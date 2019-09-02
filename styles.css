@@ -1,0 +1,112 @@
+@import url("https://fonts.googleapis.com/css?family=Titillium+Web:100,200,300,400,500,600,700,800,900");
+
+
+*{
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+.drawer-handle:hover{
+    cursor: pointer;
+}
+.drawer-handle{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 41px;
+    height: 40px;
+    cursor: pointer;
+    z-index: 0;
+    text-align: center;
+    line-height: 40px;
+    font-size: 16px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #fff;
+    /* left: -40px;
+    border-radius: 4px 0 0 4px; */
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.drawer-content{
+    height: 80%;
+    overflow-y: auto;
+    width: 100%;
+}
+#chat{
+    position: absolute;
+    right: 0px;
+    height: 100%;
+    top: 0px;
+    width: 500px;
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+}
+
+.chat-single-message-container .chat-message-bubble {
+    position: relative;
+    margin: 10px 0px 10px 10px;
+    padding: 13px;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    border: 1px solid #d3d3d352;
+    background: #fff;
+    color: #5d5d5d;
+}
+
+.chata-bar-container {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    bottom: 0;
+}
+
+.chata-input {
+    padding: 10px;
+    padding-left: 20px;
+    margin: 10px;
+    height: 42px;
+    box-sizing: border-box;
+    border-radius: 24px;
+    font-size: 16px;
+    font-family: "Titillium Web", sans-serif;
+    letter-spacing: 0.04em;
+    outline: none !important;
+    width: calc(100% - 20px);
+    background: transparent;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    color: #5d5d5d;
+}
+
+.chat-header-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    background: #28a8e0;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
+    flex-grow: 0;
+    flex-shrink: 0;
+    z-index: 1;
+    word-wrap: break-word;
+
+}
+
+.chata-header-center-container {
+    position: relative;
+    color: #fff;
+    line-height: 60px;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+}
