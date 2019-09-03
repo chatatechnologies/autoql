@@ -1,6 +1,5 @@
 @import url("https://fonts.googleapis.com/css?family=Titillium+Web:100,200,300,400,500,600,700,800,900");
 
-
 *{
     box-sizing: border-box;
     padding: 0px;
@@ -11,36 +10,121 @@
 }
 .drawer-handle{
     position: absolute;
-    top: 0;
+    top: 50px;
     right: 0;
     width: 41px;
     height: 40px;
     cursor: pointer;
-    z-index: 0;
+    z-index: 10;
     text-align: center;
     line-height: 40px;
     font-size: 16px;
     display: flex;
     justify-content: center;
     align-items: center;
+    vertical-align:middle;
     background: #fff;
     /* left: -40px;
     border-radius: 4px 0 0 4px; */
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
 }
 
-.drawer-content{
-    height: 80%;
-    overflow-y: auto;
+#drawer-wrapper{
+    background: #000;
+    opacity: .3;
     width: 100%;
+    position: fixed;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), height 0s ease 0.3s;
 }
-#chat{
-    position: absolute;
-    right: 0px;
+
+.chata-drawer{
+    z-index: 10;
+    background: white;
+    position: fixed;
+    right: 0;
     height: 100%;
     top: 0px;
-    width: 500px;
+    width: 0px;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+    /* transition: transform 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), box-shadow 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86); */
+    /* transform: translateX(500px); */
+    transition: transform 0.3s ease-in-out;
+}
+
+.chat-header-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 60px;
+    background: #28a8e0;
+    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
+    flex-grow: 0;
+    flex-shrink: 0;
+    z-index: 2;
+    word-wrap: break-word;
+    align-items: center;
+}
+
+.chata-header-center-container {
+    position: relative;
+    color: #fff;
+    line-height: 60px;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 18px;
+    letter-spacing: 0.05em;
+}
+
+.chata-header-left{
+    width: 100;
+}
+
+.chat-header-container button {
+    background: transparent;
+    border: none;
+    color: white;
+    margin: 10px;
+    margin-right: 0;
+    font-size: 20px;
+    cursor: pointer;
+    outline: none !important;
+
+}
+
+.chata-button.close svg {
+    width: 30px;
+    height: 30px;
+    padding-top: 3px;
+}
+
+.chat-header-container button svg {
+    width: 35px;
+    height: 35px;
+}
+
+.chata-button.clear-all {
+    margin-right: 11px;
+}
+
+.drawer-content{
+    width: 100%;
+    height: 100%;
+    max-height: calc(100% - 150px);
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* padding: 20px; */
+    flex: 1;
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-basis: 0%;
 }
 
 .chat-single-message-container .chat-message-bubble {
@@ -58,11 +142,63 @@
     color: #5d5d5d;
 }
 
+.chat-single-message-container.response {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 20px;
+    max-height: 85%;
+    -webkit-animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+.chata-response-content-container {
+    background-color: inherit;
+    font-size: 14px;
+    height: 100%;
+}
+
+.chat-single-message-container.request {
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 20px;
+    -webkit-animation: scale-up-br 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: scale-up-br 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+.chat-single-message-container.request .chat-message-bubble {
+    background: #28a8e0;
+    color: white;
+    border: 1px solid #28a8e0;
+    /* box-shadow: 2px 3px 8px 1px rgba(0, 0, 0, 0.1); */
+}
+
+.chat-single-message-container .chat-message-bubble {
+    position: relative;
+    padding: 13px;
+    border-radius: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+}
+
 .chata-bar-container {
     position: relative;
+}
+
+.watermark {
+    color: #5d5d5d;
+    text-align: center;
+    opacity: 0.2;
+    display: block;
+    margin-bottom: 7px;
+    width: calc(100% - 10px);
+    font-size: 13px;
+}
+
+.text-bar{
     display: flex;
-    flex-direction: row;
-    bottom: 0;
 }
 
 .chata-input {
@@ -82,31 +218,22 @@
     color: #5d5d5d;
 }
 
-.chat-header-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 60px;
-    background: #28a8e0;
-    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
-    flex-grow: 0;
-    flex-shrink: 0;
-    z-index: 2;
-    word-wrap: break-word;
-
-}
-
-.chata-header-center-container {
+.chat-voice-record-button {
+    width: 40px;
+    height: 40px;
+    border-radius: 24px;
+    margin: 10px;
+    margin-left: 0;
+    font-size: 18px;
+    line-height: 24px;
+    outline: none !important;
     position: relative;
-    color: #fff;
-    line-height: 60px;
-    font-size: 18px;
-    letter-spacing: 0.05em;
-    font-weight: 600;
+    cursor: pointer;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    font-family: "Titillium Web", sans-serif;
-    font-size: 18px;
-    letter-spacing: 0.05em;
+    background: #28a8e0;
+    color: white;
+    border: none;
+    /* transition: box-shadow 0.2s ease; */
+    flex-shrink: 0;
+    flex-grow: 0;
 }
