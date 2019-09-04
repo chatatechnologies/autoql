@@ -1,4 +1,16 @@
-var ChatDrawer = {};
+var ChatDrawer = {
+    config: {
+        projectId: 1,
+        token: undefined
+    },
+};
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
 
 (function(document, window, ChatDrawer, undefined) {
     ChatDrawer.init = function(elem, options){
@@ -44,8 +56,12 @@ var ChatDrawer = {};
             </svg>
             We run on Chata
         </div>
+        <div class="auto-complete-suggestions">
+            <ul id="auto-complete-list">
+            </ul>
+        </div>
         <div class="text-bar">
-            <input type="text" autocomplete="off" aria-autocomplete="list" aria-controls="react-autowhatever-1" class="chata-input" placeholder="Ask me anything" value="">
+            <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
             <button id="chata-voice-record-button" class="chat-voice-record-button" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false"><img class="chat-voice-record-icon" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgd2lkdGg9IjU0NC4ycHgiIGhlaWdodD0iNTQ0LjJweCIgdmlld0JveD0iMCAwIDU0NC4yIDU0NC4yIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NDQuMiA1NDQuMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGNsYXNzPSJtaWMtaWNvbiIgZmlsbD0iI0ZGRkZGRiIgZD0iTTQzOS41LDIwOS4zYy01LjcsMC0xMC42LDIuMS0xNC43LDYuMmMtNC4xLDQuMS02LjIsOS4xLTYuMiwxNC43djQxLjljMCw0MC4zLTE0LjMsNzQuOC00MywxMDMuNQoJYy0yOC43LDI4LjctNjMuMiw0My0xMDMuNSw0M2MtNDAuMywwLTc0LjgtMTQuMy0xMDMuNS00M2MtMjguNy0yOC43LTQzLTYzLjItNDMtMTAzLjV2LTQxLjljMC01LjctMi4xLTEwLjYtNi4yLTE0LjcKCWMtNC4xLTQuMS05LjEtNi4yLTE0LjctNi4yYy01LjcsMC0xMC42LDIuMS0xNC43LDYuMmMtNC4xLDQuMS02LjIsOS4xLTYuMiwxNC43djQxLjljMCw0OC4yLDE2LjEsOTAuMSw0OC4yLDEyNS43CgljMzIuMiwzNS43LDcxLjksNTYuMSwxMTkuMiw2MS4zdjQzLjJoLTgzLjdjLTUuNywwLTEwLjYsMi4xLTE0LjcsNi4yYy00LjEsNC4xLTYuMiw5LTYuMiwxNC43YzAsNS43LDIuMSwxMC42LDYuMiwxNC43CgljNC4xLDQuMSw5LDYuMiwxNC43LDYuMmgyMDkuM2M1LjcsMCwxMC42LTIuMSwxNC43LTYuMmM0LjEtNC4xLDYuMi05LjEsNi4yLTE0LjdjMC01LjctMi4xLTEwLjYtNi4yLTE0LjcKCWMtNC4xLTQuMS05LjEtNi4yLTE0LjctNi4ySDI5M3YtNDMuMmM0Ny4zLTUuMiw4Ny0yNS43LDExOS4yLTYxLjNjMzIuMi0zNS42LDQ4LjItNzcuNiw0OC4yLTEyNS43di00MS45YzAtNS43LTIuMS0xMC42LTYuMi0xNC43CglDNDUwLjEsMjExLjQsNDQ1LjIsMjA5LjMsNDM5LjUsMjA5LjN6Ii8+CjxwYXRoIGNsYXNzPSJtaWMtaWNvbiIgZmlsbD0iI0ZGRkZGRiIgZD0iTTIyMi44LDIwMy43aC01NS4zdjM4LjRoNTUuM2M4LjUsMCwxNS4zLDYuOCwxNS4zLDE1LjNzLTYuOCwxNS4zLTE1LjMsMTUuM2gtNTUuMwoJYzAuMiwyOC41LDEwLjQsNTIuOSwzMC43LDczLjNjMjAuNSwyMC41LDQ1LjEsMzAuNyw3My45LDMwLjdjMjguOCwwLDUzLjQtMTAuMiw3My45LTMwLjdjMjAuMy0yMC4zLDMwLjYtNDQuOCwzMC43LTczLjNoLTUzLjQKCWMtOC41LDAtMTUuMy02LjgtMTUuMy0xNS4zczYuOC0xNS4zLDE1LjMtMTUuM2g1My40di0zOC40aC01My40Yy04LjUsMC0xNS4zLTYuOC0xNS4zLTE1LjNzNi44LTE1LjMsMTUuMy0xNS4zaDUzLjR2LTQwLjhoLTUzLjQKCWMtOC41LDAtMTUuMy02LjgtMTUuMy0xNS4zczYuOC0xNS4zLDE1LjMtMTUuM2g1My4zYy0wLjctMjcuNS0xMC44LTUxLjItMzAuNi03MUMzMjUuNSwxMC4yLDMwMC45LDAsMjcyLjEsMAoJYy0yOC44LDAtNTMuNCwxMC4yLTczLjksMzAuN2MtMTkuOCwxOS44LTI5LjksNDMuNS0zMC42LDcxaDU1LjJjOC41LDAsMTUuMyw2LjgsMTUuMywxNS4zcy02LjgsMTUuMy0xNS4zLDE1LjNoLTU1LjN2NDAuOGg1NS4zCgljOC41LDAsMTUuMyw2LjgsMTUuMywxNS4zUzIzMS4yLDIwMy43LDIyMi44LDIwMy43eiIvPgo8L3N2Zz4=" alt="speech to text button" height="22px" width="22px" draggable="false">
             </button>
         </div>
@@ -55,12 +71,6 @@ var ChatDrawer = {};
     }
 
     ChatDrawer.createDrawerContent = function(){
-        // <div class="chat-single-message-container request">
-        //     <div class="chat-message-bubble">Janitorial expense</div>
-        // </div>
-        // <div class="chat-single-message-container full-width response">
-        //     <div data-test="query-response-wrapper" class="chata-response-content-container chat-message-bubble">books are not closed</div>
-        // </div>
         var drawerContent = document.createElement('div');
         var firstMessage = document.createElement('div');
         var chatMessageBubble = document.createElement('div');
@@ -74,6 +84,7 @@ var ChatDrawer = {};
         firstMessage.appendChild(chatMessageBubble);
         drawerContent.appendChild(firstMessage);
         ChatDrawer.rootElem.appendChild(drawerContent);
+        ChatDrawer.drawerContent = drawerContent;
     }
 
     ChatDrawer.createHeader = function(){
@@ -95,6 +106,8 @@ var ChatDrawer = {};
     }
 
     ChatDrawer.registerEvents = function(){
+        var chataInput = document.getElementById('chata-input');
+        var suggestionList = document.getElementById('auto-complete-list');
         document.addEventListener('click',function(e){
             if(e.target){
                 if(e.target.classList.contains('close-action')){
@@ -103,8 +116,19 @@ var ChatDrawer = {};
                 if(e.target.classList.contains('open-action')){
                     ChatDrawer.openDrawer();
                 }
+                if(e.target.classList.contains('suggestion')){
+                    console.log(e.target.textContent);
+                    suggestionList.style.display = 'none';
+                    ChatDrawer.sendMessage(chataInput, e.target.textContent);
+                }
             }
         });
+        chataInput.onkeyup = function(){
+            suggestionList.style.display = 'none';
+            if(this.value){
+                ChatDrawer.autocomplete(this.value, suggestionList);
+            }
+        }
     }
 
     ChatDrawer.closeDrawer = function(){
@@ -123,7 +147,6 @@ var ChatDrawer = {};
         ChatDrawer.wrapper.style.opacity = .3;
         ChatDrawer.wrapper.style.height = '100%';
         ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
-
         ChatDrawer.rootElem.style.transform = 'translateX(0px)';
         ChatDrawer.drawerButton.style.display = 'none';
     }
@@ -152,4 +175,84 @@ var ChatDrawer = {};
         body.insertBefore(drawerButton, rootElem);
         ChatDrawer.drawerButton = drawerButton;
     }
+
+    ChatDrawer.ajaxCall = function(url, callback){
+        var xhr = new XMLHttpRequest();
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4){
+                callback(xhr);
+            }
+        };
+        xhr.open('GET', url);
+        xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+        xhr.setRequestHeader("Authorization", ChatDrawer.config.token ? `Bearer ${ChatDrawer.config.token}` : undefined);
+        xhr.send();
+    }
+
+    ChatDrawer.autocomplete = function(suggestion, suggestionList){
+        const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
+            suggestion)}&projectid=${ChatDrawer.config.projectId}`;
+
+        ChatDrawer.ajaxCall(URL, function(response){
+            suggestionList.innerHTML = '';
+            var jsonResponse = JSON.parse(response.responseText);
+            if(jsonResponse['matches'].length > 0){
+
+                for (var i = jsonResponse['matches'].length-1; i >= 0; i--) {
+                    var li = document.createElement('li');
+                    li.classList.add('suggestion');
+                    li.textContent = jsonResponse['matches'][i];
+                    suggestionList.appendChild(li);
+                }
+                suggestionList.style.display = 'block';
+            }else{
+                suggestionList.style.display = 'none';
+            }
+        });
+    }
+
+    ChatDrawer.sendMessage = function(chataInput, value){
+        // chataInput.disabled = true;
+        if(value){
+            var textValue = value;
+        }else{
+            var textValue = chataInput.value;
+        }
+        const URL = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+          textValue
+        )}&projectId=${ChatDrawer.config.projectId}&unified_query_id=${uuidv4()}`;
+
+        chataInput.value = '';
+        ChatDrawer.putMessage(textValue);
+    }
+
+    ChatDrawer.putMessage = function(value){
+        // <div class="chat-single-message-container request">
+        //     <div class="chat-message-bubble">Janitorial expense</div>
+        // </div>
+        // <div class="chat-single-message-container full-width response">
+        //     <div data-test="query-response-wrapper" class="chata-response-content-container chat-message-bubble">books are not closed</div>
+        // </div>
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+
+        containerMessage.classList.add('chat-single-message-container');
+        containerMessage.classList.add('request');
+        messageBubble.classList.add('chat-message-bubble');
+        messageBubble.textContent = value;
+        containerMessage.appendChild(messageBubble);
+        ChatDrawer.drawerContent.appendChild(containerMessage);
+        ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
+    }
+
 })(document, window, ChatDrawer)
