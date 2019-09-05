@@ -121,6 +121,9 @@ function uuidv4() {
                     suggestionList.style.display = 'none';
                     ChatDrawer.sendMessage(chataInput, e.target.textContent);
                 }
+                if(e.target.classList.contains('chata-suggestion-btn')){
+                    ChatDrawer.sendMessage(chataInput, e.target.textContent);
+                }
             }
         });
         chataInput.onkeyup = function(){
@@ -180,7 +183,8 @@ function uuidv4() {
         var xhr = new XMLHttpRequest();
         xhr.onreadystatechange = function() {
             if (xhr.readyState === 4){
-                callback(xhr);
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse);
             }
         };
         xhr.open('GET', url);
@@ -193,9 +197,8 @@ function uuidv4() {
         const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
             suggestion)}&projectid=${ChatDrawer.config.projectId}`;
 
-        ChatDrawer.ajaxCall(URL, function(response){
+        ChatDrawer.ajaxCall(URL, function(jsonResponse){
             suggestionList.innerHTML = '';
-            var jsonResponse = JSON.parse(response.responseText);
             if(jsonResponse['matches'].length > 0){
 
                 for (var i = jsonResponse['matches'].length-1; i >= 0; i--) {
@@ -211,19 +214,117 @@ function uuidv4() {
         });
     }
 
-    ChatDrawer.sendMessage = function(chataInput, value){
-        // chataInput.disabled = true;
-        if(value){
-            var textValue = value;
-        }else{
-            var textValue = chataInput.value;
-        }
-        const URL = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+    ChatDrawer.sendMessage = function(chataInput, textValue){
+        chataInput.disabled = true;
+        var responseLoadingContainer = ChatDrawer.putMessage(textValue);
+        const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
           textValue
         )}&projectId=${ChatDrawer.config.projectId}&unified_query_id=${uuidv4()}`;
+        const URL = `https://backend-staging.chata.ai/api/v1/query?q=${textValue}&project=1&unified_query_id=${uuidv4()}`;
+
+        ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
+            if(jsonResponse['full_suggestion'].length > 0){
+                ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+            }else{
+                ChatDrawer.ajaxCall(URL, function(jsonResponse){
+                    console.log(jsonResponse['display_type']);
+                    chataInput.removeAttribute("disabled");
+                    ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+                    switch(jsonResponse['display_type']){
+                        case 'suggestion':
+                            ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
+                        break;
+                        case 'table':
+                            if(jsonResponse['columns'].length == 1){
+                                ChatDrawer.putSimpleResponse(jsonResponse);
+                            }else{
+                                ChatDrawer.putTableResponse(jsonResponse);
+                            }
+                        break;
+                    }
+                });
+
+            }
+        });
 
         chataInput.value = '';
-        ChatDrawer.putMessage(textValue);
+    }
+
+    ChatDrawer.putSimpleResponse = function(jsonResponse){
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        containerMessage.classList.add('chat-single-message-container');
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('chat-message-bubble');
+        messageBubble.textContent = jsonResponse['data'];
+        containerMessage.appendChild(messageBubble);
+        ChatDrawer.drawerContent.appendChild(containerMessage);
+    }
+
+    ChatDrawer.putTableResponse = function(jsonResponse){
+        var data = jsonResponse['data'].split('\n');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        var tableContainer = document.createElement('div');
+        var table = document.createElement('table');
+        var header = document.createElement('tr');
+
+        containerMessage.classList.add('chat-single-message-container');
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        tableContainer.classList.add('chata-table-container');
+        responseContentContainer.classList.add('chata-response-content-container');
+        table.classList.add('table-response');
+        var dataLines = jsonResponse['data'].split('\n');
+
+        for (var i = 0; i < jsonResponse['columns'].length; i++) {
+            var colName = jsonResponse['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            var th = document.createElement('th');
+            th.textContent = colName;
+            table.appendChild(th);
+        }
+
+        for (var i = 0; i < dataLines.length; i++) {
+            var data = dataLines[i].split(',');
+            var tr = document.createElement('tr');
+            for (var x = 0; x < data.length; x++) {
+                var td = document.createElement('td');
+                td.textContent = data[x];
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        tableContainer.appendChild(table);
+        responseContentContainer.appendChild(tableContainer);
+        messageBubble.appendChild(responseContentContainer);
+        containerMessage.appendChild(messageBubble);
+        ChatDrawer.drawerContent.appendChild(containerMessage);
+    }
+
+    ChatDrawer.putSuggestionResponse = function(jsonResponse, query){
+        var data = jsonResponse['data'].split('\n');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        containerMessage.classList.add('chat-single-message-container');
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        responseContentContainer.classList.add('chata-response-content-container');
+        responseContentContainer.innerHTML = `<div>I'm not sure what you mean by <strong>"${query}"</strong>. Did you mean:</div>`;
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement('div');
+            var button = document.createElement('button');
+            button.classList.add('chata-suggestion-btn');
+            button.textContent = data[i];
+            div.appendChild(button);
+            responseContentContainer.appendChild(div);
+        }
+        messageBubble.appendChild(responseContentContainer);
+        containerMessage.appendChild(messageBubble);
+        ChatDrawer.drawerContent.appendChild(containerMessage);
     }
 
     ChatDrawer.putMessage = function(value){
@@ -253,6 +354,7 @@ function uuidv4() {
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
         ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
+        return responseLoadingContainer;
     }
 
 })(document, window, ChatDrawer)

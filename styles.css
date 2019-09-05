@@ -318,8 +318,103 @@
     animation: response-loading3 0.6s infinite;
 }
 
-/* // response-loading-container */
+.chat-single-message-container .chat-message-bubble.full-width {
+    max-width: calc(100% - 30px);
+}
 
+.chata-response-content-container {
+    background-color: inherit;
+    font-size: 14px;
+    height: 100%;
+    font-family: "Titillium Web", sans-serif;
+    letter-spacing: 0.04em;
+}
+
+.chata-suggestion-btn {
+    padding: 6px 14px;
+    background: transparent;
+    border-radius: 8px;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 12px;
+    margin-top: 5px;
+    outline: none !important;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.1s ease;
+    /* border: 1px solid rgba(0, 0, 0, 0.15); */
+    border-color: #e2e2e26e;
+    color: inherit;
+}
+
+.chata-suggestion-btn:hover{
+    color: white;
+    background: #28a8e0;
+    border-color: transparent;
+}
+
+.drawer-content::-webkit-scrollbar {
+    display: unset;
+    background-color: transparent;
+    width: 7px;
+    height: 7px;
+}
+
+.drawer-content::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    border: 0px;
+}
+
+.chata-table-container::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    border: 0px;
+}
+
+.chata-table-container::-webkit-scrollbar {
+    display: unset;
+    background-color: transparent;
+    width: 7px;
+    height: 7px;
+}
+
+.table-response::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 7px;
+    border: 0px;
+}
+
+input[type=text]:disabled {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+.chata-table-container {
+    height: 100%;
+    background-color: inherit;
+        overflow: scroll;
+}
+.table-response th{
+    box-sizing: border-box;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: bottom;
+    padding-left: 15px;
+}
+.table-response tr{
+    border-bottom: #d3d3d352;
+}
+
+.table-response tr td{
+    text-align: center;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 14;
+    letter-spacing: 0.04em;
+    color: #5d5d5d;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+}
 /* animations */
 @keyframes scale-up-br {
     0% {
