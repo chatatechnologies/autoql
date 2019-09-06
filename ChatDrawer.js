@@ -12,6 +12,26 @@ function uuidv4() {
     });
 }
 
+function formatDate(date) {
+    var monthNames = [
+        "January", "February", "March",
+        "April", "May", "June", "July",
+        "August", "September", "October",
+        "November", "December"
+    ];
+
+    var day = date.getDate();
+    var monthIndex = date.getMonth();
+    var year = date.getFullYear();
+    // NOTE: this case only occurs in tests
+    if(Number.isNaN(monthIndex)){
+        year = '1969';
+        day = '31';
+        monthIndex = 11;
+    }
+    return monthNames[monthIndex] + ' ' + day + ', ' + year;
+}
+
 (function(document, window, ChatDrawer, undefined) {
     ChatDrawer.init = function(elem, options){
         var rootElem = document.getElementById(elem);
@@ -132,6 +152,12 @@ function uuidv4() {
                 ChatDrawer.autocomplete(this.value, suggestionList);
             }
         }
+        chataInput.onkeypress = function(event){
+            if(event.keyCode == 13 && this.value){
+                suggestionList.style.display = 'none';
+                ChatDrawer.sendMessage(chataInput, this.value);
+            }
+        }
     }
 
     ChatDrawer.closeDrawer = function(){
@@ -224,6 +250,7 @@ function uuidv4() {
 
         ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
             if(jsonResponse['full_suggestion'].length > 0){
+                chataInput.removeAttribute("disabled");
                 ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
             }else{
                 ChatDrawer.ajaxCall(URL, function(jsonResponse){
@@ -246,7 +273,6 @@ function uuidv4() {
 
             }
         });
-
         chataInput.value = '';
     }
 
@@ -259,6 +285,7 @@ function uuidv4() {
         messageBubble.textContent = jsonResponse['data'];
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
+        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
     }
 
     ChatDrawer.putTableResponse = function(jsonResponse){
@@ -282,16 +309,39 @@ function uuidv4() {
         for (var i = 0; i < jsonResponse['columns'].length; i++) {
             var colName = jsonResponse['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
             var th = document.createElement('th');
-            th.textContent = colName;
-            table.appendChild(th);
-        }
+            var arrow = document.createElement('div');
+            var col = document .createElement('div');
+            col.textContent = colName;
+            arrow.classList.add('tabulator-arrow');
+            arrow.classList.add('down');
 
+            th.appendChild(col);
+            th.appendChild(arrow);
+            header.appendChild(th);
+        }
+        table.appendChild(header);
         for (var i = 0; i < dataLines.length; i++) {
             var data = dataLines[i].split(',');
             var tr = document.createElement('tr');
             for (var x = 0; x < data.length; x++) {
+                value = '';
+                switch (jsonResponse['columns'][x]['type']) {
+                    case 'DOLLAR_AMT':
+                        if(parseFloat(data[x]) > 0){
+                            value = '$' + data[x];
+                        }else{
+                            value = data[x];
+                        }
+                    break;
+                    case 'DATE':
+                        value = formatDate(new Date( parseInt(data[x]) * 1000 ) );
+                    break;
+                    default:
+                        value = data[x];
+
+                }
                 var td = document.createElement('td');
-                td.textContent = data[x];
+                td.textContent = value;
                 tr.appendChild(td);
             }
             table.appendChild(tr);
@@ -301,6 +351,7 @@ function uuidv4() {
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
+        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
     }
 
     ChatDrawer.putSuggestionResponse = function(jsonResponse, query){
@@ -325,6 +376,7 @@ function uuidv4() {
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
+        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
     }
 
     ChatDrawer.putMessage = function(value){
@@ -354,6 +406,7 @@ function uuidv4() {
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
         ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
+        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
         return responseLoadingContainer;
     }
 

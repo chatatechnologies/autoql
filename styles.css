@@ -5,6 +5,37 @@
     padding: 0px;
     margin: 0px;
 }
+
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
 .drawer-handle:hover{
     cursor: pointer;
 }
@@ -385,7 +416,7 @@
 }
 
 input[type=text]:disabled {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: #ececec;
 }
 
 .chata-table-container {
@@ -393,27 +424,91 @@ input[type=text]:disabled {
     background-color: inherit;
         overflow: scroll;
 }
-.table-response th{
+
+.table-response tr:first-of-type{
+    border-bottom: 2px solid #d3d3d352;
+}
+
+.table-response tr th{
     box-sizing: border-box;
     width: 100%;
     white-space: nowrap;
+    font-weight: 700;
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: bottom;
-    padding-left: 15px;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    background: transparent;
+    padding: 5px 18px;
+    position: relative;
+    text-align: left;
 }
+
+.tabulator-arrow {
+  border: solid #bbb;
+  border-width: 0 2px 2px 0;
+  display: inline-block;
+  padding: 3px;
+  position: absolute;
+  right: 5px;
+  bottom: 13px;
+}
+
+.tabulator-arrow.right {
+  transform: rotate(-45deg);
+  -webkit-transform: rotate(-45deg);
+}
+
+.tabulator-arrow.left {
+  transform: rotate(135deg);
+  -webkit-transform: rotate(135deg);
+}
+
+.tabulator-arrow.up {
+  transform: rotate(-135deg);
+  -webkit-transform: rotate(-135deg);
+}
+
+.tabulator-arrow.down {
+  transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+
 .table-response tr{
-    border-bottom: #d3d3d352;
+    border-bottom: 1px solid #d3d3d352;
+    background: #fff;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 100%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.table-response tr th:hover{
+    background-color: #ececec;
+}
+tr:hover {
+    background-color: #ececec;
+}
+tr:first-child:hover {
+    background-color: transparent;
 }
 
 .table-response tr td{
     text-align: center;
     font-family: "Titillium Web", sans-serif;
-    font-size: 14;
+    font-size: 14px;
     letter-spacing: 0.04em;
     color: #5d5d5d;
+    padding: 8px;
+    height: 37px;
     vertical-align: middle;
     text-overflow: ellipsis;
+    text-align: center;
+    white-space: nowrap;
 }
 /* animations */
 @keyframes scale-up-br {
