@@ -3,6 +3,7 @@ var ChatDrawer = {
         projectId: 1,
         token: undefined
     },
+    responses: []
 };
 
 function uuidv4() {
@@ -32,6 +33,23 @@ function formatDate(date) {
     return monthNames[monthIndex] + ' ' + day + ', ' + year;
 }
 
+function copyTextToClipboard(text) {
+    var textArea = document.createElement("textarea");
+    textArea.value = text;
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+
+    try {
+        var successful = document.execCommand('copy');
+        var msg = successful ? 'successful' : 'unsuccessful';
+        console.log('Fallback: Copying text command was ' + msg);
+    } catch (err) {
+        console.error('Fallback: Oops, unable to copy', err);
+    }
+
+    document.body.removeChild(textArea);
+}
 (function(document, window, ChatDrawer, undefined) {
     ChatDrawer.init = function(elem, options){
         var rootElem = document.getElementById(elem);
@@ -144,6 +162,30 @@ function formatDate(date) {
                 if(e.target.classList.contains('chata-suggestion-btn')){
                     ChatDrawer.sendMessage(chataInput, e.target.textContent);
                 }
+                if(e.target.classList.contains('clipboard')){
+                    if(e.target.tagName == 'svg'){
+                        var json = ChatDrawer.responses[e.target.parentElement.id];
+                    }else if(e.target.tagName == 'path'){
+                        var json = ChatDrawer.responses[e.target.parentElement.parentElement.id];
+                    }else{
+                        var json = ChatDrawer.responses[e.target.id];
+                    }
+                    copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
+                }
+                if(e.target.classList.contains('csv')){
+                    if(e.target.tagName == 'svg'){
+                        var json = ChatDrawer.responses[e.target.parentElement.id];
+                    }else if(e.target.tagName == 'path'){
+                        var json = ChatDrawer.responses[e.target.parentElement.parentElement.id];
+                    }else{
+                        var json = ChatDrawer.responses[e.target.id];
+                    }
+                    var csvData = ChatDrawer.createCsvData(json);
+                    var link = document.createElement("a");
+                    link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
+                    link.setAttribute('download', 'test.csv');
+                    link.click();
+                }
             }
         });
         chataInput.onkeyup = function(){
@@ -158,6 +200,24 @@ function formatDate(date) {
                 ChatDrawer.sendMessage(chataInput, this.value);
             }
         }
+    }
+
+    ChatDrawer.createCsvData = function(json, separator=','){
+        var output = '';
+        var lines = json['data'].split('\n');
+        for(var i = 0; i<json['columns'].length; i++){
+            var colName = json['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            output += colName + separator;
+        }
+        output += '\n';
+        for (var i = 0; i < lines.length; i++) {
+            var data = lines[i].split(',');
+            for (var x = 0; x < data.length; x++) {
+                output += data[x] + separator;
+            }
+            output += '\n';
+        }
+        return output
     }
 
     ChatDrawer.closeDrawer = function(){
@@ -301,6 +361,22 @@ function formatDate(date) {
         containerMessage.classList.add('response');
         messageBubble.classList.add('chat-message-bubble');
         messageBubble.classList.add('full-width');
+        var idRequest = uuidv4();
+        ChatDrawer.responses[idRequest] = jsonResponse;
+        messageBubble.innerHTML = `
+            <div class="chat-message-toolbar right">
+                <button class="chata-toolbar-btn clipboard" id="${idRequest}" data-tip="Copy to Clipboard" data-for="chata-toolbar-btn-tooltip">
+                    <svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
+                        </path>
+                    </svg>
+                </button>
+                <button class="chata-toolbar-btn csv" id="${idRequest}" data-tip="Download as CSV" data-for="chata-toolbar-btn-tooltip">
+                    <svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
+                    </svg>
+                </button>
+            </div>`;
         tableContainer.classList.add('chata-table-container');
         responseContentContainer.classList.add('chata-response-content-container');
         table.classList.add('table-response');

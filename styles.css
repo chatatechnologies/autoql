@@ -416,7 +416,7 @@ table {
 }
 
 input[type=text]:disabled {
-    background-color: #ececec;
+    background-color: #f7f7f7;
 }
 
 .chata-table-container {
@@ -489,11 +489,13 @@ input[type=text]:disabled {
 
 .table-response tr th:hover{
     background-color: #ececec;
+    cursor: pointer;
 }
 tr:hover {
     background-color: #ececec;
 }
 tr:first-child:hover {
+    cursor: pointer;
     background-color: transparent;
 }
 
@@ -509,6 +511,41 @@ tr:first-child:hover {
     text-overflow: ellipsis;
     text-align: center;
     white-space: nowrap;
+}
+
+.chata-toolbar-btn {
+    height: 28px;
+    width: 28px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    line-height: 28px;
+    vertical-align: top;
+    color: #5d5d5d;
+    cursor: pointer;
+    outline: none !important;
+}
+
+.chat-message-toolbar {
+    display: block;
+    position: absolute;
+    background: #fff;
+    top: -22px;
+    padding: 5px;
+    border-radius: 6px;
+    line-height: 28px;
+    border: 1px solid #d3d3d352;
+}
+
+.chat-message-toolbar.right {
+    right: -9px;
+}
+.chat-message-bubble:hover .chat-message-toolbar{
+    display: block;
+}
+
+.chata-toolbar-btn:hover{
+    color: #878787;
 }
 /* animations */
 @keyframes scale-up-br {
