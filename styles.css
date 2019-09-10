@@ -493,9 +493,9 @@ input[type=text]:disabled {
 }
 tr:hover {
     background-color: #ececec;
+    cursor: pointer;
 }
 tr:first-child:hover {
-    cursor: pointer;
     background-color: transparent;
 }
 
@@ -527,18 +527,22 @@ tr:first-child:hover {
 }
 
 .chat-message-toolbar {
-    display: block;
+    display: none;
     position: absolute;
     background: #fff;
     top: -22px;
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
+    z-index: 10;
     border: 1px solid #d3d3d352;
 }
 
 .chat-message-toolbar.right {
     right: -9px;
+}
+.chat-message-toolbar.left {
+    left: -9px;
 }
 .chat-message-bubble:hover .chat-message-toolbar{
     display: block;
