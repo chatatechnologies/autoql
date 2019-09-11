@@ -441,7 +441,6 @@ input[type=text]:disabled {
     font-size: 14px;
     letter-spacing: 0.04em;
     background: transparent;
-    padding: 5px 18px;
     position: relative;
     text-align: left;
 }
@@ -551,6 +550,19 @@ tr:first-child:hover {
 .chata-toolbar-btn:hover{
     color: #878787;
 }
+.column{
+    padding: 5px 18px;
+}
+.column::-moz-selection { /* Code for Firefox */
+  color: inherit;
+  background: inherit;
+}
+
+.column::selection {
+  color: inherit;
+  background: inherit;
+}
+
 /* animations */
 @keyframes scale-up-br {
     0% {

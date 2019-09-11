@@ -3,7 +3,8 @@ var ChatDrawer = {
         projectId: 1,
         token: undefined
     },
-    responses: []
+    responses: [],
+    xhr: new XMLHttpRequest()
 };
 
 function uuidv4() {
@@ -200,6 +201,20 @@ function copyTextToClipboard(text) {
                         ChatDrawer.refreshTableData(tableElement, sortData);
                     }
                 }
+                if(e.target.classList.contains('pivot_table')){
+                    console.log('CLICK PIVOT!!!!');
+                    if(e.target.tagName == 'svg'){
+                        var idRequest = e.target.parentElement.dataset.id;
+                    }else if(e.target.tagName == 'path'){
+                        var idRequest = e.target.parentElement.parentElement.dataset.id;
+                    }else{
+                        var idRequest = e.target.dataset.id;
+                    }
+                    var json = ChatDrawer.responses[idRequest];
+                    var table = document.querySelectorAll(`[data-tableid='${idRequest}']`)[0];
+                    ChatDrawer.formatDataToGroup(json);
+                    console.log(table);
+                }
             }
         });
         chataInput.onkeyup = function(){
@@ -210,10 +225,73 @@ function copyTextToClipboard(text) {
         }
         chataInput.onkeypress = function(event){
             if(event.keyCode == 13 && this.value){
+                try {
+                    ChatDrawer.xhr.onreadystatechange = null;
+                    ChatDrawer.xhr.abort();
+                } catch (e) {}
                 suggestionList.style.display = 'none';
                 ChatDrawer.sendMessage(chataInput, this.value);
             }
         }
+    }
+
+    ChatDrawer.getGroupableField = function(json){
+        var r = {
+            indexCol: -1,
+            jsonCol: {}
+        }
+        for (var i = 0; i < json['columns'].length; i++) {
+            if(json['columns'][i]['groupable']){
+                r['indexCol'] = i;
+                r['jsonCol'] = json['columns'][i];
+                return r;
+            }
+        }
+        return -1;
+    }
+
+    ChatDrawer.formatDataToGroup = function(json){
+        var lines = json['data'].split('\n');
+        var values = [];
+        var groupField = ChatDrawer.getGroupableField(json);
+        console.log(groupField);
+        for (var i = 0; i < lines.length; i++) {
+            var data = lines[i].split(',');
+            var row = {};
+            for (var x = 0; x < data.length; x++) {
+
+                switch (json['columns'][x]['type']) {
+                    case 'DATE':
+                        var value = data[x];
+                        var date = new Date( parseInt(value) * 1000);
+                        row['full_date'] = {
+                            day: date.getDate(),
+                            month: date.getMonth(),
+                            year: date.getFullYear()
+                        }
+                        break;
+                    default:
+                        row[json['columns'][x]['name']] = data[x];
+                }
+            }
+            values.push(row);
+        }
+        var grouped = ChatDrawer.groupBy(values, row => row.full_date.year);
+        console.log(grouped);
+    }
+
+    ChatDrawer.groupBy = function(list, keyGetter) {
+        const map = new Map();
+        list.forEach((item) => {
+            const key = keyGetter(item);
+            const collection = map.get(key);
+            if (!collection) {
+                map.set(key, [item]);
+            } else {
+                collection.push(item);
+            }
+        });
+        return map;
     }
 
     ChatDrawer.sort = function(table, operator, colIndex, colType){
@@ -277,7 +355,6 @@ function copyTextToClipboard(text) {
             for (var x = 0; x < tdList.length; x++) {
                 tdList[x].textContent = ChatDrawer.formatData(newData[i-1][x], cols[x]['type']);
             }
-            console.log(rows[i].nodeName);
         }
     }
 
@@ -358,11 +435,25 @@ function copyTextToClipboard(text) {
         xhr.send();
     }
 
+    ChatDrawer.ajaxCallAutoComplete = function(url, callback){
+
+        ChatDrawer.xhr.onreadystatechange = function() {
+            if (ChatDrawer.xhr.readyState === 4){
+                var jsonResponse = JSON.parse(ChatDrawer.xhr.responseText);
+                callback(jsonResponse);
+            }
+        };
+        ChatDrawer.xhr.open('GET', url);
+        ChatDrawer.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+        ChatDrawer.xhr.setRequestHeader("Authorization", ChatDrawer.config.token ? `Bearer ${ChatDrawer.config.token}` : undefined);
+        ChatDrawer.xhr.send();
+    }
+
     ChatDrawer.autocomplete = function(suggestion, suggestionList){
         const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
             suggestion)}&projectid=${ChatDrawer.config.projectId}`;
 
-        ChatDrawer.ajaxCall(URL, function(jsonResponse){
+        ChatDrawer.ajaxCallAutoComplete(URL, function(jsonResponse){
             suggestionList.innerHTML = '';
             if(jsonResponse['matches'].length > 0){
 
@@ -423,17 +514,35 @@ function copyTextToClipboard(text) {
         var messageBubble = document.createElement('div');
         containerMessage.classList.add('chat-single-message-container');
         containerMessage.classList.add('response');
+        var idRequest = uuidv4();
+        ChatDrawer.responses[idRequest] = jsonResponse;
         messageBubble.classList.add('chat-message-bubble');
-        messageBubble.textContent = jsonResponse['data'];
+        messageBubble.innerHTML = `
+        <div class="chat-message-toolbar right">
+            <button class="chata-toolbar-btn clipboard" data-id="${idRequest}">
+                <svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
+                    </path>
+                </svg>
+            </button>
+            <button class="chata-toolbar-btn csv" data-id="${idRequest}">
+                <svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
+                </svg>
+            </button>
+        </div>`;
+
+        messageBubble.appendChild(document.createTextNode(jsonResponse['data']));
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
         ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
     }
 
-    ChatDrawer.getSupportedDisplayTypes = function(idRequest){
+    ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
         var json = ChatDrawer.responses[idRequest];
         var buttons = '';
         for (var i = 0; i < json['supported_display_types'].length; i++) {
+            if(json['supported_display_types'][i] == ignore)continue;
             if(json['supported_display_types'][i] == 'table'){
                 buttons += ChatDrawer.getTableButton(idRequest);
             }
@@ -459,7 +568,7 @@ function copyTextToClipboard(text) {
     ChatDrawer.getTableButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn" data-tip="Table" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16">
+            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
                 <path class="chart-icon-svg-0" d="M8,0.8c2.3,0,4.6,0,6.9,0c0.8,0,1.1,0.3,1.1,1.1c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.8,5.7,0.8,8,0.8L8,0.8z M5,11.1H1v2.7h4V11.1L5,11.1z M10,13.8v-2.7H6v2.7
                     L10,13.8L10,13.8z M11,13.8h4v-2.7h-4V13.8L11,13.8z M1.1,7.5v2.7h4V7.5H1.1L1.1,7.5z M11,10.2c1.3,0,2.5,0,3.8,0
                     c0.1,0,0.2-0.1,0.2-0.2c0-0.8,0-1.7,0-2.5h-4C11,8.4,11,9.3,11,10.2L11,10.2z M6,10.1h4V7.5H6V10.1L6,10.1z M5,6.6V3.9H1
@@ -472,9 +581,9 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.getPivotTableButton = function(idRequest){
         return `
-        <button class="chata-toolbar-btn" data-tip="Pivot Table" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16">
-                <path class="chart-icon-svg-0" d="M8,0.7c2.3,0,4.6,0,6.9,0C15.7,0.7,16,1,16,1.8c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0 c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.7,5.7,0.7,8,0.7L8,0.7z M5.1,6.4h4.4V3.8H5.1V6.4L5.1,6.4z M14.9,6.4V3.8 h-4.4v2.7L14.9,6.4L14.9,6.4z M5.1,10.1h4.4V7.4H5.1V10.1L5.1,10.1z M14.9,10.1V7.4h-4.4v2.7H14.9L14.9,10.1z M5.1,13.7h4.4V11H5.1 V13.7L5.1,13.7z M14.9,13.7V11h-4.4v2.7L14.9,13.7L14.9,13.7z">
+        <button class="chata-toolbar-btn pivot_table" data-tip="Pivot Table" data-id="${idRequest}">
+            <svg class="pivot_table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                <path class="pivot_table chart-icon-svg-0" d="M8,0.7c2.3,0,4.6,0,6.9,0C15.7,0.7,16,1,16,1.8c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0 c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.7,5.7,0.7,8,0.7L8,0.7z M5.1,6.4h4.4V3.8H5.1V6.4L5.1,6.4z M14.9,6.4V3.8 h-4.4v2.7L14.9,6.4L14.9,6.4z M5.1,10.1h4.4V7.4H5.1V10.1L5.1,10.1z M14.9,10.1V7.4h-4.4v2.7H14.9L14.9,10.1z M5.1,13.7h4.4V11H5.1 V13.7L5.1,13.7z M14.9,13.7V11h-4.4v2.7L14.9,13.7L14.9,13.7z">
                 </path>
             </svg>
         </button>
@@ -484,7 +593,7 @@ function copyTextToClipboard(text) {
     ChatDrawer.getColumnChartButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn" data-tip="Column Chart" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16">
+            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
                 <path class="chart-icon-svg-0" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
                 </path>
             </svg>
@@ -495,7 +604,7 @@ function copyTextToClipboard(text) {
     ChatDrawer.getBarChartButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn" data-tip="Bar Chart" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16">
+            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
                 <path class="chart-icon-svg-0" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
                 </path>
             </svg>
@@ -506,7 +615,7 @@ function copyTextToClipboard(text) {
     ChatDrawer.getLineChartButton = function(idRequest) {
         return `
         <button class="chata-toolbar-btn" data-tip="Line Chart" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16">
+            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
                 <path class="chart-icon-svg-0" d="M1,12.2c-0.2,0-0.3-0.1-0.5-0.2c-0.3-0.3-0.3-0.7,0-1l3.8-3.9C4.5,7,4.7,7,4.9,7s0.4,0.1,0.5,0.3l2.3,3l6.8-7.1 c0.3-0.3,0.7-0.3,1,0c0.3,0.3,0.3,0.7,0,1l-7.3,7.7C8,11.9,7.8,12,7.6,12s-0.4-0.1-0.5-0.3l-2.3-3L1.5,12C1.4,12.2,1.2,12.2,1,12.2z ">
                 </path>
             </svg>
@@ -528,7 +637,7 @@ function copyTextToClipboard(text) {
         messageBubble.classList.add('full-width');
         var idRequest = uuidv4();
         ChatDrawer.responses[idRequest] = jsonResponse;
-        var supportedDisplayTypes = ChatDrawer.getSupportedDisplayTypes(idRequest);
+        var supportedDisplayTypes = ChatDrawer.getSupportedDisplayTypes(idRequest, 'table');
         var toolbar = '';
         if(supportedDisplayTypes != ''){
             toolbar += `
