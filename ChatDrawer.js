@@ -7,6 +7,13 @@ var ChatDrawer = {
     xhr: new XMLHttpRequest()
 };
 
+const MONTH_NAMES = [
+    "January", "February", "March",
+    "April", "May", "June", "July",
+    "August", "September", "October",
+    "November", "December"
+];
+
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -15,12 +22,7 @@ function uuidv4() {
 }
 
 function formatDate(date) {
-    var monthNames = [
-        "January", "February", "March",
-        "April", "May", "June", "July",
-        "August", "September", "October",
-        "November", "December"
-    ];
+
 
     var day = date.getDate();
     var monthIndex = date.getMonth();
@@ -31,7 +33,7 @@ function formatDate(date) {
         day = '31';
         monthIndex = 11;
     }
-    return monthNames[monthIndex] + ' ' + day + ', ' + year;
+    return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
 }
 
 function copyTextToClipboard(text) {
@@ -211,9 +213,15 @@ function copyTextToClipboard(text) {
                         var idRequest = e.target.dataset.id;
                     }
                     var json = ChatDrawer.responses[idRequest];
-                    var table = document.querySelectorAll(`[data-tableid='${idRequest}']`)[0];
-                    ChatDrawer.formatDataToGroup(json);
-                    console.log(table);
+                    console.log(json['display_type']);
+                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    if(json['display_type'] == 'date_pivot'){
+                        var pivotArray = ChatDrawer.getDatePivotArray(json);
+                        ChatDrawer.createPivotTable(pivotArray, component);
+                    }else{
+                        var pivotArray = ChatDrawer.getPivotColumnArray(json);
+                        ChatDrawer.createPivotTable(pivotArray, component);
+                    }
                 }
             }
         });
@@ -235,49 +243,49 @@ function copyTextToClipboard(text) {
         }
     }
 
-    ChatDrawer.getGroupableField = function(json){
-        var r = {
-            indexCol: -1,
-            jsonCol: {}
-        }
-        for (var i = 0; i < json['columns'].length; i++) {
-            if(json['columns'][i]['groupable']){
-                r['indexCol'] = i;
-                r['jsonCol'] = json['columns'][i];
-                return r;
-            }
-        }
-        return -1;
-    }
-
-    ChatDrawer.formatDataToGroup = function(json){
+    ChatDrawer.getPivotColumnArray = function(json){
         var lines = json['data'].split('\n');
         var values = [];
-        var groupField = ChatDrawer.getGroupableField(json);
-        console.log(groupField);
+        var firstColName = '';
         for (var i = 0; i < lines.length; i++) {
             var data = lines[i].split(',');
-            var row = {};
+            var row = [];
+            for (var x = 0; x < data.length; x++) {
+                if(firstColName == '' && json['columns'][x]['groupable']){
+                    var name = json['columns'][x]['name'];
+                    firstColName = name.charAt(0).toUpperCase() + name.slice(1);
+                }
+                row.push(ChatDrawer.formatData(data[x], json['columns'][x]['type']));
+            }
+            values.push(row);
+        }
+        var pivotArray = ChatDrawer.getPivotArray(values, 0, 1, 2, firstColName);
+        return pivotArray;
+    }
+
+    ChatDrawer.getDatePivotArray = function(json){
+        var lines = json['data'].split('\n');
+        var values = [];
+        for (var i = 0; i < lines.length; i++) {
+            var data = lines[i].split(',');
+            var row = [];
             for (var x = 0; x < data.length; x++) {
 
                 switch (json['columns'][x]['type']) {
                     case 'DATE':
                         var value = data[x];
                         var date = new Date( parseInt(value) * 1000);
-                        row['full_date'] = {
-                            day: date.getDate(),
-                            month: date.getMonth(),
-                            year: date.getFullYear()
-                        }
+                        row.unshift(MONTH_NAMES[date.getMonth()], date.getFullYear());
                         break;
                     default:
-                        row[json['columns'][x]['name']] = data[x];
+                        row.push(ChatDrawer.formatData(data[x], json['columns'][x]['type']));
                 }
             }
             values.push(row);
         }
-        var grouped = ChatDrawer.groupBy(values, row => row.full_date.year);
-        console.log(grouped);
+
+        var pivotArray = ChatDrawer.getPivotArray(values, 0, 1, 2, 'Month');
+        return pivotArray;
     }
 
     ChatDrawer.groupBy = function(list, keyGetter) {
@@ -294,8 +302,82 @@ function copyTextToClipboard(text) {
         return map;
     }
 
+    ChatDrawer.createPivotTable = function(pivotArray, oldComponent){
+        var header = document.createElement('tr');
+        var table = document.createElement('table');
+        table.classList.add('table-response');
+        table.setAttribute('data-componentid', oldComponent.dataset.componentid);
+        for (var i = 0; i < pivotArray[0].length; i++) {
+            var colName = pivotArray[0][i];
+            var th = document.createElement('th');
+            var arrow = document.createElement('div');
+            var col = document.createElement('div');
+            col.textContent = colName;
+            arrow.classList.add('tabulator-arrow');
+            arrow.classList.add('up');
+            col.classList.add('column-pivot');
+            col.setAttribute('data-type', 'PIVOT');
+            col.setAttribute('data-index', i);
+            if(i == 0){
+                th.classList.add('sticky-col');
+            }
+            th.appendChild(col);
+            th.appendChild(arrow);
+            header.appendChild(th);
+        }
+
+        table.appendChild(header);
+
+        for (var i = 1; i < pivotArray.length; i++) {
+            var tr = document.createElement('tr');
+            for (var x = 0; x < pivotArray[i].length; x++) {
+                var td = document.createElement('td');
+                td.textContent = pivotArray[i][x];
+                if(x == 0){
+                    td.classList.add('sticky-col');
+                }
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        oldComponent.parentElement.replaceChild(table, oldComponent);
+    }
+
+    ChatDrawer.getPivotArray = function(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
+        var result = {}, ret = [];
+        var newCols = [];
+        for (var i = 0; i < dataArray.length; i++) {
+
+            if (!result[dataArray[i][rowIndex]]) {
+                result[dataArray[i][rowIndex]] = {};
+            }
+            result[dataArray[i][rowIndex]][dataArray[i][colIndex]] = dataArray[i][dataIndex];
+
+            if (newCols.indexOf(dataArray[i][colIndex]) == -1) {
+                newCols.push(dataArray[i][colIndex]);
+            }
+        }
+
+        newCols.sort();
+        var item = [];
+
+        item.push(firstColName);
+        item.push.apply(item, newCols);
+        ret.push(item);
+
+        for (var key in result) {
+            item = [];
+            item.push(key);
+            for (var i = 0; i < newCols.length; i++) {
+                item.push(result[key][newCols[i]] || "");
+            }
+            ret.push(item);
+        }
+        return ret;
+    }
+
     ChatDrawer.sort = function(table, operator, colIndex, colType){
-        var json = ChatDrawer.responses[table.dataset.tableid];
+        var json = ChatDrawer.responses[table.dataset.componentid];
         var lines = json['data'].split('\n');
         var values = []
         for (var i = 0; i < lines.length; i++) {
@@ -349,7 +431,7 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.refreshTableData = function(table, newData){
         var rows = table.childNodes;
-        var cols = ChatDrawer.responses[table.dataset.tableid]['columns'];
+        var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
         for (var i = 1; i < rows.length; i++) {
             var tdList = rows[i].childNodes;
             for (var x = 0; x < tdList.length; x++) {
@@ -501,6 +583,9 @@ function copyTextToClipboard(text) {
                         case 'date_pivot':
                             ChatDrawer.putTableResponse(jsonResponse);
                         break;
+                        case 'pivot_column':
+                            ChatDrawer.putTableResponse(jsonResponse);
+                        break;
                     }
                 });
 
@@ -558,8 +643,14 @@ function copyTextToClipboard(text) {
             if(json['supported_display_types'][i] == 'line'){
                 buttons += ChatDrawer.getLineChartButton(idRequest);
             }
-            if(json['supported_display_types'][i] == 'date_pivot'){
+            if(json['supported_display_types'][i] == 'date_pivot' || json['supported_display_types'][i] == 'pivot_column'){
                 buttons += ChatDrawer.getPivotTableButton(idRequest);
+            }
+            if(json['supported_display_types'][i] == 'heatmap'){
+                buttons += ChatDrawer.getHeatmapChartButton(idRequest);
+            }
+            if(json['supported_display_types'][i] == 'bubble'){
+                buttons += ChatDrawer.getBubbleChartButton(idRequest);
             }
         }
         return buttons;
@@ -623,6 +714,47 @@ function copyTextToClipboard(text) {
         `;
     }
 
+    ChatDrawer.getHeatmapChartButton = function(idRequest){
+        return `
+            <button class="chata-toolbar-btn" data-tip="Heatmap" data-id="${idRequest}">
+                <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                    <path class="hm0" d="M12,16h2.5c0.8,0,1.5-0.7,1.5-1.5v-2.4l-4,0V16z">
+                    </path>
+                    <polygon class="hm1" points="8,4.1 8,0 4,0 4,4.1 "></polygon>
+                    <path class="hm2" d="M4,4.1V0L1.5,0C0.7,0,0,0.7,0,1.5l0,2.6h0l0,0L4,4.1z"></path>
+                    <polygon class="hm3" points="8,4.1 8,4.1 8,4.1 4,4.1 4,8.1 8,8.2 "></polygon>
+                    <polygon class="hm2" points="0,4.1 0,8.1 4,8.1 4,4.1 "></polygon>
+                    <polygon class="hm1" points="4,4.1 8,4.1 8,4.1 "></polygon>
+                    <polygon class="hm1" points="4,16 8,16 8,12.1 4,12.1 "></polygon>
+                    <path class="hm0" d="M0,12.1v2.5C0,15.3,0.7,16,1.5,16H4v-3.9L0,12.1z"></path>
+                    <polygon class="hm0" points="0,12.1 4,12.1 4,8.2 0,8.2 "></polygon>
+                    <polygon class="hm4" points="8,12.1 8,8.2 4,8.2 4,12.1 "></polygon>
+                    <polygon class="hm2" points="16,4.1 16,4.1 16,4.1 12,4.1 12,8.2 16,8.2 "></polygon>
+                    <path class="hm0" d="M16,4.1l0-2.6C16,0.7,15.3,0,14.5,0L12,0v4.1L16,4.1z"></path>
+                    <polygon class="hm4" points="12,4.1 12,0 8,0 8,4.1 8,4.1 8,4.1 "></polygon>
+                    <polygon class="hm5" points="12,4.1 8,4.1 8,4.1 "></polygon>
+                    <polygon class="hm6" points="12,4.1 16,4.1 16,4.1 "></polygon>
+                    <polygon class="hm2" points="12,12.1 16,12.1 16,8.2 12,8.2 "></polygon>
+                    <polygon class="hm1" points="12,8.2 8,8.2 8,12.1 12,12.1 "></polygon>
+                    <polygon class="hm1" points="8,12.1 8,16 12,16 12,12.1 "></polygon>
+                </svg>
+            </button>
+        `;
+    }
+
+    ChatDrawer.getBubbleChartButton = function(idRequest){
+        return `
+            <button class="chata-toolbar-btn" data-tip="Bubble Chart" data-id="${idRequest}">
+                <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                    <circle class="chart-icon-svg-0" cx="7.7" cy="11.1" r="1.2"></circle>
+                    <circle class="chart-icon-svg-0" cx="2.6" cy="8.8" r="2.6"></circle>
+                    <circle class="chart-icon-svg-0" cx="11.7" cy="4.3" r="4.3"></circle>
+                    <circle class="chart-icon-svg-0" cx="1.8" cy="14.8" r="1.2"></circle>
+                </svg>
+            </button>
+        `;
+    }
+
     ChatDrawer.putTableResponse = function(jsonResponse){
         var data = jsonResponse['data'].split('\n');
         var containerMessage = document.createElement('div');
@@ -665,7 +797,7 @@ function copyTextToClipboard(text) {
         tableContainer.classList.add('chata-table-container');
         responseContentContainer.classList.add('chata-response-content-container');
         table.classList.add('table-response');
-        table.setAttribute('data-tableid', idRequest);
+        table.setAttribute('data-componentid', idRequest);
         var dataLines = jsonResponse['data'].split('\n');
 
         for (var i = 0; i < jsonResponse['columns'].length; i++) {

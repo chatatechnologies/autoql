@@ -508,7 +508,6 @@ tr:first-child:hover {
     height: 37px;
     vertical-align: middle;
     text-overflow: ellipsis;
-    text-align: center;
     white-space: nowrap;
 }
 
@@ -550,7 +549,7 @@ tr:first-child:hover {
 .chata-toolbar-btn:hover{
     color: #878787;
 }
-.column{
+.column, .column-pivot{
     padding: 5px 18px;
 }
 .column::-moz-selection { /* Code for Firefox */
@@ -561,6 +560,54 @@ tr:first-child:hover {
 .column::selection {
   color: inherit;
   background: inherit;
+}
+
+.column-pivot::-moz-selection { /* Code for Firefox */
+  color: inherit;
+  background: inherit;
+}
+
+.column-pivot::selection {
+  color: inherit;
+  background: inherit;
+}
+
+.sticky-col {
+    border-right: 2px solid #ddd;
+    text-align: left !important;
+    /* left: 0;
+    position: absolute;
+    top: auto;
+    width: auto; */
+}
+.hm0{
+    opacity: 0.5;
+    fill: currentColor;
+}
+.hm1 {
+    fill: currentColor;
+}
+.hm2 {
+    opacity: 0.15;
+    fill: currentColor;
+    enable-background: new;
+}
+.hm3 {
+    opacity: 0.6;
+    fill: currentColor;
+    enable-background: new;
+}
+.hm4 {
+    opacity: 0.65;
+    fill: currentColor;
+    enable-background: new;
+}
+.hm5 {
+    fill: currentColor;
+}
+
+.hm6 {
+    fill: currentColor;
 }
 
 /* animations */
