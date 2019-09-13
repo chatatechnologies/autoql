@@ -203,6 +203,28 @@ function copyTextToClipboard(text) {
                         ChatDrawer.refreshTableData(tableElement, sortData);
                     }
                 }
+                if(e.target.classList.contains('column-pivot')){
+                    var tableElement = e.target.parentElement.parentElement.parentElement;
+                    var pivotArray = [];
+                    var json = ChatDrawer.responses[tableElement.dataset.componentid];
+                    if(json['display_type'] == 'date_pivot'){
+                        pivotArray = ChatDrawer.getDatePivotArray(json);
+                    }else{
+                        pivotArray = ChatDrawer.getPivotColumnArray(json);
+                    }
+                    console.log(pivotArray);
+                    if(e.target.nextSibling.classList.contains('up')){
+                        e.target.nextSibling.classList.remove('up');
+                        e.target.nextSibling.classList.add('down');
+                        var sortData = ChatDrawer.sortPivot(pivotArray, e.target.dataset.index, 'desc');
+                        ChatDrawer.refreshPivotTable(tableElement, sortData);
+                    }else{
+                        e.target.nextSibling.classList.remove('down');
+                        e.target.nextSibling.classList.add('up');
+                        var sortData = ChatDrawer.sortPivot(pivotArray, e.target.dataset.index, 'asc');
+                        ChatDrawer.refreshPivotTable(tableElement, sortData);
+                    }
+                }
                 if(e.target.classList.contains('pivot_table')){
                     console.log('CLICK PIVOT!!!!');
                     if(e.target.tagName == 'svg'){
@@ -213,8 +235,8 @@ function copyTextToClipboard(text) {
                         var idRequest = e.target.dataset.id;
                     }
                     var json = ChatDrawer.responses[idRequest];
-                    console.log(json['display_type']);
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    ChatDrawer.refreshToolbarButtons(component, 'date_pivot');
                     if(json['display_type'] == 'date_pivot'){
                         var pivotArray = ChatDrawer.getDatePivotArray(json);
                         ChatDrawer.createPivotTable(pivotArray, component);
@@ -222,6 +244,20 @@ function copyTextToClipboard(text) {
                         var pivotArray = ChatDrawer.getPivotColumnArray(json);
                         ChatDrawer.createPivotTable(pivotArray, component);
                     }
+                }
+                if(e.target.classList.contains('table')){
+                    console.log('TABLEE!');
+                    if(e.target.tagName == 'svg'){
+                        var idRequest = e.target.parentElement.dataset.id;
+                    }else if(e.target.tagName == 'path'){
+                        var idRequest = e.target.parentElement.parentElement.dataset.id;
+                    }else{
+                        var idRequest = e.target.dataset.id;
+                    }
+                    var json = ChatDrawer.responses[idRequest];
+                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    ChatDrawer.refreshToolbarButtons(component, 'table');
+                    ChatDrawer.createTable(json, component);
                 }
             }
         });
@@ -243,6 +279,45 @@ function copyTextToClipboard(text) {
         }
     }
 
+    ChatDrawer.createTable = function(jsonResponse, oldComponent){
+        var data = jsonResponse['data'].split('\n');
+        var table = document.createElement('table');
+        var header = document.createElement('tr');
+        table.classList.add('table-response');
+        table.setAttribute('data-componentid', oldComponent.dataset.componentid);
+        var dataLines = jsonResponse['data'].split('\n');
+
+        for (var i = 0; i < jsonResponse['columns'].length; i++) {
+            var colName = jsonResponse['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            var th = document.createElement('th');
+            var arrow = document.createElement('div');
+            var col = document .createElement('div');
+            col.textContent = colName;
+            arrow.classList.add('tabulator-arrow');
+            arrow.classList.add('up');
+            col.classList.add('column');
+            col.setAttribute('data-type', jsonResponse['columns'][i]['type']);
+            col.setAttribute('data-index', i);
+
+            th.appendChild(col);
+            th.appendChild(arrow);
+            header.appendChild(th);
+        }
+        table.appendChild(header);
+        for (var i = 0; i < dataLines.length; i++) {
+            var data = dataLines[i].split(',');
+            var tr = document.createElement('tr');
+            for (var x = 0; x < data.length; x++) {
+                value = ChatDrawer.formatData(data[x], jsonResponse['columns'][x]['type']);
+                var td = document.createElement('td');
+                td.textContent = value;
+                tr.appendChild(td);
+            }
+            table.appendChild(tr);
+        }
+        oldComponent.parentElement.replaceChild(table, oldComponent);
+    }
+
     ChatDrawer.getPivotColumnArray = function(json){
         var lines = json['data'].split('\n');
         var values = [];
@@ -261,6 +336,29 @@ function copyTextToClipboard(text) {
         }
         var pivotArray = ChatDrawer.getPivotArray(values, 0, 1, 2, firstColName);
         return pivotArray;
+    }
+
+    ChatDrawer.sortPivot = function(pivotArray, colIndex, operator){
+        // Remove header
+        pivotArray.shift();
+        if(operator == 'asc'){
+            var comparator = function(a, b) {
+                if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
+                    return parseFloat(a[colIndex].slice(1)) > parseFloat(b[colIndex].slice(1)) ? 1 : -1;
+                }else{
+                    return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
+                }
+            }
+        }else{
+            var comparator = function(a, b) {
+                if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
+                    return parseFloat(a[colIndex].slice(1)) < parseFloat(b[colIndex].slice(1)) ? 1 : -1;
+                }else{
+                    return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
+                }
+            }
+        }
+        return pivotArray.sort(comparator);
     }
 
     ChatDrawer.getDatePivotArray = function(json){
@@ -300,6 +398,13 @@ function copyTextToClipboard(text) {
             }
         });
         return map;
+    }
+
+    ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
+        var messageBubble = oldComponent.parentElement.parentElement.parentElement;
+        var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
+        ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
+        toolbarLeft.innerHTML = ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
     }
 
     ChatDrawer.createPivotTable = function(pivotArray, oldComponent){
@@ -427,6 +532,17 @@ function copyTextToClipboard(text) {
                 value = val;
         }
         return value;
+    }
+
+    ChatDrawer.refreshPivotTable = function(table, pivotArray){
+        var rows = table.childNodes;
+        var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
+        for (var i = 1; i < rows.length; i++) {
+            var tdList = rows[i].childNodes;
+            for (var x = 0; x < tdList.length; x++) {
+                tdList[x].textContent = pivotArray[i-1][x];
+            }
+        }
     }
 
     ChatDrawer.refreshTableData = function(table, newData){
@@ -658,9 +774,9 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.getTableButton = function(idRequest){
         return `
-        <button class="chata-toolbar-btn" data-tip="Table" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0" d="M8,0.8c2.3,0,4.6,0,6.9,0c0.8,0,1.1,0.3,1.1,1.1c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.8,5.7,0.8,8,0.8L8,0.8z M5,11.1H1v2.7h4V11.1L5,11.1z M10,13.8v-2.7H6v2.7
+        <button class="chata-toolbar-btn table" data-tip="Table" data-id="${idRequest}">
+            <svg class="table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                <path class="chart-icon-svg-0 table" d="M8,0.8c2.3,0,4.6,0,6.9,0c0.8,0,1.1,0.3,1.1,1.1c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.8,5.7,0.8,8,0.8L8,0.8z M5,11.1H1v2.7h4V11.1L5,11.1z M10,13.8v-2.7H6v2.7
                     L10,13.8L10,13.8z M11,13.8h4v-2.7h-4V13.8L11,13.8z M1.1,7.5v2.7h4V7.5H1.1L1.1,7.5z M11,10.2c1.3,0,2.5,0,3.8,0
                     c0.1,0,0.2-0.1,0.2-0.2c0-0.8,0-1.7,0-2.5h-4C11,8.4,11,9.3,11,10.2L11,10.2z M6,10.1h4V7.5H6V10.1L6,10.1z M5,6.6V3.9H1
                     c0,0.8,0,1.6,0,2.4c0,0.1,0.2,0.2,0.3,0.2C2.5,6.6,3.7,6.6,5,6.6L5,6.6z M6,6.5h4V3.9H6V6.5L6,6.5z M14.9,6.5V3.9h-4v2.7L14.9,6.5
