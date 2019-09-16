@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="d3.tip.js"></script>
+    <title></title>
+    <style media="screen">
+        .domain{
+            stroke: #d3d3d352;
+        }
+        .tick{
+            stroke: #d3d3d352;
+            fill-opacity: 0.7;
+        }
+        line{
+            stroke-width: 1px;
+            stroke: currentColor;
+            opacity: 0.15;
+            shape-rendering: crispedges;
+        }
+        text{
+            font-family: "Titillium Web", sans-serif;
+            letter-spacing: 0.04em;
+            fill: #5d5d5d;
+        }
+
+        .d3-tip {
+            line-height: 1;
+            letter-spacing: 0.04em;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 2px;
+            font-family: "Titillium Web", sans-serif;
+            font-size: 13px;
+            color: #ececec;
+        }
+        .title-tip{
+            font-weight: bold;
+            color: #fff;
+
+        }
+
+        /* Creates a small triangle extender for the tooltip */
+        .d3-tip:after {
+            box-sizing: border-box;
+            display: inline;
+            font-size: 10px;
+            width: 100%;
+            line-height: 1;
+            color: rgba(0, 0, 0, 0.8);
+            content: "\25BC";
+            position: absolute;
+            text-align: center;
+        }
+
+        /* Style northward tooltips differently */
+        .d3-tip.n:after {
+            margin: -1px 0 0 0;
+            top: 100%;
+            left: 0;
+        }
+
+        @-webkit-keyframes bounceIn {
+            0% {
+                opacity: 0;
+                -webkit-transform: scale(.3);
+            }
+            50% {
+                opacity: 1;
+                -webkit-transform: scale(1.05);
+            }
+            70% {
+                -webkit-transform: scale(.9);
+            }
+            100% {
+                -webkit-transform: scale(1);
+            }
+        }
+        @keyframes bounceIn {
+            0% {
+                opacity: 0;
+                transform: scale(.3);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+            70% {
+                transform: scale(.9);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        .d3-tip.animate {
+            animation: bounceIn 0.2s ease-out;
+            -webkit-animation: bounceIn 0.2s ease-out;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="my_dataviz"></div>
+    <script>
+
+        // // set the dimensions and margins of the graph
+        var margin = {top: 0, right: 30, bottom: 40, left: 150},
+        width = 350,
+        height = 400;
+
+        // append the svg object to the body of the page
+        var svg = d3.select("#my_dataviz")
+        .append("svg")
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+        var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<span class='title-tip'>Sale line item sum:</span> <span>" + d.value + "</span>";
+        })
+
+        svg.call(tip);
+
+        svg.append('text')
+        .attr('x', -(height / 2))
+        .attr('y', -margin.left + margin.right)
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .text('Item')
+
+        svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom)
+        .attr('text-anchor', 'middle')
+        .text('Sale item sum')
+
+
+        // Parse the Data
+
+        var data = [
+            {item: "wire", value: 1900},
+            {item: "Tub Surround", value: 1550},
+            {item: "AIRCARE 1.6 gal.", value: 1200},
+            {item: "AIRCARE Digital", value: 1700},
+            {item: "AIRCARE Wick", value: 1200},
+            {item: "Adjustable P-Trap", value: 2244},
+            {item: "Air Conditioner", value: 4455},
+            {item: "Boilers", value: 235},
+            {item: "Compressor 1.0", value: 656},
+            {item: "FLEXIBLE COUPLING 3 X 2", value: 4564},
+            {item: "Granite Countertop - Blue Marble", value: 334},
+            {item: "Replacement Toilet", value: 1900},
+            {item: "Ridgid - Tube cutter", value: 1550},
+            {item: "Seal-A-Crack", value: 12500},
+            {item: "Seals", value: 1900},
+            {item: "Shower Head - Bronze Meta 1", value: 200},
+            {item: "Adjustable P-Trap 2", value: 2244},
+            {item: "50 Gal Water Tank/ Heater", value: 4455},
+            {item: "Thermostat - Residential", value: 2332},
+            {item: "Foo", value: 235},
+            {item: "Tap Handles - Bronze Metalss", value: 200},
+            {item: "Tap Handles - Crystal", value: 2332},
+            {item: "SharkBite", value: 235}
+        ];
+
+        console.log(data);
+        // Add X axis
+        var x = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) {
+            return d.value;
+        })])
+        .range([ 0, width]);
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+        // Y axis
+        var y = d3.scaleBand()
+        .range([ 0, height - margin.bottom ])
+        .domain(data.map(function(d) {
+            if(d.item.length < 16){
+                return d.item;
+            }else{
+                return d.item.slice(0, 16) + '...';
+            }
+
+        }))
+        .padding(.1);
+        svg.append("g")
+        .call(d3.axisLeft(y))
+
+
+        //Bars
+        svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", x(0) )
+        .attr("y", function(d) {
+            if(d.item.length < 16){
+                return y(d.item);
+            }else{
+                return y(d.item.slice(0, 16) + '...');
+            }
+            // return y(d.item);
+        })
+        .attr("width", function(d) { return x(d.value); })
+        .attr("height", y.bandwidth() )
+        .attr("fill", "#28a8e0")
+        .attr('fill-opacity', '0.7')
+        .on('mouseover', function(d) {
+            tip.attr('class', 'd3-tip animate').show(d)
+        })
+        .on('mouseout', function(d) {
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide()
+        });
+
+    </script>
+</body>
+</html>

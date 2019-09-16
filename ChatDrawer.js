@@ -702,6 +702,10 @@ function copyTextToClipboard(text) {
                         case 'pivot_column':
                             ChatDrawer.putTableResponse(jsonResponse);
                         break;
+                        default:
+                            // temporary
+                            jsonResponse['data'] = 'Error: There was no data supplied for this table';
+                            ChatDrawer.putSimpleResponse(jsonResponse);
                     }
                 });
 
