@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
-    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="d3.v4.js"></script>
     <script src="d3.tip.js"></script>
     <title></title>
     <style media="screen">
@@ -101,16 +101,17 @@
     </style>
 </head>
 <body>
-    <div id="my_dataviz"></div>
+    <div id="foo" data-containerid="1"></div>
     <script>
 
         // // set the dimensions and margins of the graph
-        var margin = {top: 0, right: 30, bottom: 40, left: 150},
-        width = 350,
+        var margin = {top: 0, right: 30, bottom: 40, left: 170},
+        width = 300,
         height = 400;
 
+
         // append the svg object to the body of the page
-        var svg = d3.select("#my_dataviz")
+        var svg = d3.select("[data-containerid='1']")
         .append("svg")
         .attr("width", width + margin.left)
         .attr("height", height + margin.top + margin.bottom)
@@ -160,7 +161,6 @@
             {item: "Seal-A-Crack", value: 12500},
             {item: "Seals", value: 1900},
             {item: "Shower Head - Bronze Meta 1", value: 200},
-            {item: "Adjustable P-Trap 2", value: 2244},
             {item: "50 Gal Water Tank/ Heater", value: 4455},
             {item: "Thermostat - Residential", value: 2332},
             {item: "Foo", value: 235},
@@ -168,6 +168,8 @@
             {item: "Tap Handles - Crystal", value: 2332},
             {item: "SharkBite", value: 235}
         ];
+
+
 
         console.log(data);
         // Add X axis
@@ -193,7 +195,6 @@
             }else{
                 return d.item.slice(0, 16) + '...';
             }
-
         }))
         .padding(.1);
         svg.append("g")
@@ -212,13 +213,13 @@
             }else{
                 return y(d.item.slice(0, 16) + '...');
             }
-            // return y(d.item);
         })
         .attr("width", function(d) { return x(d.value); })
         .attr("height", y.bandwidth() )
         .attr("fill", "#28a8e0")
         .attr('fill-opacity', '0.7')
         .on('mouseover', function(d) {
+            console.log('MOUSEEE');
             tip.attr('class', 'd3-tip animate').show(d)
         })
         .on('mouseout', function(d) {

@@ -610,6 +610,100 @@ tr:first-child:hover {
     fill: currentColor;
 }
 
+.domain{
+    stroke: #d3d3d352;
+}
+.tick{
+    stroke: #d3d3d352;
+    fill-opacity: 0.7;
+}
+line{
+    stroke-width: 1px;
+    stroke: currentColor;
+    opacity: 0.15;
+    shape-rendering: crispedges;
+}
+text{
+    font-family: "Titillium Web", sans-serif;
+    letter-spacing: 0.04em;
+    fill: #5d5d5d;
+}
+
+.d3-tip {
+    line-height: 1;
+    letter-spacing: 0.04em;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.8);
+    border-radius: 2px;
+    font-family: "Titillium Web", sans-serif;
+    font-size: 13px;
+    color: #ececec;
+}
+.title-tip{
+    font-weight: bold;
+    color: #fff;
+
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+    box-sizing: border-box;
+    display: inline;
+    font-size: 10px;
+    width: 100%;
+    line-height: 1;
+    color: rgba(0, 0, 0, 0.8);
+    content: "\25BC";
+    position: absolute;
+    text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+    margin: -1px 0 0 0;
+    top: 100%;
+    left: 0;
+}
+
+.d3-tip.animate {
+    animation: bounceIn 0.2s ease-out;
+    -webkit-animation: bounceIn 0.2s ease-out;
+}
+
+@-webkit-keyframes bounceIn {
+    0% {
+        opacity: 0;
+        -webkit-transform: scale(.3);
+    }
+    50% {
+        opacity: 1;
+        -webkit-transform: scale(1.05);
+    }
+    70% {
+        -webkit-transform: scale(.9);
+    }
+    100% {
+        -webkit-transform: scale(1);
+    }
+}
+@keyframes bounceIn {
+    0% {
+        opacity: 0;
+        transform: scale(.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+    70% {
+        transform: scale(.9);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+
 /* animations */
 @keyframes scale-up-br {
     0% {

@@ -259,6 +259,24 @@ function copyTextToClipboard(text) {
                     ChatDrawer.refreshToolbarButtons(component, 'table');
                     ChatDrawer.createTable(json, component);
                 }
+
+                if(e.target.classList.contains('bar_chart')){
+                    if(e.target.tagName == 'svg'){
+                        var idRequest = e.target.parentElement.dataset.id;
+                    }else if(e.target.tagName == 'path'){
+                        var idRequest = e.target.parentElement.parentElement.dataset.id;
+                    }else{
+                        var idRequest = e.target.dataset.id;
+                    }
+                    var json = ChatDrawer.responses[idRequest];
+                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    var groupableField = ChatDrawer.getGroupableField(json);
+                    var grouped = ChatDrawer.formatDataToGroup(json);
+                    ChatDrawer.createBarChart(component, grouped);
+                    ChatDrawer.refreshToolbarButtons(component, 'bar');
+
+                    console.log(grouped);
+                }
             }
         });
         chataInput.onkeyup = function(){
@@ -386,15 +404,178 @@ function copyTextToClipboard(text) {
         return pivotArray;
     }
 
+    ChatDrawer.getGroupableField = function(json){
+        var r = {
+            indexCol: -1,
+            jsonCol: {},
+            name: ''
+        }
+        for (var i = 0; i < json['columns'].length; i++) {
+            if(json['columns'][i]['groupable']){
+                r['indexCol'] = i;
+                r['jsonCol'] = json['columns'][i];
+                r['name'] = json['columns'][i]['name'];
+                return r;
+            }
+        }
+        return -1;
+    }
+
+    ChatDrawer.createBarChart = function(component, data){
+
+        // // set the dimensions and margins of the graph
+        var margin = {top: 0, right: 30, bottom: 40, left: 170},
+        width = component.parentElement.clientWidth,
+        height = component.parentElement.clientHeight ;
+        component.innerHTML = '';
+        console.log(component.parentElement.offsetWidth);
+
+        // append the svg object to the body of the page
+        var svg = d3.select(`[data-componentid='${component.dataset.componentid}']`)
+        .append("svg")
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+        var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return "<span class='title-tip'>Sale line item sum:</span> <span>" + d.value + "</span>";
+        })
+
+        svg.call(tip);
+
+        svg.append('text')
+        .attr('x', -(height / 2))
+        .attr('y', -margin.left + margin.right)
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .text('Item')
+
+        svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom)
+        .attr('text-anchor', 'middle')
+        .text('Sale item sum')
+
+
+        // Parse the Data
+
+        var data = [
+            {item: "wire", value: 1900},
+            {item: "Tub Surround", value: 1550},
+            {item: "AIRCARE 1.6 gal.", value: 1200},
+            {item: "AIRCARE Digital", value: 1700},
+            {item: "AIRCARE Wick", value: 1200},
+            {item: "Adjustable P-Trap", value: 2244},
+            {item: "Air Conditioner", value: 4455},
+            {item: "Boilers", value: 235},
+            {item: "Compressor 1.0", value: 656},
+            {item: "FLEXIBLE COUPLING 3 X 2", value: 4564},
+            {item: "Granite Countertop - Blue Marble", value: 334},
+            {item: "Replacement Toilet", value: 1900},
+            {item: "Ridgid - Tube cutter", value: 1550},
+            {item: "Seal-A-Crack", value: 12500},
+            {item: "Seals", value: 1900},
+            {item: "Shower Head - Bronze Meta 1", value: 200},
+            {item: "50 Gal Water Tank/ Heater", value: 4455},
+            {item: "Thermostat - Residential", value: 2332},
+            {item: "Foo", value: 235},
+            {item: "Tap Handles - Bronze Metalss", value: 200},
+            {item: "Tap Handles - Crystal", value: 2332},
+            {item: "SharkBite", value: 235}
+        ];
+
+
+
+        console.log(data);
+        // Add X axis
+        var x = d3.scaleLinear()
+        .domain([0, d3.max(data, function(d) {
+            return d.value;
+        })])
+        .range([ 0, width]);
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(d3.axisBottom(x))
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+        // Y axis
+        var y = d3.scaleBand()
+        .range([ 0, height - margin.bottom ])
+        .domain(data.map(function(d) {
+            if(d.item.length < 16){
+                return d.item;
+            }else{
+                return d.item.slice(0, 16) + '...';
+            }
+        }))
+        .padding(.1);
+        svg.append("g")
+        .call(d3.axisLeft(y))
+
+
+        //Bars
+        svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", x(0) )
+        .attr("y", function(d) {
+            if(d.item.length < 16){
+                return y(d.item);
+            }else{
+                return y(d.item.slice(0, 16) + '...');
+            }
+        })
+        .attr("width", function(d) { return x(d.value); })
+        .attr("height", y.bandwidth() )
+        .attr("fill", "#28a8e0")
+        .attr('fill-opacity', '0.7')
+        .on('mouseover', function(d) {
+            tip.attr('class', 'd3-tip animate').show(d)
+        })
+        .on('mouseout', function(d) {
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide()
+        });
+
+    }
+
+    ChatDrawer.formatDataToGroup = function(json){
+        var lines = json['data'].split('\n');
+        var values = [];
+        var groupField = ChatDrawer.getGroupableField(json);
+        
+        for (var i = 0; i < lines.length; i++) {
+            var data = lines[i].split(',');
+            var row = {};
+            for (var x = 0; x < data.length; x++) {
+                row[x] = data[x];
+            }
+            values.push(row);
+        }
+        var grouped = ChatDrawer.groupBy(values, row => row[groupField['indexCol']]);
+        return grouped;
+    }
+
+
     ChatDrawer.groupBy = function(list, keyGetter) {
         const map = new Map();
         list.forEach((item) => {
             const key = keyGetter(item);
             const collection = map.get(key);
             if (!collection) {
-                map.set(key, [item]);
+                map.set(key, item[1]);
             } else {
-                collection.push(item);
+                var oldValue = map.get(key);
+                map.set(item[1] + oldValue);
             }
         });
         return map;
@@ -721,6 +902,7 @@ function copyTextToClipboard(text) {
         containerMessage.classList.add('response');
         var idRequest = uuidv4();
         ChatDrawer.responses[idRequest] = jsonResponse;
+        containerMessage.setAttribute('data-containerid', idRequest);
         messageBubble.classList.add('chat-message-bubble');
         messageBubble.innerHTML = `
         <div class="chat-message-toolbar right">
@@ -814,9 +996,9 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.getBarChartButton = function(idRequest){
         return `
-        <button class="chata-toolbar-btn" data-tip="Bar Chart" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
+        <button class="chata-toolbar-btn bar_chart" data-tip="Bar Chart" data-id="${idRequest}">
+            <svg class="bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                <path class="chart-icon-svg-0 bar_chart" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
                 </path>
             </svg>
         </button>
