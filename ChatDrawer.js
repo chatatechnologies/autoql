@@ -151,6 +151,15 @@ function copyTextToClipboard(text) {
         var suggestionList = document.getElementById('auto-complete-list');
         document.addEventListener('click',function(e){
             if(e.target){
+
+                if(e.target.classList.contains('bar')){
+                    var selectedBars = e.target.parentElement.getElementsByClassName('active');
+                    for (var i = 0; i < selectedBars.length; i++) {
+                        selectedBars[i].classList.remove('active');
+                    }
+                    e.target.classList.add('active');
+                }
+
                 if(e.target.classList.contains('close-action')){
                     ChatDrawer.closeDrawer();
                 }
@@ -271,8 +280,13 @@ function copyTextToClipboard(text) {
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     var groupableField = ChatDrawer.getGroupableField(json);
-                    var grouped = ChatDrawer.formatDataToGroup(json);
-                    ChatDrawer.createBarChart(component, grouped);
+                    var values = ChatDrawer.formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var hasNegativeValues = values[1];
+                    var col1 = ChatDrawer.formatColumnName(json['columns'][0]['name']);
+                    var col2 = ChatDrawer.formatColumnName(json['columns'][1]['name']);
+
+                    ChatDrawer.createBarChart(component, grouped, col1, col2, hasNegativeValues);
                     ChatDrawer.refreshToolbarButtons(component, 'bar');
 
                     console.log(grouped);
@@ -303,10 +317,14 @@ function copyTextToClipboard(text) {
         var header = document.createElement('tr');
         table.classList.add('table-response');
         table.setAttribute('data-componentid', oldComponent.dataset.componentid);
+        if(oldComponent.parentElement.classList.contains('chata-chart-container')){
+            oldComponent.parentElement.classList.remove('chata-chart-container');
+            oldComponent.parentElement.classList.add('chata-table-container');
+        }
         var dataLines = jsonResponse['data'].split('\n');
 
         for (var i = 0; i < jsonResponse['columns'].length; i++) {
-            var colName = jsonResponse['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            var colName = ChatDrawer.formatColumnName(jsonResponse['columns'][i]['name']);
             var th = document.createElement('th');
             var arrow = document.createElement('div');
             var col = document .createElement('div');
@@ -421,16 +439,25 @@ function copyTextToClipboard(text) {
         return -1;
     }
 
-    ChatDrawer.createBarChart = function(component, data){
+    ChatDrawer.makeBarChartDomain = function(data, hasNegativeValues){
+        if(hasNegativeValues){
+            return d3.extent(data, function(d) { return d.value; });
+        }else{
+            return [0, d3.max(data, function(d) {
+                return d.value;
+            })];
+        }
+    }
 
-        // // set the dimensions and margins of the graph
-        var margin = {top: 0, right: 30, bottom: 40, left: 170},
-        width = component.parentElement.clientWidth,
-        height = component.parentElement.clientHeight ;
+    ChatDrawer.createBarChart = function(component, data, col1, col2, hasNegativeValues){
+
+        var margin = {top: 0, right: 10, bottom: 40, left: 130},
+        width = component.parentElement.clientWidth - margin.left,
+        height = component.parentElement.clientHeight < 600 ? 600 - margin.bottom : component.parentElement.clientHeight - margin.bottom;
         component.innerHTML = '';
-        console.log(component.parentElement.offsetWidth);
-
-        // append the svg object to the body of the page
+        component.parentElement.classList.remove('chata-table-container');
+        component.parentElement.classList.add('chata-chart-container');
+        // component.parentElement.parentElement.parentElement.classList.add('chart-full-width');
         var svg = d3.select(`[data-componentid='${component.dataset.componentid}']`)
         .append("svg")
         .attr("width", width + margin.left)
@@ -443,7 +470,9 @@ function copyTextToClipboard(text) {
         .attr('class', 'd3-tip')
         .offset([-10, 0])
         .html(function(d) {
-            return "<span class='title-tip'>Sale line item sum:</span> <span>" + d.value + "</span>";
+            return `
+            <span class='title-tip'>${col1}:</span> <span>${d.label}</span> <br/>
+            <span class='title-tip'>${col2}:</span> <span>${d.value}</span>`;
         })
 
         svg.call(tip);
@@ -453,50 +482,19 @@ function copyTextToClipboard(text) {
         .attr('y', -margin.left + margin.right)
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
-        .text('Item')
+        .attr('class', 'y-axis-label')
+        .text(col1)
 
         svg.append('text')
         .attr('x', width / 2)
         .attr('y', height + margin.bottom)
         .attr('text-anchor', 'middle')
-        .text('Sale item sum')
+        .attr("class", "x-axis-label")
+        .text(col2)
 
-
-        // Parse the Data
-
-        var data = [
-            {item: "wire", value: 1900},
-            {item: "Tub Surround", value: 1550},
-            {item: "AIRCARE 1.6 gal.", value: 1200},
-            {item: "AIRCARE Digital", value: 1700},
-            {item: "AIRCARE Wick", value: 1200},
-            {item: "Adjustable P-Trap", value: 2244},
-            {item: "Air Conditioner", value: 4455},
-            {item: "Boilers", value: 235},
-            {item: "Compressor 1.0", value: 656},
-            {item: "FLEXIBLE COUPLING 3 X 2", value: 4564},
-            {item: "Granite Countertop - Blue Marble", value: 334},
-            {item: "Replacement Toilet", value: 1900},
-            {item: "Ridgid - Tube cutter", value: 1550},
-            {item: "Seal-A-Crack", value: 12500},
-            {item: "Seals", value: 1900},
-            {item: "Shower Head - Bronze Meta 1", value: 200},
-            {item: "50 Gal Water Tank/ Heater", value: 4455},
-            {item: "Thermostat - Residential", value: 2332},
-            {item: "Foo", value: 235},
-            {item: "Tap Handles - Bronze Metalss", value: 200},
-            {item: "Tap Handles - Crystal", value: 2332},
-            {item: "SharkBite", value: 235}
-        ];
-
-
-
-        console.log(data);
         // Add X axis
         var x = d3.scaleLinear()
-        .domain([0, d3.max(data, function(d) {
-            return d.value;
-        })])
+        .domain(ChatDrawer.makeBarChartDomain(data, hasNegativeValues))
         .range([ 0, width]);
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
@@ -510,34 +508,42 @@ function copyTextToClipboard(text) {
         var y = d3.scaleBand()
         .range([ 0, height - margin.bottom ])
         .domain(data.map(function(d) {
-            if(d.item.length < 16){
-                return d.item;
+            if(d.label.length < 18){
+                return d.label;
             }else{
-                return d.item.slice(0, 16) + '...';
+                return d.label.slice(0, 18) + '...';
             }
         }))
         .padding(.1);
         svg.append("g")
-        .call(d3.axisLeft(y))
+        .call(d3.axisLeft(y));
+
+        svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisBottom(x)
+            .tickSize(-width)
+            .tickFormat("")
+        );
 
 
         //Bars
-        svg.selectAll("rect")
+        svg.selectAll("rect_bar")
         .data(data)
         .enter()
         .append("rect")
-        .attr("x", x(0) )
+        .attr("x", function(d) { return x(Math.min(0, d.value)); })
         .attr("y", function(d) {
-            if(d.item.length < 16){
-                return y(d.item);
+            if(d.label.length < 18){
+                return y(d.label);
             }else{
-                return y(d.item.slice(0, 16) + '...');
+                return y(d.label.slice(0, 18) + '...');
             }
         })
-        .attr("width", function(d) { return x(d.value); })
+        .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
         .attr("height", y.bandwidth() )
         .attr("fill", "#28a8e0")
         .attr('fill-opacity', '0.7')
+        .attr('class', 'bar')
         .on('mouseover', function(d) {
             tip.attr('class', 'd3-tip animate').show(d)
         })
@@ -548,21 +554,28 @@ function copyTextToClipboard(text) {
 
     }
 
-    ChatDrawer.formatDataToGroup = function(json){
+    ChatDrawer.formatDataToBarChart = function(json){
         var lines = json['data'].split('\n');
         var values = [];
         var groupField = ChatDrawer.getGroupableField(json);
-        
+        var colType1 = json['columns'][0]['type'];
+        var hasNegativeValues = false;
+        // var colType2 = json['columns'][1]['type'];
         for (var i = 0; i < lines.length; i++) {
             var data = lines[i].split(',');
             var row = {};
-            for (var x = 0; x < data.length; x++) {
-                row[x] = data[x];
+            row['label'] = ChatDrawer.formatData(data[0], colType1);
+            var value = parseFloat(data[1]);
+            if(value < 0 && !hasNegativeValues){
+                hasNegativeValues = true;
             }
+            row['value'] = value;
+
+
             values.push(row);
         }
-        var grouped = ChatDrawer.groupBy(values, row => row[groupField['indexCol']]);
-        return grouped;
+        // var grouped = ChatDrawer.groupBy(values, row => row[groupField['indexCol']]);
+        return [values, hasNegativeValues];
     }
 
 
@@ -593,6 +606,11 @@ function copyTextToClipboard(text) {
         var table = document.createElement('table');
         table.classList.add('table-response');
         table.setAttribute('data-componentid', oldComponent.dataset.componentid);
+        if(oldComponent.parentElement.classList.contains('chata-chart-container')){
+            oldComponent.parentElement.classList.remove('chata-chart-container');
+            oldComponent.parentElement.classList.add('chata-table-container');
+            // oldComponent.parentElement.parentElement.parentElement.classList.remove('chart-full-width');
+        }
         for (var i = 0; i < pivotArray[0].length; i++) {
             var colName = pivotArray[0][i];
             var th = document.createElement('th');
@@ -741,7 +759,7 @@ function copyTextToClipboard(text) {
         var output = '';
         var lines = json['data'].split('\n');
         for(var i = 0; i<json['columns'].length; i++){
-            var colName = json['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            var colName = ChatDrawer.formatColumnName(json['columns'][i]['name']);
             output += colName + separator;
         }
         output += '\n';
@@ -1057,6 +1075,10 @@ function copyTextToClipboard(text) {
         `;
     }
 
+    ChatDrawer.formatColumnName = function(col){
+        return col.replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); })
+    }
+
     ChatDrawer.putTableResponse = function(jsonResponse){
         var data = jsonResponse['data'].split('\n');
         var containerMessage = document.createElement('div');
@@ -1103,7 +1125,7 @@ function copyTextToClipboard(text) {
         var dataLines = jsonResponse['data'].split('\n');
 
         for (var i = 0; i < jsonResponse['columns'].length; i++) {
-            var colName = jsonResponse['columns'][i]['name'].replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
+            var colName = ChatDrawer.formatColumnName(jsonResponse['columns'][i]['name']);
             var th = document.createElement('th');
             var arrow = document.createElement('div');
             var col = document .createElement('div');

@@ -203,17 +203,6 @@ table {
     /* box-shadow: 2px 3px 8px 1px rgba(0, 0, 0, 0.1); */
 }
 
-.chat-single-message-container .chat-message-bubble {
-    position: relative;
-    padding: 13px;
-    border-radius: 10px;
-    max-width: 70%;
-    word-wrap: break-word;
-    font-family: "Titillium Web", sans-serif;
-    font-size: 14px;
-    letter-spacing: 0.04em;
-}
-
 .chata-bar-container {
     position: relative;
 }
@@ -638,11 +627,11 @@ text{
     font-family: "Titillium Web", sans-serif;
     font-size: 13px;
     color: #ececec;
+    z-index: 1000;
 }
 .title-tip{
     font-weight: bold;
     color: #fff;
-
 }
 
 /* Creates a small triangle extender for the tooltip */
@@ -669,6 +658,32 @@ text{
     animation: bounceIn 0.2s ease-out;
     -webkit-animation: bounceIn 0.2s ease-out;
 }
+
+.chata-chart-container{
+    /* width: 100%;
+    height: 100%; */
+    display: block;
+}
+
+text.x-axis-label, text.y-axis-label {
+    fill: currentColor;
+    fill-opacity: 0.7;
+    text-anchor: middle;
+    font-weight: bold;
+    font-size: 12px;
+    font-family: "Titillium Web", sans-serif;
+    letter-spacing: 0.04em;
+}
+
+.chata-chart-container .bar.active, .chata-chart-container .circle.active, .chata-chart-container .square.active, .chata-chart-container .line-dot.active {
+    fill: #a5cd39;
+}
+
+.chart-full-width{
+    width: 100%;
+}
+
+.grid path {stroke-width: 0;}
 
 @-webkit-keyframes bounceIn {
     0% {
