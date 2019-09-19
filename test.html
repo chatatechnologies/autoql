@@ -111,21 +111,21 @@
             {label: "wire", value: 1900},
             {label: "Tub Surround", value: 1550},
             {label: "AIRCARE 1.6 gal.", value: 1200},
-            {label: "AIRCARE Digital", value: 1700},
+            {label: "AIRCARE Digital", value: -1700},
             {label: "AIRCARE Wick", value: 1200},
             {label: "Adjustable P-Trap", value: 2244},
             {label: "Air Conditioner", value: 4455},
             {label: "Boilers", value: 235},
-            {label: "Compressor 1.0", value: 656},
+            {label: "Compressor 1.0", value: -656},
             {label: "FLEXIBLE COUPLING 3 X 2", value: 4564},
             {label: "Granite Countertop - Blue Marble", value: 334},
             {label: "Replacement Toilet", value: 1900},
-            {label: "Ridgid - Tube cutter", value: 1550},
+            {label: "Ridgid - Tube cutter", value: -1550},
             {label: "Seal-A-Crack", value: 12500},
             {label: "Seals", value: 1900},
-            {label: "Shower Head - Bronze Meta 1", value: 200},
-            {label: "50 Gal Water Tank/ Heater", value: 4455},
-            {label: "Thermostat - Residential", value: 2332},
+            {label: "Shower Head - Bronze Meta 1", value: -200},
+            {label: "50 Gal Water Tank/ Heater", value: -4055},
+            {label: "Thermostat - Residential", value: -2332},
             {label: "Foo", value: 235},
             {label: "Tap Handles - Bronze Metalss", value: 200},
             {label: "Tap Handles - Crystal", value: 2332},
@@ -135,7 +135,7 @@
         // // set the dimensions and margins of the graph
         var margin = {top: 10, right: 30, bottom: 40, left: 170},
         width = 430,
-        height = 500;
+        height = 400;
 
 
         // append the svg object to the body of the page
@@ -169,6 +169,22 @@
         .attr('text-anchor', 'middle')
         .text('Item')
 
+        // Y axis
+        var y = d3.scaleLinear()
+        .range([ height - margin.bottom, 0  ])
+        .domain([d3.min(data,function(d){return d.value}), d3.max(data, function(d) { return d.value; })]);
+
+        svg.append("g")
+        .call(d3.axisLeft(y)).select(".domain").remove();
+
+        svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisLeft(y)
+            .tickSize(-width)
+            .tickFormat("")
+        );
+
+
         var x = d3.scaleBand()
         .domain(data.map(function(d) {
             if(d.label.length < 16){
@@ -187,23 +203,6 @@
         .style("text-anchor", "end")
 
 
-        // Y axis
-        var y = d3.scaleLinear()
-        .range([ 0, height - margin.bottom ])
-        .domain([d3.max(data, function(d) {
-            return d.value;
-        }), 0]);
-
-        svg.append("g")
-        .call(d3.axisLeft(y)).select(".domain").remove();
-
-        svg.append("g")
-        .attr("class", "grid")
-        .call(d3.axisLeft(y)
-            .tickSize(-width)
-            .tickFormat("")
-        );
-
         //Bars
         svg.selectAll("rect")
         .data(data)
@@ -216,13 +215,12 @@
                 return x(d.label.slice(0, 16));
             }
         } )
-        .attr("y", function(d) { return y(d.value); })
+        .attr("y", function(d) { return y(Math.max(0, d.value)); })
         .attr("width", x.bandwidth() )
-        .attr("height", function(d) { return height - y(d.value) - margin.bottom; })
+        .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
         .attr("fill", "#28a8e0")
         .attr('fill-opacity', '0.7')
         .on('mouseover', function(d) {
-            console.log('MOUSEEE');
             tip.attr('class', 'd3-tip animate').show(d)
         })
         .on('mouseout', function(d) {

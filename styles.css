@@ -340,6 +340,7 @@ table {
 
 .chat-single-message-container .chat-message-bubble.full-width {
     max-width: calc(100% - 30px);
+    width: 100%;
 }
 
 .chata-response-content-container {
@@ -600,7 +601,7 @@ tr:first-child:hover {
 }
 
 .domain{
-    stroke: #d3d3d352;
+    stroke: transparent;
 }
 .tick{
     stroke: #d3d3d352;
@@ -683,6 +684,7 @@ text.x-axis-label, text.y-axis-label {
     width: 100%;
 }
 
+.grid line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
 .grid path {stroke-width: 0;}
 
 @-webkit-keyframes bounceIn {

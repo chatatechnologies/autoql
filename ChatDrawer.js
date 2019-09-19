@@ -221,7 +221,6 @@ function copyTextToClipboard(text) {
                     }else{
                         pivotArray = ChatDrawer.getPivotColumnArray(json);
                     }
-                    console.log(pivotArray);
                     if(e.target.nextSibling.classList.contains('up')){
                         e.target.nextSibling.classList.remove('up');
                         e.target.nextSibling.classList.add('down');
@@ -235,7 +234,6 @@ function copyTextToClipboard(text) {
                     }
                 }
                 if(e.target.classList.contains('pivot_table')){
-                    console.log('CLICK PIVOT!!!!');
                     if(e.target.tagName == 'svg'){
                         var idRequest = e.target.parentElement.dataset.id;
                     }else if(e.target.tagName == 'path'){
@@ -254,8 +252,25 @@ function copyTextToClipboard(text) {
                         ChatDrawer.createPivotTable(pivotArray, component);
                     }
                 }
+                if(e.target.classList.contains('column_chart')){
+                    if(e.target.tagName == 'svg'){
+                        var idRequest = e.target.parentElement.dataset.id;
+                    }else if(e.target.tagName == 'path'){
+                        var idRequest = e.target.parentElement.parentElement.dataset.id;
+                    }else{
+                        var idRequest = e.target.dataset.id;
+                    }
+                    var json = ChatDrawer.responses[idRequest];
+                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    ChatDrawer.refreshToolbarButtons(component, 'column');
+                    var values = ChatDrawer.formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var col1 = ChatDrawer.formatColumnName(json['columns'][0]['name']);
+                    var col2 = ChatDrawer.formatColumnName(json['columns'][1]['name']);
+                    var hasNegativeValues = values[1];
+                    ChatDrawer.createColumnChart(component, grouped, col1, col2, hasNegativeValues);
+                }
                 if(e.target.classList.contains('table')){
-                    console.log('TABLEE!');
                     if(e.target.tagName == 'svg'){
                         var idRequest = e.target.parentElement.dataset.id;
                     }else if(e.target.tagName == 'path'){
@@ -289,7 +304,6 @@ function copyTextToClipboard(text) {
                     ChatDrawer.createBarChart(component, grouped, col1, col2, hasNegativeValues);
                     ChatDrawer.refreshToolbarButtons(component, 'bar');
 
-                    console.log(grouped);
                 }
             }
         });
@@ -449,6 +463,133 @@ function copyTextToClipboard(text) {
         }
     }
 
+    ChatDrawer.createColumnChart = function(component, data, col1, col2, hasNegativeValues){
+        var margin = {top: 0, right: 10, bottom: 50, left: 90},
+        width = component.parentElement.clientWidth - margin.left,
+        height = component.parentElement.clientHeight < 600 ? 600 - margin.bottom : component.parentElement.clientHeight - margin.bottom;
+        component.innerHTML = '';
+        component.parentElement.classList.remove('chata-table-container');
+        component.parentElement.classList.add('chata-chart-container');
+        const barWidth = width / data.length;
+        const interval = Math.ceil((data.length * 16) / width);
+        var xTickValues = [];
+        if (barWidth < 16) {
+            data.forEach((element, index) => {
+                if (index % interval === 0) {
+                    if(element.label.length < 18){
+                        xTickValues.push(element.label);
+                    }else{
+                        xTickValues.push(element.label.slice(0, 18));
+                    }
+                }
+            });
+        }
+        var svg = d3.select(`[data-componentid='${component.dataset.componentid}']`)
+        .append("svg")
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+        var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return `
+            <span class='title-tip'>${col1}:</span> <span>${d.label}</span> <br/>
+            <span class='title-tip'>${col2}:</span> <span>${d.value}</span>`;
+        })
+
+        svg.call(tip);
+
+        svg.append('text')
+        .attr('x', -(height / 2))
+        .attr('y', -margin.left + margin.right)
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .text(col2);
+
+        svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom)
+        .attr('text-anchor', 'middle')
+        .text(col1);
+
+        minValue = 0;
+
+        if(hasNegativeValues){
+            minValue = d3.min(data, function(d) {return d.value});
+        }
+        // Y axis
+        var y = d3.scaleLinear()
+        .range([ height - (margin.bottom), 0 ])
+        .domain([minValue, d3.max(data, function(d) { return d.value; })]);
+
+        svg.append("g")
+        .call(d3.axisLeft(y)).select(".domain").remove();
+
+        svg.append("g")
+        .attr("class", "grid")
+        .call(d3.axisLeft(y)
+            .tickSize(-width)
+            .tickFormat("")
+        );
+
+
+        var x = d3.scaleBand()
+        .domain(data.map(function(d) {
+            if(d.label.length < 18){
+                return d.label;
+            }else{
+                return d.label.slice(0, 18);
+            }
+        }))
+        .range([ 0, width]).padding(0.1);
+
+        var xAxis = d3.axisBottom(x);
+
+        if(xTickValues.length > 0){
+            xAxis.tickValues(xTickValues);
+        }
+
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end")
+
+
+        //Bars
+        svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("x", function(d) {
+            if(d.label.length < 18){
+                return x(d.label);
+            }else{
+                return x(d.label.slice(0, 18));
+            }
+        } )
+        .attr("y", function(d) { return y(Math.max(0, d.value)); })
+        .attr("width", x.bandwidth() )
+        .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
+        .attr("fill", "#28a8e0")
+        .attr('fill-opacity', '0.7')
+        .attr('class', 'bar')
+        .on('mouseover', function(d) {
+            tip.attr('class', 'd3-tip animate').show(d)
+        })
+        .on('mouseout', function(d) {
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide()
+        });
+
+    }
+
     ChatDrawer.createBarChart = function(component, data, col1, col2, hasNegativeValues){
 
         var margin = {top: 0, right: 10, bottom: 40, left: 130},
@@ -457,7 +598,22 @@ function copyTextToClipboard(text) {
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
         component.parentElement.classList.add('chata-chart-container');
+        const barHeight = height / data.length;
+        const interval = Math.ceil((data.length * 16) / height);
+        var yTickValues = [];
+        if (barHeight < 16) {
+            data.forEach((element, index) => {
+                if (index % interval === 0) {
+                    if(element.label.length < 18){
+                        yTickValues.push(element.label);
+                    }else{
+                        yTickValues.push(element.label.slice(0, 18) + '...');
+                    }
+                }
+            });
+        }
         // component.parentElement.parentElement.parentElement.classList.add('chart-full-width');
+
         var svg = d3.select(`[data-componentid='${component.dataset.componentid}']`)
         .append("svg")
         .attr("width", width + margin.left)
@@ -483,22 +639,24 @@ function copyTextToClipboard(text) {
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
         .attr('class', 'y-axis-label')
-        .text(col1)
+        .text(col1);
 
         svg.append('text')
         .attr('x', width / 2)
         .attr('y', height + margin.bottom)
         .attr('text-anchor', 'middle')
         .attr("class", "x-axis-label")
-        .text(col2)
+        .text(col2);
 
         // Add X axis
         var x = d3.scaleLinear()
         .domain(ChatDrawer.makeBarChartDomain(data, hasNegativeValues))
         .range([ 0, width]);
+        var xAxis = d3.axisBottom(x);
+        xAxis.tickSize(0);
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(d3.axisBottom(x))
+        .call(xAxis)
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -515,16 +673,22 @@ function copyTextToClipboard(text) {
             }
         }))
         .padding(.1);
+
+        var yAxis = d3.axisLeft(y);
+
+        if(yTickValues.length > 0){
+            yAxis.tickValues(yTickValues);
+        }
+
         svg.append("g")
-        .call(d3.axisLeft(y));
+        .call(yAxis);
 
         svg.append("g")
         .attr("class", "grid")
         .call(d3.axisBottom(x)
-            .tickSize(-width)
+            .tickSize(height - margin.bottom)
             .tickFormat("")
         );
-
 
         //Bars
         svg.selectAll("rect_bar")
@@ -540,7 +704,7 @@ function copyTextToClipboard(text) {
             }
         })
         .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
-        .attr("height", y.bandwidth() )
+        .attr("height", y.bandwidth())
         .attr("fill", "#28a8e0")
         .attr('fill-opacity', '0.7')
         .attr('class', 'bar')
@@ -597,7 +761,6 @@ function copyTextToClipboard(text) {
     ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
         var messageBubble = oldComponent.parentElement.parentElement.parentElement;
         var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
-        ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
         toolbarLeft.innerHTML = ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
     }
 
@@ -1003,9 +1166,9 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.getColumnChartButton = function(idRequest){
         return `
-        <button class="chata-toolbar-btn" data-tip="Column Chart" data-id="${idRequest}">
-            <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
+        <button class="chata-toolbar-btn column_chart" data-tip="Column Chart" data-id="${idRequest}">
+            <svg class="column_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                <path class="chart-icon-svg-0 column_chart" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
                 </path>
             </svg>
         </button>
