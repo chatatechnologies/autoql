@@ -150,7 +150,7 @@ function copyTextToClipboard(text) {
         document.addEventListener('click',function(e){
             if(e.target){
 
-                if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')){
+                if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot') || e.target.classList.contains('square')){
                     var selectedBars = e.target.parentElement.getElementsByClassName('active');
                     for (var i = 0; i < selectedBars.length; i++) {
                         selectedBars[i].classList.remove('active');
@@ -323,6 +323,31 @@ function copyTextToClipboard(text) {
                     ChatDrawer.createLineChart(component, grouped, col1, col2, hasNegativeValues);
                     ChatDrawer.refreshToolbarButtons(component, 'line');
                 }
+
+                if(e.target.classList.contains('heatmap')){
+                    console.log(e.target.tagName);
+                    if(e.target.tagName == 'BUTTON'){
+                        var idRequest = e.target.dataset.id;
+                    }
+                    else if(e.target.tagName == 'svg'){
+                        var idRequest = e.target.parentElement.dataset.id;
+                    }else{
+                        var idRequest = e.target.parentElement.parentElement.dataset.id;
+                    }
+                    var json = ChatDrawer.responses[idRequest];
+                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    var values = ChatDrawer.formatDataToHeatmap(json);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+
+                    var col1 = ChatDrawer.formatColumnName(json['columns'][0]['name']);
+                    var col2 = ChatDrawer.formatColumnName(json['columns'][1]['name']);
+                    var col3 = ChatDrawer.formatColumnName(json['columns'][2]['name']);
+
+
+                    ChatDrawer.createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
+                    ChatDrawer.refreshToolbarButtons(component, 'heatmap');
+                }
             }
         });
         chataInput.onkeyup = function(){
@@ -483,7 +508,7 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.getUniqueValues = function(data, getter){
         let unique = {};
-        names.forEach(function(i) {
+        data.forEach(function(i) {
             if(!unique[getter(i)]) {
                 unique[getter(i)] = true;
             }
@@ -492,16 +517,196 @@ function copyTextToClipboard(text) {
     }
 
     ChatDrawer.formatDataToHeatmap = function(json){
-
+        var lines = json['data'].split('\n');
+        var values = [];
+        var groupField = ChatDrawer.getGroupableField(json);
+        var colType1 = json['columns'][0]['type'];
+        var colType2 = json['columns'][1]['type'];
+        for (var i = 0; i < lines.length; i++) {
+            var data = lines[i].split(',');
+            var row = {};
+            row['labelY'] = ChatDrawer.formatData(data[0], colType1);
+            row['labelX'] = ChatDrawer.formatData(data[1], colType2);
+            var value = parseFloat(data[2]);
+            row['value'] = value;
+            values.push(row);
+        }
+        return values;
     }
 
-    ChatDrawer.createHeatmap = function(component, data, col1, col2){
-        var margin = {top: 5, right: 10, bottom: 50, left: 90},
+    ChatDrawer.createHeatmap = function(component, labelsX, labelsY, data, col1, col2, col3){
+        var margin = {top: 5, right: 10, bottom: 50, left: 130},
         width = component.parentElement.clientWidth - margin.left,
         height = 600;
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
         component.parentElement.classList.add('chata-chart-container');
+
+        var svg = d3.select(`[data-componentid='${component.dataset.componentid}']`)
+        .append("svg")
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform",
+        "translate(" + margin.left + "," + margin.top + ")");
+
+
+        const barWidth = width / labelsX.length;
+        const barHeight = height / labelsY.length;
+
+        const intervalWidth = Math.ceil((labelsX.length * 16) / width);
+        const intervalHeight = Math.ceil((labelsY.length * 16) / height);
+
+        var xTickValues = [];
+        var yTickValues = [];
+        if (barWidth < 16) {
+            labelsX.forEach((element, index) => {
+                if (index % intervalWidth === 0) {
+                    if(element.length < 18){
+                        xTickValues.push(element);
+                    }else{
+                        xTickValues.push(element.slice(0, 18));
+                    }
+                }
+            });
+        }
+
+        if(barHeight < 16){
+            labelsY.forEach((element, index) => {
+                if (index % intervalHeight === 0) {
+                    if(element.length < 18){
+                        yTickValues.push(element);
+                    }else{
+                        yTickValues.push(element.slice(0, 18));
+                    }
+                }
+            });
+        }
+
+        var tip = d3.tip()
+        .attr('class', 'd3-tip')
+        .offset([-10, 0])
+        .html(function(d) {
+            return `
+            <span class='title-tip'>${col2}:</span> <span>${d.labelX}</span> <br/>
+            <span class='title-tip'>${col1}:</span> <span>${d.labelY}</span> <br/>
+            <span class='title-tip'>${col3}:</span> <span>${d.value}</span>`;
+        })
+
+        svg.call(tip);
+
+        svg.append('text')
+        .attr('x', -(height / 2))
+        .attr('y', -margin.left + margin.right)
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'y-axis-label')
+        .text(col1);
+
+        svg.append('text')
+        .attr('x', width / 2)
+        .attr('y', height + margin.bottom)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'x-axis-label')
+        .text(col2);
+
+
+        var x = d3.scaleBand()
+        .range([ 0, width ])
+        .domain(labelsX.map(function(d) {
+            if(d.length < 18){
+                return d;
+            }else{
+                return d.slice(0, 18);
+            }
+        }))
+        .padding(0.01);
+
+        var xAxis = d3.axisBottom(x);
+
+        if(xTickValues.length > 0){
+            xAxis.tickValues(xTickValues);
+        }
+
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+
+
+        var y = d3.scaleBand()
+        .range([ height - margin.bottom, 0])
+        .domain(labelsY.map(function(d) {
+            if(d.length < 18){
+                return d;
+            }else{
+                return d.slice(0, 18);
+            }
+        }))
+        .padding(0.01);
+
+        var yAxis = d3.axisLeft(y);
+
+        if(yTickValues.length > 0){
+            yAxis.tickValues(yTickValues);
+        }
+
+        svg.append("g")
+        .call(yAxis);
+
+        var colorScale = d3.scaleLinear()
+        .range(["white", "#28a8e0"])
+        .domain([1, d3.max(data, function(d) { return d.value; })]);
+
+        svg.selectAll()
+        .data(data, function(d) {
+            var xLabel = '';
+            var yLabel = '';
+
+            if(d.labelX.length < 18){
+                xLabel = d.labelX;
+            }else{
+                xLabel = d.labelX.slice(0, 18);
+            }
+
+            if(d.labelY.length < 18){
+                yLabel = d.labelY;
+            }else{
+                yLabel = d.labelY.slice(0, 18);
+            }
+            return xLabel+':'+yLabel;
+        })
+        .enter()
+        .append("rect")
+        .attr("x", function(d) {
+            if(d.labelX.length < 18){
+                return x(d.labelX);
+            }else{
+                return x(d.labelX.slice(0, 18));
+            }
+        })
+        .attr("y", function(d) {
+            if(d.labelY.length < 18){
+                return y(d.labelY);
+            }else{
+                return y(d.labelY.slice(0, 18));
+            }
+        })
+        .attr("width", x.bandwidth() )
+        .attr("height", y.bandwidth() )
+        .attr("fill", function(d) { return colorScale(d.value)} )
+        .attr('class', 'square')
+        .on('mouseover', function(d) {
+            tip.attr('class', 'd3-tip animate').show(d)
+        })
+        .on('mouseout', function(d) {
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide()
+        })
+
     }
 
     ChatDrawer.createLineChart = function(component, data, col1, col2, hasNegativeValues){
@@ -1030,8 +1235,8 @@ function copyTextToClipboard(text) {
         return ret;
     }
 
-    ChatDrawer.sort = function(table, operator, colIndex, colType){
-        var json = ChatDrawer.responses[table.dataset.componentid];
+    ChatDrawer.sort = function(component, operator, colIndex, colType){
+        var json = ChatDrawer.responses[component.dataset.componentid];
         var lines = json['data'].split('\n');
         var values = []
         for (var i = 0; i < lines.length; i++) {
@@ -1310,7 +1515,7 @@ function copyTextToClipboard(text) {
             if(json['supported_display_types'][i] == 'pie'){
 
             }
-            if(json['supported_display_types'][i] == 'line'){
+            if(json['supported_display_types'][i] == 'line' && json['display_type'] != 'pivot_column'){
                 buttons += ChatDrawer.getLineChartButton(idRequest);
             }
             if(json['supported_display_types'][i] == 'date_pivot' || json['supported_display_types'][i] == 'pivot_column'){
@@ -1386,27 +1591,27 @@ function copyTextToClipboard(text) {
 
     ChatDrawer.getHeatmapChartButton = function(idRequest){
         return `
-            <button class="chata-toolbar-btn" data-tip="Heatmap" data-id="${idRequest}">
-                <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                    <path class="hm0" d="M12,16h2.5c0.8,0,1.5-0.7,1.5-1.5v-2.4l-4,0V16z">
+            <button class="chata-toolbar-btn heatmap" data-tip="Heatmap" data-id="${idRequest}">
+                <svg class="heatmap" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+                    <path class="hm0 heatmap" d="M12,16h2.5c0.8,0,1.5-0.7,1.5-1.5v-2.4l-4,0V16z">
                     </path>
-                    <polygon class="hm1" points="8,4.1 8,0 4,0 4,4.1 "></polygon>
-                    <path class="hm2" d="M4,4.1V0L1.5,0C0.7,0,0,0.7,0,1.5l0,2.6h0l0,0L4,4.1z"></path>
-                    <polygon class="hm3" points="8,4.1 8,4.1 8,4.1 4,4.1 4,8.1 8,8.2 "></polygon>
-                    <polygon class="hm2" points="0,4.1 0,8.1 4,8.1 4,4.1 "></polygon>
-                    <polygon class="hm1" points="4,4.1 8,4.1 8,4.1 "></polygon>
-                    <polygon class="hm1" points="4,16 8,16 8,12.1 4,12.1 "></polygon>
-                    <path class="hm0" d="M0,12.1v2.5C0,15.3,0.7,16,1.5,16H4v-3.9L0,12.1z"></path>
-                    <polygon class="hm0" points="0,12.1 4,12.1 4,8.2 0,8.2 "></polygon>
-                    <polygon class="hm4" points="8,12.1 8,8.2 4,8.2 4,12.1 "></polygon>
-                    <polygon class="hm2" points="16,4.1 16,4.1 16,4.1 12,4.1 12,8.2 16,8.2 "></polygon>
-                    <path class="hm0" d="M16,4.1l0-2.6C16,0.7,15.3,0,14.5,0L12,0v4.1L16,4.1z"></path>
-                    <polygon class="hm4" points="12,4.1 12,0 8,0 8,4.1 8,4.1 8,4.1 "></polygon>
-                    <polygon class="hm5" points="12,4.1 8,4.1 8,4.1 "></polygon>
-                    <polygon class="hm6" points="12,4.1 16,4.1 16,4.1 "></polygon>
-                    <polygon class="hm2" points="12,12.1 16,12.1 16,8.2 12,8.2 "></polygon>
-                    <polygon class="hm1" points="12,8.2 8,8.2 8,12.1 12,12.1 "></polygon>
-                    <polygon class="hm1" points="8,12.1 8,16 12,16 12,12.1 "></polygon>
+                    <polygon class="hm1 heatmap" points="8,4.1 8,0 4,0 4,4.1 "></polygon>
+                    <path class="hm2 heatmap" d="M4,4.1V0L1.5,0C0.7,0,0,0.7,0,1.5l0,2.6h0l0,0L4,4.1z"></path>
+                    <polygon class="hm3 heatmap" points="8,4.1 8,4.1 8,4.1 4,4.1 4,8.1 8,8.2 "></polygon>
+                    <polygon class="hm2 heatmap" points="0,4.1 0,8.1 4,8.1 4,4.1 "></polygon>
+                    <polygon class="hm1 heatmap" points="4,4.1 8,4.1 8,4.1 "></polygon>
+                    <polygon class="hm1 heatmap" points="4,16 8,16 8,12.1 4,12.1 "></polygon>
+                    <path class="hm0 heatmap" d="M0,12.1v2.5C0,15.3,0.7,16,1.5,16H4v-3.9L0,12.1z"></path>
+                    <polygon class="hm0 heatmap" points="0,12.1 4,12.1 4,8.2 0,8.2 "></polygon>
+                    <polygon class="hm4 heatmap" points="8,12.1 8,8.2 4,8.2 4,12.1 "></polygon>
+                    <polygon class="hm2 heatmap" points="16,4.1 16,4.1 16,4.1 12,4.1 12,8.2 16,8.2 "></polygon>
+                    <path class="hm0 heatmap" d="M16,4.1l0-2.6C16,0.7,15.3,0,14.5,0L12,0v4.1L16,4.1z"></path>
+                    <polygon class="hm4 heatmap" points="12,4.1 12,0 8,0 8,4.1 8,4.1 8,4.1 "></polygon>
+                    <polygon class="hm5 heatmap" points="12,4.1 8,4.1 8,4.1 "></polygon>
+                    <polygon class="hm6 heatmap" points="12,4.1 16,4.1 16,4.1 "></polygon>
+                    <polygon class="hm2 heatmap" points="12,12.1 16,12.1 16,8.2 12,8.2 "></polygon>
+                    <polygon class="hm1 heatmap" points="12,8.2 8,8.2 8,12.1 12,12.1 "></polygon>
+                    <polygon class="hm1 heatmap" points="8,12.1 8,16 12,16 12,12.1 "></polygon>
                 </svg>
             </button>
         `;
