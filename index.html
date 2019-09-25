@@ -12,13 +12,28 @@
     <div id="chata">
     </div>
 
+    <div id="mycontainer" style="width:900px; margin:200px auto;">
+
+    </div>
+
+
+    <div id="response" style="width:80%; height: 600px; background: rgba(0, 0, 0, .1); margin:auto;">
+
+    </div>
+
+
     <script>
         var chata = ChatDrawer.init('chata', {
-            isVisible: true,
+            isVisible: false,
             width: 500,
             placement: 'right',
             customerName: 'Oscar'
         });
+        var chatBar = ChatDrawer.getChatBar();
+        var responseRenderer = ChatDrawer.createResponseRenderer();
+        chatBar.bind(responseRenderer);
+        document.getElementById('mycontainer').append(chatBar);
+        document.getElementById('response').append(responseRenderer);
     </script>
 
 </body>
