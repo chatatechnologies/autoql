@@ -21,10 +21,30 @@
 
     <script>
         var chata = ChatDrawer.init('chata', {
-            isVisible: false,
-            width: 500,
+            isVisible: true,
             placement: 'right',
-            customerName: 'Oscar'
+            width: 950,
+            height: 350,
+            theme: 'light',
+            accentColor: '#28a8e0',
+            title: 'Foo bar',
+            showHandle: true,
+            handleStyles: {},
+            onVisibleChange: function() {},
+            onHandleClick: function(){},
+            showMask: false,
+            onMaskClick: function(){},
+            maskClosable: true,
+            customerName: 'Oscar',
+            // introMessage: 'Testing intro message',
+            maxMessages: undefined,
+            clearOnClose: false,
+            enableVoiceRecord: true,
+            enableAutocomplete: true,
+            autocompleteStyles: {},
+            enableSafetyNet: true,
+            enableDrilldowns: true,
+            demo: false
         });
         var chatBar = ChatDrawer.getChatBar();
         var responseRenderer = ChatDrawer.createResponseRenderer();

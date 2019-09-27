@@ -356,7 +356,7 @@ table {
     letter-spacing: 0.05em;
 }
 
-.auto-complete-suggestions ul li:hover{
+.auto-complete-suggestions ul li:hover, .chat-bar-auto-complete-suggestions ul li:hover{
     background-color: rgba(0, 0, 0, 0.1) !important;
 }
 
