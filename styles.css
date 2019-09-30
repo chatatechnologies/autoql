@@ -54,7 +54,7 @@ table {
     justify-content: center;
     align-items: center;
     vertical-align:middle;
-    background: #fff;
+    background: var(--chata-drawer-background-color);
     /* left: -40px;
     border-radius: 4px 0 0 4px; */
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
@@ -83,6 +83,7 @@ table {
     /* transition: transform 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), box-shadow 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86); */
     /* transform: translateX(500px); */
     transition: transform 0.3s ease-in-out;
+    background: var(--chata-drawer-background-color);
 }
 
 .chat-header-container {
@@ -90,7 +91,7 @@ table {
     justify-content: space-between;
     width: 100%;
     height: 60px;
-    background: #28a8e0;
+    background: var(--chata-drawer-accent-color);
     box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
     flex-grow: 0;
     flex-shrink: 0;
@@ -101,7 +102,7 @@ table {
 
 .chata-header-center-container {
     position: relative;
-    color: #fff;
+    color: var(--chata-drawer-text-color-primary);
     line-height: 60px;
     font-size: 18px;
     letter-spacing: 0.05em;
@@ -121,7 +122,7 @@ table {
 .chat-header-container button {
     background: transparent;
     border: none;
-    color: white;
+    color: var(--chata-drawer-text-color-primary);
     margin: 10px;
     margin-right: 0;
     font-size: 20px;
@@ -156,6 +157,7 @@ table {
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 0%;
+    background: var(--chata-drawer-background-color);
 }
 
 .chat-single-message-container .chat-message-bubble {
@@ -168,9 +170,9 @@ table {
     font-family: "Titillium Web", sans-serif;
     font-size: 14px;
     letter-spacing: 0.04em;
-    border: 1px solid #d3d3d352;
-    background: #fff;
-    color: #5d5d5d;
+    border: 1px solid var(--chata-drawer-border-color);
+    background: var(--chata-drawer-background-color);
+    color: var(--chata-drawer-text-color-primary);
 }
 
 .chat-single-message-container.response {
@@ -197,9 +199,9 @@ table {
 }
 
 .chat-single-message-container.request .chat-message-bubble {
-    background: #28a8e0;
-    color: white;
-    border: 1px solid #28a8e0;
+    background: var(--chata-drawer-accent-color);
+    color: var(--chata-drawer-text-color-primary);
+    border: 1px solid var(--chata-drawer-accent-color);
     /* box-shadow: 2px 3px 8px 1px rgba(0, 0, 0, 0.1); */
 }
 
@@ -208,7 +210,7 @@ table {
 }
 
 .watermark {
-    color: #5d5d5d;
+    color: var(--chata-drawer-text-color-primary);
     text-align: center;
     opacity: 0.2;
     display: block;
@@ -235,7 +237,7 @@ table {
     width: calc(100% - 20px);
     background: transparent;
     border: 1px solid rgba(0, 0, 0, 0.1);
-    color: #5d5d5d;
+    color: var(--chata-drawer-text-color-primary);
 }
 .chata-input:hover{
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
@@ -253,8 +255,8 @@ table {
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    background: #28a8e0;
-    color: white;
+    background: var(--chata-drawer-accent-color);
+    color: var(--chata-drawer-text-color-primary);
     border: none;
     /* transition: box-shadow 0.2s ease; */
     flex-shrink: 0;
@@ -303,9 +305,9 @@ table {
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     border-radius: 24px;
-    border: 1px solid #d3d3d352;
-    background: #fff;
-    color: #767676;
+    border: 1px solid var(--chata-drawer-border-color);
+    background: var(--chata-drawer-background-color);
+    color: var(--chata-drawer-text-color-primary);
     list-style: none;
     bottom: 60px;
     width: calc(100%);
@@ -335,9 +337,9 @@ table {
     overflow: hidden;
     border-radius: 24px;
     z-index: 3;
-    border: 1px solid #d3d3d352;
-    background: #fff;
-    color: #767676;
+    border: 1px solid var(--chata-drawer-border-color);
+    background: var(--chata-drawer-background-color);
+    color: var(--chata-drawer-text-color-primary);
     position: fixed;
     list-style: none;
     bottom: 60px;
@@ -357,7 +359,7 @@ table {
 }
 
 .auto-complete-suggestions ul li:hover, .chat-bar-auto-complete-suggestions ul li:hover{
-    background-color: rgba(0, 0, 0, 0.1) !important;
+    background-color: var(--chata-drawer-hover-color);
 }
 
 /* response loading dots */
@@ -440,8 +442,8 @@ table {
 }
 
 .chata-suggestion-btn:hover, .chata-suggestion-btn-renderer:hover{
-    color: white;
-    background: #28a8e0;
+    color: var(--chata-drawer-text-color-primary);
+    background: var(--chata-drawer-accent-color);
     border-color: transparent;
 }
 
@@ -466,7 +468,7 @@ table {
 
 .chata-table-container::-webkit-scrollbar {
     display: unset;
-    background-color: transparent;
+    background-color: var(--chata-drawer-background-color);
     width: 7px;
     height: 7px;
 }
@@ -475,6 +477,7 @@ table {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 7px;
     border: 0px;
+    background: red;
 }
 
 input[type=text]:disabled {
@@ -488,7 +491,7 @@ input[type=text]:disabled {
 }
 
 .table-response tr:first-of-type{
-    border-bottom: 2px solid #d3d3d352;
+    border-bottom: 2px solid var(--chata-drawer-border-color);
 }
 
 .table-response tr th{
@@ -538,8 +541,8 @@ input[type=text]:disabled {
 }
 
 .table-response tr{
-    border-bottom: 1px solid #d3d3d352;
-    background: #fff;
+    border-bottom: 1px solid var(--chata-drawer-border-color);
+    background: var(--chata-drawer-background-color);
     margin-top: 10px;
     margin-bottom: 10px;
     width: 100%;
@@ -549,11 +552,11 @@ input[type=text]:disabled {
 }
 
 .table-response tr th:hover{
-    background-color: #ececec;
+    background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
 tr:hover {
-    background-color: #ececec;
+    background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
 tr:first-child:hover {
@@ -565,7 +568,7 @@ tr:first-child:hover {
     font-family: "Titillium Web", sans-serif;
     font-size: 14px;
     letter-spacing: 0.04em;
-    color: #5d5d5d;
+    color: var(--chata-drawer-text-color-primary);
     padding: 8px;
     height: 37px;
     vertical-align: middle;
@@ -581,7 +584,7 @@ tr:first-child:hover {
     font-size: 16px;
     line-height: 28px;
     vertical-align: top;
-    color: #5d5d5d;
+    color: var(--chata-drawer-text-color-primary);
     cursor: pointer;
     outline: none !important;
 }
@@ -589,13 +592,13 @@ tr:first-child:hover {
 .chat-message-toolbar {
     display: none;
     position: absolute;
-    background: #fff;
+    background: var(--chata-drawer-background-color);
     top: -22px;
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
     z-index: 10;
-    border: 1px solid #d3d3d352;
+    border: 1px solid var(--chata-drawer-border-color);
 }
 
 .chat-message-toolbar.right {
@@ -609,7 +612,7 @@ tr:first-child:hover {
 }
 
 .chata-toolbar-btn:hover{
-    color: #878787;
+    color: var(--chata-drawer-hover-color);
 }
 .column, .column-pivot{
     padding: 5px 18px;
@@ -676,7 +679,7 @@ tr:first-child:hover {
     stroke: transparent;
 }
 .tick{
-    stroke: #d3d3d352;
+    stroke: var(--chata-drawer-border-color);
     fill-opacity: 0.7;
 }
 line{
@@ -699,12 +702,12 @@ text{
     border-radius: 2px;
     font-family: "Titillium Web", sans-serif;
     font-size: 13px;
-    color: #ececec;
+    color: var(--chata-drawer-hover-color);
     z-index: 1000;
 }
 .title-tip{
     font-weight: bold;
-    color: #fff;
+    color: var(--chata-drawer-text-color-primary);
 }
 
 /* Creates a small triangle extender for the tooltip */

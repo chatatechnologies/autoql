@@ -2,6 +2,9 @@ var ChatDrawer = {
     options: {
         projectId: 1,
         token: undefined,
+        apiKey: '',
+        customerId: '',
+        userId: '',
         isVisible: false,
         placement: 'right',
         width: 500,
@@ -17,7 +20,7 @@ var ChatDrawer = {
         onMaskClick: function(){},
         maskClosable: true,
         customerName: 'there',
-        maxMessages: undefined,
+        maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
         enableAutocomplete: true,
@@ -30,6 +33,24 @@ var ChatDrawer = {
     xhr: new XMLHttpRequest()
 };
 
+const LIGHT_THEME = {
+  '--chata-drawer-accent-color': '#28a8e0',
+  '--chata-drawer-background-color': '#fff',
+  '--chata-drawer-border-color': '#d3d3d352',
+  '--chata-drawer-hover-color': '#ececec',
+  '--chata-drawer-text-color-primary': '#5d5d5d',
+  '--chata-drawer-text-color-placeholder': '#0000009c'
+}
+
+const DARK_THEME = {
+  '--chata-drawer-accent-color': '#525252', // dark gray
+  // '--chata-drawer-accent-color': '#193a48', // dark blue
+  '--chata-drawer-background-color': '#636363',
+  '--chata-drawer-border-color': '#d3d3d329',
+  '--chata-drawer-hover-color': '#5a5a5a',
+  '--chata-drawer-text-color-primary': '#fff',
+  '--chata-drawer-text-color-placeholder': '#ffffff9c'
+}
 
 const MONTH_NAMES = [
     "January", "February", "March",
@@ -101,6 +122,9 @@ function putLoadingContainer(target){
         if(!('introMessage' in options)){
             ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ " I'm  here to help you access, search and analyze your data.";
         }
+        if(!('onMaskClick' in options)){
+            ChatDrawer.options.onMaskClick = ChatDrawer.options.onHandleClick;
+        }
         ChatDrawer.rootElem = rootElem;
         rootElem.classList.add('chata-drawer');
         this.createHeader();
@@ -113,6 +137,16 @@ function putLoadingContainer(target){
             ChatDrawer.openDrawer();
         }else{
             ChatDrawer.closeDrawer();
+        }
+        const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME
+        for (let property in themeStyles) {
+            // console.log(property);
+            console.log(themeStyles[property]);
+
+            document.documentElement.style.setProperty(
+                property,
+                themeStyles[property],
+            );
         }
         return this;
     }
@@ -145,7 +179,7 @@ function putLoadingContainer(target){
             var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
             suggestionList.style.display = 'none';
             if(event.target.value){
-                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer');
+                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', {});
             }
         }
 
@@ -354,7 +388,6 @@ function putLoadingContainer(target){
         var suggestionList = document.getElementById('auto-complete-list');
         document.addEventListener('click',function(e){
             if(e.target){
-
                 if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
                 || e.target.classList.contains('square') || e.target.classList.contains('circle')){
                     var selectedBars = e.target.parentElement.getElementsByClassName('active');
@@ -364,11 +397,18 @@ function putLoadingContainer(target){
                     e.target.classList.add('active');
                 }
 
+                if(e.target.id == 'drawer-wrapper'){
+                    if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
+                        ChatDrawer.options.onMaskClick();
+                    }
+                }
+
                 if(e.target.classList.contains('close-action')){
                     ChatDrawer.closeDrawer();
                 }
                 if(e.target.classList.contains('open-action')){
                     ChatDrawer.openDrawer();
+                    ChatDrawer.options.onHandleClick();
                 }
                 if(e.target.classList.contains('suggestion')){
                     console.log(e.target.textContent);
@@ -609,9 +649,11 @@ function putLoadingContainer(target){
         });
 
         chataInput.onkeyup = function(){
-            suggestionList.style.display = 'none';
-            if(this.value){
-                ChatDrawer.autocomplete(this.value, suggestionList);
+            if(ChatDrawer.options.enableAutocomplete){
+                suggestionList.style.display = 'none';
+                if(this.value){
+                    ChatDrawer.autocomplete(this.value, suggestionList, 'suggestion', ChatDrawer.options.autocompleteStyles);
+                }
             }
         }
 
@@ -1799,6 +1841,10 @@ function putLoadingContainer(target){
                 ChatDrawer.drawerButton.style.display = 'flex';
             }
         }
+        if(ChatDrawer.options.clearOnClose){
+            ChatDrawer.clearMessages();
+        }
+        ChatDrawer.options.onVisibleChange();
     }
 
     ChatDrawer.openDrawer = function(){
@@ -1809,6 +1855,7 @@ function putLoadingContainer(target){
         ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
         ChatDrawer.rootElem.style.transform = 'translateX(0px)';
         ChatDrawer.drawerButton.style.display = 'none';
+        ChatDrawer.options.onVisibleChange();
     }
 
     ChatDrawer.createWrapper = function(rootElem){
@@ -1841,6 +1888,9 @@ function putLoadingContainer(target){
         if(!ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'none';
         }
+        for (var [key, value] of Object.entries(ChatDrawer.options.handleStyles)){
+            ChatDrawer.drawerButton.style.setProperty(key, value, '');
+        }
     }
 
     ChatDrawer.ajaxCall = function(url, callback){
@@ -1871,14 +1921,16 @@ function putLoadingContainer(target){
         ChatDrawer.xhr.send();
     }
 
-    ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggestion'){
+    ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggestion', styles){
         const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
             suggestion)}&projectid=${ChatDrawer.options.projectId}`;
 
         ChatDrawer.ajaxCallAutoComplete(URL, function(jsonResponse){
             suggestionList.innerHTML = '';
             if(jsonResponse['matches'].length > 0){
-
+                for(var [key, value] of Object.entries(styles)){
+                    suggestionList.style.setProperty(key, value, '');
+                }
                 for (var i = jsonResponse['matches'].length-1; i >= 0; i--) {
                     var li = document.createElement('li');
                     li.classList.add(liClass);
@@ -1946,6 +1998,7 @@ function putLoadingContainer(target){
                             jsonResponse['data'] = 'Error: There was no data supplied for this table';
                             ChatDrawer.putSimpleResponse(jsonResponse);
                     }
+                    ChatDrawer.checkMaxMessages();
                 });
 
             }
@@ -2293,6 +2346,15 @@ function putLoadingContainer(target){
         ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
     }
 
+    ChatDrawer.checkMaxMessages = function(){
+        if(ChatDrawer.options.maxMessages > 2){
+            var messages = ChatDrawer.drawerContent.querySelectorAll('.chat-single-message-container');
+            if(messages.length > ChatDrawer.options.maxMessages){
+                messages[1].parentNode.removeChild(messages[1]);
+            }
+        }
+    }
+
     ChatDrawer.putMessage = function(value){
         // <div class="chat-single-message-container request">
         //     <div class="chat-message-bubble">Janitorial expense</div>
@@ -2321,6 +2383,7 @@ function putLoadingContainer(target){
         ChatDrawer.drawerContent.appendChild(containerMessage);
         ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
         ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+        ChatDrawer.checkMaxMessages();
         return responseLoadingContainer;
     }
 
