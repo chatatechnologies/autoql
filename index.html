@@ -7,6 +7,7 @@
     <script src="d3.v4.js"></script>
     <script src="d3.tip.js"></script>
     <script src="ChatDrawer.js"></script>
+
 </head>
 <body>
     <div id="chata">
@@ -18,30 +19,29 @@
     <div id="response" style="width:70%; height: 600px; background: rgba(0, 0, 0, 0); margin:auto;">
     </div>
 
-
     <script>
         var chata = ChatDrawer.init('chata', {
-            isVisible: true,
-            placement: 'right',
+            isVisible: false,
+            placement: 'top',
             width: 500,
-            height: 350,
-            theme: 'dark',
-            accentColor: '#28a8e0',
+            height: 600,
+            theme: 'light',
+            accentColor: '#f2b407',
             title: 'Foo bar',
             showHandle: true,
-            handleStyles: {background: '#E0E0E0', opacity: '0.9'},
+            handleStyles: {opacity: '0.9', background: '#f2b407'},
             onVisibleChange: function() { console.log('onVisibleChange');},
             onHandleClick: function(){ console.log('handleClick!!!');},
-            showMask: true,
+            showMask: false,
             onMaskClick: function(){ console.log('onMaskClick!!!');ChatDrawer.closeDrawer(); },
             maskClosable: true,
             customerName: 'Oscar',
             introMessage: 'Testing intro message',
-            // maxMessages: 3,
+            maxMessages: 10,
             clearOnClose: true,
             enableVoiceRecord: true,
             enableAutocomplete: true,
-            // autocompleteStyles: {background: '#28a8e0', color: 'white', padding: '5px', 'border-radius': '25px'},
+            autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
             enableSafetyNet: true,
             enableDrilldowns: true,
             demo: false

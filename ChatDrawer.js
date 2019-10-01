@@ -133,12 +133,18 @@ function putLoadingContainer(target){
         this.createWrapper();
         this.createDrawerButton();
         this.registerEvents();
+        ChatDrawer.openDrawer();
+        ChatDrawer.closeDrawer();
+
         if(ChatDrawer.options.isVisible){
             ChatDrawer.openDrawer();
         }else{
             ChatDrawer.closeDrawer();
         }
         const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME
+        if ('accentColor' in options){
+            themeStyles['--chata-drawer-accent-color'] = options.accentColor;
+        }
         for (let property in themeStyles) {
             // console.log(property);
             console.log(themeStyles[property]);
@@ -163,13 +169,13 @@ function putLoadingContainer(target){
                 </ul>
             </div>
             <div class="chat-bar-input-icon"><img class="chata-bubbles-icon" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8Zz4KCTxnPgoJCTxnPgoJCQk8cGF0aCBmaWxsPSIjMjZBN0RGIiBkPSJNMTYsNUMxNC44LDIuMywxMiwwLjQsOC44LDAuNGMtNC40LDAtNy42LDMuNS03LjYsNy45djRjMCwyLjgtMSwzLjYtMSwzLjZjMS4zLDAuMSwyLjktMC40LDQtMS41CgkJCQljMC40LDAuNCwxLDAuOCwxLjYsMWMwLjUsMC4yLDEsMC40LDEuNiwwLjVjMC0wLjItMC4xLTAuNS0wLjEtMC43YzAtMC4yLDAtMC41LDAtMC43YzAtMS42LDAuNS0zLjIsMS4zLTQuNAoJCQkJYzAuMy0wLjQsMC42LTAuOCwxLTEuMmMwLjItMC4yLDAuNC0wLjMsMC42LTAuNWMwLjQtMC4zLDAuOC0wLjYsMS4yLTAuOGMwLjQtMC4yLDAuOS0wLjQsMS40LTAuNmMwLjctMC4yLDEuNS0wLjMsMi4zLTAuM2wwLDAKCQkJCWMwLjMsMCwwLjUsMCwwLjcsMGMwLjIsMCwwLjUsMC4xLDAuNywwLjFDMTYuNCw2LDE2LjIsNS41LDE2LDV6Ii8+CgkJPC9nPgoJPC9nPgoJPGc+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTIyLjcsMTguM3YtNGMwLTMuMy0xLjgtNi00LjYtNy4yYy0wLjUtMC4yLTEtMC40LTEuNi0wLjVjMC4xLDAuNSwwLjIsMS4xLDAuMiwxLjdjMCwxLjktMC43LDMuNi0xLjgsNC45CgkJCWMtMC41LDAuNi0xLDEtMS43LDEuNWMtMC40LDAuMy0wLjksMC41LTEuMywwLjdjLTAuNSwwLjItMSwwLjMtMS41LDAuNGMtMC41LDAuMS0xLDAuMi0xLjYsMC4yYy0wLjMsMC0wLjUsMC0wLjcsMAoJCQljLTAuMywwLTAuNS0wLjEtMC43LTAuMWMwLjEsMC42LDAuMywxLjEsMC41LDEuNmMxLjIsMi44LDMuOSw0LjYsNy4yLDQuNmMxLjgsMCwzLjUtMC41LDQuNi0xLjZjMSwxLDIuOSwxLjgsNC4xLDEuNQoJCQlDMjMuOCwyMS45LDIyLjcsMjEuMywyMi43LDE4LjN6Ii8+Cgk8L2c+Cgk8Zz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNMTUuMSw2LjVjLTQuNCwwLTcuOCwzLjUtNy44LDcuOWMwLDAuNSwwLjEsMSwwLjEsMS41YzAuNSwwLjEsMSwwLjEsMS41LDAuMWM0LjQsMCw3LjgtMy4zLDcuOC03LjYKCQkJYzAtMC42LTAuMS0xLjEtMC4yLTEuN0MxNi4xLDYuNSwxNS42LDYuNSwxNS4xLDYuNXoiLz4KCTwvZz4KCTxnPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xNi4zLDguMkMxNi4zLDguMiwxNi4yLDguMiwxNi4zLDguMmMtMC4xLDAtMC4xLDAtMC4yLDBjMCwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMSwwLDAuMiwwLDAuMwoJCQljMCwwLjEsMCwwLjMsMC4xLDAuM2MwLDAuMSwwLjEsMC4xLDAuMSwwLjFjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEtMC4xLDAuMS0wLjFjMC0wLjEsMC0wLjIsMC0wLjRjMC0wLjEsMC0wLjIsMC0wLjMKCQkJQzE2LjMsOC4zLDE2LjMsOC4yLDE2LjMsOC4yeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMy40LDExQzEzLjQsMTEsMTMuNCwxMSwxMy40LDExYy0wLjEsMC0wLjEsMC0wLjIsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zCgkJCWMwLDAuMiwwLDAuMywwLjEsMC40YzAsMC4xLDAuMSwwLjEsMC4xLDAuMWMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMS0wLjEsMC4xLTAuMWMwLTAuMSwwLTAuMiwwLTAuNGMwLTAuMSwwLTAuMiwwLTAuMwoJCQlDMTMuNSwxMS4xLDEzLjUsMTEuMSwxMy40LDExeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMy4zLDkuMUMxMy40LDkuMSwxMy40LDkuMSwxMy4zLDkuMUMxMy41LDkuMSwxMy41LDksMTMuNSw5YzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDMTMuMiw5LjEsMTMuMyw5LjEsMTMuMyw5LjF6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTExLjksMTAuNkMxMS45LDEwLjYsMTIsMTAuNiwxMS45LDEwLjZjMC4xLTAuMSwwLjEtMC4xLDAuMi0wLjJjMC0wLjEsMC0wLjIsMC0wLjRjMC0wLjEsMC0wLjIsMC0wLjMKCQkJYzAtMC4xLDAtMC4xLTAuMS0wLjFjMCwwLDAsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDBjMCwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUMxMS44LDEwLjYsMTEuOSwxMC42LDExLjksMTAuNnoiLz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNOS4xLDEyLjVDOS4xLDEyLjUsOS4xLDEyLjUsOS4xLDEyLjVjLTAuMSwwLTAuMSwwLTAuMiwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjMKCQkJYzAsMC4xLDAsMC4zLDAuMSwwLjNjMCwwLjEsMC4xLDAuMSwwLjEsMC4xYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLTAuMSwwLjEtMC4xYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCUM5LjIsMTIuNiw5LjIsMTIuNSw5LjEsMTIuNXoiLz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNMTAuNSwxMC42QzEwLjUsMTAuNiwxMC41LDEwLjYsMTAuNSwxMC42YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDMTAuNCwxMC41LDEwLjQsMTAuNiwxMC41LDEwLjZ6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTcuNiwxNC45QzcuNiwxNC45LDcuNywxNC45LDcuNiwxNC45YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDNy41LDE0LjgsNy42LDE0LjksNy42LDE0Ljl6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTcuNiwxMy40QzcuNiwxMy40LDcuNywxMy40LDcuNiwxMy40YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDNy41LDEzLjQsNy42LDEzLjQsNy42LDEzLjR6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTExLjksOS4xQzExLjksOS4xLDEyLDkuMSwxMS45LDkuMUMxMiw5LjEsMTIuMSw5LDEyLjEsOWMwLTAuMSwwLTAuMiwwLTAuNGMwLTAuMSwwLTAuMiwwLTAuMwoJCQljMC0wLjEsMC0wLjEtMC4xLTAuMWMwLDAsMCwwLTAuMSwwYzAsMC0wLjEsMC0wLjEsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4xLDAsMC4zLDAuMSwwLjMKCQkJQzExLjgsOS4xLDExLjksOS4xLDExLjksOS4xeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMS45LDEzLjVDMTEuOSwxMy41LDEyLDEzLjUsMTEuOSwxMy41YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMC0wLjEsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDAuMWMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJQzExLjgsMTMuNSwxMS44LDEzLjUsMTEuOSwxMy41eiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMS45LDEyLjFDMTEuOSwxMi4xLDEyLDEyLDExLjksMTIuMWMwLjEtMC4xLDAuMS0wLjEsMC4yLTAuMmMwLTAuMSwwLTAuMiwwLTAuNGMwLTAuMSwwLTAuMiwwLTAuMwoJCQljMC0wLjEsMC0wLjEtMC4xLTAuMWMwLDAsMCwwLTAuMSwwcy0wLjEsMC0wLjEsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJQzExLjgsMTIsMTEuOSwxMi4xLDExLjksMTIuMXoiLz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNMTYsNy4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4xLDAuMSwwLjEsMC4xLDAuMWMwLDAsMC4xLDAsMC4xLDBjMCwwLDAtMC4xLDAuMS0wLjFjMC0wLjEsMC0wLjIsMC0wLjMKCQkJYzAtMC4xLDAtMC4yLDAtMC4zYzAtMC4xLDAtMC4xLTAuMS0wLjFjMCwwLDAsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDBjMCwwLTAuMSwwLjEtMC4xLDAuMkMxNi4xLDcuMSwxNiw3LjIsMTYsNy4yeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMS45LDE1QzExLjksMTUsMTIsMTQuOSwxMS45LDE1YzAuMS0wLjEsMC4yLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMC0wLjEsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDAuMWMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJQzExLjgsMTQuOSwxMS44LDE1LDExLjksMTV6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTE2LjMsOS42QzE2LjMsOS42LDE2LjIsOS42LDE2LjMsOS42Yy0wLjEsMC0wLjEsMC0wLjIsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zCgkJCWMwLDAuMSwwLDAuMywwLjEsMC40YzAsMC4xLDAuMSwwLjEsMC4xLDAuMWMwLDAsMC4xLDAsMC4xLDBzMC4xLTAuMSwwLjEtMC4xYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCUMxNi4zLDkuNywxNi4zLDkuNiwxNi4zLDkuNnoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTEuNyw3LjZjMC4xLDAuMSwwLjEsMC4yLDAuMiwwLjJjMCwwLDAuMSwwLDAuMS0wLjFjMCwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLTAuMiwwLTAuMwoJCQljMC0wLjEsMC0wLjEsMC0wLjJjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAuMSwwLDAuMWMwLDAuMSwwLDAuMywwLDAuM2MwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMAoJCQlDMTEuOCw3LjcsMTEuOCw3LjYsMTEuNyw3LjZjMC4xLTAuMSwwLjEtMC4yLDAuMS0wLjNjMCwwLDAsMCwwLDBjMCwwLTAuMSwwLTAuMSwwLjFDMTEuNiw3LjQsMTEuNiw3LjUsMTEuNyw3LjZ6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTEzLjQsNi43bC0wLjIsMC4xbDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4xdjAuNWMwLDAuMSwwLDAuMSwwLDAuMQoJCQljMCwwLDAsMCwwLDBjMCwwLDAsMC0wLjEsMHYwaDAuNHYwYzAsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAtMC4xTDEzLjQsNi43TDEzLjQsNi43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNC44LDYuN2wtMC4yLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMXYwLjVjMCwwLjEsMCwwLjEsMCwwLjEKCQkJYzAsMCwwLDAsMCwwYzAsMCwwLDAtMC4xLDB2MEgxNXYwYzAsMC0wLjEsMC0wLjEsMHMwLDAsMCwwYzAsMCwwLDAsMC0wLjFMMTQuOCw2LjdMMTQuOCw2Ljd6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTE2LDdjMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4xLDAsMC4yLDAuMSwwLjNjMC4xLDAuMSwwLjEsMC4yLDAuMiwwLjJjMCwwLDAuMSwwLDAuMS0wLjEKCQkJYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLTAuMiwwLTAuM2MwLTAuMiwwLTAuMy0wLjEtMC40Yy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMWMwLDAtMC4xLDAtMC4xLDBDMTYsNi44LDE2LDYuOSwxNiw3egoJCQkgTTE2LjIsNi44QzE2LjIsNi44LDE2LjMsNi44LDE2LjIsNi44YzAuMSwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuM2MwLDAuMSwwLDAuMS0wLjEsMC4xCgkJCWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC0wLjNDMTYuMSw2LjksMTYuMSw2LjksMTYuMiw2LjgKCQkJQzE2LjEsNi44LDE2LjIsNi44LDE2LjIsNi44eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMC40LDkuMUMxMC40LDkuMSwxMC40LDkuMSwxMC40LDkuMWMwLDAtMC4xLDAtMC4xLDB2MGgwLjR2MGMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLTAuMQoJCQlWOC4yaDBsLTAuMiwwLjFsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjFWOS4xQzEwLjQsOSwxMC40LDkuMSwxMC40LDkuMXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTEuOSw5LjJjMCwwLDAuMSwwLDAuMi0wLjFjMC4xLDAsMC4xLTAuMSwwLjEtMC4yYzAtMC4xLDAuMS0wLjIsMC4xLTAuM2MwLTAuMiwwLTAuMy0wLjEtMC40CgkJCWMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC4xLTAuMSwwLjJzLTAuMSwwLjItMC4xLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUMxMS43LDkuMSwxMS44LDkuMiwxMS45LDkuMnogTTExLjgsOC40YzAtMC4xLDAtMC4yLDAuMS0wLjJjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjMKCQkJQzExLjcsOC42LDExLjcsOC41LDExLjgsOC40eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMyw4LjdjMCwwLjEsMCwwLjMsMC4xLDAuM2MwLjEsMC4xLDAuMSwwLjIsMC4yLDAuMmMwLDAsMC4xLDAsMC4yLTAuMVMxMy42LDksMTMuNiw5CgkJCWMwLTAuMSwwLjEtMC4yLDAuMS0wLjNjMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC4xLTAuMSwwLjIKCQkJQzEzLDguNSwxMyw4LjYsMTMsOC43eiBNMTMuMiw4LjRjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMC4xLDAuMSwwLjFjMCwwLjEsMCwwLjIsMCwwLjMKCQkJYzAsMC4yLDAsMC4zLDAsMC40YzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuM0MxMy4yLDguNiwxMy4yLDguNSwxMy4yLDguNHoKCQkJIi8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTE0LjYsOC4zQzE0LjYsOC4zLDE0LjYsOC4zLDE0LjYsOC4zYzAuMSwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMVY5YzAsMC4xLDAsMC4xLDAsMC4xCgkJCWMwLDAsMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBIMTV2MGMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAtMC4xLDAtMC4xVjguMWgwTDE0LjYsOC4zTDE0LjYsOC4zeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNi4yLDguMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMS0wLjEsMC4yLTAuMSwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQljMC4xLDAuMSwwLjEsMC4yLDAuMiwwLjJjMCwwLDAuMSwwLDAuMi0wLjFjMC4xLDAsMC4xLTAuMSwwLjEtMC4yYzAtMC4xLDAuMS0wLjIsMC4xLTAuM2MwLTAuMiwwLTAuMy0wLjEtMC40CgkJCUMxNi40LDguMiwxNi4zLDguMSwxNi4yLDguMXogTTE2LjQsOWMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMUMxNiw4LjksMTYsOC44LDE2LDguNwoJCQljMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBzMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuMwoJCQlDMTYuNCw4LjgsMTYuNCw4LjksMTYuNCw5eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik05LjEsOS42TDguOSw5LjdsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjF2MC41YzAsMC4xLDAsMC4xLDAsMC4xCgkJCWMwLDAsMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwczAsMCwwLDBjMCwwLDAsMCwwLTAuMUw5LjEsOS42TDkuMSw5LjZMOS4xLDkuNnoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTAuNSwxMC42YzAsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjNjMC0wLjIsMC0wLjMtMC4xLTAuNAoJCQljLTAuMS0wLjEtMC4xLTAuMS0wLjItMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUMxMC4zLDEwLjYsMTAuNCwxMC42LDEwLjUsMTAuNnogTTEwLjMsOS45YzAtMC4xLDAtMC4yLDAuMS0wLjJjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjMKCQkJQzEwLjMsMTAsMTAuMywxMCwxMC4zLDkuOXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTEuNywxMC41YzAuMSwwLjEsMC4yLDAuMiwwLjMsMC4yYzAuMSwwLDAuMSwwLDAuMi0wLjFjMC4xLDAsMC4xLTAuMSwwLjEtMC4yczAuMS0wLjIsMC4xLTAuMwoJCQljMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwLjFjLTAuMSwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMS0wLjEsMC4yLTAuMSwwLjMKCQkJQzExLjYsMTAuMiwxMS42LDEwLjQsMTEuNywxMC41eiBNMTEuNyw5LjljMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBzMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMQoJCQljMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjIsMCwwLjMsMCwwLjRjMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC4zCgkJCUMxMS43LDEwLDExLjcsOS45LDExLjcsOS45eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMy4zLDEwLjZDMTMuMywxMC42LDEzLjMsMTAuNiwxMy4zLDEwLjZjMCwwLTAuMSwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwCgkJCWMwLDAsMC0wLjEsMC0wLjFWOS42aDBsLTAuMywwLjFsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjJ2MC42QzEzLjMsMTAuNSwxMy4zLDEwLjUsMTMuMywxMC42CgkJCXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTQuNiw5LjdDMTQuNiw5LjcsMTQuNyw5LjcsMTQuNiw5LjdjMC4xLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNgoJCQljMCwwLjEsMCwwLjEsMCwwLjFzMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBIMTV2MGMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAtMC4xLDAtMC4xVjkuNmgwTDE0LjYsOS43TDE0LjYsOS43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNi4yLDkuNmMtMC4xLDAtMC4xLDAtMC4xLDAuMWMtMC4xLDAtMC4xLDAuMS0wLjEsMC4ycy0wLjEsMC4yLTAuMSwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuNAoJCQljMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMCwwLDAuMSwwLDAuMS0wLjFjMC4xLTAuMiwwLjEtMC41LDAuMi0wLjdjMC0wLjEsMC0wLjItMC4xLTAuMkMxNi40LDkuNiwxNi4zLDkuNiwxNi4yLDkuNnogTTE2LjQsMTAuNAoJCQljMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC40YzAtMC4xLDAtMC4yLDAtMC4zYzAtMC4xLDAtMC4yLDAuMS0wLjIKCQkJYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuM0MxNi40LDEwLjIsMTYuNCwxMC4zLDE2LjQsMTAuNHoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNNy44LDExLjVjMCwwLjIsMCwwLjMsMCwwLjNjMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDAKCQkJYzAsMCwwLjEsMCwwLjEtMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLTAuMiwwLTAuM2MwLTAuMSwwLTAuMi0wLjEtMC4zQzcuOCwxMS4zLDcuOCwxMS40LDcuOCwxMS41CgkJCUM3LjgsMTEuNSw3LjgsMTEuNSw3LjgsMTEuNXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNOC45LDExLjJDOC45LDExLjEsOC45LDExLjEsOC45LDExLjJjMC4xLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4xdjAuNQoJCQlDOSwxMS45LDksMTIsOSwxMmMwLDAsMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLTAuMSwwLTAuMVYxMWgwTDguOSwxMS4yTDguOSwxMS4yeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMC41LDExbC0wLjMsMC4xbDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNmMwLDAuMSwwLDAuMSwwLDAuMQoJCQlzMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLTAuMSwwLTAuMUwxMC41LDExTDEwLjUsMTF6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTExLjcsMTEuOWMwLjEsMC4xLDAuMiwwLjIsMC4zLDAuMmMwLjEsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjMKCQkJYzAtMC4yLDAtMC4zLTAuMS0wLjRDMTIuMSwxMSwxMiwxMSwxMS45LDExYy0wLjEsMC0wLjEsMC0wLjIsMC4xYy0wLjEsMC0wLjEsMC4xLTAuMiwwLjJjMCwwLjEtMC4xLDAuMi0wLjEsMC4zCgkJCUMxMS42LDExLjcsMTEuNiwxMS44LDExLjcsMTEuOXogTTExLjcsMTEuM2MwLTAuMSwwLTAuMiwwLjEtMC4yYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMQoJCQljMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjIsMCwwLjMsMCwwLjRjMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC40CgkJCUMxMS43LDExLjUsMTEuNywxMS40LDExLjcsMTEuM3oiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTMuNywxMS41YzAtMC4yLDAtMC4zLTAuMS0wLjRDMTMuNSwxMSwxMy40LDExLDEzLjMsMTFjLTAuMSwwLTAuMSwwLTAuMiwwLjFjLTAuMSwwLTAuMSwwLjEtMC4yLDAuMgoJCQljMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjRjMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMC4xLDAsMC4xLDAsMC4yLTAuMWMwLjEsMCwwLjEtMC4xLDAuMS0wLjIKCQkJQzEzLjcsMTEuOCwxMy43LDExLjcsMTMuNywxMS41eiBNMTMuNSwxMS45YzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuNAoJCQljMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLTAuMSwwLjEtMC4xYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xYzAsMC4xLDAsMC4yLDAsMC4zCgkJCUMxMy42LDExLjcsMTMuNSwxMS44LDEzLjUsMTEuOXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTQuNywxMkMxNC43LDEyLDE0LjcsMTIsMTQuNywxMmMwLDAtMC4xLDAtMC4xLDB2MEgxNXYwYy0wLjEsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMGMwLDAsMC0wLjEsMC0wLjEKCQkJVjExaDBsLTAuMywwLjFsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjJ2MC42QzE0LjcsMTIsMTQuNywxMiwxNC43LDEyeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNiwxMS4xTDE2LDExLjFDMTYsMTEuMSwxNi4xLDExLjEsMTYsMTEuMWMwLjEsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMHYwYzAtMC4xLDAtMC4xLDAuMS0wLjJMMTYsMTEuMQoJCQl6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTcuNCwxMy4zYzAuMSwwLjEsMC4xLDAuMiwwLjIsMC4yYzAsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMlM4LDEzLjEsOCwxMwoJCQljMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYy0wLjEsMC4yLTAuMSwwLjQtMC4xLDAuN0M3LjMsMTMuMyw3LjQsMTMuMyw3LjQsMTMuMwoJCQl6IE03LjUsMTIuN2MwLTAuMSwwLTAuMiwwLjEtMC4yYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNAoJCQljMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC4zQzcuNCwxMi45LDcuNCwxMi44LDcuNSwxMi43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik05LjQsMTNjMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwLjFjLTAuMSwwLTAuMSwwLjEtMC4xLDAuMgoJCQljMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4xLDAsMC4zLDAuMSwwLjRjMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMC4xLDAsMC4xLDAsMC4yLTAuMXMwLjEtMC4xLDAuMS0wLjIKCQkJQzkuNCwxMy4yLDkuNCwxMy4xLDkuNCwxM3ogTTkuMiwxMy4zYzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuMwoJCQljMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMC4xLDAuMSwwLjFjMCwwLjEsMCwwLjIsMCwwLjMKCQkJQzkuMiwxMy4xLDkuMiwxMy4yLDkuMiwxMy4zeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMC4zLDEyLjZDMTAuMywxMi41LDEwLjQsMTIuNSwxMC4zLDEyLjZjMC4xLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNgoJCQljMCwwLjEsMCwwLjEsMCwwLjFjMCwwLDAsMCwwLDBjMCwwLDAsMC0wLjEsMHYwaDAuNHYwYzAsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMGMwLDAsMC0wLjEsMC0wLjF2LTAuOWgwTDEwLjMsMTIuNkwxMC4zLDEyLjZ6IgoJCQkvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMS43LDEzLjRjMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMC4xLDAsMC4xLDAsMC4yLTAuMWMwLjEsMCwwLjEtMC4xLDAuMS0wLjJjMC0wLjEsMC4xLTAuMiwwLjEtMC4zCgkJCWMwLTAuMiwwLTAuMy0wLjEtMC40Yy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMWMtMC4xLDAtMC4xLDAtMC4yLDAuMWMtMC4xLDAtMC4xLDAuMS0wLjIsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuMwoJCQlDMTEuNiwxMy4xLDExLjYsMTMuMywxMS43LDEzLjR6IE0xMS43LDEyLjdjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLTAuMSwwLjEtMC4xYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjQKCQkJQzExLjcsMTIuOSwxMS43LDEyLjgsMTEuNywxMi43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMy4zLDEzLjVDMTMuMywxMy41LDEzLjMsMTMuNSwxMy4zLDEzLjVjMCwwLTAuMSwwLTAuMSwwdjBoMC40djBjLTAuMSwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwCgkJCWMwLDAsMC0wLjEsMC0wLjF2LTFoMGwtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwczAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNkMxMy4zLDEzLjQsMTMuMywxMy41LDEzLjMsMTMuNXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTQuOCwxMi40Yy0wLjEsMC0wLjEsMC0wLjIsMC4xYy0wLjEsMC0wLjEsMC4xLTAuMiwwLjJjMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJYzAsMC4xLDAuMSwwLjEsMC4xLDAuMmMwLDAsMCwwLDAuMS0wLjFjMCwwLDAsMCwwLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjRjMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMgoJCQlDMTQuNywxMi40LDE0LjgsMTIuNCwxNC44LDEyLjRDMTQuOCwxMi40LDE0LjksMTIuNCwxNC44LDEyLjRjMC4xLDAuMSwwLjIsMC4yLDAuMiwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjIsMCwwLjIKCQkJYzAuMS0wLjEsMC4xLTAuMiwwLjItMC4yYzAtMC4yLDAtMC4zLTAuMS0wLjRDMTQuOSwxMi40LDE0LjksMTIuNCwxNC44LDEyLjR6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTcuNiwxNC45YzAsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjNjMC0wLjIsMC0wLjMtMC4xLTAuNAoJCQljLTAuMS0wLjEtMC4xLTAuMS0wLjItMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUM3LjQsMTQuOSw3LjUsMTQuOSw3LjYsMTQuOXogTTcuNSwxNC4yYzAtMC4xLDAtMC4yLDAuMS0wLjJjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjMKCQkJQzcuNCwxNC40LDcuNCwxNC4zLDcuNSwxNC4yeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik05LDE0LjlDOSwxNC45LDksMTQuOSw5LDE0LjljMCwwLTAuMSwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLTAuMSwwLTAuMXYtMC45CgkJCWgwTDguOCwxNGwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwczAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNkM5LDE0LjgsOSwxNC45LDksMTQuOXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTAuNCwxNC45QzEwLjQsMTQuOSwxMC40LDE0LjksMTAuNCwxNC45YzAsMC0wLjEsMC0wLjEsMHYwaDAuNHYwYy0wLjEsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMAoJCQljMCwwLDAtMC4xLDAtMC4xdi0wLjloMEwxMC4zLDE0bDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNkMxMC40LDE0LjgsMTAuNCwxNC45LDEwLjQsMTQuOQoJCQl6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTExLjYsMTQuOGMwLjEsMC4xLDAuMiwwLjIsMC4zLDAuMmMwLjEsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjMKCQkJYzAtMC4yLDAtMC4zLTAuMS0wLjRjLTAuMS0wLjEtMC4yLTAuMS0wLjItMC4xYy0wLjEsMC0wLjEsMC0wLjIsMC4xYy0wLjEsMC0wLjEsMC4xLTAuMiwwLjJjMCwwLjEtMC4xLDAuMi0wLjEsMC4zCgkJCUMxMS41LDE0LjYsMTEuNiwxNC43LDExLjYsMTQuOHogTTExLjcsMTQuMWMwLTAuMSwwLTAuMiwwLjEtMC4yYzAsMCwwLjEtMC4xLDAuMS0wLjFjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMC4xLDAuMSwwLjEKCQkJYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAsMC40YzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuNAoJCQlDMTEuNywxNC4zLDExLjcsMTQuMiwxMS43LDE0LjF6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTEzLjQsMTMuOGwtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMnYwLjUKCQkJYzAuMSwwLDAuMS0wLjEsMC4xLTAuMUwxMy40LDEzLjhMMTMuNCwxMy44eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik03LjgsMTUuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjMKCQkJYzAsMCwwLDAsMC4xLDBjMC0wLjEsMC0wLjEsMC0wLjJjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwQzcuNywxNS40LDcuOCwxNS41LDcuOCwxNS40CgkJCWMwLDAuMiwwLDAuMywwLDAuNGMwLDAsMCwwLDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBDNy45LDE1LjcsNy45LDE1LjUsNy44LDE1LjR6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTkuMywxNS40Yy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMWMtMC4xLDAtMC4xLDAtMC4xLDAuMWMtMC4xLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuMwoJCQljMCwwLDAsMCwwLDAuMWMwLDAsMC4xLDAsMC4xLDBsMCwwYzAsMCwwLDAsMC0wLjFjMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwCgkJCUM5LjIsMTUuNCw5LjIsMTUuNSw5LjMsMTUuNGMwLDAuMiwwLDAuMywwLDAuNGMwLDAsMCwwLjEsMCwwLjFjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMC0wLjFDOS40LDE1LjcsOS40LDE1LjUsOS4zLDE1LjR6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTEwLjUsMTUuM2wtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMnYwLjJjMCwwLDAuMSwwLDAuMSwwCgkJCUwxMC41LDE1LjNMMTAuNSwxNS4zTDEwLjUsMTUuM3oiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTIsMTUuMmwtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwQzExLjksMTUuNCwxMS45LDE1LjMsMTIsMTUuMkwxMiwxNS4yTDEyLDE1LjJMMTIsMTUuMnoKCQkJIi8+Cgk8L2c+CjwvZz4KPC9zdmc+" alt="chata.ai" height="22px" width="22px" draggable="false"></div>
-            <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input chat-bar left-padding" placeholder="Ask me anything" value="" id="">
+            <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="">
         </div>
 
         `;
         // onkeyup="ChatBarEvent(event)" onkeypress="ChatBarSendMessage(event)"
         // <div class="chat-bar-loading"><div class="response-loading"><div></div><div></div><div></div><div></div></div></div>
-        chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input')[0];
+        chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
         chataBarContainer.bind = function(responseRenderer){
             this.responseRenderer = responseRenderer;
             responseRenderer.chataBarContainer = chataBarContainer;
@@ -228,12 +234,13 @@ function putLoadingContainer(target){
                                 ChatDrawer.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 if(jsonResponse['columns'].length == 1){
                                     var data = jsonResponse['data'];
                                     responseRenderer.innerHTML = `<div>${data}</div>`;
                                 }else{
-                                    ChatDrawer.createTable(jsonResponse, div, 'append', uuid);
+                                    ChatDrawer.createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
                                 }
                             break;
                             case 'date_pivot':
@@ -241,16 +248,18 @@ function putLoadingContainer(target){
                                 ChatDrawer.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = ChatDrawer.getDatePivotArray(jsonResponse);
-                                ChatDrawer.createPivotTable(pivotArray, div, 'append', uuid);
+                                ChatDrawer.createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                             break;
                             case 'pivot_column':
                                 var div = document.createElement('div');
                                 div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = ChatDrawer.getPivotColumnArray(jsonResponse);
-                                ChatDrawer.createPivotTable(pivotArray, div, 'append');
+                                ChatDrawer.createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
                             break;
                             case 'line':
                                 var values = ChatDrawer.formatDataToBarChart(jsonResponse);
@@ -258,7 +267,7 @@ function putLoadingContainer(target){
                                 var hasNegativeValues = values[1];
                                 var col1 = ChatDrawer.formatColumnName(jsonResponse['columns'][0]['name']);
                                 var col2 = ChatDrawer.formatColumnName(jsonResponse['columns'][1]['name']);
-                                ChatDrawer.createLineChart(responseRenderer, grouped, col1, col2, hasNegativeValues);
+                                ChatDrawer.createLineChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false);
                             break;
                             case 'bar':
                                 var values = ChatDrawer.formatDataToBarChart(jsonResponse);
@@ -266,7 +275,7 @@ function putLoadingContainer(target){
                                 var hasNegativeValues = values[1];
                                 var col1 = ChatDrawer.formatColumnName(jsonResponse['columns'][0]['name']);
                                 var col2 = ChatDrawer.formatColumnName(jsonResponse['columns'][1]['name']);
-                                ChatDrawer.createBarChart(responseRenderer, grouped, col1, col2, hasNegativeValues);
+                                ChatDrawer.createBarChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false);
                             break;
                             case 'column':
                                 var values = ChatDrawer.formatDataToBarChart(jsonResponse);
@@ -274,7 +283,7 @@ function putLoadingContainer(target){
                                 var col1 = ChatDrawer.formatColumnName(jsonResponse['columns'][0]['name']);
                                 var col2 = ChatDrawer.formatColumnName(jsonResponse['columns'][1]['name']);
                                 var hasNegativeValues = values[1];
-                                ChatDrawer.createColumnChart(responseRenderer, grouped, col1, col2, hasNegativeValues);
+                                ChatDrawer.createColumnChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false);
                             break;
                             case 'heatmap':
                                 var values = ChatDrawer.formatDataToHeatmap(jsonResponse);
@@ -283,7 +292,7 @@ function putLoadingContainer(target){
                                 var col1 = ChatDrawer.formatColumnName(jsonResponse['columns'][0]['name']);
                                 var col2 = ChatDrawer.formatColumnName(jsonResponse['columns'][1]['name']);
                                 var col3 = ChatDrawer.formatColumnName(jsonResponse['columns'][2]['name']);
-                                ChatDrawer.createHeatmap(responseRenderer, labelsX, labelsY, values, col1, col2, col3);
+                                ChatDrawer.createHeatmap(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false);
                             break;
                             case 'bubble':
                                 var values = ChatDrawer.formatDataToHeatmap(jsonResponse);
@@ -292,7 +301,7 @@ function putLoadingContainer(target){
                                 var col1 = ChatDrawer.formatColumnName(jsonResponse['columns'][0]['name']);
                                 var col2 = ChatDrawer.formatColumnName(jsonResponse['columns'][1]['name']);
                                 var col3 = ChatDrawer.formatColumnName(jsonResponse['columns'][2]['name']);
-                                ChatDrawer.createBubbleChart(responseRenderer, labelsX, labelsY, values, col1, col2, col3);
+                                ChatDrawer.createBubbleChart(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false);
                             break;
                             default:
 
@@ -308,6 +317,8 @@ function putLoadingContainer(target){
     ChatDrawer.createResponseRenderer = function(){
         var responseContentContainer = document.createElement('div')
         responseContentContainer.classList.add('chata-response-content-container');
+        responseContentContainer.classList.add('renderer-container');
+
         return responseContentContainer;
     }
 
@@ -676,11 +687,11 @@ function putLoadingContainer(target){
         });
     }
 
-    ChatDrawer.createTable = function(jsonResponse, oldComponent, action='replace', uuid){
+    ChatDrawer.createTable = function(jsonResponse, oldComponent, action='replace', uuid, tableClass='table-response'){
         var data = jsonResponse['data'].split('\n');
         var table = document.createElement('table');
         var header = document.createElement('tr');
-        table.classList.add('table-response');
+        table.classList.add(tableClass);
         if(oldComponent.dataset.componentid){
             table.setAttribute('data-componentid', oldComponent.dataset.componentid);
             if(oldComponent.parentElement.classList.contains('chata-chart-container')){
@@ -850,10 +861,19 @@ function putLoadingContainer(target){
         return values;
     }
 
-    ChatDrawer.createBubbleChart = function(component, labelsX, labelsY, data, col1, col2, col3){
+    ChatDrawer.createBubbleChart = function(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true){
         var margin = {top: 5, right: 10, bottom: 50, left: 130},
-        width = component.parentElement.clientWidth - margin.left,
-        height = 600;
+        width = component.parentElement.clientWidth - margin.left;
+        var height;
+        if(fromChatDrawer){
+            if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+                height = 600;
+            }else{
+                height = 250;
+            }
+        }else{
+            height = component.parentElement.clientHeight;
+        }
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
         component.parentElement.classList.add('chata-chart-container');
@@ -1024,10 +1044,19 @@ function putLoadingContainer(target){
         });
     }
 
-    ChatDrawer.createHeatmap = function(component, labelsX, labelsY, data, col1, col2, col3){
+    ChatDrawer.createHeatmap = function(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true){
         var margin = {top: 5, right: 10, bottom: 50, left: 130},
-        width = component.parentElement.clientWidth - margin.left,
-        height = 600;
+        width = component.parentElement.clientWidth - margin.left;
+        var height;
+        if(fromChatDrawer){
+            if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+                height = 600;
+            }else{
+                height = 250;
+            }
+        }else{
+            height = component.parentElement.clientHeight;
+        }
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
         component.parentElement.classList.add('chata-chart-container');
@@ -1148,7 +1177,7 @@ function putLoadingContainer(target){
         .call(yAxis);
 
         var colorScale = d3.scaleLinear()
-        .range(["white", "#28a8e0"])
+        .range(['rgba(40,168,224,0)', 'rgba(40,168,224,1)'])
         .domain([0, d3.max(data, function(d) { return d.value; })]);
 
         svg.selectAll()
@@ -1199,11 +1228,19 @@ function putLoadingContainer(target){
 
     }
 
-    ChatDrawer.createLineChart = function(component, data, col1, col2, hasNegativeValues){
+    ChatDrawer.createLineChart = function(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true){
         var margin = {top: 5, right: 10, bottom: 50, left: 90},
-        width = component.parentElement.clientWidth - margin.left,
-        // height = component.parentElement.clientHeight < 600 ? 600 - margin.bottom : component.parentElement.clientHeight - margin.bottom;
-        height = 600;
+        width = component.parentElement.clientWidth - margin.left;
+        var height;
+        if(fromChatDrawer){
+            if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+                height = 600;
+            }else{
+                height = 250;
+            }
+        }else{
+            height = component.parentElement.clientHeight;
+        }
 
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
@@ -1343,10 +1380,19 @@ function putLoadingContainer(target){
         });
     }
 
-    ChatDrawer.createColumnChart = function(component, data, col1, col2, hasNegativeValues){
+    ChatDrawer.createColumnChart = function(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true){
         var margin = {top: 5, right: 10, bottom: 50, left: 90},
-        width = component.parentElement.clientWidth - margin.left,
-        height = 600;
+        width = component.parentElement.clientWidth - margin.left;
+        var height;
+        if(fromChatDrawer){
+            if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+                height = 600;
+            }else{
+                height = 250;
+            }
+        }else{
+            height = component.parentElement.clientHeight;
+        }
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
         component.parentElement.classList.add('chata-chart-container');
@@ -1472,11 +1518,19 @@ function putLoadingContainer(target){
 
     }
 
-    ChatDrawer.createBarChart = function(component, data, col1, col2, hasNegativeValues){
-
+    ChatDrawer.createBarChart = function(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true){
         var margin = {top: 5, right: 10, bottom: 40, left: 130},
-        width = component.parentElement.clientWidth - margin.left,
-        height = 600;
+        width = component.parentElement.clientWidth - margin.left;
+        var height;
+        if(fromChatDrawer){
+            if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+                height = 600;
+            }else{
+                height = 250;
+            }
+        }else{
+            height = component.parentElement.clientHeight;
+        }
         component.innerHTML = '';
         component.parentElement.classList.remove('chata-table-container');
         component.parentElement.classList.add('chata-chart-container');
@@ -1649,10 +1703,10 @@ function putLoadingContainer(target){
         toolbarRight.innerHTML = ChatDrawer.getActionButtons(oldComponent.dataset.componentid, actionType);
     }
 
-    ChatDrawer.createPivotTable = function(pivotArray, oldComponent, action='replace', uuid=''){
+    ChatDrawer.createPivotTable = function(pivotArray, oldComponent, action='replace', uuid='', tableClass='table-response'){
         var header = document.createElement('tr');
         var table = document.createElement('table');
-        table.classList.add('table-response');
+        table.classList.add(tableClass);
         if(oldComponent.dataset.componentid){
             table.setAttribute('data-componentid', oldComponent.dataset.componentid);
             if(oldComponent.parentElement.classList.contains('chata-chart-container')){
@@ -1840,6 +1894,27 @@ function putLoadingContainer(target){
             if(ChatDrawer.options.showHandle){
                 ChatDrawer.drawerButton.style.display = 'flex';
             }
+        }else if(ChatDrawer.options.placement == 'left'){
+            ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
+            ChatDrawer.rootElem.left = '0';
+            ChatDrawer.rootElem.top = 0;
+            if(ChatDrawer.options.showHandle){
+                ChatDrawer.drawerButton.style.display = 'flex';
+            }
+        }else if(ChatDrawer.options.placement == 'bottom'){
+            ChatDrawer.rootElem.style.transform = 'translateY('+ ChatDrawer.options.height +'px)';
+            ChatDrawer.rootElem.style.bottom = '0';
+
+            if(ChatDrawer.options.showHandle){
+                ChatDrawer.drawerButton.style.display = 'flex';
+            }
+        }else if(ChatDrawer.options.placement == 'top'){
+            ChatDrawer.rootElem.style.transform = 'translateY(-'+ ChatDrawer.options.height +'px)';
+            ChatDrawer.rootElem.style.top = '0';
+
+            if(ChatDrawer.options.showHandle){
+                ChatDrawer.drawerButton.style.display = 'flex';
+            }
         }
         if(ChatDrawer.options.clearOnClose){
             ChatDrawer.clearMessages();
@@ -1852,9 +1927,29 @@ function putLoadingContainer(target){
             ChatDrawer.wrapper.style.opacity = .3;
             ChatDrawer.wrapper.style.height = '100%';
         }
-        ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
-        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
-        ChatDrawer.drawerButton.style.display = 'none';
+        if(ChatDrawer.options.placement == 'right'){
+            ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
+            ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+            ChatDrawer.drawerButton.style.display = 'none';
+            ChatDrawer.rootElem.style.right = '0px';
+        }else if(ChatDrawer.options.placement == 'left'){
+            ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
+            ChatDrawer.rootElem.style.left = '0px';
+            ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+            ChatDrawer.drawerButton.style.display = 'none';
+        }else if(ChatDrawer.options.placement == 'bottom'){
+            ChatDrawer.rootElem.style.width = '100%';
+            ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
+            ChatDrawer.rootElem.style.bottom = '0';
+            ChatDrawer.rootElem.style.transform = 'translateY(0)';
+            ChatDrawer.drawerButton.style.display = 'none';
+        }else if(ChatDrawer.options.placement == 'top'){
+            ChatDrawer.rootElem.style.width = '100%';
+            ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
+            ChatDrawer.rootElem.style.top = '0';
+            ChatDrawer.rootElem.style.transform = 'translateY(0)';
+            ChatDrawer.drawerButton.style.display = 'none';
+        }
         ChatDrawer.options.onVisibleChange();
     }
 
@@ -1881,6 +1976,7 @@ function putLoadingContainer(target){
         drawerIcon.classList.add('open-action');
         drawerButton.classList.add('drawer-handle');
         drawerButton.classList.add('open-action');
+        drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
         drawerButton.appendChild(drawerIcon);
         var body = document.getElementsByTagName('body')[0];
         body.insertBefore(drawerButton, rootElem);
