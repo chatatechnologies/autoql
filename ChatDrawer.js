@@ -216,7 +216,7 @@ function putLoadingContainer(target){
             ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
                 if(jsonResponse['full_suggestion'].length > 0){
                     responseRenderer.innerHTML = '';
-                    this.chatbar.removeAttribute("disabled");
+                    chataBarContainer.chatbar.removeAttribute("disabled");
                     parent.removeChild(responseLoadingContainer);
                 }else{
                     ChatDrawer.ajaxCall(URL, function(jsonResponse){
@@ -2040,6 +2040,81 @@ function putLoadingContainer(target){
         });
     }
 
+    ChatDrawer.htmlToElement = function(html) {
+        var template = document.createElement('template');
+        html = html.trim(); // Never return a text node of whitespace as the result
+        template.innerHTML = html;
+        return template.content.firstChild;
+    }
+
+    ChatDrawer.putSafetynetMessage = function(suggestionArray){
+        const message = `
+        Before I can try to find your answer,
+        I need your help understanding a term you used that I don't see in your data.
+        Click the dropdown to view suggestions so I can ensure you get the right data!`;
+
+        const safetyDeleteButtonHtml = `
+        <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z"></path><path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path></svg>
+        `;
+
+        const runQueryButtonHtml = `
+        <button class="chata-safety-net-execute-btn"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-execute-query-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>Run Query</button>
+        `
+
+        const safetyDeleteButton = ChatDrawer.htmlToElement(safetyDeleteButtonHtml);
+        const runQueryButton = ChatDrawer.htmlToElement(runQueryButtonHtml);
+
+
+        var div = document.createElement('div');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        containerMessage.classList.add('chat-single-message-container');
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        responseContentContainer.classList.add('chata-response-content-container');
+        responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
+        for (var i = 0; i < suggestionArray.length; i++) {
+            var suggestion = suggestionArray[i];
+            console.log(suggestion);
+            if(suggestion['type'] == 'word'){
+                var span = document.createElement('span');
+                span.textContent = ' ' + suggestion['word'] + ' ';
+                responseContentContainer.append(span);
+            }else{
+                var div = document.createElement('div');
+                var select = document.createElement('select');
+                select.classList.add('chata-safetynet-select');
+                select.style.width = '47px';
+                div.classList.add('chata-safety-net-selector-container');
+
+                var suggestionList = suggestion['suggestionList'];
+                for (var x = 0; x < suggestionList.length; x++) {
+                    var option = document.createElement('option');
+                    option.setAttribute('value', suggestionList[x]['text']);
+                    option.textContent = suggestionList[x]['text'];
+                    select.appendChild(option);
+                }
+                div.appendChild(select);
+                div.appendChild(safetyDeleteButton);
+                responseContentContainer.appendChild(div);
+            }
+        }
+        responseContentContainer.appendChild(runQueryButton);
+        messageBubble.append(responseContentContainer);
+        // messageBubble.innerHTML = `
+        // <div class="chata-response-content-container">
+        // <span>Before I can try to find your answer, I need your help understanding a term you used that I don't see in your data. Click the dropdown to view suggestions so I can ensure you get the right data!</span>
+        // <br><br>
+        // <span>
+        // </span>
+        // <div class="chata-safety-net-selector-container"><select class="chata-safetynet-select" style="width: 47px;"><option value="{&quot;text&quot;:&quot;for&quot;}">forundefined</option><option value="{&quot;text&quot;:&quot;foo&quot;}">foo</option><select>
+        // <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z"></path><path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path></svg></div><span> bar </span><div class="chata-safety-net-selector-container"><select class="chata-safetynet-select" style="width: 343px;"><option value="{&quot;value_label&quot;:&quot;vendor name&quot;,&quot;text&quot;:&quot;Leasing Canada&quot;}">Leasing Canada (vendor name)</option><option value="{&quot;value_label&quot;:&quot;vendor name&quot;,&quot;text&quot;:&quot;Aquality Plumbing &amp; Heating Inc&quot;}">Aquality Plumbing &amp; Heating Inc (vendor name)</option><option value="{&quot;text&quot;:&quot;testing&quot;}">testing</option></select><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z"></path><path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path></svg></div><span> chart</span></span><br><button class="chata-safety-net-execute-btn"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-execute-query-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>Run Query</button></span></div>`;
+        containerMessage.appendChild(messageBubble);
+        ChatDrawer.drawerContent.appendChild(containerMessage);
+    }
+
     ChatDrawer.sendMessage = function(chataInput, textValue){
         chataInput.disabled = true;
         var responseLoadingContainer = ChatDrawer.putMessage(textValue);
@@ -2052,6 +2127,42 @@ function putLoadingContainer(target){
             if(jsonResponse['full_suggestion'].length > 0){
                 chataInput.removeAttribute("disabled");
                 ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+
+                var fullSuggestion = jsonResponse['full_suggestion'];
+                var query = jsonResponse['query'];
+                var words = query.split(' ');
+                var suggestionArray = [];
+                for (var i = 0; i < words.length; i++) {
+                    var w = words[i];
+                    var hasSuggestion = false;
+                    for (var x = 0; x < fullSuggestion.length; x++) {
+                        var start = fullSuggestion[x]['start'];
+                        var end = fullSuggestion[x]['end'];
+                        var word = query.slice(start, end);
+
+                        console.log(word.trim());
+                        console.log(words[i].trim());
+                        console.log(fullSuggestion[x]);
+                        if(word == w){
+                            suggestionArray.push({
+                                word: word,
+                                type: 'suggestion',
+                                suggestionList: fullSuggestion[x]['suggestion_list']
+                            })
+                            hasSuggestion = true;
+                            break;
+                        }
+                    }
+                    if(!hasSuggestion){
+                        suggestionArray.push({
+                            'word': w,
+                            'type': 'word',
+                            suggestionList: []
+                        });
+                    }
+                    hasSuggestion = false;
+                }
+                ChatDrawer.putSafetynetMessage(suggestionArray);
             }else{
                 ChatDrawer.ajaxCall(URL, function(jsonResponse){
                     console.log(jsonResponse['display_type']);

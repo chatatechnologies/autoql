@@ -887,6 +887,51 @@ text.x-axis-label, text.y-axis-label {
 .grid line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
 .grid path {stroke-width: 0;}
 
+.chata-safety-net-selector-container {
+    display: inline-block;
+    position: relative;
+    margin-left: -5px;
+}
+
+.chata-safetynet-select {
+    position: relative;
+    display: inline-block;
+    height: 30px;
+    background: none;
+    outline: none !important;
+    border: none;
+    font-family: "Titillium Web", sans-serif;
+    letter-spacing: 0.05em;
+    color: #28a8e0;
+    font-size: inherit;
+}
+
+.chata-safety-net-delete-button {
+    position: relative;
+    cursor: pointer;
+    margin-bottom: -2px;
+}
+
+.chata-execute-query-icon {
+    height: 15px;
+    width: 24px;
+    vertical-align: top;
+    fill: #28a8e0;
+}
+
+.chata-safety-net-execute-btn {
+    height: 30px;
+    background: none;
+    border-radius: 4px;
+    margin-top: 24px;
+    width: 100%;
+    color: inherit;
+    cursor: pointer;
+    outline: none !important;
+    border-color: #e2e2e26e;
+    transition: all 0.2s ease;
+}
+
 @-webkit-keyframes bounceIn {
     0% {
         opacity: 0;

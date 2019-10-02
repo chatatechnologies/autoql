@@ -21,8 +21,8 @@
 
     <script>
         var chata = ChatDrawer.init('chata', {
-            isVisible: false,
-            placement: 'top',
+            isVisible: true,
+            placement: 'left',
             width: 500,
             height: 600,
             theme: 'light',
@@ -32,7 +32,7 @@
             handleStyles: {opacity: '0.9', background: '#f2b407'},
             onVisibleChange: function() { console.log('onVisibleChange');},
             onHandleClick: function(){ console.log('handleClick!!!');},
-            showMask: false,
+            showMask: true,
             onMaskClick: function(){ console.log('onMaskClick!!!');ChatDrawer.closeDrawer(); },
             maskClosable: true,
             customerName: 'Oscar',
