@@ -434,10 +434,48 @@ function deleteSuggestion(event){
         ChatDrawer.rootElem.appendChild(chatHeaderContainer);
     }
 
+    ChatDrawer.sendDrilldownMessage = function(json, indexData){
+        var value = json['data'].split('\n')[parseInt(indexData)].split(',')[0]
+        var colData = json['columns'][0]['name'];
+        var col = ChatDrawer.formatColumnName(colData);
+        var input = document.getElementById('chata-input');
+        const URL = `https://backend-staging.chata.ai/api/v1/query${
+            ChatDrawer.options.projectId === 1 ? '/demo' : ''
+        }/drilldown?&project=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
+        var data = {
+            id: json['query_id'],
+        }
+        var obj = {};
+        obj[colData] = value;
+        data['group_bys'] = obj;
+        var responseLoadingContainer = ChatDrawer.putMessage(`Drill down on ${col} "${value}"`);
+        ChatDrawer.ajaxCallPost(URL, function(response){
+            ChatDrawer.putTableResponse(response);
+            ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+        }, data);
+    }
+
     ChatDrawer.registerEvents = function(){
         var chataInput = document.getElementById('chata-input');
         var suggestionList = document.getElementById('auto-complete-list');
-        document.addEventListener('click',function(e){
+        document.addEventListener('dblclick', function(e){
+            if(e.target.parentElement.hasAttribute('data-indexrow')){
+                var table = e.target.parentElement.parentElement;
+                var json = ChatDrawer.responses[table.dataset.componentid];
+                var indexData = e.target.parentElement.dataset.indexrow;
+                ChatDrawer.sendDrilldownMessage(json, indexData);
+            }
+            if(e.target.hasAttribute('data-chartindex')){
+                var component = e.target.parentElement.parentElement.parentElement;
+                if(component.tagName == 'svg'){
+                    component = component.parentElement;
+                }
+                var json = ChatDrawer.responses[component.dataset.componentid];
+                var indexData = e.target.dataset.chartindex;
+                ChatDrawer.sendDrilldownMessage(json, indexData);
+            }
+        });
+        document.addEventListener('click', function(e){
             if(e.target){
                 if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
                 || e.target.classList.contains('square') || e.target.classList.contains('circle')){
@@ -769,6 +807,7 @@ function deleteSuggestion(event){
                 td.textContent = value;
                 tr.appendChild(td);
             }
+            tr.setAttribute('data-indexrow', i);
             table.appendChild(tr);
         }
         if(action == 'replace'){
@@ -886,7 +925,6 @@ function deleteSuggestion(event){
     ChatDrawer.formatDataToHeatmap = function(json){
         var lines = json['data'].split('\n');
         var values = [];
-        var groupField = ChatDrawer.getGroupableField(json);
         var colType1 = json['columns'][0]['type'];
         var colType2 = json['columns'][1]['type'];
         for (var i = 0; i < lines.length; i++) {
@@ -1057,6 +1095,9 @@ function deleteSuggestion(event){
         })
         .enter()
         .append("circle")
+        .each(function (d, i) {
+            d3.select(this).attr('data-chartindex', i);
+        })
         .attr("cx", function (d) {
             if(d.labelX.length < 18){
                 return x(d.labelX) + x.bandwidth() / 2;
@@ -1240,6 +1281,9 @@ function deleteSuggestion(event){
         })
         .enter()
         .append("rect")
+        .each(function (d, i) {
+            d3.select(this).attr('data-chartindex', i);
+        })
         .attr("x", function(d) {
             if(d.labelX.length < 18){
                 return x(d.labelX);
@@ -1400,6 +1444,9 @@ function deleteSuggestion(event){
         .data(data)
         .enter()
         .append("circle")
+        .each(function (d, i) {
+            d3.select(this).attr('data-chartindex', i);
+        })
         .attr("cx", function(d) {
             if(d.label.length < 18){
                 return x(d.label);
@@ -1535,6 +1582,9 @@ function deleteSuggestion(event){
         .data(data)
         .enter()
         .append("rect")
+        .each(function (d, i) {
+            d3.select(this).attr('data-chartindex', i);
+        })
         .attr("x", function(d) {
             if(d.label.length < 18){
                 return x(d.label);
@@ -1588,7 +1638,6 @@ function deleteSuggestion(event){
                 }
             });
         }
-        // component.parentElement.parentElement.parentElement.classList.add('chart-full-width');
 
         var svg = d3.select(component)
         .append("svg")
@@ -1671,6 +1720,9 @@ function deleteSuggestion(event){
         .data(data)
         .enter()
         .append("rect")
+        .each(function (d, i) {
+            d3.select(this).attr('data-chartindex', i);
+        })
         .attr("x", function(d) { return x(Math.min(0, d.value)); })
         .attr("y", function(d) {
             if(d.label.length < 18){
@@ -1697,7 +1749,6 @@ function deleteSuggestion(event){
     ChatDrawer.formatDataToBarChart = function(json){
         var lines = json['data'].split('\n');
         var values = [];
-        var groupField = ChatDrawer.getGroupableField(json);
         var colType1 = json['columns'][0]['type'];
         var hasNegativeValues = false;
         // var colType2 = json['columns'][1]['type'];
@@ -1714,7 +1765,6 @@ function deleteSuggestion(event){
 
             values.push(row);
         }
-        // var grouped = ChatDrawer.groupBy(values, row => row[groupField['indexCol']]);
         return [values, hasNegativeValues];
     }
 
@@ -2041,6 +2091,21 @@ function deleteSuggestion(event){
         xhr.setRequestHeader("Access-Control-Allow-Origin","*");
         xhr.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
         xhr.send();
+    }
+
+    ChatDrawer.ajaxCallPost = function(url, callback, data){
+        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+        xmlhttp.open("POST", url);
+        xmlhttp.setRequestHeader("Content-Type", "application/json");
+        xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
+        xmlhttp.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
+        xmlhttp.onreadystatechange = function() {
+            if (xmlhttp.readyState === 4){
+                var jsonResponse = JSON.parse(xmlhttp.responseText);
+                callback(jsonResponse);
+            }
+        };
+        xmlhttp.send(JSON.stringify(data));
     }
 
     ChatDrawer.ajaxCallAutoComplete = function(url, callback){
@@ -2531,6 +2596,7 @@ function deleteSuggestion(event){
         var tableContainer = document.createElement('div');
         var table = document.createElement('table');
         var header = document.createElement('tr');
+        var groupField = ChatDrawer.getGroupableField(jsonResponse);
         containerMessage.classList.add('chat-single-message-container');
         containerMessage.classList.add('response');
         messageBubble.classList.add('chat-message-bubble');
@@ -2584,6 +2650,9 @@ function deleteSuggestion(event){
                 var td = document.createElement('td');
                 td.textContent = value;
                 tr.appendChild(td);
+            }
+            if(typeof groupField !== 'number'){
+                tr.setAttribute('data-indexrow', i);
             }
             table.appendChild(tr);
         }
