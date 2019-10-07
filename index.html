@@ -9,25 +9,25 @@
     <script src="ChatDrawer.js"></script>
 
 </head>
-<body>
+<body style="background: #efefef">
     <div id="chata">
     </div>
 
     <div id="mycontainer" style="width:100%;">
     </div>
 
-    <div id="response" style="width:70%; height: 600px; background: rgba(0, 0, 0, 0); margin:auto;">
+    <div id="response" style="width:98%; height: 750px; background: #efefef; margin:auto; border-radius:10px">
     </div>
 
     <script>
         var chata = ChatDrawer.init('chata', {
             isVisible: true,
-            placement: 'left',
-            width: 500,
+            placement: 'right',
+            width: 550,
             height: 600,
             theme: 'black',
             // accentColor: '#f2b407',
-            title: 'Foo bar',
+            // title: 'Foo bar',
             showHandle: true,
             // handleStyles: {opacity: '0.9', background: '#f2b407'},
             onVisibleChange: function() { console.log('onVisibleChange');},
@@ -36,17 +36,31 @@
             onMaskClick: function(){ console.log('onMaskClick!!!');ChatDrawer.closeDrawer(); },
             maskClosable: true,
             customerName: 'Oscar',
-            introMessage: 'Testing intro message',
+            // introMessage: 'Testing intro message',
             maxMessages: 10,
             clearOnClose: false,
             enableVoiceRecord: true,
             enableAutocomplete: true,
-            autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
+            // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
             enableSafetyNet: true,
             enableDrilldowns: true,
             demo: false
         });
-        var chatBar = ChatDrawer.getChatBar();
+        var chatBar = ChatDrawer.getChatBar({
+            autoCompletePlacement: 'bottom',
+            enableAutocomplete: true,
+            showLoadingDots: true,
+            showChataIcon: true,
+            enableSafetyNet: true,
+            // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
+            onResponseCallback: function(){
+                console.log('foo');
+            },
+            onSubmit: function(){
+                console.log('onSubmit');
+            },
+            isDisabled: false
+        });
         var responseRenderer = ChatDrawer.createResponseRenderer();
         chatBar.bind(responseRenderer);
         document.getElementById('mycontainer').append(chatBar);

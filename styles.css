@@ -39,7 +39,7 @@ table {
     cursor: pointer;
 }
 .drawer-handle{
-    position: absolute;
+    position: fixed;
     width: 41px;
     height: 40px;
     cursor: pointer;
@@ -277,7 +277,7 @@ table {
     letter-spacing: 0.04em;
     outline: none !important;
     width: calc(100% - 20px);
-    background: transparent;
+    background: white;
     border: 1px solid #d3d3d352;
     color: #5d5d5d;
 }
@@ -832,9 +832,11 @@ input[type=text]:disabled {
 }
 .title-tip{
     font-weight: bold;
-    color: var(--chata-drawer-text-color-primary);
+    color: white;
 }
-
+.text-tip{
+    color: white;
+}
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
     box-sizing: border-box;
