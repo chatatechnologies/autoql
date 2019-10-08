@@ -4,10 +4,18 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="d3.v4.js"></script>
-    <script src="d3.tip.js"></script>
-    <script src="ChatDrawer.js"></script>
-
+    <!-- <script src="src/d3.v4.js"></script>
+    <script src="src/d3.tip.js"></script>
+    <script src="src/utils.js"></script>
+    <script src="src/ChataTable.js"></script>
+    <script src="src/ChatBar.js"></script>
+    <script src="src/ChataHeatmapChart.js"></script>
+    <script src="src/ChataBubbleChart.js"></script>
+    <script src="src/ChataBarChart.js"></script>
+    <script src="src/ChataColumnChart.js"></script>
+    <script src="src/ChataLineChart.js"></script>
+    <script src="src/ChatDrawer.js"></script> -->
+    <script src="build/chata-widget-min.js"></script>
 
 </head>
 <body style="background: #efefef">
@@ -22,8 +30,8 @@
 
     <script>
         var chata = ChatDrawer.init('chata', {
-            isVisible: false,
-            placement: 'right',
+            isVisible: true,
+            placement: 'left',
             width: 650,
             height: 600,
             theme: 'light',

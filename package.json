@@ -1,0 +1,25 @@
+{
+  "name": "vanillajs-widget",
+  "version": "1.0.0",
+  "description": "Javascript widget library",
+  "main": "ChatDrawer.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://gitlab.com/vicente_rincon/widget.git"
+  },
+  "author": "Oscar Ramirez",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/vicente_rincon/widget/issues"
+  },
+  "homepage": "https://gitlab.com/vicente_rincon/widget#readme",
+  "devDependencies": {
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-minify": "^3.1.0",
+    "gulp-order": "^1.2.0"
+  }
+}
