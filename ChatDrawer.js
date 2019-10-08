@@ -317,8 +317,10 @@ function csvTo2dArray(parseMe) {
                     var node = ChatDrawer.createSafetynetContent(suggestionArray, 'ChatBar');
                     responseRenderer.appendChild(node);
                     chataBarContainer.options.onResponseCallback();
+                    ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
                 }else{
                     ChatDrawer.ajaxCall(URL, function(jsonResponse){
+                        ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
                         responseRenderer.innerHTML = '';
                         chataBarContainer.chatbar.removeAttribute("disabled");
                         if(chataBarContainer.options.showLoadingDots){
@@ -423,7 +425,7 @@ function csvTo2dArray(parseMe) {
         var responseContentContainer = document.createElement('div')
         responseContentContainer.classList.add('chata-response-content-container');
         responseContentContainer.classList.add('renderer-container');
-
+        responseContentContainer.setAttribute('data-componentid', uuidv4());
         return responseContentContainer;
     }
 
@@ -499,7 +501,7 @@ function csvTo2dArray(parseMe) {
         ChatDrawer.rootElem.appendChild(chatHeaderContainer);
     }
 
-    ChatDrawer.sendDrilldownMessage = function(json, indexData){
+    ChatDrawer.sendDrilldownMessage = function(json, indexData, context='ChatDrawer', responseRenderer=null){
         var value = csvTo2dArray(json['data'])[parseInt(indexData)][0]
         var colData = json['columns'][0]['name'];
         var col = ChatDrawer.formatColumnName(colData);
@@ -513,11 +515,30 @@ function csvTo2dArray(parseMe) {
         obj[colData] = value;
         data['group_bys'] = obj;
         var msg = `Drill down on ${col} "${value}"`;
-        var responseLoadingContainer = ChatDrawer.putMessage(msg);
-        ChatDrawer.ajaxCallPost(URL, function(response){
-            ChatDrawer.putTableResponse(response);
-            ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-        }, data);
+        if(context == 'ChatDrawer'){
+            var responseLoadingContainer = ChatDrawer.putMessage(msg);
+            ChatDrawer.ajaxCallPost(URL, function(response){
+                ChatDrawer.putTableResponse(response);
+                ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+            }, data);
+        }else{
+            ChatDrawer.ajaxCallPost(URL, function(response){
+                responseRenderer.innerHTML = '';
+                var uuid = uuidv4();
+                ChatDrawer.responses[uuid] = response;
+                var div = document.createElement('div');
+                div.classList.add('chata-table-container');
+                div.classList.add('chata-table-container-renderer');
+                responseRenderer.appendChild(div);
+                if(response['columns'].length == 1){
+                    var data = response['data'];
+                    responseRenderer.innerHTML = `<div>${data}</div>`;
+                }else{
+                    ChatDrawer.createTable(response, div, 'append', uuid, 'table-response-renderer');
+                }
+                console.log(msg);
+            }, data);
+        }
     }
 
     ChatDrawer.registerEvents = function(){
@@ -540,16 +561,28 @@ function csvTo2dArray(parseMe) {
                     var indexData = e.target.dataset.chartindex;
                     ChatDrawer.sendDrilldownMessage(json, indexData);
                 }
-                if(e.target.hasAttribute('data-chartrenderer')){
-                    var component = e.target.parentElement.parentElement.parentElement;
-                    if(component.tagName == 'svg'){
-                        component = component.parentElement;
-                    }
+            }
+
+            if(e.target.hasAttribute('data-chartrenderer')){
+                var component = e.target.parentElement.parentElement.parentElement;
+                if(component.tagName == 'svg'){
+                    component = component.parentElement;
+                }
+                if(component.chataBarContainer.options.enableDrilldowns){
                     var json = ChatDrawer.responses[component.dataset.componentid];
                     var indexData = e.target.dataset.chartrenderer;
-                    console.log(indexData);
-                    console.log(component);
+                    ChatDrawer.sendDrilldownMessage(json, indexData, 'ChatBar', component);
                 }
+            }
+            if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
+                var component = e.target.parentElement.parentElement;
+                var responseRenderer = component.parentElement.parentElement;
+                if(responseRenderer.chataBarContainer.options.enableDrilldowns){
+                    var json = ChatDrawer.responses[component.dataset.componentid];
+                    var indexData = e.target.parentElement.dataset.indexrowrenderer;
+                    ChatDrawer.sendDrilldownMessage(json, indexData, 'ChatBar', responseRenderer);
+                }
+
             }
         });
         document.addEventListener('click', function(e){
@@ -843,6 +876,7 @@ function csvTo2dArray(parseMe) {
     }
 
     ChatDrawer.createTable = function(jsonResponse, oldComponent, action='replace', uuid, tableClass='table-response'){
+        var groupField = ChatDrawer.getGroupableField(jsonResponse);
         var table = document.createElement('table');
         var header = document.createElement('tr');
         table.classList.add(tableClass);
@@ -883,7 +917,13 @@ function csvTo2dArray(parseMe) {
                 td.textContent = value;
                 tr.appendChild(td);
             }
-            tr.setAttribute('data-indexrow', i);
+            if(typeof groupField !== 'number'){
+                if(action == 'replace'){
+                    tr.setAttribute('data-indexrow', i);
+                }else{
+                    tr.setAttribute('data-indexrowrenderer', i);
+                }
+            }
             table.appendChild(tr);
         }
         if(action == 'replace'){

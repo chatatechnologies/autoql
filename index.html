@@ -4,9 +4,12 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <script src="d3.v4.js"></script>
+    <!-- <script src="d3.v4.js"></script>
     <script src="d3.tip.js"></script>
-    <script src="ChatDrawer.js"></script>
+    <script src="ChatDrawer.js"></script> -->
+    <script src="main.min.js">
+
+    </script>
 
 </head>
 <body style="background: #efefef">
@@ -21,11 +24,11 @@
 
     <script>
         var chata = ChatDrawer.init('chata', {
-            isVisible: true,
+            isVisible: false,
             placement: 'right',
-            width: 550,
+            width: 650,
             height: 600,
-            theme: 'black',
+            theme: 'light',
             // accentColor: '#f2b407',
             // title: 'Foo bar',
             showHandle: true,
@@ -52,6 +55,7 @@
             showLoadingDots: true,
             showChataIcon: true,
             enableSafetyNet: true,
+            enableDrilldowns: true,
             // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
             onResponseCallback: function(){
                 console.log('foo');
