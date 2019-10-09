@@ -1,4 +1,4 @@
-function createBarChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex'){
+function createBarChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 40, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -127,10 +127,15 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d)
+        }
+
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide()
+        }
     });
 }

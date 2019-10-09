@@ -1,29 +1,3 @@
-const LIGHT_THEME = {
-  '--chata-drawer-accent-color': '#28a8e0',
-  '--chata-drawer-background-color': '#fff',
-  '--chata-drawer-border-color': '#d3d3d352',
-  '--chata-drawer-hover-color': '#ececec',
-  '--chata-drawer-text-color-primary': '#5d5d5d',
-  '--chata-drawer-text-color-placeholder': '#0000009c'
-}
-
-const DARK_THEME = {
-  '--chata-drawer-accent-color': '#525252', // dark gray
-  // '--chata-drawer-accent-color': '#193a48', // dark blue
-  '--chata-drawer-background-color': '#636363',
-  '--chata-drawer-border-color': '#d3d3d329',
-  '--chata-drawer-hover-color': '#5a5a5a',
-  '--chata-drawer-text-color-primary': '#fff',
-  '--chata-drawer-text-color-placeholder': '#ffffff9c'
-}
-
-const MONTH_NAMES = [
-    "January", "February", "March",
-    "April", "May", "June", "July",
-    "August", "September", "October",
-    "November", "December"
-];
-
 function formatData(val, type){
     value = '';
     switch (type) {
@@ -64,7 +38,8 @@ function formatDate(date) {
         day = '31';
         monthIndex = 11;
     }
-    return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
+    // return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
+    return MONTH_NAMES[monthIndex] + ' ' + year;
 }
 
 function copyTextToClipboard(text) {
@@ -280,4 +255,48 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
         ret.push(item);
     }
     return ret;
+}
+
+function getSVGString(svgNode) {
+    svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    var serializer = new XMLSerializer();
+    var svgString = serializer.serializeToString(svgNode);
+    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
+    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
+
+    return svgString;
+}
+
+function svgString2Image(svgString, width, height) {
+    var imgsrc = 'data:image/svg+xml;base64,'+ btoa(unescape(encodeURIComponent(svgString)));
+
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    var image = new Image();
+    image.onload = function() {
+        context.clearRect ( 0, 0, width, height );
+        context.drawImage(image, 0, 0, width, height);
+        var imgPixels = context.getImageData(0, 0, canvas.width, canvas.height);
+        for(var y = 0; y < imgPixels.height; y++){
+            for(var x = 0; x < imgPixels.width; x++){
+                var i = (y * 4) * imgPixels.width + x * 4;
+                imgPixels.data[i] = 0;
+                imgPixels.data[i + 1] = 0;
+                imgPixels.data[i + 2] = 0;
+            }
+        }
+        context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+
+        var link = document.createElement("a");
+        link.setAttribute('href', canvas.toDataURL("image/png;base64"));
+        link.setAttribute('download', 'Chart.png');
+        link.click();
+    };
+
+
+    image.src = imgsrc;
 }

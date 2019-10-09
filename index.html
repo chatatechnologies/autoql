@@ -4,18 +4,22 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="styles.css">
-    <!-- <script src="src/d3.v4.js"></script>
+    <script src="src/d3.v4.js"></script>
     <script src="src/d3.tip.js"></script>
+    <script src="src/svgIcons.js"></script>
+    <script src="src/constants.js"></script>
     <script src="src/utils.js"></script>
+    <script src="src/Safetynet.js"></script>
     <script src="src/ChataTable.js"></script>
-    <script src="src/ChatBar.js"></script>
     <script src="src/ChataHeatmapChart.js"></script>
     <script src="src/ChataBubbleChart.js"></script>
     <script src="src/ChataBarChart.js"></script>
     <script src="src/ChataColumnChart.js"></script>
     <script src="src/ChataLineChart.js"></script>
-    <script src="src/ChatDrawer.js"></script> -->
-    <script src="build/chata-widget-min.js"></script>
+    <script src="src/ResponseRenderer.js"></script>
+    <script src="src/ChatBar.js"></script>
+    <script src="src/ChatDrawer.js"></script>
+    <!-- <script src="build/chata-widget-min.js"></script> -->
 
 </head>
 <body style="background: #efefef">
@@ -71,7 +75,13 @@
             },
             isDisabled: false
         });
-        var responseRenderer = ChatDrawer.createResponseRenderer();
+        var responseRenderer = ChatDrawer.createResponseRenderer({
+            supportsSuggestions: true,
+            onSuggestionClick: function(){console.log('onSuggestionClick!!!!!!!!!!!!');},
+            // tableBorderColor: 'green',
+            // tableHoverColor: 'green',
+            renderTooltips: false,
+        });
         chatBar.bind(responseRenderer);
         document.getElementById('mycontainer').append(chatBar);
         document.getElementById('response').append(responseRenderer);

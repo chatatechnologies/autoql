@@ -1,4 +1,4 @@
-function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex'){
+function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -145,10 +145,14 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
     .attr("fill", "#28a8e0")
     .attr('class', 'line-dot')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
     });
 }

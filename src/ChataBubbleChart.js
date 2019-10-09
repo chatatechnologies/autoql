@@ -1,4 +1,4 @@
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex'){
+function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -176,10 +176,14 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
     .attr("opacity", "0.7")
     .attr('class', 'circle')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
     });
 }

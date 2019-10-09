@@ -54,6 +54,7 @@ function createTable(jsonResponse, oldComponent, action='replace', uuid, tableCl
     }else{
         oldComponent.appendChild(table);
     }
+    return table;
 }
 
 
@@ -109,4 +110,5 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
     }else{
         oldComponent.appendChild(table);
     }
+    return table;
 }
