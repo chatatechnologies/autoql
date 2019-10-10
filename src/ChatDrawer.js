@@ -476,13 +476,14 @@ var ChatDrawer = {
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     var values = formatDataToHeatmap(json);
-                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                    labelsY = formatLabels(labelsY, json['columns'][0]['type']);
+                    labelsX = formatLabels(labelsX, json['columns'][1]['type']);
 
                     var col1 = formatColumnName(json['columns'][0]['name']);
                     var col2 = formatColumnName(json['columns'][1]['name']);
                     var col3 = formatColumnName(json['columns'][2]['name']);
-
 
                     createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
                     ChatDrawer.refreshToolbarButtons(component, 'heatmap');
@@ -500,8 +501,10 @@ var ChatDrawer = {
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     var values = formatDataToHeatmap(json);
-                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                    labelsY = formatLabels(labelsY, json['columns'][0]['type']);
+                    labelsX = formatLabels(labelsX, json['columns'][1]['type']);
 
                     var col1 = formatColumnName(json['columns'][0]['name']);
                     var col2 = formatColumnName(json['columns'][1]['name']);
@@ -578,46 +581,6 @@ var ChatDrawer = {
         });
         return Object.keys(unique);
     }
-
-    formatDataToHeatmap = function(json){
-        var lines = csvTo2dArray(json['data']);
-        var values = [];
-        var colType1 = json['columns'][0]['type'];
-        var colType2 = json['columns'][1]['type'];
-        for (var i = 0; i < lines.length; i++) {
-            var data = lines[i];
-            var row = {};
-            row['labelY'] = formatData(data[0], colType1);
-            row['labelX'] = formatData(data[1], colType2);
-            var value = parseFloat(data[2]);
-            row['value'] = value;
-            values.push(row);
-        }
-        return values;
-    }
-
-    formatDataToBarChart = function(json){
-        var lines = csvTo2dArray(json['data']);
-        var values = [];
-        var colType1 = json['columns'][0]['type'];
-        var hasNegativeValues = false;
-        // var colType2 = json['columns'][1]['type'];
-        for (var i = 0; i < lines.length; i++) {
-            var data = lines[i];
-            var row = {};
-            row['label'] = formatData(data[0], colType1);
-            var value = parseFloat(data[1]);
-            if(value < 0 && !hasNegativeValues){
-                hasNegativeValues = true;
-            }
-            row['value'] = value;
-
-
-            values.push(row);
-        }
-        return [values, hasNegativeValues];
-    }
-
 
     ChatDrawer.groupBy = function(list, keyGetter) {
         const map = new Map();

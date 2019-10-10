@@ -302,22 +302,59 @@ function svgString2Image(svgString, width, height) {
 }
 
 function getSpeech(button){
-    // window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    // const recognition = new window.SpeechRecognition();
-    // recognition.onresult = (event) => {
-    //     const speechToText = event.results[0][0].transcript;
-    //     console.log(speechToText)
-    // }
-    // console.log('Audio capturing started');
-    // recognition.start();
-    // setTimeout(function(){ alert("Hello"); recognition.stop() }, 3000);
-
     window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    let finalTranscript = '';
     let recognition = new window.SpeechRecognition();
     recognition.interimResults = true;
     recognition.maxAlternatives = 10;
     recognition.continuous = true;
     return recognition;
+}
 
+function formatLabels(labels, colType){
+    labels = labels.sort();
+    for (var i = 0; i < labels.length; i++) {
+        labels[i] = formatData(labels[i], colType);
+    }
+    return labels;
+}
+
+formatDataToHeatmap = function(json){
+    var lines = csvTo2dArray(json['data']);
+    var values = [];
+    var colType1 = json['columns'][0]['type'];
+    var colType2 = json['columns'][1]['type'];
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        var row = {};
+        row['labelY'] = formatData(data[0], colType1);
+        row['labelX'] = formatData(data[1], colType2);
+        row['unformatY'] = data[0];
+        row['unformatX'] = data[1];
+        var value = parseFloat(data[2]);
+        row['value'] = value;
+        values.push(row);
+    }
+    return values;
+}
+
+formatDataToBarChart = function(json){
+    var lines = csvTo2dArray(json['data']);
+    var values = [];
+    var colType1 = json['columns'][0]['type'];
+    var hasNegativeValues = false;
+    // var colType2 = json['columns'][1]['type'];
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        var row = {};
+        row['label'] = formatData(data[0], colType1);
+        var value = parseFloat(data[1]);
+        if(value < 0 && !hasNegativeValues){
+            hasNegativeValues = true;
+        }
+        row['value'] = value;
+
+
+        values.push(row);
+    }
+    return [values, hasNegativeValues];
 }
