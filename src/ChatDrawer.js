@@ -27,10 +27,13 @@ var ChatDrawer = {
         autocompleteStyles: {},
         enableSafetyNet: true,
         enableDrilldowns: true,
-        demo: false
+        demo: false,
+        isRecordVoiceActive: false
     },
     responses: [],
-    xhr: new XMLHttpRequest()
+    xhr: new XMLHttpRequest(),
+    speechToText: getSpeech(),
+    finalTranscript: ''
 };
 
 (function(document, window, ChatDrawer, undefined) {
@@ -74,6 +77,28 @@ var ChatDrawer = {
                 themeStyles[property],
             );
         }
+
+        ChatDrawer.speechToText.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+                let transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    ChatDrawer.finalTranscript += transcript;
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            console.log(ChatDrawer.finalTranscript);
+            if(ChatDrawer.finalTranscript !== ''){
+                var button = document.getElementById('chata-voice-record-button');
+                var chataInput = document.getElementById('chata-input');
+                ChatDrawer.sendMessage(chataInput, ChatDrawer.finalTranscript);
+                ChatDrawer.speechToText.stop();
+                button.style.background = themeStyles['--chata-drawer-accent-color'];
+                ChatDrawer.options.isRecordVoiceActive = false;
+            }
+        }
+
         return this;
     }
 
@@ -101,8 +126,8 @@ var ChatDrawer = {
         </div>
         <div class="text-bar">
             <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
-            <button id="chata-voice-record-button" class="chat-voice-record-button" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false">
-            <img class="chat-voice-record-icon" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
+            <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false">
+            <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
             </button>
         </div>
         `;
@@ -247,6 +272,23 @@ var ChatDrawer = {
 
                 if(e.target.classList.contains('close-action')){
                     ChatDrawer.closeDrawer();
+                }
+
+                if(e.target.classList.contains('chata-voice')){
+                    var button = document.getElementById('chata-voice-record-button');
+
+
+                    if(ChatDrawer.options.isRecordVoiceActive){
+                        const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
+                        ChatDrawer.options.isRecordVoiceActive = false;
+                        ChatDrawer.speechToText.stop();
+                        button.style.background = themeStyles['--chata-drawer-accent-color'];
+                    }else{
+                        ChatDrawer.finalTranscript = '';
+                        button.style.background = 'red';
+                        ChatDrawer.options.isRecordVoiceActive = true;
+                        ChatDrawer.speechToText.start();
+                    }
                 }
 
                 if(e.target.classList.contains('suggestion')){

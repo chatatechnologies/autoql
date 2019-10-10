@@ -38,8 +38,8 @@ function formatDate(date) {
         day = '31';
         monthIndex = 11;
     }
-    // return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
-    return MONTH_NAMES[monthIndex] + ' ' + year;
+    return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
+    // return MONTH_NAMES[monthIndex] + ' ' + year;
 }
 
 function copyTextToClipboard(text) {
@@ -299,4 +299,25 @@ function svgString2Image(svgString, width, height) {
 
 
     image.src = imgsrc;
+}
+
+function getSpeech(button){
+    // window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    // const recognition = new window.SpeechRecognition();
+    // recognition.onresult = (event) => {
+    //     const speechToText = event.results[0][0].transcript;
+    //     console.log(speechToText)
+    // }
+    // console.log('Audio capturing started');
+    // recognition.start();
+    // setTimeout(function(){ alert("Hello"); recognition.stop() }, 3000);
+
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    let finalTranscript = '';
+    let recognition = new window.SpeechRecognition();
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 10;
+    recognition.continuous = true;
+    return recognition;
+
 }
