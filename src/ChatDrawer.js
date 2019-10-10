@@ -5,6 +5,7 @@ var ChatDrawer = {
         apiKey: '',
         customerId: '',
         userId: '',
+        domain: '',
         isVisible: false,
         placement: 'right',
         width: 500,

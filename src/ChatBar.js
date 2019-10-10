@@ -5,9 +5,11 @@ function getChatBar(options){
     chataBarContainer.classList.add('chat-drawer-chat-bar');
     chataBarContainer.classList.add('autosuggest-top');
     chataBarContainer.options = {
+        token: '',
         apiKey: '',
         customerId: '',
         userId: '',
+        domain: '',
         isDisabled: false,
         onSubmit: function(){},
         onResponseCallback: function(){},
