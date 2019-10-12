@@ -2,8 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="utf-8">
-    <script src="d3.v4.js"></script>
-    <script src="d3.tip.js"></script>
+    <script src="src/d3.v4.js"></script>
+    <script src="src/d3.tip.js"></script>
     <title></title>
     <style media="screen">
         .domain{
@@ -106,39 +106,12 @@
 <body>
     <div id="foo" data-containerid="1"></div>
     <script>
-    var margin = {top: 5, right: 10, bottom: 50, left: 90},
-    width = 450,
-    // height = component.parentElement.clientHeight < 600 ? 600 - margin.bottom : component.parentElement.clientHeight - margin.bottom;
-    height = 600;
-    var myGroups = ["December 30, 2016", "February 27, 2017", "March 30, 2017", "April 29, 2017", "May 30, 2017", "June 29, 2017", "July 30, 2017", "August 30, 2017", "September 29, 2017", "October 30, 2017"];
-    var myVars = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
 
+    var margin = {top: 10, right: 30, bottom: 20, left: 50},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 
-    var data = [
-        {label: "wire", value: 1900},
-        {label: "Tub Surround", value: 1550},
-        {label: "AIRCARE 1.6 gal.", value: 1200},
-        {label: "AIRCARE Digital", value: -1700},
-        {label: "AIRCARE Wick", value: 1200},
-        {label: "Adjustable P-Trap", value: 2244},
-        {label: "Air Conditioner", value: 4455},
-        {label: "Boilers", value: 235},
-        {label: "Compressor 1.0", value: -656},
-        {label: "FLEXIBLE COUPLING 3 X 2", value: 4564},
-        {label: "Granite Countertop - Blue Marble", value: 334},
-        {label: "Replacement Toilet", value: 1900},
-        {label: "Ridgid - Tube cutter", value: -1550},
-        {label: "Seal-A-Crack", value: 12500},
-        {label: "Seals", value: 1900},
-        {label: "Shower Head - Bronze Meta 1", value: -200},
-        {label: "50 Gal Water Tank/ Heater", value: -4055},
-        {label: "Thermostat - Residential", value: -2332},
-        {label: "Foo", value: 235},
-        {label: "Tap Handles - Bronze Metalss", value: 200},
-        {label: "Tap Handles - Crystal", value: 2332},
-        {label: "SharkBite", value: 235}
-    ];
-
+    // append the svg object to the body of the page
     var svg = d3.select("#foo")
     .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -147,45 +120,145 @@
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
+    // Parse the Data
+    d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_stacked.csv", function(data) {
+        console.log(data);
+        // List of subgroups = header of the csv files = soil condition here
+        var subgroups = data.columns.slice(1)
+        console.log(subgroups);
 
-    var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(myGroups)
-    .padding(0.01);
-    svg.append("g")
-    .attr("transform", "translate(0," + height + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+        // List of groups = species here = value of the first column called group -> I show them on the X axis
+        var groups = d3.map(data, function(d){return(d.group)}).keys()
+        console.log(groups);
+        // Add X axis
+        var x = d3.scaleBand()
+        .domain(groups)
+        .range([0, width])
+        .padding([0.2])
+        svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).tickSizeOuter(0));
 
-    // Build X scales and axis:
-    var y = d3.scaleBand()
-    .range([ height, 0 ])
-    .domain(myVars)
-    .padding(0.01);
-    svg.append("g")
-    .call(d3.axisLeft(y));
+        // Add Y axis
+        var y = d3.scaleLinear()
+        .domain([0, 60])
+        .range([ height, 0 ]);
+        svg.append("g")
+        .call(d3.axisLeft(y));
 
-    var colorScale = d3.scaleLinear()
-    .range(["white", "#69b3a2"])
-    .domain([1,100])
+        // color palette = one color per subgroup
+        var color = d3.scaleOrdinal()
+        .domain(subgroups)
+        .range(['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'])
 
-    //Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv", function(data) {
+        //stack the data? --> stack per subgroup
+        var stackedData = d3.stack()
+        .keys(subgroups)
+        (data)
 
-        svg.selectAll()
-        .data(data, function(d) {return d.group+':'+d.variable;})
-        .enter()
-        .append("rect")
-        .attr("x", function(d) { return x(d.group) })
-        .attr("y", function(d) { return y(d.variable) })
-        .attr("width", x.bandwidth() )
-        .attr("height", y.bandwidth() )
-        .style("fill", function(d) { return colorScale(d.value)} )
+        console.log(stackedData);
 
-    });
+        // Show the bars
+        svg.append("g")
+        .selectAll("g")
+        // Enter in the stack data = loop key per key = group per group
+        .data(stackedData)
+        .enter().append("g")
+        .attr("fill", function(d) { return color(d.key); })
+        .selectAll("rect")
+        // enter a second time = loop subgroup per subgroup to add all rectangles
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .attr("x", function(d) { return x(d.data.group); })
+        .attr("y", function(d) { return y(d[1])+0.5; })
+        .attr("height", function(d) { return y(d[0]) - y(d[1])-0.5; })
+        .attr("width",x.bandwidth())
+    })
+
+
+
+
+
+    // var margin = {top: 5, right: 10, bottom: 50, left: 90},
+    // width = 450,
+    // // height = component.parentElement.clientHeight < 600 ? 600 - margin.bottom : component.parentElement.clientHeight - margin.bottom;
+    // height = 600;
+    // var myGroups = ["December 30, 2016", "February 27, 2017", "March 30, 2017", "April 29, 2017", "May 30, 2017", "June 29, 2017", "July 30, 2017", "August 30, 2017", "September 29, 2017", "October 30, 2017"];
+    // var myVars = ["v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10"];
+    //
+    //
+    // var data = [
+    //     {label: "wire", value: 1900},
+    //     {label: "Tub Surround", value: 1550},
+    //     {label: "AIRCARE 1.6 gal.", value: 1200},
+    //     {label: "AIRCARE Digital", value: -1700},
+    //     {label: "AIRCARE Wick", value: 1200},
+    //     {label: "Adjustable P-Trap", value: 2244},
+    //     {label: "Air Conditioner", value: 4455},
+    //     {label: "Boilers", value: 235},
+    //     {label: "Compressor 1.0", value: -656},
+    //     {label: "FLEXIBLE COUPLING 3 X 2", value: 4564},
+    //     {label: "Granite Countertop - Blue Marble", value: 334},
+    //     {label: "Replacement Toilet", value: 1900},
+    //     {label: "Ridgid - Tube cutter", value: -1550},
+    //     {label: "Seal-A-Crack", value: 12500},
+    //     {label: "Seals", value: 1900},
+    //     {label: "Shower Head - Bronze Meta 1", value: -200},
+    //     {label: "50 Gal Water Tank/ Heater", value: -4055},
+    //     {label: "Thermostat - Residential", value: -2332},
+    //     {label: "Foo", value: 235},
+    //     {label: "Tap Handles - Bronze Metalss", value: 200},
+    //     {label: "Tap Handles - Crystal", value: 2332},
+    //     {label: "SharkBite", value: 235}
+    // ];
+    //
+    // var svg = d3.select("#foo")
+    // .append("svg")
+    // .attr("width", width + margin.left + margin.right)
+    // .attr("height", height + margin.top + margin.bottom)
+    // .append("g")
+    // .attr("transform",
+    // "translate(" + margin.left + "," + margin.top + ")");
+    //
+    //
+    // var x = d3.scaleBand()
+    // .range([ 0, width ])
+    // .domain(myGroups)
+    // .padding(0.01);
+    // svg.append("g")
+    // .attr("transform", "translate(0," + height + ")")
+    // .call(d3.axisBottom(x))
+    // .selectAll("text")
+    // .style("color", '#fff')
+    // .attr("transform", "translate(-10,0)rotate(-45)")
+    // .style("text-anchor", "end");
+    //
+    // // Build X scales and axis:
+    // var y = d3.scaleBand()
+    // .range([ height, 0 ])
+    // .domain(myVars)
+    // .padding(0.01);
+    // svg.append("g")
+    // .call(d3.axisLeft(y));
+    //
+    // var colorScale = d3.scaleLinear()
+    // .range(["white", "#69b3a2"])
+    // .domain([1,100])
+    //
+    // //Read the data
+    // d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/heatmap_data.csv", function(data) {
+    //
+    //     svg.selectAll()
+    //     .data(data, function(d) {return d.group+':'+d.variable;})
+    //     .enter()
+    //     .append("rect")
+    //     .attr("x", function(d) { return x(d.group) })
+    //     .attr("y", function(d) { return y(d.variable) })
+    //     .attr("width", x.bandwidth() )
+    //     .attr("height", y.bandwidth() )
+    //     .style("fill", function(d) { return colorScale(d.value)} )
+    //
+    // });
 
     </script>
 </body>

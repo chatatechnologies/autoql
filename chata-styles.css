@@ -878,9 +878,10 @@ text.x-axis-label, text.y-axis-label {
     fill-opacity: 0.7;
     text-anchor: middle;
     font-weight: bold;
-    font-size: 12px;
+    font-size: 13px;
     font-family: "Titillium Web", sans-serif;
     letter-spacing: 0.04em;
+    white-space: nowrap;
 }
 
 .chata-chart-container .bar.active, .chata-chart-container .circle.active, .chata-chart-container .square.active, .chata-chart-container .line-dot.active {
