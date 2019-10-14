@@ -76,7 +76,6 @@ function putLoadingContainer(target){
 }
 
 function runQuery(event, context){
-
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement.parentElement;
     }else if(event.target.tagName == 'path'){
@@ -318,7 +317,7 @@ function formatLabels(labels, colType){
     return labels;
 }
 
-formatDataToHeatmap = function(json){
+function formatDataToHeatmap(json){
     var lines = csvTo2dArray(json['data']);
     var values = [];
     var colType1 = json['columns'][0]['type'];
@@ -337,12 +336,11 @@ formatDataToHeatmap = function(json){
     return values;
 }
 
-formatDataToBarChart = function(json){
+function formatDataToBarChart(json){
     var lines = csvTo2dArray(json['data']);
     var values = [];
     var colType1 = json['columns'][0]['type'];
     var hasNegativeValues = false;
-    // var colType2 = json['columns'][1]['type'];
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};

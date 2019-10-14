@@ -417,22 +417,22 @@ var ChatDrawer = {
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
                     var data = csvTo2dArray(json['data']);
+                    console.log(data);
                     var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                    groups = groups.sort().reverse();
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][1] = formatData(data[i][1], json['columns'][1]['type']);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i] = formatData(groups[i], json['columns'][1]['type'])
+                    }
                     var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                     var col1 = formatColumnName(json['columns'][0]['name']);
                     var col2 = formatColumnName(json['columns'][1]['name']);
-                    var dataGrouped = ChatDrawer.formatDataToStackedChart(data, groups);
-                    // var values = formatDataToHeatmap(json);
-                    // var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                    // var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                    // labelsY = formatLabels(labelsY, json['columns'][0]['type']);
-                    // labelsX = formatLabels(labelsX, json['columns'][1]['type']);
-                    // console.log(values);
-                    // var col1 = formatColumnName(json['columns'][0]['name']);
-                    // var col2 = formatColumnName(json['columns'][1]['name']);
-                    // var col3 = formatColumnName(json['columns'][2]['name']);
-                    groups = groups.sort().reverse();
-                    createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2);
+                    var col3 = formatColumnName(json['columns'][2]['name']);
+                    var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
+
+                    createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
                 }
                 if(e.target.classList.contains('table')){
                     if(e.target.tagName == 'svg'){
@@ -608,7 +608,7 @@ var ChatDrawer = {
         return Object.keys(unique);
     }
 
-    ChatDrawer.formatDataToStackedChart = function(data, groups){
+    ChatDrawer.formatDataToStackedChart = function(cols, data, groups){
         var dataGrouped = [];
 
         for (var i = 0; i < groups.length; i++) {

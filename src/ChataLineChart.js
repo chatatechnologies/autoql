@@ -1,5 +1,5 @@
 function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90},
+    var margin = {top: 5, right: 10, bottom: 60, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){

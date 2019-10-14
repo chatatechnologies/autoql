@@ -962,6 +962,16 @@ text.x-axis-label, text.y-axis-label {
     margin-right: 3px;
 }
 
+.stacked-rect:hover{
+    opacity: 1;
+}
+.label{
+    fill: currentcolor;
+    fill-opacity: 0.7;
+    font-family: inherit;
+    font-size: 10px;
+}
+
 @-webkit-keyframes bounceIn {
     0% {
         opacity: 0;
