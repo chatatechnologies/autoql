@@ -17498,6 +17498,342 @@ d3.tip = function() {
   return tip
 };
 
+const CLIPBOARD_ICON = `
+<svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
+    </path>
+</svg>
+`;
+
+const DOWNLOAD_CSV_ICON = `
+<svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
+</svg>
+`;
+
+const EXPORT_PNG_ICON = `
+<svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
+</svg>
+`;
+
+const TABLE_ICON = `
+<svg class="table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="chart-icon-svg-0 table" d="M8,0.8c2.3,0,4.6,0,6.9,0c0.8,0,1.1,0.3,1.1,1.1c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.8,5.7,0.8,8,0.8L8,0.8z M5,11.1H1v2.7h4V11.1L5,11.1z M10,13.8v-2.7H6v2.7
+        L10,13.8L10,13.8z M11,13.8h4v-2.7h-4V13.8L11,13.8z M1.1,7.5v2.7h4V7.5H1.1L1.1,7.5z M11,10.2c1.3,0,2.5,0,3.8,0
+        c0.1,0,0.2-0.1,0.2-0.2c0-0.8,0-1.7,0-2.5h-4C11,8.4,11,9.3,11,10.2L11,10.2z M6,10.1h4V7.5H6V10.1L6,10.1z M5,6.6V3.9H1
+        c0,0.8,0,1.6,0,2.4c0,0.1,0.2,0.2,0.3,0.2C2.5,6.6,3.7,6.6,5,6.6L5,6.6z M6,6.5h4V3.9H6V6.5L6,6.5z M14.9,6.5V3.9h-4v2.7L14.9,6.5
+        L14.9,6.5z">
+    </path>
+</svg>
+`;
+
+const PIVOT_ICON = `
+<svg class="pivot_table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="pivot_table chart-icon-svg-0" d="M8,0.7c2.3,0,4.6,0,6.9,0C15.7,0.7,16,1,16,1.8c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0 c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.7,5.7,0.7,8,0.7L8,0.7z M5.1,6.4h4.4V3.8H5.1V6.4L5.1,6.4z M14.9,6.4V3.8 h-4.4v2.7L14.9,6.4L14.9,6.4z M5.1,10.1h4.4V7.4H5.1V10.1L5.1,10.1z M14.9,10.1V7.4h-4.4v2.7H14.9L14.9,10.1z M5.1,13.7h4.4V11H5.1 V13.7L5.1,13.7z M14.9,13.7V11h-4.4v2.7L14.9,13.7L14.9,13.7z">
+    </path>
+</svg>
+`;
+
+const COLUMN_CHART_ICON = `
+<svg class="column_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="chart-icon-svg-0 column_chart" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
+    </path>
+</svg>
+`;
+
+const STACKED_COLUMN_CHART_ICON = `
+<svg class="stacked_column_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="chart-icon-svg-0 stacked_column_chart" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
+    </path>
+</svg>
+`;
+
+const BAR_CHART_ICON = `
+<svg class="bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="chart-icon-svg-0 bar_chart" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
+    </path>
+</svg>
+`;
+
+const LINE_CHART_ICON = `
+<svg class="line_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="chart-icon-svg-0 line_chart" d="M1,12.2c-0.2,0-0.3-0.1-0.5-0.2c-0.3-0.3-0.3-0.7,0-1l3.8-3.9C4.5,7,4.7,7,4.9,7s0.4,0.1,0.5,0.3l2.3,3l6.8-7.1 c0.3-0.3,0.7-0.3,1,0c0.3,0.3,0.3,0.7,0,1l-7.3,7.7C8,11.9,7.8,12,7.6,12s-0.4-0.1-0.5-0.3l-2.3-3L1.5,12C1.4,12.2,1.2,12.2,1,12.2z ">
+    </path>
+</svg>
+`;
+
+const HEATMAP_ICON = `
+<svg class="heatmap" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="hm0 heatmap" d="M12,16h2.5c0.8,0,1.5-0.7,1.5-1.5v-2.4l-4,0V16z">
+    </path>
+    <polygon class="hm1 heatmap" points="8,4.1 8,0 4,0 4,4.1 "></polygon>
+    <path class="hm2 heatmap" d="M4,4.1V0L1.5,0C0.7,0,0,0.7,0,1.5l0,2.6h0l0,0L4,4.1z"></path>
+    <polygon class="hm3 heatmap" points="8,4.1 8,4.1 8,4.1 4,4.1 4,8.1 8,8.2 "></polygon>
+    <polygon class="hm2 heatmap" points="0,4.1 0,8.1 4,8.1 4,4.1 "></polygon>
+    <polygon class="hm1 heatmap" points="4,4.1 8,4.1 8,4.1 "></polygon>
+    <polygon class="hm1 heatmap" points="4,16 8,16 8,12.1 4,12.1 "></polygon>
+    <path class="hm0 heatmap" d="M0,12.1v2.5C0,15.3,0.7,16,1.5,16H4v-3.9L0,12.1z"></path>
+    <polygon class="hm0 heatmap" points="0,12.1 4,12.1 4,8.2 0,8.2 "></polygon>
+    <polygon class="hm4 heatmap" points="8,12.1 8,8.2 4,8.2 4,12.1 "></polygon>
+    <polygon class="hm2 heatmap" points="16,4.1 16,4.1 16,4.1 12,4.1 12,8.2 16,8.2 "></polygon>
+    <path class="hm0 heatmap" d="M16,4.1l0-2.6C16,0.7,15.3,0,14.5,0L12,0v4.1L16,4.1z"></path>
+    <polygon class="hm4 heatmap" points="12,4.1 12,0 8,0 8,4.1 8,4.1 8,4.1 "></polygon>
+    <polygon class="hm5 heatmap" points="12,4.1 8,4.1 8,4.1 "></polygon>
+    <polygon class="hm6 heatmap" points="12,4.1 16,4.1 16,4.1 "></polygon>
+    <polygon class="hm2 heatmap" points="12,12.1 16,12.1 16,8.2 12,8.2 "></polygon>
+    <polygon class="hm1 heatmap" points="12,8.2 8,8.2 8,12.1 12,12.1 "></polygon>
+    <polygon class="hm1 heatmap" points="8,12.1 8,16 12,16 12,12.1 "></polygon>
+</svg>
+`;
+
+const BUBBLE_CHART_ICON = `
+<svg class="bubble_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <circle class="chart-icon-svg-0 bubble_chart" cx="7.7" cy="11.1" r="1.2"></circle>
+    <circle class="chart-icon-svg-0 bubble_chart" cx="2.6" cy="8.8" r="2.6"></circle>
+    <circle class="chart-icon-svg-0 bubble_chart" cx="11.7" cy="4.3" r="4.3"></circle>
+    <circle class="chart-icon-svg-0 bubble_chart" cx="1.8" cy="14.8" r="1.2"></circle>
+</svg>
+`;
+
+const HELP_ICON = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-help-link-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M256 48h-.7c-55.4.2-107.4 21.9-146.6 61.1C69.6 148.4 48 200.5 48 256s21.6 107.6 60.8 146.9c39.1 39.2 91.2 60.9 146.6 61.1h.7c114.7 0 208-93.3 208-208S370.7 48 256 48zm180.2 194h-77.6c-.9-26.7-4.2-52.2-9.8-76.2 17.1-5.5 33.7-12.5 49.7-21 22 28.2 35 61.6 37.7 97.2zM242 242h-61.8c.8-24.5 3.8-47.7 8.8-69.1 17.4 3.9 35.1 6.3 53 7.1v62zm0 28v61.9c-17.8.8-35.6 3.2-53 7.1-5-21.4-8-44.6-8.8-69H242zm28 0h61.3c-.8 24.4-3.8 47.6-8.8 68.9-17.2-3.9-34.8-6.2-52.5-7V270zm0-28v-62c17.8-.8 35.4-3.2 52.5-7 5 21.4 8 44.5 8.8 69H270zm109.4-117.9c-12.3 6.1-25 11.3-38 15.5-7.1-21.4-16.1-39.9-26.5-54.5 24 8.3 45.9 21.6 64.5 39zM315 146.8c-14.7 3.2-29.8 5.2-45 6V79.4c17 9.2 33.6 33.9 45 67.4zM242 79v73.7c-15.4-.8-30.6-2.8-45.5-6.1 11.6-33.8 28.4-58.5 45.5-67.6zm-45.6 6.4c-10.3 14.5-19.2 32.9-26.3 54.1-12.8-4.2-25.4-9.4-37.5-15.4 18.4-17.3 40.1-30.5 63.8-38.7zm-82.9 59.5c15.8 8.4 32.3 15.4 49.2 20.8-5.7 23.9-9 49.5-9.8 76.2h-77c2.6-35.4 15.6-68.8 37.6-97zM75.8 270h77c.9 26.7 4.2 52.3 9.8 76.2-16.9 5.5-33.4 12.5-49.2 20.8-21.9-28.1-34.9-61.5-37.6-97zm56.7 117.9c12.1-6 24.7-11.2 37.6-15.4 7.1 21.3 16 39.6 26.3 54.2-23.7-8.4-45.4-21.5-63.9-38.8zm64-22.6c14.9-3.3 30.2-5.3 45.5-6.1V433c-17.2-9.1-33.9-33.9-45.5-67.7zm73.5 67.3v-73.5c15.2.8 30.3 2.8 45 6-11.4 33.6-28 58.3-45 67.5zm45-5.7c10.4-14.6 19.4-33.1 26.5-54.5 13 4.2 25.8 9.5 38 15.6-18.6 17.3-40.6 30.6-64.5 38.9zm83.5-59.8c-16-8.5-32.6-15.5-49.7-21 5.6-23.9 8.9-49.4 9.8-76.1h77.6c-2.7 35.5-15.6 68.9-37.7 97.1z">
+    </path>
+</svg>
+`;
+
+
+const CHATA_BUBBLES_ICON = `
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 width="24px" height="24px" viewBox="0 0 24 24" enable-background="new 0 0 24 24" xml:space="preserve">
+<g>
+	<g>
+		<g>
+			<path fill="#26A7DF" d="M16,5C14.8,2.3,12,0.4,8.8,0.4c-4.4,0-7.6,3.5-7.6,7.9v4c0,2.8-1,3.6-1,3.6c1.3,0.1,2.9-0.4,4-1.5
+				c0.4,0.4,1,0.8,1.6,1c0.5,0.2,1,0.4,1.6,0.5c0-0.2-0.1-0.5-0.1-0.7c0-0.2,0-0.5,0-0.7c0-1.6,0.5-3.2,1.3-4.4
+				c0.3-0.4,0.6-0.8,1-1.2c0.2-0.2,0.4-0.3,0.6-0.5c0.4-0.3,0.8-0.6,1.2-0.8c0.4-0.2,0.9-0.4,1.4-0.6c0.7-0.2,1.5-0.3,2.3-0.3l0,0
+				c0.3,0,0.5,0,0.7,0c0.2,0,0.5,0.1,0.7,0.1C16.4,6,16.2,5.5,16,5z"/>
+		</g>
+	</g>
+	<g>
+		<path fill="#A3CC39" d="M22.7,18.3v-4c0-3.3-1.8-6-4.6-7.2c-0.5-0.2-1-0.4-1.6-0.5c0.1,0.5,0.2,1.1,0.2,1.7c0,1.9-0.7,3.6-1.8,4.9
+			c-0.5,0.6-1,1-1.7,1.5c-0.4,0.3-0.9,0.5-1.3,0.7c-0.5,0.2-1,0.3-1.5,0.4c-0.5,0.1-1,0.2-1.6,0.2c-0.3,0-0.5,0-0.7,0
+			c-0.3,0-0.5-0.1-0.7-0.1c0.1,0.6,0.3,1.1,0.5,1.6c1.2,2.8,3.9,4.6,7.2,4.6c1.8,0,3.5-0.5,4.6-1.6c1,1,2.9,1.8,4.1,1.5
+			C23.8,21.9,22.7,21.3,22.7,18.3z"/>
+	</g>
+	<g>
+		<path fill="none" d="M15.1,6.5c-4.4,0-7.8,3.5-7.8,7.9c0,0.5,0.1,1,0.1,1.5c0.5,0.1,1,0.1,1.5,0.1c4.4,0,7.8-3.3,7.8-7.6
+			c0-0.6-0.1-1.1-0.2-1.7C16.1,6.5,15.6,6.5,15.1,6.5z"/>
+	</g>
+	<g>
+		<path fill="none" d="M16.3,8.2C16.3,8.2,16.2,8.2,16.3,8.2c-0.1,0-0.1,0-0.2,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3
+			c0,0.1,0,0.3,0.1,0.3c0,0.1,0.1,0.1,0.1,0.1c0,0,0.1,0,0.1,0c0,0,0.1-0.1,0.1-0.1c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			C16.3,8.3,16.3,8.2,16.3,8.2z"/>
+		<path fill="none" d="M13.4,11C13.4,11,13.4,11,13.4,11c-0.1,0-0.1,0-0.2,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3
+			c0,0.2,0,0.3,0.1,0.4c0,0.1,0.1,0.1,0.1,0.1c0,0,0.1,0,0.1,0c0,0,0.1-0.1,0.1-0.1c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			C13.5,11.1,13.5,11.1,13.4,11z"/>
+		<path fill="none" d="M13.3,9.1C13.4,9.1,13.4,9.1,13.3,9.1C13.5,9.1,13.5,9,13.5,9c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.3,0.1,0.3
+			C13.2,9.1,13.3,9.1,13.3,9.1z"/>
+		<path fill="none" d="M11.9,10.6C11.9,10.6,12,10.6,11.9,10.6c0.1-0.1,0.1-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.3,0.1,0.3
+			C11.8,10.6,11.9,10.6,11.9,10.6z"/>
+		<path fill="none" d="M9.1,12.5C9.1,12.5,9.1,12.5,9.1,12.5c-0.1,0-0.1,0-0.2,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3
+			c0,0.1,0,0.3,0.1,0.3c0,0.1,0.1,0.1,0.1,0.1c0,0,0.1,0,0.1,0c0,0,0.1-0.1,0.1-0.1c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			C9.2,12.6,9.2,12.5,9.1,12.5z"/>
+		<path fill="none" d="M10.5,10.6C10.5,10.6,10.5,10.6,10.5,10.6c0.1-0.1,0.1-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.3,0.1,0.3
+			C10.4,10.5,10.4,10.6,10.5,10.6z"/>
+		<path fill="none" d="M7.6,14.9C7.6,14.9,7.7,14.9,7.6,14.9c0.1-0.1,0.1-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.3,0.1,0.3
+			C7.5,14.8,7.6,14.9,7.6,14.9z"/>
+		<path fill="none" d="M7.6,13.4C7.6,13.4,7.7,13.4,7.6,13.4c0.1-0.1,0.1-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.3,0.1,0.3
+			C7.5,13.4,7.6,13.4,7.6,13.4z"/>
+		<path fill="none" d="M11.9,9.1C11.9,9.1,12,9.1,11.9,9.1C12,9.1,12.1,9,12.1,9c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.3,0.1,0.3
+			C11.8,9.1,11.9,9.1,11.9,9.1z"/>
+		<path fill="none" d="M11.9,13.5C11.9,13.5,12,13.5,11.9,13.5c0.1-0.1,0.1-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0.1c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0.1,0.4
+			C11.8,13.5,11.8,13.5,11.9,13.5z"/>
+		<path fill="none" d="M11.9,12.1C11.9,12.1,12,12,11.9,12.1c0.1-0.1,0.1-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0s-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0.1,0.4
+			C11.8,12,11.9,12.1,11.9,12.1z"/>
+		<path fill="none" d="M16,7.2c0,0.1,0,0.2,0,0.3c0,0.1,0.1,0.1,0.1,0.1c0,0,0.1,0,0.1,0c0,0,0-0.1,0.1-0.1c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.2,0-0.3c0-0.1,0-0.1-0.1-0.1c0,0,0,0-0.1,0c0,0-0.1,0-0.1,0c0,0-0.1,0.1-0.1,0.2C16.1,7.1,16,7.2,16,7.2z"/>
+		<path fill="none" d="M11.9,15C11.9,15,12,14.9,11.9,15c0.1-0.1,0.2-0.1,0.2-0.2c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1-0.1-0.1c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0.1c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0.1,0.4
+			C11.8,14.9,11.8,15,11.9,15z"/>
+		<path fill="none" d="M16.3,9.6C16.3,9.6,16.2,9.6,16.3,9.6c-0.1,0-0.1,0-0.2,0c0,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3
+			c0,0.1,0,0.3,0.1,0.4c0,0.1,0.1,0.1,0.1,0.1c0,0,0.1,0,0.1,0s0.1-0.1,0.1-0.1c0-0.1,0-0.2,0-0.4c0-0.1,0-0.2,0-0.3
+			C16.3,9.7,16.3,9.6,16.3,9.6z"/>
+		<path fill="#A3CC39" d="M11.7,7.6c0.1,0.1,0.1,0.2,0.2,0.2c0,0,0.1,0,0.1-0.1c0,0,0.1-0.1,0.1-0.2c0-0.1,0-0.2,0-0.3
+			c0-0.1,0-0.1,0-0.2c0,0-0.1,0-0.1,0c0,0,0,0.1,0,0.1c0,0.1,0,0.3,0,0.3c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0
+			C11.8,7.7,11.8,7.6,11.7,7.6c0.1-0.1,0.1-0.2,0.1-0.3c0,0,0,0,0,0c0,0-0.1,0-0.1,0.1C11.6,7.4,11.6,7.5,11.7,7.6z"/>
+		<path fill="#A3CC39" d="M13.4,6.7l-0.2,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1v0.5c0,0.1,0,0.1,0,0.1
+			c0,0,0,0,0,0c0,0,0,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0,0,0-0.1L13.4,6.7L13.4,6.7z"/>
+		<path fill="#A3CC39" d="M14.8,6.7l-0.2,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1v0.5c0,0.1,0,0.1,0,0.1
+			c0,0,0,0,0,0c0,0,0,0-0.1,0v0H15v0c0,0-0.1,0-0.1,0s0,0,0,0c0,0,0,0,0-0.1L14.8,6.7L14.8,6.7z"/>
+		<path fill="#A3CC39" d="M16,7c0,0.1-0.1,0.2-0.1,0.3c0,0.1,0,0.2,0.1,0.3c0.1,0.1,0.1,0.2,0.2,0.2c0,0,0.1,0,0.1-0.1
+			c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0-0.2,0-0.3c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0C16,6.8,16,6.9,16,7z
+			 M16.2,6.8C16.2,6.8,16.3,6.8,16.2,6.8c0.1,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.3c0,0.1,0,0.1-0.1,0.1
+			c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0-0.3C16.1,6.9,16.1,6.9,16.2,6.8
+			C16.1,6.8,16.2,6.8,16.2,6.8z"/>
+		<path fill="#A3CC39" d="M10.4,9.1C10.4,9.1,10.4,9.1,10.4,9.1c0,0-0.1,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0,0,0-0.1
+			V8.2h0l-0.2,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1V9.1C10.4,9,10.4,9.1,10.4,9.1z"/>
+		<path fill="#A3CC39" d="M11.9,9.2c0,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3c0-0.2,0-0.3-0.1-0.4
+			c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.1,0.2s-0.1,0.2-0.1,0.3c0,0.1,0,0.3,0.1,0.3
+			C11.7,9.1,11.8,9.2,11.9,9.2z M11.8,8.4c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3
+			C11.7,8.6,11.7,8.5,11.8,8.4z"/>
+		<path fill="#A3CC39" d="M13,8.7c0,0.1,0,0.3,0.1,0.3c0.1,0.1,0.1,0.2,0.2,0.2c0,0,0.1,0,0.2-0.1S13.6,9,13.6,9
+			c0-0.1,0.1-0.2,0.1-0.3c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.1,0.2
+			C13,8.5,13,8.6,13,8.7z M13.2,8.4c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3
+			c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3C13.2,8.6,13.2,8.5,13.2,8.4z
+			"/>
+		<path fill="#A3CC39" d="M14.6,8.3C14.6,8.3,14.6,8.3,14.6,8.3c0.1,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1V9c0,0.1,0,0.1,0,0.1
+			c0,0,0,0,0,0c0,0,0,0-0.1,0v0H15v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1V8.1h0L14.6,8.3L14.6,8.3z"/>
+		<path fill="#A3CC39" d="M16.2,8.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.1,0.2c0,0.1-0.1,0.2-0.1,0.3c0,0.1,0,0.3,0.1,0.3
+			c0.1,0.1,0.1,0.2,0.2,0.2c0,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3c0-0.2,0-0.3-0.1-0.4
+			C16.4,8.2,16.3,8.1,16.2,8.1z M16.4,9c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1C16,8.9,16,8.8,16,8.7
+			c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0s0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3
+			C16.4,8.8,16.4,8.9,16.4,9z"/>
+		<path fill="#A3CC39" d="M9.1,9.6L8.9,9.7l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1v0.5c0,0.1,0,0.1,0,0.1
+			c0,0,0,0,0,0c0,0,0,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0s0,0,0,0c0,0,0,0,0-0.1L9.1,9.6L9.1,9.6L9.1,9.6z"/>
+		<path fill="#A3CC39" d="M10.5,10.6c0,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3c0-0.2,0-0.3-0.1-0.4
+			c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.1,0.2c0,0.1-0.1,0.2-0.1,0.3c0,0.1,0,0.3,0.1,0.3
+			C10.3,10.6,10.4,10.6,10.5,10.6z M10.3,9.9c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3
+			C10.3,10,10.3,10,10.3,9.9z"/>
+		<path fill="#A3CC39" d="M11.7,10.5c0.1,0.1,0.2,0.2,0.3,0.2c0.1,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2s0.1-0.2,0.1-0.3
+			c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0.1c-0.1,0-0.1,0.1-0.1,0.2c0,0.1-0.1,0.2-0.1,0.3
+			C11.6,10.2,11.6,10.4,11.7,10.5z M11.7,9.9c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0s0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3
+			C11.7,10,11.7,9.9,11.7,9.9z"/>
+		<path fill="#A3CC39" d="M13.3,10.6C13.3,10.6,13.3,10.6,13.3,10.6c0,0-0.1,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0
+			c0,0,0-0.1,0-0.1V9.6h0l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.6C13.3,10.5,13.3,10.5,13.3,10.6
+			z"/>
+		<path fill="#A3CC39" d="M14.6,9.7C14.6,9.7,14.7,9.7,14.6,9.7c0.1,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.6
+			c0,0.1,0,0.1,0,0.1s0,0,0,0c0,0,0,0-0.1,0v0H15v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1V9.6h0L14.6,9.7L14.6,9.7z"/>
+		<path fill="#A3CC39" d="M16.2,9.6c-0.1,0-0.1,0-0.1,0.1c-0.1,0-0.1,0.1-0.1,0.2s-0.1,0.2-0.1,0.3c0,0.1,0,0.3,0.1,0.4
+			c0.1,0.1,0.2,0.2,0.3,0.2c0,0,0.1,0,0.1-0.1c0.1-0.2,0.1-0.5,0.2-0.7c0-0.1,0-0.2-0.1-0.2C16.4,9.6,16.3,9.6,16.2,9.6z M16.4,10.4
+			c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.4c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0.1-0.2
+			c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3C16.4,10.2,16.4,10.3,16.4,10.4z"/>
+		<path fill="#A3CC39" d="M7.8,11.5c0,0.2,0,0.3,0,0.3c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0
+			c0,0,0.1,0,0.1-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2-0.1-0.3C7.8,11.3,7.8,11.4,7.8,11.5
+			C7.8,11.5,7.8,11.5,7.8,11.5z"/>
+		<path fill="#A3CC39" d="M8.9,11.2C8.9,11.1,8.9,11.1,8.9,11.2c0.1,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1v0.5
+			C9,11.9,9,12,9,12c0,0,0,0,0,0c0,0,0,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1V11h0L8.9,11.2L8.9,11.2z"/>
+		<path fill="#A3CC39" d="M10.5,11l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.6c0,0.1,0,0.1,0,0.1
+			s0,0,0,0c0,0,0,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1L10.5,11L10.5,11z"/>
+		<path fill="#A3CC39" d="M11.7,11.9c0.1,0.1,0.2,0.2,0.3,0.2c0.1,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3
+			c0-0.2,0-0.3-0.1-0.4C12.1,11,12,11,11.9,11c-0.1,0-0.1,0-0.2,0.1c-0.1,0-0.1,0.1-0.2,0.2c0,0.1-0.1,0.2-0.1,0.3
+			C11.6,11.7,11.6,11.8,11.7,11.9z M11.7,11.3c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.4
+			C11.7,11.5,11.7,11.4,11.7,11.3z"/>
+		<path fill="#A3CC39" d="M13.7,11.5c0-0.2,0-0.3-0.1-0.4C13.5,11,13.4,11,13.3,11c-0.1,0-0.1,0-0.2,0.1c-0.1,0-0.1,0.1-0.2,0.2
+			c0,0.1-0.1,0.2-0.1,0.3c0,0.2,0,0.3,0.1,0.4c0.1,0.1,0.2,0.2,0.3,0.2c0.1,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2
+			C13.7,11.8,13.7,11.7,13.7,11.5z M13.5,11.9c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.4
+			c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0.1-0.2c0,0,0.1-0.1,0.1-0.1c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3
+			C13.6,11.7,13.5,11.8,13.5,11.9z"/>
+		<path fill="#A3CC39" d="M14.7,12C14.7,12,14.7,12,14.7,12c0,0-0.1,0-0.1,0v0H15v0c-0.1,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1
+			V11h0l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.6C14.7,12,14.7,12,14.7,12z"/>
+		<path fill="#A3CC39" d="M16,11.1L16,11.1C16,11.1,16.1,11.1,16,11.1c0.1,0,0.1,0,0.1,0c0,0,0,0,0,0v0c0-0.1,0-0.1,0.1-0.2L16,11.1
+			z"/>
+		<path fill="#A3CC39" d="M7.4,13.3c0.1,0.1,0.1,0.2,0.2,0.2c0,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2S8,13.1,8,13
+			c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0c0,0,0,0,0,0c-0.1,0.2-0.1,0.4-0.1,0.7C7.3,13.3,7.4,13.3,7.4,13.3
+			z M7.5,12.7c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4
+			c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3C7.4,12.9,7.4,12.8,7.5,12.7z"/>
+		<path fill="#A3CC39" d="M9.4,13c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0.1c-0.1,0-0.1,0.1-0.1,0.2
+			c0,0.1-0.1,0.2-0.1,0.3c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.2,0.2,0.3,0.2c0.1,0,0.1,0,0.2-0.1s0.1-0.1,0.1-0.2
+			C9.4,13.2,9.4,13.1,9.4,13z M9.2,13.3c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3
+			c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1c0,0.1,0,0.2,0,0.3
+			C9.2,13.1,9.2,13.2,9.2,13.3z"/>
+		<path fill="#A3CC39" d="M10.3,12.6C10.3,12.5,10.4,12.5,10.3,12.6c0.1,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.6
+			c0,0.1,0,0.1,0,0.1c0,0,0,0,0,0c0,0,0,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1v-0.9h0L10.3,12.6L10.3,12.6z"
+			/>
+		<path fill="#A3CC39" d="M11.7,13.4c0.1,0.1,0.2,0.2,0.3,0.2c0.1,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3
+			c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.1-0.1-0.2-0.1c-0.1,0-0.1,0-0.2,0.1c-0.1,0-0.1,0.1-0.2,0.2c0,0.1-0.1,0.2-0.1,0.3
+			C11.6,13.1,11.6,13.3,11.7,13.4z M11.7,12.7c0-0.1,0-0.2,0.1-0.2c0,0,0.1-0.1,0.1-0.1c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.4
+			C11.7,12.9,11.7,12.8,11.7,12.7z"/>
+		<path fill="#A3CC39" d="M13.3,13.5C13.3,13.5,13.3,13.5,13.3,13.5c0,0-0.1,0-0.1,0v0h0.4v0c-0.1,0-0.1,0-0.1,0c0,0,0,0,0,0
+			c0,0,0-0.1,0-0.1v-1h0l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0s0,0,0,0c0,0,0,0.1,0,0.2v0.6C13.3,13.4,13.3,13.5,13.3,13.5z"/>
+		<path fill="#A3CC39" d="M14.8,12.4c-0.1,0-0.1,0-0.2,0.1c-0.1,0-0.1,0.1-0.2,0.2c0,0.1-0.1,0.2-0.1,0.3c0,0.2,0,0.3,0.1,0.4
+			c0,0.1,0.1,0.1,0.1,0.2c0,0,0,0,0.1-0.1c0,0,0,0,0-0.1c0-0.1-0.1-0.2-0.1-0.4c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0.1-0.2
+			C14.7,12.4,14.8,12.4,14.8,12.4C14.8,12.4,14.9,12.4,14.8,12.4c0.1,0.1,0.2,0.2,0.2,0.2c0,0.1,0,0.2,0,0.3c0,0.1,0,0.2,0,0.2
+			c0.1-0.1,0.1-0.2,0.2-0.2c0-0.2,0-0.3-0.1-0.4C14.9,12.4,14.9,12.4,14.8,12.4z"/>
+		<path fill="#A3CC39" d="M7.6,14.9c0,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3c0-0.2,0-0.3-0.1-0.4
+			c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.1,0.2c0,0.1-0.1,0.2-0.1,0.3c0,0.1,0,0.3,0.1,0.3
+			C7.4,14.9,7.5,14.9,7.6,14.9z M7.5,14.2c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.3
+			C7.4,14.4,7.4,14.3,7.5,14.2z"/>
+		<path fill="#A3CC39" d="M9,14.9C9,14.9,9,14.9,9,14.9c0,0-0.1,0-0.1,0v0h0.4v0c0,0-0.1,0-0.1,0c0,0,0,0,0,0c0,0,0-0.1,0-0.1v-0.9
+			h0L8.8,14l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0s0,0,0,0c0,0,0,0.1,0,0.2v0.6C9,14.8,9,14.9,9,14.9z"/>
+		<path fill="#A3CC39" d="M10.4,14.9C10.4,14.9,10.4,14.9,10.4,14.9c0,0-0.1,0-0.1,0v0h0.4v0c-0.1,0-0.1,0-0.1,0c0,0,0,0,0,0
+			c0,0,0-0.1,0-0.1v-0.9h0L10.3,14l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.6C10.4,14.8,10.4,14.9,10.4,14.9
+			z"/>
+		<path fill="#A3CC39" d="M11.6,14.8c0.1,0.1,0.2,0.2,0.3,0.2c0.1,0,0.1,0,0.2-0.1c0.1,0,0.1-0.1,0.1-0.2c0-0.1,0.1-0.2,0.1-0.3
+			c0-0.2,0-0.3-0.1-0.4c-0.1-0.1-0.2-0.1-0.2-0.1c-0.1,0-0.1,0-0.2,0.1c-0.1,0-0.1,0.1-0.2,0.2c0,0.1-0.1,0.2-0.1,0.3
+			C11.5,14.6,11.6,14.7,11.6,14.8z M11.7,14.1c0-0.1,0-0.2,0.1-0.2c0,0,0.1-0.1,0.1-0.1c0,0,0.1,0,0.1,0c0,0,0.1,0.1,0.1,0.1
+			c0,0.1,0,0.2,0,0.3c0,0.2,0,0.3,0,0.4c0,0.1,0,0.1-0.1,0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0-0.1-0.1c0-0.1-0.1-0.2-0.1-0.4
+			C11.7,14.3,11.7,14.2,11.7,14.1z"/>
+		<path fill="#A3CC39" d="M13.4,13.8l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.5
+			c0.1,0,0.1-0.1,0.1-0.1L13.4,13.8L13.4,13.8z"/>
+		<path fill="#A3CC39" d="M7.8,15.4c-0.1-0.1-0.1-0.1-0.2-0.1c0,0-0.1,0-0.1,0c-0.1,0-0.1,0.1-0.1,0.2c0,0.1,0,0.2,0,0.3
+			c0,0,0,0,0.1,0c0-0.1,0-0.1,0-0.2c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0C7.7,15.4,7.8,15.5,7.8,15.4
+			c0,0.2,0,0.3,0,0.4c0,0,0,0,0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0C7.9,15.7,7.9,15.5,7.8,15.4z"/>
+		<path fill="#A3CC39" d="M9.3,15.4c-0.1-0.1-0.1-0.1-0.2-0.1c-0.1,0-0.1,0-0.1,0.1c-0.1,0-0.1,0.1-0.1,0.2c0,0.1-0.1,0.2-0.1,0.3
+			c0,0,0,0,0,0.1c0,0,0.1,0,0.1,0l0,0c0,0,0,0,0-0.1c0-0.1,0-0.2,0-0.3c0-0.1,0-0.2,0.1-0.2c0,0,0.1,0,0.1,0c0,0,0.1,0,0.1,0
+			C9.2,15.4,9.2,15.5,9.3,15.4c0,0.2,0,0.3,0,0.4c0,0,0,0.1,0,0.1c0,0,0.1,0,0.1,0c0,0,0,0,0-0.1C9.4,15.7,9.4,15.5,9.3,15.4z"/>
+		<path fill="#A3CC39" d="M10.5,15.3l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.2v0.2c0,0,0.1,0,0.1,0
+			L10.5,15.3L10.5,15.3L10.5,15.3z"/>
+		<path fill="#A3CC39" d="M12,15.2l-0.3,0.1l0,0c0,0,0.1,0,0.1,0c0,0,0,0,0,0C11.9,15.4,11.9,15.3,12,15.2L12,15.2L12,15.2L12,15.2z
+			"/>
+	</g>
+</g>
+</svg>
+`;
+
+const WATERMARK = `
+<svg x="0px" y="0px" width="14px" height="13px" viewBox="0 0 16 14"><path class="chata-icon-svg-0" d="M15.1,13.5c0,0-0.5-0.3-0.5-1.7V9.6c0-1.9-1.1-3.7-2.9-4.4C11.5,5.1,11.3,5,11,5c-0.1-0.3-0.2-0.5-0.3-0.7l0,0
+    C9.9,2.5,8.2,1.4,6.3,1.4c0,0,0,0-0.1,0C5,1.4,3.8,1.9,2.8,2.8C1.9,3.6,1.4,4.8,1.4,6.1c0,0.1,0,0.1,0,0.2v2.2
+    c0,1.3-0.4,1.7-0.4,1.7h0l-1,0.7l1.2,0.1c0.8,0,1.7-0.2,2.3-0.7c0.2,0.2,0.5,0.3,0.8,0.4c0.2,0.1,0.5,0.2,0.8,0.2
+    c0.1,0.2,0.1,0.5,0.2,0.7c0.8,1.7,2.5,2.8,4.4,2.8c0,0,0.1,0,0.1,0c1,0,2-0.3,2.7-0.7c0.7,0.5,1.6,0.8,2.4,0.7l1.1-0.1L15.1,13.5z
+    M10.4,6.2c0,0.9-0.3,1.8-0.9,2.5C9.2,9,8.9,9.3,8.6,9.5C8.3,9.6,8.1,9.7,7.9,9.8C7.6,9.9,7.3,10,7.1,10c-0.3,0.1-0.6,0.1-0.8,0.1
+    c-0.1,0-0.3,0-0.4,0c0,0-0.1,0-0.1,0c0,0,0-0.1,0-0.1c0-0.1,0-0.2,0-0.4c0-0.8,0.2-1.6,0.7-2.2C6.5,7.2,6.7,7,6.9,6.8
+    C7,6.7,7.1,6.6,7.2,6.5c0.2-0.2,0.4-0.3,0.7-0.4C8.1,6,8.3,5.9,8.6,5.8C9,5.7,9.4,5.6,9.8,5.6c0.1,0,0.3,0,0.4,0c0,0,0.1,0,0.1,0
+    C10.4,5.8,10.4,6,10.4,6.2z M3.8,9.3L3.5,9.1L3.2,9.3C2.9,9.7,2.4,9.9,2,10c0.1-0.4,0.2-0.8,0.2-1.5l0-2.2c0,0,0-0.1,0-0.1
+    c0-1.1,0.5-2,1.2-2.8c0.7-0.7,1.7-1.1,2.7-1.1c0,0,0.1,0,0.1,0c1.6,0,3.1,0.9,3.8,2.3c0,0.1,0.1,0.2,0.1,0.3c-0.1,0-0.2,0-0.3,0
+    c-0.5,0-1,0.1-1.5,0.2C8.1,5.1,7.8,5.2,7.5,5.4C7.2,5.5,6.9,5.7,6.7,5.9C6.6,6,6.4,6.1,6.3,6.2C6.1,6.4,5.9,6.7,5.7,6.9
+    C5.2,7.7,4.9,8.6,4.9,9.6c0,0.1,0,0.2,0,0.3c-0.1,0-0.2-0.1-0.3-0.1C4.3,9.7,4,9.5,3.8,9.3z M12.8,12.7l-0.3-0.3l-0.3,0.3
+    c-0.5,0.5-1.4,0.8-2.4,0.8c-1.6,0.1-3.1-0.9-3.8-2.3c0-0.1-0.1-0.2-0.1-0.3c0.1,0,0.2,0,0.3,0c0.3,0,0.7,0,1-0.1
+    c0.3-0.1,0.6-0.1,0.9-0.3c0.3-0.1,0.6-0.3,0.8-0.4C9.4,9.9,9.7,9.6,10,9.2c0.7-0.8,1.1-1.9,1.1-3c0-0.1,0-0.3,0-0.4
+    c0.1,0,0.2,0.1,0.3,0.1c1.5,0.6,2.4,2.1,2.4,3.7v2.2c0,0.7,0.1,1.2,0.3,1.6C13.6,13.3,13.2,13.1,12.8,12.7z"></path>
+</svg>
+`;
+
+const VOICE_RECORD_ICON = `
+PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgd2lkdGg9IjU0NC4ycHgiIGhlaWdodD0iNTQ0LjJweCIgdmlld0JveD0iMCAwIDU0NC4yIDU0NC4yIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NDQuMiA1NDQuMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGNsYXNzPSJtaWMtaWNvbiIgZmlsbD0iI0ZGRkZGRiIgZD0iTTQzOS41LDIwOS4zYy01LjcsMC0xMC42LDIuMS0xNC43LDYuMmMtNC4xLDQuMS02LjIsOS4xLTYuMiwxNC43djQxLjljMCw0MC4zLTE0LjMsNzQuOC00MywxMDMuNQoJYy0yOC43LDI4LjctNjMuMiw0My0xMDMuNSw0M2MtNDAuMywwLTc0LjgtMTQuMy0xMDMuNS00M2MtMjguNy0yOC43LTQzLTYzLjItNDMtMTAzLjV2LTQxLjljMC01LjctMi4xLTEwLjYtNi4yLTE0LjcKCWMtNC4xLTQuMS05LjEtNi4yLTE0LjctNi4yYy01LjcsMC0xMC42LDIuMS0xNC43LDYuMmMtNC4xLDQuMS02LjIsOS4xLTYuMiwxNC43djQxLjljMCw0OC4yLDE2LjEsOTAuMSw0OC4yLDEyNS43CgljMzIuMiwzNS43LDcxLjksNTYuMSwxMTkuMiw2MS4zdjQzLjJoLTgzLjdjLTUuNywwLTEwLjYsMi4xLTE0LjcsNi4yYy00LjEsNC4xLTYuMiw5LTYuMiwxNC43YzAsNS43LDIuMSwxMC42LDYuMiwxNC43CgljNC4xLDQuMSw5LDYuMiwxNC43LDYuMmgyMDkuM2M1LjcsMCwxMC42LTIuMSwxNC43LTYuMmM0LjEtNC4xLDYuMi05LjEsNi4yLTE0LjdjMC01LjctMi4xLTEwLjYtNi4yLTE0LjcKCWMtNC4xLTQuMS05LjEtNi4yLTE0LjctNi4ySDI5M3YtNDMuMmM0Ny4zLTUuMiw4Ny0yNS43LDExOS4yLTYxLjNjMzIuMi0zNS42LDQ4LjItNzcuNiw0OC4yLTEyNS43di00MS45YzAtNS43LTIuMS0xMC42LTYuMi0xNC43CglDNDUwLjEsMjExLjQsNDQ1LjIsMjA5LjMsNDM5LjUsMjA5LjN6Ii8+CjxwYXRoIGNsYXNzPSJtaWMtaWNvbiIgZmlsbD0iI0ZGRkZGRiIgZD0iTTIyMi44LDIwMy43aC01NS4zdjM4LjRoNTUuM2M4LjUsMCwxNS4zLDYuOCwxNS4zLDE1LjNzLTYuOCwxNS4zLTE1LjMsMTUuM2gtNTUuMwoJYzAuMiwyOC41LDEwLjQsNTIuOSwzMC43LDczLjNjMjAuNSwyMC41LDQ1LjEsMzAuNyw3My45LDMwLjdjMjguOCwwLDUzLjQtMTAuMiw3My45LTMwLjdjMjAuMy0yMC4zLDMwLjYtNDQuOCwzMC43LTczLjNoLTUzLjQKCWMtOC41LDAtMTUuMy02LjgtMTUuMy0xNS4zczYuOC0xNS4zLDE1LjMtMTUuM2g1My40di0zOC40aC01My40Yy04LjUsMC0xNS4zLTYuOC0xNS4zLTE1LjNzNi44LTE1LjMsMTUuMy0xNS4zaDUzLjR2LTQwLjhoLTUzLjQKCWMtOC41LDAtMTUuMy02LjgtMTUuMy0xNS4zczYuOC0xNS4zLDE1LjMtMTUuM2g1My4zYy0wLjctMjcuNS0xMC44LTUxLjItMzAuNi03MUMzMjUuNSwxMC4yLDMwMC45LDAsMjcyLjEsMAoJYy0yOC44LDAtNTMuNCwxMC4yLTczLjksMzAuN2MtMTkuOCwxOS44LTI5LjksNDMuNS0zMC42LDcxaDU1LjJjOC41LDAsMTUuMyw2LjgsMTUuMywxNS4zcy02LjgsMTUuMy0xNS4zLDE1LjNoLTU1LjN2NDAuOGg1NS4zCgljOC41LDAsMTUuMyw2LjgsMTUuMywxNS4zUzIzMS4yLDIwMy43LDIyMi44LDIwMy43eiIvPgo8L3N2Zz4=
+`;
+
+const RUN_QUERY = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-execute-query-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+    </path>
+</svg>
+`;
+
+const DELETE_ICON = `
+<svg onclick="deleteSuggestion(event)" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z">
+    </path>
+    <path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z">
+    </path>
+</svg>
+`
+
 const LIGHT_THEME = {
   '--chata-drawer-accent-color': '#28a8e0',
   '--chata-drawer-background-color': '#fff',
@@ -17565,6 +17901,7 @@ function formatDate(date) {
         monthIndex = 11;
     }
     return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
+    // return MONTH_NAMES[monthIndex] + ' ' + year;
 }
 
 function copyTextToClipboard(text) {
@@ -17601,7 +17938,6 @@ function putLoadingContainer(target){
 }
 
 function runQuery(event, context){
-
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement.parentElement;
     }else if(event.target.tagName == 'path'){
@@ -17782,207 +18118,193 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
     return ret;
 }
 
-function getChatBar(options){
-    var chataBarContainer = document.createElement('div');
-    chataBarContainer.classList.add('chata-bar-container');
-    chataBarContainer.classList.add('chat-drawer-chat-bar');
-    chataBarContainer.classList.add('autosuggest-top');
-    chataBarContainer.options = {
-        apiKey: '',
-        customerId: '',
-        userId: '',
-        isDisabled: false,
-        onSubmit: function(){},
-        onResponseCallback: function(){},
-        autoCompletePlacement: 'top',
-        showLoadingDots: true,
-        showChataIcon: true,
-        enableVoiceRecord: true,
-        enableAutocomplete: true,
-        autocompleteStyles: {},
-        enableSafetyNet: true,
-        enableDrilldowns: true,
-        demo: false
+function getSVGString(svgNode) {
+    svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    var serializer = new XMLSerializer();
+    var svgString = serializer.serializeToString(svgNode);
+    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
+    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
+
+    return svgString;
+}
+
+function svgString2Image(svgString, width, height) {
+    var imgsrc = 'data:image/svg+xml;base64,'+ btoa(unescape(encodeURIComponent(svgString)));
+
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    var image = new Image();
+    image.onload = function() {
+        context.clearRect ( 0, 0, width, height );
+        context.drawImage(image, 0, 0, width, height);
+        var imgPixels = context.getImageData(0, 0, canvas.width, canvas.height);
+        for(var y = 0; y < imgPixels.height; y++){
+            for(var x = 0; x < imgPixels.width; x++){
+                var i = (y * 4) * imgPixels.width + x * 4;
+                imgPixels.data[i] = 0;
+                imgPixels.data[i + 1] = 0;
+                imgPixels.data[i + 2] = 0;
+            }
+        }
+        context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
+
+        var link = document.createElement("a");
+        link.setAttribute('href', canvas.toDataURL("image/png;base64"));
+        link.setAttribute('download', 'Chart.png');
+        link.click();
+    };
+
+
+    image.src = imgsrc;
+}
+
+function getSpeech(button){
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+    let recognition = new window.SpeechRecognition();
+    recognition.interimResults = true;
+    recognition.maxAlternatives = 10;
+    recognition.continuous = true;
+    return recognition;
+}
+
+function formatLabels(labels, colType){
+    labels = labels.sort();
+    for (var i = 0; i < labels.length; i++) {
+        labels[i] = formatData(labels[i], colType);
     }
+    return labels;
+}
 
-    for (var [key, value] of Object.entries(options)) {
-        chataBarContainer.options[key] = value;
+function formatDataToHeatmap(json){
+    var lines = csvTo2dArray(json['data']);
+    var values = [];
+    var colType1 = json['columns'][0]['type'];
+    var colType2 = json['columns'][1]['type'];
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        var row = {};
+        row['labelY'] = formatData(data[0], colType1);
+        row['labelX'] = formatData(data[1], colType2);
+        row['unformatY'] = data[0];
+        row['unformatX'] = data[1];
+        var value = parseFloat(data[2]);
+        row['value'] = value;
+        values.push(row);
     }
-    const CHATA_ICON = chataBarContainer.options.showChataIcon ? `
-    <div class="chat-bar-input-icon"><img class="chata-bubbles-icon" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgoJIHdpZHRoPSIyNHB4IiBoZWlnaHQ9IjI0cHgiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZW5hYmxlLWJhY2tncm91bmQ9Im5ldyAwIDAgMjQgMjQiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8Zz4KCTxnPgoJCTxnPgoJCQk8cGF0aCBmaWxsPSIjMjZBN0RGIiBkPSJNMTYsNUMxNC44LDIuMywxMiwwLjQsOC44LDAuNGMtNC40LDAtNy42LDMuNS03LjYsNy45djRjMCwyLjgtMSwzLjYtMSwzLjZjMS4zLDAuMSwyLjktMC40LDQtMS41CgkJCQljMC40LDAuNCwxLDAuOCwxLjYsMWMwLjUsMC4yLDEsMC40LDEuNiwwLjVjMC0wLjItMC4xLTAuNS0wLjEtMC43YzAtMC4yLDAtMC41LDAtMC43YzAtMS42LDAuNS0zLjIsMS4zLTQuNAoJCQkJYzAuMy0wLjQsMC42LTAuOCwxLTEuMmMwLjItMC4yLDAuNC0wLjMsMC42LTAuNWMwLjQtMC4zLDAuOC0wLjYsMS4yLTAuOGMwLjQtMC4yLDAuOS0wLjQsMS40LTAuNmMwLjctMC4yLDEuNS0wLjMsMi4zLTAuM2wwLDAKCQkJCWMwLjMsMCwwLjUsMCwwLjcsMGMwLjIsMCwwLjUsMC4xLDAuNywwLjFDMTYuNCw2LDE2LjIsNS41LDE2LDV6Ii8+CgkJPC9nPgoJPC9nPgoJPGc+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTIyLjcsMTguM3YtNGMwLTMuMy0xLjgtNi00LjYtNy4yYy0wLjUtMC4yLTEtMC40LTEuNi0wLjVjMC4xLDAuNSwwLjIsMS4xLDAuMiwxLjdjMCwxLjktMC43LDMuNi0xLjgsNC45CgkJCWMtMC41LDAuNi0xLDEtMS43LDEuNWMtMC40LDAuMy0wLjksMC41LTEuMywwLjdjLTAuNSwwLjItMSwwLjMtMS41LDAuNGMtMC41LDAuMS0xLDAuMi0xLjYsMC4yYy0wLjMsMC0wLjUsMC0wLjcsMAoJCQljLTAuMywwLTAuNS0wLjEtMC43LTAuMWMwLjEsMC42LDAuMywxLjEsMC41LDEuNmMxLjIsMi44LDMuOSw0LjYsNy4yLDQuNmMxLjgsMCwzLjUtMC41LDQuNi0xLjZjMSwxLDIuOSwxLjgsNC4xLDEuNQoJCQlDMjMuOCwyMS45LDIyLjcsMjEuMywyMi43LDE4LjN6Ii8+Cgk8L2c+Cgk8Zz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNMTUuMSw2LjVjLTQuNCwwLTcuOCwzLjUtNy44LDcuOWMwLDAuNSwwLjEsMSwwLjEsMS41YzAuNSwwLjEsMSwwLjEsMS41LDAuMWM0LjQsMCw3LjgtMy4zLDcuOC03LjYKCQkJYzAtMC42LTAuMS0xLjEtMC4yLTEuN0MxNi4xLDYuNSwxNS42LDYuNSwxNS4xLDYuNXoiLz4KCTwvZz4KCTxnPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xNi4zLDguMkMxNi4zLDguMiwxNi4yLDguMiwxNi4zLDguMmMtMC4xLDAtMC4xLDAtMC4yLDBjMCwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMSwwLDAuMiwwLDAuMwoJCQljMCwwLjEsMCwwLjMsMC4xLDAuM2MwLDAuMSwwLjEsMC4xLDAuMSwwLjFjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEtMC4xLDAuMS0wLjFjMC0wLjEsMC0wLjIsMC0wLjRjMC0wLjEsMC0wLjIsMC0wLjMKCQkJQzE2LjMsOC4zLDE2LjMsOC4yLDE2LjMsOC4yeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMy40LDExQzEzLjQsMTEsMTMuNCwxMSwxMy40LDExYy0wLjEsMC0wLjEsMC0wLjIsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zCgkJCWMwLDAuMiwwLDAuMywwLjEsMC40YzAsMC4xLDAuMSwwLjEsMC4xLDAuMWMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMS0wLjEsMC4xLTAuMWMwLTAuMSwwLTAuMiwwLTAuNGMwLTAuMSwwLTAuMiwwLTAuMwoJCQlDMTMuNSwxMS4xLDEzLjUsMTEuMSwxMy40LDExeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMy4zLDkuMUMxMy40LDkuMSwxMy40LDkuMSwxMy4zLDkuMUMxMy41LDkuMSwxMy41LDksMTMuNSw5YzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDMTMuMiw5LjEsMTMuMyw5LjEsMTMuMyw5LjF6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTExLjksMTAuNkMxMS45LDEwLjYsMTIsMTAuNiwxMS45LDEwLjZjMC4xLTAuMSwwLjEtMC4xLDAuMi0wLjJjMC0wLjEsMC0wLjIsMC0wLjRjMC0wLjEsMC0wLjIsMC0wLjMKCQkJYzAtMC4xLDAtMC4xLTAuMS0wLjFjMCwwLDAsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDBjMCwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUMxMS44LDEwLjYsMTEuOSwxMC42LDExLjksMTAuNnoiLz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNOS4xLDEyLjVDOS4xLDEyLjUsOS4xLDEyLjUsOS4xLDEyLjVjLTAuMSwwLTAuMSwwLTAuMiwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjMKCQkJYzAsMC4xLDAsMC4zLDAuMSwwLjNjMCwwLjEsMC4xLDAuMSwwLjEsMC4xYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLTAuMSwwLjEtMC4xYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCUM5LjIsMTIuNiw5LjIsMTIuNSw5LjEsMTIuNXoiLz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNMTAuNSwxMC42QzEwLjUsMTAuNiwxMC41LDEwLjYsMTAuNSwxMC42YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDMTAuNCwxMC41LDEwLjQsMTAuNiwxMC41LDEwLjZ6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTcuNiwxNC45QzcuNiwxNC45LDcuNywxNC45LDcuNiwxNC45YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDNy41LDE0LjgsNy42LDE0LjksNy42LDE0Ljl6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTcuNiwxMy40QzcuNiwxMy40LDcuNywxMy40LDcuNiwxMy40YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMCwwLDAtMC4xLDBjMCwwLTAuMSwwLTAuMSwwYzAsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQlDNy41LDEzLjQsNy42LDEzLjQsNy42LDEzLjR6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTExLjksOS4xQzExLjksOS4xLDEyLDkuMSwxMS45LDkuMUMxMiw5LjEsMTIuMSw5LDEyLjEsOWMwLTAuMSwwLTAuMiwwLTAuNGMwLTAuMSwwLTAuMiwwLTAuMwoJCQljMC0wLjEsMC0wLjEtMC4xLTAuMWMwLDAsMCwwLTAuMSwwYzAsMC0wLjEsMC0wLjEsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4xLDAsMC4zLDAuMSwwLjMKCQkJQzExLjgsOS4xLDExLjksOS4xLDExLjksOS4xeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMS45LDEzLjVDMTEuOSwxMy41LDEyLDEzLjUsMTEuOSwxMy41YzAuMS0wLjEsMC4xLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMC0wLjEsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDAuMWMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJQzExLjgsMTMuNSwxMS44LDEzLjUsMTEuOSwxMy41eiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMS45LDEyLjFDMTEuOSwxMi4xLDEyLDEyLDExLjksMTIuMWMwLjEtMC4xLDAuMS0wLjEsMC4yLTAuMmMwLTAuMSwwLTAuMiwwLTAuNGMwLTAuMSwwLTAuMiwwLTAuMwoJCQljMC0wLjEsMC0wLjEtMC4xLTAuMWMwLDAsMCwwLTAuMSwwcy0wLjEsMC0wLjEsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJQzExLjgsMTIsMTEuOSwxMi4xLDExLjksMTIuMXoiLz4KCQk8cGF0aCBmaWxsPSJub25lIiBkPSJNMTYsNy4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4xLDAuMSwwLjEsMC4xLDAuMWMwLDAsMC4xLDAsMC4xLDBjMCwwLDAtMC4xLDAuMS0wLjFjMC0wLjEsMC0wLjIsMC0wLjMKCQkJYzAtMC4xLDAtMC4yLDAtMC4zYzAtMC4xLDAtMC4xLTAuMS0wLjFjMCwwLDAsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDBjMCwwLTAuMSwwLjEtMC4xLDAuMkMxNi4xLDcuMSwxNiw3LjIsMTYsNy4yeiIvPgoJCTxwYXRoIGZpbGw9Im5vbmUiIGQ9Ik0xMS45LDE1QzExLjksMTUsMTIsMTQuOSwxMS45LDE1YzAuMS0wLjEsMC4yLTAuMSwwLjItMC4yYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCWMwLTAuMSwwLTAuMS0wLjEtMC4xYzAsMC0wLjEsMC0wLjEsMGMwLDAtMC4xLDAtMC4xLDAuMWMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJQzExLjgsMTQuOSwxMS44LDE1LDExLjksMTV6Ii8+CgkJPHBhdGggZmlsbD0ibm9uZSIgZD0iTTE2LjMsOS42QzE2LjMsOS42LDE2LjIsOS42LDE2LjMsOS42Yy0wLjEsMC0wLjEsMC0wLjIsMGMwLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLDAsMC4yLDAsMC4zCgkJCWMwLDAuMSwwLDAuMywwLjEsMC40YzAsMC4xLDAuMSwwLjEsMC4xLDAuMWMwLDAsMC4xLDAsMC4xLDBzMC4xLTAuMSwwLjEtMC4xYzAtMC4xLDAtMC4yLDAtMC40YzAtMC4xLDAtMC4yLDAtMC4zCgkJCUMxNi4zLDkuNywxNi4zLDkuNiwxNi4zLDkuNnoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTEuNyw3LjZjMC4xLDAuMSwwLjEsMC4yLDAuMiwwLjJjMCwwLDAuMSwwLDAuMS0wLjFjMCwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLTAuMiwwLTAuMwoJCQljMC0wLjEsMC0wLjEsMC0wLjJjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAuMSwwLDAuMWMwLDAuMSwwLDAuMywwLDAuM2MwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMAoJCQlDMTEuOCw3LjcsMTEuOCw3LjYsMTEuNyw3LjZjMC4xLTAuMSwwLjEtMC4yLDAuMS0wLjNjMCwwLDAsMCwwLDBjMCwwLTAuMSwwLTAuMSwwLjFDMTEuNiw3LjQsMTEuNiw3LjUsMTEuNyw3LjZ6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTEzLjQsNi43bC0wLjIsMC4xbDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4xdjAuNWMwLDAuMSwwLDAuMSwwLDAuMQoJCQljMCwwLDAsMCwwLDBjMCwwLDAsMC0wLjEsMHYwaDAuNHYwYzAsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAtMC4xTDEzLjQsNi43TDEzLjQsNi43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNC44LDYuN2wtMC4yLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMXYwLjVjMCwwLjEsMCwwLjEsMCwwLjEKCQkJYzAsMCwwLDAsMCwwYzAsMCwwLDAtMC4xLDB2MEgxNXYwYzAsMC0wLjEsMC0wLjEsMHMwLDAsMCwwYzAsMCwwLDAsMC0wLjFMMTQuOCw2LjdMMTQuOCw2Ljd6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTE2LDdjMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4xLDAsMC4yLDAuMSwwLjNjMC4xLDAuMSwwLjEsMC4yLDAuMiwwLjJjMCwwLDAuMSwwLDAuMS0wLjEKCQkJYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLTAuMiwwLTAuM2MwLTAuMiwwLTAuMy0wLjEtMC40Yy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMWMwLDAtMC4xLDAtMC4xLDBDMTYsNi44LDE2LDYuOSwxNiw3egoJCQkgTTE2LjIsNi44QzE2LjIsNi44LDE2LjMsNi44LDE2LjIsNi44YzAuMSwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuM2MwLDAuMSwwLDAuMS0wLjEsMC4xCgkJCWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC0wLjNDMTYuMSw2LjksMTYuMSw2LjksMTYuMiw2LjgKCQkJQzE2LjEsNi44LDE2LjIsNi44LDE2LjIsNi44eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMC40LDkuMUMxMC40LDkuMSwxMC40LDkuMSwxMC40LDkuMWMwLDAtMC4xLDAtMC4xLDB2MGgwLjR2MGMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLTAuMQoJCQlWOC4yaDBsLTAuMiwwLjFsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjFWOS4xQzEwLjQsOSwxMC40LDkuMSwxMC40LDkuMXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTEuOSw5LjJjMCwwLDAuMSwwLDAuMi0wLjFjMC4xLDAsMC4xLTAuMSwwLjEtMC4yYzAtMC4xLDAuMS0wLjIsMC4xLTAuM2MwLTAuMiwwLTAuMy0wLjEtMC40CgkJCWMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC4xLTAuMSwwLjJzLTAuMSwwLjItMC4xLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUMxMS43LDkuMSwxMS44LDkuMiwxMS45LDkuMnogTTExLjgsOC40YzAtMC4xLDAtMC4yLDAuMS0wLjJjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjMKCQkJQzExLjcsOC42LDExLjcsOC41LDExLjgsOC40eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMyw4LjdjMCwwLjEsMCwwLjMsMC4xLDAuM2MwLjEsMC4xLDAuMSwwLjIsMC4yLDAuMmMwLDAsMC4xLDAsMC4yLTAuMVMxMy42LDksMTMuNiw5CgkJCWMwLTAuMSwwLjEtMC4yLDAuMS0wLjNjMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC4xLTAuMSwwLjIKCQkJQzEzLDguNSwxMyw4LjYsMTMsOC43eiBNMTMuMiw4LjRjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMC4xLDAuMSwwLjFjMCwwLjEsMCwwLjIsMCwwLjMKCQkJYzAsMC4yLDAsMC4zLDAsMC40YzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuM0MxMy4yLDguNiwxMy4yLDguNSwxMy4yLDguNHoKCQkJIi8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTE0LjYsOC4zQzE0LjYsOC4zLDE0LjYsOC4zLDE0LjYsOC4zYzAuMSwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMVY5YzAsMC4xLDAsMC4xLDAsMC4xCgkJCWMwLDAsMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBIMTV2MGMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAtMC4xLDAtMC4xVjguMWgwTDE0LjYsOC4zTDE0LjYsOC4zeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNi4yLDguMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMS0wLjEsMC4yLTAuMSwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuMwoJCQljMC4xLDAuMSwwLjEsMC4yLDAuMiwwLjJjMCwwLDAuMSwwLDAuMi0wLjFjMC4xLDAsMC4xLTAuMSwwLjEtMC4yYzAtMC4xLDAuMS0wLjIsMC4xLTAuM2MwLTAuMiwwLTAuMy0wLjEtMC40CgkJCUMxNi40LDguMiwxNi4zLDguMSwxNi4yLDguMXogTTE2LjQsOWMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMUMxNiw4LjksMTYsOC44LDE2LDguNwoJCQljMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBzMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuMwoJCQlDMTYuNCw4LjgsMTYuNCw4LjksMTYuNCw5eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik05LjEsOS42TDguOSw5LjdsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjF2MC41YzAsMC4xLDAsMC4xLDAsMC4xCgkJCWMwLDAsMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwczAsMCwwLDBjMCwwLDAsMCwwLTAuMUw5LjEsOS42TDkuMSw5LjZMOS4xLDkuNnoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTAuNSwxMC42YzAsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjNjMC0wLjIsMC0wLjMtMC4xLTAuNAoJCQljLTAuMS0wLjEtMC4xLTAuMS0wLjItMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUMxMC4zLDEwLjYsMTAuNCwxMC42LDEwLjUsMTAuNnogTTEwLjMsOS45YzAtMC4xLDAtMC4yLDAuMS0wLjJjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjMKCQkJQzEwLjMsMTAsMTAuMywxMCwxMC4zLDkuOXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTEuNywxMC41YzAuMSwwLjEsMC4yLDAuMiwwLjMsMC4yYzAuMSwwLDAuMSwwLDAuMi0wLjFjMC4xLDAsMC4xLTAuMSwwLjEtMC4yczAuMS0wLjIsMC4xLTAuMwoJCQljMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwLjFjLTAuMSwwLTAuMSwwLjEtMC4xLDAuMmMwLDAuMS0wLjEsMC4yLTAuMSwwLjMKCQkJQzExLjYsMTAuMiwxMS42LDEwLjQsMTEuNywxMC41eiBNMTEuNyw5LjljMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBzMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMQoJCQljMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjIsMCwwLjMsMCwwLjRjMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC4zCgkJCUMxMS43LDEwLDExLjcsOS45LDExLjcsOS45eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMy4zLDEwLjZDMTMuMywxMC42LDEzLjMsMTAuNiwxMy4zLDEwLjZjMCwwLTAuMSwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwCgkJCWMwLDAsMC0wLjEsMC0wLjFWOS42aDBsLTAuMywwLjFsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjJ2MC42QzEzLjMsMTAuNSwxMy4zLDEwLjUsMTMuMywxMC42CgkJCXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTQuNiw5LjdDMTQuNiw5LjcsMTQuNyw5LjcsMTQuNiw5LjdjMC4xLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNgoJCQljMCwwLjEsMCwwLjEsMCwwLjFzMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBIMTV2MGMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAtMC4xLDAtMC4xVjkuNmgwTDE0LjYsOS43TDE0LjYsOS43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNi4yLDkuNmMtMC4xLDAtMC4xLDAtMC4xLDAuMWMtMC4xLDAtMC4xLDAuMS0wLjEsMC4ycy0wLjEsMC4yLTAuMSwwLjNjMCwwLjEsMCwwLjMsMC4xLDAuNAoJCQljMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMCwwLDAuMSwwLDAuMS0wLjFjMC4xLTAuMiwwLjEtMC41LDAuMi0wLjdjMC0wLjEsMC0wLjItMC4xLTAuMkMxNi40LDkuNiwxNi4zLDkuNiwxNi4yLDkuNnogTTE2LjQsMTAuNAoJCQljMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC40YzAtMC4xLDAtMC4yLDAtMC4zYzAtMC4xLDAtMC4yLDAuMS0wLjIKCQkJYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuM0MxNi40LDEwLjIsMTYuNCwxMC4zLDE2LjQsMTAuNHoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNNy44LDExLjVjMCwwLjIsMCwwLjMsMCwwLjNjMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDAKCQkJYzAsMCwwLjEsMCwwLjEtMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLTAuMiwwLTAuM2MwLTAuMSwwLTAuMi0wLjEtMC4zQzcuOCwxMS4zLDcuOCwxMS40LDcuOCwxMS41CgkJCUM3LjgsMTEuNSw3LjgsMTEuNSw3LjgsMTEuNXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNOC45LDExLjJDOC45LDExLjEsOC45LDExLjEsOC45LDExLjJjMC4xLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4xdjAuNQoJCQlDOSwxMS45LDksMTIsOSwxMmMwLDAsMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLTAuMSwwLTAuMVYxMWgwTDguOSwxMS4yTDguOSwxMS4yeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMC41LDExbC0wLjMsMC4xbDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNmMwLDAuMSwwLDAuMSwwLDAuMQoJCQlzMCwwLDAsMGMwLDAsMCwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLTAuMSwwLTAuMUwxMC41LDExTDEwLjUsMTF6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTExLjcsMTEuOWMwLjEsMC4xLDAuMiwwLjIsMC4zLDAuMmMwLjEsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjMKCQkJYzAtMC4yLDAtMC4zLTAuMS0wLjRDMTIuMSwxMSwxMiwxMSwxMS45LDExYy0wLjEsMC0wLjEsMC0wLjIsMC4xYy0wLjEsMC0wLjEsMC4xLTAuMiwwLjJjMCwwLjEtMC4xLDAuMi0wLjEsMC4zCgkJCUMxMS42LDExLjcsMTEuNiwxMS44LDExLjcsMTEuOXogTTExLjcsMTEuM2MwLTAuMSwwLTAuMiwwLjEtMC4yYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMQoJCQljMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjIsMCwwLjMsMCwwLjRjMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC40CgkJCUMxMS43LDExLjUsMTEuNywxMS40LDExLjcsMTEuM3oiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTMuNywxMS41YzAtMC4yLDAtMC4zLTAuMS0wLjRDMTMuNSwxMSwxMy40LDExLDEzLjMsMTFjLTAuMSwwLTAuMSwwLTAuMiwwLjFjLTAuMSwwLTAuMSwwLjEtMC4yLDAuMgoJCQljMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjRjMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMC4xLDAsMC4xLDAsMC4yLTAuMWMwLjEsMCwwLjEtMC4xLDAuMS0wLjIKCQkJQzEzLjcsMTEuOCwxMy43LDExLjcsMTMuNywxMS41eiBNMTMuNSwxMS45YzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuNAoJCQljMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLTAuMSwwLjEtMC4xYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xYzAsMC4xLDAsMC4yLDAsMC4zCgkJCUMxMy42LDExLjcsMTMuNSwxMS44LDEzLjUsMTEuOXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTQuNywxMkMxNC43LDEyLDE0LjcsMTIsMTQuNywxMmMwLDAtMC4xLDAtMC4xLDB2MEgxNXYwYy0wLjEsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMGMwLDAsMC0wLjEsMC0wLjEKCQkJVjExaDBsLTAuMywwLjFsMCwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLDAsMGMwLDAsMCwwLjEsMCwwLjJ2MC42QzE0LjcsMTIsMTQuNywxMiwxNC43LDEyeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xNiwxMS4xTDE2LDExLjFDMTYsMTEuMSwxNi4xLDExLjEsMTYsMTEuMWMwLjEsMCwwLjEsMCwwLjEsMGMwLDAsMCwwLDAsMHYwYzAtMC4xLDAtMC4xLDAuMS0wLjJMMTYsMTEuMQoJCQl6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTcuNCwxMy4zYzAuMSwwLjEsMC4xLDAuMiwwLjIsMC4yYzAsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMlM4LDEzLjEsOCwxMwoJCQljMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYy0wLjEsMC4yLTAuMSwwLjQtMC4xLDAuN0M3LjMsMTMuMyw3LjQsMTMuMyw3LjQsMTMuMwoJCQl6IE03LjUsMTIuN2MwLTAuMSwwLTAuMiwwLjEtMC4yYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLjEsMC4xLDAuMWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNAoJCQljMCwwLjEsMCwwLjEtMC4xLDAuMWMwLDAtMC4xLDAtMC4xLDBjLTAuMSwwLTAuMSwwLTAuMS0wLjFjMC0wLjEtMC4xLTAuMi0wLjEtMC4zQzcuNCwxMi45LDcuNCwxMi44LDcuNSwxMi43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik05LjQsMTNjMC0wLjIsMC0wLjMtMC4xLTAuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwLjFjLTAuMSwwLTAuMSwwLjEtMC4xLDAuMgoJCQljMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4xLDAsMC4zLDAuMSwwLjRjMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMC4xLDAsMC4xLDAsMC4yLTAuMXMwLjEtMC4xLDAuMS0wLjIKCQkJQzkuNCwxMy4yLDkuNCwxMy4xLDkuNCwxM3ogTTkuMiwxMy4zYzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuMwoJCQljMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMC4xLDAuMSwwLjFjMCwwLjEsMCwwLjIsMCwwLjMKCQkJQzkuMiwxMy4xLDkuMiwxMy4yLDkuMiwxMy4zeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMC4zLDEyLjZDMTAuMywxMi41LDEwLjQsMTIuNSwxMC4zLDEyLjZjMC4xLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNgoJCQljMCwwLjEsMCwwLjEsMCwwLjFjMCwwLDAsMCwwLDBjMCwwLDAsMC0wLjEsMHYwaDAuNHYwYzAsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMGMwLDAsMC0wLjEsMC0wLjF2LTAuOWgwTDEwLjMsMTIuNkwxMC4zLDEyLjZ6IgoJCQkvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMS43LDEzLjRjMC4xLDAuMSwwLjIsMC4yLDAuMywwLjJjMC4xLDAsMC4xLDAsMC4yLTAuMWMwLjEsMCwwLjEtMC4xLDAuMS0wLjJjMC0wLjEsMC4xLTAuMiwwLjEtMC4zCgkJCWMwLTAuMiwwLTAuMy0wLjEtMC40Yy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMWMtMC4xLDAtMC4xLDAtMC4yLDAuMWMtMC4xLDAtMC4xLDAuMS0wLjIsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuMwoJCQlDMTEuNiwxMy4xLDExLjYsMTMuMywxMS43LDEzLjR6IE0xMS43LDEyLjdjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLTAuMSwwLjEtMC4xYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjQKCQkJQzExLjcsMTIuOSwxMS43LDEyLjgsMTEuNywxMi43eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik0xMy4zLDEzLjVDMTMuMywxMy41LDEzLjMsMTMuNSwxMy4zLDEzLjVjMCwwLTAuMSwwLTAuMSwwdjBoMC40djBjLTAuMSwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwCgkJCWMwLDAsMC0wLjEsMC0wLjF2LTFoMGwtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwczAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNkMxMy4zLDEzLjQsMTMuMywxMy41LDEzLjMsMTMuNXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTQuOCwxMi40Yy0wLjEsMC0wLjEsMC0wLjIsMC4xYy0wLjEsMC0wLjEsMC4xLTAuMiwwLjJjMCwwLjEtMC4xLDAuMi0wLjEsMC4zYzAsMC4yLDAsMC4zLDAuMSwwLjQKCQkJYzAsMC4xLDAuMSwwLjEsMC4xLDAuMmMwLDAsMCwwLDAuMS0wLjFjMCwwLDAsMCwwLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjRjMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMgoJCQlDMTQuNywxMi40LDE0LjgsMTIuNCwxNC44LDEyLjRDMTQuOCwxMi40LDE0LjksMTIuNCwxNC44LDEyLjRjMC4xLDAuMSwwLjIsMC4yLDAuMiwwLjJjMCwwLjEsMCwwLjIsMCwwLjNjMCwwLjEsMCwwLjIsMCwwLjIKCQkJYzAuMS0wLjEsMC4xLTAuMiwwLjItMC4yYzAtMC4yLDAtMC4zLTAuMS0wLjRDMTQuOSwxMi40LDE0LjksMTIuNCwxNC44LDEyLjR6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTcuNiwxNC45YzAsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjNjMC0wLjIsMC0wLjMtMC4xLTAuNAoJCQljLTAuMS0wLjEtMC4xLTAuMS0wLjItMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuM2MwLDAuMSwwLDAuMywwLjEsMC4zCgkJCUM3LjQsMTQuOSw3LjUsMTQuOSw3LjYsMTQuOXogTTcuNSwxNC4yYzAtMC4xLDAtMC4yLDAuMS0wLjJjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMCwwLjEsMGMwLDAsMC4xLDAuMSwwLjEsMC4xCgkJCWMwLDAuMSwwLDAuMiwwLDAuM2MwLDAuMiwwLDAuMywwLDAuNGMwLDAuMSwwLDAuMS0wLjEsMC4xYzAsMC0wLjEsMC0wLjEsMGMtMC4xLDAtMC4xLDAtMC4xLTAuMWMwLTAuMS0wLjEtMC4yLTAuMS0wLjMKCQkJQzcuNCwxNC40LDcuNCwxNC4zLDcuNSwxNC4yeiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik05LDE0LjlDOSwxNC45LDksMTQuOSw5LDE0LjljMCwwLTAuMSwwLTAuMSwwdjBoMC40djBjMCwwLTAuMSwwLTAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLTAuMSwwLTAuMXYtMC45CgkJCWgwTDguOCwxNGwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwczAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNkM5LDE0LjgsOSwxNC45LDksMTQuOXoiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTAuNCwxNC45QzEwLjQsMTQuOSwxMC40LDE0LjksMTAuNCwxNC45YzAsMC0wLjEsMC0wLjEsMHYwaDAuNHYwYy0wLjEsMC0wLjEsMC0wLjEsMGMwLDAsMCwwLDAsMAoJCQljMCwwLDAtMC4xLDAtMC4xdi0wLjloMEwxMC4zLDE0bDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBjMCwwLDAsMCwwLDBjMCwwLDAsMC4xLDAsMC4ydjAuNkMxMC40LDE0LjgsMTAuNCwxNC45LDEwLjQsMTQuOQoJCQl6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTExLjYsMTQuOGMwLjEsMC4xLDAuMiwwLjIsMC4zLDAuMmMwLjEsMCwwLjEsMCwwLjItMC4xYzAuMSwwLDAuMS0wLjEsMC4xLTAuMmMwLTAuMSwwLjEtMC4yLDAuMS0wLjMKCQkJYzAtMC4yLDAtMC4zLTAuMS0wLjRjLTAuMS0wLjEtMC4yLTAuMS0wLjItMC4xYy0wLjEsMC0wLjEsMC0wLjIsMC4xYy0wLjEsMC0wLjEsMC4xLTAuMiwwLjJjMCwwLjEtMC4xLDAuMi0wLjEsMC4zCgkJCUMxMS41LDE0LjYsMTEuNiwxNC43LDExLjYsMTQuOHogTTExLjcsMTQuMWMwLTAuMSwwLTAuMiwwLjEtMC4yYzAsMCwwLjEtMC4xLDAuMS0wLjFjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLjEsMC4xLDAuMSwwLjEKCQkJYzAsMC4xLDAsMC4yLDAsMC4zYzAsMC4yLDAsMC4zLDAsMC40YzAsMC4xLDAsMC4xLTAuMSwwLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC0wLjEtMC4xYzAtMC4xLTAuMS0wLjItMC4xLTAuNAoJCQlDMTEuNywxNC4zLDExLjcsMTQuMiwxMS43LDE0LjF6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTEzLjQsMTMuOGwtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMnYwLjUKCQkJYzAuMSwwLDAuMS0wLjEsMC4xLTAuMUwxMy40LDEzLjhMMTMuNCwxMy44eiIvPgoJCTxwYXRoIGZpbGw9IiNBM0NDMzkiIGQ9Ik03LjgsMTUuNGMtMC4xLTAuMS0wLjEtMC4xLTAuMi0wLjFjMCwwLTAuMSwwLTAuMSwwYy0wLjEsMC0wLjEsMC4xLTAuMSwwLjJjMCwwLjEsMCwwLjIsMCwwLjMKCQkJYzAsMCwwLDAsMC4xLDBjMC0wLjEsMC0wLjEsMC0wLjJjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwQzcuNywxNS40LDcuOCwxNS41LDcuOCwxNS40CgkJCWMwLDAuMiwwLDAuMywwLDAuNGMwLDAsMCwwLDAsMGMwLDAsMC4xLDAsMC4xLDBjMCwwLDAsMCwwLDBDNy45LDE1LjcsNy45LDE1LjUsNy44LDE1LjR6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTkuMywxNS40Yy0wLjEtMC4xLTAuMS0wLjEtMC4yLTAuMWMtMC4xLDAtMC4xLDAtMC4xLDAuMWMtMC4xLDAtMC4xLDAuMS0wLjEsMC4yYzAsMC4xLTAuMSwwLjItMC4xLDAuMwoJCQljMCwwLDAsMCwwLDAuMWMwLDAsMC4xLDAsMC4xLDBsMCwwYzAsMCwwLDAsMC0wLjFjMC0wLjEsMC0wLjIsMC0wLjNjMC0wLjEsMC0wLjIsMC4xLTAuMmMwLDAsMC4xLDAsMC4xLDBjMCwwLDAuMSwwLDAuMSwwCgkJCUM5LjIsMTUuNCw5LjIsMTUuNSw5LjMsMTUuNGMwLDAuMiwwLDAuMywwLDAuNGMwLDAsMCwwLjEsMCwwLjFjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMC0wLjFDOS40LDE1LjcsOS40LDE1LjUsOS4zLDE1LjR6Ii8+CgkJPHBhdGggZmlsbD0iI0EzQ0MzOSIgZD0iTTEwLjUsMTUuM2wtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwYzAsMCwwLDAsMCwwYzAsMCwwLDAuMSwwLDAuMnYwLjJjMCwwLDAuMSwwLDAuMSwwCgkJCUwxMC41LDE1LjNMMTAuNSwxNS4zTDEwLjUsMTUuM3oiLz4KCQk8cGF0aCBmaWxsPSIjQTNDQzM5IiBkPSJNMTIsMTUuMmwtMC4zLDAuMWwwLDBjMCwwLDAuMSwwLDAuMSwwYzAsMCwwLDAsMCwwQzExLjksMTUuNCwxMS45LDE1LjMsMTIsMTUuMkwxMiwxNS4yTDEyLDE1LjJMMTIsMTUuMnoKCQkJIi8+Cgk8L2c+CjwvZz4KPC9zdmc+" alt="chata.ai" height="22px" width="22px" draggable="false"></div>
-    ` : '';
+    return values;
+}
 
-    var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
+function formatDataToBarChart(json){
+    var lines = csvTo2dArray(json['data']);
+    var values = [];
+    var colType1 = json['columns'][0]['type'];
+    var hasNegativeValues = false;
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        var row = {};
+        row['label'] = formatData(data[0], colType1);
+        var value = parseFloat(data[1]);
+        if(value < 0 && !hasNegativeValues){
+            hasNegativeValues = true;
+        }
+        row['value'] = value;
 
-    chataBarContainer.innerHTML = `
-    <div class="chat-bar-text">
-        <div class="chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
-            <ul class="chat-bar-autocomplete">
-            </ul>
-        </div>
-        ${CHATA_ICON}
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="" ${disabled}>
-    </div>
 
+        values.push(row);
+    }
+    return [values, hasNegativeValues];
+}
+
+function createSafetynetContent(suggestionArray, context='ChatDrawer'){
+    const message = `
+    Before I can try to find your answer,
+    I need your help understanding a term you used that I don't see in your data.
+    Click the dropdown to view suggestions so I can ensure you get the right data!`;
+    const safetyDeleteButtonHtml = `
+        ${DELETE_ICON}
     `;
+    const runQueryButtonHtml = `
+    <button class="chata-safety-net-execute-btn" onclick="runQuery(event, '${context}')">
+        ${RUN_QUERY}
+    Run Query</button>
+    `
+    const runQueryButton = ChatDrawer.htmlToElement(runQueryButtonHtml);
+    var responseContentContainer = document.createElement('div');
+    responseContentContainer.classList.add('chata-response-content-container');
+    responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
+    for (var i = 0; i < suggestionArray.length; i++) {
+        var suggestion = suggestionArray[i];
+        console.log(suggestion);
+        if(suggestion['type'] == 'word'){
+            var span = document.createElement('span');
+            span.textContent = ' ' + suggestion['word'] + ' ';
+            span.classList.add('safetynet-value');
+            responseContentContainer.append(span);
+        }else{
+            var div = document.createElement('div');
+            var select = document.createElement('select');
+            select.classList.add('chata-safetynet-select');
+            select.style.width = '47px';
+            div.classList.add('chata-safety-net-selector-container');
 
-    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
-    chataBarContainer.bind = function(responseRenderer){
-        this.responseRenderer = responseRenderer;
-        responseRenderer.chataBarContainer = chataBarContainer;
+            var suggestionList = suggestion['suggestionList'];
+            for (var x = 0; x < suggestionList.length; x++) {
+                var option = document.createElement('option');
+                option.setAttribute('value', suggestionList[x]['text']);
+                option.textContent = suggestionList[x]['text'];
+                select.appendChild(option);
+            }
+            var safetyDeleteButton = ChatDrawer.htmlToElement(safetyDeleteButtonHtml);
+            var o = document.createElement('option');
+            o.setAttribute('value', suggestion['word']);
+            o.textContent = suggestion['word'];
+            select.appendChild(o);
+            select.classList.add('safetynet-value');
+            div.appendChild(select);
+            div.appendChild(safetyDeleteButton);
+            responseContentContainer.appendChild(div);
+        }
     }
+    responseContentContainer.appendChild(runQueryButton);
+    return responseContentContainer;
+}
 
-    chataBarContainer.onkeyup = function(){
-        if(chataBarContainer.options.enableAutocomplete){
-            var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
-            suggestionList.style.display = 'none';
-            if(event.target.value){
-                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options.autocompleteStyles);
+
+function createSuggestionArray(jsonResponse){
+    var fullSuggestion = jsonResponse['full_suggestion'];
+    var query = jsonResponse['query'];
+    var words = query.split(' ');
+    var suggestionArray = [];
+    for (var i = 0; i < words.length; i++) {
+        var w = words[i];
+        var hasSuggestion = false;
+        for (var x = 0; x < fullSuggestion.length; x++) {
+            var start = fullSuggestion[x]['start'];
+            var end = fullSuggestion[x]['end'];
+            var word = query.slice(start, end);
+            if(word == w){
+                suggestionArray.push({
+                    word: word,
+                    type: 'suggestion',
+                    suggestionList: fullSuggestion[x]['suggestion_list']
+                })
+                hasSuggestion = true;
+                break;
             }
         }
-    }
-
-    chataBarContainer.onkeypress = function(event){
-        var suggestionList = event.target.parentElement.getElementsByClassName('chat-bar-autocomplete')[0];
-        suggestionList.style.display = 'none';
-        if(event.keyCode == 13 && event.target.value){
-            try {
-                ChatDrawer.xhr.onreadystatechange = null;
-                ChatDrawer.xhr.abort();
-            } catch (e) {}
-            this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value);
+        if(!hasSuggestion){
+            suggestionArray.push({
+                'word': w,
+                'type': 'word',
+                suggestionList: []
+            });
         }
     }
-
-    chataBarContainer.sendMessageToResponseRenderer = function(value){
-        chataBarContainer.options.onSubmit();
-        var responseRenderer = this.responseRenderer;
-        var parent = this.getElementsByClassName('chat-bar-text')[0];
-        this.chatbar.disabled = true;
-        this.chatbar.value = '';
-        if(this.options.showLoadingDots){
-            var responseLoadingContainer = putLoadingContainer(parent);
-        }
-        const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
-          value
-        )}&projectId=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
-        const URL = `https://backend-staging.chata.ai/api/v1/query?q=${value}&project=1&unified_query_id=${uuidv4()}`;
-
-        ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
-            if(jsonResponse['full_suggestion'].length && chataBarContainer.options.enableSafetyNet){
-                responseRenderer.innerHTML = '';
-                chataBarContainer.chatbar.removeAttribute("disabled");
-                if(chataBarContainer.options.showLoadingDots){
-                    parent.removeChild(responseLoadingContainer);
-                }
-                var suggestionArray = ChatDrawer.createSuggestionArray(jsonResponse);
-                var node = ChatDrawer.createSafetynetContent(suggestionArray, 'ChatBar');
-                responseRenderer.appendChild(node);
-                chataBarContainer.options.onResponseCallback();
-                ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
-            }else{
-                ChatDrawer.ajaxCall(URL, function(jsonResponse){
-                    ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
-                    responseRenderer.innerHTML = '';
-                    chataBarContainer.chatbar.removeAttribute("disabled");
-                    if(chataBarContainer.options.showLoadingDots){
-                        parent.removeChild(responseLoadingContainer);
-                    }
-                    switch(jsonResponse['display_type']){
-                        case 'suggestion':
-                            var data = csvTo2dArray(jsonResponse['data']);
-                            responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
-                            ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
-                        break;
-                        case 'table':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            if(jsonResponse['columns'].length == 1){
-                                var data = jsonResponse['data'];
-                                responseRenderer.innerHTML = `<div>${data}</div>`;
-                            }else{
-                                createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
-                            }
-                        break;
-                        case 'date_pivot':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            var pivotArray = ChatDrawer.getDatePivotArray(jsonResponse);
-                            createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
-                        break;
-                        case 'pivot_column':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            var pivotArray = ChatDrawer.getPivotColumnArray(jsonResponse);
-                            createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
-                        break;
-                        case 'line':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var hasNegativeValues = values[1];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            createLineChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer');
-                        break;
-                        case 'bar':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var hasNegativeValues = values[1];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            createBarChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer');
-                        break;
-                        case 'column':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var hasNegativeValues = values[1];
-                            createColumnChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer');
-                        break;
-                        case 'heatmap':
-                            var values = formatDataToHeatmap(jsonResponse);
-                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
-                            createHeatmap(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer');
-                        break;
-                        case 'bubble':
-                            var values = formatDataToHeatmap(jsonResponse);
-                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
-                            createBubbleChart(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer');
-                        break;
-                        case 'help':
-                            responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
-                        break;
-                        default:
-
-                    }
-                    chataBarContainer.options.onResponseCallback();
-                });
-            }
-        });
-    }
-
-    return chataBarContainer;
+    return suggestionArray;
 }
 
 function createTable(jsonResponse, oldComponent, action='replace', uuid, tableClass='table-response'){
@@ -18041,6 +18363,7 @@ function createTable(jsonResponse, oldComponent, action='replace', uuid, tableCl
     }else{
         oldComponent.appendChild(table);
     }
+    return table;
 }
 
 
@@ -18096,9 +18419,10 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
     }else{
         oldComponent.appendChild(table);
     }
+    return table;
 }
 
-function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex'){
+function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18276,15 +18600,19 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, from
     .attr("fill", function(d) { return colorScale(d.value)} )
     .attr('class', 'square')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
     });
 }
 
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex'){
+function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18462,15 +18790,19 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
     .attr("opacity", "0.7")
     .attr('class', 'circle')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
     });
 }
 
-function createBarChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex'){
+function createBarChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 40, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18599,15 +18931,20 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d)
+        }
+
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide()
+        }
     });
 }
 
-function createColumnChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex'){
+function createColumnChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18739,16 +19076,20 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fromC
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d)
+            tip.hide();
+        }
     });
 }
 
-function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex'){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90},
+function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+    var margin = {top: 5, right: 10, bottom: 60, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
@@ -18894,12 +19235,459 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
     .attr("fill", "#28a8e0")
     .attr('class', 'line-dot')
     .on('mouseover', function(d) {
-        tip.attr('class', 'd3-tip animate').show(d)
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
     })
     .on('mouseout', function(d) {
-        tip.attr('class', 'd3-tip').show(d)
-        tip.hide()
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
     });
+}
+
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+    var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
+    var margin = {top: 5, right: 10, bottom: 40, left: 80},
+    width = component.parentElement.clientWidth - margin.left;
+    var wLegendBox = 180;
+    var legspacing = 15;
+    var chartWidth = width - wLegendBox;
+    var height;
+    var legendBoxMargin = 25
+    if(fromChatDrawer){
+        if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+            height = 600;
+        }else{
+            height = 250;
+        }
+    }else{
+        height = component.parentElement.clientHeight;
+    }
+    component.innerHTML = '';
+    component.parentElement.classList.remove('chata-table-container');
+    component.parentElement.classList.add('chata-chart-container');
+    const barWidth = width / groups.length;
+    const interval = Math.ceil((groups.length * 16) / width);
+    var xTickValues = [];
+    if (barWidth < 16) {
+        groups.forEach((element, index) => {
+            if (index % interval === 0) {
+                xTickValues.push(element);
+                // if(element.length < 18){
+                // }
+            }
+        });
+    }
+    var svg = d3.select(component)
+    .append("svg")
+    .attr("width", width + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+    "translate(" + margin.left + "," + margin.top + ")");
+
+    var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+        return `
+        <span class='title-tip'>${col2}:</span> <span class="text-tip">${d.data.group}</span> <br/>
+        <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.labelY}</span> <br/>
+        <span class='title-tip'>${col3}:</span> <span class="text-tip">${d.value}</span>`;
+    })
+
+    svg.call(tip);
+
+    svg.append('text')
+    .attr('x', -(height / 2))
+    .attr('y', -margin.left + margin.right)
+    .attr('transform', 'rotate(-90)')
+    .attr('text-anchor', 'middle')
+    .attr('class', 'y-axis-label')
+    .text(col1);
+
+    svg.append('text')
+    .attr('x', chartWidth / 2)
+    .attr('y', height + margin.bottom)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'x-axis-label')
+    .text(col2);
+
+
+    var x = d3.scaleBand()
+    .domain(groups)
+    .range([0, chartWidth])
+    .padding([0.2]);
+
+    var xAxis = d3.axisBottom(x);
+
+    if(xTickValues.length > 0){
+        xAxis.tickValues(xTickValues);
+    }
+
+    svg.append("g")
+    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+    .call(xAxis)
+    .selectAll("text")
+    .style("color", '#fff')
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+    var y = d3.scaleLinear()
+    .domain([0, 200000])
+    .range([ height - margin.bottom, 0 ]);
+    svg.append("g")
+    .call(d3.axisLeft(y));
+
+    var color = d3.scaleOrdinal()
+    .domain(subgroups)
+    .range(colors)
+
+    svg.append("g")
+    .call(d3.axisLeft(y)).select(".domain").remove();
+
+    svg.append("g")
+    .attr("class", "grid")
+    .call(d3.axisLeft(y)
+        .tickSize(-chartWidth)
+        .tickFormat("")
+    );
+
+    var stackedData = d3.stack()
+    .keys(subgroups)
+    (data)
+
+    svg.append("g")
+    .selectAll("g")
+    .data(stackedData)
+    .enter().append("g")
+    .attr("fill", function(d) { return color(d.key); })
+    .selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+    .attr('opacity', '0.7')
+    .attr('class', 'stacked-rect')
+    .attr("x", function(d) { return x(d.data.group); })
+    .attr("y", function(d) {
+        if(isNaN(d[1])){
+            return 0;
+        }else{
+            return Math.abs(y(d[1])) + 0.5;
+        }
+    })
+    .attr("height", function(d) {
+        if(isNaN([d[1]])){
+            return 0;
+        }else{
+            return Math.abs(y(d[0]) - y(d[1]) - 0.5);
+        }
+    })
+    .attr("width",x.bandwidth())
+    .on('mouseover', function(d, i) {
+        if(renderTooltips){
+            var pos = d[1];
+            var group = groups.reverse()[i];
+            var sum = 0;
+            for (var [key, value] of Object.entries(d.data)){
+                if(key == 'group')continue;
+                sum += parseFloat(value);
+                if(sum == pos){
+                    d.value = value;
+                    d.labelY = key;
+                    break;
+                }
+            }
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
+    })
+    .on('mouseout', function(d, i) {
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
+    });
+
+
+    var legend = svg.selectAll(".legend")
+        .data(subgroups.sort())
+        .enter()
+        .append("g")
+
+    legend.append("circle")
+        .attr("fill", color)
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("cy", function (d, i) {
+            return i * legspacing + margin.top;
+        })
+        .attr('opacity', '0.7')
+        .attr("cx", chartWidth + legspacing)
+        .attr("r", 5);
+
+    legend.append("text")
+        .attr("class", "label")
+        .attr('opacity', '0.7')
+        .attr("y", function (d, i) {
+            return i * legspacing + margin.top;
+        })
+        .attr("x", chartWidth + legendBoxMargin)
+        .attr("text-anchor", "start")
+        .text(function (d, i) {
+            return subgroups[i];
+        })
+
+
+}
+
+function createResponseRenderer(options={}){
+    var responseRenderer = document.createElement('div');
+    responseRenderer.options = {
+        supportsSuggestions: true,
+        onSuggestionClick: function() {},
+        tableBorderColor: undefined,
+        tableHoverColor: undefined,
+        displayType: undefined,
+        isFilteringTable: false,
+        renderTooltips: true,
+        currencyCode: 'USD',
+        languageCode: 'en-US',
+        fontFamily: 'sans-serif',
+        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195']
+    }
+    for (var [key, value] of Object.entries(options)) {
+        responseRenderer.options[key] = value;
+    }
+    responseRenderer.classList.add('chata-response-content-container');
+    responseRenderer.classList.add('renderer-container');
+    responseRenderer.setAttribute('data-componentid', uuidv4());
+    var applyTableStyles = function(){
+        css = '';
+        var style = document.createElement('style');
+        if(responseRenderer.options.tableBorderColor !== undefined){
+            css += `.renderer-table tr{ border-color: ${responseRenderer.options.tableBorderColor}; }`;
+        }
+        if(responseRenderer.options.tableHoverColor !== undefined){
+            css += `.renderer-table tr:hover{ background-color: ${responseRenderer.options.tableHoverColor}; }`;
+        }
+        style.appendChild(document.createTextNode(css));
+        document.getElementsByTagName('head')[0].appendChild(style);
+    }
+    applyTableStyles();
+    return responseRenderer;
+}
+
+function getChatBar(options){
+
+    var chataBarContainer = document.createElement('div');
+    chataBarContainer.classList.add('chata-bar-container');
+    chataBarContainer.classList.add('chat-drawer-chat-bar');
+    chataBarContainer.classList.add('autosuggest-top');
+    chataBarContainer.options = {
+        token: '',
+        apiKey: '',
+        customerId: '',
+        userId: '',
+        domain: '',
+        isDisabled: false,
+        onSubmit: function(){},
+        onResponseCallback: function(){},
+        autoCompletePlacement: 'top',
+        showLoadingDots: true,
+        showChataIcon: true,
+        enableVoiceRecord: true,
+        enableAutocomplete: true,
+        autocompleteStyles: {},
+        enableSafetyNet: true,
+        enableDrilldowns: true,
+        demo: false
+    }
+
+    for (var [key, value] of Object.entries(options)) {
+        chataBarContainer.options[key] = value;
+    }
+    const CHATA_ICON = chataBarContainer.options.showChataIcon ? `
+    <div class="chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
+    ` : '';
+
+    var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
+
+    chataBarContainer.innerHTML = `
+    <div class="chat-bar-text">
+        <div class="chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
+            <ul class="chat-bar-autocomplete">
+            </ul>
+        </div>
+        ${CHATA_ICON}
+        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="" ${disabled}>
+    </div>
+    `;
+
+    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
+    chataBarContainer.bind = function(responseRenderer){
+        this.responseRenderer = responseRenderer;
+        responseRenderer.chataBarContainer = chataBarContainer;
+    }
+
+    chataBarContainer.onkeyup = function(){
+        if(chataBarContainer.options.enableAutocomplete){
+            var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
+            suggestionList.style.display = 'none';
+            if(event.target.value){
+                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options.autocompleteStyles);
+            }
+        }
+    }
+
+    chataBarContainer.onkeypress = function(event){
+        var suggestionList = event.target.parentElement.getElementsByClassName('chat-bar-autocomplete')[0];
+        suggestionList.style.display = 'none';
+        if(event.keyCode == 13 && event.target.value){
+            try {
+                ChatDrawer.xhr.onreadystatechange = null;
+                ChatDrawer.xhr.abort();
+            } catch (e) {}
+            this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value);
+        }
+    }
+
+    chataBarContainer.sendMessageToResponseRenderer = function(value){
+        chataBarContainer.options.onSubmit();
+        var responseRenderer = this.responseRenderer;
+        var parent = this.getElementsByClassName('chat-bar-text')[0];
+        this.chatbar.disabled = true;
+        this.chatbar.value = '';
+        if(this.options.showLoadingDots){
+            var responseLoadingContainer = putLoadingContainer(parent);
+        }
+        const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+          value
+        )}&projectId=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
+        const URL = `https://backend-staging.chata.ai/api/v1/query?q=${value}&project=1&unified_query_id=${uuidv4()}`;
+
+        ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
+            if(jsonResponse['full_suggestion'].length && chataBarContainer.options.enableSafetyNet){
+                responseRenderer.innerHTML = '';
+                chataBarContainer.chatbar.removeAttribute("disabled");
+                if(chataBarContainer.options.showLoadingDots){
+                    parent.removeChild(responseLoadingContainer);
+                }
+                var suggestionArray = createSuggestionArray(jsonResponse);
+                var node = createSafetynetContent(suggestionArray, 'ChatBar');
+                responseRenderer.appendChild(node);
+                chataBarContainer.options.onResponseCallback();
+                ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
+            }else{
+                ChatDrawer.ajaxCall(URL, function(jsonResponse){
+                    ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                    responseRenderer.innerHTML = '';
+                    chataBarContainer.chatbar.removeAttribute("disabled");
+                    if(chataBarContainer.options.showLoadingDots){
+                        parent.removeChild(responseLoadingContainer);
+                    }
+                    switch(jsonResponse['display_type']){
+                        case 'suggestion':
+                            if(responseRenderer.options.supportsSuggestions){
+                                var data = csvTo2dArray(jsonResponse['data']);
+                                responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
+                                ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
+                            }else{
+                                responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
+                            }
+                        break;
+                        case 'table':
+                            var uuid = uuidv4();
+                            ChatDrawer.responses[uuid] = jsonResponse;
+                            var div = document.createElement('div');
+                            div.classList.add('chata-table-container');
+                            div.classList.add('chata-table-container-renderer');
+                            responseRenderer.appendChild(div);
+                            if(jsonResponse['columns'].length == 1){
+                                var data = jsonResponse['data'];
+                                responseRenderer.innerHTML = `<div>${data}</div>`;
+                            }else{
+                                var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                                table.classList.add('renderer-table');
+                            }
+                        break;
+                        case 'date_pivot':
+                            var uuid = uuidv4();
+                            ChatDrawer.responses[uuid] = jsonResponse;
+                            var div = document.createElement('div');
+                            div.classList.add('chata-table-container');
+                            div.classList.add('chata-table-container-renderer');
+                            responseRenderer.appendChild(div);
+                            var pivotArray = getDatePivotArray(jsonResponse);
+                            var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
+                            table.classList.add('renderer-table');
+                        break;
+                        case 'pivot_column':
+                            var uuid = uuidv4();
+                            ChatDrawer.responses[uuid] = jsonResponse;
+                            var div = document.createElement('div');
+                            div.classList.add('chata-table-container');
+                            div.classList.add('chata-table-container-renderer');
+                            responseRenderer.appendChild(div);
+                            var pivotArray = getPivotColumnArray(jsonResponse);
+                            var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
+                            table.classList.add('renderer-table');
+                        break;
+                        case 'line':
+                            var values = formatDataToBarChart(jsonResponse);
+                            var grouped = values[0];
+                            var hasNegativeValues = values[1];
+                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                            createLineChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
+                        break;
+                        case 'bar':
+                            var values = formatDataToBarChart(jsonResponse);
+                            var grouped = values[0];
+                            var hasNegativeValues = values[1];
+                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                            createBarChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
+                        break;
+                        case 'column':
+                            var values = formatDataToBarChart(jsonResponse);
+                            var grouped = values[0];
+                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                            var hasNegativeValues = values[1];
+                            createColumnChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
+                        break;
+                        case 'heatmap':
+                            var values = formatDataToHeatmap(jsonResponse);
+                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                            createHeatmap(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
+                        break;
+                        case 'bubble':
+                            var values = formatDataToHeatmap(jsonResponse);
+                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                            createBubbleChart(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
+                        break;
+                        case 'help':
+                            responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
+                        break;
+                        default:
+                            responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
+                    }
+                    chataBarContainer.options.onResponseCallback();
+                });
+            }
+        });
+    }
+
+    return chataBarContainer;
 }
 
 var ChatDrawer = {
@@ -18909,6 +19697,7 @@ var ChatDrawer = {
         apiKey: '',
         customerId: '',
         userId: '',
+        domain: '',
         isVisible: false,
         placement: 'right',
         width: 500,
@@ -18931,10 +19720,13 @@ var ChatDrawer = {
         autocompleteStyles: {},
         enableSafetyNet: true,
         enableDrilldowns: true,
-        demo: false
+        demo: false,
+        isRecordVoiceActive: false
     },
     responses: [],
-    xhr: new XMLHttpRequest()
+    xhr: new XMLHttpRequest(),
+    speechToText: getSpeech(),
+    finalTranscript: ''
 };
 
 (function(document, window, ChatDrawer, undefined) {
@@ -18971,13 +19763,33 @@ var ChatDrawer = {
             themeStyles['--chata-drawer-accent-color'] = options.accentColor;
         }
         for (let property in themeStyles) {
-            console.log(themeStyles[property]);
-
             document.documentElement.style.setProperty(
                 property,
                 themeStyles[property],
             );
         }
+
+        ChatDrawer.speechToText.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+                let transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    ChatDrawer.finalTranscript += transcript;
+                } else {
+                    interimTranscript += transcript;
+                }
+            }
+            console.log(ChatDrawer.finalTranscript);
+            if(ChatDrawer.finalTranscript !== ''){
+                var button = document.getElementById('chata-voice-record-button');
+                var chataInput = document.getElementById('chata-input');
+                ChatDrawer.sendMessage(chataInput, ChatDrawer.finalTranscript);
+                ChatDrawer.speechToText.stop();
+                button.style.background = themeStyles['--chata-drawer-accent-color'];
+                ChatDrawer.options.isRecordVoiceActive = false;
+            }
+        }
+
         return this;
     }
 
@@ -18985,12 +19797,8 @@ var ChatDrawer = {
         return getChatBar(options);
     }
 
-    ChatDrawer.createResponseRenderer = function(){
-        var responseContentContainer = document.createElement('div')
-        responseContentContainer.classList.add('chata-response-content-container');
-        responseContentContainer.classList.add('renderer-container');
-        responseContentContainer.setAttribute('data-componentid', uuidv4());
-        return responseContentContainer;
+    ChatDrawer.createResponseRenderer = function(options){
+        return createResponseRenderer(options);
     }
 
     ChatDrawer.createBar = function(){
@@ -19000,21 +19808,7 @@ var ChatDrawer = {
         chataBarContainer.classList.add('autosuggest-top');
         var htmlBar = `
         <div class="watermark">
-            <svg x="0px" y="0px" width="14px" height="13px" viewBox="0 0 16 14"><path class="chata-icon-svg-0" d="M15.1,13.5c0,0-0.5-0.3-0.5-1.7V9.6c0-1.9-1.1-3.7-2.9-4.4C11.5,5.1,11.3,5,11,5c-0.1-0.3-0.2-0.5-0.3-0.7l0,0
-                C9.9,2.5,8.2,1.4,6.3,1.4c0,0,0,0-0.1,0C5,1.4,3.8,1.9,2.8,2.8C1.9,3.6,1.4,4.8,1.4,6.1c0,0.1,0,0.1,0,0.2v2.2
-                c0,1.3-0.4,1.7-0.4,1.7h0l-1,0.7l1.2,0.1c0.8,0,1.7-0.2,2.3-0.7c0.2,0.2,0.5,0.3,0.8,0.4c0.2,0.1,0.5,0.2,0.8,0.2
-                c0.1,0.2,0.1,0.5,0.2,0.7c0.8,1.7,2.5,2.8,4.4,2.8c0,0,0.1,0,0.1,0c1,0,2-0.3,2.7-0.7c0.7,0.5,1.6,0.8,2.4,0.7l1.1-0.1L15.1,13.5z
-                M10.4,6.2c0,0.9-0.3,1.8-0.9,2.5C9.2,9,8.9,9.3,8.6,9.5C8.3,9.6,8.1,9.7,7.9,9.8C7.6,9.9,7.3,10,7.1,10c-0.3,0.1-0.6,0.1-0.8,0.1
-                c-0.1,0-0.3,0-0.4,0c0,0-0.1,0-0.1,0c0,0,0-0.1,0-0.1c0-0.1,0-0.2,0-0.4c0-0.8,0.2-1.6,0.7-2.2C6.5,7.2,6.7,7,6.9,6.8
-                C7,6.7,7.1,6.6,7.2,6.5c0.2-0.2,0.4-0.3,0.7-0.4C8.1,6,8.3,5.9,8.6,5.8C9,5.7,9.4,5.6,9.8,5.6c0.1,0,0.3,0,0.4,0c0,0,0.1,0,0.1,0
-                C10.4,5.8,10.4,6,10.4,6.2z M3.8,9.3L3.5,9.1L3.2,9.3C2.9,9.7,2.4,9.9,2,10c0.1-0.4,0.2-0.8,0.2-1.5l0-2.2c0,0,0-0.1,0-0.1
-                c0-1.1,0.5-2,1.2-2.8c0.7-0.7,1.7-1.1,2.7-1.1c0,0,0.1,0,0.1,0c1.6,0,3.1,0.9,3.8,2.3c0,0.1,0.1,0.2,0.1,0.3c-0.1,0-0.2,0-0.3,0
-                c-0.5,0-1,0.1-1.5,0.2C8.1,5.1,7.8,5.2,7.5,5.4C7.2,5.5,6.9,5.7,6.7,5.9C6.6,6,6.4,6.1,6.3,6.2C6.1,6.4,5.9,6.7,5.7,6.9
-                C5.2,7.7,4.9,8.6,4.9,9.6c0,0.1,0,0.2,0,0.3c-0.1,0-0.2-0.1-0.3-0.1C4.3,9.7,4,9.5,3.8,9.3z M12.8,12.7l-0.3-0.3l-0.3,0.3
-                c-0.5,0.5-1.4,0.8-2.4,0.8c-1.6,0.1-3.1-0.9-3.8-2.3c0-0.1-0.1-0.2-0.1-0.3c0.1,0,0.2,0,0.3,0c0.3,0,0.7,0,1-0.1
-                c0.3-0.1,0.6-0.1,0.9-0.3c0.3-0.1,0.6-0.3,0.8-0.4C9.4,9.9,9.7,9.6,10,9.2c0.7-0.8,1.1-1.9,1.1-3c0-0.1,0-0.3,0-0.4
-                c0.1,0,0.2,0.1,0.3,0.1c1.5,0.6,2.4,2.1,2.4,3.7v2.2c0,0.7,0.1,1.2,0.3,1.6C13.6,13.3,13.2,13.1,12.8,12.7z"></path>
-            </svg>
+            ${WATERMARK}
             We run on Chata
         </div>
         <div class="auto-complete-suggestions">
@@ -19023,7 +19817,8 @@ var ChatDrawer = {
         </div>
         <div class="text-bar">
             <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
-            <button id="chata-voice-record-button" class="chat-voice-record-button" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false"><img class="chat-voice-record-icon" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDIyLjEuMCwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkNhcGFfMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayIgeD0iMHB4IiB5PSIwcHgiCgkgd2lkdGg9IjU0NC4ycHgiIGhlaWdodD0iNTQ0LjJweCIgdmlld0JveD0iMCAwIDU0NC4yIDU0NC4yIiBlbmFibGUtYmFja2dyb3VuZD0ibmV3IDAgMCA1NDQuMiA1NDQuMiIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+CjxwYXRoIGNsYXNzPSJtaWMtaWNvbiIgZmlsbD0iI0ZGRkZGRiIgZD0iTTQzOS41LDIwOS4zYy01LjcsMC0xMC42LDIuMS0xNC43LDYuMmMtNC4xLDQuMS02LjIsOS4xLTYuMiwxNC43djQxLjljMCw0MC4zLTE0LjMsNzQuOC00MywxMDMuNQoJYy0yOC43LDI4LjctNjMuMiw0My0xMDMuNSw0M2MtNDAuMywwLTc0LjgtMTQuMy0xMDMuNS00M2MtMjguNy0yOC43LTQzLTYzLjItNDMtMTAzLjV2LTQxLjljMC01LjctMi4xLTEwLjYtNi4yLTE0LjcKCWMtNC4xLTQuMS05LjEtNi4yLTE0LjctNi4yYy01LjcsMC0xMC42LDIuMS0xNC43LDYuMmMtNC4xLDQuMS02LjIsOS4xLTYuMiwxNC43djQxLjljMCw0OC4yLDE2LjEsOTAuMSw0OC4yLDEyNS43CgljMzIuMiwzNS43LDcxLjksNTYuMSwxMTkuMiw2MS4zdjQzLjJoLTgzLjdjLTUuNywwLTEwLjYsMi4xLTE0LjcsNi4yYy00LjEsNC4xLTYuMiw5LTYuMiwxNC43YzAsNS43LDIuMSwxMC42LDYuMiwxNC43CgljNC4xLDQuMSw5LDYuMiwxNC43LDYuMmgyMDkuM2M1LjcsMCwxMC42LTIuMSwxNC43LTYuMmM0LjEtNC4xLDYuMi05LjEsNi4yLTE0LjdjMC01LjctMi4xLTEwLjYtNi4yLTE0LjcKCWMtNC4xLTQuMS05LjEtNi4yLTE0LjctNi4ySDI5M3YtNDMuMmM0Ny4zLTUuMiw4Ny0yNS43LDExOS4yLTYxLjNjMzIuMi0zNS42LDQ4LjItNzcuNiw0OC4yLTEyNS43di00MS45YzAtNS43LTIuMS0xMC42LTYuMi0xNC43CglDNDUwLjEsMjExLjQsNDQ1LjIsMjA5LjMsNDM5LjUsMjA5LjN6Ii8+CjxwYXRoIGNsYXNzPSJtaWMtaWNvbiIgZmlsbD0iI0ZGRkZGRiIgZD0iTTIyMi44LDIwMy43aC01NS4zdjM4LjRoNTUuM2M4LjUsMCwxNS4zLDYuOCwxNS4zLDE1LjNzLTYuOCwxNS4zLTE1LjMsMTUuM2gtNTUuMwoJYzAuMiwyOC41LDEwLjQsNTIuOSwzMC43LDczLjNjMjAuNSwyMC41LDQ1LjEsMzAuNyw3My45LDMwLjdjMjguOCwwLDUzLjQtMTAuMiw3My45LTMwLjdjMjAuMy0yMC4zLDMwLjYtNDQuOCwzMC43LTczLjNoLTUzLjQKCWMtOC41LDAtMTUuMy02LjgtMTUuMy0xNS4zczYuOC0xNS4zLDE1LjMtMTUuM2g1My40di0zOC40aC01My40Yy04LjUsMC0xNS4zLTYuOC0xNS4zLTE1LjNzNi44LTE1LjMsMTUuMy0xNS4zaDUzLjR2LTQwLjhoLTUzLjQKCWMtOC41LDAtMTUuMy02LjgtMTUuMy0xNS4zczYuOC0xNS4zLDE1LjMtMTUuM2g1My4zYy0wLjctMjcuNS0xMC44LTUxLjItMzAuNi03MUMzMjUuNSwxMC4yLDMwMC45LDAsMjcyLjEsMAoJYy0yOC44LDAtNTMuNCwxMC4yLTczLjksMzAuN2MtMTkuOCwxOS44LTI5LjksNDMuNS0zMC42LDcxaDU1LjJjOC41LDAsMTUuMyw2LjgsMTUuMywxNS4zcy02LjgsMTUuMy0xNS4zLDE1LjNoLTU1LjN2NDAuOGg1NS4zCgljOC41LDAsMTUuMyw2LjgsMTUuMywxNS4zUzIzMS4yLDIwMy43LDIyMi44LDIwMy43eiIvPgo8L3N2Zz4=" alt="speech to text button" height="22px" width="22px" draggable="false">
+            <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false">
+            <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
             </button>
         </div>
         `;
@@ -19169,10 +19964,24 @@ var ChatDrawer = {
                 if(e.target.classList.contains('close-action')){
                     ChatDrawer.closeDrawer();
                 }
-                if(e.target.classList.contains('open-action')){
-                    ChatDrawer.openDrawer();
-                    ChatDrawer.options.onHandleClick();
+
+                if(e.target.classList.contains('chata-voice')){
+                    var button = document.getElementById('chata-voice-record-button');
+
+
+                    if(ChatDrawer.options.isRecordVoiceActive){
+                        const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
+                        ChatDrawer.options.isRecordVoiceActive = false;
+                        ChatDrawer.speechToText.stop();
+                        button.style.background = themeStyles['--chata-drawer-accent-color'];
+                    }else{
+                        ChatDrawer.finalTranscript = '';
+                        button.style.background = 'red';
+                        ChatDrawer.options.isRecordVoiceActive = true;
+                        ChatDrawer.speechToText.start();
+                    }
                 }
+
                 if(e.target.classList.contains('suggestion')){
                     console.log(e.target.textContent);
                     suggestionList.style.display = 'none';
@@ -19189,6 +19998,7 @@ var ChatDrawer = {
                 }
                 if(e.target.classList.contains('chata-suggestion-btn-renderer')){
                     var parent = e.target.parentElement.parentElement;
+                    parent.options.onSuggestionClick();
                     parent.chataBarContainer.sendMessageToResponseRenderer(e.target.textContent);
                 }
                 if(e.target.classList.contains('clipboard')){
@@ -19287,6 +20097,35 @@ var ChatDrawer = {
                     var hasNegativeValues = values[1];
                     createColumnChart(component, grouped, col1, col2, hasNegativeValues);
                 }
+                if(e.target.classList.contains('stacked_column_chart')){
+                    if(e.target.tagName == 'svg'){
+                        var idRequest = e.target.parentElement.dataset.id;
+                    }else if(e.target.tagName == 'path'){
+                        var idRequest = e.target.parentElement.parentElement.dataset.id;
+                    }else{
+                        var idRequest = e.target.dataset.id;
+                    }
+                    var json = ChatDrawer.responses[idRequest];
+                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                    ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
+                    var data = csvTo2dArray(json['data']);
+                    console.log(data);
+                    var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                    groups = groups.sort().reverse();
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][1] = formatData(data[i][1], json['columns'][1]['type']);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i] = formatData(groups[i], json['columns'][1]['type'])
+                    }
+                    var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    var col1 = formatColumnName(json['columns'][0]['name']);
+                    var col2 = formatColumnName(json['columns'][1]['name']);
+                    var col3 = formatColumnName(json['columns'][2]['name']);
+                    var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
+
+                    createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+                }
                 if(e.target.classList.contains('table')){
                     if(e.target.tagName == 'svg'){
                         var idRequest = e.target.parentElement.dataset.id;
@@ -19311,7 +20150,6 @@ var ChatDrawer = {
                     }
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    var groupableField = getGroupableField(json);
                     var values = formatDataToBarChart(json);
                     var grouped = values[0];
                     var hasNegativeValues = values[1];
@@ -19356,13 +20194,14 @@ var ChatDrawer = {
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     var values = formatDataToHeatmap(json);
-                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                    labelsY = formatLabels(labelsY, json['columns'][0]['type']);
+                    labelsX = formatLabels(labelsX, json['columns'][1]['type']);
 
                     var col1 = formatColumnName(json['columns'][0]['name']);
                     var col2 = formatColumnName(json['columns'][1]['name']);
                     var col3 = formatColumnName(json['columns'][2]['name']);
-
 
                     createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
                     ChatDrawer.refreshToolbarButtons(component, 'heatmap');
@@ -19380,8 +20219,10 @@ var ChatDrawer = {
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     var values = formatDataToHeatmap(json);
-                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                    labelsY = formatLabels(labelsY, json['columns'][0]['type']);
+                    labelsX = formatLabels(labelsX, json['columns'][1]['type']);
 
                     var col1 = formatColumnName(json['columns'][0]['name']);
                     var col2 = formatColumnName(json['columns'][1]['name']);
@@ -19402,8 +20243,8 @@ var ChatDrawer = {
                     var json = ChatDrawer.responses[idRequest];
                     var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                     var svg = component.getElementsByTagName('svg')[0];
-                    var svgString = ChatDrawer.getSVGString(svg);
-                    ChatDrawer.svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
+                    var svgString = getSVGString(svg);
+                    svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
                 }
                 if(e.target.classList.contains('clear-all')){
                     ChatDrawer.clearMessages();
@@ -19459,45 +20300,25 @@ var ChatDrawer = {
         return Object.keys(unique);
     }
 
-    formatDataToHeatmap = function(json){
-        var lines = csvTo2dArray(json['data']);
-        var values = [];
-        var colType1 = json['columns'][0]['type'];
-        var colType2 = json['columns'][1]['type'];
-        for (var i = 0; i < lines.length; i++) {
-            var data = lines[i];
-            var row = {};
-            row['labelY'] = formatData(data[0], colType1);
-            row['labelX'] = formatData(data[1], colType2);
-            var value = parseFloat(data[2]);
-            row['value'] = value;
-            values.push(row);
-        }
-        return values;
-    }
+    ChatDrawer.formatDataToStackedChart = function(cols, data, groups){
+        var dataGrouped = [];
 
-    formatDataToBarChart = function(json){
-        var lines = csvTo2dArray(json['data']);
-        var values = [];
-        var colType1 = json['columns'][0]['type'];
-        var hasNegativeValues = false;
-        // var colType2 = json['columns'][1]['type'];
-        for (var i = 0; i < lines.length; i++) {
-            var data = lines[i];
-            var row = {};
-            row['label'] = formatData(data[0], colType1);
-            var value = parseFloat(data[1]);
-            if(value < 0 && !hasNegativeValues){
-                hasNegativeValues = true;
+        for (var i = 0; i < groups.length; i++) {
+            var group = groups[i];
+            dataGrouped.push({group: group});
+            for (var x = 0; x < data.length; x++) {
+                if(data[x][1] == group){
+                    dataGrouped[i][data[x][0]] = parseFloat(data[x][2]);
+                }
             }
-            row['value'] = value;
-
-
-            values.push(row);
         }
-        return [values, hasNegativeValues];
+        // console.log(dataGrouped);
+        // var stackedData = d3.stack()
+        // .keys(ChatDrawer.getUniqueValues(data, row => row[1]))
+        // (dataGrouped)
+        // console.log(stackedData);
+        return dataGrouped;
     }
-
 
     ChatDrawer.groupBy = function(list, keyGetter) {
         const map = new Map();
@@ -19683,17 +20504,20 @@ var ChatDrawer = {
 
     ChatDrawer.createDrawerButton = function(rootElem){
         var drawerButton = document.createElement("div");
-        var drawerIcon = document.createElement("img");
-        drawerIcon.setAttribute("src", "chata-bubles.svg");
-        drawerIcon.setAttribute("alt", "chata.ai");
+        var drawerIcon = document.createElement("div");
         drawerIcon.setAttribute("height", "22px");
         drawerIcon.setAttribute("width", "22px");
         drawerIcon.classList.add('chata-bubbles-icon');
         drawerIcon.classList.add('open-action');
+        drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
         drawerButton.classList.add('drawer-handle');
         drawerButton.classList.add('open-action');
         drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
         drawerButton.appendChild(drawerIcon);
+        drawerButton.addEventListener('click', function(e){
+            ChatDrawer.options.onHandleClick();
+            ChatDrawer.openDrawer();
+        })
         var body = document.getElementsByTagName('body')[0];
         body.insertBefore(drawerButton, rootElem);
         ChatDrawer.drawerButton = drawerButton;
@@ -19773,68 +20597,18 @@ var ChatDrawer = {
 
     ChatDrawer.htmlToElement = function(html) {
         var template = document.createElement('template');
-        html = html.trim(); // Never return a text node of whitespace as the result
+        html = html.trim();
         template.innerHTML = html;
         return template.content.firstChild;
-    }
-
-    ChatDrawer.createSafetynetContent = function(suggestionArray, context='ChatDrawer'){
-        const message = `
-        Before I can try to find your answer,
-        I need your help understanding a term you used that I don't see in your data.
-        Click the dropdown to view suggestions so I can ensure you get the right data!`;
-        const safetyDeleteButtonHtml = `
-        <svg onclick="deleteSuggestion(event)" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z"></path><path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z"></path></svg>
-        `;
-        const runQueryButtonHtml = `
-        <button class="chata-safety-net-execute-btn" onclick="runQuery(event, '${context}')"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-execute-query-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg>Run Query</button>
-        `
-        const runQueryButton = ChatDrawer.htmlToElement(runQueryButtonHtml);
-        var responseContentContainer = document.createElement('div');
-        responseContentContainer.classList.add('chata-response-content-container');
-        responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
-        for (var i = 0; i < suggestionArray.length; i++) {
-            var suggestion = suggestionArray[i];
-            console.log(suggestion);
-            if(suggestion['type'] == 'word'){
-                var span = document.createElement('span');
-                span.textContent = ' ' + suggestion['word'] + ' ';
-                span.classList.add('safetynet-value');
-                responseContentContainer.append(span);
-            }else{
-                var div = document.createElement('div');
-                var select = document.createElement('select');
-                select.classList.add('chata-safetynet-select');
-                select.style.width = '47px';
-                div.classList.add('chata-safety-net-selector-container');
-
-                var suggestionList = suggestion['suggestionList'];
-                for (var x = 0; x < suggestionList.length; x++) {
-                    var option = document.createElement('option');
-                    option.setAttribute('value', suggestionList[x]['text']);
-                    option.textContent = suggestionList[x]['text'];
-                    select.appendChild(option);
-                }
-                var safetyDeleteButton = ChatDrawer.htmlToElement(safetyDeleteButtonHtml);
-                var o = document.createElement('option');
-                o.setAttribute('value', suggestion['word']);
-                o.textContent = suggestion['word'];
-                select.appendChild(o);
-                select.classList.add('safetynet-value');
-                div.appendChild(select);
-                div.appendChild(safetyDeleteButton);
-                responseContentContainer.appendChild(div);
-            }
-        }
-        responseContentContainer.appendChild(runQueryButton);
-        return responseContentContainer;
     }
 
     ChatDrawer.createHelpContent = function(link){
         return `
         Great news, I can help with that:
         <br/>
-        <button onclick="window.open('${link}', '_blank')" class="chata-help-link-btn"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-help-link-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M256 48h-.7c-55.4.2-107.4 21.9-146.6 61.1C69.6 148.4 48 200.5 48 256s21.6 107.6 60.8 146.9c39.1 39.2 91.2 60.9 146.6 61.1h.7c114.7 0 208-93.3 208-208S370.7 48 256 48zm180.2 194h-77.6c-.9-26.7-4.2-52.2-9.8-76.2 17.1-5.5 33.7-12.5 49.7-21 22 28.2 35 61.6 37.7 97.2zM242 242h-61.8c.8-24.5 3.8-47.7 8.8-69.1 17.4 3.9 35.1 6.3 53 7.1v62zm0 28v61.9c-17.8.8-35.6 3.2-53 7.1-5-21.4-8-44.6-8.8-69H242zm28 0h61.3c-.8 24.4-3.8 47.6-8.8 68.9-17.2-3.9-34.8-6.2-52.5-7V270zm0-28v-62c17.8-.8 35.4-3.2 52.5-7 5 21.4 8 44.5 8.8 69H270zm109.4-117.9c-12.3 6.1-25 11.3-38 15.5-7.1-21.4-16.1-39.9-26.5-54.5 24 8.3 45.9 21.6 64.5 39zM315 146.8c-14.7 3.2-29.8 5.2-45 6V79.4c17 9.2 33.6 33.9 45 67.4zM242 79v73.7c-15.4-.8-30.6-2.8-45.5-6.1 11.6-33.8 28.4-58.5 45.5-67.6zm-45.6 6.4c-10.3 14.5-19.2 32.9-26.3 54.1-12.8-4.2-25.4-9.4-37.5-15.4 18.4-17.3 40.1-30.5 63.8-38.7zm-82.9 59.5c15.8 8.4 32.3 15.4 49.2 20.8-5.7 23.9-9 49.5-9.8 76.2h-77c2.6-35.4 15.6-68.8 37.6-97zM75.8 270h77c.9 26.7 4.2 52.3 9.8 76.2-16.9 5.5-33.4 12.5-49.2 20.8-21.9-28.1-34.9-61.5-37.6-97zm56.7 117.9c12.1-6 24.7-11.2 37.6-15.4 7.1 21.3 16 39.6 26.3 54.2-23.7-8.4-45.4-21.5-63.9-38.8zm64-22.6c14.9-3.3 30.2-5.3 45.5-6.1V433c-17.2-9.1-33.9-33.9-45.5-67.7zm73.5 67.3v-73.5c15.2.8 30.3 2.8 45 6-11.4 33.6-28 58.3-45 67.5zm45-5.7c10.4-14.6 19.4-33.1 26.5-54.5 13 4.2 25.8 9.5 38 15.6-18.6 17.3-40.6 30.6-64.5 38.9zm83.5-59.8c-16-8.5-32.6-15.5-49.7-21 5.6-23.9 8.9-49.4 9.8-76.1h77.6c-2.7 35.5-15.6 68.9-37.7 97.1z"></path></svg>Bar chart 2</button>
+        <button onclick="window.open('${link}', '_blank')" class="chata-help-link-btn">
+        ${HELP_ICON}
+        Bar chart 2</button>
         `;
     }
 
@@ -19864,43 +20638,10 @@ var ChatDrawer = {
         messageBubble.classList.add('chat-message-bubble');
         messageBubble.classList.add('full-width');
 
-        messageBubble.append(ChatDrawer.createSafetynetContent(suggestionArray));
+        messageBubble.append(createSafetynetContent(suggestionArray));
         containerMessage.appendChild(messageBubble);
         ChatDrawer.drawerContent.appendChild(containerMessage);
         ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-    }
-
-    ChatDrawer.createSuggestionArray = function(jsonResponse){
-        var fullSuggestion = jsonResponse['full_suggestion'];
-        var query = jsonResponse['query'];
-        var words = query.split(' ');
-        var suggestionArray = [];
-        for (var i = 0; i < words.length; i++) {
-            var w = words[i];
-            var hasSuggestion = false;
-            for (var x = 0; x < fullSuggestion.length; x++) {
-                var start = fullSuggestion[x]['start'];
-                var end = fullSuggestion[x]['end'];
-                var word = query.slice(start, end);
-                if(word == w){
-                    suggestionArray.push({
-                        word: word,
-                        type: 'suggestion',
-                        suggestionList: fullSuggestion[x]['suggestion_list']
-                    })
-                    hasSuggestion = true;
-                    break;
-                }
-            }
-            if(!hasSuggestion){
-                suggestionArray.push({
-                    'word': w,
-                    'type': 'word',
-                    suggestionList: []
-                });
-            }
-        }
-        return suggestionArray;
     }
 
     ChatDrawer.sendMessage = function(chataInput, textValue){
@@ -19916,7 +20657,7 @@ var ChatDrawer = {
                 chataInput.removeAttribute("disabled");
                 ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
 
-                var suggestionArray = ChatDrawer.createSuggestionArray(jsonResponse);
+                var suggestionArray = createSuggestionArray(jsonResponse);
                 ChatDrawer.putSafetynetMessage(suggestionArray);
             }else{
                 ChatDrawer.ajaxCall(URL, function(jsonResponse){
@@ -19984,19 +20725,10 @@ var ChatDrawer = {
         ChatDrawer.responses[idRequest] = jsonResponse;
         containerMessage.setAttribute('data-containerid', idRequest);
         messageBubble.classList.add('chat-message-bubble');
+        toolbarButtons = ChatDrawer.getActionButtons(idRequest, 'csvCopy');
         messageBubble.innerHTML = `
         <div class="chat-message-toolbar right">
-            <button class="chata-toolbar-btn clipboard" data-id="${idRequest}">
-                <svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
-                    </path>
-                </svg>
-            </button>
-            <button class="chata-toolbar-btn csv" data-id="${idRequest}">
-                <svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
-                </svg>
-            </button>
+            ${toolbarButtons}
         </div>`;
 
         messageBubble.appendChild(document.createTextNode(jsonResponse['data']));
@@ -20005,74 +20737,20 @@ var ChatDrawer = {
         ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
     }
 
-    ChatDrawer.getSVGString = function( svgNode ) {
-        svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-
-        var serializer = new XMLSerializer();
-        var svgString = serializer.serializeToString(svgNode);
-        svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
-        svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
-
-        return svgString;
-    }
-
-
-    ChatDrawer.svgString2Image = function(svgString, width, height) {
-        var imgsrc = 'data:image/svg+xml;base64,'+ btoa(unescape(encodeURIComponent(svgString)));
-
-        var canvas = document.createElement("canvas");
-        var context = canvas.getContext("2d");
-
-        canvas.width = width;
-        canvas.height = height;
-
-
-        var image = new Image();
-        image.onload = function() {
-            context.clearRect ( 0, 0, width, height );
-            context.drawImage(image, 0, 0, width, height);
-            var imgPixels = context.getImageData(0, 0, canvas.width, canvas.height);
-            for(var y = 0; y < imgPixels.height; y++){
-                for(var x = 0; x < imgPixels.width; x++){
-                    var i = (y * 4) * imgPixels.width + x * 4;
-                    imgPixels.data[i] = 0;
-                    imgPixels.data[i + 1] = 0;
-                    imgPixels.data[i + 2] = 0;
-                }
-            }
-            context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
-
-            var link = document.createElement("a");
-            link.setAttribute('href', canvas.toDataURL("image/png;base64"));
-            link.setAttribute('download', 'Chart.png');
-            link.click();
-        };
-
-
-        image.src = imgsrc;
-    }
-
     ChatDrawer.getActionButtons = function(idRequest, type){
         if (type == 'csvCopy'){
             return `
             <button class="chata-toolbar-btn clipboard" data-id="${idRequest}">
-                <svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
-                    </path>
-                </svg>
+                ${CLIPBOARD_ICON}
             </button>
             <button class="chata-toolbar-btn csv" data-id="${idRequest}">
-                <svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
-                </svg>
+                ${DOWNLOAD_CSV_ICON}
             </button>
             `;
         }else{
             return `
             <button class="chata-toolbar-btn export_png" data-id="${idRequest}">
-                <svg stroke="currentColor" class="export_png" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="export_png"></path>
-                </svg>
+                ${EXPORT_PNG_ICON}
             </button>
             `;
         }
@@ -20082,6 +20760,7 @@ var ChatDrawer = {
         var json = ChatDrawer.responses[idRequest];
         var buttons = '';
         for (var i = 0; i < json['supported_display_types'].length; i++) {
+            console.log(json['supported_display_types'][i]);
             if(json['supported_display_types'][i] == ignore)continue;
             if(json['supported_display_types'][i] == 'table'){
                 buttons += ChatDrawer.getTableButton(idRequest);
@@ -20107,6 +20786,9 @@ var ChatDrawer = {
             if(json['supported_display_types'][i] == 'bubble'){
                 buttons += ChatDrawer.getBubbleChartButton(idRequest);
             }
+            if(json['supported_display_types'][i] == 'stacked_column'){
+                buttons += ChatDrawer.getStackedColumnChartButton(idRequest);
+            }
         }
         return buttons;
     }
@@ -20114,24 +20796,14 @@ var ChatDrawer = {
     ChatDrawer.getTableButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn table" data-tip="Table" data-id="${idRequest}">
-            <svg class="table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0 table" d="M8,0.8c2.3,0,4.6,0,6.9,0c0.8,0,1.1,0.3,1.1,1.1c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.8,5.7,0.8,8,0.8L8,0.8z M5,11.1H1v2.7h4V11.1L5,11.1z M10,13.8v-2.7H6v2.7
-                    L10,13.8L10,13.8z M11,13.8h4v-2.7h-4V13.8L11,13.8z M1.1,7.5v2.7h4V7.5H1.1L1.1,7.5z M11,10.2c1.3,0,2.5,0,3.8,0
-                    c0.1,0,0.2-0.1,0.2-0.2c0-0.8,0-1.7,0-2.5h-4C11,8.4,11,9.3,11,10.2L11,10.2z M6,10.1h4V7.5H6V10.1L6,10.1z M5,6.6V3.9H1
-                    c0,0.8,0,1.6,0,2.4c0,0.1,0.2,0.2,0.3,0.2C2.5,6.6,3.7,6.6,5,6.6L5,6.6z M6,6.5h4V3.9H6V6.5L6,6.5z M14.9,6.5V3.9h-4v2.7L14.9,6.5
-                    L14.9,6.5z">
-                </path>
-            </svg>
+            ${TABLE_ICON}
         </button>`;
     }
 
     ChatDrawer.getPivotTableButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn pivot_table" data-tip="Pivot Table" data-id="${idRequest}">
-            <svg class="pivot_table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="pivot_table chart-icon-svg-0" d="M8,0.7c2.3,0,4.6,0,6.9,0C15.7,0.7,16,1,16,1.8c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0 c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.7,5.7,0.7,8,0.7L8,0.7z M5.1,6.4h4.4V3.8H5.1V6.4L5.1,6.4z M14.9,6.4V3.8 h-4.4v2.7L14.9,6.4L14.9,6.4z M5.1,10.1h4.4V7.4H5.1V10.1L5.1,10.1z M14.9,10.1V7.4h-4.4v2.7H14.9L14.9,10.1z M5.1,13.7h4.4V11H5.1 V13.7L5.1,13.7z M14.9,13.7V11h-4.4v2.7L14.9,13.7L14.9,13.7z">
-                </path>
-            </svg>
+            ${PIVOT_ICON}
         </button>
         `;
     }
@@ -20139,10 +20811,7 @@ var ChatDrawer = {
     ChatDrawer.getColumnChartButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn column_chart" data-tip="Column Chart" data-id="${idRequest}">
-            <svg class="column_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0 column_chart" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
-                </path>
-            </svg>
+            ${COLUMN_CHART_ICON}
         </button>
         `;
     }
@@ -20150,10 +20819,7 @@ var ChatDrawer = {
     ChatDrawer.getBarChartButton = function(idRequest){
         return `
         <button class="chata-toolbar-btn bar_chart" data-tip="Bar Chart" data-id="${idRequest}">
-            <svg class="bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0 bar_chart" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
-                </path>
-            </svg>
+            ${BAR_CHART_ICON}
         </button>
         `;
     }
@@ -20161,53 +20827,31 @@ var ChatDrawer = {
     ChatDrawer.getLineChartButton = function(idRequest) {
         return `
         <button class="chata-toolbar-btn line_chart" data-tip="Line Chart" data-id="${idRequest}">
-            <svg class="line_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                <path class="chart-icon-svg-0 line_chart" d="M1,12.2c-0.2,0-0.3-0.1-0.5-0.2c-0.3-0.3-0.3-0.7,0-1l3.8-3.9C4.5,7,4.7,7,4.9,7s0.4,0.1,0.5,0.3l2.3,3l6.8-7.1 c0.3-0.3,0.7-0.3,1,0c0.3,0.3,0.3,0.7,0,1l-7.3,7.7C8,11.9,7.8,12,7.6,12s-0.4-0.1-0.5-0.3l-2.3-3L1.5,12C1.4,12.2,1.2,12.2,1,12.2z ">
-                </path>
-            </svg>
+            ${LINE_CHART_ICON}
         </button>
         `;
     }
 
     ChatDrawer.getHeatmapChartButton = function(idRequest){
         return `
-            <button class="chata-toolbar-btn heatmap" data-tip="Heatmap" data-id="${idRequest}">
-                <svg class="heatmap" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                    <path class="hm0 heatmap" d="M12,16h2.5c0.8,0,1.5-0.7,1.5-1.5v-2.4l-4,0V16z">
-                    </path>
-                    <polygon class="hm1 heatmap" points="8,4.1 8,0 4,0 4,4.1 "></polygon>
-                    <path class="hm2 heatmap" d="M4,4.1V0L1.5,0C0.7,0,0,0.7,0,1.5l0,2.6h0l0,0L4,4.1z"></path>
-                    <polygon class="hm3 heatmap" points="8,4.1 8,4.1 8,4.1 4,4.1 4,8.1 8,8.2 "></polygon>
-                    <polygon class="hm2 heatmap" points="0,4.1 0,8.1 4,8.1 4,4.1 "></polygon>
-                    <polygon class="hm1 heatmap" points="4,4.1 8,4.1 8,4.1 "></polygon>
-                    <polygon class="hm1 heatmap" points="4,16 8,16 8,12.1 4,12.1 "></polygon>
-                    <path class="hm0 heatmap" d="M0,12.1v2.5C0,15.3,0.7,16,1.5,16H4v-3.9L0,12.1z"></path>
-                    <polygon class="hm0 heatmap" points="0,12.1 4,12.1 4,8.2 0,8.2 "></polygon>
-                    <polygon class="hm4 heatmap" points="8,12.1 8,8.2 4,8.2 4,12.1 "></polygon>
-                    <polygon class="hm2 heatmap" points="16,4.1 16,4.1 16,4.1 12,4.1 12,8.2 16,8.2 "></polygon>
-                    <path class="hm0 heatmap" d="M16,4.1l0-2.6C16,0.7,15.3,0,14.5,0L12,0v4.1L16,4.1z"></path>
-                    <polygon class="hm4 heatmap" points="12,4.1 12,0 8,0 8,4.1 8,4.1 8,4.1 "></polygon>
-                    <polygon class="hm5 heatmap" points="12,4.1 8,4.1 8,4.1 "></polygon>
-                    <polygon class="hm6 heatmap" points="12,4.1 16,4.1 16,4.1 "></polygon>
-                    <polygon class="hm2 heatmap" points="12,12.1 16,12.1 16,8.2 12,8.2 "></polygon>
-                    <polygon class="hm1 heatmap" points="12,8.2 8,8.2 8,12.1 12,12.1 "></polygon>
-                    <polygon class="hm1 heatmap" points="8,12.1 8,16 12,16 12,12.1 "></polygon>
-                </svg>
-            </button>
+        <button class="chata-toolbar-btn heatmap" data-tip="Heatmap" data-id="${idRequest}">
+            ${HEATMAP_ICON}
+        </button>
         `;
     }
 
     ChatDrawer.getBubbleChartButton = function(idRequest){
         return `
-            <button class="chata-toolbar-btn bubble_chart" data-tip="Bubble Chart" data-id="${idRequest}">
-                <svg class="bubble_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-                    <circle class="chart-icon-svg-0 bubble_chart" cx="7.7" cy="11.1" r="1.2"></circle>
-                    <circle class="chart-icon-svg-0 bubble_chart" cx="2.6" cy="8.8" r="2.6"></circle>
-                    <circle class="chart-icon-svg-0 bubble_chart" cx="11.7" cy="4.3" r="4.3"></circle>
-                    <circle class="chart-icon-svg-0 bubble_chart" cx="1.8" cy="14.8" r="1.2"></circle>
-                </svg>
-            </button>
+        <button class="chata-toolbar-btn bubble_chart" data-tip="Bubble Chart" data-id="${idRequest}">
+            ${BUBBLE_CHART_ICON}
+        </button>
         `;
+    }
+
+    ChatDrawer.getStackedColumnChartButton = function(idRequest){
+        return `<button class="chata-toolbar-btn stacked_column_chart" data-tip="Column Chart" data-id="${idRequest}">
+            ${STACKED_COLUMN_CHART_ICON}
+        </button>`;
     }
 
     ChatDrawer.putTableResponse = function(jsonResponse){
@@ -20246,7 +20890,6 @@ var ChatDrawer = {
         table.classList.add('table-response');
         table.setAttribute('data-componentid', idRequest);
         var dataLines = csvTo2dArray(jsonResponse['data']);
-        // var dataLines = csvTo2dArray(jsonResponse['data']);
 
         for (var i = 0; i < jsonResponse['columns'].length; i++) {
             var colName = formatColumnName(jsonResponse['columns'][i]['name']);
@@ -20327,12 +20970,6 @@ var ChatDrawer = {
     }
 
     ChatDrawer.putMessage = function(value){
-        // <div class="chat-single-message-container request">
-        //     <div class="chat-message-bubble">Janitorial expense</div>
-        // </div>
-        // <div class="chat-single-message-container full-width response">
-        //     <div data-test="query-response-wrapper" class="chata-response-content-container chat-message-bubble">books are not closed</div>
-        // </div>
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseLoadingContainer = document.createElement('div');

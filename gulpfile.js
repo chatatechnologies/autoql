@@ -17,8 +17,9 @@ gulp.task('scripts', function() {
             "src/ChataBarChart.js",
             "src/ChataColumnChart.js",
             "src/ChataLineChart.js",
+            "src/ChataStackedColumnChart.js",
+            "src/ResponseRenderer.js",
             "src/ChatBar.js",
-            "src/ResponseRenderer.js",    
             "src/ChatDrawer.js",
         ], { base: './' }))
         .pipe(concat('chata-widget.js'))
