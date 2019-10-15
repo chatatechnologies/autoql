@@ -7,11 +7,15 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
         ${DELETE_ICON}
     `;
     const runQueryButtonHtml = `
-    <button class="chata-safety-net-execute-btn" onclick="runQuery(event, '${context}')">
+    <button class="chata-safety-net-execute-btn">
         ${RUN_QUERY}
     Run Query</button>
     `
+    // onclick="runQuery(event, '${context}')"
     const runQueryButton = ChatDrawer.htmlToElement(runQueryButtonHtml);
+    runQueryButton.onclick = function(event){
+        runQuery(event, context);
+    }
     var responseContentContainer = document.createElement('div');
     responseContentContainer.classList.add('chata-response-content-container');
     responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
@@ -38,6 +42,9 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
                 select.appendChild(option);
             }
             var safetyDeleteButton = ChatDrawer.htmlToElement(safetyDeleteButtonHtml);
+            safetyDeleteButton.onclick = function(event){
+                deleteSuggestion(event);
+            }
             var o = document.createElement('option');
             o.setAttribute('value', suggestion['word']);
             o.textContent = suggestion['word'];

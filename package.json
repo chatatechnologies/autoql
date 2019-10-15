@@ -2,7 +2,7 @@
   "name": "vanillajs-widget",
   "version": "1.0.0",
   "description": "Javascript widget library",
-  "main": "ChatDrawer.js",
+  "main": "buid/ChatDrawer.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,5 +21,8 @@
     "gulp-concat": "^2.6.1",
     "gulp-minify": "^3.1.0",
     "gulp-order": "^1.2.0"
+  },
+  "dependencies": {
+    "gulp-umd": "^2.0.0"
   }
 }

@@ -1,6 +1,6 @@
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
-    var margin = {top: 5, right: 10, bottom: 50, left: 80},
+    var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
     var legspacing = 15;
@@ -21,11 +21,11 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     component.parentElement.classList.add('chata-chart-container');
     const barWidth = chartWidth / groups.length;
     const interval = Math.ceil((groups.length * 16) / width);
-    var xTickValues = [];
+    var yTickValues = [];
     if (barWidth < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
-                xTickValues.push(element);
+                yTickValues.push(element);
                 // if(element.length < 18){
                 // }
             }
@@ -57,34 +57,14 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'y-axis-label')
-    .text(col1);
+    .text(col2);
 
     svg.append('text')
     .attr('x', chartWidth / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
     .attr('class', 'x-axis-label')
-    .text(col2);
-
-
-    var x = d3.scaleBand()
-    .domain(groups)
-    .range([0, chartWidth])
-    .padding([0.2]);
-
-    var xAxis = d3.axisBottom(x);
-
-    if(xTickValues.length > 0){
-        xAxis.tickValues(xTickValues);
-    }
-
-    svg.append("g")
-    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    .call(xAxis)
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    .text(col1);
 
     var maxValue = d3.max(data, function(d) {
         var sum = 0;
@@ -96,9 +76,31 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     });
     console.log(maxValue);
 
-    var y = d3.scaleLinear()
+    var x = d3.scaleLinear()
     .domain([0, maxValue])
-    .range([ height - margin.bottom, 0 ]);
+    .range([ 0, chartWidth ]);
+
+
+    svg.append("g")
+    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .style("color", '#fff')
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+
+    // Add Y axis
+    var y = d3.scaleBand()
+    .domain(groups)
+    .range([height - margin.bottom, 0])
+    .padding([0.2])
+    var yAxis = d3.axisLeft(y);
+
+    if(yTickValues.length > 0){
+        yAxis.tickValues(yTickValues);
+    }
+
     svg.append("g")
     .call(d3.axisLeft(y));
 
@@ -111,8 +113,8 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
 
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisLeft(y)
-        .tickSize(-chartWidth)
+    .call(d3.axisBottom(x)
+        .tickSize(height - margin.bottom)
         .tickFormat("")
     );
 
@@ -124,28 +126,26 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .selectAll("g")
     .data(stackedData)
     .enter().append("g")
-    .attr("fill", function(d) { return color(d.key); })
+    .attr("fill", function(d) { return color(d.key) })
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
     .attr('opacity', '0.7')
     .attr('class', 'stacked-rect')
-    .attr("x", function(d) { return x(d.data.group); })
-    .attr("y", function(d) {
-        if(isNaN(d[1])){
-            return 0;
-        }else{
-            return Math.abs(y(d[1])) + 0.5;
-        }
+    .attr("x", function(d) {
+        return x(d[0]);
     })
+    .attr("y", function(d) { return y(d.data.group) })
     .attr("height", function(d) {
-        if(isNaN([d[1]])){
-            return 0;
-        }else{
-            return Math.abs(y(d[0]) - y(d[1]) - 0.5);
-        }
+        return y.bandwidth();
     })
-    .attr("width",x.bandwidth())
+    .attr("width",function(d){
+        var d1 = d[1];
+        if(isNaN(d1)){
+            return 0;
+        }
+        return Math.abs(x(d[0]) - x(d[1]));
+    })
     .on('mouseover', function(d, i) {
         if(renderTooltips){
             var pos = d[1];
@@ -169,7 +169,6 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
             tip.hide();
         }
     });
-
 
     var legend = svg.selectAll(".legend")
         .data(subgroups.sort())

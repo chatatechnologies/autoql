@@ -1,6 +1,7 @@
 const concat = require('gulp-concat');
 const order = require('gulp-order');
 const minify = require('gulp-minify');
+const umd = require('gulp-umd');
 const gulp = require('gulp');
 gulp.task('scripts', function() {
     return gulp.src(['./src/*.js'])
@@ -18,11 +19,20 @@ gulp.task('scripts', function() {
             "src/ChataColumnChart.js",
             "src/ChataLineChart.js",
             "src/ChataStackedColumnChart.js",
+            "src/ChataStackedBarChart.js",
             "src/ResponseRenderer.js",
             "src/ChatBar.js",
             "src/ChatDrawer.js",
         ], { base: './' }))
-        .pipe(concat('chata-widget.js'))
+        .pipe(concat('ChatDrawer.js'))
         .pipe(minify())
+        .pipe(umd({
+            exports: function(file) {
+                return 'ChatDrawer';
+            },
+            namespace: function(file) {
+                return 'ChatDrawer';
+            }
+        }))
         .pipe(gulp.dest('./build'));
 });

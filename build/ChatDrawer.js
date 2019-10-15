@@ -1,3 +1,12 @@
+;(function(root, factory) {
+  if (typeof define === 'function' && define.amd) {
+    define([], factory);
+  } else if (typeof exports === 'object') {
+    module.exports = factory();
+  } else {
+    root.ChatDrawer = factory();
+  }
+}(this, function() {
 // https://d3js.org Version 4.13.0. Copyright 2018 Mike Bostock.
 (function (global, factory) {
 	typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
@@ -17177,327 +17186,6 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
 
-// d3.tip
-// Copyright (c) 2013 Justin Palmer
-// ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
-// Removal of ES6 for D3 v4 Adaption Copyright (c) 2016 David Gotz
-//
-// Tooltips for d3.js SVG visualizations
-
-d3.functor = function functor(v) {
-  return typeof v === "function" ? v : function() {
-    return v;
-  };
-};
-
-d3.tip = function() {
-
-  var direction = d3_tip_direction,
-      offset    = d3_tip_offset,
-      html      = d3_tip_html,
-      node      = initNode(),
-      svg       = null,
-      point     = null,
-      target    = null
-
-  function tip(vis) {
-    svg = getSVGNode(vis)
-    point = svg.createSVGPoint()
-    document.body.appendChild(node)
-  }
-
-  // Public - show the tooltip on the screen
-  //
-  // Returns a tip
-  tip.show = function() {
-    var args = Array.prototype.slice.call(arguments)
-    if(args[args.length - 1] instanceof SVGElement) target = args.pop()
-
-    var content = html.apply(this, args),
-        poffset = offset.apply(this, args),
-        dir     = direction.apply(this, args),
-        nodel   = getNodeEl(),
-        i       = directions.length,
-        coords,
-        scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
-        scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
-
-    nodel.html(content)
-      .style('position', 'absolute')
-      .style('opacity', 1)
-      .style('pointer-events', 'all')
-
-    while(i--) nodel.classed(directions[i], false)
-    coords = direction_callbacks[dir].apply(this)
-    nodel.classed(dir, true)
-      .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
-      .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
-
-    return tip
-  }
-
-  // Public - hide the tooltip
-  //
-  // Returns a tip
-  tip.hide = function() {
-    var nodel = getNodeEl()
-    nodel
-      .style('opacity', 0)
-      .style('pointer-events', 'none')
-    return tip
-  }
-
-  // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
-  //
-  // n - name of the attribute
-  // v - value of the attribute
-  //
-  // Returns tip or attribute value
-  tip.attr = function(n, v) {
-    if (arguments.length < 2 && typeof n === 'string') {
-      return getNodeEl().attr(n)
-    } else {
-      var args =  Array.prototype.slice.call(arguments)
-      d3.selection.prototype.attr.apply(getNodeEl(), args)
-    }
-
-    return tip
-  }
-
-  // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
-  //
-  // n - name of the property
-  // v - value of the property
-  //
-  // Returns tip or style property value
-  tip.style = function(n, v) {
-    // debugger;
-    if (arguments.length < 2 && typeof n === 'string') {
-      return getNodeEl().style(n)
-    } else {
-      var args = Array.prototype.slice.call(arguments);
-      if (args.length === 1) {
-        var styles = args[0];
-        Object.keys(styles).forEach(function(key) {
-          return d3.selection.prototype.style.apply(getNodeEl(), [key, styles[key]]);
-        });
-      }
-    }
-
-    return tip
-  }
-
-  // Public: Set or get the direction of the tooltip
-  //
-  // v - One of n(north), s(south), e(east), or w(west), nw(northwest),
-  //     sw(southwest), ne(northeast) or se(southeast)
-  //
-  // Returns tip or direction
-  tip.direction = function(v) {
-    if (!arguments.length) return direction
-    direction = v == null ? v : d3.functor(v)
-
-    return tip
-  }
-
-  // Public: Sets or gets the offset of the tip
-  //
-  // v - Array of [x, y] offset
-  //
-  // Returns offset or
-  tip.offset = function(v) {
-    if (!arguments.length) return offset
-    offset = v == null ? v : d3.functor(v)
-
-    return tip
-  }
-
-  // Public: sets or gets the html value of the tooltip
-  //
-  // v - String value of the tip
-  //
-  // Returns html value or tip
-  tip.html = function(v) {
-    if (!arguments.length) return html
-    html = v == null ? v : d3.functor(v)
-
-    return tip
-  }
-
-  // Public: destroys the tooltip and removes it from the DOM
-  //
-  // Returns a tip
-  tip.destroy = function() {
-    if(node) {
-      getNodeEl().remove();
-      node = null;
-    }
-    return tip;
-  }
-
-  function d3_tip_direction() { return 'n' }
-  function d3_tip_offset() { return [0, 0] }
-  function d3_tip_html() { return ' ' }
-
-  var direction_callbacks = {
-    n:  direction_n,
-    s:  direction_s,
-    e:  direction_e,
-    w:  direction_w,
-    nw: direction_nw,
-    ne: direction_ne,
-    sw: direction_sw,
-    se: direction_se
-  };
-
-  var directions = Object.keys(direction_callbacks);
-
-  function direction_n() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.n.y - node.offsetHeight,
-      left: bbox.n.x - node.offsetWidth / 2
-    }
-  }
-
-  function direction_s() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.s.y,
-      left: bbox.s.x - node.offsetWidth / 2
-    }
-  }
-
-  function direction_e() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.e.y - node.offsetHeight / 2,
-      left: bbox.e.x
-    }
-  }
-
-  function direction_w() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.w.y - node.offsetHeight / 2,
-      left: bbox.w.x - node.offsetWidth
-    }
-  }
-
-  function direction_nw() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.nw.y - node.offsetHeight,
-      left: bbox.nw.x - node.offsetWidth
-    }
-  }
-
-  function direction_ne() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.ne.y - node.offsetHeight,
-      left: bbox.ne.x
-    }
-  }
-
-  function direction_sw() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.sw.y,
-      left: bbox.sw.x - node.offsetWidth
-    }
-  }
-
-  function direction_se() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.se.y,
-      left: bbox.e.x
-    }
-  }
-
-  function initNode() {
-    var node = d3.select(document.createElement('div'))
-    node
-      .style('position', 'absolute')
-      .style('top', 0)
-      .style('opacity', 0)
-      .style('pointer-events', 'none')
-      .style('box-sizing', 'border-box')
-
-    return node.node()
-  }
-
-  function getSVGNode(el) {
-    el = el.node()
-    if(el.tagName.toLowerCase() === 'svg')
-      return el
-
-    return el.ownerSVGElement
-  }
-
-  function getNodeEl() {
-    if(node === null) {
-      node = initNode();
-      // re-add node to DOM
-      document.body.appendChild(node);
-    };
-    return d3.select(node);
-  }
-
-  // Private - gets the screen coordinates of a shape
-  //
-  // Given a shape on the screen, will return an SVGPoint for the directions
-  // n(north), s(south), e(east), w(west), ne(northeast), se(southeast), nw(northwest),
-  // sw(southwest).
-  //
-  //    +-+-+
-  //    |   |
-  //    +   +
-  //    |   |
-  //    +-+-+
-  //
-  // Returns an Object {n, s, e, w, nw, sw, ne, se}
-  function getScreenBBox() {
-    var targetel   = target || d3.event.target;
-
-    while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
-        targetel = targetel.parentNode;
-    }
-
-    var bbox       = {},
-        matrix     = targetel.getScreenCTM(),
-        tbbox      = targetel.getBBox(),
-        width      = tbbox.width,
-        height     = tbbox.height,
-        x          = tbbox.x,
-        y          = tbbox.y
-
-    point.x = x
-    point.y = y
-    bbox.nw = point.matrixTransform(matrix)
-    point.x += width
-    bbox.ne = point.matrixTransform(matrix)
-    point.y += height
-    bbox.se = point.matrixTransform(matrix)
-    point.x -= width
-    bbox.sw = point.matrixTransform(matrix)
-    point.y -= height / 2
-    bbox.w  = point.matrixTransform(matrix)
-    point.x += width
-    bbox.e = point.matrixTransform(matrix)
-    point.x -= width / 2
-    point.y -= height / 2
-    bbox.n = point.matrixTransform(matrix)
-    point.y += height
-    bbox.s = point.matrixTransform(matrix)
-
-    return bbox
-  }
-
-  return tip
-};
-
 const CLIPBOARD_ICON = `
 <svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
@@ -17548,6 +17236,14 @@ const STACKED_COLUMN_CHART_ICON = `
     </path>
 </svg>
 `;
+
+const STACKED_BAR_CHART_ICON = `
+<svg class="stacked_bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
+    <path class="chart-icon-svg-0 stacked_bar_chart" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
+    </path>
+</svg>
+`;
+
 
 const BAR_CHART_ICON = `
 <svg class="bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
@@ -17826,7 +17522,7 @@ const RUN_QUERY = `
 `;
 
 const DELETE_ICON = `
-<svg onclick="deleteSuggestion(event)" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z">
     </path>
     <path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z">
@@ -18228,11 +17924,15 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
         ${DELETE_ICON}
     `;
     const runQueryButtonHtml = `
-    <button class="chata-safety-net-execute-btn" onclick="runQuery(event, '${context}')">
+    <button class="chata-safety-net-execute-btn">
         ${RUN_QUERY}
     Run Query</button>
     `
+    // onclick="runQuery(event, '${context}')"
     const runQueryButton = ChatDrawer.htmlToElement(runQueryButtonHtml);
+    runQueryButton.onclick = function(event){
+        runQuery(event, context);
+    }
     var responseContentContainer = document.createElement('div');
     responseContentContainer.classList.add('chata-response-content-container');
     responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
@@ -18259,6 +17959,9 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
                 select.appendChild(option);
             }
             var safetyDeleteButton = ChatDrawer.htmlToElement(safetyDeleteButtonHtml);
+            safetyDeleteButton.onclick = function(event){
+                deleteSuggestion(event);
+            }
             var o = document.createElement('option');
             o.setAttribute('value', suggestion['word']);
             o.textContent = suggestion['word'];
@@ -19089,7 +18792,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fromC
 }
 
 function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 90},
+    var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
@@ -19247,9 +18950,9 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
     });
 }
 
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
-    var margin = {top: 5, right: 10, bottom: 40, left: 80},
+    var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
     var legspacing = 15;
@@ -19268,7 +18971,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
-    const barWidth = width / groups.length;
+    const barWidth = chartWidth / groups.length;
     const interval = Math.ceil((groups.length * 16) / width);
     var xTickValues = [];
     if (barWidth < 16) {
@@ -19335,8 +19038,18 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
 
+    var maxValue = d3.max(data, function(d) {
+        var sum = 0;
+        for (var [key, value] of Object.entries(d)){
+            if(key == 'group')continue;
+            sum += parseFloat(value);
+        }
+        return sum;
+    });
+    console.log(maxValue);
+
     var y = d3.scaleLinear()
-    .domain([0, 200000])
+    .domain([0, maxValue])
     .range([ height - margin.bottom, 0 ]);
     svg.append("g")
     .call(d3.axisLeft(y));
@@ -19430,15 +19143,214 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
         .attr("class", "label")
         .attr('opacity', '0.7')
         .attr("y", function (d, i) {
-            return i * legspacing + margin.top;
+            return i * legspacing + margin.top + 2;
         })
         .attr("x", chartWidth + legendBoxMargin)
         .attr("text-anchor", "start")
         .text(function (d, i) {
             return subgroups[i];
         })
+}
+
+function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+    var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
+    var margin = {top: 5, right: 10, bottom: 30, left: 120},
+    width = component.parentElement.clientWidth - margin.left;
+    var wLegendBox = 180;
+    var legspacing = 15;
+    var chartWidth = width - wLegendBox;
+    var height;
+    var legendBoxMargin = 25
+    if(fromChatDrawer){
+        if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+            height = 600;
+        }else{
+            height = 250;
+        }
+    }else{
+        height = component.parentElement.clientHeight;
+    }
+    component.innerHTML = '';
+    component.parentElement.classList.remove('chata-table-container');
+    component.parentElement.classList.add('chata-chart-container');
+    const barWidth = chartWidth / groups.length;
+    const interval = Math.ceil((groups.length * 16) / width);
+    var yTickValues = [];
+    if (barWidth < 16) {
+        groups.forEach((element, index) => {
+            if (index % interval === 0) {
+                yTickValues.push(element);
+                // if(element.length < 18){
+                // }
+            }
+        });
+    }
+    var svg = d3.select(component)
+    .append("svg")
+    .attr("width", width + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+    "translate(" + margin.left + "," + margin.top + ")");
+
+    var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .offset([-10, 0])
+    .html(function(d) {
+        return `
+        <span class='title-tip'>${col2}:</span> <span class="text-tip">${d.data.group}</span> <br/>
+        <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.labelY}</span> <br/>
+        <span class='title-tip'>${col3}:</span> <span class="text-tip">${d.value}</span>`;
+    })
+
+    svg.call(tip);
+
+    svg.append('text')
+    .attr('x', -(height / 2))
+    .attr('y', -margin.left + margin.right)
+    .attr('transform', 'rotate(-90)')
+    .attr('text-anchor', 'middle')
+    .attr('class', 'y-axis-label')
+    .text(col2);
+
+    svg.append('text')
+    .attr('x', chartWidth / 2)
+    .attr('y', height + margin.bottom)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'x-axis-label')
+    .text(col1);
+
+    var maxValue = d3.max(data, function(d) {
+        var sum = 0;
+        for (var [key, value] of Object.entries(d)){
+            if(key == 'group')continue;
+            sum += parseFloat(value);
+        }
+        return sum;
+    });
+    console.log(maxValue);
+
+    var x = d3.scaleLinear()
+    .domain([0, maxValue])
+    .range([ 0, chartWidth ]);
 
 
+    svg.append("g")
+    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .style("color", '#fff')
+    .attr("transform", "translate(-10,0)rotate(-45)")
+    .style("text-anchor", "end");
+
+
+    // Add Y axis
+    var y = d3.scaleBand()
+    .domain(groups)
+    .range([height - margin.bottom, 0])
+    .padding([0.2])
+    var yAxis = d3.axisLeft(y);
+
+    if(yTickValues.length > 0){
+        yAxis.tickValues(yTickValues);
+    }
+
+    svg.append("g")
+    .call(d3.axisLeft(y));
+
+    var color = d3.scaleOrdinal()
+    .domain(subgroups)
+    .range(colors)
+
+    svg.append("g")
+    .call(d3.axisLeft(y)).select(".domain").remove();
+
+    svg.append("g")
+    .attr("class", "grid")
+    .call(d3.axisBottom(x)
+        .tickSize(height - margin.bottom)
+        .tickFormat("")
+    );
+
+    var stackedData = d3.stack()
+    .keys(subgroups)
+    (data)
+
+    svg.append("g")
+    .selectAll("g")
+    .data(stackedData)
+    .enter().append("g")
+    .attr("fill", function(d) { return color(d.key) })
+    .selectAll("rect")
+    .data(function(d) { return d; })
+    .enter().append("rect")
+    .attr('opacity', '0.7')
+    .attr('class', 'stacked-rect')
+    .attr("x", function(d) {
+        return x(d[0]);
+    })
+    .attr("y", function(d) { return y(d.data.group) })
+    .attr("height", function(d) {
+        return y.bandwidth();
+    })
+    .attr("width",function(d){
+        var d1 = d[1];
+        if(isNaN(d1)){
+            return 0;
+        }
+        return Math.abs(x(d[0]) - x(d[1]));
+    })
+    .on('mouseover', function(d, i) {
+        if(renderTooltips){
+            var pos = d[1];
+            var group = groups.reverse()[i];
+            var sum = 0;
+            for (var [key, value] of Object.entries(d.data)){
+                if(key == 'group')continue;
+                sum += parseFloat(value);
+                if(sum == pos){
+                    d.value = value;
+                    d.labelY = key;
+                    break;
+                }
+            }
+            tip.attr('class', 'd3-tip animate').show(d);
+        }
+    })
+    .on('mouseout', function(d, i) {
+        if(renderTooltips){
+            tip.attr('class', 'd3-tip').show(d);
+            tip.hide();
+        }
+    });
+
+    var legend = svg.selectAll(".legend")
+        .data(subgroups.sort())
+        .enter()
+        .append("g")
+
+    legend.append("circle")
+        .attr("fill", color)
+        .attr("width", 20)
+        .attr("height", 20)
+        .attr("cy", function (d, i) {
+            return i * legspacing + margin.top;
+        })
+        .attr('opacity', '0.7')
+        .attr("cx", chartWidth + legspacing)
+        .attr("r", 5);
+
+    legend.append("text")
+        .attr("class", "label")
+        .attr('opacity', '0.7')
+        .attr("y", function (d, i) {
+            return i * legspacing + margin.top + 2;
+        })
+        .attr("x", chartWidth + legendBoxMargin)
+        .attr("text-anchor", "start")
+        .text(function (d, i) {
+            return subgroups[i];
+        })
 }
 
 function createResponseRenderer(options={}){
@@ -19729,1270 +19641,1620 @@ var ChatDrawer = {
     finalTranscript: ''
 };
 
-(function(document, window, ChatDrawer, undefined) {
+ChatDrawer.init = function(elem, options){
+    var rootElem = document.getElementById(elem);
+    for (var [key, value] of Object.entries(options)) {
+        ChatDrawer.options[key] = value;
+    }
+    if(!('introMessage' in options)){
+        ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ " I'm  here to help you access, search and analyze your data.";
+    }
+    if(!('onMaskClick' in options)){
+        ChatDrawer.options.onMaskClick = ChatDrawer.options.onHandleClick;
+    }
+    ChatDrawer.rootElem = rootElem;
+    rootElem.classList.add('chata-drawer');
+    this.createHeader();
+    this.createDrawerContent();
+    this.createBar();
+    this.createWrapper();
+    this.createDrawerButton();
+    this.registerEvents();
+    ChatDrawer.openDrawer();
+    ChatDrawer.closeDrawer();
 
-    ChatDrawer.init = function(elem, options){
-        var rootElem = document.getElementById(elem);
-        for (var [key, value] of Object.entries(options)) {
-            ChatDrawer.options[key] = value;
-        }
-        if(!('introMessage' in options)){
-            ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ " I'm  here to help you access, search and analyze your data.";
-        }
-        if(!('onMaskClick' in options)){
-            ChatDrawer.options.onMaskClick = ChatDrawer.options.onHandleClick;
-        }
-        ChatDrawer.rootElem = rootElem;
-        rootElem.classList.add('chata-drawer');
-        this.createHeader();
-        this.createDrawerContent();
-        this.createBar();
-        this.createWrapper();
-        this.createDrawerButton();
-        this.registerEvents();
+    if(ChatDrawer.options.isVisible){
         ChatDrawer.openDrawer();
+    }else{
         ChatDrawer.closeDrawer();
+    }
+    const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME
+    if ('accentColor' in options){
+        themeStyles['--chata-drawer-accent-color'] = options.accentColor;
+    }
+    for (let property in themeStyles) {
+        document.documentElement.style.setProperty(
+            property,
+            themeStyles[property],
+        );
+    }
 
-        if(ChatDrawer.options.isVisible){
-            ChatDrawer.openDrawer();
-        }else{
-            ChatDrawer.closeDrawer();
-        }
-        const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME
-        if ('accentColor' in options){
-            themeStyles['--chata-drawer-accent-color'] = options.accentColor;
-        }
-        for (let property in themeStyles) {
-            document.documentElement.style.setProperty(
-                property,
-                themeStyles[property],
-            );
-        }
-
-        ChatDrawer.speechToText.onresult = (event) => {
-            let interimTranscript = '';
-            for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-                let transcript = event.results[i][0].transcript;
-                if (event.results[i].isFinal) {
-                    ChatDrawer.finalTranscript += transcript;
-                } else {
-                    interimTranscript += transcript;
-                }
-            }
-            console.log(ChatDrawer.finalTranscript);
-            if(ChatDrawer.finalTranscript !== ''){
-                var button = document.getElementById('chata-voice-record-button');
-                var chataInput = document.getElementById('chata-input');
-                ChatDrawer.sendMessage(chataInput, ChatDrawer.finalTranscript);
-                ChatDrawer.speechToText.stop();
-                button.style.background = themeStyles['--chata-drawer-accent-color'];
-                ChatDrawer.options.isRecordVoiceActive = false;
+    ChatDrawer.speechToText.onresult = (event) => {
+        let interimTranscript = '';
+        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+            let transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+                ChatDrawer.finalTranscript += transcript;
+            } else {
+                interimTranscript += transcript;
             }
         }
-
-        return this;
-    }
-
-    ChatDrawer.getChatBar = function(options={}){
-        return getChatBar(options);
-    }
-
-    ChatDrawer.createResponseRenderer = function(options){
-        return createResponseRenderer(options);
-    }
-
-    ChatDrawer.createBar = function(){
-        var chataBarContainer = document.createElement('div');
-        chataBarContainer.classList.add('chata-bar-container');
-        chataBarContainer.classList.add('chat-drawer-chat-bar');
-        chataBarContainer.classList.add('autosuggest-top');
-        var htmlBar = `
-        <div class="watermark">
-            ${WATERMARK}
-            We run on Chata
-        </div>
-        <div class="auto-complete-suggestions">
-            <ul id="auto-complete-list">
-            </ul>
-        </div>
-        <div class="text-bar">
-            <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
-            <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false">
-            <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
-            </button>
-        </div>
-        `;
-        chataBarContainer.innerHTML = htmlBar;
-        ChatDrawer.rootElem.appendChild(chataBarContainer);
-    }
-
-    ChatDrawer.createDrawerContent = function(){
-        var drawerContent = document.createElement('div');
-        var firstMessage = document.createElement('div');
-        var chatMessageBubble = document.createElement('div');
-        chatMessageBubble.textContent = ChatDrawer.options.introMessage;
-        drawerContent.classList.add('drawer-content');
-        firstMessage.classList.add('chat-single-message-container');
-        firstMessage.classList.add('response');
-        chatMessageBubble.classList.add('chat-message-bubble');
-
-        firstMessage.appendChild(chatMessageBubble);
-        drawerContent.appendChild(firstMessage);
-        ChatDrawer.rootElem.appendChild(drawerContent);
-        ChatDrawer.drawerContent = drawerContent;
-    }
-
-    ChatDrawer.createHeader = function(){
-        var chatHeaderContainer = document.createElement('div');
-        var htmlHeader = `
-            <div class="chata-header-left">
-                <button class="chata-button close close-action" data-tip="Close Drawer" data-for="chata-header-tooltip" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
-            </div>
-            <div class="chata-header-center-container">
-                ${ChatDrawer.options.title}
-            </div>
-            <div class="chata-header-right-container">
-                <button class="chata-button clear-all" data-tip="Clear Messages" data-for="chata-header-tooltip" currentitem="false"><svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg></button>
-            </div>`;
-        chatHeaderContainer.classList.add('chat-header-container');
-        chatHeaderContainer.innerHTML = htmlHeader;
-
-        ChatDrawer.rootElem.appendChild(chatHeaderContainer);
-    }
-
-    ChatDrawer.sendDrilldownMessage = function(json, indexData, context='ChatDrawer', responseRenderer=null){
-        var value = csvTo2dArray(json['data'])[parseInt(indexData)][0]
-        var colData = json['columns'][0]['name'];
-        var col = formatColumnName(colData);
-        const URL = `https://backend-staging.chata.ai/api/v1/query${
-            ChatDrawer.options.projectId === 1 ? '/demo' : ''
-        }/drilldown?&project=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
-        var data = {
-            id: json['query_id'],
-        }
-        var obj = {};
-        obj[colData] = value;
-        data['group_bys'] = obj;
-        var msg = `Drill down on ${col} "${value}"`;
-        if(context == 'ChatDrawer'){
-            var responseLoadingContainer = ChatDrawer.putMessage(msg);
-            ChatDrawer.ajaxCallPost(URL, function(response){
-                ChatDrawer.putTableResponse(response);
-                ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-            }, data);
-        }else{
-            ChatDrawer.ajaxCallPost(URL, function(response){
-                responseRenderer.innerHTML = '';
-                var uuid = uuidv4();
-                ChatDrawer.responses[uuid] = response;
-                var div = document.createElement('div');
-                div.classList.add('chata-table-container');
-                div.classList.add('chata-table-container-renderer');
-                responseRenderer.appendChild(div);
-                if(response['columns'].length == 1){
-                    var data = response['data'];
-                    responseRenderer.innerHTML = `<div>${data}</div>`;
-                }else{
-                    createTable(response, div, 'append', uuid, 'table-response-renderer');
-                }
-                console.log(msg);
-            }, data);
+        console.log(ChatDrawer.finalTranscript);
+        if(ChatDrawer.finalTranscript !== ''){
+            var button = document.getElementById('chata-voice-record-button');
+            var chataInput = document.getElementById('chata-input');
+            ChatDrawer.sendMessage(chataInput, ChatDrawer.finalTranscript);
+            ChatDrawer.speechToText.stop();
+            button.style.background = themeStyles['--chata-drawer-accent-color'];
+            ChatDrawer.options.isRecordVoiceActive = false;
         }
     }
 
-    ChatDrawer.registerEvents = function(){
-        var chataInput = document.getElementById('chata-input');
-        var suggestionList = document.getElementById('auto-complete-list');
-        document.addEventListener('dblclick', function(e){
-            if(ChatDrawer.options.enableDrilldowns){
-                if(e.target.parentElement.hasAttribute('data-indexrow')){
-                    var table = e.target.parentElement.parentElement;
-                    var json = ChatDrawer.responses[table.dataset.componentid];
-                    var indexData = e.target.parentElement.dataset.indexrow;
-                    ChatDrawer.sendDrilldownMessage(json, indexData);
-                }
-                if(e.target.hasAttribute('data-chartindex')){
-                    var component = e.target.parentElement.parentElement.parentElement;
-                    if(component.tagName == 'svg'){
-                        component = component.parentElement;
-                    }
-                    var json = ChatDrawer.responses[component.dataset.componentid];
-                    var indexData = e.target.dataset.chartindex;
-                    ChatDrawer.sendDrilldownMessage(json, indexData);
-                }
+    return this;
+}
+
+ChatDrawer.getChatBar = function(options={}){
+    return getChatBar(options);
+}
+
+ChatDrawer.createResponseRenderer = function(options){
+    return createResponseRenderer(options);
+}
+
+ChatDrawer.createBar = function(){
+    var chataBarContainer = document.createElement('div');
+    chataBarContainer.classList.add('chata-bar-container');
+    chataBarContainer.classList.add('chat-drawer-chat-bar');
+    chataBarContainer.classList.add('autosuggest-top');
+    var htmlBar = `
+    <div class="watermark">
+        ${WATERMARK}
+        We run on Chata
+    </div>
+    <div class="auto-complete-suggestions">
+        <ul id="auto-complete-list">
+        </ul>
+    </div>
+    <div class="text-bar">
+        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
+        <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false">
+        <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
+        </button>
+    </div>
+    `;
+    chataBarContainer.innerHTML = htmlBar;
+    ChatDrawer.rootElem.appendChild(chataBarContainer);
+}
+
+ChatDrawer.createDrawerContent = function(){
+    var drawerContent = document.createElement('div');
+    var firstMessage = document.createElement('div');
+    var chatMessageBubble = document.createElement('div');
+    chatMessageBubble.textContent = ChatDrawer.options.introMessage;
+    drawerContent.classList.add('drawer-content');
+    firstMessage.classList.add('chat-single-message-container');
+    firstMessage.classList.add('response');
+    chatMessageBubble.classList.add('chat-message-bubble');
+
+    firstMessage.appendChild(chatMessageBubble);
+    drawerContent.appendChild(firstMessage);
+    ChatDrawer.rootElem.appendChild(drawerContent);
+    ChatDrawer.drawerContent = drawerContent;
+}
+
+ChatDrawer.createHeader = function(){
+    var chatHeaderContainer = document.createElement('div');
+    var htmlHeader = `
+        <div class="chata-header-left">
+            <button class="chata-button close close-action" data-tip="Close Drawer" data-for="chata-header-tooltip" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
+        </div>
+        <div class="chata-header-center-container">
+            ${ChatDrawer.options.title}
+        </div>
+        <div class="chata-header-right-container">
+            <button class="chata-button clear-all" data-tip="Clear Messages" data-for="chata-header-tooltip" currentitem="false"><svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg></button>
+        </div>`;
+    chatHeaderContainer.classList.add('chat-header-container');
+    chatHeaderContainer.innerHTML = htmlHeader;
+
+    ChatDrawer.rootElem.appendChild(chatHeaderContainer);
+}
+
+ChatDrawer.sendDrilldownMessage = function(json, indexData, context='ChatDrawer', responseRenderer=null){
+    var value = csvTo2dArray(json['data'])[parseInt(indexData)][0]
+    var colData = json['columns'][0]['name'];
+    var col = formatColumnName(colData);
+    const URL = `https://backend-staging.chata.ai/api/v1/query${
+        ChatDrawer.options.projectId === 1 ? '/demo' : ''
+    }/drilldown?&project=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
+    var data = {
+        id: json['query_id'],
+    }
+    var obj = {};
+    obj[colData] = value;
+    data['group_bys'] = obj;
+    var msg = `Drill down on ${col} "${value}"`;
+    if(context == 'ChatDrawer'){
+        var responseLoadingContainer = ChatDrawer.putMessage(msg);
+        ChatDrawer.ajaxCallPost(URL, function(response){
+            ChatDrawer.putTableResponse(response);
+            ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+        }, data);
+    }else{
+        ChatDrawer.ajaxCallPost(URL, function(response){
+            responseRenderer.innerHTML = '';
+            var uuid = uuidv4();
+            ChatDrawer.responses[uuid] = response;
+            var div = document.createElement('div');
+            div.classList.add('chata-table-container');
+            div.classList.add('chata-table-container-renderer');
+            responseRenderer.appendChild(div);
+            if(response['columns'].length == 1){
+                var data = response['data'];
+                responseRenderer.innerHTML = `<div>${data}</div>`;
+            }else{
+                createTable(response, div, 'append', uuid, 'table-response-renderer');
             }
+            console.log(msg);
+        }, data);
+    }
+}
 
-            if(e.target.hasAttribute('data-chartrenderer')){
+ChatDrawer.registerEvents = function(){
+    var chataInput = document.getElementById('chata-input');
+    var suggestionList = document.getElementById('auto-complete-list');
+    document.addEventListener('dblclick', function(e){
+        if(ChatDrawer.options.enableDrilldowns){
+            if(e.target.parentElement.hasAttribute('data-indexrow')){
+                var table = e.target.parentElement.parentElement;
+                var json = ChatDrawer.responses[table.dataset.componentid];
+                var indexData = e.target.parentElement.dataset.indexrow;
+                ChatDrawer.sendDrilldownMessage(json, indexData);
+            }
+            if(e.target.hasAttribute('data-chartindex')){
                 var component = e.target.parentElement.parentElement.parentElement;
                 if(component.tagName == 'svg'){
                     component = component.parentElement;
                 }
-                if(component.chataBarContainer.options.enableDrilldowns){
-                    var json = ChatDrawer.responses[component.dataset.componentid];
-                    var indexData = e.target.dataset.chartrenderer;
-                    ChatDrawer.sendDrilldownMessage(json, indexData, 'ChatBar', component);
-                }
-            }
-            if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
-                var component = e.target.parentElement.parentElement;
-                var responseRenderer = component.parentElement.parentElement;
-                if(responseRenderer.chataBarContainer.options.enableDrilldowns){
-                    var json = ChatDrawer.responses[component.dataset.componentid];
-                    var indexData = e.target.parentElement.dataset.indexrowrenderer;
-                    ChatDrawer.sendDrilldownMessage(json, indexData, 'ChatBar', responseRenderer);
-                }
-
-            }
-        });
-        document.addEventListener('click', function(e){
-            if(e.target){
-                if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
-                || e.target.classList.contains('square') || e.target.classList.contains('circle')){
-                    var selectedBars = e.target.parentElement.getElementsByClassName('active');
-                    for (var i = 0; i < selectedBars.length; i++) {
-                        selectedBars[i].classList.remove('active');
-                    }
-                    e.target.classList.add('active');
-                }
-
-                if(e.target.id == 'drawer-wrapper'){
-                    if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
-                        ChatDrawer.options.onMaskClick();
-                    }
-                }
-
-                if(e.target.classList.contains('close-action')){
-                    ChatDrawer.closeDrawer();
-                }
-
-                if(e.target.classList.contains('chata-voice')){
-                    var button = document.getElementById('chata-voice-record-button');
-
-
-                    if(ChatDrawer.options.isRecordVoiceActive){
-                        const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
-                        ChatDrawer.options.isRecordVoiceActive = false;
-                        ChatDrawer.speechToText.stop();
-                        button.style.background = themeStyles['--chata-drawer-accent-color'];
-                    }else{
-                        ChatDrawer.finalTranscript = '';
-                        button.style.background = 'red';
-                        ChatDrawer.options.isRecordVoiceActive = true;
-                        ChatDrawer.speechToText.start();
-                    }
-                }
-
-                if(e.target.classList.contains('suggestion')){
-                    console.log(e.target.textContent);
-                    suggestionList.style.display = 'none';
-                    ChatDrawer.sendMessage(chataInput, e.target.textContent);
-                }
-                if(e.target.classList.contains('suggestion-renderer')){
-                    var parent = e.target.parentElement.parentElement.parentElement.parentElement;
-                    var chatBarSuggestionList = parent.getElementsByClassName('chat-bar-autocomplete')[0];
-                    chatBarSuggestionList.style.display = 'none';
-                    parent.sendMessageToResponseRenderer(e.target.textContent);
-                }
-                if(e.target.classList.contains('chata-suggestion-btn')){
-                    ChatDrawer.sendMessage(chataInput, e.target.textContent);
-                }
-                if(e.target.classList.contains('chata-suggestion-btn-renderer')){
-                    var parent = e.target.parentElement.parentElement;
-                    parent.options.onSuggestionClick();
-                    parent.chataBarContainer.sendMessageToResponseRenderer(e.target.textContent);
-                }
-                if(e.target.classList.contains('clipboard')){
-                    if(e.target.tagName == 'svg'){
-                        var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
-                    }else if(e.target.tagName == 'path'){
-                        var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
-                    }else{
-                        var json = ChatDrawer.responses[e.target.dataset.id];
-                    }
-                    copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
-                }
-                if(e.target.classList.contains('csv')){
-                    if(e.target.tagName == 'svg'){
-                        var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
-                    }else if(e.target.tagName == 'path'){
-                        var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
-                    }else{
-                        var json = ChatDrawer.responses[e.target.dataset.id];
-                    }
-                    var csvData = ChatDrawer.createCsvData(json);
-                    var link = document.createElement("a");
-                    link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-                    link.setAttribute('download', 'test.csv');
-                    link.click();
-                }
-                if(e.target.classList.contains('column')){
-                    var tableElement = e.target.parentElement.parentElement.parentElement;
-                    if(e.target.nextSibling.classList.contains('up')){
-                        e.target.nextSibling.classList.remove('up');
-                        e.target.nextSibling.classList.add('down');
-                        var sortData = ChatDrawer.sort(tableElement, 'desc', e.target.dataset.index, e.target.dataset.type);
-                        ChatDrawer.refreshTableData(tableElement, sortData);
-                    }else{
-                        e.target.nextSibling.classList.remove('down');
-                        e.target.nextSibling.classList.add('up');
-                        var sortData = ChatDrawer.sort(tableElement, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
-                        ChatDrawer.refreshTableData(tableElement, sortData);
-                    }
-                }
-                if(e.target.classList.contains('column-pivot')){
-                    var tableElement = e.target.parentElement.parentElement.parentElement;
-                    var pivotArray = [];
-                    var json = ChatDrawer.responses[tableElement.dataset.componentid];
-                    if(json['display_type'] == 'date_pivot'){
-                        pivotArray = getDatePivotArray(json);
-                    }else{
-                        pivotArray = getPivotColumnArray(json);
-                    }
-                    if(e.target.nextSibling.classList.contains('up')){
-                        e.target.nextSibling.classList.remove('up');
-                        e.target.nextSibling.classList.add('down');
-                        var sortData = sortPivot(pivotArray, e.target.dataset.index, 'desc');
-                        ChatDrawer.refreshPivotTable(tableElement, sortData);
-                    }else{
-                        e.target.nextSibling.classList.remove('down');
-                        e.target.nextSibling.classList.add('up');
-                        var sortData = sortPivot(pivotArray, e.target.dataset.index, 'asc');
-                        ChatDrawer.refreshPivotTable(tableElement, sortData);
-                    }
-                }
-                if(e.target.classList.contains('pivot_table')){
-                    if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    ChatDrawer.refreshToolbarButtons(component, 'date_pivot');
-                    if(json['display_type'] == 'date_pivot'){
-                        var pivotArray = getDatePivotArray(json);
-                        createPivotTable(pivotArray, component);
-                    }else{
-                        var pivotArray = getPivotColumnArray(json);
-                        createPivotTable(pivotArray, component);
-                    }
-                }
-                if(e.target.classList.contains('column_chart')){
-                    if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    ChatDrawer.refreshToolbarButtons(component, 'column');
-                    var values = formatDataToBarChart(json);
-                    var grouped = values[0];
-                    var col1 = formatColumnName(json['columns'][0]['name']);
-                    var col2 = formatColumnName(json['columns'][1]['name']);
-                    var hasNegativeValues = values[1];
-                    createColumnChart(component, grouped, col1, col2, hasNegativeValues);
-                }
-                if(e.target.classList.contains('stacked_column_chart')){
-                    if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
-                    var data = csvTo2dArray(json['data']);
-                    console.log(data);
-                    var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
-                    groups = groups.sort().reverse();
-                    for (var i = 0; i < data.length; i++) {
-                        data[i][1] = formatData(data[i][1], json['columns'][1]['type']);
-                    }
-                    for (var i = 0; i < groups.length; i++) {
-                        groups[i] = formatData(groups[i], json['columns'][1]['type'])
-                    }
-                    var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    var col1 = formatColumnName(json['columns'][0]['name']);
-                    var col2 = formatColumnName(json['columns'][1]['name']);
-                    var col3 = formatColumnName(json['columns'][2]['name']);
-                    var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-
-                    createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
-                }
-                if(e.target.classList.contains('table')){
-                    if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    ChatDrawer.refreshToolbarButtons(component, 'table');
-                    createTable(json, component);
-                }
-
-                if(e.target.classList.contains('bar_chart')){
-                    if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    var values = formatDataToBarChart(json);
-                    var grouped = values[0];
-                    var hasNegativeValues = values[1];
-                    var col1 = formatColumnName(json['columns'][0]['name']);
-                    var col2 = formatColumnName(json['columns'][1]['name']);
-
-                    createBarChart(component, grouped, col1, col2, hasNegativeValues);
-                    ChatDrawer.refreshToolbarButtons(component, 'bar');
-
-                }
-
-                if(e.target.classList.contains('line_chart')){
-                    if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    var values = formatDataToBarChart(json);
-                    var grouped = values[0];
-                    var hasNegativeValues = values[1];
-                    var col1 = formatColumnName(json['columns'][0]['name']);
-                    var col2 = formatColumnName(json['columns'][1]['name']);
-
-                    createLineChart(component, grouped, col1, col2, hasNegativeValues);
-                    ChatDrawer.refreshToolbarButtons(component, 'line');
-                }
-
-                if(e.target.classList.contains('heatmap')){
-                    console.log(e.target.tagName);
-                    if(e.target.tagName == 'BUTTON'){
-                        var idRequest = e.target.dataset.id;
-                    }
-                    else if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    var values = formatDataToHeatmap(json);
-                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                    labelsY = formatLabels(labelsY, json['columns'][0]['type']);
-                    labelsX = formatLabels(labelsX, json['columns'][1]['type']);
-
-                    var col1 = formatColumnName(json['columns'][0]['name']);
-                    var col2 = formatColumnName(json['columns'][1]['name']);
-                    var col3 = formatColumnName(json['columns'][2]['name']);
-
-                    createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
-                    ChatDrawer.refreshToolbarButtons(component, 'heatmap');
-                }
-
-                if(e.target.classList.contains('bubble_chart')){
-                    if(e.target.tagName == 'BUTTON'){
-                        var idRequest = e.target.dataset.id;
-                    }
-                    else if(e.target.tagName == 'svg'){
-                        var idRequest = e.target.parentElement.dataset.id;
-                    }else{
-                        var idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    var values = formatDataToHeatmap(json);
-                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                    labelsY = formatLabels(labelsY, json['columns'][0]['type']);
-                    labelsX = formatLabels(labelsX, json['columns'][1]['type']);
-
-                    var col1 = formatColumnName(json['columns'][0]['name']);
-                    var col2 = formatColumnName(json['columns'][1]['name']);
-                    var col3 = formatColumnName(json['columns'][2]['name']);
-
-
-                    createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3);
-                    ChatDrawer.refreshToolbarButtons(component, 'bubble');
-                }
-                if(e.target.classList.contains('export_png')){
-                    if(e.target.tagName == 'svg'){
-                        idRequest = e.target.parentElement.dataset.id;
-                    }else if(e.target.tagName == 'path'){
-                        idRequest = e.target.parentElement.parentElement.dataset.id;
-                    }else{
-                        idRequest = e.target.dataset.id;
-                    }
-                    var json = ChatDrawer.responses[idRequest];
-                    var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                    var svg = component.getElementsByTagName('svg')[0];
-                    var svgString = getSVGString(svg);
-                    svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
-                }
-                if(e.target.classList.contains('clear-all')){
-                    ChatDrawer.clearMessages();
-                }
-            }
-        });
-
-        chataInput.onkeyup = function(){
-            if(ChatDrawer.options.enableAutocomplete){
-                suggestionList.style.display = 'none';
-                if(this.value){
-                    ChatDrawer.autocomplete(this.value, suggestionList, 'suggestion', ChatDrawer.options.autocompleteStyles);
-                }
+                var json = ChatDrawer.responses[component.dataset.componentid];
+                var indexData = e.target.dataset.chartindex;
+                ChatDrawer.sendDrilldownMessage(json, indexData);
             }
         }
 
-        chataInput.onkeypress = function(event){
-            if(event.keyCode == 13 && this.value){
-                try {
-                    ChatDrawer.xhr.onreadystatechange = null;
-                    ChatDrawer.xhr.abort();
-                } catch (e) {}
-                suggestionList.style.display = 'none';
-                ChatDrawer.sendMessage(chataInput, this.value);
+        if(e.target.hasAttribute('data-chartrenderer')){
+            var component = e.target.parentElement.parentElement.parentElement;
+            if(component.tagName == 'svg'){
+                component = component.parentElement;
+            }
+            if(component.chataBarContainer.options.enableDrilldowns){
+                var json = ChatDrawer.responses[component.dataset.componentid];
+                var indexData = e.target.dataset.chartrenderer;
+                ChatDrawer.sendDrilldownMessage(json, indexData, 'ChatBar', component);
             }
         }
-    }
-
-    ChatDrawer.clearMessages = function(){
-        [].forEach.call(ChatDrawer.drawerContent.querySelectorAll('.chat-single-message-container'), function(e, index){
-            if(index == 0) return;
-            e.parentNode.removeChild(e);
-        });
-    }
-
-    ChatDrawer.makeBarChartDomain = function(data, hasNegativeValues){
-        if(hasNegativeValues){
-            return d3.extent(data, function(d) { return d.value; });
-        }else{
-            return [0, d3.max(data, function(d) {
-                return d.value;
-            })];
-        }
-    }
-
-    ChatDrawer.getUniqueValues = function(data, getter){
-        let unique = {};
-        data.forEach(function(i) {
-            if(!unique[getter(i)]) {
-                unique[getter(i)] = true;
+        if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
+            var component = e.target.parentElement.parentElement;
+            var responseRenderer = component.parentElement.parentElement;
+            if(responseRenderer.chataBarContainer.options.enableDrilldowns){
+                var json = ChatDrawer.responses[component.dataset.componentid];
+                var indexData = e.target.parentElement.dataset.indexrowrenderer;
+                ChatDrawer.sendDrilldownMessage(json, indexData, 'ChatBar', responseRenderer);
             }
-        });
-        return Object.keys(unique);
-    }
 
-    ChatDrawer.formatDataToStackedChart = function(cols, data, groups){
-        var dataGrouped = [];
+        }
+    });
+    document.addEventListener('click', function(e){
+        if(e.target){
+            if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
+            || e.target.classList.contains('square') || e.target.classList.contains('circle')){
+                var selectedBars = e.target.parentElement.getElementsByClassName('active');
+                for (var i = 0; i < selectedBars.length; i++) {
+                    selectedBars[i].classList.remove('active');
+                }
+                e.target.classList.add('active');
+            }
 
-        for (var i = 0; i < groups.length; i++) {
-            var group = groups[i];
-            dataGrouped.push({group: group});
-            for (var x = 0; x < data.length; x++) {
-                if(data[x][1] == group){
-                    dataGrouped[i][data[x][0]] = parseFloat(data[x][2]);
+            if(e.target.id == 'drawer-wrapper'){
+                if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
+                    ChatDrawer.options.onMaskClick();
                 }
             }
-        }
-        // console.log(dataGrouped);
-        // var stackedData = d3.stack()
-        // .keys(ChatDrawer.getUniqueValues(data, row => row[1]))
-        // (dataGrouped)
-        // console.log(stackedData);
-        return dataGrouped;
-    }
 
-    ChatDrawer.groupBy = function(list, keyGetter) {
-        const map = new Map();
-        list.forEach((item) => {
-            const key = keyGetter(item);
-            const collection = map.get(key);
-            if (!collection) {
-                map.set(key, item[1]);
-            } else {
-                var oldValue = map.get(key);
-                map.set(item[1] + oldValue);
+            if(e.target.classList.contains('close-action')){
+                ChatDrawer.closeDrawer();
             }
-        });
-        return map;
-    }
 
-    ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
-        var messageBubble = oldComponent.parentElement.parentElement.parentElement;
-        var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
-        var toolbarRight = messageBubble.getElementsByClassName('right')[0];
-        var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
-        toolbarLeft.innerHTML = ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
-        toolbarRight.innerHTML = ChatDrawer.getActionButtons(oldComponent.dataset.componentid, actionType);
-    }
+            if(e.target.classList.contains('chata-voice')){
+                var button = document.getElementById('chata-voice-record-button');
 
-    ChatDrawer.sort = function(component, operator, colIndex, colType){
-        var json = ChatDrawer.responses[component.dataset.componentid];
-        var lines = csvTo2dArray(json['data']);
-        var values = []
-        for (var i = 0; i < lines.length; i++) {
-            var data = lines[i];
-            var row = [];
-            for (var x = 0; x < data.length; x++) {
-                row.push(data[x]);
-            }
-            values.push(row);
-        }
-        if(operator == 'asc'){
-            var comparator = function(a, b) {
-                if (colType == 'DOLLAR_AMT' || colType == 'DATE'){
-                    return parseFloat(a[colIndex]) > parseFloat(b[colIndex]) ? 1 : -1;
+
+                if(ChatDrawer.options.isRecordVoiceActive){
+                    const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
+                    ChatDrawer.options.isRecordVoiceActive = false;
+                    ChatDrawer.speechToText.stop();
+                    button.style.background = themeStyles['--chata-drawer-accent-color'];
                 }else{
-                    return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
+                    ChatDrawer.finalTranscript = '';
+                    button.style.background = 'red';
+                    ChatDrawer.options.isRecordVoiceActive = true;
+                    ChatDrawer.speechToText.start();
                 }
             }
-        }else{
-            var comparator = function(a, b) {
-                if (colType == 'DOLLAR_AMT' || colType == 'DATE'){
-                    return parseFloat(a[colIndex]) < parseFloat(b[colIndex]) ? 1 : -1;
+
+            if(e.target.classList.contains('suggestion')){
+                console.log(e.target.textContent);
+                suggestionList.style.display = 'none';
+                ChatDrawer.sendMessage(chataInput, e.target.textContent);
+            }
+            if(e.target.classList.contains('suggestion-renderer')){
+                var parent = e.target.parentElement.parentElement.parentElement.parentElement;
+                var chatBarSuggestionList = parent.getElementsByClassName('chat-bar-autocomplete')[0];
+                chatBarSuggestionList.style.display = 'none';
+                parent.sendMessageToResponseRenderer(e.target.textContent);
+            }
+            if(e.target.classList.contains('chata-suggestion-btn')){
+                ChatDrawer.sendMessage(chataInput, e.target.textContent);
+            }
+            if(e.target.classList.contains('chata-suggestion-btn-renderer')){
+                var parent = e.target.parentElement.parentElement;
+                parent.options.onSuggestionClick();
+                parent.chataBarContainer.sendMessageToResponseRenderer(e.target.textContent);
+            }
+            if(e.target.classList.contains('clipboard')){
+                if(e.target.tagName == 'svg'){
+                    var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
+                }else if(e.target.tagName == 'path'){
+                    var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
                 }else{
-                    return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
+                    var json = ChatDrawer.responses[e.target.dataset.id];
+                }
+                copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
+            }
+            if(e.target.classList.contains('csv')){
+                if(e.target.tagName == 'svg'){
+                    var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
+                }else if(e.target.tagName == 'path'){
+                    var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
+                }else{
+                    var json = ChatDrawer.responses[e.target.dataset.id];
+                }
+                var csvData = ChatDrawer.createCsvData(json);
+                var link = document.createElement("a");
+                link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
+                link.setAttribute('download', 'test.csv');
+                link.click();
+            }
+            if(e.target.classList.contains('column')){
+                var tableElement = e.target.parentElement.parentElement.parentElement;
+                if(e.target.nextSibling.classList.contains('up')){
+                    e.target.nextSibling.classList.remove('up');
+                    e.target.nextSibling.classList.add('down');
+                    var sortData = ChatDrawer.sort(tableElement, 'desc', e.target.dataset.index, e.target.dataset.type);
+                    ChatDrawer.refreshTableData(tableElement, sortData);
+                }else{
+                    e.target.nextSibling.classList.remove('down');
+                    e.target.nextSibling.classList.add('up');
+                    var sortData = ChatDrawer.sort(tableElement, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
+                    ChatDrawer.refreshTableData(tableElement, sortData);
                 }
             }
+            if(e.target.classList.contains('column-pivot')){
+                var tableElement = e.target.parentElement.parentElement.parentElement;
+                var pivotArray = [];
+                var json = ChatDrawer.responses[tableElement.dataset.componentid];
+                if(json['display_type'] == 'date_pivot'){
+                    pivotArray = getDatePivotArray(json);
+                }else{
+                    pivotArray = getPivotColumnArray(json);
+                }
+                if(e.target.nextSibling.classList.contains('up')){
+                    e.target.nextSibling.classList.remove('up');
+                    e.target.nextSibling.classList.add('down');
+                    var sortData = sortPivot(pivotArray, e.target.dataset.index, 'desc');
+                    ChatDrawer.refreshPivotTable(tableElement, sortData);
+                }else{
+                    e.target.nextSibling.classList.remove('down');
+                    e.target.nextSibling.classList.add('up');
+                    var sortData = sortPivot(pivotArray, e.target.dataset.index, 'asc');
+                    ChatDrawer.refreshPivotTable(tableElement, sortData);
+                }
+            }
+            if(e.target.classList.contains('pivot_table')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                ChatDrawer.refreshToolbarButtons(component, 'date_pivot');
+                if(json['display_type'] == 'date_pivot'){
+                    var pivotArray = getDatePivotArray(json);
+                    createPivotTable(pivotArray, component);
+                }else{
+                    var pivotArray = getPivotColumnArray(json);
+                    createPivotTable(pivotArray, component);
+                }
+            }
+            if(e.target.classList.contains('column_chart')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                ChatDrawer.refreshToolbarButtons(component, 'column');
+                var values = formatDataToBarChart(json);
+                var grouped = values[0];
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+                var hasNegativeValues = values[1];
+                createColumnChart(component, grouped, col1, col2, hasNegativeValues);
+            }
+            if(e.target.classList.contains('stacked_column_chart')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
+                var data = csvTo2dArray(json['data']);
+                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                groups = groups.sort().reverse();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][1] = formatData(data[i][1], json['columns'][1]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['columns'][1]['type'])
+                }
+                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+                var col3 = formatColumnName(json['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
+                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+            }
+            if(e.target.classList.contains('stacked_bar_chart')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                ChatDrawer.refreshToolbarButtons(component, 'stacked_bar');
+                var data = csvTo2dArray(json['data']);
+                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                groups = groups.sort().reverse();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][1] = formatData(data[i][1], json['columns'][1]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['columns'][1]['type'])
+                }
+                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+                var col3 = formatColumnName(json['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
+                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+            }
+            if(e.target.classList.contains('table')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                ChatDrawer.refreshToolbarButtons(component, 'table');
+                createTable(json, component);
+            }
+
+            if(e.target.classList.contains('bar_chart')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                var values = formatDataToBarChart(json);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+
+                createBarChart(component, grouped, col1, col2, hasNegativeValues);
+                ChatDrawer.refreshToolbarButtons(component, 'bar');
+
+            }
+
+            if(e.target.classList.contains('line_chart')){
+                if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                var values = formatDataToBarChart(json);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+
+                createLineChart(component, grouped, col1, col2, hasNegativeValues);
+                ChatDrawer.refreshToolbarButtons(component, 'line');
+            }
+
+            if(e.target.classList.contains('heatmap')){
+                console.log(e.target.tagName);
+                if(e.target.tagName == 'BUTTON'){
+                    var idRequest = e.target.dataset.id;
+                }
+                else if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                var values = formatDataToHeatmap(json);
+                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                labelsY = formatLabels(labelsY, json['columns'][0]['type']);
+                labelsX = formatLabels(labelsX, json['columns'][1]['type']);
+
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+                var col3 = formatColumnName(json['columns'][2]['name']);
+
+                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
+                ChatDrawer.refreshToolbarButtons(component, 'heatmap');
+            }
+
+            if(e.target.classList.contains('bubble_chart')){
+                if(e.target.tagName == 'BUTTON'){
+                    var idRequest = e.target.dataset.id;
+                }
+                else if(e.target.tagName == 'svg'){
+                    var idRequest = e.target.parentElement.dataset.id;
+                }else{
+                    var idRequest = e.target.parentElement.parentElement.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                var values = formatDataToHeatmap(json);
+                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                labelsY = formatLabels(labelsY, json['columns'][0]['type']);
+                labelsX = formatLabels(labelsX, json['columns'][1]['type']);
+
+                var col1 = formatColumnName(json['columns'][0]['name']);
+                var col2 = formatColumnName(json['columns'][1]['name']);
+                var col3 = formatColumnName(json['columns'][2]['name']);
+
+
+                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3);
+                ChatDrawer.refreshToolbarButtons(component, 'bubble');
+            }
+            if(e.target.classList.contains('export_png')){
+                if(e.target.tagName == 'svg'){
+                    idRequest = e.target.parentElement.dataset.id;
+                }else if(e.target.tagName == 'path'){
+                    idRequest = e.target.parentElement.parentElement.dataset.id;
+                }else{
+                    idRequest = e.target.dataset.id;
+                }
+                var json = ChatDrawer.responses[idRequest];
+                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+                var svg = component.getElementsByTagName('svg')[0];
+                var svgString = getSVGString(svg);
+                svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
+            }
+            if(e.target.classList.contains('clear-all')){
+                ChatDrawer.clearMessages();
+            }
         }
-        var sortedArray = values.sort(comparator);
+    });
 
-        return sortedArray;
-    }
-
-    ChatDrawer.refreshPivotTable = function(table, pivotArray){
-        var rows = table.childNodes;
-        var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
-        for (var i = 1; i < rows.length; i++) {
-            var tdList = rows[i].childNodes;
-            for (var x = 0; x < tdList.length; x++) {
-                tdList[x].textContent = pivotArray[i-1][x];
+    chataInput.onkeyup = function(){
+        if(ChatDrawer.options.enableAutocomplete){
+            suggestionList.style.display = 'none';
+            if(this.value){
+                ChatDrawer.autocomplete(this.value, suggestionList, 'suggestion', ChatDrawer.options.autocompleteStyles);
             }
         }
     }
 
-    ChatDrawer.refreshTableData = function(table, newData){
-        var rows = table.childNodes;
-        var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
-        for (var i = 1; i < rows.length; i++) {
-            var tdList = rows[i].childNodes;
-            for (var x = 0; x < tdList.length; x++) {
-                tdList[x].textContent = formatData(newData[i-1][x], cols[x]['type']);
+    chataInput.onkeypress = function(event){
+        if(event.keyCode == 13 && this.value){
+            try {
+                ChatDrawer.xhr.onreadystatechange = null;
+                ChatDrawer.xhr.abort();
+            } catch (e) {}
+            suggestionList.style.display = 'none';
+            ChatDrawer.sendMessage(chataInput, this.value);
+        }
+    }
+}
+
+ChatDrawer.clearMessages = function(){
+    [].forEach.call(ChatDrawer.drawerContent.querySelectorAll('.chat-single-message-container'), function(e, index){
+        if(index == 0) return;
+        e.parentNode.removeChild(e);
+    });
+}
+
+ChatDrawer.makeBarChartDomain = function(data, hasNegativeValues){
+    if(hasNegativeValues){
+        return d3.extent(data, function(d) { return d.value; });
+    }else{
+        return [0, d3.max(data, function(d) {
+            return d.value;
+        })];
+    }
+}
+
+ChatDrawer.getUniqueValues = function(data, getter){
+    let unique = {};
+    data.forEach(function(i) {
+        if(!unique[getter(i)]) {
+            unique[getter(i)] = true;
+        }
+    });
+    return Object.keys(unique);
+}
+
+ChatDrawer.formatDataToStackedChart = function(cols, data, groups){
+    var dataGrouped = [];
+
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        dataGrouped.push({group: group});
+        for (var x = 0; x < data.length; x++) {
+            if(data[x][1] == group){
+                dataGrouped[i][data[x][0]] = parseFloat(data[x][2]);
             }
         }
     }
 
-    ChatDrawer.createCsvData = function(json, separator=','){
-        var output = '';
-        var lines = csvTo2dArray(json['data']);
-        for(var i = 0; i<json['columns'].length; i++){
-            var colName = formatColumnName(json['columns'][i]['name']);
-            output += colName + separator;
+    return dataGrouped;
+}
+
+ChatDrawer.groupBy = function(list, keyGetter) {
+    const map = new Map();
+    list.forEach((item) => {
+        const key = keyGetter(item);
+        const collection = map.get(key);
+        if (!collection) {
+            map.set(key, item[1]);
+        } else {
+            var oldValue = map.get(key);
+            map.set(item[1] + oldValue);
+        }
+    });
+    return map;
+}
+
+ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
+    var messageBubble = oldComponent.parentElement.parentElement.parentElement;
+    var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
+    var toolbarRight = messageBubble.getElementsByClassName('right')[0];
+    var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
+    toolbarLeft.innerHTML = ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
+    toolbarRight.innerHTML = ChatDrawer.getActionButtons(oldComponent.dataset.componentid, actionType);
+}
+
+ChatDrawer.sort = function(component, operator, colIndex, colType){
+    var json = ChatDrawer.responses[component.dataset.componentid];
+    var lines = csvTo2dArray(json['data']);
+    var values = []
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        var row = [];
+        for (var x = 0; x < data.length; x++) {
+            row.push(data[x]);
+        }
+        values.push(row);
+    }
+    if(operator == 'asc'){
+        var comparator = function(a, b) {
+            if (colType == 'DOLLAR_AMT' || colType == 'DATE'){
+                return parseFloat(a[colIndex]) > parseFloat(b[colIndex]) ? 1 : -1;
+            }else{
+                return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
+            }
+        }
+    }else{
+        var comparator = function(a, b) {
+            if (colType == 'DOLLAR_AMT' || colType == 'DATE'){
+                return parseFloat(a[colIndex]) < parseFloat(b[colIndex]) ? 1 : -1;
+            }else{
+                return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
+            }
+        }
+    }
+    var sortedArray = values.sort(comparator);
+
+    return sortedArray;
+}
+
+ChatDrawer.refreshPivotTable = function(table, pivotArray){
+    var rows = table.childNodes;
+    var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
+    for (var i = 1; i < rows.length; i++) {
+        var tdList = rows[i].childNodes;
+        for (var x = 0; x < tdList.length; x++) {
+            tdList[x].textContent = pivotArray[i-1][x];
+        }
+    }
+}
+
+ChatDrawer.refreshTableData = function(table, newData){
+    var rows = table.childNodes;
+    var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
+    for (var i = 1; i < rows.length; i++) {
+        var tdList = rows[i].childNodes;
+        for (var x = 0; x < tdList.length; x++) {
+            tdList[x].textContent = formatData(newData[i-1][x], cols[x]['type']);
+        }
+    }
+}
+
+ChatDrawer.createCsvData = function(json, separator=','){
+    var output = '';
+    var lines = csvTo2dArray(json['data']);
+    for(var i = 0; i<json['columns'].length; i++){
+        var colName = formatColumnName(json['columns'][i]['name']);
+        output += colName + separator;
+    }
+    output += '\n';
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        for (var x = 0; x < data.length; x++) {
+            output += data[x] + separator;
         }
         output += '\n';
-        for (var i = 0; i < lines.length; i++) {
-            var data = lines[i];
-            for (var x = 0; x < data.length; x++) {
-                output += data[x] + separator;
-            }
-            output += '\n';
-        }
-        return output
     }
+    return output
+}
 
-    ChatDrawer.closeDrawer = function(){
+ChatDrawer.closeDrawer = function(){
+    ChatDrawer.wrapper.style.opacity = 0;
+    ChatDrawer.wrapper.style.height = 0;
+
+    if(ChatDrawer.options.placement == 'right'){
+        ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
+        ChatDrawer.rootElem.right = 0;
+        ChatDrawer.rootElem.top = 0;
+        if(ChatDrawer.options.showHandle){
+            ChatDrawer.drawerButton.style.display = 'flex';
+        }
+    }else if(ChatDrawer.options.placement == 'left'){
+        ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
+        ChatDrawer.rootElem.left = 0;
+        ChatDrawer.rootElem.top = 0;
+        if(ChatDrawer.options.showHandle){
+            ChatDrawer.drawerButton.style.display = 'flex';
+        }
+    }else if(ChatDrawer.options.placement == 'bottom'){
+        ChatDrawer.rootElem.style.transform = 'translateY('+ ChatDrawer.options.height +'px)';
+        ChatDrawer.rootElem.style.bottom = '0';
+
+        if(ChatDrawer.options.showHandle){
+            ChatDrawer.drawerButton.style.display = 'flex';
+        }
+    }else if(ChatDrawer.options.placement == 'top'){
+        ChatDrawer.rootElem.style.transform = 'translateY(-'+ ChatDrawer.options.height +'px)';
+        ChatDrawer.rootElem.style.top = '0';
+
+        if(ChatDrawer.options.showHandle){
+            ChatDrawer.drawerButton.style.display = 'flex';
+        }
+    }
+    if(ChatDrawer.options.clearOnClose){
+        ChatDrawer.clearMessages();
+    }
+    ChatDrawer.options.onVisibleChange();
+}
+
+ChatDrawer.openDrawer = function(){
+    if(ChatDrawer.options.showMask){
+        ChatDrawer.wrapper.style.opacity = .3;
+        ChatDrawer.wrapper.style.height = '100%';
+    }
+    if(ChatDrawer.options.placement == 'right'){
+        ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
+        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+        ChatDrawer.drawerButton.style.display = 'none';
+        ChatDrawer.rootElem.style.right = 0;
+        ChatDrawer.rootElem.style.top = 0;
+    }else if(ChatDrawer.options.placement == 'left'){
+        ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
+        ChatDrawer.rootElem.style.left = 0;
+        ChatDrawer.rootElem.style.top = 0;
+        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+        ChatDrawer.drawerButton.style.display = 'none';
+    }else if(ChatDrawer.options.placement == 'bottom'){
+        ChatDrawer.rootElem.style.width = '100%';
+        ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
+        ChatDrawer.rootElem.style.bottom = 0;
+        ChatDrawer.rootElem.style.transform = 'translateY(0)';
+        ChatDrawer.drawerButton.style.display = 'none';
+    }else if(ChatDrawer.options.placement == 'top'){
+        ChatDrawer.rootElem.style.width = '100%';
+        ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
+        ChatDrawer.rootElem.style.top = 0;
+        ChatDrawer.rootElem.style.transform = 'translateY(0)';
+        ChatDrawer.drawerButton.style.display = 'none';
+    }
+    ChatDrawer.options.onVisibleChange();
+}
+
+ChatDrawer.createWrapper = function(rootElem){
+    var wrapper = document.createElement('div');
+    var body = document.getElementsByTagName('body')[0];
+    body.insertBefore(wrapper, rootElem);
+    wrapper.setAttribute('id', 'drawer-wrapper');
+    ChatDrawer.wrapper = wrapper;
+    if(!ChatDrawer.options.showMask){
         ChatDrawer.wrapper.style.opacity = 0;
         ChatDrawer.wrapper.style.height = 0;
+    }
+}
 
-        if(ChatDrawer.options.placement == 'right'){
-            ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
-            ChatDrawer.rootElem.right = 0;
-            ChatDrawer.rootElem.top = 0;
-            if(ChatDrawer.options.showHandle){
-                ChatDrawer.drawerButton.style.display = 'flex';
-            }
-        }else if(ChatDrawer.options.placement == 'left'){
-            ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
-            ChatDrawer.rootElem.left = 0;
-            ChatDrawer.rootElem.top = 0;
-            if(ChatDrawer.options.showHandle){
-                ChatDrawer.drawerButton.style.display = 'flex';
-            }
-        }else if(ChatDrawer.options.placement == 'bottom'){
-            ChatDrawer.rootElem.style.transform = 'translateY('+ ChatDrawer.options.height +'px)';
-            ChatDrawer.rootElem.style.bottom = '0';
+ChatDrawer.createDrawerButton = function(rootElem){
+    var drawerButton = document.createElement("div");
+    var drawerIcon = document.createElement("div");
+    drawerIcon.setAttribute("height", "22px");
+    drawerIcon.setAttribute("width", "22px");
+    drawerIcon.classList.add('chata-bubbles-icon');
+    drawerIcon.classList.add('open-action');
+    drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
+    drawerButton.classList.add('drawer-handle');
+    drawerButton.classList.add('open-action');
+    drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
+    drawerButton.appendChild(drawerIcon);
+    drawerButton.addEventListener('click', function(e){
+        ChatDrawer.options.onHandleClick();
+        ChatDrawer.openDrawer();
+    })
+    var body = document.getElementsByTagName('body')[0];
+    body.insertBefore(drawerButton, rootElem);
+    ChatDrawer.drawerButton = drawerButton;
+    if(!ChatDrawer.options.showHandle){
+        ChatDrawer.drawerButton.style.display = 'none';
+    }
+    for (var [key, value] of Object.entries(ChatDrawer.options.handleStyles)){
+        ChatDrawer.drawerButton.style.setProperty(key, value, '');
+    }
+}
 
-            if(ChatDrawer.options.showHandle){
-                ChatDrawer.drawerButton.style.display = 'flex';
-            }
-        }else if(ChatDrawer.options.placement == 'top'){
-            ChatDrawer.rootElem.style.transform = 'translateY(-'+ ChatDrawer.options.height +'px)';
-            ChatDrawer.rootElem.style.top = '0';
-
-            if(ChatDrawer.options.showHandle){
-                ChatDrawer.drawerButton.style.display = 'flex';
-            }
+ChatDrawer.ajaxCall = function(url, callback){
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4){
+            var jsonResponse = JSON.parse(xhr.responseText);
+            callback(jsonResponse);
         }
-        if(ChatDrawer.options.clearOnClose){
-            ChatDrawer.clearMessages();
-        }
-        ChatDrawer.options.onVisibleChange();
-    }
+    };
+    xhr.open('GET', url);
+    xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    xhr.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
+    xhr.send();
+}
 
-    ChatDrawer.openDrawer = function(){
-        if(ChatDrawer.options.showMask){
-            ChatDrawer.wrapper.style.opacity = .3;
-            ChatDrawer.wrapper.style.height = '100%';
+ChatDrawer.ajaxCallPost = function(url, callback, data){
+    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+    xmlhttp.open("POST", url);
+    xmlhttp.setRequestHeader("Content-Type", "application/json");
+    xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
+    xmlhttp.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === 4){
+            var jsonResponse = JSON.parse(xmlhttp.responseText);
+            callback(jsonResponse);
         }
-        if(ChatDrawer.options.placement == 'right'){
-            ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
-            ChatDrawer.rootElem.style.transform = 'translateX(0px)';
-            ChatDrawer.drawerButton.style.display = 'none';
-            ChatDrawer.rootElem.style.right = 0;
-            ChatDrawer.rootElem.style.top = 0;
-        }else if(ChatDrawer.options.placement == 'left'){
-            ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
-            ChatDrawer.rootElem.style.left = 0;
-            ChatDrawer.rootElem.style.top = 0;
-            ChatDrawer.rootElem.style.transform = 'translateX(0px)';
-            ChatDrawer.drawerButton.style.display = 'none';
-        }else if(ChatDrawer.options.placement == 'bottom'){
-            ChatDrawer.rootElem.style.width = '100%';
-            ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
-            ChatDrawer.rootElem.style.bottom = 0;
-            ChatDrawer.rootElem.style.transform = 'translateY(0)';
-            ChatDrawer.drawerButton.style.display = 'none';
-        }else if(ChatDrawer.options.placement == 'top'){
-            ChatDrawer.rootElem.style.width = '100%';
-            ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
-            ChatDrawer.rootElem.style.top = 0;
-            ChatDrawer.rootElem.style.transform = 'translateY(0)';
-            ChatDrawer.drawerButton.style.display = 'none';
-        }
-        ChatDrawer.options.onVisibleChange();
-    }
+    };
+    xmlhttp.send(JSON.stringify(data));
+}
 
-    ChatDrawer.createWrapper = function(rootElem){
-        var wrapper = document.createElement('div');
-        var body = document.getElementsByTagName('body')[0];
-        body.insertBefore(wrapper, rootElem);
-        wrapper.setAttribute('id', 'drawer-wrapper');
-        ChatDrawer.wrapper = wrapper;
-        if(!ChatDrawer.options.showMask){
-            ChatDrawer.wrapper.style.opacity = 0;
-            ChatDrawer.wrapper.style.height = 0;
-        }
-    }
+ChatDrawer.ajaxCallAutoComplete = function(url, callback){
 
-    ChatDrawer.createDrawerButton = function(rootElem){
-        var drawerButton = document.createElement("div");
-        var drawerIcon = document.createElement("div");
-        drawerIcon.setAttribute("height", "22px");
-        drawerIcon.setAttribute("width", "22px");
-        drawerIcon.classList.add('chata-bubbles-icon');
-        drawerIcon.classList.add('open-action');
-        drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
-        drawerButton.classList.add('drawer-handle');
-        drawerButton.classList.add('open-action');
-        drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
-        drawerButton.appendChild(drawerIcon);
-        drawerButton.addEventListener('click', function(e){
-            ChatDrawer.options.onHandleClick();
-            ChatDrawer.openDrawer();
-        })
-        var body = document.getElementsByTagName('body')[0];
-        body.insertBefore(drawerButton, rootElem);
-        ChatDrawer.drawerButton = drawerButton;
-        if(!ChatDrawer.options.showHandle){
-            ChatDrawer.drawerButton.style.display = 'none';
+    ChatDrawer.xhr.onreadystatechange = function() {
+        if (ChatDrawer.xhr.readyState === 4){
+            var jsonResponse = JSON.parse(ChatDrawer.xhr.responseText);
+            callback(jsonResponse);
         }
-        for (var [key, value] of Object.entries(ChatDrawer.options.handleStyles)){
-            ChatDrawer.drawerButton.style.setProperty(key, value, '');
-        }
-    }
+    };
+    ChatDrawer.xhr.open('GET', url);
+    ChatDrawer.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    ChatDrawer.xhr.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
+    ChatDrawer.xhr.send();
+}
 
-    ChatDrawer.ajaxCall = function(url, callback){
-        var xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4){
-                var jsonResponse = JSON.parse(xhr.responseText);
-                callback(jsonResponse);
+ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggestion', styles){
+    const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
+        suggestion)}&projectid=${ChatDrawer.options.projectId}`;
+
+    ChatDrawer.ajaxCallAutoComplete(URL, function(jsonResponse){
+        suggestionList.innerHTML = '';
+        if(jsonResponse['matches'].length > 0){
+            for(var [key, value] of Object.entries(styles)){
+                suggestionList.style.setProperty(key, value, '');
             }
-        };
-        xhr.open('GET', url);
-        xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-        xhr.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
-        xhr.send();
-    }
-
-    ChatDrawer.ajaxCallPost = function(url, callback, data){
-        var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
-        xmlhttp.open("POST", url);
-        xmlhttp.setRequestHeader("Content-Type", "application/json");
-        xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
-        xmlhttp.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
-        xmlhttp.onreadystatechange = function() {
-            if (xmlhttp.readyState === 4){
-                var jsonResponse = JSON.parse(xmlhttp.responseText);
-                callback(jsonResponse);
+            for (var i = jsonResponse['matches'].length-1; i >= 0; i--) {
+                var li = document.createElement('li');
+                li.classList.add(liClass);
+                li.textContent = jsonResponse['matches'][i];
+                suggestionList.appendChild(li);
             }
-        };
-        xmlhttp.send(JSON.stringify(data));
-    }
+            suggestionList.style.display = 'block';
+        }else{
+            suggestionList.style.display = 'none';
+        }
+    });
+}
 
-    ChatDrawer.ajaxCallAutoComplete = function(url, callback){
+ChatDrawer.htmlToElement = function(html) {
+    var template = document.createElement('template');
+    html = html.trim();
+    template.innerHTML = html;
+    return template.content.firstChild;
+}
 
-        ChatDrawer.xhr.onreadystatechange = function() {
-            if (ChatDrawer.xhr.readyState === 4){
-                var jsonResponse = JSON.parse(ChatDrawer.xhr.responseText);
-                callback(jsonResponse);
-            }
-        };
-        ChatDrawer.xhr.open('GET', url);
-        ChatDrawer.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-        ChatDrawer.xhr.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
-        ChatDrawer.xhr.send();
-    }
+ChatDrawer.createHelpContent = function(link){
+    return `
+    Great news, I can help with that:
+    <br/>
+    <button onclick="window.open('${link}', '_blank')" class="chata-help-link-btn">
+    ${HELP_ICON}
+    Bar chart 2</button>
+    `;
+}
 
-    ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggestion', styles){
-        const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
-            suggestion)}&projectid=${ChatDrawer.options.projectId}`;
+ChatDrawer.putHelpMessage = function(jsonResponse){
+    var div = document.createElement('div');
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
 
-        ChatDrawer.ajaxCallAutoComplete(URL, function(jsonResponse){
-            suggestionList.innerHTML = '';
-            if(jsonResponse['matches'].length > 0){
-                for(var [key, value] of Object.entries(styles)){
-                    suggestionList.style.setProperty(key, value, '');
-                }
-                for (var i = jsonResponse['matches'].length-1; i >= 0; i--) {
-                    var li = document.createElement('li');
-                    li.classList.add(liClass);
-                    li.textContent = jsonResponse['matches'][i];
-                    suggestionList.appendChild(li);
-                }
-                suggestionList.style.display = 'block';
-            }else{
-                suggestionList.style.display = 'none';
-            }
-        });
-    }
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('response');
+    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('full-width');
 
-    ChatDrawer.htmlToElement = function(html) {
-        var template = document.createElement('template');
-        html = html.trim();
-        template.innerHTML = html;
-        return template.content.firstChild;
-    }
+    messageBubble.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+}
 
-    ChatDrawer.createHelpContent = function(link){
-        return `
-        Great news, I can help with that:
-        <br/>
-        <button onclick="window.open('${link}', '_blank')" class="chata-help-link-btn">
-        ${HELP_ICON}
-        Bar chart 2</button>
-        `;
-    }
+ChatDrawer.putSafetynetMessage = function(suggestionArray){
+    var div = document.createElement('div');
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
 
-    ChatDrawer.putHelpMessage = function(jsonResponse){
-        var div = document.createElement('div');
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('response');
+    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('full-width');
 
-        containerMessage.classList.add('chat-single-message-container');
-        containerMessage.classList.add('response');
-        messageBubble.classList.add('chat-message-bubble');
-        messageBubble.classList.add('full-width');
+    messageBubble.append(createSafetynetContent(suggestionArray));
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+}
 
-        messageBubble.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
-        containerMessage.appendChild(messageBubble);
-        ChatDrawer.drawerContent.appendChild(containerMessage);
-        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-    }
+ChatDrawer.sendMessage = function(chataInput, textValue){
+    chataInput.disabled = true;
+    var responseLoadingContainer = ChatDrawer.putMessage(textValue);
+    const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+      textValue
+    )}&projectId=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
+    const URL = `https://backend-staging.chata.ai/api/v1/query?q=${textValue}&project=1&unified_query_id=${uuidv4()}`;
 
-    ChatDrawer.putSafetynetMessage = function(suggestionArray){
-        var div = document.createElement('div');
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
+    ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
+        if(jsonResponse['full_suggestion'].length > 0 && ChatDrawer.options.enableSafetyNet){
+            chataInput.removeAttribute("disabled");
+            ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
 
-        containerMessage.classList.add('chat-single-message-container');
-        containerMessage.classList.add('response');
-        messageBubble.classList.add('chat-message-bubble');
-        messageBubble.classList.add('full-width');
-
-        messageBubble.append(createSafetynetContent(suggestionArray));
-        containerMessage.appendChild(messageBubble);
-        ChatDrawer.drawerContent.appendChild(containerMessage);
-        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-    }
-
-    ChatDrawer.sendMessage = function(chataInput, textValue){
-        chataInput.disabled = true;
-        var responseLoadingContainer = ChatDrawer.putMessage(textValue);
-        const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
-          textValue
-        )}&projectId=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
-        const URL = `https://backend-staging.chata.ai/api/v1/query?q=${textValue}&project=1&unified_query_id=${uuidv4()}`;
-
-        ChatDrawer.ajaxCall(URL_SAFETYNET, function(jsonResponse){
-            if(jsonResponse['full_suggestion'].length > 0 && ChatDrawer.options.enableSafetyNet){
+            var suggestionArray = createSuggestionArray(jsonResponse);
+            ChatDrawer.putSafetynetMessage(suggestionArray);
+        }else{
+            ChatDrawer.ajaxCall(URL, function(jsonResponse){
+                console.log(jsonResponse['display_type']);
                 chataInput.removeAttribute("disabled");
                 ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-
-                var suggestionArray = createSuggestionArray(jsonResponse);
-                ChatDrawer.putSafetynetMessage(suggestionArray);
-            }else{
-                ChatDrawer.ajaxCall(URL, function(jsonResponse){
-                    console.log(jsonResponse['display_type']);
-                    chataInput.removeAttribute("disabled");
-                    ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-                    switch(jsonResponse['display_type']){
-                        case 'suggestion':
-                            ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
-                        break;
-                        case 'table':
-                            if(jsonResponse['columns'].length == 1){
-                                ChatDrawer.putSimpleResponse(jsonResponse);
-                            }else{
-                                ChatDrawer.putTableResponse(jsonResponse);
-                            }
-                        break;
-                        case 'date_pivot':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'pivot_column':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'line':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'bar':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'word_cloud':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'stacked_column':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'bubble':
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'heatmap':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                        break;
-                        case 'help':
-                            console.log(jsonResponse);
-                            ChatDrawer.putHelpMessage(jsonResponse);
-                        break;
-                        default:
-                            // temporary
-                            jsonResponse['data'] = 'Error: There was no data supplied for this table';
+                switch(jsonResponse['display_type']){
+                    case 'suggestion':
+                        ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
+                    break;
+                    case 'table':
+                        if(jsonResponse['columns'].length == 1){
                             ChatDrawer.putSimpleResponse(jsonResponse);
-                    }
-                    ChatDrawer.checkMaxMessages();
-                });
+                        }else{
+                            ChatDrawer.putTableResponse(jsonResponse);
+                        }
+                    break;
+                    case 'date_pivot':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'pivot_column':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'line':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'bar':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'word_cloud':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'stacked_column':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'bubble':
+                        ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'heatmap':
+                    ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'help':
+                        console.log(jsonResponse);
+                        ChatDrawer.putHelpMessage(jsonResponse);
+                    break;
+                    default:
+                        // temporary
+                        jsonResponse['data'] = 'Error: There was no data supplied for this table';
+                        ChatDrawer.putSimpleResponse(jsonResponse);
+                }
+                ChatDrawer.checkMaxMessages();
+            });
 
-            }
-        });
-        chataInput.value = '';
+        }
+    });
+    chataInput.value = '';
+}
+
+ChatDrawer.putSimpleResponse = function(jsonResponse){
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('response');
+    var idRequest = uuidv4();
+    ChatDrawer.responses[idRequest] = jsonResponse;
+    containerMessage.setAttribute('data-containerid', idRequest);
+    messageBubble.classList.add('chat-message-bubble');
+    toolbarButtons = ChatDrawer.getActionButtons(idRequest, 'csvCopy');
+    messageBubble.innerHTML = `
+    <div class="chat-message-toolbar right">
+        ${toolbarButtons}
+    </div>`;
+
+    messageBubble.appendChild(document.createTextNode(jsonResponse['data']));
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+}
+
+ChatDrawer.getActionButtons = function(idRequest, type){
+    if (type == 'csvCopy'){
+        return `
+        <button class="chata-toolbar-btn clipboard" data-id="${idRequest}">
+            ${CLIPBOARD_ICON}
+        </button>
+        <button class="chata-toolbar-btn csv" data-id="${idRequest}">
+            ${DOWNLOAD_CSV_ICON}
+        </button>
+        `;
+    }else{
+        return `
+        <button class="chata-toolbar-btn export_png" data-id="${idRequest}">
+            ${EXPORT_PNG_ICON}
+        </button>
+        `;
     }
+}
 
-    ChatDrawer.putSimpleResponse = function(jsonResponse){
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
-        containerMessage.classList.add('chat-single-message-container');
-        containerMessage.classList.add('response');
-        var idRequest = uuidv4();
-        ChatDrawer.responses[idRequest] = jsonResponse;
-        containerMessage.setAttribute('data-containerid', idRequest);
-        messageBubble.classList.add('chat-message-bubble');
-        toolbarButtons = ChatDrawer.getActionButtons(idRequest, 'csvCopy');
-        messageBubble.innerHTML = `
+ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
+    var json = ChatDrawer.responses[idRequest];
+    var buttons = '';
+    for (var i = 0; i < json['supported_display_types'].length; i++) {
+        console.log(json['supported_display_types'][i]);
+        if(json['supported_display_types'][i] == ignore)continue;
+        if(json['supported_display_types'][i] == 'table'){
+            buttons += ChatDrawer.getTableButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'column'){
+            buttons += ChatDrawer.getColumnChartButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'bar'){
+            buttons += ChatDrawer.getBarChartButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'pie'){
+
+        }
+        if(json['supported_display_types'][i] == 'line' && json['display_type'] != 'pivot_column'){
+            buttons += ChatDrawer.getLineChartButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'date_pivot' || json['supported_display_types'][i] == 'pivot_column'){
+            buttons += ChatDrawer.getPivotTableButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'heatmap'){
+            buttons += ChatDrawer.getHeatmapChartButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'bubble'){
+            buttons += ChatDrawer.getBubbleChartButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'stacked_column'){
+            buttons += ChatDrawer.getStackedColumnChartButton(idRequest);
+        }
+        if(json['supported_display_types'][i] == 'stacked_bar'){
+            buttons += ChatDrawer.getStackedBarChartButton(idRequest);
+        }
+    }
+    return buttons;
+}
+
+ChatDrawer.getTableButton = function(idRequest){
+    return `
+    <button class="chata-toolbar-btn table" data-tip="Table" data-id="${idRequest}">
+        ${TABLE_ICON}
+    </button>`;
+}
+
+ChatDrawer.getPivotTableButton = function(idRequest){
+    return `
+    <button class="chata-toolbar-btn pivot_table" data-tip="Pivot Table" data-id="${idRequest}">
+        ${PIVOT_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getColumnChartButton = function(idRequest){
+    return `
+    <button class="chata-toolbar-btn column_chart" data-tip="Column Chart" data-id="${idRequest}">
+        ${COLUMN_CHART_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getBarChartButton = function(idRequest){
+    return `
+    <button class="chata-toolbar-btn bar_chart" data-tip="Bar Chart" data-id="${idRequest}">
+        ${BAR_CHART_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getLineChartButton = function(idRequest) {
+    return `
+    <button class="chata-toolbar-btn line_chart" data-tip="Line Chart" data-id="${idRequest}">
+        ${LINE_CHART_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getHeatmapChartButton = function(idRequest){
+    return `
+    <button class="chata-toolbar-btn heatmap" data-tip="Heatmap" data-id="${idRequest}">
+        ${HEATMAP_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getBubbleChartButton = function(idRequest){
+    return `
+    <button class="chata-toolbar-btn bubble_chart" data-tip="Bubble Chart" data-id="${idRequest}">
+        ${BUBBLE_CHART_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getStackedColumnChartButton = function(idRequest){
+    return `<button class="chata-toolbar-btn stacked_column_chart" data-tip="Column Chart" data-id="${idRequest}">
+        ${STACKED_COLUMN_CHART_ICON}
+    </button>`;
+}
+
+ChatDrawer.getStackedBarChartButton = function(idRequest){
+    return `<button class="chata-toolbar-btn stacked_bar_chart" data-tip="Column Chart" data-id="${idRequest}">
+        ${STACKED_BAR_CHART_ICON}
+    </button>`;
+}
+
+ChatDrawer.putTableResponse = function(jsonResponse){
+    var data = csvTo2dArray(jsonResponse['data']);
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
+    var responseContentContainer = document.createElement('div');
+    var tableContainer = document.createElement('div');
+    var table = document.createElement('table');
+    var header = document.createElement('tr');
+    var groupField = getGroupableField(jsonResponse);
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('response');
+    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('full-width');
+    var idRequest = uuidv4();
+    ChatDrawer.responses[idRequest] = jsonResponse;
+    var supportedDisplayTypes = ChatDrawer.getSupportedDisplayTypes(idRequest, 'table');
+    var actions = ChatDrawer.getActionButtons(idRequest, 'csvCopy');
+    var toolbar = '';
+    if(supportedDisplayTypes != ''){
+        toolbar += `
+        <div class="chat-message-toolbar left">
+            ${supportedDisplayTypes}
+        </div>
+        `
+    }
+    toolbar += `
         <div class="chat-message-toolbar right">
-            ${toolbarButtons}
+            ${actions}
         </div>`;
 
-        messageBubble.appendChild(document.createTextNode(jsonResponse['data']));
-        containerMessage.appendChild(messageBubble);
-        ChatDrawer.drawerContent.appendChild(containerMessage);
-        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-    }
+    messageBubble.innerHTML = toolbar;
+    tableContainer.classList.add('chata-table-container');
+    responseContentContainer.classList.add('chata-response-content-container');
+    table.classList.add('table-response');
+    table.setAttribute('data-componentid', idRequest);
+    var dataLines = csvTo2dArray(jsonResponse['data']);
 
-    ChatDrawer.getActionButtons = function(idRequest, type){
-        if (type == 'csvCopy'){
-            return `
-            <button class="chata-toolbar-btn clipboard" data-id="${idRequest}">
-                ${CLIPBOARD_ICON}
-            </button>
-            <button class="chata-toolbar-btn csv" data-id="${idRequest}">
-                ${DOWNLOAD_CSV_ICON}
-            </button>
-            `;
-        }else{
-            return `
-            <button class="chata-toolbar-btn export_png" data-id="${idRequest}">
-                ${EXPORT_PNG_ICON}
-            </button>
-            `;
+    for (var i = 0; i < jsonResponse['columns'].length; i++) {
+        var colName = formatColumnName(jsonResponse['columns'][i]['name']);
+        var th = document.createElement('th');
+        var arrow = document.createElement('div');
+        var col = document .createElement('div');
+        col.textContent = colName;
+        arrow.classList.add('tabulator-arrow');
+        arrow.classList.add('up');
+        col.classList.add('column');
+        col.setAttribute('data-type', jsonResponse['columns'][i]['type']);
+        col.setAttribute('data-index', i);
+
+        th.appendChild(col);
+        th.appendChild(arrow);
+        header.appendChild(th);
+    }
+    table.appendChild(header);
+
+    for (var i = 0; i < dataLines.length; i++) {
+        var data = dataLines[i];
+        var tr = document.createElement('tr');
+        for (var x = 0; x < data.length; x++) {
+            value = formatData(data[x], jsonResponse['columns'][x]['type']);
+            var td = document.createElement('td');
+            td.textContent = value;
+            tr.appendChild(td);
+        }
+        if(typeof groupField !== 'number'){
+            tr.setAttribute('data-indexrow', i);
+        }
+        table.appendChild(tr);
+    }
+    tableContainer.appendChild(table);
+    responseContentContainer.appendChild(tableContainer);
+    messageBubble.appendChild(responseContentContainer);
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+}
+
+ChatDrawer.createSuggestions = function(responseContentContainer, data, classButton='chata-suggestion-btn'){
+    for (var i = 0; i < data.length; i++) {
+        var div = document.createElement('div');
+        var button = document.createElement('button');
+        button.classList.add(classButton);
+        button.textContent = data[i];
+        div.appendChild(button);
+        responseContentContainer.appendChild(div);
+    }
+}
+
+ChatDrawer.putSuggestionResponse = function(jsonResponse, query){
+    var data = csvTo2dArray(jsonResponse['data']);
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
+    var responseContentContainer = document.createElement('div');
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('response');
+    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('full-width');
+    responseContentContainer.classList.add('chata-response-content-container');
+    responseContentContainer.innerHTML = `<div>I'm not sure what you mean by <strong>"${query}"</strong>. Did you mean:</div>`;
+    ChatDrawer.createSuggestions(responseContentContainer, data);
+    messageBubble.appendChild(responseContentContainer);
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+}
+
+ChatDrawer.checkMaxMessages = function(){
+    if(ChatDrawer.options.maxMessages > 2){
+        var messages = ChatDrawer.drawerContent.querySelectorAll('.chat-single-message-container');
+        if(messages.length > ChatDrawer.options.maxMessages){
+            messages[1].parentNode.removeChild(messages[1]);
         }
     }
+}
 
-    ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
-        var json = ChatDrawer.responses[idRequest];
-        var buttons = '';
-        for (var i = 0; i < json['supported_display_types'].length; i++) {
-            console.log(json['supported_display_types'][i]);
-            if(json['supported_display_types'][i] == ignore)continue;
-            if(json['supported_display_types'][i] == 'table'){
-                buttons += ChatDrawer.getTableButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'column'){
-                buttons += ChatDrawer.getColumnChartButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'bar'){
-                buttons += ChatDrawer.getBarChartButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'pie'){
+ChatDrawer.putMessage = function(value){
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
+    var responseLoadingContainer = document.createElement('div');
+    var responseLoading = document.createElement('div');
 
-            }
-            if(json['supported_display_types'][i] == 'line' && json['display_type'] != 'pivot_column'){
-                buttons += ChatDrawer.getLineChartButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'date_pivot' || json['supported_display_types'][i] == 'pivot_column'){
-                buttons += ChatDrawer.getPivotTableButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'heatmap'){
-                buttons += ChatDrawer.getHeatmapChartButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'bubble'){
-                buttons += ChatDrawer.getBubbleChartButton(idRequest);
-            }
-            if(json['supported_display_types'][i] == 'stacked_column'){
-                buttons += ChatDrawer.getStackedColumnChartButton(idRequest);
-            }
-        }
-        return buttons;
+    responseLoadingContainer.classList.add('response-loading-container');
+    responseLoading.classList.add('response-loading');
+    for (var i = 0; i <= 3; i++) {
+        responseLoading.appendChild(document.createElement('div'));
     }
 
-    ChatDrawer.getTableButton = function(idRequest){
-        return `
-        <button class="chata-toolbar-btn table" data-tip="Table" data-id="${idRequest}">
-            ${TABLE_ICON}
-        </button>`;
+    responseLoadingContainer.appendChild(responseLoading);
+
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('request');
+    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.textContent = value;
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.checkMaxMessages();
+    return responseLoadingContainer;
+}
+
+// d3.tip
+// Copyright (c) 2013 Justin Palmer
+// ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
+// Removal of ES6 for D3 v4 Adaption Copyright (c) 2016 David Gotz
+//
+// Tooltips for d3.js SVG visualizations
+
+d3.functor = function functor(v) {
+  return typeof v === "function" ? v : function() {
+    return v;
+  };
+};
+
+d3.tip = function() {
+
+  var direction = d3_tip_direction,
+      offset    = d3_tip_offset,
+      html      = d3_tip_html,
+      node      = initNode(),
+      svg       = null,
+      point     = null,
+      target    = null
+
+  function tip(vis) {
+    svg = getSVGNode(vis)
+    point = svg.createSVGPoint()
+    document.body.appendChild(node)
+  }
+
+  // Public - show the tooltip on the screen
+  //
+  // Returns a tip
+  tip.show = function() {
+    var args = Array.prototype.slice.call(arguments)
+    if(args[args.length - 1] instanceof SVGElement) target = args.pop()
+
+    var content = html.apply(this, args),
+        poffset = offset.apply(this, args),
+        dir     = direction.apply(this, args),
+        nodel   = getNodeEl(),
+        i       = directions.length,
+        coords,
+        scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
+        scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
+
+    nodel.html(content)
+      .style('position', 'absolute')
+      .style('opacity', 1)
+      .style('pointer-events', 'all')
+
+    while(i--) nodel.classed(directions[i], false)
+    coords = direction_callbacks[dir].apply(this)
+    nodel.classed(dir, true)
+      .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
+      .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
+
+    return tip
+  }
+
+  // Public - hide the tooltip
+  //
+  // Returns a tip
+  tip.hide = function() {
+    var nodel = getNodeEl()
+    nodel
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+    return tip
+  }
+
+  // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
+  //
+  // n - name of the attribute
+  // v - value of the attribute
+  //
+  // Returns tip or attribute value
+  tip.attr = function(n, v) {
+    if (arguments.length < 2 && typeof n === 'string') {
+      return getNodeEl().attr(n)
+    } else {
+      var args =  Array.prototype.slice.call(arguments)
+      d3.selection.prototype.attr.apply(getNodeEl(), args)
     }
 
-    ChatDrawer.getPivotTableButton = function(idRequest){
-        return `
-        <button class="chata-toolbar-btn pivot_table" data-tip="Pivot Table" data-id="${idRequest}">
-            ${PIVOT_ICON}
-        </button>
-        `;
+    return tip
+  }
+
+  // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
+  //
+  // n - name of the property
+  // v - value of the property
+  //
+  // Returns tip or style property value
+  tip.style = function(n, v) {
+    // debugger;
+    if (arguments.length < 2 && typeof n === 'string') {
+      return getNodeEl().style(n)
+    } else {
+      var args = Array.prototype.slice.call(arguments);
+      if (args.length === 1) {
+        var styles = args[0];
+        Object.keys(styles).forEach(function(key) {
+          return d3.selection.prototype.style.apply(getNodeEl(), [key, styles[key]]);
+        });
+      }
     }
 
-    ChatDrawer.getColumnChartButton = function(idRequest){
-        return `
-        <button class="chata-toolbar-btn column_chart" data-tip="Column Chart" data-id="${idRequest}">
-            ${COLUMN_CHART_ICON}
-        </button>
-        `;
+    return tip
+  }
+
+  // Public: Set or get the direction of the tooltip
+  //
+  // v - One of n(north), s(south), e(east), or w(west), nw(northwest),
+  //     sw(southwest), ne(northeast) or se(southeast)
+  //
+  // Returns tip or direction
+  tip.direction = function(v) {
+    if (!arguments.length) return direction
+    direction = v == null ? v : d3.functor(v)
+
+    return tip
+  }
+
+  // Public: Sets or gets the offset of the tip
+  //
+  // v - Array of [x, y] offset
+  //
+  // Returns offset or
+  tip.offset = function(v) {
+    if (!arguments.length) return offset
+    offset = v == null ? v : d3.functor(v)
+
+    return tip
+  }
+
+  // Public: sets or gets the html value of the tooltip
+  //
+  // v - String value of the tip
+  //
+  // Returns html value or tip
+  tip.html = function(v) {
+    if (!arguments.length) return html
+    html = v == null ? v : d3.functor(v)
+
+    return tip
+  }
+
+  // Public: destroys the tooltip and removes it from the DOM
+  //
+  // Returns a tip
+  tip.destroy = function() {
+    if(node) {
+      getNodeEl().remove();
+      node = null;
+    }
+    return tip;
+  }
+
+  function d3_tip_direction() { return 'n' }
+  function d3_tip_offset() { return [0, 0] }
+  function d3_tip_html() { return ' ' }
+
+  var direction_callbacks = {
+    n:  direction_n,
+    s:  direction_s,
+    e:  direction_e,
+    w:  direction_w,
+    nw: direction_nw,
+    ne: direction_ne,
+    sw: direction_sw,
+    se: direction_se
+  };
+
+  var directions = Object.keys(direction_callbacks);
+
+  function direction_n() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.n.y - node.offsetHeight,
+      left: bbox.n.x - node.offsetWidth / 2
+    }
+  }
+
+  function direction_s() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.s.y,
+      left: bbox.s.x - node.offsetWidth / 2
+    }
+  }
+
+  function direction_e() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.e.y - node.offsetHeight / 2,
+      left: bbox.e.x
+    }
+  }
+
+  function direction_w() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.w.y - node.offsetHeight / 2,
+      left: bbox.w.x - node.offsetWidth
+    }
+  }
+
+  function direction_nw() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.nw.y - node.offsetHeight,
+      left: bbox.nw.x - node.offsetWidth
+    }
+  }
+
+  function direction_ne() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.ne.y - node.offsetHeight,
+      left: bbox.ne.x
+    }
+  }
+
+  function direction_sw() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.sw.y,
+      left: bbox.sw.x - node.offsetWidth
+    }
+  }
+
+  function direction_se() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.se.y,
+      left: bbox.e.x
+    }
+  }
+
+  function initNode() {
+    var node = d3.select(document.createElement('div'))
+    node
+      .style('position', 'absolute')
+      .style('top', 0)
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+      .style('box-sizing', 'border-box')
+
+    return node.node()
+  }
+
+  function getSVGNode(el) {
+    el = el.node()
+    if(el.tagName.toLowerCase() === 'svg')
+      return el
+
+    return el.ownerSVGElement
+  }
+
+  function getNodeEl() {
+    if(node === null) {
+      node = initNode();
+      // re-add node to DOM
+      document.body.appendChild(node);
+    };
+    return d3.select(node);
+  }
+
+  // Private - gets the screen coordinates of a shape
+  //
+  // Given a shape on the screen, will return an SVGPoint for the directions
+  // n(north), s(south), e(east), w(west), ne(northeast), se(southeast), nw(northwest),
+  // sw(southwest).
+  //
+  //    +-+-+
+  //    |   |
+  //    +   +
+  //    |   |
+  //    +-+-+
+  //
+  // Returns an Object {n, s, e, w, nw, sw, ne, se}
+  function getScreenBBox() {
+    var targetel   = target || d3.event.target;
+
+    while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
+        targetel = targetel.parentNode;
     }
 
-    ChatDrawer.getBarChartButton = function(idRequest){
-        return `
-        <button class="chata-toolbar-btn bar_chart" data-tip="Bar Chart" data-id="${idRequest}">
-            ${BAR_CHART_ICON}
-        </button>
-        `;
-    }
+    var bbox       = {},
+        matrix     = targetel.getScreenCTM(),
+        tbbox      = targetel.getBBox(),
+        width      = tbbox.width,
+        height     = tbbox.height,
+        x          = tbbox.x,
+        y          = tbbox.y
 
-    ChatDrawer.getLineChartButton = function(idRequest) {
-        return `
-        <button class="chata-toolbar-btn line_chart" data-tip="Line Chart" data-id="${idRequest}">
-            ${LINE_CHART_ICON}
-        </button>
-        `;
-    }
+    point.x = x
+    point.y = y
+    bbox.nw = point.matrixTransform(matrix)
+    point.x += width
+    bbox.ne = point.matrixTransform(matrix)
+    point.y += height
+    bbox.se = point.matrixTransform(matrix)
+    point.x -= width
+    bbox.sw = point.matrixTransform(matrix)
+    point.y -= height / 2
+    bbox.w  = point.matrixTransform(matrix)
+    point.x += width
+    bbox.e = point.matrixTransform(matrix)
+    point.x -= width / 2
+    point.y -= height / 2
+    bbox.n = point.matrixTransform(matrix)
+    point.y += height
+    bbox.s = point.matrixTransform(matrix)
 
-    ChatDrawer.getHeatmapChartButton = function(idRequest){
-        return `
-        <button class="chata-toolbar-btn heatmap" data-tip="Heatmap" data-id="${idRequest}">
-            ${HEATMAP_ICON}
-        </button>
-        `;
-    }
+    return bbox
+  }
 
-    ChatDrawer.getBubbleChartButton = function(idRequest){
-        return `
-        <button class="chata-toolbar-btn bubble_chart" data-tip="Bubble Chart" data-id="${idRequest}">
-            ${BUBBLE_CHART_ICON}
-        </button>
-        `;
-    }
+  return tip
+};
 
-    ChatDrawer.getStackedColumnChartButton = function(idRequest){
-        return `<button class="chata-toolbar-btn stacked_column_chart" data-tip="Column Chart" data-id="${idRequest}">
-            ${STACKED_COLUMN_CHART_ICON}
-        </button>`;
-    }
-
-    ChatDrawer.putTableResponse = function(jsonResponse){
-        var data = csvTo2dArray(jsonResponse['data']);
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
-        var responseContentContainer = document.createElement('div');
-        var tableContainer = document.createElement('div');
-        var table = document.createElement('table');
-        var header = document.createElement('tr');
-        var groupField = getGroupableField(jsonResponse);
-        containerMessage.classList.add('chat-single-message-container');
-        containerMessage.classList.add('response');
-        messageBubble.classList.add('chat-message-bubble');
-        messageBubble.classList.add('full-width');
-        var idRequest = uuidv4();
-        ChatDrawer.responses[idRequest] = jsonResponse;
-        var supportedDisplayTypes = ChatDrawer.getSupportedDisplayTypes(idRequest, 'table');
-        var actions = ChatDrawer.getActionButtons(idRequest, 'csvCopy');
-        var toolbar = '';
-        if(supportedDisplayTypes != ''){
-            toolbar += `
-            <div class="chat-message-toolbar left">
-                ${supportedDisplayTypes}
-            </div>
-            `
-        }
-        toolbar += `
-            <div class="chat-message-toolbar right">
-                ${actions}
-            </div>`;
-
-        messageBubble.innerHTML = toolbar;
-        tableContainer.classList.add('chata-table-container');
-        responseContentContainer.classList.add('chata-response-content-container');
-        table.classList.add('table-response');
-        table.setAttribute('data-componentid', idRequest);
-        var dataLines = csvTo2dArray(jsonResponse['data']);
-
-        for (var i = 0; i < jsonResponse['columns'].length; i++) {
-            var colName = formatColumnName(jsonResponse['columns'][i]['name']);
-            var th = document.createElement('th');
-            var arrow = document.createElement('div');
-            var col = document .createElement('div');
-            col.textContent = colName;
-            arrow.classList.add('tabulator-arrow');
-            arrow.classList.add('up');
-            col.classList.add('column');
-            col.setAttribute('data-type', jsonResponse['columns'][i]['type']);
-            col.setAttribute('data-index', i);
-
-            th.appendChild(col);
-            th.appendChild(arrow);
-            header.appendChild(th);
-        }
-        table.appendChild(header);
-
-        for (var i = 0; i < dataLines.length; i++) {
-            var data = dataLines[i];
-            var tr = document.createElement('tr');
-            for (var x = 0; x < data.length; x++) {
-                value = formatData(data[x], jsonResponse['columns'][x]['type']);
-                var td = document.createElement('td');
-                td.textContent = value;
-                tr.appendChild(td);
-            }
-            if(typeof groupField !== 'number'){
-                tr.setAttribute('data-indexrow', i);
-            }
-            table.appendChild(tr);
-        }
-        tableContainer.appendChild(table);
-        responseContentContainer.appendChild(tableContainer);
-        messageBubble.appendChild(responseContentContainer);
-        containerMessage.appendChild(messageBubble);
-        ChatDrawer.drawerContent.appendChild(containerMessage);
-        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-    }
-
-    ChatDrawer.createSuggestions = function(responseContentContainer, data, classButton='chata-suggestion-btn'){
-        for (var i = 0; i < data.length; i++) {
-            var div = document.createElement('div');
-            var button = document.createElement('button');
-            button.classList.add(classButton);
-            button.textContent = data[i];
-            div.appendChild(button);
-            responseContentContainer.appendChild(div);
-        }
-    }
-
-    ChatDrawer.putSuggestionResponse = function(jsonResponse, query){
-        var data = csvTo2dArray(jsonResponse['data']);
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
-        var responseContentContainer = document.createElement('div');
-        containerMessage.classList.add('chat-single-message-container');
-        containerMessage.classList.add('response');
-        messageBubble.classList.add('chat-message-bubble');
-        messageBubble.classList.add('full-width');
-        responseContentContainer.classList.add('chata-response-content-container');
-        responseContentContainer.innerHTML = `<div>I'm not sure what you mean by <strong>"${query}"</strong>. Did you mean:</div>`;
-        ChatDrawer.createSuggestions(responseContentContainer, data);
-        messageBubble.appendChild(responseContentContainer);
-        containerMessage.appendChild(messageBubble);
-        ChatDrawer.drawerContent.appendChild(containerMessage);
-        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-    }
-
-    ChatDrawer.checkMaxMessages = function(){
-        if(ChatDrawer.options.maxMessages > 2){
-            var messages = ChatDrawer.drawerContent.querySelectorAll('.chat-single-message-container');
-            if(messages.length > ChatDrawer.options.maxMessages){
-                messages[1].parentNode.removeChild(messages[1]);
-            }
-        }
-    }
-
-    ChatDrawer.putMessage = function(value){
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
-        var responseLoadingContainer = document.createElement('div');
-        var responseLoading = document.createElement('div');
-
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
-        for (var i = 0; i <= 3; i++) {
-            responseLoading.appendChild(document.createElement('div'));
-        }
-
-        responseLoadingContainer.appendChild(responseLoading);
-
-        containerMessage.classList.add('chat-single-message-container');
-        containerMessage.classList.add('request');
-        messageBubble.classList.add('chat-message-bubble');
-        messageBubble.textContent = value;
-        containerMessage.appendChild(messageBubble);
-        ChatDrawer.drawerContent.appendChild(containerMessage);
-        ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
-        ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
-        ChatDrawer.checkMaxMessages();
-        return responseLoadingContainer;
-    }
-
-})(document, window, ChatDrawer)
+return ChatDrawer;
+}));
