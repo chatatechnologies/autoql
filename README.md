@@ -149,7 +149,7 @@ document.getElementById('my-response').append(responseRenderer);
 
 **showHandle**: Whether or not to show the handle. If you do not want to show the handle, you can use your own custom button and control the drawer with the isVisible prop.
 
-**handleStyles**: Specify custom css styles for the handle. Must pass in a valid jsx css style object (ie. { backgroundColor: '#000000' }).
+**handleStyles**: Specify custom css styles for the handle. (ie. { 'background-color': '#000000' }).
 
 **clearOnClose**: Whether or not to clear all messages when the drawer is closed. The intro message will still show when you open the drawer again.
 
