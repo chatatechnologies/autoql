@@ -17186,6 +17186,327 @@ Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
 
+// d3.tip
+// Copyright (c) 2013 Justin Palmer
+// ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
+// Removal of ES6 for D3 v4 Adaption Copyright (c) 2016 David Gotz
+//
+// Tooltips for d3.js SVG visualizations
+
+d3.functor = function functor(v) {
+  return typeof v === "function" ? v : function() {
+    return v;
+  };
+};
+
+d3.tip = function() {
+
+  var direction = d3_tip_direction,
+      offset    = d3_tip_offset,
+      html      = d3_tip_html,
+      node      = initNode(),
+      svg       = null,
+      point     = null,
+      target    = null
+
+  function tip(vis) {
+    svg = getSVGNode(vis)
+    point = svg.createSVGPoint()
+    document.body.appendChild(node)
+  }
+
+  // Public - show the tooltip on the screen
+  //
+  // Returns a tip
+  tip.show = function() {
+    var args = Array.prototype.slice.call(arguments)
+    if(args[args.length - 1] instanceof SVGElement) target = args.pop()
+
+    var content = html.apply(this, args),
+        poffset = offset.apply(this, args),
+        dir     = direction.apply(this, args),
+        nodel   = getNodeEl(),
+        i       = directions.length,
+        coords,
+        scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
+        scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
+
+    nodel.html(content)
+      .style('position', 'absolute')
+      .style('opacity', 1)
+      .style('pointer-events', 'all')
+
+    while(i--) nodel.classed(directions[i], false)
+    coords = direction_callbacks[dir].apply(this)
+    nodel.classed(dir, true)
+      .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
+      .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
+
+    return tip
+  }
+
+  // Public - hide the tooltip
+  //
+  // Returns a tip
+  tip.hide = function() {
+    var nodel = getNodeEl()
+    nodel
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+    return tip
+  }
+
+  // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
+  //
+  // n - name of the attribute
+  // v - value of the attribute
+  //
+  // Returns tip or attribute value
+  tip.attr = function(n, v) {
+    if (arguments.length < 2 && typeof n === 'string') {
+      return getNodeEl().attr(n)
+    } else {
+      var args =  Array.prototype.slice.call(arguments)
+      d3.selection.prototype.attr.apply(getNodeEl(), args)
+    }
+
+    return tip
+  }
+
+  // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
+  //
+  // n - name of the property
+  // v - value of the property
+  //
+  // Returns tip or style property value
+  tip.style = function(n, v) {
+    // debugger;
+    if (arguments.length < 2 && typeof n === 'string') {
+      return getNodeEl().style(n)
+    } else {
+      var args = Array.prototype.slice.call(arguments);
+      if (args.length === 1) {
+        var styles = args[0];
+        Object.keys(styles).forEach(function(key) {
+          return d3.selection.prototype.style.apply(getNodeEl(), [key, styles[key]]);
+        });
+      }
+    }
+
+    return tip
+  }
+
+  // Public: Set or get the direction of the tooltip
+  //
+  // v - One of n(north), s(south), e(east), or w(west), nw(northwest),
+  //     sw(southwest), ne(northeast) or se(southeast)
+  //
+  // Returns tip or direction
+  tip.direction = function(v) {
+    if (!arguments.length) return direction
+    direction = v == null ? v : d3.functor(v)
+
+    return tip
+  }
+
+  // Public: Sets or gets the offset of the tip
+  //
+  // v - Array of [x, y] offset
+  //
+  // Returns offset or
+  tip.offset = function(v) {
+    if (!arguments.length) return offset
+    offset = v == null ? v : d3.functor(v)
+
+    return tip
+  }
+
+  // Public: sets or gets the html value of the tooltip
+  //
+  // v - String value of the tip
+  //
+  // Returns html value or tip
+  tip.html = function(v) {
+    if (!arguments.length) return html
+    html = v == null ? v : d3.functor(v)
+
+    return tip
+  }
+
+  // Public: destroys the tooltip and removes it from the DOM
+  //
+  // Returns a tip
+  tip.destroy = function() {
+    if(node) {
+      getNodeEl().remove();
+      node = null;
+    }
+    return tip;
+  }
+
+  function d3_tip_direction() { return 'n' }
+  function d3_tip_offset() { return [0, 0] }
+  function d3_tip_html() { return ' ' }
+
+  var direction_callbacks = {
+    n:  direction_n,
+    s:  direction_s,
+    e:  direction_e,
+    w:  direction_w,
+    nw: direction_nw,
+    ne: direction_ne,
+    sw: direction_sw,
+    se: direction_se
+  };
+
+  var directions = Object.keys(direction_callbacks);
+
+  function direction_n() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.n.y - node.offsetHeight,
+      left: bbox.n.x - node.offsetWidth / 2
+    }
+  }
+
+  function direction_s() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.s.y,
+      left: bbox.s.x - node.offsetWidth / 2
+    }
+  }
+
+  function direction_e() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.e.y - node.offsetHeight / 2,
+      left: bbox.e.x
+    }
+  }
+
+  function direction_w() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.w.y - node.offsetHeight / 2,
+      left: bbox.w.x - node.offsetWidth
+    }
+  }
+
+  function direction_nw() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.nw.y - node.offsetHeight,
+      left: bbox.nw.x - node.offsetWidth
+    }
+  }
+
+  function direction_ne() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.ne.y - node.offsetHeight,
+      left: bbox.ne.x
+    }
+  }
+
+  function direction_sw() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.sw.y,
+      left: bbox.sw.x - node.offsetWidth
+    }
+  }
+
+  function direction_se() {
+    var bbox = getScreenBBox()
+    return {
+      top:  bbox.se.y,
+      left: bbox.e.x
+    }
+  }
+
+  function initNode() {
+    var node = d3.select(document.createElement('div'))
+    node
+      .style('position', 'absolute')
+      .style('top', 0)
+      .style('opacity', 0)
+      .style('pointer-events', 'none')
+      .style('box-sizing', 'border-box')
+
+    return node.node()
+  }
+
+  function getSVGNode(el) {
+    el = el.node()
+    if(el.tagName.toLowerCase() === 'svg')
+      return el
+
+    return el.ownerSVGElement
+  }
+
+  function getNodeEl() {
+    if(node === null) {
+      node = initNode();
+      // re-add node to DOM
+      document.body.appendChild(node);
+    };
+    return d3.select(node);
+  }
+
+  // Private - gets the screen coordinates of a shape
+  //
+  // Given a shape on the screen, will return an SVGPoint for the directions
+  // n(north), s(south), e(east), w(west), ne(northeast), se(southeast), nw(northwest),
+  // sw(southwest).
+  //
+  //    +-+-+
+  //    |   |
+  //    +   +
+  //    |   |
+  //    +-+-+
+  //
+  // Returns an Object {n, s, e, w, nw, sw, ne, se}
+  function getScreenBBox() {
+    var targetel   = target || d3.event.target;
+
+    while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
+        targetel = targetel.parentNode;
+    }
+
+    var bbox       = {},
+        matrix     = targetel.getScreenCTM(),
+        tbbox      = targetel.getBBox(),
+        width      = tbbox.width,
+        height     = tbbox.height,
+        x          = tbbox.x,
+        y          = tbbox.y
+
+    point.x = x
+    point.y = y
+    bbox.nw = point.matrixTransform(matrix)
+    point.x += width
+    bbox.ne = point.matrixTransform(matrix)
+    point.y += height
+    bbox.se = point.matrixTransform(matrix)
+    point.x -= width
+    bbox.sw = point.matrixTransform(matrix)
+    point.y -= height / 2
+    bbox.w  = point.matrixTransform(matrix)
+    point.x += width
+    bbox.e = point.matrixTransform(matrix)
+    point.x -= width / 2
+    point.y -= height / 2
+    bbox.n = point.matrixTransform(matrix)
+    point.y += height
+    bbox.s = point.matrixTransform(matrix)
+
+    return bbox
+  }
+
+  return tip
+};
+
 const CLIPBOARD_ICON = `
 <svg stroke="currentColor" class="clipboard" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path class="clipboard" d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z">
@@ -17915,6 +18236,22 @@ function formatDataToBarChart(json){
     return [values, hasNegativeValues];
 }
 
+function getSupportedDisplayTypesArray(){
+    return [
+        'table',
+        'date_pivot',
+        'pivot_column',
+        'line',
+        'bar',
+        'column',
+        'heatmap',
+        'bubble',
+        'column_chart',
+        'stacked_bar',
+        'stacked_column'
+    ];
+}
+
 function createSafetynetContent(suggestionArray, context='ChatDrawer'){
     const message = `
     Before I can try to find your answer,
@@ -18125,7 +18462,7 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
     return table;
 }
 
-function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fillColor='rgba(221, 106, 106)', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18136,7 +18473,7 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, from
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -18258,8 +18595,9 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, from
     .call(yAxis);
 
     var colorScale = d3.scaleLinear()
-    .range(['rgba(40,168,224,0)', 'rgba(40,168,224,1)'])
+    .range([0, 1])
     .domain([0, d3.max(data, function(d) { return d.value; })]);
+
 
     svg.selectAll()
     .data(data, function(d) {
@@ -18298,9 +18636,10 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, from
             return y(d.labelY.slice(0, 18));
         }
     })
-    .attr("width", x.bandwidth() )
-    .attr("height", y.bandwidth() )
-    .attr("fill", function(d) { return colorScale(d.value)} )
+    .attr("width", x.bandwidth())
+    .attr("height", y.bandwidth())
+    .attr("fill", fillColor)
+    .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
     .attr('class', 'square')
     .on('mouseover', function(d) {
         if(renderTooltips){
@@ -18315,7 +18654,7 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, from
     });
 }
 
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18326,7 +18665,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -18489,7 +18828,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
         }
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr("opacity", "0.7")
     .attr('class', 'circle')
     .on('mouseover', function(d) {
@@ -18505,7 +18844,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
     });
 }
 
-function createBarChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBarChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 40, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18516,7 +18855,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -18630,7 +18969,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
     })
     .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
     .attr("height", y.bandwidth())
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
@@ -18647,7 +18986,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
     });
 }
 
-function createColumnChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createColumnChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18658,7 +18997,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fromC
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -18775,7 +19114,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fromC
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
     .attr("width", x.bandwidth() )
     .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
@@ -18791,7 +19130,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fromC
     });
 }
 
-function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -18802,7 +19141,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
 
     component.innerHTML = '';
@@ -18896,7 +19235,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
     svg.append("path")
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", "#28a8e0")
+    .attr("stroke", fillColor)
     .attr("stroke-width", 1)
     .attr('opacity', '0.7')
     .attr("d", d3.line()
@@ -18935,7 +19274,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
      } )
     .attr("cy", function(d) { return y(d.value) } )
     .attr("r", 3)
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr('class', 'line-dot')
     .on('mouseover', function(d) {
         if(renderTooltips){
@@ -18950,8 +19289,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
     });
 }
 
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -18966,7 +19304,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -19152,8 +19490,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
         })
 }
 
-function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
+function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -19168,15 +19505,15 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
-    const barWidth = chartWidth / groups.length;
-    const interval = Math.ceil((groups.length * 16) / width);
+    const barHeight = height / groups.length;
+    const interval = Math.ceil((groups.length * 16) / height);
     var yTickValues = [];
-    if (barWidth < 16) {
+    if (barHeight < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
                 yTickValues.push(element);
@@ -19228,7 +19565,6 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         }
         return sum;
     });
-    console.log(maxValue);
 
     var x = d3.scaleLinear()
     .domain([0, maxValue])
@@ -19256,14 +19592,14 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     }
 
     svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(yAxis);
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
     .range(colors)
 
     svg.append("g")
-    .call(d3.axisLeft(y)).select(".domain").remove();
+    .call(yAxis).select(".domain").remove();
 
     svg.append("g")
     .attr("class", "grid")
@@ -19373,6 +19709,10 @@ function createResponseRenderer(options={}){
     }
     responseRenderer.classList.add('chata-response-content-container');
     responseRenderer.classList.add('renderer-container');
+    responseRenderer.style.setProperty(
+        '--chata-drawer-font-family',
+        responseRenderer.options.fontFamily
+    )
     responseRenderer.setAttribute('data-componentid', uuidv4());
     var applyTableStyles = function(){
         css = '';
@@ -19413,7 +19753,8 @@ function getChatBar(options){
         autocompleteStyles: {},
         enableSafetyNet: true,
         enableDrilldowns: true,
-        demo: false
+        demo: false,
+        fontFamily: 'sans-serif'
     }
 
     for (var [key, value] of Object.entries(options)) {
@@ -19435,6 +19776,11 @@ function getChatBar(options){
         <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="" ${disabled}>
     </div>
     `;
+
+    chataBarContainer.style.setProperty(
+        '--chata-drawer-font-family',
+        chataBarContainer.options.fontFamily
+    )
 
     chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
     chataBarContainer.bind = function(responseRenderer){
@@ -19498,100 +19844,168 @@ function getChatBar(options){
                     if(chataBarContainer.options.showLoadingDots){
                         parent.removeChild(responseLoadingContainer);
                     }
-                    switch(jsonResponse['display_type']){
-                        case 'suggestion':
-                            if(responseRenderer.options.supportsSuggestions){
-                                var data = csvTo2dArray(jsonResponse['data']);
-                                responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
-                                ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
-                            }else{
-                                responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
-                            }
-                        break;
-                        case 'table':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            if(jsonResponse['columns'].length == 1){
-                                var data = jsonResponse['data'];
-                                responseRenderer.innerHTML = `<div>${data}</div>`;
-                            }else{
-                                var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                    if(jsonResponse['supported_display_types'].includes(responseRenderer.options.displayType)){
+                        displayType = responseRenderer.options.displayType;
+                    }else{
+                        displayType = 'table';
+                    }
+                    if(jsonResponse['display_type'] == 'suggestion' &&
+                        responseRenderer.options.supportsSuggestions){
+                        var data = csvTo2dArray(jsonResponse['data']);
+                        responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
+                        ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
+                    }else{
+                        switch(displayType){
+                            case 'table':
+                                var uuid = uuidv4();
+                                ChatDrawer.responses[uuid] = jsonResponse;
+                                var div = document.createElement('div');
+                                div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
+                                responseRenderer.appendChild(div);
+                                if(jsonResponse['columns'].length == 1){
+                                    var data = jsonResponse['data'];
+                                    responseRenderer.innerHTML = `<div>${data}</div>`;
+                                }else{
+                                    var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                                    table.classList.add('renderer-table');
+                                }
+                            break;
+                            case 'date_pivot':
+                                var uuid = uuidv4();
+                                ChatDrawer.responses[uuid] = jsonResponse;
+                                var div = document.createElement('div');
+                                div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
+                                responseRenderer.appendChild(div);
+                                var pivotArray = getDatePivotArray(jsonResponse);
+                                var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                                 table.classList.add('renderer-table');
-                            }
-                        break;
-                        case 'date_pivot':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            var pivotArray = getDatePivotArray(jsonResponse);
-                            var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
-                            table.classList.add('renderer-table');
-                        break;
-                        case 'pivot_column':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            var pivotArray = getPivotColumnArray(jsonResponse);
-                            var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
-                            table.classList.add('renderer-table');
-                        break;
-                        case 'line':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var hasNegativeValues = values[1];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            createLineChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'bar':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var hasNegativeValues = values[1];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            createBarChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'column':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var hasNegativeValues = values[1];
-                            createColumnChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'heatmap':
-                            var values = formatDataToHeatmap(jsonResponse);
-                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
-                            createHeatmap(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'bubble':
-                            var values = formatDataToHeatmap(jsonResponse);
-                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
-                            createBubbleChart(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'help':
-                            responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
-                        break;
-                        default:
-                            responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
+                            break;
+                            case 'pivot_column':
+                                var uuid = uuidv4();
+                                ChatDrawer.responses[uuid] = jsonResponse;
+                                var div = document.createElement('div');
+                                div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
+                                responseRenderer.appendChild(div);
+                                var pivotArray = getPivotColumnArray(jsonResponse);
+                                var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
+                                table.classList.add('renderer-table');
+                            break;
+                            case 'line':
+                                var values = formatDataToBarChart(jsonResponse);
+                                var grouped = values[0];
+                                var hasNegativeValues = values[1];
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                createLineChart(
+                                    responseRenderer, grouped, col1,
+                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'bar':
+                                var values = formatDataToBarChart(jsonResponse);
+                                var grouped = values[0];
+                                var hasNegativeValues = values[1];
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                createBarChart(
+                                    responseRenderer, grouped, col1,
+                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'column':
+                                var values = formatDataToBarChart(jsonResponse);
+                                var grouped = values[0];
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var hasNegativeValues = values[1];
+                                createColumnChart(
+                                    responseRenderer, grouped, col1,
+                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer',
+                                    responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'heatmap':
+                                var values = formatDataToHeatmap(jsonResponse);
+                                var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                                var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                createHeatmap(
+                                    responseRenderer, labelsX, labelsY,
+                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'bubble':
+                                var values = formatDataToHeatmap(jsonResponse);
+                                var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                                var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                createBubbleChart(
+                                    responseRenderer, labelsX, labelsY,
+                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'help':
+                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
+                            break;
+                            case 'stacked_bar':
+                                var data = csvTo2dArray(jsonResponse['data']);
+                                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                                groups = groups.sort().reverse();
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i][1] = formatData(data[i][1], jsonResponse['columns'][1]['type']);
+                                }
+                                for (var i = 0; i < groups.length; i++) {
+                                    groups[i] = formatData(groups[i], jsonResponse['columns'][1]['type'])
+                                }
+                                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['columns'], data, groups);
+                                createStackedBarChart(
+                                    responseRenderer, dataGrouped, groups,
+                                    subgroups, col1, col2, col3,
+                                    responseRenderer.options.chartColors, false,
+                                    'data-chartindex', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'stacked_column':
+                                var data = csvTo2dArray(jsonResponse['data']);
+                                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                                groups = groups.sort().reverse();
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i][1] = formatData(data[i][1], jsonResponse['columns'][1]['type']);
+                                }
+                                for (var i = 0; i < groups.length; i++) {
+                                    groups[i] = formatData(groups[i], jsonResponse['columns'][1]['type'])
+                                }
+                                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['columns'], data, groups);
+                                createStackedColumnChart(
+                                    responseRenderer, dataGrouped, groups,
+                                    subgroups, col1, col2, col3,
+                                    responseRenderer.options.chartColors, false,
+                                    'data-chartindex', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            default:
+                                responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
+                        }
                     }
                     chataBarContainer.options.onResponseCallback();
                 });
@@ -19633,6 +20047,10 @@ var ChatDrawer = {
         enableSafetyNet: true,
         enableDrilldowns: true,
         demo: false,
+        currencyCode: 'USD',
+        languageCode: 'en-US',
+        fontFamily: 'sans-serif',
+        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
         isRecordVoiceActive: false
     },
     responses: [],
@@ -19678,6 +20096,10 @@ ChatDrawer.init = function(elem, options){
             themeStyles[property],
         );
     }
+    ChatDrawer.rootElem.style.setProperty(
+        '--chata-drawer-font-family',
+        ChatDrawer.options['fontFamily']
+    );
 
     ChatDrawer.speechToText.onresult = (event) => {
         let interimTranscript = '';
@@ -20005,7 +20427,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, col1, col2, hasNegativeValues);
+                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
             }
             if(e.target.classList.contains('stacked_column_chart')){
                 if(e.target.tagName == 'svg'){
@@ -20032,7 +20454,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options.chartColors);
             }
             if(e.target.classList.contains('stacked_bar_chart')){
                 if(e.target.tagName == 'svg'){
@@ -20059,7 +20481,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options.chartColors);
             }
             if(e.target.classList.contains('table')){
                 if(e.target.tagName == 'svg'){
@@ -20091,7 +20513,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
 
-                createBarChart(component, grouped, col1, col2, hasNegativeValues);
+                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'bar');
 
             }
@@ -20112,7 +20534,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
 
-                createLineChart(component, grouped, col1, col2, hasNegativeValues);
+                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'line');
             }
 
@@ -20138,7 +20560,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
 
-                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
+                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'heatmap');
             }
 
@@ -20164,7 +20586,7 @@ ChatDrawer.registerEvents = function(){
                 var col3 = formatColumnName(json['columns'][2]['name']);
 
 
-                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3);
+                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'bubble');
             }
             if(e.target.classList.contains('export_png')){
@@ -20687,6 +21109,10 @@ ChatDrawer.getActionButtons = function(idRequest, type){
     }
 }
 
+ChatDrawer.getSupportedDisplayTypesArray = function(){
+    return getSupportedDisplayTypesArray();
+}
+
 ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var json = ChatDrawer.responses[idRequest];
     var buttons = '';
@@ -20934,327 +21360,6 @@ ChatDrawer.putMessage = function(value){
     ChatDrawer.checkMaxMessages();
     return responseLoadingContainer;
 }
-
-// d3.tip
-// Copyright (c) 2013 Justin Palmer
-// ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
-// Removal of ES6 for D3 v4 Adaption Copyright (c) 2016 David Gotz
-//
-// Tooltips for d3.js SVG visualizations
-
-d3.functor = function functor(v) {
-  return typeof v === "function" ? v : function() {
-    return v;
-  };
-};
-
-d3.tip = function() {
-
-  var direction = d3_tip_direction,
-      offset    = d3_tip_offset,
-      html      = d3_tip_html,
-      node      = initNode(),
-      svg       = null,
-      point     = null,
-      target    = null
-
-  function tip(vis) {
-    svg = getSVGNode(vis)
-    point = svg.createSVGPoint()
-    document.body.appendChild(node)
-  }
-
-  // Public - show the tooltip on the screen
-  //
-  // Returns a tip
-  tip.show = function() {
-    var args = Array.prototype.slice.call(arguments)
-    if(args[args.length - 1] instanceof SVGElement) target = args.pop()
-
-    var content = html.apply(this, args),
-        poffset = offset.apply(this, args),
-        dir     = direction.apply(this, args),
-        nodel   = getNodeEl(),
-        i       = directions.length,
-        coords,
-        scrollTop  = document.documentElement.scrollTop || document.body.scrollTop,
-        scrollLeft = document.documentElement.scrollLeft || document.body.scrollLeft
-
-    nodel.html(content)
-      .style('position', 'absolute')
-      .style('opacity', 1)
-      .style('pointer-events', 'all')
-
-    while(i--) nodel.classed(directions[i], false)
-    coords = direction_callbacks[dir].apply(this)
-    nodel.classed(dir, true)
-      .style('top', (coords.top +  poffset[0]) + scrollTop + 'px')
-      .style('left', (coords.left + poffset[1]) + scrollLeft + 'px')
-
-    return tip
-  }
-
-  // Public - hide the tooltip
-  //
-  // Returns a tip
-  tip.hide = function() {
-    var nodel = getNodeEl()
-    nodel
-      .style('opacity', 0)
-      .style('pointer-events', 'none')
-    return tip
-  }
-
-  // Public: Proxy attr calls to the d3 tip container.  Sets or gets attribute value.
-  //
-  // n - name of the attribute
-  // v - value of the attribute
-  //
-  // Returns tip or attribute value
-  tip.attr = function(n, v) {
-    if (arguments.length < 2 && typeof n === 'string') {
-      return getNodeEl().attr(n)
-    } else {
-      var args =  Array.prototype.slice.call(arguments)
-      d3.selection.prototype.attr.apply(getNodeEl(), args)
-    }
-
-    return tip
-  }
-
-  // Public: Proxy style calls to the d3 tip container.  Sets or gets a style value.
-  //
-  // n - name of the property
-  // v - value of the property
-  //
-  // Returns tip or style property value
-  tip.style = function(n, v) {
-    // debugger;
-    if (arguments.length < 2 && typeof n === 'string') {
-      return getNodeEl().style(n)
-    } else {
-      var args = Array.prototype.slice.call(arguments);
-      if (args.length === 1) {
-        var styles = args[0];
-        Object.keys(styles).forEach(function(key) {
-          return d3.selection.prototype.style.apply(getNodeEl(), [key, styles[key]]);
-        });
-      }
-    }
-
-    return tip
-  }
-
-  // Public: Set or get the direction of the tooltip
-  //
-  // v - One of n(north), s(south), e(east), or w(west), nw(northwest),
-  //     sw(southwest), ne(northeast) or se(southeast)
-  //
-  // Returns tip or direction
-  tip.direction = function(v) {
-    if (!arguments.length) return direction
-    direction = v == null ? v : d3.functor(v)
-
-    return tip
-  }
-
-  // Public: Sets or gets the offset of the tip
-  //
-  // v - Array of [x, y] offset
-  //
-  // Returns offset or
-  tip.offset = function(v) {
-    if (!arguments.length) return offset
-    offset = v == null ? v : d3.functor(v)
-
-    return tip
-  }
-
-  // Public: sets or gets the html value of the tooltip
-  //
-  // v - String value of the tip
-  //
-  // Returns html value or tip
-  tip.html = function(v) {
-    if (!arguments.length) return html
-    html = v == null ? v : d3.functor(v)
-
-    return tip
-  }
-
-  // Public: destroys the tooltip and removes it from the DOM
-  //
-  // Returns a tip
-  tip.destroy = function() {
-    if(node) {
-      getNodeEl().remove();
-      node = null;
-    }
-    return tip;
-  }
-
-  function d3_tip_direction() { return 'n' }
-  function d3_tip_offset() { return [0, 0] }
-  function d3_tip_html() { return ' ' }
-
-  var direction_callbacks = {
-    n:  direction_n,
-    s:  direction_s,
-    e:  direction_e,
-    w:  direction_w,
-    nw: direction_nw,
-    ne: direction_ne,
-    sw: direction_sw,
-    se: direction_se
-  };
-
-  var directions = Object.keys(direction_callbacks);
-
-  function direction_n() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.n.y - node.offsetHeight,
-      left: bbox.n.x - node.offsetWidth / 2
-    }
-  }
-
-  function direction_s() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.s.y,
-      left: bbox.s.x - node.offsetWidth / 2
-    }
-  }
-
-  function direction_e() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.e.y - node.offsetHeight / 2,
-      left: bbox.e.x
-    }
-  }
-
-  function direction_w() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.w.y - node.offsetHeight / 2,
-      left: bbox.w.x - node.offsetWidth
-    }
-  }
-
-  function direction_nw() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.nw.y - node.offsetHeight,
-      left: bbox.nw.x - node.offsetWidth
-    }
-  }
-
-  function direction_ne() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.ne.y - node.offsetHeight,
-      left: bbox.ne.x
-    }
-  }
-
-  function direction_sw() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.sw.y,
-      left: bbox.sw.x - node.offsetWidth
-    }
-  }
-
-  function direction_se() {
-    var bbox = getScreenBBox()
-    return {
-      top:  bbox.se.y,
-      left: bbox.e.x
-    }
-  }
-
-  function initNode() {
-    var node = d3.select(document.createElement('div'))
-    node
-      .style('position', 'absolute')
-      .style('top', 0)
-      .style('opacity', 0)
-      .style('pointer-events', 'none')
-      .style('box-sizing', 'border-box')
-
-    return node.node()
-  }
-
-  function getSVGNode(el) {
-    el = el.node()
-    if(el.tagName.toLowerCase() === 'svg')
-      return el
-
-    return el.ownerSVGElement
-  }
-
-  function getNodeEl() {
-    if(node === null) {
-      node = initNode();
-      // re-add node to DOM
-      document.body.appendChild(node);
-    };
-    return d3.select(node);
-  }
-
-  // Private - gets the screen coordinates of a shape
-  //
-  // Given a shape on the screen, will return an SVGPoint for the directions
-  // n(north), s(south), e(east), w(west), ne(northeast), se(southeast), nw(northwest),
-  // sw(southwest).
-  //
-  //    +-+-+
-  //    |   |
-  //    +   +
-  //    |   |
-  //    +-+-+
-  //
-  // Returns an Object {n, s, e, w, nw, sw, ne, se}
-  function getScreenBBox() {
-    var targetel   = target || d3.event.target;
-
-    while ('undefined' === typeof targetel.getScreenCTM && 'undefined' === targetel.parentNode) {
-        targetel = targetel.parentNode;
-    }
-
-    var bbox       = {},
-        matrix     = targetel.getScreenCTM(),
-        tbbox      = targetel.getBBox(),
-        width      = tbbox.width,
-        height     = tbbox.height,
-        x          = tbbox.x,
-        y          = tbbox.y
-
-    point.x = x
-    point.y = y
-    bbox.nw = point.matrixTransform(matrix)
-    point.x += width
-    bbox.ne = point.matrixTransform(matrix)
-    point.y += height
-    bbox.se = point.matrixTransform(matrix)
-    point.x -= width
-    bbox.sw = point.matrixTransform(matrix)
-    point.y -= height / 2
-    bbox.w  = point.matrixTransform(matrix)
-    point.x += width
-    bbox.e = point.matrixTransform(matrix)
-    point.x -= width / 2
-    point.y -= height / 2
-    bbox.n = point.matrixTransform(matrix)
-    point.y += height
-    bbox.s = point.matrixTransform(matrix)
-
-    return bbox
-  }
-
-  return tip
-};
 
 return ChatDrawer;
 }));
