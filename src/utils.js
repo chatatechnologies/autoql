@@ -356,3 +356,19 @@ function formatDataToBarChart(json){
     }
     return [values, hasNegativeValues];
 }
+
+function getSupportedDisplayTypesArray(){
+    return [
+        'table',
+        'date_pivot',
+        'pivot_column',
+        'line',
+        'bar',
+        'column',
+        'heatmap',
+        'bubble',
+        'column_chart',
+        'stacked_bar',
+        'stacked_column'
+    ];
+}

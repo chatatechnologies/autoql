@@ -1,4 +1,4 @@
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -9,7 +9,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -172,7 +172,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
         }
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr("opacity", "0.7")
     .attr('class', 'circle')
     .on('mouseover', function(d) {

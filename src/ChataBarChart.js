@@ -1,4 +1,4 @@
-function createBarChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBarChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 40, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -9,7 +9,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -123,7 +123,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fromChat
     })
     .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
     .attr("height", y.bandwidth())
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {

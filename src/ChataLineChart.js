@@ -1,4 +1,4 @@
-function createLineChart(component, data, col1, col2, hasNegativeValues, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -9,7 +9,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
 
     component.innerHTML = '';
@@ -103,7 +103,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
     svg.append("path")
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", "#28a8e0")
+    .attr("stroke", fillColor)
     .attr("stroke-width", 1)
     .attr('opacity', '0.7')
     .attr("d", d3.line()
@@ -142,7 +142,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fromCha
      } )
     .attr("cy", function(d) { return y(d.value) } )
     .attr("r", 3)
-    .attr("fill", "#28a8e0")
+    .attr("fill", fillColor)
     .attr('class', 'line-dot')
     .on('mouseover', function(d) {
         if(renderTooltips){

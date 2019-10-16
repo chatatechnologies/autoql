@@ -1,5 +1,4 @@
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -14,7 +13,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');

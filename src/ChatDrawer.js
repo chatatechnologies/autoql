@@ -29,6 +29,10 @@ var ChatDrawer = {
         enableSafetyNet: true,
         enableDrilldowns: true,
         demo: false,
+        currencyCode: 'USD',
+        languageCode: 'en-US',
+        fontFamily: 'sans-serif',
+        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
         isRecordVoiceActive: false
     },
     responses: [],
@@ -74,6 +78,10 @@ ChatDrawer.init = function(elem, options){
             themeStyles[property],
         );
     }
+    ChatDrawer.rootElem.style.setProperty(
+        '--chata-drawer-font-family',
+        ChatDrawer.options['fontFamily']
+    );
 
     ChatDrawer.speechToText.onresult = (event) => {
         let interimTranscript = '';
@@ -401,7 +409,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, col1, col2, hasNegativeValues);
+                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
             }
             if(e.target.classList.contains('stacked_column_chart')){
                 if(e.target.tagName == 'svg'){
@@ -428,7 +436,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options.chartColors);
             }
             if(e.target.classList.contains('stacked_bar_chart')){
                 if(e.target.tagName == 'svg'){
@@ -455,7 +463,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3);
+                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options.chartColors);
             }
             if(e.target.classList.contains('table')){
                 if(e.target.tagName == 'svg'){
@@ -487,7 +495,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
 
-                createBarChart(component, grouped, col1, col2, hasNegativeValues);
+                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'bar');
 
             }
@@ -508,7 +516,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
 
-                createLineChart(component, grouped, col1, col2, hasNegativeValues);
+                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'line');
             }
 
@@ -534,7 +542,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
 
-                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3);
+                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'heatmap');
             }
 
@@ -560,7 +568,7 @@ ChatDrawer.registerEvents = function(){
                 var col3 = formatColumnName(json['columns'][2]['name']);
 
 
-                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3);
+                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options.chartColors[0]);
                 ChatDrawer.refreshToolbarButtons(component, 'bubble');
             }
             if(e.target.classList.contains('export_png')){
@@ -1081,6 +1089,10 @@ ChatDrawer.getActionButtons = function(idRequest, type){
         </button>
         `;
     }
+}
+
+ChatDrawer.getSupportedDisplayTypesArray = function(){
+    return getSupportedDisplayTypesArray();
 }
 
 ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){

@@ -31,7 +31,7 @@
     <div id="mycontainer" style="width:100%;">
     </div>
 
-    <div id="response" style="width:98%; height: 750px; background: #efefef; margin:auto; border-radius:10px">
+    <div id="response" style="width:98%; height: 750px; background: white; margin:auto;">
     </div>
 
     <script>
@@ -59,7 +59,9 @@
             // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
             enableSafetyNet: true,
             enableDrilldowns: true,
-            demo: false
+            demo: false,
+            // chartColors: ['#03A9F4', '#311B92', '#4A148C', '#0D47A1 ', '#BF360C', '#BF360C']
+            // fontFamily: 'Monaco'
         });
         var chatBar = ChatDrawer.getChatBar({
             autoCompletePlacement: 'bottom',
@@ -75,18 +77,22 @@
             onSubmit: function(){
                 console.log('onSubmit');
             },
-            isDisabled: false
+            isDisabled: false,
+            // fontFamily: 'Monaco'
         });
         var responseRenderer = ChatDrawer.createResponseRenderer({
             supportsSuggestions: true,
             onSuggestionClick: function(){console.log('onSuggestionClick!!!!!!!!!!!!');},
             // tableBorderColor: 'green',
             // tableHoverColor: 'green',
-            renderTooltips: false,
+            displayType: 'stacked_column',
+            renderTooltips: true,
+            // fontFamily: 'Monaco'
         });
         chatBar.bind(responseRenderer);
         document.getElementById('mycontainer').append(chatBar);
         document.getElementById('response').append(responseRenderer);
+        console.log(ChatDrawer.getSupportedDisplayTypesArray());
     </script>
 
 </body>

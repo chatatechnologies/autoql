@@ -21,7 +21,8 @@ function getChatBar(options){
         autocompleteStyles: {},
         enableSafetyNet: true,
         enableDrilldowns: true,
-        demo: false
+        demo: false,
+        fontFamily: 'sans-serif'
     }
 
     for (var [key, value] of Object.entries(options)) {
@@ -43,6 +44,11 @@ function getChatBar(options){
         <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="" ${disabled}>
     </div>
     `;
+
+    chataBarContainer.style.setProperty(
+        '--chata-drawer-font-family',
+        chataBarContainer.options.fontFamily
+    )
 
     chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
     chataBarContainer.bind = function(responseRenderer){
@@ -106,100 +112,168 @@ function getChatBar(options){
                     if(chataBarContainer.options.showLoadingDots){
                         parent.removeChild(responseLoadingContainer);
                     }
-                    switch(jsonResponse['display_type']){
-                        case 'suggestion':
-                            if(responseRenderer.options.supportsSuggestions){
-                                var data = csvTo2dArray(jsonResponse['data']);
-                                responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
-                                ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
-                            }else{
-                                responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
-                            }
-                        break;
-                        case 'table':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            if(jsonResponse['columns'].length == 1){
-                                var data = jsonResponse['data'];
-                                responseRenderer.innerHTML = `<div>${data}</div>`;
-                            }else{
-                                var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                    if(jsonResponse['supported_display_types'].includes(responseRenderer.options.displayType)){
+                        displayType = responseRenderer.options.displayType;
+                    }else{
+                        displayType = 'table';
+                    }
+                    if(jsonResponse['display_type'] == 'suggestion' &&
+                        responseRenderer.options.supportsSuggestions){
+                        var data = csvTo2dArray(jsonResponse['data']);
+                        responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
+                        ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
+                    }else{
+                        switch(displayType){
+                            case 'table':
+                                var uuid = uuidv4();
+                                ChatDrawer.responses[uuid] = jsonResponse;
+                                var div = document.createElement('div');
+                                div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
+                                responseRenderer.appendChild(div);
+                                if(jsonResponse['columns'].length == 1){
+                                    var data = jsonResponse['data'];
+                                    responseRenderer.innerHTML = `<div>${data}</div>`;
+                                }else{
+                                    var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                                    table.classList.add('renderer-table');
+                                }
+                            break;
+                            case 'date_pivot':
+                                var uuid = uuidv4();
+                                ChatDrawer.responses[uuid] = jsonResponse;
+                                var div = document.createElement('div');
+                                div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
+                                responseRenderer.appendChild(div);
+                                var pivotArray = getDatePivotArray(jsonResponse);
+                                var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                                 table.classList.add('renderer-table');
-                            }
-                        break;
-                        case 'date_pivot':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            var pivotArray = getDatePivotArray(jsonResponse);
-                            var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
-                            table.classList.add('renderer-table');
-                        break;
-                        case 'pivot_column':
-                            var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
-                            var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
-                            var pivotArray = getPivotColumnArray(jsonResponse);
-                            var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
-                            table.classList.add('renderer-table');
-                        break;
-                        case 'line':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var hasNegativeValues = values[1];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            createLineChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'bar':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var hasNegativeValues = values[1];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            createBarChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'column':
-                            var values = formatDataToBarChart(jsonResponse);
-                            var grouped = values[0];
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var hasNegativeValues = values[1];
-                            createColumnChart(responseRenderer, grouped, col1, col2, hasNegativeValues, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'heatmap':
-                            var values = formatDataToHeatmap(jsonResponse);
-                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
-                            createHeatmap(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'bubble':
-                            var values = formatDataToHeatmap(jsonResponse);
-                            var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                            var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
-                            var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
-                            var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
-                            var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
-                            createBubbleChart(responseRenderer, labelsX, labelsY, values, col1, col2, col3, false, 'data-chartrenderer', responseRenderer.options.renderTooltips);
-                        break;
-                        case 'help':
-                            responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
-                        break;
-                        default:
-                            responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
+                            break;
+                            case 'pivot_column':
+                                var uuid = uuidv4();
+                                ChatDrawer.responses[uuid] = jsonResponse;
+                                var div = document.createElement('div');
+                                div.classList.add('chata-table-container');
+                                div.classList.add('chata-table-container-renderer');
+                                responseRenderer.appendChild(div);
+                                var pivotArray = getPivotColumnArray(jsonResponse);
+                                var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
+                                table.classList.add('renderer-table');
+                            break;
+                            case 'line':
+                                var values = formatDataToBarChart(jsonResponse);
+                                var grouped = values[0];
+                                var hasNegativeValues = values[1];
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                createLineChart(
+                                    responseRenderer, grouped, col1,
+                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'bar':
+                                var values = formatDataToBarChart(jsonResponse);
+                                var grouped = values[0];
+                                var hasNegativeValues = values[1];
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                createBarChart(
+                                    responseRenderer, grouped, col1,
+                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'column':
+                                var values = formatDataToBarChart(jsonResponse);
+                                var grouped = values[0];
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var hasNegativeValues = values[1];
+                                createColumnChart(
+                                    responseRenderer, grouped, col1,
+                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer',
+                                    responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'heatmap':
+                                var values = formatDataToHeatmap(jsonResponse);
+                                var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                                var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                createHeatmap(
+                                    responseRenderer, labelsX, labelsY,
+                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'bubble':
+                                var values = formatDataToHeatmap(jsonResponse);
+                                var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                                var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                createBubbleChart(
+                                    responseRenderer, labelsX, labelsY,
+                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'help':
+                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
+                            break;
+                            case 'stacked_bar':
+                                var data = csvTo2dArray(jsonResponse['data']);
+                                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                                groups = groups.sort().reverse();
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i][1] = formatData(data[i][1], jsonResponse['columns'][1]['type']);
+                                }
+                                for (var i = 0; i < groups.length; i++) {
+                                    groups[i] = formatData(groups[i], jsonResponse['columns'][1]['type'])
+                                }
+                                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['columns'], data, groups);
+                                createStackedBarChart(
+                                    responseRenderer, dataGrouped, groups,
+                                    subgroups, col1, col2, col3,
+                                    responseRenderer.options.chartColors, false,
+                                    'data-chartindex', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            case 'stacked_column':
+                                var data = csvTo2dArray(jsonResponse['data']);
+                                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                                groups = groups.sort().reverse();
+                                for (var i = 0; i < data.length; i++) {
+                                    data[i][1] = formatData(data[i][1], jsonResponse['columns'][1]['type']);
+                                }
+                                for (var i = 0; i < groups.length; i++) {
+                                    groups[i] = formatData(groups[i], jsonResponse['columns'][1]['type'])
+                                }
+                                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                                var col1 = formatColumnName(jsonResponse['columns'][0]['name']);
+                                var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
+                                var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
+                                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['columns'], data, groups);
+                                createStackedColumnChart(
+                                    responseRenderer, dataGrouped, groups,
+                                    subgroups, col1, col2, col3,
+                                    responseRenderer.options.chartColors, false,
+                                    'data-chartindex', responseRenderer.options.renderTooltips
+                                );
+                            break;
+                            default:
+                                responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
+                        }
                     }
                     chataBarContainer.options.onResponseCallback();
                 });

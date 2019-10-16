@@ -1,5 +1,4 @@
-function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, maxValue, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var colors = ['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'];
+function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -14,15 +13,15 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
             height = 250;
         }
     }else{
-        height = component.parentElement.clientHeight;
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
-    const barWidth = chartWidth / groups.length;
-    const interval = Math.ceil((groups.length * 16) / width);
+    const barHeight = height / groups.length;
+    const interval = Math.ceil((groups.length * 16) / height);
     var yTickValues = [];
-    if (barWidth < 16) {
+    if (barHeight < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
                 yTickValues.push(element);
@@ -74,7 +73,6 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         }
         return sum;
     });
-    console.log(maxValue);
 
     var x = d3.scaleLinear()
     .domain([0, maxValue])
@@ -102,14 +100,14 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     }
 
     svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(yAxis);
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
     .range(colors)
 
     svg.append("g")
-    .call(d3.axisLeft(y)).select(".domain").remove();
+    .call(yAxis).select(".domain").remove();
 
     svg.append("g")
     .attr("class", "grid")

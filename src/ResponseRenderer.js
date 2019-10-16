@@ -18,6 +18,10 @@ function createResponseRenderer(options={}){
     }
     responseRenderer.classList.add('chata-response-content-container');
     responseRenderer.classList.add('renderer-container');
+    responseRenderer.style.setProperty(
+        '--chata-drawer-font-family',
+        responseRenderer.options.fontFamily
+    )
     responseRenderer.setAttribute('data-componentid', uuidv4());
     var applyTableStyles = function(){
         css = '';

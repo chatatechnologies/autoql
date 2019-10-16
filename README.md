@@ -104,6 +104,8 @@ document.getElementById('my-response').append(responseRenderer);
 | enableSafetyNet | Boolean | true |
 | enableDrilldowns |  Boolean | true |
 | demo | Boolean | false |
+| fontFamily | String | 'sans-serif' |
+| chartColors | Array | ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'] |
 
 #### ChatBar Props
 | Prop | Type | Default Value |
@@ -124,6 +126,7 @@ document.getElementById('my-response').append(responseRenderer);
 | enableSafetyNet | Boolean | true |
 | enableDrilldowns |  Boolean | true |
 | demo | Boolean | false |
+| fontFamily | String | 'sans-serif' |
 
 #### ResponseRenderer Props
 | Prop | Type | Default Value |
@@ -132,9 +135,10 @@ document.getElementById('my-response').append(responseRenderer);
 | onSuggestionClick | Function | undefined |
 | tableBorderColor | String | undefined |
 | tableHoverColor | String | undefined |
+| displayType | String | undefined |
 | renderTooltips | Boolean | true |
-
-
+| fontFamily | String | 'sans-serif' |
+| chartColors | Array | ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'] |
 
 #### Prop Descriptions
 **isVisible**: Whether the drawer is open or not. You have full control over the visibility of the drawer by using your own state.
@@ -159,6 +163,8 @@ document.getElementById('my-response').append(responseRenderer);
 
 **accentColor**: Main accent color used in the chat drawer. This is the color of the header, speech-to-text button, and the request messages. The chart colours will not be affected by this.
 
+**chartColors**: An array of colors for the chart themes starting with the most primary. You can pass in any valid css color format in here, however it is recommended that the color is opaque. ie. "#26A7E9", "rgb(111, 227, 142)", or "red". The charts will always use the colors in order from first to last. If the chart requires more colors than provided, it will repeat the colors provided.
+
 **onVisibleChange**: Callback after the drawer closes or opens.
 
 **onHandleClick**: Callback when drawer handle is clicked.
@@ -172,6 +178,8 @@ document.getElementById('my-response').append(responseRenderer);
 **customerName**: Name used in the intro message (ie. "Hi Nikki! I am here..."). You can customize this value using names from your own database.
 
 **introMessage**: Customize the intro message to use your own branded voice. The customerName prop will be ignored if this is provided.
+
+**fontFamily**: Customize the font family to the provided font wherever possible. Accepts any css font family that is available, and if not it will default on sans-serif
 
 **enableVoiceRecord**: Enables the speech to text button. Note that this feature is only available in Google Chrome. It will fail silently on other browsers.
 
@@ -199,4 +207,32 @@ If this value is false, the query will bypass the "safetynet" endpoint and be se
 
 **tableHoverColor**: Custom color provided to the tables for the rows on hover. Default is a medium-dark gray.
 
+**displayType**: This is where you can pass in the type of visualization you want for the data. The full list of display types is below:
+
+| Display Type | Prop Value | Description |
+| :------------ | :------------ | :------------ |
+| Table | `table` | Displays array data in a regular table. |
+| Pivot Table | `pivot_column` | Displays a multi-dimensional table |
+| Bar Chart | `bar` | Ordinal data is on the y-axis, numerical data is on the x-axis, bars are horizontal. Will show a series for each column of data where applicable |
+| Column Chart | `column` | Ordinal data is on the x-axis, numerical data is on the y-axis, bars are vertical. Will show a series for each column of data where applicable |
+| Line Chart | `line` | Ordinal data is on the x-axis, numerical data is on the y-axis. Will show a line series for each column of data where applicable |
+| Heat Map | `heatmap` | The position of the squares are based on the categories, and the opacity of the squares are based on the values |
+| Bubble Chart | `bubble` | The position of the bubbles are based on the categories, and the radius of the bubbles are based on the values |
+| Stacked Column chart | `stacked_column` | Ordinal data is on the x-axis, numerical data is on the y-axis, bars are vertical.
+Will show a series for each column in a stacked way of data when appropriate |
+| Stacked Bar chart | `stacked_bar` | Ordinal data is on the y-axis, numerical data is on the x-axis, bars are horizontal. Will show a series for each column in a stacked way of data when appropriate |
+
+You must pass in a supported display type to the ResponseRenderer (see the Supported Display Types section below for more details). If an invalid display type or non-supported display type is passed in, it will default to a regular table.
+
 **renderTooltips**: Whether or not to render tooltips for chart display types. When this value is true, each chart element will have a tooltip showing the ordinal title/value and numerical title/value.
+
+
+# Supported Display Types
+
+You can get the supported display types calling the ChatDrawer.getSupportedDisplayTypesArray() that returns an array of strings.
+
+```
+// Will return ['table', 'pivot_table', 'bar' ...]
+var supportedDisplayTypes = ChatDrawer.getSupportedDisplayTypesArray();
+
+```
