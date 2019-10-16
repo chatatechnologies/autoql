@@ -218,8 +218,7 @@ If this value is false, the query will bypass the "safetynet" endpoint and be se
 | Line Chart | `line` | Ordinal data is on the x-axis, numerical data is on the y-axis. Will show a line series for each column of data where applicable |
 | Heat Map | `heatmap` | The position of the squares are based on the categories, and the opacity of the squares are based on the values |
 | Bubble Chart | `bubble` | The position of the bubbles are based on the categories, and the radius of the bubbles are based on the values |
-| Stacked Column chart | `stacked_column` | Ordinal data is on the x-axis, numerical data is on the y-axis, bars are vertical.
-Will show a series for each column in a stacked way of data when appropriate |
+| Stacked Column chart | `stacked_column` | Ordinal data is on the x-axis, numerical data is on the y-axis, bars are vertical. Will show a series for each column in a stacked way of data when appropriate |
 | Stacked Bar chart | `stacked_bar` | Ordinal data is on the y-axis, numerical data is on the x-axis, bars are horizontal. Will show a series for each column in a stacked way of data when appropriate |
 
 You must pass in a supported display type to the ResponseRenderer (see the Supported Display Types section below for more details). If an invalid display type or non-supported display type is passed in, it will default to a regular table.
