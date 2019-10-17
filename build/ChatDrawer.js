@@ -17521,8 +17521,8 @@ const DOWNLOAD_CSV_ICON = `
 `;
 
 const EXPORT_PNG_ICON = `
-<svg stroke="currentColor" class="csv" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="csv"></path>
+<svg stroke="currentColor" class="export_png" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z" class="export_png"></path>
 </svg>
 `;
 
@@ -17851,6 +17851,16 @@ const DELETE_ICON = `
 </svg>
 `
 
+const CLEAR_ALL = `
+<svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path class="clear-all" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41
+        0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0
+        16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12
+        12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z">
+    </path>
+</svg>
+`
+
 const LIGHT_THEME = {
   '--chata-drawer-accent-color': '#28a8e0',
   '--chata-drawer-background-color': '#fff',
@@ -17877,12 +17887,19 @@ const MONTH_NAMES = [
     "November", "December"
 ];
 
-function formatData(val, type){
+function formatData(val, type, lang='en-US', currency='USD'){
     value = '';
     switch (type) {
         case 'DOLLAR_AMT':
-        if(parseFloat(val) != 0){
-            value = '$' + val;
+        val = parseFloat(val);
+        const sigDigs = String(parseInt(val)).length
+        if(val != 0){
+            value = new Intl.NumberFormat(lang, {
+                    style: 'currency',
+                    currency: currency,
+                    maximumSignificantDigits: sigDigs
+                }
+            ).format(val);
         }else{
             value = val;
         }
@@ -18035,7 +18052,7 @@ function getGroupableField(json){
 }
 
 
-function getPivotColumnArray(json){
+function getPivotColumnArray(json, options){
     var lines = csvTo2dArray(json['data']);
     var values = [];
     var firstColName = '';
@@ -18047,7 +18064,12 @@ function getPivotColumnArray(json){
                 var name = json['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
-            row.push(formatData(data[x], json['columns'][x]['type']));
+            row.push(formatData(
+                data[x],
+                json['columns'][x]['type'],
+                options.languageCode,
+                options.currencyCode
+            ));
         }
         values.push(row);
     }
@@ -18077,7 +18099,7 @@ function sortPivot(pivotArray, colIndex, operator){
     return pivotArray.sort(comparator);
 }
 
-function getDatePivotArray(json){
+function getDatePivotArray(json, options){
     var lines = csvTo2dArray(json['data']);
     var values = [];
     for (var i = 0; i < lines.length; i++) {
@@ -18092,7 +18114,7 @@ function getDatePivotArray(json){
                     row.unshift(MONTH_NAMES[date.getMonth()], date.getFullYear());
                     break;
                 default:
-                    row.push(formatData(data[x], json['columns'][x]['type']));
+                    row.push(formatData(data[x], json['columns'][x]['type'], options.languageCode, options.currencyCode));
             }
         }
         values.push(row);
@@ -18136,13 +18158,82 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
 }
 
 function getSVGString(svgNode) {
+    // svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    // var serializer = new XMLSerializer();
+    // var svgString = serializer.serializeToString(svgNode);
+    // svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
+    // svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
+    //
+    // return svgString;
+
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    var cssStyleText = getCSSStyles( svgNode );
+    appendCSS( cssStyleText, svgNode );
+
     var serializer = new XMLSerializer();
     var svgString = serializer.serializeToString(svgNode);
-    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
-    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
+    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
+    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
 
     return svgString;
+
+    function getCSSStyles( parentElement ) {
+        var selectorTextArr = [];
+
+        // Add Parent element Id and Classes to the list
+        selectorTextArr.push( '#'+parentElement.id );
+        for (var c = 0; c < parentElement.classList.length; c++)
+        if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
+        selectorTextArr.push( '.'+parentElement.classList[c] );
+
+        // Add Children element Ids and Classes to the list
+        var nodes = parentElement.getElementsByTagName("*");
+        for (var i = 0; i < nodes.length; i++) {
+            var id = nodes[i].id;
+            if ( !contains('#'+id, selectorTextArr) )
+            selectorTextArr.push( '#'+id );
+
+            var classes = nodes[i].classList;
+            for (var c = 0; c < classes.length; c++)
+            if ( !contains('.'+classes[c], selectorTextArr) )
+            selectorTextArr.push( '.'+classes[c] );
+        }
+
+        // Extract CSS Rules
+        var extractedCSSText = "";
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var s = document.styleSheets[i];
+
+            try {
+                if(!s.cssRules) continue;
+            } catch( e ) {
+                if(e.name !== 'SecurityError') throw e; // for Firefox
+                continue;
+            }
+
+            var cssRules = s.cssRules;
+            for (var r = 0; r < cssRules.length; r++) {
+                if ( contains( cssRules[r].selectorText, selectorTextArr ) )
+                extractedCSSText += cssRules[r].cssText;
+            }
+        }
+
+
+        return extractedCSSText;
+
+        function contains(str,arr) {
+            return arr.indexOf( str ) === -1 ? false : true;
+        }
+
+    }
+
+    function appendCSS( cssText, element ) {
+        var styleElement = document.createElement("style");
+        styleElement.setAttribute("type","text/css");
+        styleElement.innerHTML = cssText;
+        var refNode = element.hasChildNodes() ? element.children[0] : null;
+        element.insertBefore( styleElement, refNode );
+    }
 }
 
 function svgString2Image(svgString, width, height) {
@@ -18158,17 +18249,6 @@ function svgString2Image(svgString, width, height) {
     image.onload = function() {
         context.clearRect ( 0, 0, width, height );
         context.drawImage(image, 0, 0, width, height);
-        var imgPixels = context.getImageData(0, 0, canvas.width, canvas.height);
-        for(var y = 0; y < imgPixels.height; y++){
-            for(var x = 0; x < imgPixels.width; x++){
-                var i = (y * 4) * imgPixels.width + x * 4;
-                imgPixels.data[i] = 0;
-                imgPixels.data[i + 1] = 0;
-                imgPixels.data[i + 2] = 0;
-            }
-        }
-        context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
-
         var link = document.createElement("a");
         link.setAttribute('href', canvas.toDataURL("image/png;base64"));
         link.setAttribute('download', 'Chart.png');
@@ -18347,7 +18427,7 @@ function createSuggestionArray(jsonResponse){
     return suggestionArray;
 }
 
-function createTable(jsonResponse, oldComponent, action='replace', uuid, tableClass='table-response'){
+function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='table-response'){
     var groupField = getGroupableField(jsonResponse);
     var table = document.createElement('table');
     var header = document.createElement('tr');
@@ -18384,7 +18464,11 @@ function createTable(jsonResponse, oldComponent, action='replace', uuid, tableCl
         var data = dataLines[i];
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
-            value = formatData(data[x], jsonResponse['columns'][x]['type']);
+            value = formatData(
+                data[x], jsonResponse['columns'][x]['type'],
+                options.languageCode,
+                options.currencyCode
+            );
             var td = document.createElement('td');
             td.textContent = value;
             tr.appendChild(td);
@@ -18462,13 +18546,13 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
     return table;
 }
 
-function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fillColor='rgba(221, 106, 106)', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -18638,7 +18722,7 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fill
     })
     .attr("width", x.bandwidth())
     .attr("height", y.bandwidth())
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
     .attr('class', 'square')
     .on('mouseover', function(d) {
@@ -18654,13 +18738,13 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, fill
     });
 }
 
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -18828,7 +18912,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
         }
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'circle')
     .on('mouseover', function(d) {
@@ -18844,13 +18928,15 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
     });
 }
 
-function createBarChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 40, left: 130},
+function createBarChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+    var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    console.log(component.parentElement.offsetHeight);
+
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -18915,6 +19001,11 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fillColo
     .range([ 0, width]);
     var xAxis = d3.axisBottom(x);
     xAxis.tickSize(0);
+
+    xAxis.tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode);
+    });
+
     svg.append("g")
     .attr("transform", "translate(0," + (height - margin.bottom) + ")")
     .call(xAxis)
@@ -18969,7 +19060,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fillColo
     })
     .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
     .attr("height", y.bandwidth())
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
@@ -18986,13 +19077,15 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fillColo
     });
 }
 
-function createColumnChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createColumnChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    console.log(component.parentElement.offsetHeight);
+
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -19059,15 +19152,14 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fillC
     var y = d3.scaleLinear()
     .range([ height - (margin.bottom), 0 ])
     .domain([minValue, d3.max(data, function(d) { return d.value; })]);
-
-    svg.append("g")
-    .call(d3.axisLeft(y)).select(".domain").remove();
-
+    var axisLeft = d3.axisLeft(y);
+    
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisLeft(y)
+    .call(
+        axisLeft
         .tickSize(-width)
-        .tickFormat("")
+        .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)})
     );
 
 
@@ -19114,7 +19206,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fillC
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
     .attr("width", x.bandwidth() )
     .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {
@@ -19130,13 +19222,13 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fillC
     });
 }
 
-function createLineChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -19230,12 +19322,14 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fillCol
     .range([ height - (margin.bottom), 0 ])
     .domain([minValue, d3.max(data, function(d) { return d.value; })]);
     svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y).tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+    ));
     // Add the line
     svg.append("path")
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", fillColor)
+    .attr("stroke", options.chartColors[0])
     .attr("stroke-width", 1)
     .attr('opacity', '0.7')
     .attr("d", d3.line()
@@ -19274,7 +19368,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fillCol
      } )
     .attr("cy", function(d) { return y(d.value) } )
     .attr("r", 3)
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('class', 'line-dot')
     .on('mouseover', function(d) {
         if(renderTooltips){
@@ -19289,7 +19383,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fillCol
     });
 }
 
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -19299,7 +19393,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     var legendBoxMargin = 25
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -19390,11 +19484,13 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .domain([0, maxValue])
     .range([ height - margin.bottom, 0 ]);
     svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y).tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+    ));
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(colors)
+    .range(options.chartColors)
 
     svg.append("g")
     .call(d3.axisLeft(y)).select(".domain").remove();
@@ -19490,7 +19586,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
         })
 }
 
-function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -19500,7 +19596,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     var legendBoxMargin = 25
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -19573,7 +19669,9 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
 
     svg.append("g")
     .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    .call(d3.axisBottom(x))
+    .call(d3.axisBottom(x).tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+    ))
     .selectAll("text")
     .style("color", '#fff')
     .attr("transform", "translate(-10,0)rotate(-45)")
@@ -19596,7 +19694,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(colors)
+    .range(options.chartColors)
 
     svg.append("g")
     .call(yAxis).select(".domain").remove();
@@ -19699,8 +19797,8 @@ function createResponseRenderer(options={}){
         displayType: undefined,
         isFilteringTable: false,
         renderTooltips: true,
-        currencyCode: 'USD',
         languageCode: 'en-US',
+        currencyCode: 'USD',
         fontFamily: 'sans-serif',
         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195']
     }
@@ -19864,10 +19962,15 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 if(jsonResponse['columns'].length == 1){
-                                    var data = jsonResponse['data'];
+                                    var data = formatData(
+                                        jsonResponse['data'],
+                                        jsonResponse['columns'][0]['type'],
+                                        responseRenderer.options.languageCode,
+                                        responseRenderer.options.currencyCode,
+                                    );
                                     responseRenderer.innerHTML = `<div>${data}</div>`;
                                 }else{
-                                    var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                                    var table = createTable(jsonResponse, div, responseRenderer.options, 'append', uuid, 'table-response-renderer');
                                     table.classList.add('renderer-table');
                                 }
                             break;
@@ -19878,7 +19981,7 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
-                                var pivotArray = getDatePivotArray(jsonResponse);
+                                var pivotArray = getDatePivotArray(jsonResponse, responseRenderer.options);
                                 var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
@@ -19889,7 +19992,7 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
-                                var pivotArray = getPivotColumnArray(jsonResponse);
+                                var pivotArray = getPivotColumnArray(jsonResponse, responseRenderer.options);
                                 var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
@@ -19901,7 +20004,7 @@ function getChatBar(options){
                                 var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
                                 createLineChart(
                                     responseRenderer, grouped, col1,
-                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    col2, hasNegativeValues, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -19913,7 +20016,7 @@ function getChatBar(options){
                                 var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
                                 createBarChart(
                                     responseRenderer, grouped, col1,
-                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    col2, hasNegativeValues, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -19925,7 +20028,7 @@ function getChatBar(options){
                                 var hasNegativeValues = values[1];
                                 createColumnChart(
                                     responseRenderer, grouped, col1,
-                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    col2, hasNegativeValues, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
@@ -19939,7 +20042,7 @@ function getChatBar(options){
                                 var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
                                 createHeatmap(
                                     responseRenderer, labelsX, labelsY,
-                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    values, col1, col2, col3, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -19952,7 +20055,7 @@ function getChatBar(options){
                                 var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
                                 createBubbleChart(
                                     responseRenderer, labelsX, labelsY,
-                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    values, col1, col2, col3, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -19977,7 +20080,7 @@ function getChatBar(options){
                                 createStackedBarChart(
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, col1, col2, col3,
-                                    responseRenderer.options.chartColors, false,
+                                    responseRenderer.options, false,
                                     'data-chartindex', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -19999,7 +20102,7 @@ function getChatBar(options){
                                 createStackedColumnChart(
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, col1, col2, col3,
-                                    responseRenderer.options.chartColors, false,
+                                    responseRenderer.options, false,
                                     'data-chartindex', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -20184,8 +20287,11 @@ ChatDrawer.createHeader = function(){
             ${ChatDrawer.options.title}
         </div>
         <div class="chata-header-right-container">
-            <button class="chata-button clear-all" data-tip="Clear Messages" data-for="chata-header-tooltip" currentitem="false"><svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg></button>
+            <button class="chata-button clear-all">
+                ${CLEAR_ALL}
+            </button>
         </div>`;
+        // <svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg>
     chatHeaderContainer.classList.add('chat-header-container');
     chatHeaderContainer.innerHTML = htmlHeader;
 
@@ -20363,12 +20469,12 @@ ChatDrawer.registerEvents = function(){
                     e.target.nextSibling.classList.remove('up');
                     e.target.nextSibling.classList.add('down');
                     var sortData = ChatDrawer.sort(tableElement, 'desc', e.target.dataset.index, e.target.dataset.type);
-                    ChatDrawer.refreshTableData(tableElement, sortData);
+                    ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
                 }else{
                     e.target.nextSibling.classList.remove('down');
                     e.target.nextSibling.classList.add('up');
                     var sortData = ChatDrawer.sort(tableElement, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
-                    ChatDrawer.refreshTableData(tableElement, sortData);
+                    ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
                 }
             }
             if(e.target.classList.contains('column-pivot')){
@@ -20376,9 +20482,9 @@ ChatDrawer.registerEvents = function(){
                 var pivotArray = [];
                 var json = ChatDrawer.responses[tableElement.dataset.componentid];
                 if(json['display_type'] == 'date_pivot'){
-                    pivotArray = getDatePivotArray(json);
+                    pivotArray = getDatePivotArray(json, ChatDrawer.options);
                 }else{
-                    pivotArray = getPivotColumnArray(json);
+                    pivotArray = getPivotColumnArray(json, ChatDrawer.options);
                 }
                 if(e.target.nextSibling.classList.contains('up')){
                     e.target.nextSibling.classList.remove('up');
@@ -20404,10 +20510,10 @@ ChatDrawer.registerEvents = function(){
                 var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                 ChatDrawer.refreshToolbarButtons(component, 'date_pivot');
                 if(json['display_type'] == 'date_pivot'){
-                    var pivotArray = getDatePivotArray(json);
+                    var pivotArray = getDatePivotArray(json, ChatDrawer.options);
                     createPivotTable(pivotArray, component);
                 }else{
-                    var pivotArray = getPivotColumnArray(json);
+                    var pivotArray = getPivotColumnArray(json, ChatDrawer.options);
                     createPivotTable(pivotArray, component);
                 }
             }
@@ -20427,7 +20533,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
+                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
             }
             if(e.target.classList.contains('stacked_column_chart')){
                 if(e.target.tagName == 'svg'){
@@ -20454,7 +20560,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options.chartColors);
+                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             }
             if(e.target.classList.contains('stacked_bar_chart')){
                 if(e.target.tagName == 'svg'){
@@ -20481,7 +20587,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.formatDataToStackedChart(json['columns'], data, groups);
-                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options.chartColors);
+                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             }
             if(e.target.classList.contains('table')){
                 if(e.target.tagName == 'svg'){
@@ -20494,7 +20600,7 @@ ChatDrawer.registerEvents = function(){
                 var json = ChatDrawer.responses[idRequest];
                 var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                 ChatDrawer.refreshToolbarButtons(component, 'table');
-                createTable(json, component);
+                createTable(json, component, ChatDrawer.options);
             }
 
             if(e.target.classList.contains('bar_chart')){
@@ -20513,7 +20619,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
 
-                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
+                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
                 ChatDrawer.refreshToolbarButtons(component, 'bar');
 
             }
@@ -20534,7 +20640,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['columns'][0]['name']);
                 var col2 = formatColumnName(json['columns'][1]['name']);
 
-                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options.chartColors[0]);
+                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
                 ChatDrawer.refreshToolbarButtons(component, 'line');
             }
 
@@ -20560,7 +20666,7 @@ ChatDrawer.registerEvents = function(){
                 var col2 = formatColumnName(json['columns'][1]['name']);
                 var col3 = formatColumnName(json['columns'][2]['name']);
 
-                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options.chartColors[0]);
+                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
                 ChatDrawer.refreshToolbarButtons(component, 'heatmap');
             }
 
@@ -20586,7 +20692,7 @@ ChatDrawer.registerEvents = function(){
                 var col3 = formatColumnName(json['columns'][2]['name']);
 
 
-                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options.chartColors[0]);
+                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
                 ChatDrawer.refreshToolbarButtons(component, 'bubble');
             }
             if(e.target.classList.contains('export_png')){
@@ -20601,6 +20707,7 @@ ChatDrawer.registerEvents = function(){
                 var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                 var svg = component.getElementsByTagName('svg')[0];
                 var svgString = getSVGString(svg);
+                // svgToPng(svg);
                 svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
             }
             if(e.target.classList.contains('clear-all')){
@@ -20742,13 +20849,13 @@ ChatDrawer.refreshPivotTable = function(table, pivotArray){
     }
 }
 
-ChatDrawer.refreshTableData = function(table, newData){
+ChatDrawer.refreshTableData = function(table, newData, options){
     var rows = table.childNodes;
     var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
     for (var i = 1; i < rows.length; i++) {
         var tdList = rows[i].childNodes;
         for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = formatData(newData[i-1][x], cols[x]['type']);
+            tdList[x].textContent = formatData(newData[i-1][x], cols[x]['type'], options.languageCode, options.currencyCode);
         }
     }
 }
@@ -21052,6 +21159,12 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                     case 'heatmap':
                     ChatDrawer.putTableResponse(jsonResponse);
                     break;
+                    case 'pie':
+                    ChatDrawer.putTableResponse(jsonResponse);
+                    break;
+                    case 'column':
+                    ChatDrawer.putTableResponse(jsonResponse);
+                    break;
                     case 'help':
                         console.log(jsonResponse);
                         ChatDrawer.putHelpMessage(jsonResponse);
@@ -21083,8 +21196,13 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
     <div class="chat-message-toolbar right">
         ${toolbarButtons}
     </div>`;
-
-    messageBubble.appendChild(document.createTextNode(jsonResponse['data']));
+    var value = formatData(
+        jsonResponse['data'],
+        jsonResponse['columns'][0]['type'],
+        ChatDrawer.options.languageCode,
+        ChatDrawer.options.currencyCode
+    );
+    messageBubble.appendChild(document.createTextNode(value));
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
     ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
@@ -21117,7 +21235,6 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var json = ChatDrawer.responses[idRequest];
     var buttons = '';
     for (var i = 0; i < json['supported_display_types'].length; i++) {
-        console.log(json['supported_display_types'][i]);
         if(json['supported_display_types'][i] == ignore)continue;
         if(json['supported_display_types'][i] == 'table'){
             buttons += ChatDrawer.getTableButton(idRequest);
@@ -21278,8 +21395,13 @@ ChatDrawer.putTableResponse = function(jsonResponse){
     for (var i = 0; i < dataLines.length; i++) {
         var data = dataLines[i];
         var tr = document.createElement('tr');
+        console.log(ChatDrawer.options.languageCode);
         for (var x = 0; x < data.length; x++) {
-            value = formatData(data[x], jsonResponse['columns'][x]['type']);
+            value = formatData(
+                data[x], jsonResponse['columns'][x]['type'],
+                ChatDrawer.options.languageCode,
+                ChatDrawer.options.currencyCode
+            );
             var td = document.createElement('td');
             td.textContent = value;
             tr.appendChild(td);

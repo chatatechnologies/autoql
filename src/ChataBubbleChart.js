@@ -1,10 +1,10 @@
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -172,7 +172,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
         }
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'circle')
     .on('mouseover', function(d) {

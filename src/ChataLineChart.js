@@ -1,10 +1,10 @@
-function createLineChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -98,12 +98,14 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fillCol
     .range([ height - (margin.bottom), 0 ])
     .domain([minValue, d3.max(data, function(d) { return d.value; })]);
     svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y).tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+    ));
     // Add the line
     svg.append("path")
     .datum(data)
     .attr("fill", "none")
-    .attr("stroke", fillColor)
+    .attr("stroke", options.chartColors[0])
     .attr("stroke-width", 1)
     .attr('opacity', '0.7')
     .attr("d", d3.line()
@@ -142,7 +144,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, fillCol
      } )
     .attr("cy", function(d) { return y(d.value) } )
     .attr("r", 3)
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('class', 'line-dot')
     .on('mouseover', function(d) {
         if(renderTooltips){

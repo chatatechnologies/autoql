@@ -1,4 +1,4 @@
-function createTable(jsonResponse, oldComponent, action='replace', uuid, tableClass='table-response'){
+function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='table-response'){
     var groupField = getGroupableField(jsonResponse);
     var table = document.createElement('table');
     var header = document.createElement('tr');
@@ -35,7 +35,11 @@ function createTable(jsonResponse, oldComponent, action='replace', uuid, tableCl
         var data = dataLines[i];
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
-            value = formatData(data[x], jsonResponse['columns'][x]['type']);
+            value = formatData(
+                data[x], jsonResponse['columns'][x]['type'],
+                options.languageCode,
+                options.currencyCode
+            );
             var td = document.createElement('td');
             td.textContent = value;
             tr.appendChild(td);

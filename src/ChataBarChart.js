@@ -1,10 +1,12 @@
-function createBarChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 40, left: 130},
+function createBarChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+    var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    console.log(component.parentElement.offsetHeight);
+
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -69,6 +71,11 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fillColo
     .range([ 0, width]);
     var xAxis = d3.axisBottom(x);
     xAxis.tickSize(0);
+
+    xAxis.tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode);
+    });
+
     svg.append("g")
     .attr("transform", "translate(0," + (height - margin.bottom) + ")")
     .call(xAxis)
@@ -123,7 +130,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, fillColo
     })
     .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
     .attr("height", y.bandwidth())
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {

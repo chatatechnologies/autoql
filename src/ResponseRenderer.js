@@ -8,8 +8,8 @@ function createResponseRenderer(options={}){
         displayType: undefined,
         isFilteringTable: false,
         renderTooltips: true,
-        currencyCode: 'USD',
         languageCode: 'en-US',
+        currencyCode: 'USD',
         fontFamily: 'sans-serif',
         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195']
     }

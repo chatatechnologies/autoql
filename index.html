@@ -4,6 +4,7 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="chata-styles.css">
+
     <script src="src/d3.v4.js"></script>
     <script src="src/d3.tip.js"></script>
     <script src="src/svgIcons.js"></script>
@@ -23,6 +24,8 @@
     <script src="src/ChatDrawer.js"></script>
     <!-- <script src="build/ChatDrawer-min.js"></script> -->
 
+    <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/19dda2d3-4f7a-4e2c-b642-34de287bca09/chatastyles.css">
+    <script src="https://ucarecdn.com/2721c373-e848-4f33-8ff7-25a8c75a241e/ChatDrawermin.js"></script> -->
 </head>
 <body style="background: #efefef">
     <div id="chata">
@@ -37,8 +40,8 @@
     <script>
         var chata = ChatDrawer.init('chata', {
             isVisible: true,
-            placement: 'left',
-            width: 750,
+            placement: 'right',
+            // width: 750,
             height: 600,
             theme: 'light',
             // accentColor: '#f2b407',
@@ -62,6 +65,8 @@
             demo: false,
             // chartColors: ['#03A9F4', '#311B92', '#4A148C', '#0D47A1 ', '#BF360C', '#BF360C']
             // fontFamily: 'Monaco'
+            // languageCode: 'ja-JP',
+            // currencyCode: 'JPY'
         });
         var chatBar = ChatDrawer.getChatBar({
             autoCompletePlacement: 'bottom',
@@ -88,11 +93,13 @@
             displayType: 'stacked_column',
             renderTooltips: true,
             // fontFamily: 'Monaco'
+            // languageCode: 'ja-JP',
+            // currencyCode: 'JPY',
         });
         chatBar.bind(responseRenderer);
         document.getElementById('mycontainer').append(chatBar);
         document.getElementById('response').append(responseRenderer);
-        console.log(ChatDrawer.getSupportedDisplayTypesArray());
+        // console.log(ChatDrawer.getSupportedDisplayTypesArray());
     </script>
 
 </body>

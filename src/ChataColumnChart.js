@@ -1,10 +1,12 @@
-function createColumnChart(component, data, col1, col2, hasNegativeValues, fillColor='#28a8e0', fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createColumnChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    console.log(component.parentElement.offsetHeight);
+
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -71,15 +73,14 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fillC
     var y = d3.scaleLinear()
     .range([ height - (margin.bottom), 0 ])
     .domain([minValue, d3.max(data, function(d) { return d.value; })]);
-
-    svg.append("g")
-    .call(d3.axisLeft(y)).select(".domain").remove();
-
+    var axisLeft = d3.axisLeft(y);
+    
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisLeft(y)
+    .call(
+        axisLeft
         .tickSize(-width)
-        .tickFormat("")
+        .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)})
     );
 
 
@@ -126,7 +127,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, fillC
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
     .attr("width", x.bandwidth() )
     .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
-    .attr("fill", fillColor)
+    .attr("fill", options.chartColors[0])
     .attr('fill-opacity', '0.7')
     .attr('class', 'bar')
     .on('mouseover', function(d) {

@@ -1,4 +1,4 @@
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, colors=['#355C7D','#6C5B7B','#C06C84', '#F67280', '#F8B195'], fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -8,7 +8,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     var legendBoxMargin = 25
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = 600;
+            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }
@@ -99,11 +99,13 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .domain([0, maxValue])
     .range([ height - margin.bottom, 0 ]);
     svg.append("g")
-    .call(d3.axisLeft(y));
+    .call(d3.axisLeft(y).tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+    ));
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(colors)
+    .range(options.chartColors)
 
     svg.append("g")
     .call(d3.axisLeft(y)).select(".domain").remove();

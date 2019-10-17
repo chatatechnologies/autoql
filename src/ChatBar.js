@@ -132,10 +132,15 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 if(jsonResponse['columns'].length == 1){
-                                    var data = jsonResponse['data'];
+                                    var data = formatData(
+                                        jsonResponse['data'],
+                                        jsonResponse['columns'][0]['type'],
+                                        responseRenderer.options.languageCode,
+                                        responseRenderer.options.currencyCode,
+                                    );
                                     responseRenderer.innerHTML = `<div>${data}</div>`;
                                 }else{
-                                    var table = createTable(jsonResponse, div, 'append', uuid, 'table-response-renderer');
+                                    var table = createTable(jsonResponse, div, responseRenderer.options, 'append', uuid, 'table-response-renderer');
                                     table.classList.add('renderer-table');
                                 }
                             break;
@@ -146,7 +151,7 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
-                                var pivotArray = getDatePivotArray(jsonResponse);
+                                var pivotArray = getDatePivotArray(jsonResponse, responseRenderer.options);
                                 var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
@@ -157,7 +162,7 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
-                                var pivotArray = getPivotColumnArray(jsonResponse);
+                                var pivotArray = getPivotColumnArray(jsonResponse, responseRenderer.options);
                                 var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
@@ -169,7 +174,7 @@ function getChatBar(options){
                                 var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
                                 createLineChart(
                                     responseRenderer, grouped, col1,
-                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    col2, hasNegativeValues, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -181,7 +186,7 @@ function getChatBar(options){
                                 var col2 = formatColumnName(jsonResponse['columns'][1]['name']);
                                 createBarChart(
                                     responseRenderer, grouped, col1,
-                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    col2, hasNegativeValues, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -193,7 +198,7 @@ function getChatBar(options){
                                 var hasNegativeValues = values[1];
                                 createColumnChart(
                                     responseRenderer, grouped, col1,
-                                    col2, hasNegativeValues, responseRenderer.options.chartColors[0],
+                                    col2, hasNegativeValues, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
@@ -207,7 +212,7 @@ function getChatBar(options){
                                 var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
                                 createHeatmap(
                                     responseRenderer, labelsX, labelsY,
-                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    values, col1, col2, col3, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -220,7 +225,7 @@ function getChatBar(options){
                                 var col3 = formatColumnName(jsonResponse['columns'][2]['name']);
                                 createBubbleChart(
                                     responseRenderer, labelsX, labelsY,
-                                    values, col1, col2, col3, responseRenderer.options.chartColors[0],
+                                    values, col1, col2, col3, responseRenderer.options,
                                     false, 'data-chartrenderer', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -245,7 +250,7 @@ function getChatBar(options){
                                 createStackedBarChart(
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, col1, col2, col3,
-                                    responseRenderer.options.chartColors, false,
+                                    responseRenderer.options, false,
                                     'data-chartindex', responseRenderer.options.renderTooltips
                                 );
                             break;
@@ -267,7 +272,7 @@ function getChatBar(options){
                                 createStackedColumnChart(
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, col1, col2, col3,
-                                    responseRenderer.options.chartColors, false,
+                                    responseRenderer.options, false,
                                     'data-chartindex', responseRenderer.options.renderTooltips
                                 );
                             break;

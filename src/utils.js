@@ -1,9 +1,16 @@
-function formatData(val, type){
+function formatData(val, type, lang='en-US', currency='USD'){
     value = '';
     switch (type) {
         case 'DOLLAR_AMT':
-        if(parseFloat(val) != 0){
-            value = '$' + val;
+        val = parseFloat(val);
+        const sigDigs = String(parseInt(val)).length
+        if(val != 0){
+            value = new Intl.NumberFormat(lang, {
+                    style: 'currency',
+                    currency: currency,
+                    maximumSignificantDigits: sigDigs
+                }
+            ).format(val);
         }else{
             value = val;
         }
@@ -156,7 +163,7 @@ function getGroupableField(json){
 }
 
 
-function getPivotColumnArray(json){
+function getPivotColumnArray(json, options){
     var lines = csvTo2dArray(json['data']);
     var values = [];
     var firstColName = '';
@@ -168,7 +175,12 @@ function getPivotColumnArray(json){
                 var name = json['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
-            row.push(formatData(data[x], json['columns'][x]['type']));
+            row.push(formatData(
+                data[x],
+                json['columns'][x]['type'],
+                options.languageCode,
+                options.currencyCode
+            ));
         }
         values.push(row);
     }
@@ -198,7 +210,7 @@ function sortPivot(pivotArray, colIndex, operator){
     return pivotArray.sort(comparator);
 }
 
-function getDatePivotArray(json){
+function getDatePivotArray(json, options){
     var lines = csvTo2dArray(json['data']);
     var values = [];
     for (var i = 0; i < lines.length; i++) {
@@ -213,7 +225,7 @@ function getDatePivotArray(json){
                     row.unshift(MONTH_NAMES[date.getMonth()], date.getFullYear());
                     break;
                 default:
-                    row.push(formatData(data[x], json['columns'][x]['type']));
+                    row.push(formatData(data[x], json['columns'][x]['type'], options.languageCode, options.currencyCode));
             }
         }
         values.push(row);
@@ -257,13 +269,82 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
 }
 
 function getSVGString(svgNode) {
+    // svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    // var serializer = new XMLSerializer();
+    // var svgString = serializer.serializeToString(svgNode);
+    // svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
+    // svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
+    //
+    // return svgString;
+
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    var cssStyleText = getCSSStyles( svgNode );
+    appendCSS( cssStyleText, svgNode );
+
     var serializer = new XMLSerializer();
     var svgString = serializer.serializeToString(svgNode);
-    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
-    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
+    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
+    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
 
     return svgString;
+
+    function getCSSStyles( parentElement ) {
+        var selectorTextArr = [];
+
+        // Add Parent element Id and Classes to the list
+        selectorTextArr.push( '#'+parentElement.id );
+        for (var c = 0; c < parentElement.classList.length; c++)
+        if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
+        selectorTextArr.push( '.'+parentElement.classList[c] );
+
+        // Add Children element Ids and Classes to the list
+        var nodes = parentElement.getElementsByTagName("*");
+        for (var i = 0; i < nodes.length; i++) {
+            var id = nodes[i].id;
+            if ( !contains('#'+id, selectorTextArr) )
+            selectorTextArr.push( '#'+id );
+
+            var classes = nodes[i].classList;
+            for (var c = 0; c < classes.length; c++)
+            if ( !contains('.'+classes[c], selectorTextArr) )
+            selectorTextArr.push( '.'+classes[c] );
+        }
+
+        // Extract CSS Rules
+        var extractedCSSText = "";
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var s = document.styleSheets[i];
+
+            try {
+                if(!s.cssRules) continue;
+            } catch( e ) {
+                if(e.name !== 'SecurityError') throw e; // for Firefox
+                continue;
+            }
+
+            var cssRules = s.cssRules;
+            for (var r = 0; r < cssRules.length; r++) {
+                if ( contains( cssRules[r].selectorText, selectorTextArr ) )
+                extractedCSSText += cssRules[r].cssText;
+            }
+        }
+
+
+        return extractedCSSText;
+
+        function contains(str,arr) {
+            return arr.indexOf( str ) === -1 ? false : true;
+        }
+
+    }
+
+    function appendCSS( cssText, element ) {
+        var styleElement = document.createElement("style");
+        styleElement.setAttribute("type","text/css");
+        styleElement.innerHTML = cssText;
+        var refNode = element.hasChildNodes() ? element.children[0] : null;
+        element.insertBefore( styleElement, refNode );
+    }
 }
 
 function svgString2Image(svgString, width, height) {
@@ -279,17 +360,6 @@ function svgString2Image(svgString, width, height) {
     image.onload = function() {
         context.clearRect ( 0, 0, width, height );
         context.drawImage(image, 0, 0, width, height);
-        var imgPixels = context.getImageData(0, 0, canvas.width, canvas.height);
-        for(var y = 0; y < imgPixels.height; y++){
-            for(var x = 0; x < imgPixels.width; x++){
-                var i = (y * 4) * imgPixels.width + x * 4;
-                imgPixels.data[i] = 0;
-                imgPixels.data[i + 1] = 0;
-                imgPixels.data[i + 2] = 0;
-            }
-        }
-        context.putImageData(imgPixels, 0, 0, 0, 0, imgPixels.width, imgPixels.height);
-
         var link = document.createElement("a");
         link.setAttribute('href', canvas.toDataURL("image/png;base64"));
         link.setAttribute('download', 'Chart.png');
