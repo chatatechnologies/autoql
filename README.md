@@ -34,6 +34,7 @@ var chata = ChatDrawer.init('my-drawer-container', {
     placement: 'left',
     width: 650,
     theme: 'light',
+    token: '',
     apiKey: 'your-api-key',
     customerId: 'your-customer-id',
     userId: 'your@email.com',
@@ -52,6 +53,7 @@ You will find a list of available props and their defaults in the next section.
 <script>
 //Create the components
 var chatBar = ChatDrawer.getChatBar({
+    token: '',
     apiKey: 'your-api-key',
     customerId: 'your-customer-id',
     userId: 'your@email.com',
