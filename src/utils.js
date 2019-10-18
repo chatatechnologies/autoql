@@ -151,11 +151,11 @@ function getGroupableField(json){
         jsonCol: {},
         name: ''
     }
-    for (var i = 0; i < json['columns'].length; i++) {
-        if(json['columns'][i]['groupable']){
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        if(json['data']['columns'][i]['groupable']){
             r['indexCol'] = i;
-            r['jsonCol'] = json['columns'][i];
-            r['name'] = json['columns'][i]['name'];
+            r['jsonCol'] = json['data']['columns'][i];
+            r['name'] = json['data']['columns'][i]['name'];
             return r;
         }
     }
@@ -164,20 +164,20 @@ function getGroupableField(json){
 
 
 function getPivotColumnArray(json, options){
-    var lines = csvTo2dArray(json['data']);
+    var lines = json['data']['rows'];
     var values = [];
     var firstColName = '';
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = [];
         for (var x = 0; x < data.length; x++) {
-            if(firstColName == '' && json['columns'][x]['groupable']){
-                var name = json['columns'][x]['name'];
+            if(firstColName == '' && json['data']['columns'][x]['groupable']){
+                var name = json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
             row.push(formatData(
                 data[x],
-                json['columns'][x]['type'],
+                json['data']['columns'][x]['type'],
                 options.languageCode,
                 options.currencyCode
             ));
@@ -211,21 +211,21 @@ function sortPivot(pivotArray, colIndex, operator){
 }
 
 function getDatePivotArray(json, options){
-    var lines = csvTo2dArray(json['data']);
+    var lines = json['data']['rows'];
     var values = [];
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = [];
         for (var x = 0; x < data.length; x++) {
 
-            switch (json['columns'][x]['type']) {
+            switch (json['data']['columns'][x]['type']) {
                 case 'DATE':
                     var value = data[x];
                     var date = new Date( parseInt(value) * 1000);
                     row.unshift(MONTH_NAMES[date.getMonth()], date.getFullYear());
                     break;
                 default:
-                    row.push(formatData(data[x], json['columns'][x]['type'], options.languageCode, options.currencyCode));
+                    row.push(formatData(data[x], json['data']['columns'][x]['type'], options.languageCode, options.currencyCode));
             }
         }
         values.push(row);
@@ -388,10 +388,10 @@ function formatLabels(labels, colType){
 }
 
 function formatDataToHeatmap(json){
-    var lines = csvTo2dArray(json['data']);
+    var lines = json['data']['rows'];
     var values = [];
-    var colType1 = json['columns'][0]['type'];
-    var colType2 = json['columns'][1]['type'];
+    var colType1 = json['data']['columns'][0]['type'];
+    var colType2 = json['data']['columns'][1]['type'];
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
@@ -407,9 +407,9 @@ function formatDataToHeatmap(json){
 }
 
 function formatDataToBarChart(json){
-    var lines = csvTo2dArray(json['data']);
+    var lines = json['data']['rows'];
     var values = [];
-    var colType1 = json['columns'][0]['type'];
+    var colType1 = json['data']['columns'][0]['type'];
     var hasNegativeValues = false;
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
@@ -430,15 +430,35 @@ function formatDataToBarChart(json){
 function getSupportedDisplayTypesArray(){
     return [
         'table',
-        'date_pivot',
+        // 'date_pivot',
         'pivot_column',
         'line',
         'bar',
         'column',
         'heatmap',
         'bubble',
-        'column_chart',
         'stacked_bar',
         'stacked_column'
     ];
+}
+
+
+function cloneObject(source) {
+    if (Object.prototype.toString.call(source) === '[object Array]') {
+        var clone = [];
+        for (var i=0; i<source.length; i++) {
+            clone[i] = cloneObject(source[i]);
+        }
+        return clone;
+    } else if (typeof(source)=="object") {
+        var clone = {};
+        for (var prop in source) {
+            if (source.hasOwnProperty(prop)) {
+                clone[prop] = cloneObject(source[prop]);
+            }
+        }
+        return clone;
+    } else {
+        return source;
+    }
 }

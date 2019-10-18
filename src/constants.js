@@ -23,3 +23,20 @@ const MONTH_NAMES = [
     "August", "September", "October",
     "November", "December"
 ];
+
+const DISPLAY_TYPES_2D = [
+    'table',
+    'column',
+    'bar',
+    'line',
+];
+
+const DISPLAY_TYPES_3D  = [
+    'table',
+    // 'date_pivot',
+    'pivot_column',
+    'heatmap',
+    'bubble',
+    'stacked_bar',
+    'stacked_column'
+];

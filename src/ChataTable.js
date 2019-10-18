@@ -12,10 +12,10 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     }else{
         table.setAttribute('data-componentid', uuid);
     }
-    var dataLines = csvTo2dArray(jsonResponse['data']);
+    var dataLines = jsonResponse['data']['rows'];
 
-    for (var i = 0; i < jsonResponse['columns'].length; i++) {
-        var colName = formatColumnName(jsonResponse['columns'][i]['name']);
+    for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
+        var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
         var col = document .createElement('div');
@@ -23,7 +23,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         arrow.classList.add('tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column');
-        col.setAttribute('data-type', jsonResponse['columns'][i]['type']);
+        col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
         col.setAttribute('data-index', i);
 
         th.appendChild(col);
@@ -36,7 +36,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
             value = formatData(
-                data[x], jsonResponse['columns'][x]['type'],
+                data[x], jsonResponse['data']['columns'][x]['type'],
                 options.languageCode,
                 options.currencyCode
             );

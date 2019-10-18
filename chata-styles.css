@@ -834,9 +834,9 @@ input[type=text]:disabled {
     line-height: 1;
     letter-spacing: 0.04em;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(0, 0, 0, 0.9);
     border-radius: 2px;
-    font-family: var(--chata-drawer-font-family);
+    font-family: sans-serif;
     font-size: 13px;
     color: var(--chata-drawer-hover-color);
     z-index: 1000;
