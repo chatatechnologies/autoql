@@ -897,7 +897,7 @@ ChatDrawer.safetynetCall = function(url, callback, options){
         }
     };
     xhr.open('GET', url);
-    xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
     xhr.setRequestHeader("Authorization", `Bearer ${options.token}`);
     xhr.send();
 }
@@ -923,6 +923,7 @@ ChatDrawer.ajaxCall = function(val, callback, options){
     xhr.open('POST', url);
     xhr.setRequestHeader("Content-Type", "application/json");
     if(!options.demo){
+        // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
         xhr.setRequestHeader("Authorization", `Bearer ${options.token}`);
     }
     xhr.send(JSON.stringify(data));
@@ -932,7 +933,7 @@ ChatDrawer.ajaxCallPost = function(url, callback, data, options){
     var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
     xmlhttp.open("POST", url);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
-    xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
+    // xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
     if(!options.demo){
         xmlhttp.setRequestHeader("Authorization", `Bearer ${options.token}`);
     }
@@ -1043,75 +1044,75 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
         textValue
       )}&projectId=1`
       : `${ChatDrawer.options.domain}/api/v1/chata/safetynet?query=${encodeURIComponent(
-        query
+        textValue
       )}&key=${ChatDrawer.options.apiKey}&customer_id=${ChatDrawer.options.customerId}&user_id=${ChatDrawer.options.userId}`
 
 
-    ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse){
-        if(jsonResponse['full_suggestion'].length > 0 && ChatDrawer.options.enableSafetyNet){
-            chataInput.removeAttribute("disabled");
-            ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+    // ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse){
+    //     if(jsonResponse['full_suggestion'].length > 0 && ChatDrawer.options.enableSafetyNet){
+    //         chataInput.removeAttribute("disabled");
+    //         ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+    //
+    //         var suggestionArray = createSuggestionArray(jsonResponse);
+    //         ChatDrawer.putSafetynetMessage(suggestionArray);
+    //     }else{
+    //     }
+    // }, ChatDrawer.options);
 
-            var suggestionArray = createSuggestionArray(jsonResponse);
-            ChatDrawer.putSafetynetMessage(suggestionArray);
-        }else{
-            ChatDrawer.ajaxCall(textValue, function(jsonResponse){
-                chataInput.removeAttribute("disabled");
-                ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-                switch(jsonResponse['data']['display_type']){
-                    case 'suggestion':
-                        ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
-                    break;
-                    case 'table':
-                        if(jsonResponse['data']['columns'].length == 1){
-                            ChatDrawer.putSimpleResponse(jsonResponse);
-                        }else{
-                            ChatDrawer.putTableResponse(jsonResponse);
-                        }
-                    break;
-                    case 'date_pivot':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'pivot_column':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'line':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'bar':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'word_cloud':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'stacked_column':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'bubble':
-                        ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'heatmap':
+    ChatDrawer.ajaxCall(textValue, function(jsonResponse){
+        chataInput.removeAttribute("disabled");
+        ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+        switch(jsonResponse['data']['display_type']){
+            case 'suggestion':
+                ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
+            break;
+            case 'table':
+                if(jsonResponse['data']['columns'].length == 1){
+                    ChatDrawer.putSimpleResponse(jsonResponse);
+                }else{
                     ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'pie':
-                    ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'column':
-                    ChatDrawer.putTableResponse(jsonResponse);
-                    break;
-                    case 'help':
-                        console.log(jsonResponse);
-                        ChatDrawer.putHelpMessage(jsonResponse);
-                    break;
-                    default:
-                        // temporary
-                        jsonResponse['data'] = 'Error: There was no data supplied for this table';
-                        ChatDrawer.putSimpleResponse(jsonResponse);
                 }
-                ChatDrawer.checkMaxMessages();
-            }, ChatDrawer.options);
-
+            break;
+            case 'date_pivot':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'pivot_column':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'line':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'bar':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'word_cloud':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'stacked_column':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'bubble':
+                ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'heatmap':
+            ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'pie':
+            ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'column':
+            ChatDrawer.putTableResponse(jsonResponse);
+            break;
+            case 'help':
+                console.log(jsonResponse);
+                ChatDrawer.putHelpMessage(jsonResponse);
+            break;
+            default:
+                // temporary
+                jsonResponse['data'] = 'Error: There was no data supplied for this table';
+                ChatDrawer.putSimpleResponse(jsonResponse);
         }
+        ChatDrawer.checkMaxMessages();
     }, ChatDrawer.options);
     chataInput.value = '';
 }

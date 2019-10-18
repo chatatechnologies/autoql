@@ -22,6 +22,9 @@
     <script src="src/ResponseRenderer.js"></script>
     <script src="src/ChatBar.js"></script>
     <script src="src/ChatDrawer.js"></script>
+
+    <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/fd4b2bdf-fbc1-4ab2-af8b-5a1efc0f7285/chatastyles.css">
+    <script src="https://ucarecdn.com/3013a14f-43b8-4b0c-a068-ea8d229a05b6/ChatDrawermin.js"></script> -->
     <!-- <script src="build/ChatDrawer-min.js"></script> -->
 
     <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/19dda2d3-4f7a-4e2c-b642-34de287bca09/chatastyles.css">
@@ -38,7 +41,13 @@
     </div>
 
     <script>
+    var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxMzYyOTYzLCAiZXhwIjogMTU3MTM3Mzc2MywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.ZVcVUmhVTIh0d_A386IUPaijxMRHGiilTGSWFVpxAbjfJSBzt_bq4ZGrYWYwwYzgqjZZaQY7Z9FchlA5LoUhbkQRQHl6JBTC6fY6IXepyZySBA8nHm37dWpd_p2HJBm0-YjmB7Hma2zLQKU_RKtl4SWXbq-q01I2RX_xghA8UyQwOSKtUcOF6Fr44lUGeJiWQMgWniJRjUMzl9o_x5z2sf1O7oNKanDbSriyRCC8_8SUYmZ_PevMPt9r1FLKbMJEWf0U8-xCRofvunJIbkz_mX_kRRb5aEW79yxRgvtQStzjp4Rd65MIpOK-2K1ZVGqcY1hC3sLcusUEbkbazaZTqg==`;
         var chata = ChatDrawer.init('chata', {
+            token: _token,
+            apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
+            customerId: 'locate-demo1',
+            userId: 'nmoore@chata.ai',
+            domain: 'https://locate-staging.chata.io',
             isVisible: true,
             placement: 'right',
             // width: 750,
@@ -62,8 +71,8 @@
             // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
             enableSafetyNet: true,
             enableDrilldowns: true,
-            demo: true,
-            debug: true
+            demo: false,
+            debug: false
             // chartColors: ['#03A9F4', '#311B92', '#4A148C', '#0D47A1 ', '#BF360C', '#BF360C']
             // fontFamily: 'Monaco'
             // languageCode: 'ja-JP',
