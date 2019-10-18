@@ -7,7 +7,7 @@ you have to import the javascript and css file from the widget
 
 ```
 <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/fd4b2bdf-fbc1-4ab2-af8b-5a1efc0f7285/chatastyles.css">
-<script src="https://ucarecdn.com/3013a14f-43b8-4b0c-a068-ea8d229a05b6/ChatDrawermin.js"></script>
+<script src="https://ucarecdn.com/9912723e-ab89-46c9-ba6c-2825821f7111/ChatDrawermin.js"></script>
 ```
 
 # Environment Support
