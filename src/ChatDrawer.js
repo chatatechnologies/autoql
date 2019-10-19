@@ -132,7 +132,7 @@ ChatDrawer.createBar = function(){
     </div>
     <div class="text-bar">
         <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
-        <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tip="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tip-disable="false" currentitem="false">
+        <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
         <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
         </button>
     </div>
@@ -161,7 +161,7 @@ ChatDrawer.createHeader = function(){
     var chatHeaderContainer = document.createElement('div');
     var htmlHeader = `
         <div class="chata-header-left">
-            <button class="chata-button close close-action" data-tip="Close Drawer" data-for="chata-header-tooltip" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
+            <button class="chata-button close close-action" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
         </div>
         <div class="chata-header-center-container">
             ${ChatDrawer.options.title}
@@ -315,6 +315,27 @@ ChatDrawer.registerEvents = function(){
                     ChatDrawer.options.isRecordVoiceActive = true;
                     ChatDrawer.speechToText.start();
                 }
+            }
+
+            if(e.target.classList.contains('filter-table')){
+                if(e.target.tagName == 'svg'){
+                    parent = e.target.parentElement.parentElement.parentElement;
+                }else if(e.target.tagName == 'path'){
+                    parent = e.target.parentElement.parentElement.parentElement.parentElement;
+                }else{
+                    parent = e.target.parentElement.parentElement;
+                }
+                var table = parent.getElementsByTagName('table')[0];
+                var inputs = table.getElementsByClassName('tabulator-header-filter');
+
+                for (var i = 0; i < inputs.length; i++) {
+                    if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
+                        inputs[i].style.display = 'block';
+                    }else{
+                        inputs[i].style.display = 'none';
+                    }
+                }
+                console.log();
             }
 
             if(e.target.classList.contains('suggestion')){
@@ -700,6 +721,7 @@ ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
     toolbarLeft.innerHTML = ChatDrawer.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
     toolbarRight.innerHTML = ChatDrawer.getActionButtons(oldComponent.dataset.componentid, actionType);
+    refreshTooltips();
 }
 
 ChatDrawer.sort = function(component, operator, colIndex, colType){
@@ -1056,8 +1078,10 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
     //         var suggestionArray = createSuggestionArray(jsonResponse);
     //         ChatDrawer.putSafetynetMessage(suggestionArray);
     //     }else{
+    //
     //     }
     // }, ChatDrawer.options);
+
 
     ChatDrawer.ajaxCall(textValue, function(jsonResponse){
         chataInput.removeAttribute("disabled");
@@ -1113,7 +1137,9 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                 ChatDrawer.putSimpleResponse(jsonResponse);
         }
         ChatDrawer.checkMaxMessages();
+        refreshTooltips();
     }, ChatDrawer.options);
+
     chataInput.value = '';
 }
 
@@ -1126,7 +1152,7 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
     ChatDrawer.responses[idRequest] = jsonResponse;
     containerMessage.setAttribute('data-containerid', idRequest);
     messageBubble.classList.add('chat-message-bubble');
-    toolbarButtons = ChatDrawer.getActionButtons(idRequest, 'csvCopy');
+    toolbarButtons = ChatDrawer.getActionButtons(idRequest, 'simple');
     messageBubble.innerHTML = `
     <div class="chat-message-toolbar right">
         ${toolbarButtons}
@@ -1144,19 +1170,35 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
 }
 
 ChatDrawer.getActionButtons = function(idRequest, type){
-    if (type == 'csvCopy'){
+    var tooltipContent = ChatDrawer.responses[idRequest]['data']['interpretation'];
+
+    if(type == 'simple'){
         return `
-        <button class="chata-toolbar-btn clipboard" data-id="${idRequest}">
+        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
+            ${INFO_ICON}
+        </button>`;
+    }else if (type == 'csvCopy'){
+        return `
+        <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
+            ${FILTER_TABLE}
+        </button>
+        <button class="chata-toolbar-btn clipboard" data-tippy-content="Copy to Clipboard" data-id="${idRequest}">
             ${CLIPBOARD_ICON}
         </button>
-        <button class="chata-toolbar-btn csv" data-id="${idRequest}">
+        <button class="chata-toolbar-btn csv" data-tippy-content="Download as CSV" data-id="${idRequest}">
             ${DOWNLOAD_CSV_ICON}
+        </button>
+        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
+            ${INFO_ICON}
         </button>
         `;
     }else{
         return `
-        <button class="chata-toolbar-btn export_png" data-id="${idRequest}">
+        <button class="chata-toolbar-btn export_png" data-tippy-content="Download as PNG" data-id="${idRequest}">
             ${EXPORT_PNG_ICON}
+        </button>
+        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
+            ${INFO_ICON}
         </button>
         `;
     }
@@ -1226,14 +1268,14 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
 
 ChatDrawer.getTableButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn table" data-tip="Table" data-id="${idRequest}">
+    <button class="chata-toolbar-btn table" data-tippy-content="Table" data-id="${idRequest}">
         ${TABLE_ICON}
     </button>`;
 }
 
 ChatDrawer.getPivotTableButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn pivot_table" data-tip="Pivot Table" data-id="${idRequest}">
+    <button class="chata-toolbar-btn pivot_table" data-tippy-content="Pivot Table" data-id="${idRequest}">
         ${PIVOT_ICON}
     </button>
     `;
@@ -1241,7 +1283,7 @@ ChatDrawer.getPivotTableButton = function(idRequest){
 
 ChatDrawer.getColumnChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn column_chart" data-tip="Column Chart" data-id="${idRequest}">
+    <button class="chata-toolbar-btn column_chart" data-tippy-content="Column Chart" data-id="${idRequest}">
         ${COLUMN_CHART_ICON}
     </button>
     `;
@@ -1249,7 +1291,7 @@ ChatDrawer.getColumnChartButton = function(idRequest){
 
 ChatDrawer.getBarChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn bar_chart" data-tip="Bar Chart" data-id="${idRequest}">
+    <button class="chata-toolbar-btn bar_chart" data-tippy-content="Bar Chart" data-id="${idRequest}">
         ${BAR_CHART_ICON}
     </button>
     `;
@@ -1257,7 +1299,7 @@ ChatDrawer.getBarChartButton = function(idRequest){
 
 ChatDrawer.getLineChartButton = function(idRequest) {
     return `
-    <button class="chata-toolbar-btn line_chart" data-tip="Line Chart" data-id="${idRequest}">
+    <button class="chata-toolbar-btn line_chart" data-tippy-content="Line Chart" data-id="${idRequest}">
         ${LINE_CHART_ICON}
     </button>
     `;
@@ -1265,7 +1307,7 @@ ChatDrawer.getLineChartButton = function(idRequest) {
 
 ChatDrawer.getHeatmapChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn heatmap" data-tip="Heatmap" data-id="${idRequest}">
+    <button class="chata-toolbar-btn heatmap" data-tippy-content="Heatmap" data-id="${idRequest}">
         ${HEATMAP_ICON}
     </button>
     `;
@@ -1273,20 +1315,20 @@ ChatDrawer.getHeatmapChartButton = function(idRequest){
 
 ChatDrawer.getBubbleChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn bubble_chart" data-tip="Bubble Chart" data-id="${idRequest}">
+    <button class="chata-toolbar-btn bubble_chart" data-tippy-content="Bubble Chart" data-id="${idRequest}">
         ${BUBBLE_CHART_ICON}
     </button>
     `;
 }
 
 ChatDrawer.getStackedColumnChartButton = function(idRequest){
-    return `<button class="chata-toolbar-btn stacked_column_chart" data-tip="Column Chart" data-id="${idRequest}">
+    return `<button class="chata-toolbar-btn stacked_column_chart" data-tippy-content="Stacked Column Chart" data-id="${idRequest}">
         ${STACKED_COLUMN_CHART_ICON}
     </button>`;
 }
 
 ChatDrawer.getStackedBarChartButton = function(idRequest){
-    return `<button class="chata-toolbar-btn stacked_bar_chart" data-tip="Column Chart" data-id="${idRequest}">
+    return `<button class="chata-toolbar-btn stacked_bar_chart" data-tippy-content="Stacked Bar Chart" data-id="${idRequest}">
         ${STACKED_BAR_CHART_ICON}
     </button>`;
 }
@@ -1339,7 +1381,12 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         col.classList.add('column');
         col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
         col.setAttribute('data-index', i);
-
+        var divFilter = document.createElement('div');
+        var filter = document.createElement('input');
+        divFilter.classList.add('tabulator-header-filter');
+        divFilter.appendChild(filter);
+        filter.setAttribute('placeholder', 'Filter column');
+        col.appendChild(divFilter);
         th.appendChild(col);
         th.appendChild(arrow);
         header.appendChild(th);

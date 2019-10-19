@@ -26,6 +26,13 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
         col.setAttribute('data-index', i);
 
+        var divFilter = document.createElement('div');
+        var filter = document.createElement('input');
+        divFilter.classList.add('tabulator-header-filter');
+        divFilter.appendChild(filter);
+        filter.setAttribute('placeholder', 'Filter column');
+        col.appendChild(divFilter);
+
         th.appendChild(col);
         th.appendChild(arrow);
         header.appendChild(th);
@@ -87,6 +94,12 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         col.classList.add('column-pivot');
         col.setAttribute('data-type', 'PIVOT');
         col.setAttribute('data-index', i);
+        var divFilter = document.createElement('div');
+        var filter = document.createElement('input');
+        divFilter.classList.add('tabulator-header-filter');
+        divFilter.appendChild(filter);
+        filter.setAttribute('placeholder', 'Filter column');
+        col.appendChild(divFilter);
         if(i == 0){
             th.classList.add('sticky-col');
         }

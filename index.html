@@ -5,6 +5,11 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="chata-styles.css">
 
+    <script src="https://unpkg.com/popper.js@1"></script>
+    <script src="https://unpkg.com/tippy.js@5"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" />
+
     <script src="src/d3.v4.js"></script>
     <script src="src/d3.tip.js"></script>
     <script src="src/svgIcons.js"></script>
@@ -34,6 +39,9 @@
     <div id="chata">
     </div>
 
+    <div id="chata2">
+    </div>
+
     <div id="mycontainer" style="width:100%;">
     </div>
 
@@ -41,7 +49,7 @@
     </div>
 
     <script>
-    var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxMzYyOTYzLCAiZXhwIjogMTU3MTM3Mzc2MywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.ZVcVUmhVTIh0d_A386IUPaijxMRHGiilTGSWFVpxAbjfJSBzt_bq4ZGrYWYwwYzgqjZZaQY7Z9FchlA5LoUhbkQRQHl6JBTC6fY6IXepyZySBA8nHm37dWpd_p2HJBm0-YjmB7Hma2zLQKU_RKtl4SWXbq-q01I2RX_xghA8UyQwOSKtUcOF6Fr44lUGeJiWQMgWniJRjUMzl9o_x5z2sf1O7oNKanDbSriyRCC8_8SUYmZ_PevMPt9r1FLKbMJEWf0U8-xCRofvunJIbkz_mX_kRRb5aEW79yxRgvtQStzjp4Rd65MIpOK-2K1ZVGqcY1hC3sLcusUEbkbazaZTqg==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxNDM4ODU1LCAiZXhwIjogMTU3MTQ0OTY1NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.BJEuLY4oZ0DkfwS4S4rxC5EQeHzAT-KZKjklm9KWYxn76MP_zh4gU-fvcK4sl82S38kiFYBuDGbT0h9_VQ4PXpcj-dj1FviMcROYa7UITIFYzajj4xRjvAwWG8tXYZNqPRXMbNP2LTbXIt3nqch7Tq2FrYuv6pqHhJeHgzXWH9FX3g3F5cMQXEdfM-CDtWJhOUX87CHId9TzzGindPlDdbAS22RHGj4NulKR89iRwyIubITHDVUVXHJl9LUBk3AOZ69J90GdrIQbj8bKU79SEjiQ-M2idtpMSv5-EqmoPx-aVaoD-3S-NMIz_nBPLvaQX4qEo0PDrbY0nr3SXLUbyQ==`;
         var chata = ChatDrawer.init('chata', {
             token: _token,
             apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
@@ -72,7 +80,7 @@
             enableSafetyNet: true,
             enableDrilldowns: true,
             demo: true,
-            debug: false
+            debug: true
             // chartColors: ['#03A9F4', '#311B92', '#4A148C', '#0D47A1 ', '#BF360C', '#BF360C']
             // fontFamily: 'Monaco'
             // languageCode: 'ja-JP',
@@ -97,7 +105,7 @@
         });
         var responseRenderer = ChatDrawer.createResponseRenderer({
             supportsSuggestions: true,
-            onSuggestionClick: function(){console.log('onSuggestionClick!!!!!!!!!!!!');},
+            onSuggestionClick: function(){},
             // tableBorderColor: 'green',
             // tableHoverColor: 'green',
             displayType: 'stacked_column',

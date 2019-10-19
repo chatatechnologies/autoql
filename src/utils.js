@@ -462,3 +462,25 @@ function cloneObject(source) {
         return source;
     }
 }
+
+function refreshTooltips(){
+    tippy('.chata-interpretation', {
+        theme: 'chata',
+        onShow: function(instance){
+            var data = ChatDrawer.responses[instance.reference.dataset.id]['data'];
+            var content  = `<span class='title-tip'>Interpretation:</span> <span class="text-tip">${data['interpretation']}</span>`;
+            if(ChatDrawer.options.debug){
+                content += `</br></br>
+                <span class='title-tip'>SQL:</span> <span class="text-tip">${data['sql']}</span>
+                `;
+            }
+            instance.setContent(
+                content
+            );
+        }
+    });
+    tippy('[data-tippy-content]', {
+        theme: 'chata',
+        delay: [500]
+    })
+}
