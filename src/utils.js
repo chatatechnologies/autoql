@@ -163,8 +163,8 @@ function getGroupableField(json){
 }
 
 
-function getPivotColumnArray(json, options){
-    var lines = json['data']['rows'];
+function getPivotColumnArray(json, options, _data){
+    var lines = _data;
     var values = [];
     var firstColName = '';
     for (var i = 0; i < lines.length; i++) {
@@ -210,8 +210,8 @@ function sortPivot(pivotArray, colIndex, operator){
     return pivotArray.sort(comparator);
 }
 
-function getDatePivotArray(json, options){
-    var lines = json['data']['rows'];
+function getDatePivotArray(json, options, _data){
+    var lines = _data;
     var values = [];
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
@@ -483,4 +483,21 @@ function refreshTooltips(){
         theme: 'chata',
         delay: [500]
     })
+}
+
+function applyFilter(idRequest){
+    var _table = document.querySelector(`[data-componentid='${idRequest}']`);
+    var inputs = _table.getElementsByTagName('input');
+    var rows = cloneObject(ChatDrawer.responses[_table.dataset.componentid]['data']['rows']);
+    for (var i = 0; i < inputs.length; i++) {
+        if(inputs[i].value == '')continue;
+        rows = rows.filter(function(elem){
+            var v = elem[i];
+            if(typeof v === 'number'){
+                v = v.toString();
+            }
+            return v.toLowerCase().includes(inputs[i].value.toLowerCase());
+        });
+    }
+    return rows;
 }

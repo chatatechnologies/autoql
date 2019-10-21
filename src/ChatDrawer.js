@@ -335,7 +335,6 @@ ChatDrawer.registerEvents = function(){
                         inputs[i].style.display = 'none';
                     }
                 }
-                console.log();
             }
 
             if(e.target.classList.contains('suggestion')){
@@ -386,12 +385,14 @@ ChatDrawer.registerEvents = function(){
                 if(e.target.nextSibling.classList.contains('up')){
                     e.target.nextSibling.classList.remove('up');
                     e.target.nextSibling.classList.add('down');
-                    var sortData = ChatDrawer.sort(tableElement, 'desc', e.target.dataset.index, e.target.dataset.type);
+                    var data = applyFilter(tableElement.dataset.componentid);
+                    var sortData = ChatDrawer.sort(data, 'desc', e.target.dataset.index, e.target.dataset.type);
                     ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
                 }else{
                     e.target.nextSibling.classList.remove('down');
                     e.target.nextSibling.classList.add('up');
-                    var sortData = ChatDrawer.sort(tableElement, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
+                    var data = applyFilter(tableElement.dataset.componentid);
+                    var sortData = ChatDrawer.sort(data, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
                     ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
                 }
             }
@@ -399,20 +400,23 @@ ChatDrawer.registerEvents = function(){
                 var tableElement = e.target.parentElement.parentElement.parentElement;
                 var pivotArray = [];
                 var json = ChatDrawer.responses[tableElement.dataset.componentid];
+                var rows = applyFilter(tableElement.dataset.componentid);
                 if(json['display_type'] == 'date_pivot'){
-                    pivotArray = getDatePivotArray(json, ChatDrawer.options);
+                    pivotArray = getDatePivotArray(json, ChatDrawer.options, rows);
                 }else{
-                    pivotArray = getPivotColumnArray(json, ChatDrawer.options);
+                    pivotArray = getPivotColumnArray(json, ChatDrawer.options, rows);
                 }
                 if(e.target.nextSibling.classList.contains('up')){
                     e.target.nextSibling.classList.remove('up');
                     e.target.nextSibling.classList.add('down');
                     var sortData = sortPivot(pivotArray, e.target.dataset.index, 'desc');
+                    sortData.unshift([]); //Simulate header
                     ChatDrawer.refreshPivotTable(tableElement, sortData);
                 }else{
                     e.target.nextSibling.classList.remove('down');
                     e.target.nextSibling.classList.add('up');
                     var sortData = sortPivot(pivotArray, e.target.dataset.index, 'asc');
+                    sortData.unshift([]); //Simulate header
                     ChatDrawer.refreshPivotTable(tableElement, sortData);
                 }
             }
@@ -428,10 +432,10 @@ ChatDrawer.registerEvents = function(){
                 var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                 ChatDrawer.refreshToolbarButtons(component, 'pivot_column');
                 if(json['display_type'] == 'date_pivot'){
-                    var pivotArray = getDatePivotArray(json, ChatDrawer.options);
+                    var pivotArray = getDatePivotArray(json, ChatDrawer.options, json['data']['rows']);
                     createPivotTable(pivotArray, component);
                 }else{
-                    var pivotArray = getPivotColumnArray(json, ChatDrawer.options);
+                    var pivotArray = getPivotColumnArray(json, ChatDrawer.options, json['data']['rows']);
                     createPivotTable(pivotArray, component);
                 }
             }
@@ -724,9 +728,8 @@ ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     refreshTooltips();
 }
 
-ChatDrawer.sort = function(component, operator, colIndex, colType){
-    var json = ChatDrawer.responses[component.dataset.componentid];
-    var lines = json['data']['rows'];
+ChatDrawer.sort = function(data, operator, colIndex, colType){
+    var lines = data;
     var values = []
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
@@ -761,22 +764,37 @@ ChatDrawer.sort = function(component, operator, colIndex, colType){
 ChatDrawer.refreshPivotTable = function(table, pivotArray){
     var rows = table.childNodes;
     var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
-    for (var i = 1; i < rows.length; i++) {
+    for (var i = 0; i < rows.length; i++) {
+        rows[i].style.visibility = 'visible';
+    }
+
+    for (var i = 1; i < pivotArray.length; i++) {
         var tdList = rows[i].childNodes;
         for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = pivotArray[i-1][x];
+            tdList[x].textContent = pivotArray[i][x];
         }
+    }
+
+    for (var i = pivotArray.length; i < rows.length; i++) {
+        rows[i].style.visibility = 'hidden';
     }
 }
 
 ChatDrawer.refreshTableData = function(table, newData, options){
-    var rows = table.childNodes;
+    var rows = newData;//table.childNodes;
+    var nodes = table.childNodes;
     var cols = ChatDrawer.responses[table.dataset.componentid]['data']['columns'];
-    for (var i = 1; i < rows.length; i++) {
-        var tdList = rows[i].childNodes;
+    for (var i = 0; i < nodes.length; i++) {
+        nodes[i].style.visibility = 'visible';
+    }
+    for (var i = 0; i < newData.length; i++) {
+        var tdList = nodes[i+1].childNodes;
         for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = formatData(newData[i-1][x], cols[x]['type'], options.languageCode, options.currencyCode);
+            tdList[x].textContent = formatData(newData[i][x], cols[x]['type'], options.languageCode, options.currencyCode);
         }
+    }
+    for (var i = newData.length+1; i < nodes.length; i++) {
+        nodes[i].style.visibility = 'hidden';
     }
 }
 
@@ -1386,6 +1404,14 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         divFilter.classList.add('tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
+        filter.classList.add('filter-input');
+        filter.setAttribute('data-dataid', idRequest);
+        filter.setAttribute('data-inputindex', i);
+        filter.onkeyup = function(event){
+            var _table = document.querySelector(`[data-componentid='${idRequest}']`);
+            var rows = applyFilter(idRequest);
+            ChatDrawer.refreshTableData(_table, cloneObject(rows), ChatDrawer.options, false);
+        }
         col.appendChild(divFilter);
         th.appendChild(col);
         th.appendChild(arrow);

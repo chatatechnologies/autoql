@@ -1004,6 +1004,10 @@ text.x-axis-label, text.y-axis-label {
     width: 100%;
 }
 
+.tabulator-header-filter input:focus{
+    border-color: #28a8e0;
+}
+
 /* .chata-interpretation .tooltiptext {
     visibility: hidden;
     position: absolute;
@@ -1050,6 +1054,8 @@ text.x-axis-label, text.y-axis-label {
   font-size: 15px;
   font-family: sans-serif;
 }
+
+
 
 @-webkit-keyframes bounceIn {
     0% {

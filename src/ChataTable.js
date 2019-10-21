@@ -31,6 +31,11 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         divFilter.classList.add('tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
+        filter.onkeyup = function(event){
+            var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
+            var rows = applyFilter(oldComponent.dataset.componentid);
+            ChatDrawer.refreshTableData(_table, cloneObject(rows), ChatDrawer.options, false);
+        }
         col.appendChild(divFilter);
 
         th.appendChild(col);
@@ -99,6 +104,20 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         divFilter.classList.add('tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
+        filter.onkeyup = function(event){
+            var _json = ChatDrawer.responses[oldComponent.dataset.componentid];
+            var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
+            var rows = applyFilter(oldComponent.dataset.componentid);
+            if(_json['display_type'] == 'date_pivot'){
+                var pivotArray = getDatePivotArray(_json, ChatDrawer.options, rows);
+            }else{
+                var pivotArray = getPivotColumnArray(_json, ChatDrawer.options, rows);
+            }
+            console.log('PIVOOTTTTTTTTTTTTTTTTTTTTT');
+            console.log(pivotArray);
+            ChatDrawer.refreshPivotTable(_table, pivotArray);
+            // ChatDrawer.refreshTableData(_table, cloneObject(rows), ChatDrawer.options, false);
+        }
         col.appendChild(divFilter);
         if(i == 0){
             th.classList.add('sticky-col');
