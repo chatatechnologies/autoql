@@ -9,7 +9,7 @@ var ChatDrawer = {
         isVisible: false,
         placement: 'right',
         width: 500,
-        height: 350,
+        height: 500,
         theme: 'light',
         accentColor: '#28a8e0',
         title: 'Chat with your data',
@@ -61,10 +61,11 @@ ChatDrawer.init = function(elem, options){
     this.createWrapper();
     this.createDrawerButton();
     this.registerEvents();
+    var isVisible = ChatDrawer.options.isVisible;
     ChatDrawer.openDrawer();
     ChatDrawer.closeDrawer();
 
-    if(ChatDrawer.options.isVisible){
+    if(isVisible){
         ChatDrawer.openDrawer();
     }else{
         ChatDrawer.closeDrawer();
@@ -291,6 +292,7 @@ ChatDrawer.registerEvents = function(){
             }
 
             if(e.target.id == 'drawer-wrapper'){
+                console.log('foo');
                 if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
                     ChatDrawer.options.onMaskClick();
                 }
@@ -817,33 +819,34 @@ ChatDrawer.createCsvData = function(json, separator=','){
 }
 
 ChatDrawer.closeDrawer = function(){
+    ChatDrawer.options.isVisible = false;
     ChatDrawer.wrapper.style.opacity = 0;
     ChatDrawer.wrapper.style.height = 0;
 
     if(ChatDrawer.options.placement == 'right'){
-        ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
         ChatDrawer.rootElem.right = 0;
         ChatDrawer.rootElem.top = 0;
+        ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
         }
     }else if(ChatDrawer.options.placement == 'left'){
-        ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
         ChatDrawer.rootElem.left = 0;
         ChatDrawer.rootElem.top = 0;
+        ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
         }
     }else if(ChatDrawer.options.placement == 'bottom'){
-        ChatDrawer.rootElem.style.transform = 'translateY('+ ChatDrawer.options.height +'px)';
         ChatDrawer.rootElem.style.bottom = '0';
+        ChatDrawer.rootElem.style.transform = 'translateY('+ ChatDrawer.options.height +'px)';
 
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
         }
     }else if(ChatDrawer.options.placement == 'top'){
-        ChatDrawer.rootElem.style.transform = 'translateY(-'+ ChatDrawer.options.height +'px)';
         ChatDrawer.rootElem.style.top = '0';
+        ChatDrawer.rootElem.style.transform = 'translateY(-'+ ChatDrawer.options.height +'px)';
 
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
@@ -856,34 +859,35 @@ ChatDrawer.closeDrawer = function(){
 }
 
 ChatDrawer.openDrawer = function(){
+    ChatDrawer.options.isVisible = true;
     if(ChatDrawer.options.showMask){
         ChatDrawer.wrapper.style.opacity = .3;
         ChatDrawer.wrapper.style.height = '100%';
     }
     if(ChatDrawer.options.placement == 'right'){
         ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
-        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
         ChatDrawer.drawerButton.style.display = 'none';
         ChatDrawer.rootElem.style.right = 0;
         ChatDrawer.rootElem.style.top = 0;
+        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
     }else if(ChatDrawer.options.placement == 'left'){
         ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
         ChatDrawer.rootElem.style.left = 0;
         ChatDrawer.rootElem.style.top = 0;
-        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
         ChatDrawer.drawerButton.style.display = 'none';
+        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
     }else if(ChatDrawer.options.placement == 'bottom'){
         ChatDrawer.rootElem.style.width = '100%';
         ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
         ChatDrawer.rootElem.style.bottom = 0;
-        ChatDrawer.rootElem.style.transform = 'translateY(0)';
         ChatDrawer.drawerButton.style.display = 'none';
+        ChatDrawer.rootElem.style.transform = 'translateY(0)';
     }else if(ChatDrawer.options.placement == 'top'){
         ChatDrawer.rootElem.style.width = '100%';
         ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
         ChatDrawer.rootElem.style.top = 0;
-        ChatDrawer.rootElem.style.transform = 'translateY(0)';
         ChatDrawer.drawerButton.style.display = 'none';
+        ChatDrawer.rootElem.style.transform = 'translateY(0)';
     }
     ChatDrawer.options.onVisibleChange();
 }

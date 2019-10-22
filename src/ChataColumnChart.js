@@ -42,9 +42,14 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, optio
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
+        var val = formatData(
+            d.value, 'DOLLAR_AMT',
+            options.languageCode,
+            options.currencyCode
+        );
         return `
         <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.label}</span> <br/>
-        <span class='title-tip'>${col2}:</span> <span class="text-tip">${d.value}</span>`;
+        <span class='title-tip'>${col2}:</span> <span class="text-tip">${val}</span>`;
     })
 
     svg.call(tip);
@@ -74,7 +79,7 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, optio
     .range([ height - (margin.bottom), 0 ])
     .domain([minValue, d3.max(data, function(d) { return d.value; })]);
     var axisLeft = d3.axisLeft(y);
-    
+
     svg.append("g")
     .attr("class", "grid")
     .call(

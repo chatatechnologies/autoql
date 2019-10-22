@@ -91,6 +91,7 @@ table {
     top: 0;
     left: 0;
     transition: opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), height 0s ease 0.3s;
+    z-index: 2;
 }
 
 .chata-drawer{
@@ -152,7 +153,9 @@ table {
     outline: none !important;
 
 }
-
+.chata-button{
+    background: none !important;
+}
 .chata-button.close svg {
     width: 30px;
     height: 30px;
@@ -253,23 +256,28 @@ table {
 }
 
 .chata-input {
-    padding: 10px;
-    padding-left: 20px;
-    margin: 10px;
-    height: 42px;
-    box-sizing: border-box;
-    border-radius: 24px;
-    font-size: 16px;
-    font-family: var(--chata-drawer-font-family);
-    letter-spacing: 0.04em;
+    padding: 10px !important;
+    padding-left: 20px !important;
+    margin: 10px !important;
+    height: 42px !important;
+    box-sizing: border-box !important;
+    border-radius: 24px !important;
+    font-size: 16px !important;
+    font-family: var(--chata-drawer-font-family) !important;
+    letter-spacing: 0.04em !important;
     outline: none !important;
-    width: calc(100% - 20px);
-    background: transparent;
-    border: 1px solid var(--chata-drawer-border-color);
-    color: var(--chata-drawer-text-color-primary);
+    width: calc(100% - 20px) !important;
+    background: transparent !important;
+    border: 1px solid var(--chata-drawer-border-color) !important;
+    color: var(--chata-drawer-text-color-primary) !important;
 }
 .chata-input:hover, .chata-input-renderer:hover{
-    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1) !important;
+}
+
+.chata-input:focus, .chata-input-renderer:focus{
+    border-color: transparent !important;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1) !important;
 }
 
 .chata-input::placeholder{
@@ -277,20 +285,20 @@ table {
 }
 
 .chata-input-renderer {
-    padding: 10px;
-    padding-left: 20px;
-    margin: 10px;
-    height: 42px;
-    box-sizing: border-box;
-    border-radius: 24px;
-    font-size: 16px;
-    font-family: var(--chata-drawer-font-family);
-    letter-spacing: 0.04em;
+    padding: 10px !important;
+    padding-left: 20px !important;
+    margin: 10px !important;
+    height: 42px !important;
+    box-sizing: border-box !important;
+    border-radius: 24px !important;
+    font-size: 16px !important;
+    font-family: var(--chata-drawer-font-family) !important;
+    letter-spacing: 0.04em !important;
     outline: none !important;
-    width: calc(100% - 20px);
-    background: white;
-    border: 1px solid #d3d3d352;
-    color: #5d5d5d;
+    width: calc(100% - 20px) !important;
+    background: white !important;
+    border: 1px solid #d3d3d352 !important;
+    color: #5d5d5d !important;
 }
 
 .chat-voice-record-button {
@@ -348,7 +356,7 @@ table {
 }
 
 .chata-input-renderer.left-padding {
-    padding-left: 54px;
+    padding-left: 54px !important;
 }
 
 .chat-bar-auto-complete-suggestions ul {
@@ -564,6 +572,10 @@ input[type=text]:disabled {
     border-spacing: 0;
 }
 
+.table-response th{
+    padding: 0px !important;
+}
+
 .table-response tr:first-of-type{
     border-bottom: 2px solid var(--chata-drawer-border-color);
 }
@@ -714,6 +726,10 @@ input[type=text]:disabled {
     outline: none !important;
 }
 
+.chata-toolbar-btn:focus{
+    background: none !important;
+}
+
 .chat-message-toolbar {
     display: none;
     position: absolute;
@@ -736,28 +752,32 @@ input[type=text]:disabled {
     display: block;
 }
 
+.chat-message-bubble button:focus{
+    background: inherit;
+}
+
 .chata-toolbar-btn:hover{
     opacity: .7;
 }
-.column, .column-pivot{
-    padding: 5px 18px;
+.table-response .column, .column-pivot{
+    padding: 5px 18px !important;
 }
-.column::-moz-selection { /* Code for Firefox */
+.table-response .column::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
 }
 
-.column::selection {
+.table-response .column::selection {
   color: inherit;
   background: inherit;
 }
 
-.column-pivot::-moz-selection { /* Code for Firefox */
+.table-response .column-pivot::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
 }
 
-.column-pivot::selection {
+.table-response .column-pivot::selection {
   color: inherit;
   background: inherit;
 }
@@ -1002,6 +1022,8 @@ text.x-axis-label, text.y-axis-label {
     padding: 4px 9px !important;
     outline: none !important;
     width: 100%;
+    font-family: var(--chata-drawer-font-family);
+    color: var(--chata-drawer-text-color-primary)
 }
 
 .tabulator-header-filter input:focus{
@@ -1050,7 +1072,8 @@ text.x-axis-label, text.y-axis-label {
 
 .tippy-tooltip.chata-theme {
   background-color: black;
-  color: var(--chata-drawer-hover-color);
+  /* color: var(--chata-drawer-hover-color); */
+  color: white;
   font-size: 15px;
   font-family: sans-serif;
 }

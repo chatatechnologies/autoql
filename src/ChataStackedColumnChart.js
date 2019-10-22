@@ -42,10 +42,15 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .attr('class', 'd3-tip')
     .offset([-10, 0])
     .html(function(d) {
+        var val = formatData(
+            d.value, 'DOLLAR_AMT',
+            options.languageCode,
+            options.currencyCode
+        )
         return `
         <span class='title-tip'>${col2}:</span> <span class="text-tip">${d.data.group}</span> <br/>
         <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.labelY}</span> <br/>
-        <span class='title-tip'>${col3}:</span> <span class="text-tip">${d.value}</span>`;
+        <span class='title-tip'>${col3}:</span> <span class="text-tip">${val}</span>`;
     })
 
     svg.call(tip);

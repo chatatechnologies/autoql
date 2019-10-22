@@ -4,7 +4,13 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" type="text/css" href="chata-styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <script src="https://unpkg.com/popper.js@1"></script>
     <script src="https://unpkg.com/tippy.js@5"></script>
 
@@ -34,20 +40,267 @@
 
     <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/19dda2d3-4f7a-4e2c-b642-34de287bca09/chatastyles.css">
     <script src="https://ucarecdn.com/2721c373-e848-4f33-8ff7-25a8c75a241e/ChatDrawermin.js"></script> -->
+    <style media="screen">
+        .my-container{
+            display: flex;
+            justify-content: center;
+            width: 70%;
+            /* margin: auto; */
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            margin: 35px 0px;
+        }
+        .prop{
+            display: flex;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+        }
+        .prop-column{
+            flex-direction: column;
+        }
+        .prop.direction-row{
+            flex-direction: row;
+        }
+        .info-text{
+            font-size: 10px;
+        }
+        .info-text-bold{
+            font-weight: bold;
+            font-size: 10px;
+        }
+    </style>
 </head>
 <body style="background: #efefef">
     <div id="chata">
     </div>
 
-    <div id="chata2">
+    <div class="my-container">
+        <div class=""><span class="flow-text">Data source</span></div>
+        <div class="prop prop-column">
+            <h6 class="">Demo data</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="">
+            <h4 style="text-align: center;">Drawer Props</h4>
+            <button type="button" name="button" class="waves-effect waves-light btn white black-text">Reload Drawer</button>
+            <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()">Open Drawer</button>
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Show Drawer Handle</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" name="showHandle" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Show Mask</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" name="showMask" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="">
+            <h6 style="text-align: center;">Theme</h6>
+            <div>
+                <label>
+                    <input name="theme" id="light" type="radio" checked />
+                    <span>Light</span>
+                </label>
+                <label>
+                    <input name="theme" id="dark" type="radio" />
+                    <span>Dark</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="">
+            <h6 style="text-align: center;">Drawer Placement</h6>
+            <div>
+                <label>
+                    <input name="placement" type="radio" value="top" />
+                    <span>Top</span>
+                </label>
+                <label>
+                    <input name="placement" value="bottom" type="radio" />
+                    <span>Bottom</span>
+                </label>
+                <label>
+                    <input name="placement" value="left" type="radio" />
+                    <span>Left</span>
+                </label>
+                <label>
+                    <input name="placement" value="right" type="radio" checked />
+                    <span>Right</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Currency Code</h6>
+            <input type="text" name="" value="USD" placeholder="Currency Code">
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Language Code</h6>
+            <input type="text" name="" value="en-US" placeholder="Language Code">
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Customer Name</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="" value="en-US" placeholder="Customer Name">
+        </div>
+
+
+        <div class="prop prop-column">
+            <h6>Intro message</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="" value="en-US" placeholder="Customer Name">
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Clear All Messages on Close</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Height</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="number" name="height" value="500" placeholder="Height">
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Width</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="number" name="width" value="500" placeholder="Width">
+        </div>
+
+
+        <div class="prop prop-column">
+            <h6>Title</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="title" value="en-US" placeholder="Customer Name">
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Font Family</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="fontFamily" value="en-US" placeholder="Customer Name">
+        </div>
+
+
+        <div class="prop prop-column">
+            <h6>Chart Colors</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <span class="info-text-bold" style="max-width:650px;">
+                This is an array of colors used for the charts. If the data scale is larger than the color array, it will repeat the colors. Any solid color formats are accepted. Hit "enter" to add a color.
+            </span>
+            <div class="chips" name="chartColors" style="width:550px;">
+
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Light Theme Accent Color</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;">
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Dark Theme Accent Color</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="color" name="accentColor-black" value="#525252" placeholder="Accent Color" style="width:150px;">
+        </div>
+
+        <div class="prop prop-column">
+            <h6>Maximum Number of Messages</h6>
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="maxMessages" value="en-US" placeholder="Customer Name">
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Enable Autocomplete</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Enable Safety Net</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Enable Speech to Text</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Debug Mode (Shows SQL in the info tooltip)</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" checked>
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
     </div>
 
-    <div id="mycontainer" style="width:100%;">
-    </div>
-
-    <div id="response" style="width:98%; height: 750px; background: white; margin:auto;">
-    </div>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxNDM4ODU1LCAiZXhwIjogMTU3MTQ0OTY1NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.BJEuLY4oZ0DkfwS4S4rxC5EQeHzAT-KZKjklm9KWYxn76MP_zh4gU-fvcK4sl82S38kiFYBuDGbT0h9_VQ4PXpcj-dj1FviMcROYa7UITIFYzajj4xRjvAwWG8tXYZNqPRXMbNP2LTbXIt3nqch7Tq2FrYuv6pqHhJeHgzXWH9FX3g3F5cMQXEdfM-CDtWJhOUX87CHId9TzzGindPlDdbAS22RHGj4NulKR89iRwyIubITHDVUVXHJl9LUBk3AOZ69J90GdrIQbj8bKU79SEjiQ-M2idtpMSv5-EqmoPx-aVaoD-3S-NMIz_nBPLvaQX4qEo0PDrbY0nr3SXLUbyQ==`;
         var chata = ChatDrawer.init('chata', {
@@ -58,67 +311,112 @@
             domain: 'https://locate-staging.chata.io',
             isVisible: true,
             placement: 'right',
-            // width: 750,
+            width: 500,
             height: 600,
             theme: 'light',
-            // accentColor: '#f2b407',
-            // title: 'Foo bar',
             showHandle: true,
-            // handleStyles: {opacity: '0.9', background: '#f2b407'},
-            onVisibleChange: function() { console.log('onVisibleChange');},
-            onHandleClick: function(){ console.log('handleClick!!!');},
             showMask: true,
-            onMaskClick: function(){ console.log('onMaskClick!!!');ChatDrawer.closeDrawer(); },
             maskClosable: true,
             customerName: 'Oscar',
-            // introMessage: 'Testing intro message',
             maxMessages: 10,
             clearOnClose: false,
             enableVoiceRecord: true,
             enableAutocomplete: true,
-            // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
             enableSafetyNet: true,
             enableDrilldowns: true,
             demo: true,
-            debug: true
-            // chartColors: ['#03A9F4', '#311B92', '#4A148C', '#0D47A1 ', '#BF360C', '#BF360C']
-            // fontFamily: 'Monaco'
-            // languageCode: 'ja-JP',
-            // currencyCode: 'JPY'
+            debug: true,
+            languageCode: 'ja-JP',
+            currencyCode: 'JPY',
+            onMaskClick: function(){
+                ChatDrawer.closeDrawer();
+            }
         });
-        var chatBar = ChatDrawer.getChatBar({
-            autoCompletePlacement: 'bottom',
-            enableAutocomplete: true,
-            showLoadingDots: true,
-            showChataIcon: true,
-            enableSafetyNet: true,
-            enableDrilldowns: true,
-            // autocompleteStyles: {'border-radius': '25px', color: '#0794f2'},
-            onResponseCallback: function(){
-                console.log('foo');
-            },
-            onSubmit: function(){
-                console.log('onSubmit');
-            },
-            isDisabled: false,
-            // fontFamily: 'Monaco'
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelectorAll('.chips');
+            var instances = M.Chips.init(elems, {});
         });
-        var responseRenderer = ChatDrawer.createResponseRenderer({
-            supportsSuggestions: true,
-            onSuggestionClick: function(){},
-            // tableBorderColor: 'green',
-            // tableHoverColor: 'green',
-            displayType: 'stacked_column',
-            renderTooltips: true,
-            // fontFamily: 'Monaco'
-            // languageCode: 'ja-JP',
-            // currencyCode: 'JPY',
-        });
-        chatBar.bind(responseRenderer);
-        document.getElementById('mycontainer').append(chatBar);
-        document.getElementById('response').append(responseRenderer);
-        // console.log(ChatDrawer.getSupportedDisplayTypesArray());
+
+        var showHandle = document.querySelector('[name="showHandle"]')
+        var showMask = document.querySelector('[name="showMask"]')
+        var theme = document.querySelectorAll('[name="theme"]')
+        var placement = document.querySelectorAll('[name="placement"]')
+
+
+        showHandle.onchange = function(event){
+            ChatDrawer.options.showHandle = event.target.checked;
+            if(event.target.checked){
+                if(ChatDrawer.options.isVisible){
+                    ChatDrawer.drawerButton.style.display = 'none';
+                }else{
+                    ChatDrawer.drawerButton.style.display = 'flex';
+                }
+            }else{
+                ChatDrawer.drawerButton.style.display = 'none';
+            }
+        }
+
+        showMask.onchange = function(event){
+            ChatDrawer.options.showMask = event.target.checked;
+            if(event.target.checked){
+                if(ChatDrawer.options.isVisible){
+                    ChatDrawer.wrapper.style.opacity = .3;
+                    ChatDrawer.wrapper.style.height = '100%';
+                }else{
+                    ChatDrawer.wrapper.style.opacity = 0;
+                    ChatDrawer.wrapper.style.height = 0;
+                }
+            }else{
+                ChatDrawer.wrapper.style.opacity = 0;
+                ChatDrawer.wrapper.style.height = 0;
+            }
+        }
+
+        for (var i = 0; i < theme.length; i++) {
+            theme[i].onchange = function(event){
+                const themeStyles = event.target.id === 'light' ? LIGHT_THEME : DARK_THEME;
+                for (let property in themeStyles) {
+                    document.documentElement.style.setProperty(
+                        property,
+                        themeStyles[property],
+                    );
+                }
+            }
+        }
+
+        for (var i = 0; i < placement.length; i++) {
+            placement[i].onchange = function(event){
+                console.log(event.target.value);
+                // ChatDrawer.closeDrawer();
+                // ChatDrawer.openDrawer();
+                // if(ChatDrawer.options.isVisible){
+                //     ChatDrawer.closeDrawer();
+                //     ChatDrawer.openDrawer();
+                // }else{
+                //     ChatDrawer.openDrawer();
+                //     ChatDrawer.closeDrawer();
+                // }
+                ChatDrawer.drawerButton.classList.remove(ChatDrawer.options.placement + '-btn');
+                ChatDrawer.options.placement = event.target.value;
+                ChatDrawer.drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
+
+                // ChatDrawer.openDrawer();
+                // ChatDrawer.openDrawer();
+
+                // if(ChatDrawer.options.isVisible){
+                //     ChatDrawer.closeDrawer();
+                //     ChatDrawer.openDrawer();
+                // }else{
+                //     ChatDrawer.openDrawer();
+                //     ChatDrawer.closeDrawer();
+                // }
+            }
+        }
+
     </script>
+
+
 
 </body>
 </html>
