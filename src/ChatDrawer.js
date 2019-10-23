@@ -824,15 +824,15 @@ ChatDrawer.closeDrawer = function(){
     ChatDrawer.wrapper.style.height = 0;
 
     if(ChatDrawer.options.placement == 'right'){
-        ChatDrawer.rootElem.right = 0;
-        ChatDrawer.rootElem.top = 0;
+        ChatDrawer.rootElem.style.right = 0;
+        ChatDrawer.rootElem.style.top = 0;
         ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
         }
     }else if(ChatDrawer.options.placement == 'left'){
-        ChatDrawer.rootElem.left = 0;
-        ChatDrawer.rootElem.top = 0;
+        ChatDrawer.rootElem.style.left = 0;
+        ChatDrawer.rootElem.style.top = 0;
         ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';

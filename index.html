@@ -72,7 +72,8 @@
         }
     </style>
 </head>
-<body style="background: #efefef">
+<!-- style="background: #efefef" -->
+<body>
     <div id="chata">
     </div>
 
@@ -90,7 +91,7 @@
 
         <div class="">
             <h4 style="text-align: center;">Drawer Props</h4>
-            <button type="button" name="button" class="waves-effect waves-light btn white black-text">Reload Drawer</button>
+            <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload">Reload Drawer</button>
             <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()">Open Drawer</button>
         </div>
 
@@ -152,12 +153,18 @@
 
         <div class="prop prop-column">
             <h6>Currency Code</h6>
-            <input type="text" name="" value="USD" placeholder="Currency Code">
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="currencyCode" value="USD" placeholder="Currency Code" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
             <h6>Language Code</h6>
-            <input type="text" name="" value="en-US" placeholder="Language Code">
+            <span class="info-text">
+                (Must click 'Reload Drawer' to apply this)
+            </span>
+            <input type="text" name="languageCode" value="en-US" placeholder="Language Code" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
@@ -165,7 +172,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="text" name="" value="en-US" placeholder="Customer Name">
+            <input type="text" name="customerName" value="Oscar" placeholder="Customer Name" class="reload-prop">
         </div>
 
 
@@ -174,14 +181,14 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="text" name="" value="en-US" placeholder="Customer Name">
+            <input type="text" name="introMessage" value="" placeholder="Intro message" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
             <h6 class="">Clear All Messages on Close</h6>
             <div class="switch">
                 <label>
-                    <input type="checkbox" checked>
+                    <input type="checkbox" name="clearOnClose">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -192,7 +199,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="number" name="height" value="500" placeholder="Height">
+            <input type="number" name="height" value="500" placeholder="Height" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
@@ -200,7 +207,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="number" name="width" value="500" placeholder="Width">
+            <input type="number" name="width" value="500" placeholder="Width" class="reload-prop">
         </div>
 
 
@@ -209,7 +216,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="text" name="title" value="en-US" placeholder="Customer Name">
+            <input type="text" name="title" value="Chat with your data" placeholder="Title" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
@@ -217,7 +224,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="text" name="fontFamily" value="en-US" placeholder="Customer Name">
+            <input type="text" name="fontFamily" value="sans-serif" placeholder="Font Family" class="reload-prop">
         </div>
 
 
@@ -239,7 +246,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;">
+            <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
@@ -247,7 +254,7 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="color" name="accentColor-black" value="#525252" placeholder="Accent Color" style="width:150px;">
+            <input type="color" name="accentColor-dark" value="#525252" placeholder="Accent Color" style="width:150px;" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
@@ -255,14 +262,14 @@
             <span class="info-text">
                 (Must click 'Reload Drawer' to apply this)
             </span>
-            <input type="text" name="maxMessages" value="en-US" placeholder="Customer Name">
+            <input type="text" name="maxMessages" value="6" placeholder="Maximum Number of Messages" class="reload-prop">
         </div>
 
         <div class="prop prop-column">
             <h6 class="">Enable Autocomplete</h6>
             <div class="switch">
                 <label>
-                    <input type="checkbox" checked>
+                    <input type="checkbox" checked name="enableAutocomplete">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -272,7 +279,7 @@
             <h6 class="">Enable Safety Net</h6>
             <div class="switch">
                 <label>
-                    <input type="checkbox" checked>
+                    <input type="checkbox" checked name="enableSafetyNet">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -282,7 +289,7 @@
             <h6 class="">Enable Speech to Text</h6>
             <div class="switch">
                 <label>
-                    <input type="checkbox" checked>
+                    <input type="checkbox" checked name="enableVoiceRecord">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -292,7 +299,7 @@
             <h6 class="">Debug Mode (Shows SQL in the info tooltip)</h6>
             <div class="switch">
                 <label>
-                    <input type="checkbox" checked>
+                    <input type="checkbox" checked name="debug">
                     <span class="lever"></span>
                 </label>
             </div>
@@ -318,7 +325,7 @@
             showMask: true,
             maskClosable: true,
             customerName: 'Oscar',
-            maxMessages: 10,
+            maxMessages: 6,
             clearOnClose: false,
             enableVoiceRecord: true,
             enableAutocomplete: true,
@@ -326,22 +333,35 @@
             enableDrilldowns: true,
             demo: true,
             debug: true,
-            languageCode: 'ja-JP',
-            currencyCode: 'JPY',
+            // languageCode: 'ja-JP',
+            // currencyCode: 'JPY',
             onMaskClick: function(){
                 ChatDrawer.closeDrawer();
             }
         });
-
+        var instances;
         document.addEventListener('DOMContentLoaded', function() {
-            var elems = document.querySelectorAll('.chips');
-            var instances = M.Chips.init(elems, {});
+            var elems = document.querySelector('.chips');
+            instances = M.Chips.init(elems, {
+                data: [
+                    {tag: '#355C7D'},
+                    {tag: '#6C5B7B'},
+                    {tag: '#C06C84'},
+                    {tag: '#F67280'},
+                    {tag: '#F8B195'},
+                ]
+            });
         });
 
         var showHandle = document.querySelector('[name="showHandle"]')
         var showMask = document.querySelector('[name="showMask"]')
         var theme = document.querySelectorAll('[name="theme"]')
         var placement = document.querySelectorAll('[name="placement"]')
+        var enableAutocomplete = document.querySelector('[name="enableAutocomplete"]')
+        var enableVoiceRecord = document.querySelector('[name="enableVoiceRecord"]')
+        var enableSafetyNet = document.querySelector('[name="enableSafetyNet"]')
+        var debug = document.querySelector('[name="debug"]')
+        var clearOnClose = document.querySelector('[name="clearOnClose"]')
 
 
         showHandle.onchange = function(event){
@@ -382,37 +402,64 @@
                         themeStyles[property],
                     );
                 }
+                ChatDrawer.options.theme = event.target.id;
             }
         }
 
+        enableAutocomplete.onchange = function(event){
+            ChatDrawer.options.enableAutocomplete = event.target.checked;
+        }
+
+        enableSafetyNet.onchange = function(event){
+            ChatDrawer.options.enableSafetyNet = event.target.checked;
+        }
+
+        enableVoiceRecord.onchange = function(event){
+            ChatDrawer.options.enableVoiceRecord = event.target.checked;
+        }
+
+        debug.onchange = function(event){
+            ChatDrawer.options.debug = event.target.checked;
+        }
+
+        clearOnClose.onchange = function(event){
+            ChatDrawer.options.clearOnClose = event.target.checked;
+        }
         for (var i = 0; i < placement.length; i++) {
             placement[i].onchange = function(event){
-                console.log(event.target.value);
-                // ChatDrawer.closeDrawer();
-                // ChatDrawer.openDrawer();
-                // if(ChatDrawer.options.isVisible){
-                //     ChatDrawer.closeDrawer();
-                //     ChatDrawer.openDrawer();
-                // }else{
-                //     ChatDrawer.openDrawer();
-                //     ChatDrawer.closeDrawer();
-                // }
+                ChatDrawer.rootElem.removeAttribute('style');
+
                 ChatDrawer.drawerButton.classList.remove(ChatDrawer.options.placement + '-btn');
                 ChatDrawer.options.placement = event.target.value;
                 ChatDrawer.drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
-
-                // ChatDrawer.openDrawer();
-                // ChatDrawer.openDrawer();
-
-                // if(ChatDrawer.options.isVisible){
-                //     ChatDrawer.closeDrawer();
-                //     ChatDrawer.openDrawer();
-                // }else{
-                //     ChatDrawer.openDrawer();
-                //     ChatDrawer.closeDrawer();
-                // }
             }
         }
+
+        var reload = document.getElementById('reload');
+        reload.onclick = function(event){
+            var propsEls = document.getElementsByClassName('reload-prop');
+            for (var i = 0; i < propsEls.length; i++) {
+                if(propsEls[i].value != ''){
+                    ChatDrawer.options[propsEls[i].name] = propsEls[i].value;
+                }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
+                    ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ " I'm  here to help you access, search and analyze your data.";
+                }if(ChatDrawer.options.theme == 'light' && propsEls[i].name == 'accentColor-light'){
+                    ChatDrawer.options.accentColor = propsEls[i].value;
+                }else if (ChatDrawer.options.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
+                    ChatDrawer.options.accentColor = propsEls[i].value;
+                }
+            }
+            var chartColors = [];
+            for (var i = 0; i < instances.chipsData.length; i++) {
+                chartColors.push(instances.chipsData[i]['tag']);
+            }
+            ChatDrawer.drawerButton.remove();
+            ChatDrawer.options.chartColors = chartColors;
+            var c = document.getElementById('chata');
+            c.innerHTML = '';
+            var newDrawer = ChatDrawer.init('chata', ChatDrawer.options);
+        }
+
 
     </script>
 

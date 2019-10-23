@@ -1016,18 +1016,22 @@ text.x-axis-label, text.y-axis-label {
 }
 
 .tabulator-header-filter input{
-    border: 1px solid var(--chata-drawer-border-color);
-    border-radius: 4px;
+    border: 1px solid var(--chata-drawer-border-color) !important;
+    border-radius: 4px !important;
     background: transparent;
     padding: 4px 9px !important;
     outline: none !important;
     width: 100%;
-    font-family: var(--chata-drawer-font-family);
-    color: var(--chata-drawer-text-color-primary)
+    font-family: var(--chata-drawer-font-family) !important;
+    color: var(--chata-drawer-text-color-primary) !important;
+    height: 24px !important;
+    box-shadow: none !important;
+    margin: 0px !important;
+    box-sizing: border-box !important;
 }
 
 .tabulator-header-filter input:focus{
-    border-color: #28a8e0;
+    border-color: #28a8e0 !important;
 }
 
 /* .chata-interpretation .tooltiptext {
