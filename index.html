@@ -3,8 +3,8 @@
 <head>
     <meta charset="utf-8">
     <title></title>
-    <link rel="stylesheet" type="text/css" href="chata-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" type="text/css" href="chata-styles.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -83,9 +83,47 @@
             <h6 class="">Demo data</h6>
             <div class="switch">
                 <label>
-                    <input type="checkbox" checked>
+                    <input type="checkbox" checked name="demo">
                     <span class="lever"></span>
                 </label>
+            </div>
+        </div>
+        <div id="login-section" style="display: none;">
+            <div class="">
+                <h5>You must login to access data</h5>
+            </div>
+            <div class="prop prop-column">
+                <h6>Username</h6>
+                <input type="text" id="username" value="" placeholder="" class="">
+            </div>
+
+            <div class="prop prop-column">
+                <h6>Password</h6>
+                <input type="text" id="password" value="" placeholder="" class="">
+            </div>
+
+            <div class="">
+                <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Login</button>
+            </div>
+
+            <div class="prop prop-column">
+                <h6>API key</h6>
+                <input type="text" name="apiKey" value="" placeholder="" class="">
+            </div>
+
+            <div class="prop prop-column">
+                <h6>Customer ID</h6>
+                <input type="text" name="customerId" value="" placeholder="" class="">
+            </div>
+
+            <div class="prop prop-column">
+                <h6>User ID (email)</h6>
+                <input type="text" name="userId" value="" placeholder="" class="">
+            </div>
+
+            <div class="prop prop-column">
+                <h6>Domain URL</h6>
+                <input type="text" name="domain" value="" placeholder="" class="">
             </div>
         </div>
 
@@ -362,7 +400,65 @@
         var enableSafetyNet = document.querySelector('[name="enableSafetyNet"]')
         var debug = document.querySelector('[name="debug"]')
         var clearOnClose = document.querySelector('[name="clearOnClose"]')
+        var demo = document.querySelector('[name="demo"]')
+        var login = document.getElementById('login')
 
+        login.onclick = function(event){
+            var user = document.getElementById('username').value;
+            var password = document.getElementById('password').value;
+            var apiKey = document.querySelector('[name="apiKey"]').value;
+            var customerId = document.querySelector('[name="customerId"]').value;
+            var userId = document.querySelector('[name="userId"]').value;
+            var domain = document.querySelector('[name="domain"]').value;
+            login.style.display = 'none';
+            ChatDrawer.options.apiKey = apiKey;
+            ChatDrawer.options.customerId = customerId;
+            ChatDrawer.options.userId = userId;
+            ChatDrawer.options.domain = domain;
+
+            var xhr = new XMLHttpRequest();
+            const URL = 'https://backend-staging.chata.io/api/v1/login';
+            var formData = new FormData();
+
+            formData.append("username", user);
+            formData.append("password", password);
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4){
+                    var xhr2 = new XMLHttpRequest();
+                    var loginToken = xhr.responseText;
+
+                    xhr2.onreadystatechange = function(){
+                        if(xhr2.readyState === 4){
+                            console.log(xhr2.responseText);
+                            login.style.display = 'block';
+                            if(xhr2.status != 200){
+                                alert(xhr2.responseText);
+                            }else{
+                                ChatDrawer.options.token = xhr2.responseText;
+                                alert('Login Sucessful!');
+                            }
+                        }
+                    }
+                    xhr2.open('GET', 'https://backend-staging.chata.io/api/v1/jwt');
+                    xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
+                    xhr2.send();
+                }
+            };
+
+            xhr.open('POST', URL);
+            xhr.send(formData);
+        }
+
+        demo.onchange = function(event){
+            ChatDrawer.options.demo = event.target.checked;
+            var loginSection = document.getElementById('login-section');
+            if(!ChatDrawer.options.demo){
+                loginSection.style.display = 'block';
+            }else{
+                loginSection.style.display = 'none';
+            }
+        }
 
         showHandle.onchange = function(event){
             ChatDrawer.options.showHandle = event.target.checked;
@@ -454,9 +550,11 @@
                 chartColors.push(instances.chipsData[i]['tag']);
             }
             ChatDrawer.drawerButton.remove();
+            ChatDrawer.rootElem.remove();
             ChatDrawer.options.chartColors = chartColors;
-            var c = document.getElementById('chata');
-            c.innerHTML = '';
+            var div = document.createElement('div');
+            div.setAttribute('id', 'chata');
+            document.getElementsByTagName('body')[0].appendChild(div);
             var newDrawer = ChatDrawer.init('chata', ChatDrawer.options);
         }
 

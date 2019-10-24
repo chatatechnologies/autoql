@@ -269,14 +269,6 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
 }
 
 function getSVGString(svgNode) {
-    // svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-    // var serializer = new XMLSerializer();
-    // var svgString = serializer.serializeToString(svgNode);
-    // svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink=');
-    // svgString = svgString.replace(/NS\d+:href/g, 'xlink:href');
-    //
-    // return svgString;
-
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
     var cssStyleText = getCSSStyles( svgNode );
     appendCSS( cssStyleText, svgNode );

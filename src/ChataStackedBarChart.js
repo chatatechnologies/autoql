@@ -8,7 +8,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     var legendBoxMargin = 25
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
         }else{
             height = 250;
         }

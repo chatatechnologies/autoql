@@ -974,7 +974,7 @@ ChatDrawer.ajaxCall = function(val, callback, options){
 }
 
 ChatDrawer.ajaxCallPost = function(url, callback, data, options){
-    var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance
+    var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", url);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
     // xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
@@ -1126,31 +1126,113 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                 ChatDrawer.putTableResponse(jsonResponse);
             break;
             case 'line':
-                ChatDrawer.putTableResponse(jsonResponse);
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                var values = formatDataToBarChart(jsonResponse);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+
+                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                ChatDrawer.refreshToolbarButtons(component, 'line');
             break;
             case 'bar':
-                ChatDrawer.putTableResponse(jsonResponse);
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                var values = formatDataToBarChart(jsonResponse);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+
+                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                ChatDrawer.refreshToolbarButtons(component, 'bar');
             break;
             case 'word_cloud':
                 ChatDrawer.putTableResponse(jsonResponse);
             break;
             case 'stacked_column':
-                ChatDrawer.putTableResponse(jsonResponse);
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
+                var data = cloneObject(jsonResponse['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                groups = groups.sort().reverse();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'])
+                }
+                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+                var col3 = formatColumnName(jsonResponse['data']['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['data']['columns'], data, groups);
+                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
+            break;
+            case 'stacked_bar':
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                ChatDrawer.refreshToolbarButtons(component, 'stacked_bar');
+                var data = cloneObject(jsonResponse['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                groups = groups.sort().reverse();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'])
+                }
+                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+                var col3 = formatColumnName(jsonResponse['data']['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['data']['columns'], data, groups);
+                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             break;
             case 'bubble':
-                ChatDrawer.putTableResponse(jsonResponse);
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                var values = formatDataToHeatmap(jsonResponse);
+                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0]['type']);
+                labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1]['type']);
+
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+                var col3 = formatColumnName(jsonResponse['data']['columns'][2]['name']);
+                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
+                ChatDrawer.refreshToolbarButtons(component, 'bubble');
             break;
             case 'heatmap':
-            ChatDrawer.putTableResponse(jsonResponse);
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                var values = formatDataToHeatmap(jsonResponse);
+                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0]['type']);
+                labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1]['type']);
+
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+                var col3 = formatColumnName(jsonResponse['data']['columns'][2]['name']);
+                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
+                ChatDrawer.refreshToolbarButtons(component, 'heatmap');
             break;
             case 'pie':
-            ChatDrawer.putTableResponse(jsonResponse);
+                ChatDrawer.putTableResponse(jsonResponse);
             break;
             case 'column':
-            ChatDrawer.putTableResponse(jsonResponse);
+                var component = ChatDrawer.putTableResponse(jsonResponse);
+                var values = formatDataToBarChart(jsonResponse);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
+                var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+
+                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                ChatDrawer.refreshToolbarButtons(component, 'column');
             break;
             case 'help':
-                console.log(jsonResponse);
                 ChatDrawer.putHelpMessage(jsonResponse);
             break;
             default:
@@ -1447,6 +1529,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
     ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    return table;
 }
 
 ChatDrawer.createSuggestions = function(responseContentContainer, data, classButton='chata-suggestion-btn'){
