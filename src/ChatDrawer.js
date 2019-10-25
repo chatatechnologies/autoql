@@ -452,12 +452,32 @@ ChatDrawer.registerEvents = function(){
                 var json = ChatDrawer.responses[idRequest];
                 var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
                 ChatDrawer.refreshToolbarButtons(component, 'column');
-                var values = formatDataToBarChart(json);
-                var grouped = values[0];
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
+                    var data = cloneObject(json['data']['rows']);
+
+                    var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    groups = groups.sort();
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                    }
+                    // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    // var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                    var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                    createColumnChart(component, groups, dataGrouped, col1, col2, ChatDrawer.options);
+                    console.log(dataGrouped);
+                }else{
+                    var values = formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var hasNegativeValues = values[1];
+                    createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                }
             }
             if(e.target.classList.contains('stacked_column_chart')){
                 if(e.target.tagName == 'svg'){
@@ -484,7 +504,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                var dataGrouped = ChatDrawer.formatDataToStackedChart(json['data']['columns'], data, groups);
+                var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
                 createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             }
             if(e.target.classList.contains('stacked_bar_chart')){
@@ -511,7 +531,7 @@ ChatDrawer.registerEvents = function(){
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                var dataGrouped = ChatDrawer.formatDataToStackedChart(json['data']['columns'], data, groups);
+                var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
                 createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             }
             if(e.target.classList.contains('table')){
@@ -689,7 +709,23 @@ ChatDrawer.getUniqueValues = function(data, getter){
     return Object.keys(unique);
 }
 
-ChatDrawer.formatDataToStackedChart = function(cols, data, groups){
+ChatDrawer.formatCompareData = function(col, data, groups){
+    var dataGrouped = [];
+
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        dataGrouped.push({group: group});
+        for (var x = 0; x < data.length; x++) {
+            if(data[x][0] == group){
+                dataGrouped[i]['value1'] = parseFloat(data[x][1]);
+                dataGrouped[i]['value2'] = parseFloat(data[x][2]);
+            }
+        }
+    }
+    return dataGrouped;
+}
+
+ChatDrawer.format3dData = function(cols, data, groups){
     var dataGrouped = [];
 
     for (var i = 0; i < groups.length; i++) {
@@ -701,6 +737,8 @@ ChatDrawer.formatDataToStackedChart = function(cols, data, groups){
             }
         }
     }
+
+    console.log(dataGrouped);
 
     return dataGrouped;
 }
@@ -1108,6 +1146,7 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
     ChatDrawer.ajaxCall(textValue, function(jsonResponse){
         chataInput.removeAttribute("disabled");
         ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+        console.log(jsonResponse['data']['display_type']);
         switch(jsonResponse['data']['display_type']){
             case 'suggestion':
                 ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
@@ -1118,6 +1157,9 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                 }else{
                     ChatDrawer.putTableResponse(jsonResponse);
                 }
+            break;
+            case 'compare_table':
+                ChatDrawer.putTableResponse(jsonResponse);
             break;
             case 'date_pivot':
                 ChatDrawer.putTableResponse(jsonResponse);
@@ -1167,7 +1209,7 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                 var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                 var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
                 var col3 = formatColumnName(jsonResponse['data']['columns'][2]['name']);
-                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['data']['columns'], data, groups);
+                var dataGrouped = ChatDrawer.format3dData(jsonResponse['data']['columns'], data, groups);
                 createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             break;
             case 'stacked_bar':
@@ -1187,7 +1229,7 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                 var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                 var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
                 var col3 = formatColumnName(jsonResponse['data']['columns'][2]['name']);
-                var dataGrouped = ChatDrawer.formatDataToStackedChart(jsonResponse['data']['columns'], data, groups);
+                var dataGrouped = ChatDrawer.format3dData(jsonResponse['data']['columns'], data, groups);
                 createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
             break;
             case 'bubble':
@@ -1316,7 +1358,7 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var json = ChatDrawer.responses[idRequest];
     var buttons = '';
     var displayTypes;
-    if(json['data']['columns'].length == 2){
+    if(json['data']['columns'].length == 2 || DISPLAY_TYPES_2D.includes(json['data']['display_type'])){
         // buttons += ChatDrawer.getTableButton(idRequest);
         // buttons += ChatDrawer.getColumnChartButton(idRequest);
         // buttons += ChatDrawer.getBarChartButton(idRequest);

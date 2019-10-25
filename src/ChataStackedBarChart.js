@@ -68,7 +68,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
     .attr('class', 'x-axis-label')
-    .text(col1);
+    .text(col3);
 
     var maxValue = d3.max(data, function(d) {
         var sum = 0;

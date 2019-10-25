@@ -61,7 +61,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'y-axis-label')
-    .text(col1);
+    .text(col3);
 
     svg.append('text')
     .attr('x', chartWidth / 2)

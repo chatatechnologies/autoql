@@ -29,6 +29,7 @@ const DISPLAY_TYPES_2D = [
     'column',
     'bar',
     'line',
+    'compare_table'
 ];
 
 const DISPLAY_TYPES_3D  = [
