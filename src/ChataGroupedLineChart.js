@@ -1,4 +1,4 @@
-function createGroupedColumnChart(component, groups, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createGroupedLineChart(component, groups, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -29,7 +29,7 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
                 if(element.length < 18){
                     xTickValues.push(element);
                 }else{
-                    xTickValues.push(element.slice(0, 18));
+                    xTickValues.push(element);
                 }
             }
         });
@@ -58,12 +58,28 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     .text(col1);
 
 
+    var dataReady = subgroups.map( function(grpName) { // .map allows to do something for each element of the list
+        return {
+            name: grpName,
+            values: data.map(function(d) {
+                return {group: d.group, value: +d[grpName]};
+            })
+        };
+    });
+
+    console.log(dataReady);
+
+    var color = d3.scaleOrdinal()
+    .domain(subgroups)
+    .range(options.chartColors)
+
+
     var x = d3.scaleBand()
     .domain(groups.map(function(d) {
         if(d < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d;
         }
     }))
     .range([0, width])
@@ -83,6 +99,7 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
 
+    // Add Y axis
     var maxValue = d3.max(data, function(d) {
         var sum = 0;
         return Math.max(d['value1'], d['value2']);
@@ -102,40 +119,39 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
         .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)})
     );
 
-    // Another scale for subgroup position?
-    var xSubgroup = d3.scaleBand()
-    .domain(subgroups)
-    .range([0, x.bandwidth()])
-    .padding([0.05])
-
-    // color palette = one color per subgroup
-    var color = d3.scaleOrdinal()
-    .domain(subgroups)
-    .range(options.chartColors)
-
-    // Show the bars
-    svg.append("g")
-    .selectAll("g")
-    // Enter in data = loop group per group
-    .data(data)
+    // Add the lines
+    var line = d3.line()
+    .x(function(d) { return x(d.group) })
+    .y(function(d) { return y(+d.value) })
+    svg.selectAll("myLines")
+    .data(dataReady)
     .enter()
-    .append("g")
-    .attr("transform", function(d) {
-        if(d.group < 18){
-            return "translate(" + x(d.group) + ",0)";
-        }else{
-            return "translate(" + x(d.group.slice(0,18)) + ",0)";
-        }
+    .append("path")
+    .attr("d", function(d){
+        console.log(d.values);
+        return line(d.values)
     })
-    .selectAll("rect")
-    .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
-    .enter().append("rect")
-    .attr("x", function(d) { return xSubgroup(d.key); })
-    .attr("y", function(d) { return y(Math.abs(d.value)); })
-    .attr("width", xSubgroup.bandwidth())
-    .attr("height", function(d) { return Math.abs (height - y(Math.abs(d.value))); })
-    .attr("fill", function(d) { return color(d.key); })
-    .attr('fill-opacity', '0.7');
+    .attr("stroke", function(d){ return color(d.name) })
+    .style("stroke-width", 1)
+    .style("fill", "none")
+    .attr('opacity', '0.7')
+
+    // Add the points
+    svg
+    // First we need to enter in a group
+    .selectAll("myDots")
+    .data(dataReady)
+    .enter()
+    .append('g')
+    .style("fill", function(d){ return color(d.name) })
+    // Second we need to enter in the 'values' part of this group
+    .selectAll("myPoints")
+    .data(function(d){ return d.values })
+    .enter()
+    .append("circle")
+    .attr("cx", function(d) { return x(d.group) } )
+    .attr("cy", function(d) { return y(d.value) } )
+    .attr("r", 3)
 
     var nodeWidth = (d) => d.getBBox().width;
 

@@ -106,115 +106,215 @@
 <body>
     <div id="foo" data-containerid="1"></div>
     <script>
+    //
+    // // set the dimensions and margins of the graph
+    // var margin = {top: 10, right: 30, bottom: 20, left: 50},
+    // width = 460 - margin.left - margin.right,
+    // height = 400 - margin.top - margin.bottom;
+    //
+    // // append the svg object to the body of the page
+    // var svg = d3.select("#foo")
+    // .append("svg")
+    // .attr("width", width + margin.left + margin.right)
+    // .attr("height", height + margin.top + margin.bottom)
+    // .append("g")
+    // .attr("transform",
+    // "translate(" + margin.left + "," + margin.top + ")");
+    // //
+    // data = [
+    //     {group: "October 30, 2019", value1: 0, value2: -3399.96},
+    //     {group: "September 29, 2019", value1: 150589.85, value2: 6065.16},
+    //     {group: "August 30, 2019", value1: 149459.61, value2: 11709.35},
+    //     {group: "July 30, 2019", value1: 145899.65, value2: 15316.21},
+    //     {group: "June 29, 2019", value1: 161465.81, value2: 18529.57},
+    //     {group: "May 30, 2019", value1: 168586.49, value2: 17018.43},
+    //     {group: "April 29, 2019", value1: 175571.78, value2: 27444.95},
+    //     {group: "March 30, 2019", value1: 167702.65, value2: 31159.38},
+    //     {group: "February 27, 2019", value1: 144232.48, value2: 16737.58},
+    //     {group: "January 30, 2019", value1: 159506.19, value2: 25938.17},
+    //     {group: "December 30, 2018", value1: 156277.41, value2: 21851.49},
+    //     {group: "November 29, 2018", value1: 157167.6, value2: 20727.48},
+    //     {group: "October 30, 2018", value1: 141297.61, value2: 21352.76},
+    //     {group: "September 29, 2018", value1: 137473.46, value2: 23932.17},
+    //     {group: "August 30, 2018", value1: 136300.56, value2: 28503.74},
+    //     {group: "July 30, 2018", value1: 119100.7, value2: 20213.62},
+    //     {group: "June 29, 2018", value1: 116861.26, value2: 21220.52},
+    //     {group: "May 30, 2018", value1: 115954.13, value2: 32225.77},
+    //     {group: "April 29, 2018", value1: 107069.81, value2: 32183.18},
+    //     {group: "March 30, 2018", value1: 98219.44, value2: 18305.69},
+    //     {group: "February 27, 2018", value1: 99543.18, value2: 32737.82},
+    //     {group: "January 30, 2018", value1: 80255.57, value2: 26653.61},
+    //     {group: "December 30, 2017", value1: 62987.27, value2: 10116.21},
+    //     {group: "November 29, 2017", value1: 58901.25, value2: 20541.23},
+    //     {group: "October 30, 2017", value1: 53789.66, value2: 26835.61},
+    //     {group: "September 29, 2017", value1: 24074.22, value2: 582.5},
+    //     {group: "August 30, 2017", value1: 20302.76, value2: 8443.45},
+    //     {group: "July 30, 2017", value1: 20449.86, value2: 9389.39},
+    //     {group: "June 29, 2017", value1: 11948.44, value2: 3123.84},
+    //     {group: "May 30, 2017", value1: 14642.19, value2: 3815.18},
+    //     {group: "April 29, 2017", value1: 3243.12, value2: -5943.78},
+    //     {group: "March 30, 2017", value1: 11723.36, value2: 624.03},
+    //     {group: "February 27, 2017", value1: 8742.68, value2: -3737.15},
+    //     {group: "December 30, 2016", value1: 12500, value2: 12500}
+    // ]
+    // // Parse the Data
+    //
+    //     console.log(data);
+    //     // List of subgroups = header of the csv files = soil condition here
+    //     var subgroups = ['value1', 'value2'];
+    //
+    //     // List of groups = species here = value of the first column called group -> I show them on the X axis
+    //     // var groups = d3.map(data, function(d){return(d.group)}).keys()
+    //     console.log(groups);
+    //     console.log(subgroups);
+    //     // Add X axis
+    //     var x = d3.scaleBand()
+    //     .domain(groups)
+    //     .range([0, width])
+    //     .padding([0.2])
+    //     svg.append("g")
+    //     .attr("transform", "translate(0," + height + ")")
+    //     .call(d3.axisBottom(x).tickSize(0));
+    //
+    //     // Add Y axis
+    //     var y = d3.scaleLinear()
+    //     .domain([0, 180000])
+    //     .range([ height, 0 ]);
+    //     svg.append("g")
+    //     .call(d3.axisLeft(y));
+    //
+    //     // Another scale for subgroup position?
+    //     var xSubgroup = d3.scaleBand()
+    //     .domain(subgroups)
+    //     .range([0, x.bandwidth()])
+    //     .padding([0.05])
+    //
+    //     // color palette = one color per subgroup
+    //     var color = d3.scaleOrdinal()
+    //     .domain(subgroups)
+    //     .range(['#e41a1c','#377eb8','#4daf4a'])
+    //
+    //     // Show the bars
+    //     console.log(data);
+    //     svg.append("g")
+    //     .selectAll("g")
+    //     // Enter in data = loop group per group
+    //     .data(data)
+    //     .enter()
+    //     .append("g")
+    //     .attr("transform", function(d) { return "translate(" + x(d.group) + ",0)"; })
+    //     .selectAll("rect")
+    //     .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
+    //     .enter().append("rect")
+    //     .attr("x", function(d) { return xSubgroup(d.key); })
+    //     .attr("y", function(d) { return y(Math.abs(d.value)); })
+    //     .attr("width", xSubgroup.bandwidth())
+    //     .attr("height", function(d) { return height - Math.abs(y(Math.abs(d.value))); })
+    //     .attr("fill", function(d) { return color(d.key); });
+    //
+    //
+    // d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_stacked.csv", function(data) {
+    // })
 
     // set the dimensions and margins of the graph
-    var margin = {top: 10, right: 30, bottom: 20, left: 50},
+var margin = {top: 10, right: 100, bottom: 30, left: 30},
     width = 460 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
-    // append the svg object to the body of the page
-    var svg = d3.select("#foo")
-    .append("svg")
+// append the svg object to the body of the page
+var svg = d3.select("#foo")
+  .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
-    .append("g")
+  .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
-    //
-    data = [
-        {group: "October 30, 2019", value1: 0, value2: -3399.96},
-        {group: "September 29, 2019", value1: 150589.85, value2: 6065.16},
-        {group: "August 30, 2019", value1: 149459.61, value2: 11709.35},
-        {group: "July 30, 2019", value1: 145899.65, value2: 15316.21},
-        {group: "June 29, 2019", value1: 161465.81, value2: 18529.57},
-        {group: "May 30, 2019", value1: 168586.49, value2: 17018.43},
-        {group: "April 29, 2019", value1: 175571.78, value2: 27444.95},
-        {group: "March 30, 2019", value1: 167702.65, value2: 31159.38},
-        {group: "February 27, 2019", value1: 144232.48, value2: 16737.58},
-        {group: "January 30, 2019", value1: 159506.19, value2: 25938.17},
-        {group: "December 30, 2018", value1: 156277.41, value2: 21851.49},
-        {group: "November 29, 2018", value1: 157167.6, value2: 20727.48},
-        {group: "October 30, 2018", value1: 141297.61, value2: 21352.76},
-        {group: "September 29, 2018", value1: 137473.46, value2: 23932.17},
-        {group: "August 30, 2018", value1: 136300.56, value2: 28503.74},
-        {group: "July 30, 2018", value1: 119100.7, value2: 20213.62},
-        {group: "June 29, 2018", value1: 116861.26, value2: 21220.52},
-        {group: "May 30, 2018", value1: 115954.13, value2: 32225.77},
-        {group: "April 29, 2018", value1: 107069.81, value2: 32183.18},
-        {group: "March 30, 2018", value1: 98219.44, value2: 18305.69},
-        {group: "February 27, 2018", value1: 99543.18, value2: 32737.82},
-        {group: "January 30, 2018", value1: 80255.57, value2: 26653.61},
-        {group: "December 30, 2017", value1: 62987.27, value2: 10116.21},
-        {group: "November 29, 2017", value1: 58901.25, value2: 20541.23},
-        {group: "October 30, 2017", value1: 53789.66, value2: 26835.61},
-        {group: "September 29, 2017", value1: 24074.22, value2: 582.5},
-        {group: "August 30, 2017", value1: 20302.76, value2: 8443.45},
-        {group: "July 30, 2017", value1: 20449.86, value2: 9389.39},
-        {group: "June 29, 2017", value1: 11948.44, value2: 3123.84},
-        {group: "May 30, 2017", value1: 14642.19, value2: 3815.18},
-        {group: "April 29, 2017", value1: 3243.12, value2: -5943.78},
-        {group: "March 30, 2017", value1: 11723.36, value2: 624.03},
-        {group: "February 27, 2017", value1: 8742.68, value2: -3737.15},
-        {group: "December 30, 2016", value1: 12500, value2: 12500}
-    ]
-    // Parse the Data
+          "translate(" + margin.left + "," + margin.top + ")");
 
-        console.log(data);
-        // List of subgroups = header of the csv files = soil condition here
-        var subgroups = ['value1', 'value2'];
+//Read the data
+d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_connectedscatter.csv", function(data) {
 
-        // List of groups = species here = value of the first column called group -> I show them on the X axis
-        // var groups = d3.map(data, function(d){return(d.group)}).keys()
-        console.log(groups);
-        console.log(subgroups);
-        // Add X axis
-        var x = d3.scaleBand()
-        .domain(groups)
-        .range([0, width])
-        .padding([0.2])
-        svg.append("g")
-        .attr("transform", "translate(0," + height + ")")
-        .call(d3.axisBottom(x).tickSize(0));
+    // List of groups (here I have one group per column)
+    var allGroup = ["valueA", "valueB", "valueC"]
 
-        // Add Y axis
-        var y = d3.scaleLinear()
-        .domain([0, 180000])
-        .range([ height, 0 ]);
-        svg.append("g")
-        .call(d3.axisLeft(y));
+    // Reformat the data: we need an array of arrays of {x, y} tuples
+    var dataReady = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
+      return {
+        name: grpName,
+        values: data.map(function(d) {
+          return {time: d.time, value: +d[grpName]};
+        })
+      };
+    });
+    console.log(dataReady);
+    // I strongly advise to have a look to dataReady with
+    // console.log(dataReady)
 
-        // Another scale for subgroup position?
-        var xSubgroup = d3.scaleBand()
-        .domain(subgroups)
-        .range([0, x.bandwidth()])
-        .padding([0.05])
+    // A color scale: one color for each group
+    var myColor = d3.scaleOrdinal()
+      .domain(allGroup)
+      .range(['#355C7D', '#6C5B7B']);
 
-        // color palette = one color per subgroup
-        var color = d3.scaleOrdinal()
-        .domain(subgroups)
-        .range(['#e41a1c','#377eb8','#4daf4a'])
+    // Add X axis --> it is a date format
+    var x = d3.scaleLinear()
+      .domain([0,10])
+      .range([ 0, width ]);
+    svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
 
-        // Show the bars
-        console.log(data);
-        svg.append("g")
-        .selectAll("g")
-        // Enter in data = loop group per group
-        .data(data)
-        .enter()
-        .append("g")
-        .attr("transform", function(d) { return "translate(" + x(d.group) + ",0)"; })
-        .selectAll("rect")
-        .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
-        .enter().append("rect")
-        .attr("x", function(d) { return xSubgroup(d.key); })
-        .attr("y", function(d) { return y(Math.abs(d.value)); })
-        .attr("width", xSubgroup.bandwidth())
-        .attr("height", function(d) { return height - Math.abs(y(Math.abs(d.value))); })
-        .attr("fill", function(d) { return color(d.key); });
+    // Add Y axis
+    var y = d3.scaleLinear()
+      .domain( [0,20])
+      .range([ height, 0 ]);
+    svg.append("g")
+      .call(d3.axisLeft(y));
 
+    // Add the lines
+    var line = d3.line()
+      .x(function(d) { return x(+d.time) })
+      .y(function(d) { return y(+d.value) })
+    svg.selectAll("myLines")
+      .data(dataReady)
+      .enter()
+      .append("path")
+        .attr("d", function(d){ return line(d.values) } )
+        .attr("stroke", function(d){ return myColor(d.name) })
+        .style("stroke-width", 4)
+        .style("fill", "none")
 
-    d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_stacked.csv", function(data) {
-    })
+    // Add the points
+    svg
+      // First we need to enter in a group
+      .selectAll("myDots")
+      .data(dataReady)
+      .enter()
+        .append('g')
+        .style("fill", function(d){ return myColor(d.name) })
+      // Second we need to enter in the 'values' part of this group
+      .selectAll("myPoints")
+      .data(function(d){ return d.values })
+      .enter()
+      .append("circle")
+        .attr("cx", function(d) { return x(d.time) } )
+        .attr("cy", function(d) { return y(d.value) } )
+        .attr("r", 5)
+        .attr("stroke", "white")
+
+    // Add a legend at the end of each line
+    svg
+      .selectAll("myLabels")
+      .data(dataReady)
+      .enter()
+        .append('g')
+        .append("text")
+          .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
+          .attr("transform", function(d) { return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")"; }) // Put the text at the position of the last point
+          .attr("x", 12) // shift the text a bit more right
+          .text(function(d) { return d.name; })
+          .style("fill", function(d){ return myColor(d.name) })
+          .style("font-size", 15)
+
+})
 
 
     </script>

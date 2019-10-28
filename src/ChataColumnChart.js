@@ -113,7 +113,6 @@ function createColumnChart(component, data, col1, col2, hasNegativeValues, optio
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end")
 
-
     //Bars
     svg.selectAll("rect")
     .data(data)
