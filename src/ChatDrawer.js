@@ -558,13 +558,32 @@ ChatDrawer.registerEvents = function(){
                 }
                 var json = ChatDrawer.responses[idRequest];
                 var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                var values = formatDataToBarChart(json);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
                 ChatDrawer.refreshToolbarButtons(component, 'bar');
+                if(json['data']['display_type'] == 'compare_table'){
+                    var data = cloneObject(json['data']['rows']);
+
+                    var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    groups = groups.sort();
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                    }
+                    // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                    var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                    createGroupedBarChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
+                }else{
+                    var values = formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var hasNegativeValues = values[1];
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                }
 
             }
 

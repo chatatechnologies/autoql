@@ -1,5 +1,5 @@
-function createGroupedColumnChart(component, groups, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 140, left: 80},
+function createGroupedBarChart(component, groups, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+    var margin = {top: 5, right: 10, bottom: 140, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
     var legspacing = 15;
@@ -20,16 +20,16 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
     var subgroups = ['value1', 'value2'];
-    const barWidth = chartWidth / groups.length;
-    const interval = Math.ceil((groups.length * 16) / width);
-    var xTickValues = [];
-    if (barWidth < 16) {
+    const barHeight = height / groups.length;
+    const interval = Math.ceil((groups.length * 16) / height);
+    var yTickValues = [];
+    if (barHeight < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
                 if(element.length < 18){
-                    xTickValues.push(element);
+                    yTickValues.push(element);
                 }else{
-                    xTickValues.push(element.slice(0, 18));
+                    yTickValues.push(element.slice(0, 18));
                 }
             }
         });
@@ -57,24 +57,19 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     .attr('class', 'x-axis-label')
     .text(col1);
 
+    var maxValue = d3.max(data, function(d) {
+        return Math.max(d['value1'], d['value2']);
+    });
 
-    var x = d3.scaleBand()
-    .domain(groups.map(function(d) {
-        if(d < 18){
-            return d;
-        }else{
-            return d.slice(0, 18);
-        }
-    }))
-    .range([0, width])
-    .padding([0.02]);
-
+    var x = d3.scaleLinear()
+    .domain([0, maxValue])
+    .range([0, width]);
     var xAxis = d3.axisBottom(x);
+    xAxis.tickSize(0);
 
-    if(xTickValues.length > 0){
-        xAxis.tickValues(xTickValues);
-    }
-
+    xAxis.tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode);
+    });
     svg.append("g")
     .attr("transform", "translate(0," + (height) + ")")
     .call(xAxis)
@@ -83,29 +78,40 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     .attr("transform", "translate(-10,0)rotate(-45)")
     .style("text-anchor", "end");
 
-    var maxValue = d3.max(data, function(d) {
-        var sum = 0;
-        return Math.max(d['value1'], d['value2']);
-    });
 
     // Add Y axis
-    var y = d3.scaleLinear()
-    .domain([0, maxValue])
-    .range([ height, 0 ]);
+    var y = d3.scaleBand()
+    .domain(
+        groups.map(function(d) {
+            if(d < 18){
+                return d;
+            }else{
+                return d.slice(0, 18);
+            }
+        })
+    )
+    .range([ 0, height ])
+    .padding([0.02]);
     var axisLeft = d3.axisLeft(y);
+
+    if(yTickValues.length > 0){
+        axisLeft.tickValues(yTickValues);
+    }
+
+
+    svg.append("g")
+    .call(axisLeft);
 
     svg.append("g")
     .attr("class", "grid")
-    .call(
-        axisLeft
-        .tickSize(-width)
-        .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)})
+    .call(d3.axisBottom(x)
+        .tickSize(height)
+        .tickFormat("")
     );
 
-    // Another scale for subgroup position?
     var xSubgroup = d3.scaleBand()
     .domain(subgroups)
-    .range([0, x.bandwidth()])
+    .range([0, y.bandwidth()])
     .padding([0.01])
 
     // color palette = one color per subgroup
@@ -122,21 +128,21 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     .append("g")
     .attr("transform", function(d) {
         if(d.group < 18){
-            return "translate(" + x(d.group) + ",0)";
+            return "translate(0,"+ y(d.group) +")";
         }else{
-            return "translate(" + x(d.group.slice(0,18)) + ",0)";
+            return "translate(0,"+ y(d.group.slice(0, 18)) +")";
         }
     })
     .selectAll("rect")
     .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
     .enter().append("rect")
-    .attr("x", function(d) { return xSubgroup(d.key); })
-    .attr("y", function(d) { return y(Math.abs(d.value)); })
-    .attr("width", xSubgroup.bandwidth())
-    .attr("height", function(d) { return Math.abs(y(Math.abs(d.value)) - y(0)); })
+    .attr("x", function(d) { return x(Math.min(0, d.value)); })
+    .attr("y", function(d) { return xSubgroup(d.key); })
+    .attr("width", function(d) {return Math.abs(x(d.value) - x(0));})
+    .attr("height", xSubgroup.bandwidth() )
     .attr("fill", function(d) { return color(d.key); })
     .attr('fill-opacity', '0.7');
-
+    //
     var nodeWidth = (d) => d.getBBox().width;
 
     const legend = svg.append('g')
