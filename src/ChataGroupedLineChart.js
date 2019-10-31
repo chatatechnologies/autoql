@@ -8,8 +8,8 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
     var legendBoxMargin = 25;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
-            height -= hLegendBox;
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
+            // height -= hLegendBox;
         }else{
             height = 180;
         }
@@ -149,9 +149,20 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
     .data(function(d){ return d.values })
     .enter()
     .append("circle")
+    .each(function (d, i) {
+        var nameCol2 = d.key == 'value1' ? col2 : col3;
+        d3.select(this)
+        .attr('data-col1', col1)
+        .attr('data-col2', nameCol2)
+        .attr('data-colvalue1', d.group)
+        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
+    })
+    .attr('class', 'tooltip-2d line-dot')
     .attr("cx", function(d) { return x(d.group) } )
     .attr("cy", function(d) { return y(d.value) } )
-    .attr("r", 3)
+    .attr("r", 2)
+    .attr('stroke', 'transparent')
+    .attr('stroke-width', '5')
 
     var nodeWidth = (d) => d.getBBox().width;
 
@@ -170,6 +181,7 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
     .attr('cx', 9)
     .attr('cy', 5)
     .attr('r', 4)
+
 
     lg.append('text')
     .style('font-size', '10px')
@@ -192,5 +204,6 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
         return `translate(${(width - nodeWidth(this)) / 2},${0})`
     });
 
+    tooltipCharts();
 
 }

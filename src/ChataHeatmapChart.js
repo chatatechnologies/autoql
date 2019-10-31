@@ -56,23 +56,6 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, opti
         });
     }
 
-    var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-        var val = formatData(
-            d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode
-        );
-        return `
-        <span class='title-tip'>${col2}:</span> <span class="text-tip">${d.labelX}</span> <br/>
-        <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.labelY}</span> <br/>
-        <span class='title-tip'>${col3}:</span> <span class="text-tip">${val}</span>`;
-    })
-
-    svg.call(tip);
-
     svg.append('text')
     .attr('x', -(height / 2))
     .attr('y', -margin.left + margin.right)
@@ -161,7 +144,13 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, opti
     .enter()
     .append("rect")
     .each(function (d, i) {
-        d3.select(this).attr(valueClass, i);
+        d3.select(this).attr(valueClass, i)
+        .attr('data-col1', col1)
+        .attr('data-col2', col2)
+        .attr('data-col3', col3)
+        .attr('data-colvalue1', d.labelY)
+        .attr('data-colvalue2', d.labelX)
+        .attr('data-colvalue3', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
     })
     .attr("x", function(d) {
         if(d.labelX.length < 18){
@@ -181,16 +170,7 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, opti
     .attr("height", y.bandwidth())
     .attr("fill", options.chartColors[0])
     .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
-    .attr('class', 'square')
-    .on('mouseover', function(d) {
-        if(renderTooltips){
-            tip.attr('class', 'd3-tip animate').show(d);
-        }
-    })
-    .on('mouseout', function(d) {
-        if(renderTooltips){
-            tip.attr('class', 'd3-tip').show(d);
-            tip.hide();
-        }
-    });
+    .attr('class', 'tooltip-3d square')
+
+    tooltipCharts();
 }

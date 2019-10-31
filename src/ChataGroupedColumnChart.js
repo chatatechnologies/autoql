@@ -8,8 +8,8 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     var legendBoxMargin = 25;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
-            height -= hLegendBox;
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
+            // height -= hLegendBox;
         }else{
             height = 180;
         }
@@ -67,7 +67,7 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
         }
     }))
     .range([0, width])
-    .padding([0.02]);
+    .padding([0.2]);
 
     var xAxis = d3.axisBottom(x);
 
@@ -106,7 +106,7 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     var xSubgroup = d3.scaleBand()
     .domain(subgroups)
     .range([0, x.bandwidth()])
-    .padding([0.01])
+    .padding([0.05])
 
     // color palette = one color per subgroup
     var color = d3.scaleOrdinal()
@@ -128,8 +128,19 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
         }
     })
     .selectAll("rect")
-    .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
+    .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key], group: d.group}; }); })
     .enter().append("rect")
+    .each(function (d, i) {
+        var nameCol2 = d.key == 'value1' ? col2 : col3;
+        d3.select(this)
+        .attr('data-col1', col1)
+        .attr('data-col2', nameCol2)
+        .attr('data-colvalue1', d.group)
+        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode));
+    })
+    .attr('class', 'tooltip-2d bar')
+    .attr('stroke', 'transparent')
+    .attr('stroke-width', '5')
     .attr("x", function(d) { return xSubgroup(d.key); })
     .attr("y", function(d) { return y(Math.abs(d.value)); })
     .attr("width", xSubgroup.bandwidth())
@@ -176,5 +187,5 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
         return `translate(${(width - nodeWidth(this)) / 2},${0})`
     });
 
-
+    tooltipCharts();
 }

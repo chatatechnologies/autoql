@@ -38,23 +38,6 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-        var val = formatData(
-            d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode
-        );
-        return `
-        <span class='title-tip'>${col2}:</span> <span class="text-tip">${d.data.group}</span> <br/>
-        <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.labelY}</span> <br/>
-        <span class='title-tip'>${col3}:</span> <span class="text-tip">${val}</span>`;
-    })
-
-    svg.call(tip);
-
     svg.append('text')
     .attr('x', -(height / 2))
     .attr('y', -margin.left + margin.right)
@@ -135,8 +118,28 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
+    .each(function (d, i) {
+        var pos = d[1];
+        var sum = 0;
+        for (var [key, value] of Object.entries(d.data)){
+            if(key == 'group')continue;
+            sum += parseFloat(value);
+            if(sum == pos){
+                d.value = value;
+                d.labelY = key;
+                break;
+            }
+        }
+        d3.select(this).attr(valueClass, i)
+        .attr('data-col1', col1)
+        .attr('data-col2', col2)
+        .attr('data-col3', col3)
+        .attr('data-colvalue1', d.labelY)
+        .attr('data-colvalue2', d.data.group)
+        .attr('data-colvalue3', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
+    })
     .attr('opacity', '0.7')
-    .attr('class', 'stacked-rect')
+    .attr('class', 'tooltip-3d stacked-rect')
     .attr("x", function(d) {
         return x(d[0]);
     })
@@ -151,29 +154,6 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         }
         return Math.abs(x(d[0]) - x(d[1]));
     })
-    .on('mouseover', function(d, i) {
-        if(renderTooltips){
-            var pos = d[1];
-            var group = groups.reverse()[i];
-            var sum = 0;
-            for (var [key, value] of Object.entries(d.data)){
-                if(key == 'group')continue;
-                sum += parseFloat(value);
-                if(sum == pos){
-                    d.value = value;
-                    d.labelY = key;
-                    break;
-                }
-            }
-            tip.attr('class', 'd3-tip animate').show(d);
-        }
-    })
-    .on('mouseout', function(d, i) {
-        if(renderTooltips){
-            tip.attr('class', 'd3-tip').show(d);
-            tip.hide();
-        }
-    });
 
     var legend = svg.selectAll(".legend")
         .data(subgroups.sort())
@@ -202,4 +182,5 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         .text(function (d, i) {
             return subgroups[i];
         })
+    tooltipCharts();
 }

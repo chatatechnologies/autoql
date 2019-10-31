@@ -477,6 +477,37 @@ function refreshTooltips(){
     })
 }
 
+function tooltipCharts(){
+    var get2dContent = (instance) => {
+        var dataset = instance.reference.dataset;
+        var content  = `<span class='title-tip'>${dataset.col1}:</span> <span class="text-tip">${dataset.colvalue1}</span>`;
+        content += '<br/>';
+        content += `<span class='title-tip'>${dataset.col2}:</span> <span class="text-tip">${dataset.colvalue2}</span>`
+        return content;
+    }
+
+    tippy('.tooltip-2d', {
+        theme: 'chata',
+        onShow: function(instance){
+            instance.setContent(
+                get2dContent(instance)
+            );
+        }
+    })
+
+    tippy('.tooltip-3d', {
+        theme: 'chata',
+        onShow: function(instance){
+            var dataset = instance.reference.dataset;
+            var content = get2dContent(instance);
+            content += '<br/>';
+            content += `<span class='title-tip'>${dataset.col3}:</span> <span class="text-tip">${dataset.colvalue3}</span>`;
+            instance.setContent(
+                content
+            );
+        }
+    })
+}
 function applyFilter(idRequest){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.getElementsByTagName('input');

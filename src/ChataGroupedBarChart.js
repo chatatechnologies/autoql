@@ -8,8 +8,8 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
     var legendBoxMargin = 25;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
-            height -= hLegendBox;
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
+            // height -= hLegendBox;
         }else{
             height = 180;
         }
@@ -134,8 +134,17 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
         }
     })
     .selectAll("rect")
-    .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
+    .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key], group: d.group};  }); })
     .enter().append("rect")
+    .each(function (d, i) {
+        var nameCol2 = d.key == 'value1' ? col2 : col3;
+        d3.select(this)
+        .attr('data-col1', col1)
+        .attr('data-col2', nameCol2)
+        .attr('data-colvalue1', d.group)
+        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode));
+    })
+    .attr('class', 'tooltip-2d bar')
     .attr("x", function(d) { return x(Math.min(0, d.value)); })
     .attr("y", function(d) { return xSubgroup(d.key); })
     .attr("width", function(d) {return Math.abs(x(d.value) - x(0));})
@@ -182,5 +191,5 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
         return `translate(${(width - nodeWidth(this)) / 2},${0})`
     });
 
-
+    tooltipCharts();
 }

@@ -37,22 +37,6 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .offset([-10, 0])
-    .html(function(d) {
-        var val = formatData(
-            d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode
-        );
-        return `
-        <span class='title-tip'>${col1}:</span> <span class="text-tip">${d.label}</span> <br/>
-        <span class='title-tip'>${col2}:</span> <span class="text-tip">${val}</span>`;
-    })
-
-    svg.call(tip);
-
     svg.append('text')
     .attr('x', -(height / 2))
     .attr('y', -margin.left + margin.right)
@@ -138,7 +122,11 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
     .enter()
     .append("circle")
     .each(function (d, i) {
-        d3.select(this).attr(valueClass, i);
+        d3.select(this).attr(valueClass, i)
+        .attr('data-col1', col1)
+        .attr('data-col2', col2)
+        .attr('data-colvalue1', d.label)
+        .attr('data-colvalue2',formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
     })
     .attr("cx", function(d) {
         if(d.label.length < 18){
@@ -148,18 +136,11 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
         }
      } )
     .attr("cy", function(d) { return y(d.value) } )
-    .attr("r", 3)
+    .attr("r", 2)
+    .attr('stroke', 'transparent')
+    .attr('stroke-width', '5')
     .attr("fill", options.chartColors[0])
-    .attr('class', 'line-dot')
-    .on('mouseover', function(d) {
-        if(renderTooltips){
-            tip.attr('class', 'd3-tip animate').show(d);
-        }
-    })
-    .on('mouseout', function(d) {
-        if(renderTooltips){
-            tip.attr('class', 'd3-tip').show(d);
-            tip.hide();
-        }
-    });
+    .attr('class', 'tooltip-2d line-dot')
+
+    tooltipCharts();
 }
