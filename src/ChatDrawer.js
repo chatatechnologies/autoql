@@ -18,6 +18,7 @@ var ChatDrawer = {
         onVisibleChange: function() {},
         onHandleClick: function(){},
         showMask: true,
+        shiftScreen: false,
         onMaskClick: function(){},
         maskClosable: true,
         customerName: 'there',
@@ -402,22 +403,24 @@ ChatDrawer.registerEvents = function(){
                 var tableElement = e.target.parentElement.parentElement.parentElement;
                 var pivotArray = [];
                 var json = ChatDrawer.responses[tableElement.dataset.componentid];
-                var rows = applyFilter(tableElement.dataset.componentid);
                 if(json['display_type'] == 'date_pivot'){
-                    pivotArray = getDatePivotArray(json, ChatDrawer.options, rows);
+                    pivotArray = getDatePivotArray(json, ChatDrawer.options, cloneObject(json['data']['rows']));
                 }else{
-                    pivotArray = getPivotColumnArray(json, ChatDrawer.options, rows);
+                    pivotArray = getPivotColumnArray(json, ChatDrawer.options, cloneObject(json['data']['rows']));
                 }
+                var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
                 if(e.target.nextSibling.classList.contains('up')){
                     e.target.nextSibling.classList.remove('up');
                     e.target.nextSibling.classList.add('down');
-                    var sortData = sortPivot(pivotArray, e.target.dataset.index, 'desc');
+                    rows.unshift([]); //Simulate header
+                    var sortData = sortPivot(rows, e.target.dataset.index, 'desc');
                     sortData.unshift([]); //Simulate header
                     ChatDrawer.refreshPivotTable(tableElement, sortData);
                 }else{
                     e.target.nextSibling.classList.remove('down');
                     e.target.nextSibling.classList.add('up');
-                    var sortData = sortPivot(pivotArray, e.target.dataset.index, 'asc');
+                    rows.unshift([]); //Simulate header
+                    var sortData = sortPivot(rows, e.target.dataset.index, 'asc');
                     sortData.unshift([]); //Simulate header
                     ChatDrawer.refreshPivotTable(tableElement, sortData);
                 }
@@ -898,20 +901,29 @@ ChatDrawer.closeDrawer = function(){
     ChatDrawer.options.isVisible = false;
     ChatDrawer.wrapper.style.opacity = 0;
     ChatDrawer.wrapper.style.height = 0;
+    var body = document.getElementsByTagName('body')[0];
 
     if(ChatDrawer.options.placement == 'right'){
         ChatDrawer.rootElem.style.right = 0;
         ChatDrawer.rootElem.style.top = 0;
-        ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
+        }
+        if(ChatDrawer.options.shiftScreen){
+            body.style.transform = 'translateX(0px)';
+        }else{
+            ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
         }
     }else if(ChatDrawer.options.placement == 'left'){
         ChatDrawer.rootElem.style.left = 0;
         ChatDrawer.rootElem.style.top = 0;
-        ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
         if(ChatDrawer.options.showHandle){
             ChatDrawer.drawerButton.style.display = 'flex';
+        }
+        if(ChatDrawer.options.shiftScreen){
+            body.style.transform = 'translateX(0px)';
+        }else{
+            ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
         }
     }else if(ChatDrawer.options.placement == 'bottom'){
         ChatDrawer.rootElem.style.bottom = '0';
@@ -936,22 +948,41 @@ ChatDrawer.closeDrawer = function(){
 
 ChatDrawer.openDrawer = function(){
     ChatDrawer.options.isVisible = true;
+    var body = document.getElementsByTagName('body')[0];
     if(ChatDrawer.options.showMask){
         ChatDrawer.wrapper.style.opacity = .3;
         ChatDrawer.wrapper.style.height = '100%';
     }
     if(ChatDrawer.options.placement == 'right'){
         ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
+        ChatDrawer.rootElem.style.height = 'calc(100vh)';
+
         ChatDrawer.drawerButton.style.display = 'none';
         ChatDrawer.rootElem.style.right = 0;
         ChatDrawer.rootElem.style.top = 0;
-        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+        if(ChatDrawer.options.shiftScreen){
+            body.style.position = 'relative';
+            body.style.overflow = 'hidden';
+            body.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
+            ChatDrawer.rootElem.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
+        }else{
+            ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+        }
+
     }else if(ChatDrawer.options.placement == 'left'){
         ChatDrawer.rootElem.style.width = ChatDrawer.options.width + 'px';
+        ChatDrawer.rootElem.style.height = 'calc(100vh)';
         ChatDrawer.rootElem.style.left = 0;
         ChatDrawer.rootElem.style.top = 0;
         ChatDrawer.drawerButton.style.display = 'none';
-        ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+        if(ChatDrawer.options.shiftScreen){
+            body.style.position = 'relative';
+            body.style.overflow = 'hidden';
+            body.style.transform = 'translateX('+ ChatDrawer.options.width +'px)';
+            ChatDrawer.rootElem.style.transform = 'translateX(-'+ ChatDrawer.options.width +'px)';
+        }else{
+            ChatDrawer.rootElem.style.transform = 'translateX(0px)';
+        }
     }else if(ChatDrawer.options.placement == 'bottom'){
         ChatDrawer.rootElem.style.width = '100%';
         ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
@@ -1573,6 +1604,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         filter.classList.add('filter-input');
         filter.setAttribute('data-dataid', idRequest);
         filter.setAttribute('data-inputindex', i);
+        filter.colType = jsonResponse['data']['columns'][i]['type'];
         filter.onkeyup = function(event){
             var _table = document.querySelector(`[data-componentid='${idRequest}']`);
             var rows = applyFilter(idRequest);

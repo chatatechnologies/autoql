@@ -52,7 +52,7 @@
             align-items: center;
             align-content: center;
             flex-direction: column;
-            margin: 35px 0px;
+            /* margin: 35px 0px; */
         }
         .prop{
             display: flex;
@@ -155,6 +155,17 @@
                 </label>
             </div>
         </div>
+
+        <div class="prop prop-column">
+            <h6 class="">Shift Screen on Open/Close</h6>
+            <div class="switch">
+                <label>
+                    <input type="checkbox" name="shiftScreen">
+                    <span class="lever"></span>
+                </label>
+            </div>
+        </div>
+
 
         <div class="">
             <h6 style="text-align: center;">Theme</h6>
@@ -357,7 +368,8 @@
             customerId: 'locate-demo1',
             userId: 'nmoore@chata.ai',
             domain: 'https://locate-staging.chata.io',
-            isVisible: true,
+            isVisible: false,
+            shiftScreen: false,
             placement: 'right',
             width: 500,
             height: 600,
@@ -396,6 +408,7 @@
 
         var showHandle = document.querySelector('[name="showHandle"]')
         var showMask = document.querySelector('[name="showMask"]')
+        var shiftScreen = document.querySelector('[name="shiftScreen"]')
         var theme = document.querySelectorAll('[name="theme"]')
         var placement = document.querySelectorAll('[name="placement"]')
         var enableAutocomplete = document.querySelector('[name="enableAutocomplete"]')
@@ -474,6 +487,10 @@
             }else{
                 ChatDrawer.drawerButton.style.display = 'none';
             }
+        }
+
+        shiftScreen.onchange = function(event){
+            ChatDrawer.options.shiftScreen = event.target.checked;
         }
 
         showMask.onchange = function(event){

@@ -508,18 +508,45 @@ function tooltipCharts(){
         }
     })
 }
-function applyFilter(idRequest){
+function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.getElementsByTagName('input');
-    var rows = cloneObject(ChatDrawer.responses[_table.dataset.componentid]['data']['rows']);
+    var rows = array || cloneObject(ChatDrawer.responses[_table.dataset.componentid]['data']['rows']);
     for (var i = 0; i < inputs.length; i++) {
         if(inputs[i].value == '')continue;
+        var colType = inputs[i].colType;
+        var compareValue = inputs[i].value.toLowerCase();
         rows = rows.filter(function(elem){
             var v = elem[i];
-            if(typeof v === 'number'){
-                v = v.toString();
+            if(colType == 'DATE'){
+                var formatDate = formatData(v, 'DATE');
+                return formatDate.toLowerCase().includes(compareValue);
+            }else if(
+                colType == 'DOLLAR_AMT' ||
+                colType == 'QUANTITY' ||
+                colType == 'PERCENT'
+            ) {
+                var trimmedValue = compareValue.trim();
+                if (trimmedValue.length >= 2) {
+                    const number = parseFloat(trimmedValue.substr(1));
+                    if (trimmedValue[0] === '>' && trimmedValue[1] === '=') {
+                        return v >= number;
+                    } else if (trimmedValue[0] === '>') {
+                        return v > number;
+                    } else if (trimmedValue[0] === '<' && trimmedValue[1] === '=') {
+                        return v <= number;
+                    } else if (trimmedValue[0] === '<') {
+                        return v < number;
+                    } else if (trimmedValue[0] === '!' && trimmedValue[1] === '=') {
+                        return v !== number;
+                    } else if (trimmedValue[0] === '=') {
+                        return v === number;
+                    }
+                }
+                return v.toString().includes(compareValue);
+            }else{
+                return v.toString().toLowerCase().includes(compareValue);
             }
-            return v.toLowerCase().includes(inputs[i].value.toLowerCase());
         });
     }
     return rows;

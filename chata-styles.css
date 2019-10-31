@@ -64,7 +64,9 @@
     transition: opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), height 0s ease 0.3s;
     z-index: 2;
 }
-
+body{
+    transition: transform 0.3s ease-in-out;
+}
 .chata-drawer{
     z-index: 10;
     background: white;

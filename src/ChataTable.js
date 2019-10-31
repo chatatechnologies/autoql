@@ -31,6 +31,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         divFilter.classList.add('tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
+        filter.colType = jsonResponse['data']['columns'][i]['type'];
         filter.onkeyup = function(event){
             var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
             var rows = applyFilter(oldComponent.dataset.componentid);
@@ -104,19 +105,23 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         divFilter.classList.add('tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
+        if(i == 0){
+            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid]['data']['columns'][0];
+        }else if(i >= 1){
+            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid]['data']['columns'][2];
+        }
         filter.onkeyup = function(event){
             var _json = ChatDrawer.responses[oldComponent.dataset.componentid];
             var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
-            var rows = applyFilter(oldComponent.dataset.componentid);
             if(_json['display_type'] == 'date_pivot'){
-                var pivotArray = getDatePivotArray(_json, ChatDrawer.options, rows);
+                var pivotArray = getDatePivotArray(_json, ChatDrawer.options, cloneObject(_json['data']['rows']));
             }else{
-                var pivotArray = getPivotColumnArray(_json, ChatDrawer.options, rows);
+                var pivotArray = getPivotColumnArray(_json, ChatDrawer.options, cloneObject(_json['data']['rows']));
             }
-            console.log('PIVOOTTTTTTTTTTTTTTTTTTTTT');
-            console.log(pivotArray);
-            ChatDrawer.refreshPivotTable(_table, pivotArray);
-            // ChatDrawer.refreshTableData(_table, cloneObject(rows), ChatDrawer.options, false);
+            pivotArray.shift();
+            var rows = applyFilter(oldComponent.dataset.componentid, pivotArray);
+            rows.unshift([]);
+            ChatDrawer.refreshPivotTable(_table, rows);
         }
         col.appendChild(divFilter);
         if(i == 0){
