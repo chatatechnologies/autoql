@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <title></title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-    <link rel="stylesheet" type="text/css" href="chata-styles.css">
+    <link rel="stylesheet" type="text/css" href="css/chata-styles.css">
+    <link rel="stylesheet" type="text/css" href="css/Dashboard.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -15,9 +16,9 @@
     <script src="https://unpkg.com/tippy.js@5"></script>
 
     <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" />
-
+    <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script>
+    <script src="https://unpkg.com/muuri@0.8.0/dist/muuri.min.js"></script>
     <script src="src/d3.v4.js"></script>
-    <!-- <script src="src/d3.tip.js"></script> -->
     <script src="src/svgIcons.js"></script>
     <script src="src/constants.js"></script>
     <script src="src/utils.js"></script>
@@ -36,7 +37,7 @@
     <script src="src/ResponseRenderer.js"></script>
     <script src="src/ChatBar.js"></script>
     <script src="src/ChatDrawer.js"></script>
-
+    <script src="src/Dashboard.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/fd4b2bdf-fbc1-4ab2-af8b-5a1efc0f7285/chatastyles.css">
     <script src="https://ucarecdn.com/9912723e-ab89-46c9-ba6c-2825821f7111/ChatDrawermin.js"></script> -->
     <!-- <script src="build/ChatDrawer-min.js"></script> -->
@@ -77,286 +78,372 @@
 </head>
 <!-- style="background: #efefef" -->
 <body>
-    <div id="chata">
-    </div>
 
-    <div class="my-container">
-        <div class=""><span class="flow-text">Data source</span></div>
-        <div class="prop prop-column">
-            <h6 class="">Demo data</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" checked name="demo">
-                    <span class="lever"></span>
-                </label>
-            </div>
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s3"><a class="active" href="#test1">Chat Drawer</a></li>
+                <li class="tab col s3"><a class="" href="#test2">Dashboard</a></li>
+            </ul>
         </div>
-        <div id="login-section" style="display: none;">
-            <div class="">
-                <h5>You must login to access data</h5>
-            </div>
-            <div class="prop prop-column">
-                <h6>Username</h6>
-                <input type="text" id="username" value="" placeholder="" class="">
+        <div id="test1" class="col s12">
+
+            <div id="chata">
             </div>
 
-            <div class="prop prop-column">
-                <h6>Password</h6>
-                <input type="text" id="password" value="" placeholder="" class="">
+            <div class="my-container">
+                <div class=""><span class="flow-text">Data source</span></div>
+                <div class="prop prop-column">
+                    <h6 class="">Demo data</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="demo">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+                <div id="login-section" style="display: none;">
+                    <div class="">
+                        <h5>You must login to access data</h5>
+                    </div>
+                    <div class="prop prop-column">
+                        <h6>Username</h6>
+                        <input type="text" id="username" value="" placeholder="" class="">
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>Password</h6>
+                        <input type="text" id="password" value="" placeholder="" class="">
+                    </div>
+
+                    <div class="">
+                        <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Login</button>
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>API key</h6>
+                        <input type="text" name="apiKey" value="" placeholder="" class="">
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>Customer ID</h6>
+                        <input type="text" name="customerId" value="" placeholder="" class="">
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>User ID (email)</h6>
+                        <input type="text" name="userId" value="" placeholder="" class="">
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>Domain URL</h6>
+                        <input type="text" name="domain" value="" placeholder="" class="">
+                    </div>
+                </div>
+
+                <div class="">
+                    <h4 style="text-align: center;">Drawer Props</h4>
+                    <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload">Reload Drawer</button>
+                    <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()">Open Drawer</button>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Show Drawer Handle</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="showHandle" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Show Mask</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="showMask" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Shift Screen on Open/Close</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="shiftScreen">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="">
+                    <h6 style="text-align: center;">Theme</h6>
+                    <div>
+                        <label>
+                            <input name="theme" id="light" type="radio" checked />
+                            <span>Light</span>
+                        </label>
+                        <label>
+                            <input name="theme" id="dark" type="radio" />
+                            <span>Dark</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="">
+                    <h6 style="text-align: center;">Drawer Placement</h6>
+                    <div>
+                        <label>
+                            <input name="placement" type="radio" value="top" />
+                            <span>Top</span>
+                        </label>
+                        <label>
+                            <input name="placement" value="bottom" type="radio" />
+                            <span>Bottom</span>
+                        </label>
+                        <label>
+                            <input name="placement" value="left" type="radio" />
+                            <span>Left</span>
+                        </label>
+                        <label>
+                            <input name="placement" value="right" type="radio" checked />
+                            <span>Right</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Currency Code</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="currencyCode" value="USD" placeholder="Currency Code" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Language Code</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="languageCode" value="en-US" placeholder="Language Code" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Customer Name</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="customerName" value="Oscar" placeholder="Customer Name" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Intro message</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="introMessage" value="" placeholder="Intro message" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Clear All Messages on Close</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="clearOnClose">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Height</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="number" name="height" value="500" placeholder="Height" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Width</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="number" name="width" value="500" placeholder="Width" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Title</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="title" value="Chat with your data" placeholder="Title" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Font Family</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="fontFamily" value="sans-serif" placeholder="Font Family" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Chart Colors</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <span class="info-text-bold" style="max-width:650px;">
+                        This is an array of colors used for the charts. If the data scale is larger than the color array, it will repeat the colors. Any solid color formats are accepted. Hit "enter" to add a color.
+                    </span>
+                    <div class="chips" name="chartColors" style="width:550px;">
+
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Light Theme Accent Color</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Dark Theme Accent Color</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="color" name="accentColor-dark" value="#525252" placeholder="Accent Color" style="width:150px;" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Maximum Number of Messages</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="maxMessages" value="6" placeholder="Maximum Number of Messages" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Autocomplete</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableAutocomplete">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Safety Net</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableSafetyNet">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Speech to Text</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableVoiceRecord">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Debug Mode (Shows SQL in the info tooltip)</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="debug">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
             </div>
 
-            <div class="">
-                <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Login</button>
+        </div>
+        <div id="test2" class="col s12">
+
+            <div class="grid grid-1">
+                <div class="item">
+                    <div class="item-content">
+
+                        <div class="chata-tile-content">
+                            <h1>fooo</h1>
+                            <button type="button" name="button">FOO</button>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="item">
+                    <div class="item-content">2</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">3</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">4</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">5</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">6</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">7</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">8</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">9</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">10</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">11</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">12</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">13</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">14</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">15</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">16</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">17</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">18</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">19</div>
+                </div>
+                <div class="item">
+                    <div class="item-content">20</div>
+                </div>
             </div>
 
-            <div class="prop prop-column">
-                <h6>API key</h6>
-                <input type="text" name="apiKey" value="" placeholder="" class="">
-            </div>
-
-            <div class="prop prop-column">
-                <h6>Customer ID</h6>
-                <input type="text" name="customerId" value="" placeholder="" class="">
-            </div>
-
-            <div class="prop prop-column">
-                <h6>User ID (email)</h6>
-                <input type="text" name="userId" value="" placeholder="" class="">
-            </div>
-
-            <div class="prop prop-column">
-                <h6>Domain URL</h6>
-                <input type="text" name="domain" value="" placeholder="" class="">
-            </div>
         </div>
-
-        <div class="">
-            <h4 style="text-align: center;">Drawer Props</h4>
-            <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload">Reload Drawer</button>
-            <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()">Open Drawer</button>
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Show Drawer Handle</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" name="showHandle" checked>
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Show Mask</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" name="showMask" checked>
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Shift Screen on Open/Close</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" name="shiftScreen">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-
-        <div class="">
-            <h6 style="text-align: center;">Theme</h6>
-            <div>
-                <label>
-                    <input name="theme" id="light" type="radio" checked />
-                    <span>Light</span>
-                </label>
-                <label>
-                    <input name="theme" id="dark" type="radio" />
-                    <span>Dark</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="">
-            <h6 style="text-align: center;">Drawer Placement</h6>
-            <div>
-                <label>
-                    <input name="placement" type="radio" value="top" />
-                    <span>Top</span>
-                </label>
-                <label>
-                    <input name="placement" value="bottom" type="radio" />
-                    <span>Bottom</span>
-                </label>
-                <label>
-                    <input name="placement" value="left" type="radio" />
-                    <span>Left</span>
-                </label>
-                <label>
-                    <input name="placement" value="right" type="radio" checked />
-                    <span>Right</span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Currency Code</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="currencyCode" value="USD" placeholder="Currency Code" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Language Code</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="languageCode" value="en-US" placeholder="Language Code" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Customer Name</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="customerName" value="Oscar" placeholder="Customer Name" class="reload-prop">
-        </div>
-
-
-        <div class="prop prop-column">
-            <h6>Intro message</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="introMessage" value="" placeholder="Intro message" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Clear All Messages on Close</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" name="clearOnClose">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Height</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="number" name="height" value="500" placeholder="Height" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Width</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="number" name="width" value="500" placeholder="Width" class="reload-prop">
-        </div>
-
-
-        <div class="prop prop-column">
-            <h6>Title</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="title" value="Chat with your data" placeholder="Title" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Font Family</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="fontFamily" value="sans-serif" placeholder="Font Family" class="reload-prop">
-        </div>
-
-
-        <div class="prop prop-column">
-            <h6>Chart Colors</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <span class="info-text-bold" style="max-width:650px;">
-                This is an array of colors used for the charts. If the data scale is larger than the color array, it will repeat the colors. Any solid color formats are accepted. Hit "enter" to add a color.
-            </span>
-            <div class="chips" name="chartColors" style="width:550px;">
-
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Light Theme Accent Color</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Dark Theme Accent Color</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="color" name="accentColor-dark" value="#525252" placeholder="Accent Color" style="width:150px;" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6>Maximum Number of Messages</h6>
-            <span class="info-text">
-                (Must click 'Reload Drawer' to apply this)
-            </span>
-            <input type="text" name="maxMessages" value="6" placeholder="Maximum Number of Messages" class="reload-prop">
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Enable Autocomplete</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" checked name="enableAutocomplete">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Enable Safety Net</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" checked name="enableSafetyNet">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Enable Speech to Text</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" checked name="enableVoiceRecord">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
-        <div class="prop prop-column">
-            <h6 class="">Debug Mode (Shows SQL in the info tooltip)</h6>
-            <div class="switch">
-                <label>
-                    <input type="checkbox" checked name="debug">
-                    <span class="lever"></span>
-                </label>
-            </div>
-        </div>
-
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
@@ -395,6 +482,8 @@
         var instances;
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelector('.chips');
+            var tabs = document.querySelector('.tabs');
+            var instance = M.Tabs.init(tabs, {});
             instances = M.Chips.init(elems, {
                 data: [
                     {tag: '#355C7D'},
@@ -578,6 +667,9 @@
             var newDrawer = ChatDrawer.init('chata', ChatDrawer.options);
         }
 
+
+        w = new Dashboard('.grid-1');
+        console.log(w);
 
     </script>
 
