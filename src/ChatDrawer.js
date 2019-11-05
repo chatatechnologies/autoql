@@ -12,7 +12,7 @@ var ChatDrawer = {
         height: 500,
         theme: 'light',
         accentColor: '#28a8e0',
-        title: 'Chat with your data',
+        title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
         onVisibleChange: function() {},

@@ -6,6 +6,9 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, options,
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+            if(height < 250){
+                height = 300;
+            }
         }else{
             height = 250;
         }

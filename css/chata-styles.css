@@ -151,10 +151,10 @@ body{
 }
 
 .drawer-content{
-    width: 100%;
+    width: calc(100% - 7px);
     height: 100%;
     max-height: calc(100% - 150px);
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     /* padding: 20px; */
     flex: 1;
@@ -162,6 +162,11 @@ body{
     flex-shrink: 1;
     flex-basis: 0%;
     background: var(--chata-drawer-background-color);
+}
+
+.drawer-content:hover{
+    overflow-y: auto;
+    width: 100%;
 }
 
 .chat-single-message-container .chat-message-bubble {
@@ -537,7 +542,11 @@ input[type=text]:disabled {
 .chata-table-container {
     height: 100%;
     background-color: inherit;
-        overflow: scroll;
+    overflow: hidden;
+}
+
+.chata-table-container:hover{
+    overflow: scroll;
 }
 
 .table-response, .table-response-renderer{

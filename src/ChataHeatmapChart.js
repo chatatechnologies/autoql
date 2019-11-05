@@ -5,6 +5,9 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, opti
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+            if(height < 250){
+                height = 300;
+            }
         }else{
             height = 250;
         }

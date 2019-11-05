@@ -9,6 +9,9 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
+            if(height < 250){
+                height = 300;
+            }
             // height -= hLegendBox;
         }else{
             height = 180;
