@@ -43,7 +43,7 @@ var ChatDrawer = {
     finalTranscript: ''
 };
 
-ChatDrawer.init = function(elem, options){
+ChatDrawer.init = function(elem, options, registerEventsFlag=true){
     var rootElem = document.getElementById(elem);
     for (var [key, value] of Object.entries(options)) {
         ChatDrawer.options[key] = value;
@@ -62,6 +62,7 @@ ChatDrawer.init = function(elem, options){
     this.createWrapper();
     this.createDrawerButton();
     this.registerEvents();
+
     var isVisible = ChatDrawer.options.isVisible;
     ChatDrawer.openDrawer();
     ChatDrawer.closeDrawer();
@@ -208,6 +209,7 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
     if(context == 'ChatDrawer'){
         var responseLoadingContainer = ChatDrawer.putMessage(msg);
         ChatDrawer.ajaxCallPost(URL, function(response){
+            console.log(response);
             ChatDrawer.putTableResponse(response);
             ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
         }, data, options);
@@ -231,476 +233,482 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
     }
 }
 
-ChatDrawer.registerEvents = function(){
-    var chataInput = document.getElementById('chata-input');
-    var suggestionList = document.getElementById('auto-complete-list');
-    document.addEventListener('dblclick', function(e){
-        if(ChatDrawer.options.enableDrilldowns){
-            if(e.target.parentElement.hasAttribute('data-indexrow')){
-                var table = e.target.parentElement.parentElement;
-                var json = ChatDrawer.responses[table.dataset.componentid];
-                var indexData = e.target.parentElement.dataset.indexrow;
-                ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
+ChatDrawer.clickHandler = function(e){
+    if(e.target){
+        var chataInput = document.getElementById('chata-input');
+        var suggestionList = document.getElementById('auto-complete-list');
+        if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
+        || e.target.classList.contains('square') || e.target.classList.contains('circle')){
+            var selectedBars = e.target.parentElement.getElementsByClassName('active');
+            for (var i = 0; i < selectedBars.length; i++) {
+                selectedBars[i].classList.remove('active');
             }
-            if(e.target.hasAttribute('data-chartindex')){
-                var component = e.target.parentElement.parentElement.parentElement;
-                if(component.tagName == 'svg'){
-                    component = component.parentElement;
-                }
-                var json = ChatDrawer.responses[component.dataset.componentid];
-                var indexData = e.target.dataset.chartindex;
-                ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
+            e.target.classList.add('active');
+        }
+
+        if(e.target.id == 'drawer-wrapper'){
+            console.log('foo');
+            if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
+                ChatDrawer.options.onMaskClick();
             }
         }
 
-        if(e.target.hasAttribute('data-chartrenderer')){
+        if(e.target.classList.contains('close-action')){
+            ChatDrawer.closeDrawer();
+        }
+
+        if(e.target.classList.contains('chata-voice')){
+            var button = document.getElementById('chata-voice-record-button');
+
+
+            if(ChatDrawer.options.isRecordVoiceActive){
+                const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
+                ChatDrawer.options.isRecordVoiceActive = false;
+                ChatDrawer.speechToText.stop();
+                button.style.background = themeStyles['--chata-drawer-accent-color'];
+            }else{
+                ChatDrawer.finalTranscript = '';
+                button.style.background = 'red';
+                ChatDrawer.options.isRecordVoiceActive = true;
+                ChatDrawer.speechToText.start();
+            }
+        }
+
+        if(e.target.classList.contains('filter-table')){
+            if(e.target.tagName == 'svg'){
+                parent = e.target.parentElement.parentElement.parentElement;
+            }else if(e.target.tagName == 'path'){
+                parent = e.target.parentElement.parentElement.parentElement.parentElement;
+            }else{
+                parent = e.target.parentElement.parentElement;
+            }
+            var table = parent.getElementsByTagName('table')[0];
+            var inputs = table.getElementsByClassName('tabulator-header-filter');
+
+            for (var i = 0; i < inputs.length; i++) {
+                if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
+                    inputs[i].style.display = 'block';
+                }else{
+                    inputs[i].style.display = 'none';
+                }
+            }
+        }
+
+        if(e.target.classList.contains('suggestion')){
+            console.log(e.target.textContent);
+            suggestionList.style.display = 'none';
+            ChatDrawer.sendMessage(chataInput, e.target.textContent);
+        }
+        if(e.target.classList.contains('suggestion-renderer')){
+            var parent = e.target.parentElement.parentElement.parentElement.parentElement;
+            var chatBarSuggestionList = parent.getElementsByClassName('chat-bar-autocomplete')[0];
+            chatBarSuggestionList.style.display = 'none';
+            parent.sendMessageToResponseRenderer(e.target.textContent);
+        }
+        if(e.target.classList.contains('chata-suggestion-btn')){
+            ChatDrawer.sendMessage(chataInput, e.target.textContent);
+        }
+        if(e.target.classList.contains('chata-suggestion-btn-renderer')){
+            var parent = e.target.parentElement.parentElement;
+            parent.options.onSuggestionClick();
+            parent.chataBarContainer.sendMessageToResponseRenderer(e.target.textContent);
+        }
+        if(e.target.classList.contains('clipboard')){
+            if(e.target.tagName == 'svg'){
+                var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
+            }else if(e.target.tagName == 'path'){
+                var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
+            }else{
+                var json = ChatDrawer.responses[e.target.dataset.id];
+            }
+            copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
+        }
+        if(e.target.classList.contains('csv')){
+            if(e.target.tagName == 'svg'){
+                var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
+            }else if(e.target.tagName == 'path'){
+                var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
+            }else{
+                var json = ChatDrawer.responses[e.target.dataset.id];
+            }
+            var csvData = ChatDrawer.createCsvData(json);
+            var link = document.createElement("a");
+            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
+            link.setAttribute('download', 'test.csv');
+            link.click();
+        }
+        if(e.target.classList.contains('column')){
+            var tableElement = e.target.parentElement.parentElement.parentElement;
+            if(e.target.nextSibling.classList.contains('up')){
+                e.target.nextSibling.classList.remove('up');
+                e.target.nextSibling.classList.add('down');
+                var data = applyFilter(tableElement.dataset.componentid);
+                var sortData = ChatDrawer.sort(data, 'desc', e.target.dataset.index, e.target.dataset.type);
+                ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
+            }else{
+                e.target.nextSibling.classList.remove('down');
+                e.target.nextSibling.classList.add('up');
+                var data = applyFilter(tableElement.dataset.componentid);
+                var sortData = ChatDrawer.sort(data, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
+                ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
+            }
+        }
+        if(e.target.classList.contains('column-pivot')){
+            var tableElement = e.target.parentElement.parentElement.parentElement;
+            var pivotArray = [];
+            var json = ChatDrawer.responses[tableElement.dataset.componentid];
+            if(json['display_type'] == 'date_pivot'){
+                pivotArray = getDatePivotArray(json, ChatDrawer.options, cloneObject(json['data']['rows']));
+            }else{
+                pivotArray = getPivotColumnArray(json, ChatDrawer.options, cloneObject(json['data']['rows']));
+            }
+            var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
+            if(e.target.nextSibling.classList.contains('up')){
+                e.target.nextSibling.classList.remove('up');
+                e.target.nextSibling.classList.add('down');
+                rows.unshift([]); //Simulate header
+                var sortData = sortPivot(rows, e.target.dataset.index, 'desc');
+                sortData.unshift([]); //Simulate header
+                ChatDrawer.refreshPivotTable(tableElement, sortData);
+            }else{
+                e.target.nextSibling.classList.remove('down');
+                e.target.nextSibling.classList.add('up');
+                rows.unshift([]); //Simulate header
+                var sortData = sortPivot(rows, e.target.dataset.index, 'asc');
+                sortData.unshift([]); //Simulate header
+                ChatDrawer.refreshPivotTable(tableElement, sortData);
+            }
+        }
+        if(e.target.classList.contains('pivot_table')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'pivot_column');
+            if(json['display_type'] == 'date_pivot'){
+                var pivotArray = getDatePivotArray(json, ChatDrawer.options, json['data']['rows']);
+                createPivotTable(pivotArray, component);
+            }else{
+                var pivotArray = getPivotColumnArray(json, ChatDrawer.options, json['data']['rows']);
+                createPivotTable(pivotArray, component);
+            }
+        }
+        if(e.target.classList.contains('column_chart')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'column');
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                }
+                // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                createGroupedColumnChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
+                console.log(dataGrouped);
+            }else{
+                var values = formatDataToBarChart(json);
+                var grouped = values[0];
+                var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var hasNegativeValues = values[1];
+                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+            }
+        }
+        if(e.target.classList.contains('stacked_column_chart')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
+            var data = cloneObject(json['data']['rows']);
+
+            var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+            groups = groups.sort().reverse();
+            for (var i = 0; i < data.length; i++) {
+                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+            }
+            for (var i = 0; i < groups.length; i++) {
+                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+            }
+            var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+            var col1 = formatColumnName(json['data']['columns'][0]['name']);
+            var col2 = formatColumnName(json['data']['columns'][1]['name']);
+            var col3 = formatColumnName(json['data']['columns'][2]['name']);
+            var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+            createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
+        }
+        if(e.target.classList.contains('stacked_bar_chart')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'stacked_bar');
+            var data = cloneObject(json['data']['rows']);
+            var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+            groups = groups.sort().reverse();
+            for (var i = 0; i < data.length; i++) {
+                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+            }
+            for (var i = 0; i < groups.length; i++) {
+                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+            }
+            var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+            var col1 = formatColumnName(json['data']['columns'][0]['name']);
+            var col2 = formatColumnName(json['data']['columns'][1]['name']);
+            var col3 = formatColumnName(json['data']['columns'][2]['name']);
+            var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+            createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
+        }
+        if(e.target.classList.contains('table')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'table');
+            createTable(json, component, ChatDrawer.options);
+        }
+
+        if(e.target.classList.contains('bar_chart')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'bar');
+            if(json['data']['display_type'] == 'compare_table'){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                }
+                // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                createGroupedBarChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
+            }else{
+                var values = formatDataToBarChart(json);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+            }
+
+        }
+
+        if(e.target.classList.contains('line_chart')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'line');
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                }
+                // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                createGroupedLineChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
+                console.log(dataGrouped);
+            }else{
+                var values = formatDataToBarChart(json);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                var col2 = formatColumnName(json['data']['columns'][1]['name']);
+
+                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+            }
+        }
+
+        if(e.target.classList.contains('heatmap')){
+            console.log(e.target.tagName);
+            if(e.target.tagName == 'BUTTON'){
+                var idRequest = e.target.dataset.id;
+            }
+            else if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            var values = formatDataToHeatmap(json);
+            var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+            var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+            labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
+            labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
+
+            var col1 = formatColumnName(json['data']['columns'][0]['name']);
+            var col2 = formatColumnName(json['data']['columns'][1]['name']);
+            var col3 = formatColumnName(json['data']['columns'][2]['name']);
+
+            createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
+            ChatDrawer.refreshToolbarButtons(component, 'heatmap');
+        }
+
+        if(e.target.classList.contains('bubble_chart')){
+            if(e.target.tagName == 'BUTTON'){
+                var idRequest = e.target.dataset.id;
+            }
+            else if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            var values = formatDataToHeatmap(json);
+            var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
+            var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+            labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
+            labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
+
+            var col1 = formatColumnName(json['data']['columns'][0]['name']);
+            var col2 = formatColumnName(json['data']['columns'][1]['name']);
+            var col3 = formatColumnName(json['data']['columns'][2]['name']);
+
+
+            createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
+            ChatDrawer.refreshToolbarButtons(component, 'bubble');
+        }
+        if(e.target.classList.contains('export_png')){
+            if(e.target.tagName == 'svg'){
+                idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            var svg = component.getElementsByTagName('svg')[0];
+            var svgString = getSVGString(svg);
+            // svgToPng(svg);
+            svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
+        }
+        if(e.target.classList.contains('clear-all')){
+            ChatDrawer.clearMessages();
+        }
+    }
+}
+
+ChatDrawer.drilldownHandler = function(e){
+    if(ChatDrawer.options.enableDrilldowns){
+        if(e.target.parentElement.hasAttribute('data-indexrow')){
+            var table = e.target.parentElement.parentElement;
+            var json = ChatDrawer.responses[table.dataset.componentid];
+            var indexData = e.target.parentElement.dataset.indexrow;
+            ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
+        }
+        if(e.target.hasAttribute('data-chartindex')){
             var component = e.target.parentElement.parentElement.parentElement;
             if(component.tagName == 'svg'){
                 component = component.parentElement;
             }
-            if(component.chataBarContainer.options.enableDrilldowns){
-                var json = ChatDrawer.responses[component.dataset.componentid];
-                var indexData = e.target.dataset.chartrenderer;
-                ChatDrawer.sendDrilldownMessage(
-                    json, indexData,
-                    responseRenderer.chataBarContainer.options,
-                    'ChatBar', component);
-            }
+            var json = ChatDrawer.responses[component.dataset.componentid];
+            var indexData = e.target.dataset.chartindex;
+            ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
         }
-        if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
-            var component = e.target.parentElement.parentElement;
-            var responseRenderer = component.parentElement.parentElement;
-            if(responseRenderer.chataBarContainer.options.enableDrilldowns){
-                var json = ChatDrawer.responses[component.dataset.componentid];
-                var indexData = e.target.parentElement.dataset.indexrowrenderer;
-                ChatDrawer.sendDrilldownMessage(
-                    json, indexData,
-                    responseRenderer.chataBarContainer.options,
-                    'ChatBar', responseRenderer);
-            }
+    }
 
+    if(e.target.hasAttribute('data-chartrenderer')){
+        var component = e.target.parentElement.parentElement.parentElement;
+        if(component.tagName == 'svg'){
+            component = component.parentElement;
         }
-    });
-    document.addEventListener('click', function(e){
-        if(e.target){
-            if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
-            || e.target.classList.contains('square') || e.target.classList.contains('circle')){
-                var selectedBars = e.target.parentElement.getElementsByClassName('active');
-                for (var i = 0; i < selectedBars.length; i++) {
-                    selectedBars[i].classList.remove('active');
-                }
-                e.target.classList.add('active');
-            }
-
-            if(e.target.id == 'drawer-wrapper'){
-                console.log('foo');
-                if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
-                    ChatDrawer.options.onMaskClick();
-                }
-            }
-
-            if(e.target.classList.contains('close-action')){
-                ChatDrawer.closeDrawer();
-            }
-
-            if(e.target.classList.contains('chata-voice')){
-                var button = document.getElementById('chata-voice-record-button');
-
-
-                if(ChatDrawer.options.isRecordVoiceActive){
-                    const themeStyles = ChatDrawer.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
-                    ChatDrawer.options.isRecordVoiceActive = false;
-                    ChatDrawer.speechToText.stop();
-                    button.style.background = themeStyles['--chata-drawer-accent-color'];
-                }else{
-                    ChatDrawer.finalTranscript = '';
-                    button.style.background = 'red';
-                    ChatDrawer.options.isRecordVoiceActive = true;
-                    ChatDrawer.speechToText.start();
-                }
-            }
-
-            if(e.target.classList.contains('filter-table')){
-                if(e.target.tagName == 'svg'){
-                    parent = e.target.parentElement.parentElement.parentElement;
-                }else if(e.target.tagName == 'path'){
-                    parent = e.target.parentElement.parentElement.parentElement.parentElement;
-                }else{
-                    parent = e.target.parentElement.parentElement;
-                }
-                var table = parent.getElementsByTagName('table')[0];
-                var inputs = table.getElementsByClassName('tabulator-header-filter');
-
-                for (var i = 0; i < inputs.length; i++) {
-                    if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
-                        inputs[i].style.display = 'block';
-                    }else{
-                        inputs[i].style.display = 'none';
-                    }
-                }
-            }
-
-            if(e.target.classList.contains('suggestion')){
-                console.log(e.target.textContent);
-                suggestionList.style.display = 'none';
-                ChatDrawer.sendMessage(chataInput, e.target.textContent);
-            }
-            if(e.target.classList.contains('suggestion-renderer')){
-                var parent = e.target.parentElement.parentElement.parentElement.parentElement;
-                var chatBarSuggestionList = parent.getElementsByClassName('chat-bar-autocomplete')[0];
-                chatBarSuggestionList.style.display = 'none';
-                parent.sendMessageToResponseRenderer(e.target.textContent);
-            }
-            if(e.target.classList.contains('chata-suggestion-btn')){
-                ChatDrawer.sendMessage(chataInput, e.target.textContent);
-            }
-            if(e.target.classList.contains('chata-suggestion-btn-renderer')){
-                var parent = e.target.parentElement.parentElement;
-                parent.options.onSuggestionClick();
-                parent.chataBarContainer.sendMessageToResponseRenderer(e.target.textContent);
-            }
-            if(e.target.classList.contains('clipboard')){
-                if(e.target.tagName == 'svg'){
-                    var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
-                }else if(e.target.tagName == 'path'){
-                    var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
-                }else{
-                    var json = ChatDrawer.responses[e.target.dataset.id];
-                }
-                copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
-            }
-            if(e.target.classList.contains('csv')){
-                if(e.target.tagName == 'svg'){
-                    var json = ChatDrawer.responses[e.target.parentElement.dataset.id];
-                }else if(e.target.tagName == 'path'){
-                    var json = ChatDrawer.responses[e.target.parentElement.parentElement.dataset.id];
-                }else{
-                    var json = ChatDrawer.responses[e.target.dataset.id];
-                }
-                var csvData = ChatDrawer.createCsvData(json);
-                var link = document.createElement("a");
-                link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-                link.setAttribute('download', 'test.csv');
-                link.click();
-            }
-            if(e.target.classList.contains('column')){
-                var tableElement = e.target.parentElement.parentElement.parentElement;
-                if(e.target.nextSibling.classList.contains('up')){
-                    e.target.nextSibling.classList.remove('up');
-                    e.target.nextSibling.classList.add('down');
-                    var data = applyFilter(tableElement.dataset.componentid);
-                    var sortData = ChatDrawer.sort(data, 'desc', e.target.dataset.index, e.target.dataset.type);
-                    ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
-                }else{
-                    e.target.nextSibling.classList.remove('down');
-                    e.target.nextSibling.classList.add('up');
-                    var data = applyFilter(tableElement.dataset.componentid);
-                    var sortData = ChatDrawer.sort(data, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
-                    ChatDrawer.refreshTableData(tableElement, sortData, ChatDrawer.options);
-                }
-            }
-            if(e.target.classList.contains('column-pivot')){
-                var tableElement = e.target.parentElement.parentElement.parentElement;
-                var pivotArray = [];
-                var json = ChatDrawer.responses[tableElement.dataset.componentid];
-                if(json['display_type'] == 'date_pivot'){
-                    pivotArray = getDatePivotArray(json, ChatDrawer.options, cloneObject(json['data']['rows']));
-                }else{
-                    pivotArray = getPivotColumnArray(json, ChatDrawer.options, cloneObject(json['data']['rows']));
-                }
-                var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
-                if(e.target.nextSibling.classList.contains('up')){
-                    e.target.nextSibling.classList.remove('up');
-                    e.target.nextSibling.classList.add('down');
-                    rows.unshift([]); //Simulate header
-                    var sortData = sortPivot(rows, e.target.dataset.index, 'desc');
-                    sortData.unshift([]); //Simulate header
-                    ChatDrawer.refreshPivotTable(tableElement, sortData);
-                }else{
-                    e.target.nextSibling.classList.remove('down');
-                    e.target.nextSibling.classList.add('up');
-                    rows.unshift([]); //Simulate header
-                    var sortData = sortPivot(rows, e.target.dataset.index, 'asc');
-                    sortData.unshift([]); //Simulate header
-                    ChatDrawer.refreshPivotTable(tableElement, sortData);
-                }
-            }
-            if(e.target.classList.contains('pivot_table')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'pivot_column');
-                if(json['display_type'] == 'date_pivot'){
-                    var pivotArray = getDatePivotArray(json, ChatDrawer.options, json['data']['rows']);
-                    createPivotTable(pivotArray, component);
-                }else{
-                    var pivotArray = getPivotColumnArray(json, ChatDrawer.options, json['data']['rows']);
-                    createPivotTable(pivotArray, component);
-                }
-            }
-            if(e.target.classList.contains('column_chart')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'column');
-                if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
-                    var data = cloneObject(json['data']['rows']);
-
-                    var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    groups = groups.sort();
-                    for (var i = 0; i < data.length; i++) {
-                        data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
-                    }
-                    for (var i = 0; i < groups.length; i++) {
-                        groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
-                    }
-                    // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                    var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
-                    createGroupedColumnChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
-                    console.log(dataGrouped);
-                }else{
-                    var values = formatDataToBarChart(json);
-                    var grouped = values[0];
-                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                    var hasNegativeValues = values[1];
-                    createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
-                }
-            }
-            if(e.target.classList.contains('stacked_column_chart')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'stacked_column');
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
-                groups = groups.sort().reverse();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
-                }
-                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
-                createStackedColumnChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
-            }
-            if(e.target.classList.contains('stacked_bar_chart')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'stacked_bar');
-                var data = cloneObject(json['data']['rows']);
-                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
-                groups = groups.sort().reverse();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
-                }
-                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
-                createStackedBarChart(component, dataGrouped, groups, subgroups, col1, col2, col3, ChatDrawer.options);
-            }
-            if(e.target.classList.contains('table')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'table');
-                createTable(json, component, ChatDrawer.options);
-            }
-
-            if(e.target.classList.contains('bar_chart')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'bar');
-                if(json['data']['display_type'] == 'compare_table'){
-                    var data = cloneObject(json['data']['rows']);
-
-                    var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    groups = groups.sort();
-                    for (var i = 0; i < data.length; i++) {
-                        data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
-                    }
-                    for (var i = 0; i < groups.length; i++) {
-                        groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
-                    }
-                    // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                    var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
-                    createGroupedBarChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
-                }else{
-                    var values = formatDataToBarChart(json);
-                    var grouped = values[0];
-                    var hasNegativeValues = values[1];
-                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                    createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
-                }
-
-            }
-
-            if(e.target.classList.contains('line_chart')){
-                if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                ChatDrawer.refreshToolbarButtons(component, 'line');
-                if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
-                    var data = cloneObject(json['data']['rows']);
-
-                    var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    groups = groups.sort();
-                    for (var i = 0; i < data.length; i++) {
-                        data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
-                    }
-                    for (var i = 0; i < groups.length; i++) {
-                        groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
-                    }
-                    // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                    var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
-                    createGroupedLineChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
-                    console.log(dataGrouped);
-                }else{
-                    var values = formatDataToBarChart(json);
-                    var grouped = values[0];
-                    var hasNegativeValues = values[1];
-                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
-
-                    createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
-                }
-            }
-
-            if(e.target.classList.contains('heatmap')){
-                console.log(e.target.tagName);
-                if(e.target.tagName == 'BUTTON'){
-                    var idRequest = e.target.dataset.id;
-                }
-                else if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                var values = formatDataToHeatmap(json);
-                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
-
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
-
-                createHeatmap(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
-                ChatDrawer.refreshToolbarButtons(component, 'heatmap');
-            }
-
-            if(e.target.classList.contains('bubble_chart')){
-                if(e.target.tagName == 'BUTTON'){
-                    var idRequest = e.target.dataset.id;
-                }
-                else if(e.target.tagName == 'svg'){
-                    var idRequest = e.target.parentElement.dataset.id;
-                }else{
-                    var idRequest = e.target.parentElement.parentElement.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                var values = formatDataToHeatmap(json);
-                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
-
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
-
-
-                createBubbleChart(component, labelsX, labelsY, values, col1, col2, col3, ChatDrawer.options);
-                ChatDrawer.refreshToolbarButtons(component, 'bubble');
-            }
-            if(e.target.classList.contains('export_png')){
-                if(e.target.tagName == 'svg'){
-                    idRequest = e.target.parentElement.dataset.id;
-                }else if(e.target.tagName == 'path'){
-                    idRequest = e.target.parentElement.parentElement.dataset.id;
-                }else{
-                    idRequest = e.target.dataset.id;
-                }
-                var json = ChatDrawer.responses[idRequest];
-                var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-                var svg = component.getElementsByTagName('svg')[0];
-                var svgString = getSVGString(svg);
-                // svgToPng(svg);
-                svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
-            }
-            if(e.target.classList.contains('clear-all')){
-                ChatDrawer.clearMessages();
-            }
+        if(component.chataBarContainer.options.enableDrilldowns){
+            var json = ChatDrawer.responses[component.dataset.componentid];
+            var indexData = e.target.dataset.chartrenderer;
+            ChatDrawer.sendDrilldownMessage(
+                json, indexData,
+                responseRenderer.chataBarContainer.options,
+                'ChatBar', component);
         }
-    });
+    }
+    if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
+        var component = e.target.parentElement.parentElement;
+        var responseRenderer = component.parentElement.parentElement;
+        if(responseRenderer.chataBarContainer.options.enableDrilldowns){
+            var json = ChatDrawer.responses[component.dataset.componentid];
+            var indexData = e.target.parentElement.dataset.indexrowrenderer;
+            ChatDrawer.sendDrilldownMessage(
+                json, indexData,
+                responseRenderer.chataBarContainer.options,
+                'ChatBar', responseRenderer);
+        }
+    }
+}
+
+ChatDrawer.registerEvents = function(){
+    var chataInput = document.getElementById('chata-input');
+    var suggestionList = document.getElementById('auto-complete-list');
+    document.addEventListener('dblclick', ChatDrawer.drilldownHandler);
+
+    document.addEventListener('click', ChatDrawer.clickHandler);
 
     chataInput.onkeyup = function(){
         if(ChatDrawer.options.enableAutocomplete){
@@ -1227,6 +1235,18 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                     ChatDrawer.putTableResponse(jsonResponse);
                 }
             break;
+            case 'data':
+                var cols = jsonResponse['data']['columns'];
+                if(cols.length == 1){
+                    if(cols[0]['name'] == 'query_suggestion'){
+                        ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
+                    }else{
+                        ChatDrawer.putSimpleResponse(jsonResponse);
+                    }
+                }else{
+                    ChatDrawer.putTableResponse(jsonResponse);
+                }
+            break;
             case 'compare_table':
                 ChatDrawer.putTableResponse(jsonResponse);
             break;
@@ -1427,20 +1447,15 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var json = ChatDrawer.responses[idRequest];
     var buttons = '';
     var displayTypes;
-    if(json['data']['columns'].length == 2 || DISPLAY_TYPES_2D.includes(json['data']['display_type'])){
-        // buttons += ChatDrawer.getTableButton(idRequest);
-        // buttons += ChatDrawer.getColumnChartButton(idRequest);
-        // buttons += ChatDrawer.getBarChartButton(idRequest);
-        // buttons += ChatDrawer.getLineChartButton(idRequest);
+    var groupField = getGroupableField(json);
+    console.log(json['data']['display_type'] + '===' + 'table');
+    if(
+        (json['data']['columns'].length == 2 ||
+        DISPLAY_TYPES_2D.includes(json['data']['display_type']) && typeof groupField !== 'number')
+    ){
         displayTypes = DISPLAY_TYPES_2D;
     }
     else if(json['data']['columns'].length == 3){
-        // buttons += ChatDrawer.getTableButton(idRequest);
-        // buttons += ChatDrawer.getPivotTableButton(idRequest);
-        // buttons += ChatDrawer.getHeatmapChartButton(idRequest);
-        // buttons += ChatDrawer.getBubbleChartButton(idRequest);
-        // buttons += ChatDrawer.getStackedColumnChartButton(idRequest);
-        // buttons += ChatDrawer.getStackedBarChartButton(idRequest);
         displayTypes = DISPLAY_TYPES_3D;
     }else{
         displayTypes = ['table'];

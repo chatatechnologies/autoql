@@ -2,24 +2,28 @@ function formatData(val, type, lang='en-US', currency='USD'){
     value = '';
     switch (type) {
         case 'DOLLAR_AMT':
-        val = parseFloat(val);
-        const sigDigs = String(parseInt(val)).length
-        if(val != 0){
-            value = new Intl.NumberFormat(lang, {
-                    style: 'currency',
-                    currency: currency,
-                    maximumSignificantDigits: sigDigs
-                }
-            ).format(val);
-        }else{
-            value = val;
-        }
+            val = parseFloat(val);
+            const sigDigs = String(parseInt(val)).length
+            if(val != 0){
+                value = new Intl.NumberFormat(lang, {
+                        style: 'currency',
+                        currency: currency,
+                        maximumSignificantDigits: sigDigs
+                    }
+                ).format(val);
+            }else{
+                value = val;
+            }
         break;
         case 'DATE':
-        value = formatDate(new Date( parseInt(val) * 1000 ) );
+            value = formatDate(new Date( parseInt(val) * 1000 ) );
+        break;
+        case 'PERCENT':
+            val = parseFloat(val) * 100;
+            value =  val.toFixed(2) + '%';
         break;
         default:
-        value = val;
+            value = val;
     }
     return value;
 }
