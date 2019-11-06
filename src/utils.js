@@ -3,16 +3,16 @@ function formatData(val, type, lang='en-US', currency='USD'){
     switch (type) {
         case 'DOLLAR_AMT':
             val = parseFloat(val);
-            const sigDigs = String(parseInt(val)).length
+            const sigDigs = String(parseInt(val.toFixed(2))).length
             if(val != 0){
                 value = new Intl.NumberFormat(lang, {
                         style: 'currency',
                         currency: currency,
-                        maximumSignificantDigits: sigDigs
+                        minimumFractionDigits: 2
                     }
                 ).format(val);
             }else{
-                value = val;
+                value = val.toFixed(2);
             }
         break;
         case 'DATE':
