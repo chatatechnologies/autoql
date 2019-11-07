@@ -184,7 +184,6 @@ ChatDrawer.createHeader = function(){
 ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='ChatDrawer', responseRenderer=null){
     var value = json['data']['rows'][parseInt(indexData)][0]
     var colData = json['data']['columns'][0]['name'];
-    var col = formatColumnName(colData);
 
     const URL = options.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
@@ -195,7 +194,7 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
     // }/drilldown?&project=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
 
     var obj = {};
-    obj[colData] = value;
+    obj[colData] = value.toString();
 
     const data = {
         query_id: json['data']['query_id'],
@@ -205,9 +204,19 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
         debug: options.debug
     }
 
-    var msg = `Drill down on ${col} "${value}"`;
     if(context == 'ChatDrawer'){
-        var responseLoadingContainer = ChatDrawer.putMessage(msg);
+        // var responseLoadingContainer = ChatDrawer.putMessage(msg);
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+        ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
         ChatDrawer.ajaxCallPost(URL, function(response){
             console.log(response);
             ChatDrawer.putTableResponse(response);
@@ -228,7 +237,6 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
             }else{
                 createTable(response, div, 'append', uuid, 'table-response-renderer');
             }
-            console.log(msg);
         }, data, options);
     }
 }
@@ -673,6 +681,13 @@ ChatDrawer.drilldownHandler = function(e){
             var indexData = e.target.dataset.chartindex;
             ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
         }
+        if (e.target.hasAttribute('data-stackedchartindex')) {
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+            var json = cloneObject(ChatDrawer.responses[component.dataset.componentid]);
+            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            console.log(json['data']['rows'][0]);
+            ChatDrawer.sendDrilldownMessage(json, 0, ChatDrawer.options);
+        }
     }
 
     if(e.target.hasAttribute('data-chartrenderer')){
@@ -714,7 +729,7 @@ ChatDrawer.registerEvents = function(){
         if(ChatDrawer.options.enableAutocomplete){
             suggestionList.style.display = 'none';
             if(this.value){
-                ChatDrawer.autocomplete(this.value, suggestionList, 'suggestion', ChatDrawer.options.autocompleteStyles);
+                ChatDrawer.autocomplete(this.value, suggestionList, 'suggestion', ChatDrawer.options);
             }
         }
     }
@@ -1104,7 +1119,7 @@ ChatDrawer.ajaxCallPost = function(url, callback, data, options){
     xmlhttp.send(JSON.stringify(data));
 }
 
-ChatDrawer.ajaxCallAutoComplete = function(url, callback){
+ChatDrawer.ajaxCallAutoComplete = function(url, callback, options){
 
     ChatDrawer.xhr.onreadystatechange = function() {
         if (ChatDrawer.xhr.readyState === 4){
@@ -1114,31 +1129,36 @@ ChatDrawer.ajaxCallAutoComplete = function(url, callback){
     };
     ChatDrawer.xhr.open('GET', url);
     ChatDrawer.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    // ChatDrawer.xhr.setRequestHeader("Authorization", ChatDrawer.options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
+    ChatDrawer.xhr.setRequestHeader("Authorization", options.token ? `Bearer ${ChatDrawer.options.token}` : undefined);
     ChatDrawer.xhr.send();
 }
 
-ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggestion', styles){
-    const URL = `https://backend-staging.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
-        suggestion)}&projectid=${ChatDrawer.options.projectId}`;
-
+ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggestion', options){
+    const URL = options.demo
+      ? `https://backend.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
+        suggestion
+      )}&projectid=1`
+      : `${options.domain}/api/v1/chata/autocomplete?text=${encodeURIComponent(
+        suggestion
+      )}&key=${options.apiKey}&customer_id=${options.customerId}&user_id=${options.userId}`
     ChatDrawer.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
-        if(jsonResponse['matches'].length > 0){
-            for(var [key, value] of Object.entries(styles)){
+        var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
+        if(matches.length > 0){
+            for(var [key, value] of Object.entries(options.autocompleteStyles)){
                 suggestionList.style.setProperty(key, value, '');
             }
-            for (var i = jsonResponse['matches'].length-1; i >= 0; i--) {
+            for (var i = matches.length-1; i >= 0; i--) {
                 var li = document.createElement('li');
                 li.classList.add(liClass);
-                li.textContent = jsonResponse['matches'][i];
+                li.textContent = matches[i];
                 suggestionList.appendChild(li);
             }
             suggestionList.style.display = 'block';
         }else{
             suggestionList.style.display = 'none';
         }
-    });
+    }, options);
 }
 
 ChatDrawer.htmlToElement = function(html) {
@@ -1192,6 +1212,7 @@ ChatDrawer.putSafetynetMessage = function(suggestionArray){
 
 ChatDrawer.sendMessage = function(chataInput, textValue){
     chataInput.disabled = true;
+    chataInput.value = '';
     var responseLoadingContainer = ChatDrawer.putMessage(textValue);
     // const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
     //   textValue
@@ -1201,19 +1222,19 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
       ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
         textValue
       )}&projectId=1`
-      : `${ChatDrawer.options.domain}/api/v1/chata/safetynet?query=${encodeURIComponent(
+      : `${ChatDrawer.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
         textValue
       )}&key=${ChatDrawer.options.apiKey}&customer_id=${ChatDrawer.options.customerId}&user_id=${ChatDrawer.options.userId}`
 
 
     ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse){
-        if(jsonResponse['full_suggestion'].length > 0 && ChatDrawer.options.enableSafetyNet){
+        var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
+        if(suggestions.length > 0 && ChatDrawer.options.enableSafetyNet){
             chataInput.removeAttribute("disabled");
             ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
 
             var suggestionArray = createSuggestionArray(jsonResponse);
             ChatDrawer.putSafetynetMessage(suggestionArray);
-            console.log(jsonResponse);
         }else{
             ChatDrawer.ajaxCall(textValue, function(jsonResponse){
                 chataInput.removeAttribute("disabled");
@@ -1371,11 +1392,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                 ChatDrawer.checkMaxMessages();
                 refreshTooltips();
             }, ChatDrawer.options);
-
-            chataInput.value = '';
         }
     }, ChatDrawer.options);
-
 
 
 }

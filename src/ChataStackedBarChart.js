@@ -1,4 +1,4 @@
-function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;

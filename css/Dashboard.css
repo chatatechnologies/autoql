@@ -10,7 +10,7 @@
   /* height: 100px; */
   margin: 5px;
   z-index: 1;
-  resize: both;
+  resize: both !important;
 }
 .item.muuri-item-hidden {
   z-index: 0;
@@ -22,6 +22,8 @@
   z-index: 3;
 }
 .item-content {
+    resize: both !important;
+z-index: 500;
   position: relative;
   width: 100%;
   height: 100%;

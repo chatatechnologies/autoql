@@ -1,4 +1,4 @@
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 180;
@@ -89,24 +89,22 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     var y = d3.scaleLinear()
     .domain([0, maxValue])
     .range([ height - margin.bottom, 0 ]);
-    svg.append("g")
-    .call(d3.axisLeft(y).tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
-    ));
+    var yAxis = d3.axisLeft(y);
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
     .range(options.chartColors)
 
-    svg.append("g")
-    .call(d3.axisLeft(y)).select(".domain").remove();
 
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisLeft(y)
+    .call(yAxis.tickFormat(function(d){
+            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+        )
         .tickSize(-chartWidth)
-        .tickFormat("")
     );
+    svg.append("g")
+    .call(yAxis).select(".domain").remove();
 
     var stackedData = d3.stack()
     .keys(subgroups)

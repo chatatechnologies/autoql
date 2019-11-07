@@ -583,33 +583,24 @@ input[type=text]:disabled {
 }
 
 .tabulator-arrow {
-  border: solid #bbb;
-  border-width: 0 2px 2px 0;
-  display: inline-block;
-  padding: 3px;
   position: absolute;
   right: 5px;
   bottom: 13px;
+  display: none;
 }
-
-.tabulator-arrow.right {
-  transform: rotate(-45deg);
-  -webkit-transform: rotate(-45deg);
+.tabulator-arrow.up{
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #bbb;
 }
-
-.tabulator-arrow.left {
-  transform: rotate(135deg);
-  -webkit-transform: rotate(135deg);
-}
-
-.tabulator-arrow.up {
-  transform: rotate(-135deg);
-  -webkit-transform: rotate(-135deg);
-}
-
 .tabulator-arrow.down {
-  transform: rotate(45deg);
-  -webkit-transform: rotate(45deg);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #bbb;
 }
 
 .table-response tr{
@@ -626,6 +617,9 @@ input[type=text]:disabled {
 .table-response tr th:hover{
     background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
+}
+.table-response tr th:hover .tabulator-arrow{
+    display: block;
 }
 .table-response tr:hover {
     background-color: var(--chata-drawer-hover-color);

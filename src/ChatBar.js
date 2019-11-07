@@ -61,7 +61,7 @@ function getChatBar(options){
             var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
             suggestionList.style.display = 'none';
             if(event.target.value){
-                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options.autocompleteStyles);
+                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options);
             }
         }
     }
