@@ -89,10 +89,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
     var y = d3.scaleLinear()
     .range([ height - (margin.bottom), 0 ])
     .domain([minValue, d3.max(data, function(d) { return d.value; })]);
-    svg.append("g")
-    .call(d3.axisLeft(y).tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
-    ));
+    var yAxis = d3.axisLeft(y);
     // Add the line
     svg.append("path")
     .datum(data)
@@ -112,11 +109,12 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
     )
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisLeft(y)
+    .call(yAxis.tickFormat(function(d){
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+    )
     .tickSize(-width)
-    .tickFormat("")
     );
-    svg.append("g").call(d3.axisLeft(y)).select(".domain").remove();
+    svg.append("g").call(yAxis).select(".domain").remove();
 
     svg
     .append("g")

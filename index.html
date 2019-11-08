@@ -648,6 +648,9 @@
 
         enableVoiceRecord.onchange = function(event){
             ChatDrawer.options.enableVoiceRecord = event.target.checked;
+            var display = ChatDrawer.options.enableVoiceRecord ? 'block' : 'none';
+            var voiceButton = document.getElementById('chata-voice-record-button');
+            voiceButton.style.display = display;
         }
 
         debug.onchange = function(event){

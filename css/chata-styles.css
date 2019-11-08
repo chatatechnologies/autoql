@@ -95,6 +95,71 @@ body{
     word-wrap: break-word;
     align-items: center;
     color:white;
+    position: relative;
+}
+
+.popover-container{
+    z-index: 9999;
+    border: 1px solid #ababab52;
+    border-radius: 4px;
+    box-shadow: 0px 0 8px rgba(0, 0, 0, 0.15);
+    position: absolute;
+    right: 5px;
+    top: 50px;
+    opacity: 0;
+    display: block;
+    visibility: hidden;
+    transition: all 0.35s ease 0s;
+    /* background: white; */
+}
+
+.clear-messages-confirm-popover {
+    color: var(--chata-drawer-text-color-primary);
+    padding: 20px;
+    background: var(--chata-drawer-background-color);
+    text-align: right;
+    padding: 18px;
+    width: 185px;
+}
+.chata-confirm-btn {
+    margin: 7px 0px 0 2px !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    outline: none !important;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+    border-width: 2px;
+    display: inline-block;
+    text-align: center;
+    align-items: flex-start;
+    cursor: default;
+    box-sizing: border-box;
+    margin: 0em;
+    padding: 3px 6px !important;
+    border-width: 2px;
+    border-style: outset;
+    border-image: initial;
+    font-size: 14px !important;
+}
+
+.chata-confirm-btn.no {
+    color: inherit;
+    border: 2px outset #a7a7a7 !important;
+    background: inherit;
+}
+
+.chata-confirm-btn.yes {
+    background: var(--chata-drawer-accent-color) !important;
+    border: 2px outset var(--chata-drawer-accent-color) !important;
+    color: white;
+}
+
+.chata-confirm-btn:hover{
+    opacity: .7;
+}
+.chata-confirm-icon {
+    color: #faad14;
+    display: inline-block;
 }
 
 .chata-header-center-container {
@@ -142,7 +207,7 @@ body{
     padding-top: 2px;
 }
 
-.chat-header-container button:hover{
+.chat-header-container .chata-button:hover{
     color: var(--chata-drawer-hover-color);
 }
 
@@ -244,10 +309,13 @@ body{
     font-family: var(--chata-drawer-font-family) !important;
     letter-spacing: 0.04em !important;
     outline: none !important;
-    width: calc(100% - 20px) !important;
+    width: calc(100% - 20px);
     background: transparent !important;
     border: 1px solid var(--chata-drawer-border-color) !important;
     color: var(--chata-drawer-text-color-primary) !important;
+}
+.chata-input-full-width{
+    width: 100%;
 }
 .chata-input:hover, .chata-input-renderer:hover{
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1) !important;
@@ -1010,45 +1078,9 @@ text.x-axis-label, text.y-axis-label {
     border-color: #28a8e0 !important;
 }
 
-/* .chata-interpretation .tooltiptext {
-    visibility: hidden;
-    position: absolute;
-    width: 100%;
-    max-width: 320px;
-    background-color: black;
-    color: #fff;
-    text-align: center;
-    padding: 8px 8px;
-    display: block;
-    border-radius: 1px;
-    z-index: 1;
-    opacity: 0;
-    transition: opacity 0.1s;
-    font-size: 13px;
-    font-family: sans-serif;
+.chart-icon-svg-0, .chata-icon-svg-0 {
+    fill: currentColor;
 }
-
-.tooltip-left::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 100%;
-    margin-top: -5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: transparent transparent transparent black;
-}
-
-.chata-interpretation:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-
-.tooltip-left {
-    top: -5px;
-    bottom: auto;
-    right: 35px;
-} */
 
 .tippy-tooltip.chata-theme {
   background-color: black;

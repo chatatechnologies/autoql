@@ -124,6 +124,7 @@ ChatDrawer.createBar = function(){
     chataBarContainer.classList.add('chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
     chataBarContainer.classList.add('autosuggest-top');
+    var display = ChatDrawer.options.enableVoiceRecord ? 'block' : 'none';
     var htmlBar = `
     <div class="watermark">
         ${WATERMARK}
@@ -135,8 +136,8 @@ ChatDrawer.createBar = function(){
     </div>
     <div class="text-bar">
         <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
-        <button id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
-        <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
+        <button style="display: ${display};" id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
+            <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
         </button>
     </div>
     `;
@@ -173,7 +174,21 @@ ChatDrawer.createHeader = function(){
             <button class="chata-button clear-all" data-tippy-content="Clear Messages">
                 ${CLEAR_ALL}
             </button>
-        </div>`;
+        </div>
+        <div class="popover-container">
+            <div class="clear-messages-confirm-popover">
+                <div class="chata-confirm-text">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-confirm-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+                    </svg>
+                    Clear all messages?
+                </div>
+                <button class="chata-confirm-btn no">No</button>
+                <button class="chata-confirm-btn yes">Yes</button>
+            </div>
+        </div>
+        `;
+        // style="overflow: hidden; position: absolute; top: 48px; left: 964px; opacity: 1; transition: opacity 0.35s ease 0s;"
         // <svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg>
     chatHeaderContainer.classList.add('chat-header-container');
     chatHeaderContainer.innerHTML = htmlHeader;
@@ -187,11 +202,7 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
 
     const URL = options.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`
-
-    // const URL = `https://backend-staging.chata.ai/api/v1/query${
-    //     ChatDrawer.options.projectId === 1 ? '/demo' : ''
-    // }/drilldown?&project=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
+      : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
 
     var obj = {};
     obj[colData] = value.toString();
@@ -221,6 +232,7 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
             console.log(response);
             ChatDrawer.putTableResponse(response);
             ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+            refreshTooltips();
         }, data, options);
     }else{
         ChatDrawer.ajaxCallPost(URL, function(response){
@@ -254,8 +266,14 @@ ChatDrawer.clickHandler = function(e){
             e.target.classList.add('active');
         }
 
+        if(e.target.classList.contains('chata-confirm-btn')){
+            ChatDrawer.closePopOver();
+            if(e.target.classList.contains('yes')){
+                ChatDrawer.clearMessages();
+            }
+        }
+
         if(e.target.id == 'drawer-wrapper'){
-            console.log('foo');
             if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
                 ChatDrawer.options.onMaskClick();
             }
@@ -659,9 +677,17 @@ ChatDrawer.clickHandler = function(e){
             svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
         }
         if(e.target.classList.contains('clear-all')){
-            ChatDrawer.clearMessages();
+            var confirm = document.querySelector('.popover-container');
+            confirm.style.visibility = 'visible';
+            confirm.style.opacity = 1;
         }
     }
+}
+
+ChatDrawer.closePopOver = function(){
+    var confirm = document.querySelector('.popover-container');
+    confirm.style.opacity = 0;
+    confirm.style.visibility = 'hidden';
 }
 
 ChatDrawer.drilldownHandler = function(e){
@@ -1010,12 +1036,14 @@ ChatDrawer.openDrawer = function(){
         ChatDrawer.rootElem.style.width = '100%';
         ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
         ChatDrawer.rootElem.style.bottom = 0;
+        ChatDrawer.rootElem.style.left = 0;
         ChatDrawer.drawerButton.style.display = 'none';
         ChatDrawer.rootElem.style.transform = 'translateY(0)';
     }else if(ChatDrawer.options.placement == 'top'){
         ChatDrawer.rootElem.style.width = '100%';
         ChatDrawer.rootElem.style.height = ChatDrawer.options.height + 'px';
         ChatDrawer.rootElem.style.top = 0;
+        ChatDrawer.rootElem.style.left = 0;
         ChatDrawer.drawerButton.style.display = 'none';
         ChatDrawer.rootElem.style.transform = 'translateY(0)';
     }
@@ -1486,6 +1514,7 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
         displayTypes = ['table'];
     }
     for (var i = 0; i < displayTypes.length; i++) {
+        console.log(displayTypes[i]);
         if(displayTypes[i] == ignore)continue;
         if(displayTypes[i] == 'table'){
             buttons += ChatDrawer.getTableButton(idRequest);
@@ -1497,7 +1526,7 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
             buttons += ChatDrawer.getBarChartButton(idRequest);
         }
         if(displayTypes[i] == 'pie'){
-
+            buttons += ChatDrawer.getPieChartButton(idRequest);
         }
         if(displayTypes[i] == 'line'){
             buttons += ChatDrawer.getLineChartButton(idRequest);
@@ -1556,6 +1585,14 @@ ChatDrawer.getLineChartButton = function(idRequest) {
     return `
     <button class="chata-toolbar-btn line_chart" data-tippy-content="Line Chart" data-id="${idRequest}">
         ${LINE_CHART_ICON}
+    </button>
+    `;
+}
+
+ChatDrawer.getPieChartButton = function(idRequest) {
+    return `
+    <button class="chata-toolbar-btn pie_chart" data-tippy-content="Pie Chart" data-id="${idRequest}">
+        ${PIE_CHART_ICON}
     </button>
     `;
 }
