@@ -1,4 +1,4 @@
-function createPieChart(component, data, options, col1, col2,  fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, data, options, col1, col2, colType1, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
     var pieWidth;
@@ -135,7 +135,13 @@ function createPieChart(component, data, options, col1, col2,  fromChatDrawer=tr
         .attr("x", legendMargin + legendBoxMargin)
         .attr("text-anchor", "start")
         .text(function (d, i) {
-            return d.data.key + ": " + d.data.value;
+            return formatData(
+                d.data.key, colType1,
+                options.languageCode, options.currencyCode) + ": " +
+                formatData(
+                    d.value, 'DOLLAR_AMT',
+                    options.languageCode, options.currencyCode
+                );
         })
 
 

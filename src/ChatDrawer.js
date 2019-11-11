@@ -476,7 +476,8 @@ ChatDrawer.clickHandler = function(e){
             var data = ChatDrawer.groupBy(json['data']['rows'], row => row[0]);
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
             var col2 = formatColumnName(json['data']['columns'][1]['name']);
-            createPieChart(component, data, ChatDrawer.options, col1, col2);
+            var colType1 = json['data']['columns'][0]['type'];
+            createPieChart(component, data, ChatDrawer.options, col1, col2, colType1);
         }
         if(e.target.classList.contains('stacked_column_chart')){
             if(e.target.tagName == 'svg'){
