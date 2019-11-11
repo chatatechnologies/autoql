@@ -1090,6 +1090,10 @@ text.x-axis-label, text.y-axis-label {
   font-family: sans-serif;
 }
 
+.chata-response-content-container *:focus {
+    outline: none !important;
+}
+
 
 
 @-webkit-keyframes bounceIn {

@@ -462,6 +462,22 @@ ChatDrawer.clickHandler = function(e){
                 createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
             }
         }
+        if(e.target.classList.contains('pie_chart')){
+            if(e.target.tagName == 'svg'){
+                var idRequest = e.target.parentElement.dataset.id;
+            }else if(e.target.tagName == 'path'){
+                var idRequest = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var idRequest = e.target.dataset.id;
+            }
+            var json = ChatDrawer.responses[idRequest];
+            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            ChatDrawer.refreshToolbarButtons(component, 'pie');
+            var data = ChatDrawer.groupBy(json['data']['rows'], row => row[0]);
+            var col1 = formatColumnName(json['data']['columns'][0]['name']);
+            var col2 = formatColumnName(json['data']['columns'][1]['name']);
+            createPieChart(component, data, ChatDrawer.options, col1, col2);
+        }
         if(e.target.classList.contains('stacked_column_chart')){
             if(e.target.tagName == 'svg'){
                 var idRequest = e.target.parentElement.dataset.id;
@@ -834,18 +850,14 @@ ChatDrawer.format3dData = function(cols, data, groups){
 }
 
 ChatDrawer.groupBy = function(list, keyGetter) {
-    const map = new Map();
+    obj = {};
     list.forEach((item) => {
         const key = keyGetter(item);
-        const collection = map.get(key);
-        if (!collection) {
-            map.set(key, item[1]);
-        } else {
-            var oldValue = map.get(key);
-            map.set(item[1] + oldValue);
+        if (!obj.hasOwnProperty(key)) {
+            obj[key] = item[1];
         }
     });
-    return map;
+    return obj;
 }
 
 ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
