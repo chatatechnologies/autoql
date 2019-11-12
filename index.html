@@ -372,11 +372,77 @@
             </div>
 
         </div>
-        <div id="test2" class="col s12">
+        <div id="test2" class="col s12 dashboard-container">
+
+            <div class="dashboard-toolbar-container" style="display: flex; justify-content: center; background: rgb(250, 250, 250); padding: 10px;">
+                <button type="button" class="ant-btn">
+                    <i class="anticon anticon-stop">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="stop" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372
+                            0-89 31.3-170.8 83.5-234.8l523.3 523.3C682.8 852.7 601 884 512 884zm288.5-137.2L277.2 223.5C341.2 171.3 423 140 512 140c205.4 0
+                            372 166.6 372 372 0 89-31.3 170.8-83.5 234.8z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span>Stop Editing</span>
+                </button>
+                <!-- <button type="button" class="ant-btn">
+                    <i class="anticon anticon-edit">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9
+                            114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4
+                            29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7
+                            0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span>Edit</span>
+                </button> -->
+                <button type="button" class="ant-btn" style="margin-left: 10px;">
+                    <i aria-label="icon: play-circle" class="anticon anticon-play-circle">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="play-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z">
+                            </path>
+                            <path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path>
+                        </svg>
+                    </i>
+                    <span>Execute Dashboard</span>
+                </button>
+                <button type="button" class="ant-btn" style="margin-left: 10px;">
+                    <span>Log Current Tile State</span>
+                </button>
+                <div style="padding-top: 6px; margin-left: 10px;">Run Dashboard Automatically&nbsp;&nbsp;
+                    <button type="button" role="switch" aria-checked="false" class="ant-switch ant-switch-checked">
+                        <span class="ant-switch-inner"></span>
+                    </button>
+                </div>
+
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px;">
+                    <i aria-label="icon: plus" class="anticon anticon-plus">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
+                            <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path>
+                        </svg>
+                    </i>
+                    <span>Add Tile</span>
+                </button>
+
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px;">
+                    <i aria-label="icon: rollback" class="anticon anticon-rollback">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="rollback" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M793 242H366v-74c0-6.7-7.7-10.4-12.9-6.3l-142 112a8 8 0 0 0 0
+                                12.6l142 112c5.2 4.1 12.9.4 12.9-6.3v-74h415v470H175c-4.4 0-8 3.6-8
+                                8v60c0 4.4 3.6 8 8 8h618c35.3 0 64-28.7 64-64V306c0-35.3-28.7-64-64-64z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span>Undo</span>
+                </button>
+            </div>
 
             <div class="grid grid-1">
-                <div class="item">
-                    <div class="item-content">
+                <div class="chata-dashboard-item">
+                    <div class="item-content item-content-edit">
                         <div class="dashboard-tile-input-container">
                             <input class="dashboard-tile-input query" placeholder="Query" value="profit by month last year">
                             <input class="dashboard-tile-input title" placeholder="Title (optional)" value="2018 Monthly Profit">
@@ -395,10 +461,12 @@
                                 </div>
                             </div>
                         </div>
+                        <span class="resize-handler">
+                        </span>
                     </div>
                 </div>
-                <div class="item">
-                    <div class="item-content">
+                <div class="chata-dashboard-item">
+                    <div class="item-content item-content-execute">
                         <div class="dashboard-tile-title-container">
                             <span class="dashboard-tile-title">2018 Monthly Profits</span>
                             <div class="dashboard-tile-title-divider">
@@ -415,58 +483,58 @@
                         </div>
                     </div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">3</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">4</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">5</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">6</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">7</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">8</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">9</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">10</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">11</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">12</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">13</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">14</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">15</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">16</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">17</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">18</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">19</div>
                 </div>
-                <div class="item">
+                <div class="chata-dashboard-item">
                     <div class="item-content">20</div>
                 </div>
             </div>
