@@ -12,7 +12,7 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
     Run Query</button>
     `
     // onclick="runQuery(event, '${context}')"
-    const runQueryButton = ChatDrawer.htmlToElement(runQueryButtonHtml);
+    const runQueryButton = htmlToElement(runQueryButtonHtml);
     runQueryButton.onclick = function(event){
         runQuery(event, context);
     }
@@ -41,7 +41,7 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
                 option.textContent = suggestionList[x]['text'];
                 select.appendChild(option);
             }
-            var safetyDeleteButton = ChatDrawer.htmlToElement(safetyDeleteButtonHtml);
+            var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
             safetyDeleteButton.onclick = function(event){
                 deleteSuggestion(event);
             }

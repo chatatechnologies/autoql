@@ -1202,13 +1202,6 @@ ChatDrawer.autocomplete = function(suggestion, suggestionList, liClass='suggesti
     }, options);
 }
 
-ChatDrawer.htmlToElement = function(html) {
-    var template = document.createElement('template');
-    html = html.trim();
-    template.innerHTML = html;
-    return template.content.firstChild;
-}
-
 ChatDrawer.createHelpContent = function(link){
     return `
     Great news, I can help with that:

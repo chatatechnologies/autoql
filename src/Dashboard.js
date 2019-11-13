@@ -1,4 +1,4 @@
-function Dashboard(selector){
+function Dashboard(selector, options={}){
     var grid = new Muuri(selector, {
         // layoutOnResize: true,
         layoutDuration: 400,
@@ -20,51 +20,40 @@ function Dashboard(selector){
             if(event.target.tagName == 'SPAN'){
                 return false;
             }
-            if (grid._settings.dragEnabled) {
-                return Muuri.ItemDrag.defaultStartPredicate(item, event);
-            } else {
-                return false;
+            if(event.target.classList.contains('item-content')){
+                if (grid._settings.dragEnabled) {
+                    return Muuri.ItemDrag.defaultStartPredicate(item, event);
+                } else {
+                    return false;
+                }
             }
         },
     });
 
-    var resize = document.querySelector('.resize-handler')
-    resize.addEventListener('mousedown', initResize, false);
-    var startX, startY, startWidth, startHeight;
-
-    function initResize(e) {
-        startX = e.clientX;
-        startY = e.clientY;
-        startWidth = parseInt(
-            document.defaultView.getComputedStyle(
-                resize.parentElement.parentElement
-            ).width,10);
-        startHeight = parseInt(
-            document.defaultView.getComputedStyle(
-                resize.parentElement.parentElement
-            ).height, 10);
-            window.addEventListener('mousemove', Resize, false);
-            window.addEventListener('mouseup', stopResize, false);
+    var items = [];
+    for (var i = 0; i < options.tiles.length; i++) {
+        var opts = {
+            query: options.tiles[i].query,
+            title: options.tiles[i].title
         }
-    function Resize(e) {
-        var newWidth = (startWidth + e.clientX - startX);
-        var newHeight = (startHeight + e.clientY - startY);
-        if(newWidth < 320){
-            newWidth = 320;
-        }else if(newWidth >= resize.parentElement.parentElement.parentElement.clientWidth - 20){
-            newWidth = resize.parentElement.parentElement.parentElement.clientWidth - 20;
-        }
-        if(newHeight < 140){
-            newHeight = 140;
-        }
-        resize.parentElement.parentElement.style.width = newWidth + 'px';
-        resize.parentElement.parentElement.style.height = newHeight + 'px';
-        grid.refreshItems(resize.parentElement.parentElement).layout()
-    }
-    function stopResize(e) {
-        window.removeEventListener('mousemove', Resize, false);
-        window.removeEventListener('mouseup', stopResize, false);
+        items.push(new Tile(grid, opts));
     }
 
+
+    this.grid = grid;
+    this.tiles = items;
+    this.grid.add(this.tiles);
+
+    this.startEditing = function(){
+        this.tiles.forEach(function(tile){
+            tile.startEditing();
+        })
+    }
+
+    this.stopEditing = function(){
+        this.tiles.forEach(function(tile){
+            tile.stopEditing();
+        })
+    }
     return this;
 }
