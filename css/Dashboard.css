@@ -38,9 +38,8 @@
     border-radius: 4px;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
     padding: 25px;
-    cursor: move;
 }
-.chata-dashboard-item:hover {
+.chata-dashboard-item.editing:hover {
     cursor: move !important;
 }
 
@@ -96,6 +95,9 @@
 }
 
 .dashboard-tile-input-container .dashboard-tile-input.title:hover{
+    border-left: 1px solid  #28a8e0;
+}
+.dashboard-tile-input-container .dashboard-tile-input.title:focus{
     border-left: 1px solid  #28a8e0;
 }
 
@@ -173,12 +175,14 @@
     background-repeat: no-repeat;
     cursor: se-resize;
     z-index: 20000;
-    visibility: hidden;
     display: inline-block;
     position: absolute;
+    opacity: 0;
+    -webkit-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
 }
-.chata-dashboard-item:hover .resize-handler{
-    visibility: visible;
+.chata-dashboard-item.editing:hover .resize-handler{
+    opacity: 1;
 }
 
 .ant-btn, .ant-btn:active, .ant-btn:focus {
@@ -299,4 +303,36 @@
     -ms-transform: translateX(-100%);
     transform: translateX(-100%);
 }
+
+.placeholder-top{
+    display: block;
+    width: 100%;
+    height: 35px;
+    background: #f3f3f3;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
+.placeholder-content{
+    display: block;
+    width: 100%;
+    height: calc(100% - 35px);
+    background: #f9f9f9;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.dashboard-tile-delete-button {
+    opacity: 0;
+    color: rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    cursor: pointer;
+    -webkit-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
+}
+
+.chata-dashboard-item.editing:hover .dashboard-tile-delete-button{
+    opacity: 1
 }

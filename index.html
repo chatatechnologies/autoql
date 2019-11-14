@@ -422,7 +422,7 @@
                     </div>
                 </div>
 
-                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px;">
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display: none;" id="add-tile">
                     <i aria-label="icon: plus" class="anticon anticon-plus">
                         <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
                             <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
@@ -432,7 +432,7 @@
                     <span>Add Tile</span>
                 </button>
 
-                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px;">
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display: none;" id="undo">
                     <i aria-label="icon: rollback" class="anticon anticon-rollback">
                         <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="rollback" width="1em" height="1em" fill="currentColor" aria-hidden="true">
                             <path d="M793 242H366v-74c0-6.7-7.7-10.4-12.9-6.3l-142 112a8 8 0 0 0 0
@@ -781,6 +781,14 @@
                 {
                     query: 'total profit last month',
                     title: 'Profit - Previous Month'
+                },
+                {
+                    query: 'total profit last month',
+                    title: 'Profit - Previous Month'
+                },
+                {
+                    query: 'total profit last month',
+                    title: 'Profit - Previous Month'
                 }
             ]
         });
@@ -789,16 +797,26 @@
 
         var startEditing = document.getElementById('start-editing')
         var stopEditing = document.getElementById('stop-editing')
+        var addTile = document.getElementById('add-tile')
+        var undo = document.getElementById('undo')
         startEditing.onclick = function(){
             dashboard.startEditing();
             this.style.display = 'none';
             stopEditing.style.display = 'block';
+            addTile.style.display = 'block';
+            undo.style.display = 'block';
         }
 
         stopEditing.onclick = function(){
             dashboard.stopEditing();
             this.style.display = 'none';
+            addTile.style.display = 'none';
+            undo.style.display = 'none';
             startEditing.style.display = 'block';
+        }
+
+        addTile.onclick = function(){
+            dashboard.addTile({title: '', query: ''})
         }
 
     </script>
