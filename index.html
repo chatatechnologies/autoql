@@ -416,7 +416,7 @@
                     <div class="switch">
                         Run Dashboard Automatically
                         <label>
-                            <input type="checkbox" checked name="enableAutocomplete">
+                            <input type="checkbox" name="runDashboard" id="runDashboard">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -771,25 +771,40 @@
             var newDrawer = ChatDrawer.init('chata', ChatDrawer.options);
         }
 
-
         var dashboard = new Dashboard('.grid-1', {
+            demo: true,
+            token: undefined,
+            apiKey: '',
+            customerId: '',
+            userId: '',
+            domain: '',
             tiles: [
                 {
-                    query: 'total profit this month',
-                    title: 'Profit - Current Month'
+                    query: 'sales by customer per month',
+                    title: 'Sales by customer - MONTH',
+                    displayType: 'stacked_bar'
                 },
                 {
-                    query: 'total profit last month',
-                    title: 'Profit - Previous Month'
+                    query: 'sales by item',
+                    title: 'Sales Per Month',
+                    displayType: 'bar'
                 },
                 {
-                    query: 'total profit last month',
-                    title: 'Profit - Previous Month'
+                    query: 'sales by customer ytd',
+                    title: 'Sales by Customer - YTD',
+                    displayType: 'column'
                 },
                 {
-                    query: 'total profit last month',
-                    title: 'Profit - Previous Month'
-                }
+                    query: 'total profit ytd',
+                    title: 'Profit - YTD',
+                    displayType: 'data'
+
+                },
+                {
+                    query: 'last years profit',
+                    title: 'Profit - Previous Year',
+                    displayType: 'data'
+                },
             ]
         });
 
@@ -799,6 +814,7 @@
         var stopEditing = document.getElementById('stop-editing')
         var addTile = document.getElementById('add-tile')
         var undo = document.getElementById('undo')
+        var runDashboard = document.getElementById('runDashboard')
         startEditing.onclick = function(){
             dashboard.startEditing();
             this.style.display = 'none';
@@ -809,6 +825,9 @@
 
         stopEditing.onclick = function(){
             dashboard.stopEditing();
+            if(runDashboard.checked){
+                dashboard.run();
+            }
             this.style.display = 'none';
             addTile.style.display = 'none';
             undo.style.display = 'none';
@@ -817,6 +836,12 @@
 
         addTile.onclick = function(){
             dashboard.addTile({title: '', query: ''})
+        }
+
+        runDashboard.onchange = function(event){
+            if(event.target.checked){
+                dashboard.run();
+            }
         }
 
     </script>

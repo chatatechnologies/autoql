@@ -177,12 +177,14 @@
     z-index: 20000;
     display: inline-block;
     position: absolute;
+    visibility: hidden;
     opacity: 0;
     -webkit-transition: opacity 0.3s ease;
     transition: opacity 0.3s ease;
 }
 .chata-dashboard-item.editing:hover .resize-handler{
     opacity: 1;
+    visibility: visible;
 }
 
 .ant-btn, .ant-btn:active, .ant-btn:focus {
@@ -336,3 +338,15 @@
 .chata-dashboard-item.editing:hover .dashboard-tile-delete-button{
     opacity: 1
 }
+
+.tile-response-loading-container {
+  position: relative;
+}
+
+.single-value-response {
+    font-size: 23px;
+}
+/* 
+.dashboard-tile-response-container svg .grid path{
+    opacity: .6 !important;
+} */

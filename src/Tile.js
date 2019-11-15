@@ -1,4 +1,4 @@
-function Tile(grid, options={}){
+function Tile(dashboard, options={}){
     var chataDashboardItem = document.createElement('div');
     var itemContent = document.createElement('div');
     var tileInputContainer = document.createElement('div');
@@ -89,6 +89,7 @@ function Tile(grid, options={}){
             ).height, 10);
         window.addEventListener('mousemove', resizeItem, false);
         window.addEventListener('mouseup', stopResize, false);
+        dashboard.showPlaceHolders();
     }
 
     function resizeItem(e) {
@@ -104,7 +105,7 @@ function Tile(grid, options={}){
         }
         chataDashboardItem.style.width = newWidth + 'px';
         chataDashboardItem.style.height = newHeight + 'px';
-        grid.refreshItems(chataDashboardItem).layout();
+        dashboard.grid.refreshItems(chataDashboardItem).layout();
     }
 
     function stopResize(e) {
@@ -154,9 +155,169 @@ function Tile(grid, options={}){
     chataDashboardItem.focusItem = function(){
         chataDashboardItem.inputQuery.focus();
     }
+
+    chataDashboardItem.runQuery = function(){
+        var val = chataDashboardItem.inputQuery.value;
+        var loadingContainer = chataDashboardItem.showLoadingDots();
+        ChatDrawer.ajaxCall(val, function(json){
+            tileResponseContainer.removeChild(loadingContainer);
+            var uuid = uuidv4();
+            ChatDrawer.responses[uuid] = json;
+            console.log(options.displayType);
+            switch (options.displayType) {
+                case 'data':
+                    var div = createTableContainer();
+                    tileResponseContainer.appendChild(div);
+                    if(json['data']['columns'].length == 1){
+                        var data = formatData(
+                            json['data']['rows'][0][0],
+                            json['data']['columns'][0]['type'],
+                            ChatDrawer.options.languageCode,
+                            ChatDrawer.options.currencyCode,
+                        );
+                        tileResponseContainer.innerHTML = `<div><a class="single-value-response">${data}<a/></div>`;
+                    }else{
+                        var table = createTable(json, div, ChatDrawer.options, 'append', uuid, 'table-response-renderer');
+                        table.classList.add('renderer-table');
+                    }
+                    break;
+                case 'bar':
+                    var values = formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var hasNegativeValues = values[1];
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    createBarChart(
+                        tileResponseContainer, grouped, col1,
+                        col2, hasNegativeValues, ChatDrawer.options,
+                        false, 'data-tilechart', ChatDrawer.options.renderTooltips
+                    );
+                    break;
+                case 'column':
+                    var values = formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var hasNegativeValues = values[1];
+                    createColumnChart(
+                        tileResponseContainer, grouped, col1,
+                        col2, hasNegativeValues, ChatDrawer.options,
+                        false, 'data-tilechart',
+                        ChatDrawer.options.renderTooltips
+                    );
+                    break;
+                case 'line':
+                    var values = formatDataToBarChart(json);
+                    var grouped = values[0];
+                    var hasNegativeValues = values[1];
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    createLineChart(
+                        tileResponseContainer, grouped, col1,
+                        col2, hasNegativeValues, ChatDrawer.options,
+                        false, 'data-chartrenderer', ChatDrawer.options.renderTooltips
+                    );
+                    break;
+                case 'heatmap':
+                    var values = formatDataToHeatmap(json);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                    createHeatmap(
+                        tileResponseContainer, labelsX, labelsY,
+                        values, col1, col2, col3, tileResponseContainer.options,
+                        false, 'data-chartrenderer', tileResponseContainer.options.renderTooltips
+                    );
+                    break;
+                case 'bubble':
+                    var values = formatDataToHeatmap(json);
+                    var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
+                    var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                    createBubbleChart(
+                        tileResponseContainer, labelsX, labelsY,
+                        values, col1, col2, col3, tileResponseContainer.options,
+                        false, 'data-chartrenderer', tileResponseContainer.options.renderTooltips
+                    );
+                    break;
+                case 'stacked_bar':
+                    var data = json['data']['rows'];
+                    var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                    groups = groups.sort().reverse();
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+                    }
+                    var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                    var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+                    createStackedBarChart(
+                        tileResponseContainer, dataGrouped, groups,
+                        subgroups, col1, col2, col3,
+                        ChatDrawer.options, false,
+                        'data-chartindex', ChatDrawer.options.renderTooltips
+                    );
+                    break;
+                case 'stacked_column':
+                    var data = json['data']['rows'];
+                    var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                    groups = groups.sort().reverse();
+                    for (var i = 0; i < data.length; i++) {
+                        data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+                    }
+                    for (var i = 0; i < groups.length; i++) {
+                        groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+                    }
+                    var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                    var col1 = formatColumnName(json['data']['columns'][0]['name']);
+                    var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                    var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                    var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+                    createStackedColumnChart(
+                        tileResponseContainer, dataGrouped, groups,
+                        subgroups, col1, col2, col3,
+                        ChatDrawer.options, false,
+                        'data-chartindex', ChatDrawer.options.renderTooltips
+                    );
+                    break;
+                default:
+
+            }
+
+        }, dashboard.options);
+    }
+
+    chataDashboardItem.showLoadingDots = function(){
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('tile-response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+        tileResponseContainer.innerHTML = '';
+        tileResponseContainer.appendChild(responseLoadingContainer);
+        return responseLoadingContainer;
+    }
+
     deleteButton.onclick = function(){
-        grid.remove(chataDashboardItem, {layout:true})
+        dashboard.grid.remove(chataDashboardItem, {layout:true})
         chataDashboardItem.parentElement.removeChild(chataDashboardItem);
+    }
+
+    tilePlayBuytton.onclick = function(event){
+        chataDashboardItem.runQuery();
     }
 
 

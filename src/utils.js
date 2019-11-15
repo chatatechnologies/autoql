@@ -562,3 +562,11 @@ function htmlToElement(html) {
     template.innerHTML = html;
     return template.content.firstChild;
 }
+
+function createTableContainer(){
+    var div = document.createElement('div');
+    div.classList.add('chata-table-container');
+    div.classList.add('chata-table-container-renderer');
+
+    return div;
+}

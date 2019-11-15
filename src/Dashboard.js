@@ -1,6 +1,7 @@
 function Dashboard(selector, options={}){
     var items = [];
     var obj = this;
+    obj.options = options;
     var grid = new Muuri(selector, {
         layoutDuration: 400,
         showDuration: 0,
@@ -44,9 +45,10 @@ function Dashboard(selector, options={}){
     for (var i = 0; i < options.tiles.length; i++) {
         var opts = {
             query: options.tiles[i].query,
-            title: options.tiles[i].title
+            title: options.tiles[i].title,
+            displayType: options.tiles[i].displayType
         }
-        items.push(new Tile(grid, opts));
+        items.push(new Tile(obj, opts));
     }
     obj.grid.add(obj.tiles);
     obj.grid._settings.dragEnabled = false;
@@ -83,6 +85,12 @@ function Dashboard(selector, options={}){
         obj.grid.add(tile);
         tile.startEditing();
         tile.focusItem();
+    }
+
+    obj.run = function(){
+        obj.tiles.forEach(function(tile){
+            tile.runQuery();
+        });
     }
 
     return obj;
