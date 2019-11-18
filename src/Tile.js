@@ -28,8 +28,13 @@ function Tile(dashboard, options={}){
         <div class="placeholder-top"></div>
         <div class="placeholder-content"></div>
     `
+    var pixels = options.h * 70;
+    chataDashboardItem.style.height = pixels + 'px';
+    tileResponseWrapper.style.height = 'calc(100% - 40px)';
+    tileResponseContainer.style.height = 'calc(100%)';
 
     chataDashboardItem.classList.add('chata-dashboard-item');
+    chataDashboardItem.classList.add(`chata-col-${options.w}`);
     itemContent.classList.add('item-content');
     tileInputContainer.classList.add('dashboard-tile-input-container');
     tileTitleContainer.classList.add('dashboard-tile-title-container');
@@ -109,6 +114,7 @@ function Tile(dashboard, options={}){
     }
 
     function stopResize(e) {
+        dashboard.hidePlaceHolders();
         window.removeEventListener('mousemove', resizeItem, false);
         window.removeEventListener('mouseup', stopResize, false);
     }
@@ -163,8 +169,9 @@ function Tile(dashboard, options={}){
             tileResponseContainer.removeChild(loadingContainer);
             var uuid = uuidv4();
             ChatDrawer.responses[uuid] = json;
-            console.log(options.displayType);
-            switch (options.displayType) {
+            var displayType = options.displayType || 'data';
+            console.log(displayType);
+            switch (displayType) {
                 case 'data':
                     var div = createTableContainer();
                     tileResponseContainer.appendChild(div);
@@ -227,8 +234,8 @@ function Tile(dashboard, options={}){
                     var col3 = formatColumnName(json['data']['columns'][2]['name']);
                     createHeatmap(
                         tileResponseContainer, labelsX, labelsY,
-                        values, col1, col2, col3, tileResponseContainer.options,
-                        false, 'data-chartrenderer', tileResponseContainer.options.renderTooltips
+                        values, col1, col2, col3, ChatDrawer.options,
+                        false, 'data-chartrenderer', ChatDrawer.options.renderTooltips
                     );
                     break;
                 case 'bubble':
@@ -240,8 +247,8 @@ function Tile(dashboard, options={}){
                     var col3 = formatColumnName(json['data']['columns'][2]['name']);
                     createBubbleChart(
                         tileResponseContainer, labelsX, labelsY,
-                        values, col1, col2, col3, tileResponseContainer.options,
-                        false, 'data-chartrenderer', tileResponseContainer.options.renderTooltips
+                        values, col1, col2, col3, ChatDrawer.options,
+                        false, 'data-chartrenderer', ChatDrawer.options.renderTooltips
                     );
                     break;
                 case 'stacked_bar':

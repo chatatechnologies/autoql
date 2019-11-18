@@ -6,16 +6,16 @@ function Dashboard(selector, options={}){
         layoutDuration: 400,
         showDuration: 0,
         dragSortHeuristics: {
-            sortInterval: 1,
-            minDragDistance: 1,
-            minBounceBackAngle: 1
+            sortInterval: 10,
+            minDragDistance: 10,
+            minBounceBackAngle: 10
         },
         layoutEasing: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
         dragEnabled: true,
         dragSort: function () {
             return [grid];
         },
-        dragSortInterval: 0,
+        dragSortInterval: 10,
         dragReleaseDuration: 400,
         dragReleaseEasing: 'ease',
         dragStartPredicate: function (item, event) {
@@ -44,6 +44,8 @@ function Dashboard(selector, options={}){
     obj.tiles = items;
     for (var i = 0; i < options.tiles.length; i++) {
         var opts = {
+            w: options.tiles[i].w,
+            h: options.tiles[i].h,
             query: options.tiles[i].query,
             title: options.tiles[i].title,
             displayType: options.tiles[i].displayType
