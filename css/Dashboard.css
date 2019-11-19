@@ -39,6 +39,22 @@
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
     padding: 25px;
 }
+.tile-toolbar{
+    visibility: hidden;
+    background: #fff;
+    padding: 5px;
+    border-radius: 6px;
+    line-height: 28px;
+    z-index: 10;
+    border: 1px solid #d3d3d352;
+    position: absolute;
+    bottom: 7px;
+    left: 10px;
+}
+.chata-dashboard-item.editing .item-content:hover .tile-toolbar{
+    visibility: visible;
+}
+
 .chata-dashboard-item.editing:hover {
     cursor: move !important;
 }

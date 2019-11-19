@@ -1502,8 +1502,7 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var buttons = '';
     var displayTypes;
     var groupField = getGroupableField(json);
-    console.log('SIZE');
-    console.log(json['data']['rows'].length);
+    
     if(
         (json['data']['columns'].length == 2 ||
         DISPLAY_TYPES_2D.includes(json['data']['display_type']) && typeof groupField !== 'number')

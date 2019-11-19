@@ -12,6 +12,7 @@ function Tile(dashboard, options={}){
     var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
+    var vizToolbar = document.createElement('div');
 
     const placeHolderText = `
         <div class="dashboard-tile-placeholder-text">
@@ -30,9 +31,10 @@ function Tile(dashboard, options={}){
     `
     var pixels = options.h * 70;
     chataDashboardItem.style.height = pixels + 'px';
-    tileResponseWrapper.style.height = 'calc(100% - 40px)';
+    tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
 
+    vizToolbar.classList.add('tile-toolbar');
     chataDashboardItem.classList.add('chata-dashboard-item');
     chataDashboardItem.classList.add(`chata-col-${options.w}`);
     itemContent.classList.add('item-content');
@@ -75,6 +77,7 @@ function Tile(dashboard, options={}){
     itemContent.appendChild(tileTitleContainer);
     itemContent.appendChild(tileResponseWrapper);
     itemContent.appendChild(resizeHandler);
+    itemContent.appendChild(vizToolbar);
     chataDashboardItem.appendChild(itemContent);
     chataDashboardItem.appendChild(placeHolderDrag);
 
@@ -169,10 +172,12 @@ function Tile(dashboard, options={}){
             tileResponseContainer.removeChild(loadingContainer);
             var uuid = uuidv4();
             ChatDrawer.responses[uuid] = json;
-            var displayType = options.displayType || 'data';
-            console.log(displayType);
+            var displayType = options.displayType || 'table';
+            var displayTypes = chataDashboardItem.getDisplayTypes(json);
+            vizToolbar.innerHTML = ChatDrawer.getSupportedDisplayTypes(uuid, displayType);
+            console.log(displayTypes);
             switch (displayType) {
-                case 'data':
+                case 'table':
                     var div = createTableContainer();
                     tileResponseContainer.appendChild(div);
                     if(json['data']['columns'].length == 1){
@@ -327,6 +332,23 @@ function Tile(dashboard, options={}){
         chataDashboardItem.runQuery();
     }
 
-
+    chataDashboardItem.getDisplayTypes = function(json){
+        var displayTypes = [];
+        if(
+            (json['data']['columns'].length == 2 ||
+            DISPLAY_TYPES_2D.includes(json['data']['display_type']) && typeof groupField !== 'number')
+        ){
+            displayTypes = DISPLAY_TYPES_2D;
+        }
+        else if(json['data']['columns'].length == 3){
+            displayTypes = DISPLAY_TYPES_3D;
+        }else{
+            displayTypes = ['table'];
+        }
+        if(json['data']['rows'].length <= 1){
+            displayTypes = ['table'];
+        }
+        return displayTypes;
+    }
     return chataDashboardItem;
 }
