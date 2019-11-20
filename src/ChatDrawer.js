@@ -273,12 +273,6 @@ ChatDrawer.clickHandler = function(e){
             }
         }
 
-        if(e.target.id == 'drawer-wrapper'){
-            if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
-                ChatDrawer.options.onMaskClick();
-            }
-        }
-
         if(e.target.classList.contains('close-action')){
             ChatDrawer.closeDrawer();
         }
@@ -764,9 +758,16 @@ ChatDrawer.drilldownHandler = function(e){
 ChatDrawer.registerEvents = function(){
     var chataInput = document.getElementById('chata-input');
     var suggestionList = document.getElementById('auto-complete-list');
+    document.addEventListener('click', function(e){
+        if(e.target.id == 'drawer-wrapper'){
+            if(ChatDrawer.options.showMask && ChatDrawer.options.maskClosable){
+                ChatDrawer.options.onMaskClick();
+            }
+        }
+    })
     document.addEventListener('dblclick', ChatDrawer.drilldownHandler);
 
-    document.addEventListener('click', ChatDrawer.clickHandler);
+    ChatDrawer.rootElem.addEventListener('click', ChatDrawer.clickHandler);
 
     chataInput.onkeyup = function(){
         if(ChatDrawer.options.enableAutocomplete){
@@ -1502,7 +1503,7 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var buttons = '';
     var displayTypes;
     var groupField = getGroupableField(json);
-    
+
     if(
         (json['data']['columns'].length == 2 ||
         DISPLAY_TYPES_2D.includes(json['data']['display_type']) && typeof groupField !== 'number')
