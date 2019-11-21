@@ -9,6 +9,7 @@
     width: 100%;
     background: transparent;
     border: 5px solid transparent;
+    font-family: var(--chata-drawer-font-family);
 }
 .chata-dashboard-item {
     position: absolute;

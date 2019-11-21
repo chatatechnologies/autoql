@@ -106,9 +106,9 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         if(i == 0){
-            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid]['data']['columns'][0];
+            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid || uuid]['data']['columns'][0];
         }else if(i >= 1){
-            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid]['data']['columns'][2];
+            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid || uuid]['data']['columns'][2];
         }
         filter.onkeyup = function(event){
             var _json = ChatDrawer.responses[oldComponent.dataset.componentid];

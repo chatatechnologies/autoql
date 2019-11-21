@@ -12,10 +12,20 @@ function Tile(dashboard, options={}){
     var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
+    chataDashboardItem.options = {
+        query: '',
+        title: '',
+        displayType: 'table',
+        w: 3,
+        h: 2
+    }
 
+    for (var [key, value] of Object.entries(options)) {
+        chataDashboardItem.options[key] = value;
+    }
     const placeHolderText = `
         <div class="dashboard-tile-placeholder-text">
-            <em>Hit "Execute" to run this dashboard</em>
+            <em>${dashboard.options.notExecutedText}</em>
         </div>
     `;
 
@@ -28,13 +38,13 @@ function Tile(dashboard, options={}){
         <div class="placeholder-top"></div>
         <div class="placeholder-content"></div>
     `
-    var pixels = options.h * 70;
+    var pixels = chataDashboardItem.options.h * 70;
     chataDashboardItem.style.height = pixels + 'px';
     tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
 
     chataDashboardItem.classList.add('chata-dashboard-item');
-    chataDashboardItem.classList.add(`chata-col-${options.w}`);
+    chataDashboardItem.classList.add(`chata-col-${chataDashboardItem.options.w}`);
     itemContent.classList.add('item-content');
     tileInputContainer.classList.add('dashboard-tile-input-container');
     tileTitleContainer.classList.add('dashboard-tile-title-container');
@@ -130,8 +140,8 @@ function Tile(dashboard, options={}){
     chataDashboardItem.tileInputContainer.style.display = 'none';
     chataDashboardItem.placeHolderDrag.style.display = 'none';
     chataDashboardItem.tileTitle.textContent = options.title;
-    chataDashboardItem.inputQuery.value = options.query;
-    chataDashboardItem.inputTitle.value = options.title;
+    chataDashboardItem.inputQuery.value = chataDashboardItem.options.query;
+    chataDashboardItem.inputTitle.value = chataDashboardItem.options.title;
 
     chataDashboardItem.startEditing = function(){
         chataDashboardItem.tileInputContainer.style.display = 'flex';
@@ -169,7 +179,7 @@ function Tile(dashboard, options={}){
             tileResponseContainer.removeChild(loadingContainer);
             var uuid = uuidv4();
             ChatDrawer.responses[uuid] = json;
-            var displayType = options.displayType || 'table';
+            var displayType = chataDashboardItem.options.displayType || 'table';
             chataDashboardItem.refreshItem(displayType, uuid);
         }, dashboard.options);
     }
@@ -286,8 +296,8 @@ function Tile(dashboard, options={}){
                         var data = formatData(
                             json['data']['rows'][0][0],
                             json['data']['columns'][0]['type'],
-                            ChatDrawer.options.languageCode,
-                            ChatDrawer.options.currencyCode,
+                            dashboard.options.languageCode,
+                            dashboard.options.currencyCode,
                         );
                         tileResponseContainer.innerHTML =
                         `<div>
@@ -295,7 +305,7 @@ function Tile(dashboard, options={}){
                         </div>`;
                     }else{
                         var table = createTable(
-                            json, div, ChatDrawer.options,
+                            json, div, dashboard.options,
                             'append', uuid, 'table-response-renderer'
                         );
                         table.classList.add('renderer-table');
@@ -311,9 +321,9 @@ function Tile(dashboard, options={}){
                         json['data']['columns'][1]['name']);
                     createBarChart(
                         tileResponseContainer, grouped, col1,
-                        col2, hasNegativeValues, ChatDrawer.options,
+                        col2, hasNegativeValues, dashboard.options,
                         false, 'data-tilechart',
-                        ChatDrawer.options.renderTooltips
+                        dashboard.options.renderTooltips
                     );
                     break;
                 case 'column':
@@ -326,9 +336,9 @@ function Tile(dashboard, options={}){
                     var hasNegativeValues = values[1];
                     createColumnChart(
                         tileResponseContainer, grouped, col1,
-                        col2, hasNegativeValues, ChatDrawer.options,
+                        col2, hasNegativeValues, dashboard.options,
                         false, 'data-tilechart',
-                        ChatDrawer.options.renderTooltips
+                        dashboard.options.renderTooltips
                     );
                     break;
                 case 'line':
@@ -339,9 +349,9 @@ function Tile(dashboard, options={}){
                     var col2 = formatColumnName(json['data']['columns'][1]['name']);
                     createLineChart(
                         tileResponseContainer, grouped, col1,
-                        col2, hasNegativeValues, ChatDrawer.options,
+                        col2, hasNegativeValues, dashboard.options,
                         false, 'data-chartrenderer',
-                        ChatDrawer.options.renderTooltips
+                        dashboard.options.renderTooltips
                     );
                     break;
                 case 'heatmap':
@@ -356,8 +366,8 @@ function Tile(dashboard, options={}){
                     var col3 = formatColumnName(json['data']['columns'][2]['name']);
                     createHeatmap(tileResponseContainer,
                         labelsX, labelsY, values, col1,
-                        col2, col3, ChatDrawer.options, false,
-                        'data-chartrenderer', ChatDrawer.options.renderTooltips);
+                        col2, col3, dashboard.options, false,
+                        'data-chartrenderer', dashboard.options.renderTooltips);
                     break;
                 case 'bubble':
                     var values = formatDataToHeatmap(json);
@@ -371,9 +381,9 @@ function Tile(dashboard, options={}){
                     var col3 = formatColumnName(json['data']['columns'][2]['name']);
                     createBubbleChart(
                         tileResponseContainer, labelsX, labelsY,
-                        values, col1, col2, col3, ChatDrawer.options,
+                        values, col1, col2, col3, dashboard.options,
                         false, 'data-chartrenderer',
-                        ChatDrawer.options.renderTooltips
+                        dashboard.options.renderTooltips
                     );
                     break;
                 case 'stacked_bar':
@@ -394,8 +404,8 @@ function Tile(dashboard, options={}){
                     createStackedBarChart(
                         tileResponseContainer, dataGrouped, groups,
                         subgroups, col1, col2, col3,
-                        ChatDrawer.options, false,
-                        'data-chartindex', ChatDrawer.options.renderTooltips
+                        dashboard.options, false,
+                        'data-chartindex', dashboard.options.renderTooltips
                     );
                     break;
                 case 'stacked_column':
@@ -416,8 +426,8 @@ function Tile(dashboard, options={}){
                     createStackedColumnChart(
                         tileResponseContainer, dataGrouped, groups,
                         subgroups, col1, col2, col3,
-                        ChatDrawer.options, false,
-                        'data-chartindex', ChatDrawer.options.renderTooltips
+                        dashboard.options, false,
+                        'data-chartindex', dashboard.options.renderTooltips
                     );
                     break;
                 case 'pie':
@@ -426,17 +436,19 @@ function Tile(dashboard, options={}){
                     var col2 = formatColumnName(json['data']['columns'][1]['name']);
                     var colType1 = json['data']['columns'][0]['type'];
                     createPieChart(tileResponseContainer, data,
-                        ChatDrawer.options, col1, col2, colType1
+                        dashboard.options, col1, col2, colType1, false
                     );
                     break;
                 case 'pivot_column':
+                    var div = createTableContainer();
+                    tileResponseContainer.appendChild(div);
                     var pivotArray = [];
                     if(json['display_type'] == 'date_pivot'){
-                        pivotArray = getDatePivotArray(json, ChatDrawer.options, json['data']['rows']);
+                        pivotArray = getDatePivotArray(json, dashboard.options, json['data']['rows']);
                     }else{
-                        pivotArray = getPivotColumnArray(json, ChatDrawer.options, json['data']['rows']);
+                        pivotArray = getPivotColumnArray(json, dashboard.options, json['data']['rows']);
                     }
-                    createPivotTable(pivotArray, tileResponseContainer);
+                    createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                     break;
                 default:
 

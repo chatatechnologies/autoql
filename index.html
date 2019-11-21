@@ -885,10 +885,15 @@
                     displayType: 'heatmap',
                     title: 'Customer Profitability'
                 }
-            ]
+            ],
+            onChangeCallback: function() {
+                console.log('Dashboard onChangeCallback');
+            },
+            executeOnMount: false,
+            executeOnStopEditing: false,
+            // fontFamily: 'monospace'
         });
 
-        console.log(dashboard);
 
         var startEditing = document.getElementById('start-editing')
         var stopEditing = document.getElementById('stop-editing')
@@ -907,9 +912,6 @@
 
         stopEditing.onclick = function(){
             dashboard.stopEditing();
-            if(runDashboard.checked){
-                dashboard.run();
-            }
             this.style.display = 'none';
             addTile.style.display = 'none';
             undo.style.display = 'none';
@@ -921,6 +923,7 @@
         }
 
         runDashboard.onchange = function(event){
+            dashboard.options.executeOnStopEditing = event.target.checked
             if(event.target.checked){
                 dashboard.run();
             }

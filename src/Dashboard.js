@@ -1,7 +1,31 @@
 function Dashboard(selector, options={}){
     var items = [];
     var obj = this;
-    obj.options = options;
+    obj.options = {
+        token: '',
+        apiKey: '',
+        customerId: '',
+        userId: '',
+        domain: '',
+        tiles: [],
+        onChangeCallback: function(){},
+        isEditing: false,
+        currencyCode: 'USD',
+        languageCode: 'en-US',
+        // comparisonDisplay: 'ratio' || 'percent'
+        fontFamily:	'sans-serif',
+        chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+        executeOnMount:	true,
+        executeOnStopEditing: true,
+        notExecutedText: 'Hit "Execute" to run this dashboard',
+        demo: false,
+        debug: false
+    }
+
+    for (var [key, value] of Object.entries(options)) {
+        obj.options[key] = value;
+    }
+    obj.onChangeCallback = obj.options.onChangeCallback;
     var grid = new Muuri(selector, {
         layoutDuration: 400,
         showDuration: 0,
@@ -66,6 +90,9 @@ function Dashboard(selector, options={}){
         obj.tiles.forEach(function(tile){
             tile.stopEditing();
         })
+        if(obj.options.executeOnStopEditing){
+            obj.run();
+        }
         obj.grid._settings.dragEnabled = false;
     }
 
@@ -93,7 +120,20 @@ function Dashboard(selector, options={}){
         obj.tiles.forEach(function(tile){
             tile.runQuery();
         });
+        obj.onChangeCallback();
     }
+
+    if(obj.options.executeOnMount){
+        obj.run();
+    }
+
+    if(obj.options.isEditing){
+        this.startEditing();
+    }
+    obj.grid._element.style.setProperty(
+        '--chata-drawer-font-family',
+        obj.options['fontFamily']
+    );
 
     return obj;
 }

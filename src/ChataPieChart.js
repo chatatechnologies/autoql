@@ -1,11 +1,12 @@
 function createPieChart(component, data, options, col1, col2, colType1, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = 20;
+    var marginX = 30;
+    var marginY = 0;
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin + 3);
+            height = component.parentElement.parentElement.clientHeight - (marginY + 3);
             if(height < 250){
                 height = 300;
             }
@@ -13,20 +14,18 @@ function createPieChart(component, data, options, col1, col2, colType1, fromChat
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin);
+        height = component.parentElement.offsetHeight - (marginY);
     }
-    var _data = {a: 9, b: 20, c:30, d:8, e:12};
-    console.log(_data);
     if (width < height) {
-      pieWidth = width / 2 - margin;
+      pieWidth = width / 2 - marginX;
     } else if (height * 2 < width) {
-      pieWidth = height - margin;
+      pieWidth = height - marginX;
     } else {
-      pieWidth = width / 2 - margin;
+      pieWidth = width / 2 - marginY;
     }
 
     var outerRadius = pieWidth / 2
-    var innerRadius = outerRadius - 40 > 15 ? outerRadius - 40 : 0
+    var innerRadius = outerRadius - 45 > 15 ? outerRadius - 45 : 0
 
     component.innerHTML = '';
     component.parentElement.classList.remove('chata-table-container');
@@ -50,7 +49,7 @@ function createPieChart(component, data, options, col1, col2, colType1, fromChat
 
     svg
     .append('g')
-    .attr("transform", "translate(" + (width / 2 + outerRadius + margin) + "," + (height / 2 - margin) + ")")
+    .attr("transform", "translate(" + (width / 2 + outerRadius + marginX) + "," + (height / 2 - marginY) + ")")
     .selectAll('.slices')
     .data(dataReady)
     .enter()
