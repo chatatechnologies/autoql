@@ -2,7 +2,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, options,
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-
+    const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -67,13 +67,23 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, options,
         return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode);
     });
 
-    svg.append("g")
-    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    .call(xAxis)
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    if(tickWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center");
+    }
+
 
     // Y axis
     var y = d3.scaleBand()

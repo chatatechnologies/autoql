@@ -94,13 +94,22 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
         xAxis.tickValues(xTickValues);
     }
 
-    svg.append("g")
-    .attr("transform", "translate(0," + (height) + ")")
-    .call(xAxis)
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    if(barWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center");
+    }
 
     // Add Y axis
     var maxValue = d3.max(data, function(d) {

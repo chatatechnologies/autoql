@@ -6,6 +6,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 25
+    const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -69,16 +70,26 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     .domain([0, maxValue])
     .range([ 0, chartWidth ]);
 
-
-    svg.append("g")
-    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    .call(d3.axisBottom(x).tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
-    ))
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    if(tickWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(d3.axisBottom(x).tickFormat(function(d){
+            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+        ))
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(d3.axisBottom(x).tickFormat(function(d){
+            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+        ))
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center");
+    }
 
 
     // Add Y axis

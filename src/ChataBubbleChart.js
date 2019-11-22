@@ -93,13 +93,22 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
         xAxis.tickValues(xTickValues);
     }
 
-    svg.append("g")
-    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    .call(xAxis)
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    if(barWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center");
+    }
 
 
     var y = d3.scaleBand()

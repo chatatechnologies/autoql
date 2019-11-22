@@ -409,7 +409,7 @@
                     </i>
                     <span>Execute Dashboard</span>
                 </button>
-                <button type="button" class="ant-btn" style="margin-left: 10px;">
+                <button type="button" class="ant-btn" style="margin-left: 10px;" id="log">
                     <span>Log Current Tile State</span>
                 </button>
                 <div style="padding-top: 5px; margin-left: 10px;">
@@ -901,6 +901,8 @@
         var undo = document.getElementById('undo')
         var runDashboard = document.getElementById('runDashboard')
         var execute = document.getElementById('execute')
+        var log = document.getElementById('log')
+
 
         startEditing.onclick = function(){
             dashboard.startEditing();
@@ -931,6 +933,14 @@
 
         execute.onclick = function(event){
             dashboard.run();
+        }
+
+        undo.onclick = function(){
+            dashboard.undo();
+        }
+
+        log.onclick = function(){
+            console.log(dashboard.tiles);
         }
 
     </script>

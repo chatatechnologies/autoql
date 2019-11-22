@@ -143,6 +143,31 @@ function Tile(dashboard, options={}){
     chataDashboardItem.inputQuery.value = chataDashboardItem.options.query;
     chataDashboardItem.inputTitle.value = chataDashboardItem.options.title;
 
+    const setState = (event, reference) => {
+        state = {
+            inputValue: event.target.value,
+            element: reference,
+        }
+
+        return state;
+    }
+
+    chataDashboardItem.inputQuery.onfocus = function(event){
+        dashboard.oldState = setState(event, this);
+    };
+
+    chataDashboardItem.inputQuery.onblur = function(event){
+        dashboard.lastState = setState(event, this);
+    };
+
+    chataDashboardItem.inputTitle.onfocus = function(event){
+        dashboard.oldState = setState(event, this);
+    };
+
+    chataDashboardItem.inputTitle.onblur = function(event){
+        dashboard.lastState = setState(event, this);
+    };
+
     chataDashboardItem.startEditing = function(){
         chataDashboardItem.tileInputContainer.style.display = 'flex';
         chataDashboardItem.tileTitleContainer.style.display = 'none';
@@ -252,6 +277,7 @@ function Tile(dashboard, options={}){
                 if(button.innerHTML != ''){
                     vizToolbar.appendChild(button);
                     button.onclick = function(event){
+                        chataDashboardItem.options.displayType = this.dataset.displaytype;
                         chataDashboardItem.refreshItem(this.dataset.displaytype, uuid)
                     }
                 }

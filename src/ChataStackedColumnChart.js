@@ -67,14 +67,22 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
     }
-
-    svg.append("g")
-    .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    .call(xAxis)
-    .selectAll("text")
-    .style("color", '#fff')
-    .attr("transform", "translate(-10,0)rotate(-45)")
-    .style("text-anchor", "end");
+    if(barWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center");
+    }
 
     var maxValue = d3.max(data, function(d) {
         var sum = 0;

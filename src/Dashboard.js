@@ -1,6 +1,15 @@
 function Dashboard(selector, options={}){
     var items = [];
     var obj = this;
+    obj.oldState = {
+        inputValue: '',
+        element: '',
+    };
+    obj.lastState = {
+        inputValue: '',
+        element: '',
+    };
+
     obj.options = {
         token: '',
         apiKey: '',
@@ -134,6 +143,17 @@ function Dashboard(selector, options={}){
         '--chata-drawer-font-family',
         obj.options['fontFamily']
     );
+
+    obj.undo = function(){
+        var oldValue = obj.oldState.inputValue;
+        var newValue = obj.lastState.inputValue;
+        obj.lastState.element.value = oldValue;
+        obj.lastState.inputValue = oldValue;
+        obj.oldState.inputValue = newValue;
+
+        console.log(obj.lastState.element);
+        console.log(obj.oldState.element);
+    }
 
     return obj;
 }
