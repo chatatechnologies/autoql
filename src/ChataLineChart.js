@@ -145,10 +145,11 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
         }
      } )
     .attr("cy", function(d) { return y(d.value) } )
-    .attr("r", 2)
-    .attr('stroke', 'transparent')
-    .attr('stroke-width', '5')
-    .attr("fill", options.chartColors[0])
+    .attr("r", 3)
+    .attr('stroke', options.chartColors[0])
+    .attr('stroke-width', '2')
+    .attr('stroke-opacity', '0.7')
+    .attr("fill", 'white')
     .attr('class', 'tooltip-2d line-dot')
 
     tooltipCharts();

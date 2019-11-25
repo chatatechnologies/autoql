@@ -150,9 +150,6 @@ function Dashboard(selector, options={}){
         obj.lastState.element.value = oldValue;
         obj.lastState.inputValue = oldValue;
         obj.oldState.inputValue = newValue;
-
-        console.log(obj.lastState.element);
-        console.log(obj.oldState.element);
     }
 
     return obj;

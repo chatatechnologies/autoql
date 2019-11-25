@@ -3,9 +3,6 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
     Before I can try to find your answer,
     I need your help understanding a term you used that I don't see in your data.
     Click the dropdown to view suggestions so I can ensure you get the right data!`;
-    const safetyDeleteButtonHtml = `
-        ${DELETE_ICON}
-    `;
     const runQueryButtonHtml = `
     <button class="chata-safety-net-execute-btn">
         ${RUN_QUERY}
@@ -19,6 +16,15 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
     var responseContentContainer = document.createElement('div');
     responseContentContainer.classList.add('chata-response-content-container');
     responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
+    createSafetynetBody(responseContentContainer, suggestionArray);
+    responseContentContainer.appendChild(runQueryButton);
+    return responseContentContainer;
+}
+
+function createSafetynetBody(responseContentContainer, suggestionArray){
+    const safetyDeleteButtonHtml = `
+        ${DELETE_ICON}
+    `;
     for (var i = 0; i < suggestionArray.length; i++) {
         var suggestion = suggestionArray[i];
         console.log(suggestion);
@@ -55,10 +61,7 @@ function createSafetynetContent(suggestionArray, context='ChatDrawer'){
             responseContentContainer.appendChild(div);
         }
     }
-    responseContentContainer.appendChild(runQueryButton);
-    return responseContentContainer;
 }
-
 
 function createSuggestionArray(jsonResponse){
     var fullSuggestion = jsonResponse['full_suggestion'];

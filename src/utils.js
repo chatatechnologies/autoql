@@ -86,14 +86,7 @@ function putLoadingContainer(target){
     return responseLoadingContainer;
 }
 
-function runQuery(event, context){
-    if(event.target.tagName == 'svg'){
-        var node = event.target.parentElement.parentElement;
-    }else if(event.target.tagName == 'path'){
-        var node = event.target.parentElement.parentElement.parentElement;
-    }else{
-        var node = event.target.parentElement;
-    }
+function getSafetynetValues(node){
     var nodes = node.getElementsByClassName('safetynet-value');
     var words = [];
     for (var i = 0; i < nodes.length; i++) {
@@ -103,6 +96,18 @@ function runQuery(event, context){
             words.push(nodes[i].value.trim());
         }
     }
+    return words;
+}
+
+function runQuery(event, context){
+    if(event.target.tagName == 'svg'){
+        var node = event.target.parentElement.parentElement;
+    }else if(event.target.tagName == 'path'){
+        var node = event.target.parentElement.parentElement.parentElement;
+    }else{
+        var node = event.target.parentElement;
+    }
+    var words = getSafetynetValues(node);
     if(context == 'ChatDrawer'){
         ChatDrawer.sendMessage(document.getElementById('chata-input'), words.join(' '));
     }else{
