@@ -5,6 +5,7 @@
     <title></title>
     <link rel="stylesheet" type="text/css" href="css/chata-styles.css">
     <link rel="stylesheet" type="text/css" href="css/Dashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/Modal.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -39,6 +40,7 @@
     <script src="src/ResponseRenderer.js"></script>
     <script src="src/ChatBar.js"></script>
     <script src="src/ChatDrawer.js"></script>
+    <script src="src/Modal.js"></script>
     <script src="src/Tile.js"></script>
     <script src="src/Dashboard.js"></script>
     <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/fd4b2bdf-fbc1-4ab2-af8b-5a1efc0f7285/chatastyles.css">
@@ -446,7 +448,7 @@
                 </button>
             </div>
 
-            <div class="grid grid-1">
+            <div class="grid-1">
                 <!-- <div class="chata-dashboard-item">
                     <div class="item-content">
                         <div class="dashboard-tile-input-container">
@@ -773,6 +775,7 @@
         }
 
         var dashboard = new Dashboard('.grid-1', {
+            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
             demo: true,
             token: undefined,
             apiKey: '',
@@ -782,18 +785,18 @@
             tiles: [
                 {
                     key: '0',
-                    w: 3,
-                    h: 2,
+                    w: 6,
+                    h: 7,
                     x: 0,
                     y: 0,
-                    // query: 'total profit this month',
-                    query: 'foo bar',
-                    title: 'Profit - Current Month'
+                    query: 'Sales by customer per month',
+                    title: 'Customer Sales',
+                    displayType: 'stacked_bar'
                 },
                 {
                     key: '1',
                     w: 3,
-                    h: 2,
+                    h: 3,
                     x: 3,
                     y: 0,
                     query: 'total profit last month',
@@ -802,7 +805,7 @@
                 {
                     key: '2',
                     w: 3,
-                    h: 2,
+                    h: 3,
                     x: 6,
                     y: 0,
                     query: 'total profit ytd',
@@ -811,11 +814,20 @@
                 {
                     key: '3',
                     w: 3,
-                    h: 2,
+                    h: 3,
                     x: 9,
                     y: 0,
                     query: 'last years profit',
                     title: 'Profit - Previous Year'
+                },
+                {
+                    key: '99',
+                    w: 3,
+                    h: 3,
+                    x: 0,
+                    y: 2,
+                    query: 'total sales',
+                    title: 'All Sales'
                 },
                 {
                     key: '4',

@@ -4,12 +4,12 @@
     background: rgb(250, 250, 250);
 }
 
-.grid {
+.chata-dashboard {
     position: relative;
     width: 100%;
     background: transparent;
     border: 5px solid transparent;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--chata-dashboard-font-family);
 }
 .chata-dashboard-item {
     position: absolute;
@@ -416,15 +416,15 @@
     stroke-width: 1 !important;
 }
 
-.dashboard-tile-response-container svg .grid line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
-.dashboard-tile-response-container svg .grid path {stroke-width: 0;}
+.dashboard-tile-response-container svg .chata-dashboard line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
+.dashboard-tile-response-container svg .chata-dashboard path {stroke-width: 0;}
 
 .dashboard-tile-response-container svg .domain{
     stroke: #d3d3d352 !important;
 }
 
 .dashboard-tile-response-container svg .tick{
-    stroke: var(--chata-drawer-border-color) !important;
+    stroke: var(--chata-dashboard-border-color) !important;
     fill-opacity: 0.7;
 
 }
@@ -436,9 +436,9 @@
 }
 
 .dashboard-tile-response-container text{
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--chata-dashboard-font-family);
     letter-spacing: 0.04em;
-    fill: var(--chata-drawer-text-color-primary);
+    fill: var(--chata-dashboard-text-color-primary);
 }
 
 .single-value-response{
@@ -459,8 +459,10 @@
 .dashboard-tile-response-container .stacked-rect:focus {
     /* fill: #a5cd39 !important; */
     outline: none !important;
+    opacity: 1;
     fill-opacity: 1;
 }
+
 
 .dashboard-tile-response-container .bar:hover,
 .dashboard-tile-response-container .circle:hover,
@@ -468,12 +470,13 @@
 .dashboard-tile-response-container .line-dot:hover
 .dashboard-tile-response-container .stacked-rect:hover {
     fill-opacity: 1;
+    opacity: 1;
 }
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
 
 
 /*
-.dashboard-tile-response-container svg .grid path{
+.dashboard-tile-response-container svg .chata-dashboard path{
     opacity: .6 !important;
 } */

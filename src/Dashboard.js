@@ -34,6 +34,12 @@ function Dashboard(selector, options={}){
     for (var [key, value] of Object.entries(options)) {
         obj.options[key] = value;
     }
+    for (let property in DASHBOARD_LIGHT_THEME) {
+        document.documentElement.style.setProperty(
+            property,
+            DASHBOARD_LIGHT_THEME[property],
+        );
+    }
     obj.onChangeCallback = obj.options.onChangeCallback;
     var grid = new Muuri(selector, {
         layoutDuration: 400,
@@ -72,6 +78,8 @@ function Dashboard(selector, options={}){
             touchAction: 'auto'
         }
     });
+
+    grid._element.classList.add('chata-dashboard');
 
     obj.grid = grid;
     obj.tiles = items;
@@ -140,7 +148,7 @@ function Dashboard(selector, options={}){
         this.startEditing();
     }
     obj.grid._element.style.setProperty(
-        '--chata-drawer-font-family',
+        '--chata-dashboard-font-family',
         obj.options['fontFamily']
     );
 

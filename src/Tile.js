@@ -12,6 +12,7 @@ function Tile(dashboard, options={}){
     var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
+    const uuid = uuidv4();
     chataDashboardItem.options = {
         query: '',
         title: '',
@@ -231,7 +232,7 @@ function Tile(dashboard, options={}){
                     chataDashboardItem.options.isSafetynet = false;
                     ChatDrawer.ajaxCall(val, function(json){
                         tileResponseContainer.removeChild(loadingContainer);
-                        var uuid = uuidv4();
+
                         ChatDrawer.responses[uuid] = json;
                         var displayType = chataDashboardItem.options.displayType
                         || 'table';
@@ -529,6 +530,24 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.itemContent.addEventListener('click', function(e){
         console.log(e);
+        if(e.target.dataset.tilechart){
+            var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');
+            for (var i = 0; i < selectedBars.length; i++) {
+                selectedBars[i].classList.remove('active');
+            }
+            e.target.classList.add('active');
+            console.log(e.target);
+            var query = chataDashboardItem.inputQuery.value;
+            var originalDisplayType = chataDashboardItem.options.displayType;
+            var modal = new Modal(
+                query,
+                originalDisplayType,
+                uuid,
+                tileResponseContainer
+            );
+            modal.show();
+            delete modal;
+        }
     });
 
     return chataDashboardItem;

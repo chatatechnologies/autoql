@@ -7,6 +7,16 @@ const LIGHT_THEME = {
   '--chata-drawer-text-color-placeholder': '#0000009c'
 }
 
+const DASHBOARD_LIGHT_THEME = {
+  '--chata-dashboard-accent-color': '#28a8e0',
+  '--chata-dashboard-background-color': '#fff',
+  '--chata-dashboard-border-color': '#d3d3d352',
+  '--chata-dashboard-hover-color': '#ececec',
+  '--chata-dashboard-text-color-primary': '#5d5d5d',
+  '--chata-dashboard-text-color-placeholder': '#0000009c'
+}
+
+
 const DARK_THEME = {
   '--chata-drawer-accent-color': '#525252', // dark gray
   // '--chata-drawer-accent-color': '#193a48', // dark blue
