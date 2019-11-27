@@ -1,7 +1,8 @@
-function createBarChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    console.log(col2Type);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
@@ -64,7 +65,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, options,
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode);
+        return formatData(d, col2Type, options.languageCode, options.currencyCode);
     });
 
     if(tickWidth < 135){
@@ -123,7 +124,7 @@ function createBarChart(component, data, col1, col2, hasNegativeValues, options,
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-colvalue1', d.label)
-        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
+        .attr('data-colvalue2', formatData(d.value, col2Type, options.languageCode, options.currencyCode))
     })
     .attr("x", function(d) { return x(Math.min(0, d.value)); })
     .attr("y", function(d) {

@@ -43,8 +43,12 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
             var suggestionList = suggestion['suggestionList'];
             for (var x = 0; x < suggestionList.length; x++) {
                 var option = document.createElement('option');
+                var textContent = suggestionList[x]['text'];
+                if(suggestionList[x].value_label){
+                    textContent += ` (${suggestionList[x].value_label})`;
+                }
                 option.setAttribute('value', suggestionList[x]['text']);
-                option.textContent = suggestionList[x]['text'];
+                option.textContent = textContent;
                 select.appendChild(option);
             }
             var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);

@@ -354,6 +354,16 @@
                 </div>
 
                 <div class="prop prop-column">
+                    <h6 class="">Disable Drilldowns</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="disableDrilldowns">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
                     <h6 class="">Enable Speech to Text</h6>
                     <div class="switch">
                         <label>
@@ -605,6 +615,7 @@
         var enableAutocomplete = document.querySelector('[name="enableAutocomplete"]')
         var enableVoiceRecord = document.querySelector('[name="enableVoiceRecord"]')
         var enableSafetyNet = document.querySelector('[name="enableSafetyNet"]')
+        var disableDrilldowns = document.querySelector('[name="disableDrilldowns"]')
         var debug = document.querySelector('[name="debug"]')
         var clearOnClose = document.querySelector('[name="clearOnClose"]')
         var demo = document.querySelector('[name="demo"]')
@@ -719,6 +730,11 @@
 
         enableSafetyNet.onchange = function(event){
             ChatDrawer.options.enableSafetyNet = event.target.checked;
+        }
+
+        disableDrilldowns.onchange = function(event){
+            ChatDrawer.options.disableDrilldowns = event.target.checked;
+            console.log(ChatDrawer.options.disableDrilldowns);
         }
 
         enableVoiceRecord.onchange = function(event){

@@ -171,6 +171,15 @@ function getGroupableField(json){
     return -1;
 }
 
+function getGroupableCount(json){
+    var cont = 0;
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        if(json['data']['columns'][i]['groupable']){
+            cont++;
+        }
+    }
+    return cont;
+}
 
 function getPivotColumnArray(json, options, _data){
     var lines = _data;

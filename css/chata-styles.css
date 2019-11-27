@@ -206,7 +206,8 @@ body{
 }
 
 .chat-header-container .chata-button:hover{
-    color: var(--chata-drawer-hover-color);
+    /* color: var(--chata-drawer-hover-color); */
+    opacity: .7;
 }
 
 .chata-button.clear-all {

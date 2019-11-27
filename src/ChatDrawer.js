@@ -28,7 +28,7 @@ var ChatDrawer = {
         enableAutocomplete: true,
         autocompleteStyles: {},
         enableSafetyNet: true,
-        enableDrilldowns: true,
+        disableDrilldowns: false,
         demo: false,
         debug: true,
         currencyCode: 'USD',
@@ -326,7 +326,26 @@ ChatDrawer.clickHandler = function(e){
             parent.sendMessageToResponseRenderer(e.target.textContent);
         }
         if(e.target.classList.contains('chata-suggestion-btn')){
-            ChatDrawer.sendMessage(chataInput, e.target.textContent);
+            if(!e.target.classList.contains('none-of-these-btn')){
+                ChatDrawer.sendMessage(chataInput, e.target.textContent);
+            }else{
+                var responseLoadingContainer = ChatDrawer.putMessage(
+                    e.target.textContent
+                );
+                var interval = setInterval(function(){
+                    ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+                    var containerMessage = document.createElement('div');
+                    var messageBubble = document.createElement('div');
+                    containerMessage.classList.add('chat-single-message-container');
+                    containerMessage.classList.add('response');
+                    messageBubble.classList.add('chat-message-bubble');
+                    messageBubble.textContent = 'Thank you for your feedback.';
+                    containerMessage.appendChild(messageBubble);
+                    ChatDrawer.drawerContent.appendChild(containerMessage);
+                    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+                    clearInterval(interval);
+                }, 1300);
+            }
         }
         if(e.target.classList.contains('chata-suggestion-btn-renderer')){
             var parent = e.target.parentElement.parentElement;
@@ -452,8 +471,10 @@ ChatDrawer.clickHandler = function(e){
                 var grouped = values[0];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var col2Type = json['data']['columns'][1]['type'];
+
                 var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                createColumnChart(component, grouped, col1, col2, col2Type, hasNegativeValues, ChatDrawer.options);
             }
         }
         if(e.target.classList.contains('pie_chart')){
@@ -553,7 +574,8 @@ ChatDrawer.clickHandler = function(e){
             var json = ChatDrawer.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             ChatDrawer.refreshToolbarButtons(component, 'bar');
-            if(json['data']['display_type'] == 'compare_table'){
+            var groupCount = getGroupableCount(json);
+            if(groupCount == 1 && json['data']['columns'].length == 3){
                 var data = cloneObject(json['data']['rows']);
 
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
@@ -576,7 +598,8 @@ ChatDrawer.clickHandler = function(e){
                 var hasNegativeValues = values[1];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                var col2Type = json['data']['columns'][1]['type'];
+                createBarChart(component, grouped, col1, col2, col2Type, hasNegativeValues, ChatDrawer.options);
             }
 
         }
@@ -616,8 +639,9 @@ ChatDrawer.clickHandler = function(e){
                 var hasNegativeValues = values[1];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var colType2 = json['data']['columns'][1]['type'];
 
-                createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                createLineChart(component, grouped, col1, col2, colType2, hasNegativeValues, ChatDrawer.options);
             }
         }
 
@@ -702,7 +726,7 @@ ChatDrawer.closePopOver = function(){
 }
 
 ChatDrawer.drilldownHandler = function(e){
-    if(ChatDrawer.options.enableDrilldowns){
+    if(!ChatDrawer.options.disableDrilldowns){
         if(e.target.parentElement.hasAttribute('data-indexrow')){
             var table = e.target.parentElement.parentElement;
             var json = ChatDrawer.responses[table.dataset.componentid];
@@ -732,7 +756,7 @@ ChatDrawer.drilldownHandler = function(e){
         if(component.tagName == 'svg'){
             component = component.parentElement;
         }
-        if(component.chataBarContainer.options.enableDrilldowns){
+        if(!component.chataBarContainer.options.disableDrilldowns){
             var json = ChatDrawer.responses[component.dataset.componentid];
             var indexData = e.target.dataset.chartrenderer;
             ChatDrawer.sendDrilldownMessage(
@@ -744,7 +768,7 @@ ChatDrawer.drilldownHandler = function(e){
     if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
         var component = e.target.parentElement.parentElement;
         var responseRenderer = component.parentElement.parentElement;
-        if(responseRenderer.chataBarContainer.options.enableDrilldowns){
+        if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
             var json = ChatDrawer.responses[component.dataset.componentid];
             var indexData = e.target.parentElement.dataset.indexrowrenderer;
             ChatDrawer.sendDrilldownMessage(
@@ -1264,7 +1288,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
 
     ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse){
         var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
-        if(suggestions.length > 0 && ChatDrawer.options.enableSafetyNet){
+        if(suggestions.length > 0 && ChatDrawer.options.enableSafetyNet
+        && textValue != 'None of these'){
             chataInput.removeAttribute("disabled");
             ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
 
@@ -1316,8 +1341,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var hasNegativeValues = values[1];
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                         var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
-
-                        createLineChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                        var col2Type = jsonResponse['data']['columns'][1]['type'];
+                        createLineChart(component, grouped, col1, col2, col2Type, hasNegativeValues, ChatDrawer.options);
                         ChatDrawer.refreshToolbarButtons(component, 'line');
                     break;
                     case 'bar':
@@ -1327,8 +1352,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var hasNegativeValues = values[1];
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                         var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
-
-                        createBarChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                        var col2Type = jsonResponse['data']['columns'][1]['type'];
+                        createBarChart(component, grouped, col1, col2, col2Type, hasNegativeValues, ChatDrawer.options);
                         ChatDrawer.refreshToolbarButtons(component, 'bar');
                     break;
                     case 'word_cloud':
@@ -1412,8 +1437,9 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var hasNegativeValues = values[1];
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                         var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
+                        var col2Type = jsonResponse['data']['columns'][1]['type'];
 
-                        createColumnChart(component, grouped, col1, col2, hasNegativeValues, ChatDrawer.options);
+                        createColumnChart(component, grouped, col1, col2, col2Type, hasNegativeValues, ChatDrawer.options);
                         ChatDrawer.refreshToolbarButtons(component, 'column');
                     break;
                     case 'help':
@@ -1460,7 +1486,8 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
 }
 
 ChatDrawer.getActionButtons = function(idRequest, type){
-    var tooltipContent = ChatDrawer.responses[idRequest]['data']['interpretation'];
+    var request = ChatDrawer.responses[idRequest];
+    var tooltipContent = request['data']['interpretation'];
 
     if(type == 'simple'){
         return `
@@ -1468,10 +1495,16 @@ ChatDrawer.getActionButtons = function(idRequest, type){
             ${INFO_ICON}
         </button>`;
     }else if (type == 'csvCopy'){
+        var filterButton = `
+            <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
+                ${FILTER_TABLE}
+            </button>
+        `;
+        if(request['data']['rows'].length == 1){
+            filterButton = '';
+        }
         return `
-        <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
-            ${FILTER_TABLE}
-        </button>
+        ${filterButton}
         <button class="chata-toolbar-btn clipboard" data-tippy-content="Copy to Clipboard" data-id="${idRequest}">
             ${CLIPBOARD_ICON}
         </button>
@@ -1503,14 +1536,18 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
     var buttons = '';
     var displayTypes;
     var groupField = getGroupableField(json);
-
+    var groupCount = getGroupableCount(json);
+    console.log('Group count: ');
+    console.log(groupCount);
     if(
         (json['data']['columns'].length == 2 ||
-        DISPLAY_TYPES_2D.includes(json['data']['display_type']) && typeof groupField !== 'number')
+        DISPLAY_TYPES_2D.includes(json['data']['display_type']) && groupCount == 1)
     ){
         displayTypes = DISPLAY_TYPES_2D;
     }
-    else if(json['data']['columns'].length == 3){
+    else if(json['data']['columns'].length == 3 && groupCount == 1){
+        displayTypes = DISPLAY_TYPES_2D;
+    }else if(json['data']['columns'].length == 3 && groupCount == 2){
         displayTypes = DISPLAY_TYPES_3D;
     }else{
         displayTypes = ['table'];
@@ -1531,7 +1568,7 @@ ChatDrawer.getSupportedDisplayTypes = function(idRequest, ignore){
         if(displayTypes[i] == 'bar'){
             buttons += ChatDrawer.getBarChartButton(idRequest);
         }
-        if(displayTypes[i] == 'pie'){
+        if(displayTypes[i] == 'pie' && json['data']['columns'].length == 2){
             buttons += ChatDrawer.getPieChartButton(idRequest);
         }
         if(displayTypes[i] == 'line'){
@@ -1735,6 +1772,9 @@ ChatDrawer.createSuggestions = function(responseContentContainer, data, classBut
         button.textContent = data[i][0];
         div.appendChild(button);
         responseContentContainer.appendChild(div);
+        if(i == data.length-1){
+            button.classList.add('none-of-these-btn');
+        }
     }
 }
 

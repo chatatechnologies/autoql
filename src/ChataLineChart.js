@@ -1,7 +1,8 @@
-function createLineChart(component, data, col1, col2, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, col1, col2, col2Type, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    console.log(col2Type);
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -118,7 +119,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+        return formatData(d, col2Type, options.languageCode, options.currencyCode)}
     )
     .tickSize(-width)
     );
@@ -135,7 +136,7 @@ function createLineChart(component, data, col1, col2, hasNegativeValues, options
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-colvalue1', d.label)
-        .attr('data-colvalue2',formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
+        .attr('data-colvalue2',formatData(d.value, col2Type, options.languageCode, options.currencyCode))
     })
     .attr("cx", function(d) {
         if(d.label.length < 18){

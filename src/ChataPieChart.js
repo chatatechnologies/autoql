@@ -1,9 +1,10 @@
-function createPieChart(component, data, options, col1, col2, colType1, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, data, options, col1, col2, colType1, colType2, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var marginX = 30;
     var marginY = 0;
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
+    console.log(colType2);
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (marginY + 3);
@@ -59,8 +60,8 @@ function createPieChart(component, data, options, col1, col2, colType1, fromChat
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', d.data.key)
-        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
+        .attr('data-colvalue1', formatData(d.data.key, colType1))
+        .attr('data-colvalue2', formatData(d.value, colType2, options.languageCode, options.currencyCode))
     })
     .attr('class', 'slice')
     .attr('d', d3.arc()
@@ -138,7 +139,7 @@ function createPieChart(component, data, options, col1, col2, colType1, fromChat
                 d.data.key, colType1,
                 options.languageCode, options.currencyCode) + ": " +
                 formatData(
-                    d.value, 'DOLLAR_AMT',
+                    d.value, colType2,
                     options.languageCode, options.currencyCode
                 );
         })

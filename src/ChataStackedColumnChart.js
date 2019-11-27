@@ -1,7 +1,7 @@
 function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
-    var wLegendBox = 180;
+    var wLegendBox = 140;
     var legspacing = 15;
     var chartWidth = width - wLegendBox;
     var height;
@@ -27,9 +27,11 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     if (barWidth < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
-                xTickValues.push(element);
-                // if(element.length < 18){
-                // }
+                if(element.length < 15){
+                    xTickValues.push(element);
+                }else{
+                    xTickValues.push(element.slice(0, 15)+ '...');
+                }
             }
         });
     }
@@ -58,7 +60,13 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
 
 
     var x = d3.scaleBand()
-    .domain(groups)
+    .domain(groups.map(function(element){
+        if(element.length < 15){
+            return element;
+        }else{
+            return element.slice(0, 15) + '...';
+        }
+    }))
     .range([0, chartWidth])
     .padding([0.2]);
 
@@ -113,7 +121,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-
+    console.log(subgroups);
     var stackedData = d3.stack()
     .keys(subgroups)
     (data)
@@ -122,7 +130,9 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     .selectAll("g")
     .data(stackedData)
     .enter().append("g")
-    .attr("fill", function(d) { return color(d.key); })
+    .attr("fill", function(d) {
+        return color(d.key);
+    })
     .selectAll("rect")
     .data(function(d) { return d; })
     .enter().append("rect")
@@ -148,7 +158,13 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     })
     .attr('opacity', '0.7')
     .attr('class', 'tooltip-3d stacked-rect')
-    .attr("x", function(d) { return x(d.data.group); })
+    .attr("x", function(d) {
+        if(d.data.group.length < 15){
+            return x(d.data.group);
+        }else{
+            return x(d.data.group.slice(0,15)+'...');
+        }
+    })
     .attr("y", function(d) {
         if(isNaN(d[1])){
             return 0;
