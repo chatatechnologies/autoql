@@ -392,9 +392,10 @@ function Tile(dashboard, options={}){
                     json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(
                     json['data']['columns'][1]['name']);
+                var colType2 = json['data']['columns'][1]['type'];
                 createBarChart(
                     tileResponseContainer, grouped, col1,
-                    col2, hasNegativeValues, dashboard.options,
+                    col2, colType2, hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -406,10 +407,11 @@ function Tile(dashboard, options={}){
                     json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(
                     json['data']['columns'][1]['name']);
+                var colType2 = json['data']['columns'][1]['type'];
                 var hasNegativeValues = values[1];
                 createColumnChart(
                     tileResponseContainer, grouped, col1,
-                    col2, hasNegativeValues, dashboard.options,
+                    col2, colType2, hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -420,9 +422,10 @@ function Tile(dashboard, options={}){
                 var hasNegativeValues = values[1];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
+                var colType2 = json['data']['columns'][1]['type'];
                 createLineChart(
                     tileResponseContainer, grouped, col1,
-                    col2, hasNegativeValues, dashboard.options,
+                    col2, colType2, hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
