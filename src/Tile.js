@@ -12,7 +12,12 @@ function Tile(dashboard, options={}){
     var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
+    var drilldownOriginal = document.createElement('div');
+    var chartDrilldownContainer = document.createElement('div');
+    var drilldownTable = document.createElement('div');
     const uuid = uuidv4();
+    const modal = new Modal();
+
     chataDashboardItem.options = {
         query: '',
         title: '',
@@ -45,6 +50,8 @@ function Tile(dashboard, options={}){
     tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
 
+    drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
+    drilldownTable.classList.add('chata-dashboard-drilldown-table');
     chataDashboardItem.classList.add('chata-dashboard-item');
     chataDashboardItem.classList.add(`chata-col-${chataDashboardItem.options.w}`);
     itemContent.classList.add('item-content');
@@ -72,7 +79,7 @@ function Tile(dashboard, options={}){
 
     tileResponseContainer.innerHTML = placeHolderText;
 
-
+    drilldownOriginal.appendChild(chartDrilldownContainer);
     tileInputContainer.appendChild(inputQuery);
     tileInputContainer.appendChild(inputTitle);
     tileInputContainer.appendChild(tilePlayBuytton);
@@ -236,7 +243,11 @@ function Tile(dashboard, options={}){
                         ChatDrawer.responses[uuid] = json;
                         var displayType = chataDashboardItem.options.displayType
                         || 'table';
-                        chataDashboardItem.refreshItem(displayType, uuid);
+                        chataDashboardItem.refreshItem(
+                            displayType,
+                            uuid,
+                            tileResponseContainer
+                        );
                     }, dashboard.options);
                 }
             }, dashboard.options)
@@ -357,14 +368,15 @@ function Tile(dashboard, options={}){
         return displayTypes;
     }
 
-    chataDashboardItem.refreshItem = function(displayType, uuid){
+    chataDashboardItem.refreshItem = function(displayType, uuid, view){
         var json = ChatDrawer.responses[uuid];
-        tileResponseContainer.innerHTML = '';
+        container = view;
+        container.innerHTML = '';
         this.createVizToolbar(json, uuid, displayType);
         switch (displayType) {
             case 'table':
                 var div = createTableContainer();
-                tileResponseContainer.appendChild(div);
+                container.appendChild(div);
                 if(json['data']['columns'].length == 1){
                     var data = formatData(
                         json['data']['rows'][0][0],
@@ -372,7 +384,7 @@ function Tile(dashboard, options={}){
                         dashboard.options.languageCode,
                         dashboard.options.currencyCode,
                     );
-                    tileResponseContainer.innerHTML =
+                    container.innerHTML =
                     `<div>
                         <a class="single-value-response">${data}<a/>
                     </div>`;
@@ -394,7 +406,7 @@ function Tile(dashboard, options={}){
                     json['data']['columns'][1]['name']);
                 var colType2 = json['data']['columns'][1]['type'];
                 createBarChart(
-                    tileResponseContainer, grouped, col1,
+                    container, grouped, col1,
                     col2, colType2, hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -410,7 +422,7 @@ function Tile(dashboard, options={}){
                 var colType2 = json['data']['columns'][1]['type'];
                 var hasNegativeValues = values[1];
                 createColumnChart(
-                    tileResponseContainer, grouped, col1,
+                    container, grouped, col1,
                     col2, colType2, hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -424,7 +436,7 @@ function Tile(dashboard, options={}){
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var colType2 = json['data']['columns'][1]['type'];
                 createLineChart(
-                    tileResponseContainer, grouped, col1,
+                    container, grouped, col1,
                     col2, colType2, hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -440,7 +452,7 @@ function Tile(dashboard, options={}){
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var col3 = formatColumnName(json['data']['columns'][2]['name']);
-                createHeatmap(tileResponseContainer,
+                createHeatmap(container,
                     labelsX, labelsY, values, col1,
                     col2, col3, dashboard.options, false,
                     'data-tilechart', true);
@@ -456,7 +468,7 @@ function Tile(dashboard, options={}){
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var col3 = formatColumnName(json['data']['columns'][2]['name']);
                 createBubbleChart(
-                    tileResponseContainer, labelsX, labelsY,
+                    container, labelsX, labelsY,
                     values, col1, col2, col3, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -478,7 +490,7 @@ function Tile(dashboard, options={}){
                 var col3 = formatColumnName(json['data']['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
                 createStackedBarChart(
-                    tileResponseContainer, dataGrouped, groups,
+                    container, dataGrouped, groups,
                     subgroups, col1, col2, col3,
                     dashboard.options, false,
                     'data-tilechart', true
@@ -500,7 +512,7 @@ function Tile(dashboard, options={}){
                 var col3 = formatColumnName(json['data']['columns'][2]['name']);
                 var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
                 createStackedColumnChart(
-                    tileResponseContainer, dataGrouped, groups,
+                    container, dataGrouped, groups,
                     subgroups, col1, col2, col3,
                     dashboard.options, false,
                     'data-tilechart', true
@@ -511,13 +523,13 @@ function Tile(dashboard, options={}){
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var colType1 = json['data']['columns'][0]['type'];
-                createPieChart(tileResponseContainer, data,
+                createPieChart(container, data,
                     dashboard.options, col1, col2, colType1, false
                 );
                 break;
             case 'pivot_column':
                 var div = createTableContainer();
-                tileResponseContainer.appendChild(div);
+                container.appendChild(div);
                 var pivotArray = [];
                 if(json['display_type'] == 'date_pivot'){
                     pivotArray = getDatePivotArray(json, dashboard.options, json['data']['rows']);
@@ -527,7 +539,7 @@ function Tile(dashboard, options={}){
                 createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                 break;
             default:
-            tileResponseContainer.innerHTML = "Oops! We didn't understand that query.";
+            container.innerHTML = "Oops! We didn't understand that query.";
         }
     }
 
@@ -542,16 +554,69 @@ function Tile(dashboard, options={}){
             console.log(e.target);
             var query = chataDashboardItem.inputQuery.value;
             var originalDisplayType = chataDashboardItem.options.displayType;
-            var modal = new Modal(
-                query,
-                originalDisplayType,
-                uuid,
-                tileResponseContainer
+            modal.clearViews();
+            modal.addView(drilldownOriginal);
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var json = cloneObject(
+                ChatDrawer.responses[uuid]
             );
+            var drilldownUUID = uuidv4();
+            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            chataDashboardItem.refreshItem(
+                chataDashboardItem.options.displayType,
+                uuid,
+                chartDrilldownContainer
+            )
+
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, 0, dashboard.options);
+            chataDashboardItem.sendDrilldownMessage(
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    chataDashboardItem.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable
+                    )
+                }
+            )
             modal.show();
-            delete modal;
         }
     });
+    chataDashboardItem.getDrilldownData = function(json, indexData, options){
+        var value = json['data']['rows'][parseInt(indexData)][0]
+        var colData = json['data']['columns'][0]['name'];
+
+        const URL = options.demo
+          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+          : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
+
+        var obj = {};
+        obj[colData] = value.toString();
+
+        const data = {
+            query_id: json['data']['query_id'],
+            group_bys: obj,
+            customer_id: options.customerId,
+            user_id: options.userId,
+            debug: options.demo
+        }
+        return data;
+    }
+
+    chataDashboardItem.sendDrilldownMessage = function(data, options, _uuid, callback){
+        const URL = options.demo
+          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+          : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
+        ChatDrawer.ajaxCallPost(URL, function(response){
+            ChatDrawer.responses[_uuid] = response;
+            console.log(response);
+            callback();
+        }, data, options);
+    }
 
     return chataDashboardItem;
 }

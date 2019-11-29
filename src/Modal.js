@@ -1,6 +1,6 @@
-function Modal(title, originalDisplayType, uuid, content){
+function Modal(){
     obj = this;
-    console.log(content);
+    obj.isOpen = false;
     const body = document.getElementsByTagName('body')[0];
     const closeIcon = htmlToElement(DASHBOARD_DELETE_ICON);
     var modalContainer = document.createElement('div');
@@ -13,9 +13,7 @@ function Modal(title, originalDisplayType, uuid, content){
     chataHeader.classList.add('chata-modal-header');
     closeIcon.classList.add('chata-modal-close-btn');
     chataBody.classList.add('chata-modal-body');
-    chataHeader.innerHTML = title;
 
-    chataHeader.appendChild(closeIcon);
     chataModal.appendChild(chataHeader);
     chataModal.appendChild(chataBody);
     modalContainer.appendChild(chataModal);
@@ -23,14 +21,29 @@ function Modal(title, originalDisplayType, uuid, content){
 
     obj.show = function(){
         modalContainer.style.visibility = 'visible';
+        obj.isOpen = true;
     }
 
     obj.close = function(){
         modalContainer.style.visibility = 'hidden';
+        obj.isOpen = false;
+    }
+
+    obj.setTitle = function(value){
+        chataHeader.innerHTML = value;
+        chataHeader.appendChild(closeIcon);
     }
 
     closeIcon.onclick = function(event){
         obj.close();
+    }
+
+    obj.addView = function(view){
+        chataBody.appendChild(view);
+    }
+
+    obj.clearViews = function(){
+        chataBody.innerHTML = '';
     }
 
     return obj;

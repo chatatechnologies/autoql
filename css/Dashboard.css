@@ -472,6 +472,21 @@
     fill-opacity: 1;
     opacity: 1;
 }
+
+.chata-dashboard-drilldown-original {
+    -webkit-box-flex: 0;
+    flex: 0 0 34vh;
+    height: 34vh;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.chata-dashboard-drilldown-table {
+    -webkit-box-flex: 1;
+    flex: 1;
+    height: 30vh;
+    overflow: hidden;
+}
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
 

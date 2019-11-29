@@ -8,6 +8,7 @@
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
   z-index: 9999;
+  visibility: hidden;
   /* transition: opacity 0.2s ease 0s !important; */
   /* backface-visibility: hidden; */
   transition: none !important;
@@ -63,6 +64,7 @@
 .chata-modal-close-btn:hover {
   opacity: 1;
 }
+
 
 @keyframes createBox {
   from {

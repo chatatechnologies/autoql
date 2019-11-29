@@ -34,6 +34,7 @@ function Dashboard(selector, options={}){
     for (var [key, value] of Object.entries(options)) {
         obj.options[key] = value;
     }
+    
     for (let property in DASHBOARD_LIGHT_THEME) {
         document.documentElement.style.setProperty(
             property,
