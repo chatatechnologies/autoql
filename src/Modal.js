@@ -18,7 +18,7 @@ function Modal(){
     chataModal.appendChild(chataBody);
     modalContainer.appendChild(chataModal);
     body.appendChild(modalContainer);
-
+    obj.modalContainer = modalContainer;
     obj.show = function(){
         modalContainer.style.visibility = 'visible';
         obj.isOpen = true;
@@ -44,6 +44,9 @@ function Modal(){
 
     obj.clearViews = function(){
         chataBody.innerHTML = '';
+    }
+    obj.addEvent = function(event, callback){
+        obj.modalContainer.addEventListener(event, callback);
     }
 
     return obj;

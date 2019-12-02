@@ -49,8 +49,8 @@ function formatDate(date) {
         day = '31';
         monthIndex = 11;
     }
-    return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
-    // return MONTH_NAMES[monthIndex] + ' ' + year;
+    // return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
+    return MONTH_NAMES[monthIndex] + ' ' + year;
 }
 
 function copyTextToClipboard(text) {

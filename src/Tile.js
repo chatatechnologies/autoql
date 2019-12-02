@@ -543,15 +543,48 @@ function Tile(dashboard, options={}){
         }
     }
 
+    modal.addEvent('click', function(e){
+        if(e.target.dataset.tilechart){
+            chataDashboardItem.updateSelectedBars(e.target)
+            var json = cloneObject(
+                ChatDrawer.responses[uuid]
+            );
+            var drilldownUUID = uuidv4();
+            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, 0, dashboard.options);
+            drilldownTable.innerHTML = '';
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    chataDashboardItem.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable
+                    )
+                }
+            )
+        }
+
+    });
+
+    chataDashboardItem.updateSelectedBars = function(elem){
+        var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');
+        for (var i = 0; i < selectedBars.length; i++) {
+            selectedBars[i].classList.remove('active');
+        }
+        elem.classList.add('active');
+    }
+
     chataDashboardItem.itemContent.addEventListener('click', function(e){
         console.log(e);
         if(e.target.dataset.tilechart){
-            var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');
-            for (var i = 0; i < selectedBars.length; i++) {
-                selectedBars[i].classList.remove('active');
-            }
-            e.target.classList.add('active');
-            console.log(e.target);
+            chataDashboardItem.updateSelectedBars(e.target)
             var query = chataDashboardItem.inputQuery.value;
             var originalDisplayType = chataDashboardItem.options.displayType;
             modal.clearViews();
@@ -571,6 +604,9 @@ function Tile(dashboard, options={}){
 
             var drilldownData = chataDashboardItem.getDrilldownData(
                 json, 0, dashboard.options);
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
                 drilldownData,
                 dashboard.options,
