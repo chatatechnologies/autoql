@@ -254,6 +254,59 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
 }
 
 ChatDrawer.clickHandler = function(e){
+
+    if(!ChatDrawer.options.disableDrilldowns){
+        if(e.target.parentElement.hasAttribute('data-indexrow')){
+            var table = e.target.parentElement.parentElement;
+            var json = ChatDrawer.responses[table.dataset.componentid];
+            var indexData = e.target.parentElement.dataset.indexrow;
+            ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
+        }
+        if(e.target.hasAttribute('data-chartindex')){
+            var component = e.target.parentElement.parentElement.parentElement;
+            if(component.tagName == 'svg'){
+                component = component.parentElement;
+            }
+            var json = ChatDrawer.responses[component.dataset.componentid];
+            var indexData = e.target.dataset.chartindex;
+            ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
+        }
+        if (e.target.hasAttribute('data-stackedchartindex')) {
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+            var json = cloneObject(ChatDrawer.responses[component.dataset.componentid]);
+            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            console.log(json['data']['rows'][0]);
+            ChatDrawer.sendDrilldownMessage(json, 0, ChatDrawer.options);
+        }
+    }
+
+    if(e.target.hasAttribute('data-chartrenderer')){
+        var component = e.target.parentElement.parentElement.parentElement;
+        if(component.tagName == 'svg'){
+            component = component.parentElement;
+        }
+        if(!component.chataBarContainer.options.disableDrilldowns){
+            var json = ChatDrawer.responses[component.dataset.componentid];
+            var indexData = e.target.dataset.chartrenderer;
+            ChatDrawer.sendDrilldownMessage(
+                json, indexData,
+                responseRenderer.chataBarContainer.options,
+                'ChatBar', component);
+        }
+    }
+    if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
+        var component = e.target.parentElement.parentElement;
+        var responseRenderer = component.parentElement.parentElement;
+        if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
+            var json = ChatDrawer.responses[component.dataset.componentid];
+            var indexData = e.target.parentElement.dataset.indexrowrenderer;
+            ChatDrawer.sendDrilldownMessage(
+                json, indexData,
+                responseRenderer.chataBarContainer.options,
+                'ChatBar', responseRenderer);
+        }
+    }
+
     if(e.target){
         var chataInput = document.getElementById('chata-input');
         var suggestionList = document.getElementById('auto-complete-list');
@@ -726,57 +779,7 @@ ChatDrawer.closePopOver = function(){
 }
 
 ChatDrawer.drilldownHandler = function(e){
-    if(!ChatDrawer.options.disableDrilldowns){
-        if(e.target.parentElement.hasAttribute('data-indexrow')){
-            var table = e.target.parentElement.parentElement;
-            var json = ChatDrawer.responses[table.dataset.componentid];
-            var indexData = e.target.parentElement.dataset.indexrow;
-            ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
-        }
-        if(e.target.hasAttribute('data-chartindex')){
-            var component = e.target.parentElement.parentElement.parentElement;
-            if(component.tagName == 'svg'){
-                component = component.parentElement;
-            }
-            var json = ChatDrawer.responses[component.dataset.componentid];
-            var indexData = e.target.dataset.chartindex;
-            ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);
-        }
-        if (e.target.hasAttribute('data-stackedchartindex')) {
-            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-            var json = cloneObject(ChatDrawer.responses[component.dataset.componentid]);
-            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
-            console.log(json['data']['rows'][0]);
-            ChatDrawer.sendDrilldownMessage(json, 0, ChatDrawer.options);
-        }
-    }
 
-    if(e.target.hasAttribute('data-chartrenderer')){
-        var component = e.target.parentElement.parentElement.parentElement;
-        if(component.tagName == 'svg'){
-            component = component.parentElement;
-        }
-        if(!component.chataBarContainer.options.disableDrilldowns){
-            var json = ChatDrawer.responses[component.dataset.componentid];
-            var indexData = e.target.dataset.chartrenderer;
-            ChatDrawer.sendDrilldownMessage(
-                json, indexData,
-                responseRenderer.chataBarContainer.options,
-                'ChatBar', component);
-        }
-    }
-    if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
-        var component = e.target.parentElement.parentElement;
-        var responseRenderer = component.parentElement.parentElement;
-        if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
-            var json = ChatDrawer.responses[component.dataset.componentid];
-            var indexData = e.target.parentElement.dataset.indexrowrenderer;
-            ChatDrawer.sendDrilldownMessage(
-                json, indexData,
-                responseRenderer.chataBarContainer.options,
-                'ChatBar', responseRenderer);
-        }
-    }
 }
 
 ChatDrawer.registerEvents = function(){
@@ -789,7 +792,7 @@ ChatDrawer.registerEvents = function(){
             }
         }
     })
-    document.addEventListener('dblclick', ChatDrawer.drilldownHandler);
+    // document.addEventListener('dblclick', ChatDrawer.drilldownHandler);
 
     ChatDrawer.rootElem.addEventListener('click', ChatDrawer.clickHandler);
 
