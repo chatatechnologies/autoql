@@ -16,7 +16,7 @@ function Tile(dashboard, options={}){
     var chartDrilldownContainer = document.createElement('div');
     var drilldownTable = document.createElement('div');
     const uuid = uuidv4();
-    const modal = new Modal();
+    var modal = new Modal();
 
     chataDashboardItem.options = {
         query: '',
@@ -297,6 +297,10 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.createVizToolbar = function(json, uuid, ignoreDisplayType){
         var displayTypes = chataDashboardItem.getDisplayTypes(json);
+        [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
+        function(e, index){
+            e.parentNode.removeChild(e);
+        });
         if(displayTypes.length > 1){
             var vizToolbar = document.createElement('div');
             vizToolbar.classList.add('tile-toolbar');
@@ -339,11 +343,14 @@ function Tile(dashboard, options={}){
                     vizToolbar.appendChild(button);
                     button.onclick = function(event){
                         chataDashboardItem.options.displayType = this.dataset.displaytype;
-                        chataDashboardItem.refreshItem(this.dataset.displaytype, uuid)
+                        chataDashboardItem.refreshItem(
+                            this.dataset.displaytype,
+                            uuid,
+                            tileResponseContainer
+                        )
                     }
                 }
             }
-
             itemContent.appendChild(vizToolbar);
         }
     }
@@ -368,8 +375,8 @@ function Tile(dashboard, options={}){
         return displayTypes;
     }
 
-    chataDashboardItem.refreshItem = function(displayType, uuid, view){
-        var json = ChatDrawer.responses[uuid];
+    chataDashboardItem.refreshItem = function(displayType, _uuid, view){
+        var json = ChatDrawer.responses[_uuid];
         container = view;
         container.innerHTML = '';
         this.createVizToolbar(json, uuid, displayType);
@@ -567,6 +574,9 @@ function Tile(dashboard, options={}){
                         drilldownUUID,
                         drilldownTable
                     )
+                    chataDashboardItem.createVizToolbar(
+                        json, uuid, chataDashboardItem.options.displayType
+                    )
                 }
             )
         }
@@ -582,12 +592,11 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.itemContent.addEventListener('click', function(e){
-        console.log(e);
         if(e.target.dataset.tilechart){
             chataDashboardItem.updateSelectedBars(e.target)
             var query = chataDashboardItem.inputQuery.value;
-            var originalDisplayType = chataDashboardItem.options.displayType;
             modal.clearViews();
+            drilldownTable.innerHTML = '';
             modal.addView(drilldownOriginal);
             modal.addView(drilldownTable);
             modal.setTitle(query);
@@ -617,21 +626,68 @@ function Tile(dashboard, options={}){
                         drilldownUUID,
                         drilldownTable
                     )
+                    chataDashboardItem.createVizToolbar(
+                        json, uuid, chataDashboardItem.options.displayType
+                    )
+                }
+            )
+            modal.show();
+        }else if (e.target.parentElement.dataset.indexrowrenderer ||
+        e.target.classList.contains('single-value-response')){
+            var query = chataDashboardItem.inputQuery.value;
+            modal.clearViews();
+            drilldownTable.innerHTML = '';
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var drilldownValue = '';
+            var indexData = 0;
+            var json = cloneObject(
+                ChatDrawer.responses[uuid]
+            );
+            if(e.target.classList.contains('single-value-response')){
+                json['data']['rows'][0][0] = e.target.textContent;
+                indexData = -1;
+            }else{
+                var row = e.target.parentElement;
+                json['data']['rows'][0][0] = row.childNodes[0].textContent;
+            }
+            var drilldownUUID = uuidv4();
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData, dashboard.options);
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    chataDashboardItem.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable
+                    )
+                    console.log('AQUI');
+                    chataDashboardItem.createVizToolbar(
+                        ChatDrawer.responses[uuid],
+                        uuid, chataDashboardItem.options.displayType
+                    )
                 }
             )
             modal.show();
         }
     });
     chataDashboardItem.getDrilldownData = function(json, indexData, options){
-        var value = json['data']['rows'][parseInt(indexData)][0]
-        var colData = json['data']['columns'][0]['name'];
-
         const URL = options.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
           : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
 
         var obj = {};
-        obj[colData] = value.toString();
+        if(indexData != -1){
+            var value = json['data']['rows'][parseInt(indexData)][0]
+            var colData = json['data']['columns'][0]['name'];
+            obj[colData] = value.toString();
+        }
 
         const data = {
             query_id: json['data']['query_id'],

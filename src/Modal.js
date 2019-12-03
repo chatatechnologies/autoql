@@ -1,8 +1,8 @@
 function Modal(){
-    obj = this;
+    var obj = this;
     obj.isOpen = false;
     const body = document.getElementsByTagName('body')[0];
-    const closeIcon = htmlToElement(DASHBOARD_DELETE_ICON);
+    var closeIcon = htmlToElement(DASHBOARD_DELETE_ICON);
     var modalContainer = document.createElement('div');
     var chataModal = document.createElement('div');
     var chataHeader = document.createElement('div');
