@@ -2,7 +2,6 @@ function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    console.log(col2Type);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){

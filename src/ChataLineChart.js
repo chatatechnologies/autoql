@@ -51,7 +51,7 @@ function createLineChart(component, data, col1, col2, col2Type, hasNegativeValue
 
     svg.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + margin.bottom - 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'x-axis-label')
     .text(col1);

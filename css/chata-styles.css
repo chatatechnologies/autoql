@@ -1093,7 +1093,11 @@ text.x-axis-label, text.y-axis-label {
     outline: none !important;
 }
 
-
+.chata-single-response:hover{
+    color: rgba(0,0,0,1);
+    text-decoration: underline;
+    cursor: pointer;
+}
 
 @-webkit-keyframes bounceIn {
     0% {

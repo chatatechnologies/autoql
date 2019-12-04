@@ -356,23 +356,7 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.getDisplayTypes = function(json){
-        var displayTypes = [];
-        if(
-            (json['data']['columns'].length == 2 ||
-            DISPLAY_TYPES_2D.includes(json['data']['display_type'])
-            && typeof groupField !== 'number')
-        ){
-            displayTypes = DISPLAY_TYPES_2D;
-        }
-        else if(json['data']['columns'].length == 3){
-            displayTypes = DISPLAY_TYPES_3D;
-        }else{
-            displayTypes = ['table'];
-        }
-        if(json['data']['rows'].length <= 1){
-            displayTypes = ['table'];
-        }
-        return displayTypes;
+        return getSupportedDisplayTypes(json);
     }
 
     chataDashboardItem.refreshItem = function(displayType, _uuid, view){

@@ -584,3 +584,68 @@ function createTableContainer(){
 
     return div;
 }
+
+const getNumberOfGroupables = columns => {
+    if (columns) {
+        let numberOfGroupables = 0
+        columns.forEach(col => {
+            if (col.groupable) {
+                numberOfGroupables += 1
+            }
+        })
+        return numberOfGroupables
+    }
+    return null
+}
+
+const getSupportedDisplayTypes = response => {
+    // if (!_get(response, 'data.data.display_type')) {
+    //     return []
+    // }
+
+    // For CaaS there should be 3 types: data, suggestion, help
+    const displayType = response['data']['display_type']
+
+    if (displayType === 'suggestion' || displayType === 'help') {
+        return [displayType]
+    }
+
+    const columns = response['data']['columns'];
+
+    if (!columns) {
+        return []
+    }
+
+    if (getNumberOfGroupables(columns) === 1) {
+        // Is direct key-value query (ie. Avg days to pay per customer)
+        const supportedDisplayTypes = ['bar', 'column', 'line', 'table']
+
+        if (columns.length === 2) {
+            supportedDisplayTypes.push('pie')
+        }
+
+        // create pivot based on month and year
+        if (
+            columns[0].type === 'DATE' &&
+            columns[0].name.includes('month') &&
+            columns.length === 2
+        ) {
+            supportedDisplayTypes.push('pivot_column')
+        }
+        return supportedDisplayTypes
+    } else if (getNumberOfGroupables(columns) === 2) {
+        // Is pivot query (ie. Sale per customer per month)
+        return [
+            'multi_line',
+            'stacked_bar',
+            'stacked_column',
+            'bubble',
+            'heatmap',
+            'table',
+            'pivot_column'
+        ]
+    }
+
+    // We should always be able to display the table type by default
+    return ['table']
+}

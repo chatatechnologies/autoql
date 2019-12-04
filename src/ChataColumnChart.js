@@ -52,7 +52,7 @@ function createColumnChart(component, data, col1, col2, col2Type, hasNegativeVal
 
     svg.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + margin.bottom - 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'x-axis-label')
     .text(col1);
