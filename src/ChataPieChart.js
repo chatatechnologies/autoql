@@ -15,7 +15,9 @@ function createPieChart(component, data, options, col1, col2, colType1, colType2
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (marginY);
+        // height = 1;
+        height = component.parentElement.offsetHeight - (marginX);
+        // width = 1;
     }
     if (width < height) {
       pieWidth = width / 2 - marginX;

@@ -1,4 +1,4 @@
-function formatData(val, type, lang='en-US', currency='USD'){
+function formatData(val, type, lang='en-US', currency='USD', digits=2){
     value = '';
     switch (type) {
         case 'DOLLAR_AMT':
@@ -8,7 +8,7 @@ function formatData(val, type, lang='en-US', currency='USD'){
                 value = new Intl.NumberFormat(lang, {
                         style: 'currency',
                         currency: currency,
-                        minimumFractionDigits: 2
+                        minimumFractionDigits: digits
                     }
                 ).format(val);
             }else{

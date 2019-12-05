@@ -514,8 +514,10 @@ function Tile(dashboard, options={}){
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
                 var colType1 = json['data']['columns'][0]['type'];
+                var colType2 = json['data']['columns'][1]['type'];
+
                 createPieChart(container, data,
-                    dashboard.options, col1, col2, colType1, false
+                    dashboard.options, col1, col2, colType1, colType2, false
                 );
                 break;
             case 'pivot_column':

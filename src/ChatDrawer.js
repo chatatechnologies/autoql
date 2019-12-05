@@ -394,15 +394,7 @@ ChatDrawer.clickHandler = function(e){
                 );
                 var interval = setInterval(function(){
                     ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-                    var containerMessage = document.createElement('div');
-                    var messageBubble = document.createElement('div');
-                    containerMessage.classList.add('chat-single-message-container');
-                    containerMessage.classList.add('response');
-                    messageBubble.classList.add('chat-message-bubble');
-                    messageBubble.textContent = 'Thank you for your feedback.';
-                    containerMessage.appendChild(messageBubble);
-                    ChatDrawer.drawerContent.appendChild(containerMessage);
-                    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+                    ChatDrawer.sendResponse('Thank you for your feedback.');
                     clearInterval(interval);
                 }, 1300);
             }
@@ -556,7 +548,8 @@ ChatDrawer.clickHandler = function(e){
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
             var col2 = formatColumnName(json['data']['columns'][1]['name']);
             var colType1 = json['data']['columns'][0]['type'];
-            createPieChart(component, data, ChatDrawer.options, col1, col2, colType1);
+            var colType2 = json['data']['columns'][1]['type'];
+            createPieChart(component, data, ChatDrawer.options, col1, col2, colType1, colType2);
         }
         if(e.target.classList.contains('stacked_column_chart')){
             if(e.target.tagName == 'svg'){
@@ -791,6 +784,18 @@ ChatDrawer.closePopOver = function(){
 
 ChatDrawer.drilldownHandler = function(e){
 
+}
+
+ChatDrawer.sendResponse = function(text){
+    var containerMessage = document.createElement('div');
+    var messageBubble = document.createElement('div');
+    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('response');
+    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.textContent = text;
+    containerMessage.appendChild(messageBubble);
+    ChatDrawer.drawerContent.appendChild(containerMessage);
+    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
 }
 
 ChatDrawer.registerEvents = function(){
@@ -1145,8 +1150,12 @@ ChatDrawer.safetynetCall = function(url, callback, options){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4){
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            console.log(xhr.status);
+            var jsonResponse = undefined;
+            if(xhr.status == 200){
+                jsonResponse = JSON.parse(xhr.responseText);
+            }
+            callback(jsonResponse, xhr.status);
         }
     };
     xhr.open('GET', url);
@@ -1300,9 +1309,19 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
       )}&key=${ChatDrawer.options.apiKey}&customer_id=${ChatDrawer.options.customerId}&user_id=${ChatDrawer.options.userId}`
 
 
-    ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse){
-        var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
-        if(suggestions.length > 0 && ChatDrawer.options.enableSafetyNet
+    ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
+        var suggestions = {};
+        if(jsonResponse != undefined){
+            var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
+        }
+        if(statusCode != 200){
+            ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
+            chataInput.removeAttribute("disabled");
+            ChatDrawer.sendResponse(`
+                Uh oh.. It looks like you don't have access to this resource.
+                Please double check that all the required authentication fields are provided.`
+            )
+        }else if(suggestions.length > 0 && ChatDrawer.options.enableSafetyNet
         && textValue != 'None of these'){
             chataInput.removeAttribute("disabled");
             ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
@@ -1313,7 +1332,6 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
             ChatDrawer.ajaxCall(textValue, function(jsonResponse){
                 chataInput.removeAttribute("disabled");
                 ChatDrawer.drawerContent.removeChild(responseLoadingContainer);
-                console.log(jsonResponse['data']['display_type']);
                 switch(jsonResponse['data']['display_type']){
                     case 'suggestion':
                         ChatDrawer.putSuggestionResponse(jsonResponse, textValue);

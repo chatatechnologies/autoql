@@ -14,8 +14,6 @@
 }
 .drawer-handle{
     position: fixed;
-    width: 41px;
-    height: 40px;
     cursor: pointer;
     z-index: 10;
     text-align: center;
@@ -29,25 +27,32 @@
     /* left: -40px;
     border-radius: 4px 0 0 4px; */
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+
+    -webkit-transition: opacity 0.5s ease;
+    transition: opacity 0.5s ease;
+    overflow: hidden;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
 }
 
 .drawer-handle.right-btn{
     top: 55px;
-    right: 0;
+    right: 10px;
 }
 
 .drawer-handle.left-btn{
     top: 55px;
-    left: 0;
+    left: 10px;
 }
 
 .drawer-handle.bottom-btn{
-    bottom: 0;
+    bottom: 10px;
     left: calc(50% - 20px);
 }
 
 .drawer-handle.top-btn{
-    top: 0;
+    top: 10px;
     left: calc(50% - 20px);
 }
 
@@ -78,6 +83,7 @@ body{
     /* transform: translateX(500px); */
     transition: transform 0.3s ease-in-out;
     background: var(--chata-drawer-background-color);
+    border-radius: 4px;
 }
 
 .chat-header-container {

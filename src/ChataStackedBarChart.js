@@ -1,7 +1,7 @@
 function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
-    var wLegendBox = 180;
+    var wLegendBox = 140;
     var legspacing = 15;
     var chartWidth = width - wLegendBox;
     var height;
@@ -71,10 +71,11 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     .range([ 0, chartWidth ]);
 
     if(tickWidth < 135){
+        console.log('AQUI MEROOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(d3.axisBottom(x).tickFormat(function(d){
-            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+        .call(d3.axisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
+            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)}
         ))
         .selectAll("text")
         .style("color", '#fff')
@@ -84,7 +85,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(d3.axisBottom(x).tickFormat(function(d){
-            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)}
+            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)}
         ))
         .selectAll("text")
         .style("color", '#fff')
