@@ -334,6 +334,16 @@
                 </div>
 
                 <div class="prop prop-column">
+                    <h6 class="">Display comparisons as Percent</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="comparisonDisplay">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
                     <h6 class="">Enable Autocomplete</h6>
                     <div class="switch">
                         <label>
@@ -364,6 +374,26 @@
                 </div>
 
                 <div class="prop prop-column">
+                    <h6 class="">Enable Query Tips Tab</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableQueryTipsTab">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Column Visibility Editor</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableColumnEditor">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
                     <h6 class="">Enable Speech to Text</h6>
                     <div class="switch">
                         <label>
@@ -378,6 +408,16 @@
                     <div class="switch">
                         <label>
                             <input type="checkbox" checked name="debug">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Test Mode (Provides extra logging on the server side)</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="testMode">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -620,6 +660,12 @@
         var clearOnClose = document.querySelector('[name="clearOnClose"]')
         var demo = document.querySelector('[name="demo"]')
         var login = document.getElementById('login')
+        var enableQueryTipsTab = document.querySelector('[name="enableQueryTipsTab"]')
+
+        enableQueryTipsTab.onchange = function(event){
+            ChatDrawer.options.enableQueryTipsTab = event.target.checked
+            
+        }
 
         login.onclick = function(event){
             var user = document.getElementById('username').value;

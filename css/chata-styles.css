@@ -225,13 +225,15 @@ body{
     height: 100%;
     max-height: calc(100% - 150px);
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: visible;
+    /* overflow: auto;
     /* padding: 20px; */
     flex: 1;
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 0%;
     background: var(--chata-drawer-background-color);
+    position: relative;
 }
 
 .drawer-content:hover{
@@ -1105,6 +1107,175 @@ text.x-axis-label, text.y-axis-label {
     cursor: pointer;
 }
 
+/* Shadow container (this is used to cut off the shadow so it doesnt show in the drawer) */
+.page-switcher-shadow-container {
+  position: absolute;
+  background: transparent;
+  overflow: hidden;
+}
+.page-switcher-shadow-container.right {
+  top: 80px;
+  left: -60px;
+  width: 60px;
+}
+.page-switcher-shadow-container.left {
+  top: 80px;
+  right: -60px;
+  width: 60px;
+}
+.page-switcher-shadow-container.top {
+  left: calc(50% - 85px);
+  bottom: -60px;
+  height: 60px;
+}
+.page-switcher-shadow-container.bottom {
+  left: calc(50% - 85px);
+  top: -60px;
+  height: 60px;
+}
+
+/* Container holding the tabs */
+.page-switcher-container.right {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+.page-switcher-container.left {
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-left: -5px;
+}
+.page-switcher-container.top {
+  margin-right: 20px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+.page-switcher-container.bottom {
+  margin-top: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+/* Individual Tabs */
+.page-switcher-container .tab {
+  position: relative;
+  z-index: 1;
+
+  background: var(--chata-drawer-accent-color);
+  color: #fff;
+
+  padding-left: 0px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+
+  font-size: 18px;
+  text-align: center;
+  transform: translate(0, 0);
+  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+
+  transition-property: background, color, transform, line-height, height, width,
+    margin-right, margin-top, margin-left, margin-bottom, z-index;
+  transition-duration: 0.2s;
+}
+.page-switcher-container.right .tab {
+  text-align: left;
+  padding-left: 10px;
+  height: 65px;
+  width: 45px;
+  line-height: 52px;
+}
+.page-switcher-container.left .tab {
+  text-align: left;
+  padding-left: 13px;
+  height: 65px;
+  width: 45px;
+  line-height: 52px;
+}
+.page-switcher-container.top .tab,
+.page-switcher-container.bottom .tab {
+  padding-top: 4px;
+  height: 45px;
+  width: 65px;
+  line-height: 45px;
+}
+.page-switcher-container.top .tab {
+  vertical-align: top;
+}
+.page-switcher-container.bottom .tab {
+  background: var(--chata-drawer-background-color);
+  color: var(--chata-drawer-text-color-primary);
+}
+.page-switcher-container .tab.active {
+  background: var(--chata-drawer-background-color);
+  color: var(--chata-drawer-text-color-primary);
+  font-weight: bold;
+  position: relative;
+  z-index: 2;
+}
+.page-switcher-container.bottom .tab.active {
+  background: var(--chata-drawer-accent-color);
+  color: #fff;
+  font-weight: bold;
+}
+.page-switcher-container.top .tab,
+.page-switcher-container.bottom .tab {
+  display: inline-block;
+  /* position: absolute; */
+}
+/* .page-switcher-container.right .tab:hover {
+  height: 69px;
+  width: 49px;
+  line-height: 56px;
+  transform: translate(-2px, 0px);
+  margin-bottom: -2px;
+  z-index: 3;
+}
+.page-switcher-container.left .tab:hover {
+  height: 69px;
+  width: 47px;
+  line-height: 56px;
+  transform: translate(0px, -2px);
+  margin-bottom: -2px;
+  z-index: 3;
+}
+.page-switcher-container.top .tab:hover {
+  height: 49px;
+  width: 71px;
+  line-height: 49px;
+  transform: translate(-2px, -2px);
+  margin-right: -2px;
+  margin-bottom: -2px;
+  z-index: 3;
+}
+.page-switcher-container.bottom .tab:hover {
+  height: 51px;
+  width: 71px;
+  line-height: 45px;
+  transform: translate(-2px, -2px);
+  margin-right: -2px;
+  margin-top: -2px;
+  z-index: 3;
+} */
+
+/* Curve appropriate corners depending on placement */
+.page-switcher-container.right .tab:first-child,
+.page-switcher-container.bottom .tab:first-child {
+  border-top-left-radius: 10px;
+}
+.page-switcher-container.right .tab:last-child,
+.page-switcher-container.top .tab:first-child {
+  border-bottom-left-radius: 10px;
+}
+.page-switcher-container.bottom .tab:last-child,
+.page-switcher-container.left .tab:first-child {
+  border-top-right-radius: 10px;
+}
+.page-switcher-container.left .tab:last-child,
+.page-switcher-container.top .tab:last-child {
+  border-bottom-right-radius: 10px;
+}
 @-webkit-keyframes bounceIn {
     0% {
         opacity: .25;

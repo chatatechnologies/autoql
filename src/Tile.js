@@ -524,7 +524,9 @@ function Tile(dashboard, options={}){
                 var div = createTableContainer();
                 container.appendChild(div);
                 var pivotArray = [];
-                if(json['display_type'] == 'date_pivot'){
+                var columns = json['data']['columns'];
+                if(columns[0].type === 'DATE' &&
+                columns[0].name.includes('month')){
                     pivotArray = getDatePivotArray(json, dashboard.options, json['data']['rows']);
                 }else{
                     pivotArray = getPivotColumnArray(json, dashboard.options, json['data']['rows']);

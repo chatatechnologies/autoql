@@ -71,7 +71,6 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
     .range([ 0, chartWidth ]);
 
     if(tickWidth < 135){
-        console.log('AQUI MEROOOOOOOOOOOOOOOOOOOOOOOOOOOOO');
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(d3.axisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
