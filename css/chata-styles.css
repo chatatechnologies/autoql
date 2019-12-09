@@ -233,7 +233,7 @@ body{
     flex-shrink: 1;
     flex-basis: 0%;
     background: var(--chata-drawer-background-color);
-    position: relative;
+    /* position: relative; */
 }
 
 .drawer-content:hover{
@@ -258,6 +258,15 @@ body{
 }
 
 .chat-single-message-container.response {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 10px;
+    max-height: 85%;
+    -webkit-animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+.chata-animation-message{
     display: flex;
     justify-content: flex-start;
     margin-left: 10px;
@@ -1117,6 +1126,7 @@ text.x-axis-label, text.y-axis-label {
   top: 80px;
   left: -60px;
   width: 60px;
+  overflow: hidden;
 }
 .page-switcher-shadow-container.left {
   top: 80px;
@@ -1139,6 +1149,7 @@ text.x-axis-label, text.y-axis-label {
   margin-top: 20px;
   margin-left: 20px;
   margin-bottom: 20px;
+  margin-right: -5px;
 }
 .page-switcher-container.left {
   margin-top: 20px;
@@ -1181,7 +1192,7 @@ text.x-axis-label, text.y-axis-label {
 }
 .page-switcher-container.right .tab {
   text-align: left;
-  padding-left: 10px;
+  padding-left: 13px;
   height: 65px;
   width: 45px;
   line-height: 52px;
@@ -1222,13 +1233,15 @@ text.x-axis-label, text.y-axis-label {
 .page-switcher-container.top .tab,
 .page-switcher-container.bottom .tab {
   display: inline-block;
+  margin-right: -4px !important;
   /* position: absolute; */
 }
-/* .page-switcher-container.right .tab:hover {
+.page-switcher-container.right .tab:hover {
   height: 69px;
-  width: 49px;
+  width: 47px;
   line-height: 56px;
-  transform: translate(-2px, 0px);
+  transform: translate(0px, -2px);
+
   margin-bottom: -2px;
   z-index: 3;
 }
@@ -1257,7 +1270,7 @@ text.x-axis-label, text.y-axis-label {
   margin-right: -2px;
   margin-top: -2px;
   z-index: 3;
-} */
+}
 
 /* Curve appropriate corners depending on placement */
 .page-switcher-container.right .tab:first-child,

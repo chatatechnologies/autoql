@@ -124,26 +124,61 @@ ChatDrawer.createResponseRenderer = function(options){
 }
 
 ChatDrawer.createQueryTabs = function(){
-    var orientation = ChatDrawer.options.placement
-    var tabs = htmlToElement(
-    `<div class="page-switcher-shadow-container ${orientation}">
-        <div class="page-switcher-container ${orientation}">
-            <div class="tab active" data-tip="Data Messenger" data-for="chata-header-tooltip" data-delay-show="1000" currentitem="false">
-                <svg x="0px" y="0px" width="23.7px" height="23.7px" viewBox="0 0 23.7 23.7">
-                    <path class="chata-icon-svg-0" d="M22.2,19.8L22.2,19.8c0,0-0.7-0.5-0.7-2.4v-3.2c0-2.9-1.7-5.5-4.2-6.4c-0.3-0.1-0.6-0.3-1-0.3 c-0.1-0.4-0.3-0.7-0.4-0.9C14.7,4,12.2,2.3,9.4,2.3H9.3c-1.7,0-3.5,0.7-5,2C3,5.6,2.2,7.3,2.2,9.2v3.5c0,1.8-0.5,2.3-0.5,2.3L0,16.2 l2.1,0.2c1.3,0,2.5-0.4,3.3-1c0.3,0.3,0.7,0.4,1.1,0.5c0.2,0.1,0.6,0.3,1.1,0.3c0,0.1,0.1,0.3,0.1,0.4c0,0.2,0.1,0.4,0.2,0.5 c1.2,2.5,3.7,4.1,6.4,4.1h0.1c1.3,0,2.8-0.4,3.9-1c0.9,0.7,2,1,3,1c0.2,0,0.3,0,0.5,0l1.9-0.2L22.2,19.8z M9.3,16.3 c1.3,0,2.7-0.4,4-1.1c2-1.2,3.2-3.4,3.2-5.8V9c0,0,0,0,0,0c0.1,0,0.2,0.1,0.2,0.1c2,0.8,3.4,2.9,3.4,5.2v3.2c0,0.9,0.1,1.6,0.3,2.1 c-0.6-0.2-1.1-0.4-1.6-0.9l-0.5-0.5l-0.5,0.5c-0.7,0.7-2,1.1-3.4,1.1c-2.2,0.1-4.3-1.2-5.3-3.2c0-0.1,0-0.2-0.1-0.2c0,0,0,0,0,0H9.3 z M8.8,14.3c0-1.2,0.4-2.3,1.1-3.4c0.1-0.2,0.3-0.5,0.5-0.7c0.9-0.9,2.5-1.5,4-1.5h0.6c0.1,0.2,0.1,0.5,0.1,0.7 c0,1.5-0.7,3.1-1.9,4.1c-1.1,0.9-2.5,1.4-4.4,1.4h0V14.3z M7.3,14.5c-0.1,0-0.2-0.1-0.3-0.1c-0.1,0-0.1,0-0.1,0 c-0.3-0.1-0.6-0.4-0.9-0.6l0,0c-0.1-0.1-0.3-0.2-0.4-0.3c-0.1-0.1-0.3,0-0.9,0.6c-0.1,0.1-0.2,0.2-0.2,0.2c-0.3,0.2-0.6,0.3-1,0.4 c0.1-0.5,0.2-1.1,0.2-2V9.4c0-1.4,0.5-2.6,1.7-3.9c1-1,2.4-1.5,3.8-1.5h0.1c2.3,0,4.4,1.3,5.4,3.3c0.1,0.2,0.1,0.3,0.1,0.3 c0,0-0.1,0-0.1,0C12.8,7.3,11.1,7.9,9.7,9c-1.5,1.3-2.4,3.2-2.4,5.3V14.5z M7.4,14.7C7.4,14.7,7.4,14.7,7.4,14.7L7.4,14.7L7.4,14.7z ">
-                    </path>
-                </svg>
-            </div>
-            <div class="tab" data-tip="Query Tips" data-for="chata-header-tooltip" data-delay-show="1000" currentitem="false">
-                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" size="22" height="22" width="22" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6C7.8 12.16 7 10.63 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"></path>
-                </svg>
-            </div>
-        </div>
-    </div>`);
+    var orientation = ChatDrawer.options.placement;
+    var pageSwitcherShadowContainer = document.createElement('div');
+    var pageSwitcherContainer = document.createElement('div');
+    var tabDataMessenger = document.createElement('div');
+    var tabQueryTips = document.createElement('div');
+
+    var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
+    var queryTabsIcon = htmlToElement(QUERY_TIPS);
+
+    pageSwitcherShadowContainer.classList.add('page-switcher-shadow-container');
+    pageSwitcherShadowContainer.classList.add(orientation);
+
+    pageSwitcherContainer.classList.add('page-switcher-container');
+    pageSwitcherContainer.classList.add(orientation);
+
+    pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
+
+    tabDataMessenger.classList.add('tab');
+    tabDataMessenger.classList.add('active');
+    tabQueryTips.classList.add('tab');
+    tabDataMessenger.appendChild(dataMessengerIcon);
+    tabQueryTips.appendChild(queryTabsIcon);
+
+    pageSwitcherContainer.appendChild(tabDataMessenger)
+    pageSwitcherContainer.appendChild(tabQueryTips)
+
+
+    tabDataMessenger.onclick = function(event){
+        tabDataMessenger.classList.add('active');
+        tabQueryTips.classList.remove('active');
+        ChatDrawer.tabsAnimation('flex', 'block');
+    }
+    tabQueryTips.onclick = function(event){
+        tabQueryTips.classList.add('active');
+        tabDataMessenger.classList.remove('active');
+        ChatDrawer.tabsAnimation('none', 'none');
+    }
+
+    var tabs = pageSwitcherShadowContainer;
     ChatDrawer.rootElem.appendChild(tabs);
     ChatDrawer.queryTabs = tabs;
-    
+
+}
+
+ChatDrawer.tabsAnimation = function(visibility, displayBar){
+    var nodes = ChatDrawer.drawerContent.childNodes;
+    for (var i = 0; i < nodes.length; i++) {
+        nodes[i].style.display = visibility;
+        if(visibility == 'hidden'){
+            nodes[i].classList.remove('chata-animation-message');
+        }else{
+            nodes[i].classList.add('chata-animation-message');
+        }
+    }
+    ChatDrawer.chataBarContainer.style.display = displayBar;
 }
 
 ChatDrawer.createBar = function(){
@@ -169,6 +204,7 @@ ChatDrawer.createBar = function(){
     </div>
     `;
     chataBarContainer.innerHTML = htmlBar;
+    ChatDrawer.chataBarContainer = chataBarContainer;
     ChatDrawer.rootElem.appendChild(chataBarContainer);
 }
 
@@ -916,8 +952,6 @@ ChatDrawer.format3dData = function(cols, data, groups){
         }
     }
 
-    console.log(dataGrouped);
-
     return dataGrouped;
 }
 
@@ -1376,7 +1410,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                     break;
                     case 'data':
                         var cols = jsonResponse['data']['columns'];
-                        if(cols.length == 1){
+                        var rows = jsonResponse['data']['rows'];
+                        if(cols.length == 1 && rows.length == 1){
                             if(cols[0]['name'] == 'query_suggestion'){
                                 ChatDrawer.putSuggestionResponse(jsonResponse, textValue);
                             }else if(cols[0]['name'] == 'Help Link'){
