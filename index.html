@@ -801,8 +801,12 @@
                 ChatDrawer.rootElem.removeAttribute('style');
 
                 ChatDrawer.drawerButton.classList.remove(ChatDrawer.options.placement + '-btn');
+                ChatDrawer.queryTabs.classList.remove(ChatDrawer.options.placement);
+                ChatDrawer.queryTabsContainer.classList.remove(ChatDrawer.options.placement);
                 ChatDrawer.options.placement = event.target.value;
                 ChatDrawer.drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
+                ChatDrawer.queryTabs.classList.add(ChatDrawer.options.placement);
+                ChatDrawer.queryTabsContainer.classList.add(ChatDrawer.options.placement);
             }
         }
 

@@ -65,6 +65,7 @@ ChatDrawer.init = function(elem, options, registerEventsFlag=true){
     this.createWrapper();
     this.createDrawerButton();
     this.createQueryTabs();
+    this.createQueryTips();
     this.registerEvents();
 
     var isVisible = ChatDrawer.options.isVisible;
@@ -123,6 +124,87 @@ ChatDrawer.createResponseRenderer = function(options){
     return createResponseRenderer(options);
 }
 
+ChatDrawer.createQueryTips = function(){
+    const searchIcon = htmlToElement(SEARCH_ICON);
+    var container = document.createElement('div');
+    var textBar = document.createElement('div');
+    var queryTipsResultContainer = document.createElement('div');
+    var queryTipsResultPlaceHolder = document.createElement('div');
+    var chatBarInputIcon = document.createElement('div');
+
+    var input = document.createElement('input');
+
+    textBar.classList.add('text-bar');
+    textBar.classList.add('text-bar-animation');
+    chatBarInputIcon.classList.add('chat-bar-input-icon');
+    queryTipsResultContainer.classList.add('query-tips-result-container');
+    queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
+    queryTipsResultPlaceHolder.innerHTML = `
+        <p>Your query suggestions will show up here.<p>
+        <p>You can copy them for later use or execute them in the data messenger by
+        hitting the “execute” button<p>
+    `;
+
+    queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
+    chatBarInputIcon.appendChild(searchIcon);
+    textBar.appendChild(input);
+    textBar.appendChild(chatBarInputIcon);
+    container.appendChild(textBar);
+    container.appendChild(queryTipsResultContainer);
+    // <div class="chat-bar-loading-spinner"><div class="spinner-loader" style="width: 19px; height: 20px; color: rgb(153, 153, 153);"></div></div>
+
+    input.onkeypress = function(event){
+        if(event.keyCode == 13 && this.value){
+            console.log(this.value);
+            var temp = [
+                'list all sales',
+                'Sales per month last year',
+                'Total sales this year',
+                'All sales per customer',
+                'Sales per service per month',
+                'All Sales last year',
+                'Sales for porcelain sink',
+                'Sales per product per month',
+                'Sales per year',
+                'All sales over $1000',
+            ]
+            var chatBarLoadingSpinner = document.createElement('div');
+            var spinnerLoader = document.createElement('div');
+            var queryTipListContainer = document.createElement('div');
+
+            spinnerLoader.classList.add('spinner-loader');
+            chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
+            queryTipListContainer.classList.add('query-tip-list-container');
+            chatBarLoadingSpinner.appendChild(spinnerLoader);
+            textBar.appendChild(chatBarLoadingSpinner);
+            var interval = setInterval(function(){
+                textBar.removeChild(chatBarLoadingSpinner);
+                clearInterval(interval);
+                var delay = 0.08;
+                for (var i = 0; i < temp.length; i++) {
+                    var item = document.createElement('div');
+                    item.classList.add('animated-item');
+                    item.classList.add('query-tip-item');
+                    item.innerHTML = temp[i];
+                    item.style.animationDelay = (delay * i) + 's';
+                    queryTipListContainer.appendChild(item);
+                }
+                queryTipsResultContainer.innerHTML = '';
+                queryTipsResultContainer.appendChild(queryTipListContainer);
+
+            }, 600);
+        }
+    }
+
+    container.style.display = 'none';
+
+    input.classList.add('chata-input')
+    input.classList.add('left-padding')
+    input.setAttribute('placeholder', 'Enter a topic');
+    ChatDrawer.queryTips = container;
+    ChatDrawer.drawerContent.appendChild(container);
+}
+
 ChatDrawer.createQueryTabs = function(){
     var orientation = ChatDrawer.options.placement;
     var pageSwitcherShadowContainer = document.createElement('div');
@@ -154,31 +236,41 @@ ChatDrawer.createQueryTabs = function(){
     tabDataMessenger.onclick = function(event){
         tabDataMessenger.classList.add('active');
         tabQueryTips.classList.remove('active');
-        ChatDrawer.tabsAnimation('flex', 'block');
+        ChatDrawer.tabsAnimation('flex', 'block', 'inline-block');
+        ChatDrawer.queryTipsAnimation('none');
     }
     tabQueryTips.onclick = function(event){
         tabQueryTips.classList.add('active');
         tabDataMessenger.classList.remove('active');
-        ChatDrawer.tabsAnimation('none', 'none');
+        ChatDrawer.tabsAnimation('none', 'none', 'none');
+        ChatDrawer.queryTipsAnimation('block');
+
     }
 
     var tabs = pageSwitcherShadowContainer;
     ChatDrawer.rootElem.appendChild(tabs);
     ChatDrawer.queryTabs = tabs;
+    ChatDrawer.queryTabsContainer = pageSwitcherContainer;
 
 }
 
-ChatDrawer.tabsAnimation = function(visibility, displayBar){
+ChatDrawer.tabsAnimation = function(displayNodes, displayBar, displayHeader){
     var nodes = ChatDrawer.drawerContent.childNodes;
     for (var i = 0; i < nodes.length; i++) {
-        nodes[i].style.display = visibility;
-        if(visibility == 'hidden'){
-            nodes[i].classList.remove('chata-animation-message');
-        }else{
-            nodes[i].classList.add('chata-animation-message');
-        }
+        nodes[i].style.display = displayNodes;
     }
     ChatDrawer.chataBarContainer.style.display = displayBar;
+    if(displayNodes == 'none'){
+        ChatDrawer.headerTitle.innerHTML = 'What Can I Ask?';
+        ChatDrawer.headerRight.style.visibility = 'hidden';
+    }else{
+        ChatDrawer.headerTitle.innerHTML = ChatDrawer.options.title;
+        ChatDrawer.headerRight.style.visibility = 'visible';
+    }
+}
+
+ChatDrawer.queryTipsAnimation = function(display){
+    ChatDrawer.queryTips.style.display = display;
 }
 
 ChatDrawer.createBar = function(){
@@ -226,13 +318,17 @@ ChatDrawer.createDrawerContent = function(){
 
 ChatDrawer.createHeader = function(){
     var chatHeaderContainer = document.createElement('div');
-    var htmlHeader = `
+    var headerLeft = htmlToElement(`
         <div class="chata-header-left">
             <button class="chata-button close close-action" data-tippy-content="Close Drawer" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
         </div>
+    `)
+    var headerTitle = htmlToElement(`
         <div class="chata-header-center-container">
             ${ChatDrawer.options.title}
         </div>
+    `)
+    var headerRight = htmlToElement(`
         <div class="chata-header-right-container">
             <button class="chata-button clear-all" data-tippy-content="Clear Messages">
                 ${CLEAR_ALL}
@@ -250,13 +346,17 @@ ChatDrawer.createHeader = function(){
                 <button class="chata-confirm-btn yes">Yes</button>
             </div>
         </div>
-        `;
+    `)
         // style="overflow: hidden; position: absolute; top: 48px; left: 964px; opacity: 1; transition: opacity 0.35s ease 0s;"
         // <svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg>
     chatHeaderContainer.classList.add('chat-header-container');
-    chatHeaderContainer.innerHTML = htmlHeader;
+    chatHeaderContainer.appendChild(headerLeft);
+    chatHeaderContainer.appendChild(headerTitle);
+    chatHeaderContainer.appendChild(headerRight);
 
     ChatDrawer.rootElem.appendChild(chatHeaderContainer);
+    ChatDrawer.headerRight = headerRight;
+    ChatDrawer.headerTitle = headerTitle;
 }
 
 ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='ChatDrawer', responseRenderer=null){

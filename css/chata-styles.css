@@ -312,8 +312,11 @@ body{
 
 .text-bar{
     display: flex;
+    position: relative;
 }
-
+.text-bar-animation{
+    animation: 0.5s ease 0s 1 normal none running slideDown;
+}
 .chata-input {
     padding: 10px !important;
     padding-left: 20px !important;
@@ -1289,6 +1292,114 @@ text.x-axis-label, text.y-axis-label {
 .page-switcher-container.top .tab:last-child {
   border-bottom-right-radius: 10px;
 }
+
+.chata-input.left-padding {
+    padding-left: 54px !important;
+}
+
+.chat-bar-input-icon {
+    position: absolute;
+    left: 30px;
+    top: 20px;
+}
+
+.query-tips-result-container {
+    color: var(--chata-drawer-text-color-primary);
+    padding: 0 20px;
+    text-align: center;
+    max-width: 550px;
+    margin: 0 auto;
+}
+
+.query-tips-result-container .query-tips-result-placeholder {
+    margin-top: 50px;
+    opacity: .6;
+}
+
+.query-tips-result-container .query-tips-result-placeholder p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.spinner-loader {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+}
+
+.spinner-loader:after {
+    content: " ";
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: 0px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    border-color: currentColor transparent currentColor transparent;
+    animation: spinner-loader 1.2s linear infinite;
+}
+
+.chat-bar-loading-spinner {
+  position: absolute;
+  right: 20px;
+  top: 22px;
+}
+
+.query-tips-result-container .query-tip-list-container {
+    margin-bottom: 20px;
+}
+
+.query-tips-result-container .query-tip-item:first-child {
+    border-top: none;
+    animation-delay: .08s;
+}
+
+.query-tips-result-container .query-tip-item {
+    position: relative;
+    padding: 13px;
+    border-top: 1px solid rgba(0,0,0,.04);
+    cursor: pointer;
+}
+
+.query-tips-result-container .animated-item {
+    -webkit-animation: fadeIn .3s linear;
+    animation: fadeIn .3s linear;
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+}
+
+.query-tip-item:hover {
+    font-weight: bold;
+    color: var(--chata-drawer-accent-color);
+}
+
+@-webkit-keyframes fadeIn {
+  0% {
+    opacity: 0;
+    top: 100px;
+  }
+  75% {
+    opacity: 0.5;
+    top: 0px;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes spinner-loader {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
 @-webkit-keyframes bounceIn {
     0% {
         opacity: .25;
@@ -1376,4 +1487,13 @@ text.x-axis-label, text.y-axis-label {
     100% {
         transform: translate(19px, 0);
     }
+}
+
+@keyframes slideDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
 }
