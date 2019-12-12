@@ -17,7 +17,7 @@ function Tile(dashboard, options={}){
     var drilldownTable = document.createElement('div');
     const uuid = uuidv4();
     var modal = new Modal();
-
+    modal.chataBody.classList.add('chata-modal-full-height')
     chataDashboardItem.options = {
         query: '',
         title: '',
@@ -655,7 +655,6 @@ function Tile(dashboard, options={}){
                         drilldownUUID,
                         drilldownTable
                     )
-                    console.log('AQUI');
                     chataDashboardItem.createVizToolbar(
                         ChatDrawer.responses[uuid],
                         uuid, chataDashboardItem.options.displayType

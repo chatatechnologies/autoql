@@ -599,10 +599,6 @@ const getNumberOfGroupables = columns => {
 }
 
 const getSupportedDisplayTypes = response => {
-    // if (!_get(response, 'data.data.display_type')) {
-    //     return []
-    // }
-
     // For CaaS there should be 3 types: data, suggestion, help
     const displayType = response['data']['display_type']
 

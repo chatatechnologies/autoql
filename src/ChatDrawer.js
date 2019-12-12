@@ -491,6 +491,58 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
     }
 }
 
+ChatDrawer.showColumnEditor = function(id){
+    var modal = new Modal({
+        destroyOnClose: true,
+        withFooter: true
+    })
+    var json = ChatDrawer.responses[id];
+    var columns = json['data']['columns'];
+    var container = document.createElement('div');
+    var headerEditor = document.createElement('div');
+
+    container.style.padding = '0px 15px';
+    headerEditor.classList.add('col-visibility-header');
+    headerEditor.appendChild(htmlToElement(`
+        <div>Column Name</div>
+    `))
+    headerEditor.appendChild(htmlToElement(`
+        <div>Visible</div>
+    `))
+    container.appendChild(headerEditor);
+    modal.chataModal.classList.add('chata-modal-column-editor')
+    modal.setTitle('Show/Hide Columns')
+
+    for (var i = 0; i < columns.length; i++) {
+        var lineItem = document.createElement('div');
+        var colName = formatColumnName(columns[i]['name']);
+        var checkboxContainer = document.createElement('div');
+        var checkboxWrapper = document.createElement('div');
+        var mCheckbox = document.createElement('div');
+        var checkboxInput = document.createElement('input');
+        checkboxInput.setAttribute('type', 'checkbox');
+        checkboxInput.classList.add('m-checkbox__input')
+
+        mCheckbox.classList.add('m-checkbox')
+        checkboxWrapper.appendChild(mCheckbox);
+        checkboxWrapper.appendChild(checkboxInput);
+
+        checkboxContainer.appendChild(checkboxWrapper);
+        lineItem.classList.add('col-visibility-line-item')
+        lineItem.appendChild(htmlToElement(`
+            <div>${colName}</div>
+        `))
+        lineItem.appendChild(checkboxContainer);
+        container.appendChild(lineItem);
+    }
+    modal.addView(container)
+    modal.setFooterContent(`
+        <div class="chata-btn default " style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>
+        <div class="chata-btn primary " style="padding: 5px 16px; margin: 2px 5px;">Save</div>
+    `)
+    modal.show();
+}
+
 ChatDrawer.clickHandler = function(e){
 
     if(!ChatDrawer.options.disableDrilldowns){
@@ -650,6 +702,17 @@ ChatDrawer.clickHandler = function(e){
                 var json = ChatDrawer.responses[e.target.dataset.id];
             }
             copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
+        }
+        if(e.target.classList.contains('show-hide-columns')){
+            if(e.target.tagName == 'svg'){
+                var id = e.target.parentElement.dataset.id
+            }else if(e.target.tagName == 'path'){
+                var id = e.target.parentElement.parentElement.dataset.id;
+            }else{
+                var id = e.target.dataset.id;
+            }
+            // var json = ChatDrawer.responses[id];
+            ChatDrawer.showColumnEditor(id)
         }
         if(e.target.classList.contains('csv')){
             if(e.target.tagName == 'svg'){
@@ -1763,7 +1826,6 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
 ChatDrawer.getActionButtons = function(idRequest, type){
     var request = ChatDrawer.responses[idRequest];
     var tooltipContent = request['data']['interpretation'];
-
     if(type == 'simple'){
         return `
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
@@ -1775,11 +1837,22 @@ ChatDrawer.getActionButtons = function(idRequest, type){
                 ${FILTER_TABLE}
             </button>
         `;
+        var showHideColumnsButton = '';
         if(request['data']['rows'].length == 1){
             filterButton = '';
         }
+        if(request['data']['rows'].length > 1 &&
+           request['data']['columns'].length > 1 &&
+           getNumberOfGroupables(request['data']['columns']) == 0){
+            showHideColumnsButton = `
+                   <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
+                       ${COLUMN_EDITOR}
+                   </button>
+               `;
+           }
         return `
         ${filterButton}
+        ${showHideColumnsButton}
         <button class="chata-toolbar-btn clipboard" data-tippy-content="Copy to Clipboard" data-id="${idRequest}">
             ${CLIPBOARD_ICON}
         </button>
