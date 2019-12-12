@@ -1377,6 +1377,91 @@ text.x-axis-label, text.y-axis-label {
     color: var(--chata-drawer-accent-color);
 }
 
+#react-paginate {
+    position: relative;
+    background: transparent;
+    padding: 8px !important;
+    width: 80%;
+    margin: auto;
+    text-align: center;
+}
+
+#react-paginate ul {
+    display: inline-block;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style-type: disc;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    padding-inline-start: 40px;
+}
+#react-paginate .pagination-next, #react-paginate .pagination-previous {
+    position: absolute;
+    font-size: 18px;
+}
+
+#react-paginate .pagination-previous {
+    left: 20px;
+}
+
+#react-paginate .pagination-next a, #react-paginate .pagination-previous a {
+    color: var(--chata-drawer-accent-color);
+}
+
+#react-paginate li {
+    display: inline-block;
+    color: var(--chata-drawer-text-color-primary);
+    cursor: pointer;
+    margin-right: 3px;
+    border-radius: 5px;
+    margin-bottom: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    text-align: center;
+}
+
+#react-paginate li a {
+    display: inline-block;
+    color: var(--chata-drawer-text-color-primary);
+    outline: none;
+    width: 28px;
+    height: 28px;
+    line-height: 28px;
+    font-size: 14px !important;
+    font-family: var(--chata-drawer-font-family),sans-serif !important;
+}
+
+#react-paginate li.selected {
+    background: var(--chata-drawer-accent-color);
+    border-radius: 50%;
+    outline: none;
+}
+
+#react-paginate li.selected a {
+    color: #fff;
+}
+
+#react-paginate li {
+    display: inline-block;
+    color: var(--chata-drawer-text-color-primary);
+    cursor: pointer;
+    margin-right: 3px;
+    border-radius: 5px;
+    margin-bottom: 0;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+#react-paginate .pagination-next {
+    right: 20px;
+}
+
 @-webkit-keyframes fadeIn {
   0% {
     opacity: 0;

@@ -154,7 +154,9 @@ ChatDrawer.createQueryTips = function(){
     // <div class="chat-bar-loading-spinner"><div class="spinner-loader" style="width: 19px; height: 20px; color: rgb(153, 153, 153);"></div></div>
 
     input.onkeypress = function(event){
+
         if(event.keyCode == 13 && this.value){
+
             console.log(this.value);
             var temp = [
                 'list all sales',
@@ -171,6 +173,27 @@ ChatDrawer.createQueryTips = function(){
             var chatBarLoadingSpinner = document.createElement('div');
             var spinnerLoader = document.createElement('div');
             var queryTipListContainer = document.createElement('div');
+            var paginationContainer = document.createElement('div');
+            var pagination = document.createElement('ul');
+            var paginationPrevious = document.createElement('li');
+            var aPrevious = document.createElement('a');
+            var aNext = document.createElement('a');
+            var paginationNext = document.createElement('li');
+
+            const pageSize = 10;
+            const pages = 10;
+            aPrevious.textContent = '←';
+            aNext.textContent = '→';
+
+            paginationContainer.setAttribute('id', 'react-paginate')
+            paginationContainer.classList.add('animated-item')
+            paginationContainer.classList.add('pagination')
+            paginationPrevious.classList.add('pagination-previous')
+            paginationNext.classList.add('pagination-next')
+            paginationPrevious.appendChild(aPrevious);
+            paginationNext.appendChild(aNext);
+
+            pagination.appendChild(paginationPrevious);
 
             spinnerLoader.classList.add('spinner-loader');
             chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
@@ -187,11 +210,59 @@ ChatDrawer.createQueryTips = function(){
                     item.classList.add('query-tip-item');
                     item.innerHTML = temp[i];
                     item.style.animationDelay = (delay * i) + 's';
+                    item.onclick = function(event){
+                        chataInput = document.getElementById('chata-input');
+                        ChatDrawer.tabsAnimation('flex', 'block');
+                        ChatDrawer.queryTipsAnimation('none');
+                        chataInput.focus();
+                        var selectedQuery = event.target.textContent;
+                        var subQuery = '';
+                        console.log(selectedQuery);
+                        var index = 0;
+                        var int = setInterval(function () {
+                            subQuery += selectedQuery[index];
+                            console.log(selectedQuery[index]);
+                            if(index >= selectedQuery.length){
+                                clearInterval(int);
+                                var ev = new KeyboardEvent('keypress', {
+                                    keyCode: 13,
+                                    type: "keypress",
+                                    which: 13
+                                });
+                                chataInput.dispatchEvent(ev)
+                            }else{
+                                chataInput.value = subQuery;
+                            }
+                            index++;
+                        }, 85);
+
+                    }
                     queryTipListContainer.appendChild(item);
                 }
                 queryTipsResultContainer.innerHTML = '';
                 queryTipsResultContainer.appendChild(queryTipListContainer);
-
+                for (var i = 0; i < 5; i++) {
+                    var li = document.createElement('li')
+                    var a = document.createElement('a')
+                    if(i == 0){
+                        li.classList.add('selected')
+                    }
+                    li.appendChild(a)
+                    if(i == 2){
+                        li.classList.add('break');
+                        a.textContent = '...';
+                    }else{
+                        a.textContent = (i+1);
+                    }
+                    pagination.appendChild(li)
+                }
+                pagination.appendChild(paginationNext);
+                paginationContainer.appendChild(pagination);
+                container.appendChild(paginationContainer)
+                if(ChatDrawer.pagination){
+                    container.removeChild(ChatDrawer.pagination);
+                }
+                ChatDrawer.pagination = paginationContainer;
             }, 600);
         }
     }
@@ -236,13 +307,13 @@ ChatDrawer.createQueryTabs = function(){
     tabDataMessenger.onclick = function(event){
         tabDataMessenger.classList.add('active');
         tabQueryTips.classList.remove('active');
-        ChatDrawer.tabsAnimation('flex', 'block', 'inline-block');
+        ChatDrawer.tabsAnimation('flex', 'block');
         ChatDrawer.queryTipsAnimation('none');
     }
     tabQueryTips.onclick = function(event){
         tabQueryTips.classList.add('active');
         tabDataMessenger.classList.remove('active');
-        ChatDrawer.tabsAnimation('none', 'none', 'none');
+        ChatDrawer.tabsAnimation('none', 'none');
         ChatDrawer.queryTipsAnimation('block');
 
     }
@@ -254,7 +325,7 @@ ChatDrawer.createQueryTabs = function(){
 
 }
 
-ChatDrawer.tabsAnimation = function(displayNodes, displayBar, displayHeader){
+ChatDrawer.tabsAnimation = function(displayNodes, displayBar){
     var nodes = ChatDrawer.drawerContent.childNodes;
     for (var i = 0; i < nodes.length; i++) {
         nodes[i].style.display = displayNodes;
@@ -334,6 +405,8 @@ ChatDrawer.createHeader = function(){
                 ${CLEAR_ALL}
             </button>
         </div>
+    `)
+    var popover = htmlToElement(`
         <div class="popover-container">
             <div class="clear-messages-confirm-popover">
                 <div class="chata-confirm-text">
@@ -347,6 +420,7 @@ ChatDrawer.createHeader = function(){
             </div>
         </div>
     `)
+    headerRight.appendChild(popover);
         // style="overflow: hidden; position: absolute; top: 48px; left: 964px; opacity: 1; transition: opacity 0.35s ease 0s;"
         // <svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg>
     chatHeaderContainer.classList.add('chat-header-container');
