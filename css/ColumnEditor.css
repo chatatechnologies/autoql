@@ -18,53 +18,61 @@
 
 
 .m-checkbox {
-    display: flex;
-    align-items: center;
-    padding: .5rem;
+    display: flex !important;
+    align-items: center !important;
+    padding: .2rem !important;
+    font-weight: normal !important;
+    box-sizing: content-box !important;
+    /*width: 36px;
+    height: 36px; */
 }
 
 .chata-modal-container .m-checkbox__input {
     border-color: var(--chata-drawer-accent-color);
-    box-sizing: border-box;
-    padding: 0;
+    box-sizing: border-box !important;
+    padding: 0 !important;
     opacity: 1 !important;
 }
 
 .m-checkbox__input {
-    position: relative;
-    flex-shrink: 0;
-    width: 20px;
-    height: 20px;
-    appearance: none;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    outline: none;
-    background: transparent;
-    cursor: pointer;
-    border: 1px solid #5dceee;
-    border-radius: 3px;
+    position: relative !important;
+    flex-shrink: 0 !important;
+    width: 20px !important;
+    height: 20px !important;
+    appearance: none !important;
+    -webkit-appearance: none !important;
+    -moz-appearance: none !important;
+    outline: none !important;
+    background: transparent !important;
+    cursor: pointer !important;
+    border: 1px solid #5dceee !important;
+    border-radius: 3px !important;
+    font-size: 13.3333px;
+    line-height: 36px !important;
+    overflow: auto !important;
+    pointer-events: all !important;
 }
 
 .chata-drawer .m-checkbox__input:before, .chata-modal-container .m-checkbox__input:before {
-    background: var(--chata-drawer-accent-color);
+    background: var(--chata-drawer-accent-color) !important;
 }
 
 .m-checkbox__input:before {
-    content: " ";
-    position: absolute;
-    top: 50%;
-    right: 50%;
-    bottom: 50%;
-    left: 50%;
-    -webkit-transition: all .1s;
-    transition: all .1s;
-    background: #5dceee;
-    cursor: pointer;
+    content: " " !important;
+    position: absolute !important;
+    top: 50% !important;
+    right: 50% !important;
+    bottom: 50% !important;
+    left: 50% !important;
+    -webkit-transition: all .1s !important;
+    transition: all .1s !important;
+    background: #5dceee !important;
+    cursor: pointer !important;
 }
 
 .m-checkbox__input:checked:before, .m-checkbox__input:indeterminate:before {
-    top: 2px;
-    right: 2px;
-    bottom: 2px;
-    left: 2px;
+    top: 2px !important;
+    right: 2px !important;
+    bottom: 2px !important;
+    left: 2px !important;
 }

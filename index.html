@@ -183,7 +183,6 @@
                     </div>
                 </div>
 
-
                 <div class="">
                     <h6 style="text-align: center;">Theme</h6>
                     <div>
@@ -234,6 +233,22 @@
                         (Must click 'Reload Drawer' to apply this)
                     </span>
                     <input type="text" name="languageCode" value="en-US" placeholder="Language Code" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Number of Decimals for Currency Values</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="customerName" value="2" placeholder="Number of Decimals for Currency Values" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Number of Decimals for Quantity Values</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="customerName" value="2" placeholder="Number of Decimals for Quantity Values" class="reload-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -662,9 +677,14 @@
         var demo = document.querySelector('[name="demo"]')
         var login = document.getElementById('login')
         var enableQueryTipsTab = document.querySelector('[name="enableQueryTipsTab"]')
+        var enableColumnEditor = document.querySelector('[name="enableColumnEditor"]')
 
         enableQueryTipsTab.onchange = function(event){
             ChatDrawer.options.enableQueryTipsTab = event.target.checked
+        }
+
+        enableColumnEditor.onchange = function(event){
+            ChatDrawer.options.enableColumnEditor = event.target.checked;
         }
 
         login.onclick = function(event){

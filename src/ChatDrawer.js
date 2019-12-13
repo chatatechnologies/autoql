@@ -522,6 +522,10 @@ ChatDrawer.showColumnEditor = function(id){
         var checkboxInput = document.createElement('input');
         checkboxInput.setAttribute('type', 'checkbox');
         checkboxInput.classList.add('m-checkbox__input')
+        checkboxContainer.style.width = '36px';
+        checkboxContainer.style.height = '36px';
+        checkboxWrapper.style.width = '36px';
+        checkboxWrapper.style.height = '36px';
 
         mCheckbox.classList.add('m-checkbox')
         checkboxWrapper.appendChild(mCheckbox);
@@ -535,11 +539,20 @@ ChatDrawer.showColumnEditor = function(id){
         lineItem.appendChild(checkboxContainer);
         container.appendChild(lineItem);
     }
-    modal.addView(container)
-    modal.setFooterContent(`
-        <div class="chata-btn default " style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>
-        <div class="chata-btn primary " style="padding: 5px 16px; margin: 2px 5px;">Save</div>
-    `)
+    var cancelButton = htmlToElement(
+        `<div class="chata-btn default" style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+    )
+    var saveButton = htmlToElement(
+        `<div class="chata-btn primary " style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+    )
+
+    cancelButton.onclick = function(event){
+        modal.close();
+    }
+
+    modal.addView(container);
+    modal.addFooterElement(cancelButton);
+    modal.addFooterElement(saveButton);
     modal.show();
 }
 
@@ -1843,7 +1856,8 @@ ChatDrawer.getActionButtons = function(idRequest, type){
         }
         if(request['data']['rows'].length > 1 &&
            request['data']['columns'].length > 1 &&
-           getNumberOfGroupables(request['data']['columns']) == 0){
+           getNumberOfGroupables(request['data']['columns']) == 0 &&
+           ChatDrawer.options.enableColumnEditor){
             showHideColumnsButton = `
                    <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
                        ${COLUMN_EDITOR}

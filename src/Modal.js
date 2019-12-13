@@ -48,7 +48,6 @@ function Modal(options={}){
     }
 
     obj.destroy = function(){
-        console.log('DESTRUIR!!');
         body.removeChild(modalContainer);
     }
 
@@ -73,8 +72,8 @@ function Modal(options={}){
         obj.modalContainer.addEventListener(event, callback);
     }
 
-    obj.setFooterContent = function(html){
-        chataFooter.innerHTML = html
+    obj.addFooterElement = function(elem){
+        chataFooter.appendChild(elem);
     }
 
 
