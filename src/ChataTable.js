@@ -51,7 +51,8 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
             value = formatData(
                 data[x], jsonResponse['data']['columns'][x]['type'],
                 options.languageCode,
-                options.currencyCode
+                options.currencyCode,
+                options.currencyDecimals
             );
             var td = document.createElement('td');
             td.textContent = value;

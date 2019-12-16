@@ -33,6 +33,8 @@ var ChatDrawer = {
         debug: true,
         currencyCode: 'USD',
         languageCode: 'en-US',
+        currencyDecimals: 2,
+        quantityDecimals: 1,
         comparisonDisplay: 'ratio',
         enableQueryTipsTab: true,
         enableColumnEditor: true,
@@ -823,10 +825,16 @@ ChatDrawer.clickHandler = function(e){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0]['type']
+                    );
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                    groups[i] = formatData(
+                        groups[i],
+                        json['data']['columns'][0]['type']
+                    )
                 }
                 // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -1825,7 +1833,8 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
         jsonResponse['data']['rows'][0][0],
         jsonResponse['data']['columns'][0]['type'],
         ChatDrawer.options.languageCode,
-        ChatDrawer.options.currencyCode
+        ChatDrawer.options.currencyCode,
+        ChatDrawer.options.currencyDecimals
     );
     var div = document.createElement('div');
     div.classList.add('chata-single-response');
@@ -2086,7 +2095,8 @@ ChatDrawer.putTableResponse = function(jsonResponse){
             value = formatData(
                 data[x], jsonResponse['data']['columns'][x]['type'],
                 ChatDrawer.options.languageCode,
-                ChatDrawer.options.currencyCode
+                ChatDrawer.options.currencyCode,
+                ChatDrawer.options.currencyDecimals
             );
             var td = document.createElement('td');
             td.textContent = value;

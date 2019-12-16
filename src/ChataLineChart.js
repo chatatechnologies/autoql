@@ -119,7 +119,7 @@ function createLineChart(component, data, col1, col2, col2Type, hasNegativeValue
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-        return formatData(d, col2Type, options.languageCode, options.currencyCode)}
+        return formatData(d, col2Type, options.languageCode, options.currencyCode, 0)}
     )
     .tickSize(-width)
     );
@@ -136,7 +136,12 @@ function createLineChart(component, data, col1, col2, col2Type, hasNegativeValue
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-colvalue1', d.label)
-        .attr('data-colvalue2',formatData(d.value, col2Type, options.languageCode, options.currencyCode))
+        .attr('data-colvalue2',formatData(
+            d.value, col2Type,
+            options.languageCode,
+            options.currencyCode,
+            options.currencyDecimals
+        ))
     })
     .attr("cx", function(d) {
         if(d.label.length < 18){

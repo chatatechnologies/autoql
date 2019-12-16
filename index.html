@@ -17,6 +17,7 @@
     <script src="src/popper.min.js"></script>
     <script src="src/tippy.min.js"></script>
     <script src="src/muuri.min.js"></script>
+    <script src="src/moment.js"></script>
 
     <!-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" /> -->
     <!-- <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script> -->
@@ -236,11 +237,38 @@
                 </div>
 
                 <div class="prop prop-column">
+                    <h6>Format for Month, Year</h6>
+                    <span class="info-text">
+                        Don't know the syntax for formats?
+                        <a href="https://devhints.io/moment">View the cheat sheet</a>
+                    </span>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+
+                    <input type="text" name="customerName" value="MMM YYYY" placeholder="Format for Month, Year" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Format for Day, Month, Year</h6>
+                    <span class="info-text">
+                        Don't know the syntax for formats?
+                        <a href="https://devhints.io/moment">View the cheat sheet</a>
+                    </span>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+
+                    <input type="text" name="customerName" value="MMM DD, YYYY" placeholder="Format for Day, Month, Year" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
                     <h6>Number of Decimals for Currency Values</h6>
                     <span class="info-text">
                         (Must click 'Reload Drawer' to apply this)
                     </span>
-                    <input type="text" name="customerName" value="2" placeholder="Number of Decimals for Currency Values" class="reload-prop">
+                    <input type="text" name="currencyDecimals" value="2" placeholder="Number of Decimals for Currency Values" class="reload-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -248,7 +276,7 @@
                     <span class="info-text">
                         (Must click 'Reload Drawer' to apply this)
                     </span>
-                    <input type="text" name="customerName" value="2" placeholder="Number of Decimals for Quantity Values" class="reload-prop">
+                    <input type="text" name="quantityDecimals" value="2" placeholder="Number of Decimals for Quantity Values" class="reload-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -641,6 +669,7 @@
             enableDrilldowns: true,
             demo: true,
             debug: true,
+            accentColor: '#2466AE',
             // languageCode: 'ja-JP',
             // currencyCode: 'JPY',
             onMaskClick: function(){

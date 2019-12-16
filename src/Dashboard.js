@@ -21,6 +21,8 @@ function Dashboard(selector, options={}){
         isEditing: false,
         currencyCode: 'USD',
         languageCode: 'en-US',
+        currencyDecimals: 2,
+        quantityDecimals: 1,
         // comparisonDisplay: 'ratio' || 'percent'
         fontFamily:	'sans-serif',
         chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
@@ -34,7 +36,7 @@ function Dashboard(selector, options={}){
     for (var [key, value] of Object.entries(options)) {
         obj.options[key] = value;
     }
-    
+
     for (let property in DASHBOARD_LIGHT_THEME) {
         document.documentElement.style.setProperty(
             property,

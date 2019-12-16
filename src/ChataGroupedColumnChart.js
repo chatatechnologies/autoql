@@ -112,7 +112,7 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
     .call(
         axisLeft
         .tickSize(-width)
-        .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode)})
+        .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)})
     );
 
     // Another scale for subgroup position?
@@ -149,7 +149,12 @@ function createGroupedColumnChart(component, groups, data, col1, col2, col3, opt
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)
         .attr('data-colvalue1', d.group)
-        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode));
+        .attr('data-colvalue2', formatData(
+            d.value, 'DOLLAR_AMT',
+            options.languageCode,
+            options.currencyCode,
+            options.currencyDecimals
+        ));
     })
     .attr('class', 'tooltip-2d bar')
     .attr('stroke', 'transparent')

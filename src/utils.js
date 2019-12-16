@@ -20,7 +20,11 @@ function formatData(val, type, lang='en-US', currency='USD', digits=2){
         break;
         case 'PERCENT':
             val = parseFloat(val) * 100;
-            value =  val.toFixed(2) + '%';
+            if(!isNaN(val)){
+                value =  val.toFixed(2) + '%';
+            }else{
+                value = '';
+            }
         break;
         default:
             value = val;
@@ -197,7 +201,8 @@ function getPivotColumnArray(json, options, _data){
                 data[x],
                 json['data']['columns'][x]['type'],
                 options.languageCode,
-                options.currencyCode
+                options.currencyCode,
+                options.currencyDecimals
             ));
         }
         values.push(row);
@@ -243,7 +248,13 @@ function getDatePivotArray(json, options, _data){
                     row.unshift(MONTH_NAMES[date.getMonth()], date.getFullYear());
                     break;
                 default:
-                    row.push(formatData(data[x], json['data']['columns'][x]['type'], options.languageCode, options.currencyCode));
+                    row.push(formatData(
+                        data[x], json['data']['columns'][x]['type'],
+                        options.languageCode,
+                        options.currencyCode,
+                        options.currencyDecimals
+                    )
+                );
             }
         }
         values.push(row);

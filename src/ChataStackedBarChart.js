@@ -150,7 +150,12 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         .attr('data-col3', col3)
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', d.data.group)
-        .attr('data-colvalue3', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode))
+        .attr('data-colvalue3', formatData(
+            d.value, 'DOLLAR_AMT',
+            options.languageCode,
+            options.currencyCode,
+            options.currencyDecimals
+        ))
     })
     .attr('opacity', '0.7')
     .attr('class', 'tooltip-3d stacked-rect')

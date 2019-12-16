@@ -71,7 +71,7 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode);
+        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0);
     });
     svg.append("g")
     .attr("transform", "translate(0," + (height) + ")")
@@ -145,7 +145,12 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)
         .attr('data-colvalue1', d.group)
-        .attr('data-colvalue2', formatData(d.value, 'DOLLAR_AMT', options.languageCode, options.currencyCode));
+        .attr('data-colvalue2', formatData(
+            d.value, 'DOLLAR_AMT',
+            options.languageCode,
+            options.currencyCode,
+            options.currencyDecimals
+        ));
     })
     .attr('class', 'tooltip-2d bar')
     .attr("x", function(d) { return x(Math.min(0, d.value)); })
