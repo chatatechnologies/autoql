@@ -62,12 +62,10 @@ function createPieChart(component, data, options, col1, col2, colType1, colType2
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(d.data.key, colType1))
+        .attr('data-colvalue1', formatData(d.data.key, colType1, options))
         .attr('data-colvalue2', formatData(
             d.value, colType2,
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr('class', 'slice')
@@ -144,10 +142,10 @@ function createPieChart(component, data, options, col1, col2, colType1, colType2
         .text(function (d, i) {
             return formatData(
                 d.data.key, colType1,
-                options.languageCode, options.currencyCode) + ": " +
+                options) + ": " +
                 formatData(
                     d.value, colType2,
-                    options.languageCode, options.currencyCode
+                    options
                 );
         })
 

@@ -73,7 +73,7 @@ function createColumnChart(component, data, col1, col2, col2Type, hasNegativeVal
     .call(
         axisLeft
         .tickSize(-width)
-        .tickFormat(function(d){return formatData(d, col2Type, options.languageCode, options.currencyCode, 0)})
+        .tickFormat(function(d){return formatChartData(d, col2Type, options)})
     );
 
 
@@ -123,9 +123,7 @@ function createColumnChart(component, data, col1, col2, col2Type, hasNegativeVal
         .attr('data-colvalue1', d.label)
         .attr('data-colvalue2', formatData(
             d.value, col2Type,
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr("x", function(d) {

@@ -64,7 +64,7 @@ function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatData(d, col2Type, options.languageCode, options.currencyCode, 0);
+        return formatChartData(d, col2Type, options);
     });
 
     if(tickWidth < 135){
@@ -126,9 +126,7 @@ function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues
         .attr('data-colvalue2', formatData(
             d.value,
             col2Type,
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr("x", function(d) { return x(Math.min(0, d.value)); })

@@ -1,14 +1,20 @@
-function formatData(val, type, lang='en-US', currency='USD', digits=2){
+function formatChartData(val, type, options){
+    var clone = cloneObject(options);
+    clone.currencyDecimals = 0;
+    return formatData(val, type, clone);
+}
+
+function formatData(val, type, options={}){
     value = '';
     switch (type) {
         case 'DOLLAR_AMT':
             val = parseFloat(val);
             const sigDigs = String(parseInt(val.toFixed(2))).length
             if(val != 0){
-                value = new Intl.NumberFormat(lang, {
+                value = new Intl.NumberFormat(options.languageCode, {
                         style: 'currency',
-                        currency: currency,
-                        minimumFractionDigits: digits
+                        currency: options.currencyCode,
+                        minimumFractionDigits: options.currencyDecimals
                     }
                 ).format(val);
             }else{
@@ -16,7 +22,8 @@ function formatData(val, type, lang='en-US', currency='USD', digits=2){
             }
         break;
         case 'DATE':
-            value = formatDate(new Date( parseInt(val) * 1000 ) );
+            // value = formatDate(new Date( parseInt(val) * 1000 ) );
+            value = moment(parseInt(val)*1000).format(options.monthYearFormat);
         break;
         case 'PERCENT':
             val = parseFloat(val) * 100;
@@ -24,6 +31,16 @@ function formatData(val, type, lang='en-US', currency='USD', digits=2){
                 value =  val.toFixed(2) + '%';
             }else{
                 value = '';
+            }
+        break;
+        case 'QUANTITY':
+            var n = Math.abs(parseFloat(val)); // Change to positive
+            var decimal = n - Math.floor(n);
+            console.log(decimal);
+            if(decimal > 0){
+                value = parseFloat(val).toFixed(options.quantityDecimals);
+            }else{
+                value = parseInt(val);
             }
         break;
         default:
@@ -200,9 +217,7 @@ function getPivotColumnArray(json, options, _data){
             row.push(formatData(
                 data[x],
                 json['data']['columns'][x]['type'],
-                options.languageCode,
-                options.currencyCode,
-                options.currencyDecimals
+                options
             ));
         }
         values.push(row);
@@ -250,9 +265,7 @@ function getDatePivotArray(json, options, _data){
                 default:
                     row.push(formatData(
                         data[x], json['data']['columns'][x]['type'],
-                        options.languageCode,
-                        options.currencyCode,
-                        options.currencyDecimals
+                        options
                     )
                 );
             }
@@ -400,15 +413,15 @@ function getSpeech(button){
     return recognition;
 }
 
-function formatLabels(labels, colType){
+function formatLabels(labels, colType, options){
     labels = labels.sort();
     for (var i = 0; i < labels.length; i++) {
-        labels[i] = formatData(labels[i], colType);
+        labels[i] = formatData(labels[i], colType, options);
     }
     return labels;
 }
 
-function formatDataToHeatmap(json){
+function formatDataToHeatmap(json, options){
     var lines = json['data']['rows'];
     var values = [];
     var colType1 = json['data']['columns'][0]['type'];
@@ -416,8 +429,8 @@ function formatDataToHeatmap(json){
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['labelY'] = formatData(data[0], colType1);
-        row['labelX'] = formatData(data[1], colType2);
+        row['labelY'] = formatData(data[0], colType1, options);
+        row['labelX'] = formatData(data[1], colType2, options);
         row['unformatY'] = data[0];
         row['unformatX'] = data[1];
         var value = parseFloat(data[2]);
@@ -427,7 +440,7 @@ function formatDataToHeatmap(json){
     return values;
 }
 
-function formatDataToBarChart(json){
+function formatDataToBarChart(json, options){
     var lines = json['data']['rows'];
     var values = [];
     var colType1 = json['data']['columns'][0]['type'];
@@ -435,7 +448,7 @@ function formatDataToBarChart(json){
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['label'] = formatData(data[0], colType1);
+        row['label'] = formatData(data[0], colType1, options);
         var value = parseFloat(data[1]);
         if(value < 0 && !hasNegativeValues){
             hasNegativeValues = true;

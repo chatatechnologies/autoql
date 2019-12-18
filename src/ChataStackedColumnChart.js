@@ -115,7 +115,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)}
+            return formatChartData(d, 'DOLLAR_AMT', options)}
         )
         .tickSize(-chartWidth)
     );
@@ -156,9 +156,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
         .attr('data-colvalue2', d.data.group)
         .attr('data-colvalue3', formatData(
             d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr('opacity', '0.7')

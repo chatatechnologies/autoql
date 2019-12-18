@@ -71,7 +71,7 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0);
+        return formatChartData(d, 'DOLLAR_AMT', options);
     });
     svg.append("g")
     .attr("transform", "translate(0," + (height) + ")")

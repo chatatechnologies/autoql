@@ -164,9 +164,7 @@ function createHeatmap(component, labelsX, labelsY, data, col1, col2, col3, opti
         .attr('data-colvalue2', d.labelX)
         .attr('data-colvalue3', formatData(
             d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr("x", function(d) {

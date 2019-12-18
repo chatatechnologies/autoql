@@ -12,6 +12,8 @@ function createResponseRenderer(options={}){
         currencyCode: 'USD',
         currencyDecimals: 2,
         quantityDecimals: 1,
+        monthYearFormat: 'MMM YYYY',
+        dayMonthYearFormat: 'MMM DD, YYYY',
         fontFamily: 'sans-serif',
         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195']
     }

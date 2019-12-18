@@ -128,7 +128,7 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
     .call(
         axisLeft
         .tickSize(-width)
-        .tickFormat(function(d){return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)})
+        .tickFormat(function(d){return formatChartData(d, 'DOLLAR_AMT', options)})
     );
 
     // Add the lines
@@ -169,9 +169,7 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
         .attr('data-colvalue1', d.group)
         .attr('data-colvalue2', formatData(
             d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr('class', 'tooltip-2d line-dot')

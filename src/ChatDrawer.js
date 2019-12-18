@@ -35,6 +35,8 @@ var ChatDrawer = {
         languageCode: 'en-US',
         currencyDecimals: 2,
         quantityDecimals: 1,
+        monthYearFormat: 'MMM YYYY',
+        dayMonthYearFormat: 'MMM DD, YYYY',
         comparisonDisplay: 'ratio',
         enableQueryTipsTab: true,
         enableColumnEditor: true,
@@ -827,13 +829,15 @@ ChatDrawer.clickHandler = function(e){
                 for (var i = 0; i < data.length; i++) {
                     data[i][0] = formatData(
                         data[i][0],
-                        json['data']['columns'][0]['type']
+                        json['data']['columns'][0]['type'],
+                        ChatDrawer.options
                     );
                 }
                 for (var i = 0; i < groups.length; i++) {
                     groups[i] = formatData(
                         groups[i],
-                        json['data']['columns'][0]['type']
+                        json['data']['columns'][0]['type'],
+                        ChatDrawer.options
                     )
                 }
                 // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
@@ -844,7 +848,7 @@ ChatDrawer.clickHandler = function(e){
                 createGroupedColumnChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
                 console.log(dataGrouped);
             }else{
-                var values = formatDataToBarChart(json);
+                var values = formatDataToBarChart(json, ChatDrawer.options);
                 var grouped = values[0];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
                 var col2 = formatColumnName(json['data']['columns'][1]['name']);
@@ -888,10 +892,10 @@ ChatDrawer.clickHandler = function(e){
             var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
             groups = groups.sort().reverse();
             for (var i = 0; i < data.length; i++) {
-                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], ChatDrawer.options);
             }
             for (var i = 0; i < groups.length; i++) {
-                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], ChatDrawer.options)
             }
             var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -915,10 +919,10 @@ ChatDrawer.clickHandler = function(e){
             var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
             groups = groups.sort().reverse();
             for (var i = 0; i < data.length; i++) {
-                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], ChatDrawer.options);
             }
             for (var i = 0; i < groups.length; i++) {
-                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], ChatDrawer.options)
             }
             var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -959,10 +963,10 @@ ChatDrawer.clickHandler = function(e){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type'], ChatDrawer.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'], ChatDrawer.options)
                 }
                 // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -971,7 +975,7 @@ ChatDrawer.clickHandler = function(e){
                 var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedBarChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
             }else{
-                var values = formatDataToBarChart(json);
+                var values = formatDataToBarChart(json, ChatDrawer.options);
                 var grouped = values[0];
                 var hasNegativeValues = values[1];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -999,10 +1003,10 @@ ChatDrawer.clickHandler = function(e){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type']);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type'], ChatDrawer.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'])
+                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'], ChatDrawer.options)
                 }
                 // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -1012,7 +1016,7 @@ ChatDrawer.clickHandler = function(e){
                 createGroupedLineChart(component, groups, dataGrouped, col1, col2, col3, ChatDrawer.options);
                 console.log(dataGrouped);
             }else{
-                var values = formatDataToBarChart(json);
+                var values = formatDataToBarChart(json, ChatDrawer.options);
                 var grouped = values[0];
                 var hasNegativeValues = values[1];
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -1035,11 +1039,11 @@ ChatDrawer.clickHandler = function(e){
             }
             var json = ChatDrawer.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var values = formatDataToHeatmap(json);
+            var values = formatDataToHeatmap(json, ChatDrawer.options);
             var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
             var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-            labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
-            labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
+            labelsY = formatLabels(labelsY, json['data']['columns'][0]['type'], ChatDrawer.options);
+            labelsX = formatLabels(labelsX, json['data']['columns'][1]['type'], ChatDrawer.options);
 
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
             var col2 = formatColumnName(json['data']['columns'][1]['name']);
@@ -1060,11 +1064,11 @@ ChatDrawer.clickHandler = function(e){
             }
             var json = ChatDrawer.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var values = formatDataToHeatmap(json);
+            var values = formatDataToHeatmap(json, ChatDrawer.options);
             var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
             var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-            labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
-            labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
+            labelsY = formatLabels(labelsY, json['data']['columns'][0]['type'], ChatDrawer.options);
+            labelsX = formatLabels(labelsX, json['data']['columns'][1]['type'], ChatDrawer.options);
 
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
             var col2 = formatColumnName(json['data']['columns'][1]['name']);
@@ -1296,7 +1300,7 @@ ChatDrawer.refreshTableData = function(table, newData, options){
     for (var i = 0; i < newData.length; i++) {
         var tdList = nodes[i+1].childNodes;
         for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = formatData(newData[i][x], cols[x]['type'], options.languageCode, options.currencyCode);
+            tdList[x].textContent = formatData(newData[i][x], cols[x]['type'], options);
         }
     }
     for (var i = newData.length+1; i < nodes.length; i++) {
@@ -1692,7 +1696,7 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                     break;
                     case 'line':
                         var component = ChatDrawer.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse);
+                        var values = formatDataToBarChart(jsonResponse, ChatDrawer.options);
                         var grouped = values[0];
                         var hasNegativeValues = values[1];
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1703,7 +1707,7 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                     break;
                     case 'bar':
                         var component = ChatDrawer.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse);
+                        var values = formatDataToBarChart(jsonResponse, ChatDrawer.options);
                         var grouped = values[0];
                         var hasNegativeValues = values[1];
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1723,10 +1727,10 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                         groups = groups.sort().reverse();
                         for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type']);
+                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options);
                         }
                         for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'])
+                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options)
                         }
                         var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1743,10 +1747,10 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                         groups = groups.sort().reverse();
                         for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type']);
+                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options);
                         }
                         for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'])
+                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options)
                         }
                         var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1760,8 +1764,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var values = formatDataToHeatmap(jsonResponse);
                         var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
                         var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0]['type']);
-                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1]['type']);
+                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0]['type'], ChatDrawer.options);
+                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1]['type'], ChatDrawer.options);
 
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                         var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
@@ -1774,8 +1778,8 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var values = formatDataToHeatmap(jsonResponse);
                         var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
                         var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0]['type']);
-                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1]['type']);
+                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0]['type'], ChatDrawer.options);
+                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1]['type'], ChatDrawer.options);
 
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
                         var col2 = formatColumnName(jsonResponse['data']['columns'][1]['name']);
@@ -1788,7 +1792,7 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                     break;
                     case 'column':
                         var component = ChatDrawer.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse);
+                        var values = formatDataToBarChart(jsonResponse, ChatDrawer.options);
                         var grouped = values[0];
                         var hasNegativeValues = values[1];
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1832,9 +1836,7 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
     var value = formatData(
         jsonResponse['data']['rows'][0][0],
         jsonResponse['data']['columns'][0]['type'],
-        ChatDrawer.options.languageCode,
-        ChatDrawer.options.currencyCode,
-        ChatDrawer.options.currencyDecimals
+        ChatDrawer.options
     );
     var div = document.createElement('div');
     div.classList.add('chata-single-response');
@@ -2094,9 +2096,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         for (var x = 0; x < data.length; x++) {
             value = formatData(
                 data[x], jsonResponse['data']['columns'][x]['type'],
-                ChatDrawer.options.languageCode,
-                ChatDrawer.options.currencyCode,
-                ChatDrawer.options.currencyDecimals
+                ChatDrawer.options
             );
             var td = document.createElement('td');
             td.textContent = value;

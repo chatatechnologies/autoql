@@ -23,6 +23,8 @@ function Dashboard(selector, options={}){
         languageCode: 'en-US',
         currencyDecimals: 2,
         quantityDecimals: 1,
+        monthYearFormat: 'MMM YYYY',
+        dayMonthYearFormat: 'MMM DD, YYYY',
         // comparisonDisplay: 'ratio' || 'percent'
         fontFamily:	'sans-serif',
         chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],

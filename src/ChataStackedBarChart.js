@@ -74,7 +74,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(d3.axisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
-            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)}
+            return formatChartData(d, 'DOLLAR_AMT', options)}
         ))
         .selectAll("text")
         .style("color", '#fff')
@@ -84,7 +84,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(d3.axisBottom(x).tickFormat(function(d){
-            return formatData(d, 'DOLLAR_AMT', options.languageCode, options.currencyCode, 0)}
+            return formatChartData(d, 'DOLLAR_AMT', options)}
         ))
         .selectAll("text")
         .style("color", '#fff')
@@ -152,9 +152,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         .attr('data-colvalue2', d.data.group)
         .attr('data-colvalue3', formatData(
             d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ))
     })
     .attr('opacity', '0.7')

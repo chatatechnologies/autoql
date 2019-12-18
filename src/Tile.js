@@ -372,8 +372,7 @@ function Tile(dashboard, options={}){
                     var data = formatData(
                         json['data']['rows'][0][0],
                         json['data']['columns'][0]['type'],
-                        dashboard.options.languageCode,
-                        dashboard.options.currencyCode,
+                        dashboard.options
                     );
                     container.innerHTML =
                     `<div>
