@@ -764,7 +764,7 @@ ChatDrawer.clickHandler = function(e){
         if(e.target.classList.contains('column-pivot')){
             var tableElement = e.target.parentElement.parentElement.parentElement;
             var pivotArray = [];
-            var json = ChatDrawer.responses[tableElement.dataset.componentid];
+            var json = cloneObject(ChatDrawer.responses[tableElement.dataset.componentid]);
             var columns = json['data']['columns'];
             if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){

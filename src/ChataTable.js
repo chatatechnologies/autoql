@@ -110,9 +110,11 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
             filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid || uuid]['data']['columns'][2];
         }
         filter.onkeyup = function(event){
-            var _json = ChatDrawer.responses[oldComponent.dataset.componentid];
+            var _json = cloneObject(ChatDrawer.responses[oldComponent.dataset.componentid]);
             var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
-            if(_json['display_type'] == 'date_pivot'){
+            var _columns = _json['data']['columns'];
+            if(_columns[0].type === 'DATE' &&
+                _columns[0].name.includes('month')){
                 var pivotArray = getDatePivotArray(_json, ChatDrawer.options, cloneObject(_json['data']['rows']));
             }else{
                 var pivotArray = getPivotColumnArray(_json, ChatDrawer.options, cloneObject(_json['data']['rows']));

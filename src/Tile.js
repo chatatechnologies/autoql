@@ -469,10 +469,10 @@ function Tile(dashboard, options={}){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], dashboard.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], dashboard.options)
                 }
                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -491,10 +491,10 @@ function Tile(dashboard, options={}){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type']);
+                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], dashboard.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'])
+                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], dashboard.options)
                 }
                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);

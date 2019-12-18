@@ -43,6 +43,22 @@ function formatData(val, type, options={}){
                 value = parseInt(val);
             }
         break;
+        case 'RATIO':
+            val = parseFloat(val) * 100;
+            if(!isNaN(val)){
+                value =  val.toFixed(2) + '%';
+            }else{
+                value = '';
+            }
+        break;
+        case 'NUMBER':
+            val = parseFloat(val) * 100;
+            if(!isNaN(val)){
+                value =  val.toFixed(2) + '%';
+            }else{
+                value = '';
+            }
+        break;
         default:
             value = val;
     }
@@ -227,11 +243,17 @@ function getPivotColumnArray(json, options, _data){
 }
 
 function sortPivot(pivotArray, colIndex, operator){
+    console.log(pivotArray);
     pivotArray.shift();
+    pivotArray.shift();
+
+    console.log(pivotArray[0]);
+
     if(operator == 'asc'){
         var comparator = function(a, b) {
+
             if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
-                return parseFloat(a[colIndex].slice(1)) > parseFloat(b[colIndex].slice(1)) ? 1 : -1;
+                return parseFloat(a[colIndex].toString().slice(1)) > parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
             }else{
                 return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
             }
@@ -239,13 +261,13 @@ function sortPivot(pivotArray, colIndex, operator){
     }else{
         var comparator = function(a, b) {
             if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
-                return parseFloat(a[colIndex].slice(1)) < parseFloat(b[colIndex].slice(1)) ? 1 : -1;
+                return parseFloat(a[colIndex].toString().slice(1)) < parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
             }else{
                 return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
             }
         }
     }
-    return pivotArray.sort(comparator);
+    return cloneObject(pivotArray.sort(comparator));
 }
 
 function getDatePivotArray(json, options, _data){
@@ -591,6 +613,7 @@ function applyFilter(idRequest, array){
             }
         });
     }
+    console.log(rows);
     return rows;
 }
 
