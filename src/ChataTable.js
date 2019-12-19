@@ -49,7 +49,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
             value = formatData(
-                data[x], jsonResponse['data']['columns'][x]['type'],
+                data[x], jsonResponse['data']['columns'][x],
                 options
             );
             var td = document.createElement('td');

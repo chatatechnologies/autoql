@@ -147,9 +147,7 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
         .attr('data-colvalue1', d.group)
         .attr('data-colvalue2', formatData(
             d.value, 'DOLLAR_AMT',
-            options.languageCode,
-            options.currencyCode,
-            options.currencyDecimals
+            options
         ));
     })
     .attr('class', 'tooltip-2d bar')

@@ -819,9 +819,10 @@ ChatDrawer.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = ChatDrawer.responses[idRequest];
+            console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             ChatDrawer.refreshToolbarButtons(component, 'column');
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
@@ -829,14 +830,14 @@ ChatDrawer.clickHandler = function(e){
                 for (var i = 0; i < data.length; i++) {
                     data[i][0] = formatData(
                         data[i][0],
-                        json['data']['columns'][0]['type'],
+                        json['data']['columns'][0],
                         ChatDrawer.options
                     );
                 }
                 for (var i = 0; i < groups.length; i++) {
                     groups[i] = formatData(
                         groups[i],
-                        json['data']['columns'][0]['type'],
+                        json['data']['columns'][0],
                         ChatDrawer.options
                     )
                 }
@@ -892,10 +893,10 @@ ChatDrawer.clickHandler = function(e){
             var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
             groups = groups.sort().reverse();
             for (var i = 0; i < data.length; i++) {
-                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], ChatDrawer.options);
+                data[i][1] = formatData(data[i][1], json['data']['columns'][1], ChatDrawer.options);
             }
             for (var i = 0; i < groups.length; i++) {
-                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], ChatDrawer.options)
+                groups[i] = formatData(groups[i], json['data']['columns'][1], ChatDrawer.options)
             }
             var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -919,10 +920,10 @@ ChatDrawer.clickHandler = function(e){
             var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
             groups = groups.sort().reverse();
             for (var i = 0; i < data.length; i++) {
-                data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], ChatDrawer.options);
+                data[i][1] = formatData(data[i][1], json['data']['columns'][1], ChatDrawer.options);
             }
             for (var i = 0; i < groups.length; i++) {
-                groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], ChatDrawer.options)
+                groups[i] = formatData(groups[i], json['data']['columns'][1], ChatDrawer.options)
             }
             var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
             var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -954,19 +955,20 @@ ChatDrawer.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = ChatDrawer.responses[idRequest];
+            console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             ChatDrawer.refreshToolbarButtons(component, 'bar');
             var groupCount = getGroupableCount(json);
-            if(groupCount == 1 && json['data']['columns'].length == 3){
+            if(groupCount == 1 && json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type'], ChatDrawer.options);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'], ChatDrawer.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
                 }
                 // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -995,18 +997,19 @@ ChatDrawer.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = ChatDrawer.responses[idRequest];
+            console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             ChatDrawer.refreshToolbarButtons(component, 'line');
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length == 3){
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
                 var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0]['type'], ChatDrawer.options);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0]['type'], ChatDrawer.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
                 }
                 // var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var col1 = formatColumnName(json['data']['columns'][0]['name']);
@@ -1300,7 +1303,7 @@ ChatDrawer.refreshTableData = function(table, newData, options){
     for (var i = 0; i < newData.length; i++) {
         var tdList = nodes[i+1].childNodes;
         for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = formatData(newData[i][x], cols[x]['type'], options);
+            tdList[x].textContent = formatData(newData[i][x], cols[x], options);
         }
     }
     for (var i = newData.length+1; i < nodes.length; i++) {
@@ -1727,10 +1730,10 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                         groups = groups.sort().reverse();
                         for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options);
+                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1], ChatDrawer.options);
                         }
                         for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options)
+                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1], ChatDrawer.options)
                         }
                         var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1747,10 +1750,10 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
                         var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                         groups = groups.sort().reverse();
                         for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options);
+                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1], ChatDrawer.options);
                         }
                         for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1]['type'], ChatDrawer.options)
+                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1], ChatDrawer.options)
                         }
                         var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                         var col1 = formatColumnName(jsonResponse['data']['columns'][0]['name']);
@@ -1835,7 +1838,7 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
     </div>`;
     var value = formatData(
         jsonResponse['data']['rows'][0][0],
-        jsonResponse['data']['columns'][0]['type'],
+        jsonResponse['data']['columns'][0],
         ChatDrawer.options
     );
     var div = document.createElement('div');
@@ -2095,7 +2098,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
             value = formatData(
-                data[x], jsonResponse['data']['columns'][x]['type'],
+                data[x], jsonResponse['data']['columns'][x],
                 ChatDrawer.options
             );
             var td = document.createElement('td');

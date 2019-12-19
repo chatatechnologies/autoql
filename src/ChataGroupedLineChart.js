@@ -155,7 +155,7 @@ function createGroupedLineChart(component, groups, data, col1, col2, col3, optio
     .data(dataReady)
     .enter()
     .append('g')
-    .style("fill", function(d){ return color(d.name) })
+    .style("fill", function(d){ return console.log(d); color(d.name) })
     // Second we need to enter in the 'values' part of this group
     .selectAll("myPoints")
     .data(function(d){ return d.values })

@@ -1,11 +1,12 @@
-function formatChartData(val, type, options){
+function formatChartData(val, col, options){
     var clone = cloneObject(options);
     clone.currencyDecimals = 0;
-    return formatData(val, type, clone);
+    return formatData(val, col, clone);
 }
 
-function formatData(val, type, options={}){
+function formatData(val, col, options={}){
     value = '';
+    let type = col['type'];
     switch (type) {
         case 'DOLLAR_AMT':
             val = parseFloat(val);
@@ -22,8 +23,18 @@ function formatData(val, type, options={}){
             }
         break;
         case 'DATE':
-            // value = formatDate(new Date( parseInt(val) * 1000 ) );
-            value = moment(parseInt(val)*1000).format(options.monthYearFormat);
+            var colName = col.name;
+            if(colName.includes('year')){
+                value = moment(parseInt(val)*1000).format('YYYY');
+            }else if(colName.includes('month')){
+                value = moment(parseInt(val)*1000).format(
+                    options.monthYearFormat
+                );
+            }else{
+                value = moment(parseInt(val)*1000).format(
+                    options.dayMonthYearFormat
+                );
+            }
         break;
         case 'PERCENT':
             val = parseFloat(val) * 100;
@@ -66,7 +77,8 @@ function formatData(val, type, options={}){
 }
 
 function formatColumnName(col){
-    return col.replace(/__/g, ' ').replace(/_/g, ' ').replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); })
+    return col.replace(/__/g, ' ').replace(/_/g, ' ').
+    replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); })
 }
 
 function uuidv4() {
@@ -146,9 +158,13 @@ function runQuery(event, context){
     }
     var words = getSafetynetValues(node);
     if(context == 'ChatDrawer'){
-        ChatDrawer.sendMessage(document.getElementById('chata-input'), words.join(' '));
+        ChatDrawer.sendMessage(
+            document.getElementById('chata-input'), words.join(' ')
+        );
     }else{
-        node.parentElement.chataBarContainer.sendMessageToResponseRenderer(words.join(' '));
+        node.parentElement.chataBarContainer.sendMessageToResponseRenderer(
+            words.join(' ')
+        );
     }
 }
 
@@ -232,7 +248,7 @@ function getPivotColumnArray(json, options, _data){
             }
             row.push(formatData(
                 data[x],
-                json['data']['columns'][x]['type'],
+                json['data']['columns'][x],
                 options
             ));
         }
@@ -253,7 +269,9 @@ function sortPivot(pivotArray, colIndex, operator){
         var comparator = function(a, b) {
 
             if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
-                return parseFloat(a[colIndex].toString().slice(1)) > parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
+                return parseFloat(
+                    a[colIndex].toString().slice(1)
+                ) > parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
             }else{
                 return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
             }
@@ -261,7 +279,9 @@ function sortPivot(pivotArray, colIndex, operator){
     }else{
         var comparator = function(a, b) {
             if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
-                return parseFloat(a[colIndex].toString().slice(1)) < parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
+                return parseFloat(
+                    a[colIndex].toString().slice(1)
+                ) < parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
             }else{
                 return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
             }
@@ -282,11 +302,13 @@ function getDatePivotArray(json, options, _data){
                 case 'DATE':
                     var value = data[x];
                     var date = new Date( parseInt(value) * 1000);
-                    row.unshift(MONTH_NAMES[date.getMonth()], date.getFullYear());
+                    row.unshift(
+                        MONTH_NAMES[date.getMonth()], date.getFullYear()
+                    );
                     break;
                 default:
                     row.push(formatData(
-                        data[x], json['data']['columns'][x]['type'],
+                        data[x], json['data']['columns'][x],
                         options
                     )
                 );
@@ -404,7 +426,9 @@ function getSVGString(svgNode) {
 }
 
 function svgString2Image(svgString, width, height) {
-    var imgsrc = 'data:image/svg+xml;base64,'+ btoa(unescape(encodeURIComponent(svgString)));
+    var imgsrc = 'data:image/svg+xml;base64,'+ btoa(
+        unescape(encodeURIComponent(svgString))
+    );
 
     var canvas = document.createElement("canvas");
     var context = canvas.getContext("2d");
@@ -435,10 +459,10 @@ function getSpeech(button){
     return recognition;
 }
 
-function formatLabels(labels, colType, options){
+function formatLabels(labels, col, options){
     labels = labels.sort();
     for (var i = 0; i < labels.length; i++) {
-        labels[i] = formatData(labels[i], colType, options);
+        labels[i] = formatData(labels[i], col, options);
     }
     return labels;
 }
@@ -446,13 +470,13 @@ function formatLabels(labels, colType, options){
 function formatDataToHeatmap(json, options){
     var lines = json['data']['rows'];
     var values = [];
-    var colType1 = json['data']['columns'][0]['type'];
-    var colType2 = json['data']['columns'][1]['type'];
+    var col1 = json['data']['columns'][0];
+    var col2 = json['data']['columns'][1];
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['labelY'] = formatData(data[0], colType1, options);
-        row['labelX'] = formatData(data[1], colType2, options);
+        row['labelY'] = formatData(data[0], col1, options);
+        row['labelX'] = formatData(data[1], col2, options);
         row['unformatY'] = data[0];
         row['unformatX'] = data[1];
         var value = parseFloat(data[2]);
@@ -465,12 +489,12 @@ function formatDataToHeatmap(json, options){
 function formatDataToBarChart(json, options){
     var lines = json['data']['rows'];
     var values = [];
-    var colType1 = json['data']['columns'][0]['type'];
+    var col1 = json['data']['columns'][0];
     var hasNegativeValues = false;
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['label'] = formatData(data[0], colType1, options);
+        row['label'] = formatData(data[0], col1, options);
         var value = parseFloat(data[1]);
         if(value < 0 && !hasNegativeValues){
             hasNegativeValues = true;
@@ -575,7 +599,8 @@ function tooltipCharts(){
 function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.getElementsByTagName('input');
-    var rows = array || cloneObject(ChatDrawer.responses[_table.dataset.componentid]['data']['rows']);
+    var json = ChatDrawer.responses[_table.dataset.componentid];
+    var rows = array || cloneObject(json['data']['rows']);
     for (var i = 0; i < inputs.length; i++) {
         if(inputs[i].value == '')continue;
         var colType = inputs[i].colType;
@@ -583,7 +608,9 @@ function applyFilter(idRequest, array){
         rows = rows.filter(function(elem){
             var v = elem[i];
             if(colType == 'DATE'){
-                var formatDate = formatData(v, 'DATE');
+                var formatDate = formatData(v, 'DATE',
+                json['data']['columns'][i], ChatDrawer.options
+            );
                 return formatDate.toLowerCase().includes(compareValue);
             }else if(
                 colType == 'DOLLAR_AMT' ||
