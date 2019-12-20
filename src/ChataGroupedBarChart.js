@@ -1,4 +1,4 @@
-function createGroupedBarChart(component, groups, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createGroupedBarChart(component, groups, data, cols, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -6,6 +6,9 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
     var chartWidth = width;
     var height;
     var legendBoxMargin = 25;
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
+    var col3 = formatColumnName(cols[2]['name']);
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
@@ -71,7 +74,7 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatChartData(d, 'DOLLAR_AMT', options);
+        return formatChartData(d, cols[1], options);
     });
     svg.append("g")
     .attr("transform", "translate(0," + (height) + ")")
@@ -146,7 +149,7 @@ function createGroupedBarChart(component, groups, data, col1, col2, col3, option
         .attr('data-col2', nameCol2)
         .attr('data-colvalue1', d.group)
         .attr('data-colvalue2', formatData(
-            d.value, 'DOLLAR_AMT',
+            d.value, cols[1],
             options
         ));
     })

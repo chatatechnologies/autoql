@@ -1,11 +1,14 @@
-function createStackedBarChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedBarChart(component, data, groups, subgroups, cols, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 120},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var legspacing = 15;
     var chartWidth = width - wLegendBox;
     var height;
-    var legendBoxMargin = 25
+    var legendBoxMargin = 25;
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
+    var col3 = formatColumnName(cols[2]['name']);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
@@ -74,7 +77,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(d3.axisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
-            return formatChartData(d, 'DOLLAR_AMT', options)}
+            return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
         .style("color", '#fff')
@@ -84,7 +87,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(d3.axisBottom(x).tickFormat(function(d){
-            return formatChartData(d, 'DOLLAR_AMT', options)}
+            return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
         .style("color", '#fff')
@@ -151,7 +154,7 @@ function createStackedBarChart(component, data, groups, subgroups, col1, col2, c
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', d.data.group)
         .attr('data-colvalue3', formatData(
-            d.value, 'DOLLAR_AMT',
+            d.value, cols[2],
             options
         ))
     })

@@ -387,79 +387,66 @@ function Tile(dashboard, options={}){
                 }
                 break;
             case 'bar':
-                var values = formatDataToBarChart(json);
+                var values = formatDataToBarChart(json, dashboard.options);
                 var grouped = values[0];
                 var hasNegativeValues = values[1];
-                var col1 = formatColumnName(
-                    json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(
-                    json['data']['columns'][1]['name']);
-                var colType2 = json['data']['columns'][1]['type'];
+                var cols = json['data']['columns'];
                 createBarChart(
-                    container, grouped, col1,
-                    col2, colType2, hasNegativeValues, dashboard.options,
+                    container, grouped, cols,
+                    hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
                 break;
             case 'column':
-                var values = formatDataToBarChart(json);
+                var values = formatDataToBarChart(json, dashboard.options);
                 var grouped = values[0];
-                var col1 = formatColumnName(
-                    json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(
-                    json['data']['columns'][1]['name']);
-                var colType2 = json['data']['columns'][1]['type'];
+                var cols = json['data']['columns'];
                 var hasNegativeValues = values[1];
                 createColumnChart(
-                    container, grouped, col1,
-                    col2, colType2, hasNegativeValues, dashboard.options,
+                    container, grouped, cols,
+                    hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
                 break;
             case 'line':
-                var values = formatDataToBarChart(json);
+                var values = formatDataToBarChart(json, dashboard.options);
                 var grouped = values[0];
                 var hasNegativeValues = values[1];
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var colType2 = json['data']['columns'][1]['type'];
+                var cols = json['data']['columns'];
                 createLineChart(
-                    container, grouped, col1,
-                    col2, colType2, hasNegativeValues, dashboard.options,
+                    container, grouped, cols,
+                    hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
                 break;
             case 'heatmap':
-                var values = formatDataToHeatmap(json);
+                var values = formatDataToHeatmap(json, dashboard.options);
                 var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
                 var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
+                labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
+                labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
 
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var cols = json['data']['columns'];
+
                 createHeatmap(container,
-                    labelsX, labelsY, values, col1,
-                    col2, col3, dashboard.options, false,
+                    labelsX, labelsY, values, cols,
+                    dashboard.options, false,
                     'data-tilechart', true);
                 break;
             case 'bubble':
-                var values = formatDataToHeatmap(json);
+                var values = formatDataToHeatmap(json, dashboard.options);
                 var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
                 var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0]['type']);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1]['type']);
+                labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
+                labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
 
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var cols = json['data']['columns'];
                 createBubbleChart(
                     container, labelsX, labelsY,
-                    values, col1, col2, col3, dashboard.options,
+                    values, cols, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -469,19 +456,17 @@ function Tile(dashboard, options={}){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], dashboard.options);
+                    data[i][1] = formatData(data[i][1], json['data']['columns'][1], dashboard.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], dashboard.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][1], dashboard.options)
                 }
                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var cols = json['data']['columns'];
                 var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
                 createStackedBarChart(
                     container, dataGrouped, groups,
-                    subgroups, col1, col2, col3,
+                    subgroups, cols,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
@@ -491,32 +476,26 @@ function Tile(dashboard, options={}){
                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1]['type'], dashboard.options);
+                    data[i][1] = formatData(data[i][1], json['data']['columns'][1], dashboard.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1]['type'], dashboard.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][1], dashboard.options)
                 }
                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var col3 = formatColumnName(json['data']['columns'][2]['name']);
+                var cols = json['data']['columns'];
                 var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
                 createStackedColumnChart(
                     container, dataGrouped, groups,
-                    subgroups, col1, col2, col3,
+                    subgroups, cols,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
                 break;
             case 'pie':
                 var data = ChatDrawer.groupBy(json['data']['rows'], row => row[0]);
-                var col1 = formatColumnName(json['data']['columns'][0]['name']);
-                var col2 = formatColumnName(json['data']['columns'][1]['name']);
-                var colType1 = json['data']['columns'][0]['type'];
-                var colType2 = json['data']['columns'][1]['type'];
-
+                var cols = json['data']['columns'];
                 createPieChart(container, data,
-                    dashboard.options, col1, col2, colType1, colType2, false
+                    dashboard.options, cols, false
                 );
                 break;
             case 'pivot_column':

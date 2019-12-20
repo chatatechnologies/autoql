@@ -1,8 +1,10 @@
-function createLineChart(component, data, col1, col2, col2Type, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, cols, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    console.log(col2Type);
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
+    console.log(cols);
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -119,7 +121,7 @@ function createLineChart(component, data, col1, col2, col2Type, hasNegativeValue
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-        return formatChartData(d, col2Type, options)}
+        return formatChartData(d, cols[1], options)}
     )
     .tickSize(-width)
     );
@@ -137,7 +139,7 @@ function createLineChart(component, data, col1, col2, col2Type, hasNegativeValue
         .attr('data-col2', col2)
         .attr('data-colvalue1', d.label)
         .attr('data-colvalue2',formatData(
-            d.value, col2Type,
+            d.value, cols[1],
             options
         ))
     })

@@ -1,10 +1,11 @@
-function createPieChart(component, data, options, col1, col2, colType1, colType2, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, data, options, cols, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var marginX = 30;
     var marginY = 0;
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
-    console.log(colType2);
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (marginY + 3);
@@ -62,9 +63,9 @@ function createPieChart(component, data, options, col1, col2, colType1, colType2
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(d.data.key, colType1, options))
+        .attr('data-colvalue1', formatData(d.data.key, cols[0], options))
         .attr('data-colvalue2', formatData(
-            d.value, colType2,
+            d.value, cols[0],
             options
         ))
     })
@@ -141,10 +142,10 @@ function createPieChart(component, data, options, col1, col2, colType1, colType2
         .attr("text-anchor", "start")
         .text(function (d, i) {
             return formatData(
-                d.data.key, colType1,
+                d.data.key, cols[0],
                 options) + ": " +
                 formatData(
-                    d.value, colType2,
+                    d.value, cols[1],
                     options
                 );
         })

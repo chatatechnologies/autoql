@@ -608,8 +608,10 @@ function applyFilter(idRequest, array){
         rows = rows.filter(function(elem){
             var v = elem[i];
             if(colType == 'DATE'){
-                var formatDate = formatData(v, 'DATE',
-                json['data']['columns'][i], ChatDrawer.options
+                var formatDate = formatData(
+                    v,
+                    json['data']['columns'][i],
+                    ChatDrawer.options
             );
                 return formatDate.toLowerCase().includes(compareValue);
             }else if(
@@ -640,7 +642,6 @@ function applyFilter(idRequest, array){
             }
         });
     }
-    console.log(rows);
     return rows;
 }
 

@@ -1,7 +1,10 @@
-function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBarChart(component, data, cols, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
+
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
@@ -64,7 +67,7 @@ function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatChartData(d, col2Type, options);
+        return formatChartData(d, cols[1], options);
     });
 
     if(tickWidth < 135){
@@ -125,7 +128,7 @@ function createBarChart(component, data, col1, col2, col2Type, hasNegativeValues
         .attr('data-colvalue1', d.label)
         .attr('data-colvalue2', formatData(
             d.value,
-            col2Type,
+            cols[1],
             options
         ))
     })

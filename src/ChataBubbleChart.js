@@ -1,7 +1,11 @@
-function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createBubbleChart(component, labelsX, labelsY, data, cols, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
+    var col3 = formatColumnName(cols[2]['name']);
+
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -163,7 +167,7 @@ function createBubbleChart(component, labelsX, labelsY, data, col1, col2, col3, 
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', d.labelX)
         .attr('data-colvalue3', formatData(
-            d.value, 'DOLLAR_AMT',
+            d.value, cols[2],
             options
         ))
     })

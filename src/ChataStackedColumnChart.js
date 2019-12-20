@@ -1,11 +1,14 @@
-function createStackedColumnChart(component, data, groups, subgroups, col1, col2, col3, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedColumnChart(component, data, groups, subgroups, cols, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var legspacing = 15;
     var chartWidth = width - wLegendBox;
     var height;
-    var legendBoxMargin = 25
+    var legendBoxMargin = 25;
+    var col1 = formatColumnName(cols[0]['name']);
+    var col2 = formatColumnName(cols[1]['name']);
+    var col3 = formatColumnName(cols[2]['name']);
     if(fromChatDrawer){
         if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
             height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
@@ -115,7 +118,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-            return formatChartData(d, 'DOLLAR_AMT', options)}
+            return formatChartData(d, cols[2], options)}
         )
         .tickSize(-chartWidth)
     );
@@ -155,7 +158,7 @@ function createStackedColumnChart(component, data, groups, subgroups, col1, col2
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', d.data.group)
         .attr('data-colvalue3', formatData(
-            d.value, 'DOLLAR_AMT',
+            d.value, cols[2],
             options
         ))
     })
