@@ -845,7 +845,6 @@ ChatDrawer.clickHandler = function(e){
                 var cols = json['data']['columns'];
                 var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedColumnChart(component, groups, dataGrouped, cols, ChatDrawer.options);
-                console.log(dataGrouped);
             }else{
                 var values = formatDataToBarChart(json, ChatDrawer.options);
                 var grouped = values[0];
@@ -983,7 +982,6 @@ ChatDrawer.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = ChatDrawer.responses[idRequest];
-            console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             ChatDrawer.refreshToolbarButtons(component, 'line');
             if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){

@@ -387,6 +387,29 @@ function Tile(dashboard, options={}){
                 }
                 break;
             case 'bar':
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                createGroupedBarChart(
+                    container,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
                 var values = formatDataToBarChart(json, dashboard.options);
                 var grouped = values[0];
                 var hasNegativeValues = values[1];
@@ -397,8 +420,33 @@ function Tile(dashboard, options={}){
                     false, 'data-tilechart',
                     true
                 );
+            }
+
                 break;
             case 'column':
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                createGroupedColumnChart(
+                    container,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
                 var values = formatDataToBarChart(json, dashboard.options);
                 var grouped = values[0];
                 var cols = json['data']['columns'];
@@ -409,8 +457,33 @@ function Tile(dashboard, options={}){
                     false, 'data-tilechart',
                     true
                 );
+            }
+
                 break;
             case 'line':
+            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                createGroupedLineChart(
+                    container,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
                 var values = formatDataToBarChart(json, dashboard.options);
                 var grouped = values[0];
                 var hasNegativeValues = values[1];
@@ -421,6 +494,8 @@ function Tile(dashboard, options={}){
                     false, 'data-tilechart',
                     true
                 );
+            }
+
                 break;
             case 'heatmap':
                 var values = formatDataToHeatmap(json, dashboard.options);
