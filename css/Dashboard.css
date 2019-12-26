@@ -169,7 +169,7 @@
     cursor: default;
 }
 .dashboard-tile-title-container .dashboard-tile-title {
-    color: #356f90;
+    color: var(--chata-dashboard-accent-color);
     font-weight: bold;
     font-size: 17px;
     text-align: left !important;

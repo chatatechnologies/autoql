@@ -28,6 +28,7 @@ function Dashboard(selector, options={}){
         // comparisonDisplay: 'ratio' || 'percent'
         fontFamily:	'sans-serif',
         chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+        titleColor: '#2466AE',
         executeOnMount:	true,
         executeOnStopEditing: true,
         notExecutedText: 'Hit "Execute" to run this dashboard',
@@ -152,10 +153,18 @@ function Dashboard(selector, options={}){
     if(obj.options.isEditing){
         this.startEditing();
     }
-    obj.grid._element.style.setProperty(
-        '--chata-dashboard-font-family',
-        obj.options['fontFamily']
-    );
+
+    obj.applyCSS = function(){
+        obj.grid._element.style.setProperty(
+            '--chata-dashboard-font-family',
+            obj.options['fontFamily']
+        );
+
+        obj.grid._element.style.setProperty(
+            '--chata-dashboard-accent-color',
+            obj.options['titleColor']
+        )
+    }
 
     obj.undo = function(){
         var oldValue = obj.oldState.inputValue;
@@ -164,6 +173,8 @@ function Dashboard(selector, options={}){
         obj.lastState.inputValue = oldValue;
         obj.oldState.inputValue = newValue;
     }
+
+    obj.applyCSS();
 
     return obj;
 }

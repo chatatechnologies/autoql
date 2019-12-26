@@ -339,7 +339,6 @@
                     <input type="text" name="fontFamily" value="sans-serif" placeholder="Font Family" class="reload-prop">
                 </div>
 
-
                 <div class="prop prop-column">
                     <h6>Chart Colors</h6>
                     <span class="info-text">
@@ -354,11 +353,16 @@
                 </div>
 
                 <div class="prop prop-column">
+                    <h6>Dashboard Title Color</h6>
+                    <input type="text" name="titleColor" value="#2466AE" placeholder="Font Family" class="reload-dashboard-prop">
+                </div>
+
+                <div class="prop prop-column">
                     <h6>Light Theme Accent Color</h6>
                     <span class="info-text">
                         (Must click 'Reload Drawer' to apply this)
                     </span>
-                    <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;" class="reload-prop">
+                    <input type="color" name="accentColor-light" value="#2466AE" placeholder="Accent Color" style="width:150px;" class="reload-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -418,7 +422,7 @@
                 </div>
 
                 <div class="prop prop-column">
-                    <h6 class="">Enable Query Tips Tab</h6>
+                    <h6 class="">Enable Query Inspiration Tab</h6>
                     <div class="switch">
                         <label>
                             <input type="checkbox" checked name="enableQueryTipsTab">
@@ -708,6 +712,12 @@
         var login = document.getElementById('login')
         var enableQueryTipsTab = document.querySelector('[name="enableQueryTipsTab"]')
         var enableColumnEditor = document.querySelector('[name="enableColumnEditor"]')
+        var titleColor = document.querySelector('[name="titleColor"]')
+
+        titleColor.onchange = function(event){
+            dashboard.options.titleColor = event.target.value;
+            dashboard.applyCSS();
+        }
 
         enableQueryTipsTab.onchange = function(event){
             ChatDrawer.options.enableQueryTipsTab = event.target.checked
@@ -1074,8 +1084,6 @@
         }
 
     </script>
-
-
 
 </body>
 </html>

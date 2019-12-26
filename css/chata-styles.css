@@ -395,17 +395,22 @@ body{
 .chat-bar-auto-complete-suggestions{
     overflow: hidden;
     position: absolute;
-    width: calc(100% - 15px);
+    width: calc(100% - 17px);
     margin-left: 10px;
     border-radius: 24px;
     z-index: 100;
 }
+
+.chat-bar-autocomplete{
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
 .chat-bar-auto-complete-suggestions.bottom{
-    top: 60px;
+    top: 45px;
 }
 
 .chat-bar-auto-complete-suggestions.top{
-    bottom: 60px;
+    bottom: 45px;
 }
 
 .chat-bar-input-icon {
@@ -433,7 +438,7 @@ body{
     color: #5d5d5d;
     list-style: none;
     bottom: 60px;
-    width: calc(100%);
+    width: calc(100% - 5px);
     display: none;
 }
 .chat-bar-auto-complete-suggestions ul li{
@@ -705,7 +710,7 @@ input[type=text]:disabled {
     background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
-.table-response tr th:hover .tabulator-arrow{
+.table-response tr th:hover .tabulator-arrow, .table-response-renderer tr th:hover .tabulator-arrow{
     display: block;
 }
 .table-response tr:hover {
@@ -841,6 +846,29 @@ input[type=text]:disabled {
 }
 
 .table-response .column-pivot::selection {
+  color: inherit;
+  background: inherit;
+}
+
+.table-response-renderer .column, .column-pivot{
+    padding: 5px 18px !important;
+}
+.table-response-renderer .column::-moz-selection { /* Code for Firefox */
+  color: inherit;
+  background: inherit;
+}
+
+.table-response-renderer .column::selection {
+  color: inherit;
+  background: inherit;
+}
+
+.table-response-renderer .column-pivot::-moz-selection { /* Code for Firefox */
+  color: inherit;
+  background: inherit;
+}
+
+.table-response-renderer .column-pivot::selection {
   color: inherit;
   background: inherit;
 }

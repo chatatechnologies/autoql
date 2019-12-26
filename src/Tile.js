@@ -371,7 +371,7 @@ function Tile(dashboard, options={}){
                 if(json['data']['columns'].length == 1){
                     var data = formatData(
                         json['data']['rows'][0][0],
-                        json['data']['columns'][0]['type'],
+                        json['data']['columns'][0],
                         dashboard.options
                     );
                     container.innerHTML =
@@ -745,7 +745,6 @@ function Tile(dashboard, options={}){
           : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
         ChatDrawer.ajaxCallPost(URL, function(response){
             ChatDrawer.responses[_uuid] = response;
-            console.log(response);
             callback();
         }, data, options);
     }
