@@ -25,6 +25,17 @@ function getChatBar(options){
         fontFamily: 'sans-serif'
     }
 
+    chataBarContainer.addEventListener('click', function(e){
+        if(e.target.classList.contains('suggestion-renderer')){
+            var parent = e.target.parentElement.parentElement.parentElement.parentElement;
+            var chatBarSuggestionList = parent.getElementsByClassName(
+                'chat-bar-autocomplete'
+            )[0];
+            chatBarSuggestionList.style.display = 'none';
+            parent.sendMessageToResponseRenderer(e.target.textContent);
+        }
+    });
+
     for (var [key, value] of Object.entries(options)) {
         chataBarContainer.options[key] = value;
     }
@@ -107,6 +118,7 @@ function getChatBar(options){
                 ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
                 ChatDrawer.ajaxCall(value, function(jsonResponse){
+                    console.log(jsonResponse['data']['display_type']);
                     ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
                     responseRenderer.innerHTML = '';
                     chataBarContainer.chatbar.removeAttribute("disabled");
@@ -119,11 +131,48 @@ function getChatBar(options){
                     }else{
                         displayType = 'table';
                     }
-                    if(jsonResponse['data']['display_type'] == 'suggestion' &&
-                        responseRenderer.options.supportsSuggestions){
-                        var data = jsonResponse['data']['rows'];
-                        responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
-                        ChatDrawer.createSuggestions(responseRenderer, data, 'chata-suggestion-btn-renderer');
+                    if(displayType == 'table'){
+                        var cols = jsonResponse['data']['columns'];
+                        var rows = jsonResponse['data']['rows'];
+                        if(cols.length == 1 && rows.length == 1){
+                            if(cols[0]['name'] == 'query_suggestion' && responseRenderer.options.supportsSuggestions){
+                                responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
+                                ChatDrawer.createSuggestions(
+                                    responseRenderer,
+                                    rows,
+                                    'chata-suggestion-btn-renderer'
+                                );
+                            }else if(cols[0]['name'] == 'Help Link'){
+                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(
+                                    jsonResponse['data']['rows'][0]
+                                );
+                            }else{
+                                var data = formatData(
+                                    rows[0][0],
+                                    cols[0],
+                                    responseRenderer.options
+                                );
+                                responseRenderer.innerHTML = `<div>${data}</div>`;
+                            }
+                        }else{
+                            // table
+                            var uuid = uuidv4();
+                            ChatDrawer.responses[uuid] = jsonResponse;
+                            var div = document.createElement('div');
+                            div.classList.add('chata-table-container');
+                            div.classList.add('chata-table-container-renderer');
+                            responseRenderer.appendChild(div);
+                            var table = createTable(
+                                jsonResponse,
+                                div,
+                                responseRenderer.options,
+                                'append',
+                                uuid,
+                                'table-response-renderer'
+                            );
+                            table.classList.add('renderer-table');
+                        }
+
                     }else{
                         switch(displayType){
                             case 'table':
@@ -231,7 +280,9 @@ function getChatBar(options){
                                 );
                             break;
                             case 'help':
-                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']);
+                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(
+                                    jsonResponse['data']['rows'][0]
+                                );
                             break;
                             case 'stacked_bar':
                                 var data = jsonResponse['data']['rows'];

@@ -40,5 +40,47 @@ function createResponseRenderer(options={}){
         document.getElementsByTagName('head')[0].appendChild(style);
     }
     applyTableStyles();
+
+    responseRenderer.addEventListener('click', function(e){
+        if(e.target.hasAttribute('data-chartrenderer')){
+            var component = e.target.parentElement.parentElement.parentElement;
+            if(component.tagName == 'svg'){
+                component = component.parentElement;
+            }
+            if(!component.chataBarContainer.options.disableDrilldowns){
+                var json = ChatDrawer.responses[component.dataset.componentid];
+                var indexData = e.target.dataset.chartrenderer;
+                ChatDrawer.sendDrilldownMessage(
+                    json, indexData,
+                    responseRenderer.chataBarContainer.options,
+                    'ChatBar', component);
+            }
+        }
+        if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
+            var component = e.target.parentElement.parentElement;
+            var responseRenderer = component.parentElement.parentElement;
+            if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
+                var json = ChatDrawer.responses[component.dataset.componentid];
+                var indexData = e.target.parentElement.dataset.indexrowrenderer;
+                let mergeOptions = {
+                    ...responseRenderer.chataBarContainer.options,
+                    ...responseRenderer.options
+                }
+                ChatDrawer.sendDrilldownMessage(
+                    json, indexData,
+                    mergeOptions,
+                    'ChatBar', responseRenderer);
+            }
+        }
+
+        if(e.target.classList.contains('chata-suggestion-btn-renderer')){
+            var parent = e.target.parentElement.parentElement;
+            parent.options.onSuggestionClick();
+            parent.chataBarContainer.sendMessageToResponseRenderer(
+                e.target.textContent
+            );
+        }
+    });
+
     return responseRenderer;
 }
