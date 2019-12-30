@@ -50,9 +50,13 @@ function createResponseRenderer(options={}){
             if(!component.chataBarContainer.options.disableDrilldowns){
                 var json = ChatDrawer.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
+                let mergeOptions = {
+                    ...component.chataBarContainer.options,
+                    ...component.options
+                }
                 ChatDrawer.sendDrilldownMessage(
                     json, indexData,
-                    responseRenderer.chataBarContainer.options,
+                    mergeOptions,
                     'ChatBar', component);
             }
         }
@@ -71,6 +75,22 @@ function createResponseRenderer(options={}){
                     mergeOptions,
                     'ChatBar', responseRenderer);
             }
+        }
+
+        if (e.target.hasAttribute('data-stackedchartindex')) {
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+            var json = cloneObject(ChatDrawer.responses[component.dataset.componentid]);
+            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            let mergeOptions = {
+                ...component.chataBarContainer.options,
+                ...component.options
+            }
+            ChatDrawer.sendDrilldownMessage(
+                json,
+                0,
+                mergeOptions,
+                'ChatBar', component
+            );
         }
 
         if(e.target.classList.contains('chata-suggestion-btn-renderer')){

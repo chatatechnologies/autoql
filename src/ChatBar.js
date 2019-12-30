@@ -98,14 +98,26 @@ function getChatBar(options){
         if(this.options.showLoadingDots){
             var responseLoadingContainer = putLoadingContainer(parent);
         }
-        const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
-          value
-        )}&projectId=${ChatDrawer.options.projectId}&unified_query_id=${uuidv4()}`;
-        const URL = `https://backend-staging.chata.ai/api/v1/query?q=${value}&project=1&unified_query_id=${uuidv4()}`;
+        // const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+        //   value
+        // )}&projectId=${chataBarContainer.options.projectId}&unified_query_id=${uuidv4()}`;
+        // const URL = `https://backend-staging.chata.ai/api/v1/query?q=${value}&project=1&unified_query_id=${uuidv4()}`;
 
-        ChatDrawer.ajaxCall(value, function(jsonResponse){
+        const URL_SAFETYNET = chataBarContainer.options.demo
+          ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+            value
+          )}&projectId=1`
+          : `${chataBarContainer.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+            value
+          )}&key=${chataBarContainer.options.apiKey}&customer_id=${chataBarContainer.options.customerId}&user_id=${chataBarContainer.options.userId}`
+
+        ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
-            if(1 == 2 && chataBarContainer.options.enableSafetyNet){
+            console.log(jsonResponse);
+            if(jsonResponse != undefined){
+                var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
+            }
+            if(suggestions.length > 0 && chataBarContainer.options.enableSafetyNet){
                 responseRenderer.innerHTML = '';
                 chataBarContainer.chatbar.removeAttribute("disabled");
                 if(chataBarContainer.options.showLoadingDots){
@@ -217,7 +229,10 @@ function getChatBar(options){
                                 table.classList.add('renderer-table');
                             break;
                             case 'line':
-                                var values = formatDataToBarChart(jsonResponse);
+                                var values = formatDataToBarChart(
+                                    jsonResponse,
+                                    responseRenderer.options
+                                );
                                 var grouped = values[0];
                                 var hasNegativeValues = values[1];
                                 var cols = jsonResponse['data']['columns'];
@@ -229,7 +244,10 @@ function getChatBar(options){
                                 );
                             break;
                             case 'bar':
-                                var values = formatDataToBarChart(jsonResponse);
+                                var values = formatDataToBarChart(
+                                    jsonResponse,
+                                    responseRenderer.options
+                                );
                                 var grouped = values[0];
                                 var hasNegativeValues = values[1];
                                 var cols = jsonResponse['data']['columns'];
@@ -241,7 +259,10 @@ function getChatBar(options){
                                 );
                             break;
                             case 'column':
-                                var values = formatDataToBarChart(jsonResponse);
+                                var values = formatDataToBarChart(
+                                    jsonResponse,
+                                    responseRenderer.options
+                                );
                                 var grouped = values[0];
                                 var cols = jsonResponse['data']['columns'];
                                 var hasNegativeValues = values[1];
@@ -309,7 +330,7 @@ function getChatBar(options){
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, cols,
                                     responseRenderer.options, false,
-                                    'data-chartindex', responseRenderer.options.renderTooltips
+                                    'data-stackedchartindex', responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'stacked_column':
@@ -338,7 +359,7 @@ function getChatBar(options){
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, cols,
                                     responseRenderer.options, false,
-                                    'data-chartindex', responseRenderer.options.renderTooltips
+                                    'data-stackedchartindex', responseRenderer.options.renderTooltips
                                 );
                             break;
                             default:
