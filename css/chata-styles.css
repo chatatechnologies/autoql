@@ -56,6 +56,11 @@
     left: calc(50% - 20px);
 }
 
+#notification-icon{
+    font-size: 26px;
+    margin-top: 13px;
+}
+
 #drawer-wrapper{
     background: #000;
     opacity: .3;
