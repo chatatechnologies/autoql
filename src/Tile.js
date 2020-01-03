@@ -364,6 +364,10 @@ function Tile(dashboard, options={}){
         container = view;
         container.innerHTML = '';
         this.createVizToolbar(json, uuid, displayType);
+        if(json['data']['rows'].length == 0){
+            container.innerHTML = 'No data found.';
+            return 0;
+        }
         switch (displayType) {
             case 'table':
                 var div = createTableContainer();

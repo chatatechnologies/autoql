@@ -411,4 +411,27 @@ const COLUMN_EDITOR = `
     <path class="show-hide-columns" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z">
     </path>
 </svg>
-`
+`;
+
+const DISMISS = `
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;">
+    <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+    <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
+    <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
+    <path d="M18 8a6 6 0 0 0-9.33-5"></path>
+    <line x1="1" y1="1" x2="23" y2="23"></line>
+</svg>
+`;
+
+const CALENDAR = `
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="4" width="18" height="18" rx="2" ry="2">
+    </rect>
+    <line x1="16" y1="2" x2="16" y2="6">
+    </line>
+    <line x1="8" y1="2" x2="8" y2="6">
+    </line>
+    <line x1="3" y1="10" x2="21" y2="10">
+    </line>
+</svg>
+`;
