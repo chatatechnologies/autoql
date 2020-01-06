@@ -132,7 +132,7 @@ function Dashboard(selector, options={}){
     }
 
     obj.addTile = function(options){
-        var tile = new Tile(grid, options);
+        var tile = new Tile(obj, options);
         obj.tiles.push(tile);
         obj.grid.add(tile);
         tile.startEditing();

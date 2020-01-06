@@ -177,6 +177,11 @@ function Tile(dashboard, options={}){
         dashboard.lastState = setState(event, this);
     };
 
+    chataDashboardItem.inputQuery.onkeypress = function(evt){
+        if(evt.keyCode == 13 && this.value){
+            chataDashboardItem.runQuery();
+        }
+    }
     chataDashboardItem.startEditing = function(){
         chataDashboardItem.tileInputContainer.style.display = 'flex';
         chataDashboardItem.tileTitleContainer.style.display = 'none';
@@ -361,8 +366,12 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.refreshItem = function(displayType, _uuid, view){
         var json = ChatDrawer.responses[_uuid];
+        var supportedDisplayTypes = getSupportedDisplayTypes(json);
         container = view;
         container.innerHTML = '';
+        if(!supportedDisplayTypes.includes(displayType)){
+            displayType = 'table';
+        }
         this.createVizToolbar(json, uuid, displayType);
         if(json['data']['rows'].length == 0){
             container.innerHTML = 'No data found.';

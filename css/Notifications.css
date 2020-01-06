@@ -126,3 +126,69 @@
     height: 205px;
     padding: 5px 20px 0;
 }
+
+.chata-notification-add-btn-container .chata-notification-add-btn {
+    display: inline-block;
+    height: 35px;
+    width: 35px;
+    border-radius: 20px;
+    background: #26a7df;
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.13);
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-add-btn-container {
+    text-align: right;
+    padding-right: 20px;
+    padding-top: 15px;
+}
+
+.chata-notification-settings-container {
+    margin: 15px 20px 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.13);
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.chata-notification-settings-container .chata-notification-setting-item {
+    height: 55px;
+    line-height: 55px;
+    -webkit-transition: height .3s cubic-bezier(.26,.26,0,1);
+    transition: height .3s cubic-bezier(.26,.26,0,1);
+    cursor: pointer;
+}
+
+.chata-notification-settings-container .chata-notification-setting-item-header {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 8px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
+
+.chata-notification-settings-container .chata-notification-edit-icon {
+    font-size: 18px;
+    height: 50px;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 20px;
+    margin-top: 9px;
+    margin-right: 3px;
+    background-color: transparent;
+    -webkit-transition: background-color .2s ease;
+    transition: background-color .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-settings-container .chata-notification-setting-item.expanded {
+    height: 300px;
+    border-bottom: 1px solid rgba(0,0,0,.05);
+}
