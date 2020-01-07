@@ -215,23 +215,31 @@ function Tile(dashboard, options={}){
         var val = '';
         if(chataDashboardItem.options.isSafetynet){
             val = chataDashboardItem.getSafetynetValues().join(' ');
-            console.log(val);
         }else{
             val = chataDashboardItem.inputQuery.value;
         }
         if(val != ''){
             var loadingContainer = chataDashboardItem.showLoadingDots();
             ChatDrawer.safetynetCall(chataDashboardItem.safetynet(val),
-                function(json){
+                function(json, statusCode){
                 var suggestions = json['full_suggestion'] ||
                 json['data']['replacements'];
                 if(suggestions.length > 0){
+                    const message = `
+                    Before I can try to find your answer,
+                    I need your help understanding a term you used that I don't see in your data.
+                    Click the dropdown to view suggestions so I can ensure you get the right data
+                    `
                     chataDashboardItem.options.isSafetynet = true;
                     tileResponseContainer.removeChild(loadingContainer);
                     var suggestionArray = createSuggestionArray(json);
                     var responseContentContainer = document.createElement('div');
+                    responseContentContainer.innerHTML = `<div>${message}</div>`;
                     responseContentContainer.classList.add(
                         'chata-response-content-container'
+                    );
+                    responseContentContainer.classList.add(
+                        'chata-response-content-center'
                     );
                     createSafetynetBody(
                         responseContentContainer,
@@ -371,6 +379,9 @@ function Tile(dashboard, options={}){
         container.innerHTML = '';
         if(!supportedDisplayTypes.includes(displayType)){
             displayType = 'table';
+        }
+        if(supportedDisplayTypes.includes('suggestion')){
+            displayType = 'suggestion';
         }
         this.createVizToolbar(json, uuid, displayType);
         if(json['data']['rows'].length == 0){
@@ -599,6 +610,22 @@ function Tile(dashboard, options={}){
                 }
                 createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
                 break;
+            case 'suggestion':
+                var responseContentContainer = document.createElement('div');
+                responseContentContainer.classList.add(
+                    'chata-response-content-container'
+                );
+                responseContentContainer.classList.add(
+                    'chata-response-content-center'
+                );
+                container.appendChild(responseContentContainer);
+                var rows = json['data']['rows'];
+                ChatDrawer.createSuggestions(
+                    responseContentContainer,
+                    rows,
+                    'chata-suggestion-btn-renderer'
+                );
+                break;
             default:
             container.innerHTML = "Oops! We didn't understand that query.";
         }
@@ -634,8 +661,15 @@ function Tile(dashboard, options={}){
                 }
             )
         }
-
     });
+
+    itemContent.onclick = function(evt){
+        console.log(evt);
+        if(evt.target.classList.contains('chata-suggestion-btn-renderer')){
+            inputQuery.value = evt.target.textContent;
+            chataDashboardItem.runQuery();
+        }
+    };
 
     chataDashboardItem.updateSelectedBars = function(elem){
         var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');

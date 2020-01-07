@@ -579,7 +579,7 @@ body{
 }
 
 .chata-suggestion-btn:hover, .chata-suggestion-btn-renderer:hover{
-    color: var(--chata-drawer-text-color-primary);
+    color: white;
     background: var(--chata-drawer-accent-color);
     border-color: transparent;
 }
