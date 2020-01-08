@@ -638,10 +638,17 @@ function Tile(dashboard, options={}){
                 ChatDrawer.responses[uuid]
             );
             var drilldownUUID = uuidv4();
-            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
-            var drilldownData = chataDashboardItem.getDrilldownData(
-                json, 0, dashboard.options);
+            var indexData = parseInt(e.target.dataset.tilechart);
+
             drilldownTable.innerHTML = '';
+            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
+               chataDashboardItem.options.displayType == 'stacked_column'){
+                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+                   indexData = 0;
+                   console.log('INDEX DATA: ' + indexData);
+            }
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData , dashboard.options);
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
             dots.classList.add('tile-response-loading-container');
@@ -664,7 +671,6 @@ function Tile(dashboard, options={}){
     });
 
     itemContent.onclick = function(evt){
-        console.log(evt);
         if(evt.target.classList.contains('chata-suggestion-btn-renderer')){
             inputQuery.value = evt.target.textContent;
             chataDashboardItem.runQuery();
@@ -683,6 +689,7 @@ function Tile(dashboard, options={}){
         if(e.target.dataset.tilechart){
             chataDashboardItem.updateSelectedBars(e.target)
             var query = chataDashboardItem.inputQuery.value;
+            var indexData = parseInt(e.target.dataset.tilechart);
             modal.clearViews();
             drilldownTable.innerHTML = '';
             modal.addView(drilldownOriginal);
@@ -692,7 +699,11 @@ function Tile(dashboard, options={}){
                 ChatDrawer.responses[uuid]
             );
             var drilldownUUID = uuidv4();
-            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
+               chataDashboardItem.options.displayType == 'stacked_column'){
+                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+                   indexData = 0;
+            }
             chataDashboardItem.refreshItem(
                 chataDashboardItem.options.displayType,
                 uuid,
@@ -700,7 +711,7 @@ function Tile(dashboard, options={}){
             )
 
             var drilldownData = chataDashboardItem.getDrilldownData(
-                json, 0, dashboard.options);
+                json, indexData, dashboard.options);
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
             dots.classList.add('tile-response-loading-container');
@@ -728,16 +739,13 @@ function Tile(dashboard, options={}){
             modal.addView(drilldownTable);
             modal.setTitle(query);
             var drilldownValue = '';
-            var indexData = 0;
+            var indexData = e.target.parentElement.dataset.indexrowrenderer;
             var json = cloneObject(
                 ChatDrawer.responses[uuid]
             );
             if(e.target.classList.contains('single-value-response')){
                 json['data']['rows'][0][0] = e.target.textContent;
                 indexData = -1;
-            }else{
-                var row = e.target.parentElement;
-                json['data']['rows'][0][0] = row.childNodes[0].textContent;
             }
             var drilldownUUID = uuidv4();
             var drilldownData = chataDashboardItem.getDrilldownData(
@@ -771,7 +779,7 @@ function Tile(dashboard, options={}){
 
         var obj = {};
         if(indexData != -1){
-            var value = json['data']['rows'][parseInt(indexData)][0]
+            var value = json['data']['rows'][parseInt(indexData)][0];
             var colData = json['data']['columns'][0]['name'];
             obj[colData] = value.toString();
         }
