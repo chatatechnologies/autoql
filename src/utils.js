@@ -224,6 +224,17 @@ function getGroupableField(json){
     return -1;
 }
 
+function getGroupables(json){
+    var cont = 0;
+    var groups = []
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        if(json['data']['columns'][i]['groupable']){
+            groups.push(json['data']['columns'][i]);
+        }
+    }
+    return groups;
+}
+
 function getGroupableCount(json){
     var cont = 0;
     for (var i = 0; i < json['data']['columns'].length; i++) {

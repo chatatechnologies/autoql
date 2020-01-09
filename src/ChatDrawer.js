@@ -440,9 +440,11 @@ ChatDrawer.createHeader = function(){
 ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='ChatDrawer', responseRenderer=null){
     var obj = {};
     if(indexData != -1){
-        var value = json['data']['rows'][parseInt(indexData)][0]
-        var colData = json['data']['columns'][0]['name'];
-        obj[colData] = value.toString();
+        for (var i = 0; i < getGroupableCount(json); i++) {
+            var value = json['data']['rows'][parseInt(indexData)][i]
+            var colData = json['data']['columns'][i]['name'];
+            obj[colData] = value.toString();
+        }
     }
 
     const URL = options.demo

@@ -477,17 +477,17 @@
     cursor: pointer;
 }
 
-.dashboard-tile-response-container .bar:focus,
-.dashboard-tile-response-container .circle:focus,
-.dashboard-tile-response-container .square:focus,
-.dashboard-tile-response-container .line-dot:focus
-.dashboard-tile-response-container .stacked-rect:focus {
-    /* fill: #a5cd39 !important; */
+.bar:focus,
+.circle:focus,
+.square:focus,
+.line-dot:focus,
+.stacked-rect:focus {
     outline: none !important;
+    border-color: transparent !important;
+    border-width: 0px !important;
     opacity: 1;
     fill-opacity: 1;
 }
-
 
 .dashboard-tile-response-container .bar:hover,
 .dashboard-tile-response-container .circle:hover,
