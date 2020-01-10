@@ -162,19 +162,27 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.inputQuery.onfocus = function(event){
-        dashboard.oldState = setState(event, this);
+        if(event.target.value != dashboard.lastState.inputValue){
+            dashboard.oldState = setState(event, this);
+        }
     };
 
     chataDashboardItem.inputQuery.onblur = function(event){
-        dashboard.lastState = setState(event, this);
+        if(event.target.value != dashboard.lastState.inputValue){
+            dashboard.lastState = setState(event, this);
+        }
     };
 
     chataDashboardItem.inputTitle.onfocus = function(event){
-        dashboard.oldState = setState(event, this);
+        if(event.target.value != dashboard.lastState.inputValue){
+            dashboard.oldState = setState(event, this);
+        }
     };
 
     chataDashboardItem.inputTitle.onblur = function(event){
-        dashboard.lastState = setState(event, this);
+        if(event.target.value != dashboard.lastState.inputValue){
+            dashboard.lastState = setState(event, this);
+        }
     };
 
     chataDashboardItem.inputQuery.onkeypress = function(evt){
@@ -675,6 +683,88 @@ function Tile(dashboard, options={}){
             inputQuery.value = evt.target.textContent;
             chataDashboardItem.runQuery();
         }
+        if(evt.target.classList.contains('column')){
+            var tableElement = evt.target.parentElement.parentElement.parentElement;
+            var uuid = tableElement.dataset.componentid;
+            if(evt.target.nextSibling.classList.contains('up')){
+                evt.target.nextSibling.classList.remove('up');
+                evt.target.nextSibling.classList.add('down');
+                var data = cloneObject(ChatDrawer.responses[uuid]);
+                var sortData = ChatDrawer.sort(
+                    data['data']['rows'],
+                    'desc',
+                    evt.target.dataset.index,
+                    evt.target.dataset.type
+                );
+                ChatDrawer.refreshTableData(
+                    tableElement,
+                    sortData,
+                    ChatDrawer.options
+                );
+            }else{
+                evt.target.nextSibling.classList.remove('down');
+                evt.target.nextSibling.classList.add('up');
+                var data = cloneObject(
+                    ChatDrawer.responses[uuid]
+                );
+                var sortData = ChatDrawer.sort(
+                    data['data']['rows'],
+                    'asc',
+                    parseInt(evt.target.dataset.index),
+                    evt.target.dataset.type
+                );
+                ChatDrawer.refreshTableData(
+                    tableElement,
+                    sortData,
+                    ChatDrawer.options
+                );
+            }
+        }
+
+        if(evt.target.classList.contains('column-pivot')){
+            var tableElement = evt.target.parentElement.parentElement.parentElement;
+            var pivotArray = [];
+            var json = cloneObject(
+                ChatDrawer.responses[tableElement.dataset.componentid]
+            );
+            var columns = json['data']['columns'];
+            if(columns[0].type === 'DATE' &&
+                columns[0].name.includes('month')){
+                pivotArray = getDatePivotArray(
+                    json,
+                    ChatDrawer.options,
+                    cloneObject(json['data']['rows'])
+                );
+            }else{
+                pivotArray = getPivotColumnArray(
+                    json,
+                    ChatDrawer.options,
+                    cloneObject(json['data']['rows'])
+                );
+            }
+            if(evt.target.nextSibling.classList.contains('up')){
+                evt.target.nextSibling.classList.remove('up');
+                evt.target.nextSibling.classList.add('down');
+                var sortData = sortPivot(
+                    pivotArray,
+                    evt.target.dataset.index,
+                    'desc'
+                );
+                sortData.unshift([]); //Simulate header
+                ChatDrawer.refreshPivotTable(tableElement, sortData);
+            }else{
+                evt.target.nextSibling.classList.remove('down');
+                evt.target.nextSibling.classList.add('up');
+                var sortData = sortPivot(
+                    pivotArray,
+                    evt.target.dataset.index,
+                    'asc'
+                );
+                sortData.unshift([]); //Simulate header
+                ChatDrawer.refreshPivotTable(tableElement, sortData);
+            }
+        }
+
     };
 
     chataDashboardItem.updateSelectedBars = function(elem){

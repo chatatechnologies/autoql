@@ -526,6 +526,9 @@
     justify-content: center;
     flex-direction: column;
 }
+.table-response-renderer tr th{
+    padding: 0px;
+}
 
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
