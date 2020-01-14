@@ -67,8 +67,18 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChatD
         return Math.max(d['value1'], d['value2']);
     });
 
+    var minValue = d3.min(data, function(d) {
+        var sum = 0;
+        return Math.min(d['value1'], d['value2']);
+    });
+
+    if(minValue > 0){
+        minValue = 0;
+    }
+
+
     var x = d3.scaleLinear()
-    .domain([0, maxValue])
+    .domain([minValue, maxValue])
     .range([0, width]);
     var xAxis = d3.axisBottom(x);
     xAxis.tickSize(0);

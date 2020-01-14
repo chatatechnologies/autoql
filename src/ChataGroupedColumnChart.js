@@ -104,9 +104,19 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
         return Math.max(d['value1'], d['value2']);
     });
 
+    var minValue = d3.min(data, function(d) {
+        var sum = 0;
+        return Math.min(d['value1'], d['value2']);
+    });
+
+    if(minValue > 0){
+        minValue = 0;
+    }
+
+
     // Add Y axis
     var y = d3.scaleLinear()
-    .domain([0, maxValue])
+    .domain([minValue, maxValue])
     .range([ height, 0 ]);
     var axisLeft = d3.axisLeft(y);
 
@@ -161,7 +171,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     .attr('stroke', 'transparent')
     .attr('stroke-width', '5')
     .attr("x", function(d) { return xSubgroup(d.key); })
-    .attr("y", function(d) { return y(Math.abs(d.value)); })
+    .attr("y", function(d) { return y(Math.max(0, d.value)); })
     .attr("width", xSubgroup.bandwidth())
     .attr("height", function(d) { return Math.abs(y(Math.abs(d.value)) - y(0)); })
     .attr("fill", function(d) { return color(d.key); })

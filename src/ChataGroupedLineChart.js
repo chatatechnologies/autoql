@@ -73,8 +73,6 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
         };
     });
 
-    console.log(dataReady);
-
     var color = d3.scaleOrdinal()
     .domain(subgroups)
     .range(options.chartColors)
@@ -120,9 +118,18 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
         return Math.max(d['value1'], d['value2']);
     });
 
+    var minValue = d3.min(data, function(d) {
+        var sum = 0;
+        return Math.min(d['value1'], d['value2']);
+    });
+
+    if(minValue > 0){
+        minValue = 0;
+    }
+
     // Add Y axis
     var y = d3.scaleLinear()
-    .domain([0, maxValue])
+    .domain([minValue, maxValue])
     .range([ height, 0 ]);
     var axisLeft = d3.axisLeft(y);
 
