@@ -602,7 +602,8 @@ function Tile(dashboard, options={}){
                 var data = ChatDrawer.groupBy(json['data']['rows'], row => row[0]);
                 var cols = json['data']['columns'];
                 createPieChart(container, data,
-                    dashboard.options, cols, false
+                    dashboard.options, cols, false,
+                    'data-tilechart', true
                 );
                 break;
             case 'pivot_column':

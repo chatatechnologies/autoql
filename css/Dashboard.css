@@ -480,6 +480,7 @@
 .bar:focus,
 .circle:focus,
 .square:focus,
+.pie-slice:focus,
 .line-dot:focus,
 .stacked-rect:focus {
     outline: none !important;
@@ -493,6 +494,7 @@
 .dashboard-tile-response-container .circle:hover,
 .dashboard-tile-response-container .square:hover,
 .dashboard-tile-response-container .line-dot:hover
+.dashboard-tile-response-container .pie-slice:hover
 .dashboard-tile-response-container .stacked-rect:hover {
     fill-opacity: 1;
     opacity: 1;
