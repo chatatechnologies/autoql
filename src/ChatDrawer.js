@@ -487,6 +487,10 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
             div.classList.add('chata-table-container');
             div.classList.add('chata-table-container-renderer');
             responseRenderer.appendChild(div);
+            console.log(response);
+            if(response['data']['rows'].length == 0){
+                responseRenderer.innerHTML = `<div>No data found.</div>`;
+            }
             if(response['data']['columns'].length == 1){
                 var data = response['data'];
                 responseRenderer.innerHTML = `<div>${data}</div>`;
@@ -586,7 +590,9 @@ ChatDrawer.clickHandler = function(e){
         if (e.target.hasAttribute('data-stackedchartindex')) {
             var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
             var json = cloneObject(ChatDrawer.responses[component.dataset.componentid]);
-            json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+            json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
+            json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
+            json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
             ChatDrawer.sendDrilldownMessage(json, 0, ChatDrawer.options);
         }
 
@@ -851,16 +857,11 @@ ChatDrawer.clickHandler = function(e){
 
             var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
             groups = groups.sort().reverse();
-            for (var i = 0; i < data.length; i++) {
-                data[i][1] = formatData(data[i][1], json['data']['columns'][1], ChatDrawer.options);
-            }
-            for (var i = 0; i < groups.length; i++) {
-                groups[i] = formatData(groups[i], json['data']['columns'][1], ChatDrawer.options)
-            }
             var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
             var cols = json['data']['columns']
 
             var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+            console.log(dataGrouped);
             createStackedColumnChart(component, dataGrouped, groups, subgroups, cols, ChatDrawer.options);
         }
         if(e.target.classList.contains('stacked_bar_chart')){
@@ -877,12 +878,6 @@ ChatDrawer.clickHandler = function(e){
             var data = cloneObject(json['data']['rows']);
             var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
             groups = groups.sort().reverse();
-            for (var i = 0; i < data.length; i++) {
-                data[i][1] = formatData(data[i][1], json['data']['columns'][1], ChatDrawer.options);
-            }
-            for (var i = 0; i < groups.length; i++) {
-                groups[i] = formatData(groups[i], json['data']['columns'][1], ChatDrawer.options)
-            }
             var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
             var cols = json['data']['columns'];
             var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
@@ -1682,12 +1677,6 @@ ChatDrawer.sendMessage = function(chataInput, textValue){
 
                         var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                         groups = groups.sort().reverse();
-                        for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1], ChatDrawer.options);
-                        }
-                        for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1], ChatDrawer.options)
-                        }
                         var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                         var cols = jsonResponse['data']['columns'];
                         var dataGrouped = ChatDrawer.format3dData(jsonResponse['data']['columns'], data, groups);

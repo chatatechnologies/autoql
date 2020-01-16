@@ -562,12 +562,6 @@ function Tile(dashboard, options={}){
                 var data = cloneObject(json['data']['rows']);
                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1], dashboard.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1], dashboard.options)
-                }
                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var cols = json['data']['columns'];
                 var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
@@ -582,12 +576,6 @@ function Tile(dashboard, options={}){
                 var data = cloneObject(json['data']['rows']);
                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][1] = formatData(data[i][1], json['data']['columns'][1], dashboard.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][1], dashboard.options)
-                }
                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                 var cols = json['data']['columns'];
                 var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
@@ -653,7 +641,10 @@ function Tile(dashboard, options={}){
             drilldownTable.innerHTML = '';
             if(chataDashboardItem.options.displayType == 'stacked_bar' ||
                chataDashboardItem.options.displayType == 'stacked_column'){
-                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+                   json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
+                   json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
+                   json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
+
                    indexData = 0;
             }
             var drilldownData = chataDashboardItem.getDrilldownData(

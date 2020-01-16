@@ -106,15 +106,14 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         yAxis.tickValues(yTickValues);
     }
 
-    svg.append("g")
-    .call(yAxis);
-
     var color = d3.scaleOrdinal()
     .domain(subgroups)
     .range(options.chartColors)
 
     svg.append("g")
-    .call(yAxis).select(".domain").remove();
+    .call(yAxis.tickFormat(function(d){
+        return formatChartData(d, cols[1], options);
+    })).select(".domain").remove();
 
     svg.append("g")
     .attr("class", "grid")
@@ -152,11 +151,17 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         .attr('data-col2', col2)
         .attr('data-col3', col3)
         .attr('data-colvalue1', d.labelY)
-        .attr('data-colvalue2', d.data.group)
+        .attr('data-colvalue2', formatData(
+            d.data.group, cols[1], options
+        ))
         .attr('data-colvalue3', formatData(
             d.value, cols[2],
             options
         ))
+        .attr('data-unformatvalue1', d.labelY)
+        .attr('data-unformatvalue2', d.data.group)
+        .attr('data-unformatvalue3', d.value)
+
     })
     .attr('opacity', '0.7')
     .attr('class', 'tooltip-3d stacked-rect')

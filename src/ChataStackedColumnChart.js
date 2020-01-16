@@ -81,7 +81,9 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     if(barWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[1], options);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -89,7 +91,9 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[1], options);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .style("text-anchor", "center");
@@ -156,11 +160,16 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
         .attr('data-col2', col2)
         .attr('data-col3', col3)
         .attr('data-colvalue1', d.labelY)
-        .attr('data-colvalue2', d.data.group)
+        .attr('data-colvalue2', formatData(
+            d.data.group, cols[1], options
+        ))
         .attr('data-colvalue3', formatData(
             d.value, cols[2],
             options
         ))
+        .attr('data-unformatvalue1', d.labelY)
+        .attr('data-unformatvalue2', d.data.group)
+        .attr('data-unformatvalue3', d.value)
     })
     .attr('opacity', '0.7')
     .attr('class', 'tooltip-3d stacked-rect')

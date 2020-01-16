@@ -309,20 +309,6 @@ function getChatBar(options){
                                 var data = jsonResponse['data']['rows'];
                                 var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
                                 groups = groups.sort().reverse();
-                                for (var i = 0; i < data.length; i++) {
-                                    data[i][1] = formatData(
-                                        data[i][1],
-                                        jsonResponse['data']['columns'][1],
-                                        responseRenderer.options
-                                    );
-                                }
-                                for (var i = 0; i < groups.length; i++) {
-                                    groups[i] = formatData(
-                                        groups[i],
-                                        jsonResponse['data']['columns'][1],
-                                        responseRenderer.options
-                                    )
-                                }
                                 var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
                                 var cols = jsonResponse['data']['columns'];
                                 var dataGrouped = ChatDrawer.format3dData(jsonResponse['data']['columns'], data, groups);
@@ -335,26 +321,19 @@ function getChatBar(options){
                             break;
                             case 'stacked_column':
                                 var data = jsonResponse['data']['rows'];
-                                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                                var groups = ChatDrawer.getUniqueValues(
+                                    data, row => row[1]
+                                );
                                 groups = groups.sort().reverse();
-                                for (var i = 0; i < data.length; i++) {
-                                    data[i][1] = formatData(
-                                        data[i][1],
-                                        jsonResponse['data']['columns'][1],
-                                        responseRenderer.options
-                                    );
-                                }
-                                for (var i = 0; i < groups.length; i++) {
-                                    groups[i] = formatData(
-                                        groups[i],
-                                        jsonResponse['data']['columns'][1],
-                                        responseRenderer.options
-                                    )
-                                }
-                                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                                var subgroups = ChatDrawer.getUniqueValues(
+                                    data, row => row[0]
+                                );
                                 var cols = jsonResponse['data']['columns'];
 
-                                var dataGrouped = ChatDrawer.format3dData(jsonResponse['data']['columns'], data, groups);
+                                var dataGrouped = ChatDrawer.format3dData(
+                                    jsonResponse['data']['columns'],
+                                    data, groups
+                                );
                                 createStackedColumnChart(
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, cols,
@@ -362,6 +341,16 @@ function getChatBar(options){
                                     'data-stackedchartindex', responseRenderer.options.renderTooltips
                                 );
                             break;
+                            case 'pie':
+                                var data = ChatDrawer.groupBy(
+                                    jsonResponse['data']['rows'], row => row[0]
+                                );
+                                var cols = jsonResponse['data']['columns'];
+                                createPieChart(responseRenderer, data,
+                                    dashboard.options, cols, false,
+                                    'data-chartrenderer', true
+                                );
+                                break;
                             default:
                                 responseRenderer.innerHTML = `<div>Error: There was no data supplied for this table</div>`;
                         }

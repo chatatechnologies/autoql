@@ -96,8 +96,9 @@
             <ul class="tabs">
                 <li class="tab col s2"><a class="active" href="#test1">Chat Drawer</a></li>
                 <li class="tab col s2"><a class="" href="#test2">Dashboard</a></li>
-                <li class="tab col s2"><a class="" href="#test3">Settings</a></li>
-                <li class="tab col s1"><a class="" href="#test4">
+                <li class="tab col s2"><a class="" href="#test3">ChatBar</a></li>
+                <li class="tab col s2"><a class="" href="#test4">Settings</a></li>
+                <li class="tab col s1"><a class="" href="#test5">
                     <svg id="notification-icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-notifications-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M257 120.471c7.083 0 23.911 4.479 23.911 4.479 45.589 10.447 77.678 52.439 77.678 99.85V352.412l9.321 9.364 7.788 7.823H136.302l7.788-7.823 9.321-9.364V224.8c0-47.41 32.089-89.403 77.678-99.85 0 0 18.043-4.479 23.911-4.479M256 48c-17.602 0-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2zm41.411 374.4h-82.823c0 22.881 18.633 41.6 41.412 41.6s41.411-18.719 41.411-41.6z"></path></svg>
                 </a></li>
             </ul>
@@ -653,7 +654,15 @@
             </div>
 
         </div>
-        <div id="test3" class="col s12">
+        <div id="test3">
+            <div style="padding-top: 55px">
+                <div class="" id="chat-bar">
+                </div>
+                <div class="" id="response-renderer" style="padding:15px; width:100%; height: 650px;">
+                </div>
+            </div>
+        </div>
+        <div id="test4" class="col s12">
             <div class="" style="height: calc(100vh - 48px); background: rgb(250, 250, 250); overflow: auto;">
                 <div class="chata-notification-add-btn-container">
                     <div class="chata-notification-add-btn">
@@ -675,7 +684,7 @@
                 </div>
             </div>
         </div>
-        <div id="test4" class="col s12">
+        <div id="test5" class="col s12">
             <!-- <div style="height: 100vh; background: rgb(250, 250, 250);">
                 <div class="chata-notification-list-container">
                     <div class="chata-notification-dismiss-all">
@@ -803,7 +812,21 @@
             last_triggered: new Date()
         }),
     ]);
-    document.getElementById('test4').appendChild(notificationList);
+    document.getElementById('test5').appendChild(notificationList);
+    //Create the components
+    var chatBar = ChatDrawer.getChatBar({
+        autoCompletePlacement: 'bottom',
+    });
+    var responseRenderer = ChatDrawer.createResponseRenderer({
+        displayType: 'stacked_column'
+    });
+
+    //Bind the chatBar to responseRenderer
+    chatBar.bind(responseRenderer);
+
+    //Add components to document
+    document.getElementById('chat-bar').append(chatBar);
+    document.getElementById('response-renderer').append(responseRenderer);
     var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxNDM4ODU1LCAiZXhwIjogMTU3MTQ0OTY1NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.BJEuLY4oZ0DkfwS4S4rxC5EQeHzAT-KZKjklm9KWYxn76MP_zh4gU-fvcK4sl82S38kiFYBuDGbT0h9_VQ4PXpcj-dj1FviMcROYa7UITIFYzajj4xRjvAwWG8tXYZNqPRXMbNP2LTbXIt3nqch7Tq2FrYuv6pqHhJeHgzXWH9FX3g3F5cMQXEdfM-CDtWJhOUX87CHId9TzzGindPlDdbAS22RHGj4NulKR89iRwyIubITHDVUVXHJl9LUBk3AOZ69J90GdrIQbj8bKU79SEjiQ-M2idtpMSv5-EqmoPx-aVaoD-3S-NMIz_nBPLvaQX4qEo0PDrbY0nr3SXLUbyQ==`;
         var chata = ChatDrawer.init('chata', {
             token: _token,
