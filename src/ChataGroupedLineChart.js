@@ -150,7 +150,6 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .enter()
     .append("path")
     .attr("d", function(d){
-        console.log(d.values);
         return line(d.values)
     })
     .attr("stroke", function(d){ return color(d.name) })
@@ -165,15 +164,21 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .data(dataReady)
     .enter()
     .append('g')
-    .style("fill", function(d){ return console.log(d); color(d.name) })
+    .style("fill", function(d){ return color(d.name) })
     // Second we need to enter in the 'values' part of this group
     .selectAll("myPoints")
-    .data(function(d){ return d.values })
+    .data(function(d){
+        for (var i = 0; i < d.values.length; i++) {
+            d.values[i].name = d.name;
+        }
+        return d.values;
+    })
     .enter()
     .append("circle")
     .each(function (d, i) {
         var nameCol2 = d.key == 'value1' ? col2 : col3;
         d3.select(this)
+        .attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)
         .attr('data-colvalue1', d.group)
@@ -185,10 +190,11 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .attr('class', 'tooltip-2d line-dot')
     .attr("cx", function(d) { return x(d.group) } )
     .attr("cy", function(d) { return y(d.value) } )
-    .attr("r", 2)
-    .attr('stroke', 'transparent')
-    .attr('stroke-width', '5')
-
+    .attr("r", 3)
+    .attr('stroke', function(d) { return color(d.name)} )
+    .attr('stroke-width', '2')
+    .attr('stroke-opacity', '0.7')
+    .attr("fill", 'white')
     var nodeWidth = (d) => d.getBBox().width;
 
     const legend = svg.append('g')

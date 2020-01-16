@@ -1,24 +1,3 @@
-const centerVisualization = (svg, width, height) => {
-    const containerBBox = svg.node().getBBox()
-
-    const containerWidth = containerBBox.width
-    const containerHeight = containerBBox.height
-
-    const currentXPosition = containerBBox.x
-    const currentYPosition = containerBBox.y
-
-    const finalXPosition = (width - containerWidth) / 2
-    const finalYPosition = (height - containerHeight) / 2
-    const xDelta = finalXPosition - currentXPosition
-    const yDelta = finalYPosition - currentYPosition
-
-
-    svg.attr(
-        'transform',
-        `translate(${xDelta},${yDelta})`
-    )
-}
-
 function createPieChart(component, data, options, cols, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
@@ -84,7 +63,6 @@ function createPieChart(component, data, options, cols, fromChatDrawer=true, val
     .enter()
     .append('path')
     .each(function(d, i){
-        console.log(d);
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
@@ -104,15 +82,16 @@ function createPieChart(component, data, options, cols, fromChatDrawer=true, val
         d3.select(this).style('fill-opacity', 0.85)
     })
     .on('click', function(d) {
-        if (!d._expanded) {
-            svg
-            .selectAll('path.slice')
-            .each(function(data) {
-                data._expanded = false
-            })
-            .transition()
-            .duration(500)
-        }
+        svg
+        .selectAll('path.slice')
+        .each(function(data) {
+            data._expanded = false
+        })
+        .transition()
+        .duration(500)
+        .attr('transform', function(d){
+            return 'translate(0,0)';
+        });
 
         d3.select(this)
         .transition()
@@ -122,8 +101,8 @@ function createPieChart(component, data, options, cols, fromChatDrawer=true, val
                 d._expanded = true
                 const a =
                 d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2
-                const x = Math.cos(a) * 20
-                const y = Math.sin(a) * 20
+                const x = Math.cos(a) * 10
+                const y = Math.sin(a) * 10
                 return 'translate(' + x + ',' + y + ')'
             } else {
                 d._expanded = false
@@ -131,7 +110,7 @@ function createPieChart(component, data, options, cols, fromChatDrawer=true, val
             }
         })
     })
-    .attr('class', 'tooltip-2d pie-slice')
+    .attr('class', 'tooltip-2d pie-slice slice')
     tooltipCharts();
 
 

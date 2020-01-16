@@ -47,7 +47,6 @@ function formatData(val, col, options={}){
         case 'QUANTITY':
             var n = Math.abs(parseFloat(val)); // Change to positive
             var decimal = n - Math.floor(n);
-            console.log(decimal);
             if(decimal > 0){
                 value = parseFloat(val).toFixed(options.quantityDecimals);
             }else{
@@ -71,7 +70,11 @@ function formatData(val, col, options={}){
             }
         break;
         default:
-            value = val;
+            if(Object.prototype.toString.call(val) === '[object Object]'){
+                value = '';
+            }else{
+                value = val;
+            }
     }
     return value;
 }

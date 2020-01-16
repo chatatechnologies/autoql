@@ -576,6 +576,9 @@ ChatDrawer.clickHandler = function(e){
             if(component.tagName == 'svg'){
                 component = component.parentElement;
             }
+            if(component.tagName === 'g'){
+                component = component.parentElement.parentElement;
+            }
             var json = ChatDrawer.responses[component.dataset.componentid];
             var indexData = e.target.dataset.chartindex;
             ChatDrawer.sendDrilldownMessage(json, indexData, ChatDrawer.options);

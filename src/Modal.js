@@ -45,6 +45,7 @@ function Modal(options={}){
         if(obj.options.destroyOnClose){
             obj.destroy();
         }
+        obj.clearViews();
     }
 
     obj.destroy = function(){

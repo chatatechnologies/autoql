@@ -391,7 +391,7 @@ function Tile(dashboard, options={}){
         if(supportedDisplayTypes.includes('suggestion')){
             displayType = 'suggestion';
         }
-        this.createVizToolbar(json, uuid, displayType);
+        this.createVizToolbar(json, _uuid, displayType);
         if(json['data']['rows'].length == 0){
             container.innerHTML = 'No data found.';
             return 0;
@@ -413,7 +413,7 @@ function Tile(dashboard, options={}){
                 }else{
                     var table = createTable(
                         json, div, dashboard.options,
-                        'append', uuid, 'table-response-renderer'
+                        'append', _uuid, 'table-response-renderer'
                     );
                     table.classList.add('renderer-table');
                 }
@@ -646,6 +646,7 @@ function Tile(dashboard, options={}){
             var json = cloneObject(
                 ChatDrawer.responses[uuid]
             );
+            console.log(json);
             var drilldownUUID = uuidv4();
             var indexData = parseInt(e.target.dataset.tilechart);
 
@@ -654,7 +655,6 @@ function Tile(dashboard, options={}){
                chataDashboardItem.options.displayType == 'stacked_column'){
                    json['data']['rows'][0][0] = e.target.dataset.colvalue1;
                    indexData = 0;
-                   console.log('INDEX DATA: ' + indexData);
             }
             var drilldownData = chataDashboardItem.getDrilldownData(
                 json, indexData , dashboard.options);
@@ -677,6 +677,90 @@ function Tile(dashboard, options={}){
                 }
             )
         }
+
+        if(e.target.classList.contains('column')){
+            var tableElement = e.target.parentElement.parentElement.parentElement;
+
+            var localuuid = tableElement.dataset.componentid;
+            if(e.target.nextSibling.classList.contains('up')){
+                e.target.nextSibling.classList.remove('up');
+                e.target.nextSibling.classList.add('down');
+                var data = cloneObject(ChatDrawer.responses[localuuid]);
+                var sortData = ChatDrawer.sort(
+                    data['data']['rows'],
+                    'desc',
+                    e.target.dataset.index,
+                    e.target.dataset.type
+                );
+                ChatDrawer.refreshTableData(
+                    tableElement,
+                    sortData,
+                    ChatDrawer.options
+                );
+            }else{
+                e.target.nextSibling.classList.remove('down');
+                e.target.nextSibling.classList.add('up');
+                var data = cloneObject(
+                    ChatDrawer.responses[localuuid]
+                );
+                var sortData = ChatDrawer.sort(
+                    data['data']['rows'],
+                    'asc',
+                    parseInt(e.target.dataset.index),
+                    e.target.dataset.type
+                );
+                ChatDrawer.refreshTableData(
+                    tableElement,
+                    sortData,
+                    ChatDrawer.options
+                );
+            }
+        }
+
+        if(e.target.classList.contains('column-pivot')){
+            var tableElement = e.target.parentElement.parentElement.parentElement;
+            var pivotArray = [];
+            var json = cloneObject(
+                ChatDrawer.responses[tableElement.dataset.componentid]
+            );
+            var columns = json['data']['columns'];
+            if(columns[0].type === 'DATE' &&
+                columns[0].name.includes('month')){
+                pivotArray = getDatePivotArray(
+                    json,
+                    ChatDrawer.options,
+                    cloneObject(json['data']['rows'])
+                );
+            }else{
+                pivotArray = getPivotColumnArray(
+                    json,
+                    ChatDrawer.options,
+                    cloneObject(json['data']['rows'])
+                );
+            }
+            if(e.target.nextSibling.classList.contains('up')){
+                e.target.nextSibling.classList.remove('up');
+                e.target.nextSibling.classList.add('down');
+                var sortData = sortPivot(
+                    pivotArray,
+                    e.target.dataset.index,
+                    'desc'
+                );
+                sortData.unshift([]); //Simulate header
+                ChatDrawer.refreshPivotTable(tableElement, sortData);
+            }else{
+                e.target.nextSibling.classList.remove('down');
+                e.target.nextSibling.classList.add('up');
+                var sortData = sortPivot(
+                    pivotArray,
+                    e.target.dataset.index,
+                    'asc'
+                );
+                sortData.unshift([]); //Simulate header
+                ChatDrawer.refreshPivotTable(tableElement, sortData);
+            }
+        }
+
     });
 
     itemContent.onclick = function(evt){

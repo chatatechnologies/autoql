@@ -139,6 +139,8 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     .domain(subgroups)
     .range(options.chartColors)
 
+
+    var indexCount = 0;
     // Show the bars
     svg.append("g")
     .selectAll("g")
@@ -159,6 +161,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     .each(function (d, i) {
         var nameCol2 = d.key == 'value1' ? col2 : col3;
         d3.select(this)
+        .attr(valueClass, indexCount)
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)
         .attr('data-colvalue1', d.group)
@@ -166,6 +169,9 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
             d.value, cols[1],
             options
         ));
+        if(d.key == 'value2'){
+            indexCount++;
+        }
     })
     .attr('class', 'tooltip-2d bar')
     .attr('stroke', 'transparent')

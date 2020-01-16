@@ -136,6 +136,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChatD
     .range(options.chartColors)
 
     // Show the bars
+    var indexCount = 0;
     svg.append("g")
     .selectAll("g")
     // Enter in data = loop group per group
@@ -155,6 +156,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChatD
     .each(function (d, i) {
         var nameCol2 = d.key == 'value1' ? col2 : col3;
         d3.select(this)
+        .attr(valueClass, indexCount)
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)
         .attr('data-colvalue1', d.group)
@@ -162,6 +164,9 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChatD
             d.value, cols[1],
             options
         ));
+        if(d.key == 'value2'){
+            indexCount++;
+        }
     })
     .attr('class', 'tooltip-2d bar')
     .attr("x", function(d) { return x(Math.min(0, d.value)); })
