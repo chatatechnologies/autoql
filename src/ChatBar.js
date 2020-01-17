@@ -113,7 +113,6 @@ function getChatBar(options){
 
         ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
-            console.log(jsonResponse);
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
             }
@@ -130,7 +129,6 @@ function getChatBar(options){
                 ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
                 ChatDrawer.ajaxCall(value, function(jsonResponse){
-                    console.log(jsonResponse['data']['display_type']);
                     ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
                     responseRenderer.innerHTML = '';
                     chataBarContainer.chatbar.removeAttribute("disabled");
@@ -146,15 +144,23 @@ function getChatBar(options){
                     if(displayType == 'table'){
                         var cols = jsonResponse['data']['columns'];
                         var rows = jsonResponse['data']['rows'];
-                        if(cols.length == 1 && rows.length == 1){
-                            if(cols[0]['name'] == 'query_suggestion' && responseRenderer.options.supportsSuggestions){
-                                responseRenderer.innerHTML = `<div>I'm not sure what you mean by <strong>"${value}"</strong>. Did you mean:</div>`;
-                                ChatDrawer.createSuggestions(
-                                    responseRenderer,
-                                    rows,
-                                    'chata-suggestion-btn-renderer'
-                                );
-                            }else if(cols[0]['name'] == 'Help Link'){
+
+                        if(cols[0]['name'] == 'query_suggestion' &&
+                        responseRenderer.options.supportsSuggestions){
+                            var wrapper = document.createElement('div');
+                            responseRenderer.innerHTML = '';
+                            wrapper.innerHTML = `
+                                <div>
+                                    I'm not sure what you mean by <strong>"
+                                    ${value}"</strong>. Did you mean:</div>`;
+                            ChatDrawer.createSuggestions(
+                                wrapper,
+                                rows,
+                                'chata-suggestion-btn-renderer'
+                            );
+                            responseRenderer.appendChild(wrapper)
+                        }else if(cols.length == 1 && rows.length == 1){
+                            if(cols[0]['name'] == 'Help Link'){
                                 responseRenderer.innerHTML = ChatDrawer.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
@@ -184,6 +190,7 @@ function getChatBar(options){
                             );
                             table.classList.add('renderer-table');
                         }
+
 
                     }else{
                         switch(displayType){

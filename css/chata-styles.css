@@ -934,7 +934,12 @@ input[type=text]:disabled {
     letter-spacing: 0.04em;
     fill: var(--chata-drawer-text-color-primary);
 }
-
+.renderer-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+}
 .renderer-container line{
     stroke-width: 1px;
     stroke: currentColor;

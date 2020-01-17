@@ -66,6 +66,10 @@ function createResponseRenderer(options={}){
             if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
                 var json = ChatDrawer.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;
+                var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
+                    'chat-bar-text'
+                )[0]
+                var loading = putLoadingContainer(topBar);
                 let mergeOptions = {
                     ...responseRenderer.chataBarContainer.options,
                     ...responseRenderer.options
@@ -73,7 +77,7 @@ function createResponseRenderer(options={}){
                 ChatDrawer.sendDrilldownMessage(
                     json, indexData,
                     mergeOptions,
-                    'ChatBar', responseRenderer);
+                    'ChatBar', responseRenderer, loading);
             }
         }
 
@@ -98,7 +102,7 @@ function createResponseRenderer(options={}){
         }
 
         if(e.target.classList.contains('chata-suggestion-btn-renderer')){
-            var parent = e.target.parentElement.parentElement;
+            var parent = e.target.parentElement.parentElement.parentElement;
             parent.options.onSuggestionClick();
             parent.chataBarContainer.sendMessageToResponseRenderer(
                 e.target.textContent

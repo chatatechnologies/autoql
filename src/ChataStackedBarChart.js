@@ -1,11 +1,10 @@
 function createStackedBarChart(component, data, groups, subgroups, cols, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 30, left: 120},
+    var margin = {top: 5, right: 10, bottom: 30, left: 100},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
-    var legspacing = 15;
     var chartWidth = width - wLegendBox;
     var height;
-    var legendBoxMargin = 25;
+    var legendBoxMargin = 15;
     var col1 = formatColumnName(cols[0]['name']);
     var col2 = formatColumnName(cols[1]['name']);
     var col3 = formatColumnName(cols[2]['name']);
@@ -180,32 +179,33 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         return Math.abs(x(d[0]) - x(d[1]));
     })
 
-    var legend = svg.selectAll(".legend")
-        .data(subgroups.sort())
-        .enter()
-        .append("g")
+    var svgLegend = svg.append('g')
+    .style('fill', 'currentColor')
+    .style('fill-opacity', '0.7')
+    .style('font-family', 'inherit')
+    .style('font-size', '10px')
 
-    legend.append("circle")
-        .attr("fill", color)
-        .attr("width", 20)
-        .attr("height", 20)
-        .attr("cy", function (d, i) {
-            return i * legspacing + margin.top;
-        })
-        .attr('opacity', '0.7')
-        .attr("cx", chartWidth + legspacing)
-        .attr("r", 5);
+    const legendWrapLength = wLegendBox - 28;
+    legendScale = d3.scaleOrdinal()
+        .domain(subgroups.sort())
+        .range(options.chartColors)
 
-    legend.append("text")
-        .attr("class", "label")
-        .attr('opacity', '0.7')
-        .attr("y", function (d, i) {
-            return i * legspacing + margin.top + 2;
-        })
-        .attr("x", chartWidth + legendBoxMargin)
-        .attr("text-anchor", "start")
-        .text(function (d, i) {
-            return subgroups[i];
-        })
+    var legendOrdinal = d3.legendColor()
+    .shape(
+        'path',
+        d3.symbol()
+        .type(d3.symbolCircle)
+        .size(75)()
+    )
+    .orient('vertical')
+    .shapePadding(5)
+    .labelWrap(legendWrapLength)
+    .scale(legendScale)
+    svgLegend.call(legendOrdinal)
+
+    const newX = chartWidth + legendBoxMargin
+    svgLegend
+      .attr('transform', `translate(${newX}, ${0})`)
+
     tooltipCharts();
 }

@@ -437,7 +437,9 @@ ChatDrawer.createHeader = function(){
     ChatDrawer.headerTitle = headerTitle;
 }
 
-ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='ChatDrawer', responseRenderer=null){
+ChatDrawer.sendDrilldownMessage = function(
+    json, indexData, options, context='ChatDrawer',
+    responseRenderer=undefined, loading=undefined){
     var obj = {};
     if(indexData != -1){
         for (var i = 0; i < getGroupableCount(json); i++) {
@@ -481,6 +483,10 @@ ChatDrawer.sendDrilldownMessage = function(json, indexData, options, context='Ch
     }else{
         ChatDrawer.ajaxCallPost(URL, function(response){
             responseRenderer.innerHTML = '';
+            var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
+                'chat-bar-text'
+            )[0]
+            topBar.removeChild(loading);
             var uuid = uuidv4();
             ChatDrawer.responses[uuid] = response;
             var div = document.createElement('div');
