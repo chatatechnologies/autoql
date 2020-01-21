@@ -192,3 +192,75 @@
     height: 300px;
     border-bottom: 1px solid rgba(0,0,0,.05);
 }
+
+.chata-checkbox {
+  text-align: center;
+  margin-top: 18px !important;
+  display: flex;
+  align-items: center;
+  margin: .5rem;
+  cursor: pointer
+}
+
+.chata-checkbox .chata-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.chata-checkbox .chata-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.chata-checkbox .chata-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+  display: inline-block;
+}
+
+.chata-checkbox .chata-slider.round {
+  border-radius: 34px;
+}
+
+.chata-checkbox .chata-slider.round:before {
+  border-radius: 50%;
+}
+
+.chata-checkbox .chata-slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 2px;
+  bottom: 3px;
+  background-color: #fff;
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+
+.chata-checkbox input:checked + .chata-slider {
+  border-color: #26a7df;
+  background: #26a7df;
+}
+
+.chata-checkbox input:checked + .chata-slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+.chata-settings-container{
+    height: calc(100vh - 48px);
+    background: rgb(250, 250, 250);
+    overflow: auto;
+}
