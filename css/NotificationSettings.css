@@ -1,0 +1,345 @@
+.chata-steps-container {
+    margin: 10px;
+}
+
+.chata-step-container {
+    position: relative;
+    border-left: 1px solid #d3d3d3;
+    margin-left: 10px;
+    padding-left: 25px;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
+
+.chata-step-title {
+    font-weight: 500;
+    font-size: 15px;
+    line-height: 15px;
+}
+
+.chata-step-content {
+    padding: 15px 15px 25px;
+}
+
+.chata-input-container {
+    position: relative;
+    margin: 2px 5px;
+    display: inline-block;
+}
+
+.chata-notification-display-name-input, .chata-notification-message-input {
+    width: 100%;
+}
+
+.chata-input-container .chata-input-settings.with-icon {
+    padding-left: 38px;
+}
+.chata-input-container .chata-input-settings {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+    background: #fff;
+    line-height: 32px;
+    min-height: 34px;
+    padding: 0 10px;
+    width: 100%;
+    outline: none!important;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-transition-property: border-color,color,opacity;
+    transition-property: border-color,color,opacity;
+}
+
+.chata-input-container .chata-input-icon {
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    opacity: .4;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+}
+
+.chata-input-container .chata-input-icon svg {
+    height: 17px;
+    width: 17px;
+}
+
+.chata-icon svg {
+    margin-bottom: -.1em;
+}
+
+.chata-input-container {
+    position: relative;
+    margin: 2px 5px;
+    display: inline-block;
+}
+
+.chata-input-container .chata-input-settings {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+    background: #fff;
+    line-height: 32px;
+    min-height: 34px;
+    padding: 0 10px;
+    width: 100%;
+    outline: none!important;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-transition-property: border-color,color,opacity;
+    transition-property: border-color,color,opacity;
+}
+
+.chata-input-container .chata-input-settings.area{
+    overflow: auto;
+    resize: vertical;
+}
+
+.chata-step-dot {
+    position: absolute;
+    top: 0;
+    left: -8px;
+    height: 15px;
+    width: 15px;
+    background: #fff;
+    border-radius: 8px;
+    border: 1px solid #d3d3d3;
+    -webkit-transition: all .5s ease;
+    transition: all .5s ease;
+}
+
+.chata-step-subtitle {
+    font-size: 13px;
+    margin-top: 6px;
+    color: rgba(0,0,0,.4);
+}
+
+.notification-rule-add-btn-outer {
+    text-align: center;
+    border-style: dashed!important;
+    height: 38px;
+    line-height: 25px;
+    margin: 15px 0 0!important;
+    overflow: hidden;
+}
+
+.notification-rule-outer-container {
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 4px;
+}
+
+.notification-group-wrapper:last-of-type {
+    margin-bottom: 0;
+}
+.notification-group-wrapper:first-of-type {
+    margin-top: 0;
+}
+.notification-group-wrapper {
+    position: relative;
+    margin-right: 0;
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy {
+    position: relative;
+    padding: 50px 20px 20px;
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+}
+
+.chata-notification-rule-container {
+    display: flex;
+    align-items: baseline;
+}
+
+.chata-notification-rule-container .chata-rule-input {
+    flex: 1 1;
+    width: 100%;
+}
+
+.chata-input-container {
+    position: relative;
+    margin: 2px 5px;
+    display: inline-block;
+}
+
+.chata-notification-rule-container .chata-rule-condition-select {
+    flex: 0 1;
+    flex-basis: 33px;
+}
+
+.chata-select {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+    background: #fff;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 33px;
+    height: 35px;
+    margin: 0 3px;
+    padding: 0 11px;
+    color: var(--chata-drawer-accent-color);
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-rule-container .chata-rule-second-input-container {
+    position: relative;
+    margin: 2px 5px;
+    flex: 1 1;
+}
+
+.chata-notification-rule-container .chata-rule-delete-btn {
+    margin-left: 5px;
+}
+
+.chata-notification-rule-container .chata-rule-add-btn, .chata-notification-rule-container .chata-rule-delete-btn {
+    opacity: .4;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy .notification-rule-and-or-select {
+    display: block;
+    position: absolute;
+    margin: 0 auto;
+    padding: 0 10px;
+    background: #fff;
+    top: 16px;
+    color: rgba(0,0,0,.5);
+}
+
+.chata-radio-btn-container {
+    display: inline-block;
+    border-radius: 4px;
+    margin: 0 4px;
+}
+
+.chata-radio-btn-container .chata-radio-btn:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin-left: 0;
+}
+
+.chata-radio-btn-container .chata-radio-btn.active {
+    background-color: var(--chata-drawer-accent-color);
+    border-color: var(--chata-drawer-accent-color);
+    color: #fff;
+    z-index: 3;
+}
+.chata-radio-btn-container .chata-radio-btn {
+    position: relative;
+    display: inline-block;
+    padding: 3px 12px;
+    border: 1px solid #dcdcdc;
+    margin-left: -1px;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.chata-radio-btn-container .chata-radio-btn:last-child {
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy .chata-notification-group-delete-btn {
+    top: -10px;
+    right: -10px;
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy .chata-notification-group-add-btn,
+.notification-group-wrapper .chata-notification-group-container-copy .chata-notification-group-delete-btn {
+    position: absolute;
+    height: 21px;
+    width: 21px;
+    border-radius: 10px;
+    border: 1px solid;
+    line-height: 20px;
+    text-align: center;
+    background: #fff;
+    color: rgba(0,0,0,.2);
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    cursor: pointer;
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy .chata-notification-group-add-btn svg,
+.notification-group-wrapper .chata-notification-group-container-copy .chata-notification-group-delete-btn svg {
+    width: 15px;
+    height: 15px;
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy .notification-rule-btn-container {
+    display: flex;
+    margin-top: 5px;
+    width: calc(100% - 25px);
+}
+
+.notification-group-wrapper .chata-notification-group-container-copy .chata-notification-rule-add-btn {
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    border-radius: 20px;
+    margin-left: 5px;
+    line-height: 20px;
+    text-align: center;
+    font-size: 14px;
+    color: rgba(0,0,0,.2);
+    border: 1px solid;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+
+.chata-notification-rule-container .chata-rule-term-type-selector {
+    position: absolute;
+    margin: 0;
+    top: 3px;
+    left: 5px;
+    height: 32px;
+    background: #fff;
+    color: rgba(0,0,0,.25);
+    border: none;
+    border-right: 1px solid rgba(0,0,0,.15);
+    border-left: 1px solid rgba(0,0,0,.15);
+
+    border-radius: 0;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    width: 40px;
+}
+
+.chata-notification-rule-container .chata-rule-term-type-selector svg {
+    height: 17px;
+    width: 17px;
+    margin-top: 7px;
+}
+.chata-rule-second-input-container:hover .chata-input-settings,
+.chata-rule-second-input-container:hover .chata-select{
+    border-color: var(--chata-drawer-accent-color);
+
+}
+.chata-input-settings:hover{
+    border-color: var(--chata-drawer-accent-color);
+}
+.chata-select:hover{
+    border-color: var(--chata-drawer-accent-color);
+    color: var(--chata-drawer-accent-color);
+}
+
+.chata-notification-rule-container .chata-rule-second-input-container .chata-input-container .chata-input-settings {
+    padding-left: 48px;
+}
+
+.chata-step-container.complete .chata-step-dot {
+    border-color: var(--chata-drawer-accent-color);
+    background: var(--chata-drawer-accent-color);
+}
+
+.chata-step-container.complete {
+    border-color: var(--chata-drawer-accent-color);
+}
