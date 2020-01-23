@@ -39,9 +39,6 @@
     width: 100%;
 }
 
-.chata-input-container .chata-input-settings.with-icon {
-    padding-left: 38px;
-}
 .chata-input-container .chata-input-settings {
     border: 1px solid rgba(0,0,0,.1);
     border-radius: 4px;
@@ -99,6 +96,9 @@
 .chata-input-container .chata-input-settings.area{
     overflow: auto;
     resize: vertical;
+}
+.chata-input-container .chata-input-settings.with-icon {
+    padding-left: 38px;
 }
 
 .chata-step-dot {

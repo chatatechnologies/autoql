@@ -38,6 +38,8 @@ function SettingsItem(title, message){
                 withFooter: true,
                 destroyOnClose: true
             })
+            var modalView = new NotificationSettingsModal();
+            configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
             configModal.show();
         }

@@ -1,3 +1,9 @@
+.chata-modal-body * {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
 .chata-modal-container {
   position: fixed !important;
   top: 0;

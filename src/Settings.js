@@ -19,5 +19,16 @@ function NotificationSettings(items=[]){
     for (var i = 0; i < items.length; i++) {
         notificationSettingsContainer.appendChild(items[i]);
     }
+
+    notificationAddContainer.onclick = (evt) => {
+        var configModal = new Modal({
+            withFooter: true,
+            destroyOnClose: true
+        })
+        var modalView = new NotificationSettingsModal();
+        configModal.addView(modalView);
+        configModal.setTitle('Custom Notification');
+        configModal.show();
+    }
     return wrapper
 }
