@@ -1,3 +1,11 @@
+.chata-steps-container *, .chata-steps-container *:before, .chata-steps-container *:after{
+    box-sizing: border-box !important;
+    padding: 0px;
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+
 .chata-steps-container {
     margin: 10px;
 }
@@ -321,7 +329,6 @@
 .chata-rule-second-input-container:hover .chata-input-settings,
 .chata-rule-second-input-container:hover .chata-select{
     border-color: var(--chata-drawer-accent-color);
-
 }
 .chata-input-settings:hover{
     border-color: var(--chata-drawer-accent-color);
@@ -341,5 +348,9 @@
 }
 
 .chata-step-container.complete {
+    border-color: var(--chata-drawer-accent-color);
+}
+
+.chata-checkbox__input {
     border-color: var(--chata-drawer-accent-color);
 }
