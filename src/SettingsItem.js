@@ -39,6 +39,8 @@ function SettingsItem(title, message){
                 destroyOnClose: true
             })
             var modalView = new NotificationSettingsModal();
+            configModal.chataModal.style.width = '95vw';
+
             configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
             configModal.show();

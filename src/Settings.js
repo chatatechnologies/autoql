@@ -26,6 +26,7 @@ function NotificationSettings(items=[]){
             destroyOnClose: true
         })
         var modalView = new NotificationSettingsModal();
+        configModal.chataModal.style.width = 'vw';
         configModal.addView(modalView);
         configModal.setTitle('Custom Notification');
         configModal.show();
