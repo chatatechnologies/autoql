@@ -1,5 +1,6 @@
 function NotificationSettingsModal(){
     var wrapper = document.createElement('div');
+    var conditionGroups = [];
     var btnAddGroup = htmlToElement(`
         <span>
             <div class="chata-btn default notification-rule-add-btn-outer"
@@ -46,14 +47,31 @@ function NotificationSettingsModal(){
     messageContainer.appendChild(messageArea.input);
     step1.addElement(titleContainer);
     step1.addElement(messageContainer);
+    console.log(step1.classList);
+    titleInput.input.onkeyup = function(evt){
+        if(evt.target.value != ''){
+            if(!step1.classList.contains('complete')){
+                step1.classList.add('complete');
+            }
+        }else{
+            step1.classList.remove('complete');
+        }
+    }
 
     // STEP 2
     var ruleContainer = document.createElement('div');
-    var group = ConditionGroup();
+    var group = ConditionGroup(true);
+    conditionGroups.push(group);
     ruleContainer.classList.add('notification-rule-outer-container');
     ruleContainer.appendChild(group);
     ruleContainer.appendChild(btnAddGroup);
     step2.addElement(ruleContainer);
+    btnAddGroup.onclick = function(evt){
+        var newGroup = ConditionGroup();
+        ruleContainer.insertBefore(newGroup, btnAddGroup);
+        conditionGroups.push(newGroup);
+        addMarginLeft(conditionGroups);
+    }
 
     // STEP 3
     var queryReturnContainer = new InputContainer(
@@ -65,8 +83,16 @@ function NotificationSettingsModal(){
     }, QUERY);
     queryReturnContainer.appendChild(queryReturnInput.input);
     queryReturnContainer.appendChild(queryReturnInput.spanIcon);
-
     step3.addElement(queryReturnContainer);
+    queryReturnInput.input.onkeyup = function(evt){
+        if(evt.target.value != ''){
+            if(!step3.classList.contains('complete')){
+                step3.classList.add('complete');
+            }
+        }else{
+            step3.classList.remove('complete');
+        }
+    }
 
     // STEP 4
     var label = document.createTextNode('Notify me')
@@ -101,6 +127,15 @@ function NotificationSettingsModal(){
     return wrapper;
 }
 
+function addMarginLeft(groups){
+    if(groups.length > 0){
+        groups[0].notificationAndOrBreak.style.visibility = 'visible';
+    }
+    for (var i = 0; i < groups.length; i++) {
+        groups[i].style.marginLeft = '50px';
+    }
+}
+
 function ChataInput(tag, elementProps, svgIcon=undefined){
     let input;
     input = document.createElement(tag);
@@ -132,7 +167,7 @@ function InputContainer(classList=[]){
     return container;
 }
 
-function ConditionGroup(){
+function ConditionGroup(first=false){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
     var ruleContainer = document.createElement('div');
@@ -193,7 +228,33 @@ function ConditionGroup(){
         type: "single"
     }, QUERY);
 
+    groupWrapper.queryInput1 = queryInput;
+    groupWrapper.queryInput2 = queryInput2;
+    groupWrapper.notificationRuleAddBtn = notificationRuleAddBtn;
     groupWrapper.classList.add('notification-group-wrapper');
+    let notificationAndOrBreak;
+    if(first){
+        notificationAndOrBreak = htmlToElement(`
+            <div
+                class="notification-and-or-break"
+                style="top: 0px; height: 100%; visibility: hidden">
+            </div>
+        `);
+    }else{
+        notificationAndOrBreak = htmlToElement(`
+            <div
+                class="notification-and-or-break"
+                style="top: -19px;
+                height: calc(100% + 19px);">
+                <div class="notification-and-or-text"
+                    style="background: rgb(186, 233, 255);
+                    border: 1px solid rgb(144, 221, 255);">AND
+                </div>
+            </div>
+        `);
+    }
+    groupWrapper.notificationAndOrBreak = notificationAndOrBreak; 
+    groupWrapper.appendChild(notificationAndOrBreak);
     groupWrapper.style.marginLeft = '0px';
     groupContainer.classList.add('chata-notification-group-container-copy');
     groupContainer.classList.add('disable-first-delete');

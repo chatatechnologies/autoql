@@ -62,7 +62,7 @@
 
   padding: 25px;
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .chata-modal-body-editor{

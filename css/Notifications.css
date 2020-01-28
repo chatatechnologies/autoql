@@ -339,3 +339,22 @@
     text-overflow: ellipsis;
     padding-right: 10px;
 }
+
+.notification-group-wrapper .notification-and-or-break {
+    position: absolute;
+    color: rgba(0,0,0,.4);
+    left: -35px;
+    border-left: 1px dashed rgba(0,0,0,.15);
+}
+
+.notification-group-wrapper .notification-and-or-text {
+    width: 41px;
+    z-index: 999999;
+    position: absolute;
+    left: -21px;
+    top: -5px;
+    padding: 4px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 12px;
+}
