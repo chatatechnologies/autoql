@@ -1,6 +1,5 @@
 function NotificationSettingsModal(){
     var wrapper = document.createElement('div');
-    var conditionGroups = [];
     var btnAddGroup = htmlToElement(`
         <span>
             <div class="chata-btn default notification-rule-add-btn-outer"
@@ -60,17 +59,27 @@ function NotificationSettingsModal(){
 
     // STEP 2
     var ruleContainer = document.createElement('div');
-    var group = ConditionGroup(true);
-    conditionGroups.push(group);
+    var parentSelect = notificationRuleAndOrSelect();
+    var group = ConditionGroup(ruleContainer, parentSelect, true);
+    parentSelect.style.visibility = 'hidden';
+    parentSelect.style.display = 'none';
+
     ruleContainer.classList.add('notification-rule-outer-container');
     ruleContainer.appendChild(group);
     ruleContainer.appendChild(btnAddGroup);
+    step2.addElement(parentSelect);
     step2.addElement(ruleContainer);
     btnAddGroup.onclick = function(evt){
-        var newGroup = ConditionGroup();
+        var groups = document.getElementsByClassName(
+            'notification-group-wrapper'
+        );
+        var isFirst = groups.length === 0 ? true : false;
+        var newGroup = ConditionGroup(ruleContainer, parentSelect, isFirst);
         ruleContainer.insertBefore(newGroup, btnAddGroup);
-        conditionGroups.push(newGroup);
-        addMarginLeft(conditionGroups);
+        if(groups.length >= 1){
+            groups[0].hideNotificationAndOrBreak();
+        }
+        showLeftAndOr(parentSelect, ruleContainer);
     }
 
     // STEP 3
@@ -127,12 +136,23 @@ function NotificationSettingsModal(){
     return wrapper;
 }
 
-function addMarginLeft(groups){
-    if(groups.length > 0){
-        groups[0].notificationAndOrBreak.style.visibility = 'visible';
+function showLeftAndOr(parentSelect, step){
+    var groups = document.getElementsByClassName('notification-group-wrapper');
+    console.log(groups);
+    if(groups.length <= 1){
+        parentSelect.style.visibility = 'hidden';
+        parentSelect.style.display = 'none';
+        marginLeft(groups, '0px');
+    }else{
+        parentSelect.style.visibility = 'visible';
+        parentSelect.style.display = 'block';
+        marginLeft(groups, '50px');
     }
+}
+
+function marginLeft(groups, marginValue){
     for (var i = 0; i < groups.length; i++) {
-        groups[i].style.marginLeft = '50px';
+        groups[i].style.marginLeft = marginValue;
     }
 }
 
@@ -167,7 +187,36 @@ function InputContainer(classList=[]){
     return container;
 }
 
-function ConditionGroup(first=false){
+function createRadio(){
+    var radio = document.createElement('div');
+    var btnAll = document.createElement('div');
+    var btnAny = document.createElement('div');
+    radio.classList.add('chata-radio-btn-container');
+    btnAll.classList.add('chata-radio-btn');
+    btnAll.classList.add('active');
+    btnAny.classList.add('chata-radio-btn');
+    btnAny.innerHTML = 'ANY';
+    btnAll.innerHTML = 'ALL';
+
+    radio.btnAll = btnAll;
+    radio.btnAny = btnAny;
+    radio.appendChild(btnAll);
+    radio.appendChild(btnAny);
+    return radio;
+}
+
+function notificationRuleAndOrSelect(){
+    var div = document.createElement('div');
+    var radio = createRadio();
+    div.classList.add('notification-rule-and-or-select');
+    div.style.marginBottom = '10px';
+    div.innerHTML = 'Match';
+    div.appendChild(radio);
+    div.appendChild(document.createTextNode('of the following:'));
+    return div;
+}
+
+function ConditionGroup(parent, parentSelect, first=false){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
     var ruleContainer = document.createElement('div');
@@ -180,7 +229,8 @@ function ConditionGroup(first=false){
         </span>
     `);
     var chataRuleDeleteBtn = htmlToElement(`
-        <span class="chata-icon chata-rule-delete-btn">
+        <span
+            class="chata-icon chata-rule-delete-btn">
             ${INPUT_DELETE}
         </span>
     `);
@@ -195,7 +245,8 @@ function ConditionGroup(first=false){
         </div>
     `);
     var notificationGroupDeleteBtn = htmlToElement(`
-        <div class="chata-notification-group-delete-btn">
+        <div
+            class="chata-notification-group-delete-btn"
             <span data-test="chata-icon" class="chata-icon">
                 ${INPUT_DELETE}
             </span>
@@ -253,8 +304,24 @@ function ConditionGroup(first=false){
             </div>
         `);
     }
-    groupWrapper.notificationAndOrBreak = notificationAndOrBreak; 
+    notificationGroupDeleteBtn.onclick = function(evt){
+        parent.removeChild(groupWrapper);
+        var groups = document.getElementsByClassName(
+            'notification-group-wrapper'
+        );
+        if(groups.length >= 1){
+            groups[0].hideNotificationAndOrBreak();
+        }
+        showLeftAndOr(parentSelect, parent);
+    }
+    groupWrapper.notificationAndOrBreak = notificationAndOrBreak;
     groupWrapper.appendChild(notificationAndOrBreak);
+    groupWrapper.hideNotificationAndOrBreak = function(){
+        groupWrapper.notificationAndOrBreak.style.visibility = 'hidden';
+    }
+    groupWrapper.showNotificationAndOrBreak = function(){
+        groupWrapper.notificationAndOrBreak.style.visibility = 'visible';
+    }
     groupWrapper.style.marginLeft = '0px';
     groupContainer.classList.add('chata-notification-group-container-copy');
     groupContainer.classList.add('disable-first-delete');
@@ -316,6 +383,9 @@ function createStep(title, subtitle=''){
     step.appendChild(stepDot);
     step.addElement = (elem) => {
         contentWrapper.appendChild(elem);
+    }
+    step.removeElement = (elem) => {
+        contentWrapper.removeChild(elem);
     }
     return step;
 }
