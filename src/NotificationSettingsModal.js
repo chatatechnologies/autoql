@@ -59,7 +59,21 @@ function NotificationSettingsModal(){
 
     // STEP 2
     var ruleContainer = document.createElement('div');
-    var parentSelect = notificationRuleAndOrSelect();
+    var onChangeAndOr = (evt) => {
+        var groups = document.getElementsByClassName(
+            'notification-group-wrapper'
+        );
+        var newText = evt.target.textContent === 'ALL' ? 'AND' : 'OR';
+        for (var i = 0; i < groups.length; i++) {
+            groups[i].notificationAndOrBreak.setText(newText);
+        }
+        parentSelect.operator = newText;
+    }
+    var parentSelect = notificationRuleAndOrSelect(
+        'of the following:',
+        onChangeAndOr
+    );
+    parentSelect.operator = 'AND';
     var group = ConditionGroup(ruleContainer, parentSelect, true);
     parentSelect.style.visibility = 'hidden';
     parentSelect.style.display = 'none';
@@ -77,7 +91,10 @@ function NotificationSettingsModal(){
         var newGroup = ConditionGroup(ruleContainer, parentSelect, isFirst);
         ruleContainer.insertBefore(newGroup, btnAddGroup);
         if(groups.length >= 1){
-            groups[0].hideNotificationAndOrBreak();
+            groups[0].setAsFirtsAndOrBreak();
+        }
+        if(groups.length > 1){
+            groups[0].showNotificationAndOrBreak();
         }
         showLeftAndOr(parentSelect, ruleContainer);
     }
@@ -187,7 +204,7 @@ function InputContainer(classList=[]){
     return container;
 }
 
-function createRadio(){
+function createRadio(onChange){
     var radio = document.createElement('div');
     var btnAll = document.createElement('div');
     var btnAny = document.createElement('div');
@@ -202,18 +219,64 @@ function createRadio(){
     radio.btnAny = btnAny;
     radio.appendChild(btnAll);
     radio.appendChild(btnAny);
+    radio.onclick = function(evt){
+        console.log(evt.target);
+        if(!evt.target.classList.contains('active')){
+            btnAny.classList.toggle('active');
+            btnAll.classList.toggle('active');
+        }
+        onChange(evt);
+    }
     return radio;
 }
 
-function notificationRuleAndOrSelect(){
+function notificationRuleAndOrSelect(text, onChange){
     var div = document.createElement('div');
-    var radio = createRadio();
+    var radio = createRadio(onChange);
     div.classList.add('notification-rule-and-or-select');
     div.style.marginBottom = '10px';
     div.innerHTML = 'Match';
     div.appendChild(radio);
-    div.appendChild(document.createTextNode('of the following:'));
+    div.appendChild(document.createTextNode(text));
+
     return div;
+}
+
+function notificationAndOrBreak(isFirst, text=''){
+    var wrapper = document.createElement('div');
+    wrapper.notificationAndOrText = null;
+    wrapper.isFirst = isFirst;
+    wrapper.classList.add('notification-and-or-break');
+    wrapper.setColor = (text) => {
+        if(text === 'AND'){
+            andOrText.style.background = 'rgb(186, 233, 255)';
+            andOrText.style.border = '1px solid rgb(144, 221, 255)';
+        }else{
+            andOrText.style.background = 'rgb(255, 250, 202)';
+            andOrText.style.border = '1px solid rgb(255, 235, 59)';
+        }
+    }
+    wrapper.setText = (text) => {
+        if(wrapper.notificationAndOrText !== null){
+            wrapper.notificationAndOrText.innerHTML = text;
+            wrapper.setColor(text);
+        }
+    }
+    if(isFirst){
+        wrapper.style.top = '0px';
+        wrapper.style.height = '100%';
+        wrapper.style.visibility = 'hidden';
+    }else{
+        wrapper.style.top = '-19px';
+        wrapper.style.height = 'calc(100% + 19px)';
+        var andOrText = document.createElement('div');
+        andOrText.classList.add('notification-and-or-text');
+        andOrText.innerHTML = text;
+        wrapper.appendChild(andOrText);
+        wrapper.notificationAndOrText = andOrText;
+        wrapper.setColor(text);
+    }
+    return wrapper;
 }
 
 function ConditionGroup(parent, parentSelect, first=false){
@@ -234,16 +297,12 @@ function ConditionGroup(parent, parentSelect, first=false){
             ${INPUT_DELETE}
         </span>
     `);
-    var rulaAndOrSelect = htmlToElement(`
-        <div class="notification-rule-and-or-select">
-            Match
-            <div class="chata-radio-btn-container" data-test="chata-radio">
-                <div class="chata-radio-btn active">ALL</div>
-                <div class="chata-radio-btn">ANY</div>
-            </div>
-            conditions
-        </div>
-    `);
+    var onChangeAndOr = (evt) => {
+
+    }
+    var rulaAndOrSelect = notificationRuleAndOrSelect(
+        ' conditions', onChangeAndOr
+    );
     var notificationGroupDeleteBtn = htmlToElement(`
         <div
             class="chata-notification-group-delete-btn"
@@ -279,43 +338,37 @@ function ConditionGroup(parent, parentSelect, first=false){
         type: "single"
     }, QUERY);
 
-    groupWrapper.queryInput1 = queryInput;
-    groupWrapper.queryInput2 = queryInput2;
     groupWrapper.notificationRuleAddBtn = notificationRuleAddBtn;
     groupWrapper.classList.add('notification-group-wrapper');
-    let notificationAndOrBreak;
-    if(first){
-        notificationAndOrBreak = htmlToElement(`
-            <div
-                class="notification-and-or-break"
-                style="top: 0px; height: 100%; visibility: hidden">
-            </div>
-        `);
-    }else{
-        notificationAndOrBreak = htmlToElement(`
-            <div
-                class="notification-and-or-break"
-                style="top: -19px;
-                height: calc(100% + 19px);">
-                <div class="notification-and-or-text"
-                    style="background: rgb(186, 233, 255);
-                    border: 1px solid rgb(144, 221, 255);">AND
-                </div>
-            </div>
-        `);
-    }
+    let andOrBreak = notificationAndOrBreak(first, parentSelect.operator);
+
     notificationGroupDeleteBtn.onclick = function(evt){
         parent.removeChild(groupWrapper);
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
         );
         if(groups.length >= 1){
-            groups[0].hideNotificationAndOrBreak();
+            groups[0].setAsFirtsAndOrBreak();
+        }
+        if(groups.length > 1){
+            groups[0].showNotificationAndOrBreak();
         }
         showLeftAndOr(parentSelect, parent);
     }
-    groupWrapper.notificationAndOrBreak = notificationAndOrBreak;
-    groupWrapper.appendChild(notificationAndOrBreak);
+    groupWrapper.setAsFirtsAndOrBreak = function(){
+        var groups = document.getElementsByClassName(
+            'notification-group-wrapper'
+        );
+        var newAndOrBreak = notificationAndOrBreak(
+            true, parentSelect.operator
+        );
+        groupWrapper.replaceChild(
+            newAndOrBreak, groupWrapper.notificationAndOrBreak
+        );
+        groupWrapper.notificationAndOrBreak = newAndOrBreak;
+    }
+    groupWrapper.notificationAndOrBreak = andOrBreak;
+    groupWrapper.appendChild(andOrBreak);
     groupWrapper.hideNotificationAndOrBreak = function(){
         groupWrapper.notificationAndOrBreak.style.visibility = 'hidden';
     }
