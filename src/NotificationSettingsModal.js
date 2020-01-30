@@ -74,7 +74,7 @@ function NotificationSettingsModal(){
         onChangeAndOr
     );
     parentSelect.operator = 'AND';
-    var group = ConditionGroup(ruleContainer, parentSelect, true);
+    var group = new ConditionGroup(ruleContainer, parentSelect, true);
     parentSelect.style.visibility = 'hidden';
     parentSelect.style.display = 'none';
 
@@ -88,7 +88,7 @@ function NotificationSettingsModal(){
             'notification-group-wrapper'
         );
         var isFirst = groups.length === 0 ? true : false;
-        var newGroup = ConditionGroup(ruleContainer, parentSelect, isFirst);
+        var newGroup = new ConditionGroup(ruleContainer, parentSelect, isFirst);
         ruleContainer.insertBefore(newGroup, btnAddGroup);
         if(groups.length >= 1){
             groups[0].setAsFirtsAndOrBreak();
@@ -279,6 +279,73 @@ function notificationAndOrBreak(isFirst, text=''){
     return wrapper;
 }
 
+function GroupLine(){
+    var secondContainer = document.createElement('div');
+    var chataSelectTermType = document.createElement('div');
+    var chataSelect = document.createElement('div');
+    var ruleContainer = document.createElement('div');
+    var chataRuleDeleteBtn = htmlToElement(`
+        <span
+            class="chata-icon chata-rule-delete-btn">
+            ${INPUT_DELETE}
+        </span>
+    `);
+    var spanBubbleIcon = htmlToElement(`
+        <span class="chata-icon rule-input-select-bubbles-icon">
+            ${INPUT_BUBBLES}
+        </span>
+    `);
+
+    var inputContainer1 = new InputContainer([
+        'chata-rule-input'
+    ])
+
+    var inputContainer2 = new InputContainer([
+        'chata-rule-input'
+    ])
+
+    var queryInput = new ChataInput('input', {
+        placeholder: 'Query',
+        type: "single"
+    }, QUERY);
+
+    var queryInput2 = new ChataInput('input', {
+        placeholder: 'Query',
+        type: "single"
+    }, QUERY);
+
+    inputContainer1.appendChild(queryInput.input);
+    inputContainer1.appendChild(queryInput.spanIcon);
+    inputContainer2.appendChild(queryInput2.input);
+    inputContainer2.appendChild(queryInput2.spanIcon);
+
+    ruleContainer.classList.add('chata-notification-rule-container');
+    chataSelectTermType.classList.add('chata-select');
+    chataSelectTermType.classList.add('chata-rule-term-type-selector');
+    secondContainer.classList.add('chata-rule-second-input-container');
+    secondContainer.appendChild(inputContainer2);
+    secondContainer.appendChild(chataSelectTermType);
+
+    chataSelect.classList.add('chata-select');
+    chataSelect.classList.add('chata-rule-condition-select');
+    chataSelectTermType.classList.add('chata-select');
+    chataSelectTermType.classList.add('chata-rule-term-type-selector');
+    chataSelectTermType.appendChild(spanBubbleIcon);
+
+    chataSelect.innerHTML = '&gt;';
+
+    ruleContainer.inputContainer1 = inputContainer1;
+    ruleContainer.chataSelect = chataSelect;
+    ruleContainer.secondContainer = secondContainer;
+    ruleContainer.chataRuleDeleteBtn = chataRuleDeleteBtn;
+    ruleContainer.appendChild(inputContainer1);
+    ruleContainer.appendChild(chataSelect);
+    ruleContainer.appendChild(secondContainer);
+    ruleContainer.appendChild(chataRuleDeleteBtn);
+
+    return ruleContainer;
+}
+
 function ConditionGroup(parent, parentSelect, first=false){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
@@ -286,15 +353,19 @@ function ConditionGroup(parent, parentSelect, first=false){
     var chataSelect = document.createElement('div');
     var secondContainer = document.createElement('div');
     var chataSelectTermType = document.createElement('div');
-    var spanBubbleIcon = htmlToElement(`
-        <span class="chata-icon rule-input-select-bubbles-icon">
-            ${INPUT_BUBBLES}
-        </span>
-    `);
+    this.groupLines = [];
+    var obj = this;
+
     var chataRuleDeleteBtn = htmlToElement(`
         <span
             class="chata-icon chata-rule-delete-btn">
             ${INPUT_DELETE}
+        </span>
+    `);
+
+    var spanBubbleIcon = htmlToElement(`
+        <span class="chata-icon rule-input-select-bubbles-icon">
+            ${INPUT_BUBBLES}
         </span>
     `);
     var onChangeAndOr = (evt) => {
@@ -312,32 +383,17 @@ function ConditionGroup(parent, parentSelect, first=false){
         </div>
     `);
 
-    var notificationRuleAddBtn = htmlToElement(`
-        <div class="notification-rule-btn-container">
-            <div class="chata-notification-rule-add-btn">
-                <span class="chata-icon chata-notification-add-icon">
-                    ${ADD_GROUP}
-                </span>
-            </div>
+    var notificationRuleAddBtn = document.createElement('div');
+    notificationRuleAddBtn.classList.add('notification-rule-btn-container');
+
+    var addRuleButton = htmlToElement(`
+        <div class="chata-notification-rule-add-btn">
+            <span class="chata-icon chata-notification-add-icon">
+                ${ADD_GROUP}
+            </span>
         </div>
     `)
-    var inputContainer1 = new InputContainer([
-        'chata-rule-input'
-    ])
-    var inputContainer2 = new InputContainer([
-        'chata-rule-input'
-    ])
-
-    var queryInput = new ChataInput('input', {
-        placeholder: 'Query',
-        type: "single"
-    }, QUERY);
-
-    var queryInput2 = new ChataInput('input', {
-        placeholder: 'Query',
-        type: "single"
-    }, QUERY);
-
+    notificationRuleAddBtn.appendChild(addRuleButton);
     groupWrapper.notificationRuleAddBtn = notificationRuleAddBtn;
     groupWrapper.classList.add('notification-group-wrapper');
     let andOrBreak = notificationAndOrBreak(first, parentSelect.operator);
@@ -355,6 +411,13 @@ function ConditionGroup(parent, parentSelect, first=false){
         }
         showLeftAndOr(parentSelect, parent);
     }
+
+    addRuleButton.onclick = function(evt){
+        var newGroupLine = new GroupLine();
+        obj.groupLines.push(newGroupLine);
+        groupContainer.insertBefore(newGroupLine, notificationRuleAddBtn);
+    }
+
     groupWrapper.setAsFirtsAndOrBreak = function(){
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
@@ -387,22 +450,10 @@ function ConditionGroup(parent, parentSelect, first=false){
     chataSelect.innerHTML = '&gt;';
     secondContainer.classList.add('chata-rule-second-input-container');
 
-    inputContainer1.appendChild(queryInput.input);
-    inputContainer1.appendChild(queryInput.spanIcon);
-    inputContainer2.appendChild(queryInput2.input);
-    inputContainer2.appendChild(queryInput2.spanIcon);
-
-    chataSelectTermType.appendChild(spanBubbleIcon);
-
-    secondContainer.appendChild(inputContainer2);
-    secondContainer.appendChild(chataSelectTermType);
-
-    ruleContainer.appendChild(inputContainer1);
-    ruleContainer.appendChild(chataSelect);
-    ruleContainer.appendChild(secondContainer);
-    ruleContainer.appendChild(chataRuleDeleteBtn);
-
-    groupContainer.appendChild(ruleContainer);
+    var defaultGroup = new GroupLine();
+    obj.groupLines.push(defaultGroup);
+    console.log(this.groupLines);
+    groupContainer.appendChild(defaultGroup);
     groupContainer.appendChild(rulaAndOrSelect);
     groupContainer.appendChild(notificationGroupDeleteBtn);
     groupContainer.appendChild(notificationRuleAddBtn);
