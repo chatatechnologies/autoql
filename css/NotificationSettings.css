@@ -174,6 +174,51 @@
 .chata-notification-rule-container .chata-rule-condition-select {
     flex: 0 1;
     flex-basis: 33px;
+    text-align: center;
+}
+
+.chata-select-popup-container .chata-select-popup {
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+.chata-select-popup-container .chata-select-popup li {
+    color: var(--chata-drawer-text-color-primary);
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.chata-select-popup-container .chata-select-option.active {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.chata-select-popup-container .chata-select-option:hover {
+    background: rgba(0, 0, 0, 0.04);
+}
+
+.chata-select-popup-container {
+    position: absolute;
+    background: var(--chata-drawer-background-color);
+    padding: 10px 0;
+    z-index: 9999;
+    border: 1px solid #ababab52;
+    border-radius: 4px;
+    box-shadow: 0px 0 8px rgba(0, 0, 0, 0.15);
+    -webkit-transition: opacity 0.2s ease 0s !important;
+    transition: opacity 0.2s ease 0s !important;
+    top: calc(100% + 10px);
+    left: calc(-25% - 1.5px);
+    visibility: hidden;
+    opacity: 0;
+}
+
+.active-popup{
+    visibility: visible;
+    opacity: 1;
 }
 
 .chata-select {
@@ -190,6 +235,7 @@
     -webkit-transition: all .2s ease;
     transition: all .2s ease;
     cursor: pointer;
+    position: relative;
 }
 
 .chata-notification-rule-container .chata-rule-second-input-container {

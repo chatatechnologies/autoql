@@ -44,6 +44,7 @@ function SettingsItem(title, message){
             configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
             configModal.show();
+            refreshTooltips();
         }
     }
     wrapper.appendChild(header);
