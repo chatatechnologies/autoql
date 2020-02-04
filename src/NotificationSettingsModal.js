@@ -169,6 +169,11 @@ function checkStep2(ruleContainer){
             break;
         }
     }
+
+    if(groups.length === 0){
+        valid = false;
+    }
+
     if(valid){
         ruleContainer.step.classList.add('complete');
     }else{
@@ -329,12 +334,17 @@ function PopupContainer(options=[]){
     return container
 }
 
-function GroupLine(onDelete){
+function GroupLine(params){
     var secondContainer = document.createElement('div');
     var chataSelectTermType = document.createElement('div');
     var chataSelect = document.createElement('div');
     var ruleContainer = document.createElement('div');
+    var conditionValueSelect = document.createElement('div');
+    conditionValueSelect.innerHTML = '>';
     var uuid = uuidv4();
+    ruleContainer.conditionValue = '>';
+    ruleContainer.termType = 'query';
+
     var chataRuleDeleteBtn = htmlToElement(`
         <span
             class="chata-icon chata-rule-delete-btn">
@@ -373,6 +383,23 @@ function GroupLine(onDelete){
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
 
+    popup.onclick = (evt) => {
+        console.log(evt.target.tagName);
+        if(evt.target.tagName === 'LI'){
+            var val = evt.target.textContent;
+            ruleContainer.conditionValue = val;
+            chataSelect.conditionElement.innerHTML = val;
+            if(val === '∃'){
+                secondContainer.style.visibility = 'hidden';
+                secondContainer.style.display = 'none';
+            }else{
+                secondContainer.style.visibility = 'visible';
+                secondContainer.style.display = 'block';
+            }
+            params.onSelectRule();
+        }
+    }
+
     var popupQuery = PopupContainer([
         {
             text: `
@@ -387,16 +414,41 @@ function GroupLine(onDelete){
             dataTip: 'Constant',
             active: false
         }
-    ])
+    ]);
+
+    popupQuery.onclick = (evt) => {
+        let element;
+        if(!evt.target.classList.contains('chata-select-popup-container')){
+            if(evt.target.tagName === 'svg'){
+                element = evt.target.parentElement.parentElement;
+            }else if(evt.target.tagName === 'path'){
+                element = evt.target.parentElement.parentElement.parentElement;
+            }else if(evt.target.tagName === 'DIV'){
+                element = evt.target.parentElement;
+            }else{
+                element = evt.target;
+            }
+            queryInput2.input.setAttribute(
+                'placeholder', element.dataset.tippyContent
+            );
+            ruleContainer.termType = element.dataset.tippyContent.toLowerCase();
+            chataSelectTermType.innerHTML = element.innerHTML;
+            chataSelectTermType.appendChild(popupQuery);
+        }
+    }
 
     ruleContainer.isEmpty = function(){
         var val1 = queryInput.input.value;
         var val2 = queryInput2.input.value;
-        return !val1 || !val2;
+        if(ruleContainer.conditionValue === '∃'){
+            return !val1;
+        }else{
+            return !val1 || !val2;
+        }
     }
 
     chataRuleDeleteBtn.onclick = function(evt){
-        onDelete(evt, ruleContainer);
+        params.onDeleteLine(evt, ruleContainer);
     }
 
     chataSelect.onclick = function(){
@@ -422,7 +474,8 @@ function GroupLine(onDelete){
     chataSelect.classList.add('chata-select');
     chataSelect.classList.add('chata-rule-condition-select');
     chataSelect.appendChild(popup);
-    chataSelect.appendChild(document.createTextNode('>'));
+    chataSelect.appendChild(conditionValueSelect);
+    chataSelect.conditionElement = conditionValueSelect;
     chataSelectTermType.classList.add('chata-select');
     chataSelectTermType.classList.add('chata-rule-term-type-selector');
     chataSelectTermType.appendChild(spanBubbleIcon);
@@ -473,6 +526,10 @@ function ConditionGroup(parent, parentSelect, first=false){
         checkStep2(parent);
     }
 
+    var onSelectRule = () => {
+        checkStep2(parent);
+    }
+
     var rulaAndOrSelect = notificationRuleAndOrSelect(
         ' conditions', onChangeAndOr
     );
@@ -516,7 +573,10 @@ function ConditionGroup(parent, parentSelect, first=false){
     }
 
     addRuleButton.onclick = function(evt){
-        var newGroupLine = new GroupLine(onDeleteLine);
+        var newGroupLine = new GroupLine({
+            onDeleteLine: onDeleteLine,
+            onSelectRule: onSelectRule
+        });
         obj.groupLines.push(newGroupLine);
         groupContainer.insertBefore(newGroupLine, notificationRuleAddBtn);
         checkStep2(parent);
@@ -537,6 +597,9 @@ function ConditionGroup(parent, parentSelect, first=false){
 
     groupWrapper.isValid = function(){
         var lines = obj.groupLines;
+        if(lines.length === 0){
+            return false;
+        }
         for (var i = 0; i < lines.length; i++) {
             if(lines[i].isEmpty()){
                 return false;
@@ -565,7 +628,10 @@ function ConditionGroup(parent, parentSelect, first=false){
     chataSelect.innerHTML = '&gt;';
     secondContainer.classList.add('chata-rule-second-input-container');
 
-    var defaultGroup = new GroupLine(onDeleteLine);
+    var defaultGroup = new GroupLine({
+        onDeleteLine: onDeleteLine,
+        onSelectRule: onSelectRule
+    });
     obj.groupLines.push(defaultGroup);
     groupContainer.appendChild(defaultGroup);
     groupContainer.appendChild(rulaAndOrSelect);
