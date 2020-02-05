@@ -93,16 +93,60 @@
     </style>
 </head>
 <!-- style="background: #efefef" -->
+<style media="screen">
+    .tab a{
+        position: relative;
+    }
+    #bubbles-icon, #dashboard-icon {
+        position: absolute;
+        left: 35px;
+        top: 1px;
+        opacity: .4;
+        -webkit-transition: all .2s ease;
+        transition: all .2s ease;
+    }
+    #dashboard-icon{
+        top: 4px;
+        left: 40px;
+    }
+    #bubbles-icon svg, #dashboard-icon svg{
+        width: 18px;
+        height: 18px;
+    }
+</style>
 <body>
-
+    <div id="ui-overlay" style="display:none">
+        <img src="qbo_demo.png" alt="qbo_demo" class="responsive-img">
+    </div>
     <div class="row">
         <div class="col s12">
             <ul class="tabs">
-                <li class="tab col s2"><a class="active" href="#test1">Chat Drawer</a></li>
-                <li class="tab col s2"><a class="" href="#test2">Dashboard</a></li>
-                <li class="tab col s2"><a class="" href="#test3">ChatBar</a></li>
-                <li class="tab col s2"><a class="" href="#test4">Settings</a></li>
-                <li class="tab col s1"><a class="" href="#test5">
+                <li class="tab col s2 test-tab chatdrawer-tab">
+                    <a class="active" href="#test1">
+                        <span id="bubbles-icon" class="chata-icon">
+                            <svg x="0px" y="0px" width="12.7px" height="12.7px" viewBox="0 0 12.7 12.7">
+                                <path class="chata-icon-svg-0" d="M8.7,3.6l0.1,0l0,0l0,0l0.1,0c2.2,0,4.3,1.3,5.2,3.3c0.2,0.4,0.3,0.7,0.4,1.1l0,0c0.1,0.4,0.1,0.8,0.1,1.2 c0,1.3-0.5,2.5-1.3,3.4c-0.4,0.4-0.8,0.7-1.2,1c-0.3,0.2-0.7,0.4-1,0.5c-0.4,0.1-0.7,0.2-1.1,0.3c-0.4,0.1-0.8,0.1-1.2,0.1 c-0.2,0-0.4,0-0.6,0c-0.2,0-0.4,0-0.6-0.1l-0.2,0c-0.3-0.1-0.6-0.2-1-0.3c-0.4-0.2-0.7-0.4-1-0.6l-1-0.9l-1,1 c-0.1,0.1-0.2,0.2-0.3,0.2c0-0.3,0-0.6,0-1l0-3.6c0-0.1,0-0.1,0-0.2C3.2,6,5.7,3.6,8.7,3.6L8.7,3.6 M8.7,2.1c-3.8,0-6.9,3-7,6.9 c0,0.1,0,0.2,0,0.2v3.6c0,2.6-1,3.2-1,3.2c0.1,0,0.2,0,0.3,0c1.3,0,2.5-0.5,3.5-1.4c0.4,0.4,0.9,0.7,1.5,0.9c0.5,0.2,1,0.3,1.5,0.4 l0,0C7.7,16,7.9,16,8.1,16c0.2,0,0.5,0,0.7,0c0,0,0,0,0,0c0.5,0,1,0,1.5-0.1c0.5-0.1,0.9-0.2,1.4-0.4c0.4-0.2,0.9-0.4,1.3-0.6 c0.6-0.4,1.1-0.8,1.6-1.3c1.1-1.2,1.7-2.8,1.7-4.5c0-0.5-0.1-1-0.2-1.5l0,0c0,0,0,0,0,0c0,0,0,0,0,0l0,0c-0.1-0.5-0.3-1-0.5-1.5 c-1.2-2.5-3.8-4.1-6.6-4.1c0,0-0.1,0-0.1,0C8.8,2.1,8.7,2.1,8.7,2.1L8.7,2.1z">
+                                </path>
+                                <path class="chata-icon-svg-0" d="M15,9.1c3,0,5.4,2.4,5.5,5.4c0,0.1,0,0.1,0,0.2v3.6c0,0.4,0,0.7,0,1c-0.1-0.1-0.2-0.2-0.3-0.2l-1-1l-1,0.9 c-0.3,0.3-0.7,0.5-1,0.6c-0.3,0.1-0.6,0.2-0.9,0.3L16,20c-0.2,0-0.4,0.1-0.6,0.1c-0.2,0-0.4,0-0.6,0c-0.4,0-0.8,0-1.2-0.1 c-0.4-0.1-0.8-0.2-1.1-0.3c-0.3-0.1-0.7-0.3-1-0.5c-0.5-0.3-0.9-0.6-1.2-1C9.5,17.2,9,16,9,14.7c0-0.4,0-0.8,0.1-1.1l0,0l0,0 c0.1-0.4,0.2-0.8,0.4-1.1c1-2,3-3.3,5.2-3.3l0.1,0l0,0l0,0L15,9.1 M15,7.6c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0c-2.8,0-5.4,1.6-6.6,4.1 c-0.2,0.5-0.4,1-0.5,1.5l0,0c0,0,0,0,0,0c0,0,0,0,0,0l0,0c-0.1,0.5-0.2,1-0.2,1.5c0,1.6,0.6,3.2,1.7,4.5c0.5,0.5,1,1,1.6,1.3 c0.4,0.2,0.8,0.5,1.3,0.6c0.4,0.2,0.9,0.3,1.4,0.4c0.5,0.1,1,0.1,1.5,0.1c0,0,0,0,0,0c0.2,0,0.5,0,0.7,0c0.2,0,0.5,0,0.7-0.1l0,0 c0.5-0.1,1-0.2,1.5-0.4c0.6-0.2,1.1-0.5,1.5-0.9c0.9,0.9,2.2,1.4,3.5,1.4c0.1,0,0.2,0,0.3,0c0,0-1-0.6-1-3.2v-3.6 c0-0.1,0-0.2,0-0.2C21.9,10.7,18.8,7.6,15,7.6L15,7.6z">
+                                </path>
+                            </svg>
+                        </span>
+                    Chat Drawer</a>
+                </li>
+                <li class="tab col s2 test-tab">
+                    <a class="" href="#test2">
+                        <span id="dashboard-icon" class="chata-icon">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M924.8 385.6a446.7 446.7 0 0 0-96-142.4 446.7 446.7 0 0 0-142.4-96C631.1 123.8 572.5 112 512 112s-119.1 11.8-174.4 35.2a446.7 446.7 0 0 0-142.4 96 446.7 446.7 0 0 0-96 142.4C75.8 440.9 64 499.5 64 560c0 132.7 58.3 257.7 159.9 343.1l1.7 1.4c5.8 4.8 13.1 7.5 20.6 7.5h531.7c7.5 0 14.8-2.7 20.6-7.5l1.7-1.4C901.7 817.7 960 692.7 960 560c0-60.5-11.9-119.1-35.2-174.4zM761.4 836H262.6A371.12 371.12 0 0 1 140 560c0-99.4 38.7-192.8 109-263 70.3-70.3 163.7-109 263-109 99.4 0 192.8 38.7 263 109 70.3 70.3 109 163.7 109 263 0 105.6-44.5 205.5-122.6 276zM623.5 421.5a8.03 8.03 0 0 0-11.3 0L527.7 506c-18.7-5-39.4-.2-54.1 14.5a55.95 55.95 0 0 0 0 79.2 55.95 55.95 0 0 0 79.2 0 55.87 55.87 0 0 0 14.5-54.1l84.5-84.5c3.1-3.1 3.1-8.2 0-11.3l-28.3-28.3zM490 320h44c4.4 0 8-3.6 8-8v-80c0-4.4-3.6-8-8-8h-44c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8zm260 218v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8zm12.7-197.2l-31.1-31.1a8.03 8.03 0 0 0-11.3 0l-56.6 56.6a8.03 8.03 0 0 0 0 11.3l31.1 31.1c3.1 3.1 8.2 3.1 11.3 0l56.6-56.6c3.1-3.1 3.1-8.2 0-11.3zm-458.6-31.1a8.03 8.03 0 0 0-11.3 0l-31.1 31.1a8.03 8.03 0 0 0 0 11.3l56.6 56.6c3.1 3.1 8.2 3.1 11.3 0l31.1-31.1c3.1-3.1 3.1-8.2 0-11.3l-56.6-56.6zM262 530h-80c-4.4 0-8 3.6-8 8v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8z">
+                                </path>
+                            </svg>
+                        </span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="tab col s2 test-tab"><a class="" href="#test3">ChatBar</a></li>
+                <li class="tab col s2 test-tab"><a class="" href="#test4">Notification Settings</a></li>
+                <li class="tab col s1 test-tab"><a class="" href="#test5">
                     <svg id="notification-icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-notifications-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M257 120.471c7.083 0 23.911 4.479 23.911 4.479 45.589 10.447 77.678 52.439 77.678 99.85V352.412l9.321 9.364 7.788 7.823H136.302l7.788-7.823 9.321-9.364V224.8c0-47.41 32.089-89.403 77.678-99.85 0 0 18.043-4.479 23.911-4.479M256 48c-17.602 0-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2zm41.411 374.4h-82.823c0 22.881 18.633 41.6 41.412 41.6s41.411-18.719 41.411-41.6z"></path></svg>
                 </a></li>
             </ul>
@@ -119,6 +163,15 @@
                     <div class="switch">
                         <label>
                             <input type="checkbox" checked name="demo">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+                <div class="prop prop-column">
+                    <h6 class="">Show UI Overlay</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="show-ui">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -164,8 +217,8 @@
 
                 <div class="">
                     <h4 style="text-align: center;">Drawer Props</h4>
-                    <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload">Reload Drawer</button>
-                    <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()">Open Drawer</button>
+                    <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload"><i class="small material-icons left">replay</i> <span>Reload Drawer<span></button>
+                    <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()"><i class="small material-icons left">format_indent_decrease</i>Open Drawer</button>
                 </div>
 
                 <div class="prop prop-column">
@@ -368,7 +421,7 @@
 
                 <div class="prop prop-column">
                     <h6>Dashboard Title Color</h6>
-                    <input type="text" name="titleColor" value="#2466AE" placeholder="Font Family" class="reload-dashboard-prop">
+                    <input type="text" name="titleColor" value="#28a8e0" placeholder="Font Family" class="reload-dashboard-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -376,7 +429,7 @@
                     <span class="info-text">
                         (Must click 'Reload Drawer' to apply this)
                     </span>
-                    <input type="color" name="accentColor-light" value="#2466AE" placeholder="Accent Color" style="width:150px;" class="reload-prop">
+                    <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;" class="reload-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -794,7 +847,7 @@
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
-
+    document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
     var settingsList = new NotificationSettings([
         new SettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000')
     ])
@@ -865,7 +918,7 @@
             enableDrilldowns: true,
             demo: true,
             debug: true,
-            accentColor: '#2466AE',
+            // accentColor: '#2466AE',
             // languageCode: 'ja-JP',
             // currencyCode: 'JPY',
             onMaskClick: function(){
@@ -876,6 +929,21 @@
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelector('.chips');
             var tabs = document.querySelector('.tabs');
+            var tabsLi = document.querySelectorAll('.test-tab');
+            for (var i = 0; i < tabsLi.length; i++) {
+                tabsLi[i].onclick = function(evt){
+                    console.log(evt.target.parentElement.classList.contains('chatdrawer-tab'));
+                    if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
+                        if(ChatDrawer.options.showHandle){
+                            ChatDrawer.drawerButton.style.display = 'flex';
+                        }else{
+                            ChatDrawer.drawerButton.style.display = 'none';
+                        }
+                    }else{
+                        ChatDrawer.drawerButton.style.display = 'none';
+                    }
+                }
+            }
             var instance = M.Tabs.init(tabs, {});
             instances = M.Chips.init(elems, {
                 data: [
@@ -889,6 +957,7 @@
         });
 
         var showHandle = document.querySelector('[name="showHandle"]')
+        var uiOverlay = document.querySelector('[name="show-ui"]')
         var showMask = document.querySelector('[name="showMask"]')
         var shiftScreen = document.querySelector('[name="shiftScreen"]')
         var theme = document.querySelectorAll('[name="theme"]')
@@ -904,6 +973,14 @@
         var enableQueryTipsTab = document.querySelector('[name="enableQueryTipsTab"]')
         var enableColumnEditor = document.querySelector('[name="enableColumnEditor"]')
         var titleColor = document.querySelector('[name="titleColor"]')
+
+        uiOverlay.onchange = function(event){
+            if(event.target.checked){
+                document.getElementById('ui-overlay').style.display = 'block';
+            }else{
+                document.getElementById('ui-overlay').style.display = 'none';
+            }
+        }
 
         titleColor.onchange = function(event){
             dashboard.options.titleColor = event.target.value;

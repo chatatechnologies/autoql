@@ -145,8 +145,7 @@ ChatDrawer.createQueryTips = function(){
     queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
     queryTipsResultPlaceHolder.innerHTML = `
         <p>Your query suggestions will show up here.<p>
-        <p>You can copy them for later use or execute them in the data messenger by
-        hitting the “execute” button<p>
+        <p>Click on the suggestion to execute it in Data Messenger<p>
     `;
 
     queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
