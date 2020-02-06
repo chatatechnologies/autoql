@@ -400,3 +400,20 @@
 .chata-checkbox__input {
     border-color: var(--chata-drawer-accent-color);
 }
+
+.frequency-popup{
+    width: calc(100% + 50px);
+    left: -25px;
+    min-width: 195px;
+}
+
+.notification-frequency-select {
+    margin-left: 8px;
+    left: 0px;
+}
+
+.frequency-repeat-follow-text {
+    padding-top: 20px;
+    display: inline-block;
+    vertical-align: middle;
+}

@@ -129,23 +129,39 @@ function NotificationSettingsModal(){
     var label = document.createTextNode('Notify me')
     var selectFrequency = document.createElement('div');
     var relativeDiv = document.createElement('div');
-    var checkboxFrequency = htmlToElement(`
-        <div data-test="chata-checkbox"
-            style="display: inline-block; vertical-align: middle;">
-            <div class="chata-checkbox">
-                <input type="checkbox" class="chata-checkbox__input">
-                <div style="width:5px;"></div>
-                <div class="chata-checkbox-label">Repeat</div>
-            </div>
-            <div class="chata-select notification-frequency-select">
-                Monthly
-            </div>
-        </div>
-    `);
+
     relativeDiv.style.position = 'relative';
     selectFrequency.classList.add('chata-select');
-    selectFrequency.innerHTML = 'Once, When this happens';
-    relativeDiv.appendChild(checkboxFrequency);
+    frequencyValue = document.createElement('div');
+    frequencyValue.innerHTML = 'Once, When this happens'
+    frequencyValue.indexValue = 1;
+    var popupFrequency = PopupContainer([
+        {text: 'Once, When this happens', active:true},
+        {text: 'Every time this happens', active:false},
+        {text: 'On a schedule', active:false},
+    ]);
+
+    popupFrequency.classList.add('frequency-popup');
+    popupFrequency.onclick = (evt) => {
+        if(evt.target.tagName === 'LI'){
+            var val = evt.target.textContent;
+            frequencyValue.indexValue = evt.target.dataset.indexOption;
+            frequencyValue.innerHTML = val;
+            showFrequencyView(relativeDiv, parseInt(frequencyValue.indexValue));
+        }
+    }
+
+
+
+    selectFrequency.appendChild(popupFrequency);
+
+    showFrequencyView(relativeDiv, 0);
+    relativeDiv.appendChild(relativeDiv.popup);
+
+    selectFrequency.appendChild(frequencyValue);
+    selectFrequency.onclick = function(){
+        popupFrequency.toggleVisibility();
+    }
     step4.addElement(label);
     step4.addElement(selectFrequency);
     step4.addElement(relativeDiv);
@@ -156,6 +172,87 @@ function NotificationSettingsModal(){
     wrapper.appendChild(step4);
 
     return wrapper;
+}
+
+function showFrequencyView(frequencyElement, type){
+    switch (type) {
+        case 0:
+            frequencyElement.innerHTML = '';
+            var checkboxFrequency = htmlToElement(`
+                <div data-test="chata-checkbox"
+                    style="display: inline-block; vertical-align: middle;">
+                    <div class="chata-checkbox">
+                        <input type="checkbox" class="chata-checkbox__input">
+                        <div style="width:5px;"></div>
+                        <div class="chata-checkbox-label">Repeat</div>
+                    </div>
+                </div>
+            `);
+            frequencyElement.appendChild(checkboxFrequency);
+            frequencyElement.style.visibility = 'visible';
+            var repeatFollowText = htmlToElement(`
+                <span class="frequency-repeat-follow-text"> on:</span>
+            `);
+            var frequencyButton = htmlToElement(`
+                <div class="chata-select notification-frequency-select">
+                Monthly
+                </div>
+            `)
+            var popupFrequencySelect = PopupContainer([
+                {text: 'Daily', active:false},
+                {text: 'Weekly', active:false},
+                {text: 'Monthly', active:true},
+                {text: 'Yearly', active:false},
+            ]);
+            frequencyButton.appendChild(popupFrequencySelect);
+            frequencyButton.onclick = (evt) => {
+                popupFrequencySelect.toggleVisibility();
+            }
+
+            frequencyElement.appendChild(frequencyButton);
+            frequencyElement.appendChild(repeatFollowText);
+            frequencyElement.popup = popupFrequencySelect;
+            break;
+        case 1:
+            frequencyElement.innerHTML = '';
+            var checkboxFrequency = htmlToElement(`
+                <div data-test="chata-checkbox"
+                    style="display: inline-block; vertical-align: middle;">
+                    <div class="chata-checkbox">
+                        <input type="checkbox" class="chata-checkbox__input">
+                        <div style="width:5px;"></div>
+                        <div class="chata-checkbox-label">Only on</div>
+                    </div>
+                </div>
+            `);
+            frequencyElement.appendChild(checkboxFrequency);
+            frequencyElement.style.visibility = 'visible';
+
+            var frequencyButton = htmlToElement(`
+                <div class="chata-select notification-frequency-select">
+                    Certains days of the month
+                </div>
+            `)
+            var popupFrequencySelect = PopupContainer([
+                {text: 'Certains days of week', active:false},
+                {text: 'Certains days of the month', active:true},
+                {text: 'Certains months of the year', active:false},
+            ]);
+            frequencyButton.appendChild(popupFrequencySelect);
+            frequencyButton.onclick = (evt) => {
+                popupFrequencySelect.toggleVisibility();
+            }
+
+            frequencyElement.appendChild(frequencyButton);
+            frequencyElement.appendChild(repeatFollowText);
+            frequencyElement.popup = popupFrequencySelect;
+            break;
+        case 2:
+            frequencyElement.style.visibility = 'hidden';
+            break;
+        default:
+
+    }
 }
 
 function checkStep2(ruleContainer){
@@ -318,7 +415,10 @@ function PopupContainer(options=[]){
         var option = document.createElement('li');
         option.innerHTML = options[i].text;
         option.classList.add('chata-select-option');
-        option.setAttribute('data-tippy-content', options[i].dataTip);
+        option.setAttribute('data-index-option', i);
+        if(options[i].dataTip){
+            option.setAttribute('data-tippy-content', options[i].dataTip);
+        }
         if(options[i].active){
             option.classList.add('active');
         }

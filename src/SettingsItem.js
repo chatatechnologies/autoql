@@ -31,6 +31,15 @@ function SettingsItem(title, message){
     header.appendChild(settingsDisplayName);
     header.appendChild(settingsActions);
     header.onclick = function(evt){
+        var cancelButton = htmlToElement(
+            `<div class="chata-btn default"
+                style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        )
+        var saveButton = htmlToElement(
+            `<div class="chata-btn primary "
+                style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+        )
+
         var target = evt.target;
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
@@ -43,8 +52,16 @@ function SettingsItem(title, message){
 
             configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
+            configModal.addFooterElement(cancelButton);
+            configModal.addFooterElement(saveButton);
             configModal.show();
             refreshTooltips();
+            cancelButton.onclick = (e) => {
+                configModal.close();
+            }
+            saveButton.onclick = (e) => {
+                configModal.close();
+            }
         }
     }
     wrapper.appendChild(header);
