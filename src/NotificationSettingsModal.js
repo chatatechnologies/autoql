@@ -1,5 +1,8 @@
 function NotificationSettingsModal(){
     var wrapper = document.createElement('div');
+    var frequencyBox = FrequencyBox(
+        "Notify me as soon as this happens, then don't notify me again."
+    );
     var btnAddGroup = htmlToElement(`
         <span>
             <div class="chata-btn default notification-rule-add-btn-outer"
@@ -22,7 +25,7 @@ function NotificationSettingsModal(){
         'Return the data from this query when the notification is triggered'
     );
     var step4 = createStep('Frequency');
-
+    step4.classList.add('complete');
     // STEP 1
     var titleContainer = new InputContainer(
         ['chata-notification-display-name-input']
@@ -133,7 +136,7 @@ function NotificationSettingsModal(){
     relativeDiv.style.position = 'relative';
     selectFrequency.classList.add('chata-select');
     frequencyValue = document.createElement('div');
-    frequencyValue.innerHTML = 'Once, When this happens'
+    frequencyValue.innerHTML = 'Once, When this happens';
     frequencyValue.indexValue = 1;
     var popupFrequency = PopupContainer([
         {text: 'Once, When this happens', active:true},
@@ -145,27 +148,50 @@ function NotificationSettingsModal(){
     popupFrequency.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){
             var val = evt.target.textContent;
-            frequencyValue.indexValue = evt.target.dataset.indexOption;
+            var index = parseInt(evt.target.dataset.indexOption);
+            frequencyValue.indexValue = index;
             frequencyValue.innerHTML = val;
-            showFrequencyView(relativeDiv, parseInt(frequencyValue.indexValue));
+            showFrequencyView(relativeDiv, index);
+            switch (index) {
+                case 0:
+                    frequencyBox.setMessage(
+                        `Notify me as soon as this happens,
+                        then don't notify me again.`
+                    );
+                    break;
+                case 1:
+                    frequencyBox.setMessage(`
+                        Notify me every time this happens.
+                    `);
+                    break;
+                case 2:
+                    frequencyBox.setMessage(`
+                        Notify me every (description of schedule)
+                    `);
+                    break;
+                default:
+
+            }
         }
     }
-
-
 
     selectFrequency.appendChild(popupFrequency);
 
     showFrequencyView(relativeDiv, 0);
-    relativeDiv.appendChild(relativeDiv.popup);
 
     selectFrequency.appendChild(frequencyValue);
     selectFrequency.onclick = function(){
         popupFrequency.toggleVisibility();
     }
-    step4.addElement(label);
-    step4.addElement(selectFrequency);
-    step4.addElement(relativeDiv);
+    var frequencySettingsContainer = document.createElement('div');
+    frequencySettingsContainer.classList.add('frequency-settings-container');
 
+    step4.addClass('notification-frequency-step');
+    frequencySettingsContainer.appendChild(label);
+    frequencySettingsContainer.appendChild(selectFrequency);
+    frequencySettingsContainer.appendChild(relativeDiv);
+    step4.addElement(frequencySettingsContainer);
+    step4.addElement(frequencyBox);
     wrapper.appendChild(step1);
     wrapper.appendChild(step2);
     wrapper.appendChild(step3);
@@ -174,84 +200,109 @@ function NotificationSettingsModal(){
     return wrapper;
 }
 
+function FrequencyBox(message){
+    var parent = htmlToElement(`
+        <div class="frequency-description-box-container">
+    </div>`);
+    var box = document.createElement('div');
+    var messageContent = document.createElement('span');
+    messageContent.innerHTML = message;
+    box.classList.add('frequency-description-box');
+    box.appendChild(htmlToElement(`
+        <div class="frequency-description-title">Description:</div>
+    `));
+    box.appendChild(messageContent);
+
+    parent.setMessage = (newMessage) => {
+        messageContent.innerHTML = newMessage;
+    }
+    parent.appendChild(box);
+
+    return parent;
+}
+
+function frequencyView(parentElement, popupValues, label, followText){
+    parentElement.innerHTML = '';
+    var repeatFollowText = htmlToElement(`
+        <span class="frequency-repeat-follow-text"> on:</span>
+    `);
+    var checkboxInput = htmlToElement(`
+        <input type="checkbox" class="chata-checkbox__input">
+    `)
+    var checkboxContainer = htmlToElement(`
+        <div class="chata-checkbox">
+            <div style="width:5px;"></div>
+            <div class="chata-checkbox-label">Repeat</div>
+        </div>
+    `);
+    var checkboxFrequency = htmlToElement(`
+        <div data-test="chata-checkbox"
+            style="display: inline-block; vertical-align: middle;">
+        </div>
+    `);
+    checkboxContainer.insertAdjacentElement('afterbegin', checkboxInput)
+    checkboxFrequency.appendChild(checkboxContainer);
+    parentElement.appendChild(checkboxFrequency);
+    parentElement.style.visibility = 'visible';
+    repeatFollowText.style.visibility='hidden';
+    var frequencyButton = htmlToElement(`
+        <div class="chata-select notification-frequency-select">
+            ${label}
+        </div>
+    `);
+    var popupFrequencySelect = PopupContainer(popupValues);
+    frequencyButton.appendChild(popupFrequencySelect);
+    frequencyButton.style.visibility = 'hidden';
+
+    checkboxInput.onchange = (evt) => {
+        if(evt.target.checked){
+            frequencyButton.style.visibility = 'visible';
+            repeatFollowText.style.visibility='visible'
+        }else{
+            frequencyButton.style.visibility = 'hidden';
+            repeatFollowText.style.visibility='hidden';
+        }
+    }
+    frequencyButton.onclick = (evt) => {
+        popupFrequencySelect.toggleVisibility();
+        console.log('test');
+    }
+
+    parentElement.appendChild(frequencyButton);
+    if(followText){
+        parentElement.appendChild(repeatFollowText);
+    }
+
+    return popupFrequencySelect;
+}
+
 function showFrequencyView(frequencyElement, type){
     switch (type) {
         case 0:
-            frequencyElement.innerHTML = '';
-            var checkboxFrequency = htmlToElement(`
-                <div data-test="chata-checkbox"
-                    style="display: inline-block; vertical-align: middle;">
-                    <div class="chata-checkbox">
-                        <input type="checkbox" class="chata-checkbox__input">
-                        <div style="width:5px;"></div>
-                        <div class="chata-checkbox-label">Repeat</div>
-                    </div>
-                </div>
-            `);
-            frequencyElement.appendChild(checkboxFrequency);
-            frequencyElement.style.visibility = 'visible';
-            var repeatFollowText = htmlToElement(`
-                <span class="frequency-repeat-follow-text"> on:</span>
-            `);
-            var frequencyButton = htmlToElement(`
-                <div class="chata-select notification-frequency-select">
-                Monthly
-                </div>
-            `)
-            var popupFrequencySelect = PopupContainer([
+            var popup = frequencyView(frequencyElement, [
                 {text: 'Daily', active:false},
                 {text: 'Weekly', active:false},
                 {text: 'Monthly', active:true},
                 {text: 'Yearly', active:false},
-            ]);
-            frequencyButton.appendChild(popupFrequencySelect);
-            frequencyButton.onclick = (evt) => {
-                popupFrequencySelect.toggleVisibility();
+            ], 'Monthly', true);
+            frequencyElement.popup = popup;
+            popup.onclick = (evt) => {
+                console.log('FOO');
             }
-
-            frequencyElement.appendChild(frequencyButton);
-            frequencyElement.appendChild(repeatFollowText);
-            frequencyElement.popup = popupFrequencySelect;
             break;
         case 1:
-            frequencyElement.innerHTML = '';
-            var checkboxFrequency = htmlToElement(`
-                <div data-test="chata-checkbox"
-                    style="display: inline-block; vertical-align: middle;">
-                    <div class="chata-checkbox">
-                        <input type="checkbox" class="chata-checkbox__input">
-                        <div style="width:5px;"></div>
-                        <div class="chata-checkbox-label">Only on</div>
-                    </div>
-                </div>
-            `);
-            frequencyElement.appendChild(checkboxFrequency);
-            frequencyElement.style.visibility = 'visible';
-
-            var frequencyButton = htmlToElement(`
-                <div class="chata-select notification-frequency-select">
-                    Certains days of the month
-                </div>
-            `)
-            var popupFrequencySelect = PopupContainer([
+            var popup = frequencyView(frequencyElement, [
                 {text: 'Certains days of week', active:false},
                 {text: 'Certains days of the month', active:true},
                 {text: 'Certains months of the year', active:false},
-            ]);
-            frequencyButton.appendChild(popupFrequencySelect);
-            frequencyButton.onclick = (evt) => {
-                popupFrequencySelect.toggleVisibility();
-            }
-
-            frequencyElement.appendChild(frequencyButton);
-            frequencyElement.appendChild(repeatFollowText);
-            frequencyElement.popup = popupFrequencySelect;
+            ], 'Certains days of the month', false);
+            frequencyElement.popup = popup;
             break;
         case 2:
             frequencyElement.style.visibility = 'hidden';
             break;
         default:
-
+            break;
     }
 }
 
@@ -770,6 +821,9 @@ function createStep(title, subtitle=''){
     }
     step.removeElement = (elem) => {
         contentWrapper.removeChild(elem);
+    }
+    step.addClass = (className) => {
+        contentWrapper.classList.add(className);
     }
     return step;
 }

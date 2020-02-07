@@ -417,3 +417,28 @@
     display: inline-block;
     vertical-align: middle;
 }
+
+.frequency-description-box-container {
+    flex: 1 1;
+}
+
+.frequency-description-box-container .frequency-description-box {
+    border: 1px solid #ffeb3b;
+    border-radius: 4px;
+    padding: 20px;
+    background: #fffaca;
+    color: rgba(0, 0, 0, 0.4);
+}
+
+.notification-frequency-step {
+    display: flex;
+}
+
+.notification-frequency-step .frequency-settings-container {
+    flex: 0 1 350px;
+}
+
+.notification-frequency-step .frequency-description-box-container .frequency-description-title {
+    color: rgba(0, 0, 0, 0.6);
+    font-weight: 600;
+}
