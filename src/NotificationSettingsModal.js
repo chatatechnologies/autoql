@@ -151,6 +151,7 @@ function NotificationSettingsModal(){
             var index = parseInt(evt.target.dataset.indexOption);
             frequencyValue.indexValue = index;
             frequencyValue.innerHTML = val;
+            relativeDiv.dateSelectView = null;
             showFrequencyView(relativeDiv, index);
             switch (index) {
                 case 0:
@@ -245,12 +246,16 @@ function frequencyView(parentElement, popupValues, label, followText){
     parentElement.appendChild(checkboxFrequency);
     parentElement.style.visibility = 'visible';
     repeatFollowText.style.visibility='hidden';
+    var labelContent = htmlToElement(`
+        <div>${label}</div>
+    `)
     var frequencyButton = htmlToElement(`
         <div class="chata-select notification-frequency-select">
-            ${label}
+
         </div>
     `);
     var popupFrequencySelect = PopupContainer(popupValues);
+    frequencyButton.appendChild(labelContent);
     frequencyButton.appendChild(popupFrequencySelect);
     frequencyButton.style.visibility = 'hidden';
 
@@ -258,14 +263,20 @@ function frequencyView(parentElement, popupValues, label, followText){
         if(evt.target.checked){
             frequencyButton.style.visibility = 'visible';
             repeatFollowText.style.visibility='visible'
+            if(parentElement.dateSelectView){
+                parentElement.dateSelectView.style.visibility = 'visible';
+            }
         }else{
             frequencyButton.style.visibility = 'hidden';
             repeatFollowText.style.visibility='hidden';
+            if(parentElement.dateSelectView){
+                parentElement.dateSelectView.style.visibility = 'hidden';
+            }
         }
     }
     frequencyButton.onclick = (evt) => {
         popupFrequencySelect.toggleVisibility();
-        console.log('test');
+        console.log('toggleVisibility');
     }
 
     parentElement.appendChild(frequencyButton);
@@ -273,7 +284,65 @@ function frequencyView(parentElement, popupValues, label, followText){
         parentElement.appendChild(repeatFollowText);
     }
 
+    popupFrequencySelect.setValue = (text) => {
+        labelContent.textContent = text;
+    }
+
     return popupFrequencySelect;
+}
+
+function weeklyView(frequencyElement){
+    return `<div class="frequency-date-select-container">
+        <div class="chata-radio-btn-container">
+            <div class="chata-radio-btn active">S</div>
+            <div class="chata-radio-btn">M</div>
+            <div class="chata-radio-btn">T</div>
+            <div class="chata-radio-btn">W</div>
+            <div class="chata-radio-btn">T</div>
+            <div class="chata-radio-btn">F</div>
+            <div class="chata-radio-btn">S</div>
+        </div>
+    </div>`;
+}
+
+function monthlyView(frequencyElement){
+    return `
+    <div class="frequency-date-select-container">
+    <div class="chata-radio-btn-container month-select">
+    <div class="chata-radio-btn active">1</div>
+    <div class="chata-radio-btn">2</div>
+    <div class="chata-radio-btn">3</div>
+    <div class="chata-radio-btn">4</div>
+    <div class="chata-radio-btn">5</div>
+    <div class="chata-radio-btn">6</div>
+    <div class="chata-radio-btn top-right">7</div><br>
+    <div class="chata-radio-btn">8</div>
+    <div class="chata-radio-btn">9</div>
+    <div class="chata-radio-btn">10</div>
+    <div class="chata-radio-btn">11</div>
+    <div class="chata-radio-btn">12</div>
+    <div class="chata-radio-btn">13</div>
+    <div class="chata-radio-btn">14</div><br>
+    <div class="chata-radio-btn">15</div>
+    <div class="chata-radio-btn">16</div>
+    <div class="chata-radio-btn">17</div>
+    <div class="chata-radio-btn">18</div>
+    <div class="chata-radio-btn">19</div>
+    <div class="chata-radio-btn">20</div>
+    <div class="chata-radio-btn">21</div><br>
+    <div class="chata-radio-btn">22</div>
+    <div class="chata-radio-btn">23</div>
+    <div class="chata-radio-btn">24</div>
+    <div class="chata-radio-btn">25</div>
+    <div class="chata-radio-btn">26</div>
+    <div class="chata-radio-btn">27</div>
+    <div class="chata-radio-btn">28</div>
+    <br>
+    <div class="chata-radio-btn bottom-left">29</div>
+    <div class="chata-radio-btn">30</div>
+    <div class="chata-radio-btn">31</div>
+    <div class="chata-radio-btn last-day">Last Day</div></div></div>
+    `;
 }
 
 function showFrequencyView(frequencyElement, type){
@@ -286,8 +355,43 @@ function showFrequencyView(frequencyElement, type){
                 {text: 'Yearly', active:false},
             ], 'Monthly', true);
             frequencyElement.popup = popup;
+
             popup.onclick = (evt) => {
-                console.log('FOO');
+                var index = parseInt(evt.target.dataset.indexOption);
+                popup.setValue(evt.target.textContent);
+                switch (index) {
+                    case 0:
+                        if(frequencyElement.dateSelectView){
+                            frequencyElement.removeChild(
+                                frequencyElement.dateSelectView
+                            );
+                            frequencyElement.dateSelectView = null;
+                        }
+                        break;
+                    case 1:
+                        var view = htmlToElement(weeklyView());
+                        if(!frequencyElement.dateSelectView){
+                            frequencyElement.appendChild(view);
+                        }else{
+                            frequencyElement.replaceChild(
+                                view, frequencyElement.dateSelectView
+                            );
+                        }
+                        frequencyElement.dateSelectView = view;
+                        break;
+                    case 2:
+                        var view = htmlToElement(monthlyView());
+                        if(!frequencyElement.dateSelectView){
+                            frequencyElement.appendChild(view);
+                        }else{
+                            frequencyElement.replaceChild(
+                                view, frequencyElement.dateSelectView
+                            );
+                        }
+                        frequencyElement.dateSelectView = view;
+                    default:
+
+                }
             }
             break;
         case 1:
@@ -299,7 +403,7 @@ function showFrequencyView(frequencyElement, type){
             frequencyElement.popup = popup;
             break;
         case 2:
-            frequencyElement.style.visibility = 'hidden';
+            frequencyElement.innerHTML = ''
             break;
         default:
             break;

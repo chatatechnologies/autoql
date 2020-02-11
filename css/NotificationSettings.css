@@ -442,3 +442,50 @@
     color: rgba(0, 0, 0, 0.6);
     font-weight: 600;
 }
+
+.frequency-date-select-container {
+    margin-top: 13px;
+}
+
+.chata-radio-btn-container .chata-radio-btn:hover:not(.active) {
+    border-color: var(--chata-drawer-accent-color);
+    color: var(--chata-drawer-accent-color);
+    z-index: 2;
+}
+
+ .frequency-date-select-container .chata-radio-btn-container .chata-radio-btn:first-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    margin-left: -3px;
+}
+
+.frequency-date-select-container .chata-radio-btn-container{
+    display: flex;
+}
+
+.frequency-date-select-container .month-select{
+    display: block;
+}
+
+.month-select .chata-radio-btn:first-child, .year-select .chata-radio-btn:first-child {
+    border-top-left-radius: 4px !important;
+    border-bottom-left-radius: 0px !important;
+    margin-left: -1px !important;
+}
+
+.month-select .chata-radio-btn, .year-select .chata-radio-btn {
+    margin-top: -1px;
+    text-align: center;
+}
+
+.month-select .chata-radio-btn {
+    width: 40px;
+}
+
+.month-select .chata-radio-btn.last-day, .year-select .chata-radio-btn.last-day {
+    width: 157px;
+}
+.month-select .chata-radio-btn:last-child, .year-select .chata-radio-btn:last-child {
+    border-top-right-radius: 0px !important;
+    border-bottom-right-radius: 4px !important;
+}
