@@ -456,21 +456,26 @@
  .frequency-date-select-container .chata-radio-btn-container .chata-radio-btn:first-child {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
-    margin-left: -3px;
+    margin-left: -1px;
 }
 
 .frequency-date-select-container .chata-radio-btn-container{
     display: flex;
 }
 
-.frequency-date-select-container .month-select{
+.frequency-date-select-container .month-select,
+.frequency-date-select-container .year-select{
     display: block;
+ }
+
+.month-select .row-month, .year-select .row-year{
+    display: flex;
 }
 
 .month-select .chata-radio-btn:first-child, .year-select .chata-radio-btn:first-child {
     border-top-left-radius: 4px !important;
     border-bottom-left-radius: 0px !important;
-    margin-left: -1px !important;
+    /* margin-left: -1px !important; */
 }
 
 .month-select .chata-radio-btn, .year-select .chata-radio-btn {
@@ -482,10 +487,22 @@
     width: 40px;
 }
 
+.year-select .chata-radio-btn {
+    width: 67px;
+    height: 38px;
+    line-height: 32px;
+}
+
 .month-select .chata-radio-btn.last-day, .year-select .chata-radio-btn.last-day {
     width: 157px;
 }
 .month-select .chata-radio-btn:last-child, .year-select .chata-radio-btn:last-child {
     border-top-right-radius: 0px !important;
     border-bottom-right-radius: 4px !important;
+}
+
+.large-popup{
+    min-width: 145px;
+    width: calc(100% + 70px);
+    left: -35px;
 }

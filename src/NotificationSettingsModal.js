@@ -155,12 +155,20 @@ function NotificationSettingsModal(){
             showFrequencyView(relativeDiv, index);
             switch (index) {
                 case 0:
+                    var view = monthlyView();
+                    relativeDiv.appendChild(view);
+                    relativeDiv.dateSelectView = view;
+                    view.style.visibility = 'hidden';
                     frequencyBox.setMessage(
                         `Notify me as soon as this happens,
                         then don't notify me again.`
                     );
                     break;
                 case 1:
+                    var view = monthlyView();
+                    relativeDiv.appendChild(view);
+                    relativeDiv.dateSelectView = view;
+                    view.style.visibility = 'hidden';
                     frequencyBox.setMessage(`
                         Notify me every time this happens.
                     `);
@@ -179,6 +187,10 @@ function NotificationSettingsModal(){
     selectFrequency.appendChild(popupFrequency);
 
     showFrequencyView(relativeDiv, 0);
+    var view = monthlyView();
+    relativeDiv.appendChild(view);
+    relativeDiv.dateSelectView = view;
+    view.style.visibility = 'hidden';
 
     selectFrequency.appendChild(frequencyValue);
     selectFrequency.onclick = function(){
@@ -292,57 +304,129 @@ function frequencyView(parentElement, popupValues, label, followText){
 }
 
 function weeklyView(frequencyElement){
-    return `<div class="frequency-date-select-container">
-        <div class="chata-radio-btn-container">
-            <div class="chata-radio-btn active">S</div>
-            <div class="chata-radio-btn">M</div>
-            <div class="chata-radio-btn">T</div>
-            <div class="chata-radio-btn">W</div>
-            <div class="chata-radio-btn">T</div>
-            <div class="chata-radio-btn">F</div>
-            <div class="chata-radio-btn">S</div>
-        </div>
-    </div>`;
+    const DAYS = [
+        'S','M','T','W','T','F','S'
+    ];
+    var container = document.createElement('div');
+    var radioContainer = document.createElement('div');
+
+    container.classList.add('frequency-date-select-container');
+    radioContainer.classList.add('chata-radio-btn-container');
+    for (var i = 0; i < DAYS.length; i++) {
+        var element = document.createElement('div');
+        element.classList.add('chata-radio-btn');
+        element.innerHTML = DAYS[i];
+        radioContainer.appendChild(element);
+    }
+    container.appendChild(radioContainer);
+    return container;
 }
 
 function monthlyView(frequencyElement){
-    return `
-    <div class="frequency-date-select-container">
-    <div class="chata-radio-btn-container month-select">
-    <div class="chata-radio-btn active">1</div>
-    <div class="chata-radio-btn">2</div>
-    <div class="chata-radio-btn">3</div>
-    <div class="chata-radio-btn">4</div>
-    <div class="chata-radio-btn">5</div>
-    <div class="chata-radio-btn">6</div>
-    <div class="chata-radio-btn top-right">7</div><br>
-    <div class="chata-radio-btn">8</div>
-    <div class="chata-radio-btn">9</div>
-    <div class="chata-radio-btn">10</div>
-    <div class="chata-radio-btn">11</div>
-    <div class="chata-radio-btn">12</div>
-    <div class="chata-radio-btn">13</div>
-    <div class="chata-radio-btn">14</div><br>
-    <div class="chata-radio-btn">15</div>
-    <div class="chata-radio-btn">16</div>
-    <div class="chata-radio-btn">17</div>
-    <div class="chata-radio-btn">18</div>
-    <div class="chata-radio-btn">19</div>
-    <div class="chata-radio-btn">20</div>
-    <div class="chata-radio-btn">21</div><br>
-    <div class="chata-radio-btn">22</div>
-    <div class="chata-radio-btn">23</div>
-    <div class="chata-radio-btn">24</div>
-    <div class="chata-radio-btn">25</div>
-    <div class="chata-radio-btn">26</div>
-    <div class="chata-radio-btn">27</div>
-    <div class="chata-radio-btn">28</div>
-    <br>
-    <div class="chata-radio-btn bottom-left">29</div>
-    <div class="chata-radio-btn">30</div>
-    <div class="chata-radio-btn">31</div>
-    <div class="chata-radio-btn last-day">Last Day</div></div></div>
-    `;
+    var container = document.createElement('div');
+    var radioContainer = document.createElement('div');
+    container.classList.add('frequency-date-select-container');
+    radioContainer.classList.add('chata-radio-btn-container');
+    radioContainer.classList.add('month-select');
+    var nDay = 1;
+    for (var x = 0; x < 5; x++) {
+        var row = document.createElement('div');
+        row.classList.add('row-month');
+        for (var i = 0; i < 7; i++) {
+            var btn = document.createElement('div');
+            btn.classList.add('chata-radio-btn');
+            if(nDay > 31){
+                btn.classList.add('last-day');
+                btn.innerHTML = 'Last Day';
+                row.appendChild(btn);
+                break;
+            }
+            btn.innerHTML = (nDay++);
+            if(nDay == 6)btn.classList.add('top-right');
+            row.appendChild(btn);
+        }
+        radioContainer.appendChild(row);
+    }
+    container.appendChild(radioContainer);
+    return container;
+}
+
+function yearlyView(){
+    var container = document.createElement('div');
+    var radioContainer = document.createElement('div');
+    container.classList.add('frequency-date-select-container');
+    radioContainer.classList.add('chata-radio-btn-container');
+    radioContainer.classList.add('year-select');
+    const MONTH_LIST = [
+        'Jan', 'Feb', 'Mar',
+        'Apr', 'May', 'Jun',
+        'Jul', 'Aug', 'Sep',
+        'Oct', 'Nov', 'Dec'
+    ];
+    var nMonth = 0;
+    for (var i = 0; i < 3; i++) {
+        var row = document.createElement('div');
+        row.classList.add('row-year');
+        for (var x = 0; x < 3; x++) {
+            var btn = document.createElement('div');
+            btn.classList.add('chata-radio-btn');
+            btn.innerHTML = MONTH_LIST[nMonth++];
+            if(nMonth == 3)btn.classList.add('top-right');
+            row.appendChild(btn);
+        }
+        radioContainer.appendChild(row);
+    }
+    container.appendChild(radioContainer);
+    return container;
+}
+
+function onFrequencyPopupClick(evt, frequencyElement, indexZero=false){
+    var index = parseInt(evt.target.dataset.indexOption);
+    if(indexZero)index += 1;
+    frequencyElement.popup.setValue(evt.target.textContent);
+    switch (index) {
+        case 1:
+            var view = weeklyView();
+            if(!frequencyElement.dateSelectView){
+                frequencyElement.appendChild(view);
+            }else{
+                frequencyElement.replaceChild(
+                    view, frequencyElement.dateSelectView
+                );
+            }
+            frequencyElement.dateSelectView = view;
+            break;
+        case 2:
+            var view = monthlyView();
+            if(!frequencyElement.dateSelectView){
+                frequencyElement.appendChild(view);
+            }else{
+                frequencyElement.replaceChild(
+                    view, frequencyElement.dateSelectView
+                );
+            }
+            frequencyElement.dateSelectView = view;
+            break;
+        case 3:
+            var view = yearlyView();
+            if(!frequencyElement.dateSelectView){
+                frequencyElement.appendChild(view);
+            }else{
+                frequencyElement.replaceChild(
+                    view, frequencyElement.dateSelectView
+                );
+            }
+            frequencyElement.dateSelectView = view;
+            break;
+        default:
+            if(frequencyElement.dateSelectView){
+                frequencyElement.removeChild(
+                    frequencyElement.dateSelectView
+                );
+                frequencyElement.dateSelectView = null;
+            }
+            break;
+    }
 }
 
 function showFrequencyView(frequencyElement, type){
@@ -355,43 +439,8 @@ function showFrequencyView(frequencyElement, type){
                 {text: 'Yearly', active:false},
             ], 'Monthly', true);
             frequencyElement.popup = popup;
-
             popup.onclick = (evt) => {
-                var index = parseInt(evt.target.dataset.indexOption);
-                popup.setValue(evt.target.textContent);
-                switch (index) {
-                    case 0:
-                        if(frequencyElement.dateSelectView){
-                            frequencyElement.removeChild(
-                                frequencyElement.dateSelectView
-                            );
-                            frequencyElement.dateSelectView = null;
-                        }
-                        break;
-                    case 1:
-                        var view = htmlToElement(weeklyView());
-                        if(!frequencyElement.dateSelectView){
-                            frequencyElement.appendChild(view);
-                        }else{
-                            frequencyElement.replaceChild(
-                                view, frequencyElement.dateSelectView
-                            );
-                        }
-                        frequencyElement.dateSelectView = view;
-                        break;
-                    case 2:
-                        var view = htmlToElement(monthlyView());
-                        if(!frequencyElement.dateSelectView){
-                            frequencyElement.appendChild(view);
-                        }else{
-                            frequencyElement.replaceChild(
-                                view, frequencyElement.dateSelectView
-                            );
-                        }
-                        frequencyElement.dateSelectView = view;
-                    default:
-
-                }
+                onFrequencyPopupClick(evt, frequencyElement);
             }
             break;
         case 1:
@@ -401,6 +450,10 @@ function showFrequencyView(frequencyElement, type){
                 {text: 'Certains months of the year', active:false},
             ], 'Certains days of the month', false);
             frequencyElement.popup = popup;
+            popup.classList.add('large-popup');
+            popup.onclick = (evt) => {
+                onFrequencyPopupClick(evt, frequencyElement, true);
+            }
             break;
         case 2:
             frequencyElement.innerHTML = ''
