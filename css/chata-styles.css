@@ -229,9 +229,9 @@ body{
     width: calc(100%);
     height: 100%;
     max-height: calc(100% - 150px);
-    overflow-y: auto;
-    overflow-x: visible;
-    /* overflow: auto;
+    /* overflow: hidden; */
+    /* overflow-y: auto;
+    overflow-x: visible; */
     /* padding: 20px; */
     flex: 1;
     flex-grow: 1;
@@ -242,8 +242,21 @@ body{
 }
 
 .drawer-content:hover{
+    /* overflow: auto; */
     /* overflow-y: auto; */
     /* width: 100%; */
+}
+
+.chata-scrollbox {
+  width: 100%;
+  height: 100%;
+  max-height: calc(100% - 150px);
+  overflow: auto;
+  visibility: hidden;
+}
+
+.drawer-content, .chata-scrollbox:hover, .chata-scrollbox:focus {
+  visibility: visible;
 }
 
 .chat-single-message-container .chat-message-bubble {
@@ -584,14 +597,14 @@ body{
     border-color: transparent;
 }
 
-.drawer-content::-webkit-scrollbar {
+.chata-scrollbox::-webkit-scrollbar {
     display: unset;
     background-color: transparent;
     width: 7px;
     height: 7px;
 }
 
-.drawer-content::-webkit-scrollbar-thumb {
+.chata-scrollbox::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 7px;
     border: 0px;
@@ -636,6 +649,17 @@ input[type=text]:disabled {
     /* background-color: var(--chata-drawer-text-color-placeholder); */
 }
 
+.chata-table-scrollbox{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    visibility: hidden;
+}
+
+.chata-table-container, .chata-table-scrollbox:hover, .chata-table-scrollbox:focus {
+  visibility: visible;
+}
+
 .chata-table-container {
     height: 100%;
     background-color: inherit;
@@ -643,8 +667,9 @@ input[type=text]:disabled {
     /* overflow: hidden; */
 }
 
-.chata-table-container:hover{
-}
+/* .chata-table-container:hover{
+    overflow: scroll;
+} */
 
 .table-response, .table-response-renderer{
     border-collapse: collapse;

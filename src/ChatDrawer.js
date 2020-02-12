@@ -378,6 +378,8 @@ ChatDrawer.createDrawerContent = function(){
     var drawerContent = document.createElement('div');
     var firstMessage = document.createElement('div');
     var chatMessageBubble = document.createElement('div');
+    var scrollBox = document.createElement('div');
+    scrollBox.classList.add('chata-scrollbox');
     chatMessageBubble.textContent = ChatDrawer.options.introMessage;
     drawerContent.classList.add('drawer-content');
     firstMessage.classList.add('chat-single-message-container');
@@ -386,8 +388,10 @@ ChatDrawer.createDrawerContent = function(){
 
     firstMessage.appendChild(chatMessageBubble);
     drawerContent.appendChild(firstMessage);
-    ChatDrawer.rootElem.appendChild(drawerContent);
+    scrollBox.appendChild(drawerContent);
+    ChatDrawer.rootElem.appendChild(scrollBox);
     ChatDrawer.drawerContent = drawerContent;
+    ChatDrawer.scrollBox = scrollBox;
 }
 
 ChatDrawer.createHeader = function(){
@@ -1062,7 +1066,7 @@ ChatDrawer.sendResponse = function(text){
     messageBubble.textContent = text;
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
 }
 
 ChatDrawer.registerEvents = function(){
@@ -1542,7 +1546,7 @@ ChatDrawer.putHelpMessage = function(jsonResponse){
     messageBubble.innerHTML = ChatDrawer.createHelpContent(jsonResponse['data']['rows'][0]);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
 }
 
 ChatDrawer.putSafetynetMessage = function(suggestionArray){
@@ -1558,7 +1562,7 @@ ChatDrawer.putSafetynetMessage = function(suggestionArray){
     messageBubble.append(createSafetynetContent(suggestionArray));
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
 }
 
 ChatDrawer.sendMessage = function(chataInput, textValue){
@@ -1766,7 +1770,7 @@ ChatDrawer.putSimpleResponse = function(jsonResponse){
     messageBubble.appendChild(div);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
 }
 
 ChatDrawer.getActionButtons = function(idRequest, type){
@@ -1808,6 +1812,9 @@ ChatDrawer.getActionButtons = function(idRequest, type){
         </button>
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
+        </button>
+        <button class="chata-toolbar-btn" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+            ${COPY_SQL}
         </button>
         `;
     }else{
@@ -1949,6 +1956,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
     var messageBubble = document.createElement('div');
     var responseContentContainer = document.createElement('div');
     var tableContainer = document.createElement('div');
+    var scrollbox = document.createElement('div');
     var table = document.createElement('table');
     var header = document.createElement('tr');
     var groupField = getGroupableField(jsonResponse);
@@ -1975,6 +1983,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
 
     messageBubble.innerHTML = toolbar;
     tableContainer.classList.add('chata-table-container');
+    scrollbox.classList.add('chata-table-scrollbox');
     responseContentContainer.classList.add('chata-response-content-container');
     table.classList.add('table-response');
     table.setAttribute('data-componentid', idRequest);
@@ -2030,11 +2039,12 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         table.appendChild(tr);
     }
     tableContainer.appendChild(table);
+    // scrollbox.appendChild(tableContainer);
     responseContentContainer.appendChild(tableContainer);
     messageBubble.appendChild(responseContentContainer);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
     return table;
 }
 
@@ -2067,7 +2077,7 @@ ChatDrawer.putSuggestionResponse = function(jsonResponse, query){
     messageBubble.appendChild(responseContentContainer);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
 }
 
 ChatDrawer.checkMaxMessages = function(){
@@ -2100,7 +2110,7 @@ ChatDrawer.putMessage = function(value){
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
     ChatDrawer.drawerContent.appendChild(responseLoadingContainer);
-    ChatDrawer.drawerContent.scrollTop = ChatDrawer.drawerContent.scrollHeight;
+    ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
     ChatDrawer.checkMaxMessages();
     return responseLoadingContainer;
 }

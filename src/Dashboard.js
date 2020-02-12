@@ -25,7 +25,7 @@ function Dashboard(selector, options={}){
         quantityDecimals: 1,
         monthYearFormat: 'MMM YYYY',
         dayMonthYearFormat: 'MMM DD, YYYY',
-        // comparisonDisplay: 'ratio' || 'percent'
+        comparisonDisplay: 'ratio' || 'percent',
         fontFamily:	'sans-serif',
         chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
         titleColor: '#2466AE',

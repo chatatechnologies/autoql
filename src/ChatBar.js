@@ -20,7 +20,7 @@ function getChatBar(options){
         enableAutocomplete: true,
         autocompleteStyles: {},
         enableSafetyNet: true,
-        enableDrilldowns: true,
+        disableDrilldowns: false,
         demo: true,
         fontFamily: 'sans-serif'
     }

@@ -71,6 +71,47 @@ document.getElementById('my-response').append(responseRenderer);
 </script>
 ```
 
+#### Dashboard
+
+An editable dashboard component containing tiles with a query and a visualization. This component takes an array of tile objects as a prop for the initial render.
+
+You will find a list of available props and their defaults in the next section.
+```
+<div class="my-grid"><div>
+
+<script>
+var dashboard = new Dashboard('.my-grid', {
+    chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    demo: false,
+    token: 'your-jwt-token',
+    apiKey: 'your-api-key',
+    customerId: 'your-customer-id',
+    userId: 'your-user-id',
+    domain: 'https://yourdomain.com',
+    tiles: [
+        {
+            w: 6,
+            h: 7,
+            query: 'total sales and ebitda per month',
+            title: 'Total sales and ebitda - Month',
+            displayType: 'line'
+        },
+        {
+            w: 3,
+            h: 3,
+            query: 'total profit last month',
+            title: 'Profit - Previous Month'
+        },
+    ],
+    onChangeCallback: function() {
+        console.log('Dashboard onChangeCallback');
+    },
+    executeOnMount: false,
+    executeOnStopEditing: false,
+    fontFamily: 'monospace'
+});
+</script>
+```
 
 # Props
 
@@ -104,8 +145,14 @@ document.getElementById('my-response').append(responseRenderer);
 | enableAutocomplete | Boolean | true |
 | autocompleteStyles | Object | {} |
 | enableSafetyNet | Boolean | true |
-| enableDrilldowns |  Boolean | true |
+| disableDrilldowns |  Boolean | true |
 | demo | Boolean | false |
+| currencyCode | String | 'USD' |
+| languageCode | String | 'en-US' |
+| currencyDecimals | Number | 2 |
+| quantityDecimals | Number | 1 |
+| monthYearFormat | String | 'MMM YYYY' |
+| dayMonthYearFormat | String | 'MMM DD, YYYY' |
 | fontFamily | String | 'sans-serif' |
 | chartColors | Array | ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'] |
 
@@ -126,7 +173,7 @@ document.getElementById('my-response').append(responseRenderer);
 | enableAutocomplete | Boolean | true |
 | autocompleteStyles | Object | {} |
 | enableSafetyNet | Boolean | true |
-| enableDrilldowns |  Boolean | true |
+| disableDrilldowns |  Boolean | true |
 | demo | Boolean | false |
 | fontFamily | String | 'sans-serif' |
 
@@ -139,8 +186,42 @@ document.getElementById('my-response').append(responseRenderer);
 | tableHoverColor | String | undefined |
 | displayType | String | undefined |
 | renderTooltips | Boolean | true |
+| currencyCode | String | 'USD' |
+| languageCode | String | 'en-US' |
+| currencyDecimals | Number | 2 |
+| quantityDecimals | Number | 1 |
+| monthYearFormat | String | 'MMM YYYY' |
+| dayMonthYearFormat | String | 'MMM DD, YYYY' |
 | fontFamily | String | 'sans-serif' |
 | chartColors | Array | ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'] |
+
+#### Dashboard Props
+
+| Prop                  | Type                                   | Default Value                                           |
+| :-------------------- | :------------------------------------- | :------------------------------------------------------ |
+| token (Required)      | String                                 | -                                                       |
+| apiKey (Required)     | String                                 | -                                                       |
+| customerId (Required) | String                                 | -                                                       |
+| userId (Required)     | String                                 | -                                                       |
+| domain (Required)     | String                                 | -                                                       |
+| tiles (Required)      | Array of Tile Objects                  | []                                                      |
+| onChangeCallback      | Function                               | () => {}                                                |
+| isEditing             | Boolean                                | false                                                   |
+| currencyCode          | String                                 | 'USD'                                                   |
+| languageCode          | String                                 | 'en-US'                                                 |
+| currencyDecimals      | Number                                 | 2                                                       |
+| quantityDecimals      | Number                                 | 1                                                       |
+| monthYearFormat       | String                                 | 'MMM YYYY'                                              |
+| dayMonthYearFormat    | String                                 | 'MMM DD, YYYY'                                          |
+| comparisonDisplay     | String: 'ratio' &#124;&#124; 'percent' | 'percent'                                               |
+| fontFamily            | String                                 | 'sans-serif'                                            |
+| chartColors           | Array                                  | ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'] |
+| titleColor            | string                                 | '#2466AE'                                               |
+| executeOnMount        | Boolean                                | true                                                    |
+| executeOnStopEditing  | Boolean                                | true                                                    |
+| notExecutedText       | String                                 | 'Hit "Execute" to run this dashboard'                   |
+| demo                  | Boolean                                | false                                                   |
+| debug                 | Boolean                                | false                                                   |
 
 #### Prop Descriptions
 **isVisible**: Whether the drawer is open or not. You have full control over the visibility of the drawer by using your own state.
@@ -195,7 +276,7 @@ For example: If you query 'How much money does Nikk owe me?', safetynet may dete
 
 If this value is false, the query will bypass the "safetynet" endpoint and be sent straight to the "query" endpoint.
 
-**enableDrilldowns**: A new query will be sent when clicking on a table or chart element to "drill down" into the data. A new message will be sent to the user with more detailed data related to that clicked element. If this is false, nothing will happen when a table or chart element is clicked.
+**disableDrilldowns**: A new query will be sent when clicking on a table or chart element to "drill down" into the data. A new message will be sent to the user with more detailed data related to that clicked element. If this is false, nothing will happen when a table or chart element is clicked.
 
 **demo**: If this value is true, the widget will use chata's demo Plumbing Co. as a data source.
 
