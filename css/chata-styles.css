@@ -610,31 +610,31 @@ body{
     border: 0px;
 }
 
-.chata-table-container::-webkit-scrollbar-thumb {
+.chata-table-scrollbox::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 7px;
     border: 0px;
 }
 
-.chata-table-container::-webkit-scrollbar {
+.chata-table-scrollbox::-webkit-scrollbar {
     display: unset;
     background-color: var(--chata-drawer-background-color);
     width: 7px;
     height: 7px;
 }
 
-.chata-table-container::-webkit-scrollbar-corner{
+.chata-table-scrollbox::-webkit-scrollbar-corner{
     background-color: var(--chata-drawer-background-color);
 }
 
-.chata-table-container-renderer::-webkit-scrollbar {
+.chata-table-scrollbox::-webkit-scrollbar {
     display: unset;
     background-color: #fff;
     width: 7px;
     height: 7px;
 }
 
-.chata-table-container-renderer::-webkit-scrollbar-corner{
+.chata-table-scrollbox::-webkit-scrollbar-corner{
     background-color: #fff;
 }
 
@@ -656,14 +656,14 @@ input[type=text]:disabled {
     visibility: hidden;
 }
 
-.chata-table-container, .chata-table-scrollbox:hover, .chata-table-scrollbox:focus {
+.chata-table-container, .chata-chart-container, .chata-table-container-renderer, .chata-table-scrollbox:hover, .chata-table-scrollbox:focus {
   visibility: visible;
 }
 
 .chata-table-container {
     height: 100%;
     background-color: inherit;
-    overflow: scroll;
+    /* overflow: scroll; */
     /* overflow: hidden; */
 }
 
@@ -1545,6 +1545,10 @@ text.x-axis-label, text.y-axis-label {
     background: var(--chata-drawer-accent-color);
     border: 1px solid var(--chata-drawer-accent-color);
     color: #fff;
+}
+
+.chata-toolbar-btn.btn-green {
+    color: #2ecc40;
 }
 
 @-webkit-keyframes fadeIn {

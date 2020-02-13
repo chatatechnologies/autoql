@@ -356,7 +356,7 @@ ChatDrawer.createBar = function(){
     var htmlBar = `
     <div class="watermark">
         ${WATERMARK}
-        We run on Chata
+        We run on AutoQL by Chata
     </div>
     <div class="auto-complete-suggestions">
         <ul id="auto-complete-list">
@@ -702,6 +702,24 @@ ChatDrawer.clickHandler = function(e){
             }
             copyTextToClipboard(ChatDrawer.createCsvData(json, '\t'));
         }
+        if(e.target.classList.contains('sql')){
+            let parent;
+            if(e.target.tagName == 'svg'){
+                parent = e.target.parentElement;
+            }else if(e.target.tagName == 'path'
+            || e.target.tagName == 'ellipse'){
+                parent = e.target.parentElement.parentElement;
+            }else{
+                parent = e.target;
+            }
+            var json = ChatDrawer.responses[parent.dataset.id];
+            parent.classList.add('btn-green')
+            var interval = setInterval(function(){
+                parent.classList.remove('btn-green');
+                clearInterval(interval);
+            }, 1000);
+            copyTextToClipboard(json['data']['sql']);
+        }
         if(e.target.classList.contains('show-hide-columns')){
             if(e.target.tagName == 'svg'){
                 var id = e.target.parentElement.dataset.id
@@ -710,8 +728,7 @@ ChatDrawer.clickHandler = function(e){
             }else{
                 var id = e.target.dataset.id;
             }
-            // var json = ChatDrawer.responses[id];
-            ChatDrawer.showColumnEditor(id)
+            ChatDrawer.showColumnEditor(id);
         }
         if(e.target.classList.contains('csv')){
             if(e.target.tagName == 'svg'){
@@ -915,6 +932,7 @@ ChatDrawer.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = ChatDrawer.responses[idRequest];
+            console.log('ID REQUESTS: ' + idRequest);
             console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             ChatDrawer.refreshToolbarButtons(component, 'bar');
@@ -1175,7 +1193,7 @@ ChatDrawer.groupBy = function(list, keyGetter) {
 }
 
 ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
-    var messageBubble = oldComponent.parentElement.parentElement.parentElement;
+    var messageBubble = oldComponent.parentElement.parentElement.parentElement.parentElement;
     var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
     var toolbarRight = messageBubble.getElementsByClassName('right')[0];
     var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
@@ -1221,7 +1239,7 @@ ChatDrawer.refreshPivotTable = function(table, pivotArray){
     var rows = table.childNodes;
     var cols = ChatDrawer.responses[table.dataset.componentid]['columns'];
     for (var i = 0; i < rows.length; i++) {
-        rows[i].style.visibility = 'visible';
+        rows[i].style.display = 'table-row';
     }
 
     for (var i = 1; i < pivotArray.length; i++) {
@@ -1232,7 +1250,7 @@ ChatDrawer.refreshPivotTable = function(table, pivotArray){
     }
 
     for (var i = pivotArray.length; i < rows.length; i++) {
-        rows[i].style.visibility = 'hidden';
+        rows[i].style.display = 'none';
     }
 }
 
@@ -1241,7 +1259,7 @@ ChatDrawer.refreshTableData = function(table, newData, options){
     var nodes = table.childNodes;
     var cols = ChatDrawer.responses[table.dataset.componentid]['data']['columns'];
     for (var i = 0; i < nodes.length; i++) {
-        nodes[i].style.visibility = 'visible';
+        nodes[i].style.display = 'table-row';
     }
     for (var i = 0; i < newData.length; i++) {
         var tdList = nodes[i+1].childNodes;
@@ -1250,7 +1268,7 @@ ChatDrawer.refreshTableData = function(table, newData, options){
         }
     }
     for (var i = newData.length+1; i < nodes.length; i++) {
-        nodes[i].style.visibility = 'hidden';
+        nodes[i].style.display = 'none';
     }
 }
 
@@ -1813,7 +1831,7 @@ ChatDrawer.getActionButtons = function(idRequest, type){
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
         </button>
-        <button class="chata-toolbar-btn" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+        <button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
             ${COPY_SQL}
         </button>
         `;
@@ -2039,8 +2057,8 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         table.appendChild(tr);
     }
     tableContainer.appendChild(table);
-    // scrollbox.appendChild(tableContainer);
-    responseContentContainer.appendChild(tableContainer);
+    scrollbox.appendChild(tableContainer);
+    responseContentContainer.appendChild(scrollbox);
     messageBubble.appendChild(responseContentContainer);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);

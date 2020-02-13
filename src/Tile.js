@@ -399,7 +399,10 @@ function Tile(dashboard, options={}){
         switch (displayType) {
             case 'table':
                 var div = createTableContainer();
-                container.appendChild(div);
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add('chata-table-scrollbox');
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
                 if(json['data']['columns'].length == 1){
                     var data = formatData(
                         json['data']['rows'][0][0],
@@ -596,7 +599,10 @@ function Tile(dashboard, options={}){
                 break;
             case 'pivot_column':
                 var div = createTableContainer();
-                container.appendChild(div);
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add('chata-table-scrollbox');
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
                 var pivotArray = [];
                 var columns = json['data']['columns'];
                 if(columns[0].type === 'DATE' &&
