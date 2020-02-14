@@ -256,6 +256,7 @@ function Tile(dashboard, options={}){
                     tileResponseContainer.appendChild(
                         responseContentContainer
                     );
+                    updateSelectWidth(responseContentContainer);
                 }else{
                     chataDashboardItem.options.isSafetynet = false;
                     ChatDrawer.ajaxCall(val, function(json){
@@ -621,6 +622,10 @@ function Tile(dashboard, options={}){
                 responseContentContainer.classList.add(
                     'chata-response-content-center'
                 );
+                responseContentContainer.innerHTML = `
+                    <div>I'm not sure what you mean by
+                        <strong>"${inputQuery.value}"</strong>. Did you mean:
+                    </div>`;
                 container.appendChild(responseContentContainer);
                 var rows = json['data']['rows'];
                 ChatDrawer.createSuggestions(

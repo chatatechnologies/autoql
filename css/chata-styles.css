@@ -122,6 +122,10 @@ body{
     /* background: white; */
 }
 
+.chata-confirm-text {
+    text-align: center;
+}
+
 .clear-messages-confirm-popover {
     color: var(--chata-drawer-text-color-primary);
     padding: 20px;

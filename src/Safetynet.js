@@ -27,7 +27,6 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
     `;
     for (var i = 0; i < suggestionArray.length; i++) {
         var suggestion = suggestionArray[i];
-        console.log(suggestion);
         if(suggestion['type'] == 'word'){
             var span = document.createElement('span');
             span.textContent = ' ' + suggestion['word'] + ' ';
@@ -54,6 +53,10 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
             var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
             safetyDeleteButton.onclick = function(event){
                 deleteSuggestion(event);
+            }
+            select.onchange = (evt) => {
+                console.log(evt.target.value);
+                updateSelect(evt.target);
             }
             var o = document.createElement('option');
             o.setAttribute('value', suggestion['word']);
@@ -98,4 +101,39 @@ function createSuggestionArray(jsonResponse){
         }
     }
     return suggestionArray;
+}
+
+function getTextWidth(text, font) {
+    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
+    var context = canvas.getContext("2d");
+    context.font = font;
+    var metrics = context.measureText(text);
+    return metrics.width;
+}
+
+function updateSelectWidth(container){
+    var selects = document.querySelectorAll('.chata-safetynet-select');
+    for (var i = 0; i < selects.length; i++) {
+        updateSelect(selects[i]);
+    }
+}
+
+function updateSelect(elem){
+    const suggestionDiv = document.createElement('div')
+    const stringValue = elem.options[elem.selectedIndex].textContent;
+    suggestionDiv.innerHTML = stringValue;
+    suggestionDiv.style.display = 'inline-block'
+    suggestionDiv.style.position = 'absolute'
+    suggestionDiv.style.visibility = 'hidden'
+    document.body.appendChild(suggestionDiv)
+    // const selectWidth = suggestionDiv.clientWidth + 36
+    // var styles = window.getComputedStyle(elem);
+    // var size = styles.getPropertyValue('font-size');
+    // var family = styles.getPropertyValue('font-family');
+    // var weight = styles.getPropertyValue('font-weight');
+    // var width = getTextWidth(
+    //     elem.value, `${weight} ${size} ${family}`
+    // );
+    // console.log(width);
+    elem.style.width = (suggestionDiv.clientWidth + 36) + 'px';
 }

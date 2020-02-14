@@ -542,6 +542,14 @@
     padding: 0px;
 }
 
+.chata-dashboard .chata-suggestion-btn-renderer{
+    padding: 6px 14px;
+    margin-top: 5px;
+}
+.chata-dashboard strong{
+    font-weight: bold;
+}
+
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
 

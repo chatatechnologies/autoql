@@ -1580,6 +1580,7 @@ ChatDrawer.putSafetynetMessage = function(suggestionArray){
     messageBubble.append(createSafetynetContent(suggestionArray));
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
+    updateSelectWidth(containerMessage)
     ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
 }
 
@@ -1806,6 +1807,8 @@ ChatDrawer.getActionButtons = function(idRequest, type){
             </button>
         `;
         var showHideColumnsButton = '';
+        var copySqlButton = '';
+
         if(request['data']['rows'].length == 1){
             filterButton = '';
         }
@@ -1818,7 +1821,12 @@ ChatDrawer.getActionButtons = function(idRequest, type){
                        ${COLUMN_EDITOR}
                    </button>
                `;
-           }
+        }
+        if(ChatDrawer.options.debug){
+            copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+                ${COPY_SQL}
+            </button>`;
+        }
         return `
         ${filterButton}
         ${showHideColumnsButton}
@@ -1831,11 +1839,15 @@ ChatDrawer.getActionButtons = function(idRequest, type){
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
         </button>
-        <button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-            ${COPY_SQL}
-        </button>
+        ${copySqlButton}
         `;
     }else{
+        var copySqlButton = '';
+        if(ChatDrawer.options.debug){
+            copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+                ${COPY_SQL}
+            </button>`;
+        }
         return `
         <button class="chata-toolbar-btn export_png" data-tippy-content="Download as PNG" data-id="${idRequest}">
             ${EXPORT_PNG_ICON}
@@ -1843,6 +1855,7 @@ ChatDrawer.getActionButtons = function(idRequest, type){
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
         </button>
+        ${copySqlButton}
         `;
     }
 }
