@@ -56,7 +56,7 @@ ChatDrawer.init = function(elem, options, registerEventsFlag=true){
         ChatDrawer.options[key] = value;
     }
     if(!('introMessage' in options)){
-        ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ " I'm  here to help you access, search and analyze your data.";
+        ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ "! I'm  here to help you access, search and analyze your data.";
     }
     if(!('onMaskClick' in options)){
         ChatDrawer.options.onMaskClick = ChatDrawer.options.onHandleClick;
@@ -664,6 +664,7 @@ ChatDrawer.clickHandler = function(e){
             }
             var table = parent.getElementsByTagName('table')[0];
             var inputs = table.getElementsByClassName('tabulator-header-filter');
+            var arrows = table.getElementsByClassName('tabulator-arrow');
 
             for (var i = 0; i < inputs.length; i++) {
                 if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
@@ -671,6 +672,7 @@ ChatDrawer.clickHandler = function(e){
                 }else{
                     inputs[i].style.display = 'none';
                 }
+                arrows[i].classList.toggle('tabulator-filter');
             }
         }
 
@@ -2020,7 +2022,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
     table.classList.add('table-response');
     table.setAttribute('data-componentid', idRequest);
     var dataLines = jsonResponse['data']['rows'];
-
+    var thArray = [];
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
         var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
         var th = document.createElement('th');
@@ -2050,6 +2052,7 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         th.appendChild(col);
         th.appendChild(arrow);
         header.appendChild(th);
+        thArray.push(th);
     }
     table.appendChild(header);
 
@@ -2076,6 +2079,17 @@ ChatDrawer.putTableResponse = function(jsonResponse){
     messageBubble.appendChild(responseContentContainer);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
+    console.log(table.offsetWidth);
+    console.log();
+    var rowsElements = table.querySelectorAll('[data-indexrow]');
+    for (var i = 0; i < rowsElements.length; i++) {
+        var tdEl = rowsElements[i].getElementsByTagName('td');
+        var sizes = [];
+        for (var x = 0; x < tdEl.length; x++) {
+            // thArray[x].style.width = tdEl[x].clientWidth + 'px';
+        }
+    }
+    console.log(thArray);
     ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
     return table;
 }
