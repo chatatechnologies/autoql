@@ -50,14 +50,19 @@ function createResponseRenderer(options={}){
             if(!component.chataBarContainer.options.disableDrilldowns){
                 var json = ChatDrawer.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
-                let mergeOptions = {
-                    ...component.chataBarContainer.options,
-                    ...component.options
-                }
+                var topBar = component.chataBarContainer.getElementsByClassName(
+                    'chat-bar-text'
+                )[0]
+                var loading = putLoadingContainer(topBar);
+                let opts = mergeOptions([
+                    component.chataBarContainer.options,
+                    component.options
+                ]);
+
                 ChatDrawer.sendDrilldownMessage(
                     json, indexData,
-                    mergeOptions,
-                    'ChatBar', component);
+                    opts,
+                    'ChatBar', component, loading);
             }
         }
         if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
@@ -70,13 +75,14 @@ function createResponseRenderer(options={}){
                     'chat-bar-text'
                 )[0]
                 var loading = putLoadingContainer(topBar);
-                let mergeOptions = {
-                    ...responseRenderer.chataBarContainer.options,
-                    ...responseRenderer.options
-                }
+                let opts = mergeOptions([
+                    component.chataBarContainer.options,
+                    component.options
+                ]);
+
                 ChatDrawer.sendDrilldownMessage(
                     json, indexData,
-                    mergeOptions,
+                    opts,
                     'ChatBar', responseRenderer, loading);
             }
         }
@@ -87,17 +93,19 @@ function createResponseRenderer(options={}){
             json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
             json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
-            console.log(json['data']['rows'][0]);
-            let mergeOptions = {
-                ...component.chataBarContainer.options,
-                ...component.options
-            }
-            console.log(component);
+            var topBar = component.chataBarContainer.getElementsByClassName(
+                'chat-bar-text'
+            )[0]
+            var loading = putLoadingContainer(topBar);
+            let opts = mergeOptions([
+                component.chataBarContainer.options,
+                component.options
+            ]);
             ChatDrawer.sendDrilldownMessage(
                 json,
                 0,
-                mergeOptions,
-                'ChatBar', component
+                opts,
+                'ChatBar', component, loading
             );
         }
 

@@ -464,13 +464,29 @@ function svgString2Image(svgString, width, height) {
     image.src = imgsrc;
 }
 
+function mergeOptions(objList){
+    var output = [];
+    for (var i = 0; i < objList.length; i++) {
+        let obj = objList[i];
+        for (var [key, value] of Object.entries(obj)) {
+            output[key] = value;
+        }
+    }
+    return output;
+}
+
 function getSpeech(button){
-    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
-    let recognition = new window.SpeechRecognition();
-    recognition.interimResults = true;
-    recognition.maxAlternatives = 10;
-    recognition.continuous = true;
-    return recognition;
+    window.SpeechRecognition =
+    window.webkitSpeechRecognition || window.SpeechRecognition;
+    if(window.SpeechRecognition){
+        let recognition = new window.SpeechRecognition();
+        recognition.interimResults = true;
+        recognition.maxAlternatives = 10;
+        recognition.continuous = true;
+        return recognition;
+    }else{
+        return false
+    }
 }
 
 function formatLabels(labels, col, options){

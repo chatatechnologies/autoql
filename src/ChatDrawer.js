@@ -95,25 +95,26 @@ ChatDrawer.init = function(elem, options, registerEventsFlag=true){
         '--chata-drawer-font-family',
         ChatDrawer.options['fontFamily']
     );
-
-    ChatDrawer.speechToText.onresult = (event) => {
-        let interimTranscript = '';
-        for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-            let transcript = event.results[i][0].transcript;
-            if (event.results[i].isFinal) {
-                ChatDrawer.finalTranscript += transcript;
-            } else {
-                interimTranscript += transcript;
+    if(ChatDrawer.speechToText){
+        ChatDrawer.speechToText.onresult = (event) => {
+            let interimTranscript = '';
+            for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
+                let transcript = event.results[i][0].transcript;
+                if (event.results[i].isFinal) {
+                    ChatDrawer.finalTranscript += transcript;
+                } else {
+                    interimTranscript += transcript;
+                }
             }
-        }
-        console.log(ChatDrawer.finalTranscript);
-        if(ChatDrawer.finalTranscript !== ''){
-            var button = document.getElementById('chata-voice-record-button');
-            var chataInput = document.getElementById('chata-input');
-            ChatDrawer.sendMessage(chataInput, ChatDrawer.finalTranscript);
-            ChatDrawer.speechToText.stop();
-            button.style.background = themeStyles['--chata-drawer-accent-color'];
-            ChatDrawer.options.isRecordVoiceActive = false;
+            console.log(ChatDrawer.finalTranscript);
+            if(ChatDrawer.finalTranscript !== ''){
+                var button = document.getElementById('chata-voice-record-button');
+                var chataInput = document.getElementById('chata-input');
+                ChatDrawer.sendMessage(chataInput, ChatDrawer.finalTranscript);
+                ChatDrawer.speechToText.stop();
+                button.style.background = themeStyles['--chata-drawer-accent-color'];
+                ChatDrawer.options.isRecordVoiceActive = false;
+            }
         }
     }
     refreshTooltips();

@@ -30,9 +30,11 @@ function Tile(dashboard, options={}){
     for (var [key, value] of Object.entries(options)) {
         chataDashboardItem.options[key] = value;
     }
+    const notExecutedText = options.notExecutedText
+    || dashboard.options.notExecutedText;
     const placeHolderText = `
         <div class="dashboard-tile-placeholder-text">
-            <em>${dashboard.options.notExecutedText}</em>
+            <em>${notExecutedText}</em>
         </div>
     `;
 
