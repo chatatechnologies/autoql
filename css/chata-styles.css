@@ -631,24 +631,6 @@ body{
     background-color: var(--chata-drawer-background-color);
 }
 
-.chata-table-scrollbox::-webkit-scrollbar {
-    display: unset;
-    background-color: #fff;
-    width: 7px;
-    height: 7px;
-}
-
-.chata-table-scrollbox::-webkit-scrollbar-corner{
-    background-color: #fff;
-}
-
-.table-response::-webkit-scrollbar-thumb {
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 7px;
-    border: 0px;
-    background: red;
-}
-
 input[type=text]:disabled {
     /* background-color: var(--chata-drawer-text-color-placeholder); */
 }
@@ -702,23 +684,25 @@ input[type=text]:disabled {
     border-spacing: 0;
 }
 
-.table-response th{
-    padding: 0px !important;
+.chata-table-scrollbox .table-header{
 }
 
-.table-response tr:first-of-type{
+.chata-response-content-container .table-header,
+.chata-table-scrollbox .table-header{
     border-bottom: 2px solid var(--chata-drawer-border-color);
-    /* position: sticky !important;
+    position: sticky !important;
     position: -webkit-sticky !important;
     top: 0 !important;
-    display: block; */
+    display: block;
+    visibility: visible;
 }
 
 .table-response-renderer tr:first-of-type{
     border-bottom: 2px solid #d3d3d352;
 }
 
-.table-response tr th, .table-response-renderer tr th{
+.chata-table-scrollbox .table-header th, .table-response-renderer tr th{
+    padding: 8px 12px !important;
     box-sizing: border-box;
     width: 100%;
     white-space: nowrap;
@@ -729,9 +713,9 @@ input[type=text]:disabled {
     font-family: var(--chata-drawer-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
-    background: transparent;
+    background: var(--chata-drawer-background-color);
     position: relative;
-    text-align: left;
+    text-align: center;
 }
 
 .tabulator-arrow {
@@ -766,11 +750,11 @@ input[type=text]:disabled {
     overflow: hidden;
 }
 
-.table-response tr th:hover{
+.chata-table-scrollbox tr th:hover{
     background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
-.table-response tr th:hover .tabulator-arrow, .table-response-renderer tr th:hover .tabulator-arrow{
+.chata-table-scrollbox tr th:hover .tabulator-arrow, .table-response-renderer tr th:hover .tabulator-arrow{
     display: block;
 }
 .table-response tr:hover {

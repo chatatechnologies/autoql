@@ -1,7 +1,8 @@
-function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='table-response'){
+function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='table-response', selector='[data-indexrow]'){
     var groupField = getGroupableField(jsonResponse);
     var table = document.createElement('table');
     var header = document.createElement('tr');
+    var thArray = [];
     table.classList.add(tableClass);
     if(oldComponent.dataset.componentid){
         table.setAttribute('data-componentid', oldComponent.dataset.componentid);
@@ -42,8 +43,10 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         th.appendChild(col);
         th.appendChild(arrow);
         header.appendChild(th);
+        thArray.push(th);
     }
-    table.appendChild(header);
+    header.classList.add('table-header');
+    // table.appendChild(header);
     for (var i = 0; i < dataLines.length; i++) {
         var data = dataLines[i];
         var tr = document.createElement('tr');
@@ -56,20 +59,32 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
             td.textContent = value;
             tr.appendChild(td);
         }
+        if(action == 'replace'){
+            tr.setAttribute('data-indexrow', i);
+        }else{
+            tr.setAttribute('data-indexrowrenderer', i);
+        }
         if(typeof groupField !== 'number'){
-            if(action == 'replace'){
-                tr.setAttribute('data-indexrow', i);
-            }else{
-                tr.setAttribute('data-indexrowrenderer', i);
-            }
+            tr.setAttribute('data-has-drilldown', true);
+        }else{
+            tr.setAttribute('data-has-drilldown', false);
         }
         table.appendChild(tr);
     }
+
     if(action == 'replace'){
+        if(oldComponent.headerElement){
+            oldComponent.parentElement.parentElement.replaceChild(header, oldComponent.headerElement);
+        }
         oldComponent.parentElement.replaceChild(table, oldComponent);
     }else{
+        // oldComponent.parentElement.appendChild(header);
         oldComponent.appendChild(table);
     }
+    let headerWidth = adjustTableWidth(table, thArray, selector);
+    table.style.width = headerWidth + 'px';
+    header.style.width = headerWidth + 'px';
+    table.headerElement = header;
     return table;
 }
 

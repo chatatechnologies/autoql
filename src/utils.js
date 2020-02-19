@@ -628,7 +628,7 @@ function tooltipCharts(){
 }
 function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
-    var inputs = _table.getElementsByTagName('input');
+    var inputs = _table.headerElement.getElementsByTagName('input');
     var json = ChatDrawer.responses[_table.dataset.componentid];
     var rows = array || cloneObject(json['data']['rows']);
     for (var i = 0; i < inputs.length; i++) {
@@ -749,4 +749,32 @@ const getSupportedDisplayTypes = response => {
 
     // We should always be able to display the table type by default
     return ['table']
+}
+
+function adjustTableWidth(table, thArray, selector='[data-indexrow]'){
+    var headerWidth = 0;
+    var rowsElements = table.querySelectorAll(selector);
+    for (var i = 0; i < 1; i++) {
+        var tdEl = rowsElements[i].getElementsByTagName('td');
+        var sizes = [];
+        for (var x = 0; x < tdEl.length; x++) {
+            const div = document.createElement('div')
+            div.innerHTML = thArray[x].textContent;
+            div.style.display = 'inline-block';
+            div.style.position = 'absolute';
+            div.style.visibility = 'hidden';
+            document.body.appendChild(div);
+
+            w = tdEl[x].offsetWidth;
+            if(div.offsetWidth > tdEl[x].offsetWidth){
+                w = div.offsetWidth + 35;
+            }
+            thArray[x].style.width = (w) + 'px';
+            tdEl[x].style.width = (w) + 'px';
+
+            headerWidth += w;
+            document.body.removeChild(div);
+        }
+    }
+    return headerWidth;
 }

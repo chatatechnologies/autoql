@@ -663,9 +663,12 @@ ChatDrawer.clickHandler = function(e){
                 parent = e.target.parentElement.parentElement;
             }
             var table = parent.getElementsByTagName('table')[0];
-            var inputs = table.getElementsByClassName('tabulator-header-filter');
-            var arrows = table.getElementsByClassName('tabulator-arrow');
-
+            var inputs = table.headerElement.getElementsByClassName(
+                'tabulator-header-filter'
+            );
+            var arrows = table.headerElement.getElementsByClassName(
+                'tabulator-arrow'
+            );
             for (var i = 0; i < inputs.length; i++) {
                 if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
                     inputs[i].style.display = 'block';
@@ -749,6 +752,7 @@ ChatDrawer.clickHandler = function(e){
         }
         if(e.target.classList.contains('column')){
             var tableElement = e.target.parentElement.parentElement.parentElement;
+            console.log(tableElement);
             if(e.target.nextSibling.classList.contains('up')){
                 e.target.nextSibling.classList.remove('up');
                 e.target.nextSibling.classList.add('down');
@@ -1265,12 +1269,12 @@ ChatDrawer.refreshTableData = function(table, newData, options){
         nodes[i].style.display = 'table-row';
     }
     for (var i = 0; i < newData.length; i++) {
-        var tdList = nodes[i+1].childNodes;
+        var tdList = nodes[i].childNodes;
         for (var x = 0; x < tdList.length; x++) {
             tdList[x].textContent = formatData(newData[i][x], cols[x], options);
         }
     }
-    for (var i = newData.length+1; i < nodes.length; i++) {
+    for (var i = newData.length; i < nodes.length; i++) {
         nodes[i].style.display = 'none';
     }
 }
@@ -2054,7 +2058,8 @@ ChatDrawer.putTableResponse = function(jsonResponse){
         header.appendChild(th);
         thArray.push(th);
     }
-    table.appendChild(header);
+    header.classList.add('table-header');
+    scrollbox.appendChild(header);
 
     for (var i = 0; i < dataLines.length; i++) {
         var data = dataLines[i];
@@ -2068,8 +2073,11 @@ ChatDrawer.putTableResponse = function(jsonResponse){
             td.textContent = value;
             tr.appendChild(td);
         }
+        tr.setAttribute('data-indexrow', i);
         if(typeof groupField !== 'number'){
-            tr.setAttribute('data-indexrow', i);
+            tr.setAttribute('data-has-drilldown', true);
+        }else{
+            tr.setAttribute('data-has-drilldown', false);
         }
         table.appendChild(tr);
     }
@@ -2079,17 +2087,11 @@ ChatDrawer.putTableResponse = function(jsonResponse){
     messageBubble.appendChild(responseContentContainer);
     containerMessage.appendChild(messageBubble);
     ChatDrawer.drawerContent.appendChild(containerMessage);
-    console.log(table.offsetWidth);
-    console.log();
-    var rowsElements = table.querySelectorAll('[data-indexrow]');
-    for (var i = 0; i < rowsElements.length; i++) {
-        var tdEl = rowsElements[i].getElementsByTagName('td');
-        var sizes = [];
-        for (var x = 0; x < tdEl.length; x++) {
-            // thArray[x].style.width = tdEl[x].clientWidth + 'px';
-        }
-    }
-    console.log(thArray);
+
+    var headerWidth = adjustTableWidth(table, thArray);
+    table.style.width = headerWidth + 'px';
+    header.style.width = headerWidth + 'px';
+    table.headerElement = header;
     ChatDrawer.scrollBox.scrollTop = ChatDrawer.scrollBox.scrollHeight;
     return table;
 }

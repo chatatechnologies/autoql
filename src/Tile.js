@@ -419,9 +419,11 @@ function Tile(dashboard, options={}){
                 }else{
                     var table = createTable(
                         json, div, dashboard.options,
-                        'append', _uuid, 'table-response-renderer'
+                        'append', _uuid, 'table-response-renderer',
+                        '[data-indexrowrenderer]'
                     );
                     table.classList.add('renderer-table');
+                    scrollbox.insertBefore(table.headerElement, div);
                 }
                 break;
             case 'bar':
