@@ -22,8 +22,18 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
+    component.innerHTML = '';
+    if(component.headerElement){
+        component.parentElement.parentElement.removeChild(
+            component.headerElement
+        );
+        component.headerElement = null;
+    }
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.parentElement.classList.add(
+        'chata-hidden-scrollbox'
+    );
     const barHeight = height / groups.length;
     const interval = Math.ceil((groups.length * 16) / height);
     var yTickValues = [];

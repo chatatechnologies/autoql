@@ -17,8 +17,18 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
         height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
+    component.innerHTML = '';
+    if(component.headerElement){
+        component.parentElement.parentElement.removeChild(
+            component.headerElement
+        );
+        component.headerElement = null;
+    }
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.parentElement.classList.add(
+        'chata-hidden-scrollbox'
+    );
     const barWidth = width / data.length;
     const interval = Math.ceil((data.length * 16) / width);
     var xTickValues = [];

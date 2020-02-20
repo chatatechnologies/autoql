@@ -612,11 +612,18 @@ function Tile(dashboard, options={}){
                 var columns = json['data']['columns'];
                 if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){
-                    pivotArray = getDatePivotArray(json, dashboard.options, json['data']['rows']);
+                    pivotArray = getDatePivotArray(
+                        json, dashboard.options, json['data']['rows']
+                    );
                 }else{
-                    pivotArray = getPivotColumnArray(json, dashboard.options, json['data']['rows']);
+                    pivotArray = getPivotColumnArray(
+                        json, dashboard.options, json['data']['rows']
+                    );
                 }
-                createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
+                var table = createPivotTable(
+                    pivotArray, div, 'append', uuid, 'table-response-renderer'
+                );
+                scrollbox.insertBefore(table.headerElement, div);
                 break;
             case 'suggestion':
                 var responseContentContainer = document.createElement('div');

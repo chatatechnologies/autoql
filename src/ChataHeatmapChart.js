@@ -18,8 +18,18 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromCha
         height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
+    component.innerHTML = '';
+    if(component.headerElement){
+        component.parentElement.parentElement.removeChild(
+            component.headerElement
+        );
+        component.headerElement = null;
+    }
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.parentElement.classList.add(
+        'chata-hidden-scrollbox'
+    );
 
     var svg = d3.select(component)
     .append("svg")

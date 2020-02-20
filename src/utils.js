@@ -751,7 +751,7 @@ const getSupportedDisplayTypes = response => {
     return ['table']
 }
 
-function adjustTableWidth(table, thArray, selector='[data-indexrow]'){
+function adjustTableWidth(table, thArray, selector='[data-indexrow]', offset=0){
     var headerWidth = 0;
     var rowsElements = table.querySelectorAll(selector);
     for (var i = 0; i < 1; i++) {
@@ -767,8 +767,9 @@ function adjustTableWidth(table, thArray, selector='[data-indexrow]'){
 
             w = tdEl[x].offsetWidth;
             if(div.offsetWidth > tdEl[x].offsetWidth){
-                w = div.offsetWidth + 35;
+                w = div.offsetWidth + 70;
             }
+            w += offset;
             thArray[x].style.width = (w) + 'px';
             tdEl[x].style.width = (w) + 'px';
 

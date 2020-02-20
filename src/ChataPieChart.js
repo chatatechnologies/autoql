@@ -29,8 +29,18 @@ function createPieChart(component, data, options, cols, fromChatDrawer=true, val
     var innerRadius = outerRadius - 40 > 15 ? outerRadius - 40 : 0
 
     component.innerHTML = '';
+    component.innerHTML = '';
+    if(component.headerElement){
+        component.parentElement.parentElement.removeChild(
+            component.headerElement
+        );
+        component.headerElement = null;
+    }
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.parentElement.classList.add(
+        'chata-hidden-scrollbox'
+    );
 
     var legendRectSize = 15;
     var legendSpacing = 1;

@@ -23,8 +23,18 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
         height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
+    component.innerHTML = '';
+    if(component.headerElement){
+        component.parentElement.parentElement.removeChild(
+            component.headerElement
+        );
+        component.headerElement = null;
+    }
     component.parentElement.classList.remove('chata-table-container');
     component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.parentElement.classList.add(
+        'chata-hidden-scrollbox'
+    );
     var subgroups = ['value1', 'value2'];
     const barWidth = chartWidth / groups.length;
     const interval = Math.ceil((groups.length * 16) / width);

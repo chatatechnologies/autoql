@@ -614,6 +614,17 @@ body{
     border: 0px;
 }
 
+.chata-table-scrollbox{
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    visibility: hidden;
+}
+
+.chata-hidden-scrollbox{
+    overflow: hidden;
+}
+
 .chata-table-scrollbox::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 7px;
@@ -635,18 +646,9 @@ input[type=text]:disabled {
     /* background-color: var(--chata-drawer-text-color-placeholder); */
 }
 
-.chata-table-scrollbox{
-    width: 100%;
-    height: 100%;
-    /* overflow-y: hidden;
-    overflow-x: auto; */
-    overflow: auto;
-    visibility: hidden;
-}
-
 .tabulator-filter{
-    bottom: 40px !important;
-    right: 15px !important;
+    bottom: 42px !important;
+    right: 13px !important;
 }
 
 /* .chata-table-vertical-scrollbox{
@@ -871,9 +873,7 @@ input[type=text]:disabled {
 .chata-toolbar-btn:hover{
     opacity: .7;
 }
-.table-response .column, .column-pivot{
-    padding: 5px 18px !important;
-}
+
 .table-response .column::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
@@ -894,9 +894,9 @@ input[type=text]:disabled {
   background: inherit;
 }
 
-.table-response-renderer .column, .column-pivot{
+/* .table-response-renderer .column, .column-pivot{
     padding: 5px 18px !important;
-}
+} */
 .table-response-renderer .column::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;

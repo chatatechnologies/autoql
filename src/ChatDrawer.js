@@ -1200,7 +1200,11 @@ ChatDrawer.groupBy = function(list, keyGetter) {
 }
 
 ChatDrawer.refreshToolbarButtons = function(oldComponent, activeDisplayType){
-    var messageBubble = oldComponent.parentElement.parentElement.parentElement.parentElement;
+    var messageBubble = oldComponent.parentElement.parentElement.parentElement;
+    if(messageBubble.classList.contains('chata-response-content-container')){
+        messageBubble = messageBubble.parentElement;
+    }
+    console.log(messageBubble);
     var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
     var toolbarRight = messageBubble.getElementsByClassName('right')[0];
     var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';

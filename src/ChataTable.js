@@ -4,6 +4,9 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     var header = document.createElement('tr');
     var thArray = [];
     table.classList.add(tableClass);
+    oldComponent.parentElement.parentElement.classList.remove(
+        'chata-hidden-scrollbox'
+    );
     if(oldComponent.dataset.componentid){
         table.setAttribute('data-componentid', oldComponent.dataset.componentid);
         if(oldComponent.parentElement.classList.contains('chata-chart-container')){
@@ -19,7 +22,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
-        var col = document .createElement('div');
+        var col = document.createElement('div');
         col.textContent = colName;
         arrow.classList.add('tabulator-arrow');
         arrow.classList.add('up');
@@ -74,7 +77,13 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
 
     if(action == 'replace'){
         if(oldComponent.headerElement){
-            oldComponent.parentElement.parentElement.replaceChild(header, oldComponent.headerElement);
+            oldComponent.parentElement.parentElement.replaceChild(
+                header, oldComponent.headerElement
+            );
+        }else{
+            oldComponent.parentElement.parentElement.insertBefore(
+                header, oldComponent.parentElement
+            );
         }
         oldComponent.parentElement.replaceChild(table, oldComponent);
     }else{
@@ -88,17 +97,24 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     return table;
 }
 
-
 function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', tableClass='table-response'){
     var header = document.createElement('tr');
     var table = document.createElement('table');
+    var jsonResponse = ChatDrawer.responses[
+        oldComponent.dataset.componentid || uuid
+    ]
+    var groupField = getGroupableField(jsonResponse);
+
+    var thArray = [];
     table.classList.add(tableClass);
+    oldComponent.parentElement.parentElement.classList.remove(
+        'chata-hidden-scrollbox'
+    );
     if(oldComponent.dataset.componentid){
         table.setAttribute('data-componentid', oldComponent.dataset.componentid);
         if(oldComponent.parentElement.classList.contains('chata-chart-container')){
             oldComponent.parentElement.classList.remove('chata-chart-container');
             oldComponent.parentElement.classList.add('chata-table-container');
-            // oldComponent.parentElement.parentElement.parentElement.classList.remove('chart-full-width');
         }
     }else{
         table.setAttribute('data-componentid', uuid);
@@ -120,19 +136,36 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         if(i == 0){
-            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid || uuid]['data']['columns'][0];
+            filter.colType = ChatDrawer.responses[
+                oldComponent.dataset.componentid || uuid
+            ]['data']['columns'][0];
         }else if(i >= 1){
-            filter.colType = ChatDrawer.responses[oldComponent.dataset.componentid || uuid]['data']['columns'][2];
+            filter.colType = ChatDrawer.responses[
+                oldComponent.dataset.componentid || uuid
+            ]['data']['columns'][2];
         }
         filter.onkeyup = function(event){
-            var _json = cloneObject(ChatDrawer.responses[oldComponent.dataset.componentid]);
-            var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
+            var _json = cloneObject(
+                ChatDrawer.responses[oldComponent.dataset.componentid]
+            );
+            var _table = document.querySelector(
+                `[data-componentid='${oldComponent.dataset.componentid}']`
+            );
+
             var _columns = _json['data']['columns'];
             if(_columns[0].type === 'DATE' &&
                 _columns[0].name.includes('month')){
-                var pivotArray = getDatePivotArray(_json, ChatDrawer.options, cloneObject(_json['data']['rows']));
+                var pivotArray = getDatePivotArray(
+                    _json,
+                    ChatDrawer.options,
+                    cloneObject(_json['data']['rows'])
+                );
             }else{
-                var pivotArray = getPivotColumnArray(_json, ChatDrawer.options, cloneObject(_json['data']['rows']));
+                var pivotArray = getPivotColumnArray(
+                    _json,
+                    ChatDrawer.options,
+                    cloneObject(_json['data']['rows'])
+                );
             }
             pivotArray.shift();
             var rows = applyFilter(oldComponent.dataset.componentid, pivotArray);
@@ -146,9 +179,9 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         th.appendChild(col);
         th.appendChild(arrow);
         header.appendChild(th);
+        thArray.push(th);
     }
-
-    table.appendChild(header);
+    header.classList.add('table-header');
 
     for (var i = 1; i < pivotArray.length; i++) {
         var tr = document.createElement('tr');
@@ -160,12 +193,38 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
             }
             tr.appendChild(td);
         }
+        if(action == 'replace'){
+            tr.setAttribute('data-indexrow', i);
+        }else{
+            tr.setAttribute('data-indexrowrenderer', i);
+        }
+        if(typeof groupField !== 'number'){
+            tr.setAttribute('data-has-drilldown', true);
+        }else{
+            tr.setAttribute('data-has-drilldown', false);
+        }
         table.appendChild(tr);
     }
+    let selector;
     if(action == 'replace'){
+        if(oldComponent.headerElement){
+            oldComponent.parentElement.parentElement.replaceChild(
+                header, oldComponent.headerElement
+            );
+            selector = '[data-indexrow]';
+        }else{
+            oldComponent.parentElement.parentElement.insertBefore(
+                header, oldComponent.parentElement
+            );
+        }
         oldComponent.parentElement.replaceChild(table, oldComponent);
     }else{
         oldComponent.appendChild(table);
+        selector = '[data-indexrowrenderer]';
     }
+    let headerWidth = adjustTableWidth(table, thArray, selector, 25);
+    table.style.width = (headerWidth) + 'px';
+    header.style.width = (headerWidth) + 'px';
+    table.headerElement = header;
     return table;
 }
