@@ -230,7 +230,7 @@ function Tile(dashboard, options={}){
         }
         if(val != ''){
             var loadingContainer = chataDashboardItem.showLoadingDots();
-            ChatDrawer.safetynetCall(chataDashboardItem.safetynet(val),
+            DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
                 function(json, statusCode){
                 var suggestions = json['full_suggestion'] ||
                 json['data']['replacements'];
@@ -261,10 +261,10 @@ function Tile(dashboard, options={}){
                     updateSelectWidth(responseContentContainer);
                 }else{
                     chataDashboardItem.options.isSafetynet = false;
-                    ChatDrawer.ajaxCall(val, function(json){
+                    DataMessenger.ajaxCall(val, function(json){
                         tileResponseContainer.removeChild(loadingContainer);
 
-                        ChatDrawer.responses[uuid] = json;
+                        DataMessenger.responses[uuid] = json;
                         var displayType = chataDashboardItem.options.displayType
                         || 'table';
                         chataDashboardItem.refreshItem(
@@ -384,7 +384,7 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.refreshItem = function(displayType, _uuid, view){
-        var json = ChatDrawer.responses[_uuid];
+        var json = DataMessenger.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
         container = view;
         container.innerHTML = '';
@@ -430,16 +430,16 @@ function Tile(dashboard, options={}){
             if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
-                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
                 }
                 var cols = json['data']['columns'];
-                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedBarChart(
                     container,
                     groups,
@@ -467,16 +467,16 @@ function Tile(dashboard, options={}){
             if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
-                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
                 }
                 var cols = json['data']['columns'];
-                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedColumnChart(
                     container,
                     groups,
@@ -504,16 +504,16 @@ function Tile(dashboard, options={}){
             if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
-                var groups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
                 groups = groups.sort();
                 for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], ChatDrawer.options);
+                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
                 }
                 for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], ChatDrawer.options)
+                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
                 }
                 var cols = json['data']['columns'];
-                var dataGrouped = ChatDrawer.formatCompareData(json['data']['columns'], data, groups);
+                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedLineChart(
                     container,
                     groups,
@@ -539,8 +539,8 @@ function Tile(dashboard, options={}){
                 break;
             case 'heatmap':
                 var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
+                var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
                 labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
                 labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
 
@@ -553,8 +553,8 @@ function Tile(dashboard, options={}){
                 break;
             case 'bubble':
                 var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = ChatDrawer.getUniqueValues(values, row => row.unformatX);
-                var labelsY = ChatDrawer.getUniqueValues(values, row => row.unformatY);
+                var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
+                var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
                 labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
                 labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
 
@@ -568,11 +568,11 @@ function Tile(dashboard, options={}){
                 break;
             case 'stacked_bar':
                 var data = cloneObject(json['data']['rows']);
-                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
-                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
                 var cols = json['data']['columns'];
-                var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+                var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
                 createStackedBarChart(
                     container, dataGrouped, groups,
                     subgroups, cols,
@@ -582,11 +582,11 @@ function Tile(dashboard, options={}){
                 break;
             case 'stacked_column':
                 var data = cloneObject(json['data']['rows']);
-                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
                 groups = groups.sort().reverse();
-                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
                 var cols = json['data']['columns'];
-                var dataGrouped = ChatDrawer.format3dData(json['data']['columns'], data, groups);
+                var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
                 createStackedColumnChart(
                     container, dataGrouped, groups,
                     subgroups, cols,
@@ -595,7 +595,7 @@ function Tile(dashboard, options={}){
                 );
                 break;
             case 'pie':
-                var data = ChatDrawer.groupBy(json['data']['rows'], row => row[0]);
+                var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
                 var cols = json['data']['columns'];
                 createPieChart(container, data,
                     dashboard.options, cols, false,
@@ -639,7 +639,7 @@ function Tile(dashboard, options={}){
                     </div>`;
                 container.appendChild(responseContentContainer);
                 var rows = json['data']['rows'];
-                ChatDrawer.createSuggestions(
+                DataMessenger.createSuggestions(
                     responseContentContainer,
                     rows,
                     'chata-suggestion-btn-renderer'
@@ -654,7 +654,7 @@ function Tile(dashboard, options={}){
         if(e.target.dataset.tilechart){
             chataDashboardItem.updateSelectedBars(e.target)
             var json = cloneObject(
-                ChatDrawer.responses[uuid]
+                DataMessenger.responses[uuid]
             );
             console.log(json);
             var drilldownUUID = uuidv4();
@@ -692,62 +692,64 @@ function Tile(dashboard, options={}){
         }
 
         if(e.target.classList.contains('column')){
-            var tableElement = e.target.parentElement.parentElement.parentElement;
-
+            var container = e.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
+            console.log(container);
             var localuuid = tableElement.dataset.componentid;
             if(e.target.nextSibling.classList.contains('up')){
                 e.target.nextSibling.classList.remove('up');
                 e.target.nextSibling.classList.add('down');
-                var data = cloneObject(ChatDrawer.responses[localuuid]);
-                var sortData = ChatDrawer.sort(
+                var data = cloneObject(DataMessenger.responses[localuuid]);
+                var sortData = DataMessenger.sort(
                     data['data']['rows'],
                     'desc',
                     e.target.dataset.index,
                     e.target.dataset.type
                 );
-                ChatDrawer.refreshTableData(
+                DataMessenger.refreshTableData(
                     tableElement,
                     sortData,
-                    ChatDrawer.options
+                    DataMessenger.options
                 );
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
                 var data = cloneObject(
-                    ChatDrawer.responses[localuuid]
+                    DataMessenger.responses[localuuid]
                 );
-                var sortData = ChatDrawer.sort(
+                var sortData = DataMessenger.sort(
                     data['data']['rows'],
                     'asc',
                     parseInt(e.target.dataset.index),
                     e.target.dataset.type
                 );
-                ChatDrawer.refreshTableData(
+                DataMessenger.refreshTableData(
                     tableElement,
                     sortData,
-                    ChatDrawer.options
+                    DataMessenger.options
                 );
             }
         }
 
         if(e.target.classList.contains('column-pivot')){
-            var tableElement = e.target.parentElement.parentElement.parentElement;
+            var container = evt.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
             var pivotArray = [];
             var json = cloneObject(
-                ChatDrawer.responses[tableElement.dataset.componentid]
+                DataMessenger.responses[tableElement.dataset.componentid]
             );
             var columns = json['data']['columns'];
             if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){
                 pivotArray = getDatePivotArray(
                     json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(json['data']['rows'])
                 );
             }else{
                 pivotArray = getPivotColumnArray(
                     json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(json['data']['rows'])
                 );
             }
@@ -759,8 +761,8 @@ function Tile(dashboard, options={}){
                     e.target.dataset.index,
                     'desc'
                 );
-                sortData.unshift([]); //Simulate header
-                ChatDrawer.refreshPivotTable(tableElement, sortData);
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
@@ -769,8 +771,8 @@ function Tile(dashboard, options={}){
                     e.target.dataset.index,
                     'asc'
                 );
-                sortData.unshift([]); //Simulate header
-                ChatDrawer.refreshPivotTable(tableElement, sortData);
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
             }
         }
 
@@ -782,61 +784,63 @@ function Tile(dashboard, options={}){
             chataDashboardItem.runQuery();
         }
         if(evt.target.classList.contains('column')){
-            var tableElement = evt.target.parentElement.parentElement.parentElement;
+            var container = evt.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
             var uuid = tableElement.dataset.componentid;
             if(evt.target.nextSibling.classList.contains('up')){
                 evt.target.nextSibling.classList.remove('up');
                 evt.target.nextSibling.classList.add('down');
-                var data = cloneObject(ChatDrawer.responses[uuid]);
-                var sortData = ChatDrawer.sort(
+                var data = cloneObject(DataMessenger.responses[uuid]);
+                var sortData = DataMessenger.sort(
                     data['data']['rows'],
                     'desc',
                     evt.target.dataset.index,
                     evt.target.dataset.type
                 );
-                ChatDrawer.refreshTableData(
+                DataMessenger.refreshTableData(
                     tableElement,
                     sortData,
-                    ChatDrawer.options
+                    DataMessenger.options
                 );
             }else{
                 evt.target.nextSibling.classList.remove('down');
                 evt.target.nextSibling.classList.add('up');
                 var data = cloneObject(
-                    ChatDrawer.responses[uuid]
+                    DataMessenger.responses[uuid]
                 );
-                var sortData = ChatDrawer.sort(
+                var sortData = DataMessenger.sort(
                     data['data']['rows'],
                     'asc',
                     parseInt(evt.target.dataset.index),
                     evt.target.dataset.type
                 );
-                ChatDrawer.refreshTableData(
+                DataMessenger.refreshTableData(
                     tableElement,
                     sortData,
-                    ChatDrawer.options
+                    DataMessenger.options
                 );
             }
         }
 
         if(evt.target.classList.contains('column-pivot')){
-            var tableElement = evt.target.parentElement.parentElement.parentElement;
+            var container = evt.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
             var pivotArray = [];
             var json = cloneObject(
-                ChatDrawer.responses[tableElement.dataset.componentid]
+                DataMessenger.responses[tableElement.dataset.componentid]
             );
             var columns = json['data']['columns'];
             if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){
                 pivotArray = getDatePivotArray(
                     json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(json['data']['rows'])
                 );
             }else{
                 pivotArray = getPivotColumnArray(
                     json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(json['data']['rows'])
                 );
             }
@@ -848,8 +852,8 @@ function Tile(dashboard, options={}){
                     evt.target.dataset.index,
                     'desc'
                 );
-                sortData.unshift([]); //Simulate header
-                ChatDrawer.refreshPivotTable(tableElement, sortData);
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
             }else{
                 evt.target.nextSibling.classList.remove('down');
                 evt.target.nextSibling.classList.add('up');
@@ -858,8 +862,8 @@ function Tile(dashboard, options={}){
                     evt.target.dataset.index,
                     'asc'
                 );
-                sortData.unshift([]); //Simulate header
-                ChatDrawer.refreshPivotTable(tableElement, sortData);
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
             }
         }
 
@@ -884,7 +888,7 @@ function Tile(dashboard, options={}){
             modal.addView(drilldownTable);
             modal.setTitle(query);
             var json = cloneObject(
-                ChatDrawer.responses[uuid]
+                DataMessenger.responses[uuid]
             );
             var drilldownUUID = uuidv4();
             if(chataDashboardItem.options.displayType == 'stacked_bar' ||
@@ -929,7 +933,7 @@ function Tile(dashboard, options={}){
             var drilldownValue = '';
             var indexData = e.target.parentElement.dataset.indexrowrenderer;
             var json = cloneObject(
-                ChatDrawer.responses[uuid]
+                DataMessenger.responses[uuid]
             );
             if(e.target.classList.contains('single-value-response')){
                 json['data']['rows'][0][0] = e.target.textContent;
@@ -952,7 +956,7 @@ function Tile(dashboard, options={}){
                         drilldownTable
                     )
                     chataDashboardItem.createVizToolbar(
-                        ChatDrawer.responses[uuid],
+                        DataMessenger.responses[uuid],
                         uuid, chataDashboardItem.options.displayType
                     )
                 }
@@ -989,8 +993,8 @@ function Tile(dashboard, options={}){
         const URL = options.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
           : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
-        ChatDrawer.ajaxCallPost(URL, function(response){
-            ChatDrawer.responses[_uuid] = response;
+        DataMessenger.ajaxCallPost(URL, function(response){
+            DataMessenger.responses[_uuid] = response;
             callback();
         }, data, options);
     }

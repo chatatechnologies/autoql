@@ -1,4 +1,4 @@
-function createStackedBarChart(component, data, groups, subgroups, cols, options, fromChatDrawer=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedBarChart(component, data, groups, subgroups, cols, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 100},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -9,8 +9,8 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
     var col2 = formatColumnName(cols[1]['name']);
     var col3 = formatColumnName(cols[2]['name']);
     const tickWidth = (width - margin.left - margin.right) / 6
-    if(fromChatDrawer){
-        if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+    if(fromDataMessenger){
+        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

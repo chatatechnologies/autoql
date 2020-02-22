@@ -160,8 +160,8 @@ function runQuery(event, context){
         var node = event.target.parentElement;
     }
     var words = getSafetynetValues(node);
-    if(context == 'ChatDrawer'){
-        ChatDrawer.sendMessage(
+    if(context == 'DataMessenger'){
+        DataMessenger.sendMessage(
             document.getElementById('chata-input'), words.join(' ')
         );
     }else{
@@ -577,9 +577,9 @@ function refreshTooltips(){
     tippy('.chata-interpretation', {
         theme: 'chata',
         onShow: function(instance){
-            var data = ChatDrawer.responses[instance.reference.dataset.id]['data'];
+            var data = DataMessenger.responses[instance.reference.dataset.id]['data'];
             var content  = `<span class='title-tip'>Interpretation:</span> <span class="text-tip">${data['interpretation']}</span>`;
-            // if(ChatDrawer.options.debug){
+            // if(DataMessenger.options.debug){
             //     content += `</br></br>
             //     <span class='title-tip'>SQL:</span> <span class="text-tip">${data['sql']}</span>
             //     `;
@@ -629,7 +629,7 @@ function tooltipCharts(){
 function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.headerElement.getElementsByTagName('input');
-    var json = ChatDrawer.responses[_table.dataset.componentid];
+    var json = DataMessenger.responses[_table.dataset.componentid];
     var rows = array || cloneObject(json['data']['rows']);
     for (var i = 0; i < inputs.length; i++) {
         if(inputs[i].value == '')continue;
@@ -641,7 +641,7 @@ function applyFilter(idRequest, array){
                 var formatDate = formatData(
                     v,
                     json['data']['columns'][i],
-                    ChatDrawer.options
+                    DataMessenger.options
             );
                 return formatDate.toLowerCase().includes(compareValue);
             }else if(

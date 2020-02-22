@@ -72,7 +72,7 @@ function getChatBar(options){
             var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
             suggestionList.style.display = 'none';
             if(event.target.value){
-                ChatDrawer.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options);
+                DataMessenger.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options);
             }
         }
     }
@@ -82,8 +82,8 @@ function getChatBar(options){
         suggestionList.style.display = 'none';
         if(event.keyCode == 13 && event.target.value){
             try {
-                ChatDrawer.xhr.onreadystatechange = null;
-                ChatDrawer.xhr.abort();
+                DataMessenger.xhr.onreadystatechange = null;
+                DataMessenger.xhr.abort();
             } catch (e) {}
             this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value);
         }
@@ -111,7 +111,7 @@ function getChatBar(options){
             value
           )}&key=${chataBarContainer.options.apiKey}&customer_id=${chataBarContainer.options.customerId}&user_id=${chataBarContainer.options.userId}`
 
-        ChatDrawer.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
+        DataMessenger.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
@@ -126,10 +126,10 @@ function getChatBar(options){
                 var node = createSafetynetContent(suggestionArray, 'ChatBar');
                 responseRenderer.appendChild(node);
                 chataBarContainer.options.onResponseCallback();
-                ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                DataMessenger.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
-                ChatDrawer.ajaxCall(value, function(jsonResponse){
-                    ChatDrawer.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                DataMessenger.ajaxCall(value, function(jsonResponse){
+                    DataMessenger.responses[responseRenderer.dataset.componentid] = jsonResponse;
                     responseRenderer.innerHTML = '';
                     chataBarContainer.chatbar.removeAttribute("disabled");
                     if(chataBarContainer.options.showLoadingDots){
@@ -153,7 +153,7 @@ function getChatBar(options){
                                 <div>
                                     I'm not sure what you mean by <strong>"
                                     ${value}"</strong>. Did you mean:</div>`;
-                            ChatDrawer.createSuggestions(
+                            DataMessenger.createSuggestions(
                                 wrapper,
                                 rows,
                                 'chata-suggestion-btn-renderer'
@@ -161,7 +161,7 @@ function getChatBar(options){
                             responseRenderer.appendChild(wrapper)
                         }else if(cols.length == 1 && rows.length == 1){
                             if(cols[0]['name'] == 'Help Link'){
-                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(
+                                responseRenderer.innerHTML = DataMessenger.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
                             }else{
@@ -175,20 +175,25 @@ function getChatBar(options){
                         }else{
                             // table
                             var uuid = uuidv4();
-                            ChatDrawer.responses[uuid] = jsonResponse;
+                            DataMessenger.responses[uuid] = jsonResponse;
                             var div = document.createElement('div');
                             div.classList.add('chata-table-container');
                             div.classList.add('chata-table-container-renderer');
-                            responseRenderer.appendChild(div);
+                            var scrollbox = document.createElement('div');
+                            scrollbox.classList.add('chata-table-scrollbox');
+                            scrollbox.appendChild(div);
+                            responseRenderer.appendChild(scrollbox);
                             var table = createTable(
                                 jsonResponse,
                                 div,
                                 responseRenderer.options,
                                 'append',
                                 uuid,
-                                'table-response-renderer'
+                                'table-response-renderer',
+                                '[data-indexrowrenderer]'
                             );
                             table.classList.add('renderer-table');
+                            scrollbox.insertBefore(table.headerElement, div);
                         }
 
 
@@ -196,11 +201,14 @@ function getChatBar(options){
                         switch(displayType){
                             case 'table':
                                 var uuid = uuidv4();
-                                ChatDrawer.responses[uuid] = jsonResponse;
+                                DataMessenger.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
-                                responseRenderer.appendChild(div);
+                                var scrollbox = document.createElement('div');
+                                scrollbox.classList.add('chata-table-scrollbox');
+                                scrollbox.appendChild(div);
+                                responseRenderer.appendChild(scrollbox);
                                 if(jsonResponse['data']['columns'].length == 1){
                                     var data = formatData(
                                         jsonResponse['data'],
@@ -209,13 +217,23 @@ function getChatBar(options){
                                     );
                                     responseRenderer.innerHTML = `<div>${data}</div>`;
                                 }else{
-                                    var table = createTable(jsonResponse, div, responseRenderer.options, 'append', uuid, 'table-response-renderer');
+                                    var table = createTable(
+                                        jsonResponse,
+                                        div,
+                                        responseRenderer.options,
+                                        'append',
+                                        uuid,
+                                        'table-response-renderer',
+                                        '[data-indexrowrenderer]'
+                                    );
                                     table.classList.add('renderer-table');
+                                    scrollbox.insertBefore(table.headerElement, div);
+
                                 }
                             break;
                             case 'date_pivot':
                                 var uuid = uuidv4();
-                                ChatDrawer.responses[uuid] = jsonResponse;
+                                DataMessenger.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
@@ -226,7 +244,7 @@ function getChatBar(options){
                             break;
                             case 'pivot_column':
                                 var uuid = uuidv4();
-                                ChatDrawer.responses[uuid] = jsonResponse;
+                                DataMessenger.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('chata-table-container');
                                 div.classList.add('chata-table-container-renderer');
@@ -284,8 +302,8 @@ function getChatBar(options){
                                 var values = formatDataToHeatmap(
                                     jsonResponse, responseRenderer.options
                                 );
-                                var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                                var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                                var labelsX = DataMessenger.getUniqueValues(values, row => row.labelX);
+                                var labelsY = DataMessenger.getUniqueValues(values, row => row.labelY);
                                 var cols = jsonResponse['data']['columns'];
 
                                 createHeatmap(
@@ -298,8 +316,8 @@ function getChatBar(options){
                                 var values = formatDataToHeatmap(
                                     jsonResponse, responseRenderer.options
                                 );
-                                var labelsX = ChatDrawer.getUniqueValues(values, row => row.labelX);
-                                var labelsY = ChatDrawer.getUniqueValues(values, row => row.labelY);
+                                var labelsX = DataMessenger.getUniqueValues(values, row => row.labelX);
+                                var labelsY = DataMessenger.getUniqueValues(values, row => row.labelY);
                                 var cols = jsonResponse['data']['columns'];
                                 createBubbleChart(
                                     responseRenderer, labelsX, labelsY,
@@ -308,17 +326,17 @@ function getChatBar(options){
                                 );
                             break;
                             case 'help':
-                                responseRenderer.innerHTML = ChatDrawer.createHelpContent(
+                                responseRenderer.innerHTML = DataMessenger.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
                             break;
                             case 'stacked_bar':
                                 var data = jsonResponse['data']['rows'];
-                                var groups = ChatDrawer.getUniqueValues(data, row => row[1]);
+                                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
                                 groups = groups.sort().reverse();
-                                var subgroups = ChatDrawer.getUniqueValues(data, row => row[0]);
+                                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
                                 var cols = jsonResponse['data']['columns'];
-                                var dataGrouped = ChatDrawer.format3dData(jsonResponse['data']['columns'], data, groups);
+                                var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
                                 createStackedBarChart(
                                     responseRenderer, dataGrouped, groups,
                                     subgroups, cols,
@@ -328,16 +346,16 @@ function getChatBar(options){
                             break;
                             case 'stacked_column':
                                 var data = jsonResponse['data']['rows'];
-                                var groups = ChatDrawer.getUniqueValues(
+                                var groups = DataMessenger.getUniqueValues(
                                     data, row => row[1]
                                 );
                                 groups = groups.sort().reverse();
-                                var subgroups = ChatDrawer.getUniqueValues(
+                                var subgroups = DataMessenger.getUniqueValues(
                                     data, row => row[0]
                                 );
                                 var cols = jsonResponse['data']['columns'];
 
-                                var dataGrouped = ChatDrawer.format3dData(
+                                var dataGrouped = DataMessenger.format3dData(
                                     jsonResponse['data']['columns'],
                                     data, groups
                                 );
@@ -349,7 +367,7 @@ function getChatBar(options){
                                 );
                             break;
                             case 'pie':
-                                var data = ChatDrawer.groupBy(
+                                var data = DataMessenger.groupBy(
                                     jsonResponse['data']['rows'], row => row[0]
                                 );
                                 var cols = jsonResponse['data']['columns'];

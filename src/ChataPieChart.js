@@ -1,12 +1,12 @@
-function createPieChart(component, data, options, cols, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, data, options, cols, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
     var col1 = formatColumnName(cols[0]['name']);
     var col2 = formatColumnName(cols[1]['name']);
-    if(fromChatDrawer){
-        if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+    if(fromDataMessenger){
+        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin + 3);
             if(height < 250){
                 height = 300;

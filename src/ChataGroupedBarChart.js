@@ -1,4 +1,4 @@
-function createGroupedBarChart(component, groups, data, cols, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createGroupedBarChart(component, groups, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -9,8 +9,8 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChatD
     var col1 = formatColumnName(cols[0]['name']);
     var col2 = formatColumnName(cols[1]['name']);
     var col3 = formatColumnName(cols[2]['name']);
-    if(fromChatDrawer){
-        if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+    if(fromDataMessenger){
+        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
             if(height < 250){
                 height = 300;

@@ -1,12 +1,12 @@
-function createLineChart(component, data, cols, hasNegativeValues, options, fromChatDrawer=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, data, cols, hasNegativeValues, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var col1 = formatColumnName(cols[0]['name']);
     var col2 = formatColumnName(cols[1]['name']);
     console.log(cols);
-    if(fromChatDrawer){
-        if(ChatDrawer.options.placement == 'left' || ChatDrawer.options.placement == 'right'){
+    if(fromDataMessenger){
+        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

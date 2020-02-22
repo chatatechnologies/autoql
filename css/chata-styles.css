@@ -124,14 +124,14 @@ body{
 
 .chata-confirm-text {
     text-align: center;
+    width: 100%;
 }
 
 .clear-messages-confirm-popover {
     color: var(--chata-drawer-text-color-primary);
-    padding: 20px;
     background: var(--chata-drawer-background-color);
     text-align: right;
-    padding: 18px;
+    padding: 18px !important;
     width: 185px;
 }
 .chata-confirm-btn {
@@ -157,8 +157,8 @@ body{
 
 .chata-confirm-btn.no {
     color: inherit;
-    border: 2px outset #a7a7a7 !important;
-    background: inherit;
+    border: 1px solid rgba(0,0,0,.15);
+    background: inherit
 }
 
 .chata-confirm-btn.yes {

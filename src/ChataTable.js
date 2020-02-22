@@ -39,7 +39,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         filter.onkeyup = function(event){
             var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
             var rows = applyFilter(oldComponent.dataset.componentid);
-            ChatDrawer.refreshTableData(_table, cloneObject(rows), ChatDrawer.options, false);
+            DataMessenger.refreshTableData(_table, cloneObject(rows), DataMessenger.options, false);
         }
         col.appendChild(divFilter);
 
@@ -100,7 +100,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
 function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', tableClass='table-response'){
     var header = document.createElement('tr');
     var table = document.createElement('table');
-    var jsonResponse = ChatDrawer.responses[
+    var jsonResponse = DataMessenger.responses[
         oldComponent.dataset.componentid || uuid
     ]
     var groupField = getGroupableField(jsonResponse);
@@ -136,17 +136,17 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         if(i == 0){
-            filter.colType = ChatDrawer.responses[
+            filter.colType = DataMessenger.responses[
                 oldComponent.dataset.componentid || uuid
             ]['data']['columns'][0];
         }else if(i >= 1){
-            filter.colType = ChatDrawer.responses[
+            filter.colType = DataMessenger.responses[
                 oldComponent.dataset.componentid || uuid
             ]['data']['columns'][2];
         }
         filter.onkeyup = function(event){
             var _json = cloneObject(
-                ChatDrawer.responses[oldComponent.dataset.componentid]
+                DataMessenger.responses[oldComponent.dataset.componentid]
             );
             var _table = document.querySelector(
                 `[data-componentid='${oldComponent.dataset.componentid}']`
@@ -157,20 +157,20 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
                 _columns[0].name.includes('month')){
                 var pivotArray = getDatePivotArray(
                     _json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(_json['data']['rows'])
                 );
             }else{
                 var pivotArray = getPivotColumnArray(
                     _json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(_json['data']['rows'])
                 );
             }
             pivotArray.shift();
             var rows = applyFilter(oldComponent.dataset.componentid, pivotArray);
-            rows.unshift([]);
-            ChatDrawer.refreshPivotTable(_table, rows);
+            // rows.unshift([]);
+            DataMessenger.refreshPivotTable(_table, rows);
         }
         col.appendChild(divFilter);
         if(i == 0){

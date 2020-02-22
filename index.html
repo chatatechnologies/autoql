@@ -881,10 +881,10 @@
     document.getElementById('test5').appendChild(notificationList);
     document.getElementById('test4').appendChild(settingsList);
     //Create the components
-    var chatBar = ChatDrawer.getChatBar({
+    var chatBar = DataMessenger.getChatBar({
         autoCompletePlacement: 'bottom',
     });
-    var responseRenderer = ChatDrawer.createResponseRenderer({
+    var responseRenderer = DataMessenger.createResponseRenderer({
         displayType: 'stacked_column'
     });
 
@@ -895,7 +895,7 @@
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
     var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxNDM4ODU1LCAiZXhwIjogMTU3MTQ0OTY1NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.BJEuLY4oZ0DkfwS4S4rxC5EQeHzAT-KZKjklm9KWYxn76MP_zh4gU-fvcK4sl82S38kiFYBuDGbT0h9_VQ4PXpcj-dj1FviMcROYa7UITIFYzajj4xRjvAwWG8tXYZNqPRXMbNP2LTbXIt3nqch7Tq2FrYuv6pqHhJeHgzXWH9FX3g3F5cMQXEdfM-CDtWJhOUX87CHId9TzzGindPlDdbAS22RHGj4NulKR89iRwyIubITHDVUVXHJl9LUBk3AOZ69J90GdrIQbj8bKU79SEjiQ-M2idtpMSv5-EqmoPx-aVaoD-3S-NMIz_nBPLvaQX4qEo0PDrbY0nr3SXLUbyQ==`;
-        var chata = ChatDrawer.init('chata', {
+        var chata = DataMessenger.init('chata', {
             token: _token,
             apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
             customerId: 'locate-demo1',
@@ -923,7 +923,7 @@
             // languageCode: 'ja-JP',
             // currencyCode: 'JPY',
             onMaskClick: function(){
-                ChatDrawer.closeDrawer();
+                DataMessenger.closeDrawer();
             }
         });
         var instances;
@@ -935,13 +935,13 @@
                 tabsLi[i].onclick = function(evt){
                     console.log(evt.target.parentElement.classList.contains('chatdrawer-tab'));
                     if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
-                        if(ChatDrawer.options.showHandle){
-                            ChatDrawer.drawerButton.style.display = 'flex';
+                        if(DataMessenger.options.showHandle){
+                            DataMessenger.drawerButton.style.display = 'flex';
                         }else{
-                            ChatDrawer.drawerButton.style.display = 'none';
+                            DataMessenger.drawerButton.style.display = 'none';
                         }
                     }else{
-                        ChatDrawer.drawerButton.style.display = 'none';
+                        DataMessenger.drawerButton.style.display = 'none';
                     }
                 }
             }
@@ -989,11 +989,11 @@
         }
 
         enableQueryTipsTab.onchange = function(event){
-            ChatDrawer.options.enableQueryTipsTab = event.target.checked
+            DataMessenger.options.enableQueryTipsTab = event.target.checked
         }
 
         enableColumnEditor.onchange = function(event){
-            ChatDrawer.options.enableColumnEditor = event.target.checked;
+            DataMessenger.options.enableColumnEditor = event.target.checked;
         }
 
         login.onclick = function(event){
@@ -1004,10 +1004,10 @@
             var userId = document.querySelector('[name="userId"]').value;
             var domain = document.querySelector('[name="domain"]').value;
             login.style.display = 'none';
-            ChatDrawer.options.apiKey = apiKey;
-            ChatDrawer.options.customerId = customerId;
-            ChatDrawer.options.userId = userId;
-            ChatDrawer.options.domain = domain;
+            DataMessenger.options.apiKey = apiKey;
+            DataMessenger.options.customerId = customerId;
+            DataMessenger.options.userId = userId;
+            DataMessenger.options.domain = domain;
 
             var xhr = new XMLHttpRequest();
             const URL = 'https://backend-staging.chata.io/api/v1/login';
@@ -1028,7 +1028,7 @@
                             if(xhr2.status != 200){
                                 alert(xhr2.responseText);
                             }else{
-                                ChatDrawer.options.token = xhr2.responseText;
+                                DataMessenger.options.token = xhr2.responseText;
                                 alert('Login Sucessful!');
                             }
                         }
@@ -1044,9 +1044,9 @@
         }
 
         demo.onchange = function(event){
-            ChatDrawer.options.demo = event.target.checked;
+            DataMessenger.options.demo = event.target.checked;
             var loginSection = document.getElementById('login-section');
-            if(!ChatDrawer.options.demo){
+            if(!DataMessenger.options.demo){
                 loginSection.style.display = 'block';
             }else{
                 loginSection.style.display = 'none';
@@ -1054,35 +1054,35 @@
         }
 
         showHandle.onchange = function(event){
-            ChatDrawer.options.showHandle = event.target.checked;
+            DataMessenger.options.showHandle = event.target.checked;
             if(event.target.checked){
-                if(ChatDrawer.options.isVisible){
-                    ChatDrawer.drawerButton.style.display = 'none';
+                if(DataMessenger.options.isVisible){
+                    DataMessenger.drawerButton.style.display = 'none';
                 }else{
-                    ChatDrawer.drawerButton.style.display = 'flex';
+                    DataMessenger.drawerButton.style.display = 'flex';
                 }
             }else{
-                ChatDrawer.drawerButton.style.display = 'none';
+                DataMessenger.drawerButton.style.display = 'none';
             }
         }
 
         shiftScreen.onchange = function(event){
-            ChatDrawer.options.shiftScreen = event.target.checked;
+            DataMessenger.options.shiftScreen = event.target.checked;
         }
 
         showMask.onchange = function(event){
-            ChatDrawer.options.showMask = event.target.checked;
+            DataMessenger.options.showMask = event.target.checked;
             if(event.target.checked){
-                if(ChatDrawer.options.isVisible){
-                    ChatDrawer.wrapper.style.opacity = .3;
-                    ChatDrawer.wrapper.style.height = '100%';
+                if(DataMessenger.options.isVisible){
+                    DataMessenger.wrapper.style.opacity = .3;
+                    DataMessenger.wrapper.style.height = '100%';
                 }else{
-                    ChatDrawer.wrapper.style.opacity = 0;
-                    ChatDrawer.wrapper.style.height = 0;
+                    DataMessenger.wrapper.style.opacity = 0;
+                    DataMessenger.wrapper.style.height = 0;
                 }
             }else{
-                ChatDrawer.wrapper.style.opacity = 0;
-                ChatDrawer.wrapper.style.height = 0;
+                DataMessenger.wrapper.style.opacity = 0;
+                DataMessenger.wrapper.style.height = 0;
             }
         }
 
@@ -1095,48 +1095,48 @@
                         themeStyles[property],
                     );
                 }
-                ChatDrawer.options.theme = event.target.id;
+                DataMessenger.options.theme = event.target.id;
             }
         }
 
         enableAutocomplete.onchange = function(event){
-            ChatDrawer.options.enableAutocomplete = event.target.checked;
+            DataMessenger.options.enableAutocomplete = event.target.checked;
         }
 
         enableSafetyNet.onchange = function(event){
-            ChatDrawer.options.enableSafetyNet = event.target.checked;
+            DataMessenger.options.enableSafetyNet = event.target.checked;
         }
 
         disableDrilldowns.onchange = function(event){
-            ChatDrawer.options.disableDrilldowns = event.target.checked;
-            console.log(ChatDrawer.options.disableDrilldowns);
+            DataMessenger.options.disableDrilldowns = event.target.checked;
+            console.log(DataMessenger.options.disableDrilldowns);
         }
 
         enableVoiceRecord.onchange = function(event){
-            ChatDrawer.options.enableVoiceRecord = event.target.checked;
-            var display = ChatDrawer.options.enableVoiceRecord ? 'block' : 'none';
+            DataMessenger.options.enableVoiceRecord = event.target.checked;
+            var display = DataMessenger.options.enableVoiceRecord ? 'block' : 'none';
             var voiceButton = document.getElementById('chata-voice-record-button');
             voiceButton.style.display = display;
         }
 
         debug.onchange = function(event){
-            ChatDrawer.options.debug = event.target.checked;
+            DataMessenger.options.debug = event.target.checked;
         }
 
         clearOnClose.onchange = function(event){
-            ChatDrawer.options.clearOnClose = event.target.checked;
+            DataMessenger.options.clearOnClose = event.target.checked;
         }
         for (var i = 0; i < placement.length; i++) {
             placement[i].onchange = function(event){
-                ChatDrawer.rootElem.removeAttribute('style');
+                DataMessenger.rootElem.removeAttribute('style');
 
-                ChatDrawer.drawerButton.classList.remove(ChatDrawer.options.placement + '-btn');
-                ChatDrawer.queryTabs.classList.remove(ChatDrawer.options.placement);
-                ChatDrawer.queryTabsContainer.classList.remove(ChatDrawer.options.placement);
-                ChatDrawer.options.placement = event.target.value;
-                ChatDrawer.drawerButton.classList.add(ChatDrawer.options.placement + '-btn');
-                ChatDrawer.queryTabs.classList.add(ChatDrawer.options.placement);
-                ChatDrawer.queryTabsContainer.classList.add(ChatDrawer.options.placement);
+                DataMessenger.drawerButton.classList.remove(DataMessenger.options.placement + '-btn');
+                DataMessenger.queryTabs.classList.remove(DataMessenger.options.placement);
+                DataMessenger.queryTabsContainer.classList.remove(DataMessenger.options.placement);
+                DataMessenger.options.placement = event.target.value;
+                DataMessenger.drawerButton.classList.add(DataMessenger.options.placement + '-btn');
+                DataMessenger.queryTabs.classList.add(DataMessenger.options.placement);
+                DataMessenger.queryTabsContainer.classList.add(DataMessenger.options.placement);
             }
         }
 
@@ -1145,28 +1145,28 @@
             var propsEls = document.getElementsByClassName('reload-prop');
             for (var i = 0; i < propsEls.length; i++) {
                 if(propsEls[i].value != ''){
-                    ChatDrawer.options[propsEls[i].name] = propsEls[i].value;
+                    DataMessenger.options[propsEls[i].name] = propsEls[i].value;
                 }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
-                    ChatDrawer.options.introMessage = "Hi " + ChatDrawer.options.customerName+ " I'm  here to help you access, search and analyze your data.";
-                }if(ChatDrawer.options.theme == 'light' && propsEls[i].name == 'accentColor-light'){
-                    ChatDrawer.options.accentColor = propsEls[i].value;
-                }else if (ChatDrawer.options.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
-                    ChatDrawer.options.accentColor = propsEls[i].value;
+                    DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ " I'm  here to help you access, search and analyze your data.";
+                }if(DataMessenger.options.theme == 'light' && propsEls[i].name == 'accentColor-light'){
+                    DataMessenger.options.accentColor = propsEls[i].value;
+                }else if (DataMessenger.options.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
+                    DataMessenger.options.accentColor = propsEls[i].value;
                 }
             }
             var chartColors = [];
             for (var i = 0; i < instances.chipsData.length; i++) {
                 chartColors.push(instances.chipsData[i]['tag']);
             }
-            ChatDrawer.drawerButton.remove();
-            ChatDrawer.rootElem.remove();
-            ChatDrawer.options.chartColors = chartColors;
+            DataMessenger.drawerButton.remove();
+            DataMessenger.rootElem.remove();
+            DataMessenger.options.chartColors = chartColors;
             var div = document.createElement('div');
             div.setAttribute('id', 'chata');
             document.getElementsByTagName('body')[0].appendChild(div);
-            document.removeEventListener('click', ChatDrawer.clickHandler);
-            document.removeEventListener('dblclick', ChatDrawer.drilldownHandler);
-            var newDrawer = ChatDrawer.init('chata', ChatDrawer.options);
+            document.removeEventListener('click', DataMessenger.clickHandler);
+            document.removeEventListener('dblclick', DataMessenger.drilldownHandler);
+            var newDrawer = DataMessenger.init('chata', DataMessenger.options);
         }
 
         var dashboard = new Dashboard('.grid-1', {

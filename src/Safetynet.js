@@ -1,4 +1,4 @@
-function createSafetynetContent(suggestionArray, context='ChatDrawer'){
+function createSafetynetContent(suggestionArray, context='DataMessenger'){
     const message = `
     Before I can try to find your answer,
     I need your help understanding a term you used that I don't see in your data.

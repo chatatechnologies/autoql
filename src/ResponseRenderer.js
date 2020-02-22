@@ -48,7 +48,7 @@ function createResponseRenderer(options={}){
                 component = component.parentElement;
             }
             if(!component.chataBarContainer.options.disableDrilldowns){
-                var json = ChatDrawer.responses[component.dataset.componentid];
+                var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
                 var topBar = component.chataBarContainer.getElementsByClassName(
                     'chat-bar-text'
@@ -59,7 +59,7 @@ function createResponseRenderer(options={}){
                     component.options
                 ]);
 
-                ChatDrawer.sendDrilldownMessage(
+                DataMessenger.sendDrilldownMessage(
                     json, indexData,
                     opts,
                     'ChatBar', component, loading);
@@ -69,7 +69,7 @@ function createResponseRenderer(options={}){
             var component = e.target.parentElement.parentElement;
             var responseRenderer = component.parentElement.parentElement;
             if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
-                var json = ChatDrawer.responses[component.dataset.componentid];
+                var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;
                 var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
                     'chat-bar-text'
@@ -80,7 +80,7 @@ function createResponseRenderer(options={}){
                     component.options
                 ]);
 
-                ChatDrawer.sendDrilldownMessage(
+                DataMessenger.sendDrilldownMessage(
                     json, indexData,
                     opts,
                     'ChatBar', responseRenderer, loading);
@@ -89,7 +89,7 @@ function createResponseRenderer(options={}){
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
             var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-            var json = cloneObject(ChatDrawer.responses[component.dataset.componentid]);
+            var json = cloneObject(DataMessenger.responses[component.dataset.componentid]);
             json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
             json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
@@ -101,7 +101,7 @@ function createResponseRenderer(options={}){
                 component.chataBarContainer.options,
                 component.options
             ]);
-            ChatDrawer.sendDrilldownMessage(
+            DataMessenger.sendDrilldownMessage(
                 json,
                 0,
                 opts,
@@ -118,62 +118,64 @@ function createResponseRenderer(options={}){
         }
 
         if(e.target.classList.contains('column')){
-            var tableElement = e.target.parentElement.parentElement.parentElement;
+            var container = e.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
 
             var localuuid = tableElement.dataset.componentid;
             if(e.target.nextSibling.classList.contains('up')){
                 e.target.nextSibling.classList.remove('up');
                 e.target.nextSibling.classList.add('down');
-                var data = cloneObject(ChatDrawer.responses[localuuid]);
-                var sortData = ChatDrawer.sort(
+                var data = cloneObject(DataMessenger.responses[localuuid]);
+                var sortData = DataMessenger.sort(
                     data['data']['rows'],
                     'desc',
                     e.target.dataset.index,
                     e.target.dataset.type
                 );
-                ChatDrawer.refreshTableData(
+                DataMessenger.refreshTableData(
                     tableElement,
                     sortData,
-                    ChatDrawer.options
+                    DataMessenger.options
                 );
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
                 var data = cloneObject(
-                    ChatDrawer.responses[localuuid]
+                    DataMessenger.responses[localuuid]
                 );
-                var sortData = ChatDrawer.sort(
+                var sortData = DataMessenger.sort(
                     data['data']['rows'],
                     'asc',
                     parseInt(e.target.dataset.index),
                     e.target.dataset.type
                 );
-                ChatDrawer.refreshTableData(
+                DataMessenger.refreshTableData(
                     tableElement,
                     sortData,
-                    ChatDrawer.options
+                    DataMessenger.options
                 );
             }
         }
 
         if(e.target.classList.contains('column-pivot')){
-            var tableElement = e.target.parentElement.parentElement.parentElement;
+            var container = e.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
             var pivotArray = [];
             var json = cloneObject(
-                ChatDrawer.responses[tableElement.dataset.componentid]
+                DataMessenger.responses[tableElement.dataset.componentid]
             );
             var columns = json['data']['columns'];
             if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){
                 pivotArray = getDatePivotArray(
                     json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(json['data']['rows'])
                 );
             }else{
                 pivotArray = getPivotColumnArray(
                     json,
-                    ChatDrawer.options,
+                    DataMessenger.options,
                     cloneObject(json['data']['rows'])
                 );
             }
@@ -185,8 +187,8 @@ function createResponseRenderer(options={}){
                     e.target.dataset.index,
                     'desc'
                 );
-                sortData.unshift([]); //Simulate header
-                ChatDrawer.refreshPivotTable(tableElement, sortData);
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
@@ -195,8 +197,8 @@ function createResponseRenderer(options={}){
                     e.target.dataset.index,
                     'asc'
                 );
-                sortData.unshift([]); //Simulate header
-                ChatDrawer.refreshPivotTable(tableElement, sortData);
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
             }
         }
     });
