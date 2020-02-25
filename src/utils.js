@@ -1,10 +1,11 @@
 function formatChartData(val, col, options){
     var clone = cloneObject(options);
-    clone.currencyDecimals = 0;
+    clone.dataFormatting.currencyDecimals = 0;
     return formatData(val, col, clone);
 }
 
-function formatData(val, col, options={}){
+function formatData(val, col, allOptions={}){
+    const options = allOptions.dataFormatting;
     value = '';
     let type = col['type'];
     switch (type) {

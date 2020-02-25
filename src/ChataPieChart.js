@@ -48,7 +48,7 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
     // define color scale
     var color = d3.scaleOrdinal()
     .domain(data)
-    .range(options.chartColors)
+    .range(options.themeConfig.chartColors)
 
     var svg = d3.select(component)
     .append('svg')
@@ -149,7 +149,7 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
     const legendWrapLength = width / 2 - 50
     legendScale = d3.scaleOrdinal()
         .domain(labels)
-        .range(options.chartColors)
+        .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
     .shape(

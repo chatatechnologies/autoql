@@ -143,7 +143,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
     // color palette = one color per subgroup
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(options.chartColors)
+    .range(options.themeConfig.chartColors)
 
     // Show the bars
     var indexCount = 0;

@@ -732,7 +732,7 @@ function Tile(dashboard, options={}){
         }
 
         if(e.target.classList.contains('column-pivot')){
-            var container = evt.target.parentElement.parentElement.parentElement;
+            var container = e.target.parentElement.parentElement.parentElement;
             var tableElement = container.querySelector('[data-componentid]');
             var pivotArray = [];
             var json = cloneObject(

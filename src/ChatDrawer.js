@@ -1,17 +1,50 @@
 var DataMessenger = {
     options: {
-        projectId: 1,
-        token: undefined,
-        apiKey: '',
-        customerId: '',
-        userId: '',
-        domain: '',
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+        dataFormatting:{
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY'
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableColumnEditor: true,
+            enableDrilldowns: true
+        },
+        themeConfig: {
+            theme: 'light',
+            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+            accentColor: undefined,
+            fontFamily: 'sans-serif',
+            titleColor: '#356f90' // DASHBOARD TILES ONLY
+        },
+        // token: undefined,
+        // apiKey: '',
+        // customerId: '',
+        // userId: '',
+        // domain: '',
         isVisible: false,
         placement: 'right',
         width: 500,
         height: 500,
-        theme: 'light',
-        accentColor: '#28a8e0',
+        // theme: 'light',
+        // accentColor: '#28a8e0',
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
@@ -25,23 +58,23 @@ var DataMessenger = {
         maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
-        enableAutocomplete: true,
+        // enableAutocomplete: true,
         autocompleteStyles: {},
-        enableSafetyNet: true,
-        disableDrilldowns: false,
-        demo: false,
-        debug: true,
-        currencyCode: 'USD',
-        languageCode: 'en-US',
-        currencyDecimals: 2,
-        quantityDecimals: 1,
-        monthYearFormat: 'MMM YYYY',
-        dayMonthYearFormat: 'MMM DD, YYYY',
-        comparisonDisplay: 'ratio',
+        // enableQueryValidation: true,
+        // disableDrilldowns: false,
+        // demo: false,
+        // debug: true,
+        // currencyCode: 'USD',
+        // languageCode: 'en-US',
+        // currencyDecimals: 2,
+        // quantityDecimals: 1,
+        // monthYearFormat: 'MMM YYYY',
+        // dayMonthYearFormat: 'MMM DD, YYYY',
+        // comparisonDisplay: 'ratio',
         enableQueryTipsTab: true,
-        enableColumnEditor: true,
-        fontFamily: 'sans-serif',
-        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        // enableColumnEditor: true,
+        // fontFamily: 'sans-serif',
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
         isRecordVoiceActive: false
     },
     responses: [],
@@ -52,9 +85,40 @@ var DataMessenger = {
 
 DataMessenger.init = function(elem, options, registerEventsFlag=true){
     var rootElem = document.getElementById(elem);
-    for (var [key, value] of Object.entries(options)) {
-        DataMessenger.options[key] = value;
+
+
+    if('authentication' in options){
+        for (var [key, value] of Object.entries(options['authentication'])) {
+            DataMessenger.options.authentication[key] = value;
+        }
     }
+
+    if('dataFormatting' in options){
+        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+            DataMessenger.options.dataFormatting[key] = value;
+        }
+    }
+
+    if('autoQLConfig' in options){
+        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+            DataMessenger.options.autoQLConfig[key] = value;
+        }
+    }
+
+    if('themeConfig' in options){
+        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+            DataMessenger.options.themeConfig[key] = value;
+        }
+    }
+
+    for (var [key, value] of Object.entries(options)) {
+        if(typeof value !== 'object'){
+            console.log(typeof value);
+            console.log(value);
+            DataMessenger.options[key] = value;
+        }
+    }
+
     if(!('introMessage' in options)){
         DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ "! I'm  here to help you access, search and analyze your data.";
     }
@@ -81,9 +145,9 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     }else{
         DataMessenger.closeDrawer();
     }
-    const themeStyles = DataMessenger.options.theme === 'light' ? LIGHT_THEME : DARK_THEME
+    const themeStyles = DataMessenger.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME
     if ('accentColor' in options){
-        themeStyles['--chata-drawer-accent-color'] = options.accentColor;
+        themeStyles['--chata-drawer-accent-color'] = options.themeConfig.accentColor;
     }
     for (let property in themeStyles) {
         document.documentElement.style.setProperty(
@@ -93,7 +157,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     }
     DataMessenger.rootElem.style.setProperty(
         '--chata-drawer-font-family',
-        DataMessenger.options['fontFamily']
+        DataMessenger.options.themeConfig['fontFamily']
     );
     if(DataMessenger.speechToText){
         DataMessenger.speechToText.onresult = (event) => {
@@ -453,7 +517,7 @@ DataMessenger.sendDrilldownMessage = function(
         }
     }
 
-    const URL = options.demo
+    const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
       : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
 
@@ -461,9 +525,10 @@ DataMessenger.sendDrilldownMessage = function(
     const data = {
         query_id: json['data']['query_id'],
         group_bys: obj,
-        customer_id: options.customerId,
-        user_id: options.userId,
-        debug: options.debug
+        username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+        customer_id: options.authentication.customerId || "",
+        user_id: options.authentication.userId || "",
+        debug: options.autoQLConfig.debug
     }
 
     if(context == 'DataMessenger'){
@@ -578,7 +643,7 @@ DataMessenger.showColumnEditor = function(id){
 
 DataMessenger.clickHandler = function(e){
 
-    if(!DataMessenger.options.disableDrilldowns){
+    if(DataMessenger.options.autoQLConfig.enableDrilldowns){
         if(e.target.parentElement.hasAttribute('data-indexrow')){
             var table = e.target.parentElement.parentElement;
             var json = DataMessenger.responses[table.dataset.componentid];
@@ -642,7 +707,7 @@ DataMessenger.clickHandler = function(e){
 
 
             if(DataMessenger.options.isRecordVoiceActive){
-                const themeStyles = DataMessenger.options.theme === 'light' ? LIGHT_THEME : DARK_THEME;
+                const themeStyles = DataMessenger.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME;
                 DataMessenger.options.isRecordVoiceActive = false;
                 DataMessenger.speechToText.stop();
                 button.style.background = themeStyles['--chata-drawer-accent-color'];
@@ -1111,7 +1176,7 @@ DataMessenger.registerEvents = function(){
     DataMessenger.rootElem.addEventListener('click', DataMessenger.clickHandler);
 
     chataInput.onkeyup = function(){
-        if(DataMessenger.options.enableAutocomplete){
+        if(DataMessenger.options.autoQLConfig.enableAutocomplete){
             suggestionList.style.display = 'none';
             if(this.value){
                 DataMessenger.autocomplete(this.value, suggestionList, 'suggestion', DataMessenger.options);
@@ -1464,20 +1529,21 @@ DataMessenger.safetynetCall = function(url, callback, options){
     };
     xhr.open('GET', url);
     // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    xhr.setRequestHeader("Authorization", `Bearer ${options.token}`);
+    xhr.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     xhr.send();
 }
 
 DataMessenger.ajaxCall = function(val, callback, options){
-    const url = options.demo
+    const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
-    : `${options.domain}/api/v1/chata/query?key=${options.apiKey}`
+    : `${options.domain}/api/v1/chata/query?key=${options.authentication.apiKey}`
 
     const data = {
         text: val,
-        customer_id: options.customerId,
-        user_id: options.demo ? 'widget-demo' : options.userId || 'widget-user',
-        debug: options.debug
+        username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+        customer_id: options.authentication.customerId || "",
+        user_id: options.authentication.userId || "",
+        debug: options.autoQLConfig.debug
     }
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -1488,9 +1554,9 @@ DataMessenger.ajaxCall = function(val, callback, options){
     };
     xhr.open('POST', url);
     xhr.setRequestHeader("Content-Type", "application/json");
-    if(!options.demo){
+    if(!options.authentication.demo){
         // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-        xhr.setRequestHeader("Authorization", `Bearer ${options.token}`);
+        xhr.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     }
     xhr.send(JSON.stringify(data));
 }
@@ -1500,8 +1566,8 @@ DataMessenger.ajaxCallPost = function(url, callback, data, options){
     xmlhttp.open("POST", url);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
     // xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
-    if(!options.demo){
-        xmlhttp.setRequestHeader("Authorization", `Bearer ${options.token}`);
+    if(!options.authentication.demo){
+        xmlhttp.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     }
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4){
@@ -1522,18 +1588,18 @@ DataMessenger.ajaxCallAutoComplete = function(url, callback, options){
     };
     DataMessenger.xhr.open('GET', url);
     DataMessenger.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    DataMessenger.xhr.setRequestHeader("Authorization", options.token ? `Bearer ${DataMessenger.options.token}` : undefined);
+    DataMessenger.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${DataMessenger.options.authentication.token}` : undefined);
     DataMessenger.xhr.send();
 }
 
 DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='suggestion', options){
-    const URL = options.demo
+    const URL = options.authentication.demo
       ? `https://backend.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
         suggestion
       )}&projectid=1`
       : `${options.domain}/api/v1/chata/autocomplete?text=${encodeURIComponent(
         suggestion
-      )}&key=${options.apiKey}&customer_id=${options.customerId}&user_id=${options.userId}`
+      )}&key=${options.authentication.apiKey}&customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}`
     DataMessenger.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
@@ -1605,13 +1671,13 @@ DataMessenger.sendMessage = function(chataInput, textValue){
     //   textValue
     // )}&projectId=${DataMessenger.options.projectId}&unified_query_id=${uuidv4()}`;
 
-    const URL_SAFETYNET = DataMessenger.options.demo
+    const URL_SAFETYNET = DataMessenger.options.authentication.demo
       ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
         textValue
       )}&projectId=1`
       : `${DataMessenger.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
         textValue
-      )}&key=${DataMessenger.options.apiKey}&customer_id=${DataMessenger.options.customerId}&user_id=${DataMessenger.options.userId}`
+      )}&key=${DataMessenger.options.authentication.apiKey}&customer_id=${DataMessenger.options.authentication.customerId}&user_id=${DataMessenger.options.authentication.userId}`
 
 
     DataMessenger.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
@@ -1626,7 +1692,7 @@ DataMessenger.sendMessage = function(chataInput, textValue){
                 Uh oh.. It looks like you don't have access to this resource.
                 Please double check that all the required authentication fields are provided.`
             )
-        }else if(suggestions.length > 0 && DataMessenger.options.enableSafetyNet
+        }else if(suggestions.length > 0 && DataMessenger.options.autoQLConfig.enableQueryValidation
         && textValue != 'None of these'){
             chataInput.removeAttribute("disabled");
             DataMessenger.drawerContent.removeChild(responseLoadingContainer);
@@ -1828,14 +1894,14 @@ DataMessenger.getActionButtons = function(idRequest, type){
         if(request['data']['rows'].length > 1 &&
            request['data']['columns'].length > 1 &&
            getNumberOfGroupables(request['data']['columns']) == 0 &&
-           DataMessenger.options.enableColumnEditor){
+           DataMessenger.options.autoQLConfig.enableColumnEditor){
             showHideColumnsButton = `
                    <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
                        ${COLUMN_EDITOR}
                    </button>
                `;
         }
-        if(DataMessenger.options.debug){
+        if(DataMessenger.options.autoQLConfig.debug){
             copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
                 ${COPY_SQL}
             </button>`;
@@ -1856,7 +1922,7 @@ DataMessenger.getActionButtons = function(idRequest, type){
         `;
     }else{
         var copySqlButton = '';
-        if(DataMessenger.options.debug){
+        if(DataMessenger.options.autoQLConfig.debug){
             copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
                 ${COPY_SQL}
             </button>`;

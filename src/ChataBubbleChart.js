@@ -195,7 +195,7 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
         }
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
-    .attr("fill", options.chartColors[0])
+    .attr("fill", options.themeConfig.chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'tooltip-3d circle')
     tooltipCharts();

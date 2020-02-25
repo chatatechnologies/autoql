@@ -117,7 +117,7 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(options.chartColors)
+    .range(options.themeConfig.chartColors)
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
@@ -198,7 +198,7 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
         .domain(subgroups.sort())
-        .range(options.chartColors)
+        .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
     .shape(

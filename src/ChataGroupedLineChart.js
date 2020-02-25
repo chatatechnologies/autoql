@@ -85,7 +85,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(options.chartColors)
+    .range(options.themeConfig.chartColors)
 
 
     var x = d3.scaleBand()

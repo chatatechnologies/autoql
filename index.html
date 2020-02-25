@@ -896,17 +896,22 @@
     document.getElementById('response-renderer').append(responseRenderer);
     var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxNDM4ODU1LCAiZXhwIjogMTU3MTQ0OTY1NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.BJEuLY4oZ0DkfwS4S4rxC5EQeHzAT-KZKjklm9KWYxn76MP_zh4gU-fvcK4sl82S38kiFYBuDGbT0h9_VQ4PXpcj-dj1FviMcROYa7UITIFYzajj4xRjvAwWG8tXYZNqPRXMbNP2LTbXIt3nqch7Tq2FrYuv6pqHhJeHgzXWH9FX3g3F5cMQXEdfM-CDtWJhOUX87CHId9TzzGindPlDdbAS22RHGj4NulKR89iRwyIubITHDVUVXHJl9LUBk3AOZ69J90GdrIQbj8bKU79SEjiQ-M2idtpMSv5-EqmoPx-aVaoD-3S-NMIz_nBPLvaQX4qEo0PDrbY0nr3SXLUbyQ==`;
         var chata = DataMessenger.init('chata', {
-            token: _token,
-            apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
-            customerId: 'locate-demo1',
-            userId: 'nmoore@chata.ai',
-            domain: 'https://locate-staging.chata.io',
+            authentication: {
+                // token: _token,
+                // apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
+                // customerId: 'locate-demo1',
+                // userId: 'nmoore@chata.ai',
+                // domain: 'https://locate-staging.chata.io',
+                demo: true
+            },
+            theme: {
+                accentColor: '#2466AE',
+            },
             isVisible: false,
             shiftScreen: false,
             placement: 'right',
             width: 550,
             height: 600,
-            theme: 'light',
             showHandle: true,
             showMask: true,
             maskClosable: true,
@@ -914,15 +919,13 @@
             maxMessages: 6,
             clearOnClose: false,
             enableVoiceRecord: true,
-            enableAutocomplete: true,
-            enableSafetyNet: true,
-            enableDrilldowns: true,
-            demo: true,
-            debug: true,
+            // demo: true,
+            // debug: true,
             // accentColor: '#2466AE',
             // languageCode: 'ja-JP',
             // currencyCode: 'JPY',
             onMaskClick: function(){
+                console.log('FOOO');
                 DataMessenger.closeDrawer();
             }
         });

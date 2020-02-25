@@ -125,7 +125,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
 
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(options.chartColors)
+    .range(options.themeConfig.chartColors)
 
 
     svg.append("g")
@@ -214,7 +214,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
         .domain(subgroups.sort())
-        .range(options.chartColors)
+        .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
     .shape(

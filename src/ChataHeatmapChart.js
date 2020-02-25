@@ -196,7 +196,7 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     })
     .attr("width", x.bandwidth())
     .attr("height", y.bandwidth())
-    .attr("fill", options.chartColors[0])
+    .attr("fill", options.themeConfig.chartColors[0])
     .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
     .attr('class', 'tooltip-3d square')
 

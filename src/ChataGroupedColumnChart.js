@@ -147,7 +147,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
     // color palette = one color per subgroup
     var color = d3.scaleOrdinal()
     .domain(subgroups)
-    .range(options.chartColors)
+    .range(options.themeConfig.chartColors)
 
 
     var indexCount = 0;

@@ -145,7 +145,7 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
     .attr("width", x.bandwidth() )
     .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
-    .attr("fill", options.chartColors[0])
+    .attr("fill", options.themeConfig.chartColors[0])
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
     tooltipCharts();

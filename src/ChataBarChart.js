@@ -1,6 +1,5 @@
 function createBarChart(component, data, cols, hasNegativeValues, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
-
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var col1 = formatColumnName(cols[0]['name']);
@@ -151,7 +150,7 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
     })
     .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
     .attr("height", y.bandwidth())
-    .attr("fill", options.chartColors[0])
+    .attr("fill", options.themeConfig.chartColors[0])
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
     tooltipCharts();
