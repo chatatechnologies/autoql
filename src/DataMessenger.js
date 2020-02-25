@@ -32,7 +32,6 @@ var DataMessenger = {
             chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
             accentColor: undefined,
             fontFamily: 'sans-serif',
-            titleColor: '#356f90' // DASHBOARD TILES ONLY
         },
         // token: undefined,
         // apiKey: '',
@@ -100,13 +99,13 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     }
 
     if('autoQLConfig' in options){
-        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
             DataMessenger.options.autoQLConfig[key] = value;
         }
     }
 
     if('themeConfig' in options){
-        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+        for (var [key, value] of Object.entries(options['themeConfig'])) {
             DataMessenger.options.themeConfig[key] = value;
         }
     }
@@ -519,7 +518,7 @@ DataMessenger.sendDrilldownMessage = function(
 
     const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
+      : `${options.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
 
 
     const data = {
@@ -644,7 +643,7 @@ DataMessenger.showColumnEditor = function(id){
 DataMessenger.clickHandler = function(e){
 
     if(DataMessenger.options.autoQLConfig.enableDrilldowns){
-        if(e.target.parentElement.hasAttribute('data-indexrow')){
+        if(e.target.parentElement.dataset.hasDrilldown === 'true'){
             var table = e.target.parentElement.parentElement;
             var json = DataMessenger.responses[table.dataset.componentid];
             var indexData = e.target.parentElement.dataset.indexrow;

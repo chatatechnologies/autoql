@@ -44,7 +44,7 @@
     <script src="src/ChataPieChart.js"></script>
     <script src="src/ResponseRenderer.js"></script>
     <script src="src/ChatBar.js"></script>
-    <script src="src/ChatDrawer.js"></script>
+    <script src="src/DataMessenger.js"></script>
     <script src="src/Modal.js"></script>
     <script src="src/Tile.js"></script>
     <script src="src/Dashboard.js"></script>
@@ -1173,13 +1173,17 @@
         }
 
         var dashboard = new Dashboard('.grid-1', {
-            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            demo: true,
+            themeConfig: {
+                chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            },
+            authentication: {
+                demo: true,
+            },
             // token: undefined,
-            apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
-            customerId: 'locate-demo1',
-            userId: 'nmoore@chata.ai',
-            domain: 'https://locate-staging.chata.io',
+            // apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
+            // customerId: 'locate-demo1',
+            // userId: 'nmoore@chata.ai',
+            // domain: 'https://locate-staging.chata.io',
             tiles: [
                 {
                     key: '0',

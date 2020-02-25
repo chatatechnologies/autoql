@@ -1,13 +1,18 @@
 const concat = require('gulp-concat');
 const order = require('gulp-order');
 const minify = require('gulp-minify');
-const umd = require('gulp-umd');
 const gulp = require('gulp');
+const cleanCSS = require('gulp-clean-css');
+
 gulp.task('scripts', function() {
     return gulp.src(['./src/*.js'])
         .pipe(order([
+            "src/popper.min.js",
+            "src/tippy.min.js",
+            "src/muuri.min.js",
+            "src/moment.js",
             "src/d3.v4.js",
-            "src/d3.tip.js",
+            "src/d3-legend.js",
             "src/svgIcons.js",
             "src/constants.js",
             "src/utils.js",
@@ -20,19 +25,32 @@ gulp.task('scripts', function() {
             "src/ChataLineChart.js",
             "src/ChataStackedColumnChart.js",
             "src/ChataStackedBarChart.js",
+            "src/ChataGroupedColumnChart.js",
+            "src/ChataGroupedLineChart.js",
+            "src/ChataGroupedBarChart.js",
+            "src/ChataPieChart.js",
             "src/ResponseRenderer.js",
             "src/ChatBar.js",
-            "src/ChatDrawer.js",
+            "src/DataMessenger.js",
+            "src/Modal.js",
+            "src/Tile.js",
+            "src/Dashboard.js",
+            "src/NotificationList.js",
+            "src/Notification.js",
+            "src/NotificationSettingsModal.js",
+            "src/Settings.js",
+            "src/SettingsItem.js",
         ], { base: './' }))
-        .pipe(concat('ChatDrawer.js'))
+        .pipe(concat('autoql.js'))
         .pipe(minify())
-        .pipe(umd({
-            exports: function(file) {
-                return 'ChatDrawer';
-            },
-            namespace: function(file) {
-                return 'ChatDrawer';
-            }
-        }))
         .pipe(gulp.dest('./build'));
+});
+
+
+gulp.task('css', () => {
+  return gulp.src(['./css/*.css'])
+    .pipe(cleanCSS({compatibility: 'ie8'}))
+    .pipe(minify())
+    .pipe(concat('autoql-styles.css'))
+    .pipe(gulp.dest('./build'));
 });

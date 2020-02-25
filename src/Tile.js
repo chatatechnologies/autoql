@@ -284,13 +284,13 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.safetynet = function(textValue){
-        const URL_SAFETYNET = dashboard.options.demo
+        const URL_SAFETYNET = dashboard.options.authentication.demo
           ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
             textValue
           )}&projectId=1`
-          : `${dashboard.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+          : `${dashboard.options.authentication.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
             textValue
-          )}&key=${dashboard.options.apiKey}&customer_id=${dashboard.options.customerId}&user_id=${dashboard.options.userId}`;
+          )}&key=${dashboard.options.authentication.apiKey}&customer_id=${dashboard.options.authentication.customerId}&user_id=${dashboard.options.authentication.userId}`;
         return URL_SAFETYNET;
     }
 
@@ -965,9 +965,9 @@ function Tile(dashboard, options={}){
         }
     });
     chataDashboardItem.getDrilldownData = function(json, indexData, options){
-        const URL = options.demo
+        const URL = options.authentication.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
+          : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
 
         var obj = {};
         var groupableCount = getGroupableCount(json);
@@ -978,21 +978,22 @@ function Tile(dashboard, options={}){
                 obj[colData] = value.toString();
             }
         }
-
+        
         const data = {
             query_id: json['data']['query_id'],
             group_bys: obj,
-            customer_id: options.customerId,
-            user_id: options.userId,
-            debug: options.demo
+            username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+            customer_id: options.authentication.customerId || "",
+            user_id: options.authentication.userId || "",
+            debug: options.autoQLConfig.debug
         }
         return data;
     }
 
     chataDashboardItem.sendDrilldownMessage = function(data, options, _uuid, callback){
-        const URL = options.demo
+        const URL = options.authentication.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.domain}/api/v1/chata/query/drilldown?key=${options.api_key}`;
+          : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
         DataMessenger.ajaxCallPost(URL, function(response){
             DataMessenger.responses[_uuid] = response;
             callback();

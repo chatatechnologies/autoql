@@ -11,33 +11,76 @@ function Dashboard(selector, options={}){
     };
 
     obj.options = {
-        token: '',
-        apiKey: '',
-        customerId: '',
-        userId: '',
-        domain: '',
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+        dataFormatting:{
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY'
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableColumnEditor: true,
+            enableDrilldowns: true
+        },
+        themeConfig: {
+            theme: 'light',
+            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+            accentColor: undefined,
+            fontFamily: 'sans-serif',
+            titleColor: '#356f90'
+        },
         tiles: [],
         onChangeCallback: function(){},
         isEditing: false,
-        currencyCode: 'USD',
-        languageCode: 'en-US',
-        currencyDecimals: 2,
-        quantityDecimals: 1,
-        monthYearFormat: 'MMM YYYY',
-        dayMonthYearFormat: 'MMM DD, YYYY',
-        comparisonDisplay: 'ratio' || 'percent',
-        fontFamily:	'sans-serif',
-        chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
-        titleColor: '#2466AE',
         executeOnMount:	true,
         executeOnStopEditing: true,
         notExecutedText: 'Hit "Execute" to run this dashboard',
-        demo: false,
-        debug: false
+    }
+
+    if('authentication' in options){
+        for (var [key, value] of Object.entries(options['authentication'])) {
+            obj.options.authentication[key] = value;
+        }
+    }
+
+    if('dataFormatting' in options){
+        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+            obj.options.dataFormatting[key] = value;
+        }
+    }
+
+    if('autoQLConfig' in options){
+        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
+            obj.options.autoQLConfig[key] = value;
+        }
+    }
+
+    if('themeConfig' in options){
+        for (var [key, value] of Object.entries(options['themeConfig'])) {
+            obj.options.themeConfig[key] = value;
+        }
     }
 
     for (var [key, value] of Object.entries(options)) {
-        obj.options[key] = value;
+        if(typeof value !== 'object'){
+            obj.options[key] = value;
+        }
     }
 
     for (let property in DASHBOARD_LIGHT_THEME) {
@@ -157,12 +200,12 @@ function Dashboard(selector, options={}){
     obj.applyCSS = function(){
         obj.grid._element.style.setProperty(
             '--chata-dashboard-font-family',
-            obj.options['fontFamily']
+            obj.options.themeConfig['fontFamily']
         );
 
         obj.grid._element.style.setProperty(
             '--chata-dashboard-accent-color',
-            obj.options['titleColor']
+            obj.options.themeConfig['titleColor']
         )
     }
 
