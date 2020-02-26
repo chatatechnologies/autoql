@@ -9,23 +9,32 @@
         <link rel="stylesheet" type="text/css" href="css/ColumnEditor.css">
         <link rel="stylesheet" type="text/css" href="css/Notifications.css">
         <link rel="stylesheet" type="text/css" href="css/NotificationSettings.css"> -->
+        
         <link rel="stylesheet" type="text/css" href="build/autoql-styles.css">
         <script src="build/autoql-min.js"></script>
     </head>
     <body>
+        <div id="datamessenger">
+
+        </div>
         <div id="chata" class="chata">
 
         </div>
     </body>
     <script>
-        // var chata = DataMessenger.init('chata', {
-        //     authentication: {
-        //         demo: true
-        //     },
-        //     themeConfig: {
-        //         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        //     }
-        // });
+        var chata = DataMessenger.init('datamessenger', {
+            authentication: {
+                demo: true
+            },
+            themeConfig: {
+                chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            },
+            maskClosable: true,
+            onMaskClick: function(){
+                console.log('FOOO');
+                DataMessenger.closeDrawer();
+            }
+        });
         var dashboard = new Dashboard('.chata', {
             themeConfig: {
                 chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
@@ -117,6 +126,6 @@
             executeOnMount: true,
             executeOnStopEditing: false,
         });
-        // dashboard.startEditing();
+        dashboard.startEditing();
     </script>
 </html>

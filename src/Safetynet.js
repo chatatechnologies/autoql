@@ -71,8 +71,12 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
 }
 
 function createSuggestionArray(jsonResponse){
-    var fullSuggestion = jsonResponse['full_suggestion'];
-    var query = jsonResponse['query'];
+    // {"reference_id": "1.1.240", "data": {"text": "foo bar", "replacements": [{"start": 0, "end": 7, "suggestions": [{"text": "chinese elecronics for weigh bar", "value_label": "Part"}, {"text": "domestic electronics for weigh bar", "value_label": "Part"}]}]}, "message": "Success"}
+    // {"full_suggestion": [{"end": 3, "suggestion_list": [{"text": "for"}], "start": 0}], "query": "foo bar"}
+
+    var fullSuggestion = jsonResponse['full_suggestion']
+    || jsonResponse['data']['replacements'];
+    var query = jsonResponse['query'] || jsonResponse['data']['text'];
     var words = query.split(' ');
     var suggestionArray = [];
     for (var i = 0; i < words.length; i++) {
@@ -83,10 +87,12 @@ function createSuggestionArray(jsonResponse){
             var end = fullSuggestion[x]['end'];
             var word = query.slice(start, end);
             if(word == w){
+                let suggestions = fullSuggestion[x]['suggestion_list']
+                || fullSuggestion[x]['suggestions'];
                 suggestionArray.push({
                     word: word,
                     type: 'suggestion',
-                    suggestionList: fullSuggestion[x]['suggestion_list']
+                    suggestionList: suggestions
                 })
                 hasSuggestion = true;
                 break;

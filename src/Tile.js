@@ -123,8 +123,8 @@ function Tile(dashboard, options={}){
         var newHeight = (startHeight + e.clientY - startY);
         if(newWidth < 320){
             newWidth = 320;
-        }else if(newWidth >= chataDashboardItem.parentElement.clientWidth - 20){
-            newWidth = chataDashboardItem.parentElement.clientWidth - 20;
+        }else if(newWidth >= chataDashboardItem.parentElement.offsetWidth - 22){
+            newWidth = chataDashboardItem.parentElement.offsetWidth - 22;
         }
         if(newHeight < 140){
             newHeight = 140;
@@ -978,7 +978,7 @@ function Tile(dashboard, options={}){
                 obj[colData] = value.toString();
             }
         }
-        
+
         const data = {
             query_id: json['data']['query_id'],
             group_bys: obj,

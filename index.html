@@ -894,15 +894,15 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTcxNDM4ODU1LCAiZXhwIjogMTU3MTQ0OTY1NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20ifQ==.BJEuLY4oZ0DkfwS4S4rxC5EQeHzAT-KZKjklm9KWYxn76MP_zh4gU-fvcK4sl82S38kiFYBuDGbT0h9_VQ4PXpcj-dj1FviMcROYa7UITIFYzajj4xRjvAwWG8tXYZNqPRXMbNP2LTbXIt3nqch7Tq2FrYuv6pqHhJeHgzXWH9FX3g3F5cMQXEdfM-CDtWJhOUX87CHId9TzzGindPlDdbAS22RHGj4NulKR89iRwyIubITHDVUVXHJl9LUBk3AOZ69J90GdrIQbj8bKU79SEjiQ-M2idtpMSv5-EqmoPx-aVaoD-3S-NMIz_nBPLvaQX4qEo0PDrbY0nr3SXLUbyQ==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgyNzQ0MTE4LCAiZXhwIjogMTU4Mjc2NTcxOCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAibG9jYXRlLWRlbW8xIiwgInVzZXJfaWQiOiAibm1vb3JlQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.QDegXF-OZowvdC0gJ31roHwt8E_L5MIYrfN9O9SpUqSgi4MqO6KSkDFppz5UD_j_CBXeIY4AuCtSqXLV29QYu-6MUWOF_dyDi4riF3EkP05oqo5yttWb9ejkmihMaisr05k35bM__fpCWjKKtPSJMIlf4kCSh6xlJOTog7ljWxFYNqixKWf5DRnyFD396uHiBMjwVobqw62-9c0y8MVvBGYxeji3utzEofXY7QkwnTFaCKdaIbUVU_o6AqlHLYr4h2WSHb__gFk7i91O8beTLLFXxM31EZYlS4tDV6SGGzxQkqQsl-CtSJkm8GwBMbt8nWLa5TypOIgmmfYIoZHXnA==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
-                // token: _token,
-                // apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
-                // customerId: 'locate-demo1',
-                // userId: 'nmoore@chata.ai',
-                // domain: 'https://locate-staging.chata.io',
-                demo: true
+                token: _token,
+                apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
+                customerId: 'locate-demo1',
+                userId: 'nmoore@chata.ai',
+                domain: 'https://locate-staging.chata.io',
+                demo: false
             },
             theme: {
                 accentColor: '#2466AE',
@@ -1007,10 +1007,10 @@
             var userId = document.querySelector('[name="userId"]').value;
             var domain = document.querySelector('[name="domain"]').value;
             login.style.display = 'none';
-            DataMessenger.options.apiKey = apiKey;
-            DataMessenger.options.customerId = customerId;
-            DataMessenger.options.userId = userId;
-            DataMessenger.options.domain = domain;
+            DataMessenger.options.authentication.apiKey = apiKey;
+            DataMessenger.options.authentication.customerId = customerId;
+            DataMessenger.options.authentication.userId = userId;
+            DataMessenger.options.authentication.domain = domain;
 
             var xhr = new XMLHttpRequest();
             const URL = 'https://backend-staging.chata.io/api/v1/login';
@@ -1031,7 +1031,7 @@
                             if(xhr2.status != 200){
                                 alert(xhr2.responseText);
                             }else{
-                                DataMessenger.options.token = xhr2.responseText;
+                                DataMessenger.options.authentication.token = xhr2.responseText;
                                 alert('Login Sucessful!');
                             }
                         }
@@ -1047,9 +1047,9 @@
         }
 
         demo.onchange = function(event){
-            DataMessenger.options.demo = event.target.checked;
+            DataMessenger.options.authentication.demo = event.target.checked;
             var loginSection = document.getElementById('login-section');
-            if(!DataMessenger.options.demo){
+            if(!DataMessenger.options.authentication.demo){
                 loginSection.style.display = 'block';
             }else{
                 loginSection.style.display = 'none';

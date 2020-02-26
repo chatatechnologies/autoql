@@ -218,6 +218,7 @@ function Dashboard(selector, options={}){
     }
 
     obj.applyCSS();
+    obj.grid.refreshItems();
 
     return obj;
 }

@@ -1,7 +1,8 @@
 * {
-    -webkit-box-sizing: inherit;
-    box-sizing: inherit;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
+
 .chata-dashboard *, .chata-dashboard *:before, .chata-dashboard *:after{
     box-sizing: border-box !important;
     padding: 0px;
@@ -13,18 +14,20 @@
     display: block;
     width: 100%;
     background: rgb(250, 250, 250);
+    /* box-sizing: border-box; */
+    /* padding: 0px;
+    margin: 0px;
+    border-width: 0px; */
 }
 .chata-dashboard {
     position: relative;
     width: 100%;
     background: transparent;
-    border: 5px solid transparent;
+    /* border: 5px solid transparent; */
     font-family: var(--chata-dashboard-font-family);
 }
 .chata-dashboard-item {
     position: absolute;
-    /* width: calc(50% - 20px); */
-    /* height: 450px; */
     margin: 10px;
 }
 .chata-dashboard-item.muuri-item-hidden {
@@ -48,7 +51,7 @@
     overflow: hidden;
     border-radius: 4px;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
-    padding: 25px;
+    padding: 21px;
 }
 .tile-toolbar{
     visibility: hidden;
@@ -374,52 +377,56 @@
     font-size: 23px;
 }
 
+#test2{
+    padding: 0px !important;
+}
+
 .chata-col-1{
-    width: calc(8.3333333333333% - 21px);
+    width: calc(8.3333333333333% - 22px);
 }
 
 .chata-col-2{
-    width: calc(16.6666666666666% - 21px);
+    width: calc(16.6666666666666% - 22px);
 }
 
 .chata-col-3{
-    width: calc(25.0% - 21px);
+    width: calc(25.0% - 22px);
 }
 
 .chata-col-4{
-    width: calc(33.333333333333% - 21px);
+    width: calc(33.333333333333% - 22px);
 }
 
 .chata-col-5{
-    width: calc(41.666666666666% - 21px);
+    width: calc(41.666666666666% - 22px);
 }
 
 .chata-col-6{
-    width: calc(50.0% - 21px);
+    width: calc(50.0% - 22px);
 }
 
 .chata-col-7{
-    width: calc(58.3333333333333% - 21px);
+    width: calc(58.3333333333333% - 22px);
 }
 
 .chata-col-8{
-    width: calc(66.666666666666% - 21px);
+    width: calc(66.666666666666% - 22px);
 }
 
 .chata-col-9{
-    width: calc(75.0% - 21px);
+    width: calc(75.0% - 22px);
 }
 
 .chata-col-10{
-    width: calc(83.333333333333% - 21px);
+    width: calc(83.333333333333% - 22px);
 }
 
 .chata-col-11{
-    width: calc(91.666666666666% - 21px);
+    width: calc(91.666666666666% - 22px);
 }
 
 .chata-col-12{
-    width: calc(100.0% - 21px);
+    width: calc(100.0% - 22px);
 }
 
 .dashboard-tile-response-container svg path{

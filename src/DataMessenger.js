@@ -518,8 +518,7 @@ DataMessenger.sendDrilldownMessage = function(
 
     const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
-
+      : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
 
     const data = {
         query_id: json['data']['query_id'],
@@ -1535,7 +1534,7 @@ DataMessenger.safetynetCall = function(url, callback, options){
 DataMessenger.ajaxCall = function(val, callback, options){
     const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
-    : `${options.domain}/api/v1/chata/query?key=${options.authentication.apiKey}`
+    : `${options.authentication.domain}/api/v1/chata/query?key=${options.authentication.apiKey}`
 
     const data = {
         text: val,
@@ -1596,9 +1595,10 @@ DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='sugge
       ? `https://backend.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
         suggestion
       )}&projectid=1`
-      : `${options.domain}/api/v1/chata/autocomplete?text=${encodeURIComponent(
+      : `${options.authentication.domain}/autoql/api/v1/query/autocomplete?text=${encodeURIComponent(
         suggestion
       )}&key=${options.authentication.apiKey}&customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}`
+
     DataMessenger.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
@@ -1674,7 +1674,7 @@ DataMessenger.sendMessage = function(chataInput, textValue){
       ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
         textValue
       )}&projectId=1`
-      : `${DataMessenger.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+      : `${DataMessenger.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
         textValue
       )}&key=${DataMessenger.options.authentication.apiKey}&customer_id=${DataMessenger.options.authentication.customerId}&user_id=${DataMessenger.options.authentication.userId}`
 
