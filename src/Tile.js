@@ -132,12 +132,19 @@ function Tile(dashboard, options={}){
         chataDashboardItem.style.width = newWidth + 'px';
         chataDashboardItem.style.height = newHeight + 'px';
         dashboard.grid.refreshItems(chataDashboardItem).layout();
+
     }
 
     function stopResize(e) {
         dashboard.hidePlaceHolders();
         window.removeEventListener('mousemove', resizeItem, false);
         window.removeEventListener('mouseup', stopResize, false);
+        dashboard.lastEvent.type = 'resize';
+        dashboard.lastEvent.value = {
+            item: chataDashboardItem,
+            startWidth: startWidth,
+            startHeight: startHeight
+        };
     }
 
     chataDashboardItem.itemContent = itemContent;

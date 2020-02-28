@@ -894,7 +894,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgyNzQ0MTE4LCAiZXhwIjogMTU4Mjc2NTcxOCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAibG9jYXRlLWRlbW8xIiwgInVzZXJfaWQiOiAibm1vb3JlQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.QDegXF-OZowvdC0gJ31roHwt8E_L5MIYrfN9O9SpUqSgi4MqO6KSkDFppz5UD_j_CBXeIY4AuCtSqXLV29QYu-6MUWOF_dyDi4riF3EkP05oqo5yttWb9ejkmihMaisr05k35bM__fpCWjKKtPSJMIlf4kCSh6xlJOTog7ljWxFYNqixKWf5DRnyFD396uHiBMjwVobqw62-9c0y8MVvBGYxeji3utzEofXY7QkwnTFaCKdaIbUVU_o6AqlHLYr4h2WSHb__gFk7i91O8beTLLFXxM31EZYlS4tDV6SGGzxQkqQsl-CtSJkm8GwBMbt8nWLa5TypOIgmmfYIoZHXnA==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgyODM4NDY2LCAiZXhwIjogMTU4Mjg2MDA2NiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAibG9jYXRlLWRlbW8xIiwgInVzZXJfaWQiOiAibm1vb3JlQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.plRqCG-6JkqH0e7PA-zx8wvUnsumFSbwvfmw2YHDUl5l8xPISE-3rAm8H3aHKHvYwtQYmuKiFP80xu-aTDuq67OrfBNeGOOegPZ7jyKrVC61SPEuacBBZDu37iqqxGAffJizS6x-YdkfD9n_931oMWWRhl65O7tOqKKTGOe06eWkhKKSHF0rYo06AePWBNNS0iiLXpRT3FDOb4Bu11--A1239_DGipuo5nmXXQtU0lWxE7wCIo1iKSYuN_4WzA84sDl9llX9_Vol9sSuvgpJ5fVeSk2lA5ovO27qplLtWZ6Tmxz3pNXst1ALGm2Q0Nr_cy6SMWn94jCJj7t39bGVEg==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -1036,7 +1036,10 @@
                             }
                         }
                     }
-                    xhr2.open('GET', 'https://backend-staging.chata.io/api/v1/jwt');
+                    const url = `
+                        https://backend-staging.chata.io/api/v1/jwt?user_id=${userId}&customer_id=${customerId}
+                    `
+                    xhr2.open('GET', url);
                     xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
                     xhr2.send();
                 }

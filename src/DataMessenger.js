@@ -1534,10 +1534,11 @@ DataMessenger.safetynetCall = function(url, callback, options){
 DataMessenger.ajaxCall = function(val, callback, options){
     const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
-    : `${options.authentication.domain}/api/v1/chata/query?key=${options.authentication.apiKey}`
+    : `${options.authentication.domain}/autoql/api/v1/query?key=${options.authentication.apiKey}`
 
     const data = {
         text: val,
+        source: "data_messenger",
         username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
         customer_id: options.authentication.customerId || "",
         user_id: options.authentication.userId || "",

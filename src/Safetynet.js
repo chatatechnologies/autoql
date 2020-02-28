@@ -77,7 +77,14 @@ function createSuggestionArray(jsonResponse){
     var fullSuggestion = jsonResponse['full_suggestion']
     || jsonResponse['data']['replacements'];
     var query = jsonResponse['query'] || jsonResponse['data']['text'];
-    var words = query.split(' ');
+    var words = [];
+    var start = fullSuggestion[0]['start'];
+    var end = fullSuggestion[0]['end'];
+    if(end == query.length && start == 0){
+        words.push(query);
+    }else{
+        words = query.split(' ');
+    }
     var suggestionArray = [];
     for (var i = 0; i < words.length; i++) {
         var w = words[i];

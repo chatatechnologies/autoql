@@ -10,6 +10,11 @@ function Dashboard(selector, options={}){
         element: '',
     };
 
+    obj.lastEvent = {
+        type: '',
+        value: {}
+    }
+
     obj.options = {
         authentication: {
             token: undefined,
@@ -40,7 +45,11 @@ function Dashboard(selector, options={}){
         },
         themeConfig: {
             theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
             accentColor: undefined,
             fontFamily: 'sans-serif',
             titleColor: '#356f90'
@@ -103,9 +112,30 @@ function Dashboard(selector, options={}){
         dragSort: function () {
             return [grid];
         },
+        sortData: {
+            undoSort: function(item, element){
+                const values = element.style.transform
+                .replace('translateX', '')
+                .replace('translateY', '')
+                .replace(/[()]/g, '')
+                .replace(/px/g, '').split(' ');
+                var sum = 0;
+                console.log(item);
+                for (var i = 0; i < values.length; i++) {
+                    sum += parseFloat(values[i]) * parseInt(item._id);
+                }
+                return item._id;
+            }
+        },
         dragSortInterval: 10,
         dragReleaseDuration: 400,
         dragReleaseEasing: 'ease',
+        dragSortPredicate: function(item, e) {
+            return Muuri.ItemDrag.defaultSortPredicate(item, {
+                action: 'swap',
+                threshold: 50
+            });
+        },
         dragStartPredicate: function (item, event) {
             if(event.target.tagName == 'SPAN'){
                 return false;
@@ -215,7 +245,74 @@ function Dashboard(selector, options={}){
         obj.lastState.element.value = oldValue;
         obj.lastState.inputValue = oldValue;
         obj.oldState.inputValue = newValue;
+        switch (obj.lastEvent.type) {
+            case 'drag':
+                var item = obj.lastEvent.value.item;
+                var toIndex = obj.lastEvent.value.toIndex;
+                var fromIndex = obj.lastEvent.value.fromIndex;
+
+
+                // var transform = obj.lastEvent.value.transform;
+                // item._element.style.transform = transform;
+                // obj.grid.sort('undoSort');
+                // obj.grid.refreshItems(item);
+                grid.move(toIndex, fromIndex, {action: 'swap'});
+                grid.synchronize();
+                break;
+            case 'remove':
+                var removedItem  = obj.lastEvent.value.item;
+                var insertIndex  = obj.lastEvent.value.index;
+                var tile = new Tile(obj, removedItem.options);
+                obj.tiles.push(tile);
+                obj.grid.add(tile, {index: insertIndex});
+                tile.startEditing();
+            break;
+            case 'resize':
+                const width = obj.lastEvent.value.startWidth;
+                const height = obj.lastEvent.value.startHeight;
+                var item = obj.lastEvent.value.item;
+                item.style.width = width + 'px';
+                item.style.height = height + 'px';
+                obj.grid.refreshItems(item).layout();
+            break;
+            default:
+        }
     }
+
+    obj.grid.on('dragInit', function(item, event){
+        obj.lastEvent.type = 'drag';
+        obj.lastEvent.value = {
+            item: item,
+            transform: item._element.style.transform
+        };
+
+    })
+
+    // obj.grid.on('dragEnd', function(item, event){
+    //     console.log(obj.lastEvent.value.transform + '===' + );
+    //     if(obj.lastEvent.value.transform !== item._element.style.transform){
+    //
+    //     }
+    //     console.log();
+    // })
+
+    grid.on('move', function(data){
+        obj.lastEvent.type = 'drag';
+        obj.lastEvent.value = {
+            item: data._element,
+            fromIndex: data.fromIndex,
+            toIndex: data.toIndex
+        }
+    })
+
+    grid.on('remove', function (items, indices) {
+        console.log(items[0], indices[0]);
+        obj.lastEvent.type = 'remove';
+        obj.lastEvent.value = {
+            item: items[0]._element,
+            index: indices[0]
+        }
+    });
 
     obj.applyCSS();
     obj.grid.refreshItems();
