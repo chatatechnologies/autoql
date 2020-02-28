@@ -210,6 +210,11 @@ function Dashboard(selector, options={}){
         obj.grid.add(tile);
         tile.startEditing();
         tile.focusItem();
+        obj.lastEvent.type = 'tile_added';
+        obj.lastEvent.value = {
+            tile: tile,
+            index: -1
+        }
     }
 
     obj.run = function(){
@@ -250,12 +255,6 @@ function Dashboard(selector, options={}){
                 var item = obj.lastEvent.value.item;
                 var toIndex = obj.lastEvent.value.toIndex;
                 var fromIndex = obj.lastEvent.value.fromIndex;
-
-
-                // var transform = obj.lastEvent.value.transform;
-                // item._element.style.transform = transform;
-                // obj.grid.sort('undoSort');
-                // obj.grid.refreshItems(item);
                 grid.move(toIndex, fromIndex, {action: 'swap'});
                 grid.synchronize();
                 break;
@@ -266,6 +265,11 @@ function Dashboard(selector, options={}){
                 obj.tiles.push(tile);
                 obj.grid.add(tile, {index: insertIndex});
                 tile.startEditing();
+                obj.lastEvent.type = 'tile_added';
+                obj.lastEvent.value = {
+                    tile: tile,
+                    insertIndex: insertIndex
+                }
             break;
             case 'resize':
                 const width = obj.lastEvent.value.startWidth;
@@ -274,6 +278,33 @@ function Dashboard(selector, options={}){
                 item.style.width = width + 'px';
                 item.style.height = height + 'px';
                 obj.grid.refreshItems(item).layout();
+            break;
+            case 'display_type':
+                const currentTile = obj.lastEvent.value.tile
+                const displayType = obj.lastEvent.value.displayType
+                currentTile.refreshItem(
+                    displayType,
+                    currentTile.globalUUID,
+                    currentTile.view
+                );
+                dashboard.lastEvent.type = 'display_type';
+                dashboard.lastEvent.value = {
+                    tile: currentTile,
+                    displayType: currentTile.options.displayType
+                };
+                currentTile.options.displayType = displayType;
+            break;
+            case 'tile_added':
+                const addedTile = obj.lastEvent.value.tile
+                const lastInsertIndex = obj.lastEvent.value.index
+                console.log(addedTile);
+                obj.grid.remove(addedTile, {layout:true})
+                addedTile.parentElement.removeChild(addedTile);
+                obj.lastEvent.type = 'remove'
+                obj.lastEvent.value = {
+                    index: lastInsertIndex,
+                    item: addedTile
+                }
             break;
             default:
         }
@@ -285,16 +316,7 @@ function Dashboard(selector, options={}){
             item: item,
             transform: item._element.style.transform
         };
-
     })
-
-    // obj.grid.on('dragEnd', function(item, event){
-    //     console.log(obj.lastEvent.value.transform + '===' + );
-    //     if(obj.lastEvent.value.transform !== item._element.style.transform){
-    //
-    //     }
-    //     console.log();
-    // })
 
     grid.on('move', function(data){
         obj.lastEvent.type = 'drag';

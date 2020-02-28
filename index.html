@@ -163,7 +163,7 @@
                     <h6 class="">Demo data</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" checked name="demo">
+                            <input type="checkbox" name="demo">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -177,27 +177,9 @@
                         </label>
                     </div>
                 </div>
-                <div id="login-section" style="display: none;">
+                <div id="login-section" style="display: block;">
                     <div class="">
                         <h5>You must login to access data</h5>
-                    </div>
-                    <div class="prop prop-column">
-                        <h6>Username</h6>
-                        <input type="text" id="username" value="" placeholder="" class="">
-                    </div>
-
-                    <div class="prop prop-column">
-                        <h6>Password</h6>
-                        <input type="text" id="password" value="" placeholder="" class="">
-                    </div>
-
-                    <div class="">
-                        <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Login</button>
-                    </div>
-
-                    <div class="prop prop-column">
-                        <h6>API key</h6>
-                        <input type="text" name="apiKey" value="" placeholder="" class="">
                     </div>
 
                     <div class="prop prop-column">
@@ -211,8 +193,24 @@
                     </div>
 
                     <div class="prop prop-column">
+                        <h6>API key</h6>
+                        <input type="text" name="apiKey" value="" placeholder="" class="">
+                    </div>
+                    <div class="prop prop-column">
                         <h6>Domain URL</h6>
                         <input type="text" name="domain" value="" placeholder="" class="">
+                    </div>
+                    <div class="prop prop-column">
+                        <h6>Username</h6>
+                        <input type="text" id="username" value="" placeholder="" class="">
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>Password</h6>
+                        <input type="text" id="password" value="" placeholder="" class="">
+                    </div>
+                    <div class="">
+                        <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Login</button>
                     </div>
                 </div>
 
@@ -894,7 +892,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgyODM4NDY2LCAiZXhwIjogMTU4Mjg2MDA2NiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAibG9jYXRlLWRlbW8xIiwgInVzZXJfaWQiOiAibm1vb3JlQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.plRqCG-6JkqH0e7PA-zx8wvUnsumFSbwvfmw2YHDUl5l8xPISE-3rAm8H3aHKHvYwtQYmuKiFP80xu-aTDuq67OrfBNeGOOegPZ7jyKrVC61SPEuacBBZDu37iqqxGAffJizS6x-YdkfD9n_931oMWWRhl65O7tOqKKTGOe06eWkhKKSHF0rYo06AePWBNNS0iiLXpRT3FDOb4Bu11--A1239_DGipuo5nmXXQtU0lWxE7wCIo1iKSYuN_4WzA84sDl9llX9_Vol9sSuvgpJ5fVeSk2lA5ovO27qplLtWZ6Tmxz3pNXst1ALGm2Q0Nr_cy6SMWn94jCJj7t39bGVEg==`;
+    var _token = ``;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -1268,7 +1266,7 @@
             onChangeCallback: function() {
                 console.log('Dashboard onChangeCallback');
             },
-            executeOnMount: false,
+            executeOnMount: true,
             executeOnStopEditing: false,
             // fontFamily: 'monospace'
         });

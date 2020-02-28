@@ -23212,9 +23212,20 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
 }
 
 function createSuggestionArray(jsonResponse){
-    var fullSuggestion = jsonResponse['full_suggestion'];
-    var query = jsonResponse['query'];
-    var words = query.split(' ');
+    // {"reference_id": "1.1.240", "data": {"text": "foo bar", "replacements": [{"start": 0, "end": 7, "suggestions": [{"text": "chinese elecronics for weigh bar", "value_label": "Part"}, {"text": "domestic electronics for weigh bar", "value_label": "Part"}]}]}, "message": "Success"}
+    // {"full_suggestion": [{"end": 3, "suggestion_list": [{"text": "for"}], "start": 0}], "query": "foo bar"}
+
+    var fullSuggestion = jsonResponse['full_suggestion']
+    || jsonResponse['data']['replacements'];
+    var query = jsonResponse['query'] || jsonResponse['data']['text'];
+    var words = [];
+    var start = fullSuggestion[0]['start'];
+    var end = fullSuggestion[0]['end'];
+    if(end == query.length && start == 0){
+        words.push(query);
+    }else{
+        words = query.split(' ');
+    }
     var suggestionArray = [];
     for (var i = 0; i < words.length; i++) {
         var w = words[i];
@@ -23224,10 +23235,12 @@ function createSuggestionArray(jsonResponse){
             var end = fullSuggestion[x]['end'];
             var word = query.slice(start, end);
             if(word == w){
+                let suggestions = fullSuggestion[x]['suggestion_list']
+                || fullSuggestion[x]['suggestions'];
                 suggestionArray.push({
                     word: word,
                     type: 'suggestion',
-                    suggestionList: fullSuggestion[x]['suggestion_list']
+                    suggestionList: suggestions
                 })
                 hasSuggestion = true;
                 break;
@@ -26881,8 +26894,7 @@ DataMessenger.sendDrilldownMessage = function(
 
     const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
-
+      : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
 
     const data = {
         query_id: json['data']['query_id'],
@@ -27898,10 +27910,11 @@ DataMessenger.safetynetCall = function(url, callback, options){
 DataMessenger.ajaxCall = function(val, callback, options){
     const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
-    : `${options.domain}/api/v1/chata/query?key=${options.authentication.apiKey}`
+    : `${options.authentication.domain}/autoql/api/v1/query?key=${options.authentication.apiKey}`
 
     const data = {
         text: val,
+        source: "data_messenger",
         username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
         customer_id: options.authentication.customerId || "",
         user_id: options.authentication.userId || "",
@@ -27959,9 +27972,10 @@ DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='sugge
       ? `https://backend.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
         suggestion
       )}&projectid=1`
-      : `${options.domain}/api/v1/chata/autocomplete?text=${encodeURIComponent(
+      : `${options.authentication.domain}/autoql/api/v1/query/autocomplete?text=${encodeURIComponent(
         suggestion
       )}&key=${options.authentication.apiKey}&customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}`
+
     DataMessenger.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
@@ -28037,7 +28051,7 @@ DataMessenger.sendMessage = function(chataInput, textValue){
       ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
         textValue
       )}&projectId=1`
-      : `${DataMessenger.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+      : `${DataMessenger.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
         textValue
       )}&key=${DataMessenger.options.authentication.apiKey}&customer_id=${DataMessenger.options.authentication.customerId}&user_id=${DataMessenger.options.authentication.userId}`
 
@@ -28698,6 +28712,7 @@ function Tile(dashboard, options={}){
     var chartDrilldownContainer = document.createElement('div');
     var drilldownTable = document.createElement('div');
     const uuid = uuidv4();
+    chataDashboardItem.globalUUID = uuid;
     var modal = new Modal();
     modal.chataBody.classList.add('chata-modal-full-height')
     chataDashboardItem.options = {
@@ -28733,7 +28748,7 @@ function Tile(dashboard, options={}){
     chataDashboardItem.style.height = pixels + 'px';
     tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
-
+    chataDashboardItem.view = tileResponseContainer;
     drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
     drilldownTable.classList.add('chata-dashboard-drilldown-table');
     chataDashboardItem.classList.add('chata-dashboard-item');
@@ -28814,12 +28829,19 @@ function Tile(dashboard, options={}){
         chataDashboardItem.style.width = newWidth + 'px';
         chataDashboardItem.style.height = newHeight + 'px';
         dashboard.grid.refreshItems(chataDashboardItem).layout();
+
     }
 
     function stopResize(e) {
         dashboard.hidePlaceHolders();
         window.removeEventListener('mousemove', resizeItem, false);
         window.removeEventListener('mouseup', stopResize, false);
+        dashboard.lastEvent.type = 'resize';
+        dashboard.lastEvent.value = {
+            item: chataDashboardItem,
+            startWidth: startWidth,
+            startHeight: startHeight
+        };
     }
 
     chataDashboardItem.itemContent = itemContent;
@@ -29048,6 +29070,12 @@ function Tile(dashboard, options={}){
                 if(button.innerHTML != ''){
                     vizToolbar.appendChild(button);
                     button.onclick = function(event){
+                        dashboard.lastEvent.type = 'display_type';
+                        dashboard.lastEvent.value = {
+                            tile: chataDashboardItem,
+                            displayType: chataDashboardItem.options.displayType
+                        };
+
                         chataDashboardItem.options.displayType = this.dataset.displaytype;
                         chataDashboardItem.refreshItem(
                             this.dataset.displaytype,
@@ -29697,6 +29725,11 @@ function Dashboard(selector, options={}){
         element: '',
     };
 
+    obj.lastEvent = {
+        type: '',
+        value: {}
+    }
+
     obj.options = {
         authentication: {
             token: undefined,
@@ -29727,7 +29760,11 @@ function Dashboard(selector, options={}){
         },
         themeConfig: {
             theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
             accentColor: undefined,
             fontFamily: 'sans-serif',
             titleColor: '#356f90'
@@ -29790,9 +29827,30 @@ function Dashboard(selector, options={}){
         dragSort: function () {
             return [grid];
         },
+        sortData: {
+            undoSort: function(item, element){
+                const values = element.style.transform
+                .replace('translateX', '')
+                .replace('translateY', '')
+                .replace(/[()]/g, '')
+                .replace(/px/g, '').split(' ');
+                var sum = 0;
+                console.log(item);
+                for (var i = 0; i < values.length; i++) {
+                    sum += parseFloat(values[i]) * parseInt(item._id);
+                }
+                return item._id;
+            }
+        },
         dragSortInterval: 10,
         dragReleaseDuration: 400,
         dragReleaseEasing: 'ease',
+        dragSortPredicate: function(item, e) {
+            return Muuri.ItemDrag.defaultSortPredicate(item, {
+                action: 'swap',
+                threshold: 50
+            });
+        },
         dragStartPredicate: function (item, event) {
             if(event.target.tagName == 'SPAN'){
                 return false;
@@ -29867,6 +29925,11 @@ function Dashboard(selector, options={}){
         obj.grid.add(tile);
         tile.startEditing();
         tile.focusItem();
+        obj.lastEvent.type = 'tile_added';
+        obj.lastEvent.value = {
+            tile: tile,
+            index: -1
+        }
     }
 
     obj.run = function(){
@@ -29902,7 +29965,91 @@ function Dashboard(selector, options={}){
         obj.lastState.element.value = oldValue;
         obj.lastState.inputValue = oldValue;
         obj.oldState.inputValue = newValue;
+        switch (obj.lastEvent.type) {
+            case 'drag':
+                var item = obj.lastEvent.value.item;
+                var toIndex = obj.lastEvent.value.toIndex;
+                var fromIndex = obj.lastEvent.value.fromIndex;
+                grid.move(toIndex, fromIndex, {action: 'swap'});
+                grid.synchronize();
+                break;
+            case 'remove':
+                var removedItem  = obj.lastEvent.value.item;
+                var insertIndex  = obj.lastEvent.value.index;
+                var tile = new Tile(obj, removedItem.options);
+                obj.tiles.push(tile);
+                obj.grid.add(tile, {index: insertIndex});
+                tile.startEditing();
+                obj.lastEvent.type = 'tile_added';
+                obj.lastEvent.value = {
+                    tile: tile,
+                    insertIndex: insertIndex
+                }
+            break;
+            case 'resize':
+                const width = obj.lastEvent.value.startWidth;
+                const height = obj.lastEvent.value.startHeight;
+                var item = obj.lastEvent.value.item;
+                item.style.width = width + 'px';
+                item.style.height = height + 'px';
+                obj.grid.refreshItems(item).layout();
+            break;
+            case 'display_type':
+                const currentTile = obj.lastEvent.value.tile
+                const displayType = obj.lastEvent.value.displayType
+                currentTile.refreshItem(
+                    displayType,
+                    currentTile.globalUUID,
+                    currentTile.view
+                );
+                dashboard.lastEvent.type = 'display_type';
+                dashboard.lastEvent.value = {
+                    tile: currentTile,
+                    displayType: currentTile.options.displayType
+                };
+                currentTile.options.displayType = displayType;
+            break;
+            case 'tile_added':
+                const addedTile = obj.lastEvent.value.tile
+                const lastInsertIndex = obj.lastEvent.value.index
+                console.log(addedTile);
+                obj.grid.remove(addedTile, {layout:true})
+                addedTile.parentElement.removeChild(addedTile);
+                obj.lastEvent.type = 'remove'
+                obj.lastEvent.value = {
+                    index: lastInsertIndex,
+                    item: addedTile
+                }
+            break;
+            default:
+        }
     }
+
+    obj.grid.on('dragInit', function(item, event){
+        obj.lastEvent.type = 'drag';
+        obj.lastEvent.value = {
+            item: item,
+            transform: item._element.style.transform
+        };
+    })
+
+    grid.on('move', function(data){
+        obj.lastEvent.type = 'drag';
+        obj.lastEvent.value = {
+            item: data._element,
+            fromIndex: data.fromIndex,
+            toIndex: data.toIndex
+        }
+    })
+
+    grid.on('remove', function (items, indices) {
+        console.log(items[0], indices[0]);
+        obj.lastEvent.type = 'remove';
+        obj.lastEvent.value = {
+            item: items[0]._element,
+            index: indices[0]
+        }
+    });
 
     obj.applyCSS();
     obj.grid.refreshItems();

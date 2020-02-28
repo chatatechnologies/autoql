@@ -16,6 +16,7 @@ function Tile(dashboard, options={}){
     var chartDrilldownContainer = document.createElement('div');
     var drilldownTable = document.createElement('div');
     const uuid = uuidv4();
+    chataDashboardItem.globalUUID = uuid;
     var modal = new Modal();
     modal.chataBody.classList.add('chata-modal-full-height')
     chataDashboardItem.options = {
@@ -51,7 +52,7 @@ function Tile(dashboard, options={}){
     chataDashboardItem.style.height = pixels + 'px';
     tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
-
+    chataDashboardItem.view = tileResponseContainer;
     drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
     drilldownTable.classList.add('chata-dashboard-drilldown-table');
     chataDashboardItem.classList.add('chata-dashboard-item');
@@ -373,6 +374,12 @@ function Tile(dashboard, options={}){
                 if(button.innerHTML != ''){
                     vizToolbar.appendChild(button);
                     button.onclick = function(event){
+                        dashboard.lastEvent.type = 'display_type';
+                        dashboard.lastEvent.value = {
+                            tile: chataDashboardItem,
+                            displayType: chataDashboardItem.options.displayType
+                        };
+
                         chataDashboardItem.options.displayType = this.dataset.displaytype;
                         chataDashboardItem.refreshItem(
                             this.dataset.displaytype,
