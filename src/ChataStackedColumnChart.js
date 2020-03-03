@@ -5,9 +5,12 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);

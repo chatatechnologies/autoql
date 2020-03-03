@@ -598,7 +598,9 @@ DataMessenger.showColumnEditor = function(id){
 
     for (var i = 0; i < columns.length; i++) {
         var lineItem = document.createElement('div');
-        var colName = formatColumnName(columns[i]['name']);
+        var colStr = columns[i]['display_name'] ||
+            columns[i]['name'];
+        var colName = formatColumnName(colStr);
         var checkboxContainer = document.createElement('div');
         var checkboxWrapper = document.createElement('div');
         var mCheckbox = document.createElement('div');
@@ -740,6 +742,19 @@ DataMessenger.clickHandler = function(e){
                 }
                 arrows[i].classList.toggle('tabulator-filter');
             }
+        }
+
+        if(e.target.classList.contains('delete-message')){
+            if(e.target.tagName == 'svg'){
+                parent = e.target.parentElement.parentElement.
+                parentElement.parentElement;
+            }else if(e.target.tagName == 'path'){
+                parent = e.target.parentElement.parentElement.
+                    parentElement.parentElement.parentElement;
+            }else{
+                parent = e.target.parentElement.parentElement.parentElement;
+            }
+            DataMessenger.drawerContent.removeChild(parent);
         }
 
         if(e.target.classList.contains('suggestion')){
@@ -1352,7 +1367,9 @@ DataMessenger.createCsvData = function(json, separator=','){
     var output = '';
     var lines = json['data']['rows'];
     for(var i = 0; i<json['data']['columns'].length; i++){
-        var colName = formatColumnName(json['data']['columns'][i]['name']);
+        var colStr = json['data']['columns'][i]['display_name'] ||
+            json['data']['columns'][i]['name'];
+        var colName = formatColumnName(colStr);
         output += colName + separator;
     }
     output += '\n';
@@ -1874,11 +1891,24 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
 DataMessenger.getActionButtons = function(idRequest, type){
     var request = DataMessenger.responses[idRequest];
     var tooltipContent = request['data']['interpretation'];
+    var copySqlButton = '';
+    const deleteMessage = `
+        <button class="chata-toolbar-btn delete-message" data-tippy-content="Delete Message" data-id="${idRequest}">
+                ${DELETE_MESSAGE}
+        </button>`;
+    if(DataMessenger.options.autoQLConfig.debug){
+        copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+            ${COPY_SQL}
+        </button>`;
+    }
     if(type == 'simple'){
         return `
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
-        </button>`;
+        </button>
+        ${copySqlButton}
+        ${deleteMessage}
+        `;
     }else if (type == 'csvCopy'){
         var filterButton = `
             <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
@@ -1886,7 +1916,6 @@ DataMessenger.getActionButtons = function(idRequest, type){
             </button>
         `;
         var showHideColumnsButton = '';
-        var copySqlButton = '';
 
         if(request['data']['rows'].length == 1){
             filterButton = '';
@@ -1901,11 +1930,7 @@ DataMessenger.getActionButtons = function(idRequest, type){
                    </button>
                `;
         }
-        if(DataMessenger.options.autoQLConfig.debug){
-            copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-                ${COPY_SQL}
-            </button>`;
-        }
+
         return `
         ${filterButton}
         ${showHideColumnsButton}
@@ -1919,9 +1944,9 @@ DataMessenger.getActionButtons = function(idRequest, type){
             ${INFO_ICON}
         </button>
         ${copySqlButton}
+        ${deleteMessage}
         `;
     }else{
-        var copySqlButton = '';
         if(DataMessenger.options.autoQLConfig.debug){
             copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
                 ${COPY_SQL}
@@ -1935,6 +1960,7 @@ DataMessenger.getActionButtons = function(idRequest, type){
             ${INFO_ICON}
         </button>
         ${copySqlButton}
+        ${deleteMessage}
         `;
     }
 }
@@ -2100,7 +2126,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var dataLines = jsonResponse['data']['rows'];
     var thArray = [];
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
+        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
+            jsonResponse['data']['columns'][i]['name'];
+        var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
         var col = document .createElement('div');

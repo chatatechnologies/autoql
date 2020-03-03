@@ -3,8 +3,10 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin + 3);

@@ -2,8 +2,10 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){

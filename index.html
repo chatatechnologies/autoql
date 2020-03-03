@@ -892,18 +892,21 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = ``;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgzMTk1ODYyLCAiZXhwIjogMTU4MzIxNzQ2MiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAicHVyZWZhY3RzLWRlbW8xIiwgInVzZXJfaWQiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.gIwerUz2ZQaBbKCkyMfEAuKwuuNn6gh1nVtltcRBK9peSSLr494AF_kSBo3Nf1akcVL5bvIp-duTMfo8h-IqPWd9yCC5fB_oNnw2E-AvvAUqBKx5WAV15pr9g__THIYhzDsKis1G9uGaLfkboMjpU2QsLNmfq7mequjaSNcu9_N3eAOAqFxOaquLtjS8TicU0JqmvhX2VhCaAy-GnyCJGzCzmGubepdWkVdRNKvDh3ymKsmi7Zpo7NLNDsByQgOdWRV-XkL5xFI035PEvet2-TTRGZO4UaZ7op72ybPhEtm6gPOwyFIkZ_TazZm3nlzVkRFvNe_Oy6_1lFPqt9lVKQ==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
-                apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
-                customerId: 'locate-demo1',
-                userId: 'nmoore@chata.ai',
-                domain: 'https://locate-staging.chata.io',
+                apiKey: 'AIzaSyBxoR51Cw8UryZWmMdAkktBUO83ukMFFO0',
+                customerId: 'purefacts-demo1',
+                userId: 'vidhya@chata.ai',
+                domain: 'https://purefacts-staging.chata.io',
                 demo: false
             },
             theme: {
                 accentColor: '#2466AE',
+            },
+            autoQLConfig: {
+                debug: true
             },
             isVisible: false,
             shiftScreen: false,

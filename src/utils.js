@@ -258,7 +258,8 @@ function getPivotColumnArray(json, options, _data){
         var row = [];
         for (var x = 0; x < data.length; x++) {
             if(firstColName == '' && json['data']['columns'][x]['groupable']){
-                var name = json['data']['columns'][x]['name'];
+                var name = json['data']['columns'][x]['display_name'] || 
+                json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
             row.push(formatData(

@@ -19,7 +19,9 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     var dataLines = jsonResponse['data']['rows'];
 
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
+        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
+        jsonResponse['data']['columns'][i]['name'];
+        var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
         var col = document.createElement('div');
