@@ -33,17 +33,10 @@ var DataMessenger = {
             accentColor: undefined,
             fontFamily: 'sans-serif',
         },
-        // token: undefined,
-        // apiKey: '',
-        // customerId: '',
-        // userId: '',
-        // domain: '',
         isVisible: false,
         placement: 'right',
         width: 500,
         height: 500,
-        // theme: 'light',
-        // accentColor: '#28a8e0',
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
@@ -57,24 +50,10 @@ var DataMessenger = {
         maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
-        // enableAutocomplete: true,
         autocompleteStyles: {},
-        // enableQueryValidation: true,
-        // disableDrilldowns: false,
-        // demo: false,
-        // debug: true,
-        // currencyCode: 'USD',
-        // languageCode: 'en-US',
-        // currencyDecimals: 2,
-        // quantityDecimals: 1,
-        // monthYearFormat: 'MMM YYYY',
-        // dayMonthYearFormat: 'MMM DD, YYYY',
-        // comparisonDisplay: 'ratio',
-        enableQueryTipsTab: true,
-        // enableColumnEditor: true,
-        // fontFamily: 'sans-serif',
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        isRecordVoiceActive: false
+        enableQueryInspirationTab: true,
+        isRecordVoiceActive: false,
+        inputPlaceholder: 'Ask me anything…'
     },
     responses: [],
     xhr: new XMLHttpRequest(),
@@ -412,6 +391,7 @@ DataMessenger.queryTipsAnimation = function(display){
 }
 
 DataMessenger.createBar = function(){
+    const placeholder = DataMessenger.options.inputPlaceholder;
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
@@ -427,7 +407,7 @@ DataMessenger.createBar = function(){
         </ul>
     </div>
     <div class="text-bar">
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
+        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="${placeholder}" value="" id="chata-input">
         <button style="display: ${display};" id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
             <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
         </button>
@@ -598,6 +578,7 @@ DataMessenger.showColumnEditor = function(id){
 
     for (var i = 0; i < columns.length; i++) {
         var lineItem = document.createElement('div');
+        var isVisible = columns[i]['is_visible'] || false;
         var colStr = columns[i]['display_name'] ||
             columns[i]['name'];
         var colName = formatColumnName(colStr);
@@ -611,8 +592,12 @@ DataMessenger.showColumnEditor = function(id){
         checkboxContainer.style.height = '36px';
         checkboxWrapper.style.width = '36px';
         checkboxWrapper.style.height = '36px';
-
         mCheckbox.classList.add('m-checkbox')
+
+        if(isVisible){
+            checkboxInput.setAttribute('checked', 'true');
+        }
+
         checkboxWrapper.appendChild(mCheckbox);
         checkboxWrapper.appendChild(checkboxInput);
 
@@ -633,6 +618,16 @@ DataMessenger.showColumnEditor = function(id){
 
     cancelButton.onclick = function(event){
         modal.close();
+    }
+
+    saveButton.onclick = function(event){
+        var inputs = container.getElementsByClassName('m-checkbox__input');
+        for (var i = 0; i < inputs.length; i++) {
+            console.log(inputs[i].checked);
+        }
+        DataMessenger.putCall(columns, function(response){
+            modal.close();
+        }, DataMessenger.options)
     }
 
     modal.addView(container);
@@ -1435,7 +1430,7 @@ DataMessenger.closeDrawer = function(){
 
 DataMessenger.openDrawer = function(){
     DataMessenger.options.isVisible = true;
-    if(DataMessenger.options.enableQueryTipsTab){
+    if(DataMessenger.options.enableQueryInspirationTab){
         DataMessenger.queryTabs.style.visibility = 'visible';
     }
     var body = document.getElementsByTagName('body')[0];
@@ -1575,6 +1570,15 @@ DataMessenger.ajaxCall = function(val, callback, options){
         xhr.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     }
     xhr.send(JSON.stringify(data));
+}
+
+DataMessenger.putCall = function(data, callback, options){
+    const url = options.authentication.demo
+    ? `https://backend-staging.chata.ai/api/v1/chata/query`
+    : `${options.authentication.domain}/autoql/api/v1/query/column-visibility?key=${options.authentication.apiKey}`
+    console.log(url);
+
+    callback();
 }
 
 DataMessenger.ajaxCallPost = function(url, callback, data, options){

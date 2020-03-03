@@ -22165,6 +22165,16 @@ const CLEAR_ALL = `
 </svg>
 `
 
+const DELETE_MESSAGE = `
+<svg class="delete-message" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path class="delete-message" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41
+        0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0
+        16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12
+        12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z">
+    </path>
+</svg>
+`;
+
 const INFO_ICON = `
 <svg fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" class="interpretation-icon">
     <path class="" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
@@ -22173,8 +22183,8 @@ const INFO_ICON = `
 `;
 
 const FILTER_TABLE = `
-<svg class="filter-table" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path class="filter-table" d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z"></path>
+<svg class="filter-table" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <polygon class="filter-table" points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
 </svg>
 `
 
@@ -22616,7 +22626,8 @@ function getPivotColumnArray(json, options, _data){
         var row = [];
         for (var x = 0; x < data.length; x++) {
             if(firstColName == '' && json['data']['columns'][x]['groupable']){
-                var name = json['data']['columns'][x]['name'];
+                var name = json['data']['columns'][x]['display_name'] || 
+                json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
             row.push(formatData(
@@ -23313,7 +23324,9 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     var dataLines = jsonResponse['data']['rows'];
 
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
+        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
+        jsonResponse['data']['columns'][i]['name'];
+        var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
         var col = document.createElement('div');
@@ -23527,9 +23540,12 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -23732,9 +23748,12 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
 
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
@@ -23935,8 +23954,10 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
@@ -24093,8 +24114,12 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -24246,9 +24271,12 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    console.log(cols);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+
+
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
@@ -24422,9 +24450,12 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
@@ -24660,9 +24691,12 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
@@ -24883,9 +24917,12 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
     var chartWidth = width;
     var height;
     var legendBoxMargin = 25;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
@@ -25120,9 +25157,12 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
     var chartWidth = width;
     var height;
     var legendBoxMargin = 25;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
@@ -25371,9 +25411,12 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
     var chartWidth = width;
     var height;
     var legendBoxMargin = 25;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
-    var col3 = formatColumnName(cols[2]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
@@ -25598,8 +25641,10 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
-    var col1 = formatColumnName(cols[0]['name']);
-    var col2 = formatColumnName(cols[1]['name']);
+    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
+    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin + 3);
@@ -26409,17 +26454,10 @@ var DataMessenger = {
             accentColor: undefined,
             fontFamily: 'sans-serif',
         },
-        // token: undefined,
-        // apiKey: '',
-        // customerId: '',
-        // userId: '',
-        // domain: '',
         isVisible: false,
         placement: 'right',
         width: 500,
         height: 500,
-        // theme: 'light',
-        // accentColor: '#28a8e0',
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
@@ -26433,24 +26471,10 @@ var DataMessenger = {
         maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
-        // enableAutocomplete: true,
         autocompleteStyles: {},
-        // enableQueryValidation: true,
-        // disableDrilldowns: false,
-        // demo: false,
-        // debug: true,
-        // currencyCode: 'USD',
-        // languageCode: 'en-US',
-        // currencyDecimals: 2,
-        // quantityDecimals: 1,
-        // monthYearFormat: 'MMM YYYY',
-        // dayMonthYearFormat: 'MMM DD, YYYY',
-        // comparisonDisplay: 'ratio',
-        enableQueryTipsTab: true,
-        // enableColumnEditor: true,
-        // fontFamily: 'sans-serif',
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        isRecordVoiceActive: false
+        enableQueryInspirationTab: true,
+        isRecordVoiceActive: false,
+        inputPlaceholder: 'Ask me anything…'
     },
     responses: [],
     xhr: new XMLHttpRequest(),
@@ -26788,6 +26812,7 @@ DataMessenger.queryTipsAnimation = function(display){
 }
 
 DataMessenger.createBar = function(){
+    const placeholder = DataMessenger.options.inputPlaceholder;
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
@@ -26803,7 +26828,7 @@ DataMessenger.createBar = function(){
         </ul>
     </div>
     <div class="text-bar">
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="Ask me anything" value="" id="chata-input">
+        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="${placeholder}" value="" id="chata-input">
         <button style="display: ${display};" id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
             <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
         </button>
@@ -26974,7 +26999,9 @@ DataMessenger.showColumnEditor = function(id){
 
     for (var i = 0; i < columns.length; i++) {
         var lineItem = document.createElement('div');
-        var colName = formatColumnName(columns[i]['name']);
+        var colStr = columns[i]['display_name'] ||
+            columns[i]['name'];
+        var colName = formatColumnName(colStr);
         var checkboxContainer = document.createElement('div');
         var checkboxWrapper = document.createElement('div');
         var mCheckbox = document.createElement('div');
@@ -27116,6 +27143,19 @@ DataMessenger.clickHandler = function(e){
                 }
                 arrows[i].classList.toggle('tabulator-filter');
             }
+        }
+
+        if(e.target.classList.contains('delete-message')){
+            if(e.target.tagName == 'svg'){
+                parent = e.target.parentElement.parentElement.
+                parentElement.parentElement;
+            }else if(e.target.tagName == 'path'){
+                parent = e.target.parentElement.parentElement.
+                    parentElement.parentElement.parentElement;
+            }else{
+                parent = e.target.parentElement.parentElement.parentElement;
+            }
+            DataMessenger.drawerContent.removeChild(parent);
         }
 
         if(e.target.classList.contains('suggestion')){
@@ -27728,7 +27768,9 @@ DataMessenger.createCsvData = function(json, separator=','){
     var output = '';
     var lines = json['data']['rows'];
     for(var i = 0; i<json['data']['columns'].length; i++){
-        var colName = formatColumnName(json['data']['columns'][i]['name']);
+        var colStr = json['data']['columns'][i]['display_name'] ||
+            json['data']['columns'][i]['name'];
+        var colName = formatColumnName(colStr);
         output += colName + separator;
     }
     output += '\n';
@@ -27794,7 +27836,7 @@ DataMessenger.closeDrawer = function(){
 
 DataMessenger.openDrawer = function(){
     DataMessenger.options.isVisible = true;
-    if(DataMessenger.options.enableQueryTipsTab){
+    if(DataMessenger.options.enableQueryInspirationTab){
         DataMessenger.queryTabs.style.visibility = 'visible';
     }
     var body = document.getElementsByTagName('body')[0];
@@ -28250,11 +28292,24 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
 DataMessenger.getActionButtons = function(idRequest, type){
     var request = DataMessenger.responses[idRequest];
     var tooltipContent = request['data']['interpretation'];
+    var copySqlButton = '';
+    const deleteMessage = `
+        <button class="chata-toolbar-btn delete-message" data-tippy-content="Delete Message" data-id="${idRequest}">
+                ${DELETE_MESSAGE}
+        </button>`;
+    if(DataMessenger.options.autoQLConfig.debug){
+        copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+            ${COPY_SQL}
+        </button>`;
+    }
     if(type == 'simple'){
         return `
         <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
-        </button>`;
+        </button>
+        ${copySqlButton}
+        ${deleteMessage}
+        `;
     }else if (type == 'csvCopy'){
         var filterButton = `
             <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
@@ -28262,7 +28317,6 @@ DataMessenger.getActionButtons = function(idRequest, type){
             </button>
         `;
         var showHideColumnsButton = '';
-        var copySqlButton = '';
 
         if(request['data']['rows'].length == 1){
             filterButton = '';
@@ -28277,11 +28331,7 @@ DataMessenger.getActionButtons = function(idRequest, type){
                    </button>
                `;
         }
-        if(DataMessenger.options.autoQLConfig.debug){
-            copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-                ${COPY_SQL}
-            </button>`;
-        }
+
         return `
         ${filterButton}
         ${showHideColumnsButton}
@@ -28295,9 +28345,9 @@ DataMessenger.getActionButtons = function(idRequest, type){
             ${INFO_ICON}
         </button>
         ${copySqlButton}
+        ${deleteMessage}
         `;
     }else{
-        var copySqlButton = '';
         if(DataMessenger.options.autoQLConfig.debug){
             copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
                 ${COPY_SQL}
@@ -28311,6 +28361,7 @@ DataMessenger.getActionButtons = function(idRequest, type){
             ${INFO_ICON}
         </button>
         ${copySqlButton}
+        ${deleteMessage}
         `;
     }
 }
@@ -28476,7 +28527,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var dataLines = jsonResponse['data']['rows'];
     var thArray = [];
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colName = formatColumnName(jsonResponse['data']['columns'][i]['name']);
+        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
+            jsonResponse['data']['columns'][i]['name'];
+        var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
         var col = document .createElement('div');

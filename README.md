@@ -223,6 +223,25 @@ var dashboard = new Dashboard('.my-grid', {
 | demo                  | Boolean                                | false                                                   |
 | debug                 | Boolean                                | false                                                   |
 
+#### Dashboard functions
+**dashboard.run()**: A function to run the dashboard queries. Use this function when you want to control exactly when the dashboard is executed and re-executed.
+
+**dashboard.addTile()**: A function to add a new empty tile to an existing dashboard.
+
+**dashboard.startEditing()**: A function to change to the edition mode, allows to change the queries, positions and sizes of the tiles.
+
+**dashboard.stopEditing()**: A function to stop editing.
+
+**dashboard.undo()**: A function to undo the most recent change to the dashboard. The following are actions that can be undone:
+#### Undoable Actions
+| :------------ |
+| Add Tile |
+| Delete Tile |
+| Move Tile |
+| Resize Tile |
+| Change Query Text |
+| Change Title |
+
 #### Prop Descriptions
 **isVisible**: Whether the drawer is open or not. You have full control over the visibility of the drawer by using your own state.
 
