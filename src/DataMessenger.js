@@ -588,6 +588,8 @@ DataMessenger.showColumnEditor = function(id){
         var checkboxInput = document.createElement('input');
         checkboxInput.setAttribute('type', 'checkbox');
         checkboxInput.classList.add('m-checkbox__input')
+        checkboxInput.setAttribute('data-col-name', columns[i]['name']);
+        checkboxInput.setAttribute('data-col-index', i);
         checkboxContainer.style.width = '36px';
         checkboxContainer.style.height = '36px';
         checkboxWrapper.style.width = '36px';
@@ -622,11 +624,22 @@ DataMessenger.showColumnEditor = function(id){
 
     saveButton.onclick = function(event){
         var inputs = container.getElementsByClassName('m-checkbox__input');
+        var data = [];
         for (var i = 0; i < inputs.length; i++) {
             console.log(inputs[i].checked);
+            console.log(inputs[i].dataset.colName);
+            console.log(inputs[i].dataset.colIndex);
+            data.push({
+                name: inputs[i].dataset.colName,
+                is_visible: inputs[i].checked
+            })
+            json['data']['columns'][i]['is_visible'] = inputs[i].checked;
+            hideShowTableCols(id);
         }
-        DataMessenger.putCall(columns, function(response){
+        console.log(data);
+        DataMessenger.putCall(data, function(response){
             modal.close();
+            console.log(response);
         }, DataMessenger.options)
     }
 
@@ -1576,9 +1589,29 @@ DataMessenger.putCall = function(data, callback, options){
     const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
     : `${options.authentication.domain}/autoql/api/v1/query/column-visibility?key=${options.authentication.apiKey}`
-    console.log(url);
 
-    callback();
+    var body = {
+        columns: data
+    }
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+            var jsonResponse = JSON.parse(xhr.responseText);
+            callback(jsonResponse);
+        }
+    }
+
+    xhr.open('PUT', url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    if(!options.authentication.demo){
+        xhr.setRequestHeader(
+            "Authorization", `Bearer ${options.authentication.token}`
+        );
+    }
+    xhr.send(JSON.stringify(body));
+
+    console.log(url);
 }
 
 DataMessenger.ajaxCallPost = function(url, callback, data, options){
@@ -1926,7 +1959,6 @@ DataMessenger.getActionButtons = function(idRequest, type){
         }
         if(request['data']['rows'].length > 1 &&
            request['data']['columns'].length > 1 &&
-           getNumberOfGroupables(request['data']['columns']) == 0 &&
            DataMessenger.options.autoQLConfig.enableColumnEditor){
             showHideColumnsButton = `
                    <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
@@ -2132,6 +2164,8 @@ DataMessenger.putTableResponse = function(jsonResponse){
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
         var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
             jsonResponse['data']['columns'][i]['name'];
+        var isVisible = jsonResponse['data']['columns'][i]['is_visible']
+        || false;
         var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
@@ -2161,6 +2195,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
         th.appendChild(arrow);
         header.appendChild(th);
         thArray.push(th);
+        if(!isVisible){
+            th.classList.add('chata-hidden');
+        }
     }
     header.classList.add('table-header');
     scrollbox.appendChild(header);
@@ -2169,6 +2206,8 @@ DataMessenger.putTableResponse = function(jsonResponse){
         var data = dataLines[i];
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
+            var isVisible = jsonResponse['data']['columns'][x]['is_visible']
+            || false;
             value = formatData(
                 data[x], jsonResponse['data']['columns'][x],
                 DataMessenger.options
@@ -2176,6 +2215,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
             var td = document.createElement('td');
             td.textContent = value;
             tr.appendChild(td);
+            if(!isVisible){
+                td.classList.add('chata-hidden');
+            }
         }
         tr.setAttribute('data-indexrow', i);
         if(typeof groupField !== 'number'){

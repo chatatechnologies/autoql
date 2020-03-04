@@ -720,6 +720,18 @@ input[type=text]:disabled {
     text-align: center;
 }
 
+tr th.chata-hidden{
+    display: none;
+    width: 0px;
+    visibility: hidden;
+}
+
+tr td.chata-hidden{
+    display: none;
+    width: 0px;
+    visibility: hidden;
+}
+
 .tabulator-arrow {
   position: absolute;
   right: 5px;

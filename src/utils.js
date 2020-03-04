@@ -258,7 +258,7 @@ function getPivotColumnArray(json, options, _data){
         var row = [];
         for (var x = 0; x < data.length; x++) {
             if(firstColName == '' && json['data']['columns'][x]['groupable']){
-                var name = json['data']['columns'][x]['display_name'] || 
+                var name = json['data']['columns'][x]['display_name'] ||
                 json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
@@ -780,4 +780,31 @@ function adjustTableWidth(table, thArray, selector='[data-indexrow]', offset=0){
         }
     }
     return headerWidth;
+}
+
+function hideShowTableCols(id){
+    var table = document.querySelector(`[data-componentid='${id}']`)
+    var json = DataMessenger.responses[id];
+    var cols = json['data']['columns'];
+    const thList = table.headerElement.childNodes;
+    const trList = table.childNodes;
+    console.log(table.childNodes);
+    for (var i = 0; i < thList.length; i++) {
+        if(!cols[i]['is_visible']){
+            thList[i].classList.add('chata-hidden');
+        }else{
+            thList[i].classList.remove('chata-hidden');
+        }
+    }
+
+    for (var i = 0; i < trList.length; i++) {
+        var tdList = trList[i].childNodes;
+        for (var x = 0; x < tdList.length; x++) {
+            if(!cols[x]['is_visible']){
+                tdList[x].classList.add('chata-hidden');
+            }else{
+                tdList[x].classList.remove('chata-hidden');
+            }
+        }
+    }
 }

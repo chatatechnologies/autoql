@@ -21,6 +21,8 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
         var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
         jsonResponse['data']['columns'][i]['name'];
+        var isVisible = jsonResponse['data']['columns'][i]['is_visible']
+        || false;
         var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
@@ -49,6 +51,9 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         th.appendChild(arrow);
         header.appendChild(th);
         thArray.push(th);
+        if(!isVisible){
+            th.classList.add('chata-hidden');
+        }
     }
     header.classList.add('table-header');
     // table.appendChild(header);
@@ -60,9 +65,14 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
                 data[x], jsonResponse['data']['columns'][x],
                 options
             );
+            var isVisible = jsonResponse['data']['columns'][x]['is_visible']
+            || false;
             var td = document.createElement('td');
             td.textContent = value;
             tr.appendChild(td);
+            if(!isVisible){
+                td.classList.add('chata-hidden');
+            }
         }
         if(action == 'replace'){
             tr.setAttribute('data-indexrow', i);
