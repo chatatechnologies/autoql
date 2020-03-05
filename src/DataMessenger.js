@@ -487,6 +487,7 @@ DataMessenger.createHeader = function(){
 DataMessenger.sendDrilldownMessage = function(
     json, indexData, options, context='DataMessenger',
     responseRenderer=undefined, loading=undefined){
+    var queryId = json['data']['query_id'];
     var obj = {};
     if(indexData != -1){
         for (var i = 0; i < getGroupableCount(json); i++) {
@@ -498,15 +499,30 @@ DataMessenger.sendDrilldownMessage = function(
 
     const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
+      : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
+    let data;
 
-    const data = {
-        query_id: json['data']['query_id'],
-        group_bys: obj,
-        username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-        customer_id: options.authentication.customerId || "",
-        user_id: options.authentication.userId || "",
-        debug: options.autoQLConfig.debug
+    if(options.authentication.demo){
+        data = {
+            query_id, queryId,
+            group_bys: obj,
+            username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+            customer_id: options.authentication.customerId || "",
+            user_id: options.authentication.userId || "",
+            debug: options.autoQLConfig.debug
+        }
+    }else{
+        var cols = [];
+        for(var [key, value] of Object.entries(obj)){
+            cols.push({
+                name: key,
+                value: value
+            })
+        }
+        data = {
+            debug: options.autoQLConfig.debug,
+            columns: cols
+        }
     }
 
     if(context == 'DataMessenger'){
@@ -625,18 +641,18 @@ DataMessenger.showColumnEditor = function(id){
     saveButton.onclick = function(event){
         var inputs = container.getElementsByClassName('m-checkbox__input');
         var data = [];
+        var table = document.querySelector(`[data-componentid='${id}']`);
+        var thArray = table.headerElement.getElementsByTagName('th');
+        console.log(thArray);
         for (var i = 0; i < inputs.length; i++) {
-            console.log(inputs[i].checked);
-            console.log(inputs[i].dataset.colName);
-            console.log(inputs[i].dataset.colIndex);
             data.push({
                 name: inputs[i].dataset.colName,
                 is_visible: inputs[i].checked
             })
             json['data']['columns'][i]['is_visible'] = inputs[i].checked;
-            hideShowTableCols(id);
+            hideShowTableCols(table);
+            adjustTableWidth(table, thArray, json['data']['columns']);
         }
-        console.log(data);
         DataMessenger.putCall(data, function(response){
             modal.close();
             console.log(response);
@@ -2132,6 +2148,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var table = document.createElement('table');
     var header = document.createElement('tr');
     var groupField = getGroupableField(jsonResponse);
+    var cols = jsonResponse['data']['columns'];
     containerMessage.classList.add('chat-single-message-container');
     containerMessage.classList.add('response');
     messageBubble.classList.add('chat-message-bubble');
@@ -2161,11 +2178,14 @@ DataMessenger.putTableResponse = function(jsonResponse){
     table.setAttribute('data-componentid', idRequest);
     var dataLines = jsonResponse['data']['rows'];
     var thArray = [];
-    for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
-            jsonResponse['data']['columns'][i]['name'];
-        var isVisible = jsonResponse['data']['columns'][i]['is_visible']
-        || false;
+    for (var i = 0; i < cols.length; i++) {
+        var colStr = cols[i]['display_name'] ||
+            cols[i]['name'];
+        var isVisible = true;
+        if('is_visible' in cols[i]){
+            isVisible = cols[i]['is_visible']
+            || false;
+        }
         var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
@@ -2174,7 +2194,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
         arrow.classList.add('tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column');
-        col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
+        col.setAttribute('data-type', cols[i]['type']);
         col.setAttribute('data-index', i);
         var divFilter = document.createElement('div');
         var filter = document.createElement('input');
@@ -2184,7 +2204,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
         filter.classList.add('filter-input');
         filter.setAttribute('data-dataid', idRequest);
         filter.setAttribute('data-inputindex', i);
-        filter.colType = jsonResponse['data']['columns'][i]['type'];
+        filter.colType = cols[i]['type'];
         filter.onkeyup = function(event){
             var _table = document.querySelector(`[data-componentid='${idRequest}']`);
             var rows = applyFilter(idRequest);
@@ -2206,10 +2226,13 @@ DataMessenger.putTableResponse = function(jsonResponse){
         var data = dataLines[i];
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
-            var isVisible = jsonResponse['data']['columns'][x]['is_visible']
-            || false;
+            var isVisible = true;
+            if('is_visible' in cols[x]){
+                isVisible = cols[x]['is_visible']
+                || false;
+            }
             value = formatData(
-                data[x], jsonResponse['data']['columns'][x],
+                data[x], cols[x],
                 DataMessenger.options
             );
             var td = document.createElement('td');
@@ -2234,7 +2257,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     containerMessage.appendChild(messageBubble);
     DataMessenger.drawerContent.appendChild(containerMessage);
 
-    var headerWidth = adjustTableWidth(table, thArray);
+    var headerWidth = adjustTableWidth(table, thArray, cols);
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;

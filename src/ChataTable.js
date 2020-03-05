@@ -3,6 +3,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     var table = document.createElement('table');
     var header = document.createElement('tr');
     var thArray = [];
+    var cols = jsonResponse['data']['columns'];
     table.classList.add(tableClass);
     oldComponent.parentElement.parentElement.classList.remove(
         'chata-hidden-scrollbox'
@@ -18,11 +19,14 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     }
     var dataLines = jsonResponse['data']['rows'];
 
-    for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
-        jsonResponse['data']['columns'][i]['name'];
-        var isVisible = jsonResponse['data']['columns'][i]['is_visible']
-        || false;
+    for (var i = 0; i < cols.length; i++) {
+        var colStr = cols[i]['display_name'] ||
+        cols[i]['name'];
+        var isVisible = true;
+        if('is_visible' in cols[i]){
+            isVisible = cols[i]['is_visible']
+            || false;
+        }
         var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
@@ -31,7 +35,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         arrow.classList.add('tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column');
-        col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
+        col.setAttribute('data-type', cols[i]['type']);
         col.setAttribute('data-index', i);
 
         var divFilter = document.createElement('div');
@@ -39,7 +43,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         divFilter.classList.add('tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
-        filter.colType = jsonResponse['data']['columns'][i]['type'];
+        filter.colType = cols[i]['type'];
         filter.onkeyup = function(event){
             var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
             var rows = applyFilter(oldComponent.dataset.componentid);
@@ -62,11 +66,14 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
             value = formatData(
-                data[x], jsonResponse['data']['columns'][x],
+                data[x], cols[x],
                 options
             );
-            var isVisible = jsonResponse['data']['columns'][x]['is_visible']
-            || false;
+            var isVisible = true;
+            if('is_visible' in cols[x]){
+                isVisible = cols[x]['is_visible']
+                || false;
+            }
             var td = document.createElement('td');
             td.textContent = value;
             tr.appendChild(td);
@@ -102,7 +109,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         // oldComponent.parentElement.appendChild(header);
         oldComponent.appendChild(table);
     }
-    let headerWidth = adjustTableWidth(table, thArray, selector);
+    let headerWidth = adjustTableWidth(table, thArray, cols, selector);
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;
@@ -234,7 +241,8 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         oldComponent.appendChild(table);
         selector = '[data-indexrowrenderer]';
     }
-    let headerWidth = adjustTableWidth(table, thArray, selector, 25);
+    var cols = jsonResponse['data']['columns'];
+    let headerWidth = adjustTableWidth(table, thArray, cols, selector, 25);
     table.style.width = (headerWidth) + 'px';
     header.style.width = (headerWidth) + 'px';
     table.headerElement = header;

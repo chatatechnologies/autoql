@@ -753,38 +753,41 @@ const getSupportedDisplayTypes = response => {
     return ['table']
 }
 
-function adjustTableWidth(table, thArray, selector='[data-indexrow]', offset=0){
+function adjustTableWidth(table, thArray, cols,
+    selector='[data-indexrow]', offset=0){
+
     var headerWidth = 0;
     var rowsElements = table.querySelectorAll(selector);
-    for (var i = 0; i < 1; i++) {
-        var tdEl = rowsElements[i].getElementsByTagName('td');
-        var sizes = [];
-        for (var x = 0; x < tdEl.length; x++) {
-            const div = document.createElement('div')
-            div.innerHTML = thArray[x].textContent;
-            div.style.display = 'inline-block';
-            div.style.position = 'absolute';
-            div.style.visibility = 'hidden';
-            document.body.appendChild(div);
+    var tdEl = rowsElements[0].getElementsByTagName('td');
+    var sizes = [];
+    for (var x = 0; x < tdEl.length; x++) {
+        const div = document.createElement('div')
+        div.innerHTML = thArray[x].textContent;
+        div.style.display = 'inline-block';
+        div.style.position = 'absolute';
+        div.style.visibility = 'hidden';
+        document.body.appendChild(div);
 
-            w = tdEl[x].offsetWidth;
-            if(div.offsetWidth > tdEl[x].offsetWidth){
-                w = div.offsetWidth + 70;
-            }
-            w += offset;
-            thArray[x].style.width = (w) + 'px';
-            tdEl[x].style.width = (w) + 'px';
+        w = tdEl[x].offsetWidth;
+        if('is_visible' in cols[x] && !cols[x]['is_visible'])continue;
 
-            headerWidth += w;
-            document.body.removeChild(div);
+
+        if(div.offsetWidth > tdEl[x].offsetWidth){
+            w = div.offsetWidth + 70;
         }
+        w += offset;
+        thArray[x].style.width = (w) + 'px';
+        tdEl[x].style.width = (w) + 'px';
+
+        headerWidth += w;
+        document.body.removeChild(div);
     }
+
     return headerWidth;
 }
 
-function hideShowTableCols(id){
-    var table = document.querySelector(`[data-componentid='${id}']`)
-    var json = DataMessenger.responses[id];
+function hideShowTableCols(table){
+    var json = DataMessenger.responses[table.dataset.componentid];
     var cols = json['data']['columns'];
     const thList = table.headerElement.childNodes;
     const trList = table.childNodes;
