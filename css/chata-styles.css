@@ -1551,6 +1551,11 @@ text.x-axis-label, text.y-axis-label {
     right: 20px;
 }
 
+#react-paginate .pagination-next.disabled, #react-paginate .pagination-previous.disabled {
+    opacity: .5;
+    pointer-events: none;
+}
+
 .chata-btn {
     border-radius: 4px;
     cursor: pointer;

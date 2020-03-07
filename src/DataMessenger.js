@@ -203,113 +203,25 @@ DataMessenger.createQueryTips = function(){
 
         if(event.keyCode == 13 && this.value){
 
-            console.log(this.value);
-            var temp = [
-                'list all sales',
-                'Sales per month last year',
-                'Total sales this year',
-                'All sales per customer',
-                'Sales per service per month',
-                'All Sales last year',
-                'Sales for porcelain sink',
-                'Sales per product per month',
-                'Sales per year',
-                'All sales over $1000',
-            ]
             var chatBarLoadingSpinner = document.createElement('div');
+            var searchVal = this.value;
             var spinnerLoader = document.createElement('div');
-            var queryTipListContainer = document.createElement('div');
-            var paginationContainer = document.createElement('div');
-            var pagination = document.createElement('ul');
-            var paginationPrevious = document.createElement('li');
-            var aPrevious = document.createElement('a');
-            var aNext = document.createElement('a');
-            var paginationNext = document.createElement('li');
-
-            const pageSize = 10;
-            const pages = 10;
-            aPrevious.textContent = '←';
-            aNext.textContent = '→';
-
-            paginationContainer.setAttribute('id', 'react-paginate')
-            paginationContainer.classList.add('animated-item')
-            paginationContainer.classList.add('pagination')
-            paginationPrevious.classList.add('pagination-previous')
-            paginationNext.classList.add('pagination-next')
-            paginationPrevious.appendChild(aPrevious);
-            paginationNext.appendChild(aNext);
-
-            pagination.appendChild(paginationPrevious);
-
             spinnerLoader.classList.add('spinner-loader');
             chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
-            queryTipListContainer.classList.add('query-tip-list-container');
             chatBarLoadingSpinner.appendChild(spinnerLoader);
             textBar.appendChild(chatBarLoadingSpinner);
-            var interval = setInterval(function(){
-                textBar.removeChild(chatBarLoadingSpinner);
-                clearInterval(interval);
-                var delay = 0.08;
-                for (var i = 0; i < temp.length; i++) {
-                    var item = document.createElement('div');
-                    item.classList.add('animated-item');
-                    item.classList.add('query-tip-item');
-                    item.innerHTML = temp[i];
-                    item.style.animationDelay = (delay * i) + 's';
-                    item.onclick = function(event){
-                        chataInput = document.getElementById('chata-input');
-                        DataMessenger.tabsAnimation('flex', 'block');
-                        DataMessenger.queryTipsAnimation('none');
-                        chataInput.focus();
-                        var selectedQuery = event.target.textContent;
-                        var subQuery = '';
-                        console.log(selectedQuery);
-                        var index = 0;
-                        var int = setInterval(function () {
-                            subQuery += selectedQuery[index];
-                            console.log(selectedQuery[index]);
-                            if(index >= selectedQuery.length){
-                                clearInterval(int);
-                                var ev = new KeyboardEvent('keypress', {
-                                    keyCode: 13,
-                                    type: "keypress",
-                                    which: 13
-                                });
-                                chataInput.dispatchEvent(ev)
-                            }else{
-                                chataInput.value = subQuery;
-                            }
-                            index++;
-                        }, 85);
+            var options = DataMessenger.options;
+            const URL = options.authentication.demo
+              ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
+              : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=1`;
 
-                    }
-                    queryTipListContainer.appendChild(item);
-                }
-                queryTipsResultContainer.innerHTML = '';
-                queryTipsResultContainer.appendChild(queryTipListContainer);
-                for (var i = 0; i < 5; i++) {
-                    var li = document.createElement('li')
-                    var a = document.createElement('a')
-                    if(i == 0){
-                        li.classList.add('selected')
-                    }
-                    li.appendChild(a)
-                    if(i == 2){
-                        li.classList.add('break');
-                        a.textContent = '...';
-                    }else{
-                        a.textContent = (i+1);
-                    }
-                    pagination.appendChild(li)
-                }
-                pagination.appendChild(paginationNext);
-                paginationContainer.appendChild(pagination);
-                container.appendChild(paginationContainer)
-                if(DataMessenger.pagination){
-                    container.removeChild(DataMessenger.pagination);
-                }
-                DataMessenger.pagination = paginationContainer;
-            }, 600);
+            DataMessenger.safetynetCall(URL, function(response, s){
+                textBar.removeChild(chatBarLoadingSpinner);
+                console.log(response);
+                DataMessenger.putRelatedQueries(
+                    response, queryTipsResultContainer, container
+                );
+            }, DataMessenger.options);
         }
     }
 
@@ -320,6 +232,137 @@ DataMessenger.createQueryTips = function(){
     input.setAttribute('placeholder', 'Enter a topic');
     DataMessenger.queryTips = container;
     DataMessenger.drawerContent.appendChild(container);
+}
+
+DataMessenger.putRelatedQueries = function(
+    response, queryTipsResultContainer, container){
+    var delay = 0.08;
+    var list = response.data.items;
+    var queryTipListContainer = document.createElement('div');
+    var paginationContainer = document.createElement('div');
+    var pagination = document.createElement('ul');
+    var paginationPrevious = document.createElement('li');
+    var aPrevious = document.createElement('a');
+    var aNext = document.createElement('a');
+    var paginationNext = document.createElement('li');
+    var options = DataMessenger.options
+    var nextPath = response.data.pagination.next_url;
+    var previousPath = response.data.pagination.previous_url;
+    var nextUrl = `${options.authentication.domain}${nextPath}`;
+    var previousUrl = `${options.authentication.domain}${previousPath}`;
+
+    console.log(nextUrl);
+    console.log(previousUrl);
+
+
+    const pageSize = response.data.pagination.page_size;
+    const totalItems = response.data.pagination.total_items;
+    const pages = response.data.pagination.total_pages;
+    console.log('TOTAL PAGES: ' + pages);
+    aPrevious.textContent = '←';
+    aNext.textContent = '→';
+
+    paginationContainer.setAttribute('id', 'react-paginate')
+    paginationContainer.classList.add('animated-item')
+    paginationContainer.classList.add('pagination')
+    paginationPrevious.classList.add('pagination-previous')
+    paginationNext.classList.add('pagination-next')
+    paginationPrevious.appendChild(aPrevious);
+    paginationNext.appendChild(aNext);
+
+    pagination.appendChild(paginationPrevious);
+
+    queryTipListContainer.classList.add('query-tip-list-container');
+
+    if(!nextPath){
+        paginationNext.classList.add('disabled');
+    }
+
+    if(!previousPath){
+        paginationPrevious.classList.add('disabled');
+    }
+
+    paginationNext.onclick = (evt) => {
+        if(!evt.target.classList.contains('disabled')){
+            DataMessenger.safetynetCall(nextUrl, function(response, s){
+                console.log(response);
+                DataMessenger.putRelatedQueries(
+                    response, queryTipsResultContainer, container
+                );
+            }, DataMessenger.options);
+        }
+    }
+
+    paginationPrevious.onclick = (evt) => {
+        if(!evt.target.classList.contains('disabled')){
+            DataMessenger.safetynetCall(previousUrl, function(response, s){
+                console.log(response);
+                DataMessenger.putRelatedQueries(
+                    response, queryTipsResultContainer, container
+                );
+            }, DataMessenger.options);
+        }
+    }
+
+    for (var i = 0; i < list.length; i++) {
+        var item = document.createElement('div');
+        item.classList.add('animated-item');
+        item.classList.add('query-tip-item');
+        item.innerHTML = list[i];
+        item.style.animationDelay = (delay * i) + 's';
+        item.onclick = function(event){
+            chataInput = document.getElementById('chata-input');
+            DataMessenger.tabsAnimation('flex', 'block');
+            DataMessenger.queryTipsAnimation('none');
+            chataInput.focus();
+            var selectedQuery = event.target.textContent;
+            var subQuery = '';
+            console.log(selectedQuery);
+            var index = 0;
+            var int = setInterval(function () {
+                subQuery += selectedQuery[index];
+                console.log(selectedQuery[index]);
+                if(index >= selectedQuery.length){
+                    clearInterval(int);
+                    var ev = new KeyboardEvent('keypress', {
+                        keyCode: 13,
+                        type: "keypress",
+                        which: 13
+                    });
+                    chataInput.dispatchEvent(ev)
+                }else{
+                    chataInput.value = subQuery;
+                }
+                index++;
+            }, 85);
+
+        }
+        queryTipListContainer.appendChild(item);
+    }
+    queryTipsResultContainer.innerHTML = '';
+    queryTipsResultContainer.appendChild(queryTipListContainer);
+    for (var i = 0; i < 5; i++) {
+        var li = document.createElement('li')
+        var a = document.createElement('a')
+        if(i == 0){
+            li.classList.add('selected')
+        }
+        li.appendChild(a)
+        if(i == 2){
+            li.classList.add('break');
+            a.textContent = '...';
+        }else{
+            a.textContent = (i+1);
+        }
+        pagination.appendChild(li)
+    }
+    pagination.appendChild(paginationNext);
+    paginationContainer.appendChild(pagination);
+    container.appendChild(paginationContainer)
+    if(DataMessenger.pagination){
+        container.removeChild(DataMessenger.pagination);
+    }
+    DataMessenger.pagination = paginationContainer;
 }
 
 DataMessenger.createQueryTabs = function(){
