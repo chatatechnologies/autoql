@@ -113,6 +113,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     this.createQueryTabs();
     this.createQueryTips();
     this.registerEvents();
+    this.createResizeHandler();
 
     var isVisible = DataMessenger.options.isVisible;
     DataMessenger.openDrawer();
@@ -494,7 +495,65 @@ DataMessenger.createQueryTabs = function(){
     DataMessenger.rootElem.appendChild(tabs);
     DataMessenger.queryTabs = tabs;
     DataMessenger.queryTabsContainer = pageSwitcherContainer;
+}
 
+DataMessenger.createResizeHandler = function(){
+    var resize = document.createElement('div');
+    var startX, startY, startWidth, startHeight;
+    resize.classList.add('chata-drawer-resize-handle');
+    resize.classList.add(DataMessenger.options.placement);
+
+    function resizeItem(e) {
+        let newWidth;
+        let newHeight;
+        switch (DataMessenger.options.placement) {
+            case 'left':
+                newWidth = (startWidth + e.clientX - startX);
+                break;
+            case 'right':
+                newWidth = (startWidth + startX - e.clientX);
+                break;
+            case 'top':
+                newHeight = (startHeight + e.clientY - startY);
+                break;
+            case 'bottom':
+                newHeight = (startHeight + startY - e.clientY);
+                break;
+            default:
+
+        }
+        if(['left', 'right'].includes(DataMessenger.options.placement)){
+            DataMessenger.rootElem.style.width = newWidth + 'px';
+            DataMessenger.options.width = newWidth;
+        }else{
+            DataMessenger.rootElem.style.height = newHeight + 'px';
+            DataMessenger.options.width = newHeight;
+        }
+    }
+
+    function stopResize(e) {
+        window.removeEventListener('mousemove', resizeItem, false);
+        window.removeEventListener('mouseup', stopResize, false);
+    }
+
+    function initResize(e){
+        startX = e.clientX;
+        startY = e.clientY;
+        startWidth = parseInt(
+            document.defaultView.getComputedStyle(
+                DataMessenger.rootElem
+            ).width,10);
+        startHeight = parseInt(
+            document.defaultView.getComputedStyle(
+                DataMessenger.rootElem
+            ).height, 10);
+        window.addEventListener('mousemove', resizeItem, false);
+        window.addEventListener('mouseup', stopResize, false);
+    }
+
+    resize.addEventListener('mousedown', initResize, false);
+
+    DataMessenger.rootElem.appendChild(resize);
 }
 
 DataMessenger.tabsAnimation = function(displayNodes, displayBar){
