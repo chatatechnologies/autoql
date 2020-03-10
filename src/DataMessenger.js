@@ -211,15 +211,15 @@ DataMessenger.createQueryTips = function(){
             chatBarLoadingSpinner.appendChild(spinnerLoader);
             textBar.appendChild(chatBarLoadingSpinner);
             var options = DataMessenger.options;
-            const URL = options.authentication.demo
-              ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
-              : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=1`;
+            const URL = DataMessenger.getRelatedQueriesPath(
+                1, searchVal, DataMessenger.options
+            );
 
             DataMessenger.safetynetCall(URL, function(response, s){
                 textBar.removeChild(chatBarLoadingSpinner);
                 console.log(response);
                 DataMessenger.putRelatedQueries(
-                    response, queryTipsResultContainer, container
+                    response, queryTipsResultContainer, container, searchVal
                 );
             }, DataMessenger.options);
         }
@@ -234,8 +234,15 @@ DataMessenger.createQueryTips = function(){
     DataMessenger.drawerContent.appendChild(container);
 }
 
+DataMessenger.getRelatedQueriesPath = function(page, searchVal, options){
+    const url = options.authentication.demo
+      ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
+      : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
+      return url;
+}
+
 DataMessenger.putRelatedQueries = function(
-    response, queryTipsResultContainer, container){
+    response, queryTipsResultContainer, container, searchVal){
     var delay = 0.08;
     var list = response.data.items;
     var queryTipListContainer = document.createElement('div');
@@ -251,22 +258,20 @@ DataMessenger.putRelatedQueries = function(
     var nextUrl = `${options.authentication.domain}${nextPath}`;
     var previousUrl = `${options.authentication.domain}${previousPath}`;
 
-    console.log(nextUrl);
-    console.log(previousUrl);
-
 
     const pageSize = response.data.pagination.page_size;
     const totalItems = response.data.pagination.total_items;
     const pages = response.data.pagination.total_pages;
+    const currentPage = response.data.pagination.current_page;
     console.log('TOTAL PAGES: ' + pages);
     aPrevious.textContent = '←';
     aNext.textContent = '→';
 
-    paginationContainer.setAttribute('id', 'react-paginate')
-    paginationContainer.classList.add('animated-item')
-    paginationContainer.classList.add('pagination')
-    paginationPrevious.classList.add('pagination-previous')
-    paginationNext.classList.add('pagination-next')
+    paginationContainer.classList.add('chata-paginate');
+    paginationContainer.classList.add('animated-item');
+    paginationContainer.classList.add('pagination');
+    paginationPrevious.classList.add('pagination-previous');
+    paginationNext.classList.add('pagination-next');
     paginationPrevious.appendChild(aPrevious);
     paginationNext.appendChild(aNext);
 
@@ -285,9 +290,8 @@ DataMessenger.putRelatedQueries = function(
     paginationNext.onclick = (evt) => {
         if(!evt.target.classList.contains('disabled')){
             DataMessenger.safetynetCall(nextUrl, function(response, s){
-                console.log(response);
                 DataMessenger.putRelatedQueries(
-                    response, queryTipsResultContainer, container
+                    response, queryTipsResultContainer, container, searchVal
                 );
             }, DataMessenger.options);
         }
@@ -296,9 +300,8 @@ DataMessenger.putRelatedQueries = function(
     paginationPrevious.onclick = (evt) => {
         if(!evt.target.classList.contains('disabled')){
             DataMessenger.safetynetCall(previousUrl, function(response, s){
-                console.log(response);
                 DataMessenger.putRelatedQueries(
-                    response, queryTipsResultContainer, container
+                    response, queryTipsResultContainer, container, searchVal
                 );
             }, DataMessenger.options);
         }
@@ -317,7 +320,6 @@ DataMessenger.putRelatedQueries = function(
             chataInput.focus();
             var selectedQuery = event.target.textContent;
             var subQuery = '';
-            console.log(selectedQuery);
             var index = 0;
             var int = setInterval(function () {
                 subQuery += selectedQuery[index];
@@ -341,20 +343,101 @@ DataMessenger.putRelatedQueries = function(
     }
     queryTipsResultContainer.innerHTML = '';
     queryTipsResultContainer.appendChild(queryTipListContainer);
-    for (var i = 0; i < 5; i++) {
+    // var totalPages = pages > 5 ? 5 : pages;
+    for (var i = 0; i < 3; i++) {
+        if(i >= pages)break;
         var li = document.createElement('li')
         var a = document.createElement('a')
-        if(i == 0){
+
+        if(i == currentPage-1){
             li.classList.add('selected')
         }
         li.appendChild(a)
+        pagination.appendChild(li);
+        // if(i == 2 && currentPage -1 < 2 && currentPage){
+        //     li.classList.add('break');
+        //     a.textContent = '...';
+        // }else{
+        // }
         if(i == 2){
-            li.classList.add('break');
-            a.textContent = '...';
+            if(currentPage == 3){
+                // li.classList.add('break');
+                a.textContent = currentPage;
+                var rightDots = document.createElement('li');
+                var aDots = document.createElement('a');
+                aDots.textContent = '...';
+                rightDots.appendChild(aDots);
+                pagination.appendChild(rightDots);
+                aDots.setAttribute('data-page', currentPage+1);
+                rightDots.onclick = (evt) => {
+                    var page = evt.target.dataset.page;
+                    var path = DataMessenger.getRelatedQueriesPath(
+                        page, searchVal, DataMessenger.options
+                    );
+                    DataMessenger.safetynetCall(path, function(response, s){
+                        DataMessenger.putRelatedQueries(
+                            response, queryTipsResultContainer,
+                            container, searchVal
+                        );
+                    }, DataMessenger.options);
+                }
+            }else if(currentPage > 3 && currentPage <= pages-2){
+                a.textContent = currentPage;
+                li.classList.add('selected');
+            }else{
+                a.textContent = '...';
+            }
         }else{
             a.textContent = (i+1);
         }
-        pagination.appendChild(li)
+
+        a.setAttribute('data-page', i+1);
+        li.onclick = (evt) => {
+            var page = evt.target.dataset.page;
+            var path = DataMessenger.getRelatedQueriesPath(
+                page, searchVal, DataMessenger.options
+            );
+            DataMessenger.safetynetCall(path, function(response, s){
+                DataMessenger.putRelatedQueries(
+                    response, queryTipsResultContainer, container, searchVal
+                );
+            }, DataMessenger.options);
+        }
+
+    }
+
+    if(pages > 3){
+        for (var i = pages-2; i < pages; i++) {
+            if(i >= pages)break;
+            var li = document.createElement('li')
+            var a = document.createElement('a')
+            if(i == currentPage-1){
+                li.classList.add('selected')
+            }
+            li.appendChild(a)
+            if(i == 2 && currentPage -1 != i){
+                li.classList.add('break');
+                a.textContent = '...';
+            }else{
+                a.textContent = (i+1);
+            }
+            a.setAttribute('data-page', i+1);
+
+            li.onclick = (evt) => {
+                var page = evt.target.dataset.page;
+                var path = DataMessenger.getRelatedQueriesPath(
+                    page, searchVal, DataMessenger.options
+                );
+                DataMessenger.safetynetCall(path, function(response, s){
+                    DataMessenger.putRelatedQueries(
+                        response, queryTipsResultContainer,
+                        container, searchVal
+                    );
+                }, DataMessenger.options);
+            }
+
+            pagination.appendChild(li);
+        }
     }
     pagination.appendChild(paginationNext);
     paginationContainer.appendChild(pagination);

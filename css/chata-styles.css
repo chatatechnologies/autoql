@@ -1466,7 +1466,7 @@ text.x-axis-label, text.y-axis-label {
     color: var(--chata-drawer-accent-color);
 }
 
-#react-paginate {
+.chata-paginate {
     position: relative;
     background: transparent;
     padding: 8px !important;
@@ -1475,7 +1475,7 @@ text.x-axis-label, text.y-axis-label {
     text-align: center;
 }
 
-#react-paginate ul {
+.chata-paginate ul {
     display: inline-block;
     padding-left: 0;
     margin-bottom: 0;
@@ -1486,20 +1486,20 @@ text.x-axis-label, text.y-axis-label {
     margin-inline-end: 0px;
     padding-inline-start: 40px;
 }
-#react-paginate .pagination-next, #react-paginate .pagination-previous {
+.chata-paginate .pagination-next, .chata-paginate .pagination-previous {
     position: absolute;
     font-size: 18px;
 }
 
-#react-paginate .pagination-previous {
+.chata-paginate .pagination-previous {
     left: 20px;
 }
 
-#react-paginate .pagination-next a, #react-paginate .pagination-previous a {
+.chata-paginate .pagination-next a, .chata-paginate .pagination-previous a {
     color: var(--chata-drawer-accent-color);
 }
 
-#react-paginate li {
+.chata-paginate li {
     display: inline-block;
     color: var(--chata-drawer-text-color-primary);
     cursor: pointer;
@@ -1513,7 +1513,7 @@ text.x-axis-label, text.y-axis-label {
     text-align: center;
 }
 
-#react-paginate li a {
+.chata-paginate li a {
     display: inline-block;
     color: var(--chata-drawer-text-color-primary);
     outline: none;
@@ -1524,17 +1524,17 @@ text.x-axis-label, text.y-axis-label {
     font-family: var(--chata-drawer-font-family),sans-serif !important;
 }
 
-#react-paginate li.selected {
+.chata-paginate li.selected {
     background: var(--chata-drawer-accent-color);
     border-radius: 50%;
     outline: none;
 }
 
-#react-paginate li.selected a {
+.chata-paginate li.selected a {
     color: #fff;
 }
 
-#react-paginate li {
+.chata-paginate li {
     display: inline-block;
     color: var(--chata-drawer-text-color-primary);
     cursor: pointer;
@@ -1547,11 +1547,11 @@ text.x-axis-label, text.y-axis-label {
     user-select: none;
 }
 
-#react-paginate .pagination-next {
+.chata-paginate .pagination-next {
     right: 20px;
 }
 
-#react-paginate .pagination-next.disabled, #react-paginate .pagination-previous.disabled {
+.chata-paginate .pagination-next.disabled, .chata-paginate .pagination-previous.disabled {
     opacity: .5;
     pointer-events: none;
 }
