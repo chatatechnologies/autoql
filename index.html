@@ -892,7 +892,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgzODcwMzgxLCAiZXhwIjogMTU4Mzg5MTk4MSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAicHVyZWZhY3RzLWRlbW8xIiwgInVzZXJfaWQiOiAidmlkaHlhQGNoYXRhLmFpIiwgImRpc3BsYXlfbmFtZSI6ICIiLCAicmVzb3VyY2VfYWNjZXNzIjogWyIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ==.fAvu-Nxb-sLwIBFCHPRmunShL4sg0X_ds7eRPvLJ73UhU6e0aCuFTTABAxLueiTiWn-ijUxCUBNxz3Z5k1xb72JG_jRaf-7LgY7AWA2Pp6sLbMTMqPSIzVbHBty11Am_pO8tJqZ8QrAQtrQqSbM_uRJnctTPJ8o_X1RNbPoK1FyNIB4fKsFA2wlXJjA5Q8VY25y2gONVc1m5FjfwXG8WpT6XHIl7TAK1jqurqrhmjHa4-vNrDsrsuD1zQtTYU7Q1Pq0JSI4M3LX2WpT6EoZG0OqrTxiC_c1ey3leh0iIkbQz7B70WFug-y69AgJNam_6QBgNfw7HkXP2eeAf09iYHg==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTgzOTU3OTY3LCAiZXhwIjogMTU4Mzk3OTU2NywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAicHVyZWZhY3RzLWRlbW8xIiwgInVzZXJfaWQiOiAidmlkaHlhQGNoYXRhLmFpIiwgImRpc3BsYXlfbmFtZSI6ICIiLCAicmVzb3VyY2VfYWNjZXNzIjogWyIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ==.pKypQINryXyyv6mKusGTuUmDBCuBY4XqnSmlmc9j40OPqmSbb7LVjYZRS9OXq6Ozy0_U4_tkNdjFRi3MvdP36S1MtJNJENfDKhwI6zdjSucXa96I1PEfpVGWwj_BBDxcYrNLefAuzBaqCao1lmYokM74p7WXYfDniTcl6SjyNSmgC94qbcc1t_kpVaCZJ0Ennb4kRKo3nzgahNTB47E_uJFc0OJ6VYiI6BGHyeW1aEEcQ57tbYX8ZZY7kSfgV0ltTWzvciJ5CD_s_SUHNHrvLz3eAAGKUYsu7sP01tCfjlbRQ_Gv2q1SQZcKZRqZZeZWcVSD5cXjGAOaUuQCuOh55A==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -908,9 +908,13 @@
             autoQLConfig: {
                 debug: true
             },
+            dataFormatting: {
+                // comparisonDisplay: 'RATIO'
+            },
+            // resizable: false,
             isVisible: false,
             shiftScreen: false,
-            placement: 'bottom',
+            placement: 'right',
             width: 550,
             height: 600,
             showHandle: true,

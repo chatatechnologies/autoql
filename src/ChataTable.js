@@ -76,6 +76,14 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
             }
             var td = document.createElement('td');
             td.textContent = value;
+            if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
+                options.dataFormatting.comparisonDisplay == 'PERCENT'){
+                if(parseFloat(value) >= 0){
+                    td.classList.add('comparison-value-positive');
+                }else{
+                    td.classList.add('comparison-value-negative');
+                }
+            }
             tr.appendChild(td);
             if(!isVisible){
                 td.classList.add('chata-hidden');
@@ -106,7 +114,6 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         }
         oldComponent.parentElement.replaceChild(table, oldComponent);
     }else{
-        // oldComponent.parentElement.appendChild(header);
         oldComponent.appendChild(table);
     }
     let headerWidth = adjustTableWidth(table, thArray, cols, selector);

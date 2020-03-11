@@ -775,9 +775,6 @@ tr td.chata-hidden{
     background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
-.table-response tr:first-child:hover {
-    background-color: transparent;
-}
 
 .table-response tr td{
     text-align: center;
@@ -1522,6 +1519,7 @@ text.x-axis-label, text.y-axis-label {
     line-height: 28px;
     font-size: 14px !important;
     font-family: var(--chata-drawer-font-family),sans-serif !important;
+    padding: 0px !important;
 }
 
 .chata-paginate li.selected {
@@ -1616,8 +1614,16 @@ text.x-axis-label, text.y-axis-label {
 
 .chata-drawer-resize-handle {
     position: absolute;
-    /* background: transparent; */
-    background: red;
+    background: transparent;
+    /* background: red; */
+}
+
+.comparison-value-positive {
+    color: #2ecc40 !important;
+}
+
+.comparison-value-negative {
+    color: #e80000 !important;
 }
 
 @-webkit-keyframes fadeIn {

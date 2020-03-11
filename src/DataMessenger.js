@@ -37,6 +37,7 @@ var DataMessenger = {
         placement: 'right',
         width: 500,
         height: 500,
+        resizable: true,
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
@@ -91,8 +92,6 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
 
     for (var [key, value] of Object.entries(options)) {
         if(typeof value !== 'object'){
-            console.log(typeof value);
-            console.log(value);
             DataMessenger.options[key] = value;
         }
     }
@@ -113,7 +112,9 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     this.createQueryTabs();
     this.createQueryTips();
     this.registerEvents();
-    this.createResizeHandler();
+    if(DataMessenger.options.resizable){
+        this.createResizeHandler();
+    }
 
     var isVisible = DataMessenger.options.isVisible;
     DataMessenger.openDrawer();
@@ -149,7 +150,6 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
                     interimTranscript += transcript;
                 }
             }
-            console.log(DataMessenger.finalTranscript);
             if(DataMessenger.finalTranscript !== ''){
                 var button = document.getElementById('chata-voice-record-button');
                 var chataInput = document.getElementById('chata-input');
@@ -218,7 +218,6 @@ DataMessenger.createQueryTips = function(){
 
             DataMessenger.safetynetCall(URL, function(response, s){
                 textBar.removeChild(chatBarLoadingSpinner);
-                console.log(response);
                 DataMessenger.putRelatedQueries(
                     response, queryTipsResultContainer, container, searchVal
                 );
@@ -264,7 +263,6 @@ DataMessenger.putRelatedQueries = function(
     const totalItems = response.data.pagination.total_items;
     const pages = response.data.pagination.total_pages;
     const currentPage = response.data.pagination.current_page;
-    console.log('TOTAL PAGES: ' + pages);
     aPrevious.textContent = '←';
     aNext.textContent = '→';
 
@@ -308,6 +306,19 @@ DataMessenger.putRelatedQueries = function(
         }
     }
 
+    const dotEvent = (evt) => {
+        var page = evt.target.dataset.page;
+        var path = DataMessenger.getRelatedQueriesPath(
+            page, searchVal, DataMessenger.options
+        );
+        DataMessenger.safetynetCall(path, function(response, s){
+            DataMessenger.putRelatedQueries(
+                response, queryTipsResultContainer,
+                container, searchVal
+            );
+        }, DataMessenger.options);
+    }
+
     for (var i = 0; i < list.length; i++) {
         var item = document.createElement('div');
         item.classList.add('animated-item');
@@ -324,7 +335,6 @@ DataMessenger.putRelatedQueries = function(
             var index = 0;
             var int = setInterval(function () {
                 subQuery += selectedQuery[index];
-                console.log(selectedQuery[index]);
                 if(index >= selectedQuery.length){
                     clearInterval(int);
                     var ev = new KeyboardEvent('keypress', {
@@ -355,14 +365,9 @@ DataMessenger.putRelatedQueries = function(
         }
         li.appendChild(a)
         pagination.appendChild(li);
-        // if(i == 2 && currentPage -1 < 2 && currentPage){
-        //     li.classList.add('break');
-        //     a.textContent = '...';
-        // }else{
-        // }
+
         if(i == 2){
             if(currentPage == 3){
-                // li.classList.add('break');
                 a.textContent = currentPage;
                 var rightDots = document.createElement('li');
                 var aDots = document.createElement('a');
@@ -370,40 +375,41 @@ DataMessenger.putRelatedQueries = function(
                 rightDots.appendChild(aDots);
                 pagination.appendChild(rightDots);
                 aDots.setAttribute('data-page', currentPage+1);
-                rightDots.onclick = (evt) => {
-                    var page = evt.target.dataset.page;
-                    var path = DataMessenger.getRelatedQueriesPath(
-                        page, searchVal, DataMessenger.options
-                    );
-                    DataMessenger.safetynetCall(path, function(response, s){
-                        DataMessenger.putRelatedQueries(
-                            response, queryTipsResultContainer,
-                            container, searchVal
-                        );
-                    }, DataMessenger.options);
-                }
+                rightDots.onclick = dotEvent;
             }else if(currentPage > 3 && currentPage <= pages-2){
                 a.textContent = currentPage;
                 li.classList.add('selected');
+                var rightDots = document.createElement('li');
+                var aDots = document.createElement('a');
+                aDots.textContent = '...';
+                rightDots.appendChild(aDots);
+                aDots.setAttribute('data-page', currentPage+1);
+
+                var leftDots = document.createElement('li');
+                var aDotsLeft = document.createElement('a');
+                aDotsLeft.textContent = '...';
+                leftDots.appendChild(aDotsLeft);
+                aDotsLeft.setAttribute('data-page', currentPage-1);
+                pagination.insertBefore(leftDots, li);
+                if(currentPage < pages-2){
+                    pagination.appendChild(rightDots);
+                }
+
+                rightDots.onclick = dotEvent;
+                leftDots.onclick = dotEvent;
+
             }else{
                 a.textContent = '...';
             }
         }else{
             a.textContent = (i+1);
         }
-
-        a.setAttribute('data-page', i+1);
-        li.onclick = (evt) => {
-            var page = evt.target.dataset.page;
-            var path = DataMessenger.getRelatedQueriesPath(
-                page, searchVal, DataMessenger.options
-            );
-            DataMessenger.safetynetCall(path, function(response, s){
-                DataMessenger.putRelatedQueries(
-                    response, queryTipsResultContainer, container, searchVal
-                );
-            }, DataMessenger.options);
+        if(currentPage > pages-2){
+            a.setAttribute('data-page', currentPage-1);
+        }else{
+            a.setAttribute('data-page', i+1);
         }
+        li.onclick = dotEvent;
 
     }
 
@@ -416,12 +422,7 @@ DataMessenger.putRelatedQueries = function(
                 li.classList.add('selected')
             }
             li.appendChild(a)
-            if(i == 2 && currentPage -1 != i){
-                li.classList.add('break');
-                a.textContent = '...';
-            }else{
-                a.textContent = (i+1);
-            }
+            a.textContent = (i+1);
             a.setAttribute('data-page', i+1);
 
             li.onclick = (evt) => {
@@ -527,7 +528,7 @@ DataMessenger.createResizeHandler = function(){
             DataMessenger.options.width = newWidth;
         }else{
             DataMessenger.rootElem.style.height = newHeight + 'px';
-            DataMessenger.options.width = newHeight;
+            DataMessenger.options.height = newHeight;
         }
     }
 
@@ -741,7 +742,6 @@ DataMessenger.sendDrilldownMessage = function(
             div.classList.add('chata-table-container');
             div.classList.add('chata-table-container-renderer');
             responseRenderer.appendChild(div);
-            console.log(response);
             if(response['data']['rows'].length == 0){
                 responseRenderer.innerHTML = `<div>No data found.</div>`;
             }
@@ -828,7 +828,6 @@ DataMessenger.showColumnEditor = function(id){
         var data = [];
         var table = document.querySelector(`[data-componentid='${id}']`);
         var thArray = table.headerElement.getElementsByTagName('th');
-        console.log(thArray);
         for (var i = 0; i < inputs.length; i++) {
             data.push({
                 name: inputs[i].dataset.colName,
@@ -840,7 +839,6 @@ DataMessenger.showColumnEditor = function(id){
         }
         DataMessenger.putCall(data, function(response){
             modal.close();
-            console.log(response);
         }, DataMessenger.options)
     }
 
@@ -967,7 +965,6 @@ DataMessenger.clickHandler = function(e){
         }
 
         if(e.target.classList.contains('suggestion')){
-            console.log(e.target.textContent);
             suggestionList.style.display = 'none';
             DataMessenger.sendMessage(chataInput, e.target.textContent);
         }
@@ -1040,7 +1037,6 @@ DataMessenger.clickHandler = function(e){
         if(e.target.classList.contains('column')){
             var container = e.target.parentElement.parentElement.parentElement;
             var tableElement = container.querySelector('[data-componentid]');
-            console.log(tableElement);
             if(e.target.nextSibling.classList.contains('up')){
                 e.target.nextSibling.classList.remove('up');
                 e.target.nextSibling.classList.add('down');
@@ -1114,7 +1110,6 @@ DataMessenger.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = DataMessenger.responses[idRequest];
-            console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             DataMessenger.refreshToolbarButtons(component, 'column');
             if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
@@ -1183,7 +1178,6 @@ DataMessenger.clickHandler = function(e){
             var cols = json['data']['columns']
 
             var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-            console.log(dataGrouped);
             createStackedColumnChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
         }
         if(e.target.classList.contains('stacked_bar_chart')){
@@ -1228,8 +1222,6 @@ DataMessenger.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = DataMessenger.responses[idRequest];
-            console.log('ID REQUESTS: ' + idRequest);
-            console.log('GROUPABLES: ' + getGroupableCount(json));
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             DataMessenger.refreshToolbarButtons(component, 'bar');
             var groupCount = getGroupableCount(json);
@@ -1284,7 +1276,6 @@ DataMessenger.clickHandler = function(e){
                 var cols = json['data']['columns'];
                 var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedLineChart(component, groups, dataGrouped, cols, DataMessenger.options);
-                console.log(dataGrouped);
             }else{
                 var values = formatDataToBarChart(json, DataMessenger.options);
                 var grouped = values[0];
@@ -1295,7 +1286,6 @@ DataMessenger.clickHandler = function(e){
         }
 
         if(e.target.classList.contains('heatmap')){
-            console.log(e.target.tagName);
             if(e.target.tagName == 'BUTTON'){
                 var idRequest = e.target.dataset.id;
             }
@@ -1493,7 +1483,6 @@ DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     if(messageBubble.classList.contains('chata-response-content-container')){
         messageBubble = messageBubble.parentElement;
     }
-    console.log(messageBubble);
     var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
     var toolbarRight = messageBubble.getElementsByClassName('right')[0];
     var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
@@ -1743,7 +1732,6 @@ DataMessenger.safetynetCall = function(url, callback, options){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4){
-            console.log(xhr.status);
             var jsonResponse = undefined;
             if(xhr.status == 200){
                 jsonResponse = JSON.parse(xhr.responseText);
@@ -1812,7 +1800,6 @@ DataMessenger.putCall = function(data, callback, options){
     }
     xhr.send(JSON.stringify(body));
 
-    console.log(url);
 }
 
 DataMessenger.ajaxCallPost = function(url, callback, data, options){
@@ -2212,7 +2199,6 @@ DataMessenger.getSupportedDisplayTypes = function(idRequest, ignore){
     var displayTypes = getSupportedDisplayTypes(json);
 
     for (var i = 0; i < displayTypes.length; i++) {
-        console.log(displayTypes[i]);
         if(displayTypes[i] == ignore)continue;
         if(displayTypes[i] == 'table'){
             buttons += DataMessenger.getTableButton(idRequest);
@@ -2334,6 +2320,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var header = document.createElement('tr');
     var groupField = getGroupableField(jsonResponse);
     var cols = jsonResponse['data']['columns'];
+    const options = DataMessenger.options.dataFormatting;
     containerMessage.classList.add('chat-single-message-container');
     containerMessage.classList.add('response');
     messageBubble.classList.add('chat-message-bubble');
@@ -2422,6 +2409,14 @@ DataMessenger.putTableResponse = function(jsonResponse){
             );
             var td = document.createElement('td');
             td.textContent = value;
+            if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
+                options.comparisonDisplay == 'PERCENT'){
+                if(parseFloat(value) >= 0){
+                    td.classList.add('comparison-value-positive');
+                }else{
+                    td.classList.add('comparison-value-negative');
+                }
+            }
             tr.appendChild(td);
             if(!isVisible){
                 td.classList.add('chata-hidden');

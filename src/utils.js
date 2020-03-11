@@ -38,11 +38,15 @@ function formatData(val, col, allOptions={}){
             }
         break;
         case 'PERCENT':
-            val = parseFloat(val) * 100;
-            if(!isNaN(val)){
-                value =  val.toFixed(2) + '%';
+            if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
+                val = parseFloat(val) * 100;
+                if(!isNaN(val)){
+                    value =  val.toFixed(2) + '%';
+                }else{
+                    value = '';
+                }
             }else{
-                value = '';
+                value = parseFloat(val).toFixed(4);
             }
         break;
         case 'QUANTITY':
@@ -55,11 +59,15 @@ function formatData(val, col, allOptions={}){
             }
         break;
         case 'RATIO':
-            val = parseFloat(val) * 100;
-            if(!isNaN(val)){
-                value =  val.toFixed(2) + '%';
+            if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
+                val = parseFloat(val) * 100;
+                if(!isNaN(val)){
+                    value =  val.toFixed(2) + '%';
+                }else{
+                    value = '';
+                }
             }else{
-                value = '';
+                value = parseFloat(val).toFixed(4);
             }
         break;
         case 'NUMBER':
