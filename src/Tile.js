@@ -15,28 +15,6 @@ function Tile(dashboard, options={}){
     var drilldownOriginal = document.createElement('div');
     var chartDrilldownContainer = document.createElement('div');
     var drilldownTable = document.createElement('div');
-    const vizToolbarSplit = htmlToElement(`
-        <div class="viz-toolbar split-view-btn" data-test="split-view-btn">
-            <button class="chata-toolbar-btn" data-tip="Turn On Split View">
-                <span data-test="chata-icon" class="chata-icon" style="color: inherit;">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M872 476H152c-4.4
-                        0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h720c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0-166h-56c-4.4 0-8 3.6-8 8v56c0
-                        4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 498h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0
-                        8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0-664h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0
-                        498h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM650 216h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0
-                        4.4 3.6 8 8 8zm56 592h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm-332 0h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0
-                        8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm-56-592h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-166 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4
-                        0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm332 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zM208 808h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0
-                        8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm332 0h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM152 382h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8
-                        3.6-8 8v56c0 4.4 3.6 8 8 8zm332 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zM208 642h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6
-                        8-8v-56c0-4.4-3.6-8-8-8zm332 0h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z">
-                        </path>
-                    </svg>
-                </span>
-            </button>
-        </div>
-    `);
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
     var modal = new Modal();
@@ -48,6 +26,26 @@ function Tile(dashboard, options={}){
         w: 3,
         h: 2,
         isSafetynet: false
+    }
+
+    chataDashboardItem.views = [
+        new TileView(
+            itemContent,
+            dashboard,
+            chataDashboardItem,
+            tileResponseContainer
+        )
+    ];
+
+    if(dashboard.options.splitView){
+        chataDashboardItem.views.push(
+            new TileView(
+                itemContent,
+                dashboard,
+                chataDashboardItem,
+                tileResponseContainer
+            )
+        )
     }
 
     for (var [key, value] of Object.entries(options)) {
@@ -252,61 +250,62 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.runQuery = function(){
-        var val = '';
-        if(chataDashboardItem.options.isSafetynet){
-            val = chataDashboardItem.getSafetynetValues().join(' ');
-        }else{
-            val = chataDashboardItem.inputQuery.value;
-        }
-        if(val != ''){
-            var loadingContainer = chataDashboardItem.showLoadingDots();
-            DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
-                function(json, statusCode){
-                var suggestions = json['full_suggestion'] ||
-                json['data']['replacements'];
-                if(suggestions.length > 0){
-                    const message = `
-                    Before I can try to find your answer,
-                    I need your help understanding a term you used that I don't see in your data.
-                    Click the dropdown to view suggestions so I can ensure you get the right data
-                    `
-                    chataDashboardItem.options.isSafetynet = true;
-                    tileResponseContainer.removeChild(loadingContainer);
-                    var suggestionArray = createSuggestionArray(json);
-                    var responseContentContainer = document.createElement('div');
-                    responseContentContainer.innerHTML = `<div>${message}</div>`;
-                    responseContentContainer.classList.add(
-                        'chata-response-content-container'
-                    );
-                    responseContentContainer.classList.add(
-                        'chata-response-content-center'
-                    );
-                    createSafetynetBody(
-                        responseContentContainer,
-                        suggestionArray
-                    );
-                    tileResponseContainer.appendChild(
-                        responseContentContainer
-                    );
-                    updateSelectWidth(responseContentContainer);
-                }else{
-                    chataDashboardItem.options.isSafetynet = false;
-                    DataMessenger.ajaxCall(val, function(json){
-                        tileResponseContainer.removeChild(loadingContainer);
-
-                        DataMessenger.responses[uuid] = json;
-                        var displayType = chataDashboardItem.options.displayType
-                        || 'table';
-                        chataDashboardItem.refreshItem(
-                            displayType,
-                            uuid,
-                            tileResponseContainer
-                        );
-                    }, dashboard.options);
-                }
-            }, dashboard.options)
-
-        }
+        chataDashboardItem.views[0].runQuery();
+        // var val = '';
+        // if(chataDashboardItem.options.isSafetynet){
+        //     val = chataDashboardItem.getSafetynetValues().join(' ');
+        // }else{
+        //     val = chataDashboardItem.inputQuery.value;
+        // }
+        // if(val != ''){
+        //     var loadingContainer = chataDashboardItem.showLoadingDots();
+        //     DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
+        //         function(json, statusCode){
+        //         var suggestions = json['full_suggestion'] ||
+        //         json['data']['replacements'];
+        //         if(suggestions.length > 0){
+        //             const message = `
+        //             Before I can try to find your answer,
+        //             I need your help understanding a term you used that I don't see in your data.
+        //             Click the dropdown to view suggestions so I can ensure you get the right data
+        //             `
+        //             chataDashboardItem.options.isSafetynet = true;
+        //             tileResponseContainer.removeChild(loadingContainer);
+        //             var suggestionArray = createSuggestionArray(json);
+        //             var responseContentContainer = document.createElement('div');
+        //             responseContentContainer.innerHTML = `<div>${message}</div>`;
+        //             responseContentContainer.classList.add(
+        //                 'chata-response-content-container'
+        //             );
+        //             responseContentContainer.classList.add(
+        //                 'chata-response-content-center'
+        //             );
+        //             createSafetynetBody(
+        //                 responseContentContainer,
+        //                 suggestionArray
+        //             );
+        //             tileResponseContainer.appendChild(
+        //                 responseContentContainer
+        //             );
+        //             updateSelectWidth(responseContentContainer);
+        //         }else{
+        //             chataDashboardItem.options.isSafetynet = false;
+        //             DataMessenger.ajaxCall(val, function(json){
+        //                 tileResponseContainer.removeChild(loadingContainer);
+        //
+        //                 DataMessenger.responses[uuid] = json;
+        //                 var displayType = chataDashboardItem.options.displayType
+        //                 || 'table';
+        //                 chataDashboardItem.refreshItem(
+        //                     displayType,
+        //                     uuid,
+        //                     tileResponseContainer
+        //                 );
+        //             }, dashboard.options);
+        //         }
+        //     }, dashboard.options)
+        //
+        // }
     }
 
     chataDashboardItem.getSafetynetValues = function(){
@@ -350,70 +349,76 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.createVizToolbar = function(json, uuid, ignoreDisplayType){
-        var displayTypes = chataDashboardItem.getDisplayTypes(json);
-        [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
-        function(e, index){
-            e.parentNode.removeChild(e);
-        });
-        // [].foreach.call(itemContent.querySelectorAll('.tile-'))
-        if(displayTypes.length > 1){
-            var vizToolbar = document.createElement('div');
-            vizToolbar.classList.add('tile-toolbar');
-            for (var i = 0; i < displayTypes.length; i++) {
-                if(displayTypes[i] == ignoreDisplayType)continue;
-                var button = document.createElement('button');
-                button.classList.add('chata-toolbar-btn');
-                button.setAttribute('data-displaytype', displayTypes[i]);
-                if(displayTypes[i] == 'table'){
-                    button.innerHTML = TABLE_ICON;
-                }
-                if(displayTypes[i] == 'column'){
-                    button.innerHTML = COLUMN_CHART_ICON;
-                }
-                if(displayTypes[i] == 'bar'){
-                    button.innerHTML = BAR_CHART_ICON;
-                }
-                if(displayTypes[i] == 'pie'){
-                    button.innerHTML = PIE_CHART_ICON;
-                }
-                if(displayTypes[i] == 'line'){
-                    button.innerHTML = LINE_CHART_ICON;
-                }
-                if(displayTypes[i] == 'date_pivot' || displayTypes[i] == 'pivot_column'){
-                    button.innerHTML = PIVOT_ICON;
-                }
-                if(displayTypes[i] == 'heatmap'){
-                    button.innerHTML = HEATMAP_ICON;
-                }
-                if(displayTypes[i] == 'bubble'){
-                    button.innerHTML = BUBBLE_CHART_ICON;
-                }
-                if(displayTypes[i] == 'stacked_column'){
-                    button.innerHTML = STACKED_COLUMN_CHART_ICON;
-                }
-                if(displayTypes[i] == 'stacked_bar'){
-                    button.innerHTML = STACKED_BAR_CHART_ICON;
-                }
-                if(button.innerHTML != ''){
-                    vizToolbar.appendChild(button);
-                    button.onclick = function(event){
-                        dashboard.lastEvent.type = 'display_type';
-                        dashboard.lastEvent.value = {
-                            tile: chataDashboardItem,
-                            displayType: chataDashboardItem.options.displayType
-                        };
-
-                        chataDashboardItem.options.displayType = this.dataset.displaytype;
-                        chataDashboardItem.refreshItem(
-                            this.dataset.displaytype,
-                            uuid,
-                            tileResponseContainer
-                        )
-                    }
-                }
-            }
-            itemContent.appendChild(vizToolbar);
-        }
+        // var displayTypes = chataDashboardItem.getDisplayTypes(json);
+        // [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
+        // function(e, index){
+        //     e.parentNode.removeChild(e);
+        // });
+        // if(dashboard.options.splitView){
+        //     itemContent.appendChild(vizToolbarSplit);
+        //     vizToolbarSplit.onclick = function(evt){
+        //         console.log('SPLIT');
+        //     }
+        // }
+        //
+        // if(displayTypes.length > 1){
+        //     var vizToolbar = document.createElement('div');
+        //     vizToolbar.classList.add('tile-toolbar');
+        //     for (var i = 0; i < displayTypes.length; i++) {
+        //         if(displayTypes[i] == ignoreDisplayType)continue;
+        //         var button = document.createElement('button');
+        //         button.classList.add('chata-toolbar-btn');
+        //         button.setAttribute('data-displaytype', displayTypes[i]);
+        //         if(displayTypes[i] == 'table'){
+        //             button.innerHTML = TABLE_ICON;
+        //         }
+        //         if(displayTypes[i] == 'column'){
+        //             button.innerHTML = COLUMN_CHART_ICON;
+        //         }
+        //         if(displayTypes[i] == 'bar'){
+        //             button.innerHTML = BAR_CHART_ICON;
+        //         }
+        //         if(displayTypes[i] == 'pie'){
+        //             button.innerHTML = PIE_CHART_ICON;
+        //         }
+        //         if(displayTypes[i] == 'line'){
+        //             button.innerHTML = LINE_CHART_ICON;
+        //         }
+        //         if(displayTypes[i] == 'date_pivot' || displayTypes[i] == 'pivot_column'){
+        //             button.innerHTML = PIVOT_ICON;
+        //         }
+        //         if(displayTypes[i] == 'heatmap'){
+        //             button.innerHTML = HEATMAP_ICON;
+        //         }
+        //         if(displayTypes[i] == 'bubble'){
+        //             button.innerHTML = BUBBLE_CHART_ICON;
+        //         }
+        //         if(displayTypes[i] == 'stacked_column'){
+        //             button.innerHTML = STACKED_COLUMN_CHART_ICON;
+        //         }
+        //         if(displayTypes[i] == 'stacked_bar'){
+        //             button.innerHTML = STACKED_BAR_CHART_ICON;
+        //         }
+        //         if(button.innerHTML != ''){
+        //             vizToolbar.appendChild(button);
+        //             button.onclick = function(event){
+        //                 dashboard.lastEvent.type = 'display_type';
+        //                 dashboard.lastEvent.value = {
+        //                     tile: chataDashboardItem,
+        //                     displayType: chataDashboardItem.options.displayType
+        //                 };
+        //
+        //                 chataDashboardItem.options.displayType = this.dataset.displaytype;
+        //                 chataDashboardItem.refreshItem(
+        //                     this.dataset.displaytype,
+        //                     uuid,
+        //                     tileResponseContainer
+        //                 )
+        //             }
+        //         }
+        //     }
+        //     itemContent.appendChild(vizToolbar);
+        // }
     }
 
     chataDashboardItem.getDisplayTypes = function(json){
@@ -421,270 +426,270 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.refreshItem = function(displayType, _uuid, view){
-        var json = DataMessenger.responses[_uuid];
-        var supportedDisplayTypes = getSupportedDisplayTypes(json);
-        container = view;
-        container.innerHTML = '';
-        if(!supportedDisplayTypes.includes(displayType)){
-            displayType = 'table';
-        }
-        if(supportedDisplayTypes.includes('suggestion')){
-            displayType = 'suggestion';
-        }
-        this.createVizToolbar(json, _uuid, displayType);
-        if(json['data']['rows'].length == 0){
-            container.innerHTML = 'No data found.';
-            return 0;
-        }
-        switch (displayType) {
-            case 'table':
-                var div = createTableContainer();
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('chata-table-scrollbox');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                if(json['data']['columns'].length == 1){
-                    var data = formatData(
-                        json['data']['rows'][0][0],
-                        json['data']['columns'][0],
-                        dashboard.options
-                    );
-                    container.innerHTML =
-                    `<div>
-                        <a class="single-value-response">${data}<a/>
-                    </div>`;
-                }else{
-                    var table = createTable(
-                        json, div, dashboard.options,
-                        'append', _uuid, 'table-response-renderer',
-                        '[data-indexrowrenderer]'
-                    );
-                    table.classList.add('renderer-table');
-                    scrollbox.insertBefore(table.headerElement, div);
-                }
-                break;
-            case 'bar':
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedBarChart(
-                    container,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createBarChart(
-                    container, grouped, cols,
-                    hasNegativeValues, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }
-
-                break;
-            case 'column':
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedColumnChart(
-                    container,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var cols = json['data']['columns'];
-                var hasNegativeValues = values[1];
-                createColumnChart(
-                    container, grouped, cols,
-                    hasNegativeValues, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }
-
-                break;
-            case 'line':
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedLineChart(
-                    container,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createLineChart(
-                    container, grouped, cols,
-                    hasNegativeValues, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }
-
-                break;
-            case 'heatmap':
-                var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
-
-                var cols = json['data']['columns'];
-
-                createHeatmap(container,
-                    labelsX, labelsY, values, cols,
-                    dashboard.options, false,
-                    'data-tilechart', true);
-                break;
-            case 'bubble':
-                var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
-
-                var cols = json['data']['columns'];
-                createBubbleChart(
-                    container, labelsX, labelsY,
-                    values, cols, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-                break;
-            case 'stacked_bar':
-                var data = cloneObject(json['data']['rows']);
-                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                groups = groups.sort().reverse();
-                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-                createStackedBarChart(
-                    container, dataGrouped, groups,
-                    subgroups, cols,
-                    dashboard.options, false,
-                    'data-tilechart', true
-                );
-                break;
-            case 'stacked_column':
-                var data = cloneObject(json['data']['rows']);
-                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                groups = groups.sort().reverse();
-                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-                createStackedColumnChart(
-                    container, dataGrouped, groups,
-                    subgroups, cols,
-                    dashboard.options, false,
-                    'data-tilechart', true
-                );
-                break;
-            case 'pie':
-                var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
-                var cols = json['data']['columns'];
-                createPieChart(container, data,
-                    dashboard.options, cols, false,
-                    'data-tilechart', true
-                );
-                break;
-            case 'pivot_column':
-                var div = createTableContainer();
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('chata-table-scrollbox');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                var pivotArray = [];
-                var columns = json['data']['columns'];
-                if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                    pivotArray = getDatePivotArray(
-                        json, dashboard.options, json['data']['rows']
-                    );
-                }else{
-                    pivotArray = getPivotColumnArray(
-                        json, dashboard.options, json['data']['rows']
-                    );
-                }
-                var table = createPivotTable(
-                    pivotArray, div, 'append', uuid, 'table-response-renderer'
-                );
-                scrollbox.insertBefore(table.headerElement, div);
-                break;
-            case 'suggestion':
-                var responseContentContainer = document.createElement('div');
-                responseContentContainer.classList.add(
-                    'chata-response-content-container'
-                );
-                responseContentContainer.classList.add(
-                    'chata-response-content-center'
-                );
-                responseContentContainer.innerHTML = `
-                    <div>I'm not sure what you mean by
-                        <strong>"${inputQuery.value}"</strong>. Did you mean:
-                    </div>`;
-                container.appendChild(responseContentContainer);
-                var rows = json['data']['rows'];
-                DataMessenger.createSuggestions(
-                    responseContentContainer,
-                    rows,
-                    'chata-suggestion-btn-renderer'
-                );
-                break;
-            default:
-            container.innerHTML = "Oops! We didn't understand that query.";
-        }
+        // var json = DataMessenger.responses[_uuid];
+        // var supportedDisplayTypes = getSupportedDisplayTypes(json);
+        // container = view;
+        // container.innerHTML = '';
+        // if(!supportedDisplayTypes.includes(displayType)){
+        //     displayType = 'table';
+        // }
+        // if(supportedDisplayTypes.includes('suggestion')){
+        //     displayType = 'suggestion';
+        // }
+        // this.createVizToolbar(json, _uuid, displayType);
+        // if(json['data']['rows'].length == 0){
+        //     container.innerHTML = 'No data found.';
+        //     return 0;
+        // }
+        // switch (displayType) {
+        //     case 'table':
+        //         var div = createTableContainer();
+        //         var scrollbox = document.createElement('div');
+        //         scrollbox.classList.add('chata-table-scrollbox');
+        //         scrollbox.appendChild(div);
+        //         container.appendChild(scrollbox);
+        //         if(json['data']['columns'].length == 1){
+        //             var data = formatData(
+        //                 json['data']['rows'][0][0],
+        //                 json['data']['columns'][0],
+        //                 dashboard.options
+        //             );
+        //             container.innerHTML =
+        //             `<div>
+        //                 <a class="single-value-response">${data}<a/>
+        //             </div>`;
+        //         }else{
+        //             var table = createTable(
+        //                 json, div, dashboard.options,
+        //                 'append', _uuid, 'table-response-renderer',
+        //                 '[data-indexrowrenderer]'
+        //             );
+        //             table.classList.add('renderer-table');
+        //             scrollbox.insertBefore(table.headerElement, div);
+        //         }
+        //         break;
+        //     case 'bar':
+        //     if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
+        //         var data = cloneObject(json['data']['rows']);
+        //
+        //         var groups = DataMessenger.getUniqueValues(data, row => row[0]);
+        //         groups = groups.sort();
+        //         for (var i = 0; i < data.length; i++) {
+        //             data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
+        //         }
+        //         for (var i = 0; i < groups.length; i++) {
+        //             groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
+        //         }
+        //         var cols = json['data']['columns'];
+        //         var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
+        //         createGroupedBarChart(
+        //             container,
+        //             groups,
+        //             dataGrouped,
+        //             cols,
+        //             dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //     }else{
+        //         var values = formatDataToBarChart(json, dashboard.options);
+        //         var grouped = values[0];
+        //         var hasNegativeValues = values[1];
+        //         var cols = json['data']['columns'];
+        //         createBarChart(
+        //             container, grouped, cols,
+        //             hasNegativeValues, dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //     }
+        //
+        //         break;
+        //     case 'column':
+        //     if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
+        //         var data = cloneObject(json['data']['rows']);
+        //
+        //         var groups = DataMessenger.getUniqueValues(data, row => row[0]);
+        //         groups = groups.sort();
+        //         for (var i = 0; i < data.length; i++) {
+        //             data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
+        //         }
+        //         for (var i = 0; i < groups.length; i++) {
+        //             groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
+        //         }
+        //         var cols = json['data']['columns'];
+        //         var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
+        //         createGroupedColumnChart(
+        //             container,
+        //             groups,
+        //             dataGrouped,
+        //             cols,
+        //             dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //     }else{
+        //         var values = formatDataToBarChart(json, dashboard.options);
+        //         var grouped = values[0];
+        //         var cols = json['data']['columns'];
+        //         var hasNegativeValues = values[1];
+        //         createColumnChart(
+        //             container, grouped, cols,
+        //             hasNegativeValues, dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //     }
+        //
+        //         break;
+        //     case 'line':
+        //     if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
+        //         var data = cloneObject(json['data']['rows']);
+        //
+        //         var groups = DataMessenger.getUniqueValues(data, row => row[0]);
+        //         groups = groups.sort();
+        //         for (var i = 0; i < data.length; i++) {
+        //             data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
+        //         }
+        //         for (var i = 0; i < groups.length; i++) {
+        //             groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
+        //         }
+        //         var cols = json['data']['columns'];
+        //         var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
+        //         createGroupedLineChart(
+        //             container,
+        //             groups,
+        //             dataGrouped,
+        //             cols,
+        //             dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //     }else{
+        //         var values = formatDataToBarChart(json, dashboard.options);
+        //         var grouped = values[0];
+        //         var hasNegativeValues = values[1];
+        //         var cols = json['data']['columns'];
+        //         createLineChart(
+        //             container, grouped, cols,
+        //             hasNegativeValues, dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //     }
+        //
+        //         break;
+        //     case 'heatmap':
+        //         var values = formatDataToHeatmap(json, dashboard.options);
+        //         var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
+        //         var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
+        //         labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
+        //         labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
+        //
+        //         var cols = json['data']['columns'];
+        //
+        //         createHeatmap(container,
+        //             labelsX, labelsY, values, cols,
+        //             dashboard.options, false,
+        //             'data-tilechart', true);
+        //         break;
+        //     case 'bubble':
+        //         var values = formatDataToHeatmap(json, dashboard.options);
+        //         var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
+        //         var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
+        //         labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
+        //         labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
+        //
+        //         var cols = json['data']['columns'];
+        //         createBubbleChart(
+        //             container, labelsX, labelsY,
+        //             values, cols, dashboard.options,
+        //             false, 'data-tilechart',
+        //             true
+        //         );
+        //         break;
+        //     case 'stacked_bar':
+        //         var data = cloneObject(json['data']['rows']);
+        //         var groups = DataMessenger.getUniqueValues(data, row => row[1]);
+        //         groups = groups.sort().reverse();
+        //         var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
+        //         var cols = json['data']['columns'];
+        //         var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
+        //         createStackedBarChart(
+        //             container, dataGrouped, groups,
+        //             subgroups, cols,
+        //             dashboard.options, false,
+        //             'data-tilechart', true
+        //         );
+        //         break;
+        //     case 'stacked_column':
+        //         var data = cloneObject(json['data']['rows']);
+        //         var groups = DataMessenger.getUniqueValues(data, row => row[1]);
+        //         groups = groups.sort().reverse();
+        //         var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
+        //         var cols = json['data']['columns'];
+        //         var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
+        //         createStackedColumnChart(
+        //             container, dataGrouped, groups,
+        //             subgroups, cols,
+        //             dashboard.options, false,
+        //             'data-tilechart', true
+        //         );
+        //         break;
+        //     case 'pie':
+        //         var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
+        //         var cols = json['data']['columns'];
+        //         createPieChart(container, data,
+        //             dashboard.options, cols, false,
+        //             'data-tilechart', true
+        //         );
+        //         break;
+        //     case 'pivot_column':
+        //         var div = createTableContainer();
+        //         var scrollbox = document.createElement('div');
+        //         scrollbox.classList.add('chata-table-scrollbox');
+        //         scrollbox.appendChild(div);
+        //         container.appendChild(scrollbox);
+        //         var pivotArray = [];
+        //         var columns = json['data']['columns'];
+        //         if(columns[0].type === 'DATE' &&
+        //         columns[0].name.includes('month')){
+        //             pivotArray = getDatePivotArray(
+        //                 json, dashboard.options, json['data']['rows']
+        //             );
+        //         }else{
+        //             pivotArray = getPivotColumnArray(
+        //                 json, dashboard.options, json['data']['rows']
+        //             );
+        //         }
+        //         var table = createPivotTable(
+        //             pivotArray, div, 'append', uuid, 'table-response-renderer'
+        //         );
+        //         scrollbox.insertBefore(table.headerElement, div);
+        //         break;
+        //     case 'suggestion':
+        //         var responseContentContainer = document.createElement('div');
+        //         responseContentContainer.classList.add(
+        //             'chata-response-content-container'
+        //         );
+        //         responseContentContainer.classList.add(
+        //             'chata-response-content-center'
+        //         );
+        //         responseContentContainer.innerHTML = `
+        //             <div>I'm not sure what you mean by
+        //                 <strong>"${inputQuery.value}"</strong>. Did you mean:
+        //             </div>`;
+        //         container.appendChild(responseContentContainer);
+        //         var rows = json['data']['rows'];
+        //         DataMessenger.createSuggestions(
+        //             responseContentContainer,
+        //             rows,
+        //             'chata-suggestion-btn-renderer'
+        //         );
+        //         break;
+        //     default:
+        //     container.innerHTML = "Oops! We didn't understand that query.";
+        // }
     }
 
     modal.addEvent('click', function(e){
@@ -1038,4 +1043,496 @@ function Tile(dashboard, options={}){
     }
 
     return chataDashboardItem;
+}
+
+function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContainer){
+    var obj = this
+    var reponseUUID = uuidv4();
+    var vizToolbarSplit = htmlToElement(`
+        <div class="tile-toolbar split-view-btn">
+            <button class="chata-toolbar-btn">
+                <span class="chata-icon" style="color: inherit;">
+                    ${SPLIT_VIEW}
+                </span>
+            </button>
+        </div>
+    `);
+
+    obj.runQuery = () => {
+        var val = '';
+        if(chataDashboardItem.options.isSafetynet){
+            val = chataDashboardItem.getSafetynetValues().join(' ');
+        }else{
+            val = chataDashboardItem.inputQuery.value;
+        }
+        if(val != ''){
+            var loadingContainer = chataDashboardItem.showLoadingDots();
+            DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
+                function(json, statusCode){
+                var suggestions = json['full_suggestion'] ||
+                json['data']['replacements'];
+                if(suggestions.length > 0){
+                    const message = `
+                    Before I can try to find your answer,
+                    I need your help understanding a term you used that
+                    I don't see in your data.
+                    Click the dropdown to view suggestions so
+                    I can ensure you get the right data
+                    `
+                    chataDashboardItem.options.isSafetynet = true;
+                    tileResponseContainer.removeChild(loadingContainer);
+                    var suggestionArray = createSuggestionArray(json);
+                    var responseContentContainer = document.createElement(
+                        'div'
+                    );
+                    responseContentContainer.innerHTML = `
+                        <div>${message}</div>
+                    `;
+                    responseContentContainer.classList.add(
+                        'chata-response-content-container'
+                    );
+                    responseContentContainer.classList.add(
+                        'chata-response-content-center'
+                    );
+                    createSafetynetBody(
+                        responseContentContainer,
+                        suggestionArray
+                    );
+                    tileResponseContainer.appendChild(
+                        responseContentContainer
+                    );
+                    updateSelectWidth(responseContentContainer);
+                }else{
+                    chataDashboardItem.options.isSafetynet = false;
+                    DataMessenger.ajaxCall(val, function(json){
+                        tileResponseContainer.removeChild(loadingContainer);
+
+                        DataMessenger.responses[reponseUUID] = json;
+                        var displayType =
+                        chataDashboardItem.options.displayType
+                        || 'table';
+                        obj.refreshItem(
+                            displayType,
+                            reponseUUID,
+                            tileResponseContainer
+                        );
+                    }, dashboard.options);
+                }
+            }, dashboard.options)
+
+        }
+    }
+
+    obj.refreshItem = (displayType, _uuid, view) => {
+        var json = DataMessenger.responses[_uuid];
+        var supportedDisplayTypes = getSupportedDisplayTypes(json);
+        container = view;
+        container.innerHTML = '';
+        if(!supportedDisplayTypes.includes(displayType)){
+            displayType = 'table';
+        }
+        if(supportedDisplayTypes.includes('suggestion')){
+            displayType = 'suggestion';
+        }
+        obj.createVizToolbar(json, _uuid, displayType);
+        if(json['data']['rows'].length == 0){
+            container.innerHTML = 'No data found.';
+            return 0;
+        }
+        switch (displayType) {
+            case 'table':
+                var div = createTableContainer();
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add('chata-table-scrollbox');
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
+                if(json['data']['columns'].length == 1){
+                    var data = formatData(
+                        json['data']['rows'][0][0],
+                        json['data']['columns'][0],
+                        dashboard.options
+                    );
+                    container.innerHTML =
+                    `<div>
+                        <a class="single-value-response">${data}<a/>
+                    </div>`;
+                }else{
+                    var table = createTable(
+                        json, div, dashboard.options,
+                        'append', _uuid, 'table-response-renderer',
+                        '[data-indexrowrenderer]'
+                    );
+                    table.classList.add('renderer-table');
+                    scrollbox.insertBefore(table.headerElement, div);
+                }
+                break;
+            case 'bar':
+            if(json['data']['display_type'] == 'compare_table'
+                || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = DataMessenger.getUniqueValues(
+                    data, row => row[0]
+                );
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0],
+                        DataMessenger.options
+                    );
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(
+                        groups[i],
+                        json['data']['columns'][0],
+                        DataMessenger.options
+                    )
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = DataMessenger.formatCompareData(
+                    json['data']['columns'], data, groups
+                );
+                createGroupedBarChart(
+                    container,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
+                var values = formatDataToBarChart(json, dashboard.options);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var cols = json['data']['columns'];
+                createBarChart(
+                    container, grouped, cols,
+                    hasNegativeValues, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }
+
+                break;
+            case 'column':
+            if(json['data']['display_type'] == 'compare_table'
+                || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = DataMessenger.getUniqueValues(
+                    data, row => row[0]
+                );
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0],
+                        DataMessenger.options
+                    );
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i],
+                        json['data']['columns'][0],
+                        DataMessenger.options
+                    )
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = DataMessenger.formatCompareData(
+                    json['data']['columns'],
+                    data,
+                    groups
+                );
+                createGroupedColumnChart(
+                    container,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
+                var values = formatDataToBarChart(json, dashboard.options);
+                var grouped = values[0];
+                var cols = json['data']['columns'];
+                var hasNegativeValues = values[1];
+                createColumnChart(
+                    container, grouped, cols,
+                    hasNegativeValues, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }
+
+                break;
+            case 'line':
+            if(json['data']['display_type'] == 'compare_table'
+                || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = DataMessenger.getUniqueValues(
+                    data, row => row[0]
+                );
+
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0],
+                        DataMessenger.options
+                    );
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(
+                        groups[i],
+                        json['data']['columns'][0],
+                        DataMessenger.options
+                    );
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = DataMessenger.formatCompareData(
+                    json['data']['columns'], data, groups
+                );
+                createGroupedLineChart(
+                    container,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
+                var values = formatDataToBarChart(json, dashboard.options);
+                var grouped = values[0];
+                var hasNegativeValues = values[1];
+                var cols = json['data']['columns'];
+                createLineChart(
+                    container, grouped, cols,
+                    hasNegativeValues, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }
+
+                break;
+            case 'heatmap':
+                var values = formatDataToHeatmap(json, dashboard.options);
+                var labelsX = DataMessenger.getUniqueValues(
+                    values, row => row.unformatX
+                );
+                var labelsY = DataMessenger.getUniqueValues(
+                    values, row => row.unformatY
+                );
+                labelsY = formatLabels(
+                    labelsY, json['data']['columns'][0], dashboard.options
+                );
+                labelsX = formatLabels(
+                    labelsX, json['data']['columns'][1], dashboard.options
+                );
+
+                var cols = json['data']['columns'];
+
+                createHeatmap(container,
+                    labelsX, labelsY, values, cols,
+                    dashboard.options, false,
+                    'data-tilechart', true);
+                break;
+            case 'bubble':
+                var values = formatDataToHeatmap(json, dashboard.options);
+                var labelsX = DataMessenger.getUniqueValues(
+                    values, row => row.unformatX
+                );
+                var labelsY = DataMessenger.getUniqueValues(
+                    values, row => row.unformatY
+                );
+                labelsY = formatLabels(
+                    labelsY, json['data']['columns'][0], dashboard.options
+                );
+                labelsX = formatLabels(
+                    labelsX, json['data']['columns'][1], dashboard.options
+                );
+
+                var cols = json['data']['columns'];
+                createBubbleChart(
+                    container, labelsX, labelsY,
+                    values, cols, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+                break;
+            case 'stacked_bar':
+                var data = cloneObject(json['data']['rows']);
+                var groups = DataMessenger.getUniqueValues(
+                    data, row => row[1]
+                );
+                groups = groups.sort().reverse();
+                var subgroups = DataMessenger.getUniqueValues(
+                    data, row => row[0]
+                );
+                var cols = json['data']['columns'];
+                var dataGrouped = DataMessenger.format3dData(
+                    json['data']['columns'], data, groups
+                );
+                createStackedBarChart(
+                    container, dataGrouped, groups,
+                    subgroups, cols,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                break;
+            case 'stacked_column':
+                var data = cloneObject(json['data']['rows']);
+                var groups = DataMessenger.getUniqueValues(
+                    data, row => row[1]
+                );
+                groups = groups.sort().reverse();
+                var subgroups = DataMessenger.getUniqueValues(
+                    data, row => row[0]
+                );
+                var cols = json['data']['columns'];
+                var dataGrouped = DataMessenger.format3dData(
+                    json['data']['columns'], data, groups
+                );
+                createStackedColumnChart(
+                    container, dataGrouped, groups,
+                    subgroups, cols,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                break;
+            case 'pie':
+                var data = DataMessenger.groupBy(
+                    json['data']['rows'], row => row[0]
+                );
+                var cols = json['data']['columns'];
+                createPieChart(container, data,
+                    dashboard.options, cols, false,
+                    'data-tilechart', true
+                );
+                break;
+            case 'pivot_column':
+                var div = createTableContainer();
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add('chata-table-scrollbox');
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
+                var pivotArray = [];
+                var columns = json['data']['columns'];
+                if(columns[0].type === 'DATE' &&
+                columns[0].name.includes('month')){
+                    pivotArray = getDatePivotArray(
+                        json, dashboard.options, json['data']['rows']
+                    );
+                }else{
+                    pivotArray = getPivotColumnArray(
+                        json, dashboard.options, json['data']['rows']
+                    );
+                }
+                var table = createPivotTable(
+                    pivotArray, div, 'append', _uuid, 'table-response-renderer'
+                );
+                scrollbox.insertBefore(table.headerElement, div);
+                break;
+            case 'suggestion':
+                var responseContentContainer = document.createElement('div');
+                responseContentContainer.classList.add(
+                    'chata-response-content-container'
+                );
+                responseContentContainer.classList.add(
+                    'chata-response-content-center'
+                );
+                responseContentContainer.innerHTML = `
+                    <div>I'm not sure what you mean by
+                        <strong>"${inputQuery.value}"</strong>. Did you mean:
+                    </div>`;
+                container.appendChild(responseContentContainer);
+                var rows = json['data']['rows'];
+                DataMessenger.createSuggestions(
+                    responseContentContainer,
+                    rows,
+                    'chata-suggestion-btn-renderer'
+                );
+                break;
+            default:
+            container.innerHTML = "Oops! We didn't understand that query.";
+        }
+    }
+
+    obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {
+        var displayTypes = chataDashboardItem.getDisplayTypes(json);
+        [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
+        function(e, index){
+            e.parentNode.removeChild(e);
+        });
+        if(dashboard.options.splitView){
+            itemContent.appendChild(vizToolbarSplit);
+            vizToolbarSplit.onclick = function(evt){
+                console.log('SPLIT');
+            }
+        }
+
+        if(displayTypes.length > 1){
+            var vizToolbar = document.createElement('div');
+            vizToolbar.classList.add('tile-toolbar');
+            for (var i = 0; i < displayTypes.length; i++) {
+                if(displayTypes[i] == ignoreDisplayType)continue;
+                var button = document.createElement('button');
+                button.classList.add('chata-toolbar-btn');
+                button.setAttribute('data-displaytype', displayTypes[i]);
+                if(displayTypes[i] == 'table'){
+                    button.innerHTML = TABLE_ICON;
+                }
+                if(displayTypes[i] == 'column'){
+                    button.innerHTML = COLUMN_CHART_ICON;
+                }
+                if(displayTypes[i] == 'bar'){
+                    button.innerHTML = BAR_CHART_ICON;
+                }
+                if(displayTypes[i] == 'pie'){
+                    button.innerHTML = PIE_CHART_ICON;
+                }
+                if(displayTypes[i] == 'line'){
+                    button.innerHTML = LINE_CHART_ICON;
+                }
+                if(displayTypes[i] == 'date_pivot'
+                    || displayTypes[i] == 'pivot_column'){
+                    button.innerHTML = PIVOT_ICON;
+                }
+                if(displayTypes[i] == 'heatmap'){
+                    button.innerHTML = HEATMAP_ICON;
+                }
+                if(displayTypes[i] == 'bubble'){
+                    button.innerHTML = BUBBLE_CHART_ICON;
+                }
+                if(displayTypes[i] == 'stacked_column'){
+                    button.innerHTML = STACKED_COLUMN_CHART_ICON;
+                }
+                if(displayTypes[i] == 'stacked_bar'){
+                    button.innerHTML = STACKED_BAR_CHART_ICON;
+                }
+                if(button.innerHTML != ''){
+                    vizToolbar.appendChild(button);
+                    button.onclick = function(event){
+                        dashboard.lastEvent.type = 'display_type';
+                        dashboard.lastEvent.value = {
+                            tile: chataDashboardItem,
+                            displayType: chataDashboardItem.options.displayType
+                        };
+
+                        chataDashboardItem.options.displayType =
+                        this.dataset.displaytype;
+                        chataDashboardItem.refreshItem(
+                            this.dataset.displaytype,
+                            uuid,
+                            tileResponseContainer
+                        )
+                    }
+                }
+            }
+            itemContent.appendChild(vizToolbar);
+        }
+    }
 }

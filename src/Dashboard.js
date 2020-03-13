@@ -60,6 +60,9 @@ function Dashboard(selector, options={}){
         executeOnMount:	true,
         executeOnStopEditing: true,
         notExecutedText: 'Hit "Execute" to run this dashboard',
+        splitView: true,
+        secondDisplayType: 'table',
+        secondDisplayPercentage: 25
     }
 
     if('authentication' in options){

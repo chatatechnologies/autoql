@@ -60,11 +60,30 @@
     border-radius: 6px;
     line-height: 28px;
     z-index: 10;
-    border: 1px solid #d3d3d352;
+    border: 1px solid hsla(0,0%,82.7%,.32);
     position: absolute;
     bottom: 7px;
     left: 10px;
 }
+
+.split-view-btn {
+    /* bottom: -23px; */
+    left: calc(50% - 20px);
+}
+
+.chata-toolbar-btn {
+    height: 28px;
+    width: 28px;
+    background: none;
+    border: none;
+    font-size: 16px;
+    line-height: 28px;
+    vertical-align: top;
+    color: inherit;
+    cursor: pointer;
+    outline: none!important;
+}
+
 .chata-dashboard-item.editing .item-content:hover .tile-toolbar{
     visibility: visible;
 }
