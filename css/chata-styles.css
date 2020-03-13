@@ -1626,6 +1626,43 @@ text.x-axis-label, text.y-axis-label {
     color: #e80000 !important;
 }
 
+.chata-tiny-popover-container {
+    z-index: 9999;
+    border: 1px solid hsla(0,0%,67.1%,.32);
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0,0,0,.15);
+    -webkit-transition: all .2s ease 0s!important;
+    transition: all .2s ease 0s!important;
+    position: absolute;
+    overflow: hidden;
+}
+
+.chata-context-menu {
+    background: var(--chata-drawer-background-color);
+    width: 150px;
+    padding: 10px 0;
+}
+
+.chata-context-menu-list {
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.chata-context-menu-list li {
+    color: var(--chata-response-text-color-primary);
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 20px;
+    cursor: pointer;
+}
+
+.chata-context-menu-list li:hover {
+    background: rgba(0,0,0,.05);
+}
+
 @-webkit-keyframes fadeIn {
   0% {
     opacity: 0;

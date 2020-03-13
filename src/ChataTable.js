@@ -58,6 +58,74 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         if(!isVisible){
             th.classList.add('chata-hidden');
         }
+        th.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+            let col;
+            if(e.target.tagName == 'DIV'){
+                col = e.target;
+            }else{
+                col = e.target.childNodes[0];
+            }
+            var popoverElements = document.querySelectorAll(
+                '.chata-tiny-popover-container'
+            );
+            [].forEach.call(popoverElements, function(e, i){
+                e.parentNode.removeChild(e);
+            })
+            var popoverContainer = htmlToElement(`
+                <div class="chata-tiny-popover-container">
+                </div>
+            `);
+            var popoverMenu = htmlToElement(`
+                <div class="chata-context-menu">
+                </div>
+            `)
+            var popoverList = htmlToElement(`
+                <ul class="chata-context-menu-list">
+                </ul>
+            `);
+
+            var popoverLi = htmlToElement(`
+                <li>Hide Column</li>
+            `)
+
+            popoverLi.onclick = function(evt){
+                document.body.removeChild(popoverContainer);
+                console.log(col.dataset.index);
+                var parameters = [];
+                var jsonCols = jsonResponse['data']['columns'];
+                for (var i = 0; i < jsonCols.length; i++) {
+                    var visibility = col.dataset.index == i ? false : true;
+                    if(col.dataset.index == i){
+                        visibility = false;
+                        jsonResponse.data.columns[i].is_visible = false;
+                    }else{
+                        visibility = jsonCols[i].is_visible;
+                    }
+                    parameters.push({
+                        name: jsonCols[i].name,
+                        is_visible: visibility
+                    })
+
+
+                }
+                DataMessenger.putCall(parameters, function(response){
+                    console.log(response);
+                    hideShowTableCols(table);
+                    adjustTableWidth(
+                        table, thArray, jsonResponse['data']['columns']
+                    );
+                }, DataMessenger.options)
+            }
+
+            popoverContainer.appendChild(popoverMenu);
+            popoverMenu.appendChild(popoverList);
+            popoverList.appendChild(popoverLi);
+
+            popoverContainer.style.left = mouseX(e) + 'px';
+            popoverContainer.style.top = mouseY(e) + 'px';
+            document.body.appendChild(popoverContainer);
+        })
     }
     header.classList.add('table-header');
     // table.appendChild(header);
