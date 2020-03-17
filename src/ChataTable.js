@@ -317,6 +317,7 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         selector = '[data-indexrowrenderer]';
     }
     var cols = jsonResponse['data']['columns'];
+    console.log(cols);
     let headerWidth = adjustTableWidth(table, thArray, cols, selector, 25);
     table.style.width = (headerWidth) + 'px';
     header.style.width = (headerWidth) + 'px';

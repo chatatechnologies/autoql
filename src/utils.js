@@ -777,7 +777,8 @@ function adjustTableWidth(table, thArray, cols,
         document.body.appendChild(div);
 
         w = tdEl[x].offsetWidth;
-        if('is_visible' in cols[x] && !cols[x]['is_visible'])continue;
+ 
+        if(cols[x] && 'is_visible' in cols[x] && !cols[x]['is_visible'])continue;
 
 
         if(div.offsetWidth > tdEl[x].offsetWidth){

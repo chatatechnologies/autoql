@@ -622,7 +622,7 @@ body{
 }
 
 .chata-hidden-scrollbox{
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .chata-table-scrollbox::-webkit-scrollbar-thumb {

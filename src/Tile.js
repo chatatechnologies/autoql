@@ -15,6 +15,15 @@ function Tile(dashboard, options={}){
     var drilldownOriginal = document.createElement('div');
     var chartDrilldownContainer = document.createElement('div');
     var drilldownTable = document.createElement('div');
+    var vizToolbarSplit = htmlToElement(`
+        <div class="tile-toolbar split-view-btn">
+            <button class="chata-toolbar-btn">
+                <span class="chata-icon" style="color: inherit;">
+                    ${SPLIT_VIEW}
+                </span>
+            </button>
+        </div>
+    `);
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
     var modal = new Modal();
@@ -30,7 +39,6 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.views = [
         new TileView(
-            itemContent,
             dashboard,
             chataDashboardItem,
             tileResponseContainer
@@ -40,7 +48,6 @@ function Tile(dashboard, options={}){
     if(dashboard.options.splitView){
         chataDashboardItem.views.push(
             new TileView(
-                itemContent,
                 dashboard,
                 chataDashboardItem,
                 tileResponseContainer
@@ -250,7 +257,17 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.runQuery = function(){
-        chataDashboardItem.views[0].runQuery();
+        tileResponseContainer.innerHTML = '';
+        chataDashboardItem.views.map(view => {
+            view.runQuery();
+        });
+        if(!dashboard.options.splitView){
+            itemContent.appendChild(vizToolbarSplit);
+            vizToolbarSplit.onclick = function(evt){
+                console.log('SPLIT');
+            }
+        }
+        // chataDashboardItem.views[0].runQuery();
         // var val = '';
         // if(chataDashboardItem.options.isSafetynet){
         //     val = chataDashboardItem.getSafetynetValues().join(' ');
@@ -423,273 +440,6 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.getDisplayTypes = function(json){
         return getSupportedDisplayTypes(json);
-    }
-
-    chataDashboardItem.refreshItem = function(displayType, _uuid, view){
-        // var json = DataMessenger.responses[_uuid];
-        // var supportedDisplayTypes = getSupportedDisplayTypes(json);
-        // container = view;
-        // container.innerHTML = '';
-        // if(!supportedDisplayTypes.includes(displayType)){
-        //     displayType = 'table';
-        // }
-        // if(supportedDisplayTypes.includes('suggestion')){
-        //     displayType = 'suggestion';
-        // }
-        // this.createVizToolbar(json, _uuid, displayType);
-        // if(json['data']['rows'].length == 0){
-        //     container.innerHTML = 'No data found.';
-        //     return 0;
-        // }
-        // switch (displayType) {
-        //     case 'table':
-        //         var div = createTableContainer();
-        //         var scrollbox = document.createElement('div');
-        //         scrollbox.classList.add('chata-table-scrollbox');
-        //         scrollbox.appendChild(div);
-        //         container.appendChild(scrollbox);
-        //         if(json['data']['columns'].length == 1){
-        //             var data = formatData(
-        //                 json['data']['rows'][0][0],
-        //                 json['data']['columns'][0],
-        //                 dashboard.options
-        //             );
-        //             container.innerHTML =
-        //             `<div>
-        //                 <a class="single-value-response">${data}<a/>
-        //             </div>`;
-        //         }else{
-        //             var table = createTable(
-        //                 json, div, dashboard.options,
-        //                 'append', _uuid, 'table-response-renderer',
-        //                 '[data-indexrowrenderer]'
-        //             );
-        //             table.classList.add('renderer-table');
-        //             scrollbox.insertBefore(table.headerElement, div);
-        //         }
-        //         break;
-        //     case 'bar':
-        //     if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-        //         var data = cloneObject(json['data']['rows']);
-        //
-        //         var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-        //         groups = groups.sort();
-        //         for (var i = 0; i < data.length; i++) {
-        //             data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-        //         }
-        //         for (var i = 0; i < groups.length; i++) {
-        //             groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-        //         }
-        //         var cols = json['data']['columns'];
-        //         var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-        //         createGroupedBarChart(
-        //             container,
-        //             groups,
-        //             dataGrouped,
-        //             cols,
-        //             dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //     }else{
-        //         var values = formatDataToBarChart(json, dashboard.options);
-        //         var grouped = values[0];
-        //         var hasNegativeValues = values[1];
-        //         var cols = json['data']['columns'];
-        //         createBarChart(
-        //             container, grouped, cols,
-        //             hasNegativeValues, dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //     }
-        //
-        //         break;
-        //     case 'column':
-        //     if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-        //         var data = cloneObject(json['data']['rows']);
-        //
-        //         var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-        //         groups = groups.sort();
-        //         for (var i = 0; i < data.length; i++) {
-        //             data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-        //         }
-        //         for (var i = 0; i < groups.length; i++) {
-        //             groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-        //         }
-        //         var cols = json['data']['columns'];
-        //         var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-        //         createGroupedColumnChart(
-        //             container,
-        //             groups,
-        //             dataGrouped,
-        //             cols,
-        //             dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //     }else{
-        //         var values = formatDataToBarChart(json, dashboard.options);
-        //         var grouped = values[0];
-        //         var cols = json['data']['columns'];
-        //         var hasNegativeValues = values[1];
-        //         createColumnChart(
-        //             container, grouped, cols,
-        //             hasNegativeValues, dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //     }
-        //
-        //         break;
-        //     case 'line':
-        //     if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-        //         var data = cloneObject(json['data']['rows']);
-        //
-        //         var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-        //         groups = groups.sort();
-        //         for (var i = 0; i < data.length; i++) {
-        //             data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-        //         }
-        //         for (var i = 0; i < groups.length; i++) {
-        //             groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-        //         }
-        //         var cols = json['data']['columns'];
-        //         var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-        //         createGroupedLineChart(
-        //             container,
-        //             groups,
-        //             dataGrouped,
-        //             cols,
-        //             dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //     }else{
-        //         var values = formatDataToBarChart(json, dashboard.options);
-        //         var grouped = values[0];
-        //         var hasNegativeValues = values[1];
-        //         var cols = json['data']['columns'];
-        //         createLineChart(
-        //             container, grouped, cols,
-        //             hasNegativeValues, dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //     }
-        //
-        //         break;
-        //     case 'heatmap':
-        //         var values = formatDataToHeatmap(json, dashboard.options);
-        //         var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-        //         var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-        //         labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
-        //         labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
-        //
-        //         var cols = json['data']['columns'];
-        //
-        //         createHeatmap(container,
-        //             labelsX, labelsY, values, cols,
-        //             dashboard.options, false,
-        //             'data-tilechart', true);
-        //         break;
-        //     case 'bubble':
-        //         var values = formatDataToHeatmap(json, dashboard.options);
-        //         var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-        //         var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-        //         labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
-        //         labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
-        //
-        //         var cols = json['data']['columns'];
-        //         createBubbleChart(
-        //             container, labelsX, labelsY,
-        //             values, cols, dashboard.options,
-        //             false, 'data-tilechart',
-        //             true
-        //         );
-        //         break;
-        //     case 'stacked_bar':
-        //         var data = cloneObject(json['data']['rows']);
-        //         var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-        //         groups = groups.sort().reverse();
-        //         var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-        //         var cols = json['data']['columns'];
-        //         var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-        //         createStackedBarChart(
-        //             container, dataGrouped, groups,
-        //             subgroups, cols,
-        //             dashboard.options, false,
-        //             'data-tilechart', true
-        //         );
-        //         break;
-        //     case 'stacked_column':
-        //         var data = cloneObject(json['data']['rows']);
-        //         var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-        //         groups = groups.sort().reverse();
-        //         var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-        //         var cols = json['data']['columns'];
-        //         var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-        //         createStackedColumnChart(
-        //             container, dataGrouped, groups,
-        //             subgroups, cols,
-        //             dashboard.options, false,
-        //             'data-tilechart', true
-        //         );
-        //         break;
-        //     case 'pie':
-        //         var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
-        //         var cols = json['data']['columns'];
-        //         createPieChart(container, data,
-        //             dashboard.options, cols, false,
-        //             'data-tilechart', true
-        //         );
-        //         break;
-        //     case 'pivot_column':
-        //         var div = createTableContainer();
-        //         var scrollbox = document.createElement('div');
-        //         scrollbox.classList.add('chata-table-scrollbox');
-        //         scrollbox.appendChild(div);
-        //         container.appendChild(scrollbox);
-        //         var pivotArray = [];
-        //         var columns = json['data']['columns'];
-        //         if(columns[0].type === 'DATE' &&
-        //         columns[0].name.includes('month')){
-        //             pivotArray = getDatePivotArray(
-        //                 json, dashboard.options, json['data']['rows']
-        //             );
-        //         }else{
-        //             pivotArray = getPivotColumnArray(
-        //                 json, dashboard.options, json['data']['rows']
-        //             );
-        //         }
-        //         var table = createPivotTable(
-        //             pivotArray, div, 'append', uuid, 'table-response-renderer'
-        //         );
-        //         scrollbox.insertBefore(table.headerElement, div);
-        //         break;
-        //     case 'suggestion':
-        //         var responseContentContainer = document.createElement('div');
-        //         responseContentContainer.classList.add(
-        //             'chata-response-content-container'
-        //         );
-        //         responseContentContainer.classList.add(
-        //             'chata-response-content-center'
-        //         );
-        //         responseContentContainer.innerHTML = `
-        //             <div>I'm not sure what you mean by
-        //                 <strong>"${inputQuery.value}"</strong>. Did you mean:
-        //             </div>`;
-        //         container.appendChild(responseContentContainer);
-        //         var rows = json['data']['rows'];
-        //         DataMessenger.createSuggestions(
-        //             responseContentContainer,
-        //             rows,
-        //             'chata-suggestion-btn-renderer'
-        //         );
-        //         break;
-        //     default:
-        //     container.innerHTML = "Oops! We didn't understand that query.";
-        // }
     }
 
     modal.addEvent('click', function(e){
@@ -1045,18 +795,13 @@ function Tile(dashboard, options={}){
     return chataDashboardItem;
 }
 
-function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContainer){
+function TileView(dashboard, chataDashboardItem,
+    tileResponseContainer){
     var obj = this
+    var tileWrapper = document.createElement('div');
+    tileWrapper.classList.add('chata-tile-wrapper');
+    obj.tileWrapper = tileWrapper;
     var reponseUUID = uuidv4();
-    var vizToolbarSplit = htmlToElement(`
-        <div class="tile-toolbar split-view-btn">
-            <button class="chata-toolbar-btn">
-                <span class="chata-icon" style="color: inherit;">
-                    ${SPLIT_VIEW}
-                </span>
-            </button>
-        </div>
-    `);
 
     obj.runQuery = () => {
         var val = '';
@@ -1098,7 +843,7 @@ function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContai
                         responseContentContainer,
                         suggestionArray
                     );
-                    tileResponseContainer.appendChild(
+                    tileWrapper.appendChild(
                         responseContentContainer
                     );
                     updateSelectWidth(responseContentContainer);
@@ -1114,7 +859,7 @@ function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContai
                         obj.refreshItem(
                             displayType,
                             reponseUUID,
-                            tileResponseContainer
+                            tileWrapper
                         );
                     }, dashboard.options);
                 }
@@ -1126,6 +871,7 @@ function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContai
     obj.refreshItem = (displayType, _uuid, view) => {
         var json = DataMessenger.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
+        tileResponseContainer.appendChild(view);
         container = view;
         container.innerHTML = '';
         if(!supportedDisplayTypes.includes(displayType)){
@@ -1134,7 +880,6 @@ function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContai
         if(supportedDisplayTypes.includes('suggestion')){
             displayType = 'suggestion';
         }
-        obj.createVizToolbar(json, _uuid, displayType);
         if(json['data']['rows'].length == 0){
             container.innerHTML = 'No data found.';
             return 0;
@@ -1459,20 +1204,15 @@ function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContai
             default:
             container.innerHTML = "Oops! We didn't understand that query.";
         }
+        obj.createVizToolbar(json, _uuid, displayType);
     }
 
     obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {
         var displayTypes = chataDashboardItem.getDisplayTypes(json);
-        [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
+        [].forEach.call(tileWrapper.querySelectorAll('.tile-toolbar'),
         function(e, index){
             e.parentNode.removeChild(e);
         });
-        if(dashboard.options.splitView){
-            itemContent.appendChild(vizToolbarSplit);
-            vizToolbarSplit.onclick = function(evt){
-                console.log('SPLIT');
-            }
-        }
 
         if(displayTypes.length > 1){
             var vizToolbar = document.createElement('div');
@@ -1524,15 +1264,17 @@ function TileView(itemContent, dashboard, chataDashboardItem, tileResponseContai
 
                         chataDashboardItem.options.displayType =
                         this.dataset.displaytype;
-                        chataDashboardItem.refreshItem(
+                        obj.refreshItem(
                             this.dataset.displaytype,
                             uuid,
-                            tileResponseContainer
+                            tileWrapper
                         )
                     }
                 }
             }
-            itemContent.appendChild(vizToolbar);
+            tileWrapper.appendChild(vizToolbar);
         }
     }
+
+    return obj;
 }
