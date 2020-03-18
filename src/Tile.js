@@ -34,7 +34,12 @@ function Tile(dashboard, options={}){
         displayType: 'table',
         w: 3,
         h: 2,
-        isSafetynet: false
+        isSafetynet: false,
+        isSplitView: false,
+    }
+
+    for (var [key, value] of Object.entries(options)) {
+        chataDashboardItem.options[key] = value;
     }
 
     chataDashboardItem.views = [
@@ -50,14 +55,12 @@ function Tile(dashboard, options={}){
             new TileView(
                 dashboard,
                 chataDashboardItem,
-                tileResponseContainer
+                tileResponseContainer,
+                true
             )
         )
     }
 
-    for (var [key, value] of Object.entries(options)) {
-        chataDashboardItem.options[key] = value;
-    }
     const notExecutedText = options.notExecutedText
     || dashboard.options.notExecutedText;
     const placeHolderText = `
@@ -173,6 +176,13 @@ function Tile(dashboard, options={}){
             startWidth: startWidth,
             startHeight: startHeight
         };
+        if(chataDashboardItem.options.isSplitView){
+            chataDashboardItem.views.map(view => {
+                view.refreshView(false);
+            })
+        }else{
+            chataDashboardItem.views[0].refreshView(false);
+        }
     }
 
     chataDashboardItem.itemContent = itemContent;
@@ -256,73 +266,87 @@ function Tile(dashboard, options={}){
         chataDashboardItem.inputQuery.focus();
     }
 
-    chataDashboardItem.runQuery = function(){
+    chataDashboardItem.runQuery = async() => {
         tileResponseContainer.innerHTML = '';
-        chataDashboardItem.views.map(view => {
-            view.runQuery();
-        });
-        if(!dashboard.options.splitView){
+        if(!chataDashboardItem.options.isSplitView){
+            chataDashboardItem.views[0].runQuery();
+
+        }else{
+            loadingContainer = chataDashboardItem.showLoadingDots();
+            var elements = []
+            for (var i = 0; i < chataDashboardItem.views.length; i++) {
+                await chataDashboardItem.views[i].runQuery(false, false);
+            }
+            tileResponseContainer.removeChild(loadingContainer);
+            chataDashboardItem.views.map(view => {
+                view.refreshView();
+                elements.push(view.tileWrapper);
+            });
+
+            Split(elements, {
+                direction: 'vertical',
+                sizes: [50, 50],
+                minSize: [0, 0],
+                gutterSize: 5,
+                cursor: 'row-resize',
+                onDragEnd: () => {
+                    chataDashboardItem.views.map(
+                        view => view.refreshView(false)
+                    );
+                }
+            })
+        }
+        if(dashboard.options.splitView){
             itemContent.appendChild(vizToolbarSplit);
             vizToolbarSplit.onclick = function(evt){
-                console.log('SPLIT');
+                tileResponseContainer.innerHTML = '';
+                if(!chataDashboardItem.options.isSplitView){
+
+                    chataDashboardItem.options.isSplitView = true;
+                    var splitContainer = document.createElement('div');
+                    var ids = [];
+
+                    chataDashboardItem.views.map(view => {
+                        if(view.isSecond){
+                            var viewUUID = view.uuid;
+                            var firstUUID = chataDashboardItem.views[0].uuid;
+                            DataMessenger.responses[viewUUID] = cloneObject(
+                                DataMessenger.responses[firstUUID]
+                            );
+                            view.internalDisplayType = 'table';
+                        }
+                        ids.push(view.tileWrapper);
+                        view.tileWrapper.classList.add('overflow');
+                        view.refreshView();
+                    });
+
+                    Split(ids, {
+                        direction: 'vertical',
+                        sizes: [50, 50],
+                        minSize: [0, 0],
+                        gutterSize: 5,
+                        cursor: 'row-resize',
+                        onDragEnd: () => {
+                            chataDashboardItem.views.map(
+                                view => view.refreshView(false)
+                            );
+                        }
+                    })
+
+                    chataDashboardItem.views.map(
+                        view => view.refreshView(false)
+                    );
+                }else{
+                    chataDashboardItem.views[0].tileWrapper.classList.remove(
+                        'overflow'
+                    );
+                    chataDashboardItem.views[0].tileWrapper
+                        .style.height = '100%';
+                    chataDashboardItem.options.isSplitView = false;
+                    chataDashboardItem.views[0].refreshView();
+                }
             }
         }
-        // chataDashboardItem.views[0].runQuery();
-        // var val = '';
-        // if(chataDashboardItem.options.isSafetynet){
-        //     val = chataDashboardItem.getSafetynetValues().join(' ');
-        // }else{
-        //     val = chataDashboardItem.inputQuery.value;
-        // }
-        // if(val != ''){
-        //     var loadingContainer = chataDashboardItem.showLoadingDots();
-        //     DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
-        //         function(json, statusCode){
-        //         var suggestions = json['full_suggestion'] ||
-        //         json['data']['replacements'];
-        //         if(suggestions.length > 0){
-        //             const message = `
-        //             Before I can try to find your answer,
-        //             I need your help understanding a term you used that I don't see in your data.
-        //             Click the dropdown to view suggestions so I can ensure you get the right data
-        //             `
-        //             chataDashboardItem.options.isSafetynet = true;
-        //             tileResponseContainer.removeChild(loadingContainer);
-        //             var suggestionArray = createSuggestionArray(json);
-        //             var responseContentContainer = document.createElement('div');
-        //             responseContentContainer.innerHTML = `<div>${message}</div>`;
-        //             responseContentContainer.classList.add(
-        //                 'chata-response-content-container'
-        //             );
-        //             responseContentContainer.classList.add(
-        //                 'chata-response-content-center'
-        //             );
-        //             createSafetynetBody(
-        //                 responseContentContainer,
-        //                 suggestionArray
-        //             );
-        //             tileResponseContainer.appendChild(
-        //                 responseContentContainer
-        //             );
-        //             updateSelectWidth(responseContentContainer);
-        //         }else{
-        //             chataDashboardItem.options.isSafetynet = false;
-        //             DataMessenger.ajaxCall(val, function(json){
-        //                 tileResponseContainer.removeChild(loadingContainer);
-        //
-        //                 DataMessenger.responses[uuid] = json;
-        //                 var displayType = chataDashboardItem.options.displayType
-        //                 || 'table';
-        //                 chataDashboardItem.refreshItem(
-        //                     displayType,
-        //                     uuid,
-        //                     tileResponseContainer
-        //                 );
-        //             }, dashboard.options);
-        //         }
-        //     }, dashboard.options)
-        //
-        // }
     }
 
     chataDashboardItem.getSafetynetValues = function(){
@@ -363,79 +387,6 @@ function Tile(dashboard, options={}){
 
     tilePlayBuytton.onclick = function(event){
         chataDashboardItem.runQuery();
-    }
-
-    chataDashboardItem.createVizToolbar = function(json, uuid, ignoreDisplayType){
-        // var displayTypes = chataDashboardItem.getDisplayTypes(json);
-        // [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
-        // function(e, index){
-        //     e.parentNode.removeChild(e);
-        // });
-        // if(dashboard.options.splitView){
-        //     itemContent.appendChild(vizToolbarSplit);
-        //     vizToolbarSplit.onclick = function(evt){
-        //         console.log('SPLIT');
-        //     }
-        // }
-        //
-        // if(displayTypes.length > 1){
-        //     var vizToolbar = document.createElement('div');
-        //     vizToolbar.classList.add('tile-toolbar');
-        //     for (var i = 0; i < displayTypes.length; i++) {
-        //         if(displayTypes[i] == ignoreDisplayType)continue;
-        //         var button = document.createElement('button');
-        //         button.classList.add('chata-toolbar-btn');
-        //         button.setAttribute('data-displaytype', displayTypes[i]);
-        //         if(displayTypes[i] == 'table'){
-        //             button.innerHTML = TABLE_ICON;
-        //         }
-        //         if(displayTypes[i] == 'column'){
-        //             button.innerHTML = COLUMN_CHART_ICON;
-        //         }
-        //         if(displayTypes[i] == 'bar'){
-        //             button.innerHTML = BAR_CHART_ICON;
-        //         }
-        //         if(displayTypes[i] == 'pie'){
-        //             button.innerHTML = PIE_CHART_ICON;
-        //         }
-        //         if(displayTypes[i] == 'line'){
-        //             button.innerHTML = LINE_CHART_ICON;
-        //         }
-        //         if(displayTypes[i] == 'date_pivot' || displayTypes[i] == 'pivot_column'){
-        //             button.innerHTML = PIVOT_ICON;
-        //         }
-        //         if(displayTypes[i] == 'heatmap'){
-        //             button.innerHTML = HEATMAP_ICON;
-        //         }
-        //         if(displayTypes[i] == 'bubble'){
-        //             button.innerHTML = BUBBLE_CHART_ICON;
-        //         }
-        //         if(displayTypes[i] == 'stacked_column'){
-        //             button.innerHTML = STACKED_COLUMN_CHART_ICON;
-        //         }
-        //         if(displayTypes[i] == 'stacked_bar'){
-        //             button.innerHTML = STACKED_BAR_CHART_ICON;
-        //         }
-        //         if(button.innerHTML != ''){
-        //             vizToolbar.appendChild(button);
-        //             button.onclick = function(event){
-        //                 dashboard.lastEvent.type = 'display_type';
-        //                 dashboard.lastEvent.value = {
-        //                     tile: chataDashboardItem,
-        //                     displayType: chataDashboardItem.options.displayType
-        //                 };
-        //
-        //                 chataDashboardItem.options.displayType = this.dataset.displaytype;
-        //                 chataDashboardItem.refreshItem(
-        //                     this.dataset.displaytype,
-        //                     uuid,
-        //                     tileResponseContainer
-        //                 )
-        //             }
-        //         }
-        //     }
-        //     itemContent.appendChild(vizToolbar);
-        // }
     }
 
     chataDashboardItem.getDisplayTypes = function(json){
@@ -796,82 +747,111 @@ function Tile(dashboard, options={}){
 }
 
 function TileView(dashboard, chataDashboardItem,
-    tileResponseContainer){
+    tileResponseContainer, isSecond=false){
     var obj = this
     var tileWrapper = document.createElement('div');
+    var responseUUID = uuidv4();
+
     tileWrapper.classList.add('chata-tile-wrapper');
+    tileWrapper.setAttribute('id', responseUUID);
+
+    obj.uuid = responseUUID;
     obj.tileWrapper = tileWrapper;
-    var reponseUUID = uuidv4();
+    obj.internalDisplayType = chataDashboardItem.options.displayType;
+    obj.isSecond = isSecond;
 
-    obj.runQuery = () => {
-        var val = '';
-        if(chataDashboardItem.options.isSafetynet){
-            val = chataDashboardItem.getSafetynetValues().join(' ');
-        }else{
-            val = chataDashboardItem.inputQuery.value;
-        }
-        if(val != ''){
-            var loadingContainer = chataDashboardItem.showLoadingDots();
-            DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
-                function(json, statusCode){
-                var suggestions = json['full_suggestion'] ||
-                json['data']['replacements'];
-                if(suggestions.length > 0){
-                    const message = `
-                    Before I can try to find your answer,
-                    I need your help understanding a term you used that
-                    I don't see in your data.
-                    Click the dropdown to view suggestions so
-                    I can ensure you get the right data
-                    `
-                    chataDashboardItem.options.isSafetynet = true;
-                    tileResponseContainer.removeChild(loadingContainer);
-                    var suggestionArray = createSuggestionArray(json);
-                    var responseContentContainer = document.createElement(
-                        'div'
-                    );
-                    responseContentContainer.innerHTML = `
-                        <div>${message}</div>
-                    `;
-                    responseContentContainer.classList.add(
-                        'chata-response-content-container'
-                    );
-                    responseContentContainer.classList.add(
-                        'chata-response-content-center'
-                    );
-                    createSafetynetBody(
-                        responseContentContainer,
-                        suggestionArray
-                    );
-                    tileWrapper.appendChild(
-                        responseContentContainer
-                    );
-                    updateSelectWidth(responseContentContainer);
-                }else{
-                    chataDashboardItem.options.isSafetynet = false;
-                    DataMessenger.ajaxCall(val, function(json){
-                        tileResponseContainer.removeChild(loadingContainer);
-
-                        DataMessenger.responses[reponseUUID] = json;
-                        var displayType =
-                        chataDashboardItem.options.displayType
-                        || 'table';
-                        obj.refreshItem(
-                            displayType,
-                            reponseUUID,
-                            tileWrapper
-                        );
-                    }, dashboard.options);
+    obj.runQuery = (showLoadingDots=true, refreshItem=true) => {
+        return new Promise(resolve => {
+            var val = '';
+            if(chataDashboardItem.options.isSafetynet){
+                val = chataDashboardItem.getSafetynetValues().join(' ');
+            }else{
+                val = chataDashboardItem.inputQuery.value;
+            }
+            if(val != ''){
+                let loadingContainer;
+                if(showLoadingDots){
+                    loadingContainer = chataDashboardItem.showLoadingDots();
                 }
-            }, dashboard.options)
+                DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
+                    function(json, statusCode){
+                    var suggestions = json['full_suggestion'] ||
+                    json['data']['replacements'];
+                    if(suggestions.length > 0){
+                        const message = `
+                        Before I can try to find your answer,
+                        I need your help understanding a term you used that
+                        I don't see in your data.
+                        Click the dropdown to view suggestions so
+                        I can ensure you get the right data
+                        `
+                        chataDashboardItem.options.isSafetynet = true;
+                        if(loadingContainer){
+                            tileResponseContainer.removeChild(loadingContainer);
+                        }
+                        var suggestionArray = createSuggestionArray(json);
+                        var responseContentContainer = document.createElement(
+                            'div'
+                        );
+                        responseContentContainer.innerHTML = `
+                            <div>${message}</div>
+                        `;
+                        responseContentContainer.classList.add(
+                            'chata-response-content-container'
+                        );
+                        responseContentContainer.classList.add(
+                            'chata-response-content-center'
+                        );
+                        createSafetynetBody(
+                            responseContentContainer,
+                            suggestionArray
+                        );
+                        tileWrapper.appendChild(
+                            responseContentContainer
+                        );
+                        updateSelectWidth(responseContentContainer);
+                        resolve();
+                    }else{
+                        chataDashboardItem.options.isSafetynet = false;
+                        DataMessenger.ajaxCall(val, function(json){
+                            if(loadingContainer){
+                                tileResponseContainer.removeChild(
+                                    loadingContainer
+                                );
+                            }
 
-        }
+                            DataMessenger.responses[responseUUID] = json;
+                            var displayType =
+                            obj.internalDisplayType
+                            || 'table';
+                            if(refreshItem){
+                                obj.refreshItem(
+                                    displayType,
+                                    responseUUID,
+                                    tileWrapper
+                                );
+                            }
+                            resolve();
+                        }, dashboard.options);
+                    }
+                }, dashboard.options)
+            }
+        })
     }
 
-    obj.refreshItem = (displayType, _uuid, view) => {
+    obj.refreshView = (append=true) => {
+        var displayType = this.internalDisplayType;
+        var uuid = this.uuid;
+        this.refreshItem(displayType, uuid, tileWrapper, append);
+    }
+
+    obj.refreshItem = (displayType, _uuid, view, append=true) => {
         var json = DataMessenger.responses[_uuid];
+        console.log(_uuid);
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
-        tileResponseContainer.appendChild(view);
+        if(append){
+            tileResponseContainer.appendChild(view);
+        }
         container = view;
         container.innerHTML = '';
         if(!supportedDisplayTypes.includes(displayType)){
@@ -912,6 +892,8 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 break;
             case 'bar':
+            var chartWrapper = document.createElement('div');
+            container.appendChild(chartWrapper);
             if(json['data']['display_type'] == 'compare_table'
                 || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
@@ -939,7 +921,7 @@ function TileView(dashboard, chataDashboardItem,
                     json['data']['columns'], data, groups
                 );
                 createGroupedBarChart(
-                    container,
+                    chartWrapper,
                     groups,
                     dataGrouped,
                     cols,
@@ -953,7 +935,7 @@ function TileView(dashboard, chataDashboardItem,
                 var hasNegativeValues = values[1];
                 var cols = json['data']['columns'];
                 createBarChart(
-                    container, grouped, cols,
+                    chartWrapper, grouped, cols,
                     hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -962,6 +944,8 @@ function TileView(dashboard, chataDashboardItem,
 
                 break;
             case 'column':
+            var chartWrapper = document.createElement('div');
+            container.appendChild(chartWrapper);
             if(json['data']['display_type'] == 'compare_table'
                 || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
@@ -990,7 +974,7 @@ function TileView(dashboard, chataDashboardItem,
                     groups
                 );
                 createGroupedColumnChart(
-                    container,
+                    chartWrapper,
                     groups,
                     dataGrouped,
                     cols,
@@ -1004,7 +988,7 @@ function TileView(dashboard, chataDashboardItem,
                 var cols = json['data']['columns'];
                 var hasNegativeValues = values[1];
                 createColumnChart(
-                    container, grouped, cols,
+                    chartWrapper, grouped, cols,
                     hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -1013,6 +997,8 @@ function TileView(dashboard, chataDashboardItem,
 
                 break;
             case 'line':
+            var chartWrapper = document.createElement('div');
+            container.appendChild(chartWrapper);
             if(json['data']['display_type'] == 'compare_table'
                 || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
@@ -1041,7 +1027,7 @@ function TileView(dashboard, chataDashboardItem,
                     json['data']['columns'], data, groups
                 );
                 createGroupedLineChart(
-                    container,
+                    chartWrapper,
                     groups,
                     dataGrouped,
                     cols,
@@ -1055,7 +1041,7 @@ function TileView(dashboard, chataDashboardItem,
                 var hasNegativeValues = values[1];
                 var cols = json['data']['columns'];
                 createLineChart(
-                    container, grouped, cols,
+                    chartWrapper, grouped, cols,
                     hasNegativeValues, dashboard.options,
                     false, 'data-tilechart',
                     true
@@ -1064,6 +1050,8 @@ function TileView(dashboard, chataDashboardItem,
 
                 break;
             case 'heatmap':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 var values = formatDataToHeatmap(json, dashboard.options);
                 var labelsX = DataMessenger.getUniqueValues(
                     values, row => row.unformatX
@@ -1080,12 +1068,14 @@ function TileView(dashboard, chataDashboardItem,
 
                 var cols = json['data']['columns'];
 
-                createHeatmap(container,
+                createHeatmap(chartWrapper,
                     labelsX, labelsY, values, cols,
                     dashboard.options, false,
                     'data-tilechart', true);
                 break;
             case 'bubble':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 var values = formatDataToHeatmap(json, dashboard.options);
                 var labelsX = DataMessenger.getUniqueValues(
                     values, row => row.unformatX
@@ -1102,13 +1092,15 @@ function TileView(dashboard, chataDashboardItem,
 
                 var cols = json['data']['columns'];
                 createBubbleChart(
-                    container, labelsX, labelsY,
+                    chartWrapper, labelsX, labelsY,
                     values, cols, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
                 break;
             case 'stacked_bar':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 var data = cloneObject(json['data']['rows']);
                 var groups = DataMessenger.getUniqueValues(
                     data, row => row[1]
@@ -1122,13 +1114,15 @@ function TileView(dashboard, chataDashboardItem,
                     json['data']['columns'], data, groups
                 );
                 createStackedBarChart(
-                    container, dataGrouped, groups,
+                    chartWrapper, dataGrouped, groups,
                     subgroups, cols,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
                 break;
             case 'stacked_column':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 var data = cloneObject(json['data']['rows']);
                 var groups = DataMessenger.getUniqueValues(
                     data, row => row[1]
@@ -1142,18 +1136,20 @@ function TileView(dashboard, chataDashboardItem,
                     json['data']['columns'], data, groups
                 );
                 createStackedColumnChart(
-                    container, dataGrouped, groups,
+                    chartWrapper, dataGrouped, groups,
                     subgroups, cols,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
                 break;
             case 'pie':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 var data = DataMessenger.groupBy(
                     json['data']['rows'], row => row[0]
                 );
                 var cols = json['data']['columns'];
-                createPieChart(container, data,
+                createPieChart(chartWrapper, data,
                     dashboard.options, cols, false,
                     'data-tilechart', true
                 );
@@ -1259,15 +1255,16 @@ function TileView(dashboard, chataDashboardItem,
                         dashboard.lastEvent.type = 'display_type';
                         dashboard.lastEvent.value = {
                             tile: chataDashboardItem,
-                            displayType: chataDashboardItem.options.displayType
+                            displayType: obj.internalDisplayType
                         };
 
-                        chataDashboardItem.options.displayType =
+                        obj.internalDisplayType =
                         this.dataset.displaytype;
                         obj.refreshItem(
                             this.dataset.displaytype,
                             uuid,
-                            tileWrapper
+                            tileWrapper,
+                            false
                         )
                     }
                 }
