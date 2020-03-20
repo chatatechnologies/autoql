@@ -632,6 +632,61 @@
     height: 100%;
     float: left;
 }
+
+.chata-icon svg {
+    height: 1em;
+    margin-bottom: -.1em;
+}
+
+.input-toolbar{
+    position: absolute; top: 2px;
+    left: 1px;
+    bottom: unset;
+    height: 38px;
+}
+
+.input-toolbar-btn{
+    padding-left: 3px;
+    margin-right: 10px;
+}
+
+.dashboard-tile-input.second.query.open {
+    /* width: 400px !important; */
+    padding: 12px;
+    margin-left: 5px;
+    border: 1px solid rgba(0,0,0,.1);
+    pointer-events: unset;
+}
+
+.chata-table-scrollbox .wrapper.flex{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.chata-table-container-renderer table tr td{
+    /* margin-top: 10px; */
+    font-size: 11px !important;
+}
+
+.chata-tile-wrapper .chata-table-scrollbox .table-header th{
+    font-size: 11px !important;
+}
+
+.dashboard-tile-input.second.query {
+    -webkit-transition: all .3s ease;
+    transition: all .3s ease;
+    border: 1px solid transparent;
+    outline: none!important;
+    color: #356f90;
+    margin: 0;
+    padding: 0;
+    width: 0;
+    height: 28px;
+    pointer-events: none;
+}
+
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
 

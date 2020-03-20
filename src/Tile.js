@@ -746,6 +746,58 @@ function Tile(dashboard, options={}){
     return chataDashboardItem;
 }
 
+
+function InputToolbar(text, tileWrapper) {
+    var tileToolbar = htmlToElement(`
+        <div class="tile-toolbar input-toolbar">
+        </div>
+    `)
+
+    var input = htmlToElement(`
+        <input class="dashboard-tile-input query second"
+        placeholder="Query" value="${text}"
+        style="width: 0px;">
+    `)
+
+    var btn = htmlToElement(`
+        <button class="chata-toolbar-btn input-toolbar-btn">
+            <span class="chata-icon chata-toolbar-icon">
+                ${INPUT_BUBBLES}
+            </span>
+        </button>
+    `)
+
+    var arrowIcon = htmlToElement(`
+        <span data-test="chata-icon" class="chata-icon"
+        style="position: absolute; top: 5px; left: 31px; font-size: 10px;">
+            ${LEFT_ARROW}
+        </span>
+    `)
+
+
+    btn.onclick = (evt) => {
+        if(input.classList.contains('open')){
+            input.classList.remove('open');
+            input.style.width = 0;
+        }else{
+            input.classList.add('open');
+            input.style.width = (tileWrapper.offsetWidth - 56) + 'px';
+        }
+    }
+
+    btn.appendChild(arrowIcon);
+    tileToolbar.appendChild(btn);
+    tileToolbar.appendChild(input);
+
+    this.btn = btn;
+    this.tileToolbar = tileToolbar;
+    this.arrowIcon = arrowIcon;
+
+    return this;
+}
+
+
+
 function TileView(dashboard, chataDashboardItem,
     tileResponseContainer, isSecond=false){
     var obj = this
@@ -868,8 +920,12 @@ function TileView(dashboard, chataDashboardItem,
             case 'table':
                 var div = createTableContainer();
                 var scrollbox = document.createElement('div');
+                var tableWrapper = document.createElement('div');
                 scrollbox.classList.add('chata-table-scrollbox');
-                scrollbox.appendChild(div);
+                tableWrapper.classList.add('wrapper');
+                tableWrapper.classList.add('flex');
+                tableWrapper.appendChild(div);
+                scrollbox.appendChild(tableWrapper);
                 container.appendChild(scrollbox);
                 if(json['data']['columns'].length == 1){
                     var data = formatData(
@@ -888,7 +944,7 @@ function TileView(dashboard, chataDashboardItem,
                         '[data-indexrowrenderer]'
                     );
                     table.classList.add('renderer-table');
-                    scrollbox.insertBefore(table.headerElement, div);
+                    tableWrapper.insertBefore(table.headerElement, div);
                 }
                 break;
             case 'bar':
@@ -1156,8 +1212,12 @@ function TileView(dashboard, chataDashboardItem,
                 break;
             case 'pivot_column':
                 var div = createTableContainer();
+                // var tableWrapper = document.createElement('div');
                 var scrollbox = document.createElement('div');
                 scrollbox.classList.add('chata-table-scrollbox');
+                // tableWrapper.classList.add('wrapper');
+                // tableWrapper.classList.add('flex');
+                // tableWrapper.appendChild(div);
                 scrollbox.appendChild(div);
                 container.appendChild(scrollbox);
                 var pivotArray = [];
@@ -1209,6 +1269,12 @@ function TileView(dashboard, chataDashboardItem,
         function(e, index){
             e.parentNode.removeChild(e);
         });
+
+        if(obj.isSecond){
+            var inputToolbar = new InputToolbar('TESTING', tileWrapper);
+            obj.inputToolbar = inputToolbar;
+            tileWrapper.appendChild(inputToolbar.tileToolbar);
+        }
 
         if(displayTypes.length > 1){
             var vizToolbar = document.createElement('div');

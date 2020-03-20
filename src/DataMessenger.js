@@ -690,7 +690,7 @@ DataMessenger.sendDrilldownMessage = function(
 
     if(options.authentication.demo){
         data = {
-            query_id, queryId,
+            query_id: queryId,
             group_bys: obj,
             username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
             customer_id: options.authentication.customerId || "",
@@ -1762,7 +1762,8 @@ DataMessenger.ajaxCall = function(val, callback, options){
         username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
         customer_id: options.authentication.customerId || "",
         user_id: options.authentication.userId || "",
-        debug: options.autoQLConfig.debug
+        debug: options.autoQLConfig.debug,
+        test: options.autoQLConfig.test
     }
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -1846,7 +1847,8 @@ DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='sugge
       )}&projectid=1`
       : `${options.authentication.domain}/autoql/api/v1/query/autocomplete?text=${encodeURIComponent(
         suggestion
-      )}&key=${options.authentication.apiKey}&customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}`
+      )}&key=${options.authentication.apiKey}`
+      // &customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}
 
     DataMessenger.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';

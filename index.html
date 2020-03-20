@@ -893,7 +893,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg0MDU5Mzg4LCAiZXhwIjogMTU4NDA4MDk4OCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiY3VzdG9tZXJfaWQiOiAicHVyZWZhY3RzLWRlbW8xIiwgInVzZXJfaWQiOiAidmlkaHlhQGNoYXRhLmFpIiwgImRpc3BsYXlfbmFtZSI6ICIiLCAicmVzb3VyY2VfYWNjZXNzIjogWyIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ==.h1kyIMqKxoGxUf_wAXRqClGpOItrf1URcDLvYiTp5BSB-AbPlFdPp87FhxVVBljzax7sC2HoO2E5mClUlELNOiNv9wgS-PBSv-CSWp2qlj0lg81UQ2rE4dByupFdB9W8yqjpoSbIuevJQSfPRdfMw_uEedKaxrTEZdTgY4KhTRu0Liwq9oPtZlwyRyDr2EYTCC_O95rRruJAM60xBYddPMRZvwri7dxt11N5gVar26zlYtOi4yvXY7ES4XCq6CUrBU2kV-xRkcc2drRmBSJI_oLfXl9AbNSsdApGwPg_S_z6X6RroZSf3wIt0Z9x_T2Xz7i18Cs5zp66RrspS1lj6A==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg0Njc3MDcxLCAiZXhwIjogMTU4NDY5ODY3MSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJwdXJlZmFjdHMtZGVtbzEiLCAidXNlcl9pZCI6ICJ2aWRoeWFAY2hhdGEuYWkiLCAiZGlzcGxheV9uYW1lIjogIiIsICJyZXNvdXJjZV9hY2Nlc3MiOiBbIi9hdXRvcWwvYXBpL3YxL3F1ZXJ5LyoqIiwgIi9hdXRvcWwvYXBpL3YxL3F1ZXJ5Il19.M1pDnuYZR1yr2QqGJb6L3T7Aj2FvBeu6DxIzBSwpYZnIGTGEa4wBlB2XCFTex8ekctzgWCf5DhC_0eZ3jLOHSqEEkRlaU9lyTYbR4ZD5XKM7SR2B2okt5RuEbUOtRdq0VcLLmb_uMtvTRIBCw_O95ZSvczLem7S5HJUQ9WGgtOYeLuZ8ENRfRhQc671mg-cYNtbkKU6FDRuA_1Nmfn_GEkt2R4vTXrbfgXTJgORvTw0jNq_rKrNGlWMrQgnhho74oTy6uNRPyu4mivhk2lftvz48XOij8a-akc0cw66sANPpwEvGyRJwLKrBk7KUwU617I2-80cIv3ZjjQ0sLaU7bA==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -1044,7 +1044,7 @@
                         }
                     }
                     const url = `
-                        https://backend-staging.chata.io/api/v1/jwt?user_id=${userId}&customer_id=${customerId}
+                        https://backend-staging.chata.io/api/v1/jwt?user_id=${userId}&project_id=${customerId}
                     `
                     xhr2.open('GET', url);
                     xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
