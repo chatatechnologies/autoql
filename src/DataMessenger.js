@@ -97,7 +97,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     }
 
     if(!('introMessage' in options)){
-        DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ "! I'm  here to help you access, search and analyze your data.";
+        DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ "! Let’s dive into your data. What can I help you discover today?";
     }
     if(!('onMaskClick' in options)){
         DataMessenger.options.onMaskClick = DataMessenger.options.onHandleClick;
@@ -188,8 +188,8 @@ DataMessenger.createQueryTips = function(){
     queryTipsResultContainer.classList.add('query-tips-result-container');
     queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
     queryTipsResultPlaceHolder.innerHTML = `
-        <p>Your query suggestions will show up here.<p>
-        <p>Click on the suggestion to execute it in Data Messenger<p>
+        <p>Discover what you can ask by entering a topic in the search bar above.<p>
+        <p>Simply click on any of the returned options to run the query in Data Messenger.<p>
     `;
 
     queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
@@ -650,10 +650,10 @@ DataMessenger.createHeader = function(){
                     <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-confirm-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
                     </svg>
-                    Clear all messages?
+                    Clear all queries & responses?
                 </div>
-                <button class="chata-confirm-btn no">No</button>
-                <button class="chata-confirm-btn yes">Yes</button>
+                <button class="chata-confirm-btn no">Cancel</button>
+                <button class="chata-confirm-btn yes">Clear</button>
             </div>
         </div>
     `)

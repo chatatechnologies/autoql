@@ -210,6 +210,12 @@
     background: inherit;
 }
 
+.dashboard-tile-response-container.chata-flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .dashboard-tile-response-container {
     /* display: -webkit-box;
     display: flex; */
@@ -616,7 +622,7 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: 50%;
-    border-top: 2px solid #C0C0C0;
+    border-top: 3px solid #C0C0C0;
     /* border-bottom: 1px solid #C0C0C0; */
 }
 .gutter.gutter-vertical {

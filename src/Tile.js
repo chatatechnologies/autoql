@@ -94,6 +94,7 @@ function Tile(dashboard, options={}){
 
     tileResponseWrapper.classList.add('dashboard-tile-response-wrapper');
     tileResponseContainer.classList.add('dashboard-tile-response-container');
+    tileResponseContainer.classList.add('chata-flex');
     tileTitle.classList.add('dashboard-tile-title');
     resizeHandler.classList.add('resize-handler');
     inputQuery.classList.add('dashboard-tile-input');
@@ -266,18 +267,19 @@ function Tile(dashboard, options={}){
         chataDashboardItem.inputQuery.focus();
     }
 
-    chataDashboardItem.runQuery = async() => {
+    chataDashboardItem.runQuery = async () => {
         tileResponseContainer.innerHTML = '';
         if(!chataDashboardItem.options.isSplitView){
             chataDashboardItem.views[0].runQuery();
-
         }else{
+            tileResponseContainer.classList.add('chata-flex');
             loadingContainer = chataDashboardItem.showLoadingDots();
             var elements = []
             for (var i = 0; i < chataDashboardItem.views.length; i++) {
                 await chataDashboardItem.views[i].runQuery(false, false);
             }
             tileResponseContainer.removeChild(loadingContainer);
+            tileResponseContainer.classList.remove('chata-flex');
             chataDashboardItem.views.map(view => {
                 view.refreshView();
                 elements.push(view.tileWrapper);
@@ -287,7 +289,7 @@ function Tile(dashboard, options={}){
                 direction: 'vertical',
                 sizes: [50, 50],
                 minSize: [0, 0],
-                gutterSize: 5,
+                gutterSize: 7,
                 cursor: 'row-resize',
                 onDragEnd: () => {
                     chataDashboardItem.views.map(
@@ -301,7 +303,7 @@ function Tile(dashboard, options={}){
             vizToolbarSplit.onclick = function(evt){
                 tileResponseContainer.innerHTML = '';
                 if(!chataDashboardItem.options.isSplitView){
-
+                    tileResponseContainer.classList.remove('chata-flex');
                     chataDashboardItem.options.isSplitView = true;
                     var splitContainer = document.createElement('div');
                     var ids = [];
@@ -310,9 +312,11 @@ function Tile(dashboard, options={}){
                         if(view.isSecond){
                             var viewUUID = view.uuid;
                             var firstUUID = chataDashboardItem.views[0].uuid;
-                            DataMessenger.responses[viewUUID] = cloneObject(
-                                DataMessenger.responses[firstUUID]
-                            );
+                            if(!DataMessenger.responses[viewUUID]){
+                                DataMessenger.responses[viewUUID] = cloneObject(
+                                    DataMessenger.responses[firstUUID]
+                                );
+                            }
                             view.internalDisplayType = 'table';
                         }
                         ids.push(view.tileWrapper);
@@ -324,7 +328,7 @@ function Tile(dashboard, options={}){
                         direction: 'vertical',
                         sizes: [50, 50],
                         minSize: [0, 0],
-                        gutterSize: 5,
+                        gutterSize: 7,
                         cursor: 'row-resize',
                         onDragEnd: () => {
                             chataDashboardItem.views.map(
@@ -344,6 +348,7 @@ function Tile(dashboard, options={}){
                         .style.height = '100%';
                     chataDashboardItem.options.isSplitView = false;
                     chataDashboardItem.views[0].refreshView();
+                    tileResponseContainer.classList.add('chata-flex');
                 }
             }
         }
@@ -399,7 +404,6 @@ function Tile(dashboard, options={}){
             var json = cloneObject(
                 DataMessenger.responses[uuid]
             );
-            console.log(json);
             var drilldownUUID = uuidv4();
             var indexData = parseInt(e.target.dataset.tilechart);
 
@@ -792,6 +796,7 @@ function InputToolbar(text, tileWrapper) {
     this.btn = btn;
     this.tileToolbar = tileToolbar;
     this.arrowIcon = arrowIcon;
+    this.input = input;
 
     return this;
 }
@@ -817,8 +822,14 @@ function TileView(dashboard, chataDashboardItem,
             var val = '';
             if(chataDashboardItem.options.isSafetynet){
                 val = chataDashboardItem.getSafetynetValues().join(' ');
+                console.log('getSafetynetValues()');
             }else{
-                val = chataDashboardItem.inputQuery.value;
+                if(obj.isSecond){
+                    val = obj.inputToolbar.input.value;
+                    obj.internalQuery = val;
+                }else{
+                    val = chataDashboardItem.inputQuery.value;
+                }
             }
             if(val != ''){
                 let loadingContainer;
@@ -830,6 +841,7 @@ function TileView(dashboard, chataDashboardItem,
                     var suggestions = json['full_suggestion'] ||
                     json['data']['replacements'];
                     if(suggestions.length > 0){
+                        console.log('SAFETY NET');
                         const message = `
                         Before I can try to find your answer,
                         I need your help understanding a term you used that
@@ -865,6 +877,9 @@ function TileView(dashboard, chataDashboardItem,
                         resolve();
                     }else{
                         chataDashboardItem.options.isSafetynet = false;
+                        console.log('isSecond: ' + obj.isSecond);
+                        console.log('VALLLLLLLLLLLLLLLLLLLL: ' + val);
+                        console.log('--------------------------');
                         DataMessenger.ajaxCall(val, function(json){
                             if(loadingContainer){
                                 tileResponseContainer.removeChild(
@@ -899,7 +914,6 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
         var json = DataMessenger.responses[_uuid];
-        console.log(_uuid);
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
         if(append){
             tileResponseContainer.appendChild(view);
@@ -1271,9 +1285,17 @@ function TileView(dashboard, chataDashboardItem,
         });
 
         if(obj.isSecond){
-            var inputToolbar = new InputToolbar('TESTING', tileWrapper);
+            if(!obj.internalQuery){
+                obj.internalQuery = chataDashboardItem.inputQuery.value;
+            }
+            var inputToolbar = new InputToolbar(obj.internalQuery, tileWrapper);
             obj.inputToolbar = inputToolbar;
             tileWrapper.appendChild(inputToolbar.tileToolbar);
+            obj.inputToolbar.input.onkeypress = (evt) => {
+                if(evt.keyCode == 13 && evt.target.value){
+                    chataDashboardItem.runQuery();
+                }
+            }
         }
 
         if(displayTypes.length > 1){
