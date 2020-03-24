@@ -47,7 +47,7 @@ var DataMessenger = {
         shiftScreen: false,
         onMaskClick: function(){},
         maskClosable: true,
-        customerName: 'there',
+        userDisplayName: 'there',
         maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
@@ -97,7 +97,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     }
 
     if(!('introMessage' in options)){
-        DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ "! Let’s dive into your data. What can I help you discover today?";
+        DataMessenger.options.introMessage = "Hi " + DataMessenger.options.userDisplayName+ "! Let’s dive into your data. What can I help you discover today?";
     }
     if(!('onMaskClick' in options)){
         DataMessenger.options.onMaskClick = DataMessenger.options.onHandleClick;

@@ -351,7 +351,7 @@
                     <span class="info-text">
                         (Must click 'Reload Drawer' to apply this)
                     </span>
-                    <input type="text" name="customerName" value="Oscar" placeholder="Customer Name" class="reload-prop">
+                    <input type="text" name="userDisplayName" value="Oscar" placeholder="Customer Name" class="reload-prop">
                 </div>
 
 
@@ -921,7 +921,7 @@
             showHandle: true,
             showMask: true,
             maskClosable: true,
-            customerName: 'Oscar',
+            userDisplayName: 'Oscar',
             maxMessages: 6,
             clearOnClose: false,
             enableVoiceRecord: true,
@@ -1160,7 +1160,7 @@
                 if(propsEls[i].value != ''){
                     DataMessenger.options[propsEls[i].name] = propsEls[i].value;
                 }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
-                    DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ " I'm  here to help you access, search and analyze your data.";
+                    DataMessenger.options.introMessage = "Hi " + DataMessenger.options.userDisplayName+ " I'm  here to help you access, search and analyze your data.";
                 }if(DataMessenger.options.theme == 'light' && propsEls[i].name == 'accentColor-light'){
                     DataMessenger.options.accentColor = propsEls[i].value;
                 }else if (DataMessenger.options.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){

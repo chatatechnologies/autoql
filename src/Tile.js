@@ -12,9 +12,8 @@ function Tile(dashboard, options={}){
     var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
-    var drilldownOriginal = document.createElement('div');
-    var chartDrilldownContainer = document.createElement('div');
-    var drilldownTable = document.createElement('div');
+
+
     var vizToolbarSplit = htmlToElement(`
         <div class="tile-toolbar split-view-btn">
             <button class="chata-toolbar-btn">
@@ -26,8 +25,7 @@ function Tile(dashboard, options={}){
     `);
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
-    var modal = new Modal();
-    modal.chataBody.classList.add('chata-modal-full-height')
+
     chataDashboardItem.options = {
         query: '',
         title: '',
@@ -83,8 +81,7 @@ function Tile(dashboard, options={}){
     tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
     chataDashboardItem.view = tileResponseContainer;
-    drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
-    drilldownTable.classList.add('chata-dashboard-drilldown-table');
+
     chataDashboardItem.classList.add('chata-dashboard-item');
     chataDashboardItem.classList.add(`chata-col-${chataDashboardItem.options.w}`);
     itemContent.classList.add('item-content');
@@ -113,7 +110,7 @@ function Tile(dashboard, options={}){
 
     tileResponseContainer.innerHTML = placeHolderText;
 
-    drilldownOriginal.appendChild(chartDrilldownContainer);
+
     tileInputContainer.appendChild(inputQuery);
     tileInputContainer.appendChild(inputTitle);
     tileInputContainer.appendChild(tilePlayBuytton);
@@ -272,31 +269,36 @@ function Tile(dashboard, options={}){
         if(!chataDashboardItem.options.isSplitView){
             chataDashboardItem.views[0].runQuery();
         }else{
-            tileResponseContainer.classList.add('chata-flex');
-            loadingContainer = chataDashboardItem.showLoadingDots();
-            var elements = []
-            for (var i = 0; i < chataDashboardItem.views.length; i++) {
-                await chataDashboardItem.views[i].runQuery(false, false);
-            }
-            tileResponseContainer.removeChild(loadingContainer);
-            tileResponseContainer.classList.remove('chata-flex');
-            chataDashboardItem.views.map(view => {
-                view.refreshView();
-                elements.push(view.tileWrapper);
-            });
-
-            Split(elements, {
-                direction: 'vertical',
-                sizes: [50, 50],
-                minSize: [0, 0],
-                gutterSize: 7,
-                cursor: 'row-resize',
-                onDragEnd: () => {
-                    chataDashboardItem.views.map(
-                        view => view.refreshView(false)
-                    );
+            if(!chataDashboardItem.views[0].isSafetynet){
+                tileResponseContainer.classList.add('chata-flex');
+                loadingContainer = chataDashboardItem.showLoadingDots();
+                var elements = []
+                for (var i = 0; i < chataDashboardItem.views.length; i++) {
+                    await chataDashboardItem.views[i].runQuery(false, false);
                 }
-            })
+                tileResponseContainer.removeChild(loadingContainer);
+                tileResponseContainer.classList.remove('chata-flex');
+                chataDashboardItem.views.map(view => {
+                    view.refreshView();
+                    elements.push(view.tileWrapper);
+                });
+
+                Split(elements, {
+                    direction: 'vertical',
+                    sizes: [50, 50],
+                    minSize: [0, 0],
+                    gutterSize: 7,
+                    cursor: 'row-resize',
+                    onDragEnd: () => {
+                        chataDashboardItem.views.map(
+                            view => view.refreshView(false)
+                        );
+                    }
+                })
+            }else{
+                console.log('FOOOOOOOOOOOO');
+                chataDashboardItem.views[0].runQuery();
+            }
         }
         if(dashboard.options.splitView){
             itemContent.appendChild(vizToolbarSplit);
@@ -354,8 +356,8 @@ function Tile(dashboard, options={}){
         }
     }
 
-    chataDashboardItem.getSafetynetValues = function(){
-        return getSafetynetValues(tileResponseContainer);
+    chataDashboardItem.getSafetynetValues = function(tileWrapper){
+        return getSafetynetValues(tileWrapper);
     }
 
     chataDashboardItem.safetynet = function(textValue){
@@ -398,138 +400,8 @@ function Tile(dashboard, options={}){
         return getSupportedDisplayTypes(json);
     }
 
-    modal.addEvent('click', function(e){
-        if(e.target.dataset.tilechart){
-            chataDashboardItem.updateSelectedBars(e.target)
-            var json = cloneObject(
-                DataMessenger.responses[uuid]
-            );
-            var drilldownUUID = uuidv4();
-            var indexData = parseInt(e.target.dataset.tilechart);
-
-            drilldownTable.innerHTML = '';
-            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
-               chataDashboardItem.options.displayType == 'stacked_column'){
-                   json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
-                   json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
-                   json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
-
-                   indexData = 0;
-            }
-            var drilldownData = chataDashboardItem.getDrilldownData(
-                json, indexData , dashboard.options);
-            var dots = putLoadingContainer(drilldownTable);
-            dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
-            chataDashboardItem.sendDrilldownMessage(
-                drilldownData,
-                dashboard.options,
-                drilldownUUID,
-                function(){
-                    chataDashboardItem.refreshItem(
-                        'table',
-                        drilldownUUID,
-                        drilldownTable
-                    )
-                    chataDashboardItem.createVizToolbar(
-                        json, uuid, chataDashboardItem.options.displayType
-                    )
-                }
-            )
-        }
-
-        if(e.target.classList.contains('column')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            console.log(container);
-            var localuuid = tableElement.dataset.componentid;
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[localuuid]);
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'desc',
-                    e.target.dataset.index,
-                    e.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var data = cloneObject(
-                    DataMessenger.responses[localuuid]
-                );
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'asc',
-                    parseInt(e.target.dataset.index),
-                    e.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }
-        }
-
-        if(e.target.classList.contains('column-pivot')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
-            );
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }else{
-                pivotArray = getPivotColumnArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var sortData = sortPivot(
-                    pivotArray,
-                    e.target.dataset.index,
-                    'desc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var sortData = sortPivot(
-                    pivotArray,
-                    e.target.dataset.index,
-                    'asc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
-        }
-
-    });
-
     itemContent.onclick = function(evt){
-        if(evt.target.classList.contains('chata-suggestion-btn-renderer')){
-            inputQuery.value = evt.target.textContent;
-            chataDashboardItem.runQuery();
-        }
+
         if(evt.target.classList.contains('column')){
             var container = evt.target.parentElement.parentElement.parentElement;
             var tableElement = container.querySelector('[data-componentid]');
@@ -624,93 +496,6 @@ function Tile(dashboard, options={}){
         elem.classList.add('active');
     }
 
-    chataDashboardItem.itemContent.addEventListener('click', function(e){
-        if(e.target.dataset.tilechart){
-            chataDashboardItem.updateSelectedBars(e.target)
-            var query = chataDashboardItem.inputQuery.value;
-            var indexData = parseInt(e.target.dataset.tilechart);
-            modal.clearViews();
-            drilldownTable.innerHTML = '';
-            modal.addView(drilldownOriginal);
-            modal.addView(drilldownTable);
-            modal.setTitle(query);
-            var json = cloneObject(
-                DataMessenger.responses[uuid]
-            );
-            var drilldownUUID = uuidv4();
-            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
-               chataDashboardItem.options.displayType == 'stacked_column'){
-                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
-                   indexData = 0;
-            }
-            chataDashboardItem.refreshItem(
-                chataDashboardItem.options.displayType,
-                uuid,
-                chartDrilldownContainer
-            )
-
-            var drilldownData = chataDashboardItem.getDrilldownData(
-                json, indexData, dashboard.options);
-            var dots = putLoadingContainer(drilldownTable);
-            dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
-            chataDashboardItem.sendDrilldownMessage(
-                drilldownData,
-                dashboard.options,
-                drilldownUUID,
-                function(){
-                    chataDashboardItem.refreshItem(
-                        'table',
-                        drilldownUUID,
-                        drilldownTable
-                    )
-                    chataDashboardItem.createVizToolbar(
-                        json, uuid, chataDashboardItem.options.displayType
-                    )
-                }
-            )
-            modal.show();
-        }else if (e.target.parentElement.dataset.indexrowrenderer ||
-        e.target.classList.contains('single-value-response')){
-            var query = chataDashboardItem.inputQuery.value;
-            modal.clearViews();
-            drilldownTable.innerHTML = '';
-            modal.addView(drilldownTable);
-            modal.setTitle(query);
-            var drilldownValue = '';
-            var indexData = e.target.parentElement.dataset.indexrowrenderer;
-            var json = cloneObject(
-                DataMessenger.responses[uuid]
-            );
-            if(e.target.classList.contains('single-value-response')){
-                json['data']['rows'][0][0] = e.target.textContent;
-                indexData = -1;
-            }
-            var drilldownUUID = uuidv4();
-            var drilldownData = chataDashboardItem.getDrilldownData(
-                json, indexData, dashboard.options);
-            var dots = putLoadingContainer(drilldownTable);
-            dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
-            chataDashboardItem.sendDrilldownMessage(
-                drilldownData,
-                dashboard.options,
-                drilldownUUID,
-                function(){
-                    chataDashboardItem.refreshItem(
-                        'table',
-                        drilldownUUID,
-                        drilldownTable
-                    )
-                    chataDashboardItem.createVizToolbar(
-                        DataMessenger.responses[uuid],
-                        uuid, chataDashboardItem.options.displayType
-                    )
-                }
-            )
-            modal.show();
-        }
-    });
     chataDashboardItem.getDrilldownData = function(json, indexData, options){
         const URL = options.authentication.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
@@ -806,9 +591,16 @@ function InputToolbar(text, tileWrapper) {
 function TileView(dashboard, chataDashboardItem,
     tileResponseContainer, isSecond=false){
     var obj = this
+    var chartDrilldownContainer = document.createElement('div');
     var tileWrapper = document.createElement('div');
+    var drilldownTable = document.createElement('div');
+    var drilldownOriginal = document.createElement('div');
     var responseUUID = uuidv4();
+    var modal = new Modal();
 
+    modal.chataBody.classList.add('chata-modal-full-height');
+    drilldownTable.classList.add('chata-dashboard-drilldown-table');
+    drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
     tileWrapper.classList.add('chata-tile-wrapper');
     tileWrapper.setAttribute('id', responseUUID);
 
@@ -817,12 +609,46 @@ function TileView(dashboard, chataDashboardItem,
     obj.internalDisplayType = chataDashboardItem.options.displayType;
     obj.isSecond = isSecond;
 
+    drilldownOriginal.appendChild(chartDrilldownContainer);
+
+    obj.getSafetynetBody = (json) => {
+        const message = `
+        Before I can try to find your answer,
+        I need your help understanding a term you used that
+        I don't see in your data.
+        Click the dropdown to view suggestions so
+        I can ensure you get the right data
+        `
+        var suggestionArray = createSuggestionArray(json);
+        var responseContentContainer = document.createElement(
+            'div'
+        );
+        responseContentContainer.innerHTML = `
+            <div>${message}</div>
+        `;
+        responseContentContainer.classList.add(
+            'chata-response-content-container'
+        );
+        responseContentContainer.classList.add(
+            'chata-response-content-center'
+        );
+        createSafetynetBody(
+            responseContentContainer,
+            suggestionArray
+        );
+
+        return responseContentContainer;
+    }
+
     obj.runQuery = (showLoadingDots=true, refreshItem=true) => {
         return new Promise(resolve => {
             var val = '';
-            if(chataDashboardItem.options.isSafetynet){
-                val = chataDashboardItem.getSafetynetValues().join(' ');
-                console.log('getSafetynetValues()');
+            if(obj.isSafetynet && !obj.isSecond){
+                val = chataDashboardItem.getSafetynetValues(
+                    tileWrapper
+                ).join(' ');
+                console.log('IS SECOND: ' + isSecond);
+                console.log('getSafetynetValues(): ' + val);
             }else{
                 if(obj.isSecond){
                     val = obj.inputToolbar.input.value;
@@ -841,45 +667,25 @@ function TileView(dashboard, chataDashboardItem,
                     var suggestions = json['full_suggestion'] ||
                     json['data']['replacements'];
                     if(suggestions.length > 0){
-                        console.log('SAFETY NET');
-                        const message = `
-                        Before I can try to find your answer,
-                        I need your help understanding a term you used that
-                        I don't see in your data.
-                        Click the dropdown to view suggestions so
-                        I can ensure you get the right data
-                        `
-                        chataDashboardItem.options.isSafetynet = true;
+
+                        obj.isSafetynet = true;
+
                         if(loadingContainer){
                             tileResponseContainer.removeChild(loadingContainer);
                         }
-                        var suggestionArray = createSuggestionArray(json);
-                        var responseContentContainer = document.createElement(
-                            'div'
-                        );
-                        responseContentContainer.innerHTML = `
-                            <div>${message}</div>
-                        `;
-                        responseContentContainer.classList.add(
-                            'chata-response-content-container'
-                        );
-                        responseContentContainer.classList.add(
-                            'chata-response-content-center'
-                        );
-                        createSafetynetBody(
-                            responseContentContainer,
-                            suggestionArray
+                        tileWrapper.innerHTML = '';
+                        var responseContentContainer = obj.getSafetynetBody(
+                            json
                         );
                         tileWrapper.appendChild(
                             responseContentContainer
                         );
                         updateSelectWidth(responseContentContainer);
+                        tileResponseContainer.appendChild(tileWrapper);
+
                         resolve();
                     }else{
-                        chataDashboardItem.options.isSafetynet = false;
-                        console.log('isSecond: ' + obj.isSecond);
-                        console.log('VALLLLLLLLLLLLLLLLLLLL: ' + val);
-                        console.log('--------------------------');
+                        obj.isSafetynet = false;
                         DataMessenger.ajaxCall(val, function(json){
                             if(loadingContainer){
                                 tileResponseContainer.removeChild(
@@ -912,6 +718,12 @@ function TileView(dashboard, chataDashboardItem,
         this.refreshItem(displayType, uuid, tileWrapper, append);
     }
 
+    obj.refreshDrilldownView =(view) =>{
+        var displayType = this.internalDisplayType;
+        var uuid = this.uuid;
+        this.refreshItem(displayType, uuid, view, false);
+    }
+
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
         var json = DataMessenger.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
@@ -927,10 +739,20 @@ function TileView(dashboard, chataDashboardItem,
             displayType = 'suggestion';
         }
         if(json['data']['rows'].length == 0){
+            console.log(displayType + '!==' + 'safetynet');
             container.innerHTML = 'No data found.';
             return 0;
         }
         switch (displayType) {
+            case 'safetynet':
+                var responseContentContainer = obj.getSafetynetBody(
+                    json
+                );
+                view.appendChild(
+                    responseContentContainer
+                );
+                updateSelectWidth(responseContentContainer);
+            break;
             case 'table':
                 var div = createTableContainer();
                 var scrollbox = document.createElement('div');
@@ -1259,9 +1081,15 @@ function TileView(dashboard, chataDashboardItem,
                 responseContentContainer.classList.add(
                     'chata-response-content-center'
                 );
+                var val = ''
+                if(obj.isSecond){
+                    val = obj.internalQuery;
+                }else{
+                    val = chataDashboardItem.inputQuery.value;
+                }
                 responseContentContainer.innerHTML = `
                     <div>I'm not sure what you mean by
-                        <strong>"${inputQuery.value}"</strong>. Did you mean:
+                        <strong>"${val}"</strong>. Did you mean:
                     </div>`;
                 container.appendChild(responseContentContainer);
                 var rows = json['data']['rows'];
@@ -1358,6 +1186,241 @@ function TileView(dashboard, chataDashboardItem,
                 }
             }
             tileWrapper.appendChild(vizToolbar);
+        }
+    }
+
+    obj.tileWrapper.addEventListener('click', function(e){
+        if(e.target.dataset.tilechart){
+            chataDashboardItem.updateSelectedBars(e.target);
+            var query = chataDashboardItem.inputQuery.value;
+            var indexData = parseInt(e.target.dataset.tilechart);
+            modal.clearViews();
+            drilldownTable.innerHTML = '';
+            modal.addView(drilldownOriginal);
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var json = cloneObject(
+                DataMessenger.responses[obj.uuid]
+            );
+            var drilldownUUID = uuidv4();
+            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
+               chataDashboardItem.options.displayType == 'stacked_column'){
+                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+                   indexData = 0;
+            }
+            obj.refreshItem(
+                chataDashboardItem.options.displayType,
+                obj.uuid,
+                chartDrilldownContainer,
+                false
+            )
+
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData, dashboard.options);
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    obj.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable,
+                        false
+                    )
+                    obj.createVizToolbar(
+                        json, obj.uuid, obj.internalDisplayType
+                    )
+                }
+            )
+            modal.show();
+            obj.refreshDrilldownView(chartDrilldownContainer);
+        }else if (e.target.parentElement.dataset.indexrowrenderer ||
+        e.target.classList.contains('single-value-response')){
+            let query;
+            if(obj.isSecond){
+                query = obj.internalQuery;
+            }else{
+                query = chataDashboardItem.inputQuery.value;
+            }
+            modal.clearViews();
+            drilldownTable.innerHTML = '';
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var drilldownValue = '';
+            var indexData = e.target.parentElement.dataset.indexrowrenderer;
+            var json = cloneObject(
+                DataMessenger.responses[obj.uuid]
+            );
+            if(e.target.classList.contains('single-value-response')){
+                json['data']['rows'][0][0] = e.target.textContent;
+                indexData = -1;
+            }
+            var drilldownUUID = uuidv4();
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData, dashboard.options);
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    obj.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable,
+                        false
+                    )
+                    obj.createVizToolbar(
+                        json, obj.uuid, obj.internalDisplayType
+                    )
+                }
+            )
+            modal.show();
+        }
+    });
+
+    modal.addEvent('click', function(e){
+        if(e.target.dataset.tilechart){
+            chataDashboardItem.updateSelectedBars(e.target)
+            var json = cloneObject(
+                DataMessenger.responses[obj.uuid]
+            );
+            var drilldownUUID = uuidv4();
+            var indexData = parseInt(e.target.dataset.tilechart);
+
+            drilldownTable.innerHTML = '';
+            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
+               chataDashboardItem.options.displayType == 'stacked_column'){
+                   json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
+                   json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
+                   json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
+
+                   indexData = 0;
+            }
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData , dashboard.options);
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    obj.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable,
+                        false
+                    )
+                    obj.createVizToolbar(
+                        json, obj.uuid, chataDashboardItem.options.displayType
+                    )
+                }
+            )
+        }
+
+        if(e.target.classList.contains('column')){
+            var container = e.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
+            console.log(container);
+            var localuuid = tableElement.dataset.componentid;
+            if(e.target.nextSibling.classList.contains('up')){
+                e.target.nextSibling.classList.remove('up');
+                e.target.nextSibling.classList.add('down');
+                var data = cloneObject(DataMessenger.responses[localuuid]);
+                var sortData = DataMessenger.sort(
+                    data['data']['rows'],
+                    'desc',
+                    e.target.dataset.index,
+                    e.target.dataset.type
+                );
+                DataMessenger.refreshTableData(
+                    tableElement,
+                    sortData,
+                    DataMessenger.options
+                );
+            }else{
+                e.target.nextSibling.classList.remove('down');
+                e.target.nextSibling.classList.add('up');
+                var data = cloneObject(
+                    DataMessenger.responses[localuuid]
+                );
+                var sortData = DataMessenger.sort(
+                    data['data']['rows'],
+                    'asc',
+                    parseInt(e.target.dataset.index),
+                    e.target.dataset.type
+                );
+                DataMessenger.refreshTableData(
+                    tableElement,
+                    sortData,
+                    DataMessenger.options
+                );
+            }
+        }
+
+        if(e.target.classList.contains('column-pivot')){
+            var container = e.target.parentElement.parentElement.parentElement;
+            var tableElement = container.querySelector('[data-componentid]');
+            var pivotArray = [];
+            var json = cloneObject(
+                DataMessenger.responses[tableElement.dataset.componentid]
+            );
+            var columns = json['data']['columns'];
+            if(columns[0].type === 'DATE' &&
+                columns[0].name.includes('month')){
+                pivotArray = getDatePivotArray(
+                    json,
+                    DataMessenger.options,
+                    cloneObject(json['data']['rows'])
+                );
+            }else{
+                pivotArray = getPivotColumnArray(
+                    json,
+                    DataMessenger.options,
+                    cloneObject(json['data']['rows'])
+                );
+            }
+            if(e.target.nextSibling.classList.contains('up')){
+                e.target.nextSibling.classList.remove('up');
+                e.target.nextSibling.classList.add('down');
+                var sortData = sortPivot(
+                    pivotArray,
+                    e.target.dataset.index,
+                    'desc'
+                );
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
+            }else{
+                e.target.nextSibling.classList.remove('down');
+                e.target.nextSibling.classList.add('up');
+                var sortData = sortPivot(
+                    pivotArray,
+                    e.target.dataset.index,
+                    'asc'
+                );
+                //sortData.unshift([]); //Simulate header
+                DataMessenger.refreshPivotTable(tableElement, sortData);
+            }
+        }
+    });
+
+    tileWrapper.onclick = (evt) => {
+        if(evt.target.classList.contains('chata-suggestion-btn-renderer')){
+            if(obj.isSecond){
+                obj.internalQuery = evt.target.textContent;
+                obj.inputToolbar.input.value = evt.target.textContent;
+            }else{
+                chataDashboardItem.inputQuery.value = evt.target.textContent;
+            }
+            chataDashboardItem.runQuery();
         }
     }
 
