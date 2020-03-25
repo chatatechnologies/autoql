@@ -724,13 +724,17 @@ DataMessenger.sendDrilldownMessage = function(
 
         responseLoadingContainer.appendChild(responseLoading);
         DataMessenger.drawerContent.appendChild(responseLoadingContainer);
-        DataMessenger.ajaxCallPost(URL, function(response){
-            DataMessenger.putTableResponse(response);
+        DataMessenger.ajaxCallPost(URL, function(response, status){
+            if(response['data']['rows'].length > 0){
+                DataMessenger.putTableResponse(response);
+            }else{
+                DataMessenger.putSimpleResponse(response);
+            }
             DataMessenger.drawerContent.removeChild(responseLoadingContainer);
             refreshTooltips();
         }, data, options);
     }else{
-        DataMessenger.ajaxCallPost(URL, function(response){
+        DataMessenger.ajaxCallPost(URL, function(response, status){
             responseRenderer.innerHTML = '';
             var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
                 'chat-bar-text'
@@ -834,9 +838,13 @@ DataMessenger.showColumnEditor = function(id){
                 is_visible: inputs[i].checked
             })
             json['data']['columns'][i]['is_visible'] = inputs[i].checked;
-            hideShowTableCols(table);
-            adjustTableWidth(table, thArray, json['data']['columns']);
         }
+        var headerWidth = adjustTableWidth(
+            table, thArray, json['data']['columns']
+        );
+        hideShowTableCols(table);
+        table.style.width = headerWidth + 'px';
+        table.headerElement.style.width = headerWidth + 'px';
         DataMessenger.putCall(data, function(response){
             modal.close();
         }, DataMessenger.options)
@@ -1136,12 +1144,7 @@ DataMessenger.clickHandler = function(e){
                 var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedColumnChart(component, groups, dataGrouped, cols, DataMessenger.options);
             }else{
-                var values = formatDataToBarChart(json, DataMessenger.options);
-                var grouped = values[0];
-                var cols = json['data']['columns'];
-
-                var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
+                createColumnChart(component, json, DataMessenger.options);
             }
         }
         if(e.target.classList.contains('pie_chart')){
@@ -1241,11 +1244,7 @@ DataMessenger.clickHandler = function(e){
                 var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedBarChart(component, groups, dataGrouped, cols, DataMessenger.options);
             }else{
-                var values = formatDataToBarChart(json, DataMessenger.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createBarChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
+                createBarChart(component, json, DataMessenger.options);
             }
 
         }
@@ -1277,11 +1276,7 @@ DataMessenger.clickHandler = function(e){
                 var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
                 createGroupedLineChart(component, groups, dataGrouped, cols, DataMessenger.options);
             }else{
-                var values = formatDataToBarChart(json, DataMessenger.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createLineChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
+                createLineChart(component, json, DataMessenger.options);
             }
         }
 
@@ -1769,7 +1764,7 @@ DataMessenger.ajaxCall = function(val, callback, options){
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4){
             var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            callback(jsonResponse, xhr.status);
         }
     };
     xhr.open('POST', url);
@@ -1820,7 +1815,7 @@ DataMessenger.ajaxCallPost = function(url, callback, data, options){
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4){
             var jsonResponse = JSON.parse(xmlhttp.responseText);
-            callback(jsonResponse);
+            callback(jsonResponse, xmlhttp.status);
         }
     };
     xmlhttp.send(JSON.stringify(data));
@@ -1950,7 +1945,7 @@ DataMessenger.sendMessage = function(chataInput, textValue){
             var suggestionArray = createSuggestionArray(jsonResponse);
             DataMessenger.putSafetynetMessage(suggestionArray);
         }else{
-            DataMessenger.ajaxCall(textValue, function(jsonResponse){
+            DataMessenger.ajaxCall(textValue, function(jsonResponse, status){
                 chataInput.removeAttribute("disabled");
                 DataMessenger.drawerContent.removeChild(responseLoadingContainer);
                 switch(jsonResponse['data']['display_type']){
@@ -1990,20 +1985,14 @@ DataMessenger.sendMessage = function(chataInput, textValue){
                     break;
                     case 'line':
                         var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse, DataMessenger.options);
-                        var grouped = values[0];
-                        var hasNegativeValues = values[1];
-                        var cols = jsonResponse['data']['columns'];
-                        createLineChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
+                        createLineChart(
+                            component, jsonResponse, DataMessenger.options
+                        );
                         DataMessenger.refreshToolbarButtons(component, 'line');
                     break;
                     case 'bar':
                         var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse, DataMessenger.options);
-                        var grouped = values[0];
-                        var hasNegativeValues = values[1];
-                        var cols = jsonResponse['data']['columns'];
-                        createBarChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
+                        createBarChart(component, jsonResponse, DataMessenger.options);
                         DataMessenger.refreshToolbarButtons(component, 'bar');
                     break;
                     case 'word_cloud':
@@ -2067,13 +2056,12 @@ DataMessenger.sendMessage = function(chataInput, textValue){
                         DataMessenger.putTableResponse(jsonResponse);
                     break;
                     case 'column':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse, DataMessenger.options);
-                        var grouped = values[0];
-                        var hasNegativeValues = values[1];
-                        var cols = jsonResponse['data']['columns'];
-
-                        createColumnChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
+                        var component = DataMessenger.putTableResponse(
+                            jsonResponse
+                        );
+                        createColumnChart(
+                            component, jsonResponse, DataMessenger.options
+                        );
                         DataMessenger.refreshToolbarButtons(component, 'column');
                     break;
                     case 'help':
@@ -2107,11 +2095,16 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
     <div class="chat-message-toolbar right">
         ${toolbarButtons}
     </div>`;
-    var value = formatData(
-        jsonResponse['data']['rows'][0][0],
-        jsonResponse['data']['columns'][0],
-        DataMessenger.options
-    );
+    var value = ''
+    if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
+        value = formatData(
+            jsonResponse['data']['rows'][0][0],
+            jsonResponse['data']['columns'][0],
+            DataMessenger.options
+        );
+    }else{
+        value = jsonResponse['message'];
+    }
     var div = document.createElement('div');
     div.classList.add('chata-single-response');
     div.appendChild(document.createTextNode(value));

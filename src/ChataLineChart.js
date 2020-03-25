@@ -1,12 +1,23 @@
-function createLineChart(component, data, cols, hasNegativeValues, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+
+    var values = formatDataToBarChart(json, DataMessenger.options);
+    var data = values[0];
+    var hasNegativeValues = values[1];
+    var cols = json['data']['columns'];
+
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var index1 = notGroupableField.indexCol;
+    var index2 = groupableField.indexCol;
+
+    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
+    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
-
 
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
@@ -152,7 +163,7 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
         .attr('data-col2', col2)
         .attr('data-colvalue1', d.label)
         .attr('data-colvalue2',formatData(
-            d.value, cols[1],
+            d.value, cols[index1],
             options
         ))
     })

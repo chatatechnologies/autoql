@@ -236,6 +236,25 @@ function getGroupableField(json){
     return -1;
 }
 
+function getNotGroupableField(json){
+    var r = {
+        indexCol: -1,
+        jsonCol: {},
+        name: ''
+    }
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        if(!json['data']['columns'][i]['groupable']){
+            r['indexCol'] = i;
+            r['jsonCol'] = json['data']['columns'][i];
+            r['name'] = json['data']['columns'][i]['name'];
+            return r;
+        }
+    }
+    return -1;
+}
+
+
+
 function getGroupables(json){
     var cont = 0;
     var groups = []
@@ -531,11 +550,18 @@ function formatDataToBarChart(json, options){
     var values = [];
     var col1 = json['data']['columns'][0];
     var hasNegativeValues = false;
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    console.log('GROUPABLE FIELD');
+    console.log(groupableField);
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['label'] = formatData(data[0], col1, options);
-        var value = parseFloat(data[1]);
+        row['label'] = formatData(
+            data[groupableField.indexCol], groupableField.jsonCol, options
+        );
+        var value = parseFloat(data[notGroupableField.indexCol]);
         if(value < 0 && !hasNegativeValues){
             hasNegativeValues = true;
         }
@@ -777,7 +803,7 @@ function adjustTableWidth(table, thArray, cols,
         document.body.appendChild(div);
 
         w = tdEl[x].offsetWidth;
- 
+
         if(cols[x] && 'is_visible' in cols[x] && !cols[x]['is_visible'])continue;
 
 
@@ -789,6 +815,7 @@ function adjustTableWidth(table, thArray, cols,
         tdEl[x].style.width = (w) + 'px';
 
         headerWidth += w;
+        console.log(headerWidth);
         document.body.removeChild(div);
     }
 
