@@ -822,13 +822,8 @@ function TileView(dashboard, chataDashboardItem,
                     true
                 );
             }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
                 createBarChart(
-                    chartWrapper, grouped, cols,
-                    hasNegativeValues, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -875,13 +870,8 @@ function TileView(dashboard, chataDashboardItem,
                     true
                 );
             }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var cols = json['data']['columns'];
-                var hasNegativeValues = values[1];
                 createColumnChart(
-                    chartWrapper, grouped, cols,
-                    hasNegativeValues, dashboard.options,
+                    chartWrapper,json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -928,13 +918,8 @@ function TileView(dashboard, chataDashboardItem,
                     true
                 );
             }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
                 createLineChart(
-                    chartWrapper, grouped, cols,
-                    hasNegativeValues, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -944,48 +929,17 @@ function TileView(dashboard, chataDashboardItem,
             case 'heatmap':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
-                var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = DataMessenger.getUniqueValues(
-                    values, row => row.unformatX
-                );
-                var labelsY = DataMessenger.getUniqueValues(
-                    values, row => row.unformatY
-                );
-                labelsY = formatLabels(
-                    labelsY, json['data']['columns'][0], dashboard.options
-                );
-                labelsX = formatLabels(
-                    labelsX, json['data']['columns'][1], dashboard.options
-                );
-
-                var cols = json['data']['columns'];
 
                 createHeatmap(chartWrapper,
-                    labelsX, labelsY, values, cols,
+                    json,
                     dashboard.options, false,
                     'data-tilechart', true);
                 break;
             case 'bubble':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
-                var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = DataMessenger.getUniqueValues(
-                    values, row => row.unformatX
-                );
-                var labelsY = DataMessenger.getUniqueValues(
-                    values, row => row.unformatY
-                );
-                labelsY = formatLabels(
-                    labelsY, json['data']['columns'][0], dashboard.options
-                );
-                labelsX = formatLabels(
-                    labelsX, json['data']['columns'][1], dashboard.options
-                );
-
-                var cols = json['data']['columns'];
                 createBubbleChart(
-                    chartWrapper, labelsX, labelsY,
-                    values, cols, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
@@ -993,21 +947,8 @@ function TileView(dashboard, chataDashboardItem,
             case 'stacked_bar':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
-                var data = cloneObject(json['data']['rows']);
-                var groups = DataMessenger.getUniqueValues(
-                    data, row => row[1]
-                );
-                groups = groups.sort().reverse();
-                var subgroups = DataMessenger.getUniqueValues(
-                    data, row => row[0]
-                );
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.format3dData(
-                    json['data']['columns'], data, groups
-                );
                 createStackedBarChart(
-                    chartWrapper, dataGrouped, groups,
-                    subgroups, cols,
+                    chartWrapper, json,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
@@ -1015,21 +956,8 @@ function TileView(dashboard, chataDashboardItem,
             case 'stacked_column':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
-                var data = cloneObject(json['data']['rows']);
-                var groups = DataMessenger.getUniqueValues(
-                    data, row => row[1]
-                );
-                groups = groups.sort().reverse();
-                var subgroups = DataMessenger.getUniqueValues(
-                    data, row => row[0]
-                );
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.format3dData(
-                    json['data']['columns'], data, groups
-                );
                 createStackedColumnChart(
-                    chartWrapper, dataGrouped, groups,
-                    subgroups, cols,
+                    chartWrapper, json,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
@@ -1037,12 +965,8 @@ function TileView(dashboard, chataDashboardItem,
             case 'pie':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
-                var data = DataMessenger.groupBy(
-                    json['data']['rows'], row => row[0]
-                );
-                var cols = json['data']['columns'];
-                createPieChart(chartWrapper, data,
-                    dashboard.options, cols, false,
+                createPieChart(chartWrapper, json,
+                    dashboard.options, false,
                     'data-tilechart', true
                 );
                 break;

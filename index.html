@@ -9,6 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/ColumnEditor.css">
     <link rel="stylesheet" type="text/css" href="css/Notifications.css">
     <link rel="stylesheet" type="text/css" href="css/NotificationSettings.css">
+    <link rel="stylesheet" type="text/css" href="css/spinner.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -893,7 +894,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1MTgwMzM0LCAiZXhwIjogMTU4NTIwMTkzNCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.BzEGK1G_Sp6J86GFhBY81uCZpDKmuyr8jQymycy9eg65foO4HD4M_lOU6hDk_3tGDfmsUxaq2sWGHB6ypQbleFeoDJHRL6AweJsNEHNxmSMgZxVrKzYapLRSnHkNoRBLYfA4lEeXGnTHbziL3VRHD-WkUGIJ-j_U_1y6OUB4zIc77EH5N-3ItimvohjMV33xJrzeTvu4e9fXUtLxc0GrT99A_CBXShikV7cItT9mHS94HaUYXdwL17_wCb1L2JD7VFZuQdMQ6iLzOqnDeXSYF0jDWTmoEZD5yKyG27V5QlL-n9JROmHqlmbolzkg-5XoJj-36H2l5Ln_Rdx3lnFBkg==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1MjYyOTI1LCAiZXhwIjogMTU4NTI4NDUyNSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.XzPoVuQbs42YWIi2TYMEkpqC38OvukxeR90XKzhl7DXJB3TXACcIVZe47KgOW3wb5XYYre8AaA2u1yqqlf1jrGmJKYvtztEoLlhxJSUtLqCtvLGxYQeEVMFuTmy2fFotdJoXBVHQyh9C8ngBXsHVc1KlO29JTmGg1ihauufYydKnWt_u1BNG0VvOOQu52WnDIj4Dw2PYTkv0zIZrt-w0qF4QTd73p2BR-ysCAoaDgYwK3TPfIWd9LYYzabNkkAArk25h17GjSZnBAM60sy_rNRvyWvtqKmryWx4BD7DDC_3VAqgi523ZSIv4z_e0VVtYIewnfQ0PZkvJnpSGSQbxwA==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,

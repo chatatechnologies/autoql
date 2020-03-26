@@ -1576,6 +1576,15 @@ text.x-axis-label, text.y-axis-label {
     color: #fff;
 }
 
+.chata-btn.default:hover{
+    border-color: var(--chata-drawer-accent-color);
+    color: var(--chata-drawer-accent-color);
+}
+
+.chata-btn.primary:hover{
+     opacity: 0.8;
+}
+
 .chata-toolbar-btn.btn-green {
     color: #2ecc40;
 }
@@ -1586,6 +1595,12 @@ text.x-axis-label, text.y-axis-label {
     width: 5px;
     height: 100vh;
     cursor: ew-resize;
+}
+
+.chata-btn.disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
 }
 
 .chata-drawer-resize-handle.left {

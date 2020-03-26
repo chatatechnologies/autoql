@@ -675,10 +675,12 @@ DataMessenger.sendDrilldownMessage = function(
     responseRenderer=undefined, loading=undefined){
     var queryId = json['data']['query_id'];
     var obj = {};
+    var groupables = getGroupableFields(json);
     if(indexData != -1){
-        for (var i = 0; i < getGroupableCount(json); i++) {
-            var value = json['data']['rows'][parseInt(indexData)][i]
-            var colData = json['data']['columns'][i]['name'];
+        for (var i = 0; i < groupables.length; i++) {
+            var index = groupables[i].indexCol;
+            var value = json['data']['rows'][parseInt(indexData)][index];
+            var colData = json['data']['columns'][index]['name'];
             obj[colData] = value.toString();
         }
     }
@@ -819,15 +821,27 @@ DataMessenger.showColumnEditor = function(id){
     var cancelButton = htmlToElement(
         `<div class="chata-btn default" style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
     )
+
+    var spinner = htmlToElement(`
+        <div class="spinner-loader hidden"></div>
+    `)
+
     var saveButton = htmlToElement(
-        `<div class="chata-btn primary " style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+        `<div class="chata-btn primary" style="padding: 5px 16px; margin: 2px 5px;">
+        </div>`
     )
+
+    saveButton.appendChild(spinner);
+    saveButton.appendChild(document.createTextNode('Apply'));
+
 
     cancelButton.onclick = function(event){
         modal.close();
     }
 
     saveButton.onclick = function(event){
+        this.classList.add('disabled');
+        spinner.classList.remove('hidden');
         var inputs = container.getElementsByClassName('m-checkbox__input');
         var data = [];
         var table = document.querySelector(`[data-componentid='${id}']`);
@@ -1621,6 +1635,8 @@ DataMessenger.closeDrawer = function(){
 
 DataMessenger.openDrawer = function(){
     DataMessenger.options.isVisible = true;
+    var chataInput = document.getElementById('chata-input');
+    chataInput.focus();
     if(DataMessenger.options.enableQueryInspirationTab){
         DataMessenger.queryTabs.style.visibility = 'visible';
     }
@@ -1958,7 +1974,11 @@ DataMessenger.sendMessage = function(chataInput, textValue){
                                 DataMessenger.putSimpleResponse(jsonResponse);
                             }
                         }else{
-                            DataMessenger.putTableResponse(jsonResponse);
+                            if(rows.length > 0){
+                                DataMessenger.putTableResponse(jsonResponse);
+                            }else{
+                                DataMessenger.putSimpleResponse(jsonResponse);
+                            }
                         }
                     break;
                     case 'compare_table':
@@ -2092,9 +2112,9 @@ DataMessenger.getActionButtons = function(idRequest, type){
     }
     if(type == 'simple'){
         return `
-        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
+        <!-- <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
-        </button>
+        </button> -->
         ${copySqlButton}
         ${deleteMessage}
         `;
@@ -2128,9 +2148,9 @@ DataMessenger.getActionButtons = function(idRequest, type){
         <button class="chata-toolbar-btn csv" data-tippy-content="Download as CSV" data-id="${idRequest}">
             ${DOWNLOAD_CSV_ICON}
         </button>
-        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
+        <!-- <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
-        </button>
+        </button> -->
         ${copySqlButton}
         ${deleteMessage}
         `;
@@ -2144,9 +2164,9 @@ DataMessenger.getActionButtons = function(idRequest, type){
         <button class="chata-toolbar-btn export_png" data-tippy-content="Download as PNG" data-id="${idRequest}">
             ${EXPORT_PNG_ICON}
         </button>
-        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
+        <!-- <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
             ${INFO_ICON}
-        </button>
+        </button> -->
         ${copySqlButton}
         ${deleteMessage}
         `;

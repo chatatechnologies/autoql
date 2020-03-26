@@ -216,6 +216,10 @@
     align-items: center;
 }
 
+.dashboard-tile-response-container.chata-hidden-scrollbox{
+    overflow: visible;
+}
+
 .dashboard-tile-response-container {
     /* display: -webkit-box;
     display: flex; */
