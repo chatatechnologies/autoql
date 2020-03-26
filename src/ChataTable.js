@@ -110,11 +110,10 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
 
                 }
                 DataMessenger.putCall(parameters, function(response){
-                    console.log(response);
-                    hideShowTableCols(table);
                     adjustTableWidth(
                         table, thArray, jsonResponse['data']['columns']
                     );
+                    hideShowTableCols(table);
                 }, DataMessenger.options)
             }
 

@@ -1,10 +1,31 @@
-function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createHeatmap(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
+
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    var data = formatDataToHeatmap(json, DataMessenger.options);
+    var labelsX = DataMessenger.getUniqueValues(data, row => row.unformatX);
+    var labelsY = DataMessenger.getUniqueValues(data, row => row.unformatY);
+    var cols = json['data']['columns'];
+
+    labelsY = formatLabels(
+        labelsY, cols[groupableIndex1], DataMessenger.options
+    );
+    labelsX = formatLabels(
+        labelsX, cols[groupableIndex2], DataMessenger.options
+    );
+
+    console.log(data);
+
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
-    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
@@ -54,10 +75,10 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     if (barWidth < 16) {
         labelsX.forEach((element, index) => {
             if (index % intervalWidth === 0) {
-                if(element.length < 18){
+                if(element.toString().length < 18){
                     xTickValues.push(element);
                 }else{
-                    xTickValues.push(element.slice(0, 18));
+                    xTickValues.push(element.toString().slice(0, 18));
                 }
             }
         });
@@ -66,10 +87,10 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     if(barHeight < 16){
         labelsY.forEach((element, index) => {
             if (index % intervalHeight === 0) {
-                if(element.length < 18){
+                if(element.toString().length < 18){
                     yTickValues.push(element);
                 }else{
-                    yTickValues.push(element.slice(0, 18));
+                    yTickValues.push(element.toString().slice(0, 18));
                 }
             }
         });
@@ -132,7 +153,7 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         if(d.length < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d.toString().slice(0, 18);
         }
     }))
     .padding(0.01);
@@ -156,16 +177,16 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         var xLabel = '';
         var yLabel = '';
 
-        if(d.labelX.length < 18){
+        if(d.labelX.toString().length < 18){
             xLabel = d.labelX;
         }else{
-            xLabel = d.labelX.slice(0, 18);
+            xLabel = d.labelX.toString().slice(0, 18);
         }
 
-        if(d.labelY.length < 18){
+        if(d.labelY.toString().length < 18){
             yLabel = d.labelY;
         }else{
-            yLabel = d.labelY.slice(0, 18);
+            yLabel = d.labelY.toString().slice(0, 18);
         }
         return xLabel+':'+yLabel;
     })
@@ -179,22 +200,22 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', d.labelX)
         .attr('data-colvalue3', formatData(
-            d.value, cols[2],
+            d.value, cols[notGroupableIndex],
             options
         ))
     })
     .attr("x", function(d) {
-        if(d.labelX.length < 18){
+        if(d.labelX.toString().length < 18){
             return x(d.labelX);
         }else{
-            return x(d.labelX.slice(0, 18));
+            return x(d.labelX.toString().slice(0, 18));
         }
     })
     .attr("y", function(d) {
         if(d.labelY.length < 18){
             return y(d.labelY);
         }else{
-            return y(d.labelY.slice(0, 18));
+            return y(d.labelY.toString().slice(0, 18));
         }
     })
     .attr("width", x.bandwidth())

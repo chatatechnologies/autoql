@@ -98,7 +98,7 @@ function createColumnChart(component, json, options, fromDataMessenger=true, val
     .call(
         axisLeft
         .tickSize(-width)
-        .tickFormat(function(d){return formatChartData(d, cols[1], options)})
+        .tickFormat(function(d){return formatChartData(d, cols[index1], options)})
     );
 
 

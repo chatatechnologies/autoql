@@ -1155,12 +1155,10 @@ DataMessenger.clickHandler = function(e){
             }else{
                 var idRequest = e.target.dataset.id;
             }
-            var json = DataMessenger.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             DataMessenger.refreshToolbarButtons(component, 'pie');
-            var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
-            var cols = json['data']['columns'];
-            createPieChart(component, data, DataMessenger.options, cols);
+            var json = DataMessenger.responses[idRequest];
+            createPieChart(component, json, DataMessenger.options);
         }
         if(e.target.classList.contains('stacked_column_chart')){
             if(e.target.tagName == 'svg'){
@@ -1173,15 +1171,9 @@ DataMessenger.clickHandler = function(e){
             var json = DataMessenger.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
             DataMessenger.refreshToolbarButtons(component, 'stacked_column');
-            var data = cloneObject(json['data']['rows']);
-
-            var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-            groups = groups.sort().reverse();
-            var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-            var cols = json['data']['columns']
-
-            var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-            createStackedColumnChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
+            createStackedColumnChart(
+                component, cloneObject(json), DataMessenger.options
+            );
         }
         if(e.target.classList.contains('stacked_bar_chart')){
             if(e.target.tagName == 'svg'){
@@ -1192,15 +1184,14 @@ DataMessenger.clickHandler = function(e){
                 var idRequest = e.target.dataset.id;
             }
             var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
+            var component = document.querySelectorAll(
+                `[data-componentid='${idRequest}']`
+            )[0];
             DataMessenger.refreshToolbarButtons(component, 'stacked_bar');
-            var data = cloneObject(json['data']['rows']);
-            var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-            groups = groups.sort().reverse();
-            var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-            var cols = json['data']['columns'];
-            var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-            createStackedBarChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
+
+            createStackedBarChart(
+                component, cloneObject(json), DataMessenger.options
+            );
         }
         if(e.target.classList.contains('table')){
             if(e.target.tagName == 'svg'){
@@ -1291,14 +1282,8 @@ DataMessenger.clickHandler = function(e){
             }
             var json = DataMessenger.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var values = formatDataToHeatmap(json, DataMessenger.options);
-            var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-            var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-            labelsY = formatLabels(labelsY, json['data']['columns'][0], DataMessenger.options);
-            labelsX = formatLabels(labelsX, json['data']['columns'][1], DataMessenger.options);
-            var cols = json['data']['columns'];
 
-            createHeatmap(component, labelsX, labelsY, values, cols, DataMessenger.options);
+            createHeatmap(component, json, DataMessenger.options);
             DataMessenger.refreshToolbarButtons(component, 'heatmap');
         }
 
@@ -1313,14 +1298,7 @@ DataMessenger.clickHandler = function(e){
             }
             var json = DataMessenger.responses[idRequest];
             var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var values = formatDataToHeatmap(json, DataMessenger.options);
-            var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-            var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-            labelsY = formatLabels(labelsY, json['data']['columns'][0], DataMessenger.options);
-            labelsX = formatLabels(labelsX, json['data']['columns'][1], DataMessenger.options);
-
-            var cols = json['data']['columns'];
-            createBubbleChart(component, labelsX, labelsY, values, cols, DataMessenger.options);
+            createBubbleChart(component, json, DataMessenger.options);
             DataMessenger.refreshToolbarButtons(component, 'bubble');
         }
         if(e.target.classList.contains('export_png')){
@@ -1452,15 +1430,24 @@ DataMessenger.formatCompareData = function(col, data, groups){
     return dataGrouped;
 }
 
-DataMessenger.format3dData = function(cols, data, groups){
+DataMessenger.format3dData = function(json, groups){
     var dataGrouped = [];
+    var data = json['data']['rows'];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
 
     for (var i = 0; i < groups.length; i++) {
         var group = groups[i];
         dataGrouped.push({group: group});
         for (var x = 0; x < data.length; x++) {
-            if(data[x][1] == group){
-                dataGrouped[i][data[x][0]] = parseFloat(data[x][2]);
+            console.log(group);
+            if(data[x][groupableIndex2] == group){
+                dataGrouped[i][data[x][groupableIndex1]]
+                    = parseFloat(data[x][notGroupableIndex]);
             }
         }
     }
@@ -1468,12 +1455,12 @@ DataMessenger.format3dData = function(cols, data, groups){
     return dataGrouped;
 }
 
-DataMessenger.groupBy = function(list, keyGetter) {
+DataMessenger.groupBy = function(list, keyGetter, indexData) {
     obj = {};
     list.forEach((item) => {
         const key = keyGetter(item);
         if (!obj.hasOwnProperty(key)) {
-            obj[key] = item[1];
+            obj[key] = item[indexData];
         }
     });
     return obj;
@@ -2001,55 +1988,31 @@ DataMessenger.sendMessage = function(chataInput, textValue){
                     case 'stacked_column':
                         var component = DataMessenger.putTableResponse(jsonResponse);
                         DataMessenger.refreshToolbarButtons(component, 'stacked_column');
-                        var data = cloneObject(jsonResponse['data']['rows']);
-
-                        var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                        groups = groups.sort().reverse();
-                        for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1], DataMessenger.options);
-                        }
-                        for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1], DataMessenger.options)
-                        }
-                        var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                        var cols = jsonResponse['data']['columns']
-                        var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
-                        createStackedColumnChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
+                        createStackedColumnChart(
+                            component, cloneObject(jsonResponse),
+                            DataMessenger.options
+                        );
                     break;
                     case 'stacked_bar':
                         var component = DataMessenger.putTableResponse(jsonResponse);
                         DataMessenger.refreshToolbarButtons(component, 'stacked_bar');
-                        var data = cloneObject(jsonResponse['data']['rows']);
-
-                        var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                        groups = groups.sort().reverse();
-                        var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                        var cols = jsonResponse['data']['columns'];
-                        var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
-                        createStackedBarChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
+                        createStackedBarChart(
+                            component, cloneObject(jsonResponse), DataMessenger.options
+                        );
                     break;
                     case 'bubble':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToHeatmap(jsonResponse);
-                        var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                        var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0], DataMessenger.options);
-                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1], DataMessenger.options);
-
+                        var component = DataMessenger.putTableResponse(
+                            jsonResponse
+                        );
                         var cols = jsonResponse['data']['columns'];
-                        createBubbleChart(component, labelsX, labelsY, values, cols, DataMessenger.options);
+                        createBubbleChart(
+                            component, jsonResponse, DataMessenger.options
+                        );
                         DataMessenger.refreshToolbarButtons(component, 'bubble');
                     break;
                     case 'heatmap':
                         var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToHeatmap(jsonResponse);
-                        var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                        var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0], DataMessenger.options);
-                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1], DataMessenger.options);
-                        var cols = jsonResponse['data']['columns'];
-
-                        createHeatmap(component, labelsX, labelsY, values, cols, DataMessenger.options);
+                        createHeatmap(component, jsonResponse, DataMessenger.options);
                         DataMessenger.refreshToolbarButtons(component, 'heatmap');
                     break;
                     case 'pie':
@@ -2449,10 +2412,10 @@ DataMessenger.putTableResponse = function(jsonResponse){
                 console.log(parameters);
                 DataMessenger.putCall(parameters, function(response){
                     console.log(response);
-                    hideShowTableCols(table);
                     adjustTableWidth(
                         table, thArray, jsonResponse['data']['columns']
                     );
+                    hideShowTableCols(table);
                 }, DataMessenger.options)
             }
 

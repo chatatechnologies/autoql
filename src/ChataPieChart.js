@@ -1,10 +1,22 @@
-function createPieChart(component, data, options, cols, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var cols = json['data']['columns'];
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+    var index1 = notGroupableField.indexCol;
+    var index2 = groupableField.indexCol;
+
+    var data = DataMessenger.groupBy(
+        json['data']['rows'], row => row[index2], index1
+    );
+
+    console.log(data);
+
+    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
+    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     if(fromDataMessenger){
@@ -78,9 +90,9 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(d.data.key, cols[0], options))
+        .attr('data-colvalue1', formatData(d.data.key, cols[index2], options))
         .attr('data-colvalue2', formatData(
-            d.value, cols[1],
+            d.value, cols[index1],
             options
         ))
     })
@@ -139,13 +151,15 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
         var d = dataReady[i]
         labels.push(
             formatData(
-                    d.data.key, cols[0],
+                    d.data.key, cols[index2],
                     options) + ": " +
             formatData(
-                    d.value, cols[1],
+                    d.value, cols[index1],
                     options
             )
         );
+        console.log(d.value);
+        console.log(cols[index1]);
     }
 
     const legendWrapLength = width / 2 - 50

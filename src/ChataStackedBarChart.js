@@ -1,16 +1,37 @@
-function createStackedBarChart(component, data, groups, subgroups, cols, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedBarChart(component, json, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 100},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
-    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+
+    var data = cloneObject(json['data']['rows']);
+    var groups = DataMessenger.getUniqueValues(
+        data, row => row[groupableIndex2]
+    );
+    groups = groups.sort().reverse();
+    var subgroups = DataMessenger.getUniqueValues(
+        data, row => row[groupableIndex1]
+    );
+    var cols = json['data']['columns'];
+    var data = DataMessenger.format3dData(json, groups);
+
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
+
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromDataMessenger){
         if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
@@ -124,7 +145,7 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
-        return formatChartData(d, cols[1], options);
+        return formatChartData(d, cols[groupableIndex2], options);
     })).select(".domain").remove();
 
     svg.append("g")
@@ -164,10 +185,10 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         .attr('data-col3', col3)
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', formatData(
-            d.data.group, cols[1], options
+            d.data.group, cols[groupableIndex2], options
         ))
         .attr('data-colvalue3', formatData(
-            d.value, cols[2],
+            d.value, cols[notGroupableIndex],
             options
         ))
         .attr('data-unformatvalue1', d.labelY)

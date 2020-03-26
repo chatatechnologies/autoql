@@ -88,7 +88,7 @@ function createBarChart(component, json, options, fromDataMessenger=true, valueC
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
-        return formatChartData(d, cols[1], options);
+        return formatChartData(d, cols[index1], options);
     });
 
     if(tickWidth < 135){

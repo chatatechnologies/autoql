@@ -219,6 +219,28 @@ function csvTo2dArray(parseMe) {
     return rowsOut;
 }
 
+function getGroupableFields(json){
+    var groupables = []
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        var r = {
+            indexCol: -1,
+            jsonCol: {},
+            name: ''
+        }
+        if(json['data']['columns'][i]['groupable']){
+            r['indexCol'] = i;
+            r['jsonCol'] = json['data']['columns'][i];
+            r['name'] = json['data']['columns'][i]['name'];
+            groupables.push(r);
+        }
+    }
+
+    console.log('GROUPABLES: ');
+    console.log(groupables);
+
+    return groupables;
+}
+
 function getGroupableField(json){
     var r = {
         indexCol: -1,
@@ -529,16 +551,23 @@ function formatLabels(labels, col, options){
 function formatDataToHeatmap(json, options){
     var lines = json['data']['rows'];
     var values = [];
-    var col1 = json['data']['columns'][0];
-    var col2 = json['data']['columns'][1];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    var col1 = json['data']['columns'][groupableIndex1];
+    var col2 = json['data']['columns'][groupableIndex2];
+
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['labelY'] = formatData(data[0], col1, options);
-        row['labelX'] = formatData(data[1], col2, options);
-        row['unformatY'] = data[0];
-        row['unformatX'] = data[1];
-        var value = parseFloat(data[2]);
+        row['labelY'] = formatData(data[groupableIndex1], col1, options);
+        row['labelX'] = formatData(data[groupableIndex2], col2, options);
+        row['unformatY'] = data[groupableIndex1];
+        row['unformatX'] = data[groupableIndex2];
+        var value = parseFloat(data[notGroupableIndex]);
         row['value'] = value;
         values.push(row);
     }

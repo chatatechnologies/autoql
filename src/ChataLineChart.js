@@ -145,7 +145,7 @@ function createLineChart(component, json, options, fromDataMessenger=true, value
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-        return formatChartData(d, cols[1], options)}
+        return formatChartData(d, cols[index1], options)}
     )
     .tickSize(-width)
     );
