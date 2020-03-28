@@ -13,7 +13,8 @@
 .col-visibility-line-item {
     display: flex;
     justify-content: space-between;
-    line-height: 36px;
+    /* line-height: 36px; */
+    margin-top: 5px;
 }
 
 
@@ -71,8 +72,17 @@
 }
 
 .m-checkbox__input:checked:before, .m-checkbox__input:indeterminate:before {
-    top: 2px !important;
-    right: 2px !important;
-    bottom: 2px !important;
-    left: 2px !important;
+    top: 0px !important;
+    right: 0px !important;
+    bottom: 0px !important;
+    left: 0px !important;
+}
+
+.chata-checkbox-tick {
+    position: absolute;
+    color: #fff;
+    top: 0px;
+    left: 3px;
+    line-height: 20px !important;
+    pointer-events: none;
 }

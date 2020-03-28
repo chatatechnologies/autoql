@@ -771,53 +771,104 @@ DataMessenger.showColumnEditor = function(id){
     var container = document.createElement('div');
     var headerEditor = document.createElement('div');
 
+    var createCheckbox = (name, checked, colIndex, isLine=false) => {
+        var tick = htmlToElement(`
+            <div class="chata-checkbox-tick">
+            <span class="chata-icon">${TICK}</span>
+            </div>
+        `);
+        var checkboxContainer = document.createElement('div');
+        var checkboxWrapper = document.createElement('div');
+        var checkboxInput = document.createElement('input');
+        checkboxInput.setAttribute('type', 'checkbox');
+        checkboxInput.classList.add('m-checkbox__input');
+        if(name){
+            checkboxInput.setAttribute('data-col-name', name);
+        }
+        if(isLine){
+            checkboxInput.setAttribute('data-line', 'true');
+        }
+        checkboxInput.setAttribute('data-col-index', colIndex);
+        checkboxContainer.style.width = '36px';
+        checkboxContainer.style.height = '36px';
+        checkboxWrapper.style.width = '36px';
+        checkboxWrapper.style.height = '36px';
+        checkboxWrapper.style.position = 'relative';
+
+        if(checked){
+            checkboxInput.setAttribute('checked', 'true');
+        }
+
+        checkboxWrapper.appendChild(checkboxInput);
+        checkboxWrapper.appendChild(tick);
+
+        checkboxContainer.appendChild(checkboxWrapper);
+        checkboxContainer.input = checkboxInput;
+        return checkboxContainer;
+    }
+
+
     container.style.padding = '0px 15px';
     headerEditor.classList.add('col-visibility-header');
     headerEditor.appendChild(htmlToElement(`
         <div>Column Name</div>
     `))
-    headerEditor.appendChild(htmlToElement(`
-        <div>Visible</div>
-    `))
+    var divVisibility = htmlToElement(`
+        <div>Visibility</div>
+    `);
+    divVisibility.style.display = 'flex';
     container.appendChild(headerEditor);
     modal.chataModal.classList.add('chata-modal-column-editor')
     modal.setTitle('Show/Hide Columns')
-
+    var headerCheckbox = createCheckbox(null, false, -1);
+    headerEditor.appendChild(divVisibility);
+    headerCheckbox.style.marginLeft = '12px';
+    headerCheckbox.style.marginTop = '1px';
+    divVisibility.appendChild(headerCheckbox);
     for (var i = 0; i < columns.length; i++) {
         var lineItem = document.createElement('div');
         var isVisible = columns[i]['is_visible'] || false;
         var colStr = columns[i]['display_name'] ||
             columns[i]['name'];
         var colName = formatColumnName(colStr);
-        var checkboxContainer = document.createElement('div');
-        var checkboxWrapper = document.createElement('div');
-        var mCheckbox = document.createElement('div');
-        var checkboxInput = document.createElement('input');
-        checkboxInput.setAttribute('type', 'checkbox');
-        checkboxInput.classList.add('m-checkbox__input')
-        checkboxInput.setAttribute('data-col-name', columns[i]['name']);
-        checkboxInput.setAttribute('data-col-index', i);
-        checkboxContainer.style.width = '36px';
-        checkboxContainer.style.height = '36px';
-        checkboxWrapper.style.width = '36px';
-        checkboxWrapper.style.height = '36px';
-        mCheckbox.classList.add('m-checkbox')
 
-        if(isVisible){
-            checkboxInput.setAttribute('checked', 'true');
-        }
-
-        checkboxWrapper.appendChild(mCheckbox);
-        checkboxWrapper.appendChild(checkboxInput);
-
-        checkboxContainer.appendChild(checkboxWrapper);
-        lineItem.classList.add('col-visibility-line-item')
+        lineItem.classList.add('col-visibility-line-item');
         lineItem.appendChild(htmlToElement(`
             <div>${colName}</div>
         `))
+        var checkboxContainer = createCheckbox(
+            columns[i]['name'], isVisible, i, true
+        );
+
+        checkboxContainer.input.onchange = (evt) => {
+            var headerChecked = true;
+            var inputs = container.querySelectorAll('[data-line]');
+
+            for (var x = 0; x < inputs.length; x++) {
+                if(!inputs[x].checked){
+                    headerChecked = false;
+                    break;
+                }
+            }
+            headerCheckbox.input.checked = headerChecked;
+        }
+
+        if(isVisible){
+            headerCheckbox.input.checked = true;
+        }
         lineItem.appendChild(checkboxContainer);
         container.appendChild(lineItem);
     }
+
+
+    headerCheckbox.onchange = (evt) => {
+        var inputs = container.querySelectorAll('[data-line]');
+        console.log(evt.checked);
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].checked = evt.target.checked;
+        }
+    }
+
     var cancelButton = htmlToElement(
         `<div class="chata-btn default" style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
     )
@@ -842,7 +893,7 @@ DataMessenger.showColumnEditor = function(id){
     saveButton.onclick = function(event){
         this.classList.add('disabled');
         spinner.classList.remove('hidden');
-        var inputs = container.getElementsByClassName('m-checkbox__input');
+        var inputs = container.querySelectorAll('[data-line]');
         var data = [];
         var table = document.querySelector(`[data-componentid='${id}']`);
         var thArray = table.headerElement.getElementsByTagName('th');
@@ -2307,6 +2358,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     const options = DataMessenger.options.dataFormatting;
     containerMessage.classList.add('chat-single-message-container');
     containerMessage.classList.add('response');
+    containerMessage.classList.add('chat-message-response');
     messageBubble.classList.add('chat-message-bubble');
     messageBubble.classList.add('full-width');
     var idRequest = uuidv4();

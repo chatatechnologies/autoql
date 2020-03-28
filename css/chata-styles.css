@@ -279,6 +279,10 @@ body{
 
 }
 
+.chat-message-response{
+    min-height: 380px;
+}
+
 .chat-single-message-container.response {
     display: flex;
     justify-content: flex-start;
