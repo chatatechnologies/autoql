@@ -9,7 +9,8 @@
     <link rel="stylesheet" type="text/css" href="css/ColumnEditor.css">
     <link rel="stylesheet" type="text/css" href="css/Notifications.css">
     <link rel="stylesheet" type="text/css" href="css/NotificationSettings.css">
-    <link rel="stylesheet" type="text/css" href="css/spinner.css">
+    <link rel="stylesheet" type="text/css" href="css/Spinner.css">
+    <link rel="stylesheet" type="text/css" href="css/PopoverMenu.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -894,7 +895,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1MzQ4NDIwLCAiZXhwIjogMTU4NTM3MDAyMCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.BtBYHgkUNwYNkgR_rX_0kRUO4WHhGHZERHmKjMJvBatiVeJwF2mrpj6ko2QBFCf0hkjmg7fTlQ_oxruuWxHZHHxUKoDJV1vHj_ogjRUSjsYIe91BJgA-2H-dI4wQSDmvRyU1gWj0xMdg57Og9XOAxZmtxac20wo4nA2iwy3ARLseA8yA_uc91NRScXMtEuoVR_JpAfUDqVsbSdT_jgyx8IpcKJoNADZeCUE5o_BA4Xi6qzStX-V1oVXcWv0CLDE3HJ8Y70dWBedo5GLqbxOfEioNcA7Fhj1JrFsR7thay55fpSrTSPkmjL_86ikg-kr-ZobFzBz03SyouOhseh9vIA==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1NjAwMTM2LCAiZXhwIjogMTU4NTYyMTczNiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.UYuKKfeVO1mbvenv4bcmKHNf9rUBncx-Dd8oOtSbsPcv49G7txouHWnsknekiQQWVqoDQRV46ktCHQl7XoyqTOyDwduOy98w9XBCWW0_NlgJlwyMHAcL_XlVQx7mIGHsVddNbmNM7_u270Gc_HTUmY5UeXof0hkpdcFlOqczzMknQPYo4zQJiYA3Qf3ZlpJDrjSJuEsqgJf_qdvCgQq0ETbkFxp9oeSutTAn1RKyzGy3FuD1NqB1lJyDmaspK6mJ0u9ur3p9ix8OkDVENDYWTvF97WmK4_l7sJYLdtEc0piZwZj9TU1RZ_ZuagFIFjSDf_z_ywCxbpWkbwQiqtTJ6Q==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,

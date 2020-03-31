@@ -1,0 +1,49 @@
+.chata-popover-wrapper{
+    background: var(--chata-drawer-background-color);
+    position: absolute;
+    top: 40px;
+    left: -157px;
+    right: 0;
+    z-index: 9999;
+    border: 1px solid hsla(0,0%,67.1%,.32);
+    border-radius: 4px;
+    box-shadow: 0 0 8px rgba(0,0,0,.15);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity .2s ease 0s!important;
+}
+
+.chata-popover-wrapper.show{
+    opacity: 1;
+    visibility: visible;
+}
+
+.chat-message-toolbar.show{
+    display: block;
+}
+
+.chata-more-options-menu, .report-problem-menu {
+    background: var(--chata-drawer-background-color);
+    padding: 10px 0;
+}
+
+ .chata-menu-list {
+    list-style-type: none;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+.chata-more-options-menu .chata-menu-list li{
+    color: var(--chata-drawer-text-color-primary);
+    width: 100%;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 20px;
+    cursor: pointer;
+    font-size: 13px !important;
+}
+
+.chata-more-options-menu .chata-menu-list li:hover {
+    background: rgba(0,0,0,.05);
+}

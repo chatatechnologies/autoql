@@ -52,7 +52,7 @@ var DataMessenger = {
         clearOnClose: false,
         enableVoiceRecord: true,
         autocompleteStyles: {},
-        enableQueryInspirationTab: true,
+        enableExploreQueriesTab: true,
         isRecordVoiceActive: false,
         inputPlaceholder: 'Ask me anything…'
     },
@@ -229,7 +229,7 @@ DataMessenger.createQueryTips = function(){
 
     input.classList.add('chata-input')
     input.classList.add('left-padding')
-    input.setAttribute('placeholder', 'Enter a topic');
+    input.setAttribute('placeholder', 'Search relevant queries by topic');
     DataMessenger.queryTips = container;
     DataMessenger.drawerContent.appendChild(container);
 }
@@ -470,7 +470,10 @@ DataMessenger.createQueryTabs = function(){
 
     tabDataMessenger.classList.add('tab');
     tabDataMessenger.classList.add('active');
+    tabDataMessenger.setAttribute('data-tippy-content', 'Data Messenger');
     tabQueryTips.classList.add('tab');
+    tabQueryTips.setAttribute('data-tippy-content', 'Explore Queries');
+
     tabDataMessenger.appendChild(dataMessengerIcon);
     tabQueryTips.appendChild(queryTabsIcon);
 
@@ -496,6 +499,7 @@ DataMessenger.createQueryTabs = function(){
     DataMessenger.rootElem.appendChild(tabs);
     DataMessenger.queryTabs = tabs;
     DataMessenger.queryTabsContainer = pageSwitcherContainer;
+    refreshTooltips();
 }
 
 DataMessenger.createResizeHandler = function(){
@@ -694,7 +698,7 @@ DataMessenger.sendDrilldownMessage = function(
         data = {
             query_id: queryId,
             group_bys: obj,
-            username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+            username: 'demo',
             customer_id: options.authentication.customerId || "",
             user_id: options.authentication.userId || "",
             debug: options.autoQLConfig.debug
@@ -1538,9 +1542,19 @@ DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     }
     var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
     var toolbarRight = messageBubble.getElementsByClassName('right')[0];
-    var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
-    toolbarLeft.innerHTML = DataMessenger.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
-    toolbarRight.innerHTML = DataMessenger.getActionButtons(oldComponent.dataset.componentid, actionType);
+    var actionType = ['table', 'pivot_column', 'date_pivot'].includes(
+        activeDisplayType
+    ) ? 'csvCopy' : 'chart-view';
+
+    toolbarLeft.innerHTML = DataMessenger.getSupportedDisplayTypes(
+        oldComponent.dataset.componentid, activeDisplayType
+    );
+
+    var newToolbarRight = DataMessenger.getActionToolbar(
+        oldComponent.dataset.componentid, actionType
+    );
+    console.log('refreshToolbarButtons');
+    messageBubble.replaceChild(newToolbarRight, toolbarRight);
     refreshTooltips();
 }
 
@@ -1688,7 +1702,7 @@ DataMessenger.openDrawer = function(){
     DataMessenger.options.isVisible = true;
     var chataInput = document.getElementById('chata-input');
     chataInput.focus();
-    if(DataMessenger.options.enableQueryInspirationTab){
+    if(DataMessenger.options.enableExploreQueriesTab){
         DataMessenger.queryTabs.style.visibility = 'visible';
     }
     var body = document.getElementsByTagName('body')[0];
@@ -1808,11 +1822,15 @@ DataMessenger.ajaxCall = function(val, callback, options){
     const data = {
         text: val,
         source: "data_messenger",
-        username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-        customer_id: options.authentication.customerId || "",
-        user_id: options.authentication.userId || "",
+        // username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+        // customer_id: options.authentication.customerId || "",
+        // user_id: options.authentication.userId || "",
         debug: options.autoQLConfig.debug,
         test: options.autoQLConfig.test
+    }
+    if(options.authentication.demo){
+        data['user_id'] = 'demo';
+        data['customer_id'] = 'demo';
     }
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
@@ -2124,11 +2142,8 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
     DataMessenger.responses[idRequest] = jsonResponse;
     containerMessage.setAttribute('data-containerid', idRequest);
     messageBubble.classList.add('chat-message-bubble');
-    toolbarButtons = DataMessenger.getActionButtons(idRequest, 'simple');
-    messageBubble.innerHTML = `
-    <div class="chat-message-toolbar right">
-        ${toolbarButtons}
-    </div>`;
+    toolbarButtons = DataMessenger.getActionToolbar(idRequest, 'simple');
+    messageBubble.appendChild(toolbarButtons);
     var value = ''
     if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
         value = formatData(
@@ -2148,80 +2163,197 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
     DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
 }
 
-DataMessenger.getActionButtons = function(idRequest, type){
+DataMessenger.getMoreOptionsMenu = function(){
+
+    return htmlToElement(`
+    <div class="chata-popover-wrapper">
+        <div class="chata-more-options-menu">
+            <ul class="chata-menu-list">
+                <li>
+                    <span data-test="chata-icon" class="chata-icon undefined">
+                        <svg stroke="currentColor" fill="none" stroke-width="2"
+                            viewBox="0 0 24 24" stroke-linecap="round"
+                            stroke-linejoin="round" height="1em" width="1em"
+                            xmlns="http://www.w3.org/2000/svg">
+
+                            <ellipse cx="12" cy="5" rx="9" ry="3">
+                            </ellipse>
+                            <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                            <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                        </svg>
+                    </span>
+                    Copy generated query to clipboard
+                </li>
+            </ul>
+        </div>
+    </div>`);
+}
+
+DataMessenger.getActionButton = function(svg, tooltip, idRequest, extraClass=''){
+    return htmlToElement(`
+        <button
+            class="chata-toolbar-btn"
+            data-tippy-content="${tooltip}"
+            data-id="${idRequest}">
+            ${svg}
+        </button>
+    `)
+}
+
+DataMessenger.getActionToolbar = function(idRequest, type){
     var request = DataMessenger.responses[idRequest];
     var tooltipContent = request['data']['interpretation'];
     var copySqlButton = '';
-    const deleteMessage = `
-        <button class="chata-toolbar-btn delete-message" data-tippy-content="Delete Message" data-id="${idRequest}">
-                ${DELETE_MESSAGE}
-        </button>`;
-    if(DataMessenger.options.autoQLConfig.debug){
-        copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-            ${COPY_SQL}
-        </button>`;
-    }
-    if(type == 'simple'){
-        return `
-        <!-- <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
-            ${INFO_ICON}
-        </button> -->
-        ${copySqlButton}
-        ${deleteMessage}
-        `;
-    }else if (type == 'csvCopy'){
-        var filterButton = `
-            <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
-                ${FILTER_TABLE}
-            </button>
-        `;
-        var showHideColumnsButton = '';
+    var moreOptions = DataMessenger.getMoreOptionsMenu();
+    var toolbar = htmlToElement(`
+        <div class="chat-message-toolbar right">
+        </div>
+    `)
 
-        if(request['data']['rows'].length == 1){
-            filterButton = '';
-        }
-        if(request['data']['rows'].length > 1 &&
-           request['data']['columns'].length > 1 &&
-           DataMessenger.options.autoQLConfig.enableColumnEditor){
-            showHideColumnsButton = `
-                   <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
-                       ${COLUMN_EDITOR}
-                   </button>
-               `;
-        }
+    var moreOptionsBtn = DataMessenger.getActionButton(
+        VERTICAL_DOTS,
+        'More options',
+        idRequest,
+        'more-options'
+    )
 
-        return `
-        ${filterButton}
-        ${showHideColumnsButton}
-        <button class="chata-toolbar-btn clipboard" data-tippy-content="Copy to Clipboard" data-id="${idRequest}">
-            ${CLIPBOARD_ICON}
-        </button>
-        <button class="chata-toolbar-btn csv" data-tippy-content="Download as CSV" data-id="${idRequest}">
-            ${DOWNLOAD_CSV_ICON}
-        </button>
-        <!-- <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
-            ${INFO_ICON}
-        </button> -->
-        ${copySqlButton}
-        ${deleteMessage}
-        `;
-    }else{
-        if(DataMessenger.options.autoQLConfig.debug){
-            copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-                ${COPY_SQL}
-            </button>`;
-        }
-        return `
-        <button class="chata-toolbar-btn export_png" data-tippy-content="Download as PNG" data-id="${idRequest}">
-            ${EXPORT_PNG_ICON}
-        </button>
-        <!-- <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
-            ${INFO_ICON}
-        </button> -->
-        ${copySqlButton}
-        ${deleteMessage}
-        `;
+    moreOptionsBtn.onclick = (evt) => {
+        moreOptions.classList.toggle('show');
+        toolbar.classList.toggle('show');
     }
+
+    switch (type) {
+        case 'simple':
+            toolbar.appendChild(
+                DataMessenger.getActionButton(
+                    DELETE_MESSAGE,
+                    'Delete Message',
+                    idRequest,
+                    'delete-message'
+                )
+            );
+            toolbar.appendChild(
+                moreOptionsBtn
+            );
+            break;
+        case 'csvCopy':
+            toolbar.appendChild(
+                DataMessenger.getActionButton(
+                    FILTER_TABLE,
+                    'Filter Table',
+                    idRequest,
+                    'filter-table'
+                )
+            );
+            toolbar.appendChild(
+                DataMessenger.getActionButton(
+                    COLUMN_EDITOR,
+                    'Show/Hide Columns',
+                    idRequest,
+                    'show-hide-columns'
+                )
+            );
+            toolbar.appendChild(
+                DataMessenger.getActionButton(
+                    DELETE_MESSAGE,
+                    'Delete Message',
+                    idRequest,
+                    'delete-message'
+                )
+            );
+            toolbar.appendChild(
+                moreOptionsBtn
+            );
+            break;
+        case 'chart-view':
+            toolbar.appendChild(
+                DataMessenger.getActionButton(
+                    DELETE_MESSAGE,
+                    'Delete Message',
+                    idRequest,
+                    'delete-message'
+                )
+            );
+            toolbar.appendChild(
+                moreOptionsBtn
+            );
+        default:
+
+    }
+    toolbar.appendChild(moreOptions);
+
+    return toolbar;
+    // const popoverButton = `
+    //     <button class="chata-toolbar-btn" data-tippy-content="More options" data-id="${idRequest}">
+    //         ${VERTICAL_DOTS}
+    //     </button>
+    // `
+    //
+    // const deleteMessage = `
+    //     <button class="chata-toolbar-btn delete-message" data-tippy-content="Delete Message" data-id="${idRequest}">
+    //             ${DELETE_MESSAGE}
+    //     </button>`;
+    // if(DataMessenger.options.autoQLConfig.debug){
+    //     copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+    //         ${COPY_SQL}
+    //     </button>`;
+    // }
+    // if(type == 'simple'){
+    //     return `
+    //     ${copySqlButton}
+    //     ${deleteMessage}
+    //     ${popoverButton}
+    //     `;
+    // }else if (type == 'csvCopy'){
+    //     var filterButton = `
+    //         <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
+    //             ${FILTER_TABLE}
+    //         </button>
+    //     `;
+    //     var showHideColumnsButton = '';
+    //
+    //     if(request['data']['rows'].length == 1){
+    //         filterButton = '';
+    //     }
+    //     if(request['data']['rows'].length > 1 &&
+    //        request['data']['columns'].length > 1 &&
+    //        DataMessenger.options.autoQLConfig.enableColumnEditor){
+    //         showHideColumnsButton = `
+    //                <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
+    //                    ${COLUMN_EDITOR}
+    //                </button>
+    //            `;
+    //     }
+    //
+    //     return `
+    //     ${filterButton}
+    //     ${showHideColumnsButton}
+    //     ${deleteMessage}
+    //     ${popoverButton}
+    //     ${moreOptions}
+    //     `;
+    //     // <button class="chata-toolbar-btn clipboard" data-tippy-content="Copy to Clipboard" data-id="${idRequest}">
+    //     // ${CLIPBOARD_ICON}
+    //     // </button>
+    //     // <button class="chata-toolbar-btn csv" data-tippy-content="Download as CSV" data-id="${idRequest}">
+    //     // ${DOWNLOAD_CSV_ICON}
+    //     // </button>
+    //     // ${copySqlButton}
+    // }else{
+    //     if(DataMessenger.options.autoQLConfig.debug){
+    //         copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
+    //             ${COPY_SQL}
+    //         </button>`;
+    //     }
+    //     return `
+    //     ${deleteMessage}
+    //     ${popoverButton}
+    //     <button class="chata-toolbar-btn export_png" data-tippy-content="Download as PNG" data-id="${idRequest}">
+    //     ${EXPORT_PNG_ICON}
+    //     </button>
+    //     ${copySqlButton}
+    //     `;
+    // }
 }
 
 DataMessenger.getSupportedDisplayTypesArray = function(){
@@ -2232,7 +2364,6 @@ DataMessenger.getSupportedDisplayTypes = function(idRequest, ignore){
     var json = DataMessenger.responses[idRequest];
     var buttons = '';
     var displayTypes = getSupportedDisplayTypes(json);
-
     for (var i = 0; i < displayTypes.length; i++) {
         if(displayTypes[i] == ignore)continue;
         if(displayTypes[i] == 'table'){
@@ -2364,7 +2495,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var idRequest = uuidv4();
     DataMessenger.responses[idRequest] = jsonResponse;
     var supportedDisplayTypes = DataMessenger.getSupportedDisplayTypes(idRequest, 'table');
-    var actions = DataMessenger.getActionButtons(idRequest, 'csvCopy');
+    var actions = DataMessenger.getActionToolbar(idRequest, 'csvCopy');
     var toolbar = '';
     if(supportedDisplayTypes != ''){
         toolbar += `
@@ -2373,12 +2504,8 @@ DataMessenger.putTableResponse = function(jsonResponse){
         </div>
         `
     }
-    toolbar += `
-        <div class="chat-message-toolbar right">
-            ${actions}
-        </div>`;
-
     messageBubble.innerHTML = toolbar;
+    messageBubble.appendChild(actions);
     tableContainer.classList.add('chata-table-container');
     scrollbox.classList.add('chata-table-scrollbox');
     responseContentContainer.classList.add('chata-response-content-container');
