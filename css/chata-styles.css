@@ -4,6 +4,11 @@
     margin: 0px;
 }
 
+.chata-body-drawer-open{
+    overflow: hidden;
+    touch-action: none;
+}
+
 .drawer-handle .chata-bubbles-icon{
     margin-top: 12px;
     display: block;

@@ -117,6 +117,8 @@ function formatDate(date) {
 function copyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
+    // textArea.style.display = 'inline-block';
+    // textArea.style.position = 'absolute';
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
@@ -844,7 +846,6 @@ function adjustTableWidth(table, thArray, cols,
         tdEl[x].style.width = (w) + 'px';
 
         headerWidth += w;
-        console.log(headerWidth);
         document.body.removeChild(div);
     }
 

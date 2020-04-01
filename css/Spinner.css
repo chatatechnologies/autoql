@@ -4,9 +4,11 @@
     height: 14px;
     margin-right: 6px;
 }
+
 .spinner-loader.hidden{
     display: none;
 }
+
 .spinner-loader:after {
     content: " ";
     display: block;

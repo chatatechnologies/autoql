@@ -2,7 +2,7 @@
     background: var(--chata-drawer-background-color);
     position: absolute;
     top: 40px;
-    left: -157px;
+    left: -205px;
     right: 0;
     z-index: 9999;
     border: 1px solid hsla(0,0%,67.1%,.32);
@@ -11,6 +11,10 @@
     opacity: 0;
     visibility: hidden;
     transition: opacity .2s ease 0s!important;
+}
+
+.chata-popover-wrapper.report-problem{
+    left: -100px;
 }
 
 .chata-popover-wrapper.show{
