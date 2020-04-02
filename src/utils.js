@@ -78,6 +78,10 @@ function formatData(val, col, allOptions={}){
                 value = '';
             }
         break;
+        case 'DATE_STRING':
+            var momentObj = moment(val, 'YYYY-MM');
+            value = momentObj.format(options.monthYearFormat);
+        break;
         default:
             if(Object.prototype.toString.call(val) === '[object Object]'){
                 value = '';

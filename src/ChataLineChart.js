@@ -123,7 +123,7 @@ function createLineChart(component, json, options, fromDataMessenger=true, value
     // Add Y axis
     var y = d3.scaleLinear()
     .range([ height - (margin.bottom), 0 ])
-    .domain([minValue, d3.max(data, function(d) { return d.value; })]);
+    .domain([minValue, d3.max(data, function(d) { return d.value; })]).nice();
     var yAxis = d3.axisLeft(y);
     // Add the line
     svg.append("path")

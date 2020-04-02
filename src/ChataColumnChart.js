@@ -90,7 +90,7 @@ function createColumnChart(component, json, options, fromDataMessenger=true, val
     // Y axis
     var y = d3.scaleLinear()
     .range([ height - (margin.bottom), 0 ])
-    .domain([minValue, d3.max(data, function(d) { return d.value; })]);
+    .domain([minValue, d3.max(data, function(d) { return d.value; })]).nice();
     var axisLeft = d3.axisLeft(y);
 
     svg.append("g")

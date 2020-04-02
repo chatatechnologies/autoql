@@ -824,7 +824,7 @@ DataMessenger.showColumnEditor = function(id){
     container.appendChild(headerEditor);
     modal.chataModal.classList.add('chata-modal-column-editor')
     modal.setTitle('Show/Hide Columns')
-    var headerCheckbox = createCheckbox(null, false, -1);
+    var headerCheckbox = createCheckbox(null, true, -1);
     headerEditor.appendChild(divVisibility);
     headerCheckbox.style.marginLeft = '12px';
     headerCheckbox.style.marginTop = '1px';
@@ -857,8 +857,8 @@ DataMessenger.showColumnEditor = function(id){
             headerCheckbox.input.checked = headerChecked;
         }
 
-        if(isVisible){
-            headerCheckbox.input.checked = true;
+        if(!isVisible){
+            headerCheckbox.input.checked = false;
         }
         lineItem.appendChild(checkboxContainer);
         container.appendChild(lineItem);
@@ -2272,14 +2272,64 @@ DataMessenger.sendReport = function(idRequest, options, menu, toolbar){
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
       : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
       console.log(URL);
-    DataMessenger.putCall(
-        URL, {is_correct: false}, function(r, s){
-            console.log(r);
-            menu.classList.remove('show');
-            toolbar.classList.remove('show');
 
-        }, options
+    return new Promise(resolve => {
+        DataMessenger.putCall(
+            URL, {is_correct: false}, function(r, s){
+                menu.classList.remove('show');
+                toolbar.classList.remove('show');
+                resolve();
+            }, options
+        )
+    })
+}
+
+DataMessenger.openModalReport = function(idRequest, options, menu, toolbar){
+    var modal = new Modal({
+        destroyOnClose: true,
+        withFooter: true
+    });
+    modal.setTitle('Report a Problem');
+    var container = document.createElement('div');
+    var textArea = document.createElement('textarea');
+    textArea.classList.add('report-problem-text-area');
+    var cancelButton = htmlToElement(
+        `<div class="chata-btn default"
+        style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
     )
+
+    var spinner = htmlToElement(`
+        <div class="spinner-loader hidden"></div>
+    `)
+
+    var reportButton = htmlToElement(
+        `<div class="chata-btn primary"
+            style="padding: 5px 16px; margin: 2px 5px;">
+        </div>`
+    )
+
+    reportButton.appendChild(spinner);
+    reportButton.appendChild(document.createTextNode('Report'));
+    container.appendChild(document.createTextNode(
+        'Please tell us more about the problem you are experiencing:'
+    ));
+    container.appendChild(textArea);
+    modal.addView(container);
+    modal.addFooterElement(cancelButton);
+    modal.addFooterElement(reportButton);
+
+    cancelButton.onclick = (evt) => {
+        modal.close()
+    }
+
+    reportButton.onclick = async (evt) => {
+        var reportMessage = textArea.value;
+        spinner.classList.remove('hidden');
+        await DataMessenger.sendReport(idRequest, options, menu, toolbar);
+        modal.close();
+    }
+
+    modal.show();
 }
 
 DataMessenger.getReportProblemMenu = function(toolbar, idRequest){
@@ -2301,7 +2351,7 @@ DataMessenger.getReportProblemMenu = function(toolbar, idRequest){
     menu.ul.appendChild(
         DataMessenger.getActionOption(
             '', 'Other...',
-            DataMessenger.sendReport,
+            DataMessenger.openModalReport,
             [idRequest, DataMessenger.options, menu, toolbar]
         )
     );

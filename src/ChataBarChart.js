@@ -83,7 +83,7 @@ function createBarChart(component, json, options, fromDataMessenger=true, valueC
     // Add X axis
     var x = d3.scaleLinear()
     .domain(DataMessenger.makeBarChartDomain(data, hasNegativeValues))
-    .range([ 0, width]);
+    .range([ 0, width]).nice();
     var xAxis = d3.axisBottom(x);
     xAxis.tickSize(0);
 
