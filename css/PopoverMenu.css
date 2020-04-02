@@ -13,6 +13,11 @@
     transition: opacity .2s ease 0s!important;
 }
 
+.chata-popover-single-message{
+    left: 0 !important;
+    right: -205px;
+}
+
 .chata-popover-wrapper.report-problem{
     left: -100px;
 }

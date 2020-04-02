@@ -59,7 +59,8 @@ var DataMessenger = {
     responses: [],
     xhr: new XMLHttpRequest(),
     speechToText: getSpeech(),
-    finalTranscript: ''
+    finalTranscript: '',
+    autoCompleteTimer: undefined
 };
 
 DataMessenger.init = function(elem, options, registerEventsFlag=true){
@@ -1442,18 +1443,24 @@ DataMessenger.registerEvents = function(){
     chataInput.onkeyup = function(){
         if(DataMessenger.options.autoQLConfig.enableAutocomplete){
             suggestionList.style.display = 'none';
+            clearTimeout(DataMessenger.autoCompleteTimer);
+
             if(this.value){
-                DataMessenger.autocomplete(this.value, suggestionList, 'suggestion', DataMessenger.options);
+                DataMessenger.autoCompleteTimer = setTimeout(() => {
+                    DataMessenger.autocomplete(
+                        this.value,
+                        suggestionList,
+                        'suggestion',
+                        DataMessenger.options
+                    );
+                }, 400);
             }
         }
     }
 
     chataInput.onkeypress = function(event){
         if(event.keyCode == 13 && this.value){
-            try {
-                DataMessenger.xhr.onreadystatechange = null;
-                DataMessenger.xhr.abort();
-            } catch (e) {}
+            clearTimeout(DataMessenger.autoCompleteTimer);
             suggestionList.style.display = 'none';
             DataMessenger.sendMessage(chataInput, this.value);
         }
@@ -1541,6 +1548,9 @@ DataMessenger.groupBy = function(list, keyGetter, indexData) {
 
 DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     var messageBubble = oldComponent.parentElement.parentElement.parentElement;
+    var scrollBox = messageBubble.querySelector('.chata-table-scrollbox ');
+    console.log(scrollBox);
+    scrollBox.scrollLeft = 0;
     if(messageBubble.classList.contains('chata-response-content-container')){
         messageBubble = messageBubble.parentElement;
     }
@@ -2219,9 +2229,11 @@ DataMessenger.getPopover = function(){
     return menu;
 }
 
-DataMessenger.getMoreOptionsMenu = function(options, idRequest){
-
+DataMessenger.getMoreOptionsMenu = function(options, idRequest, type){
     var menu = DataMessenger.getPopover();
+    if(type === 'simple'){
+        menu.classList.add('chata-popover-single-message');
+    }
 
     for (var i = 0; i < options.length; i++) {
         let opt = options[i]
@@ -2332,8 +2344,11 @@ DataMessenger.openModalReport = function(idRequest, options, menu, toolbar){
     modal.show();
 }
 
-DataMessenger.getReportProblemMenu = function(toolbar, idRequest){
+DataMessenger.getReportProblemMenu = function(toolbar, idRequest, type){
     var menu = DataMessenger.getPopover();
+    if(type === 'simple'){
+        menu.classList.add('chata-popover-single-message');
+    }
     menu.ul.appendChild(
         DataMessenger.getActionOption(
             '', 'The data is incorrect',
@@ -2404,9 +2419,11 @@ DataMessenger.getActionToolbar = function(idRequest, type){
 
     switch (type) {
         case 'simple':
-            toolbar.appendChild(
-                reportProblemButton
-            );
+            if(request['reference_id'] !== '1.1.420'){
+                toolbar.appendChild(
+                    reportProblemButton
+                );
+            }
             toolbar.appendChild(
                 DataMessenger.getActionButton(
                     DELETE_MESSAGE,
@@ -2434,9 +2451,11 @@ DataMessenger.getActionToolbar = function(idRequest, type){
                     'show-hide-columns'
                 )
             );
-            toolbar.appendChild(
-                reportProblemButton
-            );
+            if(request['reference_id'] !== '1.1.420'){
+                toolbar.appendChild(
+                    reportProblemButton
+                );
+            }
             toolbar.appendChild(
                 DataMessenger.getActionButton(
                     DELETE_MESSAGE,
@@ -2450,9 +2469,11 @@ DataMessenger.getActionToolbar = function(idRequest, type){
             moreOptionsArray.push('copy_sql');
             break;
         case 'chart-view':
-            toolbar.appendChild(
-                reportProblemButton
-            );
+            if(request['reference_id'] !== '1.1.420'){
+                toolbar.appendChild(
+                    reportProblemButton
+                );
+            }
             toolbar.appendChild(
                 DataMessenger.getActionButton(
                     DELETE_MESSAGE,
@@ -2468,11 +2489,13 @@ DataMessenger.getActionToolbar = function(idRequest, type){
     }
     var moreOptions = DataMessenger.getMoreOptionsMenu(
         moreOptionsArray,
-        idRequest
+        idRequest,
+        type
     );
     var reportProblem = DataMessenger.getReportProblemMenu(
         toolbar,
-        idRequest
+        idRequest,
+        type
     );
     reportProblem.classList.add('report-problem');
 
@@ -2495,12 +2518,13 @@ DataMessenger.getActionToolbar = function(idRequest, type){
         toolbar.classList.toggle('show');
     }
 
-
-    toolbar.appendChild(
-        moreOptionsBtn
-    );
-    toolbar.appendChild(moreOptions);
-    toolbar.appendChild(reportProblem);
+    if(request['reference_id'] !== '1.1.420'){
+        toolbar.appendChild(
+            moreOptionsBtn
+        );
+        toolbar.appendChild(moreOptions);
+        toolbar.appendChild(reportProblem);
+    }
 
     return toolbar;
 }
