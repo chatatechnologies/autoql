@@ -24,7 +24,7 @@ var DataMessenger = {
             enableAutocomplete: true,
             enableQueryValidation: true,
             enableQuerySuggestions: true,
-            enableColumnEditor: true,
+            enableColumnVisibilityManager: true,
             enableDrilldowns: true
         },
         themeConfig: {
@@ -865,7 +865,6 @@ DataMessenger.showColumnEditor = function(id){
         container.appendChild(lineItem);
     }
 
-
     headerCheckbox.onchange = (evt) => {
         var inputs = container.querySelectorAll('[data-line]');
         console.log(evt.checked);
@@ -917,6 +916,7 @@ DataMessenger.showColumnEditor = function(id){
             table, thArray, json['data']['columns']
         );
         hideShowTableCols(table);
+        allColHiddenMessage(table);
         table.style.width = headerWidth + 'px';
         table.headerElement.style.width = headerWidth + 'px';
         DataMessenger.putCall(url, {columns: data}, function(response){
@@ -964,7 +964,6 @@ DataMessenger.clickHandler = function(e){
             var component = e.target.parentElement.parentElement;
             var json = DataMessenger.responses[component.dataset.containerid];
             DataMessenger.sendDrilldownMessage(json, -1, DataMessenger.options);
-
         }
     }
 
@@ -1008,44 +1007,6 @@ DataMessenger.clickHandler = function(e){
             }
         }
 
-        if(e.target.classList.contains('filter-table')){
-            if(e.target.tagName == 'svg'){
-                parent = e.target.parentElement.parentElement.parentElement;
-            }else if(e.target.tagName == 'path'){
-                parent = e.target.parentElement.parentElement.parentElement.parentElement;
-            }else{
-                parent = e.target.parentElement.parentElement;
-            }
-            var table = parent.getElementsByTagName('table')[0];
-            var inputs = table.headerElement.getElementsByClassName(
-                'tabulator-header-filter'
-            );
-            var arrows = table.headerElement.getElementsByClassName(
-                'tabulator-arrow'
-            );
-            for (var i = 0; i < inputs.length; i++) {
-                if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
-                    inputs[i].style.display = 'block';
-                }else{
-                    inputs[i].style.display = 'none';
-                }
-                arrows[i].classList.toggle('tabulator-filter');
-            }
-        }
-
-        if(e.target.classList.contains('delete-message')){
-            if(e.target.tagName == 'svg'){
-                parent = e.target.parentElement.parentElement.
-                parentElement.parentElement;
-            }else if(e.target.tagName == 'path'){
-                parent = e.target.parentElement.parentElement.
-                    parentElement.parentElement.parentElement;
-            }else{
-                parent = e.target.parentElement.parentElement.parentElement;
-            }
-            DataMessenger.drawerContent.removeChild(parent);
-        }
-
         if(e.target.classList.contains('suggestion')){
             suggestionList.style.display = 'none';
             DataMessenger.sendMessage(chataInput, e.target.textContent);
@@ -1064,58 +1025,7 @@ DataMessenger.clickHandler = function(e){
                 }, 1300);
             }
         }
-        if(e.target.classList.contains('clipboard')){
-            if(e.target.tagName == 'svg'){
-                var json = DataMessenger.responses[e.target.parentElement.dataset.id];
-            }else if(e.target.tagName == 'path'){
-                var json = DataMessenger.responses[e.target.parentElement.parentElement.dataset.id];
-            }else{
-                var json = DataMessenger.responses[e.target.dataset.id];
-            }
-            copyTextToClipboard(DataMessenger.createCsvData(json, '\t'));
-        }
-        if(e.target.classList.contains('sql')){
-            let parent;
-            if(e.target.tagName == 'svg'){
-                parent = e.target.parentElement;
-            }else if(e.target.tagName == 'path'
-            || e.target.tagName == 'ellipse'){
-                parent = e.target.parentElement.parentElement;
-            }else{
-                parent = e.target;
-            }
-            var json = DataMessenger.responses[parent.dataset.id];
-            parent.classList.add('btn-green')
-            var interval = setInterval(function(){
-                parent.classList.remove('btn-green');
-                clearInterval(interval);
-            }, 1000);
-            copyTextToClipboard(json['data']['sql']);
-        }
-        if(e.target.classList.contains('show-hide-columns')){
-            if(e.target.tagName == 'svg'){
-                var id = e.target.parentElement.dataset.id
-            }else if(e.target.tagName == 'path'){
-                var id = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var id = e.target.dataset.id;
-            }
-            DataMessenger.showColumnEditor(id);
-        }
-        if(e.target.classList.contains('csv')){
-            if(e.target.tagName == 'svg'){
-                var json = DataMessenger.responses[e.target.parentElement.dataset.id];
-            }else if(e.target.tagName == 'path'){
-                var json = DataMessenger.responses[e.target.parentElement.parentElement.dataset.id];
-            }else{
-                var json = DataMessenger.responses[e.target.dataset.id];
-            }
-            var csvData = DataMessenger.createCsvData(json);
-            var link = document.createElement("a");
-            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-            link.setAttribute('download', 'test.csv');
-            link.click();
-        }
+
         if(e.target.classList.contains('column')){
             var container = e.target.parentElement.parentElement.parentElement;
             var tableElement = container.querySelector('[data-componentid]');
@@ -2371,8 +2281,6 @@ DataMessenger.getReportProblemMenu = function(toolbar, idRequest, type){
         )
     );
 
-
-
     return menu;
 }
 
@@ -2392,8 +2300,8 @@ DataMessenger.getActionOption = function(svg, text, onClick, params){
 }
 
 DataMessenger.getActionButton = function(
-    svg, tooltip, idRequest, extraClass=''){
-    return htmlToElement(`
+    svg, tooltip, idRequest, onClick, evtParams){
+    var button =  htmlToElement(`
         <button
             class="chata-toolbar-btn"
             data-tippy-content="${tooltip}"
@@ -2401,6 +2309,56 @@ DataMessenger.getActionButton = function(
             ${svg}
         </button>
     `)
+
+    button.onclick = (evt) => {
+        onClick.apply(null, [evt, idRequest, ...evtParams]);
+    }
+
+    return button;
+}
+
+DataMessenger.reportProblemHandler = (
+    evt, idRequest, reportProblem, toolbar) => {
+
+    reportProblem.classList.toggle('show');
+    toolbar.classList.toggle('show');
+}
+
+DataMessenger.moreOptionsHandler = (
+    evt, idRequest, moreOptions, toolbar) => {
+
+    moreOptions.classList.toggle('show');
+    toolbar.classList.toggle('show');
+}
+
+DataMessenger.filterTableHandler = (evt, idRequest) => {
+    var table = document.querySelector(`[data-componentid="${idRequest}"]`);
+    var inputs = table.headerElement.getElementsByClassName(
+        'tabulator-header-filter'
+    );
+    var arrows = table.headerElement.getElementsByClassName(
+        'tabulator-arrow'
+    );
+    for (var i = 0; i < inputs.length; i++) {
+        if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
+            inputs[i].style.display = 'block';
+        }else{
+            inputs[i].style.display = 'none';
+        }
+        arrows[i].classList.toggle('tabulator-filter');
+    }
+}
+
+DataMessenger.openColumnEditorHandler = (evt, idRequest) => {
+    DataMessenger.showColumnEditor(idRequest);
+}
+
+DataMessenger.deleteMessageHandler = (evt, idRequest) => {
+    var table = document.querySelector(`[data-componentid="${idRequest}"]`);
+    DataMessenger.drawerContent.removeChild(
+        table.parentElement.parentElement
+            .parentElement.parentElement.parentElement
+    )
 }
 
 DataMessenger.getActionToolbar = function(idRequest, type){
@@ -2410,11 +2368,21 @@ DataMessenger.getActionToolbar = function(idRequest, type){
         <div class="chat-message-toolbar right">
         </div>
     `);
+
+    var reportProblem = DataMessenger.getReportProblemMenu(
+        toolbar,
+        idRequest,
+        type
+    );
+    reportProblem.classList.add('report-problem');
+
+
     var reportProblemButton = DataMessenger.getActionButton(
         REPORT_PROBLEM,
         'Report a problem',
         idRequest,
-        'report-problem'
+        DataMessenger.reportProblemHandler,
+        [reportProblem, toolbar]
     )
 
     switch (type) {
@@ -2429,7 +2397,8 @@ DataMessenger.getActionToolbar = function(idRequest, type){
                     DELETE_MESSAGE,
                     'Delete Message',
                     idRequest,
-                    'delete-message'
+                    DataMessenger.deleteMessageHandler,
+                    [reportProblem, toolbar]
                 )
             );
             moreOptionsArray.push('copy_sql');
@@ -2440,17 +2409,23 @@ DataMessenger.getActionToolbar = function(idRequest, type){
                     FILTER_TABLE,
                     'Filter Table',
                     idRequest,
-                    'filter-table'
+                    DataMessenger.filterTableHandler,
+                    []
                 )
             );
-            toolbar.appendChild(
-                DataMessenger.getActionButton(
-                    COLUMN_EDITOR,
-                    'Show/Hide Columns',
-                    idRequest,
-                    'show-hide-columns'
-                )
-            );
+            var columnVisibility = DataMessenger.options.
+            autoQLConfig.enableColumnVisibilityManager
+            if(columnVisibility){
+                toolbar.appendChild(
+                    DataMessenger.getActionButton(
+                        COLUMN_EDITOR,
+                        'Show/Hide Columns',
+                        idRequest,
+                        DataMessenger.openColumnEditorHandler,
+                        []
+                    )
+                );
+            }
             if(request['reference_id'] !== '1.1.420'){
                 toolbar.appendChild(
                     reportProblemButton
@@ -2461,7 +2436,8 @@ DataMessenger.getActionToolbar = function(idRequest, type){
                     DELETE_MESSAGE,
                     'Delete Message',
                     idRequest,
-                    'delete-message'
+                    DataMessenger.deleteMessageHandler,
+                    [reportProblem, toolbar]
                 )
             );
             moreOptionsArray.push('csv');
@@ -2479,7 +2455,8 @@ DataMessenger.getActionToolbar = function(idRequest, type){
                     DELETE_MESSAGE,
                     'Delete Message',
                     idRequest,
-                    'delete-message'
+                    DataMessenger.deleteMessageHandler,
+                    [reportProblem, toolbar]
                 )
             );
             moreOptionsArray.push('png');
@@ -2487,36 +2464,20 @@ DataMessenger.getActionToolbar = function(idRequest, type){
         default:
 
     }
+
     var moreOptions = DataMessenger.getMoreOptionsMenu(
         moreOptionsArray,
         idRequest,
         type
     );
-    var reportProblem = DataMessenger.getReportProblemMenu(
-        toolbar,
-        idRequest,
-        type
-    );
-    reportProblem.classList.add('report-problem');
 
     var moreOptionsBtn = DataMessenger.getActionButton(
         VERTICAL_DOTS,
         'More options',
         idRequest,
-        'more-options'
+        DataMessenger.moreOptionsHandler,
+        [moreOptions, toolbar]
     )
-
-
-    moreOptionsBtn.onclick = (evt) => {
-        moreOptions.classList.toggle('show');
-        toolbar.classList.toggle('show');
-    }
-
-
-    reportProblemButton.onclick = (evt) => {
-        reportProblem.classList.toggle('show');
-        toolbar.classList.toggle('show');
-    }
 
     if(request['reference_id'] !== '1.1.420'){
         toolbar.appendChild(
@@ -2850,6 +2811,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;
+    allColHiddenMessage(table);
     DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
     return table;
 }

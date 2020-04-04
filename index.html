@@ -504,7 +504,7 @@
                     <h6 class="">Enable Column Visibility Editor</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" checked name="enableColumnEditor">
+                            <input type="checkbox" checked name="enableColumnVisibilityManager">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -895,7 +895,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1ODU0Nzg2LCAiZXhwIjogMTU4NTg3NjM4NiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.K6MbN1rY54CNASvZjFrXNKIQxdt4lHH0XaKnb9Wlaq1dFvl9UlkKHt7QsHnYajI6MWLwfGopgc7zMzOFXnlCKaX5mrQDM6VrSEfJdHhVcpdJDpvTHluxslcZNlCTMz2zjGBn-J5o8vbCAGlQyFLFN06s1fFi2CMN38gfwpP3ID7ULEDozRuSjmlMnuCzTpp8aRNVM5-NVcvvRhIvYnomnJ6jWQinDaNz4UHwxJHU-MtZyioiEwSNaumMnCfk_yGO7O-85Sz32crMPHTpRKaoHcMxa8gTkTA5jGaW2bg56ivEskYLMGEmt6KUfRPkvKcEWk5ZAzCIomEChScTjhcGow==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1OTU4MTIwLCAiZXhwIjogMTU4NTk3OTcyMCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.TDxmCYOfOqaIdLms96xSB822KKsBgGDIOJEErNPFd_Nn_L5m5TmzPBhAyR4LA82U24j5Nil3A5yzAk3FfrwqTL4yW-EsD8VBAvW7Ix5WF3K3jCOUe5IujYZt0oUGmg3RtHJYF2ZS3PtSf6VjF7jbd0f7OVA0X5VvDcxtuuTBAkFTbJ00lpLY2aQYNW-JXvw5kA_9BQ8y9mOTMKmqverCSpvH9KrI744pj2IPNRTZ69NPpZBh6cUji_LigCJevrbsKrkvxtI97FB4zuSf98fHl6_xcw_8J7u80pRo3r0wnLKfiT2qq1QLeoDOwHcryfYDfGBnXS_ZIV3UOT2ZIpbO5g==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -984,7 +984,7 @@
         var demo = document.querySelector('[name="demo"]')
         var login = document.getElementById('login')
         var enableQueryTipsTab = document.querySelector('[name="enableQueryTipsTab"]')
-        var enableColumnEditor = document.querySelector('[name="enableColumnEditor"]')
+        var enableColumnVisibilityManager = document.querySelector('[name="enableColumnVisibilityManager"]')
         var titleColor = document.querySelector('[name="titleColor"]')
 
         uiOverlay.onchange = function(event){
@@ -1004,8 +1004,8 @@
             DataMessenger.options.enableQueryTipsTab = event.target.checked
         }
 
-        enableColumnEditor.onchange = function(event){
-            DataMessenger.options.enableColumnEditor = event.target.checked;
+        enableColumnVisibilityManager.onchange = function(event){
+            DataMessenger.options.enableColumnVisibilityManager = event.target.checked;
         }
 
         login.onclick = function(event){

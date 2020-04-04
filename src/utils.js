@@ -881,6 +881,37 @@ function hideShowTableCols(table){
     }
 }
 
+function allColHiddenMessage(table){
+    const requestId = table.dataset.componentid;
+    const json = DataMessenger.responses[requestId];
+    var cols = json['data']['columns'];
+    var isAllHidden = true;
+    for (var i = 0; i < cols.length; i++) {
+        if(cols[i].is_visible){
+            isAllHidden = false;
+            break;
+        }
+    }
+
+    const message = htmlToElement(
+    `<div class="no-columns-error-message">
+        <div>
+            <span class="chata-icon warning-icon">
+                ${WARNING}
+            </span>
+            <br> All columns in this table are currently hidden.
+            You can adjust your column visibility preferences using
+            the Column Visibility Manager
+            (<span class="chata-icon eye-icon">${COLUMN_EDITOR}</span>)
+            in the Options Toolbar.
+        </div>
+    </div>`);
+
+    if(isAllHidden){
+        table.parentElement.appendChild(message);
+    }
+}
+
 
 function mouseX(evt) {
     if (evt.pageX) {
