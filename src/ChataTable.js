@@ -187,6 +187,8 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;
+    allColHiddenMessage(table);
+    
     return table;
 }
 

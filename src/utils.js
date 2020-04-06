@@ -892,23 +892,31 @@ function allColHiddenMessage(table){
             break;
         }
     }
-
-    const message = htmlToElement(
-    `<div class="no-columns-error-message">
-        <div>
-            <span class="chata-icon warning-icon">
-                ${WARNING}
-            </span>
-            <br> All columns in this table are currently hidden.
-            You can adjust your column visibility preferences using
-            the Column Visibility Manager
-            (<span class="chata-icon eye-icon">${COLUMN_EDITOR}</span>)
-            in the Options Toolbar.
-        </div>
-    </div>`);
+    let message;
+    if(table.noColumnsElement){
+        message = table.noColumnsElement;
+    }else{
+        message = htmlToElement(
+        `<div class="no-columns-error-message">
+            <div>
+                <span class="chata-icon warning-icon">
+                    ${WARNING}
+                </span>
+                <br> All columns in this table are currently hidden.
+                You can adjust your column visibility preferences using
+                the Column Visibility Manager
+                (<span class="chata-icon eye-icon">${COLUMN_EDITOR}</span>)
+                in the Options Toolbar.
+            </div>
+        </div>`);
+        table.parentElement.appendChild(message);
+        table.noColumnsElement = message;
+    }
 
     if(isAllHidden){
-        table.parentElement.appendChild(message);
+        message.style.display = 'flex';
+    }else{
+        message.style.display = 'none';
     }
 }
 

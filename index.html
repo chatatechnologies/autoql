@@ -186,34 +186,43 @@
                     </div>
 
                     <div class="prop prop-column">
-                        <h6>Customer ID</h6>
-                        <input type="text" name="customerId" value="" placeholder="" class="">
+                        <h6>Project ID</h6>
+                        <input type="text" name="customerId" value="" placeholder="" class="validate">
+                        <span class="helper-text" data-error="Please enter your project ID" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>User ID (email)</h6>
-                        <input type="text" name="userId" value="" placeholder="" class="">
+                        <input type="text" name="userId" value="" placeholder="" class="validate">
+                        <span class="helper-text" data-error="Please enter your user ID" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>API key</h6>
-                        <input type="text" name="apiKey" value="" placeholder="" class="">
+                        <input type="text" name="apiKey" value="" placeholder="" class="validate">
+                        <span class="helper-text" data-error="Please enter your API key" data-success=""></span>
                     </div>
                     <div class="prop prop-column">
                         <h6>Domain URL</h6>
-                        <input type="text" name="domain" value="" placeholder="" class="">
+                        <input type="text" name="domain" value="" placeholder="" class="validate">
+                        <span class="helper-text" data-error="Please enter your domain URL" data-success=""></span>
                     </div>
                     <div class="prop prop-column">
                         <h6>Username</h6>
-                        <input type="text" id="username" value="" placeholder="" class="">
+                        <input type="text" id="username" value="" placeholder="" class="validate">
+                        <span class="helper-text" data-error="Please enter your username" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>Password</h6>
-                        <input type="text" id="password" value="" placeholder="" class="">
+                        <input type="text" id="password" value="" placeholder="" class="validate">
+                        <span class="helper-text" data-error="Please enter your password" data-success=""></span>
                     </div>
                     <div class="">
-                        <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Login</button>
+                        <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Authenticate</button>
+                    </div>
+                    <div class="">
+                        <button type="button" name="button" class="waves-effect waves-light btn" id="log-out" style="width: 80%; display: block; margin: 10px auto;">Log Out</button>
                     </div>
                 </div>
 
@@ -484,7 +493,7 @@
                     <h6 class="">Disable Drilldowns</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" name="disableDrilldowns">
+                            <input type="checkbox" name="enableDrilldowns">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -494,7 +503,7 @@
                     <h6 class="">Enable Query Inspiration Tab</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" checked name="enableQueryTipsTab">
+                            <input type="checkbox" checked name="enableExploreQueriesTab">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -895,7 +904,7 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg1OTU4MTIwLCAiZXhwIjogMTU4NTk3OTcyMCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.TDxmCYOfOqaIdLms96xSB822KKsBgGDIOJEErNPFd_Nn_L5m5TmzPBhAyR4LA82U24j5Nil3A5yzAk3FfrwqTL4yW-EsD8VBAvW7Ix5WF3K3jCOUe5IujYZt0oUGmg3RtHJYF2ZS3PtSf6VjF7jbd0f7OVA0X5VvDcxtuuTBAkFTbJ00lpLY2aQYNW-JXvw5kA_9BQ8y9mOTMKmqverCSpvH9KrI744pj2IPNRTZ69NPpZBh6cUji_LigCJevrbsKrkvxtI97FB4zuSf98fHl6_xcw_8J7u80pRo3r0wnLKfiT2qq1QLeoDOwHcryfYDfGBnXS_ZIV3UOT2ZIpbO5g==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg2MjA3NjU5LCAiZXhwIjogMTU4NjIyOTI1OSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.OySw8NZf6UuPOoefh6Necma1QwHuXUJC72-Dy__GpiMhNUe8rtOUKMRZl43h3yoWY7BXPN19XyjZhVUR5pHt3d89sjJvp44vAfmbHZQqtaklgAF76D3wJQvpcUypBvkQQrJBjgu7iXet1-tcblvJaoA7z9-tIZub97evwrz2mAxCDZnlHftfmM4TrwodoVBPPgIrLS2y0t78SMqg15TrbWRPRCTuBfE3EVQnuwe95kh-3AqxpwCrXHfqx5T5i704caPsW5NV7hCGbSzxoCu9F2EOwttquLCBVSvNttSR5rslwAlgNKN5_2ZVUn8ZhFuormFcvrn1lCKA5QgRyBEApw==`;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -978,12 +987,13 @@
         var enableAutocomplete = document.querySelector('[name="enableAutocomplete"]')
         var enableVoiceRecord = document.querySelector('[name="enableVoiceRecord"]')
         var enableSafetyNet = document.querySelector('[name="enableSafetyNet"]')
-        var disableDrilldowns = document.querySelector('[name="disableDrilldowns"]')
+        var enableDrilldowns = document.querySelector('[name="enableDrilldowns"]')
         var debug = document.querySelector('[name="debug"]')
         var clearOnClose = document.querySelector('[name="clearOnClose"]')
         var demo = document.querySelector('[name="demo"]')
         var login = document.getElementById('login')
-        var enableQueryTipsTab = document.querySelector('[name="enableQueryTipsTab"]')
+        var logout = document.getElementById('log-out')
+        var enableExploreQueriesTab = document.querySelector('[name="enableExploreQueriesTab"]')
         var enableColumnVisibilityManager = document.querySelector('[name="enableColumnVisibilityManager"]')
         var titleColor = document.querySelector('[name="titleColor"]')
 
@@ -1000,34 +1010,73 @@
             dashboard.applyCSS();
         }
 
-        enableQueryTipsTab.onchange = function(event){
-            DataMessenger.options.enableQueryTipsTab = event.target.checked
+        enableExploreQueriesTab.onchange = function(event){
+            DataMessenger.options.enableExploreQueriesTab = event.target.checked
         }
 
         enableColumnVisibilityManager.onchange = function(event){
-            DataMessenger.options.enableColumnVisibilityManager = event.target.checked;
+            DataMessenger.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
+        }
+
+        logout.onclick = (evt) => {
+            DataMessenger.options.authentication.apiKey = '';
+            DataMessenger.options.authentication.customerId = '';
+            DataMessenger.options.authentication.userId = '';
+            DataMessenger.options.authentication.domain = '';
+            DataMessenger.options.authentication.token = '';
+            alert('Successfully logged out');
         }
 
         login.onclick = function(event){
-            var user = document.getElementById('username').value;
-            var password = document.getElementById('password').value;
-            var apiKey = document.querySelector('[name="apiKey"]').value;
-            var customerId = document.querySelector('[name="customerId"]').value;
-            var userId = document.querySelector('[name="userId"]').value;
-            var domain = document.querySelector('[name="domain"]').value;
-            login.style.display = 'none';
-            DataMessenger.options.authentication.apiKey = apiKey;
-            DataMessenger.options.authentication.customerId = customerId;
-            DataMessenger.options.authentication.userId = userId;
-            DataMessenger.options.authentication.domain = domain;
+            var user = document.getElementById('username');
+            var password = document.getElementById('password');
+            var apiKey = document.querySelector('[name="apiKey"]');
+            var customerId = document.querySelector('[name="customerId"]');
+            var userId = document.querySelector('[name="userId"]');
+            var domain = document.querySelector('[name="domain"]');
+            DataMessenger.options.authentication.apiKey = apiKey.value;
+            DataMessenger.options.authentication.customerId = customerId.value;
+            DataMessenger.options.authentication.userId = userId.value;
+            DataMessenger.options.authentication.domain = domain.value;
 
+            login.style.display = 'none';
             var xhr = new XMLHttpRequest();
             const URL = 'https://backend-staging.chata.io/api/v1/login';
             var formData = new FormData();
+            var sendData = true;
 
-            formData.append("username", user);
-            formData.append("password", password);
-
+            formData.append("username", user.value);
+            formData.append("password", password.value);
+            if(!user.value){
+                user.classList.remove('valid');
+                user.classList.add('invalid');
+                sendData = false;
+            }
+            if(!password.value){
+                password.classList.remove('valid');
+                password.classList.add('invalid');
+                sendData = false;
+            }
+            if(!apiKey.value){
+                apiKey.classList.remove('valid');
+                apiKey.classList.add('invalid');
+                sendData = false;
+            }
+            if(!customerId.value){
+                customerId.classList.remove('valid');
+                customerId.classList.add('invalid');
+                sendData = false;
+            }
+            if(!userId.value){
+                userId.classList.remove('valid');
+                userId.classList.add('invalid');
+                sendData = false;
+            }
+            if(!domain.value){
+                domain.classList.remove('valid');
+                domain.classList.add('invalid');
+                sendData = false;
+            }
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4){
                     var xhr2 = new XMLHttpRequest();
@@ -1046,16 +1095,19 @@
                         }
                     }
                     const url = `
-                        https://backend-staging.chata.io/api/v1/jwt?user_id=${userId}&project_id=${customerId}
+                        https://backend-staging.chata.io/api/v1/jwt?user_id=${userId.value}&project_id=${customerId.value}
                     `
                     xhr2.open('GET', url);
                     xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
                     xhr2.send();
                 }
             };
-
-            xhr.open('POST', URL);
-            xhr.send(formData);
+            if(sendData){
+                xhr.open('POST', URL);
+                xhr.send(formData);
+            }else{
+                login.style.display = 'block';
+            }
         }
 
         demo.onchange = function(event){
@@ -1115,27 +1167,27 @@
         }
 
         enableAutocomplete.onchange = function(event){
-            DataMessenger.options.enableAutocomplete = event.target.checked;
+            DataMessenger.options.autoQLConfig.enableAutocomplete = event.target.checked;
         }
 
         enableSafetyNet.onchange = function(event){
-            DataMessenger.options.enableSafetyNet = event.target.checked;
+            DataMessenger.options.autoQLConfig.enableQueryValidation = event.target.checked;
         }
 
-        disableDrilldowns.onchange = function(event){
-            DataMessenger.options.disableDrilldowns = event.target.checked;
-            console.log(DataMessenger.options.disableDrilldowns);
+        enableDrilldowns.onchange = function(event){
+            DataMessenger.options.autoQLConfig.enableDrilldowns = event.target.checked;
+            console.log(DataMessenger.options.enableDrilldowns);
         }
 
         enableVoiceRecord.onchange = function(event){
-            DataMessenger.options.enableVoiceRecord = event.target.checked;
+            DataMessenger.options.autoQLConfig.enableVoiceRecord = event.target.checked;
             var display = DataMessenger.options.enableVoiceRecord ? 'block' : 'none';
             var voiceButton = document.getElementById('chata-voice-record-button');
             voiceButton.style.display = display;
         }
 
         debug.onchange = function(event){
-            DataMessenger.options.debug = event.target.checked;
+            DataMessenger.options.autoQLConfig.debug = event.target.checked;
         }
 
         clearOnClose.onchange = function(event){
@@ -1156,17 +1208,45 @@
         }
 
         var reload = document.getElementById('reload');
+        var themeKeys = ['fontFamily'];
+        var formattingKeys = [
+            'currencyCode',
+            'languageCode',
+            'currencyDecimals',
+            'quantityDecimals',
+            'comparisonDisplay',
+            'monthYearFormat',
+            'dayMonthYearFormat',
+        ]
+        var autoQLKeys = [
+            'debug',
+            'test',
+            'enableAutocomplete',
+            'enableQueryValidation',
+            'enableQuerySuggestions',
+            'enableColumnVisibilityManager',
+            'enableDrilldowns',
+        ]
         reload.onclick = function(event){
             var propsEls = document.getElementsByClassName('reload-prop');
             for (var i = 0; i < propsEls.length; i++) {
                 if(propsEls[i].value != ''){
-                    DataMessenger.options[propsEls[i].name] = propsEls[i].value;
+                    subKey = '';
+                    if(themeKeys.includes(propsEls[i].name))subKey = 'themeConfig';
+                    if(formattingKeys.includes(propsEls[i].name))subKey = 'dataFormatting';
+                    if(autoQLKeys.includes(propsEls[i].name))subKey = 'autoQLConfig';
+                    if(subKey){
+                        console.log(subKey);
+                        DataMessenger.options[subKey][propsEls[i].name] = propsEls[i].value;
+                    }else{
+                        DataMessenger.options[propsEls[i].name] = propsEls[i].value;
+                    }
                 }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
                     DataMessenger.options.introMessage = "Hi " + DataMessenger.options.userDisplayName+ " I'm  here to help you access, search and analyze your data.";
-                }if(DataMessenger.options.theme == 'light' && propsEls[i].name == 'accentColor-light'){
-                    DataMessenger.options.accentColor = propsEls[i].value;
-                }else if (DataMessenger.options.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
-                    DataMessenger.options.accentColor = propsEls[i].value;
+                }if(DataMessenger.options.themeConfig.theme == 'light' && propsEls[i].name == 'accentColor-light'){
+                    DataMessenger.options.themeConfig.accentColor = propsEls[i].value;
+                }else if (DataMessenger.options.themeConfig.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
+                    DataMessenger.options.themeConfig.accentColor = propsEls[i].value;
                 }
             }
             var chartColors = [];
@@ -1175,7 +1255,7 @@
             }
             DataMessenger.drawerButton.remove();
             DataMessenger.rootElem.remove();
-            DataMessenger.options.chartColors = chartColors;
+            DataMessenger.options.themeConfig.chartColors = chartColors;
             var div = document.createElement('div');
             div.setAttribute('id', 'chata');
             document.getElementsByTagName('body')[0].appendChild(div);

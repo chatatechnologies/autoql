@@ -127,8 +127,10 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
         DataMessenger.closeDrawer();
     }
     const themeStyles = DataMessenger.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME
-    if ('accentColor' in options){
-        themeStyles['--chata-drawer-accent-color'] = options.themeConfig.accentColor;
+    if(options.themeConfig){
+        if ('accentColor' in options.themeConfig){
+            themeStyles['--chata-drawer-accent-color'] = options.themeConfig.accentColor;
+        }
     }
     for (let property in themeStyles) {
         document.documentElement.style.setProperty(
@@ -1459,7 +1461,10 @@ DataMessenger.groupBy = function(list, keyGetter, indexData) {
 DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     var messageBubble = oldComponent.parentElement.parentElement.parentElement;
     var scrollBox = messageBubble.querySelector('.chata-table-scrollbox ');
-    console.log(scrollBox);
+    if(oldComponent.noColumnsElement){
+        oldComponent.parentElement.removeChild(oldComponent.noColumnsElement);
+        oldComponent.noColumnsElement = null;
+    }
     scrollBox.scrollLeft = 0;
     if(messageBubble.classList.contains('chata-response-content-container')){
         messageBubble = messageBubble.parentElement;
@@ -1475,9 +1480,8 @@ DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     );
 
     var newToolbarRight = DataMessenger.getActionToolbar(
-        oldComponent.dataset.componentid, actionType
+        oldComponent.dataset.componentid, actionType, activeDisplayType
     );
-    console.log('refreshToolbarButtons');
     messageBubble.replaceChild(newToolbarRight, toolbarRight);
     refreshTooltips();
 }
@@ -2062,7 +2066,7 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
     DataMessenger.responses[idRequest] = jsonResponse;
     containerMessage.setAttribute('data-containerid', idRequest);
     messageBubble.classList.add('chat-message-bubble');
-    toolbarButtons = DataMessenger.getActionToolbar(idRequest, 'simple');
+    toolbarButtons = DataMessenger.getActionToolbar(idRequest, 'simple', 'table');
     messageBubble.appendChild(toolbarButtons);
     var value = ''
     if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
@@ -2361,7 +2365,7 @@ DataMessenger.deleteMessageHandler = (evt, idRequest) => {
     )
 }
 
-DataMessenger.getActionToolbar = function(idRequest, type){
+DataMessenger.getActionToolbar = function(idRequest, type, displayType){
     var request = DataMessenger.responses[idRequest];
     let moreOptionsArray = [];
     var toolbar = htmlToElement(`
@@ -2415,7 +2419,8 @@ DataMessenger.getActionToolbar = function(idRequest, type){
             );
             var columnVisibility = DataMessenger.options.
             autoQLConfig.enableColumnVisibilityManager
-            if(columnVisibility){
+            console.log(displayType);
+            if(columnVisibility && displayType !== 'pivot_column'){
                 toolbar.appendChild(
                     DataMessenger.getActionButton(
                         COLUMN_EDITOR,
@@ -2629,7 +2634,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var idRequest = uuidv4();
     DataMessenger.responses[idRequest] = jsonResponse;
     var supportedDisplayTypes = DataMessenger.getSupportedDisplayTypes(idRequest, 'table');
-    var actions = DataMessenger.getActionToolbar(idRequest, 'csvCopy');
+    var actions = DataMessenger.getActionToolbar(idRequest, 'csvCopy', 'table');
     var toolbar = '';
     if(supportedDisplayTypes != ''){
         toolbar += `
