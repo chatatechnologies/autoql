@@ -54,7 +54,7 @@ var DataMessenger = {
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         isRecordVoiceActive: false,
-        inputPlaceholder: 'Ask me anything…'
+        inputPlaceholder: ' Type your queries here'
     },
     responses: [],
     xhr: new XMLHttpRequest(),
@@ -869,7 +869,6 @@ DataMessenger.showColumnEditor = function(id){
 
     headerCheckbox.onchange = (evt) => {
         var inputs = container.querySelectorAll('[data-line]');
-        console.log(evt.checked);
         for (var i = 0; i < inputs.length; i++) {
             inputs[i].checked = evt.target.checked;
         }
@@ -1027,53 +1026,6 @@ DataMessenger.clickHandler = function(e){
                 }, 1300);
             }
         }
-
-        if(e.target.classList.contains('column')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var data = applyFilter(tableElement.dataset.componentid);
-                var sortData = DataMessenger.sort(data, 'desc', e.target.dataset.index, e.target.dataset.type);
-                DataMessenger.refreshTableData(tableElement, sortData, DataMessenger.options);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var data = applyFilter(tableElement.dataset.componentid);
-                var sortData = DataMessenger.sort(data, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
-                DataMessenger.refreshTableData(tableElement, sortData, DataMessenger.options);
-            }
-        }
-        if(e.target.classList.contains('column-pivot')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(DataMessenger.responses[tableElement.dataset.componentid]);
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(json, DataMessenger.options, cloneObject(json['data']['rows']));
-            }else{
-                pivotArray = getPivotColumnArray(json, DataMessenger.options, cloneObject(json['data']['rows']));
-            }
-            var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                rows.unshift([]); //Simulate header
-                var sortData = sortPivot(rows, e.target.dataset.index, 'desc');
-                // sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                rows.unshift([]); //Simulate header
-                var sortData = sortPivot(rows, e.target.dataset.index, 'asc');
-                // sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
-        }
         if(e.target.classList.contains('pivot_table')){
             if(e.target.tagName == 'svg'){
                 var idRequest = e.target.parentElement.dataset.id;
@@ -1089,10 +1041,10 @@ DataMessenger.clickHandler = function(e){
             if(columns[0].type === 'DATE' &&
             columns[0].name.includes('month')){
                 var pivotArray = getDatePivotArray(json, DataMessenger.options, json['data']['rows']);
-                createPivotTable(pivotArray, component);
+                createPivotTable(pivotArray, component, DataMessenger.options);
             }else{
                 var pivotArray = getPivotColumnArray(json, DataMessenger.options, json['data']['rows']);
-                createPivotTable(pivotArray, component);
+                createPivotTable(pivotArray, component, DataMessenger.options);
             }
         }
         if(e.target.classList.contains('column_chart')){
@@ -1436,7 +1388,6 @@ DataMessenger.format3dData = function(json, groups){
         var group = groups[i];
         dataGrouped.push({group: group});
         for (var x = 0; x < data.length; x++) {
-            console.log(group);
             if(data[x][groupableIndex2] == group){
                 dataGrouped[i][data[x][groupableIndex1]]
                     = parseFloat(data[x][notGroupableIndex]);
@@ -1813,7 +1764,6 @@ DataMessenger.ajaxCallPost = function(url, callback, data, options){
             callback(jsonResponse, xmlhttp.status);
         }
     };
-    console.log(data);
     xmlhttp.send(JSON.stringify(data));
 }
 
@@ -2090,7 +2040,6 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
 DataMessenger.copySqlHandler = function(idRequest){
     var json = DataMessenger.responses[idRequest];
     var sql = json['data']['sql'][0];
-    console.log();
     copyTextToClipboard(sql);
 }
 
@@ -2197,7 +2146,6 @@ DataMessenger.sendReport = function(idRequest, options, menu, toolbar){
     const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
       : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
-      console.log(URL);
 
     return new Promise(resolve => {
         DataMessenger.putCall(
@@ -2419,7 +2367,6 @@ DataMessenger.getActionToolbar = function(idRequest, type, displayType){
             );
             var columnVisibility = DataMessenger.options.
             autoQLConfig.enableColumnVisibilityManager
-            console.log(displayType);
             if(columnVisibility && displayType !== 'pivot_column'){
                 toolbar.appendChild(
                     DataMessenger.getActionButton(
@@ -2614,6 +2561,93 @@ DataMessenger.getStackedBarChartButton = function(idRequest){
     </button>`;
 }
 
+DataMessenger.onClickColumn = function(evt, tableElement, options){
+    let sortBy;
+    let newClassArrow;
+    let parent = evt.target;
+    evt.preventDefault();
+
+    if(parent.tagName === 'INPUT'){
+        return;
+    }
+
+    if(parent.tagName === 'TH'){
+        parent = parent.childNodes[0];
+    }
+    if(tableElement.sort === 'asc'){
+        sortBy = 'desc';
+        newClassArrow = 'down';
+    }else{
+        sortBy = 'asc';
+        newClassArrow = 'up';
+    }
+
+    tableElement.sort = sortBy;
+    parent.nextSibling.classList.remove('up');
+    parent.nextSibling.classList.remove('down');
+    parent.nextSibling.classList.add(newClassArrow);
+
+    var data = applyFilter(tableElement.dataset.componentid);
+    var sortData = DataMessenger.sort(
+        data, sortBy, parent.dataset.index, parent.dataset.type
+    );
+
+    DataMessenger.refreshTableData(
+        tableElement, sortData, options
+    );
+}
+
+DataMessenger.onClickPivotColumn = function(evt, tableElement, options){
+    var pivotArray = [];
+    var json = cloneObject(DataMessenger.responses[
+        tableElement.dataset.componentid
+    ]);
+    var columns = json['data']['columns'];
+    let sortBy;
+    let newClassArrow;
+    let parent = evt.target;
+    evt.preventDefault();
+
+    if(parent.tagName === 'INPUT'){
+        return;
+    }
+
+    if(parent.tagName === 'TH'){
+        parent = parent.childNodes[0];
+    }
+
+    if(columns[0].type === 'DATE' &&
+        columns[0].name.includes('month')){
+        pivotArray = getDatePivotArray(
+            json, options, cloneObject(json['data']['rows'])
+        );
+    }else{
+        pivotArray = getPivotColumnArray(
+            json, options, cloneObject(json['data']['rows'])
+        );
+    }
+
+    if(tableElement.sort === 'asc'){
+        sortBy = 'desc';
+        newClassArrow = 'down';
+    }else{
+        sortBy = 'asc';
+        newClassArrow = 'up';
+    }
+
+    tableElement.sort = sortBy;
+    parent.nextSibling.classList.remove('up');
+    parent.nextSibling.classList.remove('down');
+    parent.nextSibling.classList.add(newClassArrow);
+
+    var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
+    rows.unshift([]); //Simulate header
+    var sortData = sortPivot(rows, parent.dataset.index, sortBy);
+    // sortData.unshift([]); //Simulate header
+    DataMessenger.refreshPivotTable(tableElement, sortData);
+
+}
+
 DataMessenger.putTableResponse = function(jsonResponse){
     var data = jsonResponse['data']['rows'];
     var containerMessage = document.createElement('div');
@@ -2691,6 +2725,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
         col.appendChild(divFilter);
         th.appendChild(col);
         th.appendChild(arrow);
+        th.onclick = (evt) => {
+            DataMessenger.onClickColumn(evt, table, DataMessenger.options);
+        }
         header.appendChild(th);
         thArray.push(th);
         if(!isVisible){
@@ -2816,8 +2853,11 @@ DataMessenger.putTableResponse = function(jsonResponse){
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;
-    allColHiddenMessage(table);
+    if(!DataMessenger.options.authentication.demo){
+        allColHiddenMessage(table);
+    }
     DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
+    table.sort = 'asc';
     return table;
 }
 

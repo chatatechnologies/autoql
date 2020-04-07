@@ -296,7 +296,6 @@ function Tile(dashboard, options={}){
                     }
                 })
             }else{
-                console.log('FOOOOOOOOOOOO');
                 chataDashboardItem.views[0].runQuery();
             }
         }
@@ -401,91 +400,6 @@ function Tile(dashboard, options={}){
     }
 
     itemContent.onclick = function(evt){
-
-        if(evt.target.classList.contains('column')){
-            var container = evt.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var uuid = tableElement.dataset.componentid;
-            if(evt.target.nextSibling.classList.contains('up')){
-                evt.target.nextSibling.classList.remove('up');
-                evt.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[uuid]);
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'desc',
-                    evt.target.dataset.index,
-                    evt.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }else{
-                evt.target.nextSibling.classList.remove('down');
-                evt.target.nextSibling.classList.add('up');
-                var data = cloneObject(
-                    DataMessenger.responses[uuid]
-                );
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'asc',
-                    parseInt(evt.target.dataset.index),
-                    evt.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }
-        }
-
-        if(evt.target.classList.contains('column-pivot')){
-            var container = evt.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
-            );
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }else{
-                pivotArray = getPivotColumnArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }
-            if(evt.target.nextSibling.classList.contains('up')){
-                evt.target.nextSibling.classList.remove('up');
-                evt.target.nextSibling.classList.add('down');
-                var sortData = sortPivot(
-                    pivotArray,
-                    evt.target.dataset.index,
-                    'desc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                evt.target.nextSibling.classList.remove('down');
-                evt.target.nextSibling.classList.add('up');
-                var sortData = sortPivot(
-                    pivotArray,
-                    evt.target.dataset.index,
-                    'asc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
-        }
-
     };
 
     chataDashboardItem.updateSelectedBars = function(elem){
@@ -993,7 +907,8 @@ function TileView(dashboard, chataDashboardItem,
                     );
                 }
                 var table = createPivotTable(
-                    pivotArray, div, 'append', _uuid, 'table-response-renderer'
+                    pivotArray, div, dashboard.options,
+                    'append', _uuid, 'table-response-renderer'
                 );
                 scrollbox.insertBefore(table.headerElement, div);
                 break;
@@ -1250,90 +1165,6 @@ function TileView(dashboard, chataDashboardItem,
             )
         }
 
-        if(e.target.classList.contains('column')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            console.log(container);
-            var localuuid = tableElement.dataset.componentid;
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[localuuid]);
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'desc',
-                    e.target.dataset.index,
-                    e.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var data = cloneObject(
-                    DataMessenger.responses[localuuid]
-                );
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'asc',
-                    parseInt(e.target.dataset.index),
-                    e.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }
-        }
-
-        if(e.target.classList.contains('column-pivot')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
-            );
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }else{
-                pivotArray = getPivotColumnArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var sortData = sortPivot(
-                    pivotArray,
-                    e.target.dataset.index,
-                    'desc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var sortData = sortPivot(
-                    pivotArray,
-                    e.target.dataset.index,
-                    'asc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
-        }
     });
 
     tileWrapper.onclick = (evt) => {

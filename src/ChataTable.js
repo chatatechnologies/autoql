@@ -5,6 +5,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     var thArray = [];
     var cols = jsonResponse['data']['columns'];
     table.classList.add(tableClass);
+    table.sort = 'asc';
     oldComponent.parentElement.parentElement.classList.remove(
         'chata-hidden-scrollbox'
     );
@@ -45,14 +46,24 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         filter.setAttribute('placeholder', 'Filter column');
         filter.colType = cols[i]['type'];
         filter.onkeyup = function(event){
-            var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
-            var rows = applyFilter(oldComponent.dataset.componentid);
-            DataMessenger.refreshTableData(_table, cloneObject(rows), DataMessenger.options, false);
+            console.log('FILTER onkeyup');
+            var _table = document.querySelector(
+                `[data-componentid='${oldComponent.dataset.componentid}']`
+            );
+            var rows = applyFilter(
+                oldComponent.dataset.componentid
+            );
+            DataMessenger.refreshTableData(
+                _table, cloneObject(rows), DataMessenger.options, false
+            );
         }
         col.appendChild(divFilter);
 
         th.appendChild(col);
         th.appendChild(arrow);
+        th.onclick = (evt) => {
+            DataMessenger.onClickColumn(evt, table, options);
+        }
         header.appendChild(th);
         thArray.push(th);
         if(!isVisible){
@@ -187,12 +198,13 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;
-    allColHiddenMessage(table);
-    
+    if(!options.authentication.demo){
+        allColHiddenMessage(table);
+    }
     return table;
 }
 
-function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', tableClass='table-response'){
+function createPivotTable(pivotArray, oldComponent, options, action='replace', uuid='', tableClass='table-response'){
     var header = document.createElement('tr');
     var table = document.createElement('table');
     var jsonResponse = DataMessenger.responses[
@@ -273,6 +285,9 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         }
         th.appendChild(col);
         th.appendChild(arrow);
+        th.onclick = (evt) => {
+            DataMessenger.onClickPivotColumn(evt, table, options);
+        }
         header.appendChild(th);
         thArray.push(th);
     }
@@ -323,5 +338,6 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
     table.style.width = (headerWidth) + 'px';
     header.style.width = (headerWidth) + 'px';
     table.headerElement = header;
+    table.sort = 'asc';
     return table;
 }

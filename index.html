@@ -171,18 +171,10 @@
                         </label>
                     </div>
                 </div>
-                <div class="prop prop-column">
-                    <h6 class="">Show UI Overlay</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" name="show-ui">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
+
                 <div id="login-section" style="display: block;">
                     <div class="">
-                        <h5>You must login to access data</h5>
+                        <h5>Authentication</h5>
                     </div>
 
                     <div class="prop prop-column">
@@ -223,6 +215,16 @@
                     </div>
                     <div class="">
                         <button type="button" name="button" class="waves-effect waves-light btn" id="log-out" style="width: 80%; display: block; margin: 10px auto;">Log Out</button>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Show UI Overlay</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="show-ui">
+                            <span class="lever"></span>
+                        </label>
                     </div>
                 </div>
 
@@ -483,17 +485,17 @@
                     <h6 class="">Enable Safety Net</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" checked name="enableSafetyNet">
+                            <input type="checkbox" checked name="enableQueryValidation">
                             <span class="lever"></span>
                         </label>
                     </div>
                 </div>
 
                 <div class="prop prop-column">
-                    <h6 class="">Disable Drilldowns</h6>
+                    <h6 class="">Enable Drilldowns</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" name="enableDrilldowns">
+                            <input type="checkbox" name="enableDrilldowns" checked>
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -986,7 +988,7 @@
         var placement = document.querySelectorAll('[name="placement"]')
         var enableAutocomplete = document.querySelector('[name="enableAutocomplete"]')
         var enableVoiceRecord = document.querySelector('[name="enableVoiceRecord"]')
-        var enableSafetyNet = document.querySelector('[name="enableSafetyNet"]')
+        var enableQueryValidation = document.querySelector('[name="enableQueryValidation"]')
         var enableDrilldowns = document.querySelector('[name="enableDrilldowns"]')
         var debug = document.querySelector('[name="debug"]')
         var clearOnClose = document.querySelector('[name="clearOnClose"]')
@@ -1170,7 +1172,7 @@
             DataMessenger.options.autoQLConfig.enableAutocomplete = event.target.checked;
         }
 
-        enableSafetyNet.onchange = function(event){
+        enableQueryValidation.onchange = function(event){
             DataMessenger.options.autoQLConfig.enableQueryValidation = event.target.checked;
         }
 
