@@ -137,7 +137,7 @@
                         </span>
                     Chat Drawer</a>
                 </li>
-                <li class="tab col s2 test-tab">
+                <li class="tab col s2 test-tab" id="dashboard-tab">
                     <a class="" href="#test2">
                         <span id="dashboard-icon" class="chata-icon">
                             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -906,7 +906,8 @@
     //Add components to document
     document.getElementById('chat-bar').append(chatBar);
     document.getElementById('response-renderer').append(responseRenderer);
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg2MjA3NjU5LCAiZXhwIjogMTU4NjIyOTI1OSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.OySw8NZf6UuPOoefh6Necma1QwHuXUJC72-Dy__GpiMhNUe8rtOUKMRZl43h3yoWY7BXPN19XyjZhVUR5pHt3d89sjJvp44vAfmbHZQqtaklgAF76D3wJQvpcUypBvkQQrJBjgu7iXet1-tcblvJaoA7z9-tIZub97evwrz2mAxCDZnlHftfmM4TrwodoVBPPgIrLS2y0t78SMqg15TrbWRPRCTuBfE3EVQnuwe95kh-3AqxpwCrXHfqx5T5i704caPsW5NV7hCGbSzxoCu9F2EOwttquLCBVSvNttSR5rslwAlgNKN5_2ZVUn8ZhFuormFcvrn1lCKA5QgRyBEApw==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg2MzY1ODM0LCAiZXhwIjogMTU4NjM4NzQzNCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.dJSKXxLQ_MZx53Pu0q_MyetTlWnvsurrUGaM6SRAqC5EWTEwfmsc43YWPQ4JGRDU-HubEXsr_YnpKfOWg56MpRXSIi7lb0s5DYK9rgb0DTqe6Kh1YAdtloSNjHCcr5BKSniId4HAZRthmpvIUnARm4jIHrZjqGyOgcH547zraEK5S-ieD-6Jm5MuL8ZEkEnqV9eWBRb5qfX7AscnjjgYRAodLHFsYVjU6bikmwzIypUoMYTdvSeQWuyzmMgwY8pvc2LEcQxhAwD9CvC1t8QIqrNtT1e7dBtxRxrGzYiipeONFnKUmXoa9gy0F-EY4ntOu0kkNR2DTExuVtPfFIYB-A==`;
+        let dashboard;
         var chata = DataMessenger.init('chata', {
             authentication: {
                 token: _token,
@@ -956,6 +957,7 @@
             var tabsLi = document.querySelectorAll('.test-tab');
             for (var i = 0; i < tabsLi.length; i++) {
                 tabsLi[i].onclick = function(evt){
+                    window.dispatchEvent(new Event('resize'));
                     console.log(evt.target.parentElement.classList.contains('chatdrawer-tab'));
                     if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
                         if(DataMessenger.options.showHandle){
@@ -980,6 +982,7 @@
             });
         });
 
+        var dashboardTab = document.getElementById('dashboard-tab')
         var showHandle = document.querySelector('[name="showHandle"]')
         var uiOverlay = document.querySelector('[name="show-ui"]')
         var showMask = document.querySelector('[name="showMask"]')
@@ -998,6 +1001,8 @@
         var enableExploreQueriesTab = document.querySelector('[name="enableExploreQueriesTab"]')
         var enableColumnVisibilityManager = document.querySelector('[name="enableColumnVisibilityManager"]')
         var titleColor = document.querySelector('[name="titleColor"]')
+
+        dashboardTab.style.display = 'none';
 
         uiOverlay.onchange = function(event){
             if(event.target.checked){
@@ -1091,7 +1096,42 @@
                             if(xhr2.status != 200){
                                 alert(xhr2.responseText);
                             }else{
-                                DataMessenger.options.authentication.token = xhr2.responseText;
+                                var token = xhr2.responseText;
+                                DataMessenger.options.authentication.token = token;
+                                const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey.value}`;
+                                var xhrDasboard = new XMLHttpRequest();
+                                xhrDasboard.open('GET', DASHBOARD_URL);
+                                xhrDasboard.setRequestHeader("Authorization", `Bearer ${token}`);
+                                xhrDasboard.setRequestHeader("Integrator-Domain", domain.value);
+                                xhrDasboard.send();
+                                xhrDasboard.onreadystatechange = function(){
+                                    dashboardTab.style.display = 'inline-block';
+                                    if(xhrDasboard.readyState === 4){
+                                        var json = JSON.parse(xhrDasboard.responseText);
+                                        console.log(json);
+                                        dashboard = new Dashboard('.grid-1', {
+                                            themeConfig: {
+                                                chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+                                            },
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            },
+                                            tiles: json[0]['data'],
+                                            onChangeCallback: function() {
+                                                console.log('Dashboard onChangeCallback');
+                                            },
+                                            executeOnMount: true,
+                                            executeOnStopEditing: false,
+                                            splitView: true
+                                            // fontFamily: 'monospace'
+                                        });
+                                    }
+                                }
                                 alert('Login Sucessful!');
                             }
                         }
@@ -1101,6 +1141,7 @@
                     `
                     xhr2.open('GET', url);
                     xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
+
                     xhr2.send();
                 }
             };
@@ -1109,16 +1150,6 @@
                 xhr.send(formData);
             }else{
                 login.style.display = 'block';
-            }
-        }
-
-        demo.onchange = function(event){
-            DataMessenger.options.authentication.demo = event.target.checked;
-            var loginSection = document.getElementById('login-section');
-            if(!DataMessenger.options.authentication.demo){
-                loginSection.style.display = 'block';
-            }else{
-                loginSection.style.display = 'none';
             }
         }
 
@@ -1266,105 +1297,117 @@
             var newDrawer = DataMessenger.init('chata', DataMessenger.options);
         }
 
-        var dashboard = new Dashboard('.grid-1', {
-            themeConfig: {
-                chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            },
-            authentication: {
-                demo: true,
-            },
-            // token: undefined,
-            // apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
-            // customerId: 'locate-demo1',
-            // userId: 'nmoore@chata.ai',
-            // domain: 'https://locate-staging.chata.io',
-            tiles: [
-                {
-                    key: '0',
-                    w: 3,
-                    h: 2,
-                    query: 'total profit this month',
-                    title: 'Profit - Current Month'
-                },
-                {
-                    key: '1',
-                    w: 3,
-                    h: 2,
-                    query: 'total profit last month',
-                    title: 'Profit - Previous Month'
-                },
-                {
-                    key: '2',
-                    w: 3,
-                    h: 2,
-                    query: 'total profit ytd',
-                    title: 'Profit - YTD'
-                },
-                {
-                    key: '3',
-                    w: 3,
-                    h: 2,
-                    query: 'last years profit',
-                    title: 'Profit - Previous Year'
-                },
-                {
-                    key: '4',
-                    w: 6,
-                    h: 5,
-                    query: 'profit by month last 6 months',
-                    displayType: 'line',
-                    title: 'Monthly Profit'
-                },
-                {
-                    key: '5',
-                    w: 6,
-                    h: 5,
-                    query: 'profit by month last year',
-                    displayType: 'line',
-                    title: '2019 Monthly Profit'
-                },
-                {
-                    key: '6',
-                    w: 6,
-                    h: 5,
-                    query: 'profit by class last year',
-                    displayType: 'column',
-                    title: 'Total Profit by Class (2019)'
-                },
-                {
-                    key: '7',
-                    w: 6,
-                    h: 5,
-                    query: 'profit by customer last year',
-                    displayType: 'column',
-                    title: 'Total Profit by Customer (2019)'
-                },
-                {
-                    key: '8',
-                    w: 6,
-                    h: 5,
-                    query: 'total profit by class by month last 6 months',
-                    displayType: 'heatmap',
-                    title: 'Product Profitability'
-                },
-                {
-                    key: '9',
-                    w: 6,
-                    h: 5,
-                    query: 'total profit by customer by month last 6 months',
-                    displayType: 'heatmap',
-                    title: 'Customer Profitability'
-                }
-            ],
-            onChangeCallback: function() {
-                console.log('Dashboard onChangeCallback');
-            },
-            executeOnMount: true,
-            executeOnStopEditing: false,
-            splitView: true
-            // fontFamily: 'monospace'
-        });
+        // var dashboard = new Dashboard('.grid-1', {
+        //     themeConfig: {
+        //         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        //     },
+        //     authentication: {
+        //         demo: true,
+        //         // token: undefined,
+        //         // apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
+        //         // customerId: 'locate-demo1',
+        //         // userId: 'nmoore@chata.ai',
+        //         // domain: 'https://locate-staging.chata.io',
+        //     },
+        //     tiles: [
+        //         {
+        //             key: '0',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'total profit this month',
+        //             title: 'Profit - Current Month'
+        //         },
+        //         {
+        //             key: '1',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'total profit last month',
+        //             title: 'Profit - Previous Month'
+        //         },
+        //         {
+        //             key: '2',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'total profit ytd',
+        //             title: 'Profit - YTD'
+        //         },
+        //         {
+        //             key: '3',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'last years profit',
+        //             title: 'Profit - Previous Year'
+        //         },
+        //         {
+        //             key: '4',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by month last 6 months',
+        //             displayType: 'line',
+        //             title: 'Monthly Profit'
+        //         },
+        //         {
+        //             key: '5',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by month last year',
+        //             displayType: 'line',
+        //             title: '2019 Monthly Profit'
+        //         },
+        //         {
+        //             key: '6',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by class last year',
+        //             displayType: 'column',
+        //             title: 'Total Profit by Class (2019)'
+        //         },
+        //         {
+        //             key: '7',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by customer last year',
+        //             displayType: 'column',
+        //             title: 'Total Profit by Customer (2019)'
+        //         },
+        //         {
+        //             key: '8',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'total profit by class by month last 6 months',
+        //             displayType: 'heatmap',
+        //             title: 'Product Profitability'
+        //         },
+        //         {
+        //             key: '9',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'total profit by customer by month last 6 months',
+        //             displayType: 'heatmap',
+        //             title: 'Customer Profitability'
+        //         }
+        //     ],
+        //     onChangeCallback: function() {
+        //         console.log('Dashboard onChangeCallback');
+        //     },
+        //     executeOnMount: true,
+        //     executeOnStopEditing: false,
+        //     splitView: true
+        //     // fontFamily: 'monospace'
+        // });
 
+        demo.onchange = function(event){
+            DataMessenger.options.authentication.demo = event.target.checked;
+            dashboard.options.authentication.demo = event.target.checked;
+            var loginSection = document.getElementById('login-section');
+            if(!DataMessenger.options.authentication.demo){
+                loginSection.style.display = 'block';
+                dashboardTab.style.display = 'none';
+            }else{
+                loginSection.style.display = 'none';
+                // dashboardTab.style.display = 'inline-block';
+            }
+        }
 
         var startEditing = document.getElementById('start-editing')
         var stopEditing = document.getElementById('stop-editing')

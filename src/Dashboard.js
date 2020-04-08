@@ -111,6 +111,7 @@ function Dashboard(selector, options={}){
             minBounceBackAngle: 10
         },
         layoutEasing: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        layoutOnInit: true,
         dragEnabled: true,
         dragSort: function () {
             return [grid];
@@ -340,7 +341,6 @@ function Dashboard(selector, options={}){
     });
 
     obj.applyCSS();
-    obj.grid.refreshItems();
-
+    obj.grid.refreshItems().layout();
     return obj;
 }

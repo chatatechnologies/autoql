@@ -364,7 +364,7 @@ function Tile(dashboard, options={}){
           ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
             textValue
           )}&projectId=1`
-          : `${dashboard.options.authentication.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+          : `${dashboard.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
           )}&key=${dashboard.options.authentication.apiKey}&customer_id=${dashboard.options.authentication.customerId}&user_id=${dashboard.options.authentication.userId}`;
         return URL_SAFETYNET;

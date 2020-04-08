@@ -54,7 +54,7 @@ var DataMessenger = {
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         isRecordVoiceActive: false,
-        inputPlaceholder: ' Type your queries here'
+        inputPlaceholder: 'Type your queries here'
     },
     responses: [],
     xhr: new XMLHttpRequest(),
@@ -571,7 +571,7 @@ DataMessenger.tabsAnimation = function(displayNodes, displayBar){
     }
     DataMessenger.chataBarContainer.style.display = displayBar;
     if(displayNodes == 'none'){
-        DataMessenger.headerTitle.innerHTML = 'What Can I Ask?';
+        DataMessenger.headerTitle.innerHTML = 'Explore Queries';
         DataMessenger.headerRight.style.visibility = 'hidden';
     }else{
         DataMessenger.headerTitle.innerHTML = DataMessenger.options.title;
@@ -2016,8 +2016,12 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
     DataMessenger.responses[idRequest] = jsonResponse;
     containerMessage.setAttribute('data-containerid', idRequest);
     messageBubble.classList.add('chat-message-bubble');
-    toolbarButtons = DataMessenger.getActionToolbar(idRequest, 'simple', 'table');
-    messageBubble.appendChild(toolbarButtons);
+    toolbarButtons = DataMessenger.getActionToolbar(
+        idRequest, 'simple', 'table'
+    );
+    if(jsonResponse['reference_id'] !== '1.1.420'){
+        messageBubble.appendChild(toolbarButtons);
+    }
     var value = ''
     if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
         value = formatData(
@@ -2343,17 +2347,17 @@ DataMessenger.getActionToolbar = function(idRequest, type, displayType){
                 toolbar.appendChild(
                     reportProblemButton
                 );
+                toolbar.appendChild(
+                    DataMessenger.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        DataMessenger.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('copy_sql');
             }
-            toolbar.appendChild(
-                DataMessenger.getActionButton(
-                    DELETE_MESSAGE,
-                    'Delete Message',
-                    idRequest,
-                    DataMessenger.deleteMessageHandler,
-                    [reportProblem, toolbar]
-                )
-            );
-            moreOptionsArray.push('copy_sql');
             break;
         case 'csvCopy':
             toolbar.appendChild(
