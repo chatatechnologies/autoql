@@ -44,8 +44,8 @@
     <script src="src/ChataGroupedLineChart.js"></script>
     <script src="src/ChataGroupedBarChart.js"></script>
     <script src="src/ChataPieChart.js"></script>
-    <script src="src/ResponseRenderer.js"></script>
-    <script src="src/ChatBar.js"></script>
+    <script src="src/QueryOutput.js"></script>
+    <script src="src/QueryInput.js"></script>
     <script src="src/DataMessenger.js"></script>
     <script src="src/Modal.js"></script>
     <script src="src/Tile.js"></script>
@@ -148,7 +148,7 @@
                         Dashboard
                     </a>
                 </li>
-                <li class="tab col s2 test-tab"><a class="" href="#test3">ChatBar</a></li>
+                <li class="tab col s2 test-tab"><a class="" href="#test3">Query Input/Query Output</a></li>
                 <li class="tab col s2 test-tab"><a class="" href="#test4">Notification Settings</a></li>
                 <li class="tab col s1 test-tab"><a class="" href="#test5">
                     <svg id="notification-icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-notifications-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M257 120.471c7.083 0 23.911 4.479 23.911 4.479 45.589 10.447 77.678 52.439 77.678 99.85V352.412l9.321 9.364 7.788 7.823H136.302l7.788-7.823 9.321-9.364V224.8c0-47.41 32.089-89.403 77.678-99.85 0 0 18.043-4.479 23.911-4.479M256 48c-17.602 0-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2zm41.411 374.4h-82.823c0 22.881 18.633 41.6 41.412 41.6s41.411-18.719 41.411-41.6z"></path></svg>
@@ -893,18 +893,21 @@
     document.getElementById('test5').appendChild(notificationList);
     document.getElementById('test4').appendChild(settingsList);
     //Create the components
-    var chatBar = DataMessenger.getChatBar({
+    var queryInput = DataMessenger.getQueryInput({
+        authentication: {
+            demo: true
+        },
         autoCompletePlacement: 'bottom',
     });
-    var responseRenderer = DataMessenger.createResponseRenderer({
+    var responseRenderer = DataMessenger.getQueryOutput({
         displayType: 'stacked_column'
     });
 
     //Bind the chatBar to responseRenderer
-    chatBar.bind(responseRenderer);
+    queryInput.bind(responseRenderer);
 
     //Add components to document
-    document.getElementById('chat-bar').append(chatBar);
+    document.getElementById('chat-bar').append(queryInput);
     document.getElementById('response-renderer').append(responseRenderer);
     var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg2MzY1ODM0LCAiZXhwIjogMTU4NjM4NzQzNCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.dJSKXxLQ_MZx53Pu0q_MyetTlWnvsurrUGaM6SRAqC5EWTEwfmsc43YWPQ4JGRDU-HubEXsr_YnpKfOWg56MpRXSIi7lb0s5DYK9rgb0DTqe6Kh1YAdtloSNjHCcr5BKSniId4HAZRthmpvIUnARm4jIHrZjqGyOgcH547zraEK5S-ieD-6Jm5MuL8ZEkEnqV9eWBRb5qfX7AscnjjgYRAodLHFsYVjU6bikmwzIypUoMYTdvSeQWuyzmMgwY8pvc2LEcQxhAwD9CvC1t8QIqrNtT1e7dBtxRxrGzYiipeONFnKUmXoa9gy0F-EY4ntOu0kkNR2DTExuVtPfFIYB-A==`;
         let dashboard;
