@@ -1,15 +1,27 @@
-function getChatBar(options){
+function getQueryInput(options){
 
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
     chataBarContainer.classList.add('autosuggest-top');
     chataBarContainer.options = {
-        token: '',
-        apiKey: '',
-        customerId: '',
-        userId: '',
-        domain: '',
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableDrilldowns: true
+        },
         isDisabled: false,
         onSubmit: function(){},
         onResponseCallback: function(){},
@@ -17,13 +29,10 @@ function getChatBar(options){
         showLoadingDots: true,
         showChataIcon: true,
         enableVoiceRecord: true,
-        enableAutocomplete: true,
         autocompleteStyles: {},
-        enableSafetyNet: true,
-        disableDrilldowns: false,
-        demo: true,
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
     }
+    chataBarContainer.autoCompleteTimer = undefined;
 
     chataBarContainer.addEventListener('click', function(e){
         if(e.target.classList.contains('suggestion-renderer')){
@@ -67,24 +76,29 @@ function getChatBar(options){
         responseRenderer.chataBarContainer = chataBarContainer;
     }
 
-    chataBarContainer.onkeyup = function(){
-        if(chataBarContainer.options.enableAutocomplete){
+    chataBarContainer.onkeyup = function(event){
+        if(chataBarContainer.options.autoQLConfig.enableAutocomplete){
             var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
             suggestionList.style.display = 'none';
+            clearTimeout(chataBarContainer.autoCompleteTimer);
             if(event.target.value){
-                DataMessenger.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options);
+                chataBarContainer.autoCompleteTimer = setTimeout(() => {
+                    DataMessenger.autocomplete(
+                        event.target.value,
+                        suggestionList,
+                        'suggestion-renderer',
+                        chataBarContainer.options
+                    );
+                }, 400);
             }
         }
     }
 
     chataBarContainer.onkeypress = function(event){
         var suggestionList = event.target.parentElement.getElementsByClassName('chat-bar-autocomplete')[0];
-        suggestionList.style.display = 'none';
         if(event.keyCode == 13 && event.target.value){
-            try {
-                DataMessenger.xhr.onreadystatechange = null;
-                DataMessenger.xhr.abort();
-            } catch (e) {}
+            clearTimeout(chataBarContainer.autoCompleteTimer);
+            suggestionList.style.display = 'none';
             this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value);
         }
     }
@@ -103,20 +117,20 @@ function getChatBar(options){
         // )}&projectId=${chataBarContainer.options.projectId}&unified_query_id=${uuidv4()}`;
         // const URL = `https://backend-staging.chata.ai/api/v1/query?q=${value}&project=1&unified_query_id=${uuidv4()}`;
 
-        const URL_SAFETYNET = chataBarContainer.options.demo
+        const URL_SAFETYNET = chataBarContainer.options.authentication.demo
           ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
             value
           )}&projectId=1`
-          : `${chataBarContainer.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+          : `${chataBarContainer.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             value
-          )}&key=${chataBarContainer.options.apiKey}&customer_id=${chataBarContainer.options.customerId}&user_id=${chataBarContainer.options.userId}`
+          )}&key=${chataBarContainer.options.authentication.apiKey}&customer_id=${chataBarContainer.options.authentication.customerId}&user_id=${chataBarContainer.options.authentication.userId}`
 
         DataMessenger.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
             }
-            if(suggestions.length > 0 && chataBarContainer.options.enableSafetyNet){
+            if(suggestions.length > 0 && chataBarContainer.options.autoQLConfig.enableQueryValidation){
                 responseRenderer.innerHTML = '';
                 chataBarContainer.chatbar.removeAttribute("disabled");
                 if(chataBarContainer.options.showLoadingDots){
@@ -183,10 +197,14 @@ function getChatBar(options){
                             scrollbox.classList.add('chata-table-scrollbox');
                             scrollbox.appendChild(div);
                             responseRenderer.appendChild(scrollbox);
+                            let opts = mergeOptions([
+                                chataBarContainer.options,
+                                responseRenderer.options
+                            ]);
                             var table = createTable(
                                 jsonResponse,
                                 div,
-                                responseRenderer.options,
+                                opts,
                                 'append',
                                 uuid,
                                 'table-response-renderer',
@@ -217,10 +235,14 @@ function getChatBar(options){
                                     );
                                     responseRenderer.innerHTML = `<div>${data}</div>`;
                                 }else{
+                                    var opts = mergeOptions([
+                                        chataBarContainer.options,
+                                        responseRenderer.options
+                                    ]);
                                     var table = createTable(
                                         jsonResponse,
                                         div,
-                                        responseRenderer.options,
+                                        opts,
                                         'append',
                                         uuid,
                                         'table-response-renderer',
@@ -239,7 +261,11 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = getDatePivotArray(jsonResponse, responseRenderer.options);
-                                var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
+                                var opts = mergeOptions([
+                                    chataBarContainer.options,
+                                    responseRenderer.options
+                                ]);
+                                var table = createPivotTable(pivotArray, div, opts, 'append', uuid, 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
                             case 'pivot_column':
@@ -250,7 +276,11 @@ function getChatBar(options){
                                 div.classList.add('chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = getPivotColumnArray(jsonResponse, responseRenderer.options);
-                                var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
+                                var opts = mergeOptions([
+                                    chataBarContainer.options,
+                                    responseRenderer.options
+                                ]);
+                                var table = createPivotTable(pivotArray, div, opts, 'append', '', 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
                             case 'line':

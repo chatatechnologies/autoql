@@ -167,12 +167,12 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
     return this;
 }
 
-DataMessenger.getChatBar = function(options={}){
-    return getChatBar(options);
+DataMessenger.getQueryInput = function(options={}){
+    return getQueryInput(options);
 }
 
-DataMessenger.createResponseRenderer = function(options){
-    return createResponseRenderer(options);
+DataMessenger.getQueryOutput = function(options){
+    return getQueryOutput(options);
 }
 
 DataMessenger.createQueryTips = function(){
@@ -762,7 +762,15 @@ DataMessenger.sendDrilldownMessage = function(
                 var data = response['data'];
                 responseRenderer.innerHTML = `<div>${data}</div>`;
             }else{
-                createTable(response, div, options, 'append', uuid, 'table-response-renderer');
+                createTable(
+                    response,
+                    div,
+                    options,
+                    'append',
+                    uuid,
+                    'table-response-renderer',
+                    '[data-indexrowrenderer]'
+                );
             }
         }, data, options);
     }

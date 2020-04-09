@@ -1,4 +1,4 @@
-function createResponseRenderer(options={}){
+function getQueryOutput(options={}){
     var responseRenderer = document.createElement('div');
     responseRenderer.options = {
         supportsSuggestions: true,
@@ -8,14 +8,21 @@ function createResponseRenderer(options={}){
         displayType: undefined,
         isFilteringTable: false,
         renderTooltips: true,
-        languageCode: 'en-US',
-        currencyCode: 'USD',
-        currencyDecimals: 2,
-        quantityDecimals: 1,
-        monthYearFormat: 'MMM YYYY',
-        dayMonthYearFormat: 'MMM DD, YYYY',
-        fontFamily: 'sans-serif',
-        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195']
+        dataFormatting:{
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY'
+        },
+        themeConfig: {
+            theme: 'light',
+            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+            accentColor: undefined,
+            fontFamily: 'sans-serif',
+        },
     }
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
@@ -24,7 +31,7 @@ function createResponseRenderer(options={}){
     responseRenderer.classList.add('renderer-container');
     responseRenderer.style.setProperty(
         '--chata-drawer-font-family',
-        responseRenderer.options.fontFamily
+        responseRenderer.options.themeConfig.fontFamily
     )
     responseRenderer.setAttribute('data-componentid', uuidv4());
     var applyTableStyles = function(){
@@ -47,7 +54,7 @@ function createResponseRenderer(options={}){
             if(component.tagName == 'svg'){
                 component = component.parentElement;
             }
-            if(!component.chataBarContainer.options.disableDrilldowns){
+            if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
                 var topBar = component.chataBarContainer.getElementsByClassName(
@@ -66,9 +73,9 @@ function createResponseRenderer(options={}){
             }
         }
         if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
-            var component = e.target.parentElement.parentElement;
-            var responseRenderer = component.parentElement.parentElement;
-            if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+            console.log(component.options);
+            if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;
                 var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
