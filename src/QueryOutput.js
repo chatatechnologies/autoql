@@ -74,7 +74,6 @@ function getQueryOutput(options={}){
         }
         if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
             var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-            console.log(component.options);
             if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;

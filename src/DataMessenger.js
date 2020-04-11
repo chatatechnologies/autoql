@@ -754,7 +754,10 @@ DataMessenger.sendDrilldownMessage = function(
             var div = document.createElement('div');
             div.classList.add('chata-table-container');
             div.classList.add('chata-table-container-renderer');
-            responseRenderer.appendChild(div);
+            var scrollbox = document.createElement('div');
+            scrollbox.classList.add('chata-table-scrollbox');
+            scrollbox.appendChild(div);
+            responseRenderer.appendChild(scrollbox);
             if(response['data']['rows'].length == 0){
                 responseRenderer.innerHTML = `<div>No data found.</div>`;
             }
@@ -762,7 +765,7 @@ DataMessenger.sendDrilldownMessage = function(
                 var data = response['data'];
                 responseRenderer.innerHTML = `<div>${data}</div>`;
             }else{
-                createTable(
+                var table = createTable(
                     response,
                     div,
                     options,
@@ -771,6 +774,8 @@ DataMessenger.sendDrilldownMessage = function(
                     'table-response-renderer',
                     '[data-indexrowrenderer]'
                 );
+                table.classList.add('renderer-table');
+                scrollbox.insertBefore(table.headerElement, div);
             }
         }, data, options);
     }

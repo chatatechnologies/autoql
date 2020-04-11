@@ -83,6 +83,7 @@ function getQueryInput(options){
             clearTimeout(chataBarContainer.autoCompleteTimer);
             if(event.target.value){
                 chataBarContainer.autoCompleteTimer = setTimeout(() => {
+                    console.log(chataBarContainer.options.authentication);
                     DataMessenger.autocomplete(
                         event.target.value,
                         suggestionList,
@@ -284,75 +285,63 @@ function getQueryInput(options){
                                 table.classList.add('renderer-table');
                             break;
                             case 'line':
-                                var values = formatDataToBarChart(
-                                    jsonResponse,
-                                    responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var grouped = values[0];
-                                var hasNegativeValues = values[1];
-                                var cols = jsonResponse['data']['columns'];
+                                responseRenderer.appendChild(chartWrapper);
                                 createLineChart(
-                                    responseRenderer, grouped, cols,
-                                    hasNegativeValues, responseRenderer.options,
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'bar':
-                                var values = formatDataToBarChart(
-                                    jsonResponse,
-                                    responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var grouped = values[0];
-                                var hasNegativeValues = values[1];
-                                var cols = jsonResponse['data']['columns'];
+                                responseRenderer.appendChild(chartWrapper);
                                 createBarChart(
-                                    responseRenderer, grouped, cols,
-                                    hasNegativeValues, responseRenderer.options,
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'column':
-                                var values = formatDataToBarChart(
-                                    jsonResponse,
-                                    responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var grouped = values[0];
-                                var cols = jsonResponse['data']['columns'];
-                                var hasNegativeValues = values[1];
+                                responseRenderer.appendChild(chartWrapper);
                                 createColumnChart(
-                                    responseRenderer, grouped,cols,
-                                    hasNegativeValues, responseRenderer.options,
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'heatmap':
-                                var values = formatDataToHeatmap(
-                                    jsonResponse, responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var labelsX = DataMessenger.getUniqueValues(values, row => row.labelX);
-                                var labelsY = DataMessenger.getUniqueValues(values, row => row.labelY);
-                                var cols = jsonResponse['data']['columns'];
-
+                                responseRenderer.appendChild(chartWrapper);
                                 createHeatmap(
-                                    responseRenderer, labelsX, labelsY,
-                                    values, cols, responseRenderer.options,
-                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
+                                    false, 'data-chartrenderer',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'bubble':
-                                var values = formatDataToHeatmap(
-                                    jsonResponse, responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var labelsX = DataMessenger.getUniqueValues(values, row => row.labelX);
-                                var labelsY = DataMessenger.getUniqueValues(values, row => row.labelY);
-                                var cols = jsonResponse['data']['columns'];
+                                responseRenderer.appendChild(chartWrapper);
                                 createBubbleChart(
-                                    responseRenderer, labelsX, labelsY,
-                                    values, cols, responseRenderer.options,
-                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
+                                    false, 'data-chartrenderer',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'help':
@@ -361,48 +350,37 @@ function getQueryInput(options){
                                 );
                             break;
                             case 'stacked_bar':
-                                var data = jsonResponse['data']['rows'];
-                                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                                groups = groups.sort().reverse();
-                                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                                var cols = jsonResponse['data']['columns'];
-                                var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
+                                var chartWrapper = document.createElement(
+                                    'div'
+                                );
+                                responseRenderer.appendChild(chartWrapper);
                                 createStackedBarChart(
-                                    responseRenderer, dataGrouped, groups,
-                                    subgroups, cols,
+                                    chartWrapper, jsonResponse,
                                     responseRenderer.options, false,
-                                    'data-stackedchartindex', responseRenderer.options.renderTooltips
+                                    'data-stackedchartindex',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'stacked_column':
-                                var data = jsonResponse['data']['rows'];
-                                var groups = DataMessenger.getUniqueValues(
-                                    data, row => row[1]
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                groups = groups.sort().reverse();
-                                var subgroups = DataMessenger.getUniqueValues(
-                                    data, row => row[0]
-                                );
-                                var cols = jsonResponse['data']['columns'];
-
-                                var dataGrouped = DataMessenger.format3dData(
-                                    jsonResponse['data']['columns'],
-                                    data, groups
-                                );
+                                responseRenderer.appendChild(chartWrapper);
                                 createStackedColumnChart(
-                                    responseRenderer, dataGrouped, groups,
-                                    subgroups, cols,
+                                    chartWrapper, jsonResponse,
                                     responseRenderer.options, false,
-                                    'data-stackedchartindex', responseRenderer.options.renderTooltips
+                                    'data-stackedchartindex',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'pie':
-                                var data = DataMessenger.groupBy(
-                                    jsonResponse['data']['rows'], row => row[0]
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var cols = jsonResponse['data']['columns'];
-                                createPieChart(responseRenderer, data,
-                                    dashboard.options, cols, false,
+                                responseRenderer.appendChild(chartWrapper);
+                                createPieChart(
+                                    chartWrapper, jsonResponse,
+                                    responseRenderer.options, false,
                                     'data-chartrenderer', true
                                 );
                                 break;

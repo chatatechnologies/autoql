@@ -13,8 +13,6 @@ function createPieChart(component, json, options, fromDataMessenger=true, valueC
         json['data']['rows'], row => row[index2], index1
     );
 
-    console.log(data);
-
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);

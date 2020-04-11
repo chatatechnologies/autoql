@@ -893,14 +893,14 @@
     document.getElementById('test5').appendChild(notificationList);
     document.getElementById('test4').appendChild(settingsList);
     //Create the components
-    var queryInput = DataMessenger.getQueryInput({
+    let queryInput = DataMessenger.getQueryInput({
         authentication: {
-            demo: true
+            demo: false
         },
         autoCompletePlacement: 'bottom',
     });
     var responseRenderer = DataMessenger.getQueryOutput({
-        displayType: 'stacked_column'
+        displayType: 'column'
     });
 
     //Bind the chatBar to responseRenderer
@@ -1048,6 +1048,11 @@
             DataMessenger.options.authentication.customerId = customerId.value;
             DataMessenger.options.authentication.userId = userId.value;
             DataMessenger.options.authentication.domain = domain.value;
+            queryInput.options.authentication.apiKey = apiKey.value;
+            queryInput.options.authentication.customerId = customerId.value;
+            queryInput.options.authentication.userId = userId.value;
+            queryInput.options.authentication.domain = domain.value;
+
 
             login.style.display = 'none';
             var xhr = new XMLHttpRequest();
@@ -1101,6 +1106,8 @@
                             }else{
                                 var token = xhr2.responseText;
                                 DataMessenger.options.authentication.token = token;
+                                queryInput.options.authentication.token = token;
+
                                 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey.value}`;
                                 var xhrDasboard = new XMLHttpRequest();
                                 xhrDasboard.open('GET', DASHBOARD_URL);
@@ -1401,7 +1408,8 @@
 
         demo.onchange = function(event){
             DataMessenger.options.authentication.demo = event.target.checked;
-            dashboard.options.authentication.demo = event.target.checked;
+            queryInput.options.authentication.demo = event.target.checked;
+            // dashboard.options.authentication.demo = event.target.checked;
             var loginSection = document.getElementById('login-section');
             if(!DataMessenger.options.authentication.demo){
                 loginSection.style.display = 'block';
