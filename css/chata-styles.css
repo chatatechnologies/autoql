@@ -194,10 +194,6 @@ body{
     letter-spacing: 0.05em;
 }
 
-.chata-header-left{
-    width: 100;
-}
-
 .chat-header-container button {
     background: transparent;
     border: none;
@@ -339,6 +335,7 @@ body{
     margin-bottom: 7px;
     width: calc(100% - 10px);
     font-size: 13px;
+    font-family: sans-serif;
 }
 
 .text-bar{
@@ -1284,9 +1281,8 @@ text.x-axis-label, text.y-axis-label {
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
 
-  transition-property: background, color, transform, line-height, height, width,
-    margin-right, margin-top, margin-left, margin-bottom, z-index;
-  transition-duration: 0.2s;
+  transition-property: background,color,transform,line-height,height,width,margin-right,margin-top,margin-left,margin-bottom,z-index,opacity;
+  transition-duration: .2s;
 }
 .page-switcher-container.right .tab {
   text-align: left;
@@ -1334,7 +1330,10 @@ text.x-axis-label, text.y-axis-label {
   margin-right: -4px !important;
   /* position: absolute; */
 }
-.page-switcher-container.right .tab:hover {
+.page-switcher-container .tab:not(.active):hover {
+    opacity: .8;
+}
+/* .page-switcher-container.right .tab:hover {
   height: 69px;
   width: 47px;
   line-height: 56px;
@@ -1368,7 +1367,7 @@ text.x-axis-label, text.y-axis-label {
   margin-right: -2px;
   margin-top: -2px;
   z-index: 3;
-}
+} */
 
 /* Curve appropriate corners depending on placement */
 .page-switcher-container.right .tab:first-child,

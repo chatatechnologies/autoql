@@ -156,7 +156,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
             if(DataMessenger.finalTranscript !== ''){
                 var button = document.getElementById('chata-voice-record-button');
                 var chataInput = document.getElementById('chata-input');
-                DataMessenger.sendMessage(chataInput, DataMessenger.finalTranscript);
+                DataMessenger.sendMessage(chataInput, DataMessenger.finalTranscript, 'data_messenger.user');
                 DataMessenger.speechToText.stop();
                 button.style.background = themeStyles['--chata-drawer-accent-color'];
                 DataMessenger.options.isRecordVoiceActive = false;
@@ -1023,11 +1023,11 @@ DataMessenger.clickHandler = function(e){
 
         if(e.target.classList.contains('suggestion')){
             suggestionList.style.display = 'none';
-            DataMessenger.sendMessage(chataInput, e.target.textContent);
+            DataMessenger.sendMessage(chataInput, e.target.textContent, 'data_messenger.user');
         }
         if(e.target.classList.contains('chata-suggestion-btn')){
             if(!e.target.classList.contains('none-of-these-btn')){
-                DataMessenger.sendMessage(chataInput, e.target.textContent);
+                DataMessenger.sendMessage(chataInput, e.target.textContent, 'data_messenger.suggestion');
             }else{
                 var responseLoadingContainer = DataMessenger.putMessage(
                     e.target.textContent
@@ -1708,14 +1708,14 @@ DataMessenger.safetynetCall = function(url, callback, options){
     xhr.send();
 }
 
-DataMessenger.ajaxCall = function(val, callback, options){
+DataMessenger.ajaxCall = function(val, callback, options, source){
     const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
     : `${options.authentication.domain}/autoql/api/v1/query?key=${options.authentication.apiKey}`
 
     const data = {
         text: val,
-        source: "data_messenger",
+        source: source,
         // username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
         // customer_id: options.authentication.customerId || "",
         // user_id: options.authentication.userId || "",
@@ -1867,7 +1867,7 @@ DataMessenger.putSafetynetMessage = function(suggestionArray){
     DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
 }
 
-DataMessenger.sendMessage = function(chataInput, textValue){
+DataMessenger.sendMessage = function(chataInput, textValue, source){
     chataInput.disabled = true;
     chataInput.value = '';
     var responseLoadingContainer = DataMessenger.putMessage(textValue);
@@ -2013,7 +2013,7 @@ DataMessenger.sendMessage = function(chataInput, textValue){
                 }
                 DataMessenger.checkMaxMessages();
                 refreshTooltips();
-            }, DataMessenger.options);
+            }, DataMessenger.options, source);
         }
     }, DataMessenger.options);
 

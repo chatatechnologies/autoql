@@ -50,7 +50,8 @@ function getQueryOutput(options={}){
 
     responseRenderer.addEventListener('click', function(e){
         if(e.target.hasAttribute('data-chartrenderer')){
-            var component = e.target.parentElement.parentElement.parentElement;
+            var component = e.target.parentElement.parentElement.parentElement.parentElement;
+            console.log(component);
             if(component.tagName == 'svg'){
                 component = component.parentElement;
             }
@@ -94,7 +95,7 @@ function getQueryOutput(options={}){
         }
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
-            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
             var json = cloneObject(DataMessenger.responses[component.dataset.componentid]);
             json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;

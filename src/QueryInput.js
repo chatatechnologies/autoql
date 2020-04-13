@@ -31,6 +31,7 @@ function getQueryInput(options){
         enableVoiceRecord: true,
         autocompleteStyles: {},
         fontFamily: 'sans-serif',
+        placeholder: 'Type your queries here'
     }
     chataBarContainer.autoCompleteTimer = undefined;
 
@@ -41,7 +42,7 @@ function getQueryInput(options){
                 'chat-bar-autocomplete'
             )[0];
             chatBarSuggestionList.style.display = 'none';
-            parent.sendMessageToResponseRenderer(e.target.textContent);
+            parent.sendMessageToResponseRenderer(e.target.textContent, 'user');
         }
     });
 
@@ -61,7 +62,13 @@ function getQueryInput(options){
             </ul>
         </div>
         ${CHATA_ICON}
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="" ${disabled}>
+        <input
+            type="text"
+            autocomplete="off"
+            aria-autocomplete="list"
+            class="chata-input-renderer chat-bar left-padding"
+            placeholder="${chataBarContainer.options.placeholder}"
+            value="" id="" ${disabled}>
     </div>
     `;
 
@@ -100,11 +107,11 @@ function getQueryInput(options){
         if(event.keyCode == 13 && event.target.value){
             clearTimeout(chataBarContainer.autoCompleteTimer);
             suggestionList.style.display = 'none';
-            this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value);
+            this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value, 'user');
         }
     }
 
-    chataBarContainer.sendMessageToResponseRenderer = function(value){
+    chataBarContainer.sendMessageToResponseRenderer = function(value, source){
         chataBarContainer.options.onSubmit();
         var responseRenderer = this.responseRenderer;
         var parent = this.getElementsByClassName('chat-bar-text')[0];
@@ -389,7 +396,7 @@ function getQueryInput(options){
                         }
                     }
                     chataBarContainer.options.onResponseCallback();
-                }, chataBarContainer.options);
+                }, chataBarContainer.options, source);
             }
         }, chataBarContainer.options);
     }
