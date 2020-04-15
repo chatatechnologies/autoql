@@ -1,23 +1,23 @@
-.chata-drawer *, .chata-drawer *:before, .chata-drawer *:after{
+.autoql-vanilla-chata-drawer *, .autoql-vanilla-chata-drawer *:before, .autoql-vanilla-chata-drawer *:after{
     box-sizing: border-box !important;
     padding: 0px;
     margin: 0px;
 }
 
-.chata-body-drawer-open{
+.autoql-vanilla-chata-body-drawer-open{
     overflow: hidden;
     touch-action: none;
 }
 
-.drawer-handle .chata-bubbles-icon{
+.autoql-vanilla-drawer-handle .autoql-vanilla-chata-bubbles-icon{
     margin-top: 12px;
     display: block;
 }
 
-.drawer-handle:hover{
+.autoql-vanilla-drawer-handle:hover{
     cursor: pointer;
 }
-.drawer-handle{
+.autoql-vanilla-drawer-handle{
     position: fixed;
     cursor: pointer;
     z-index: 10;
@@ -41,22 +41,22 @@
     border-radius: 50%;
 }
 
-.drawer-handle.right-btn{
+.autoql-vanilla-drawer-handle.right-btn{
     top: 55px;
     right: 10px;
 }
 
-.drawer-handle.left-btn{
+.autoql-vanilla-drawer-handle.left-btn{
     top: 55px;
     left: 10px;
 }
 
-.drawer-handle.bottom-btn{
+.autoql-vanilla-drawer-handle.bottom-btn{
     bottom: 10px;
     left: calc(50% - 20px);
 }
 
-.drawer-handle.top-btn{
+.autoql-vanilla-drawer-handle.top-btn{
     top: 10px;
     left: calc(50% - 20px);
 }
@@ -66,7 +66,7 @@
     margin-top: 13px;
 }
 
-#drawer-wrapper{
+#autoql-vanilla-drawer-wrapper{
     background: #000;
     opacity: .3;
     width: 100%;
@@ -80,7 +80,7 @@
 body{
     transition: transform 0.3s ease-in-out;
 }
-.chata-drawer{
+.autoql-vanilla-chata-drawer{
     z-index: 10;
     background: white;
     position: fixed;
@@ -96,7 +96,7 @@ body{
     border-radius: 4px;
 }
 
-.chat-header-container {
+.autoql-vanilla-chat-header-container {
     display: flex;
     justify-content: space-between;
     width: 100%;
@@ -112,7 +112,7 @@ body{
     position: relative;
 }
 
-.popover-container{
+.autoql-vanilla-popover-container{
     z-index: 9999;
     border: 1px solid #ababab52;
     border-radius: 4px;
@@ -127,19 +127,19 @@ body{
     /* background: white; */
 }
 
-.chata-confirm-text {
+.autoql-vanilla-chata-confirm-text {
     text-align: center;
     width: 100%;
 }
 
-.clear-messages-confirm-popover {
+.autoql-vanilla-clear-messages-confirm-popover {
     color: var(--chata-drawer-text-color-primary);
     background: var(--chata-drawer-background-color);
     text-align: right;
     padding: 18px !important;
     width: 266px;
 }
-.chata-confirm-btn {
+.autoql-vanilla-chata-confirm-btn {
     margin: 7px 0px 0 2px !important;
     border-radius: 4px !important;
     cursor: pointer !important;
@@ -160,27 +160,27 @@ body{
     font-size: 14px !important;
 }
 
-.chata-confirm-btn.no {
+.autoql-vanilla-chata-confirm-btn.no {
     color: inherit;
     border: 1px solid rgba(0,0,0,.15);
     background: inherit
 }
 
-.chata-confirm-btn.yes {
+.autoql-vanilla-chata-confirm-btn.yes {
     background: var(--chata-drawer-accent-color) !important;
     border: 2px outset var(--chata-drawer-accent-color) !important;
     color: white;
 }
 
-.chata-confirm-btn:hover{
+.autoql-vanilla-chata-confirm-btn:hover{
     opacity: .7;
 }
-.chata-confirm-icon {
+.autoql-vanilla-chata-confirm-icon {
     color: #faad14;
     display: inline-block;
 }
 
-.chata-header-center-container {
+.autoql-vanilla-chata-header-center-container {
     position: relative;
     line-height: 60px;
     font-size: 18px;
@@ -194,7 +194,7 @@ body{
     letter-spacing: 0.05em;
 }
 
-.chat-header-container button {
+.autoql-vanilla-chat-header-container button {
     background: transparent;
     border: none;
     color: white;
@@ -205,32 +205,32 @@ body{
     outline: none !important;
 
 }
-.chata-button{
+.autoql-vanilla-chata-button{
     background: none !important;
 }
-.chata-button.close svg {
+.autoql-vanilla-chata-button.close svg {
     width: 30px;
     height: 30px;
     padding-top: 3px;
 }
 
-.chat-header-container button svg {
+.autoql-vanilla-chat-header-container button svg {
     width: 22px;
     height: 22px;
     padding-right: 2px;
     padding-top: 2px;
 }
 
-.chat-header-container .chata-button:hover{
+.autoql-vanilla-chat-header-container .autoql-vanilla-chata-button:hover{
     /* color: var(--chata-drawer-hover-color); */
     opacity: .7;
 }
 
-.chata-button.clear-all {
+.autoql-vanilla-chata-button.clear-all {
     margin-right: 11px;
 }
 
-.drawer-content{
+.autoql-vanilla-drawer-content{
     width: calc(100%);
     height: 100%;
     max-height: calc(100% - 150px);
@@ -246,13 +246,13 @@ body{
     /* position: relative; */
 }
 
-.drawer-content:hover{
+.autoql-vanilla-drawer-content:hover{
     /* overflow: auto; */
     /* overflow-y: auto; */
     /* width: 100%; */
 }
 
-.chata-scrollbox {
+.autoql-vanilla-chata-scrollbox {
   width: 100%;
   height: 100%;
   max-height: calc(100% - 150px);
@@ -260,11 +260,11 @@ body{
   visibility: hidden;
 }
 
-.drawer-content, .chata-scrollbox:hover, .chata-scrollbox:focus {
+.autoql-vanilla-drawer-content, .autoql-vanilla-chata-scrollbox:hover, .autoql-vanilla-chata-scrollbox:focus {
   visibility: visible;
 }
 
-.chat-single-message-container .chat-message-bubble {
+.autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble {
     position: relative;
     margin: 10px 0px 10px 10px;
     padding: 13px;
@@ -280,11 +280,11 @@ body{
 
 }
 
-.chat-message-response{
+.autoql-vanilla-chat-message-response{
     min-height: 380px;
 }
 
-.chat-single-message-container.response {
+.autoql-vanilla-chat-single-message-container.response {
     display: flex;
     justify-content: flex-start;
     margin-left: 10px;
@@ -293,7 +293,7 @@ body{
     animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-.chata-animation-message{
+.autoql-vanilla-chata-animation-message{
     display: flex;
     justify-content: flex-start;
     margin-left: 10px;
@@ -302,13 +302,13 @@ body{
     animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-.chata-response-content-container {
+.autoql-vanilla-chata-response-content-container {
     background-color: inherit;
     font-size: 14px;
     height: 100%;
 }
 
-.chat-single-message-container.request {
+.autoql-vanilla-chat-single-message-container.request {
     display: flex;
     justify-content: flex-end;
     margin-right: 20px;
@@ -316,18 +316,18 @@ body{
     animation: scale-up-br 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-.chat-single-message-container.request .chat-message-bubble {
+.autoql-vanilla-chat-single-message-container.request .autoql-vanilla-chat-message-bubble {
     background: var(--chata-drawer-accent-color);
     border: 1px solid var(--chata-drawer-accent-color);
     color: white;
     /* box-shadow: 2px 3px 8px 1px rgba(0, 0, 0, 0.1); */
 }
 
-.chata-bar-container {
+.autoql-vanilla-chata-bar-container {
     position: relative;
 }
 
-.watermark {
+.autoql-vanilla-watermark {
     color: var(--chata-drawer-text-color-primary);
     text-align: center;
     opacity: 0.2;
@@ -338,14 +338,14 @@ body{
     font-family: sans-serif;
 }
 
-.text-bar{
+.autoql-vanilla-text-bar{
     display: flex;
     position: relative;
 }
-.text-bar-animation{
+.autoql-vanilla-text-bar-animation{
     animation: 0.5s ease 0s 1 normal none running slideDown;
 }
-.chata-input {
+.autoql-vanilla-chata-input {
     padding: 10px !important;
     padding-left: 20px !important;
     margin: 10px !important;
@@ -361,23 +361,23 @@ body{
     border: 1px solid var(--chata-drawer-border-color) !important;
     color: var(--chata-drawer-text-color-primary) !important;
 }
-.chata-input-full-width{
+.autoql-vanilla-chata-input-full-width{
     width: 100%;
 }
-.chata-input:hover, .chata-input-renderer:hover{
+.autoql-vanilla-chata-input:hover, .autoql-vanilla-chata-input-renderer:hover{
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1) !important;
 }
 
-.chata-input:focus, .chata-input-renderer:focus{
+.autoql-vanilla-chata-input:focus, .autoql-vanilla-chata-input-renderer:focus{
     border-color: transparent !important;
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1) !important;
 }
 
-.chata-input::placeholder{
+.autoql-vanilla-chata-input::placeholder{
     color: var(--chata-drawer-text-color-placeholder);
 }
 
-.chata-input-renderer {
+.autoql-vanilla-chata-input-renderer {
     padding: 10px !important;
     padding-left: 20px !important;
     margin: 10px !important;
@@ -394,7 +394,7 @@ body{
     color: #5d5d5d !important;
 }
 
-.chat-voice-record-button {
+.autoql-vanilla-chat-voice-record-button {
     width: 40px;
     height: 40px;
     border-radius: 24px;
@@ -414,13 +414,13 @@ body{
     flex-grow: 0;
 }
 
-.chat-bar-text{
+.autoql-vanilla-chat-bar-text{
     display: block;
     width: 100%;
     position: relative;
 }
 
-.chat-bar-auto-complete-suggestions{
+.autoql-vanilla-chat-bar-auto-complete-suggestions{
     overflow: hidden;
     position: absolute;
     width: calc(100% - 17px);
@@ -429,35 +429,36 @@ body{
     z-index: 100;
 }
 
-.chat-bar-autocomplete{
+.autoql-vanilla-chat-bar-autocomplete{
     padding-left: 0 !important;
     padding-right: 0 !important;
 }
-.chat-bar-auto-complete-suggestions.bottom{
+
+.autoql-vanilla-chat-bar-auto-complete-suggestions.bottom{
     top: 45px;
 }
 
-.chat-bar-auto-complete-suggestions.top{
+.autoql-vanilla-chat-bar-auto-complete-suggestions.top{
     bottom: 45px;
 }
 
-.chat-bar-input-icon {
+.autoql-vanilla-chat-bar-input-icon {
     position: absolute;
     left: 30px;
     top: 20px;
 }
 
-.chat-bar-loading-container {
+.autoql-vanilla-chat-bar-loading-container {
     position: absolute;
     left: 30px;
     top: 20px;
 }
 
-.chata-input-renderer.left-padding {
+.autoql-vanilla-chata-input-renderer.left-padding {
     padding-left: 54px !important;
 }
 
-.chat-bar-auto-complete-suggestions ul {
+.autoql-vanilla-chat-bar-auto-complete-suggestions ul {
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     border-radius: 24px;
@@ -469,7 +470,7 @@ body{
     width: calc(100% - 5px);
     display: none;
 }
-.chat-bar-auto-complete-suggestions ul li{
+.autoql-vanilla-chat-bar-auto-complete-suggestions ul li{
     display: block;
     font-family: var(--chata-drawer-font-family);
     font-size: 15px;
@@ -482,13 +483,13 @@ body{
 }
 
 
-.auto-complete-suggestions{
+.autoql-vanilla-auto-complete-suggestions{
     position: relative;
  /* padding-left: 20px; */
     margin-left: 10px;
 }
 
-.auto-complete-suggestions ul{
+.autoql-vanilla-auto-complete-suggestions ul{
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     border-radius: 24px;
@@ -502,7 +503,7 @@ body{
     width: calc(100% - 72px);
     display: none;
 }
-.auto-complete-suggestions ul li{
+.autoql-vanilla-auto-complete-suggestions ul li{
     display: block;
     font-family: var(--chata-drawer-font-family);
     font-size: 15px;
@@ -514,11 +515,11 @@ body{
     letter-spacing: 0.05em;
 }
 
-.auto-complete-suggestions ul li:hover{
+.autoql-vanilla-auto-complete-suggestions ul li:hover{
     background-color: var(--chata-drawer-hover-color);
 }
 
-.chat-bar-auto-complete-suggestions ul li:hover{
+.autoql-vanilla-chat-bar-auto-complete-suggestions ul li:hover{
     background-color: #ececec;
 }
 
@@ -572,12 +573,12 @@ body{
     animation: response-loading3 0.6s infinite;
 }
 
-.chat-single-message-container .chat-message-bubble.full-width {
+.autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.full-width {
     max-width: calc(100% - 30px);
     width: 100%;
 }
 
-.chata-response-content-container {
+.autoql-vanilla-chata-response-content-container {
     background-color: inherit;
     font-size: 14px;
     height: 100%;
@@ -585,7 +586,7 @@ body{
     letter-spacing: 0.04em;
 }
 
-.chata-suggestion-btn, .chata-suggestion-btn-renderer {
+.autoql-vanilla-chata-suggestion-btn, .autoql-vanilla-chata-suggestion-btn-renderer {
     padding: 6px 14px;
     background: transparent;
     border-radius: 8px;
@@ -601,26 +602,26 @@ body{
     color: inherit;
 }
 
-.chata-suggestion-btn:hover, .chata-suggestion-btn-renderer:hover{
+.autoql-vanilla-chata-suggestion-btn:hover, .autoql-vanilla-chata-suggestion-btn-renderer:hover{
     color: white;
     background: var(--chata-drawer-accent-color);
     border-color: transparent;
 }
 
-.chata-scrollbox::-webkit-scrollbar {
+.autoql-vanilla-chata-scrollbox::-webkit-scrollbar {
     display: unset;
     background-color: transparent;
     width: 7px;
     height: 7px;
 }
 
-.chata-scrollbox::-webkit-scrollbar-thumb {
+.autoql-vanilla-chata-scrollbox::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 7px;
     border: 0px;
 }
 
-.chata-table-scrollbox{
+.autoql-vanilla-chata-table-scrollbox{
     width: 100%;
     height: 100%;
     overflow: auto;
@@ -631,20 +632,20 @@ body{
     overflow: hidden;
 }
 
-.chata-table-scrollbox::-webkit-scrollbar-thumb {
+.autoql-vanilla-chata-table-scrollbox::-webkit-scrollbar-thumb {
     background-color: rgba(0, 0, 0, 0.2);
     border-radius: 7px;
     border: 0px;
 }
 
-.chata-table-scrollbox::-webkit-scrollbar {
+.autoql-vanilla-chata-table-scrollbox::-webkit-scrollbar {
     display: unset;
     background-color: var(--chata-drawer-background-color);
     width: 7px;
     height: 7px;
 }
 
-.chata-table-scrollbox::-webkit-scrollbar-corner{
+.autoql-vanilla-chata-table-scrollbox::-webkit-scrollbar-corner{
     background-color: var(--chata-drawer-background-color);
 }
 
@@ -670,13 +671,13 @@ input[type=text]:disabled {
     visibility: visible;
 }
 
-.chata-table-container, .chata-chart-container, .chata-table-container-renderer,
-.chata-table-scrollbox:hover, .chata-table-scrollbox:focus,
+.autoql-vanilla-chata-table-container, .autoql-vanilla-chata-chart-container, .autoql-vanilla-chata-table-container-renderer,
+.autoql-vanilla-chata-table-scrollbox:hover, .autoql-vanilla-chata-table-scrollbox:focus,
 .chata-table-vertical-scrollbox:hover, .chata-table-vertical-scrollbox:focus {
   visibility: visible;
 }
 
-.chata-table-container {
+.autoql-vanilla-chata-table-container {
     height: 100%;
     background-color: inherit;
     /* overflow: scroll; */
@@ -687,16 +688,13 @@ input[type=text]:disabled {
     overflow: scroll;
 } */
 
-.table-response, .table-response-renderer{
+.autoql-vanilla-table-response, .autoql-vanilla-table-response-renderer{
     border-collapse: collapse;
     border-spacing: 0;
 }
 
-.chata-table-scrollbox .table-header{
-}
-
-.chata-response-content-container .table-header,
-.chata-table-scrollbox .table-header{
+.autoql-vanilla-chata-response-content-container .autoql-vanilla-table-header,
+.autoql-vanilla-chata-table-scrollbox .autoql-vanilla-table-header{
     border-bottom: 2px solid var(--chata-drawer-border-color);
     position: sticky !important;
     position: -webkit-sticky !important;
@@ -705,11 +703,11 @@ input[type=text]:disabled {
     visibility: visible;
 }
 
-.table-response-renderer tr:first-of-type{
+.autoql-vanilla-table-response-renderer tr:first-of-type{
     border-bottom: 2px solid #d3d3d352;
 }
 
-.chata-table-scrollbox .table-header th, .table-response-renderer tr th{
+.autoql-vanilla-chata-table-scrollbox .autoql-vanilla-table-header th, .autoql-vanilla-table-response-renderer tr th{
     padding: 8px 12px !important;
     box-sizing: border-box;
     width: 100%;
@@ -738,20 +736,20 @@ tr td.chata-hidden{
     visibility: hidden;
 }
 
-.tabulator-arrow {
+.autoql-vanilla-tabulator-arrow {
   position: absolute;
   right: 5px;
   bottom: 13px;
   display: none;
 }
-.tabulator-arrow.up{
+.autoql-vanilla-tabulator-arrow.up{
     width: 0;
     height: 0;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
     border-bottom: 6px solid #bbb;
 }
-.tabulator-arrow.down {
+.autoql-vanilla-tabulator-arrow.down {
   width: 0;
   height: 0;
   border-left: 6px solid transparent;
@@ -759,7 +757,7 @@ tr td.chata-hidden{
   border-top: 6px solid #bbb;
 }
 
-.table-response tr{
+.autoql-vanilla-table-response tr{
     border-bottom: 1px solid var(--chata-drawer-border-color);
     background: var(--chata-drawer-background-color);
     margin-top: 10px;
@@ -770,19 +768,19 @@ tr td.chata-hidden{
     overflow: hidden;
 }
 
-.chata-table-scrollbox tr th:hover{
+.autoql-vanilla-chata-table-scrollbox tr th:hover{
     background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
-.chata-table-scrollbox tr th:hover .tabulator-arrow, .table-response-renderer tr th:hover .tabulator-arrow{
+.autoql-vanilla-chata-table-scrollbox tr th:hover .autoql-vanilla-tabulator-arrow, .autoql-vanilla-table-response-renderer tr th:hover .autoql-vanilla-tabulator-arrow{
     display: block;
 }
-.table-response tr:hover {
+.autoql-vanilla-table-response tr:hover {
     background-color: var(--chata-drawer-hover-color);
     cursor: pointer;
 }
 
-.table-response tr td{
+.autoql-vanilla-table-response tr td{
     text-align: center;
     font-family: var(--chata-drawer-font-family);
     font-size: 14px;
@@ -795,7 +793,7 @@ tr td.chata-hidden{
     white-space: nowrap;
 }
 
-.table-response tr{
+.autoql-vanilla-table-response tr{
     border-bottom: 1px solid var(--chata-drawer-border-color);
     background: var(--chata-drawer-background-color);
     margin-top: 10px;
@@ -806,19 +804,19 @@ tr td.chata-hidden{
     overflow: hidden;
 }
 
-.table-response-renderer tr th:hover{
+.autoql-vanilla-table-response-renderer tr th:hover{
     background-color: #ececec;
     cursor: pointer;
 }
-.table-response-renderer tr:hover {
+.autoql-vanilla-table-response-renderer tr:hover {
     background-color: #ececec;
     cursor: pointer;
 }
-.table-response-renderer tr:first-child:hover {
+.autoql-vanilla-table-response-renderer tr:first-child:hover {
     background-color: transparent;
 }
 
-.table-response-renderer tr td{
+.autoql-vanilla-table-response-renderer tr td{
     text-align: center;
     font-family: var(--chata-drawer-font-family);
     font-size: 14px;
@@ -831,7 +829,7 @@ tr td.chata-hidden{
     white-space: nowrap;
 }
 
-.table-response-renderer tr{
+.autoql-vanilla-table-response-renderer tr{
     border-bottom: 1px solid #d3d3d352;
     background: #fff;
     margin-top: 10px;
@@ -842,7 +840,7 @@ tr td.chata-hidden{
     overflow: hidden;
 }
 
-.chata-toolbar-btn {
+.autoql-vanilla-chata-toolbar-btn {
     height: 28px;
     width: 28px;
     background: none;
@@ -855,11 +853,15 @@ tr td.chata-hidden{
     outline: none !important;
 }
 
-.chata-toolbar-btn:focus{
+.autoql-vanilla-chata-toolbar-btn:focus{
     background: none !important;
 }
 
-.chat-message-toolbar {
+.autoql-vanilla-chata-toolbar-btn:hover{
+    opacity: .7;
+}
+
+.autoql-vanilla-chat-message-toolbar {
     display: none;
     position: absolute;
     background: var(--chata-drawer-background-color);
@@ -871,68 +873,64 @@ tr td.chata-hidden{
     border: 1px solid var(--chata-drawer-border-color);
 }
 
-.chat-message-toolbar.right {
+.autoql-vanilla-chat-message-toolbar.right {
     right: -9px;
 }
-.chat-message-toolbar.left {
+.autoql-vanilla-chat-message-toolbar.left {
     left: -9px;
 }
-.chat-message-bubble:hover .chat-message-toolbar{
+.autoql-vanilla-chat-message-bubble:hover .autoql-vanilla-chat-message-toolbar{
     display: block;
 }
 
-.chat-message-bubble button:focus{
+.autoql-vanilla-chat-message-bubble button:focus{
     background: inherit;
 }
 
-.chata-toolbar-btn:hover{
-    opacity: .7;
-}
-
-.table-response .column::-moz-selection { /* Code for Firefox */
+.autoql-vanilla-table-response .column::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
 }
 
-.table-response .column::selection {
+.autoql-vanilla-table-response .column::selection {
   color: inherit;
   background: inherit;
 }
 
-.table-response .column-pivot::-moz-selection { /* Code for Firefox */
+.autoql-vanilla-table-response .column-pivot::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
 }
 
-.table-response .column-pivot::selection {
+.autoql-vanilla-table-response .column-pivot::selection {
   color: inherit;
   background: inherit;
 }
 
-/* .table-response-renderer .column, .column-pivot{
+/* .autoql-vanilla-table-response-renderer .column, .column-pivot{
     padding: 5px 18px !important;
 } */
-.table-response-renderer .column::-moz-selection { /* Code for Firefox */
+.autoql-vanilla-table-response-renderer .column::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
 }
 
-.table-response-renderer .column::selection {
+.autoql-vanilla-table-response-renderer .column::selection {
   color: inherit;
   background: inherit;
 }
 
-.table-response-renderer .column-pivot::-moz-selection { /* Code for Firefox */
+.autoql-vanilla-table-response-renderer .column-pivot::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
 }
 
-.table-response-renderer .column-pivot::selection {
+.autoql-vanilla-table-response-renderer .column-pivot::selection {
   color: inherit;
   background: inherit;
 }
 
-.sticky-col {
+.autoql-vanilla-sticky-col {
     border-right: 2px solid #ddd;
     text-align: left !important;
     /* left: 0;
@@ -977,17 +975,19 @@ tr td.chata-hidden{
     stroke: var(--chata-drawer-border-color);
     fill-opacity: 0.7;
 }
-.chata-response-content-container line{
+.autoql-vanilla-chata-response-content-container line{
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
 }
-.chata-response-content-container text{
+.autoql-vanilla-chata-response-content-container text{
     font-family: var(--chata-drawer-font-family);
     letter-spacing: 0.04em;
     fill: var(--chata-drawer-text-color-primary);
 }
+
+/* RESPONSE RENDERER */
 .renderer-container{
     display: flex;
     align-items: center;
@@ -1005,50 +1005,8 @@ tr td.chata-hidden{
     letter-spacing: 0.04em;
     fill: #5d5d5d;
 }
-.d3-tip {
-    line-height: 1;
-    letter-spacing: 0.04em;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.9);
-    border-radius: 2px;
-    font-family: sans-serif;
-    font-size: 13px;
-    color: var(--chata-drawer-hover-color);
-    z-index: 1000;
-}
-.title-tip{
-    font-weight: bold;
-    color: white;
-}
-.text-tip{
-    color: white;
-}
-/* Creates a small triangle extender for the tooltip */
-.d3-tip:after {
-    box-sizing: border-box;
-    display: inline;
-    font-size: 10px;
-    width: 100%;
-    line-height: 1;
-    color: rgba(0, 0, 0, 0.8);
-    content: "\25BC";
-    position: absolute;
-    text-align: center;
-}
 
-/* Style northward tooltips differently */
-.d3-tip.n:after {
-    margin: -1px 0 0 0;
-    top: 100%;
-    left: 0;
-}
-
-.d3-tip.animate {
-    animation: bounceIn 0.1s ease-in;
-    -webkit-animation: bounceIn 0.1s ease-in;
-}
-
-.chata-chart-container{
+.autoql-vanilla-chata-chart-container{
     /* width: 100%;
     height: 100%; */
     display: block;
@@ -1065,7 +1023,10 @@ text.x-axis-label, text.y-axis-label {
     white-space: nowrap;
 }
 
-.chata-chart-container .bar.active, .chata-chart-container .circle.active, .chata-chart-container .square.active, .chata-chart-container .line-dot.active {
+.autoql-vanilla-chata-chart-container .bar.active,
+.autoql-vanilla-chata-chart-container .circle.active,
+.autoql-vanilla-chata-chart-container .square.active,
+.autoql-vanilla-chata-chart-container .line-dot.active {
     fill: #a5cd39 !important;
 }
 
@@ -1201,7 +1162,7 @@ text.x-axis-label, text.y-axis-label {
   font-family: sans-serif;
 }
 
-.chata-response-content-container *:focus {
+.autoql-vanilla-chata-response-content-container *:focus {
     outline: none !important;
 }
 
@@ -1391,7 +1352,7 @@ text.x-axis-label, text.y-axis-label {
     padding-left: 54px !important;
 }
 
-.chat-bar-input-icon {
+.autoql-vanilla-chat-bar-input-icon {
     position: absolute;
     left: 30px;
     top: 20px;
@@ -1597,7 +1558,7 @@ text.x-axis-label, text.y-axis-label {
     color: #2ecc40;
 }
 
-.chata-drawer-resize-handle.right {
+.autoql-vanilla-chata-drawer-resize-handle.right {
     top: 0;
     left: -5px;
     width: 5px;
@@ -1611,7 +1572,7 @@ text.x-axis-label, text.y-axis-label {
     pointer-events: none;
 }
 
-.chata-drawer-resize-handle.left {
+.autoql-vanilla-chata-drawer-resize-handle.left {
     top: 0;
     right: -5px;
     width: 5px;
@@ -1619,7 +1580,7 @@ text.x-axis-label, text.y-axis-label {
     cursor: ew-resize;
 }
 
-.chata-drawer-resize-handle.bottom {
+.autoql-vanilla-chata-drawer-resize-handle.bottom {
     top: -5px;
     left: 0;
     height: 5px;
@@ -1627,7 +1588,7 @@ text.x-axis-label, text.y-axis-label {
     cursor: ns-resize;
 }
 
-.chata-drawer-resize-handle.top {
+.autoql-vanilla-chata-drawer-resize-handle.top {
     bottom: -5px;
     left: 0;
     height: 5px;
@@ -1635,7 +1596,7 @@ text.x-axis-label, text.y-axis-label {
     cursor: ns-resize;
 }
 
-.chata-drawer-resize-handle {
+.autoql-vanilla-chata-drawer-resize-handle {
     position: absolute;
     background: transparent;
     /* background: red; */

@@ -104,7 +104,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
         DataMessenger.options.onMaskClick = DataMessenger.options.onHandleClick;
     }
     DataMessenger.rootElem = rootElem;
-    rootElem.classList.add('chata-drawer');
+    rootElem.classList.add('autoql-vanilla-chata-drawer');
     this.createHeader();
     this.createDrawerContent();
     this.createBar();
@@ -155,7 +155,7 @@ DataMessenger.init = function(elem, options, registerEventsFlag=true){
             }
             if(DataMessenger.finalTranscript !== ''){
                 var button = document.getElementById('chata-voice-record-button');
-                var chataInput = document.getElementById('chata-input');
+                var chataInput = document.getElementById('autoql-vanilla-chata-input');
                 DataMessenger.sendMessage(chataInput, DataMessenger.finalTranscript, 'data_messenger.user');
                 DataMessenger.speechToText.stop();
                 button.style.background = themeStyles['--chata-drawer-accent-color'];
@@ -185,9 +185,9 @@ DataMessenger.createQueryTips = function(){
 
     var input = document.createElement('input');
 
-    textBar.classList.add('text-bar');
-    textBar.classList.add('text-bar-animation');
-    chatBarInputIcon.classList.add('chat-bar-input-icon');
+    textBar.classList.add('autoql-vanilla-text-bar');
+    textBar.classList.add('autoql-vanilla-text-bar-animation');
+    chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
     queryTipsResultContainer.classList.add('query-tips-result-container');
     queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
     queryTipsResultPlaceHolder.innerHTML = `
@@ -230,7 +230,7 @@ DataMessenger.createQueryTips = function(){
 
     container.style.display = 'none';
 
-    input.classList.add('chata-input')
+    input.classList.add('autoql-vanilla-chata-input')
     input.classList.add('left-padding')
     input.setAttribute('placeholder', 'Search relevant queries by topic');
     DataMessenger.queryTips = container;
@@ -329,7 +329,7 @@ DataMessenger.putRelatedQueries = function(
         item.innerHTML = list[i];
         item.style.animationDelay = (delay * i) + 's';
         item.onclick = function(event){
-            chataInput = document.getElementById('chata-input');
+            chataInput = document.getElementById('autoql-vanilla-chata-input');
             DataMessenger.tabsAnimation('flex', 'block');
             DataMessenger.queryTipsAnimation('none');
             chataInput.focus();
@@ -508,7 +508,7 @@ DataMessenger.createQueryTabs = function(){
 DataMessenger.createResizeHandler = function(){
     var resize = document.createElement('div');
     var startX, startY, startWidth, startHeight;
-    resize.classList.add('chata-drawer-resize-handle');
+    resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
     resize.classList.add(DataMessenger.options.placement);
 
     function resizeItem(e) {
@@ -586,22 +586,22 @@ DataMessenger.queryTipsAnimation = function(display){
 DataMessenger.createBar = function(){
     const placeholder = DataMessenger.options.inputPlaceholder;
     var chataBarContainer = document.createElement('div');
-    chataBarContainer.classList.add('chata-bar-container');
-    chataBarContainer.classList.add('chat-drawer-chat-bar');
-    chataBarContainer.classList.add('autosuggest-top');
+    chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
+    chataBarContainer.classList.add('autoql-vanilla-chat-drawer-chat-bar');
+    chataBarContainer.classList.add('autoql-vanilla-autosuggest-top');
     var display = DataMessenger.options.enableVoiceRecord ? 'block' : 'none';
     var htmlBar = `
-    <div class="watermark">
+    <div class="autoql-vanilla-watermark">
         ${WATERMARK}
         We run on AutoQL by Chata
     </div>
-    <div class="auto-complete-suggestions">
-        <ul id="auto-complete-list">
+    <div class="autoql-vanilla-auto-complete-suggestions">
+        <ul id="autoql-vanilla-auto-complete-list">
         </ul>
     </div>
-    <div class="text-bar">
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="${placeholder}" value="" id="chata-input">
-        <button style="display: ${display};" id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
+    <div class="autoql-vanilla-text-bar">
+        <input type="text" autocomplete="off" aria-autocomplete="list" class="autoql-vanilla-chata-input" placeholder="${placeholder}" value="" id="autoql-vanilla-chata-input">
+        <button style="display: ${display};" id="chata-voice-record-button" class="autoql-vanilla-chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
             <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
         </button>
     </div>
@@ -616,12 +616,12 @@ DataMessenger.createDrawerContent = function(){
     var firstMessage = document.createElement('div');
     var chatMessageBubble = document.createElement('div');
     var scrollBox = document.createElement('div');
-    scrollBox.classList.add('chata-scrollbox');
+    scrollBox.classList.add('autoql-vanilla-chata-scrollbox');
     chatMessageBubble.textContent = DataMessenger.options.introMessage;
-    drawerContent.classList.add('drawer-content');
-    firstMessage.classList.add('chat-single-message-container');
+    drawerContent.classList.add('autoql-vanilla-drawer-content');
+    firstMessage.classList.add('autoql-vanilla-chat-single-message-container');
     firstMessage.classList.add('response');
-    chatMessageBubble.classList.add('chat-message-bubble');
+    chatMessageBubble.classList.add('autoql-vanilla-chat-message-bubble');
 
     firstMessage.appendChild(chatMessageBubble);
     drawerContent.appendChild(firstMessage);
@@ -635,39 +635,39 @@ DataMessenger.createHeader = function(){
     var chatHeaderContainer = document.createElement('div');
     var headerLeft = htmlToElement(`
         <div class="chata-header-left">
-            <button class="chata-button close close-action" data-tippy-content="Close Drawer" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
+            <button class="autoql-vanilla-chata-button close close-action" data-tippy-content="Close Drawer" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
         </div>
     `)
     var headerTitle = htmlToElement(`
-        <div class="chata-header-center-container">
+        <div class="autoql-vanilla-chata-header-center-container">
             ${DataMessenger.options.title}
         </div>
     `)
     var headerRight = htmlToElement(`
         <div class="chata-header-right-container">
-            <button class="chata-button clear-all" data-tippy-content="Clear Messages">
+            <button class="autoql-vanilla-chata-button clear-all" data-tippy-content="Clear Messages">
                 ${CLEAR_ALL}
             </button>
         </div>
     `)
     var popover = htmlToElement(`
-        <div class="popover-container">
-            <div class="clear-messages-confirm-popover">
-                <div class="chata-confirm-text">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-confirm-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <div class="autoql-vanilla-popover-container">
+            <div class="autoql-vanilla-clear-messages-confirm-popover">
+                <div class="autoql-vanilla-chata-confirm-text">
+                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="autoql-vanilla-chata-confirm-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                         <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
                     </svg>
                     Clear all queries & responses?
                 </div>
-                <button class="chata-confirm-btn no">Cancel</button>
-                <button class="chata-confirm-btn yes">Clear</button>
+                <button class="autoql-vanilla-chata-confirm-btn no">Cancel</button>
+                <button class="autoql-vanilla-chata-confirm-btn yes">Clear</button>
             </div>
         </div>
     `)
     headerRight.appendChild(popover);
         // style="overflow: hidden; position: absolute; top: 48px; left: 964px; opacity: 1; transition: opacity 0.35s ease 0s;"
         // <svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg>
-    chatHeaderContainer.classList.add('chat-header-container');
+    chatHeaderContainer.classList.add('autoql-vanilla-chat-header-container');
     chatHeaderContainer.appendChild(headerLeft);
     chatHeaderContainer.appendChild(headerTitle);
     chatHeaderContainer.appendChild(headerRight);
@@ -746,7 +746,7 @@ DataMessenger.sendDrilldownMessage = function(
         DataMessenger.ajaxCallPost(URL, function(response, status){
             responseRenderer.innerHTML = '';
             var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
-                'chat-bar-text'
+                'autoql-vanilla-chat-bar-text'
             )[0]
             topBar.removeChild(loading);
             var uuid = uuidv4();
@@ -755,7 +755,7 @@ DataMessenger.sendDrilldownMessage = function(
             div.classList.add('chata-table-container');
             div.classList.add('chata-table-container-renderer');
             var scrollbox = document.createElement('div');
-            scrollbox.classList.add('chata-table-scrollbox');
+            scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
             scrollbox.appendChild(div);
             responseRenderer.appendChild(scrollbox);
             if(response['data']['rows'].length == 0){
@@ -771,7 +771,7 @@ DataMessenger.sendDrilldownMessage = function(
                     options,
                     'append',
                     uuid,
-                    'table-response-renderer',
+                    'autoql-vanilla-table-response-renderer',
                     '[data-indexrowrenderer]'
                 );
                 table.classList.add('renderer-table');
@@ -982,8 +982,8 @@ DataMessenger.clickHandler = function(e){
     }
 
     if(e.target){
-        var chataInput = document.getElementById('chata-input');
-        var suggestionList = document.getElementById('auto-complete-list');
+        var chataInput = document.getElementById('autoql-vanilla-chata-input');
+        var suggestionList = document.getElementById('autoql-vanilla-auto-complete-list');
         if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
         || e.target.classList.contains('square') || e.target.classList.contains('circle')){
             var selectedBars = e.target.parentElement.getElementsByClassName('active');
@@ -993,7 +993,7 @@ DataMessenger.clickHandler = function(e){
             e.target.classList.add('active');
         }
 
-        if(e.target.classList.contains('chata-confirm-btn')){
+        if(e.target.classList.contains('autoql-vanilla-chata-confirm-btn')){
             DataMessenger.closePopOver();
             if(e.target.classList.contains('yes')){
                 DataMessenger.clearMessages();
@@ -1025,7 +1025,7 @@ DataMessenger.clickHandler = function(e){
             suggestionList.style.display = 'none';
             DataMessenger.sendMessage(chataInput, e.target.textContent, 'data_messenger.user');
         }
-        if(e.target.classList.contains('chata-suggestion-btn')){
+        if(e.target.classList.contains('autoql-vanilla-chata-suggestion-btn')){
             if(!e.target.classList.contains('none-of-these-btn')){
                 DataMessenger.sendMessage(chataInput, e.target.textContent, 'data_messenger.suggestion');
             }else{
@@ -1268,7 +1268,7 @@ DataMessenger.clickHandler = function(e){
             svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
         }
         if(e.target.classList.contains('clear-all')){
-            var confirm = document.querySelector('.popover-container');
+            var confirm = document.querySelector('.autoql-vanilla-popover-container');
             confirm.style.visibility = 'visible';
             confirm.style.opacity = 1;
         }
@@ -1276,7 +1276,7 @@ DataMessenger.clickHandler = function(e){
 }
 
 DataMessenger.closePopOver = function(){
-    var confirm = document.querySelector('.popover-container');
+    var confirm = document.querySelector('.autoql-vanilla-popover-container');
     confirm.style.opacity = 0;
     confirm.style.visibility = 'hidden';
 }
@@ -1288,9 +1288,9 @@ DataMessenger.drilldownHandler = function(e){
 DataMessenger.sendResponse = function(text){
     var containerMessage = document.createElement('div');
     var messageBubble = document.createElement('div');
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     messageBubble.textContent = text;
     containerMessage.appendChild(messageBubble);
     DataMessenger.drawerContent.appendChild(containerMessage);
@@ -1298,8 +1298,8 @@ DataMessenger.sendResponse = function(text){
 }
 
 DataMessenger.registerEvents = function(){
-    var chataInput = document.getElementById('chata-input');
-    var suggestionList = document.getElementById('auto-complete-list');
+    var chataInput = document.getElementById('autoql-vanilla-chata-input');
+    var suggestionList = document.getElementById('autoql-vanilla-auto-complete-list');
     document.addEventListener('click', function(e){
         var popoverElements = document.querySelectorAll(
             '.chata-tiny-popover-container'
@@ -1307,7 +1307,7 @@ DataMessenger.registerEvents = function(){
         [].forEach.call(popoverElements, function(e, i){
             e.parentNode.removeChild(e);
         })
-        if(e.target.id == 'drawer-wrapper'){
+        if(e.target.id == 'autoql-vanilla-drawer-wrapper'){
             if(DataMessenger.options.showMask && DataMessenger.options.maskClosable){
                 DataMessenger.options.onMaskClick();
             }
@@ -1345,7 +1345,7 @@ DataMessenger.registerEvents = function(){
 }
 
 DataMessenger.clearMessages = function(){
-    [].forEach.call(DataMessenger.drawerContent.querySelectorAll('.chat-single-message-container'), function(e, index){
+    [].forEach.call(DataMessenger.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container'), function(e, index){
         if(index == 0) return;
         e.parentNode.removeChild(e);
     });
@@ -1424,13 +1424,13 @@ DataMessenger.groupBy = function(list, keyGetter, indexData) {
 
 DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
     var messageBubble = oldComponent.parentElement.parentElement.parentElement;
-    var scrollBox = messageBubble.querySelector('.chata-table-scrollbox ');
+    var scrollBox = messageBubble.querySelector('.autoql-vanilla-chata-table-scrollbox');
     if(oldComponent.noColumnsElement){
         oldComponent.parentElement.removeChild(oldComponent.noColumnsElement);
         oldComponent.noColumnsElement = null;
     }
     scrollBox.scrollLeft = 0;
-    if(messageBubble.classList.contains('chata-response-content-container')){
+    if(messageBubble.classList.contains('autoql-vanilla-chata-response-content-container')){
         messageBubble = messageBubble.parentElement;
     }
     var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
@@ -1541,7 +1541,7 @@ DataMessenger.createCsvData = function(json, separator=','){
 }
 
 DataMessenger.closeDrawer = function(){
-    document.body.classList.remove('chata-body-drawer-open');
+    document.body.classList.remove('autoql-vanilla-chata-body-drawer-open');
     DataMessenger.options.isVisible = false;
     DataMessenger.wrapper.style.opacity = 0;
     DataMessenger.wrapper.style.height = 0;
@@ -1592,9 +1592,9 @@ DataMessenger.closeDrawer = function(){
 }
 
 DataMessenger.openDrawer = function(){
-    document.body.classList.add('chata-body-drawer-open');
+    document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
     DataMessenger.options.isVisible = true;
-    var chataInput = document.getElementById('chata-input');
+    var chataInput = document.getElementById('autoql-vanilla-chata-input');
     chataInput.focus();
     if(DataMessenger.options.enableExploreQueriesTab){
         DataMessenger.queryTabs.style.visibility = 'visible';
@@ -1656,7 +1656,7 @@ DataMessenger.createWrapper = function(rootElem){
     var wrapper = document.createElement('div');
     var body = document.getElementsByTagName('body')[0];
     body.insertBefore(wrapper, rootElem);
-    wrapper.setAttribute('id', 'drawer-wrapper');
+    wrapper.setAttribute('id', 'autoql-vanilla-drawer-wrapper');
     DataMessenger.wrapper = wrapper;
     if(!DataMessenger.options.showMask){
         DataMessenger.wrapper.style.opacity = 0;
@@ -1669,10 +1669,10 @@ DataMessenger.createDrawerButton = function(rootElem){
     var drawerIcon = document.createElement("div");
     drawerIcon.setAttribute("height", "22px");
     drawerIcon.setAttribute("width", "22px");
-    drawerIcon.classList.add('chata-bubbles-icon');
+    drawerIcon.classList.add('autoql-vanilla-chata-bubbles-icon');
     drawerIcon.classList.add('open-action');
     drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
-    drawerButton.classList.add('drawer-handle');
+    drawerButton.classList.add('autoql-vanilla-drawer-handle');
     drawerButton.classList.add('open-action');
     drawerButton.classList.add(DataMessenger.options.placement + '-btn');
     drawerButton.appendChild(drawerIcon);
@@ -1839,9 +1839,9 @@ DataMessenger.putHelpMessage = function(jsonResponse){
     var containerMessage = document.createElement('div');
     var messageBubble = document.createElement('div');
 
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     messageBubble.classList.add('full-width');
 
     messageBubble.innerHTML = DataMessenger.createHelpContent(jsonResponse['data']['rows'][0]);
@@ -1855,9 +1855,9 @@ DataMessenger.putSafetynetMessage = function(suggestionArray){
     var containerMessage = document.createElement('div');
     var messageBubble = document.createElement('div');
 
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     messageBubble.classList.add('full-width');
 
     messageBubble.append(createSafetynetContent(suggestionArray));
@@ -2023,12 +2023,12 @@ DataMessenger.sendMessage = function(chataInput, textValue, source){
 DataMessenger.putSimpleResponse = function(jsonResponse){
     var containerMessage = document.createElement('div');
     var messageBubble = document.createElement('div');
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('response');
     var idRequest = uuidv4();
     DataMessenger.responses[idRequest] = jsonResponse;
     containerMessage.setAttribute('data-containerid', idRequest);
-    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     toolbarButtons = DataMessenger.getActionToolbar(
         idRequest, 'simple', 'table'
     );
@@ -2272,7 +2272,7 @@ DataMessenger.getActionButton = function(
     svg, tooltip, idRequest, onClick, evtParams){
     var button =  htmlToElement(`
         <button
-            class="chata-toolbar-btn"
+            class="autoql-vanilla-chata-toolbar-btn"
             data-tippy-content="${tooltip}"
             data-id="${idRequest}">
             ${svg}
@@ -2306,7 +2306,7 @@ DataMessenger.filterTableHandler = (evt, idRequest) => {
         'tabulator-header-filter'
     );
     var arrows = table.headerElement.getElementsByClassName(
-        'tabulator-arrow'
+        'autoql-vanilla-tabulator-arrow'
     );
     for (var i = 0; i < inputs.length; i++) {
         if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
@@ -2334,7 +2334,7 @@ DataMessenger.getActionToolbar = function(idRequest, type, displayType){
     var request = DataMessenger.responses[idRequest];
     let moreOptionsArray = [];
     var toolbar = htmlToElement(`
-        <div class="chat-message-toolbar right">
+        <div class="autoql-vanilla-chat-message-toolbar right">
         </div>
     `);
 
@@ -2505,14 +2505,14 @@ DataMessenger.getSupportedDisplayTypes = function(idRequest, ignore){
 
 DataMessenger.getTableButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn table" data-tippy-content="Table" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn table" data-tippy-content="Table" data-id="${idRequest}">
         ${TABLE_ICON}
     </button>`;
 }
 
 DataMessenger.getPivotTableButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn pivot_table" data-tippy-content="Pivot Table" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn pivot_table" data-tippy-content="Pivot Table" data-id="${idRequest}">
         ${PIVOT_ICON}
     </button>
     `;
@@ -2520,7 +2520,7 @@ DataMessenger.getPivotTableButton = function(idRequest){
 
 DataMessenger.getColumnChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn column_chart" data-tippy-content="Column Chart" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn column_chart" data-tippy-content="Column Chart" data-id="${idRequest}">
         ${COLUMN_CHART_ICON}
     </button>
     `;
@@ -2528,7 +2528,7 @@ DataMessenger.getColumnChartButton = function(idRequest){
 
 DataMessenger.getBarChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn bar_chart" data-tippy-content="Bar Chart" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn bar_chart" data-tippy-content="Bar Chart" data-id="${idRequest}">
         ${BAR_CHART_ICON}
     </button>
     `;
@@ -2536,7 +2536,7 @@ DataMessenger.getBarChartButton = function(idRequest){
 
 DataMessenger.getLineChartButton = function(idRequest) {
     return `
-    <button class="chata-toolbar-btn line_chart" data-tippy-content="Line Chart" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn line_chart" data-tippy-content="Line Chart" data-id="${idRequest}">
         ${LINE_CHART_ICON}
     </button>
     `;
@@ -2544,7 +2544,7 @@ DataMessenger.getLineChartButton = function(idRequest) {
 
 DataMessenger.getPieChartButton = function(idRequest) {
     return `
-    <button class="chata-toolbar-btn pie_chart" data-tippy-content="Pie Chart" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn pie_chart" data-tippy-content="Pie Chart" data-id="${idRequest}">
         ${PIE_CHART_ICON}
     </button>
     `;
@@ -2552,7 +2552,7 @@ DataMessenger.getPieChartButton = function(idRequest) {
 
 DataMessenger.getHeatmapChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn heatmap" data-tippy-content="Heatmap" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn heatmap" data-tippy-content="Heatmap" data-id="${idRequest}">
         ${HEATMAP_ICON}
     </button>
     `;
@@ -2560,20 +2560,20 @@ DataMessenger.getHeatmapChartButton = function(idRequest){
 
 DataMessenger.getBubbleChartButton = function(idRequest){
     return `
-    <button class="chata-toolbar-btn bubble_chart" data-tippy-content="Bubble Chart" data-id="${idRequest}">
+    <button class="autoql-vanilla-chata-toolbar-btn bubble_chart" data-tippy-content="Bubble Chart" data-id="${idRequest}">
         ${BUBBLE_CHART_ICON}
     </button>
     `;
 }
 
 DataMessenger.getStackedColumnChartButton = function(idRequest){
-    return `<button class="chata-toolbar-btn stacked_column_chart" data-tippy-content="Stacked Column Chart" data-id="${idRequest}">
+    return `<button class="autoql-vanilla-chata-toolbar-btn stacked_column_chart" data-tippy-content="Stacked Column Chart" data-id="${idRequest}">
         ${STACKED_COLUMN_CHART_ICON}
     </button>`;
 }
 
 DataMessenger.getStackedBarChartButton = function(idRequest){
-    return `<button class="chata-toolbar-btn stacked_bar_chart" data-tippy-content="Stacked Bar Chart" data-id="${idRequest}">
+    return `<button class="autoql-vanilla-chata-toolbar-btn stacked_bar_chart" data-tippy-content="Stacked Bar Chart" data-id="${idRequest}">
         ${STACKED_BAR_CHART_ICON}
     </button>`;
 }
@@ -2677,10 +2677,10 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var groupField = getGroupableField(jsonResponse);
     var cols = jsonResponse['data']['columns'];
     const options = DataMessenger.options.dataFormatting;
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('response');
-    containerMessage.classList.add('chat-message-response');
-    messageBubble.classList.add('chat-message-bubble');
+    containerMessage.classList.add('autoql-vanilla-chat-message-response');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     messageBubble.classList.add('full-width');
     var idRequest = uuidv4();
     DataMessenger.responses[idRequest] = jsonResponse;
@@ -2689,7 +2689,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     var toolbar = '';
     if(supportedDisplayTypes != ''){
         toolbar += `
-        <div class="chat-message-toolbar left">
+        <div class="autoql-vanilla-chat-message-toolbar left">
             ${supportedDisplayTypes}
         </div>
         `
@@ -2697,9 +2697,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
     messageBubble.innerHTML = toolbar;
     messageBubble.appendChild(actions);
     tableContainer.classList.add('chata-table-container');
-    scrollbox.classList.add('chata-table-scrollbox');
-    responseContentContainer.classList.add('chata-response-content-container');
-    table.classList.add('table-response');
+    scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+    responseContentContainer.classList.add('autoql-vanilla-chata-response-content-container');
+    table.classList.add('autoql-vanilla-table-response');
     table.setAttribute('data-componentid', idRequest);
     var dataLines = jsonResponse['data']['rows'];
     var thArray = [];
@@ -2716,7 +2716,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
         var arrow = document.createElement('div');
         var col = document .createElement('div');
         col.textContent = colName;
-        arrow.classList.add('tabulator-arrow');
+        arrow.classList.add('autoql-vanilla-tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column');
         col.setAttribute('data-type', cols[i]['type']);
@@ -2820,7 +2820,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
             document.body.appendChild(popoverContainer);
         })
     }
-    header.classList.add('table-header');
+    header.classList.add('autoql-vanilla-table-header');
     scrollbox.appendChild(header);
 
     for (var i = 0; i < dataLines.length; i++) {
@@ -2878,7 +2878,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
     return table;
 }
 
-DataMessenger.createSuggestions = function(responseContentContainer, data, classButton='chata-suggestion-btn'){
+DataMessenger.createSuggestions = function(responseContentContainer, data, classButton='autoql-vanilla-chata-suggestion-btn'){
     for (var i = 0; i < data.length; i++) {
         var div = document.createElement('div');
         var button = document.createElement('button');
@@ -2897,11 +2897,11 @@ DataMessenger.putSuggestionResponse = function(jsonResponse, query){
     var containerMessage = document.createElement('div');
     var messageBubble = document.createElement('div');
     var responseContentContainer = document.createElement('div');
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     messageBubble.classList.add('full-width');
-    responseContentContainer.classList.add('chata-response-content-container');
+    responseContentContainer.classList.add('autoql-vanilla-chata-response-content-container');
     responseContentContainer.innerHTML = `<div>I'm not sure what you mean by <strong>"${query}"</strong>. Did you mean:</div>`;
     DataMessenger.createSuggestions(responseContentContainer, data);
     messageBubble.appendChild(responseContentContainer);
@@ -2912,7 +2912,7 @@ DataMessenger.putSuggestionResponse = function(jsonResponse, query){
 
 DataMessenger.checkMaxMessages = function(){
     if(DataMessenger.options.maxMessages > 2){
-        var messages = DataMessenger.drawerContent.querySelectorAll('.chat-single-message-container');
+        var messages = DataMessenger.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container');
         if(messages.length > DataMessenger.options.maxMessages){
             messages[1].parentNode.removeChild(messages[1]);
         }
@@ -2933,9 +2933,9 @@ DataMessenger.putMessage = function(value){
 
     responseLoadingContainer.appendChild(responseLoading);
 
-    containerMessage.classList.add('chat-single-message-container');
+    containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
     containerMessage.classList.add('request');
-    messageBubble.classList.add('chat-message-bubble');
+    messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     messageBubble.textContent = value;
     containerMessage.appendChild(messageBubble);
     DataMessenger.drawerContent.appendChild(containerMessage);

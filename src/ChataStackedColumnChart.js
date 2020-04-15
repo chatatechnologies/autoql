@@ -52,7 +52,7 @@ function createStackedColumnChart(component, json, options, fromDataMessenger=tr
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );

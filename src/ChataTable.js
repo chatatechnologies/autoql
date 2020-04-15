@@ -1,4 +1,4 @@
-function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='table-response', selector='[data-indexrow]'){
+function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='autoql-vanilla-table-response', selector='[data-indexrow]'){
     var groupField = getGroupableField(jsonResponse);
     var table = document.createElement('table');
     var header = document.createElement('tr');
@@ -137,7 +137,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
             document.body.appendChild(popoverContainer);
         })
     }
-    header.classList.add('table-header');
+    header.classList.add('autoql-vanilla-table-header');
     // table.appendChild(header);
     for (var i = 0; i < dataLines.length; i++) {
         var data = dataLines[i];
@@ -204,7 +204,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     return table;
 }
 
-function createPivotTable(pivotArray, oldComponent, options, action='replace', uuid='', tableClass='table-response'){
+function createPivotTable(pivotArray, oldComponent, options, action='replace', uuid='', tableClass='autoql-vanilla-table-response'){
     var header = document.createElement('tr');
     var table = document.createElement('table');
     var jsonResponse = DataMessenger.responses[
@@ -281,7 +281,7 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
         }
         col.appendChild(divFilter);
         if(i == 0){
-            th.classList.add('sticky-col');
+            th.classList.add('autoql-vanilla-sticky-col');
         }
         th.appendChild(col);
         th.appendChild(arrow);
@@ -291,7 +291,7 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
         header.appendChild(th);
         thArray.push(th);
     }
-    header.classList.add('table-header');
+    header.classList.add('autoql-vanilla-table-header');
 
     for (var i = 1; i < pivotArray.length; i++) {
         var tr = document.createElement('tr');
@@ -299,7 +299,7 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
             var td = document.createElement('td');
             td.textContent = pivotArray[i][x];
             if(x == 0){
-                td.classList.add('sticky-col');
+                td.classList.add('autoql-vanilla-sticky-col');
             }
             tr.appendChild(td);
         }
