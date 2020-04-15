@@ -897,7 +897,7 @@ function allColHiddenMessage(table){
         message = table.noColumnsElement;
     }else{
         message = htmlToElement(
-        `<div class="no-columns-error-message">
+        `<div class="autoql-vanilla-no-columns-error-message">
             <div>
                 <span class="chata-icon warning-icon">
                     ${WARNING}

@@ -70,14 +70,14 @@ function createBarChart(component, json, options, fromDataMessenger=true, valueC
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col1);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr("class", "x-axis-label")
+    .attr("class", "autoql-vanilla-x-axis-label")
     .text(col2);
 
     // Add X axis

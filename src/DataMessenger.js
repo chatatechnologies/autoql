@@ -188,7 +188,7 @@ DataMessenger.createQueryTips = function(){
     textBar.classList.add('autoql-vanilla-text-bar');
     textBar.classList.add('autoql-vanilla-text-bar-animation');
     chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
-    queryTipsResultContainer.classList.add('query-tips-result-container');
+    queryTipsResultContainer.classList.add('autoql-vanilla-query-tips-result-container');
     queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
     queryTipsResultPlaceHolder.innerHTML = `
         <p>Discover what you can ask by entering a topic in the search bar above.<p>
@@ -210,7 +210,7 @@ DataMessenger.createQueryTips = function(){
             var chatBarLoadingSpinner = document.createElement('div');
             var searchVal = this.value;
             var spinnerLoader = document.createElement('div');
-            spinnerLoader.classList.add('spinner-loader');
+            spinnerLoader.classList.add('autoql-vanilla-spinner-loader');
             chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
             chatBarLoadingSpinner.appendChild(spinnerLoader);
             textBar.appendChild(chatBarLoadingSpinner);
@@ -269,7 +269,7 @@ DataMessenger.putRelatedQueries = function(
     aPrevious.textContent = '←';
     aNext.textContent = '→';
 
-    paginationContainer.classList.add('chata-paginate');
+    paginationContainer.classList.add('autoql-vanilla-chata-paginate');
     paginationContainer.classList.add('animated-item');
     paginationContainer.classList.add('pagination');
     paginationPrevious.classList.add('pagination-previous');
@@ -463,10 +463,10 @@ DataMessenger.createQueryTabs = function(){
     var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
     var queryTabsIcon = htmlToElement(QUERY_TIPS);
 
-    pageSwitcherShadowContainer.classList.add('page-switcher-shadow-container');
+    pageSwitcherShadowContainer.classList.add('autoql-vanilla-page-switcher-shadow-container');
     pageSwitcherShadowContainer.classList.add(orientation);
 
-    pageSwitcherContainer.classList.add('page-switcher-container');
+    pageSwitcherContainer.classList.add('autoql-vanilla-page-switcher-container');
     pageSwitcherContainer.classList.add(orientation);
 
     pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
@@ -752,8 +752,8 @@ DataMessenger.sendDrilldownMessage = function(
             var uuid = uuidv4();
             DataMessenger.responses[uuid] = response;
             var div = document.createElement('div');
-            div.classList.add('chata-table-container');
-            div.classList.add('chata-table-container-renderer');
+            div.classList.add('autoql-vanilla-chata-table-container');
+            div.classList.add('autoql-vanilla-chata-table-container-renderer');
             var scrollbox = document.createElement('div');
             scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
             scrollbox.appendChild(div);
@@ -888,15 +888,15 @@ DataMessenger.showColumnEditor = function(id){
     }
 
     var cancelButton = htmlToElement(
-        `<div class="chata-btn default" style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        `<div class="autoql-vanilla-chata-btn default" style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
     )
 
     var spinner = htmlToElement(`
-        <div class="spinner-loader hidden"></div>
+        <div class="autoql-vanilla-spinner-loader hidden"></div>
     `)
 
     var saveButton = htmlToElement(
-        `<div class="chata-btn primary" style="padding: 5px 16px; margin: 2px 5px;">
+        `<div class="autoql-vanilla-chata-btn primary" style="padding: 5px 16px; margin: 2px 5px;">
         </div>`
     )
 
@@ -974,7 +974,7 @@ DataMessenger.clickHandler = function(e){
             DataMessenger.sendDrilldownMessage(json, 0, DataMessenger.options);
         }
 
-        if(e.target.classList.contains('chata-single-response')){
+        if(e.target.classList.contains('autoql-vanilla-chata-single-response')){
             var component = e.target.parentElement.parentElement;
             var json = DataMessenger.responses[component.dataset.containerid];
             DataMessenger.sendDrilldownMessage(json, -1, DataMessenger.options);
@@ -1302,7 +1302,7 @@ DataMessenger.registerEvents = function(){
     var suggestionList = document.getElementById('autoql-vanilla-auto-complete-list');
     document.addEventListener('click', function(e){
         var popoverElements = document.querySelectorAll(
-            '.chata-tiny-popover-container'
+            '.autoql-vanilla-chata-tiny-popover-container'
         );
         [].forEach.call(popoverElements, function(e, i){
             e.parentNode.removeChild(e);
@@ -1828,7 +1828,7 @@ DataMessenger.createHelpContent = function(link){
     return `
     Great news, I can help with that:
     <br/>
-    <button onclick="window.open('${link}', '_blank')" class="chata-help-link-btn">
+    <button onclick="window.open('${link}', '_blank')" class="autoql-vanilla-chata-help-link-btn">
     ${HELP_ICON}
     Bar chart 2</button>
     `;
@@ -2046,7 +2046,7 @@ DataMessenger.putSimpleResponse = function(jsonResponse){
         value = jsonResponse['message'];
     }
     var div = document.createElement('div');
-    div.classList.add('chata-single-response');
+    div.classList.add('autoql-vanilla-chata-single-response');
     div.appendChild(document.createTextNode(value));
     messageBubble.appendChild(div);
     containerMessage.appendChild(messageBubble);
@@ -2183,18 +2183,18 @@ DataMessenger.openModalReport = function(idRequest, options, menu, toolbar){
     modal.setTitle('Report a Problem');
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');
-    textArea.classList.add('report-problem-text-area');
+    textArea.classList.add('autoql-vanilla-report-problem-text-area');
     var cancelButton = htmlToElement(
-        `<div class="chata-btn default"
+        `<div class="autoql-vanilla-chata-btn default"
         style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
     )
 
     var spinner = htmlToElement(`
-        <div class="spinner-loader hidden"></div>
+        <div class="autoql-vanilla-spinner-loader hidden"></div>
     `)
 
     var reportButton = htmlToElement(
-        `<div class="chata-btn primary"
+        `<div class="autoql-vanilla-chata-btn primary"
             style="padding: 5px 16px; margin: 2px 5px;">
         </div>`
     )
@@ -2303,7 +2303,7 @@ DataMessenger.moreOptionsHandler = (
 DataMessenger.filterTableHandler = (evt, idRequest) => {
     var table = document.querySelector(`[data-componentid="${idRequest}"]`);
     var inputs = table.headerElement.getElementsByClassName(
-        'tabulator-header-filter'
+        'autoql-vanilla-tabulator-header-filter'
     );
     var arrows = table.headerElement.getElementsByClassName(
         'autoql-vanilla-tabulator-arrow'
@@ -2723,7 +2723,7 @@ DataMessenger.putTableResponse = function(jsonResponse){
         col.setAttribute('data-index', i);
         var divFilter = document.createElement('div');
         var filter = document.createElement('input');
-        divFilter.classList.add('tabulator-header-filter');
+        divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         filter.classList.add('filter-input');
@@ -2759,13 +2759,13 @@ DataMessenger.putTableResponse = function(jsonResponse){
                 col = e.target.childNodes[0];
             }
             var popoverElements = document.querySelectorAll(
-                '.chata-tiny-popover-container'
+                '.autoql-vanilla-chata-tiny-popover-container'
             );
             [].forEach.call(popoverElements, function(e, i){
                 e.parentNode.removeChild(e);
             })
             var popoverContainer = htmlToElement(`
-                <div class="chata-tiny-popover-container">
+                <div class="autoql-vanilla-chata-tiny-popover-container">
                 </div>
             `);
             var popoverMenu = htmlToElement(`
@@ -2841,9 +2841,9 @@ DataMessenger.putTableResponse = function(jsonResponse){
             if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
                 options.comparisonDisplay == 'PERCENT'){
                 if(parseFloat(value) >= 0){
-                    td.classList.add('comparison-value-positive');
+                    td.classList.add('autoql-vanilla-comparison-value-positive');
                 }else{
-                    td.classList.add('comparison-value-negative');
+                    td.classList.add('autoql-vanilla-comparison-value-negative');
                 }
             }
             tr.appendChild(td);

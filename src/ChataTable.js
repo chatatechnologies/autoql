@@ -33,7 +33,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         var arrow = document.createElement('div');
         var col = document.createElement('div');
         col.textContent = colName;
-        arrow.classList.add('tabulator-arrow');
+        arrow.classList.add('autoql-vanilla-tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column');
         col.setAttribute('data-type', cols[i]['type']);
@@ -41,7 +41,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
 
         var divFilter = document.createElement('div');
         var filter = document.createElement('input');
-        divFilter.classList.add('tabulator-header-filter');
+        divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         filter.colType = cols[i]['type'];
@@ -157,9 +157,9 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
             if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
                 options.dataFormatting.comparisonDisplay == 'PERCENT'){
                 if(parseFloat(value) >= 0){
-                    td.classList.add('comparison-value-positive');
+                    td.classList.add('autoql-vanilla-comparison-value-positive');
                 }else{
-                    td.classList.add('comparison-value-negative');
+                    td.classList.add('autoql-vanilla-comparison-value-negative');
                 }
             }
             tr.appendChild(td);
@@ -232,14 +232,14 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
         var arrow = document.createElement('div');
         var col = document.createElement('div');
         col.textContent = colName;
-        arrow.classList.add('tabulator-arrow');
+        arrow.classList.add('autoql-vanilla-tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column-pivot');
         col.setAttribute('data-type', 'PIVOT');
         col.setAttribute('data-index', i);
         var divFilter = document.createElement('div');
         var filter = document.createElement('input');
-        divFilter.classList.add('tabulator-header-filter');
+        divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         if(i == 0){

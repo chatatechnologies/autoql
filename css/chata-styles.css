@@ -793,17 +793,6 @@ tr td.chata-hidden{
     white-space: nowrap;
 }
 
-.autoql-vanilla-table-response tr{
-    border-bottom: 1px solid var(--chata-drawer-border-color);
-    background: var(--chata-drawer-background-color);
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
 .autoql-vanilla-table-response-renderer tr th:hover{
     background-color: #ececec;
     cursor: pointer;
@@ -988,19 +977,19 @@ tr td.chata-hidden{
 }
 
 /* RESPONSE RENDERER */
-.renderer-container{
+.autoql-vanilla-renderer-container{
     display: flex;
     align-items: center;
     justify-content: center;
     align-self: center;
 }
-.renderer-container line{
+.autoql-vanilla-renderer-container line{
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
 }
-.renderer-container text{
+.autoql-vanilla-renderer-container text{
     font-family: var(--chata-drawer-font-family);
     letter-spacing: 0.04em;
     fill: #5d5d5d;
@@ -1012,7 +1001,7 @@ tr td.chata-hidden{
     display: block;
 }
 
-text.x-axis-label, text.y-axis-label {
+text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     fill: currentColor;
     fill-opacity: 0.7;
     text-anchor: middle;
@@ -1037,13 +1026,13 @@ text.x-axis-label, text.y-axis-label {
 .grid line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
 .grid path {stroke-width: 0;}
 
-.chata-safety-net-selector-container {
+.autoql-vanilla-chata-safety-net-selector-container {
     display: inline-block;
     position: relative;
     margin-left: -5px;
 }
 
-.chata-safetynet-select {
+.autoql-vanilla-chata-safetynet-select {
     position: relative;
     display: inline-block;
     height: 30px;
@@ -1056,20 +1045,20 @@ text.x-axis-label, text.y-axis-label {
     font-size: inherit;
 }
 
-.chata-safety-net-delete-button {
+.autoql-vanilla-chata-safety-net-delete-button {
     position: relative;
     cursor: pointer;
     margin-bottom: -2px;
 }
 
-.chata-execute-query-icon {
+.autoql-vanilla-chata-execute-query-icon {
     height: 15px;
     width: 24px;
     vertical-align: top;
     fill: #28a8e0;
 }
 
-.chata-safety-net-execute-btn {
+.autoql-vanilla-chata-safety-net-execute-btn {
     height: 30px;
     background: none;
     border-radius: 4px;
@@ -1082,7 +1071,7 @@ text.x-axis-label, text.y-axis-label {
     transition: all 0.2s ease;
 }
 
-.chata-help-link-btn {
+.autoql-vanilla-chata-help-link-btn {
     padding: 6px 14px;
     background: transparent;
     border-radius: 5px;
@@ -1097,16 +1086,17 @@ text.x-axis-label, text.y-axis-label {
     color: inherit;
 }
 
-.chata-help-link-icon {
+.autoql-vanilla-chata-help-link-icon {
     width: 15px;
     height: 15px;
     margin-bottom: -3px;
     margin-right: 3px;
 }
 
-.stacked-rect:hover{
+.autoql-vanilla-stacked-rect:hover{
     opacity: 1;
 }
+
 .label{
     fill: currentcolor;
     fill-opacity: 0.7;
@@ -1114,7 +1104,7 @@ text.x-axis-label, text.y-axis-label {
     font-size: 10px;
 }
 
-.interpretation-icon {
+.autoql-vanilla-interpretation-icon {
     color: var(--chata-drawer-text-color-primary);
     vertical-align: top;
     height: 26px;
@@ -1122,7 +1112,7 @@ text.x-axis-label, text.y-axis-label {
     font-size: 18px;
 }
 
-.tabulator-header-filter {
+.autoql-vanilla-tabulator-header-filter {
     position: relative;
     box-sizing: border-box;
     margin-top: 3px;
@@ -1131,7 +1121,7 @@ text.x-axis-label, text.y-axis-label {
     display: none;
 }
 
-.tabulator-header-filter input{
+.autoql-vanilla-tabulator-header-filter input{
     border: 1px solid var(--chata-drawer-border-color) !important;
     border-radius: 4px !important;
     background: transparent;
@@ -1146,7 +1136,7 @@ text.x-axis-label, text.y-axis-label {
     box-sizing: border-box !important;
 }
 
-.tabulator-header-filter input:focus{
+.autoql-vanilla-tabulator-header-filter input:focus{
     border-color: #28a8e0 !important;
 }
 
@@ -1166,66 +1156,66 @@ text.x-axis-label, text.y-axis-label {
     outline: none !important;
 }
 
-.chata-single-response:hover{
+.autoql-vanilla-chata-single-response:hover{
     color: rgba(0,0,0,1);
     text-decoration: underline;
     cursor: pointer;
 }
 
-/* Shadow container (this is used to cut off the shadow so it doesnt show in the drawer) */
-.page-switcher-shadow-container {
+
+.autoql-vanilla-page-switcher-shadow-container {
   position: absolute;
   background: transparent;
   overflow: hidden;
 }
-.page-switcher-shadow-container.right {
+.autoql-vanilla-page-switcher-shadow-container.right {
   top: 80px;
   left: -60px;
   width: 60px;
   overflow: hidden;
 }
-.page-switcher-shadow-container.left {
+.autoql-vanilla-page-switcher-shadow-container.left {
   top: 80px;
   right: -60px;
   width: 60px;
 }
-.page-switcher-shadow-container.top {
+.autoql-vanilla-page-switcher-shadow-container.top {
   left: calc(50% - 85px);
   bottom: -60px;
   height: 60px;
 }
-.page-switcher-shadow-container.bottom {
+.autoql-vanilla-page-switcher-shadow-container.bottom {
   left: calc(50% - 85px);
   top: -60px;
   height: 60px;
 }
 
 /* Container holding the tabs */
-.page-switcher-container.right {
+.autoql-vanilla-page-switcher-container.right {
   margin-top: 20px;
   margin-left: 20px;
   margin-bottom: 20px;
   margin-right: -5px;
 }
-.page-switcher-container.left {
+.autoql-vanilla-page-switcher-container.left {
   margin-top: 20px;
   margin-right: 20px;
   margin-bottom: 20px;
   margin-left: -5px;
 }
-.page-switcher-container.top {
+.autoql-vanilla-page-switcher-container.top {
   margin-right: 20px;
   margin-left: 20px;
   margin-bottom: 20px;
 }
-.page-switcher-container.bottom {
+.autoql-vanilla-page-switcher-container.bottom {
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
 }
 
 /* Individual Tabs */
-.page-switcher-container .tab {
+.autoql-vanilla-page-switcher-container .tab {
   position: relative;
   z-index: 1;
 
@@ -1245,110 +1235,75 @@ text.x-axis-label, text.y-axis-label {
   transition-property: background,color,transform,line-height,height,width,margin-right,margin-top,margin-left,margin-bottom,z-index,opacity;
   transition-duration: .2s;
 }
-.page-switcher-container.right .tab {
+.autoql-vanilla-page-switcher-container.right .tab {
   text-align: left;
   padding-left: 13px;
   height: 65px;
   width: 45px;
   line-height: 52px;
 }
-.page-switcher-container.left .tab {
+.autoql-vanilla-page-switcher-container.left .tab {
   text-align: left;
   padding-left: 13px;
   height: 65px;
   width: 45px;
   line-height: 52px;
 }
-.page-switcher-container.top .tab,
-.page-switcher-container.bottom .tab {
+.autoql-vanilla-page-switcher-container.top .tab,
+.autoql-vanilla-page-switcher-container.bottom .tab {
   padding-top: 4px;
   height: 45px;
   width: 65px;
   line-height: 45px;
 }
-.page-switcher-container.top .tab {
+.autoql-vanilla-page-switcher-container.top .tab {
   vertical-align: top;
 }
-.page-switcher-container.bottom .tab {
+.autoql-vanilla-page-switcher-container.bottom .tab {
   background: var(--chata-drawer-background-color);
   color: var(--chata-drawer-text-color-primary);
 }
-.page-switcher-container .tab.active {
+.autoql-vanilla-page-switcher-container .tab.active {
   background: var(--chata-drawer-background-color);
   color: var(--chata-drawer-text-color-primary);
   font-weight: bold;
   position: relative;
   z-index: 2;
 }
-.page-switcher-container.bottom .tab.active {
+.autoql-vanilla-page-switcher-container.bottom .tab.active {
   background: var(--chata-drawer-accent-color);
   color: #fff;
   font-weight: bold;
 }
-.page-switcher-container.top .tab,
-.page-switcher-container.bottom .tab {
+.autoql-vanilla-page-switcher-container.top .tab,
+.autoql-vanilla-page-switcher-container.bottom .tab {
   display: inline-block;
   margin-right: -4px !important;
   /* position: absolute; */
 }
-.page-switcher-container .tab:not(.active):hover {
+.autoql-vanilla-page-switcher-container .tab:not(.active):hover {
     opacity: .8;
 }
-/* .page-switcher-container.right .tab:hover {
-  height: 69px;
-  width: 47px;
-  line-height: 56px;
-  transform: translate(0px, -2px);
-
-  margin-bottom: -2px;
-  z-index: 3;
-}
-.page-switcher-container.left .tab:hover {
-  height: 69px;
-  width: 47px;
-  line-height: 56px;
-  transform: translate(0px, -2px);
-  margin-bottom: -2px;
-  z-index: 3;
-}
-.page-switcher-container.top .tab:hover {
-  height: 49px;
-  width: 71px;
-  line-height: 49px;
-  transform: translate(-2px, -2px);
-  margin-right: -2px;
-  margin-bottom: -2px;
-  z-index: 3;
-}
-.page-switcher-container.bottom .tab:hover {
-  height: 51px;
-  width: 71px;
-  line-height: 45px;
-  transform: translate(-2px, -2px);
-  margin-right: -2px;
-  margin-top: -2px;
-  z-index: 3;
-} */
 
 /* Curve appropriate corners depending on placement */
-.page-switcher-container.right .tab:first-child,
-.page-switcher-container.bottom .tab:first-child {
+.autoql-vanilla-page-switcher-container.right .tab:first-child,
+.autoql-vanilla-page-switcher-container.bottom .tab:first-child {
   border-top-left-radius: 10px;
 }
-.page-switcher-container.right .tab:last-child,
-.page-switcher-container.top .tab:first-child {
+.autoql-vanilla-page-switcher-container.right .tab:last-child,
+.autoql-vanilla-page-switcher-container.top .tab:first-child {
   border-bottom-left-radius: 10px;
 }
-.page-switcher-container.bottom .tab:last-child,
-.page-switcher-container.left .tab:first-child {
+.autoql-vanilla-page-switcher-container.bottom .tab:last-child,
+.autoql-vanilla-page-switcher-container.left .tab:first-child {
   border-top-right-radius: 10px;
 }
-.page-switcher-container.left .tab:last-child,
-.page-switcher-container.top .tab:last-child {
+.autoql-vanilla-page-switcher-container.left .tab:last-child,
+.autoql-vanilla-page-switcher-container.top .tab:last-child {
   border-bottom-right-radius: 10px;
 }
 
-.chata-input.left-padding {
+.autoql-vanilla-chata-input.left-padding {
     padding-left: 54px !important;
 }
 
@@ -1358,7 +1313,7 @@ text.x-axis-label, text.y-axis-label {
     top: 20px;
 }
 
-.query-tips-result-container {
+.autoql-vanilla-query-tips-result-container {
     color: var(--chata-drawer-text-color-primary);
     padding: 0 20px;
     text-align: center;
@@ -1366,12 +1321,12 @@ text.x-axis-label, text.y-axis-label {
     margin: 0 auto;
 }
 
-.query-tips-result-container .query-tips-result-placeholder {
+.autoql-vanilla-query-tips-result-container .query-tips-result-placeholder {
     margin-top: 50px;
     opacity: .6;
 }
 
-.query-tips-result-container .query-tips-result-placeholder p {
+.autoql-vanilla-query-tips-result-container .query-tips-result-placeholder p {
     display: block;
     margin-block-start: 1em;
     margin-block-end: 1em;
@@ -1379,14 +1334,14 @@ text.x-axis-label, text.y-axis-label {
     margin-inline-end: 0px;
 }
 
-.spinner-loader {
+.autoql-vanilla-spinner-loader {
     display: inline-block;
     width: 14px;
     height: 14px;
     margin-right: 6px;
 }
 
-.spinner-loader:after {
+.autoql-vanilla-spinner-loader:after {
     content: " ";
     display: block;
     width: 16px;
@@ -1404,35 +1359,35 @@ text.x-axis-label, text.y-axis-label {
   top: 22px;
 }
 
-.query-tips-result-container .query-tip-list-container {
+.autoql-vanilla-query-tips-result-container .query-tip-list-container {
     margin-bottom: 20px;
 }
 
-.query-tips-result-container .query-tip-item:first-child {
+.autoql-vanilla-query-tips-result-container .query-tip-item:first-child {
     border-top: none;
     animation-delay: .08s;
 }
 
-.query-tips-result-container .query-tip-item {
+.autoql-vanilla-query-tips-result-container .query-tip-item {
     position: relative;
     padding: 13px;
     border-top: 1px solid rgba(0,0,0,.04);
     cursor: pointer;
 }
 
-.query-tips-result-container .animated-item {
+.autoql-vanilla-query-tips-result-container .animated-item {
     -webkit-animation: fadeIn .3s linear;
     animation: fadeIn .3s linear;
     -webkit-animation-fill-mode: both;
     animation-fill-mode: both;
 }
 
-.query-tip-item:hover {
+.autoql-vanilla-query-tips-result-container query-tip-item:hover {
     font-weight: bold;
     color: var(--chata-drawer-accent-color);
 }
 
-.chata-paginate {
+.autoql-vanilla-chata-paginate {
     position: relative;
     background: transparent;
     padding: 8px !important;
@@ -1441,7 +1396,7 @@ text.x-axis-label, text.y-axis-label {
     text-align: center;
 }
 
-.chata-paginate ul {
+.autoql-vanilla-chata-paginate ul {
     display: inline-block;
     padding-left: 0;
     margin-bottom: 0;
@@ -1452,20 +1407,20 @@ text.x-axis-label, text.y-axis-label {
     margin-inline-end: 0px;
     padding-inline-start: 40px;
 }
-.chata-paginate .pagination-next, .chata-paginate .pagination-previous {
+.autoql-vanilla-chata-paginate .pagination-next, .chata-paginate .pagination-previous {
     position: absolute;
     font-size: 18px;
 }
 
-.chata-paginate .pagination-previous {
+.autoql-vanilla-chata-paginate .pagination-previous {
     left: 20px;
 }
 
-.chata-paginate .pagination-next a, .chata-paginate .pagination-previous a {
+.autoql-vanilla-chata-paginate .pagination-next a, .chata-paginate .pagination-previous a {
     color: var(--chata-drawer-accent-color);
 }
 
-.chata-paginate li {
+.autoql-vanilla-chata-paginate li {
     display: inline-block;
     color: var(--chata-drawer-text-color-primary);
     cursor: pointer;
@@ -1479,7 +1434,7 @@ text.x-axis-label, text.y-axis-label {
     text-align: center;
 }
 
-.chata-paginate li a {
+.autoql-vanilla-chata-paginate li a {
     display: inline-block;
     color: var(--chata-drawer-text-color-primary);
     outline: none;
@@ -1491,17 +1446,17 @@ text.x-axis-label, text.y-axis-label {
     padding: 0px !important;
 }
 
-.chata-paginate li.selected {
+.autoql-vanilla-chata-paginate li.selected {
     background: var(--chata-drawer-accent-color);
     border-radius: 50%;
     outline: none;
 }
 
-.chata-paginate li.selected a {
+.autoql-vanilla-chata-paginate li.selected a {
     color: #fff;
 }
 
-.chata-paginate li {
+.autoql-vanilla-chata-paginate li {
     display: inline-block;
     color: var(--chata-drawer-text-color-primary);
     cursor: pointer;
@@ -1514,16 +1469,16 @@ text.x-axis-label, text.y-axis-label {
     user-select: none;
 }
 
-.chata-paginate .pagination-next {
+.autoql-vanilla-chata-paginate .pagination-next {
     right: 20px;
 }
 
-.chata-paginate .pagination-next.disabled, .chata-paginate .pagination-previous.disabled {
+.autoql-vanilla-chata-paginate .pagination-next.disabled, .chata-paginate .pagination-previous.disabled {
     opacity: .5;
     pointer-events: none;
 }
 
-.chata-btn {
+.autoql-vanilla-chata-btn {
     border-radius: 4px;
     cursor: pointer;
     outline: none!important;
@@ -1533,28 +1488,28 @@ text.x-axis-label, text.y-axis-label {
     display: inline-block;
 }
 
-.chata-btn.default {
+.autoql-vanilla-chata-btn.default {
     color: inherit;
     border: 1px solid #a7a7a7;
     background: inherit;
 }
 
-.chata-btn.primary {
+.autoql-vanilla-chata-btn.primary {
     background: var(--chata-drawer-accent-color);
     border: 1px solid var(--chata-drawer-accent-color);
     color: #fff;
 }
 
-.chata-btn.default:hover{
+.autoql-vanilla-chata-btn.default:hover{
     border-color: var(--chata-drawer-accent-color);
     color: var(--chata-drawer-accent-color);
 }
 
-.chata-btn.primary:hover{
+.autoql-vanilla-chata-btn.primary:hover{
      opacity: 0.8;
 }
 
-.chata-toolbar-btn.btn-green {
+.autoql-vanilla-chata-toolbar-btn.btn-green {
     color: #2ecc40;
 }
 
@@ -1566,7 +1521,7 @@ text.x-axis-label, text.y-axis-label {
     cursor: ew-resize;
 }
 
-.chata-btn.disabled {
+.autoql-vanilla-chata-btn.disabled {
     opacity: 0.4;
     cursor: not-allowed;
     pointer-events: none;
@@ -1602,15 +1557,15 @@ text.x-axis-label, text.y-axis-label {
     /* background: red; */
 }
 
-.comparison-value-positive {
+.autoql-vanilla-comparison-value-positive {
     color: #2ecc40 !important;
 }
 
-.comparison-value-negative {
+.autoql-vanilla-comparison-value-negative {
     color: #e80000 !important;
 }
 
-.chata-tiny-popover-container {
+.autoql-vanilla-chata-tiny-popover-container {
     z-index: 9999;
     border: 1px solid hsla(0,0%,67.1%,.32);
     border-radius: 4px;
@@ -1621,20 +1576,20 @@ text.x-axis-label, text.y-axis-label {
     overflow: hidden;
 }
 
-.chata-context-menu {
+.autoql-vanilla-chata-tiny-popover-container .chata-context-menu {
     background: var(--chata-drawer-background-color);
     width: 150px;
     padding: 10px 0;
 }
 
-.chata-context-menu-list {
+.autoql-vanilla-chata-tiny-popover-container .chata-context-menu .chata-context-menu-list {
     list-style-type: none;
     width: 100%;
     margin: 0;
     padding: 0;
 }
 
-.chata-context-menu-list li {
+.autoql-vanilla-chata-tiny-popover-container .chata-context-menu .chata-context-menu-list .chata-context-menu-list li {
     color: var(--chata-response-text-color-primary);
     width: 100%;
     height: 35px;
@@ -1643,11 +1598,11 @@ text.x-axis-label, text.y-axis-label {
     cursor: pointer;
 }
 
-.chata-context-menu-list li:hover {
+.autoql-vanilla-chata-tiny-popover-container .chata-context-menu .chata-context-menu-list li:hover {
     background: rgba(0,0,0,.05);
 }
 
-.report-problem-text-area {
+.autoql-vanilla-report-problem-text-area {
     border-radius: 4px;
     border: 1px solid rgba(0,0,0,.15);
     margin-top: 10px;
@@ -1657,7 +1612,7 @@ text.x-axis-label, text.y-axis-label {
     resize: vertical;
 }
 
-.no-columns-error-message {
+.autoql-vanilla-no-columns-error-message {
     position: absolute;
     height: 100%;
     width: 100%;
@@ -1669,18 +1624,18 @@ text.x-axis-label, text.y-axis-label {
     font-size: 13px;
 }
 
-.no-columns-error-message .warning-icon {
+.autoql-vanilla-no-columns-error-message .warning-icon {
     font-size: 22px;
     display: block;
     margin-bottom: -13px;
 }
 
-.no-columns-error-message .warning-icon svg line{
+.autoql-vanilla-no-columns-error-message .warning-icon svg line{
     opacity: 1 !important;
     color: black;
 }
 
-.no-columns-error-message .eye-icon {
+.autoql-vanilla-no-columns-error-message .eye-icon {
     vertical-align: bottom;
     line-height: 18px;
 }

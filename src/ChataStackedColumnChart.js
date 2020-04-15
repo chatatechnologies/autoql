@@ -90,7 +90,7 @@ function createStackedColumnChart(component, json, options, fromDataMessenger=tr
     .attr('x', chartWidth / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col2);
 
 
@@ -204,7 +204,7 @@ function createStackedColumnChart(component, json, options, fromDataMessenger=tr
         .attr('data-unformatvalue3', d.value)
     })
     .attr('opacity', '0.7')
-    .attr('class', 'tooltip-3d stacked-rect')
+    .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
     .attr("x", function(d) {
         if(d.data.group.length < 15){
             return x(d.data.group);

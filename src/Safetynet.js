@@ -4,7 +4,7 @@ function createSafetynetContent(suggestionArray, context='DataMessenger'){
     I need your help understanding a term you used that I don't see in your data.
     Click the dropdown to view suggestions so I can ensure you get the right data!`;
     const runQueryButtonHtml = `
-    <button class="chata-safety-net-execute-btn">
+    <button class="autoql-vanilla-chata-safety-net-execute-btn">
         ${RUN_QUERY}
     Run Query</button>
     `
@@ -35,9 +35,9 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
         }else{
             var div = document.createElement('div');
             var select = document.createElement('select');
-            select.classList.add('chata-safetynet-select');
+            select.classList.add('autoql-vanilla-chata-safetynet-select');
             select.style.width = '47px';
-            div.classList.add('chata-safety-net-selector-container');
+            div.classList.add('autoql-vanilla-chata-safety-net-selector-container');
 
             var suggestionList = suggestion['suggestionList'];
             for (var x = 0; x < suggestionList.length; x++) {

@@ -27,8 +27,8 @@ function getQueryOutput(options={}){
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
     }
-    responseRenderer.classList.add('chata-response-content-container');
-    responseRenderer.classList.add('renderer-container');
+    responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
+    responseRenderer.classList.add('autoql-vanilla-renderer-container');
     responseRenderer.style.setProperty(
         '--chata-drawer-font-family',
         responseRenderer.options.themeConfig.fontFamily
@@ -59,7 +59,7 @@ function getQueryOutput(options={}){
                 var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
                 var topBar = component.chataBarContainer.getElementsByClassName(
-                    'chat-bar-text'
+                    'autoql-vanilla-chat-bar-text'
                 )[0]
                 var loading = putLoadingContainer(topBar);
                 let opts = mergeOptions([
@@ -79,7 +79,7 @@ function getQueryOutput(options={}){
                 var json = DataMessenger.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;
                 var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
-                    'chat-bar-text'
+                    'autoql-vanilla-chat-bar-text'
                 )[0]
                 var loading = putLoadingContainer(topBar);
                 let opts = mergeOptions([
@@ -101,7 +101,7 @@ function getQueryOutput(options={}){
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
             json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
             var topBar = component.chataBarContainer.getElementsByClassName(
-                'chat-bar-text'
+                'autoql-vanilla-chat-bar-text'
             )[0]
             var loading = putLoadingContainer(topBar);
             let opts = mergeOptions([
@@ -116,7 +116,7 @@ function getQueryOutput(options={}){
             );
         }
 
-        if(e.target.classList.contains('chata-suggestion-btn-renderer')){
+        if(e.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
             var parent = e.target.parentElement.parentElement.parentElement;
             parent.options.onSuggestionClick();
             parent.chataBarContainer.sendMessageToResponseRenderer(

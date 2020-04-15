@@ -66,14 +66,14 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + 110)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
 
     var maxValue = d3.max(data, function(d) {

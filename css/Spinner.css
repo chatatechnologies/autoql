@@ -1,15 +1,15 @@
-.spinner-loader {
+.autoql-vanilla-spinner-loader {
     display: inline-block;
     width: 14px;
     height: 14px;
     margin-right: 6px;
 }
 
-.spinner-loader.hidden{
+.autoql-vanilla-spinner-loader.hidden{
     display: none;
 }
 
-.spinner-loader:after {
+.autoql-vanilla-spinner-loader:after {
     content: " ";
     display: block;
     width: 16px;

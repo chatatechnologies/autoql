@@ -1,7 +1,7 @@
 function getQueryInput(options){
 
     var chataBarContainer = document.createElement('div');
-    chataBarContainer.classList.add('chata-bar-container');
+    chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
     chataBarContainer.classList.add('autosuggest-top');
     chataBarContainer.options = {
@@ -39,7 +39,7 @@ function getQueryInput(options){
         if(e.target.classList.contains('suggestion-renderer')){
             var parent = e.target.parentElement.parentElement.parentElement.parentElement;
             var chatBarSuggestionList = parent.getElementsByClassName(
-                'chat-bar-autocomplete'
+                'autoql-vanilla-chat-bar-autocomplete'
             )[0];
             chatBarSuggestionList.style.display = 'none';
             parent.sendMessageToResponseRenderer(e.target.textContent, 'user');
@@ -50,15 +50,15 @@ function getQueryInput(options){
         chataBarContainer.options[key] = value;
     }
     const CHATA_ICON = chataBarContainer.options.showChataIcon ? `
-    <div class="chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
+    <div class="autoql-vanilla-chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
     ` : '';
 
     var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
 
     chataBarContainer.innerHTML = `
-    <div class="chat-bar-text">
-        <div class="chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
-            <ul class="chat-bar-autocomplete">
+    <div class="autoql-vanilla-chat-bar-text">
+        <div class="autoql-vanilla-chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
+            <ul class="autoql-vanilla-chat-bar-autocomplete">
             </ul>
         </div>
         ${CHATA_ICON}
@@ -66,7 +66,7 @@ function getQueryInput(options){
             type="text"
             autocomplete="off"
             aria-autocomplete="list"
-            class="chata-input-renderer chat-bar left-padding"
+            class="autoql-vanilla-chata-input-renderer chat-bar left-padding"
             placeholder="${chataBarContainer.options.placeholder}"
             value="" id="" ${disabled}>
     </div>
@@ -77,7 +77,7 @@ function getQueryInput(options){
         chataBarContainer.options.fontFamily
     )
 
-    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
+    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('autoql-vanilla-chata-input-renderer')[0];
     chataBarContainer.bind = function(responseRenderer){
         this.responseRenderer = responseRenderer;
         responseRenderer.chataBarContainer = chataBarContainer;
@@ -85,7 +85,7 @@ function getQueryInput(options){
 
     chataBarContainer.onkeyup = function(event){
         if(chataBarContainer.options.autoQLConfig.enableAutocomplete){
-            var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
+            var suggestionList = this.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
             suggestionList.style.display = 'none';
             clearTimeout(chataBarContainer.autoCompleteTimer);
             if(event.target.value){
@@ -103,7 +103,7 @@ function getQueryInput(options){
     }
 
     chataBarContainer.onkeypress = function(event){
-        var suggestionList = event.target.parentElement.getElementsByClassName('chat-bar-autocomplete')[0];
+        var suggestionList = event.target.parentElement.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
         if(event.keyCode == 13 && event.target.value){
             clearTimeout(chataBarContainer.autoCompleteTimer);
             suggestionList.style.display = 'none';
@@ -114,7 +114,7 @@ function getQueryInput(options){
     chataBarContainer.sendMessageToResponseRenderer = function(value, source){
         chataBarContainer.options.onSubmit();
         var responseRenderer = this.responseRenderer;
-        var parent = this.getElementsByClassName('chat-bar-text')[0];
+        var parent = this.getElementsByClassName('autoql-vanilla-chat-bar-text')[0];
         this.chatbar.disabled = true;
         this.chatbar.value = '';
         if(this.options.showLoadingDots){
@@ -178,7 +178,7 @@ function getQueryInput(options){
                             DataMessenger.createSuggestions(
                                 wrapper,
                                 rows,
-                                'chata-suggestion-btn-renderer'
+                                'autoql-vanilla-chata-suggestion-btn-renderer'
                             );
                             responseRenderer.appendChild(wrapper)
                         }else if(cols.length == 1 && rows.length == 1){
@@ -199,10 +199,10 @@ function getQueryInput(options){
                             var uuid = uuidv4();
                             DataMessenger.responses[uuid] = jsonResponse;
                             var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
+                            div.classList.add('autoql-vanilla-chata-table-container');
+                            div.classList.add('autoql-vanilla-chata-table-container-renderer');
                             var scrollbox = document.createElement('div');
-                            scrollbox.classList.add('chata-table-scrollbox');
+                            scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
                             scrollbox.appendChild(div);
                             responseRenderer.appendChild(scrollbox);
                             let opts = mergeOptions([
@@ -215,7 +215,7 @@ function getQueryInput(options){
                                 opts,
                                 'append',
                                 uuid,
-                                'table-response-renderer',
+                                'autoql-vanilla-table-response-renderer',
                                 '[data-indexrowrenderer]'
                             );
                             table.classList.add('renderer-table');
@@ -229,10 +229,10 @@ function getQueryInput(options){
                                 var uuid = uuidv4();
                                 DataMessenger.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
-                                div.classList.add('chata-table-container');
-                                div.classList.add('chata-table-container-renderer');
+                                div.classList.add('autoql-vanilla-chata-table-container');
+                                div.classList.add('autoql-vanilla-chata-table-container-renderer');
                                 var scrollbox = document.createElement('div');
-                                scrollbox.classList.add('chata-table-scrollbox');
+                                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
                                 scrollbox.appendChild(div);
                                 responseRenderer.appendChild(scrollbox);
                                 if(jsonResponse['data']['columns'].length == 1){
@@ -253,7 +253,7 @@ function getQueryInput(options){
                                         opts,
                                         'append',
                                         uuid,
-                                        'table-response-renderer',
+                                        'autoql-vanilla-table-response-renderer',
                                         '[data-indexrowrenderer]'
                                     );
                                     table.classList.add('renderer-table');
@@ -265,23 +265,23 @@ function getQueryInput(options){
                                 var uuid = uuidv4();
                                 DataMessenger.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
-                                div.classList.add('chata-table-container');
-                                div.classList.add('chata-table-container-renderer');
+                                div.classList.add('autoql-vanilla-chata-table-container');
+                                div.classList.add('autoql-vanilla-chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = getDatePivotArray(jsonResponse, responseRenderer.options);
                                 var opts = mergeOptions([
                                     chataBarContainer.options,
                                     responseRenderer.options
                                 ]);
-                                var table = createPivotTable(pivotArray, div, opts, 'append', uuid, 'table-response-renderer');
+                                var table = createPivotTable(pivotArray, div, opts, 'append', uuid, 'autoql-vanilla-table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
                             case 'pivot_column':
                                 var uuid = uuidv4();
                                 DataMessenger.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
-                                div.classList.add('chata-table-container');
-                                div.classList.add('chata-table-container-renderer');
+                                div.classList.add('autoql-vanilla-chata-table-container');
+                                div.classList.add('autoql-vanilla-chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = getPivotColumnArray(jsonResponse, responseRenderer.options);
                                 var opts = mergeOptions([

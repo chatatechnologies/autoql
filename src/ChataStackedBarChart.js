@@ -90,7 +90,7 @@ function createStackedBarChart(component, json, options, fromDataMessenger=true,
     .attr('x', chartWidth / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col3);
 
     var maxValue = d3.max(data, function(d) {
@@ -197,7 +197,7 @@ function createStackedBarChart(component, json, options, fromDataMessenger=true,
 
     })
     .attr('opacity', '0.7')
-    .attr('class', 'tooltip-3d stacked-rect')
+    .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
     .attr("x", function(d) {
         return x(d[0]);
     })
