@@ -15,9 +15,9 @@ function Tile(dashboard, options={}){
 
 
     var vizToolbarSplit = htmlToElement(`
-        <div class="tile-toolbar split-view-btn">
-            <button class="chata-toolbar-btn">
-                <span class="chata-icon" style="color: inherit;">
+        <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
+            <button class="autoql-vanilla-chata-toolbar-btn">
+                <span class="autoql-vanilla-chata-icon" style="color: inherit;">
                     ${SPLIT_VIEW}
                 </span>
             </button>
@@ -62,19 +62,19 @@ function Tile(dashboard, options={}){
     const notExecutedText = options.notExecutedText
     || dashboard.options.notExecutedText;
     const placeHolderText = `
-        <div class="dashboard-tile-placeholder-text">
+        <div class="autoql-vanilla-dashboard-tile-placeholder-text">
             <em>${notExecutedText}</em>
         </div>
     `;
 
     const divider = `
-        <div class="dashboard-tile-title-divider">
+        <div class="autoql-vanilla-dashboard-tile-title-divider">
         </div>
     `;
 
     placeHolderDrag.innerHTML = `
-        <div class="placeholder-top"></div>
-        <div class="placeholder-content"></div>
+        <div class="autoql-vanilla-placeholder-top"></div>
+        <div class="autoql-vanilla-placeholder-content"></div>
     `
     var pixels = chataDashboardItem.options.h * 70;
     chataDashboardItem.style.height = pixels + 'px';
@@ -82,23 +82,23 @@ function Tile(dashboard, options={}){
     tileResponseContainer.style.height = 'calc(100%)';
     chataDashboardItem.view = tileResponseContainer;
 
-    chataDashboardItem.classList.add('chata-dashboard-item');
-    chataDashboardItem.classList.add(`chata-col-${chataDashboardItem.options.w}`);
-    itemContent.classList.add('item-content');
-    tileInputContainer.classList.add('dashboard-tile-input-container');
-    tileTitleContainer.classList.add('dashboard-tile-title-container');
-    tileTitle.classList.add('dashboard-tile-title-container');
+    chataDashboardItem.classList.add('autoql-vanilla-chata-dashboard-item');
+    chataDashboardItem.classList.add(`autoql-vanilla-chata-col-${chataDashboardItem.options.w}`);
+    itemContent.classList.add('autoql-vanilla-item-content');
+    tileInputContainer.classList.add('autoql-vanilla-dashboard-tile-input-container');
+    tileTitleContainer.classList.add('autoql-vanilla-dashboard-tile-title-container');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container');
 
-    tileResponseWrapper.classList.add('dashboard-tile-response-wrapper');
-    tileResponseContainer.classList.add('dashboard-tile-response-container');
+    tileResponseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper');
+    tileResponseContainer.classList.add('autoql-vanilla-dashboard-tile-response-container');
     tileResponseContainer.classList.add('chata-flex');
-    tileTitle.classList.add('dashboard-tile-title');
-    resizeHandler.classList.add('resize-handler');
-    inputQuery.classList.add('dashboard-tile-input');
-    inputTitle.classList.add('dashboard-tile-input');
-    tilePlayBuytton.classList.add('dashboard-tile-play-button');
-    deleteButton.classList.add('dashboard-tile-delete-button');
-    placeHolderDrag.classList.add('item-content');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
+    resizeHandler.classList.add('autoql-vanilla-resize-handler');
+    inputQuery.classList.add('autoql-vanilla-dashboard-tile-input');
+    inputTitle.classList.add('autoql-vanilla-dashboard-tile-input');
+    tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button');
+    deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button');
+    placeHolderDrag.classList.add('autoql-vanilla-item-content');
     inputQuery.classList.add('query');
     inputTitle.classList.add('title');
 
@@ -374,7 +374,7 @@ function Tile(dashboard, options={}){
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('tile-response-loading-container');
+        responseLoadingContainer.classList.add('autoql-vanilla-tile-response-loading-container');
         responseLoading.classList.add('response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
@@ -452,26 +452,26 @@ function Tile(dashboard, options={}){
 
 function InputToolbar(text, tileWrapper) {
     var tileToolbar = htmlToElement(`
-        <div class="tile-toolbar input-toolbar">
+        <div class="autoql-vanilla-tile-toolbar autoql-vanilla-input-toolbar">
         </div>
     `)
 
     var input = htmlToElement(`
-        <input class="dashboard-tile-input query second"
+        <input class="autoql-vanilla-dashboard-tile-input query second"
         placeholder="Query" value="${text}"
         style="width: 0px;">
     `)
 
     var btn = htmlToElement(`
-        <button class="chata-toolbar-btn input-toolbar-btn">
-            <span class="chata-icon chata-toolbar-icon">
+        <button class="autoql-vanilla-chata-toolbar-btn autoql-vanilla-input-toolbar-btn">
+            <span class="autoql-vanilla-chata-icon autoql-vanilla-chata-toolbar-icon">
                 ${INPUT_BUBBLES}
             </span>
         </button>
     `)
 
     var arrowIcon = htmlToElement(`
-        <span data-test="chata-icon" class="chata-icon"
+        <span class="autoql-vanilla-chata-icon"
         style="position: absolute; top: 5px; left: 31px; font-size: 10px;">
             ${LEFT_ARROW}
         </span>
@@ -513,9 +513,9 @@ function TileView(dashboard, chataDashboardItem,
     var modal = new Modal();
 
     modal.chataBody.classList.add('chata-modal-full-height');
-    drilldownTable.classList.add('chata-dashboard-drilldown-table');
-    drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
-    tileWrapper.classList.add('chata-tile-wrapper');
+    drilldownTable.classList.add('autoql-vanilla-chata-dashboard-drilldown-table');
+    drilldownOriginal.classList.add('autoql-vanilla-chata-dashboard-drilldown-original');
+    tileWrapper.classList.add('autoql-vanilla-chata-tile-wrapper');
     tileWrapper.setAttribute('id', responseUUID);
 
     obj.uuid = responseUUID;
@@ -541,10 +541,10 @@ function TileView(dashboard, chataDashboardItem,
             <div>${message}</div>
         `;
         responseContentContainer.classList.add(
-            'chata-response-content-container'
+            'autoql-vanilla-chata-response-content-container'
         );
         responseContentContainer.classList.add(
-            'chata-response-content-center'
+            'autoql-vanilla-chata-response-content-center'
         );
         createSafetynetBody(
             responseContentContainer,
@@ -561,8 +561,6 @@ function TileView(dashboard, chataDashboardItem,
                 val = chataDashboardItem.getSafetynetValues(
                     tileWrapper
                 ).join(' ');
-                console.log('IS SECOND: ' + isSecond);
-                console.log('getSafetynetValues(): ' + val);
             }else{
                 if(obj.isSecond){
                     val = obj.inputToolbar.input.value;
@@ -671,7 +669,7 @@ function TileView(dashboard, chataDashboardItem,
                 var div = createTableContainer();
                 var scrollbox = document.createElement('div');
                 var tableWrapper = document.createElement('div');
-                scrollbox.classList.add('chata-table-scrollbox');
+                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
                 tableWrapper.classList.add('wrapper');
                 tableWrapper.classList.add('flex');
                 tableWrapper.appendChild(div);
@@ -685,15 +683,17 @@ function TileView(dashboard, chataDashboardItem,
                     );
                     container.innerHTML =
                     `<div>
-                        <a class="single-value-response">${data}<a/>
+                        <a class="autoql-vanilla-single-value-response">
+                            ${data}
+                        <a/>
                     </div>`;
                 }else{
                     var table = createTable(
                         json, div, dashboard.options,
-                        'append', _uuid, 'table-response-renderer',
+                        'append', _uuid, 'autoql-vanilla-table-response-renderer',
                         '[data-indexrowrenderer]'
                     );
-                    table.classList.add('renderer-table');
+                    table.classList.add('autoql-vanilla-renderer-table');
                     tableWrapper.insertBefore(table.headerElement, div);
                 }
                 break;
@@ -888,7 +888,7 @@ function TileView(dashboard, chataDashboardItem,
                 var div = createTableContainer();
                 // var tableWrapper = document.createElement('div');
                 var scrollbox = document.createElement('div');
-                scrollbox.classList.add('chata-table-scrollbox');
+                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
                 // tableWrapper.classList.add('wrapper');
                 // tableWrapper.classList.add('flex');
                 // tableWrapper.appendChild(div);
@@ -908,17 +908,17 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 var table = createPivotTable(
                     pivotArray, div, dashboard.options,
-                    'append', _uuid, 'table-response-renderer'
+                    'append', _uuid, 'autoql-vanilla-table-response-renderer'
                 );
                 scrollbox.insertBefore(table.headerElement, div);
                 break;
             case 'suggestion':
                 var responseContentContainer = document.createElement('div');
                 responseContentContainer.classList.add(
-                    'chata-response-content-container'
+                    'autoql-vanilla-chata-response-content-container'
                 );
                 responseContentContainer.classList.add(
-                    'chata-response-content-center'
+                    'autoql-vanilla-chata-response-content-center'
                 );
                 var val = ''
                 if(obj.isSecond){
@@ -935,7 +935,7 @@ function TileView(dashboard, chataDashboardItem,
                 DataMessenger.createSuggestions(
                     responseContentContainer,
                     rows,
-                    'chata-suggestion-btn-renderer'
+                    'autoql-vanilla-chata-suggestion-btn-renderer'
                 );
                 break;
             default:
@@ -946,7 +946,9 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {
         var displayTypes = chataDashboardItem.getDisplayTypes(json);
-        [].forEach.call(tileWrapper.querySelectorAll('.tile-toolbar'),
+        [].forEach.call(tileWrapper.querySelectorAll(
+            '.autoql-vanilla-tile-toolbar'
+        ),
         function(e, index){
             e.parentNode.removeChild(e);
         });
@@ -967,11 +969,11 @@ function TileView(dashboard, chataDashboardItem,
 
         if(displayTypes.length > 1){
             var vizToolbar = document.createElement('div');
-            vizToolbar.classList.add('tile-toolbar');
+            vizToolbar.classList.add('autoql-vanilla-tile-toolbar');
             for (var i = 0; i < displayTypes.length; i++) {
                 if(displayTypes[i] == ignoreDisplayType)continue;
                 var button = document.createElement('button');
-                button.classList.add('chata-toolbar-btn');
+                button.classList.add('autoql-vanilla-chata-toolbar-btn');
                 button.setAttribute('data-displaytype', displayTypes[i]);
                 if(displayTypes[i] == 'table'){
                     button.innerHTML = TABLE_ICON;
@@ -1058,7 +1060,7 @@ function TileView(dashboard, chataDashboardItem,
                 json, indexData, dashboard.options);
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
+            dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
                 drilldownData,
                 dashboard.options,
@@ -1078,7 +1080,7 @@ function TileView(dashboard, chataDashboardItem,
             modal.show();
             obj.refreshDrilldownView(chartDrilldownContainer);
         }else if (e.target.parentElement.dataset.indexrowrenderer ||
-        e.target.classList.contains('single-value-response')){
+        e.target.classList.contains('autoql-vanilla-single-value-response')){
             let query;
             if(obj.isSecond){
                 query = obj.internalQuery;
@@ -1094,7 +1096,7 @@ function TileView(dashboard, chataDashboardItem,
             var json = cloneObject(
                 DataMessenger.responses[obj.uuid]
             );
-            if(e.target.classList.contains('single-value-response')){
+            if(e.target.classList.contains('autoql-vanilla-single-value-response')){
                 json['data']['rows'][0][0] = e.target.textContent;
                 indexData = -1;
             }
@@ -1103,7 +1105,7 @@ function TileView(dashboard, chataDashboardItem,
                 json, indexData, dashboard.options);
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
+            dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
                 drilldownData,
                 dashboard.options,
@@ -1146,7 +1148,7 @@ function TileView(dashboard, chataDashboardItem,
                 json, indexData , dashboard.options);
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
+            dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
                 drilldownData,
                 dashboard.options,
@@ -1168,7 +1170,7 @@ function TileView(dashboard, chataDashboardItem,
     });
 
     tileWrapper.onclick = (evt) => {
-        if(evt.target.classList.contains('chata-suggestion-btn-renderer')){
+        if(evt.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
             if(obj.isSecond){
                 obj.internalQuery = evt.target.textContent;
                 obj.inputToolbar.input.value = evt.target.textContent;

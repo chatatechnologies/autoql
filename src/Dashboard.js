@@ -144,7 +144,7 @@ function Dashboard(selector, options={}){
             if(event.target.tagName == 'SPAN'){
                 return false;
             }
-            if(event.target.classList.contains('item-content')){
+            if(event.target.classList.contains('autoql-vanilla-item-content')){
                 if (obj.grid._settings.dragEnabled) {
                     if(event.type == 'start'){
                         obj.showPlaceHolders();
@@ -162,7 +162,7 @@ function Dashboard(selector, options={}){
         }
     });
 
-    grid._element.classList.add('chata-dashboard');
+    grid._element.classList.add('autoql-vanilla-chata-dashboard');
 
     obj.grid = grid;
     obj.tiles = items;
