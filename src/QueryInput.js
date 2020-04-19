@@ -91,7 +91,7 @@ function getQueryInput(options){
             if(event.target.value){
                 chataBarContainer.autoCompleteTimer = setTimeout(() => {
                     console.log(chataBarContainer.options.authentication);
-                    DataMessenger.autocomplete(
+                    ChataUtils.autocomplete(
                         event.target.value,
                         suggestionList,
                         'suggestion-renderer',
@@ -133,7 +133,7 @@ function getQueryInput(options){
             value
           )}&key=${chataBarContainer.options.authentication.apiKey}&customer_id=${chataBarContainer.options.authentication.customerId}&user_id=${chataBarContainer.options.authentication.userId}`
 
-        DataMessenger.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
+        ChataUtils.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
@@ -148,10 +148,10 @@ function getQueryInput(options){
                 var node = createSafetynetContent(suggestionArray, 'ChatBar');
                 responseRenderer.appendChild(node);
                 chataBarContainer.options.onResponseCallback();
-                DataMessenger.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
-                DataMessenger.ajaxCall(value, function(jsonResponse){
-                    DataMessenger.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                ChataUtils.ajaxCall(value, function(jsonResponse){
+                    ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
                     responseRenderer.innerHTML = '';
                     chataBarContainer.chatbar.removeAttribute("disabled");
                     if(chataBarContainer.options.showLoadingDots){
@@ -175,7 +175,7 @@ function getQueryInput(options){
                                 <div>
                                     I'm not sure what you mean by <strong>"
                                     ${value}"</strong>. Did you mean:</div>`;
-                            DataMessenger.createSuggestions(
+                            ChataUtils.createSuggestions(
                                 wrapper,
                                 rows,
                                 'autoql-vanilla-chata-suggestion-btn-renderer'
@@ -183,7 +183,7 @@ function getQueryInput(options){
                             responseRenderer.appendChild(wrapper)
                         }else if(cols.length == 1 && rows.length == 1){
                             if(cols[0]['name'] == 'Help Link'){
-                                responseRenderer.innerHTML = DataMessenger.createHelpContent(
+                                responseRenderer.innerHTML = ChataUtils.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
                             }else{
@@ -197,7 +197,7 @@ function getQueryInput(options){
                         }else{
                             // table
                             var uuid = uuidv4();
-                            DataMessenger.responses[uuid] = jsonResponse;
+                            ChataUtils.responses[uuid] = jsonResponse;
                             var div = document.createElement('div');
                             div.classList.add('autoql-vanilla-chata-table-container');
                             div.classList.add('autoql-vanilla-chata-table-container-renderer');
@@ -227,7 +227,7 @@ function getQueryInput(options){
                         switch(displayType){
                             case 'table':
                                 var uuid = uuidv4();
-                                DataMessenger.responses[uuid] = jsonResponse;
+                                ChataUtils.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('autoql-vanilla-chata-table-container');
                                 div.classList.add('autoql-vanilla-chata-table-container-renderer');
@@ -263,7 +263,7 @@ function getQueryInput(options){
                             break;
                             case 'date_pivot':
                                 var uuid = uuidv4();
-                                DataMessenger.responses[uuid] = jsonResponse;
+                                ChataUtils.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('autoql-vanilla-chata-table-container');
                                 div.classList.add('autoql-vanilla-chata-table-container-renderer');
@@ -278,7 +278,7 @@ function getQueryInput(options){
                             break;
                             case 'pivot_column':
                                 var uuid = uuidv4();
-                                DataMessenger.responses[uuid] = jsonResponse;
+                                ChataUtils.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
                                 div.classList.add('autoql-vanilla-chata-table-container');
                                 div.classList.add('autoql-vanilla-chata-table-container-renderer');
@@ -352,7 +352,7 @@ function getQueryInput(options){
                                 );
                             break;
                             case 'help':
-                                responseRenderer.innerHTML = DataMessenger.createHelpContent(
+                                responseRenderer.innerHTML = ChataUtils.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
                             break;

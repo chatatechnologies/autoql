@@ -1,4 +1,4 @@
-function createPieChart(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
     var pieWidth;
@@ -9,7 +9,7 @@ function createPieChart(component, json, options, fromDataMessenger=true, valueC
     var index1 = notGroupableField.indexCol;
     var index2 = groupableField.indexCol;
 
-    var data = DataMessenger.groupBy(
+    var data = ChataUtils.groupBy(
         json['data']['rows'], row => row[index2], index1
     );
 
@@ -17,8 +17,8 @@ function createPieChart(component, json, options, fromDataMessenger=true, valueC
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin + 3);
             if(height < 250){
                 height = 300;

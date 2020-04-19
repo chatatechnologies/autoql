@@ -1,4 +1,4 @@
-function createStackedBarChart(component, json, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedBarChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 100},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -15,15 +15,15 @@ function createStackedBarChart(component, json, options, fromDataMessenger=true,
 
 
     var data = cloneObject(json['data']['rows']);
-    var groups = DataMessenger.getUniqueValues(
+    var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
     );
     groups = groups.sort().reverse();
-    var subgroups = DataMessenger.getUniqueValues(
+    var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
-    var data = DataMessenger.format3dData(json, groups);
+    var data = ChataUtils.format3dData(json, groups);
 
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -33,8 +33,8 @@ function createStackedBarChart(component, json, options, fromDataMessenger=true,
     var col3 = formatColumnName(colStr3);
 
     const tickWidth = (width - margin.left - margin.right) / 6
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

@@ -1,4 +1,4 @@
-function createStackedColumnChart(component, json, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedColumnChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -14,15 +14,15 @@ function createStackedColumnChart(component, json, options, fromDataMessenger=tr
 
 
     var data = cloneObject(json['data']['rows']);
-    var groups = DataMessenger.getUniqueValues(
+    var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
     );
     groups = groups.sort().reverse();
-    var subgroups = DataMessenger.getUniqueValues(
+    var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
-    var data = DataMessenger.format3dData(json, groups);
+    var data = ChataUtils.format3dData(json, groups);
 
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -31,8 +31,8 @@ function createStackedColumnChart(component, json, options, fromDataMessenger=tr
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
 
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

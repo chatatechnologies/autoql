@@ -46,6 +46,7 @@
     <script src="src/ChataPieChart.js"></script>
     <script src="src/QueryOutput.js"></script>
     <script src="src/QueryInput.js"></script>
+    <script src="src/ChataUtils.js"></script>
     <script src="src/DataMessenger.js"></script>
     <script src="src/Modal.js"></script>
     <script src="src/Tile.js"></script>
@@ -158,6 +159,10 @@
         <div id="test1" class="col s12">
 
             <div id="chata">
+            </div>
+
+            <div id="DataMessengerV2">
+
             </div>
 
             <div class="my-container">
@@ -861,6 +866,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
+    var datamessenger = new DataMessenger('#DataMessengerV2', {
+        authentication: {
+            demo: true
+        },
+        placement: 'left',
+        onMaskClick: function(datamessenger){
+            datamessenger.closeDrawer();
+        }
+    })
     var settingsList = new NotificationSettings([
         new SettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000')
     ])
@@ -893,13 +907,13 @@
     document.getElementById('test5').appendChild(notificationList);
     document.getElementById('test4').appendChild(settingsList);
     //Create the components
-    let queryInput = DataMessenger.getQueryInput({
+    let queryInput = ChataUtils.getQueryInput({
         authentication: {
             demo: false
         },
         autoCompletePlacement: 'bottom',
     });
-    var responseRenderer = DataMessenger.getQueryOutput({
+    var responseRenderer = ChataUtils.getQueryOutput({
         displayType: 'stacked_bar'
     });
 
@@ -911,7 +925,7 @@
     document.getElementById('response-renderer').append(responseRenderer);
     var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTg2ODE4MDY3LCAiZXhwIjogMTU4NjgzOTY2NywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAiIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.k5-TTcHfU5aOQrO0VUrswzym546X_ObtlvyG-MrV7_0HeGgiayRQoY7SPqITlSvR7VZxye754SX_rJWrs1_EwY4Xag26_AtV0S_kfEPpUMpfWYthnC56l6ydxOw5fJTTAPh8A6PGP-T8DfIfmUoo2Ev1YgHnlp2tQy7Q9Wdx-Z8pCh5EHZB_O0e_SyhJ7MuxJdaudoDPgPUKojsCB23T_r8-K7ai3jUjLKYt09zaUWhNqMu53dz7XHAY1wx7tNih515CowgeYopu0XjMgGy8ErnNWxYFionV_Nya4L2wSkZA8qbbtrv9zUck0fMysmYfdhdyCYlq8pGz4brrkw1viA==`;
         let dashboard;
-        var chata = DataMessenger.init('chata', {
+        var chata = ChataUtils.init('chata', {
             authentication: {
                 token: _token,
                 apiKey: 'AIzaSyD2J8pfYPSI8b--HfxliLYB8V5AehPv0ys',
@@ -949,7 +963,7 @@
             // currencyCode: 'JPY',
             onMaskClick: function(){
                 console.log('FOOO');
-                DataMessenger.closeDrawer();
+                ChataUtils.closeDrawer();
             },
             // inputPlaceholder: 'testing placeholder prop'
         });
@@ -963,13 +977,13 @@
                     window.dispatchEvent(new Event('resize'));
                     console.log(evt.target.parentElement.classList.contains('chatdrawer-tab'));
                     if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
-                        if(DataMessenger.options.showHandle){
-                            DataMessenger.drawerButton.style.display = 'flex';
+                        if(ChataUtils.options.showHandle){
+                            ChataUtils.drawerButton.style.display = 'flex';
                         }else{
-                            DataMessenger.drawerButton.style.display = 'none';
+                            ChataUtils.drawerButton.style.display = 'none';
                         }
                     }else{
-                        DataMessenger.drawerButton.style.display = 'none';
+                        ChataUtils.drawerButton.style.display = 'none';
                     }
                 }
             }
@@ -1021,19 +1035,19 @@
         }
 
         enableExploreQueriesTab.onchange = function(event){
-            DataMessenger.options.enableExploreQueriesTab = event.target.checked
+            ChataUtils.options.enableExploreQueriesTab = event.target.checked
         }
 
         enableColumnVisibilityManager.onchange = function(event){
-            DataMessenger.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
+            ChataUtils.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
         }
 
         logout.onclick = (evt) => {
-            DataMessenger.options.authentication.apiKey = '';
-            DataMessenger.options.authentication.customerId = '';
-            DataMessenger.options.authentication.userId = '';
-            DataMessenger.options.authentication.domain = '';
-            DataMessenger.options.authentication.token = '';
+            ChataUtils.options.authentication.apiKey = '';
+            ChataUtils.options.authentication.customerId = '';
+            ChataUtils.options.authentication.userId = '';
+            ChataUtils.options.authentication.domain = '';
+            ChataUtils.options.authentication.token = '';
             alert('Successfully logged out');
         }
 
@@ -1044,10 +1058,10 @@
             var customerId = document.querySelector('[name="customerId"]');
             var userId = document.querySelector('[name="userId"]');
             var domain = document.querySelector('[name="domain"]');
-            DataMessenger.options.authentication.apiKey = apiKey.value;
-            DataMessenger.options.authentication.customerId = customerId.value;
-            DataMessenger.options.authentication.userId = userId.value;
-            DataMessenger.options.authentication.domain = domain.value;
+            ChataUtils.options.authentication.apiKey = apiKey.value;
+            ChataUtils.options.authentication.customerId = customerId.value;
+            ChataUtils.options.authentication.userId = userId.value;
+            ChataUtils.options.authentication.domain = domain.value;
             queryInput.options.authentication.apiKey = apiKey.value;
             queryInput.options.authentication.customerId = customerId.value;
             queryInput.options.authentication.userId = userId.value;
@@ -1105,7 +1119,7 @@
                                 alert(xhr2.responseText);
                             }else{
                                 var token = xhr2.responseText;
-                                DataMessenger.options.authentication.token = token;
+                                ChataUtils.options.authentication.token = token;
                                 queryInput.options.authentication.token = token;
 
                                 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey.value}`;
@@ -1164,35 +1178,35 @@
         }
 
         showHandle.onchange = function(event){
-            DataMessenger.options.showHandle = event.target.checked;
+            ChataUtils.options.showHandle = event.target.checked;
             if(event.target.checked){
-                if(DataMessenger.options.isVisible){
-                    DataMessenger.drawerButton.style.display = 'none';
+                if(ChataUtils.options.isVisible){
+                    ChataUtils.drawerButton.style.display = 'none';
                 }else{
-                    DataMessenger.drawerButton.style.display = 'flex';
+                    ChataUtils.drawerButton.style.display = 'flex';
                 }
             }else{
-                DataMessenger.drawerButton.style.display = 'none';
+                ChataUtils.drawerButton.style.display = 'none';
             }
         }
 
         shiftScreen.onchange = function(event){
-            DataMessenger.options.shiftScreen = event.target.checked;
+            ChataUtils.options.shiftScreen = event.target.checked;
         }
 
         showMask.onchange = function(event){
-            DataMessenger.options.showMask = event.target.checked;
+            ChataUtils.options.showMask = event.target.checked;
             if(event.target.checked){
-                if(DataMessenger.options.isVisible){
-                    DataMessenger.wrapper.style.opacity = .3;
-                    DataMessenger.wrapper.style.height = '100%';
+                if(ChataUtils.options.isVisible){
+                    ChataUtils.wrapper.style.opacity = .3;
+                    ChataUtils.wrapper.style.height = '100%';
                 }else{
-                    DataMessenger.wrapper.style.opacity = 0;
-                    DataMessenger.wrapper.style.height = 0;
+                    ChataUtils.wrapper.style.opacity = 0;
+                    ChataUtils.wrapper.style.height = 0;
                 }
             }else{
-                DataMessenger.wrapper.style.opacity = 0;
-                DataMessenger.wrapper.style.height = 0;
+                ChataUtils.wrapper.style.opacity = 0;
+                ChataUtils.wrapper.style.height = 0;
             }
         }
 
@@ -1205,48 +1219,48 @@
                         themeStyles[property],
                     );
                 }
-                DataMessenger.options.theme = event.target.id;
+                ChataUtils.options.theme = event.target.id;
             }
         }
 
         enableAutocomplete.onchange = function(event){
-            DataMessenger.options.autoQLConfig.enableAutocomplete = event.target.checked;
+            ChataUtils.options.autoQLConfig.enableAutocomplete = event.target.checked;
         }
 
         enableQueryValidation.onchange = function(event){
-            DataMessenger.options.autoQLConfig.enableQueryValidation = event.target.checked;
+            ChataUtils.options.autoQLConfig.enableQueryValidation = event.target.checked;
         }
 
         enableDrilldowns.onchange = function(event){
-            DataMessenger.options.autoQLConfig.enableDrilldowns = event.target.checked;
-            console.log(DataMessenger.options.enableDrilldowns);
+            ChataUtils.options.autoQLConfig.enableDrilldowns = event.target.checked;
+            console.log(ChataUtils.options.enableDrilldowns);
         }
 
         enableVoiceRecord.onchange = function(event){
-            DataMessenger.options.autoQLConfig.enableVoiceRecord = event.target.checked;
-            var display = DataMessenger.options.enableVoiceRecord ? 'block' : 'none';
+            ChataUtils.options.autoQLConfig.enableVoiceRecord = event.target.checked;
+            var display = ChataUtils.options.enableVoiceRecord ? 'block' : 'none';
             var voiceButton = document.getElementById('chata-voice-record-button');
             voiceButton.style.display = display;
         }
 
         debug.onchange = function(event){
-            DataMessenger.options.autoQLConfig.debug = event.target.checked;
+            ChataUtils.options.autoQLConfig.debug = event.target.checked;
         }
 
         clearOnClose.onchange = function(event){
-            DataMessenger.options.clearOnClose = event.target.checked;
+            ChataUtils.options.clearOnClose = event.target.checked;
         }
         for (var i = 0; i < placement.length; i++) {
             placement[i].onchange = function(event){
-                DataMessenger.rootElem.removeAttribute('style');
+                ChataUtils.rootElem.removeAttribute('style');
 
-                DataMessenger.drawerButton.classList.remove(DataMessenger.options.placement + '-btn');
-                DataMessenger.queryTabs.classList.remove(DataMessenger.options.placement);
-                DataMessenger.queryTabsContainer.classList.remove(DataMessenger.options.placement);
-                DataMessenger.options.placement = event.target.value;
-                DataMessenger.drawerButton.classList.add(DataMessenger.options.placement + '-btn');
-                DataMessenger.queryTabs.classList.add(DataMessenger.options.placement);
-                DataMessenger.queryTabsContainer.classList.add(DataMessenger.options.placement);
+                ChataUtils.drawerButton.classList.remove(ChataUtils.options.placement + '-btn');
+                ChataUtils.queryTabs.classList.remove(ChataUtils.options.placement);
+                ChataUtils.queryTabsContainer.classList.remove(ChataUtils.options.placement);
+                ChataUtils.options.placement = event.target.value;
+                ChataUtils.drawerButton.classList.add(ChataUtils.options.placement + '-btn');
+                ChataUtils.queryTabs.classList.add(ChataUtils.options.placement);
+                ChataUtils.queryTabsContainer.classList.add(ChataUtils.options.placement);
             }
         }
 
@@ -1280,31 +1294,31 @@
                     if(autoQLKeys.includes(propsEls[i].name))subKey = 'autoQLConfig';
                     if(subKey){
                         console.log(subKey);
-                        DataMessenger.options[subKey][propsEls[i].name] = propsEls[i].value;
+                        ChataUtils.options[subKey][propsEls[i].name] = propsEls[i].value;
                     }else{
-                        DataMessenger.options[propsEls[i].name] = propsEls[i].value;
+                        ChataUtils.options[propsEls[i].name] = propsEls[i].value;
                     }
                 }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
-                    DataMessenger.options.introMessage = "Hi " + DataMessenger.options.userDisplayName+ " I'm  here to help you access, search and analyze your data.";
-                }if(DataMessenger.options.themeConfig.theme == 'light' && propsEls[i].name == 'accentColor-light'){
-                    DataMessenger.options.themeConfig.accentColor = propsEls[i].value;
-                }else if (DataMessenger.options.themeConfig.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
-                    DataMessenger.options.themeConfig.accentColor = propsEls[i].value;
+                    ChataUtils.options.introMessage = "Hi " + ChataUtils.options.userDisplayName+ " I'm  here to help you access, search and analyze your data.";
+                }if(ChataUtils.options.themeConfig.theme == 'light' && propsEls[i].name == 'accentColor-light'){
+                    ChataUtils.options.themeConfig.accentColor = propsEls[i].value;
+                }else if (ChataUtils.options.themeConfig.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
+                    ChataUtils.options.themeConfig.accentColor = propsEls[i].value;
                 }
             }
             var chartColors = [];
             for (var i = 0; i < instances.chipsData.length; i++) {
                 chartColors.push(instances.chipsData[i]['tag']);
             }
-            DataMessenger.drawerButton.remove();
-            DataMessenger.rootElem.remove();
-            DataMessenger.options.themeConfig.chartColors = chartColors;
+            ChataUtils.drawerButton.remove();
+            ChataUtils.rootElem.remove();
+            ChataUtils.options.themeConfig.chartColors = chartColors;
             var div = document.createElement('div');
             div.setAttribute('id', 'chata');
             document.getElementsByTagName('body')[0].appendChild(div);
-            document.removeEventListener('click', DataMessenger.clickHandler);
-            document.removeEventListener('dblclick', DataMessenger.drilldownHandler);
-            var newDrawer = DataMessenger.init('chata', DataMessenger.options);
+            document.removeEventListener('click', ChataUtils.clickHandler);
+            document.removeEventListener('dblclick', ChataUtils.drilldownHandler);
+            var newDrawer = ChataUtils.init('chata', ChataUtils.options);
         }
 
         // var dashboard = new Dashboard('.grid-1', {
@@ -1407,11 +1421,11 @@
         // });
 
         demo.onchange = function(event){
-            DataMessenger.options.authentication.demo = event.target.checked;
+            ChataUtils.options.authentication.demo = event.target.checked;
             queryInput.options.authentication.demo = event.target.checked;
             // dashboard.options.authentication.demo = event.target.checked;
             var loginSection = document.getElementById('login-section');
-            if(!DataMessenger.options.authentication.demo){
+            if(!ChataUtils.options.authentication.demo){
                 loginSection.style.display = 'block';
                 dashboardTab.style.display = 'none';
             }else{

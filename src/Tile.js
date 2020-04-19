@@ -313,9 +313,9 @@ function Tile(dashboard, options={}){
                         if(view.isSecond){
                             var viewUUID = view.uuid;
                             var firstUUID = chataDashboardItem.views[0].uuid;
-                            if(!DataMessenger.responses[viewUUID]){
-                                DataMessenger.responses[viewUUID] = cloneObject(
-                                    DataMessenger.responses[firstUUID]
+                            if(!ChataUtils.responses[viewUUID]){
+                                ChataUtils.responses[viewUUID] = cloneObject(
+                                    ChataUtils.responses[firstUUID]
                                 );
                             }
                             view.internalDisplayType = 'table';
@@ -440,8 +440,8 @@ function Tile(dashboard, options={}){
         const URL = options.authentication.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
           : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
-        DataMessenger.ajaxCallPost(URL, function(response){
-            DataMessenger.responses[_uuid] = response;
+        ChataUtils.ajaxCallPost(URL, function(response){
+            ChataUtils.responses[_uuid] = response;
             callback();
         }, data, options);
     }
@@ -574,7 +574,7 @@ function TileView(dashboard, chataDashboardItem,
                 if(showLoadingDots){
                     loadingContainer = chataDashboardItem.showLoadingDots();
                 }
-                DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
+                ChataUtils.safetynetCall(chataDashboardItem.safetynet(val),
                     function(json, statusCode){
                     var suggestions = json['full_suggestion'] ||
                     json['data']['replacements'];
@@ -598,14 +598,14 @@ function TileView(dashboard, chataDashboardItem,
                         resolve();
                     }else{
                         obj.isSafetynet = false;
-                        DataMessenger.ajaxCall(val, function(json){
+                        ChataUtils.ajaxCall(val, function(json){
                             if(loadingContainer){
                                 tileResponseContainer.removeChild(
                                     loadingContainer
                                 );
                             }
 
-                            DataMessenger.responses[responseUUID] = json;
+                            ChataUtils.responses[responseUUID] = json;
                             var displayType =
                             obj.internalDisplayType
                             || 'table';
@@ -637,7 +637,7 @@ function TileView(dashboard, chataDashboardItem,
     }
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
-        var json = DataMessenger.responses[_uuid];
+        var json = ChataUtils.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
         if(append){
             tileResponseContainer.appendChild(view);
@@ -704,7 +704,7 @@ function TileView(dashboard, chataDashboardItem,
                 || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
-                var groups = DataMessenger.getUniqueValues(
+                var groups = ChataUtils.getUniqueValues(
                     data, row => row[0]
                 );
                 groups = groups.sort();
@@ -712,18 +712,18 @@ function TileView(dashboard, chataDashboardItem,
                     data[i][0] = formatData(
                         data[i][0],
                         json['data']['columns'][0],
-                        DataMessenger.options
+                        ChataUtils.options
                     );
                 }
                 for (var i = 0; i < groups.length; i++) {
                     groups[i] = formatData(
                         groups[i],
                         json['data']['columns'][0],
-                        DataMessenger.options
+                        ChataUtils.options
                     )
                 }
                 var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(
+                var dataGrouped = ChataUtils.formatCompareData(
                     json['data']['columns'], data, groups
                 );
                 createGroupedBarChart(
@@ -751,7 +751,7 @@ function TileView(dashboard, chataDashboardItem,
                 || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
-                var groups = DataMessenger.getUniqueValues(
+                var groups = ChataUtils.getUniqueValues(
                     data, row => row[0]
                 );
                 groups = groups.sort();
@@ -759,17 +759,17 @@ function TileView(dashboard, chataDashboardItem,
                     data[i][0] = formatData(
                         data[i][0],
                         json['data']['columns'][0],
-                        DataMessenger.options
+                        ChataUtils.options
                     );
                 }
                 for (var i = 0; i < groups.length; i++) {
                     groups[i] = formatData(groups[i],
                         json['data']['columns'][0],
-                        DataMessenger.options
+                        ChataUtils.options
                     )
                 }
                 var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(
+                var dataGrouped = ChataUtils.formatCompareData(
                     json['data']['columns'],
                     data,
                     groups
@@ -799,7 +799,7 @@ function TileView(dashboard, chataDashboardItem,
                 || json['data']['columns'].length >= 3){
                 var data = cloneObject(json['data']['rows']);
 
-                var groups = DataMessenger.getUniqueValues(
+                var groups = ChataUtils.getUniqueValues(
                     data, row => row[0]
                 );
 
@@ -808,18 +808,18 @@ function TileView(dashboard, chataDashboardItem,
                     data[i][0] = formatData(
                         data[i][0],
                         json['data']['columns'][0],
-                        DataMessenger.options
+                        ChataUtils.options
                     );
                 }
                 for (var i = 0; i < groups.length; i++) {
                     groups[i] = formatData(
                         groups[i],
                         json['data']['columns'][0],
-                        DataMessenger.options
+                        ChataUtils.options
                     );
                 }
                 var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(
+                var dataGrouped = ChataUtils.formatCompareData(
                     json['data']['columns'], data, groups
                 );
                 createGroupedLineChart(
@@ -932,7 +932,7 @@ function TileView(dashboard, chataDashboardItem,
                     </div>`;
                 container.appendChild(responseContentContainer);
                 var rows = json['data']['rows'];
-                DataMessenger.createSuggestions(
+                ChataUtils.createSuggestions(
                     responseContentContainer,
                     rows,
                     'autoql-vanilla-chata-suggestion-btn-renderer'
@@ -1041,7 +1041,7 @@ function TileView(dashboard, chataDashboardItem,
             modal.addView(drilldownTable);
             modal.setTitle(query);
             var json = cloneObject(
-                DataMessenger.responses[obj.uuid]
+                ChataUtils.responses[obj.uuid]
             );
             var drilldownUUID = uuidv4();
             if(chataDashboardItem.options.displayType == 'stacked_bar' ||
@@ -1094,7 +1094,7 @@ function TileView(dashboard, chataDashboardItem,
             var drilldownValue = '';
             var indexData = e.target.parentElement.dataset.indexrowrenderer;
             var json = cloneObject(
-                DataMessenger.responses[obj.uuid]
+                ChataUtils.responses[obj.uuid]
             );
             if(e.target.classList.contains('autoql-vanilla-single-value-response')){
                 json['data']['rows'][0][0] = e.target.textContent;
@@ -1130,7 +1130,7 @@ function TileView(dashboard, chataDashboardItem,
         if(e.target.dataset.tilechart){
             chataDashboardItem.updateSelectedBars(e.target)
             var json = cloneObject(
-                DataMessenger.responses[obj.uuid]
+                ChataUtils.responses[obj.uuid]
             );
             var drilldownUUID = uuidv4();
             var indexData = parseInt(e.target.dataset.tilechart);

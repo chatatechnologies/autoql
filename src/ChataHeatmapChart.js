@@ -1,4 +1,4 @@
-function createHeatmap(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createHeatmap(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
 
@@ -8,16 +8,16 @@ function createHeatmap(component, json, options, fromDataMessenger=true, valueCl
     var groupableIndex2 = groupables[1].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
 
-    var data = formatDataToHeatmap(json, DataMessenger.options);
-    var labelsX = DataMessenger.getUniqueValues(data, row => row.unformatX);
-    var labelsY = DataMessenger.getUniqueValues(data, row => row.unformatY);
+    var data = formatDataToHeatmap(json, ChataUtils.options);
+    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX);
+    var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY);
     var cols = json['data']['columns'];
 
     labelsY = formatLabels(
-        labelsY, cols[groupableIndex1], DataMessenger.options
+        labelsY, cols[groupableIndex1], ChataUtils.options
     );
     labelsX = formatLabels(
-        labelsX, cols[groupableIndex2], DataMessenger.options
+        labelsX, cols[groupableIndex2], ChataUtils.options
     );
 
     console.log(data);
@@ -29,8 +29,8 @@ function createHeatmap(component, json, options, fromDataMessenger=true, valueCl
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

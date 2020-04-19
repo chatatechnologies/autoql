@@ -1,4 +1,4 @@
-function createGroupedColumnChart(component, groups, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createGroupedColumnChart(component, groups, data, cols, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -12,8 +12,8 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
             if(height < 250){
                 height = 300;

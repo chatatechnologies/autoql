@@ -1,9 +1,9 @@
-function createColumnChart(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createColumnChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
-    var values = formatDataToBarChart(json, DataMessenger.options);
+    var values = formatDataToBarChart(json, ChataUtils.options);
     var data = values[0];
     var hasNegativeValues = values[1];
     var cols = json['data']['columns'];
@@ -20,8 +20,8 @@ function createColumnChart(component, json, options, fromDataMessenger=true, val
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
 
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

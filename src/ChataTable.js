@@ -53,8 +53,8 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
             var rows = applyFilter(
                 oldComponent.dataset.componentid
             );
-            DataMessenger.refreshTableData(
-                _table, cloneObject(rows), DataMessenger.options, false
+            ChataUtils.refreshTableData(
+                _table, cloneObject(rows), ChataUtils.options, false
             );
         }
         col.appendChild(divFilter);
@@ -62,7 +62,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         th.appendChild(col);
         th.appendChild(arrow);
         th.onclick = (evt) => {
-            DataMessenger.onClickColumn(evt, table, options);
+            ChataUtils.onClickColumn(evt, table, options);
         }
         header.appendChild(th);
         thArray.push(th);
@@ -120,12 +120,12 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
 
 
                 }
-                DataMessenger.putCall(parameters, function(response){
+                ChataUtils.putCall(parameters, function(response){
                     adjustTableWidth(
                         table, thArray, jsonResponse['data']['columns']
                     );
                     hideShowTableCols(table);
-                }, DataMessenger.options)
+                }, ChataUtils.options)
             }
 
             popoverContainer.appendChild(popoverMenu);
@@ -207,7 +207,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
 function createPivotTable(pivotArray, oldComponent, options, action='replace', uuid='', tableClass='autoql-vanilla-table-response'){
     var header = document.createElement('tr');
     var table = document.createElement('table');
-    var jsonResponse = DataMessenger.responses[
+    var jsonResponse = ChataUtils.responses[
         oldComponent.dataset.componentid || uuid
     ]
     var groupField = getGroupableField(jsonResponse);
@@ -243,17 +243,17 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         if(i == 0){
-            filter.colType = DataMessenger.responses[
+            filter.colType = ChataUtils.responses[
                 oldComponent.dataset.componentid || uuid
             ]['data']['columns'][0];
         }else if(i >= 1){
-            filter.colType = DataMessenger.responses[
+            filter.colType = ChataUtils.responses[
                 oldComponent.dataset.componentid || uuid
             ]['data']['columns'][2];
         }
         filter.onkeyup = function(event){
             var _json = cloneObject(
-                DataMessenger.responses[oldComponent.dataset.componentid]
+                ChataUtils.responses[oldComponent.dataset.componentid]
             );
             var _table = document.querySelector(
                 `[data-componentid='${oldComponent.dataset.componentid}']`
@@ -264,20 +264,20 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
                 _columns[0].name.includes('month')){
                 var pivotArray = getDatePivotArray(
                     _json,
-                    DataMessenger.options,
+                    ChataUtils.options,
                     cloneObject(_json['data']['rows'])
                 );
             }else{
                 var pivotArray = getPivotColumnArray(
                     _json,
-                    DataMessenger.options,
+                    ChataUtils.options,
                     cloneObject(_json['data']['rows'])
                 );
             }
             pivotArray.shift();
             var rows = applyFilter(oldComponent.dataset.componentid, pivotArray);
             // rows.unshift([]);
-            DataMessenger.refreshPivotTable(_table, rows);
+            ChataUtils.refreshPivotTable(_table, rows);
         }
         col.appendChild(divFilter);
         if(i == 0){
@@ -286,7 +286,7 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
         th.appendChild(col);
         th.appendChild(arrow);
         th.onclick = (evt) => {
-            DataMessenger.onClickPivotColumn(evt, table, options);
+            ChataUtils.onClickPivotColumn(evt, table, options);
         }
         header.appendChild(th);
         thArray.push(th);

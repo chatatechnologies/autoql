@@ -175,8 +175,8 @@ function runQuery(event, context){
         var node = event.target.parentElement;
     }
     var words = getSafetynetValues(node);
-    if(context == 'DataMessenger'){
-        DataMessenger.sendMessage(
+    if(context == 'ChataUtils'){
+        ChataUtils.sendMessage(
             document.getElementById('chata-input'), words.join(' ')
         );
     }else{
@@ -648,9 +648,9 @@ function refreshTooltips(){
     tippy('.chata-interpretation', {
         theme: 'chata',
         onShow: function(instance){
-            var data = DataMessenger.responses[instance.reference.dataset.id]['data'];
+            var data = ChataUtils.responses[instance.reference.dataset.id]['data'];
             var content  = `<span class='title-tip'>Interpretation:</span> <span class="text-tip">${data['interpretation']}</span>`;
-            // if(DataMessenger.options.debug){
+            // if(ChataUtils.options.debug){
             //     content += `</br></br>
             //     <span class='title-tip'>SQL:</span> <span class="text-tip">${data['sql']}</span>
             //     `;
@@ -700,7 +700,7 @@ function tooltipCharts(){
 function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.headerElement.getElementsByTagName('input');
-    var json = DataMessenger.responses[_table.dataset.componentid];
+    var json = ChataUtils.responses[_table.dataset.componentid];
     var rows = array || cloneObject(json['data']['rows']);
     for (var i = 0; i < inputs.length; i++) {
         if(inputs[i].value == '')continue;
@@ -712,7 +712,7 @@ function applyFilter(idRequest, array){
                 var formatDate = formatData(
                     v,
                     json['data']['columns'][i],
-                    DataMessenger.options
+                    ChataUtils.options
             );
                 return formatDate.toLowerCase().includes(compareValue);
             }else if(
@@ -857,7 +857,7 @@ function adjustTableWidth(table, thArray, cols,
 }
 
 function hideShowTableCols(table){
-    var json = DataMessenger.responses[table.dataset.componentid];
+    var json = ChataUtils.responses[table.dataset.componentid];
     var cols = json['data']['columns'];
     const thList = table.headerElement.childNodes;
     const trList = table.childNodes;
@@ -883,7 +883,7 @@ function hideShowTableCols(table){
 
 function allColHiddenMessage(table){
     const requestId = table.dataset.componentid;
-    const json = DataMessenger.responses[requestId];
+    const json = ChataUtils.responses[requestId];
     var cols = json['data']['columns'];
     var isAllHidden = true;
     for (var i = 0; i < cols.length; i++) {

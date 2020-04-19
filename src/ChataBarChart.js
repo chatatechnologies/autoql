@@ -1,8 +1,8 @@
-function createBarChart(component, json, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var values = formatDataToBarChart(json, DataMessenger.options);
+    var values = formatDataToBarChart(json, ChataUtils.options);
     var data = values[0];
     var hasNegativeValues = values[1];
     var cols = json['data']['columns'];
@@ -18,8 +18,8 @@ function createBarChart(component, json, options, fromDataMessenger=true, valueC
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
@@ -82,7 +82,7 @@ function createBarChart(component, json, options, fromDataMessenger=true, valueC
 
     // Add X axis
     var x = d3.scaleLinear()
-    .domain(DataMessenger.makeBarChartDomain(data, hasNegativeValues))
+    .domain(ChataUtils.makeBarChartDomain(data, hasNegativeValues))
     .range([ 0, width]).nice();
     var xAxis = d3.axisBottom(x);
     xAxis.tickSize(0);

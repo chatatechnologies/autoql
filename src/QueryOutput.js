@@ -56,7 +56,7 @@ function getQueryOutput(options={}){
                 component = component.parentElement;
             }
             if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
-                var json = DataMessenger.responses[component.dataset.componentid];
+                var json = ChataUtils.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
                 var topBar = component.chataBarContainer.getElementsByClassName(
                     'autoql-vanilla-chat-bar-text'
@@ -67,7 +67,7 @@ function getQueryOutput(options={}){
                     component.options
                 ]);
 
-                DataMessenger.sendDrilldownMessage(
+                ChataUtils.sendDrilldownMessage(
                     json, indexData,
                     opts,
                     'ChatBar', component, loading);
@@ -76,7 +76,7 @@ function getQueryOutput(options={}){
         if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
             var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
             if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
-                var json = DataMessenger.responses[component.dataset.componentid];
+                var json = ChataUtils.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;
                 var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
                     'autoql-vanilla-chat-bar-text'
@@ -87,7 +87,7 @@ function getQueryOutput(options={}){
                     component.options
                 ]);
 
-                DataMessenger.sendDrilldownMessage(
+                ChataUtils.sendDrilldownMessage(
                     json, indexData,
                     opts,
                     'ChatBar', responseRenderer, loading);
@@ -96,7 +96,7 @@ function getQueryOutput(options={}){
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
             var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-            var json = cloneObject(DataMessenger.responses[component.dataset.componentid]);
+            var json = cloneObject(ChataUtils.responses[component.dataset.componentid]);
             json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
             json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
@@ -108,7 +108,7 @@ function getQueryOutput(options={}){
                 component.chataBarContainer.options,
                 component.options
             ]);
-            DataMessenger.sendDrilldownMessage(
+            ChataUtils.sendDrilldownMessage(
                 json,
                 0,
                 opts,
@@ -132,34 +132,34 @@ function getQueryOutput(options={}){
             if(e.target.nextSibling.classList.contains('up')){
                 e.target.nextSibling.classList.remove('up');
                 e.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[localuuid]);
-                var sortData = DataMessenger.sort(
+                var data = cloneObject(ChataUtils.responses[localuuid]);
+                var sortData = ChataUtils.sort(
                     data['data']['rows'],
                     'desc',
                     e.target.dataset.index,
                     e.target.dataset.type
                 );
-                DataMessenger.refreshTableData(
+                ChataUtils.refreshTableData(
                     tableElement,
                     sortData,
-                    DataMessenger.options
+                    ChataUtils.options
                 );
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
                 var data = cloneObject(
-                    DataMessenger.responses[localuuid]
+                    ChataUtils.responses[localuuid]
                 );
-                var sortData = DataMessenger.sort(
+                var sortData = ChataUtils.sort(
                     data['data']['rows'],
                     'asc',
                     parseInt(e.target.dataset.index),
                     e.target.dataset.type
                 );
-                DataMessenger.refreshTableData(
+                ChataUtils.refreshTableData(
                     tableElement,
                     sortData,
-                    DataMessenger.options
+                    ChataUtils.options
                 );
             }
         }
@@ -169,20 +169,20 @@ function getQueryOutput(options={}){
             var tableElement = container.querySelector('[data-componentid]');
             var pivotArray = [];
             var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
+                ChataUtils.responses[tableElement.dataset.componentid]
             );
             var columns = json['data']['columns'];
             if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){
                 pivotArray = getDatePivotArray(
                     json,
-                    DataMessenger.options,
+                    ChataUtils.options,
                     cloneObject(json['data']['rows'])
                 );
             }else{
                 pivotArray = getPivotColumnArray(
                     json,
-                    DataMessenger.options,
+                    ChataUtils.options,
                     cloneObject(json['data']['rows'])
                 );
             }
@@ -195,7 +195,7 @@ function getQueryOutput(options={}){
                     'desc'
                 );
                 //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
+                ChataUtils.refreshPivotTable(tableElement, sortData);
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
@@ -205,7 +205,7 @@ function getQueryOutput(options={}){
                     'asc'
                 );
                 //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
+                ChataUtils.refreshPivotTable(tableElement, sortData);
             }
         }
     });
