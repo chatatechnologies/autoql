@@ -27,7 +27,7 @@
     visibility: visible;
 }
 
-.chat-message-toolbar.show{
+.autoql-vanilla-chat-message-toolbar.show{
     display: block;
 }
 

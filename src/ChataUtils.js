@@ -1339,7 +1339,7 @@ ChataUtils.registerEvents = function(){
         if(event.keyCode == 13 && this.value){
             clearTimeout(ChataUtils.autoCompleteTimer);
             suggestionList.style.display = 'none';
-            ChataUtils.sendMessage(chataInput, this.value);
+            ChataUtils.sendMessage(chataInput, this.value, 'data_messenger.user');
         }
     }
 }
@@ -1805,6 +1805,7 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
 
     ChataUtils.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
+        console.log(URL);
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
         if(matches.length > 0){
             for(var [key, value] of Object.entries(options.autocompleteStyles)){
@@ -1815,6 +1816,7 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
                 li.classList.add(liClass);
                 li.textContent = matches[i];
                 suggestionList.appendChild(li);
+                console.log(matches[i]);
             }
             suggestionList.style.display = 'block';
         }else{

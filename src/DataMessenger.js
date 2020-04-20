@@ -60,7 +60,9 @@ function DataMessenger(elem, options){
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         isRecordVoiceActive: false,
-        inputPlaceholder: 'Type your queries here'
+        inputPlaceholder: 'Type your queries here',
+        autoCompleteTimer: undefined,
+        xhr: new XMLHttpRequest()
     };
 
     var rootElem = document.querySelector(elem);
@@ -136,8 +138,7 @@ function DataMessenger(elem, options){
     obj.openDrawer = () => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
         obj.options.isVisible = true;
-        var chataInput = document.getElementById('autoql-vanilla-chata-input');
-        // chataInput.focus();
+        obj.input.focus();
         if(obj.options.enableExploreQueriesTab){
             // obj.queryTabs.style.visibility = 'visible';
         }
@@ -292,6 +293,16 @@ function DataMessenger(elem, options){
             }else{
                 obj.closeDrawer();
             }
+
+            obj.rootElem.addEventListener('click', (evt) => {
+                // REPLACE WITH onclick event
+                if(evt.target.classList.contains('suggestion')){
+                    obj.autoCompleteList.style.display = 'none';
+                    obj.sendMessage(
+                        evt.target.textContent, 'data_messenger.user'
+                    );
+                }
+            });
         }
     }
 
@@ -410,6 +421,33 @@ function DataMessenger(elem, options){
         });
     }
 
+    obj.autoCompleteHandler = (evt) => {
+        console.log('AUTOCOMPLETE');
+        if(obj.options.autoQLConfig.enableAutocomplete){
+            obj.autoCompleteList.style.display = 'none';
+            clearTimeout(obj.autoCompleteTimer);
+            if(evt.target.value){
+                obj.autoCompleteTimer = setTimeout(() => {
+                    ChataUtils.autocomplete(
+                        evt.target.value,
+                        obj.autoCompleteList,
+                        'suggestion',
+                        obj.options
+                    );
+                }, 400);
+            }
+        }
+    }
+
+    obj.onEnterHandler = (evt) => {
+        if(evt.keyCode == 13 && obj.input.value){
+            clearTimeout(obj.autoCompleteTimer);
+            obj.autoCompleteList.style.display = 'none';
+            console.log('SEND MESSAGE');
+            obj.sendMessage(obj.input.value, 'data_messenger.user');
+        }
+    }
+
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
         var chataBarContainer = document.createElement('div');
@@ -459,8 +497,11 @@ function DataMessenger(elem, options){
         obj.chataBarContainer = chataBarContainer;
         obj.input = chataInput;
         obj.voiceRecordButton = voiceRecordButton;
-        obj.autoCompleteList = voiceRecordButton;
+        obj.autoCompleteList = autoCompleteList;
         obj.rootElem.appendChild(chataBarContainer);
+        obj.input.onkeyup = obj.autoCompleteHandler;
+        obj.input.onkeypress = obj.onEnterHandler;
+
     }
 
     obj.applyStyles = () => {
@@ -487,6 +528,828 @@ function DataMessenger(elem, options){
         );
     }
 
+    obj.checkMaxMessages = function(){
+        if(obj.options.maxMessages > 2){
+            var messages = obj.drawerContent.querySelectorAll(
+                '.autoql-vanilla-chat-single-message-container'
+            );
+
+            if(messages.length > obj.options.maxMessages){
+                messages[1].parentNode.removeChild(messages[1]);
+            }
+        }
+    }
+
+    obj.getActionOption = (svg, text, onClick, params) => {
+        var element = htmlToElement(`
+            <li>
+                <span data-test="chata-icon" class="chata-icon">
+                    ${svg}
+                </span>
+                ${text}
+            </li>
+        `);
+        element.onclick = (evt) => {
+            onClick.apply(null, params);
+        }
+        return element;
+    }
+
+    obj.getPopover = () => {
+        var optionsMenu = htmlToElement(`
+            <div class="chata-more-options-menu">
+            </div>
+        `);
+        var menu = htmlToElement(`
+            <div class="chata-popover-wrapper">
+            </div>`
+        );
+        var ul = htmlToElement(`
+            <ul class="chata-menu-list">
+            </ul>
+        `);
+        menu.ul = ul;
+        optionsMenu.appendChild(ul);
+        menu.appendChild(optionsMenu);
+        return menu;
+    }
+
+    obj.downloadCsvHandler = (idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        var csvData = ChataUtils.createCsvData(json);
+        var link = document.createElement("a");
+        link.setAttribute(
+            'href', 'data:text/csv;charset=utf-8,'
+            + encodeURIComponent(csvData)
+        );
+        link.setAttribute('download', 'table.csv');
+        link.click();
+    }
+
+    obj.copySqlHandler = (idRequest) => {
+        console.log(idRequest);
+        var json = ChataUtils.responses[idRequest];
+        console.log(json);
+        var sql = json['data']['sql'][0];
+        console.log(sql);
+        copyTextToClipboard(sql);
+    }
+
+    obj.copyHandler = (idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
+    }
+    obj.exportPNGHandler = (idRequest) => {
+        var component = document.querySelector(
+            `[data-componentid='${idRequest}']`
+        );
+        var svg = component.getElementsByTagName('svg')[0];
+        var svgString = getSVGString(svg);
+
+        svgString2Image(
+            svgString,
+            2*component.clientWidth,
+            2*component.clientHeight
+        );
+    }
+
+    obj.getMoreOptionsMenu = (options, idRequest, type) => {
+        var menu = obj.getPopover();
+        if(type === 'simple'){
+            menu.classList.add('chata-popover-single-message');
+        }
+
+        for (var i = 0; i < options.length; i++) {
+            let opt = options[i]
+            switch (opt) {
+                case 'csv':
+                    var action = obj.getActionOption(
+                        DOWNLOAD_CSV_ICON, 'Download as CSV',
+                        obj.downloadCsvHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                    break;
+                case 'copy':
+                    var action = obj.getActionOption(
+                        CLIPBOARD_ICON, 'Copy table to clipboard',
+                        obj.copyHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                    break;
+                case 'copy_sql':
+                    var action = obj.getActionOption(
+                        COPY_SQL, 'Copy generated query to clipboard',
+                        obj.copySqlHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                    break;
+                case 'png':
+                    var action = obj.getActionOption(
+                        EXPORT_PNG_ICON, 'Download as PNG',
+                        obj.exportPNGHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                default:
+
+            }
+        }
+
+        return menu;
+    }
+
+    obj.getReportProblemMenu = (toolbar, idRequest, type) => {
+        var menu = obj.getPopover();
+        if(type === 'simple'){
+            menu.classList.add('chata-popover-single-message');
+        }
+        menu.ul.appendChild(
+            obj.getActionOption(
+                '', 'The data is incorrect',
+                obj.sendReport,
+                [idRequest, obj.options, menu, toolbar]
+            )
+        );
+        menu.ul.appendChild(
+            obj.getActionOption(
+                '', 'The data is incomplete',
+                obj.sendReport,
+                [idRequest, obj.options, menu, toolbar]
+            )
+        );
+        menu.ul.appendChild(
+            obj.getActionOption(
+                '', 'Other...',
+                obj.openModalReport,
+                [idRequest, obj.options, menu, toolbar]
+            )
+        );
+
+        return menu;
+    }
+
+    obj.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
+        var button =  htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-toolbar-btn"
+                data-tippy-content="${tooltip}"
+                data-id="${idRequest}">
+                ${svg}
+            </button>
+        `)
+
+        button.onclick = (evt) => {
+            onClick.apply(null, [evt, idRequest, ...evtParams]);
+        }
+
+        return button;
+    }
+
+    obj.reportProblemHandler = (
+        evt, idRequest, reportProblem, toolbar) => {
+
+        reportProblem.classList.toggle('show');
+        toolbar.classList.toggle('show');
+    }
+
+    obj.moreOptionsHandler = (
+        evt, idRequest, moreOptions, toolbar) => {
+
+        moreOptions.classList.toggle('show');
+        toolbar.classList.toggle('show');
+    }
+
+    obj.filterTableHandler = (evt, idRequest) => {
+        var table = document.querySelector(
+            `[data-componentid="${idRequest}"]`
+        );
+        var inputs = table.headerElement.getElementsByClassName(
+            'autoql-vanilla-tabulator-header-filter'
+        );
+        var arrows = table.headerElement.getElementsByClassName(
+            'autoql-vanilla-tabulator-arrow'
+        );
+        for (var i = 0; i < inputs.length; i++) {
+            if(inputs[i].style.display == ''
+            || inputs[i].style.display == 'none'){
+                inputs[i].style.display = 'block';
+            }else{
+                inputs[i].style.display = 'none';
+            }
+            arrows[i].classList.toggle('tabulator-filter');
+        }
+    }
+
+    obj.openColumnEditorHandler = (evt, idRequest) => {
+        obj.showColumnEditor(idRequest);
+    }
+
+    obj.deleteMessageHandler = (evt, idRequest) => {
+        console.log(idRequest);
+        var table = obj.drawerContent.querySelector(
+            `[data-componentid="${idRequest}"]`
+        );
+        if(!table){
+            table = obj.drawerContent.querySelector(
+                `[data-containerid="${idRequest}"]`
+            );
+            obj.drawerContent.removeChild(
+                table
+            )
+        }else{
+            obj.drawerContent.removeChild(
+                table.parentElement.parentElement
+                .parentElement.parentElement.parentElement
+            );
+        }
+    }
+
+    obj.getActionToolbar = (idRequest, type, displayType) => {
+        var request = ChataUtils.responses[idRequest];
+        let moreOptionsArray = [];
+        var toolbar = htmlToElement(`
+            <div class="autoql-vanilla-chat-message-toolbar right">
+            </div>
+        `);
+
+        var reportProblem = obj.getReportProblemMenu(
+            toolbar,
+            idRequest,
+            type
+        );
+        reportProblem.classList.add('report-problem');
+
+
+        var reportProblemButton = obj.getActionButton(
+            REPORT_PROBLEM,
+            'Report a problem',
+            idRequest,
+            obj.reportProblemHandler,
+            [reportProblem, toolbar]
+        )
+
+        switch (type) {
+            case 'simple':
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                    toolbar.appendChild(
+                        obj.getActionButton(
+                            DELETE_MESSAGE,
+                            'Delete Message',
+                            idRequest,
+                            obj.deleteMessageHandler,
+                            [reportProblem, toolbar]
+                        )
+                    );
+                    moreOptionsArray.push('copy_sql');
+                }
+                break;
+            case 'csvCopy':
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        FILTER_TABLE,
+                        'Filter Table',
+                        idRequest,
+                        obj.filterTableHandler,
+                        []
+                    )
+                );
+                var columnVisibility = obj.options.
+                autoQLConfig.enableColumnVisibilityManager
+                if(columnVisibility && displayType !== 'pivot_column'){
+                    toolbar.appendChild(
+                        obj.getActionButton(
+                            COLUMN_EDITOR,
+                            'Show/Hide Columns',
+                            idRequest,
+                            obj.openColumnEditorHandler,
+                            []
+                        )
+                    );
+                }
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                }
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('csv');
+                moreOptionsArray.push('copy');
+                moreOptionsArray.push('copy_sql');
+                break;
+            case 'chart-view':
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                }
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('png');
+                moreOptionsArray.push('copy_sql');
+            default:
+
+        }
+
+        var moreOptions = obj.getMoreOptionsMenu(
+            moreOptionsArray,
+            idRequest,
+            type
+        );
+
+        var moreOptionsBtn = obj.getActionButton(
+            VERTICAL_DOTS,
+            'More options',
+            idRequest,
+            obj.moreOptionsHandler,
+            [moreOptions, toolbar]
+        )
+
+        if(request['reference_id'] !== '1.1.420'){
+            toolbar.appendChild(
+                moreOptionsBtn
+            );
+            toolbar.appendChild(moreOptions);
+            toolbar.appendChild(reportProblem);
+        }
+
+        return toolbar;
+    }
+
+    obj.putMessage = (value) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('request');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.textContent = value;
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.drawerContent.appendChild(responseLoadingContainer);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        obj.checkMaxMessages();
+        return responseLoadingContainer;
+    }
+
+    obj.putTableResponse = (jsonResponse) => {
+        var data = jsonResponse['data']['rows'];
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        var tableContainer = document.createElement('div');
+        var scrollbox = document.createElement('div');
+        var table = document.createElement('table');
+        var header = document.createElement('tr');
+        var groupField = getGroupableField(jsonResponse);
+        var cols = jsonResponse['data']['columns'];
+        const options = obj.options.dataFormatting;
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        containerMessage.classList.add('autoql-vanilla-chat-message-response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        var idRequest = uuidv4();
+        ChataUtils.responses[idRequest] = jsonResponse;
+        var supportedDisplayTypes = ChataUtils.getSupportedDisplayTypes(
+            idRequest, 'table'
+        );
+        var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
+        var toolbar = '';
+        if(supportedDisplayTypes != ''){
+            toolbar += `
+            <div class="autoql-vanilla-chat-message-toolbar left">
+                ${supportedDisplayTypes}
+            </div>
+            `
+        }
+        messageBubble.innerHTML = toolbar;
+        messageBubble.appendChild(actions);
+        tableContainer.classList.add('chata-table-container');
+        scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-container'
+        );
+        table.classList.add('autoql-vanilla-table-response');
+        table.setAttribute('data-componentid', idRequest);
+        var dataLines = jsonResponse['data']['rows'];
+        var thArray = [];
+        for (var i = 0; i < cols.length; i++) {
+            var colStr = cols[i]['display_name'] ||
+                cols[i]['name'];
+            var isVisible = true;
+            if('is_visible' in cols[i]){
+                isVisible = cols[i]['is_visible']
+                || false;
+            }
+            var colName = formatColumnName(colStr);
+            var th = document.createElement('th');
+            var arrow = document.createElement('div');
+            var col = document .createElement('div');
+            col.textContent = colName;
+            arrow.classList.add('autoql-vanilla-tabulator-arrow');
+            arrow.classList.add('up');
+            col.classList.add('column');
+            col.setAttribute('data-type', cols[i]['type']);
+            col.setAttribute('data-index', i);
+            var divFilter = document.createElement('div');
+            var filter = document.createElement('input');
+            divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
+            divFilter.appendChild(filter);
+            filter.setAttribute('placeholder', 'Filter column');
+            filter.classList.add('filter-input');
+            filter.setAttribute('data-dataid', idRequest);
+            filter.setAttribute('data-inputindex', i);
+            filter.colType = cols[i]['type'];
+            filter.onkeyup = function(event){
+                var _table = document.querySelector(
+                    `[data-componentid='${idRequest}']`
+                );
+                var rows = applyFilter(idRequest);
+                ChataUtils.refreshTableData(
+                    _table, cloneObject(rows), ChataUtils.options, false
+                );
+            }
+            col.appendChild(divFilter);
+            th.appendChild(col);
+            th.appendChild(arrow);
+            th.onclick = (evt) => {
+                ChataUtils.onClickColumn(evt, table, ChataUtils.options);
+            }
+            header.appendChild(th);
+            thArray.push(th);
+            if(!isVisible){
+                th.classList.add('chata-hidden');
+            }
+            th.addEventListener('contextmenu', function(e){
+                e.preventDefault();
+                let col;
+                if(e.target.tagName == 'DIV'){
+                    col = e.target;
+                }else{
+                    col = e.target.childNodes[0];
+                }
+                var popoverElements = document.querySelectorAll(
+                    '.autoql-vanilla-chata-tiny-popover-container'
+                );
+                [].forEach.call(popoverElements, function(e, i){
+                    e.parentNode.removeChild(e);
+                })
+                var popoverContainer = htmlToElement(`
+                    <div class="autoql-vanilla-chata-tiny-popover-container">
+                    </div>
+                `);
+                var popoverMenu = htmlToElement(`
+                    <div class="chata-context-menu">
+                    </div>
+                `)
+                var popoverList = htmlToElement(`
+                    <ul class="chata-context-menu-list">
+                    </ul>
+                `);
+
+                var popoverLi = htmlToElement(`
+                    <li>Hide Column</li>
+                `)
+
+                popoverLi.onclick = function(evt){
+                    var opts = ChataUtils.options
+                    const url = opts.authentication.demo
+                    ? `https://backend-staging.chata.ai/api/v1/chata/query`
+                    : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
+                    document.body.removeChild(popoverContainer);
+                    var parameters = [];
+                    var jsonCols = jsonResponse['data']['columns'];
+                    for (var i = 0; i < jsonCols.length; i++) {
+                        var visibility = col.dataset.index == i ? false : true;
+                        if(col.dataset.index == i){
+                            visibility = false;
+                            jsonResponse.data.columns[i].is_visible = false;
+                        }else{
+                            visibility = jsonCols[i].is_visible;
+                        }
+                        parameters.push({
+                            name: jsonCols[i].name,
+                            is_visible: visibility
+                        })
+                    }
+                    ChataUtils.putCall(
+                        url, {columns: parameters}, function(response){
+                        adjustTableWidth(
+                            table, thArray, jsonResponse['data']['columns']
+                        );
+                        hideShowTableCols(table);
+                    }, opts)
+                }
+
+                popoverContainer.appendChild(popoverMenu);
+                popoverMenu.appendChild(popoverList);
+                popoverList.appendChild(popoverLi);
+
+                popoverContainer.style.left = mouseX(e) + 'px';
+                popoverContainer.style.top = mouseY(e) + 'px';
+                document.body.appendChild(popoverContainer);
+            })
+        }
+        header.classList.add('autoql-vanilla-table-header');
+        scrollbox.appendChild(header);
+
+        for (var i = 0; i < dataLines.length; i++) {
+            var data = dataLines[i];
+            var tr = document.createElement('tr');
+            for (var x = 0; x < data.length; x++) {
+                var isVisible = true;
+                if('is_visible' in cols[x]){
+                    isVisible = cols[x]['is_visible']
+                    || false;
+                }
+                value = formatData(
+                    data[x], cols[x],
+                    obj.options
+                );
+                var td = document.createElement('td');
+                td.textContent = value;
+                if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
+                    options.comparisonDisplay == 'PERCENT'){
+                    if(parseFloat(value) >= 0){
+                        td.classList.add(
+                            'autoql-vanilla-comparison-value-positive'
+                        );
+                    }else{
+                        td.classList.add(
+                            'autoql-vanilla-comparison-value-negative'
+                        );
+                    }
+                }
+                tr.appendChild(td);
+                if(!isVisible){
+                    td.classList.add('chata-hidden');
+                }
+            }
+            tr.setAttribute('data-indexrow', i);
+            if(typeof groupField !== 'number'){
+                tr.setAttribute('data-has-drilldown', true);
+            }else{
+                tr.setAttribute('data-has-drilldown', false);
+            }
+            table.appendChild(tr);
+        }
+        tableContainer.appendChild(table);
+        scrollbox.appendChild(tableContainer);
+        responseContentContainer.appendChild(scrollbox);
+        messageBubble.appendChild(responseContentContainer);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+
+        var headerWidth = adjustTableWidth(table, thArray, cols);
+        table.style.width = headerWidth + 'px';
+        header.style.width = headerWidth + 'px';
+        table.headerElement = header;
+        if(!obj.options.authentication.demo){
+            allColHiddenMessage(table);
+        }
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        table.sort = 'asc';
+        return table;
+    }
+
+    obj.putSimpleResponse = (jsonResponse) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        var idRequest = uuidv4();
+        ChataUtils.responses[idRequest] = jsonResponse;
+        console.log(ChataUtils.responses);
+        containerMessage.setAttribute('data-containerid', idRequest);
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        toolbarButtons = obj.getActionToolbar(
+            idRequest, 'simple', 'table'
+        );
+        if(jsonResponse['reference_id'] !== '1.1.420'){
+            messageBubble.appendChild(toolbarButtons);
+        }
+        var value = ''
+        if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
+            value = formatData(
+                jsonResponse['data']['rows'][0][0],
+                jsonResponse['data']['columns'][0],
+                obj.options
+            );
+        }else{
+            value = jsonResponse['message'];
+        }
+        var div = document.createElement('div');
+        div.classList.add('autoql-vanilla-chata-single-response');
+        div.appendChild(document.createTextNode(value));
+        messageBubble.appendChild(div);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.sendMessage = (textValue, source) => {
+        obj.input.disabled = true;
+        obj.input.value = '';
+        var responseLoadingContainer = obj.putMessage(textValue);
+
+        const URL_SAFETYNET = obj.options.authentication.demo
+          ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+            textValue
+          )}&projectId=1`
+          : `${obj.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
+            textValue
+          )}&key=${obj.options.authentication.apiKey}&customer_id=${obj.options.authentication.customerId}&user_id=${obj.options.authentication.userId}`
+
+
+        ChataUtils.safetynetCall(
+            URL_SAFETYNET, function(jsonResponse, statusCode){
+            var suggestions = {};
+            if(jsonResponse != undefined){
+                var suggestions = jsonResponse['full_suggestion']
+                || jsonResponse['data']['replacements'];
+            }
+            if(statusCode != 200){
+                obj.drawerContent.removeChild(responseLoadingContainer);
+                obj.input.removeAttribute("disabled");
+                obj.sendResponse(`
+                    Uh oh.. It looks like you don't have access
+                    to this resource. Please double check that all the
+                    required authentication fields are provided.`
+                )
+            }else if(suggestions.length > 0
+                && obj.options.autoQLConfig.enableQueryValidation
+                && textValue != 'None of these'){
+                obj.input.removeAttribute("disabled");
+                obj.drawerContent.removeChild(responseLoadingContainer);
+
+                var suggestionArray = createSuggestionArray(jsonResponse);
+                obj.putSafetynetMessage(suggestionArray);
+
+            }else{
+                ChataUtils.ajaxCall(textValue, function(jsonResponse, status){
+                    obj.input.removeAttribute("disabled");
+                    obj.drawerContent.removeChild(responseLoadingContainer);
+                    switch(jsonResponse['data']['display_type']){
+                        case 'suggestion':
+                            obj.putSuggestionResponse(
+                                jsonResponse, textValue
+                            );
+                        break;
+                        case 'table':
+                            if(jsonResponse['data']['columns'].length == 1){
+                                obj.putSimpleResponse(jsonResponse);
+                            }else{
+                                obj.putTableResponse(jsonResponse);
+                            }
+                        break;
+                        case 'data':
+                            var cols = jsonResponse['data']['columns'];
+                            var rows = jsonResponse['data']['rows'];
+                            if(cols.length == 1 && rows.length == 1){
+                                if(cols[0]['name'] == 'query_suggestion'){
+                                    obj.putSuggestionResponse(
+                                        jsonResponse, textValue
+                                    );
+                                }else if(cols[0]['name'] == 'Help Link'){
+                                    obj.putHelpMessage(jsonResponse);
+                                }else{
+                                    obj.putSimpleResponse(jsonResponse);
+                                }
+                            }else{
+                                if(rows.length > 0){
+                                    obj.putTableResponse(jsonResponse);
+                                }else{
+                                    obj.putSimpleResponse(jsonResponse);
+                                }
+                            }
+                        break;
+                        case 'compare_table':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'date_pivot':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'pivot_column':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'line':
+                            var component = obj.putTableResponse(jsonResponse);
+                            createLineChart(
+                                component, jsonResponse, pbj.options
+                            );
+                            pbj.refreshToolbarButtons(component, 'line');
+                        break;
+                        case 'bar':
+                            var component = obj.putTableResponse(jsonResponse);
+                            createBarChart(
+                                component, jsonResponse, pbj.options
+                            );
+                            pbj.refreshToolbarButtons(component, 'bar');
+                        break;
+                        case 'word_cloud':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'stacked_column':
+                            var component = obj.putTableResponse(jsonResponse);
+                            obj.refreshToolbarButtons(
+                                component, 'stacked_column'
+                            );
+                            createStackedColumnChart(
+                                component, cloneObject(jsonResponse),
+                                obj.options
+                            );
+                        break;
+                        case 'stacked_bar':
+                            var component = obj.putTableResponse(jsonResponse);
+                            obj.refreshToolbarButtons(
+                                component, 'stacked_bar'
+                            );
+                            createStackedBarChart(
+                                component,
+                                cloneObject(jsonResponse), obj.options
+                            );
+                        break;
+                        case 'bubble':
+                            var component = obj.putTableResponse(
+                                jsonResponse
+                            );
+                            var cols = jsonResponse['data']['columns'];
+                            createBubbleChart(
+                                component, jsonResponse, obj.options
+                            );
+                            obj.refreshToolbarButtons(component, 'bubble');
+                        break;
+                        case 'heatmap':
+                            var component = obj.putTableResponse(jsonResponse);
+                            createHeatmap(
+                                component, jsonResponse, obj.options
+                            );
+                            obj.refreshToolbarButtons(component, 'heatmap');
+                        break;
+                        case 'pie':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'column':
+                            var component = obj.putTableResponse(
+                                jsonResponse
+                            );
+                            createColumnChart(
+                                component, jsonResponse, obj.options
+                            );
+                            obj.refreshToolbarButtons(component, 'column');
+                        break;
+                        case 'help':
+                            obj.putHelpMessage(jsonResponse);
+                        break;
+                        default:
+                            // temporary
+                            jsonResponse['data'] =
+                            'Error: There was no data supplied for this table';
+                            obj.putSimpleResponse(jsonResponse);
+                    }
+                    obj.checkMaxMessages();
+                    refreshTooltips();
+                }, obj.options, source);
+            }
+        }, obj.options);
+    }
 
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
     return obj;

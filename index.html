@@ -870,11 +870,27 @@
         authentication: {
             demo: true
         },
+        autoQLConfig: {
+            debug: true
+        },
         placement: 'left',
         onMaskClick: function(datamessenger){
             datamessenger.closeDrawer();
         }
     })
+    // var datamessenger = new DataMessenger('#chata', {
+    //     authentication: {
+    //         demo: true
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     title: 'TEST',
+    //     placement: 'right',
+    //     onMaskClick: function(datamessenger){
+    //         datamessenger.closeDrawer();
+    //     }
+    // })
     var settingsList = new NotificationSettings([
         new SettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000')
     ])
