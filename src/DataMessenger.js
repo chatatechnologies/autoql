@@ -47,11 +47,11 @@ function DataMessenger(elem, options){
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
-        onVisibleChange: function() {},
-        onHandleClick: function(){},
+        onVisibleChange: function(datamessenger) {},
+        onHandleClick: function(datamessenger){},
         showMask: true,
         shiftScreen: false,
-        onMaskClick: function(){},
+        onMaskClick: function(datamessenger){},
         maskClosable: true,
         userDisplayName: 'there',
         maxMessages: -1,
@@ -122,7 +122,7 @@ function DataMessenger(elem, options){
         drawerButton.classList.add(obj.options.placement + '-btn');
         drawerButton.appendChild(drawerIcon);
         drawerButton.addEventListener('click', function(e){
-            obj.options.onHandleClick();
+            obj.options.onHandleClick(obj);
             obj.openDrawer();
         })
         document.body.appendChild(drawerButton);
@@ -196,7 +196,7 @@ function DataMessenger(elem, options){
             obj.drawerButton.style.display = 'none';
             obj.rootElem.style.transform = 'translateY(0)';
         }
-        obj.options.onVisibleChange();
+        obj.options.onVisibleChange(obj);
     }
 
     obj.closeDrawer = () => {
@@ -253,7 +253,7 @@ function DataMessenger(elem, options){
         if(obj.options.clearOnClose){
             obj.clearMessages();
         }
-        obj.options.onVisibleChange();
+        obj.options.onVisibleChange(obj);
     }
 
     obj.createWrapper = () => {
@@ -422,7 +422,6 @@ function DataMessenger(elem, options){
     }
 
     obj.autoCompleteHandler = (evt) => {
-        console.log('AUTOCOMPLETE');
         if(obj.options.autoQLConfig.enableAutocomplete){
             obj.autoCompleteList.style.display = 'none';
             clearTimeout(obj.autoCompleteTimer);
@@ -896,6 +895,239 @@ function DataMessenger(elem, options){
         return toolbar;
     }
 
+    obj.refreshToolbarButtons = (oldComponent, ignore) => {
+        var messageBubble = oldComponent.parentElement
+            .parentElement.parentElement;
+        if(messageBubble.classList.contains(
+            'autoql-vanilla-chata-response-content-container'
+        )){
+            messageBubble = messageBubble.parentElement;
+        }
+
+        var scrollBox = messageBubble.querySelector(
+            '.autoql-vanilla-chata-table-scrollbox'
+        );
+        var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
+        var toolbarRight = messageBubble.getElementsByClassName('right')[0];
+
+        if(oldComponent.noColumnsElement){
+            oldComponent.parentElement.removeChild(
+                oldComponent.noColumnsElement
+            );
+            oldComponent.noColumnsElement = null;
+        }
+
+        scrollBox.scrollLeft = 0;
+
+        var actionType = ['table', 'pivot_column', 'date_pivot'].includes(
+            ignore
+        ) ? 'csvCopy' : 'chart-view';
+
+        toolbarLeft.innerHTML = ''
+        var displayTypes = obj.getDisplayTypesButtons(
+            oldComponent.dataset.componentid, ignore
+        );
+
+        for (var i = 0; i < displayTypes.length; i++) {
+            toolbarLeft.appendChild(displayTypes[i]);
+        }
+
+        var newToolbarRight = obj.getActionToolbar(
+            oldComponent.dataset.componentid, actionType, ignore
+        );
+        messageBubble.replaceChild(newToolbarRight, toolbarRight);
+
+        refreshTooltips();
+    }
+
+    obj.getComponent = (request) => {
+        return obj.drawerContent.querySelector(
+            `[data-componentid='${request}']`
+        )
+    }
+
+    obj.getRequest = (id) => {
+        return ChataUtils.responses[id];
+    }
+
+    obj.displayTableHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'table');
+        createTable(json, component, obj.options);
+    }
+
+    obj.displayColumChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'column');
+        createColumnChart(component, json, obj.options);
+    }
+
+    obj.displayBarChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'bar');
+        createBarChart(component, json, obj.options);
+    }
+
+    obj.displayPieChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'pie');
+        createPieChart(component, json, obj.options);
+    }
+
+    obj.displayLineChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'line');
+        createLineChart(component, json, obj.options);
+    }
+
+    obj.displayPivotTableHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        var columns = json['data']['columns'];
+        let pivotArray;
+        obj.refreshToolbarButtons(component, 'pivot_column');
+        if(columns[0].type === 'DATE' && columns[0].name.includes('month')){
+            pivotArray = getDatePivotArray(
+                json, obj.options, json['data']['rows']
+            );
+        }else{
+            pivotArray = getPivotColumnArray(
+                json, obj.options, json['data']['rows']
+            );
+        }
+        createPivotTable(pivotArray, component, obj.options);
+    }
+
+    obj.displayHeatmapHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'heatmap');
+        createHeatmap(component, json, obj.options);
+    }
+
+    obj.displayBubbleCharthandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'bubble');
+        createBubbleChart(component, json, obj.options);
+    }
+
+    obj.displayStackedColumnHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_column');
+        createStackedColumnChart(
+            component, cloneObject(json), obj.options
+        );
+    }
+
+    obj.displayStackedBarHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_bar');
+        createStackedBarChart(
+            component, cloneObject(json), obj.options
+        );
+    }
+
+    obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
+        var button = htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-toolbar-btn"
+                data-tippy-content="${tooltip}"
+                data-id="${idRequest}">
+                ${svg}
+            </button>
+        `);
+
+        button.onclick = (evt) => {
+            onClick(evt, idRequest);
+        }
+
+        return button;
+    }
+
+    obj.getDisplayTypesButtons = (idRequest, ignore) => {
+        var json = ChataUtils.responses[idRequest];
+        var buttons = [];
+        var displayTypes = getSupportedDisplayTypes(json);
+        for (var i = 0; i < displayTypes.length; i++) {
+            let button;
+            if(displayTypes[i] == ignore)continue;
+            if(displayTypes[i] == 'table'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, TABLE_ICON, 'Table', obj.displayTableHandler
+                )
+            }
+            if(displayTypes[i] == 'column'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, COLUMN_CHART_ICON,
+                    'Column Chart', obj.displayColumChartHandler
+                );
+            }
+            if(displayTypes[i] == 'bar'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, BAR_CHART_ICON,
+                    'Bar Chart', obj.displayBarChartHandler
+                );
+            }
+            if(displayTypes[i] == 'pie'
+                && json['data']['columns'].length == 2){
+                button = obj.getDisplayTypeButton(
+                    idRequest, PIE_CHART_ICON,
+                    'Pie Chart', obj.displayPieChartHandler
+                );
+            }
+            if(displayTypes[i] == 'line'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, LINE_CHART_ICON,
+                    'Line Chart', obj.displayLineChartHandler
+                );
+            }
+            if(displayTypes[i] == 'pivot_column'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, PIVOT_ICON,
+                    'Pivot Table', obj.displayPivotTableHandler
+                );
+            }
+            if(displayTypes[i] == 'heatmap'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, HEATMAP_ICON,
+                    'Heatmap', obj.displayHeatmapHandler
+                );
+            }
+            if(displayTypes[i] == 'bubble'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, BUBBLE_CHART_ICON,
+                    'Bubble Chart', obj.displayBubbleCharthandler
+                );
+            }
+            if(displayTypes[i] == 'stacked_column'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, STACKED_COLUMN_CHART_ICON,
+                    'Stacked Column Chart', obj.displayStackedColumnHandler
+                );
+            }
+            if(displayTypes[i] == 'stacked_bar'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, STACKED_BAR_CHART_ICON,
+                    'Stacked Bar Chart', obj.displayStackedBarHandler
+                );
+            }
+
+            if(button){
+                buttons.push(button);
+            }
+        }
+
+        return buttons;
+    }
+
     obj.putMessage = (value) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
@@ -945,19 +1177,21 @@ function DataMessenger(elem, options){
         messageBubble.classList.add('full-width');
         var idRequest = uuidv4();
         ChataUtils.responses[idRequest] = jsonResponse;
-        var supportedDisplayTypes = ChataUtils.getSupportedDisplayTypes(
+        var supportedDisplayTypes = obj.getDisplayTypesButtons(
             idRequest, 'table'
         );
         var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
         var toolbar = '';
-        if(supportedDisplayTypes != ''){
-            toolbar += `
-            <div class="autoql-vanilla-chat-message-toolbar left">
-                ${supportedDisplayTypes}
-            </div>
-            `
+        if(supportedDisplayTypes.length > 0){
+            toolbar = htmlToElement(`
+                <div class="autoql-vanilla-chat-message-toolbar left">
+                </div>
+            `);
+            for (var i = 0; i < supportedDisplayTypes.length; i++) {
+                toolbar.appendChild(supportedDisplayTypes[i]);
+            }
         }
-        messageBubble.innerHTML = toolbar;
+        messageBubble.appendChild(toolbar);
         messageBubble.appendChild(actions);
         tableContainer.classList.add('chata-table-container');
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
@@ -1147,6 +1381,77 @@ function DataMessenger(elem, options){
         return table;
     }
 
+    obj.sendResponse = (text) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.textContent = text;
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.createSuggestions = function(responseContentContainer, data){
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement('div');
+            var button = document.createElement('button');
+            button.classList.add('autoql-vanilla-chata-suggestion-btn');
+            button.textContent = data[i][0];
+            div.appendChild(button);
+            responseContentContainer.appendChild(div);
+            if(i == data.length-1){
+                button.classList.add('none-of-these-btn');
+                button.onclick = (evt) => {
+                    var responseLoadingContainer = obj.putMessage(
+                        evt.target.textContent
+                    );
+                    var interval = setInterval(function(){
+                        obj.drawerContent.removeChild(
+                            responseLoadingContainer
+                        );
+                        obj.sendResponse('Thank you for your feedback.');
+                        clearInterval(interval);
+                    }, 1300);
+                }
+            }else{
+                button.onclick = (evt) => {
+                    obj.sendMessage(
+                        evt.target.textContent, 'data_messenger.suggestion'
+                    );
+                }
+            }
+        }
+    }
+
+    obj.putSuggestionResponse = (jsonResponse, query) => {
+        var data = jsonResponse['data']['rows'];
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-container'
+        );
+        responseContentContainer.innerHTML = `
+            <div>I'm not sure what you mean by <strong>"${query}"</strong>.
+            Did you mean:</div>
+        `;
+        obj.createSuggestions(responseContentContainer, data);
+        messageBubble.appendChild(responseContentContainer);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
     obj.putSimpleResponse = (jsonResponse) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
@@ -1156,7 +1461,6 @@ function DataMessenger(elem, options){
         containerMessage.classList.add('response');
         var idRequest = uuidv4();
         ChataUtils.responses[idRequest] = jsonResponse;
-        console.log(ChataUtils.responses);
         containerMessage.setAttribute('data-containerid', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         toolbarButtons = obj.getActionToolbar(
