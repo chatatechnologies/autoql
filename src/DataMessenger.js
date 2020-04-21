@@ -140,7 +140,7 @@ function DataMessenger(elem, options){
         obj.options.isVisible = true;
         obj.input.focus();
         if(obj.options.enableExploreQueriesTab){
-            // obj.queryTabs.style.visibility = 'visible';
+            obj.queryTabs.style.visibility = 'visible';
         }
         var body = document.body;
         if(obj.options.showMask){
@@ -206,7 +206,7 @@ function DataMessenger(elem, options){
         obj.options.isVisible = false;
         obj.wrapper.style.opacity = 0;
         obj.wrapper.style.height = 0;
-        // obj.queryTabs.style.visibility = 'hidden';
+        obj.queryTabs.style.visibility = 'hidden';
         var body = document.body;
 
         if(obj.options.placement == 'right'){
@@ -282,8 +282,13 @@ function DataMessenger(elem, options){
             obj.createHeader();
             obj.createDrawerContent();
             obj.createBar();
+            obj.createResizeHandler();
+            obj.createQueryTabs();
+            obj.createQueryTips();
+
             obj.openDrawer();
             obj.closeDrawer();
+
             refreshTooltips();
 
             var isVisible = obj.options.isVisible;
@@ -304,6 +309,222 @@ function DataMessenger(elem, options){
                 }
             });
         }
+    }
+
+    obj.tabsAnimation = function(displayNodes, displayBar){
+        var nodes = obj.drawerContent.childNodes;
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].style.display = displayNodes;
+        }
+        obj.chataBarContainer.style.display = displayBar;
+        if(displayNodes == 'none'){
+            obj.headerTitle.innerHTML = 'Explore Queries';
+            obj.headerRight.style.visibility = 'hidden';
+        }else{
+            obj.headerTitle.innerHTML = obj.options.title;
+            obj.headerRight.style.visibility = 'visible';
+        }
+    }
+
+    obj.queryTipsAnimation = function(display){
+        obj.queryTips.style.display = display;
+    }
+
+    obj.createQueryTabs = function(){
+        var orientation = obj.options.placement;
+        var pageSwitcherShadowContainer = document.createElement('div');
+        var pageSwitcherContainer = document.createElement('div');
+        var tabChataUtils = document.createElement('div');
+        var tabQueryTips = document.createElement('div');
+
+        var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
+        var queryTabsIcon = htmlToElement(QUERY_TIPS);
+
+        pageSwitcherShadowContainer.classList.add(
+            'autoql-vanilla-page-switcher-shadow-container'
+        );
+        pageSwitcherShadowContainer.classList.add(orientation);
+
+        pageSwitcherContainer.classList.add(
+            'autoql-vanilla-page-switcher-container'
+        );
+        pageSwitcherContainer.classList.add(orientation);
+
+        pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
+
+        tabChataUtils.classList.add('tab');
+        tabChataUtils.classList.add('active');
+        tabChataUtils.setAttribute('data-tippy-content', 'Data Messenger');
+        tabQueryTips.classList.add('tab');
+        tabQueryTips.setAttribute('data-tippy-content', 'Explore Queries');
+
+        tabChataUtils.appendChild(dataMessengerIcon);
+        tabQueryTips.appendChild(queryTabsIcon);
+
+        pageSwitcherContainer.appendChild(tabChataUtils)
+        pageSwitcherContainer.appendChild(tabQueryTips)
+
+
+        tabChataUtils.onclick = function(event){
+            tabChataUtils.classList.add('active');
+            tabQueryTips.classList.remove('active');
+            obj.tabsAnimation('flex', 'block');
+            obj.queryTipsAnimation('none');
+        }
+        tabQueryTips.onclick = function(event){
+            tabQueryTips.classList.add('active');
+            tabChataUtils.classList.remove('active');
+            obj.tabsAnimation('none', 'none');
+            obj.queryTipsAnimation('block');
+
+        }
+
+        var tabs = pageSwitcherShadowContainer;
+        obj.rootElem.appendChild(tabs);
+        obj.queryTabs = tabs;
+        obj.queryTabsContainer = pageSwitcherContainer;
+        refreshTooltips();
+    }
+
+    obj.createQueryTips = function(){
+        const searchIcon = htmlToElement(SEARCH_ICON);
+        var container = document.createElement('div');
+        var textBar = document.createElement('div');
+        var queryTipsResultContainer = document.createElement('div');
+        var queryTipsResultPlaceHolder = document.createElement('div');
+        var chatBarInputIcon = document.createElement('div');
+
+        var input = document.createElement('input');
+
+        textBar.classList.add('autoql-vanilla-text-bar');
+        textBar.classList.add('autoql-vanilla-text-bar-animation');
+        chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
+        queryTipsResultContainer.classList.add(
+            'autoql-vanilla-query-tips-result-container'
+        );
+        queryTipsResultPlaceHolder.classList.add(
+            'query-tips-result-placeholder'
+        );
+        queryTipsResultPlaceHolder.innerHTML = `
+            <p>
+                Discover what you can ask by entering
+                a topic in the search bar above.
+            <p>
+            <p>
+                Simply click on any of the returned options
+                to run the query in Data Messenger.
+            <p>
+        `;
+
+        queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
+        chatBarInputIcon.appendChild(searchIcon);
+        textBar.appendChild(input);
+        textBar.appendChild(chatBarInputIcon);
+        container.appendChild(textBar);
+        container.appendChild(queryTipsResultContainer);
+
+        input.onkeypress = function(event){
+
+            if(event.keyCode == 13 && this.value){
+
+                var chatBarLoadingSpinner = document.createElement('div');
+                var searchVal = this.value;
+                var spinnerLoader = document.createElement('div');
+                spinnerLoader.classList.add('autoql-vanilla-spinner-loader');
+                chatBarLoadingSpinner.classList.add(
+                    'chat-bar-loading-spinner'
+                );
+                chatBarLoadingSpinner.appendChild(spinnerLoader);
+                textBar.appendChild(chatBarLoadingSpinner);
+                var options = obj.options;
+                const URL = obj.getRelatedQueriesPath(
+                    1, searchVal, obj.options
+                );
+
+                ChataUtils.safetynetCall(URL, function(response, s){
+                    textBar.removeChild(chatBarLoadingSpinner);
+                    obj.putRelatedQueries(
+                        response, queryTipsResultContainer,
+                        container, searchVal
+                    );
+                }, obj.options);
+            }
+        }
+
+        container.style.display = 'none';
+
+        input.classList.add('autoql-vanilla-chata-input')
+        input.classList.add('left-padding')
+        input.setAttribute('placeholder', 'Search relevant queries by topic');
+        obj.queryTips = container;
+        obj.drawerContent.appendChild(container);
+    }
+
+    ChataUtils.getRelatedQueriesPath = function(page, searchVal, options){
+        const url = options.authentication.demo
+          ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
+          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
+          return url;
+    }
+
+    obj.createResizeHandler = function(){
+        var resize = document.createElement('div');
+        var startX, startY, startWidth, startHeight;
+        resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
+        resize.classList.add(obj.options.placement);
+
+        function resizeItem(e) {
+            let newWidth;
+            let newHeight;
+            switch (obj.options.placement) {
+                case 'left':
+                    newWidth = (startWidth + e.clientX - startX);
+                    break;
+                case 'right':
+                    newWidth = (startWidth + startX - e.clientX);
+                    break;
+                case 'top':
+                    newHeight = (startHeight + e.clientY - startY);
+                    break;
+                case 'bottom':
+                    newHeight = (startHeight + startY - e.clientY);
+                    break;
+                default:
+
+            }
+            if(['left', 'right'].includes(obj.options.placement)){
+                obj.rootElem.style.width = newWidth + 'px';
+                obj.options.width = newWidth;
+            }else{
+                obj.rootElem.style.height = newHeight + 'px';
+                obj.options.height = newHeight;
+            }
+        }
+
+        function stopResize(e) {
+            window.removeEventListener('mousemove', resizeItem, false);
+            window.removeEventListener('mouseup', stopResize, false);
+        }
+
+        function initResize(e){
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = parseInt(
+                document.defaultView.getComputedStyle(
+                    obj.rootElem
+                ).width,10);
+            startHeight = parseInt(
+                document.defaultView.getComputedStyle(
+                    obj.rootElem
+                ).height, 10);
+            window.addEventListener('mousemove', resizeItem, false);
+            window.addEventListener('mouseup', stopResize, false);
+        }
+
+        resize.addEventListener('mousedown', initResize, false);
+
+        obj.rootElem.appendChild(resize);
+        obj.resizeHandler = resize;
     }
 
     obj.createDrawerContent = () => {
@@ -373,17 +594,10 @@ function DataMessenger(elem, options){
                 </div>
             </div>
         `)
-        headerLeft.appendChild(closeButton);
-        headerRight.appendChild(clearAllButton);
-        headerRight.appendChild(popover);
         chatHeaderContainer.classList.add(
             'autoql-vanilla-chat-header-container'
         );
-        chatHeaderContainer.appendChild(headerLeft);
-        chatHeaderContainer.appendChild(headerTitle);
-        chatHeaderContainer.appendChild(headerRight);
 
-        obj.rootElem.appendChild(chatHeaderContainer);
         closeButton.onclick = (evt) => {
             obj.closeDrawer();
         }
@@ -403,6 +617,17 @@ function DataMessenger(elem, options){
                 }
             }
         })
+
+        headerLeft.appendChild(closeButton);
+        headerRight.appendChild(clearAllButton);
+        headerRight.appendChild(popover);
+
+        chatHeaderContainer.appendChild(headerLeft);
+        chatHeaderContainer.appendChild(headerTitle);
+        chatHeaderContainer.appendChild(headerRight);
+        obj.rootElem.appendChild(chatHeaderContainer);
+        obj.headerRight = headerRight;
+        obj.headerTitle = headerTitle;
     }
 
     obj.closePopOver = (popover) => {
@@ -1181,7 +1406,7 @@ function DataMessenger(elem, options){
             idRequest, 'table'
         );
         var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
-        var toolbar = '';
+        var toolbar = undefined;
         if(supportedDisplayTypes.length > 0){
             toolbar = htmlToElement(`
                 <div class="autoql-vanilla-chat-message-toolbar left">
@@ -1191,7 +1416,9 @@ function DataMessenger(elem, options){
                 toolbar.appendChild(supportedDisplayTypes[i]);
             }
         }
-        messageBubble.appendChild(toolbar);
+        if(toolbar){
+            messageBubble.appendChild(toolbar);
+        }
         messageBubble.appendChild(actions);
         tableContainer.classList.add('chata-table-container');
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
@@ -1483,6 +1710,58 @@ function DataMessenger(elem, options){
         div.classList.add('autoql-vanilla-chata-single-response');
         div.appendChild(document.createTextNode(value));
         messageBubble.appendChild(div);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.putSafetynetMessage = function(suggestionArray){
+        var div = document.createElement('div');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+
+        messageBubble.append(createSafetynetContent(suggestionArray, obj));
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        updateSelectWidth(containerMessage)
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.createHelpContent = function(link){
+        return `
+        Great news, I can help with that:
+        <br/>
+        <button
+            onclick="window.open('${link}', '_blank')"
+            class="autoql-vanilla-chata-help-link-btn">
+            ${HELP_ICON}
+            Bar chart 2
+        </button>
+        `;
+    }
+
+    obj.putHelpMessage = function(jsonResponse){
+        var div = document.createElement('div');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+
+        messageBubble.innerHTML = obj.createHelpContent(
+            jsonResponse['data']['rows'][0]
+        );
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;

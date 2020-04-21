@@ -1,4 +1,4 @@
-function getQueryOutput(options={}){
+function QueryOutput(options={}){
     var responseRenderer = document.createElement('div');
     responseRenderer.options = {
         supportsSuggestions: true,

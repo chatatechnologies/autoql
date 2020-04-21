@@ -1,4 +1,4 @@
-function getQueryInput(options){
+function QueryInput(options){
 
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
@@ -145,7 +145,7 @@ function getQueryInput(options){
                     parent.removeChild(responseLoadingContainer);
                 }
                 var suggestionArray = createSuggestionArray(jsonResponse);
-                var node = createSafetynetContent(suggestionArray, 'ChatBar');
+                var node = createSafetynetContent(suggestionArray, responseRenderer);
                 responseRenderer.appendChild(node);
                 chataBarContainer.options.onResponseCallback();
                 ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;

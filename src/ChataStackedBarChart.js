@@ -83,7 +83,7 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')

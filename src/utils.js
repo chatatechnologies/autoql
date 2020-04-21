@@ -166,7 +166,7 @@ function getSafetynetValues(node){
     return words;
 }
 
-function runQuery(event, context){
+function runQuery(event, objContext){
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement.parentElement;
     }else if(event.target.tagName == 'path'){
@@ -175,14 +175,19 @@ function runQuery(event, context){
         var node = event.target.parentElement;
     }
     var words = getSafetynetValues(node);
-    if(context == 'ChataUtils'){
-        ChataUtils.sendMessage(
-            document.getElementById('chata-input'), words.join(' ')
-        );
-    }else{
-        node.parentElement.chataBarContainer.sendMessageToResponseRenderer(
-            words.join(' ')
-        );
+    switch (objContext.constructor) {
+        case DataMessenger:
+            objContext.sendMessage(
+                words.join(' '),
+                'data_messenger.validation'
+            );
+            break;
+        case QueryOutput:
+            node.parentElement.chataBarContainer.sendMessageToResponseRenderer(
+                words.join(' ')
+            );
+        default:
+        ;
     }
 }
 

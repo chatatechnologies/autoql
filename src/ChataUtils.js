@@ -168,11 +168,11 @@ ChataUtils.init = function(elem, options, registerEventsFlag=true){
 }
 
 ChataUtils.getQueryInput = function(options={}){
-    return getQueryInput(options);
+    return QueryInput(options);
 }
 
 ChataUtils.getQueryOutput = function(options){
-    return getQueryOutput(options);
+    return QueryOutput(options);
 }
 
 ChataUtils.createQueryTips = function(){
@@ -1829,9 +1829,12 @@ ChataUtils.createHelpContent = function(link){
     return `
     Great news, I can help with that:
     <br/>
-    <button onclick="window.open('${link}', '_blank')" class="autoql-vanilla-chata-help-link-btn">
-    ${HELP_ICON}
-    Bar chart 2</button>
+    <button
+        onclick="window.open('${link}', '_blank')"
+        class="autoql-vanilla-chata-help-link-btn">
+        ${HELP_ICON}
+        Bar chart 2
+    </button>
     `;
 }
 

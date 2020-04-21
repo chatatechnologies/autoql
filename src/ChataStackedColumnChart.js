@@ -33,7 +33,8 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
 
     if(fromChataUtils){
         if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
-            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+
             if(height < 250){
                 height = 300;
             }
@@ -83,7 +84,7 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
     svg.append('text')
