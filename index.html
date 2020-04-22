@@ -550,7 +550,7 @@
                     <h6 class="">Test Mode (Provides extra logging on the server side)</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" checked name="testMode">
+                            <input type="checkbox" checked name="test">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -879,7 +879,8 @@
             console.log(DataMessenger.name);
             console.log(QueryOutput.name);
         },
-        width: 650
+        resizable: true,
+        width: 550
     })
     // var datamessenger = new DataMessenger('#chata', {
     //     authentication: {
@@ -1014,7 +1015,13 @@
                     {tag: '#C06C84'},
                     {tag: '#F67280'},
                     {tag: '#F8B195'},
-                ]
+                ],
+                onChipAdd: function(obj){
+                    console.log(instances.chipsData);
+                },
+                onChipDelete: function() {
+                    console.log(instances.chipsData);
+                }
             });
         });
 
@@ -1037,6 +1044,18 @@
         var enableExploreQueriesTab = document.querySelector('[name="enableExploreQueriesTab"]')
         var enableColumnVisibilityManager = document.querySelector('[name="enableColumnVisibilityManager"]')
         var titleColor = document.querySelector('[name="titleColor"]')
+        var comparisonDisplay = document.querySelector('[name="comparisonDisplay"]')
+        var test = document.querySelector('[name="test"]')
+
+        test.onchange = (evt) => {
+            datamessenger.setOption('autoQLConfig', {
+                test: event.target.checked
+            });
+        }
+
+        comparisonDisplay.onchange = (evt) => {
+            datamessenger.setOption('comparisonDisplay', evt.target.checked);
+        }
 
         dashboardTab.style.display = 'none';
 
@@ -1055,10 +1074,14 @@
 
         enableExploreQueriesTab.onchange = function(event){
             ChataUtils.options.enableExploreQueriesTab = event.target.checked
+            datamessenger.setOption('enableExploreQueriesTab', event.target.checked);
         }
 
         enableColumnVisibilityManager.onchange = function(event){
             ChataUtils.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
+            datamessenger.setOption('autoQLConfig', {
+                enableColumnVisibilityManager: event.target.checked
+            });
         }
 
         logout.onclick = (evt) => {
@@ -1067,6 +1090,13 @@
             ChataUtils.options.authentication.userId = '';
             ChataUtils.options.authentication.domain = '';
             ChataUtils.options.authentication.token = '';
+            datamessenger.setOption('authentication', {
+                apiKey: '',
+                customerId: '',
+                userId: '',
+                domain: '',
+                token: '',
+            })
             alert('Successfully logged out');
         }
 
@@ -1085,7 +1115,12 @@
             queryInput.options.authentication.customerId = customerId.value;
             queryInput.options.authentication.userId = userId.value;
             queryInput.options.authentication.domain = domain.value;
-
+            datamessenger.setOption('authentication', {
+                apiKey: apiKey.value,
+                customerId: customerId.value,
+                userId: userId.value,
+                domain: domain.value,
+            })
 
             login.style.display = 'none';
             var xhr = new XMLHttpRequest();
@@ -1140,7 +1175,9 @@
                                 var token = xhr2.responseText;
                                 ChataUtils.options.authentication.token = token;
                                 queryInput.options.authentication.token = token;
-
+                                datamessenger.setOption('authentication', {
+                                    token: token
+                                })
                                 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey.value}`;
                                 var xhrDasboard = new XMLHttpRequest();
                                 xhrDasboard.open('GET', DASHBOARD_URL);
@@ -1198,6 +1235,7 @@
 
         showHandle.onchange = function(event){
             ChataUtils.options.showHandle = event.target.checked;
+            datamessenger.setOption('showHandle', event.target.checked);
             if(event.target.checked){
                 if(ChataUtils.options.isVisible){
                     ChataUtils.drawerButton.style.display = 'none';
@@ -1211,10 +1249,12 @@
 
         shiftScreen.onchange = function(event){
             ChataUtils.options.shiftScreen = event.target.checked;
+            datamessenger.setOption('shiftScreen', event.target.checked);
         }
 
         showMask.onchange = function(event){
             ChataUtils.options.showMask = event.target.checked;
+            datamessenger.setOption('showMask', event.target.checked);
             if(event.target.checked){
                 if(ChataUtils.options.isVisible){
                     ChataUtils.wrapper.style.opacity = .3;
@@ -1231,55 +1271,69 @@
 
         for (var i = 0; i < theme.length; i++) {
             theme[i].onchange = function(event){
-                const themeStyles = event.target.id === 'light' ? LIGHT_THEME : DARK_THEME;
-                for (let property in themeStyles) {
-                    document.documentElement.style.setProperty(
-                        property,
-                        themeStyles[property],
-                    );
-                }
+                // const themeStyles = event.target.id === 'light' ? LIGHT_THEME : DARK_THEME;
+                // for (let property in themeStyles) {
+                //     document.documentElement.style.setProperty(
+                //         property,
+                //         themeStyles[property],
+                //     );
+                // }
+                datamessenger.setOption('themeConfig', {
+                    theme: event.target.id
+                })
                 ChataUtils.options.theme = event.target.id;
             }
         }
 
         enableAutocomplete.onchange = function(event){
             ChataUtils.options.autoQLConfig.enableAutocomplete = event.target.checked;
+            datamessenger.setOption('enableAutocomplete', event.target.checked);
         }
 
         enableQueryValidation.onchange = function(event){
             ChataUtils.options.autoQLConfig.enableQueryValidation = event.target.checked;
+            datamessenger.setOption('enableQueryValidation', event.target.checked);
         }
 
         enableDrilldowns.onchange = function(event){
             ChataUtils.options.autoQLConfig.enableDrilldowns = event.target.checked;
             console.log(ChataUtils.options.enableDrilldowns);
+            datamessenger.setOption('enableDrilldowns', event.target.checked);
         }
 
         enableVoiceRecord.onchange = function(event){
-            ChataUtils.options.autoQLConfig.enableVoiceRecord = event.target.checked;
+            ChataUtils.options.enableVoiceRecord = event.target.checked;
             var display = ChataUtils.options.enableVoiceRecord ? 'block' : 'none';
             var voiceButton = document.getElementById('chata-voice-record-button');
             voiceButton.style.display = display;
+            datamessenger.setOption('enableVoiceRecord', event.target.checked);
         }
 
         debug.onchange = function(event){
             ChataUtils.options.autoQLConfig.debug = event.target.checked;
+            datamessenger.setOption('autoQLConfig', {
+                debug: event.target.checked
+            });
+
         }
 
         clearOnClose.onchange = function(event){
             ChataUtils.options.clearOnClose = event.target.checked;
+            datamessenger.setOption('clearOnClose', event.target.checked);
+
         }
         for (var i = 0; i < placement.length; i++) {
             placement[i].onchange = function(event){
-                ChataUtils.rootElem.removeAttribute('style');
-
-                ChataUtils.drawerButton.classList.remove(ChataUtils.options.placement + '-btn');
-                ChataUtils.queryTabs.classList.remove(ChataUtils.options.placement);
-                ChataUtils.queryTabsContainer.classList.remove(ChataUtils.options.placement);
-                ChataUtils.options.placement = event.target.value;
-                ChataUtils.drawerButton.classList.add(ChataUtils.options.placement + '-btn');
-                ChataUtils.queryTabs.classList.add(ChataUtils.options.placement);
-                ChataUtils.queryTabsContainer.classList.add(ChataUtils.options.placement);
+                // ChataUtils.rootElem.removeAttribute('style');
+                //
+                // ChataUtils.drawerButton.classList.remove(ChataUtils.options.placement + '-btn');
+                // ChataUtils.queryTabs.classList.remove(ChataUtils.options.placement);
+                // ChataUtils.queryTabsContainer.classList.remove(ChataUtils.options.placement);
+                // ChataUtils.options.placement = event.target.value;
+                // ChataUtils.drawerButton.classList.add(ChataUtils.options.placement + '-btn');
+                // ChataUtils.queryTabs.classList.add(ChataUtils.options.placement);
+                // ChataUtils.queryTabsContainer.classList.add(ChataUtils.options.placement);
+                datamessenger.setOption('placement', event.target.value);
             }
         }
 
@@ -1314,8 +1368,12 @@
                     if(subKey){
                         console.log(subKey);
                         ChataUtils.options[subKey][propsEls[i].name] = propsEls[i].value;
+                        var _obj = {}
+                        _obj[propsEls[i].name] = propsEls[i].value
+                        datamessenger.setOption(subKey, _obj);
                     }else{
                         ChataUtils.options[propsEls[i].name] = propsEls[i].value;
+                        datamessenger.setOption(propsEls[i].name, propsEls[i].value)
                     }
                 }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
                     ChataUtils.options.introMessage = "Hi " + ChataUtils.options.userDisplayName+ " I'm  here to help you access, search and analyze your data.";
@@ -1442,6 +1500,9 @@
         demo.onchange = function(event){
             ChataUtils.options.authentication.demo = event.target.checked;
             queryInput.options.authentication.demo = event.target.checked;
+            datamessenger.setOption('authentication', {
+                demo: event.target.checked
+            })
             // dashboard.options.authentication.demo = event.target.checked;
             var loginSection = document.getElementById('login-section');
             if(!ChataUtils.options.authentication.demo){

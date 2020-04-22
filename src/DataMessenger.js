@@ -109,6 +109,128 @@ function DataMessenger(elem, options){
     obj.rootElem = rootElem;
     rootElem.classList.add('autoql-vanilla-chata-drawer');
 
+    obj.setOption = (option, value) => {
+        switch (option) {
+            case 'authentication':
+                obj.setObjectProp('authentication', value);
+                break;
+            case 'dataFormatting':
+                obj.setObjectProp('dataFormatting', value);
+                break;
+            case 'autoQLConfig':
+                obj.setObjectProp('autoQLConfig', value);
+                break;
+            case 'themeConfig':
+                obj.setObjectProp('themeConfig', value);
+                obj.applyStyles();
+                break;
+            case 'isVisible':
+                if(!value)obj.closeDrawer();
+                else obj.openDrawer();
+                break;
+            case 'placement':
+                obj.rootElem.removeAttribute('style');
+                obj.drawerButton.classList.remove(
+                    obj.options.placement + '-btn'
+                );
+                obj.queryTabs.classList.remove(obj.options.placement);
+                obj.queryTabsContainer.classList.remove(obj.options.placement);
+                obj.resizeHandler.classList.remove(obj.options.placement);
+                obj.options.placement = value;
+
+                obj.drawerButton.classList.add(
+                    obj.options.placement + '-btn'
+                );
+                obj.queryTabs.classList.add(obj.options.placement);
+                obj.queryTabsContainer.classList.add(obj.options.placement);
+                obj.resizeHandler.classList.add(obj.options.placement);
+                obj.openDrawer();
+                obj.closeDrawer();
+                break;
+            case 'width':
+                obj.options.width = parseInt(value);
+                if(obj.options.isVisible &&
+                    ['left', 'right'].includes(obj.options.placement)){
+                    obj.rootElem.style.width = value;
+                }
+                break;
+            case 'height':
+                obj.options.height = parseInt(value);
+                if(obj.options.isVisible &&
+                    ['top', 'bottom'].includes(obj.options.placement)){
+                    obj.rootElem.style.height = value;
+                }
+                break;
+            case 'resizable':
+                obj.options.resizable = value;
+                if(!value) obj.resizeHandler.style.visibility = 'hidden';
+                else obj.resizeHandler.style.visibility = 'visible';
+                break;
+            case 'title':
+                obj.options.title = value;
+                obj.headerTitle.innerHTML = obj.options.title;
+                break;
+            case 'showHandle':
+                obj.options.showHandle = value;
+                if(value && !obj.options.isVisible){
+                    obj.drawerButton.style.display = 'flex';
+                }
+                else obj.drawerButton.style.display = 'none';
+                break;
+            case 'handleStyles':
+                obj.applyHandleStyles();
+                break;
+            case 'showMask':
+                obj.options.showMask = value;
+                if(value){
+                    if(obj.options.isVisible){
+                        obj.wrapper.style.opacity = .3;
+                        obj.wrapper.style.height = '100%';
+                    }else{
+                        obj.wrapper.style.opacity = 0;
+                        obj.wrapper.style.height = 0;
+                    }
+                }else{
+                    obj.wrapper.style.opacity = 0;
+                    obj.wrapper.style.height = 0;
+                }
+                break;
+            case 'maxMessages':
+                obj.options.maxMessages = value;
+                obj.checkMaxMessages();
+                break;
+            case 'enableVoiceRecord':
+                obj.options.autoQLConfig.enableVoiceRecord = value;
+                var display = value ? 'block' : 'none';
+                obj.voiceRecordButton.style.display = display;
+                break;
+            case 'enableExploreQueriesTab':
+                obj.options.enableExploreQueriesTab = value;
+                if(value && obj.options.isVisible){
+                    obj.queryTabs.style.visibility = 'visible';
+                }else obj.queryTabs.style.visibility = 'hidden';
+                break;
+            case 'inputPlaceholder':
+                obj.options.inputPlaceholder = value;
+                obj.input.setAttribute('placeholder', value);
+            default:
+                obj.options[option] = value;
+        }
+    }
+
+    obj.setObjectProp = (key, _obj) => {
+        console.log(typeof _obj);
+        for (var [keyValue, value] of Object.entries(_obj)) {
+            obj.options[key][keyValue] = value;
+        }
+    }
+
+    obj.applyHandleStyles = () => {
+        for (var [key, value] of Object.entries(obj.options.handleStyles)){
+            obj.drawerButton.style.setProperty(key, value, '');
+        }
+    }
+
     obj.createDrawerButton = () => {
         var drawerButton = document.createElement("div");
         var drawerIcon = document.createElement("div");
@@ -130,13 +252,12 @@ function DataMessenger(elem, options){
         if(!obj.options.showHandle){
             obj.drawerButton.style.display = 'none';
         }
-        for (var [key, value] of Object.entries(obj.options.handleStyles)){
-            obj.drawerButton.style.setProperty(key, value, '');
-        }
+        obj.applyHandleStyles();
     }
 
     obj.openDrawer = () => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
+        console.log(obj.options.shiftScreen);
         obj.options.isVisible = true;
         obj.input.focus();
         if(obj.options.enableExploreQueriesTab){
@@ -253,6 +374,8 @@ function DataMessenger(elem, options){
         if(obj.options.clearOnClose){
             obj.clearMessages();
         }
+        body.removeAttribute('style');
+
         obj.options.onVisibleChange(obj);
     }
 
@@ -512,7 +635,7 @@ function DataMessenger(elem, options){
             startWidth = parseInt(
                 document.defaultView.getComputedStyle(
                     obj.rootElem
-                ).width,10);
+                ).width, 10);
             startHeight = parseInt(
                 document.defaultView.getComputedStyle(
                     obj.rootElem
@@ -525,6 +648,9 @@ function DataMessenger(elem, options){
 
         obj.rootElem.appendChild(resize);
         obj.resizeHandler = resize;
+        if(!obj.options.resizable){
+            obj.resizeHandler.style.visibility = 'hidden';
+        }
     }
 
     obj.createDrawerContent = () => {
@@ -731,7 +857,6 @@ function DataMessenger(elem, options){
     obj.applyStyles = () => {
         const themeStyles = obj.options.themeConfig.theme === 'light'
         ? LIGHT_THEME : DARK_THEME
-
         if(options.themeConfig){
             if ('accentColor' in options.themeConfig){
                 themeStyles['--chata-drawer-accent-color']
