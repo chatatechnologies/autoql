@@ -118,7 +118,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         if(d.length < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d.toString().slice(0, 18);
         }
     }))
     .padding(0.01);

@@ -506,6 +506,8 @@ function DataMessenger(elem, options){
         obj.rootElem.appendChild(tabs);
         obj.queryTabs = tabs;
         obj.queryTabsContainer = pageSwitcherContainer;
+        obj.tabChataUtils = tabChataUtils;
+        obj.tabQueryTips = tabQueryTips;
         refreshTooltips();
     }
 
@@ -583,7 +585,218 @@ function DataMessenger(elem, options){
         obj.drawerContent.appendChild(container);
     }
 
-    ChataUtils.getRelatedQueriesPath = function(page, searchVal, options){
+    obj.putRelatedQueries = (
+        response, queryTipsResultContainer, container, searchVal) => {
+        var delay = 0.08;
+        var list = response.data.items;
+        var queryTipListContainer = document.createElement('div');
+        var paginationContainer = document.createElement('div');
+        var pagination = document.createElement('ul');
+        var paginationPrevious = document.createElement('li');
+        var aPrevious = document.createElement('a');
+        var aNext = document.createElement('a');
+        var paginationNext = document.createElement('li');
+        var options = obj.options
+        var nextPath = response.data.pagination.next_url;
+        var previousPath = response.data.pagination.previous_url;
+        var nextUrl = `${options.authentication.domain}${nextPath}`;
+        var previousUrl = `${options.authentication.domain}${previousPath}`;
+
+
+        const pageSize = response.data.pagination.page_size;
+        const totalItems = response.data.pagination.total_items;
+        const pages = response.data.pagination.total_pages;
+        const currentPage = response.data.pagination.current_page;
+        aPrevious.textContent = '←';
+        aNext.textContent = '→';
+
+        paginationContainer.classList.add('autoql-vanilla-chata-paginate');
+        paginationContainer.classList.add('animated-item');
+        paginationContainer.classList.add('pagination');
+        paginationPrevious.classList.add('pagination-previous');
+        paginationNext.classList.add('pagination-next');
+        paginationPrevious.appendChild(aPrevious);
+        paginationNext.appendChild(aNext);
+
+        pagination.appendChild(paginationPrevious);
+
+        queryTipListContainer.classList.add('query-tip-list-container');
+
+        if(!nextPath){
+            paginationNext.classList.add('disabled');
+        }
+
+        if(!previousPath){
+            paginationPrevious.classList.add('disabled');
+        }
+
+        paginationNext.onclick = (evt) => {
+            if(!evt.target.classList.contains('disabled')){
+                ChataUtils.safetynetCall(nextUrl, function(response, s){
+                    obj.putRelatedQueries(
+                        response, queryTipsResultContainer, container, searchVal
+                    );
+                }, obj.options);
+            }
+        }
+
+        paginationPrevious.onclick = (evt) => {
+            if(!evt.target.classList.contains('disabled')){
+                ChataUtils.safetynetCall(previousUrl, function(response, s){
+                    obj.putRelatedQueries(
+                        response, queryTipsResultContainer, container, searchVal
+                    );
+                }, obj.options);
+            }
+        }
+
+        const dotEvent = (evt) => {
+            var page = evt.target.dataset.page;
+            var path = obj.getRelatedQueriesPath(
+                page, searchVal, obj.options
+            );
+            ChataUtils.safetynetCall(path, function(response, s){
+                obj.putRelatedQueries(
+                    response, queryTipsResultContainer,
+                    container, searchVal
+                );
+            }, obj.options);
+        }
+
+        for (var i = 0; i < list.length; i++) {
+            var item = document.createElement('div');
+            item.classList.add('animated-item');
+            item.classList.add('query-tip-item');
+            item.innerHTML = list[i];
+            item.style.animationDelay = (delay * i) + 's';
+            item.onclick = function(event){
+                chataInput = obj.input;
+                obj.tabChataUtils.classList.add('active');
+                obj.tabQueryTips.classList.remove('active');
+                obj.tabsAnimation('flex', 'block');
+                obj.queryTipsAnimation('none');
+                chataInput.focus();
+                var selectedQuery = event.target.textContent;
+                var subQuery = '';
+                var index = 0;
+                var int = setInterval(function () {
+                    subQuery += selectedQuery[index];
+                    if(index >= selectedQuery.length){
+                        clearInterval(int);
+                        var ev = new KeyboardEvent('keypress', {
+                            keyCode: 13,
+                            type: "keypress",
+                            which: 13
+                        });
+                        chataInput.dispatchEvent(ev)
+                    }else{
+                        chataInput.value = subQuery;
+                    }
+                    index++;
+                }, 85);
+
+            }
+            queryTipListContainer.appendChild(item);
+        }
+        queryTipsResultContainer.innerHTML = '';
+        queryTipsResultContainer.appendChild(queryTipListContainer);
+        // var totalPages = pages > 5 ? 5 : pages;
+        for (var i = 0; i < 3; i++) {
+            if(i >= pages)break;
+            var li = document.createElement('li')
+            var a = document.createElement('a')
+
+            if(i == currentPage-1){
+                li.classList.add('selected')
+            }
+            li.appendChild(a)
+            pagination.appendChild(li);
+
+            if(i == 2){
+                if(currentPage == 3){
+                    a.textContent = currentPage;
+                    var rightDots = document.createElement('li');
+                    var aDots = document.createElement('a');
+                    aDots.textContent = '...';
+                    rightDots.appendChild(aDots);
+                    pagination.appendChild(rightDots);
+                    aDots.setAttribute('data-page', currentPage+1);
+                    rightDots.onclick = dotEvent;
+                }else if(currentPage > 3 && currentPage <= pages-2){
+                    a.textContent = currentPage;
+                    li.classList.add('selected');
+                    var rightDots = document.createElement('li');
+                    var aDots = document.createElement('a');
+                    aDots.textContent = '...';
+                    rightDots.appendChild(aDots);
+                    aDots.setAttribute('data-page', currentPage+1);
+
+                    var leftDots = document.createElement('li');
+                    var aDotsLeft = document.createElement('a');
+                    aDotsLeft.textContent = '...';
+                    leftDots.appendChild(aDotsLeft);
+                    aDotsLeft.setAttribute('data-page', currentPage-1);
+                    pagination.insertBefore(leftDots, li);
+                    if(currentPage < pages-2){
+                        pagination.appendChild(rightDots);
+                    }
+
+                    rightDots.onclick = dotEvent;
+                    leftDots.onclick = dotEvent;
+
+                }else{
+                    a.textContent = '...';
+                }
+            }else{
+                a.textContent = (i+1);
+            }
+            if(currentPage > pages-2){
+                a.setAttribute('data-page', currentPage-1);
+            }else{
+                a.setAttribute('data-page', i+1);
+            }
+            li.onclick = dotEvent;
+
+        }
+
+        if(pages > 3){
+            for (var i = pages-2; i < pages; i++) {
+                if(i >= pages)break;
+                var li = document.createElement('li')
+                var a = document.createElement('a')
+                if(i == currentPage-1){
+                    li.classList.add('selected')
+                }
+                li.appendChild(a)
+                a.textContent = (i+1);
+                a.setAttribute('data-page', i+1);
+
+                li.onclick = (evt) => {
+                    var page = evt.target.dataset.page;
+                    var path = obj.getRelatedQueriesPath(
+                        page, searchVal, obj.options
+                    );
+                    ChataUtils.safetynetCall(path, function(response, s){
+                        obj.putRelatedQueries(
+                            response, queryTipsResultContainer,
+                            container, searchVal
+                        );
+                    }, obj.options);
+                }
+
+                pagination.appendChild(li);
+            }
+        }
+        pagination.appendChild(paginationNext);
+        paginationContainer.appendChild(pagination);
+        container.appendChild(paginationContainer)
+        if(obj.pagination){
+            container.removeChild(obj.pagination);
+        }
+        obj.pagination = paginationContainer;
+    }
+
+    obj.getRelatedQueriesPath = (page, searchVal, options) => {
         const url = options.authentication.demo
           ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
           : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
@@ -1290,6 +1503,130 @@ function DataMessenger(elem, options){
         refreshTooltips();
     }
 
+
+    obj.sendDrilldownMessage = (
+        json, indexData, options) =>{
+        var queryId = json['data']['query_id'];
+        var params = {};
+        var groupables = getGroupableFields(json);
+        if(indexData != -1){
+            for (var i = 0; i < groupables.length; i++) {
+                var index = groupables[i].indexCol;
+                var value = json['data']['rows'][parseInt(indexData)][index];
+                var colData = json['data']['columns'][index]['name'];
+                params[colData] = value.toString();
+            }
+        }
+
+        const URL = options.authentication.demo
+          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+          : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
+        let data;
+
+        if(options.authentication.demo){
+            data = {
+                query_id: queryId,
+                group_bys: params,
+                username: 'demo',
+                customer_id: options.authentication.customerId || "",
+                user_id: options.authentication.userId || "",
+                debug: options.autoQLConfig.debug
+            }
+        }else{
+            var cols = [];
+            for(var [key, value] of Object.entries(params)){
+                cols.push({
+                    name: key,
+                    value: value
+                })
+            }
+            data = {
+                debug: options.autoQLConfig.debug,
+                columns: cols
+            }
+        }
+
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+        obj.drawerContent.appendChild(responseLoadingContainer);
+        ChataUtils.ajaxCallPost(URL, function(response, status){
+            if(response['data']['rows'].length > 0){
+                obj.putTableResponse(response);
+            }else{
+                obj.putSimpleResponse(response);
+            }
+            obj.drawerContent.removeChild(responseLoadingContainer);
+            refreshTooltips();
+        }, data, options);
+
+    }
+
+    obj.rowClick = (evt, idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        var row = evt.target.parentElement;
+        var indexData = row.dataset.indexrow;
+        if(row.dataset.hasDrilldown === 'true'){
+            obj.sendDrilldownMessage(json, indexData, obj.options);
+        }
+    }
+
+    obj.chartElementClick = (evt, idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        var indexData = evt.target.dataset.chartindex;
+        obj.sendDrilldownMessage(json, indexData, obj.options);
+    }
+
+    obj.stackedChartElementClick = (evt, idRequest) => {
+        var json = cloneObject(ChataUtils.responses[idRequest]);
+        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1;
+        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2;
+        json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3;
+        obj.sendDrilldownMessage(json, 0, obj.options);
+    }
+
+    obj.updateSelectedBar = (evt, component) => {
+        var oldSelect = component.querySelector('.active');
+        if(oldSelect)oldSelect.classList.remove('active');
+        if(evt.target.tagName !== 'TD') evt.target.classList.add('active');
+    }
+
+    obj.componentClickHandler = (handler, component, selector) => {
+        var elements = component.querySelectorAll(selector);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].onclick = (evt) => {
+                handler.apply(null, [evt, component.dataset.componentid])
+                obj.updateSelectedBar(evt, component);
+
+            }
+        }
+    }
+
+    obj.registerDrilldownChartEvent = (component) => {
+        obj.componentClickHandler(
+            obj.chartElementClick, component, '[data-chartindex]'
+        )
+    }
+
+    obj.registerDrilldownStackedChartEvent = (component) => {
+        obj.componentClickHandler(
+            obj.stackedChartElementClick, component, '[data-stackedchartindex]'
+        )
+    }
+
+    obj.registerDrilldownTableEvent = (table) => {
+        obj.componentClickHandler(
+            obj.rowClick, table, 'tr'
+        )
+    }
+
     obj.getComponent = (request) => {
         return obj.drawerContent.querySelector(
             `[data-componentid='${request}']`
@@ -1304,14 +1641,15 @@ function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'table');
-        createTable(json, component, obj.options);
+        var table = createTable(json, component, obj.options);
+        obj.registerDrilldownTableEvent(table);
     }
-
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
         createColumnChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayBarChartHandler = (evt, idRequest) => {
@@ -1319,6 +1657,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bar');
         createBarChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayPieChartHandler = (evt, idRequest) => {
@@ -1333,6 +1672,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'line');
         createLineChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
@@ -1358,6 +1698,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'heatmap');
         createHeatmap(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayBubbleCharthandler = (evt, idRequest) => {
@@ -1365,6 +1706,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bubble');
         createBubbleChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayStackedColumnHandler = (evt, idRequest) => {
@@ -1374,6 +1716,7 @@ function DataMessenger(elem, options){
         createStackedColumnChart(
             component, cloneObject(json), obj.options
         );
+        obj.registerDrilldownStackedChartEvent(component);
     }
 
     obj.displayStackedBarHandler = (evt, idRequest) => {
@@ -1383,6 +1726,7 @@ function DataMessenger(elem, options){
         createStackedBarChart(
             component, cloneObject(json), obj.options
         );
+        obj.registerDrilldownStackedChartEvent(component);
     }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
@@ -1730,6 +2074,7 @@ function DataMessenger(elem, options){
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         table.sort = 'asc';
+        obj.registerDrilldownTableEvent(table);
         return table;
     }
 

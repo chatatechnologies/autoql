@@ -167,4 +167,5 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
     tooltipCharts();
+
 }
