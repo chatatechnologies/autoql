@@ -1,23 +1,77 @@
 function createSafetynetContent(suggestionArray, context){
     const message = `
-    Before I can try to find your answer,
-    I need your help understanding a term you used that I don't see in your data.
-    Click the dropdown to view suggestions so I can ensure you get the right data!`;
+    I need your help matching a term you used to the exact corresponding
+    term in your database. Verify by selecting the correct
+    term from the menu below:`;
+
     const runQueryButtonHtml = `
     <button class="autoql-vanilla-chata-safety-net-execute-btn">
-        ${RUN_QUERY}
+        <span class="chata-icon autoql-vanilla-chata-execute-query-icon">
+            ${RUN_QUERY}
+        </span>
     Run Query</button>
-    `
+    `;
     // onclick="runQuery(event, '${context}')"
+
     const runQueryButton = htmlToElement(runQueryButtonHtml);
     runQueryButton.onclick = function(event){
         runQuery(event, context);
     }
     var responseContentContainer = document.createElement('div');
+    var safetyNetContainer = document.createElement('div');
+    var safetynetQuery = document.createElement('div');
+    safetynetQuery.classList.add('autoql-vanilla-chata-safety-net-query');
     responseContentContainer.classList.add('chata-response-content-container');
-    responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
-    createSafetynetBody(responseContentContainer, suggestionArray);
-    responseContentContainer.appendChild(runQueryButton);
+    safetyNetContainer.classList.add(
+        'autoql-vanilla-chata-safety-net-container'
+    );
+    safetyNetContainer.innerHTML = `
+        <div class="autoql-vanilla-chata-safety-net-description">
+            ${message}
+        </div>
+    `;
+    safetyNetContainer.appendChild(safetynetQuery);
+    createSafetynetBody(safetynetQuery, suggestionArray);
+    safetyNetContainer.appendChild(runQueryButton);
+    responseContentContainer.appendChild(safetyNetContainer);
+
+    // var f = htmlToElement(`<div class="autoql-vanilla-chata-safety-net-container">
+    //     <div class="autoql-vanilla-chata-safety-net-description">
+    //         I need your help matching a term you used to the exact corresponding term in your database. Verify by selecting the correct term from the menu below:
+    //     </div>
+    //     <span>
+    //         <div class="autoql-vanilla-chata-safety-net-query">
+    //          <span>
+    //             <span>sales by </span>
+    //             <div class="autoql-vanilla-chata-safety-net-selector-container">
+    //             <div class="autoql-vanilla-chata-safetynet-select" data-test="chata-select">first class</div>
+    //         </div>
+    //     </span>
+    //     </div>
+    //     <button class="autoql-vanilla-chata-safety-net-execute-btn">
+    //         <span class="chata-icon autoql-vanilla-chata-execute-query-icon" data-test="chata-icon">
+    //             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    //                 <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+    //             </svg>
+    //         </span>Run Query
+    //     </button>
+    //     </span>
+    // </div>`);
+    // responseContentContainer.appendChild(f);
+
+    // <div class="chata-safety-net-query">
+    //     <span>
+    //         <span>show me </span>
+    //         <div class="chata-safety-net-selector-container">
+    //             <div class="chata-select chata-safetynet-select" data-test="chata-select">
+    //                 carson
+    //             </div>
+    //         </div>
+    //     </span>
+    //     <span>
+    //         <span>who created last bill</span>
+    //     </span>
+    // </div>
     return responseContentContainer;
 }
 

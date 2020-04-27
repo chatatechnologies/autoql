@@ -2435,7 +2435,7 @@ function DataMessenger(elem, options){
         messageBubble.append(createSafetynetContent(suggestionArray, obj));
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
-        updateSelectWidth(containerMessage)
+        // updateSelectWidth(containerMessage)
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 

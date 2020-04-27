@@ -1026,13 +1026,25 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .grid line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
 .grid path {stroke-width: 0;}
 
+.autoql-vanilla-chata-safety-net-container {
+    width: 100%;
+}
+
+.autoql-vanilla-chata-safety-net-description{
+    margin-bottom: 14px;
+}
+
+.autoql-vanilla-chata-safety-net-query {
+    text-align: center;
+}
+
 .autoql-vanilla-chata-safety-net-selector-container {
     display: inline-block;
     position: relative;
     margin-left: -5px;
 }
 
-.autoql-vanilla-chata-safetynet-select {
+/* .autoql-vanilla-chata-safetynet-select {
     position: relative;
     display: inline-block;
     height: 30px;
@@ -1043,6 +1055,40 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     letter-spacing: 0.05em;
     color: #28a8e0;
     font-size: inherit;
+} */
+
+.autoql-vanilla-chata-select {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+    background: #fff;
+    display: inline-block;
+    font-size: 13px;
+    line-height: 32px;
+    height: 34px;
+    margin: 0 3px;
+    padding: 0 11px;
+    color: var(--chata-drawer-accent-color);
+
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.autoql-vanilla-chata-safetynet-select {
+    position: relative;
+    display: inline-block;
+    height: 2em;
+    background: none;
+    outline: none!important;
+    letter-spacing: .05em;
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0 .4em;
+    padding: 0;
+    border-radius: 0;
+    border: none;
+    border-bottom: 1px dashed;
+    color: var(--chata-drawer-accent-color);
+    cursor: pointer;
 }
 
 .autoql-vanilla-chata-safety-net-delete-button {
@@ -1051,14 +1097,27 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-bottom: -2px;
 }
 
-.autoql-vanilla-chata-execute-query-icon {
+/* .autoql-vanilla-chata-execute-query-icon {
     height: 15px;
     width: 24px;
     vertical-align: top;
     fill: #28a8e0;
+} */
+
+.autoql-vanilla-chata-execute-query-icon {
+    font-size: 18px;
 }
 
-.autoql-vanilla-chata-safety-net-execute-btn {
+.autoql-vanilla-chata-execute-query-icon svg {
+    height: 19px;
+    width: 19px;
+    margin-top: 4px;
+    margin-right: 4px;
+    vertical-align: top;
+    fill: var(--chata-drawer-accent-color);
+}
+
+/* .autoql-vanilla-chata-safety-net-execute-btn {
     height: 30px;
     background: none;
     border-radius: 4px;
@@ -1069,6 +1128,32 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     outline: none !important;
     border-color: #e2e2e26e;
     transition: all 0.2s ease;
+} */
+
+.autoql-vanilla-chata-safety-net-execute-btn {
+    height: 38px;
+    background: none;
+    border-radius: 4px;
+    margin-top: 24px;
+    width: 100%;
+    color: inherit;
+    cursor: pointer;
+    outline: none!important;
+    border-color: hsla(0,0%,88.6%,.43);
+    transition: all .2s ease;
+}
+
+.autoql-vanilla-chata-safety-net-execute-btn:hover {
+    border-color: #28a8e0;
+}
+
+.chata-execute-query-icon svg {
+    height: 19px;
+    width: 19px;
+    margin-top: 4px;
+    margin-right: 4px;
+    vertical-align: top;
+    fill: var(--chata-output-accent-color);
 }
 
 .autoql-vanilla-chata-help-link-btn {
