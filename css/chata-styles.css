@@ -1074,6 +1074,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-safetynet-select {
+    text-align-last: center;
     position: relative;
     display: inline-block;
     height: 2em;
@@ -1083,12 +1084,21 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     font-family: inherit;
     font-size: inherit;
     margin: 0 .4em;
-    padding: 0;
+    padding: 0px 5px;
     border-radius: 0;
     border: none;
     border-bottom: 1px dashed;
     color: var(--chata-drawer-accent-color);
     cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    appearance: none;
+    background-image: none;
+}
+
+.autoql-vanilla-chata-safetynet-select::-ms-expand {
+    display: none;
 }
 
 .autoql-vanilla-chata-safety-net-delete-button {

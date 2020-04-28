@@ -36,7 +36,7 @@ function DataMessenger(elem, options){
                 '#DD6A6A', '#FFA700',
                 '#00C1B2'
             ],
-            accentColor: undefined,
+            accentColor: '#26a7df',
             fontFamily: 'sans-serif',
         },
         isVisible: false,
@@ -59,11 +59,13 @@ function DataMessenger(elem, options){
         enableVoiceRecord: true,
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
-        isRecordVoiceActive: false,
         inputPlaceholder: 'Type your queries here',
-        autoCompleteTimer: undefined,
-        xhr: new XMLHttpRequest()
     };
+
+    obj.autoCompleteTimer = undefined;
+    obj.speechToText = getSpeech();
+    obj.finalTranscript = '';
+    obj.isRecordVoiceActive = false
 
     var rootElem = document.querySelector(elem);
 
@@ -408,6 +410,7 @@ function DataMessenger(elem, options){
             obj.createResizeHandler();
             obj.createQueryTabs();
             obj.createQueryTips();
+            obj.speechToTextEvent();
 
             obj.openDrawer();
             obj.closeDrawer();
@@ -1057,6 +1060,22 @@ function DataMessenger(elem, options){
         chataBarContainer.appendChild(autoComplete);
         chataBarContainer.appendChild(textBar);
 
+        voiceRecordButton.onmouseup = (evt) => {
+            obj.speechToText.stop();
+            voiceRecordButton.style.backgroundColor =
+            obj.options.themeConfig.accentColor;
+            console.log(obj.options.themeConfig.accentColor);
+            console.log(obj.finalTranscript);
+            obj.input.value = obj.finalTranscript;
+            obj.isRecordVoiceActive = false;
+        }
+
+        voiceRecordButton.onmousedown = (evt) => {
+            obj.speechToText.start();
+            voiceRecordButton.style.backgroundColor = '#FF471A';
+            obj.isRecordVoiceActive = true;
+        }
+
         obj.chataBarContainer = chataBarContainer;
         obj.input = chataInput;
         obj.voiceRecordButton = voiceRecordButton;
@@ -1067,6 +1086,32 @@ function DataMessenger(elem, options){
 
     }
 
+    obj.speechToTextEvent = () => {
+        if(obj.speechToText){
+            obj.speechToText.onresult = (e) => {
+                let interimTranscript = '';
+                for (let i = e.resultIndex,
+                    len = e.results.length; i < len; i++) {
+                    let transcript = e.results[i][0].transcript;
+                    if (e.results[i].isFinal) {
+                        obj.finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                if(obj.finalTranscript !== ''){
+                    obj.input.value = obj.finalTranscript;
+                    console.log(obj.finalTranscript);
+                    // var chataInput = document.getElementById('autoql-vanilla-chata-input');
+                    // obj.sendMessage(chataInput, obj.finalTranscript, 'data_messenger.user');
+                    obj.speechToText.stop();
+                    obj.voiceRecordButton.style.backgroundColor =
+                    obj.options.themeConfig.accentColor;
+                }
+            }
+        }
+    }
+
     obj.applyStyles = () => {
         const themeStyles = obj.options.themeConfig.theme === 'light'
         ? LIGHT_THEME : DARK_THEME
@@ -1074,6 +1119,8 @@ function DataMessenger(elem, options){
             if ('accentColor' in options.themeConfig){
                 themeStyles['--chata-drawer-accent-color']
                 = options.themeConfig.accentColor;
+                obj.options.themeConfig.accentColor =
+                options.themeConfig.accentColor;
             }
         }
 

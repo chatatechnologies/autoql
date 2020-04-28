@@ -880,7 +880,7 @@
         autoQLConfig: {
             debug: true
         },
-        placement: 'left',
+        placement: 'right',
         onMaskClick: function(datamessenger){
             datamessenger.closeDrawer();
             console.log(DataMessenger.name);
@@ -952,48 +952,7 @@
     document.getElementById('response-renderer').append(responseRenderer);
 
         let dashboard;
-        var chata = ChataUtils.init('chata', {
-            authentication: {
-                token: _token,
-                apiKey: 'AIzaSyD2J8pfYPSI8b--HfxliLYB8V5AehPv0ys',
-                customerId: 'qbo-1',
-                userId: 'vidhya@chata.ai',
-                domain: 'https://qbo-staging.chata.io',
-                demo: false
-            },
-            theme: {
-                accentColor: '#2466AE',
-            },
-            autoQLConfig: {
-                debug: true
-            },
-            dataFormatting: {
-                // comparisonDisplay: 'RATIO'
-            },
-            // resizable: false,
-            isVisible: false,
-            shiftScreen: false,
-            placement: 'right',
-            width: 550,
-            height: 600,
-            showHandle: true,
-            showMask: true,
-            maskClosable: true,
-            userDisplayName: 'Oscar',
-            maxMessages: 6,
-            clearOnClose: false,
-            enableVoiceRecord: true,
-            // demo: true,
-            // debug: true,
-            // accentColor: '#2466AE',
-            // languageCode: 'ja-JP',
-            // currencyCode: 'JPY',
-            onMaskClick: function(){
-                console.log('FOOO');
-                ChataUtils.closeDrawer();
-            },
-            // inputPlaceholder: 'testing placeholder prop'
-        });
+
         var instances;
         document.addEventListener('DOMContentLoaded', function() {
             var elems = document.querySelector('.chips');
@@ -1003,15 +962,15 @@
                 tabsLi[i].onclick = function(evt){
                     window.dispatchEvent(new Event('resize'));
                     console.log(evt.target.parentElement.classList.contains('chatdrawer-tab'));
-                    if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
-                        if(ChataUtils.options.showHandle){
-                            ChataUtils.drawerButton.style.display = 'flex';
-                        }else{
-                            ChataUtils.drawerButton.style.display = 'none';
-                        }
-                    }else{
-                        ChataUtils.drawerButton.style.display = 'none';
-                    }
+                    // if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
+                    //     if(ChataUtils.options.showHandle){
+                    //         ChataUtils.drawerButton.style.display = 'flex';
+                    //     }else{
+                    //         ChataUtils.drawerButton.style.display = 'none';
+                    //     }
+                    // }else{
+                    //     ChataUtils.drawerButton.style.display = 'none';
+                    // }
                 }
             }
             var instance = M.Tabs.init(tabs, {});

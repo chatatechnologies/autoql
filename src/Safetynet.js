@@ -104,21 +104,31 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
                 option.textContent = textContent;
                 select.appendChild(option);
             }
-            var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
-            safetyDeleteButton.onclick = function(event){
-                deleteSuggestion(event);
-            }
+            // var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
+            // safetyDeleteButton.onclick = function(event){
+            //     deleteSuggestion(event);
+            // }
             select.onchange = (evt) => {
                 console.log(evt.target.value);
+                if(evt.target.value === 'delete'){
+                    evt.target.parentElement.parentElement.removeChild(
+                        evt.target.parentElement
+                    )
+                }
                 updateSelect(evt.target);
             }
             var o = document.createElement('option');
-            o.setAttribute('value', suggestion['word']);
+            var deleteOption = document.createElement('option');
+            o.setAttribute('value', suggestion['word'] + '(Original term)');
+            deleteOption.setAttribute('value', 'delete');
             o.textContent = suggestion['word'];
+            deleteOption.textContent = 'Remove term';
+            deleteOption.style.color = '#d84830';
             select.appendChild(o);
+            select.appendChild(deleteOption);
             select.classList.add('safetynet-value');
             div.appendChild(select);
-            div.appendChild(safetyDeleteButton);
+            // div.appendChild(safetyDeleteButton);
             responseContentContainer.appendChild(div);
         }
     }
