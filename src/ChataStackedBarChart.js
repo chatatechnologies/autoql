@@ -34,7 +34,7 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
 
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChataUtils){
-        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

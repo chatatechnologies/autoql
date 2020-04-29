@@ -411,35 +411,48 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.getDrilldownData = function(json, indexData, options){
-        const URL = options.authentication.demo
-          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
-
-        var obj = {};
-        var groupableCount = getGroupableCount(json);
+        var queryId = json['data']['query_id'];
+        var params = {};
+        var groupables = getGroupableFields(json);
         if(indexData != -1){
-            for (var i = 0; i < groupableCount; i++) {
-                var value = json['data']['rows'][parseInt(indexData)][i];
-                var colData = json['data']['columns'][i]['name'];
-                obj[colData] = value.toString();
+            for (var i = 0; i < groupables.length; i++) {
+                var index = groupables[i].indexCol;
+                var value = json['data']['rows'][parseInt(indexData)][index];
+                var colData = json['data']['columns'][index]['name'];
+                params[colData] = value.toString();
             }
         }
+        let data;
 
-        const data = {
-            query_id: json['data']['query_id'],
-            group_bys: obj,
-            username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-            customer_id: options.authentication.customerId || "",
-            user_id: options.authentication.userId || "",
-            debug: options.autoQLConfig.debug
+        if(options.authentication.demo){
+            data = {
+                query_id: queryId,
+                group_bys: params,
+                username: 'demo',
+                customer_id: options.authentication.customerId || "",
+                user_id: options.authentication.userId || "",
+                debug: options.autoQLConfig.debug
+            }
+        }else{
+            var cols = [];
+            for(var [key, value] of Object.entries(params)){
+                cols.push({
+                    name: key,
+                    value: value
+                })
+            }
+            data = {
+                debug: options.autoQLConfig.debug,
+                columns: cols
+            }
         }
         return data;
     }
 
-    chataDashboardItem.sendDrilldownMessage = function(data, options, _uuid, callback){
+    chataDashboardItem.sendDrilldownMessage = function(queryId, data, options, _uuid, callback){
         const URL = options.authentication.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
+          : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
         ChataUtils.ajaxCallPost(URL, function(response){
             ChataUtils.responses[_uuid] = response;
             callback();
@@ -1058,10 +1071,12 @@ function TileView(dashboard, chataDashboardItem,
 
             var drilldownData = chataDashboardItem.getDrilldownData(
                 json, indexData, dashboard.options);
+            var queryId = json['data']['query_id'];
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
             dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
+                queryId,
                 drilldownData,
                 dashboard.options,
                 drilldownUUID,
@@ -1103,10 +1118,12 @@ function TileView(dashboard, chataDashboardItem,
             var drilldownUUID = uuidv4();
             var drilldownData = chataDashboardItem.getDrilldownData(
                 json, indexData, dashboard.options);
+            var queryId = json['data']['query_id'];
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
             dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
+                queryId,
                 drilldownData,
                 dashboard.options,
                 drilldownUUID,
@@ -1146,10 +1163,12 @@ function TileView(dashboard, chataDashboardItem,
             }
             var drilldownData = chataDashboardItem.getDrilldownData(
                 json, indexData , dashboard.options);
+            var queryId = json['data']['query_id'];
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
             dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
+                queryId,
                 drilldownData,
                 dashboard.options,
                 drilldownUUID,

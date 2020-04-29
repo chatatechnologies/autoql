@@ -54,7 +54,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
                 oldComponent.dataset.componentid
             );
             ChataUtils.refreshTableData(
-                _table, cloneObject(rows), ChataUtils.options, false
+                _table, cloneObject(rows), options, false
             );
         }
         col.appendChild(divFilter);
@@ -125,7 +125,7 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
                         table, thArray, jsonResponse['data']['columns']
                     );
                     hideShowTableCols(table);
-                }, ChataUtils.options)
+                }, options)
             }
 
             popoverContainer.appendChild(popoverMenu);
@@ -264,13 +264,13 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
                 _columns[0].name.includes('month')){
                 var pivotArray = getDatePivotArray(
                     _json,
-                    ChataUtils.options,
+                    options,
                     cloneObject(_json['data']['rows'])
                 );
             }else{
                 var pivotArray = getPivotColumnArray(
                     _json,
-                    ChataUtils.options,
+                    options,
                     cloneObject(_json['data']['rows'])
                 );
             }

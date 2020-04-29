@@ -32,7 +32,7 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     var col3 = formatColumnName(colStr3);
 
     if(fromChataUtils){
-        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
 
             if(height < 250){

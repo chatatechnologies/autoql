@@ -678,6 +678,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    visibility: visible;
 }
 
 .autoql-vanilla-chata-table-container-renderer table tr td{

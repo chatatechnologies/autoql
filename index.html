@@ -1039,23 +1039,23 @@
         }
 
         enableExploreQueriesTab.onchange = function(event){
-            ChataUtils.options.enableExploreQueriesTab = event.target.checked
+            // ChataUtils.options.enableExploreQueriesTab = event.target.checked
             datamessenger.setOption('enableExploreQueriesTab', event.target.checked);
         }
 
         enableColumnVisibilityManager.onchange = function(event){
-            ChataUtils.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
+            // ChataUtils.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
             datamessenger.setOption('autoQLConfig', {
                 enableColumnVisibilityManager: event.target.checked
             });
         }
 
         logout.onclick = (evt) => {
-            ChataUtils.options.authentication.apiKey = '';
-            ChataUtils.options.authentication.customerId = '';
-            ChataUtils.options.authentication.userId = '';
-            ChataUtils.options.authentication.domain = '';
-            ChataUtils.options.authentication.token = '';
+            // ChataUtils.options.authentication.apiKey = '';
+            // ChataUtils.options.authentication.customerId = '';
+            // ChataUtils.options.authentication.userId = '';
+            // ChataUtils.options.authentication.domain = '';
+            // ChataUtils.options.authentication.token = '';
             datamessenger.setOption('authentication', {
                 apiKey: '',
                 customerId: '',
@@ -1073,10 +1073,10 @@
             var customerId = document.querySelector('[name="customerId"]');
             var userId = document.querySelector('[name="userId"]');
             var domain = document.querySelector('[name="domain"]');
-            ChataUtils.options.authentication.apiKey = apiKey.value;
-            ChataUtils.options.authentication.customerId = customerId.value;
-            ChataUtils.options.authentication.userId = userId.value;
-            ChataUtils.options.authentication.domain = domain.value;
+            // ChataUtils.options.authentication.apiKey = apiKey.value;
+            // ChataUtils.options.authentication.customerId = customerId.value;
+            // ChataUtils.options.authentication.userId = userId.value;
+            // ChataUtils.options.authentication.domain = domain.value;
             queryInput.options.authentication.apiKey = apiKey.value;
             queryInput.options.authentication.customerId = customerId.value;
             queryInput.options.authentication.userId = userId.value;
@@ -1139,7 +1139,7 @@
                                 alert(xhr2.responseText);
                             }else{
                                 var token = xhr2.responseText;
-                                ChataUtils.options.authentication.token = token;
+                                // ChataUtils.options.authentication.token = token;
                                 queryInput.options.authentication.token = token;
                                 datamessenger.setOption('authentication', {
                                     token: token
@@ -1200,39 +1200,39 @@
         }
 
         showHandle.onchange = function(event){
-            ChataUtils.options.showHandle = event.target.checked;
+            // ChataUtils.options.showHandle = event.target.checked;
             datamessenger.setOption('showHandle', event.target.checked);
-            if(event.target.checked){
-                if(ChataUtils.options.isVisible){
-                    ChataUtils.drawerButton.style.display = 'none';
-                }else{
-                    ChataUtils.drawerButton.style.display = 'flex';
-                }
-            }else{
-                ChataUtils.drawerButton.style.display = 'none';
-            }
+            // if(event.target.checked){
+            //     if(ChataUtils.options.isVisible){
+            //         ChataUtils.drawerButton.style.display = 'none';
+            //     }else{
+            //         ChataUtils.drawerButton.style.display = 'flex';
+            //     }
+            // }else{
+            //     ChataUtils.drawerButton.style.display = 'none';
+            // }
         }
 
         shiftScreen.onchange = function(event){
-            ChataUtils.options.shiftScreen = event.target.checked;
+            // ChataUtils.options.shiftScreen = event.target.checked;
             datamessenger.setOption('shiftScreen', event.target.checked);
         }
 
         showMask.onchange = function(event){
-            ChataUtils.options.showMask = event.target.checked;
+            // ChataUtils.options.showMask = event.target.checked;
             datamessenger.setOption('showMask', event.target.checked);
-            if(event.target.checked){
-                if(ChataUtils.options.isVisible){
-                    ChataUtils.wrapper.style.opacity = .3;
-                    ChataUtils.wrapper.style.height = '100%';
-                }else{
-                    ChataUtils.wrapper.style.opacity = 0;
-                    ChataUtils.wrapper.style.height = 0;
-                }
-            }else{
-                ChataUtils.wrapper.style.opacity = 0;
-                ChataUtils.wrapper.style.height = 0;
-            }
+            // if(event.target.checked){
+            //     if(ChataUtils.options.isVisible){
+            //         ChataUtils.wrapper.style.opacity = .3;
+            //         ChataUtils.wrapper.style.height = '100%';
+            //     }else{
+            //         ChataUtils.wrapper.style.opacity = 0;
+            //         ChataUtils.wrapper.style.height = 0;
+            //     }
+            // }else{
+            //     ChataUtils.wrapper.style.opacity = 0;
+            //     ChataUtils.wrapper.style.height = 0;
+            // }
         }
 
         for (var i = 0; i < theme.length; i++) {
@@ -1247,36 +1247,36 @@
                 datamessenger.setOption('themeConfig', {
                     theme: event.target.id
                 })
-                ChataUtils.options.theme = event.target.id;
+                // ChataUtils.options.theme = event.target.id;
             }
         }
 
         enableAutocomplete.onchange = function(event){
-            ChataUtils.options.autoQLConfig.enableAutocomplete = event.target.checked;
+            // ChataUtils.options.autoQLConfig.enableAutocomplete = event.target.checked;
             datamessenger.setOption('enableAutocomplete', event.target.checked);
         }
 
         enableQueryValidation.onchange = function(event){
-            ChataUtils.options.autoQLConfig.enableQueryValidation = event.target.checked;
+            // ChataUtils.options.autoQLConfig.enableQueryValidation = event.target.checked;
             datamessenger.setOption('enableQueryValidation', event.target.checked);
         }
 
         enableDrilldowns.onchange = function(event){
-            ChataUtils.options.autoQLConfig.enableDrilldowns = event.target.checked;
-            console.log(ChataUtils.options.enableDrilldowns);
+            // ChataUtils.options.autoQLConfig.enableDrilldowns = event.target.checked;
+            // console.log(ChataUtils.options.enableDrilldowns);
             datamessenger.setOption('enableDrilldowns', event.target.checked);
         }
 
         enableVoiceRecord.onchange = function(event){
-            ChataUtils.options.enableVoiceRecord = event.target.checked;
-            var display = ChataUtils.options.enableVoiceRecord ? 'block' : 'none';
-            var voiceButton = document.getElementById('chata-voice-record-button');
-            voiceButton.style.display = display;
+            // ChataUtils.options.enableVoiceRecord = event.target.checked;
+            // var display = ChataUtils.options.enableVoiceRecord ? 'block' : 'none';
+            // var voiceButton = document.getElementById('chata-voice-record-button');
+            // voiceButton.style.display = display;
             datamessenger.setOption('enableVoiceRecord', event.target.checked);
         }
 
         debug.onchange = function(event){
-            ChataUtils.options.autoQLConfig.debug = event.target.checked;
+            // ChataUtils.options.autoQLConfig.debug = event.target.checked;
             datamessenger.setOption('autoQLConfig', {
                 debug: event.target.checked
             });
@@ -1284,7 +1284,7 @@
         }
 
         clearOnClose.onchange = function(event){
-            ChataUtils.options.clearOnClose = event.target.checked;
+            // ChataUtils.options.clearOnClose = event.target.checked;
             datamessenger.setOption('clearOnClose', event.target.checked);
 
         }
@@ -1333,35 +1333,29 @@
                     if(autoQLKeys.includes(propsEls[i].name))subKey = 'autoQLConfig';
                     if(subKey){
                         console.log(subKey);
-                        ChataUtils.options[subKey][propsEls[i].name] = propsEls[i].value;
+                        // ChataUtils.options[subKey][propsEls[i].name] = propsEls[i].value;
                         var _obj = {}
                         _obj[propsEls[i].name] = propsEls[i].value
                         datamessenger.setOption(subKey, _obj);
                     }else{
-                        ChataUtils.options[propsEls[i].name] = propsEls[i].value;
+                        // ChataUtils.options[propsEls[i].name] = propsEls[i].value;
                         datamessenger.setOption(propsEls[i].name, propsEls[i].value)
                     }
-                }else if(propsEls[i].name == 'introMessage' && propsEls[i].value == ''){
-                    ChataUtils.options.introMessage = "Hi " + ChataUtils.options.userDisplayName+ " I'm  here to help you access, search and analyze your data.";
-                }if(ChataUtils.options.themeConfig.theme == 'light' && propsEls[i].name == 'accentColor-light'){
-                    ChataUtils.options.themeConfig.accentColor = propsEls[i].value;
-                }else if (ChataUtils.options.themeConfig.theme == 'dark' && propsEls[i].name == 'accentColor-dark'){
-                    ChataUtils.options.themeConfig.accentColor = propsEls[i].value;
                 }
             }
             var chartColors = [];
             for (var i = 0; i < instances.chipsData.length; i++) {
                 chartColors.push(instances.chipsData[i]['tag']);
             }
-            ChataUtils.drawerButton.remove();
-            ChataUtils.rootElem.remove();
-            ChataUtils.options.themeConfig.chartColors = chartColors;
+            // ChataUtils.drawerButton.remove();
+            // ChataUtils.rootElem.remove();
+            // ChataUtils.options.themeConfig.chartColors = chartColors;
             var div = document.createElement('div');
             div.setAttribute('id', 'chata');
             document.getElementsByTagName('body')[0].appendChild(div);
-            document.removeEventListener('click', ChataUtils.clickHandler);
-            document.removeEventListener('dblclick', ChataUtils.drilldownHandler);
-            var newDrawer = ChataUtils.init('chata', ChataUtils.options);
+            // document.removeEventListener('click', ChataUtils.clickHandler);
+            // document.removeEventListener('dblclick', ChataUtils.drilldownHandler);
+            // var newDrawer = ChataUtils.init('chata', ChataUtils.options);
         }
 
         // var dashboard = new Dashboard('.grid-1', {
@@ -1464,14 +1458,14 @@
         // });
 
         demo.onchange = function(event){
-            ChataUtils.options.authentication.demo = event.target.checked;
+            // ChataUtils.options.authentication.demo = event.target.checked;
             queryInput.options.authentication.demo = event.target.checked;
             datamessenger.setOption('authentication', {
                 demo: event.target.checked
             })
             // dashboard.options.authentication.demo = event.target.checked;
             var loginSection = document.getElementById('login-section');
-            if(!ChataUtils.options.authentication.demo){
+            if(!datamessenger.options.authentication.demo){
                 loginSection.style.display = 'block';
                 dashboardTab.style.display = 'none';
             }else{

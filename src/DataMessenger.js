@@ -1712,6 +1712,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pie');
         createPieChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayLineChartHandler = (evt, idRequest) => {
@@ -1978,14 +1979,14 @@ function DataMessenger(elem, options){
                 );
                 var rows = applyFilter(idRequest);
                 ChataUtils.refreshTableData(
-                    _table, cloneObject(rows), ChataUtils.options, false
+                    _table, cloneObject(rows), options, false
                 );
             }
             col.appendChild(divFilter);
             th.appendChild(col);
             th.appendChild(arrow);
             th.onclick = (evt) => {
-                ChataUtils.onClickColumn(evt, table, ChataUtils.options);
+                ChataUtils.onClickColumn(evt, table, options);
             }
             header.appendChild(th);
             thArray.push(th);
@@ -2024,7 +2025,7 @@ function DataMessenger(elem, options){
                 `)
 
                 popoverLi.onclick = function(evt){
-                    var opts = ChataUtils.options
+                    var opts = obj.options
                     const url = opts.authentication.demo
                     ? `https://backend-staging.chata.ai/api/v1/chata/query`
                     : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
@@ -2325,7 +2326,7 @@ function DataMessenger(elem, options){
         }
 
         saveButton.onclick = function(event){
-            var opts = ChataUtils.options
+            var opts = obj.options
             const url = opts.authentication.demo
             ? `https://backend-staging.chata.ai/api/v1/chata/query`
             : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`

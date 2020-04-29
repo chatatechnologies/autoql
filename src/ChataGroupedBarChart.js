@@ -13,7 +13,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
     if(fromChataUtils){
-        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
             if(height < 250){
                 height = 300;

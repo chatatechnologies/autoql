@@ -3,7 +3,7 @@ function createColumnChart(component, json, options, fromChataUtils=true, valueC
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
-    var values = formatDataToBarChart(json, ChataUtils.options);
+    var values = formatDataToBarChart(json, options);
     var data = values[0];
     var hasNegativeValues = values[1];
     var cols = json['data']['columns'];
@@ -21,7 +21,7 @@ function createColumnChart(component, json, options, fromChataUtils=true, valueC
     var col2 = formatColumnName(colStr2);
 
     if(fromChataUtils){
-        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;

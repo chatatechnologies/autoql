@@ -18,7 +18,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     if(fromChataUtils){
-        if(ChataUtils.options.placement == 'left' || ChataUtils.options.placement == 'right'){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin + 3);
             if(height < 250){
                 height = 300;
