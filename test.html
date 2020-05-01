@@ -106,260 +106,265 @@
 <body>
     <div id="foo" data-containerid="1"></div>
     <script>
+    var margin = {top: 20, right: 20, bottom: 30, left: 40},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
 
-    var width = 450
-    height = 450
-    margin = 40
+    var x0 = d3.scaleBand()
+    .rangeRound([0, width]).padding(.1);
 
-    // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
-    var radius = Math.min(width, height) / 2 - margin
+    var x1 = d3.scaleBand();
 
-    // append the svg object to the div called 'my_dataviz'
-    var svg = d3.select("#foo")
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+    var y = d3.scaleLinear()
+    .range([height, 0]);
 
-    // Create dummy data
-    var data = {a: 9, b: 20, c:30, d:8, e:12}
+    var xAxis = d3.axisBottom(x0)
+    .tickSize(0)
 
-    // set the color scale
+    var yAxis = d3.axisLeft(y)
+
     var color = d3.scaleOrdinal()
-    .domain(data)
-    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56"])
+    .range(["#ca0020","#f4a582","#d5d5d5","#92c5de","#0571b0"]);
 
-    // Compute the position of each group on the pie:
-    var pie = d3.pie()
-    .value(function(d) {return d.value; })
-    var data_ready = pie(d3.entries(data))
+    var svg = d3.select('body').append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-    // Build the pie chart: Basically, each part of the pie is a path that we build using the arc function.
-    svg
-    .selectAll('whatever')
-    .data(data_ready)
-    .enter()
-    .append('path')
-    .attr('d', d3.arc()
-    .innerRadius(100)         // This is the size of the donut hole
-    .outerRadius(radius)
-)
-.attr('fill', function(d){ return(color(d.data.key)) })
-.attr("stroke", "black")
-.style("stroke-width", "2px")
-.style("opacity", 0.7)
-    //
-    // // set the dimensions and margins of the graph
-    // var margin = {top: 10, right: 30, bottom: 20, left: 50},
-    // width = 460 - margin.left - margin.right,
-    // height = 400 - margin.top - margin.bottom;
-    //
-    // // append the svg object to the body of the page
-    // var svg = d3.select("#foo")
-    // .append("svg")
-    // .attr("width", width + margin.left + margin.right)
-    // .attr("height", height + margin.top + margin.bottom)
-    // .append("g")
-    // .attr("transform",
-    // "translate(" + margin.left + "," + margin.top + ")");
-    // //
-    // data = [
-    //     {group: "October 30, 2019", value1: 0, value2: -3399.96},
-    //     {group: "September 29, 2019", value1: 150589.85, value2: 6065.16},
-    //     {group: "August 30, 2019", value1: 149459.61, value2: 11709.35},
-    //     {group: "July 30, 2019", value1: 145899.65, value2: 15316.21},
-    //     {group: "June 29, 2019", value1: 161465.81, value2: 18529.57},
-    //     {group: "May 30, 2019", value1: 168586.49, value2: 17018.43},
-    //     {group: "April 29, 2019", value1: 175571.78, value2: 27444.95},
-    //     {group: "March 30, 2019", value1: 167702.65, value2: 31159.38},
-    //     {group: "February 27, 2019", value1: 144232.48, value2: 16737.58},
-    //     {group: "January 30, 2019", value1: 159506.19, value2: 25938.17},
-    //     {group: "December 30, 2018", value1: 156277.41, value2: 21851.49},
-    //     {group: "November 29, 2018", value1: 157167.6, value2: 20727.48},
-    //     {group: "October 30, 2018", value1: 141297.61, value2: 21352.76},
-    //     {group: "September 29, 2018", value1: 137473.46, value2: 23932.17},
-    //     {group: "August 30, 2018", value1: 136300.56, value2: 28503.74},
-    //     {group: "July 30, 2018", value1: 119100.7, value2: 20213.62},
-    //     {group: "June 29, 2018", value1: 116861.26, value2: 21220.52},
-    //     {group: "May 30, 2018", value1: 115954.13, value2: 32225.77},
-    //     {group: "April 29, 2018", value1: 107069.81, value2: 32183.18},
-    //     {group: "March 30, 2018", value1: 98219.44, value2: 18305.69},
-    //     {group: "February 27, 2018", value1: 99543.18, value2: 32737.82},
-    //     {group: "January 30, 2018", value1: 80255.57, value2: 26653.61},
-    //     {group: "December 30, 2017", value1: 62987.27, value2: 10116.21},
-    //     {group: "November 29, 2017", value1: 58901.25, value2: 20541.23},
-    //     {group: "October 30, 2017", value1: 53789.66, value2: 26835.61},
-    //     {group: "September 29, 2017", value1: 24074.22, value2: 582.5},
-    //     {group: "August 30, 2017", value1: 20302.76, value2: 8443.45},
-    //     {group: "July 30, 2017", value1: 20449.86, value2: 9389.39},
-    //     {group: "June 29, 2017", value1: 11948.44, value2: 3123.84},
-    //     {group: "May 30, 2017", value1: 14642.19, value2: 3815.18},
-    //     {group: "April 29, 2017", value1: 3243.12, value2: -5943.78},
-    //     {group: "March 30, 2017", value1: 11723.36, value2: 624.03},
-    //     {group: "February 27, 2017", value1: 8742.68, value2: -3737.15},
-    //     {group: "December 30, 2016", value1: 12500, value2: 12500}
-    // ]
-    // // Parse the Data
-    //
-    //     console.log(data);
-    //     // List of subgroups = header of the csv files = soil condition here
-    //     var subgroups = ['value1', 'value2'];
-    //
-    //     // List of groups = species here = value of the first column called group -> I show them on the X axis
-    //     // var groups = d3.map(data, function(d){return(d.group)}).keys()
-    //     console.log(groups);
-    //     console.log(subgroups);
-    //     // Add X axis
-    //     var x = d3.scaleBand()
-    //     .domain(groups)
-    //     .range([0, width])
-    //     .padding([0.2])
-    //     svg.append("g")
-    //     .attr("transform", "translate(0," + height + ")")
-    //     .call(d3.axisBottom(x).tickSize(0));
-    //
-    //     // Add Y axis
-    //     var y = d3.scaleLinear()
-    //     .domain([0, 180000])
-    //     .range([ height, 0 ]);
-    //     svg.append("g")
-    //     .call(d3.axisLeft(y));
-    //
-    //     // Another scale for subgroup position?
-    //     var xSubgroup = d3.scaleBand()
-    //     .domain(subgroups)
-    //     .range([0, x.bandwidth()])
-    //     .padding([0.05])
-    //
-    //     // color palette = one color per subgroup
-    //     var color = d3.scaleOrdinal()
-    //     .domain(subgroups)
-    //     .range(['#e41a1c','#377eb8','#4daf4a'])
-    //
-    //     // Show the bars
-    //     console.log(data);
-    //     svg.append("g")
-    //     .selectAll("g")
-    //     // Enter in data = loop group per group
-    //     .data(data)
-    //     .enter()
-    //     .append("g")
-    //     .attr("transform", function(d) { return "translate(" + x(d.group) + ",0)"; })
-    //     .selectAll("rect")
-    //     .data(function(d) { return subgroups.map(function(key) { return {key: key, value: d[key]}; }); })
-    //     .enter().append("rect")
-    //     .attr("x", function(d) { return xSubgroup(d.key); })
-    //     .attr("y", function(d) { return y(Math.abs(d.value)); })
-    //     .attr("width", xSubgroup.bandwidth())
-    //     .attr("height", function(d) { return height - Math.abs(y(Math.abs(d.value))); })
-    //     .attr("fill", function(d) { return color(d.key); });
-    //
-    //
-    // d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_stacked.csv", function(data) {
-    // })
+    var data = [
+        {
+            "categorie": "Student",
+            "values": [
+                {
+                    "value": 0,
+                    "rate": "Not at all"
+                },
+                {
+                    "value": 4,
+                    "rate": "Not very much"
+                },
+                {
+                    "value": 12,
+                    "rate": "Medium"
+                },
+                {
+                    "value": 6,
+                    "rate": "Very much"
+                },
+                {
+                    "value": 0,
+                    "rate": "Tremendously"
+                }
+            ]
+        },
+        {
+            "categorie": "Liberal Profession",
+            "values": [
+                {
+                    "value": 1,
+                    "rate": "Not at all"
+                },
+                {
+                    "value": 21,
+                    "rate": "Not very much"
+                },
+                {
+                    "value": 13,
+                    "rate": "Medium"
+                },
+                {
+                    "value": 18,
+                    "rate": "Very much"
+                },
+                {
+                    "value": 6,
+                    "rate": "Tremendously"
+                }
+            ]
+        },
+        {
+            "categorie": "Salaried Staff",
+            "values": [
+            {
+                "value": 3,
+                "rate": "Not at all"
+            },
+            {
+                "value": 22,
+                "rate": "Not very much"
+            },
+            {
+                "value": 6,
+                "rate": "Medium"
+            },
+            {
+                "value": 15,
+                "rate": "Very much"
+            },
+            {
+                "value": 3,
+                "rate": "Tremendously"
+            }
+            ]
+        },
+        {
+            "categorie": "Employee",
+            "values": [
+            {
+                "value": 12,
+                "rate": "Not at all"
+            },
+            {
+                "value": 7,
+                "rate": "Not very much"
+            },
+            {
+                "value": 18,
+                "rate": "Medium"
+            },
+            {
+                "value": 13,
+                "rate": "Very much"
+            },
+            {
+                "value": 6,
+                "rate": "Tremendously"
+            }
+            ]
+        },
+        {
+            "categorie": "Craftsman",
+            "values": [
+            {
+                "value": 6,
+                "rate": "Not at all"
+            },
+            {
+                "value": 15,
+                "rate": "Not very much"
+            },
+            {
+                "value": 9,
+                "rate": "Medium"
+            },
+            {
+                "value": 12,
+                "rate": "Very much"
+            },
+            {
+                "value": 3,
+                "rate": "Tremendously"
+            }
+            ]
+        },
+        {
+            "categorie": "Inactive",
+            "values": [
+            {
+                "value": 6,
+                "rate": "Not at all"
+            },
+            {
+                "value": 6,
+                "rate": "Not very much"
+            },
+            {
+                "value": 6,
+                "rate": "Medium"
+            },
+            {
+                "value": 2,
+                "rate": "Very much"
+            },
+            {
+                "value": 3,
+                "rate": "Tremendously"
+            }
+            ]
+        }
+        ]
 
-    // set the dimensions and margins of the graph
-// var margin = {top: 10, right: 100, bottom: 30, left: 30},
-//     width = 460 - margin.left - margin.right,
-//     height = 400 - margin.top - margin.bottom;
-//
-// // append the svg object to the body of the page
-// var svg = d3.select("#foo")
-//   .append("svg")
-//     .attr("width", width + margin.left + margin.right)
-//     .attr("height", height + margin.top + margin.bottom)
-//   .append("g")
-//     .attr("transform",
-//           "translate(" + margin.left + "," + margin.top + ")");
-//
-// //Read the data
-// d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/data_connectedscatter.csv", function(data) {
-//
-//     // List of groups (here I have one group per column)
-//     var allGroup = ["valueA", "valueB", "valueC"]
-//
-//     // Reformat the data: we need an array of arrays of {x, y} tuples
-//     var dataReady = allGroup.map( function(grpName) { // .map allows to do something for each element of the list
-//       return {
-//         name: grpName,
-//         values: data.map(function(d) {
-//           return {time: d.time, value: +d[grpName]};
-//         })
-//       };
-//     });
-//     console.log(dataReady);
-//     // I strongly advise to have a look to dataReady with
-//     // console.log(dataReady)
-//
-//     // A color scale: one color for each group
-//     var myColor = d3.scaleOrdinal()
-//       .domain(allGroup)
-//       .range(['#355C7D', '#6C5B7B']);
-//
-//     // Add X axis --> it is a date format
-//     var x = d3.scaleLinear()
-//       .domain([0,10])
-//       .range([ 0, width ]);
-//     svg.append("g")
-//       .attr("transform", "translate(0," + height + ")")
-//       .call(d3.axisBottom(x));
-//
-//     // Add Y axis
-//     var y = d3.scaleLinear()
-//       .domain( [0,20])
-//       .range([ height, 0 ]);
-//     svg.append("g")
-//       .call(d3.axisLeft(y));
-//
-//     // Add the lines
-//     var line = d3.line()
-//       .x(function(d) { return x(+d.time) })
-//       .y(function(d) { return y(+d.value) })
-//     svg.selectAll("myLines")
-//       .data(dataReady)
-//       .enter()
-//       .append("path")
-//         .attr("d", function(d){ return line(d.values) } )
-//         .attr("stroke", function(d){ return myColor(d.name) })
-//         .style("stroke-width", 4)
-//         .style("fill", "none")
-//
-//     // Add the points
-//     svg
-//       // First we need to enter in a group
-//       .selectAll("myDots")
-//       .data(dataReady)
-//       .enter()
-//         .append('g')
-//         .style("fill", function(d){ return myColor(d.name) })
-//       // Second we need to enter in the 'values' part of this group
-//       .selectAll("myPoints")
-//       .data(function(d){ return d.values })
-//       .enter()
-//       .append("circle")
-//         .attr("cx", function(d) { return x(d.time) } )
-//         .attr("cy", function(d) { return y(d.value) } )
-//         .attr("r", 5)
-//         .attr("stroke", "white")
-//
-//     // Add a legend at the end of each line
-//     svg
-//       .selectAll("myLabels")
-//       .data(dataReady)
-//       .enter()
-//         .append('g')
-//         .append("text")
-//           .datum(function(d) { return {name: d.name, value: d.values[d.values.length - 1]}; }) // keep only the last value of each time series
-//           .attr("transform", function(d) { return "translate(" + x(d.value.time) + "," + y(d.value.value) + ")"; }) // Put the text at the position of the last point
-//           .attr("x", 12) // shift the text a bit more right
-//           .text(function(d) { return d.name; })
-//           .style("fill", function(d){ return myColor(d.name) })
-//           .style("font-size", 15)
-//
-// })
+    var categoriesNames = data.map(function(d) { return d.categorie; });
+    var rateNames = data[0].values.map(function(d) { return d.rate; });
 
+    x0.domain(categoriesNames);
+    x1.domain(rateNames).rangeRound([0, x0.bandwidth()]).padding(.1);
+    y.domain([0, d3.max(data, function(categorie) { return d3.max(categorie.values, function(d) { return d.value; }); })]);
 
+    svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+    svg.append("g")
+    .attr("class", "y axis")
+    .style('opacity','0')
+    .call(yAxis)
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("text-anchor", "end")
+    .style('font-weight','bold')
+    .text("Value");
+
+    svg.select('.y').transition().duration(500).delay(1300).style('opacity','1');
+
+    var slice = svg.selectAll(".slice")
+    .data(data)
+    .enter().append("g")
+    .attr("class", "g")
+    .attr("transform",function(d) { return "translate(" + x0(d.categorie) + ",0)"; });
+
+    slice.selectAll("rect")
+    .data(function(d) { return d.values; })
+    .enter().append("rect")
+    .attr("width", x1.bandwidth())
+    .attr("x", function(d) { return x1(d.rate); })
+    .style("fill", function(d) { return color(d.rate) })
+    .attr("y", function(d) { return y(0); })
+    .attr("height", function(d) { return height - y(0); })
+    .on("mouseover", function(d) {
+        d3.select(this).style("fill", d3.rgb(color(d.rate)).darker(2));
+    })
+    .on("mouseout", function(d) {
+        d3.select(this).style("fill", color(d.rate));
+    });
+
+    slice.selectAll("rect")
+    .transition()
+    .delay(function (d) {return Math.random()*1000;})
+    .duration(1000)
+    .attr("y", function(d) { return y(d.value); })
+    .attr("height", function(d) { return height - y(d.value); });
+
+    //Legend
+    var legend = svg.selectAll(".legend")
+    .data(data[0].values.map(function(d) { return d.rate; }).reverse())
+    .enter().append("g")
+    .attr("class", "legend")
+    .attr("transform", function(d,i) { return "translate(0," + i * 20 + ")"; })
+    .style("opacity","0");
+
+    legend.append("rect")
+    .attr("x", width - 18)
+    .attr("width", 18)
+    .attr("height", 18)
+    .style("fill", function(d) { return color(d); });
+
+    legend.append("text")
+    .attr("x", width - 24)
+    .attr("y", 9)
+    .attr("dy", ".35em")
+    .style("text-anchor", "end")
+    .text(function(d) {return d; });
+
+    legend.transition().duration(500).delay(function(d,i){ return 1300 + 100 * i; }).style("opacity","1");
+    // d3.json("data.json", function(error, data) {
+    //
+    //
+    // });
     </script>
 </body>
 </html>

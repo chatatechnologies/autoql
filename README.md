@@ -26,25 +26,34 @@ For more information on these requirements or how to retrieve/refresh your token
 #### ChatDrawer
 A chat panel that slides open from the edge of the screen. You will find a list of available props and their defaults in the next section.
 ```
-<div id="my-drawer-container">
+<div id="DataMessengerV2">
 </div>
 
 <script>
-var chata = ChatDrawer.init('my-drawer-container', {
-    placement: 'left',
-    width: 650,
-    theme: 'light',
-    token: '',
-    apiKey: 'your-api-key',
-    customerId: 'your-customer-id',
-    userId: 'your@email.com',
-    domain: 'https://yourdomain.com'
-});
+    var datamessenger = new DataMessenger('#DataMessengerV2', {
+        authentication: {
+            token: _token,
+            apiKey: 'your-api-key',
+            customerId: 'your-customer-id',
+            userId: 'your@email.com',
+            domain: 'https://yourdomain.com',
+            demo: false
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        placement: 'right',
+        onMaskClick: function(datamessenger){
+            datamessenger.closeDrawer();
+        },
+        resizable: true,
+        width: 550
+    })
 </script>
 
 ```
 
-#### ChatBar and ResponseRenderer
+#### QueryInput and QueryOutput
 
 A chat bar component and visualization component that can be placed anywhere. The ChatBar component ref should be passed into the ResponseRenderer component as a prop. This will link the two components together so they can interact with eachother.
 
@@ -52,7 +61,7 @@ You will find a list of available props and their defaults in the next section.
 ```
 <script>
 //Create the components
-var chatBar = ChatDrawer.getChatBar({
+var chatBar = ChataUtils.getQueryInput({
     token: '',
     apiKey: 'your-api-key',
     customerId: 'your-customer-id',
@@ -60,7 +69,7 @@ var chatBar = ChatDrawer.getChatBar({
     domain: 'https://yourdomain.com',
     autoCompletePlacement: 'bottom',
 });
-var responseRenderer = ChatDrawer.createResponseRenderer({});
+var responseRenderer = ChataUtils.getQueryOutput({});
 
 //Bind the chatBar to responseRenderer
 chatBar.bind(responseRenderer);
