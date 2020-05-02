@@ -875,7 +875,7 @@
             customerId: 'locate-demo1',
             userId: 'vidhya@chata.ai',
             domain: 'https://locate-staging.chata.io',
-            demo: false
+            demo: true
         },
         autoQLConfig: {
             debug: true
@@ -1183,7 +1183,7 @@
                         }
                     }
                     const url = `
-                        https://backend-staging.chata.io/api/v1/jwt?user_id=${userId.value}&project_id=${customerId.value}
+                        https://backend-staging.chata.io/api/v1/jwt?display_name=${userId.value}&project_id=${customerId.value}
                     `
                     xhr2.open('GET', url);
                     xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
