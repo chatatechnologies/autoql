@@ -1,13 +1,11 @@
 function createColumnChart(component, json, options, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-
+    var data = makeGroups(json, options, [], -1);
+    const minMaxValues = getMinAndMaxValues(data);
     var margin = {top: 5, right: 10, bottom: 50, left: 90},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
-    var values = formatDataToBarChart(json, options);
-    var data = values[0];
-    var hasNegativeValues = values[1];
     var cols = json['data']['columns'];
 
     var groupableField = getGroupableField(json);
@@ -51,18 +49,35 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
+
+    const barWidth = width / data.length;
+    const interval = Math.ceil((data.length * 16) / width);
+    var xTickValues = [];
+    if (barWidth < 16) {
+        data.forEach((element, index) => {
+            if (index % interval === 0) {
+                xTickValues.push(getLabel(element.label));
+            }
+        });
+    }
+
     var x0 = d3.scaleBand()
     .rangeRound([0, width]).padding(.1);
-
     var x1 = d3.scaleBand();
-
     var y = d3.scaleLinear()
-    .range([height, 0]);
+    .range([ height - (margin.bottom), 0 ])
 
     var xAxis = d3.axisBottom(x0)
-    .tickSize(0)
-
     var yAxis = d3.axisLeft(y)
+
+    var labelsNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+
+    x0.domain(labelsNames);
+    x1.domain(groupNames).rangeRound([0, x0.bandwidth()]).padding(.1);
+    y.domain([minMaxValues.min, minMaxValues.max]).nice();
+
+    var axisLeft = d3.axisLeft(y);
 
     var color = d3.scaleOrdinal()
     .range(options.themeConfig.chartColors);
@@ -91,229 +106,73 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
 
-    var data = [
-        {
-            "label": "Student",
-            "values": [
-                {
-                    "value": 0,
-                    "rate": "Not at all"
-                },
-                {
-                    "value": 4,
-                    "rate": "Not very much"
-                },
-                {
-                    "value": 12,
-                    "rate": "Medium"
-                },
-                {
-                    "value": 6,
-                    "rate": "Very much"
-                },
-                {
-                    "value": 0,
-                    "rate": "Tremendously"
-                }
-            ]
-        },
-        {
-            "label": "Liberal Profession",
-            "values": [
-                {
-                    "value": 1,
-                    "rate": "Not at all"
-                },
-                {
-                    "value": 21,
-                    "rate": "Not very much"
-                },
-                {
-                    "value": 13,
-                    "rate": "Medium"
-                },
-                {
-                    "value": 18,
-                    "rate": "Very much"
-                },
-                {
-                    "value": 6,
-                    "rate": "Tremendously"
-                }
-            ]
-        },
-        {
-            "label": "Salaried Staff",
-            "values": [
-            {
-                "value": 3,
-                "rate": "Not at all"
-            },
-            {
-                "value": 22,
-                "rate": "Not very much"
-            },
-            {
-                "value": 6,
-                "rate": "Medium"
-            },
-            {
-                "value": 15,
-                "rate": "Very much"
-            },
-            {
-                "value": 3,
-                "rate": "Tremendously"
-            }
-            ]
-        },
-        {
-            "label": "Employee",
-            "values": [
-            {
-                "value": 12,
-                "rate": "Not at all"
-            },
-            {
-                "value": 7,
-                "rate": "Not very much"
-            },
-            {
-                "value": 18,
-                "rate": "Medium"
-            },
-            {
-                "value": 13,
-                "rate": "Very much"
-            },
-            {
-                "value": 6,
-                "rate": "Tremendously"
-            }
-            ]
-        },
-        {
-            "label": "Craftsman",
-            "values": [
-            {
-                "value": 6,
-                "rate": "Not at all"
-            },
-            {
-                "value": 15,
-                "rate": "Not very much"
-            },
-            {
-                "value": 9,
-                "rate": "Medium"
-            },
-            {
-                "value": 12,
-                "rate": "Very much"
-            },
-            {
-                "value": 3,
-                "rate": "Tremendously"
-            }
-            ]
-        },
-        {
-            "label": "Inactive",
-            "values": [
-            {
-                "value": 6,
-                "rate": "Not at all"
-            },
-            {
-                "value": 6,
-                "rate": "Not very much"
-            },
-            {
-                "value": 6,
-                "rate": "Medium"
-            },
-            {
-                "value": 2,
-                "rate": "Very much"
-            },
-            {
-                "value": 3,
-                "rate": "Tremendously"
-            }
-            ]
-        }
-        ]
+    if(xTickValues.length > 0){
+        xAxis.tickValues(xTickValues);
+    }
 
-    var labelsNames = data.map(function(d) { return d.label; });
-    var rateNames = data[0].values.map(function(d) { return d.rate; });
-
-    x0.domain(labelsNames);
-    x1.domain(rateNames).rangeRound([0, x0.bandwidth()]).padding(.1);
-    y.domain([0, d3.max(data, function(label) { return d3.max(label.values, function(d) { return d.value; }); })]);
-
-    svg.append("g")
-    .attr("class", "x axis")
-    .attr("transform", "translate(0," + height + ")")
-    .call(xAxis);
+    if(barWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end")
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis)
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center")
+    }
 
     svg.append("g")
     .attr("class", "grid")
     .call(
         yAxis
         .tickSize(-width)
-        // .tickFormat(function(d){return formatChartData(d, cols[index1], options)})
+        .tickFormat(function(d){
+            return formatChartData(d, cols[index1], options)}
+        )
     )
-    .append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 6)
-    .attr("dy", ".71em")
-    .style("text-anchor", "end")
-    .style('font-weight','bold')
-    .text("Value");
 
     var slice = svg.selectAll(".slice")
     .data(data)
     .enter().append("g")
     .attr("class", "g")
     .attr("transform",function(d) {
-        return "translate(" + x0(d.label) + ",0)";
+        return "translate(" + x0(getLabel(d.label)) + ",0)";
     });
 
     slice.selectAll("rect")
     .data(function(d) { return d.values; })
     .enter().append("rect")
-    .attr("width", x1.bandwidth())
-    .attr("x", function(d) { return x1(d.rate); })
-    .style("fill", function(d) { return color(d.rate) })
-    .attr("y", function(d) { return y(0); })
-    .attr("height", function(d) { return height - y(0); })
-    .on("mouseover", function(d) {
-        d3.select(this).style("fill", d3.rgb(color(d.rate)).darker(2));
+    .each(function (d, i) {
+        d3.select(this).attr(valueClass, d.index)
+        .attr('data-col1', col1)
+        .attr('data-col2', col2)
+        .attr('data-colvalue1', data[d.index].label)
+        .attr('data-colvalue2', formatData(
+            d.value, cols[index1],
+            options
+        ))
     })
-    .on("mouseout", function(d) {
-        d3.select(this).style("fill", color(d.rate));
-    });
+    .attr("width", x1.bandwidth())
+    .attr("x", function(d) { return x1(d.group); })
+    .style("fill", function(d) { return color(d.group) })
+    .attr('fill-opacity', '0.7')
+    .attr('class', 'tooltip-2d bar')
+    .attr("y", function(d) { return y(Math.max(0, d.value)); })
+    .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
 
-    slice.selectAll("rect")
-    .transition()
-    .delay(function (d) {return Math.random()*1000;})
-    .duration(1000)
-    .attr("y", function(d) { return y(d.value); })
-    .attr("height", function(d) { return height - y(d.value); });
-    // const barWidth = width / data.length;
-    // const interval = Math.ceil((data.length * 16) / width);
-    // var xTickValues = [];
-    // if (barWidth < 16) {
-    //     data.forEach((element, index) => {
-    //         if (index % interval === 0) {
-    //             if(element.label.length < 18){
-    //                 xTickValues.push(element.label);
-    //             }else{
-    //                 xTickValues.push(element.label.slice(0, 18));
-    //             }
-    //         }
-    //     });
-    // }
+    // slice.selectAll("rect")
+    // .transition()
+    // .delay(function (d) {return Math.random()*1000;})
+    // .duration(1000)
+    // .attr("y", function(d) { return y(d.value); })
+    // .attr("height", function(d) { return height - y(d.value); });
+
     // var svg = d3.select(component)
     // .append("svg")
     // .attr("width", width + margin.left)

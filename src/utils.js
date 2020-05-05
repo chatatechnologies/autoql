@@ -230,28 +230,6 @@ function csvTo2dArray(parseMe) {
     return rowsOut;
 }
 
-function getGroupableFields(json){
-    var groupables = []
-    for (var i = 0; i < json['data']['columns'].length; i++) {
-        var r = {
-            indexCol: -1,
-            jsonCol: {},
-            name: ''
-        }
-        if(json['data']['columns'][i]['groupable']){
-            r['indexCol'] = i;
-            r['jsonCol'] = json['data']['columns'][i];
-            r['name'] = json['data']['columns'][i]['name'];
-            groupables.push(r);
-        }
-    }
-
-    console.log('GROUPABLES: ');
-    console.log(groupables);
-
-    return groupables;
-}
-
 function getGroupableField(json){
     var r = {
         indexCol: -1,
@@ -924,7 +902,6 @@ function allColHiddenMessage(table){
         message.style.display = 'none';
     }
 }
-
 
 function mouseX(evt) {
     if (evt.pageX) {
