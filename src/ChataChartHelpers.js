@@ -70,39 +70,3 @@ const getMinAndMaxValues = (data) => {
         max: maxValue
     }
 }
-
-// const getMinAndMaxValues = data => {
-//     console.log(data.length);
-//     try {
-//         const numSeries = getNumberOfSeries(data)
-//         console.log(numSeries);
-//         const maxValuesFromArrays = []
-//         const minValuesFromArrays = []
-//
-//         for (let i = 0; i < numSeries; i++) {
-//             maxValuesFromArrays.push(d3.max(data, d => Math.max(...d.label.values)))
-//             minValuesFromArrays.push(d3.min(data, d => Math.min(...d.label.values)))
-//         }
-//
-//         let maxValue = d3.max(maxValuesFromArrays)
-//         let minValue = d3.min(minValuesFromArrays)
-//
-//         // In order to see the chart elements we need to make sure
-//         // that the max and min values are different.
-//         if (maxValue === minValue) {
-//             if (minValue > 0) {
-//                 minValue = 0
-//             } else if (maxValue < 0) {
-//                 maxValue = 0
-//             }
-//         }
-//
-//         return {
-//             minValue: minValue,
-//             maxValue: maxValue
-//         }
-//     } catch (error) {
-//         console.error(error)
-//         return { minValue: 0, maxValue: 0 }
-//     }
-// }

@@ -77,8 +77,6 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     x1.domain(groupNames).rangeRound([0, x0.bandwidth()]).padding(.1);
     y.domain([minMaxValues.min, minMaxValues.max]).nice();
 
-    var axisLeft = d3.axisLeft(y);
-
     var color = d3.scaleOrdinal()
     .range(options.themeConfig.chartColors);
 
