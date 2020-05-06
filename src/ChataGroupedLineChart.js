@@ -77,7 +77,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .text(col1);
 
 
-    var dataReady = subgroups.map( function(grpName) { // .map allows to do something for each element of the list
+    var dataReady = subgroups.map( function(grpName) {
         return {
             name: grpName,
             values: data.map(function(d) {
@@ -208,6 +208,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .attr('stroke-width', '2')
     .attr('stroke-opacity', '0.7')
     .attr("fill", 'white')
+    
     var nodeWidth = (d) => d.getBBox().width;
 
     const legend = svg.append('g')

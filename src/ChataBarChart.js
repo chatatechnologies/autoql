@@ -28,7 +28,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight
+        - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     if(component.headerElement){
@@ -38,7 +39,9 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
