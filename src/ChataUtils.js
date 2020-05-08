@@ -180,9 +180,7 @@ ChataUtils.groupBy = function(list, keyGetter, indexData) {
     list.forEach((item) => {
         const key = keyGetter(item);
         if (!obj.hasOwnProperty(key)) {
-            obj[key] = item;
-        }else{
-            obj[key].push(item);
+            obj[key] = item[indexData];
         }
     });
     return obj;

@@ -62,7 +62,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     var y1 = d3.scaleBand();
 
     var x = d3.scaleLinear()
-    .range([0, width]).nice();
+    .range([0, width]);
 
     var xAxis = d3.axisBottom(x)
     .tickSize(0)
@@ -77,7 +77,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
 
     y0.domain(categoriesNames);
     y1.domain(groupNames).rangeRound([0, y0.bandwidth()]).padding(.1);
-    x.domain([minMaxValues.min, minMaxValues.max]);
+    x.domain([minMaxValues.min, minMaxValues.max]).nice();
+    console.log(minMaxValues.min);
 
     var svg = d3.select(component)
     .append("svg")
