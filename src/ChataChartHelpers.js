@@ -1,8 +1,10 @@
-const makeGroups = (json, options, numericIndex=[], labelIndex=-1) => {
+const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
+    var columns = json['data']['columns'];
+
     var seriesData = [];
-    if(groupables.length == 1){
+    if(groupables.length === 1 && columns === 2){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
@@ -15,16 +17,55 @@ const makeGroups = (json, options, numericIndex=[], labelIndex=-1) => {
                 values: [
                     {
                         value: parseFloat(data[i][value.indexCol]),
-                        group: '0',
+                        group: '',
                         index: i
                     }
                 ]
             }
             seriesData.push(serie);
         }
+    }else{
+        seriesData = groupByIndex(data, columns, 0, [1,2]);
+        console.log(seriesData);
     }
 
     return seriesData;
+}
+
+const getObjectValues = (item, columns, seriesIndexes) => {
+    var values = []
+    for (var i = 0; i < seriesIndexes.length; i++) {
+        var obj = {};
+        obj['value'] = item[seriesIndexes[i]];
+        obj['index'] = seriesIndexes[i];
+        obj['group'] = columns[i]['name'];
+        values.push(obj);
+        console.log(columns[i]);
+    }
+    return values;
+}
+
+const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
+
+    obj = {};
+    items.forEach((item) => {
+        const key = item[labelIndex];
+        if (!obj[key]) {
+            obj[key] = getObjectValues(item, columns, seriesIndexes);
+        }
+    });
+    return convertoTo2DChartData(obj);
+}
+
+const convertoTo2DChartData = (groupedData) => {
+    var output = []
+    for(var [key, value] of Object.entries(groupedData)){
+        output.push({
+            label: key,
+            values: groupedData[key]
+        })
+    }
+    return output;
 }
 
 const getLabel = (label) => {

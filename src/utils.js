@@ -757,53 +757,156 @@ const getNumberOfGroupables = columns => {
     return null
 }
 
-const getSupportedDisplayTypes = response => {
-    // For CaaS there should be 3 types: data, suggestion, help
-    const displayType = response['data']['display_type']
-
-    if (displayType === 'suggestion' || displayType === 'help') {
-        return [displayType]
-    }
-
-    const columns = response['data']['columns'];
-
-    if (!columns) {
-        return []
-    }
-
-    if (getNumberOfGroupables(columns) === 1) {
-        // Is direct key-value query (ie. Avg days to pay per customer)
-        const supportedDisplayTypes = ['bar', 'column', 'line', 'table']
-
-        if (columns.length === 2) {
-            supportedDisplayTypes.push('pie')
-        }
-
-        // create pivot based on month and year
-        if (
-            columns[0].type === 'DATE' &&
-            columns[0].name.includes('month') &&
-            columns.length === 2
-        ) {
-            supportedDisplayTypes.push('pivot_column')
-        }
-        return supportedDisplayTypes
-    } else if (getNumberOfGroupables(columns) === 2) {
-        // Is pivot query (ie. Sale per customer per month)
-        return [
-            'multi_line',
-            'stacked_bar',
-            'stacked_column',
-            'bubble',
-            'heatmap',
-            'table',
-            'pivot_column'
-        ]
-    }
-
-    // We should always be able to display the table type by default
-    return ['table']
+const supportsRegularPivotTable = columns => {
+    const hasTwoGroupables = getNumberOfGroupables(columns) === 2
+    return hasTwoGroupables && columns.length === 3
 }
+
+const isColumnNumberType = col => {
+    const type = col.type
+    return (
+        type === 'DOLLAR_AMT' ||
+        type === 'QUANTITY' ||
+        type === 'PERCENT' ||
+        type === 'RATIO'
+    )
+}
+
+const isColumnStringType = col => {
+    const  type = col.type
+    return type === 'STRING' || type === 'DATE_STRING' || type === 'DATE'
+}
+
+const getColumnTypeAmounts = columns => {
+    let amountOfStringColumns = 0
+    let amountOfNumberColumns = 0
+
+    columns.forEach(col => {
+        if (isColumnNumberType(col)) {
+            amountOfNumberColumns += 1
+        } else if (isColumnStringType(col)) {
+            amountOfStringColumns += 1
+        }
+    })
+
+    return { amountOfNumberColumns, amountOfStringColumns }
+}
+
+const supports2DCharts = columns => {
+    const amounts =
+    getColumnTypeAmounts(
+        columns
+    )
+
+    return amounts.amountOfNumberColumns > 0
+    && amounts.amountOfStringColumns > 0
+}
+
+const getSupportedDisplayTypes = response => {
+    try {
+        if (!response.data.display_type) {
+            return []
+        }
+
+        const displayType = response.data.display_type
+
+        if (displayType === 'suggestion' || displayType === 'help') {
+            return [displayType]
+        }
+
+        const columns = response.data.columns || [];
+        const rows = response.data.rows || [];
+        console.log(columns);
+        console.log(rows);
+        if (!columns || rows.length <= 1) {
+            return []
+        }
+
+        if (supportsRegularPivotTable(columns)) {
+            let supportedDisplayTypes = ['table']
+            if (rows.length < 1000) {
+                supportedDisplayTypes = [
+                    'pivot_table',
+                    'stacked_bar',
+                    'stacked_column',
+                    'bubble',
+                    'heatmap',
+                    'table'
+                ]
+            }
+            return supportedDisplayTypes
+        } else if (supports2DCharts(columns)) {
+            const supportedDisplayTypes = ['table', 'bar', 'column', 'line']
+
+            supportedDisplayTypes.push('pie')
+                const dateColumn = columns.find(
+                    col => col.type === 'DATE' || col.type === 'DATE_STRING'
+                )
+
+                if (
+                    dateColumn.display_name &&
+                    dateColumn.display_name.toLowerCase().includes('month') &&
+                    columns.length === 2
+                ) {
+                    supportedDisplayTypes.push('pivot_table')
+                }
+                console.log(supportedDisplayTypes);
+                return supportedDisplayTypes
+            }
+            return ['table']
+        } catch (error) {
+            console.error(error)
+            return ['table']
+        }
+}
+
+// const getSupportedDisplayTypes = response => {
+//     // For CaaS there should be 3 types: data, suggestion, help
+//     const displayType = response['data']['display_type']
+//
+//     if (displayType === 'suggestion' || displayType === 'help') {
+//         return [displayType]
+//     }
+//
+//     const columns = response['data']['columns'];
+//
+//     if (!columns) {
+//         return []
+//     }
+//
+//     if (getNumberOfGroupables(columns) === 1) {
+//         // Is direct key-value query (ie. Avg days to pay per customer)
+//         const supportedDisplayTypes = ['bar', 'column', 'line', 'table']
+//
+//         if (columns.length === 2) {
+//             supportedDisplayTypes.push('pie')
+//         }
+//
+//         // create pivot based on month and year
+//         if (
+//             columns[0].type === 'DATE' &&
+//             columns[0].name.includes('month') &&
+//             columns.length === 2
+//         ) {
+//             supportedDisplayTypes.push('pivot_column')
+//         }
+//         return supportedDisplayTypes
+//     } else if (getNumberOfGroupables(columns) === 2) {
+//         // Is pivot query (ie. Sale per customer per month)
+//         return [
+//             'multi_line',
+//             'stacked_bar',
+//             'stacked_column',
+//             'bubble',
+//             'heatmap',
+//             'table',
+//             'pivot_column'
+//         ]
+//     }
+//
+//     // We should always be able to display the table type by default
+//     return ['table']
+// }
 
 function adjustTableWidth(table, thArray, cols,
     selector='[data-indexrow]', offset=0){

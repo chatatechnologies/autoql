@@ -83,20 +83,38 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('text')
+    var labelXContainer = svg.append('g');
+    var labelYContainer = svg.append('g');
+
+    var textContainerY = labelXContainer.append('text')
     .attr('x', -(height / 2))
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
-    .text(col2);
 
-    svg.append('text')
+    textContainerY.append('tspan')
+    .text(col2)
+
+    textContainerY.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+
+
+    var  textContainerX = labelYContainer.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.bottom - 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
+
+    textContainerX.append('tspan')
     .text(col1);
+
+    textContainerX.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
 
     var x = d3.scaleBand()
     .domain(data.map(function(d) {

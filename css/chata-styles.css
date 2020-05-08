@@ -1006,7 +1006,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     fill-opacity: 0.7;
     text-anchor: middle;
     font-weight: bold;
-    font-size: 13px;
+    font-size: 12px;
     font-family: var(--chata-drawer-font-family);
     letter-spacing: 0.04em;
     white-space: nowrap;
@@ -1738,6 +1738,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-no-columns-error-message .eye-icon {
     vertical-align: bottom;
     line-height: 18px;
+}
+
+.autoql-vanilla-chata-axis-selector-arrow{
+    opacity: 1 !important;
 }
 
 @-webkit-keyframes fadeIn {
