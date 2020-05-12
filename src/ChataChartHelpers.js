@@ -4,7 +4,9 @@ const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
     var columns = json['data']['columns'];
 
     var seriesData = [];
-    if(groupables.length === 1 && columns === 2){
+    // console.log(groupable.length);
+    // console.log(colu.length);
+    if(groupables.length === 1 && columns.length === 2){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
@@ -17,7 +19,7 @@ const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
                 values: [
                     {
                         value: parseFloat(data[i][value.indexCol]),
-                        group: '',
+                        group: formatColumnName(columns[group.indexCol].name),
                         index: i
                     }
                 ]
@@ -38,9 +40,8 @@ const getObjectValues = (item, columns, seriesIndexes) => {
         var obj = {};
         obj['value'] = item[seriesIndexes[i]];
         obj['index'] = seriesIndexes[i];
-        obj['group'] = columns[i]['name'];
+        obj['group'] = formatColumnName(columns[seriesIndexes[i]]['name']);
         values.push(obj);
-        console.log(columns[i]);
     }
     return values;
 }

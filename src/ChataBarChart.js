@@ -1,7 +1,7 @@
 function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var data = makeGroups(json, options, [], -1);
     const minMaxValues = getMinAndMaxValues(data);
-    var margin = {top: 5, right: 10, bottom: 50, left: 130},
+    var margin = {top: 5, right: 10, bottom: 50, left: 130, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = json['data']['columns'];
@@ -56,9 +56,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         });
     }
 
-    var y0 = d3.scaleBand()
-    .rangeRound([0, height]).padding(.1);
-
+    var y0 = d3.scaleBand();
     var y1 = d3.scaleBand();
 
     var x = d3.scaleLinear()
@@ -69,16 +67,29 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
 
     var yAxis = d3.axisLeft(y0)
 
-    var color = d3.scaleOrdinal()
-    .range(options.themeConfig.chartColors);
 
     var categoriesNames = data.map(function(d) { return getLabel(d.label); });
     var groupNames = data[0].values.map(function(d) { return d.group; });
 
-    y0.domain(categoriesNames);
+
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend){
+        margin.bottom = 80;
+        margin.marginLabel = 0;
+    }
+
+    y0
+    .rangeRound([height - margin.bottom, 0])
+    .domain(categoriesNames)
+    .padding(.1);
+
     y1.domain(groupNames).rangeRound([0, y0.bandwidth()]).padding(.1);
     x.domain([minMaxValues.min, minMaxValues.max]).nice();
-    console.log(minMaxValues.min);
+
+    var colorScale = d3.scaleOrdinal()
+    .domain(groupNames)
+    .range(options.themeConfig.chartColors);
+
 
     var svg = d3.select(component)
     .append("svg")
@@ -98,14 +109,14 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
 
     svg.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + margin.marginLabel)
     .attr('text-anchor', 'middle')
     .attr("class", "autoql-vanilla-x-axis-label")
     .text(col2);
 
     if(tickWidth < 135){
         svg.append("g")
-        .attr("transform", "translate(0," + (height) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(xAxis)
         .selectAll("text")
         .style("color", '#fff')
@@ -113,7 +124,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         .style("text-anchor", "end");
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(xAxis)
         .selectAll("text")
         .style("color", '#fff')
@@ -123,7 +134,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     svg.append("g")
         .attr("class", "grid")
         .call(xAxis
-            .tickSize(height)
+            .tickSize(height - margin.bottom)
             .tickFormat("")
         );
 
@@ -160,95 +171,44 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     .attr("height", function(d) { return y1.bandwidth() })
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
-    .style("fill", function(d) { return color(d.group) })
+    .style("fill", function(d) { return colorScale(d.group) })
 
 
-    // // Add X axis
-    // var x = d3.scaleLinear()
-    // .domain(ChataUtils.makeBarChartDomain(data, hasNegativeValues))
-    // .range([ 0, width]).nice();
-    // var xAxis = d3.axisBottom(x);
-    // xAxis.tickSize(0);
-    //
-    // xAxis.tickFormat(function(d){
-    //     return formatChartData(d, cols[index1], options);
-    // });
-    //
-    // if(tickWidth < 135){
-    //     svg.append("g")
-    //     .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    //     .call(xAxis)
-    //     .selectAll("text")
-    //     .style("color", '#fff')
-    //     .attr("transform", "translate(-10,0)rotate(-45)")
-    //     .style("text-anchor", "end");
-    // }else{
-    //     svg.append("g")
-    //     .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-    //     .call(xAxis)
-    //     .selectAll("text")
-    //     .style("color", '#fff')
-    //     .style("text-anchor", "center");
-    // }
-    //
-    //
-    // // Y axis
-    // var y = d3.scaleBand()
-    // .range([ 0, height - margin.bottom ])
-    // .domain(data.map(function(d) {
-    //     if(d.label.length < 18){
-    //         return d.label;
-    //     }else{
-    //         return d.label.slice(0, 18) + '...';
-    //     }
-    // }))
-    // .padding(.1);
-    //
-    // var yAxis = d3.axisLeft(y);
-    //
-    // if(yTickValues.length > 0){
-    //     yAxis.tickValues(yTickValues);
-    // }
-    //
-    // svg.append("g")
-    // .call(yAxis);
-    //
-    // svg.append("g")
-    // .attr("class", "grid")
-    // .call(d3.axisBottom(x)
-    //     .tickSize(height - margin.bottom)
-    //     .tickFormat("")
-    // );
-    //
-    // //Bars
-    // svg.selectAll("rect_bar")
-    // .data(data)
-    // .enter()
-    // .append("rect")
-    // .each(function (d, i) {
-    //     d3.select(this).attr(valueClass, i)
-    //     .attr('data-col1', col1)
-    //     .attr('data-col2', col2)
-    //     .attr('data-colvalue1', d.label)
-    //     .attr('data-colvalue2', formatData(
-    //         d.value,
-    //         cols[index1],
-    //         options
-    //     ))
-    // })
-    // .attr("x", function(d) { return x(Math.min(0, d.value)); })
-    // .attr("y", function(d) {
-    //     if(d.label.length < 18){
-    //         return y(d.label);
-    //     }else{
-    //         return y(d.label.slice(0, 18) + '...');
-    //     }
-    // })
-    // .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
-    // .attr("height", y.bandwidth())
-    // .attr("fill", options.themeConfig.chartColors[0])
-    // .attr('fill-opacity', '0.7')
-    // .attr('class', 'tooltip-2d bar')
+    if(hasLegend){
+        var svgLegend = svg.append('g')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', '0.7')
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
+
+        const legendWrapLength = width / 2 - 50
+        var legendOrdinal = d3.legendColor()
+        .shape(
+            'path',
+            d3.symbol()
+            .type(d3.symbolCircle)
+            .size(70)()
+        )
+        .orient('horizontal')
+        .shapePadding(100)
+        .labelWrap(legendWrapLength)
+        .scale(colorScale)
+        svgLegend.call(legendOrdinal)
+
+        let legendBBox
+        const legendElement = svgLegend.node()
+        if (legendElement) {
+            legendBBox = legendElement.getBBox()
+        }
+
+        const legendHeight = legendBBox.height
+        const legendWidth = legendBBox.width
+        const legendXPosition = width / 2 - (legendWidth/2)
+        const legendYPosition = height + 25
+        svgLegend
+        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    }
+
     tooltipCharts();
 
 }

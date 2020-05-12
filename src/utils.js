@@ -843,14 +843,16 @@ const getSupportedDisplayTypes = response => {
                     col => col.type === 'DATE' || col.type === 'DATE_STRING'
                 )
 
-                if (
-                    dateColumn.display_name &&
-                    dateColumn.display_name.toLowerCase().includes('month') &&
-                    columns.length === 2
-                ) {
-                    supportedDisplayTypes.push('pivot_table')
+                if(dateColumn){
+                    if (
+                        dateColumn.name &&
+                        dateColumn.name.toLowerCase().includes('month') &&
+                        columns.length === 2
+                    ) {
+                        supportedDisplayTypes.push('pivot_table')
+                    }
                 }
-                console.log(supportedDisplayTypes);
+
                 return supportedDisplayTypes
             }
             return ['table']

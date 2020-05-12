@@ -1,7 +1,7 @@
 function createLineChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var data = makeGroups(json, options, [], -1);
     const minMaxValues = getMinAndMaxValues(data);
-    var margin = {top: 5, right: 10, bottom: 50, left: 90},
+    var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
@@ -12,7 +12,8 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     var index1 = notGroupableField.indexCol;
     var index2 = groupableField.indexCol;
-
+    console.log(index2);
+    console.log(index1);
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
@@ -20,6 +21,11 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     var labelsNames = data.map(function(d) { return d.label; });
     var allGroup = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = allGroup.length > 1;
+    if(hasLegend){
+        margin.bottom = 70;
+        margin.marginLabel = 10;
+    }
     var allData = [];
     var colorScale = d3.scaleOrdinal()
     .domain(allGroup)
@@ -41,7 +47,8 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight
+            - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
             }
@@ -49,7 +56,8 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight
+        - (margin.bottom + margin.top);
     }
 
     component.innerHTML = '';
@@ -61,7 +69,9 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -104,7 +114,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     var  textContainerX = labelYContainer.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom - 3)
+    .attr('y', height + margin.marginLabel + 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
 
@@ -202,81 +212,46 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     })
     .attr("cy", function(d) { return y(d.value) })
     .attr("r", 3)
-    .attr('stroke', function(d) { console.log(d.name); return colorScale(d.name) })
+    .attr('stroke', function(d) { return colorScale(d.name) })
     .attr('stroke-width', '2')
     .attr('stroke-opacity', '0.7')
     .attr("fill", 'white')
     .attr('class', 'tooltip-2d line-dot')
 
+    if(hasLegend){
+        var svgLegend = svg.append('g')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', '0.7')
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
 
-    //
-    // minValue = 0;
-    //
-    // if(hasNegativeValues){
-    //     minValue = d3.min(data, function(d) {return d.value});
-    // }
-    //
-    // // Add Y axis
-    // var y = d3.scaleLinear()
-    // .range([ height - (margin.bottom), 0 ])
-    // .domain([minValue, d3.max(data, function(d) { return d.value; })]).nice();
-    // var yAxis = d3.axisLeft(y);
-    // // Add the line
-    // svg.append("path")
-    // .datum(data)
-    // .attr("fill", "none")
-    // .attr("stroke", options.themeConfig.chartColors[0])
-    // .attr("stroke-width", 1)
-    // .attr('opacity', '0.7')
-    // .attr("d", d3.line()
-    // .x(function(d) {
-    //     if(d.label.length < 18){
-    //         return x(d.label);
-    //     }else{
-    //         return x(d.label.slice(0, 18));
-    //     }
-    //  })
-    // .y(function(d) { return y(d.value) })
-    // )
-    // svg.append("g")
-    // .attr("class", "grid")
-    // .call(yAxis.tickFormat(function(d){
-    //     return formatChartData(d, cols[index1], options)}
-    // )
-    // .tickSize(-width)
-    // );
-    // svg.append("g").call(yAxis).select(".domain").remove();
-    //
-    // svg
-    // .append("g")
-    // .selectAll("dot")
-    // .data(data)
-    // .enter()
-    // .append("circle")
-    // .each(function (d, i) {
-    //     d3.select(this).attr(valueClass, i)
-    //     .attr('data-col1', col1)
-    //     .attr('data-col2', col2)
-    //     .attr('data-colvalue1', d.label)
-    //     .attr('data-colvalue2',formatData(
-    //         d.value, cols[index1],
-    //         options
-    //     ))
-    // })
-    // .attr("cx", function(d) {
-    //     if(d.label.length < 18){
-    //         return x(d.label);
-    //     }else{
-    //         return x(d.label.slice(0, 18));
-    //     }
-    //  } )
-    // .attr("cy", function(d) { return y(d.value) } )
-    // .attr("r", 3)
-    // .attr('stroke', options.themeConfig.chartColors[0])
-    // .attr('stroke-width', '2')
-    // .attr('stroke-opacity', '0.7')
-    // .attr("fill", 'white')
-    // .attr('class', 'tooltip-2d line-dot')
+        const legendWrapLength = width / 2 - 50
+        var legendOrdinal = d3.legendColor()
+        .shape(
+            'path',
+            d3.symbol()
+            .type(d3.symbolCircle)
+            .size(70)()
+        )
+        .orient('horizontal')
+        .shapePadding(100)
+        .labelWrap(legendWrapLength)
+        .scale(colorScale)
+        svgLegend.call(legendOrdinal)
+
+        let legendBBox
+        const legendElement = svgLegend.node()
+        if (legendElement) {
+            legendBBox = legendElement.getBBox()
+        }
+
+        const legendHeight = legendBBox.height
+        const legendWidth = legendBBox.width
+        const legendXPosition = width / 2 - (legendWidth/2)
+        const legendYPosition = height + 45
+        svgLegend
+        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    }
 
     tooltipCharts();
 }
