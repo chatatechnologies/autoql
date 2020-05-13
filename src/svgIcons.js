@@ -43,19 +43,16 @@ const COLUMN_CHART_ICON = `
 `;
 
 const STACKED_COLUMN_CHART_ICON = `
-<svg class="stacked_column_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-    <path class="chart-icon-svg-0 stacked_column_chart" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
-    </path>
-</svg>
+<svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g><path class="hm1" d="M0,11.5h5.3V16H1.4C0.6,16,0,15.4,0,14.6V11.5z"></path><path class="hm2" d="M5.3,8c0-0.9-0.6-1.7-1.4-1.7H1.4C0.6,6.3,0,7.1,0,8l0,1.1h5.3V8L5.3,8z"></path><rect x="0" y="9.1" class="hm0" width="5.3" height="2.4"></rect></g><g><path class="hm1" d="M10.6,10.1H16v4.5c0,0.8-0.6,1.4-1.4,1.4h-4.1V10.1z"></path><path class="hm2" d="M16,4.8c0-0.9-0.7-1.6-1.5-1.6H12c-0.8,0-1.5,0.7-1.5,1.6v1.9H16V4.8z"></path><rect x="10.6" y="6.8" class="hm0" width="5.4" height="3.3"></rect></g><g><rect class="hm1" x="5.3" y="8" width="5.2" height="8"></rect><path class="hm2" d="M10.6,1.4C10.6,0.6,9.9,0,9.1,0H6.7C6,0,5.3,0.6,5.3,1.4v3.1h5.2V1.4z"></path><rect x="5.3" y="4.6" class="hm0" width="5.2" height="3.4"></rect></g></svg>
 `;
 
 const STACKED_BAR_CHART_ICON = `
-<svg class="stacked_bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-    <path class="chart-icon-svg-0 stacked_bar_chart" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
-    </path>
-</svg>
+<svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g><g><path class="hm1" d="M1.4,16C0.6,16,0,15.4,0,14.6v-3.9h4.5V16H1.4z"></path><path class="hm2" d="M8,10.7l-1.1,0V16L8,16c0.9,0,1.7-0.6,1.7-1.4v-2.5C9.7,11.3,8.9,10.7,8,10.7L8,10.7z"></path><rect x="4.5" y="10.7" class="hm0" width="2.4" height="5.3"></rect></g><g><path class="hm1" d="M0,5.4l0-4.1C0,0.6,0.6,0,1.4,0h4.5v5.4H0z"></path><path class="hm2" d="M9.2,0v5.4h1.9c0.9,0,1.6-0.7,1.6-1.5V1.5C12.7,0.7,12,0,11.2,0L9.2,0z"></path><rect x="5.9" y="0" class="hm0" width="3.3" height="5.4"></rect></g><g><rect class="hm1" x="0" y="5.4" width="8" height="5.2"></rect><path class="hm2" d="M11.4,5.4v5.2h3.1c0.8,0,1.4-0.6,1.4-1.4V6.9c0-0.8-0.6-1.4-1.4-1.4H11.4z"></path><rect x="8" y="5.4" class="hm0" width="3.4" height="5.2"></rect></g></g></svg>
 `;
 
+const STACKED_AREA_CHART_ICON = `
+    <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g class="st2"><polygon class="hm2" points="12,5.5 9.1,10 4.8,0 0,5 0,8 4.4,6.1 9.1,11.8 12,9.3 16,10.7 16,9.7 		"></polygon></g><polygon class="hm0" points="12,9.3 9.1,11.8 4.4,6.1 0,8 0,12.4 4.2,7.7 9.7,15.4 12.2,11.1 16,14.3 16,10.7 	"></polygon><path class="hm1" d="M9.7,15.4L4.2,7.6L0,12.4v2.3c0,0.7,0.6,1.3,1.3,1.3h13.4c0.7,0,1.3-0.6,1.3-1.3v-0.4L12.2,11L9.7,15.4z"></path></svg>
+`;
 
 const BAR_CHART_ICON = `
 <svg class="bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">

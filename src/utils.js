@@ -816,8 +816,7 @@ const getSupportedDisplayTypes = response => {
 
         const columns = response.data.columns || [];
         const rows = response.data.rows || [];
-        console.log(columns);
-        console.log(rows);
+
         if (!columns || rows.length <= 1) {
             return []
         }
@@ -829,6 +828,7 @@ const getSupportedDisplayTypes = response => {
                     'pivot_table',
                     'stacked_bar',
                     'stacked_column',
+                    'stacked_line',
                     'bubble',
                     'heatmap',
                     'table'

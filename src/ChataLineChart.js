@@ -111,8 +111,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     .text('▼')
     .style('font-size', '8px')
 
-
-    var  textContainerX = labelYContainer.append('text')
+    var textContainerX = labelYContainer.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.marginLabel + 3)
     .attr('text-anchor', 'middle')

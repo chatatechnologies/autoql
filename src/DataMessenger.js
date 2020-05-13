@@ -1101,9 +1101,6 @@ function DataMessenger(elem, options){
                 }
                 if(obj.finalTranscript !== ''){
                     obj.input.value = obj.finalTranscript;
-                    console.log(obj.finalTranscript);
-                    // var chataInput = document.getElementById('autoql-vanilla-chata-input');
-                    // obj.sendMessage(chataInput, obj.finalTranscript, 'data_messenger.user');
                     obj.speechToText.stop();
                     obj.voiceRecordButton.style.backgroundColor =
                     obj.options.themeConfig.accentColor;
@@ -1430,7 +1427,7 @@ function DataMessenger(elem, options){
                 );
                 var columnVisibility = obj.options.
                 autoQLConfig.enableColumnVisibilityManager
-                if(columnVisibility && displayType !== 'pivot_column'){
+                if(columnVisibility && displayType !== 'pivot_table'){
                     toolbar.appendChild(
                         obj.getActionButton(
                             COLUMN_EDITOR,
@@ -1529,7 +1526,7 @@ function DataMessenger(elem, options){
 
         scrollBox.scrollLeft = 0;
 
-        var actionType = ['table', 'pivot_column', 'date_pivot'].includes(
+        var actionType = ['table', 'pivot_table', 'date_pivot'].includes(
             ignore
         ) ? 'csvCopy' : 'chart-view';
 
@@ -1728,7 +1725,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         var columns = json['data']['columns'];
         let pivotArray;
-        obj.refreshToolbarButtons(component, 'pivot_column');
+        obj.refreshToolbarButtons(component, 'pivot_table');
         if(columns[0].type === 'DATE' && columns[0].name.includes('month')){
             pivotArray = getDatePivotArray(
                 json, obj.options, json['data']['rows']
@@ -1775,6 +1772,15 @@ function DataMessenger(elem, options){
             component, cloneObject(json), obj.options
         );
         obj.registerDrilldownStackedChartEvent(component);
+    }
+
+    obj.displayAreaHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_line');
+        createAreaChart(
+            component, cloneObject(json), obj.options
+        );
     }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
@@ -1831,7 +1837,7 @@ function DataMessenger(elem, options){
                     'Line Chart', obj.displayLineChartHandler
                 );
             }
-            if(displayTypes[i] == 'pivot_column'){
+            if(displayTypes[i] == 'pivot_table'){
                 button = obj.getDisplayTypeButton(
                     idRequest, PIVOT_ICON,
                     'Pivot Table', obj.displayPivotTableHandler
@@ -1859,6 +1865,13 @@ function DataMessenger(elem, options){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_BAR_CHART_ICON,
                     'Stacked Bar Chart', obj.displayStackedBarHandler
+                );
+            }
+
+            if(displayTypes[i] == 'stacked_line'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, STACKED_AREA_CHART_ICON,
+                    'Stacked Area Chart', obj.displayAreaHandler
                 );
             }
 
@@ -2602,7 +2615,7 @@ function DataMessenger(elem, options){
                         case 'date_pivot':
                             obj.putTableResponse(jsonResponse);
                         break;
-                        case 'pivot_column':
+                        case 'pivot_table':
                             obj.putTableResponse(jsonResponse);
                         break;
                         case 'line':
