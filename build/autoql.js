@@ -21856,19 +21856,16 @@ const COLUMN_CHART_ICON = `
 `;
 
 const STACKED_COLUMN_CHART_ICON = `
-<svg class="stacked_column_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-    <path class="chart-icon-svg-0 stacked_column_chart" d="M12.6,0h-2.4C9.4,0,8.8,0.6,8.8,1.4v2.7c0,0,0,0,0,0H6.3c-0.8,0-1.4,0.6-1.4,1.4v3.2c0,0-0.1,0-0.1,0H2.4 C1.6,8.7,1,9.4,1,10.1v4.5C1,15.4,1.6,16,2.4,16h2.4c0,0,0.1,0,0.1,0h1.3c0,0,0.1,0,0.1,0h2.4c0,0,0.1,0,0.1,0H10c0,0,0.1,0,0.1,0 h2.4c0.8,0,1.4-0.6,1.4-1.4V1.4C14,0.6,13.3,0,12.6,0z M6.3,5.5h2.4v9.1H6.3V5.5z M2.4,10.1h2.4v4.5H2.4V10.1z M12.6,14.6h-2.4V1.4 h2.4V14.6z">
-    </path>
-</svg>
+<svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g><path class="hm1" d="M0,11.5h5.3V16H1.4C0.6,16,0,15.4,0,14.6V11.5z"></path><path class="hm2" d="M5.3,8c0-0.9-0.6-1.7-1.4-1.7H1.4C0.6,6.3,0,7.1,0,8l0,1.1h5.3V8L5.3,8z"></path><rect x="0" y="9.1" class="hm0" width="5.3" height="2.4"></rect></g><g><path class="hm1" d="M10.6,10.1H16v4.5c0,0.8-0.6,1.4-1.4,1.4h-4.1V10.1z"></path><path class="hm2" d="M16,4.8c0-0.9-0.7-1.6-1.5-1.6H12c-0.8,0-1.5,0.7-1.5,1.6v1.9H16V4.8z"></path><rect x="10.6" y="6.8" class="hm0" width="5.4" height="3.3"></rect></g><g><rect class="hm1" x="5.3" y="8" width="5.2" height="8"></rect><path class="hm2" d="M10.6,1.4C10.6,0.6,9.9,0,9.1,0H6.7C6,0,5.3,0.6,5.3,1.4v3.1h5.2V1.4z"></path><rect x="5.3" y="4.6" class="hm0" width="5.2" height="3.4"></rect></g></svg>
 `;
 
 const STACKED_BAR_CHART_ICON = `
-<svg class="stacked_bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
-    <path class="chart-icon-svg-0 stacked_bar_chart" d="M14.6,1.6H1.4C0.6,1.6,0,2.2,0,3v2.4v0.1v1.2v0.1v2.4v0.1v1.3v0.1v2.4c0,0.8,0.6,1.4,1.4,1.4h4.5 c0.7,0,1.4-0.6,1.4-1.4v-2.4v-0.1h3.2c0.8,0,1.4-0.6,1.4-1.4V6.7l0,0h2.7c0.8,0,1.4-0.6,1.4-1.4V2.9C16,2.2,15.4,1.5,14.6,1.6z M1.4,9.2V6.8h9.1v2.4H1.4z M1.4,13.1v-2.4h4.5v2.4H1.4z M14.6,2.9v2.4H1.4V2.9H14.6z">
-    </path>
-</svg>
+<svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g><g><path class="hm1" d="M1.4,16C0.6,16,0,15.4,0,14.6v-3.9h4.5V16H1.4z"></path><path class="hm2" d="M8,10.7l-1.1,0V16L8,16c0.9,0,1.7-0.6,1.7-1.4v-2.5C9.7,11.3,8.9,10.7,8,10.7L8,10.7z"></path><rect x="4.5" y="10.7" class="hm0" width="2.4" height="5.3"></rect></g><g><path class="hm1" d="M0,5.4l0-4.1C0,0.6,0.6,0,1.4,0h4.5v5.4H0z"></path><path class="hm2" d="M9.2,0v5.4h1.9c0.9,0,1.6-0.7,1.6-1.5V1.5C12.7,0.7,12,0,11.2,0L9.2,0z"></path><rect x="5.9" y="0" class="hm0" width="3.3" height="5.4"></rect></g><g><rect class="hm1" x="0" y="5.4" width="8" height="5.2"></rect><path class="hm2" d="M11.4,5.4v5.2h3.1c0.8,0,1.4-0.6,1.4-1.4V6.9c0-0.8-0.6-1.4-1.4-1.4H11.4z"></path><rect x="8" y="5.4" class="hm0" width="3.4" height="5.2"></rect></g></g></svg>
 `;
 
+const STACKED_AREA_CHART_ICON = `
+    <svg x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16"><g class="st2"><polygon class="hm2" points="12,5.5 9.1,10 4.8,0 0,5 0,8 4.4,6.1 9.1,11.8 12,9.3 16,10.7 16,9.7 		"></polygon></g><polygon class="hm0" points="12,9.3 9.1,11.8 4.4,6.1 0,8 0,12.4 4.2,7.7 9.7,15.4 12.2,11.1 16,14.3 16,10.7 	"></polygon><path class="hm1" d="M9.7,15.4L4.2,7.6L0,12.4v2.3c0,0.7,0.6,1.3,1.3,1.3h13.4c0.7,0,1.3-0.6,1.3-1.3v-0.4L12.2,11L9.7,15.4z"></path></svg>
+`;
 
 const BAR_CHART_ICON = `
 <svg class="bar_chart" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
@@ -21918,7 +21915,7 @@ const BUBBLE_CHART_ICON = `
 `;
 
 const HELP_ICON = `
-<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-help-link-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="autoql-vanilla-chata-help-link-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 48h-.7c-55.4.2-107.4 21.9-146.6 61.1C69.6 148.4 48 200.5 48 256s21.6 107.6 60.8 146.9c39.1 39.2 91.2 60.9 146.6 61.1h.7c114.7 0 208-93.3 208-208S370.7 48 256 48zm180.2 194h-77.6c-.9-26.7-4.2-52.2-9.8-76.2 17.1-5.5 33.7-12.5 49.7-21 22 28.2 35 61.6 37.7 97.2zM242 242h-61.8c.8-24.5 3.8-47.7 8.8-69.1 17.4 3.9 35.1 6.3 53 7.1v62zm0 28v61.9c-17.8.8-35.6 3.2-53 7.1-5-21.4-8-44.6-8.8-69H242zm28 0h61.3c-.8 24.4-3.8 47.6-8.8 68.9-17.2-3.9-34.8-6.2-52.5-7V270zm0-28v-62c17.8-.8 35.4-3.2 52.5-7 5 21.4 8 44.5 8.8 69H270zm109.4-117.9c-12.3 6.1-25 11.3-38 15.5-7.1-21.4-16.1-39.9-26.5-54.5 24 8.3 45.9 21.6 64.5 39zM315 146.8c-14.7 3.2-29.8 5.2-45 6V79.4c17 9.2 33.6 33.9 45 67.4zM242 79v73.7c-15.4-.8-30.6-2.8-45.5-6.1 11.6-33.8 28.4-58.5 45.5-67.6zm-45.6 6.4c-10.3 14.5-19.2 32.9-26.3 54.1-12.8-4.2-25.4-9.4-37.5-15.4 18.4-17.3 40.1-30.5 63.8-38.7zm-82.9 59.5c15.8 8.4 32.3 15.4 49.2 20.8-5.7 23.9-9 49.5-9.8 76.2h-77c2.6-35.4 15.6-68.8 37.6-97zM75.8 270h77c.9 26.7 4.2 52.3 9.8 76.2-16.9 5.5-33.4 12.5-49.2 20.8-21.9-28.1-34.9-61.5-37.6-97zm56.7 117.9c12.1-6 24.7-11.2 37.6-15.4 7.1 21.3 16 39.6 26.3 54.2-23.7-8.4-45.4-21.5-63.9-38.8zm64-22.6c14.9-3.3 30.2-5.3 45.5-6.1V433c-17.2-9.1-33.9-33.9-45.5-67.7zm73.5 67.3v-73.5c15.2.8 30.3 2.8 45 6-11.4 33.6-28 58.3-45 67.5zm45-5.7c10.4-14.6 19.4-33.1 26.5-54.5 13 4.2 25.8 9.5 38 15.6-18.6 17.3-40.6 30.6-64.5 38.9zm83.5-59.8c-16-8.5-32.6-15.5-49.7-21 5.6-23.9 8.9-49.4 9.8-76.1h77.6c-2.7 35.5-15.6 68.9-37.7 97.1z">
     </path>
 </svg>
@@ -22140,14 +22137,14 @@ PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2Jl
 `;
 
 const RUN_QUERY = `
-<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-execute-query-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="autoql-vanilla-chata-execute-query-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
     </path>
 </svg>
 `;
 
 const DELETE_ICON = `
-<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="autoql-vanilla-chata-safety-net-delete-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M331.3 308.7L278.6 256l52.7-52.7c6.2-6.2 6.2-16.4 0-22.6-6.2-6.2-16.4-6.2-22.6 0L256 233.4l-52.7-52.7c-6.2-6.2-15.6-7.1-22.6 0-7.1 7.1-6 16.6 0 22.6l52.7 52.7-52.7 52.7c-6.7 6.7-6.4 16.3 0 22.6 6.4 6.4 16.4 6.2 22.6 0l52.7-52.7 52.7 52.7c6.2 6.2 16.4 6.2 22.6 0 6.3-6.2 6.3-16.4 0-22.6z">
     </path>
     <path d="M256 76c48.1 0 93.3 18.7 127.3 52.7S436 207.9 436 256s-18.7 93.3-52.7 127.3S304.1 436 256 436c-48.1 0-93.3-18.7-127.3-52.7S76 304.1 76 256s18.7-93.3 52.7-127.3S207.9 76 256 76m0-28C141.1 48 48 141.1 48 256s93.1 208 208 208 208-93.1 208-208S370.9 48 256 48z">
@@ -22166,17 +22163,16 @@ const CLEAR_ALL = `
 `
 
 const DELETE_MESSAGE = `
-<svg class="delete-message" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 448 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path class="delete-message" d="M268 416h24a12 12 0 0 0 12-12V188a12 12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12zM432 80h-82.41l-34-56.7A48 48 0 0 0 274.41
-        0H173.59a48 48 0 0 0-41.16 23.3L98.41 80H16A16 16 0 0 0 0 96v16a16 16 0 0 0 16 16h16v336a48 48 0 0 0 48 48h288a48 48 0 0 0 48-48V128h16a16 16 0 0 0
-        16-16V96a16 16 0 0 0-16-16zM171.84 50.91A6 6 0 0 1 177 48h94a6 6 0 0 1 5.15 2.91L293.61 80H154.39zM368 464H80V128h288zm-212-48h24a12 12 0 0 0 12-12V188a12
-        12 0 0 0-12-12h-24a12 12 0 0 0-12 12v216a12 12 0 0 0 12 12z">
-    </path>
+<svg class="delete-message" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <polyline class="delete-message" points="3 6 5 6 21 6"></polyline>
+    <path class="delete-message" d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    <line class="delete-message" x1="10" y1="11" x2="10" y2="17"></line>
+    <line class="delete-message" x1="14" y1="11" x2="14" y2="17"></line>
 </svg>
 `;
 
 const INFO_ICON = `
-<svg fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" class="interpretation-icon">
+<svg fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" class="autoql-vanilla-interpretation-icon">
     <path class="" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
     </path>
 </svg>
@@ -22230,9 +22226,10 @@ const SEARCH_ICON = `
 `;
 
 const COLUMN_EDITOR = `
-<svg class="show-hide-columns" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path class="show-hide-columns" d="M572.52 241.4C518.29 135.59 410.93 64 288 64S57.68 135.64 3.48 241.41a32.35 32.35 0 0 0 0 29.19C57.71 376.41 165.07 448 288 448s230.32-71.64 284.52-177.41a32.35 32.35 0 0 0 0-29.19zM288 400a144 144 0 1 1 144-144 143.93 143.93 0 0 1-144 144zm0-240a95.31 95.31 0 0 0-25.31 3.79 47.85 47.85 0 0 1-66.9 66.9A95.78 95.78 0 1 0 288 160z">
+<svg class="show-hide-columns" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path class="show-hide-columns" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
     </path>
+    <circle class="show-hide-columns" cx="12" cy="12" r="3"></circle>
 </svg>
 `;
 
@@ -22309,6 +22306,88 @@ const COPY_SQL = `
     <path class="sql" d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
     <path class="sql" d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
 </svg>
+`;
+
+const SPLIT_VIEW = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M872 476H152c-4.4
+    0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h720c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0-166h-56c-4.4 0-8 3.6-8 8v56c0
+    4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 498h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0
+    8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0-664h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0
+    498h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM650 216h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0
+    4.4 3.6 8 8 8zm56 592h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm-332 0h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0
+    8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm-56-592h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-166 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4
+    0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm332 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zM208 808h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0
+    8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm332 0h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM152 382h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8
+    3.6-8 8v56c0 4.4 3.6 8 8 8zm332 0h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zM208 642h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6
+    8-8v-56c0-4.4-3.6-8-8-8zm332 0h-56c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h56c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8z">
+    </path>
+</svg>
+`;
+
+const LEFT_ARROW = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"></path>
+</svg>
+`;
+
+const MORE_OPTIONS = `
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path d="M296 136c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40zm0 240c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40zm0-120c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40z">
+        </path>
+    </svg>
+`;
+
+const TICK = `
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="20 6 9 17 4 12"></polyline>
+</svg>
+`;
+
+const VERTICAL_DOTS = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M296 136c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40zm0 240c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40zm0-120c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40z"></path>
+</svg>
+`;
+
+const REPORT_PROBLEM = `
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line>
+</svg>
+`;
+
+const WARNING = `
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line>
+    <line x1="12" y1="17" x2="12" y2="17"></line>
+</svg>
+`;
+
+const CLOSE_ICON = `
+<svg class="" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path class="" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
+</svg>
+`;
+
+const POPOVER_ICON = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="autoql-vanilla-chata-confirm-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
+</svg>
+`;
+
+const VOICE_RECORD_IMAGE = `
+    <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false"/>
+`;
+
+const REMOVE_ELEMENT = `
+    <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <polyline points="3 6 5 6 21 6"></polyline>
+        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <line x1="10" y1="11" x2="10" y2="17"></line>
+        <line x1="14" y1="11" x2="14" y2="17"></line>
+    </svg>
 `;
 
 const LIGHT_THEME = {
@@ -22406,11 +22485,15 @@ function formatData(val, col, allOptions={}){
             }
         break;
         case 'PERCENT':
-            val = parseFloat(val) * 100;
-            if(!isNaN(val)){
-                value =  val.toFixed(2) + '%';
+            if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
+                val = parseFloat(val) * 100;
+                if(!isNaN(val)){
+                    value =  val.toFixed(2) + '%';
+                }else{
+                    value = '';
+                }
             }else{
-                value = '';
+                value = parseFloat(val).toFixed(4);
             }
         break;
         case 'QUANTITY':
@@ -22423,11 +22506,15 @@ function formatData(val, col, allOptions={}){
             }
         break;
         case 'RATIO':
-            val = parseFloat(val) * 100;
-            if(!isNaN(val)){
-                value =  val.toFixed(2) + '%';
+            if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
+                val = parseFloat(val) * 100;
+                if(!isNaN(val)){
+                    value =  val.toFixed(2) + '%';
+                }else{
+                    value = '';
+                }
             }else{
-                value = '';
+                value = parseFloat(val).toFixed(4);
             }
         break;
         case 'NUMBER':
@@ -22437,6 +22524,10 @@ function formatData(val, col, allOptions={}){
             }else{
                 value = '';
             }
+        break;
+        case 'DATE_STRING':
+            var momentObj = moment(val, 'YYYY-MM');
+            value = momentObj.format(options.monthYearFormat);
         break;
         default:
             if(Object.prototype.toString.call(val) === '[object Object]'){
@@ -22477,6 +22568,8 @@ function formatDate(date) {
 function copyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
+    // textArea.style.display = 'inline-block';
+    // textArea.style.position = 'absolute';
     document.body.appendChild(textArea);
     textArea.focus();
     textArea.select();
@@ -22520,7 +22613,7 @@ function getSafetynetValues(node){
     return words;
 }
 
-function runQuery(event, context){
+function runQuery(event, objContext){
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement.parentElement;
     }else if(event.target.tagName == 'path'){
@@ -22529,14 +22622,19 @@ function runQuery(event, context){
         var node = event.target.parentElement;
     }
     var words = getSafetynetValues(node);
-    if(context == 'DataMessenger'){
-        DataMessenger.sendMessage(
-            document.getElementById('chata-input'), words.join(' ')
-        );
-    }else{
-        node.parentElement.chataBarContainer.sendMessageToResponseRenderer(
-            words.join(' ')
-        );
+    switch (objContext.constructor) {
+        case DataMessenger:
+            objContext.sendMessage(
+                words.join(' '),
+                'data_messenger.validation'
+            );
+            break;
+        case QueryOutput:
+            node.parentElement.chataBarContainer.sendMessageToResponseRenderer(
+                words.join(' ')
+            );
+        default:
+        ;
     }
 }
 
@@ -22596,6 +22694,25 @@ function getGroupableField(json){
     return -1;
 }
 
+function getNotGroupableField(json){
+    var r = {
+        indexCol: -1,
+        jsonCol: {},
+        name: ''
+    }
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        if(!json['data']['columns'][i]['groupable']){
+            r['indexCol'] = i;
+            r['jsonCol'] = json['data']['columns'][i];
+            r['name'] = json['data']['columns'][i]['name'];
+            return r;
+        }
+    }
+    return -1;
+}
+
+
+
 function getGroupables(json){
     var cont = 0;
     var groups = []
@@ -22626,7 +22743,7 @@ function getPivotColumnArray(json, options, _data){
         var row = [];
         for (var x = 0; x < data.length; x++) {
             if(firstColName == '' && json['data']['columns'][x]['groupable']){
-                var name = json['data']['columns'][x]['display_name'] || 
+                var name = json['data']['columns'][x]['display_name'] ||
                 json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
@@ -22870,16 +22987,23 @@ function formatLabels(labels, col, options){
 function formatDataToHeatmap(json, options){
     var lines = json['data']['rows'];
     var values = [];
-    var col1 = json['data']['columns'][0];
-    var col2 = json['data']['columns'][1];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    var col1 = json['data']['columns'][groupableIndex1];
+    var col2 = json['data']['columns'][groupableIndex2];
+
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['labelY'] = formatData(data[0], col1, options);
-        row['labelX'] = formatData(data[1], col2, options);
-        row['unformatY'] = data[0];
-        row['unformatX'] = data[1];
-        var value = parseFloat(data[2]);
+        row['labelY'] = formatData(data[groupableIndex1], col1, options);
+        row['labelX'] = formatData(data[groupableIndex2], col2, options);
+        row['unformatY'] = data[groupableIndex1];
+        row['unformatX'] = data[groupableIndex2];
+        var value = parseFloat(data[notGroupableIndex]);
         row['value'] = value;
         values.push(row);
     }
@@ -22891,11 +23015,18 @@ function formatDataToBarChart(json, options){
     var values = [];
     var col1 = json['data']['columns'][0];
     var hasNegativeValues = false;
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    console.log('GROUPABLE FIELD');
+    console.log(groupableField);
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
-        row['label'] = formatData(data[0], col1, options);
-        var value = parseFloat(data[1]);
+        row['label'] = formatData(
+            data[groupableField.indexCol], groupableField.jsonCol, options
+        );
+        var value = parseFloat(data[notGroupableField.indexCol]);
         if(value < 0 && !hasNegativeValues){
             hasNegativeValues = true;
         }
@@ -22947,9 +23078,9 @@ function refreshTooltips(){
     tippy('.chata-interpretation', {
         theme: 'chata',
         onShow: function(instance){
-            var data = DataMessenger.responses[instance.reference.dataset.id]['data'];
+            var data = ChataUtils.responses[instance.reference.dataset.id]['data'];
             var content  = `<span class='title-tip'>Interpretation:</span> <span class="text-tip">${data['interpretation']}</span>`;
-            // if(DataMessenger.options.debug){
+            // if(ChataUtils.options.debug){
             //     content += `</br></br>
             //     <span class='title-tip'>SQL:</span> <span class="text-tip">${data['sql']}</span>
             //     `;
@@ -22999,7 +23130,7 @@ function tooltipCharts(){
 function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.headerElement.getElementsByTagName('input');
-    var json = DataMessenger.responses[_table.dataset.componentid];
+    var json = ChataUtils.responses[_table.dataset.componentid];
     var rows = array || cloneObject(json['data']['rows']);
     for (var i = 0; i < inputs.length; i++) {
         if(inputs[i].value == '')continue;
@@ -23011,7 +23142,7 @@ function applyFilter(idRequest, array){
                 var formatDate = formatData(
                     v,
                     json['data']['columns'][i],
-                    DataMessenger.options
+                    ChataUtils.options
             );
                 return formatDate.toLowerCase().includes(compareValue);
             }else if(
@@ -23073,103 +23204,481 @@ const getNumberOfGroupables = columns => {
     return null
 }
 
-const getSupportedDisplayTypes = response => {
-    // For CaaS there should be 3 types: data, suggestion, help
-    const displayType = response['data']['display_type']
-
-    if (displayType === 'suggestion' || displayType === 'help') {
-        return [displayType]
-    }
-
-    const columns = response['data']['columns'];
-
-    if (!columns) {
-        return []
-    }
-
-    if (getNumberOfGroupables(columns) === 1) {
-        // Is direct key-value query (ie. Avg days to pay per customer)
-        const supportedDisplayTypes = ['bar', 'column', 'line', 'table']
-
-        if (columns.length === 2) {
-            supportedDisplayTypes.push('pie')
-        }
-
-        // create pivot based on month and year
-        if (
-            columns[0].type === 'DATE' &&
-            columns[0].name.includes('month') &&
-            columns.length === 2
-        ) {
-            supportedDisplayTypes.push('pivot_column')
-        }
-        return supportedDisplayTypes
-    } else if (getNumberOfGroupables(columns) === 2) {
-        // Is pivot query (ie. Sale per customer per month)
-        return [
-            'multi_line',
-            'stacked_bar',
-            'stacked_column',
-            'bubble',
-            'heatmap',
-            'table',
-            'pivot_column'
-        ]
-    }
-
-    // We should always be able to display the table type by default
-    return ['table']
+const supportsRegularPivotTable = columns => {
+    const hasTwoGroupables = getNumberOfGroupables(columns) === 2
+    return hasTwoGroupables && columns.length === 3
 }
 
-function adjustTableWidth(table, thArray, selector='[data-indexrow]', offset=0){
+const isColumnNumberType = col => {
+    const type = col.type
+    return (
+        type === 'DOLLAR_AMT' ||
+        type === 'QUANTITY' ||
+        type === 'PERCENT' ||
+        type === 'RATIO'
+    )
+}
+
+const isColumnStringType = col => {
+    const  type = col.type
+    return type === 'STRING' || type === 'DATE_STRING' || type === 'DATE'
+}
+
+const getColumnTypeAmounts = columns => {
+    let amountOfStringColumns = 0
+    let amountOfNumberColumns = 0
+
+    columns.forEach(col => {
+        if (isColumnNumberType(col)) {
+            amountOfNumberColumns += 1
+        } else if (isColumnStringType(col)) {
+            amountOfStringColumns += 1
+        }
+    })
+
+    return { amountOfNumberColumns, amountOfStringColumns }
+}
+
+const supports2DCharts = columns => {
+    const amounts =
+    getColumnTypeAmounts(
+        columns
+    )
+
+    return amounts.amountOfNumberColumns > 0
+    && amounts.amountOfStringColumns > 0
+}
+
+const getSupportedDisplayTypes = response => {
+    try {
+        if (!response.data.display_type) {
+            return []
+        }
+
+        const displayType = response.data.display_type
+
+        if (displayType === 'suggestion' || displayType === 'help') {
+            return [displayType]
+        }
+
+        const columns = response.data.columns || [];
+        const rows = response.data.rows || [];
+
+        if (!columns || rows.length <= 1) {
+            return []
+        }
+
+        if (supportsRegularPivotTable(columns)) {
+            let supportedDisplayTypes = ['table']
+            if (rows.length < 1000) {
+                supportedDisplayTypes = [
+                    'pivot_table',
+                    'stacked_bar',
+                    'stacked_column',
+                    'stacked_line',
+                    'bubble',
+                    'heatmap',
+                    'table'
+                ]
+            }
+            return supportedDisplayTypes
+        } else if (supports2DCharts(columns)) {
+            const supportedDisplayTypes = ['table', 'bar', 'column', 'line']
+
+            supportedDisplayTypes.push('pie')
+                const dateColumn = columns.find(
+                    col => col.type === 'DATE' || col.type === 'DATE_STRING'
+                )
+
+                if(dateColumn){
+                    if (
+                        dateColumn.name &&
+                        dateColumn.name.toLowerCase().includes('month') &&
+                        columns.length === 2
+                    ) {
+                        supportedDisplayTypes.push('pivot_table')
+                    }
+                }
+
+                return supportedDisplayTypes
+            }
+            return ['table']
+        } catch (error) {
+            console.error(error)
+            return ['table']
+        }
+}
+
+// const getSupportedDisplayTypes = response => {
+//     // For CaaS there should be 3 types: data, suggestion, help
+//     const displayType = response['data']['display_type']
+//
+//     if (displayType === 'suggestion' || displayType === 'help') {
+//         return [displayType]
+//     }
+//
+//     const columns = response['data']['columns'];
+//
+//     if (!columns) {
+//         return []
+//     }
+//
+//     if (getNumberOfGroupables(columns) === 1) {
+//         // Is direct key-value query (ie. Avg days to pay per customer)
+//         const supportedDisplayTypes = ['bar', 'column', 'line', 'table']
+//
+//         if (columns.length === 2) {
+//             supportedDisplayTypes.push('pie')
+//         }
+//
+//         // create pivot based on month and year
+//         if (
+//             columns[0].type === 'DATE' &&
+//             columns[0].name.includes('month') &&
+//             columns.length === 2
+//         ) {
+//             supportedDisplayTypes.push('pivot_column')
+//         }
+//         return supportedDisplayTypes
+//     } else if (getNumberOfGroupables(columns) === 2) {
+//         // Is pivot query (ie. Sale per customer per month)
+//         return [
+//             'multi_line',
+//             'stacked_bar',
+//             'stacked_column',
+//             'bubble',
+//             'heatmap',
+//             'table',
+//             'pivot_column'
+//         ]
+//     }
+//
+//     // We should always be able to display the table type by default
+//     return ['table']
+// }
+
+function adjustTableWidth(table, thArray, cols,
+    selector='[data-indexrow]', offset=0){
+
     var headerWidth = 0;
     var rowsElements = table.querySelectorAll(selector);
-    for (var i = 0; i < 1; i++) {
-        var tdEl = rowsElements[i].getElementsByTagName('td');
-        var sizes = [];
-        for (var x = 0; x < tdEl.length; x++) {
-            const div = document.createElement('div')
-            div.innerHTML = thArray[x].textContent;
-            div.style.display = 'inline-block';
-            div.style.position = 'absolute';
-            div.style.visibility = 'hidden';
-            document.body.appendChild(div);
+    var tdEl = rowsElements[0].getElementsByTagName('td');
+    var sizes = [];
+    for (var x = 0; x < tdEl.length; x++) {
+        const div = document.createElement('div')
+        div.innerHTML = thArray[x].textContent;
+        div.style.display = 'inline-block';
+        div.style.position = 'absolute';
+        div.style.visibility = 'hidden';
+        document.body.appendChild(div);
 
-            w = tdEl[x].offsetWidth;
-            if(div.offsetWidth > tdEl[x].offsetWidth){
-                w = div.offsetWidth + 70;
-            }
-            w += offset;
-            thArray[x].style.width = (w) + 'px';
-            tdEl[x].style.width = (w) + 'px';
+        w = tdEl[x].offsetWidth;
 
-            headerWidth += w;
-            document.body.removeChild(div);
+        if(cols[x] && 'is_visible' in cols[x] && !cols[x]['is_visible'])continue;
+
+
+        if(div.offsetWidth > tdEl[x].offsetWidth){
+            w = div.offsetWidth + 70;
         }
+        w += offset;
+        thArray[x].style.width = (w) + 'px';
+        tdEl[x].style.width = (w) + 'px';
+
+        headerWidth += w;
+        document.body.removeChild(div);
     }
+
     return headerWidth;
 }
 
-function createSafetynetContent(suggestionArray, context='DataMessenger'){
+function hideShowTableCols(table){
+    var json = ChataUtils.responses[table.dataset.componentid];
+    var cols = json['data']['columns'];
+    const thList = table.headerElement.childNodes;
+    const trList = table.childNodes;
+    for (var i = 0; i < thList.length; i++) {
+        if(!cols[i]['is_visible']){
+            thList[i].classList.add('chata-hidden');
+        }else{
+            thList[i].classList.remove('chata-hidden');
+        }
+    }
+
+    for (var i = 0; i < trList.length; i++) {
+        var tdList = trList[i].childNodes;
+        for (var x = 0; x < tdList.length; x++) {
+            if(!cols[x]['is_visible']){
+                tdList[x].classList.add('chata-hidden');
+            }else{
+                tdList[x].classList.remove('chata-hidden');
+            }
+        }
+    }
+}
+
+function allColHiddenMessage(table){
+    const requestId = table.dataset.componentid;
+    const json = ChataUtils.responses[requestId];
+    var cols = json['data']['columns'];
+    var isAllHidden = true;
+    for (var i = 0; i < cols.length; i++) {
+        if(cols[i].is_visible){
+            isAllHidden = false;
+            break;
+        }
+    }
+    let message;
+    if(table.noColumnsElement){
+        message = table.noColumnsElement;
+    }else{
+        message = htmlToElement(
+        `<div class="autoql-vanilla-no-columns-error-message">
+            <div>
+                <span class="chata-icon warning-icon">
+                    ${WARNING}
+                </span>
+                <br> All columns in this table are currently hidden.
+                You can adjust your column visibility preferences using
+                the Column Visibility Manager
+                (<span class="chata-icon eye-icon">${COLUMN_EDITOR}</span>)
+                in the Options Toolbar.
+            </div>
+        </div>`);
+        table.parentElement.appendChild(message);
+        table.noColumnsElement = message;
+    }
+
+    if(isAllHidden){
+        message.style.display = 'flex';
+    }else{
+        message.style.display = 'none';
+    }
+}
+
+function mouseX(evt) {
+    if (evt.pageX) {
+        return evt.pageX;
+    } else if (evt.clientX) {
+        return evt.clientX + (document.documentElement.scrollLeft ?
+            document.documentElement.scrollLeft :
+            document.body.scrollLeft);
+    }else{
+        return null;
+    }
+}
+
+function mouseY(evt) {
+    if(evt.pageY){
+        return evt.pageY;
+    }else if (evt.clientY){
+        return evt.clientY + (document.documentElement.scrollTop ?
+            document.documentElement.scrollTop :
+            document.body.scrollTop);
+    }else{
+        return null;
+    }
+}
+
+const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
+    var groupables = getGroupableFields(json);
+    var data = json['data']['rows'];
+    var columns = json['data']['columns'];
+
+    var seriesData = [];
+    // console.log(groupable.length);
+    // console.log(colu.length);
+    if(groupables.length === 1 && columns.length === 2){
+        var group = getGroupableField(json);
+        var value = getNotGroupableField(json);
+        for (var i = 0; i < data.length; i++) {
+            let label = formatData(
+                data[i][group.indexCol], group.jsonCol, options
+            );
+
+            var serie = {
+                label: label,
+                values: [
+                    {
+                        value: parseFloat(data[i][value.indexCol]),
+                        group: formatColumnName(columns[group.indexCol].name),
+                        index: i
+                    }
+                ]
+            }
+            seriesData.push(serie);
+        }
+    }else{
+        seriesData = groupByIndex(data, columns, 0, [1,2]);
+        console.log(seriesData);
+    }
+
+    return seriesData;
+}
+
+const getObjectValues = (item, columns, seriesIndexes) => {
+    var values = []
+    for (var i = 0; i < seriesIndexes.length; i++) {
+        var obj = {};
+        obj['value'] = item[seriesIndexes[i]];
+        obj['index'] = seriesIndexes[i];
+        obj['group'] = formatColumnName(columns[seriesIndexes[i]]['name']);
+        values.push(obj);
+    }
+    return values;
+}
+
+const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
+
+    obj = {};
+    items.forEach((item) => {
+        const key = item[labelIndex];
+        if (!obj[key]) {
+            obj[key] = getObjectValues(item, columns, seriesIndexes);
+        }
+    });
+    return convertoTo2DChartData(obj);
+}
+
+const convertoTo2DChartData = (groupedData) => {
+    var output = []
+    for(var [key, value] of Object.entries(groupedData)){
+        output.push({
+            label: key,
+            values: groupedData[key]
+        })
+    }
+    return output;
+}
+
+const getLabel = (label) => {
+    if(label.length < 18){
+        return label;
+    }
+    return label.slice(0, 18);
+}
+
+const getGroupableFields = (json) => {
+    var groupables = []
+    for (var i = 0; i < json['data']['columns'].length; i++) {
+        var r = {
+            indexCol: -1,
+            jsonCol: {},
+            name: ''
+        }
+        if(json['data']['columns'][i]['groupable']){
+            r['indexCol'] = i;
+            r['jsonCol'] = json['data']['columns'][i];
+            r['name'] = json['data']['columns'][i]['name'];
+            groupables.push(r);
+        }
+    }
+
+    return groupables;
+}
+
+const getMinAndMaxValues = (data) => {
+    const maxValuesFromArrays = []
+    const minValuesFromArrays = []
+
+    for (var i = 0; i < data.length; i++) {
+        var serieValues = data[i].values;
+        maxValuesFromArrays.push(d3.max(serieValues, s => s.value));
+        minValuesFromArrays.push(d3.min(serieValues, s => s.value));
+    }
+    let maxValue = d3.max(maxValuesFromArrays);
+    let minValue = d3.min(minValuesFromArrays);
+
+    return {
+        min: minValue,
+        max: maxValue
+    }
+}
+
+const groupBy = (items, key) => items.reduce(
+    (result, item) => ({
+        ...result,
+        [item[key]]: [
+            ...(result[item[key]] || []),
+            item,
+        ],
+    }),
+    {},
+);
+
+function createSafetynetContent(suggestionArray, context){
     const message = `
-    Before I can try to find your answer,
-    I need your help understanding a term you used that I don't see in your data.
-    Click the dropdown to view suggestions so I can ensure you get the right data!`;
+    I need your help matching a term you used to the exact corresponding
+    term in your database. Verify by selecting the correct
+    term from the menu below:`;
+
     const runQueryButtonHtml = `
-    <button class="chata-safety-net-execute-btn">
-        ${RUN_QUERY}
+    <button class="autoql-vanilla-chata-safety-net-execute-btn">
+        <span class="chata-icon autoql-vanilla-chata-execute-query-icon">
+            ${RUN_QUERY}
+        </span>
     Run Query</button>
-    `
+    `;
     // onclick="runQuery(event, '${context}')"
+
     const runQueryButton = htmlToElement(runQueryButtonHtml);
     runQueryButton.onclick = function(event){
         runQuery(event, context);
     }
     var responseContentContainer = document.createElement('div');
+    var safetyNetContainer = document.createElement('div');
+    var safetynetQuery = document.createElement('div');
+    safetynetQuery.classList.add('autoql-vanilla-chata-safety-net-query');
     responseContentContainer.classList.add('chata-response-content-container');
-    responseContentContainer.innerHTML = `<span>${message}</span><br/><br/>`;
-    createSafetynetBody(responseContentContainer, suggestionArray);
-    responseContentContainer.appendChild(runQueryButton);
+    safetyNetContainer.classList.add(
+        'autoql-vanilla-chata-safety-net-container'
+    );
+    safetyNetContainer.innerHTML = `
+        <div class="autoql-vanilla-chata-safety-net-description">
+            ${message}
+        </div>
+    `;
+    safetyNetContainer.appendChild(safetynetQuery);
+    createSafetynetBody(safetynetQuery, suggestionArray);
+    safetyNetContainer.appendChild(runQueryButton);
+    responseContentContainer.appendChild(safetyNetContainer);
+
+    // var f = htmlToElement(`<div class="autoql-vanilla-chata-safety-net-container">
+    //     <div class="autoql-vanilla-chata-safety-net-description">
+    //         I need your help matching a term you used to the exact corresponding term in your database. Verify by selecting the correct term from the menu below:
+    //     </div>
+    //     <span>
+    //         <div class="autoql-vanilla-chata-safety-net-query">
+    //          <span>
+    //             <span>sales by </span>
+    //             <div class="autoql-vanilla-chata-safety-net-selector-container">
+    //             <div class="autoql-vanilla-chata-safetynet-select" data-test="chata-select">first class</div>
+    //         </div>
+    //     </span>
+    //     </div>
+    //     <button class="autoql-vanilla-chata-safety-net-execute-btn">
+    //         <span class="chata-icon autoql-vanilla-chata-execute-query-icon" data-test="chata-icon">
+    //             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    //                 <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+    //             </svg>
+    //         </span>Run Query
+    //     </button>
+    //     </span>
+    // </div>`);
+    // responseContentContainer.appendChild(f);
+
+    // <div class="chata-safety-net-query">
+    //     <span>
+    //         <span>show me </span>
+    //         <div class="chata-safety-net-selector-container">
+    //             <div class="chata-select chata-safetynet-select" data-test="chata-select">
+    //                 carson
+    //             </div>
+    //         </div>
+    //     </span>
+    //     <span>
+    //         <span>who created last bill</span>
+    //     </span>
+    // </div>
     return responseContentContainer;
 }
 
@@ -23187,9 +23696,9 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
         }else{
             var div = document.createElement('div');
             var select = document.createElement('select');
-            select.classList.add('chata-safetynet-select');
+            select.classList.add('autoql-vanilla-chata-safetynet-select');
             select.style.width = '47px';
-            div.classList.add('chata-safety-net-selector-container');
+            div.classList.add('autoql-vanilla-chata-safety-net-selector-container');
 
             var suggestionList = suggestion['suggestionList'];
             for (var x = 0; x < suggestionList.length; x++) {
@@ -23202,21 +23711,31 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
                 option.textContent = textContent;
                 select.appendChild(option);
             }
-            var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
-            safetyDeleteButton.onclick = function(event){
-                deleteSuggestion(event);
-            }
+            // var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
+            // safetyDeleteButton.onclick = function(event){
+            //     deleteSuggestion(event);
+            // }
             select.onchange = (evt) => {
                 console.log(evt.target.value);
+                if(evt.target.value === 'delete'){
+                    evt.target.parentElement.parentElement.removeChild(
+                        evt.target.parentElement
+                    )
+                }
                 updateSelect(evt.target);
             }
             var o = document.createElement('option');
-            o.setAttribute('value', suggestion['word']);
+            var deleteOption = document.createElement('option');
+            o.setAttribute('value', suggestion['word'] + '(Original term)');
+            deleteOption.setAttribute('value', 'delete');
             o.textContent = suggestion['word'];
+            deleteOption.textContent = 'Remove term';
+            deleteOption.style.color = '#d84830';
             select.appendChild(o);
+            select.appendChild(deleteOption);
             select.classList.add('safetynet-value');
             div.appendChild(select);
-            div.appendChild(safetyDeleteButton);
+            // div.appendChild(safetyDeleteButton);
             responseContentContainer.appendChild(div);
         }
     }
@@ -23303,12 +23822,14 @@ function updateSelect(elem){
     elem.style.width = (suggestionDiv.clientWidth + 36) + 'px';
 }
 
-function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='table-response', selector='[data-indexrow]'){
+function createTable(jsonResponse, oldComponent, options, action='replace', uuid, tableClass='autoql-vanilla-table-response', selector='[data-indexrow]'){
     var groupField = getGroupableField(jsonResponse);
     var table = document.createElement('table');
     var header = document.createElement('tr');
     var thArray = [];
+    var cols = jsonResponse['data']['columns'];
     table.classList.add(tableClass);
+    table.sort = 'asc';
     oldComponent.parentElement.parentElement.classList.remove(
         'chata-hidden-scrollbox'
     );
@@ -23323,51 +23844,152 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
     }
     var dataLines = jsonResponse['data']['rows'];
 
-    for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
-        jsonResponse['data']['columns'][i]['name'];
+    for (var i = 0; i < cols.length; i++) {
+        var colStr = cols[i]['display_name'] ||
+        cols[i]['name'];
+        var isVisible = true;
+        if('is_visible' in cols[i]){
+            isVisible = cols[i]['is_visible']
+            || false;
+        }
         var colName = formatColumnName(colStr);
         var th = document.createElement('th');
         var arrow = document.createElement('div');
         var col = document.createElement('div');
         col.textContent = colName;
-        arrow.classList.add('tabulator-arrow');
+        arrow.classList.add('autoql-vanilla-tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column');
-        col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
+        col.setAttribute('data-type', cols[i]['type']);
         col.setAttribute('data-index', i);
 
         var divFilter = document.createElement('div');
         var filter = document.createElement('input');
-        divFilter.classList.add('tabulator-header-filter');
+        divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
-        filter.colType = jsonResponse['data']['columns'][i]['type'];
+        filter.colType = cols[i]['type'];
         filter.onkeyup = function(event){
-            var _table = document.querySelector(`[data-componentid='${oldComponent.dataset.componentid}']`);
-            var rows = applyFilter(oldComponent.dataset.componentid);
-            DataMessenger.refreshTableData(_table, cloneObject(rows), DataMessenger.options, false);
+            console.log('FILTER onkeyup');
+            var _table = document.querySelector(
+                `[data-componentid='${oldComponent.dataset.componentid}']`
+            );
+            var rows = applyFilter(
+                oldComponent.dataset.componentid
+            );
+            ChataUtils.refreshTableData(
+                _table, cloneObject(rows), options, false
+            );
         }
         col.appendChild(divFilter);
 
         th.appendChild(col);
         th.appendChild(arrow);
+        th.onclick = (evt) => {
+            ChataUtils.onClickColumn(evt, table, options);
+        }
         header.appendChild(th);
         thArray.push(th);
+        if(!isVisible){
+            th.classList.add('chata-hidden');
+        }
+        th.addEventListener('contextmenu', function(e){
+            e.preventDefault();
+            let col;
+            if(e.target.tagName == 'DIV'){
+                col = e.target;
+            }else{
+                col = e.target.childNodes[0];
+            }
+            var popoverElements = document.querySelectorAll(
+                '.chata-tiny-popover-container'
+            );
+            [].forEach.call(popoverElements, function(e, i){
+                e.parentNode.removeChild(e);
+            })
+            var popoverContainer = htmlToElement(`
+                <div class="chata-tiny-popover-container">
+                </div>
+            `);
+            var popoverMenu = htmlToElement(`
+                <div class="chata-context-menu">
+                </div>
+            `)
+            var popoverList = htmlToElement(`
+                <ul class="chata-context-menu-list">
+                </ul>
+            `);
+
+            var popoverLi = htmlToElement(`
+                <li>Hide Column</li>
+            `)
+
+            popoverLi.onclick = function(evt){
+                document.body.removeChild(popoverContainer);
+                console.log(col.dataset.index);
+                var parameters = [];
+                var jsonCols = jsonResponse['data']['columns'];
+                for (var i = 0; i < jsonCols.length; i++) {
+                    var visibility = col.dataset.index == i ? false : true;
+                    if(col.dataset.index == i){
+                        visibility = false;
+                        jsonResponse.data.columns[i].is_visible = false;
+                    }else{
+                        visibility = jsonCols[i].is_visible;
+                    }
+                    parameters.push({
+                        name: jsonCols[i].name,
+                        is_visible: visibility
+                    })
+
+
+                }
+                ChataUtils.putCall(parameters, function(response){
+                    adjustTableWidth(
+                        table, thArray, jsonResponse['data']['columns']
+                    );
+                    hideShowTableCols(table);
+                }, options)
+            }
+
+            popoverContainer.appendChild(popoverMenu);
+            popoverMenu.appendChild(popoverList);
+            popoverList.appendChild(popoverLi);
+
+            popoverContainer.style.left = mouseX(e) + 'px';
+            popoverContainer.style.top = mouseY(e) + 'px';
+            document.body.appendChild(popoverContainer);
+        })
     }
-    header.classList.add('table-header');
+    header.classList.add('autoql-vanilla-table-header');
     // table.appendChild(header);
     for (var i = 0; i < dataLines.length; i++) {
         var data = dataLines[i];
         var tr = document.createElement('tr');
         for (var x = 0; x < data.length; x++) {
             value = formatData(
-                data[x], jsonResponse['data']['columns'][x],
+                data[x], cols[x],
                 options
             );
+            var isVisible = true;
+            if('is_visible' in cols[x]){
+                isVisible = cols[x]['is_visible']
+                || false;
+            }
             var td = document.createElement('td');
             td.textContent = value;
+            if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
+                options.dataFormatting.comparisonDisplay == 'PERCENT'){
+                if(parseFloat(value) >= 0){
+                    td.classList.add('autoql-vanilla-comparison-value-positive');
+                }else{
+                    td.classList.add('autoql-vanilla-comparison-value-negative');
+                }
+            }
             tr.appendChild(td);
+            if(!isVisible){
+                td.classList.add('chata-hidden');
+            }
         }
         if(action == 'replace'){
             tr.setAttribute('data-indexrow', i);
@@ -23394,20 +24016,22 @@ function createTable(jsonResponse, oldComponent, options, action='replace', uuid
         }
         oldComponent.parentElement.replaceChild(table, oldComponent);
     }else{
-        // oldComponent.parentElement.appendChild(header);
         oldComponent.appendChild(table);
     }
-    let headerWidth = adjustTableWidth(table, thArray, selector);
+    let headerWidth = adjustTableWidth(table, thArray, cols, selector);
     table.style.width = headerWidth + 'px';
     header.style.width = headerWidth + 'px';
     table.headerElement = header;
+    if(!options.authentication.demo){
+        allColHiddenMessage(table);
+    }
     return table;
 }
 
-function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', tableClass='table-response'){
+function createPivotTable(pivotArray, oldComponent, options, action='replace', uuid='', tableClass='autoql-vanilla-table-response'){
     var header = document.createElement('tr');
     var table = document.createElement('table');
-    var jsonResponse = DataMessenger.responses[
+    var jsonResponse = ChataUtils.responses[
         oldComponent.dataset.componentid || uuid
     ]
     var groupField = getGroupableField(jsonResponse);
@@ -23432,28 +24056,28 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         var arrow = document.createElement('div');
         var col = document.createElement('div');
         col.textContent = colName;
-        arrow.classList.add('tabulator-arrow');
+        arrow.classList.add('autoql-vanilla-tabulator-arrow');
         arrow.classList.add('up');
         col.classList.add('column-pivot');
         col.setAttribute('data-type', 'PIVOT');
         col.setAttribute('data-index', i);
         var divFilter = document.createElement('div');
         var filter = document.createElement('input');
-        divFilter.classList.add('tabulator-header-filter');
+        divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
         divFilter.appendChild(filter);
         filter.setAttribute('placeholder', 'Filter column');
         if(i == 0){
-            filter.colType = DataMessenger.responses[
+            filter.colType = ChataUtils.responses[
                 oldComponent.dataset.componentid || uuid
             ]['data']['columns'][0];
         }else if(i >= 1){
-            filter.colType = DataMessenger.responses[
+            filter.colType = ChataUtils.responses[
                 oldComponent.dataset.componentid || uuid
             ]['data']['columns'][2];
         }
         filter.onkeyup = function(event){
             var _json = cloneObject(
-                DataMessenger.responses[oldComponent.dataset.componentid]
+                ChataUtils.responses[oldComponent.dataset.componentid]
             );
             var _table = document.querySelector(
                 `[data-componentid='${oldComponent.dataset.componentid}']`
@@ -23464,31 +24088,34 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
                 _columns[0].name.includes('month')){
                 var pivotArray = getDatePivotArray(
                     _json,
-                    DataMessenger.options,
+                    options,
                     cloneObject(_json['data']['rows'])
                 );
             }else{
                 var pivotArray = getPivotColumnArray(
                     _json,
-                    DataMessenger.options,
+                    options,
                     cloneObject(_json['data']['rows'])
                 );
             }
             pivotArray.shift();
             var rows = applyFilter(oldComponent.dataset.componentid, pivotArray);
             // rows.unshift([]);
-            DataMessenger.refreshPivotTable(_table, rows);
+            ChataUtils.refreshPivotTable(_table, rows);
         }
         col.appendChild(divFilter);
         if(i == 0){
-            th.classList.add('sticky-col');
+            th.classList.add('autoql-vanilla-sticky-col');
         }
         th.appendChild(col);
         th.appendChild(arrow);
+        th.onclick = (evt) => {
+            ChataUtils.onClickPivotColumn(evt, table, options);
+        }
         header.appendChild(th);
         thArray.push(th);
     }
-    header.classList.add('table-header');
+    header.classList.add('autoql-vanilla-table-header');
 
     for (var i = 1; i < pivotArray.length; i++) {
         var tr = document.createElement('tr');
@@ -23496,7 +24123,7 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
             var td = document.createElement('td');
             td.textContent = pivotArray[i][x];
             if(x == 0){
-                td.classList.add('sticky-col');
+                td.classList.add('autoql-vanilla-sticky-col');
             }
             tr.appendChild(td);
         }
@@ -23529,25 +24156,49 @@ function createPivotTable(pivotArray, oldComponent, action='replace', uuid='', t
         oldComponent.appendChild(table);
         selector = '[data-indexrowrenderer]';
     }
-    let headerWidth = adjustTableWidth(table, thArray, selector, 25);
+    var cols = jsonResponse['data']['columns'];
+    console.log(cols);
+    let headerWidth = adjustTableWidth(table, thArray, cols, selector, 25);
     table.style.width = (headerWidth) + 'px';
     header.style.width = (headerWidth) + 'px';
     table.headerElement = header;
+    table.sort = 'asc';
     return table;
 }
 
-function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createHeatmap(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
+
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    var data = formatDataToHeatmap(json, options);
+    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX);
+    var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY);
+    var cols = json['data']['columns'];
+
+    labelsY = formatLabels(
+        labelsY, cols[groupableIndex1], options
+    );
+    labelsX = formatLabels(
+        labelsX, cols[groupableIndex2], options
+    );
+
+    console.log(data);
+
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
-    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
@@ -23567,7 +24218,7 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -23592,10 +24243,10 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     if (barWidth < 16) {
         labelsX.forEach((element, index) => {
             if (index % intervalWidth === 0) {
-                if(element.length < 18){
+                if(element.toString().length < 18){
                     xTickValues.push(element);
                 }else{
-                    xTickValues.push(element.slice(0, 18));
+                    xTickValues.push(element.toString().slice(0, 18));
                 }
             }
         });
@@ -23604,10 +24255,10 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     if(barHeight < 16){
         labelsY.forEach((element, index) => {
             if (index % intervalHeight === 0) {
-                if(element.length < 18){
+                if(element.toString().length < 18){
                     yTickValues.push(element);
                 }else{
-                    yTickValues.push(element.slice(0, 18));
+                    yTickValues.push(element.toString().slice(0, 18));
                 }
             }
         });
@@ -23618,14 +24269,14 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col1);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col2);
 
 
@@ -23635,7 +24286,7 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         if(d.length < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d.toString().slice(0, 18);
         }
     }))
     .padding(0.01);
@@ -23670,7 +24321,7 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         if(d.length < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d.toString().slice(0, 18);
         }
     }))
     .padding(0.01);
@@ -23694,16 +24345,16 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         var xLabel = '';
         var yLabel = '';
 
-        if(d.labelX.length < 18){
+        if(d.labelX.toString().length < 18){
             xLabel = d.labelX;
         }else{
-            xLabel = d.labelX.slice(0, 18);
+            xLabel = d.labelX.toString().slice(0, 18);
         }
 
-        if(d.labelY.length < 18){
+        if(d.labelY.toString().length < 18){
             yLabel = d.labelY;
         }else{
-            yLabel = d.labelY.slice(0, 18);
+            yLabel = d.labelY.toString().slice(0, 18);
         }
         return xLabel+':'+yLabel;
     })
@@ -23717,22 +24368,22 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', d.labelX)
         .attr('data-colvalue3', formatData(
-            d.value, cols[2],
+            d.value, cols[notGroupableIndex],
             options
         ))
     })
     .attr("x", function(d) {
-        if(d.labelX.length < 18){
+        if(d.labelX.toString().length < 18){
             return x(d.labelX);
         }else{
-            return x(d.labelX.slice(0, 18));
+            return x(d.labelX.toString().slice(0, 18));
         }
     })
     .attr("y", function(d) {
         if(d.labelY.length < 18){
             return y(d.labelY);
         }else{
-            return y(d.labelY.slice(0, 18));
+            return y(d.labelY.toString().slice(0, 18));
         }
     })
     .attr("width", x.bandwidth())
@@ -23744,19 +24395,39 @@ function createHeatmap(component, labelsX, labelsY, data, cols, options, fromDat
     tooltipCharts();
 }
 
-function createBubbleChart(component, labelsX, labelsY, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createBubbleChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
+
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    var data = formatDataToHeatmap(json, options);
+    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX);
+    var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY);
+    var cols = json['data']['columns'];
+
+    labelsY = formatLabels(
+        labelsY, cols[groupableIndex1], options
+    );
+    labelsX = formatLabels(
+        labelsX, cols[groupableIndex2], options
+    );
+
+
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
-    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
 
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
@@ -23776,7 +24447,7 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -23800,10 +24471,10 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
     if (barWidth < 16) {
         labelsX.forEach((element, index) => {
             if (index % intervalWidth === 0) {
-                if(element.length < 18){
+                if(element.toString().length < 18){
                     xTickValues.push(element);
                 }else{
-                    xTickValues.push(element.slice(0, 18));
+                    xTickValues.push(element.toString().slice(0, 18));
                 }
             }
         });
@@ -23812,10 +24483,10 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
     if(barHeight < 16){
         labelsY.forEach((element, index) => {
             if (index % intervalHeight === 0) {
-                if(element.length < 18){
+                if(element.toString().length < 18){
                     yTickValues.push(element);
                 }else{
-                    yTickValues.push(element.slice(0, 18));
+                    yTickValues.push(element.toString().slice(0, 18));
                 }
             }
         });
@@ -23827,24 +24498,24 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col1);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col2);
 
 
     var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(labelsX.map(function(d) {
-        if(d.length < 18){
+        if(d.toString().length < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d.toString().slice(0, 18);
         }
     }))
     .padding(0.01);
@@ -23876,10 +24547,10 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
     var y = d3.scaleBand()
     .range([ height - margin.bottom, 0])
     .domain(labelsY.map(function(d) {
-        if(d.length < 18){
+        if(d.toString().length < 18){
             return d;
         }else{
-            return d.slice(0, 18);
+            return d.toString().slice(0, 18);
         }
     }))
     .padding(0.01);
@@ -23902,16 +24573,16 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
         var xLabel = '';
         var yLabel = '';
 
-        if(d.labelX.length < 18){
+        if(d.labelX.toString().length < 18){
             xLabel = d.labelX;
         }else{
-            xLabel = d.labelX.slice(0, 18);
+            xLabel = d.labelX.toString().slice(0, 18);
         }
 
-        if(d.labelY.length < 18){
+        if(d.labelY.toString().length < 18){
             yLabel = d.labelY;
         }else{
-            yLabel = d.labelY.slice(0, 18);
+            yLabel = d.labelY.toString().slice(0, 18);
         }
         return xLabel+':'+yLabel;
     })
@@ -23933,14 +24604,14 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
         if(d.labelX.length < 18){
             return x(d.labelX) + x.bandwidth() / 2;
         }else{
-            return x(d.labelX.slice(0, 18)) + x.bandwidth() / 2;
+            return x(d.labelX.toString().slice(0, 18)) + x.bandwidth() / 2;
         }
     })
     .attr("cy", function (d) {
         if(d.labelY.length < 18){
             return y(d.labelY) + y.bandwidth() / 2;
         }else{
-            return y(d.labelY.slice(0, 18)) + y.bandwidth() / 2;
+            return y(d.labelY.toString().slice(0, 18)) + y.bandwidth() / 2;
         }
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
@@ -23950,18 +24621,29 @@ function createBubbleChart(component, labelsX, labelsY, data, cols, options, fro
     tooltipCharts();
 }
 
-function createBarChart(component, data, cols, hasNegativeValues, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 130},
+function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+    var data = makeGroups(json, options, [], -1);
+    const minMaxValues = getMinAndMaxValues(data);
+    var margin = {top: 5, right: 10, bottom: 50, left: 130, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var cols = json['data']['columns'];
+
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var index1 = notGroupableField.indexCol;
+    var index2 = groupableField.indexCol;
+
+    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
+    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
+            height = component.parentElement.parentElement.clientHeight
+            - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
             }
@@ -23969,7 +24651,8 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight
+        - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     if(component.headerElement){
@@ -23979,7 +24662,9 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -23989,14 +24674,45 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
     if (barHeight < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
-                if(element.label.length < 18){
-                    yTickValues.push(element.label);
-                }else{
-                    yTickValues.push(element.label.slice(0, 18) + '...');
-                }
+                yTickValues.push(getLabel(element.label));
             }
         });
     }
+
+    var y0 = d3.scaleBand();
+    var y1 = d3.scaleBand();
+
+    var x = d3.scaleLinear()
+    .range([0, width]);
+
+    var xAxis = d3.axisBottom(x)
+    .tickSize(0)
+
+    var yAxis = d3.axisLeft(y0)
+
+
+    var categoriesNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+
+
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend){
+        margin.bottom = 80;
+        margin.marginLabel = 0;
+    }
+
+    y0
+    .rangeRound([height - margin.bottom, 0])
+    .domain(categoriesNames)
+    .padding(.1);
+
+    y1.domain(groupNames).rangeRound([0, y0.bandwidth()]).padding(.1);
+    x.domain([minMaxValues.min, minMaxValues.max]).nice();
+
+    var colorScale = d3.scaleOrdinal()
+    .domain(groupNames)
+    .range(options.themeConfig.chartColors);
+
 
     var svg = d3.select(component)
     .append("svg")
@@ -24011,26 +24727,15 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col1);
 
     svg.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + margin.marginLabel)
     .attr('text-anchor', 'middle')
-    .attr("class", "x-axis-label")
+    .attr("class", "autoql-vanilla-x-axis-label")
     .text(col2);
-
-    // Add X axis
-    var x = d3.scaleLinear()
-    .domain(DataMessenger.makeBarChartDomain(data, hasNegativeValues))
-    .range([ 0, width]);
-    var xAxis = d3.axisBottom(x);
-    xAxis.tickSize(0);
-
-    xAxis.tickFormat(function(d){
-        return formatChartData(d, cols[1], options);
-    });
 
     if(tickWidth < 135){
         svg.append("g")
@@ -24049,80 +24754,114 @@ function createBarChart(component, data, cols, hasNegativeValues, options, fromD
         .style("text-anchor", "center");
     }
 
-
-    // Y axis
-    var y = d3.scaleBand()
-    .range([ 0, height - margin.bottom ])
-    .domain(data.map(function(d) {
-        if(d.label.length < 18){
-            return d.label;
-        }else{
-            return d.label.slice(0, 18) + '...';
-        }
-    }))
-    .padding(.1);
-
-    var yAxis = d3.axisLeft(y);
-
-    if(yTickValues.length > 0){
-        yAxis.tickValues(yTickValues);
-    }
+    svg.append("g")
+        .attr("class", "grid")
+        .call(xAxis
+            .tickSize(height - margin.bottom)
+            .tickFormat("")
+        );
 
     svg.append("g")
-    .call(yAxis);
+    .attr("class", "y axis")
+    .style('opacity','1')
+    .call(yAxis)
 
-    svg.append("g")
-    .attr("class", "grid")
-    .call(d3.axisBottom(x)
-        .tickSize(height - margin.bottom)
-        .tickFormat("")
-    );
-
-    //Bars
-    svg.selectAll("rect_bar")
+    var slice = svg.selectAll(".slice")
     .data(data)
-    .enter()
-    .append("rect")
+    .enter().append("g")
+    .attr("class", "g")
+    .attr("transform",function(d) {
+        return "translate(0,"+ y0(getLabel(d.label)) +")";
+    });
+
+    slice.selectAll("rect")
+    .data(function(d) { return d.values; })
+    .enter().append("rect")
     .each(function (d, i) {
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', d.label)
+        .attr('data-colvalue1', data[d.index].label)
         .attr('data-colvalue2', formatData(
             d.value,
-            cols[1],
+            cols[index1],
             options
         ))
     })
-    .attr("x", function(d) { return x(Math.min(0, d.value)); })
-    .attr("y", function(d) {
-        if(d.label.length < 18){
-            return y(d.label);
-        }else{
-            return y(d.label.slice(0, 18) + '...');
-        }
-    })
     .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
-    .attr("height", y.bandwidth())
-    .attr("fill", options.themeConfig.chartColors[0])
+    .attr("x", function(d) { return x(Math.min(0, d.value)); })
+    .attr("y", function(d) { return y1(d.group); })
+    .attr("height", function(d) { return y1.bandwidth() })
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
+    .style("fill", function(d) { return colorScale(d.group) })
+
+
+    if(hasLegend){
+        var svgLegend = svg.append('g')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', '0.7')
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
+
+        const legendWrapLength = width / 2 - 50
+        var legendOrdinal = d3.legendColor()
+        .shape(
+            'path',
+            d3.symbol()
+            .type(d3.symbolCircle)
+            .size(70)()
+        )
+        .orient('horizontal')
+        .shapePadding(100)
+        .labelWrap(legendWrapLength)
+        .scale(colorScale)
+        svgLegend.call(legendOrdinal)
+
+        let legendBBox
+        const legendElement = svgLegend.node()
+        if (legendElement) {
+            legendBBox = legendElement.getBBox()
+        }
+
+        const legendHeight = legendBBox.height
+        const legendWidth = legendBBox.width
+        const legendXPosition = width / 2 - (legendWidth/2)
+        const legendYPosition = height + 25
+        svgLegend
+        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    }
+
     tooltipCharts();
+
 }
 
-function createColumnChart(component, data, cols, hasNegativeValues, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90},
+function createColumnChart(component, json, options, fromChataUtils=true,
+    valueClass='data-chartindex', renderTooltips=true){
+    var data = makeGroups(json, options, [], -1);
+    const minMaxValues = getMinAndMaxValues(data);
+    var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+
+    var cols = json['data']['columns'];
+
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var index1 = notGroupableField.indexCol;
+    var index2 = groupableField.indexCol;
+
+    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
+    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
 
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
 
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
+            height = component.parentElement.parentElement.clientHeight
+            - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
             }
@@ -24130,7 +24869,8 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight
+        - (margin.bottom + margin.top);
     }
     component.innerHTML = '';
     component.innerHTML = '';
@@ -24141,24 +24881,50 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
+
     const barWidth = width / data.length;
     const interval = Math.ceil((data.length * 16) / width);
     var xTickValues = [];
     if (barWidth < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
-                if(element.label.length < 18){
-                    xTickValues.push(element.label);
-                }else{
-                    xTickValues.push(element.label.slice(0, 18));
-                }
+                xTickValues.push(getLabel(element.label));
             }
         });
     }
+
+    var x0 = d3.scaleBand()
+    .rangeRound([0, width]).padding(.1);
+    var x1 = d3.scaleBand();
+    var y = d3.scaleLinear()
+
+    var xAxis = d3.axisBottom(x0)
+    var yAxis = d3.axisLeft(y)
+
+    var labelsNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend){
+        margin.bottom = 90;
+        margin.marginLabel = 10;
+    }
+    x0.domain(labelsNames);
+    x1.domain(groupNames).rangeRound([0, x0.bandwidth()]).padding(.1);
+    y
+    .range([ height - (margin.bottom), 0 ])
+    .domain([minMaxValues.min, minMaxValues.max]).nice()
+
+    var colorScale = d3.scaleOrdinal()
+    .domain(groupNames)
+    .range(options.themeConfig.chartColors);
+
+
     var svg = d3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
@@ -24172,47 +24938,15 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom - 3)
+    .attr('y', height + margin.marginLabel - 3)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
-
-    minValue = 0;
-
-    if(hasNegativeValues){
-        minValue = d3.min(data, function(d) {return d.value});
-    }
-    // Y axis
-    var y = d3.scaleLinear()
-    .range([ height - (margin.bottom), 0 ])
-    .domain([minValue, d3.max(data, function(d) { return d.value; })]);
-    var axisLeft = d3.axisLeft(y);
-
-    svg.append("g")
-    .attr("class", "grid")
-    .call(
-        axisLeft
-        .tickSize(-width)
-        .tickFormat(function(d){return formatChartData(d, cols[1], options)})
-    );
-
-
-    var x = d3.scaleBand()
-    .domain(data.map(function(d) {
-        if(d.label.length < 18){
-            return d.label;
-        }else{
-            return d.label.slice(0, 18);
-        }
-    }))
-    .range([ 0, width]).padding(0.1);
-
-    var xAxis = d3.axisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -24235,51 +24969,134 @@ function createColumnChart(component, data, cols, hasNegativeValues, options, fr
         .style("text-anchor", "center")
     }
 
+    svg.append("g")
+    .attr("class", "grid")
+    .call(
+        yAxis
+        .tickSize(-width)
+        .tickFormat(function(d){
+            return formatChartData(d, cols[index1], options)}
+        )
+    )
 
-    //Bars
-    svg.selectAll("rect")
+    var slice = svg.selectAll(".slice")
     .data(data)
-    .enter()
-    .append("rect")
+    .enter().append("g")
+    .attr("class", "g")
+    .attr("transform",function(d) {
+        return "translate(" + x0(getLabel(d.label)) + ",0)";
+    });
+
+    slice.selectAll("rect")
+    .data(function(d) { return d.values; })
+    .enter().append("rect")
     .each(function (d, i) {
-        d3.select(this).attr(valueClass, i)
+        d3.select(this).attr(valueClass, d.index)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', d.label)
+        .attr('data-colvalue1', data[d.index].label)
         .attr('data-colvalue2', formatData(
-            d.value, cols[1],
+            d.value, cols[index1],
             options
         ))
     })
-    .attr("x", function(d) {
-        if(d.label.length < 18){
-            return x(d.label);
-        }else{
-            return x(d.label.slice(0, 18));
-        }
-    } )
-    .attr("y", function(d) { return y(Math.max(0, d.value)); })
-    .attr("width", x.bandwidth() )
-    .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
-    .attr("fill", options.themeConfig.chartColors[0])
+    .attr("width", x1.bandwidth())
+    .attr("x", function(d) { return x1(d.group); })
+    .style("fill", function(d) { return colorScale(d.group) })
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
+    .attr("y", function(d) { return y(Math.max(0, d.value)); })
+    .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
+
+    if(hasLegend){
+        var svgLegend = svg.append('g')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', '0.7')
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
+
+        const legendWrapLength = width / 2 - 50
+        var legendOrdinal = d3.legendColor()
+        .shape(
+            'path',
+            d3.symbol()
+            .type(d3.symbolCircle)
+            .size(70)()
+        )
+        .orient('horizontal')
+        .shapePadding(100)
+        .labelWrap(legendWrapLength)
+        .scale(colorScale)
+        svgLegend.call(legendOrdinal)
+
+        let legendBBox
+        const legendElement = svgLegend.node()
+        if (legendElement) {
+            legendBBox = legendElement.getBBox()
+        }
+
+        const legendHeight = legendBBox.height
+        const legendWidth = legendBBox.width
+        const legendXPosition = width / 2 - (legendWidth/2)
+        const legendYPosition = height + 25
+        svgLegend
+        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    }
+
     tooltipCharts();
 }
 
-function createLineChart(component, data, cols, hasNegativeValues, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90},
+function createLineChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+    var data = makeGroups(json, options, [], -1);
+    const minMaxValues = getMinAndMaxValues(data);
+    var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+
+    var cols = json['data']['columns'];
+
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var index1 = notGroupableField.indexCol;
+    var index2 = groupableField.indexCol;
+    console.log(index2);
+    console.log(index1);
+    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
+    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
 
+    var labelsNames = data.map(function(d) { return d.label; });
+    var allGroup = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = allGroup.length > 1;
+    if(hasLegend){
+        margin.bottom = 70;
+        margin.marginLabel = 10;
+    }
+    var allData = [];
+    var colorScale = d3.scaleOrdinal()
+    .domain(allGroup)
+    .range(options.themeConfig.chartColors);
 
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+    data.map(function(d) {
+        d.values.map(function(v){
+            v.label = d.label
+            allData.push(v)
+        })
+    })
+    var grouped = groupBy(allData, 'group');
+    var dataReady = allGroup.map( function(grpName) {
+        return {
+            name: grpName,
+            values: grouped[grpName]
+        };
+    });
+
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
+            height = component.parentElement.parentElement.clientHeight
+            - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
             }
@@ -24287,7 +25104,8 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight
+        - (margin.bottom + margin.top);
     }
 
     component.innerHTML = '';
@@ -24299,7 +25117,9 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -24309,11 +25129,7 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
     if (barWidth < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
-                if(element.label.length < 18){
-                    xTickValues.push(element.label);
-                }else{
-                    xTickValues.push(element.label.slice(0, 18));
-                }
+                xTickValues.push(getLabel(element.label));
             }
         });
     }
@@ -24325,32 +25141,46 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('text')
+    var labelXContainer = svg.append('g');
+    var labelYContainer = svg.append('g');
+
+    var textContainerY = labelXContainer.append('text')
     .attr('x', -(height / 2))
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
-    .text(col2);
+    .attr('class', 'autoql-vanilla-y-axis-label')
 
-    svg.append('text')
+    textContainerY.append('tspan')
+    .text(col2)
+
+    textContainerY.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+
+    var textContainerX = labelYContainer.append('text')
     .attr('x', width / 2)
-    .attr('y', height + margin.bottom - 3)
+    .attr('y', height + margin.marginLabel + 3)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
+
+    textContainerX.append('tspan')
     .text(col1);
+
+    textContainerX.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
 
     var x = d3.scaleBand()
     .domain(data.map(function(d) {
-        if(d.label.length < 18){
-            return d.label;
-        }else{
-            return d.label.slice(0, 18);
-        }
+        return getLabel(d.label)
     }))
     .range([ 0, width]);
 
     var xAxis = d3.axisBottom(x);
+    const xShift = x.bandwidth() / 2;
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -24372,47 +25202,46 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
         .style("text-anchor", "center")
     }
 
-    minValue = 0;
-
-    if(hasNegativeValues){
-        minValue = d3.min(data, function(d) {return d.value});
-    }
-
-    // Add Y axis
     var y = d3.scaleLinear()
-    .range([ height - (margin.bottom), 0 ])
-    .domain([minValue, d3.max(data, function(d) { return d.value; })]);
+    .domain([minMaxValues.min, minMaxValues.max])
+    .range([ height - margin.bottom, 0 ]).nice();
     var yAxis = d3.axisLeft(y);
-    // Add the line
-    svg.append("path")
-    .datum(data)
-    .attr("fill", "none")
-    .attr("stroke", options.themeConfig.chartColors[0])
-    .attr("stroke-width", 1)
-    .attr('opacity', '0.7')
-    .attr("d", d3.line()
-    .x(function(d) {
-        if(d.label.length < 18){
-            return x(d.label);
-        }else{
-            return x(d.label.slice(0, 18));
-        }
-     })
-    .y(function(d) { return y(d.value) })
-    )
+
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-        return formatChartData(d, cols[1], options)}
+        return formatChartData(d, cols[index1], options)}
     )
     .tickSize(-width)
     );
     svg.append("g").call(yAxis).select(".domain").remove();
 
+    var line = d3.line()
+    .x(function(d) { return x(getLabel(d.label)) + xShift })
+    .y(function(d) { return y(d.value) })
+    svg.selectAll("myLines")
+    .data(dataReady)
+    .enter()
+    .append("path")
+    .attr("d", function(d){ return line(d.values) } )
+    .attr("stroke", function(d){ return colorScale(d.name) })
+    .style("stroke-width", 1)
+    .style("fill", "none")
+    .attr('opacity', '0.7')
+
     svg
-    .append("g")
     .selectAll("dot")
-    .data(data)
+    .data(dataReady)
+    .enter()
+    .append("g")
+    .style("fill", function(d){ return colorScale(d.name) })
+    .selectAll("myDots")
+    .data(function(d){
+        for (var i = 0; i < d.values.length; i++) {
+            d.values[i].name = d.name;
+        }
+        return d.values;
+    })
     .enter()
     .append("circle")
     .each(function (d, i) {
@@ -24421,44 +25250,96 @@ function createLineChart(component, data, cols, hasNegativeValues, options, from
         .attr('data-col2', col2)
         .attr('data-colvalue1', d.label)
         .attr('data-colvalue2',formatData(
-            d.value, cols[1],
+            d.value, cols[index1],
             options
         ))
     })
     .attr("cx", function(d) {
-        if(d.label.length < 18){
-            return x(d.label);
-        }else{
-            return x(d.label.slice(0, 18));
-        }
-     } )
-    .attr("cy", function(d) { return y(d.value) } )
+        return x(getLabel(d.label)) + xShift
+    })
+    .attr("cy", function(d) { return y(d.value) })
     .attr("r", 3)
-    .attr('stroke', options.themeConfig.chartColors[0])
+    .attr('stroke', function(d) { return colorScale(d.name) })
     .attr('stroke-width', '2')
     .attr('stroke-opacity', '0.7')
     .attr("fill", 'white')
     .attr('class', 'tooltip-2d line-dot')
 
+    if(hasLegend){
+        var svgLegend = svg.append('g')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', '0.7')
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
+
+        const legendWrapLength = width / 2 - 50
+        var legendOrdinal = d3.legendColor()
+        .shape(
+            'path',
+            d3.symbol()
+            .type(d3.symbolCircle)
+            .size(70)()
+        )
+        .orient('horizontal')
+        .shapePadding(100)
+        .labelWrap(legendWrapLength)
+        .scale(colorScale)
+        svgLegend.call(legendOrdinal)
+
+        let legendBBox
+        const legendElement = svgLegend.node()
+        if (legendElement) {
+            legendBBox = legendElement.getBBox()
+        }
+
+        const legendHeight = legendBBox.height
+        const legendWidth = legendBBox.width
+        const legendXPosition = width / 2 - (legendWidth/2)
+        const legendYPosition = height + 45
+        svgLegend
+        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    }
+
     tooltipCharts();
 }
 
-function createStackedColumnChart(component, data, groups, subgroups, cols, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedColumnChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
-    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+
+    var data = cloneObject(json['data']['rows']);
+    var groups = ChataUtils.getUniqueValues(
+        data, row => row[groupableIndex2]
+    );
+    groups = groups.sort().reverse();
+    var subgroups = ChataUtils.getUniqueValues(
+        data, row => row[groupableIndex1]
+    );
+    var cols = json['data']['columns'];
+    var data = ChataUtils.format3dData(json, groups);
+
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
-            height = component.parentElement.offsetHeight - (margin.top + margin.bottom + 3);
+
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+
             if(height < 250){
                 height = 300;
             }
@@ -24477,7 +25358,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -24508,14 +25389,14 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
     svg.append('text')
     .attr('x', chartWidth / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col2);
 
 
@@ -24539,7 +25420,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[1], options);
+            return formatChartData(d, cols[groupableIndex2], options);
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -24549,7 +25430,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[1], options);
+            return formatChartData(d, cols[groupableIndex2], options);
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -24579,7 +25460,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
-            return formatChartData(d, cols[2], options)}
+            return formatChartData(d, cols[notGroupableIndex], options)}
         )
         .tickSize(-chartWidth)
     );
@@ -24618,10 +25499,10 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
         .attr('data-col3', col3)
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', formatData(
-            d.data.group, cols[1], options
+            d.data.group, cols[groupableIndex2], options
         ))
         .attr('data-colvalue3', formatData(
-            d.value, cols[2],
+            d.value, cols[notGroupableIndex],
             options
         ))
         .attr('data-unformatvalue1', d.labelY)
@@ -24629,7 +25510,7 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
         .attr('data-unformatvalue3', d.value)
     })
     .attr('opacity', '0.7')
-    .attr('class', 'tooltip-3d stacked-rect')
+    .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
     .attr("x", function(d) {
         if(d.data.group.length < 15){
             return x(d.data.group);
@@ -24684,22 +25565,43 @@ function createStackedColumnChart(component, data, groups, subgroups, cols, opti
     tooltipCharts();
 }
 
-function createStackedBarChart(component, data, groups, subgroups, cols, options, fromDataMessenger=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedBarChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 100},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
-    var colStr3 = cols[2]['display_name'] || cols[2]['name'];
+
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+
+    var data = cloneObject(json['data']['rows']);
+    var groups = ChataUtils.getUniqueValues(
+        data, row => row[groupableIndex2]
+    );
+    groups = groups.sort().reverse();
+    var subgroups = ChataUtils.getUniqueValues(
+        data, row => row[groupableIndex1]
+    );
+    var cols = json['data']['columns'];
+    var data = ChataUtils.format3dData(json, groups);
+
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
+
     const tickWidth = (width - margin.left - margin.right) / 6
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
             if(height < 250){
                 height = 300;
@@ -24719,7 +25621,7 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -24748,14 +25650,14 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')
     .attr('x', chartWidth / 2)
     .attr('y', height + margin.bottom)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col3);
 
     var maxValue = d3.max(data, function(d) {
@@ -24810,7 +25712,7 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
-        return formatChartData(d, cols[1], options);
+        return formatChartData(d, cols[groupableIndex2], options);
     })).select(".domain").remove();
 
     svg.append("g")
@@ -24850,10 +25752,10 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
         .attr('data-col3', col3)
         .attr('data-colvalue1', d.labelY)
         .attr('data-colvalue2', formatData(
-            d.data.group, cols[1], options
+            d.data.group, cols[groupableIndex2], options
         ))
         .attr('data-colvalue3', formatData(
-            d.value, cols[2],
+            d.value, cols[notGroupableIndex],
             options
         ))
         .attr('data-unformatvalue1', d.labelY)
@@ -24862,7 +25764,7 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
 
     })
     .attr('opacity', '0.7')
-    .attr('class', 'tooltip-3d stacked-rect')
+    .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
     .attr("x", function(d) {
         return x(d[0]);
     })
@@ -24909,7 +25811,271 @@ function createStackedBarChart(component, data, groups, subgroups, cols, options
     tooltipCharts();
 }
 
-function createGroupedColumnChart(component, groups, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createAreaChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
+    var margin = {top: 5, right: 10, bottom: 50, left: 80},
+    width = component.parentElement.clientWidth - margin.left;
+    var wLegendBox = 140;
+    var chartWidth = width - wLegendBox;
+    var height;
+    var legendBoxMargin = 15;
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+
+    var data = cloneObject(json['data']['rows']);
+    var groups = ChataUtils.getUniqueValues(
+        data, row => row[groupableIndex2]
+    );
+    groups = groups.sort().reverse();
+    var subgroups = ChataUtils.getUniqueValues(
+        data, row => row[groupableIndex1]
+    );
+    var cols = json['data']['columns'];
+    var data = ChataUtils.format3dData(json, groups);
+
+    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
+    var col1 = formatColumnName(colStr1);
+    var col2 = formatColumnName(colStr2);
+    var col3 = formatColumnName(colStr3);
+
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
+            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+
+            if(height < 250){
+                height = 300;
+            }
+        }else{
+            height = 250;
+        }
+    }else{
+        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+    }
+    component.innerHTML = '';
+    component.innerHTML = '';
+    if(component.headerElement){
+        component.parentElement.parentElement.removeChild(
+            component.headerElement
+        );
+        component.headerElement = null;
+    }
+    component.parentElement.classList.remove('chata-table-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+    component.parentElement.parentElement.classList.add(
+        'chata-hidden-scrollbox'
+    );
+    const barWidth = chartWidth / groups.length;
+    const interval = Math.ceil((groups.length * 16) / width);
+    var xTickValues = [];
+    if (barWidth < 16) {
+        groups.forEach((element, index) => {
+            if (index % interval === 0) {
+                if(element.length < 15){
+                    xTickValues.push(element);
+                }else{
+                    xTickValues.push(element.slice(0, 15)+ '...');
+                }
+            }
+        });
+    }
+    var svg = d3.select(component)
+    .append("svg")
+    .attr("width", width + margin.left)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+    "translate(" + margin.left + "," + margin.top + ")");
+
+    svg.append('text')
+    .attr('x', -(height / 2))
+    .attr('y', -margin.left + margin.right)
+    .attr('transform', 'rotate(-90)')
+    .attr('text-anchor', 'middle')
+    .attr('class', 'autoql-vanilla-y-axis-label')
+    .text(col3);
+
+    svg.append('text')
+    .attr('x', chartWidth / 2)
+    .attr('y', height + margin.bottom)
+    .attr('text-anchor', 'middle')
+    .attr('class', 'autoql-vanilla-x-axis-label')
+    .text(col2);
+
+
+    var x = d3.scaleBand()
+    .domain(groups.map(function(element){
+        if(element.length < 15){
+            return element;
+        }else{
+            return element.slice(0, 15) + '...';
+        }
+    }))
+    .range([0, chartWidth])
+    .padding([0.2]);
+
+    var xAxis = d3.axisBottom(x);
+
+    if(xTickValues.length > 0){
+        xAxis.tickValues(xTickValues);
+    }
+    if(barWidth < 135){
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[groupableIndex2], options);
+        }))
+        .selectAll("text")
+        .style("color", '#fff')
+        .attr("transform", "translate(-10,0)rotate(-45)")
+        .style("text-anchor", "end");
+    }else{
+        svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[groupableIndex2], options);
+        }))
+        .selectAll("text")
+        .style("color", '#fff')
+        .style("text-anchor", "center");
+    }
+
+    var maxValue = d3.max(data, function(d) {
+        var sum = 0;
+        for (var [key, value] of Object.entries(d)){
+            if(key == 'group')continue;
+            sum += parseFloat(value);
+        }
+        return sum;
+    });
+    console.log(maxValue);
+
+    var y = d3.scaleLinear()
+    .domain([0, maxValue])
+    .range([ height - margin.bottom, 0 ]);
+    var yAxis = d3.axisLeft(y);
+
+    var color = d3.scaleOrdinal()
+    .domain(subgroups)
+    .range(options.themeConfig.chartColors)
+
+
+    svg.append("g")
+    .attr("class", "grid")
+    .call(yAxis.tickFormat(function(d){
+            return formatChartData(d, cols[notGroupableIndex], options)}
+        )
+        .tickSize(-chartWidth)
+    );
+    svg.append("g")
+    .call(yAxis).select(".domain").remove();
+    console.log(subgroups);
+    var stackedData = d3.stack()
+    .keys(subgroups)
+    (data)
+
+    console.log(stackedData);
+
+    // svg.append("g")
+    // .selectAll("g")
+    // .data(stackedData)
+    // .enter().append("g")
+    // .attr("fill", function(d) {
+    //     return color(d.key);
+    // })
+    // .selectAll("rect")
+    // .data(function(d) { return d; })
+    // .enter().append("rect")
+    // .each(function (d, i) {
+    //     var pos = d[1];
+    //     var sum = 0;
+    //     for (var [key, value] of Object.entries(d.data)){
+    //         if(key == 'group')continue;
+    //         sum += parseFloat(value);
+    //         if(sum == pos){
+    //             d.value = value;
+    //             d.labelY = key;
+    //             break;
+    //         }
+    //     }
+    //     d3.select(this).attr(valueClass, i)
+    //     .attr('data-col1', col1)
+    //     .attr('data-col2', col2)
+    //     .attr('data-col3', col3)
+    //     .attr('data-colvalue1', d.labelY)
+    //     .attr('data-colvalue2', formatData(
+    //         d.data.group, cols[groupableIndex2], options
+    //     ))
+    //     .attr('data-colvalue3', formatData(
+    //         d.value, cols[notGroupableIndex],
+    //         options
+    //     ))
+    //     .attr('data-unformatvalue1', d.labelY)
+    //     .attr('data-unformatvalue2', d.data.group)
+    //     .attr('data-unformatvalue3', d.value)
+    // })
+    // .attr('opacity', '0.7')
+    // .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
+    // .attr("x", function(d) {
+    //     if(d.data.group.length < 15){
+    //         return x(d.data.group);
+    //     }else{
+    //         return x(d.data.group.slice(0,15)+'...');
+    //     }
+    // })
+    // .attr("y", function(d) {
+    //     if(isNaN(d[1])){
+    //         return 0;
+    //     }else{
+    //         return Math.abs(y(d[1])) + 0.5;
+    //     }
+    // })
+    // .attr("height", function(d) {
+    //     if(isNaN([d[1]])){
+    //         return 0;
+    //     }else{
+    //         return Math.abs(y(d[0]) - y(d[1]) - 0.5);
+    //     }
+    // })
+    // .attr("width",x.bandwidth())
+
+    var svgLegend = svg.append('g')
+    .style('fill', 'currentColor')
+    .style('fill-opacity', '0.7')
+    .style('font-family', 'inherit')
+    .style('font-size', '10px')
+
+    const legendWrapLength = wLegendBox - 28;
+    legendScale = d3.scaleOrdinal()
+        .domain(subgroups.sort())
+        .range(options.themeConfig.chartColors)
+
+    var legendOrdinal = d3.legendColor()
+    .shape(
+        'path',
+        d3.symbol()
+        .type(d3.symbolCircle)
+        .size(75)()
+    )
+    .orient('vertical')
+    .shapePadding(5)
+    .labelWrap(legendWrapLength)
+    .scale(legendScale)
+    svgLegend.call(legendOrdinal)
+
+    const newX = chartWidth + legendBoxMargin
+    svgLegend
+      .attr('transform', `translate(${newX}, ${0})`)
+
+    tooltipCharts();
+}
+
+function createGroupedColumnChart(component, groups, data, cols, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -24923,8 +26089,8 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
             if(height < 250){
                 height = 300;
@@ -24945,7 +26111,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -24977,14 +26143,14 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + 110)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
 
 
@@ -25149,7 +26315,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromDa
     tooltipCharts();
 }
 
-function createGroupedLineChart(component, groups, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createGroupedLineChart(component, groups, data, cols, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -25163,8 +26329,8 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
             if(height < 250){
                 height = 300;
@@ -25185,7 +26351,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -25217,18 +26383,18 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + 110)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
 
 
-    var dataReady = subgroups.map( function(grpName) { // .map allows to do something for each element of the list
+    var dataReady = subgroups.map( function(grpName) {
         return {
             name: grpName,
             values: data.map(function(d) {
@@ -25359,6 +26525,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
     .attr('stroke-width', '2')
     .attr('stroke-opacity', '0.7')
     .attr("fill", 'white')
+    
     var nodeWidth = (d) => d.getBBox().width;
 
     const legend = svg.append('g')
@@ -25403,7 +26570,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromData
 
 }
 
-function createGroupedBarChart(component, groups, data, cols, options, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createGroupedBarChart(component, groups, data, cols, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 140, left: 130},
     width = component.parentElement.clientWidth - margin.left;
     var hLegendBox = 100;
@@ -25417,8 +26584,8 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 6);
             if(height < 250){
                 height = 300;
@@ -25439,7 +26606,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -25471,14 +26638,14 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
-    .attr('class', 'y-axis-label')
+    .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col2);
 
     svg.append('text')
     .attr('x', width / 2)
     .attr('y', height + 110)
     .attr('text-anchor', 'middle')
-    .attr('class', 'x-axis-label')
+    .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
 
     var maxValue = d3.max(data, function(d) {
@@ -25636,17 +26803,27 @@ function createGroupedBarChart(component, groups, data, cols, options, fromDataM
     tooltipCharts();
 }
 
-function createPieChart(component, data, options, cols, fromDataMessenger=true, valueClass='data-chartindex', renderTooltips=true){
+function createPieChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
     var pieWidth;
     var height;
-    var colStr1 = cols[0]['display_name'] || cols[0]['name'];
-    var colStr2 = cols[1]['display_name'] || cols[1]['name'];
+    var cols = json['data']['columns'];
+    var groupableField = getGroupableField(json);
+    var notGroupableField = getNotGroupableField(json);
+    var index1 = notGroupableField.indexCol;
+    var index2 = groupableField.indexCol;
+
+    var data = ChataUtils.groupBy(
+        json['data']['rows'], row => row[index2], index1
+    );
+
+    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
+    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
-    if(fromDataMessenger){
-        if(DataMessenger.options.placement == 'left' || DataMessenger.options.placement == 'right'){
+    if(fromChataUtils){
+        if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin + 3);
             if(height < 250){
                 height = 300;
@@ -25677,7 +26854,7 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('chata-chart-container');
+    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -25716,9 +26893,9 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(d.data.key, cols[0], options))
+        .attr('data-colvalue1', formatData(d.data.key, cols[index2], options))
         .attr('data-colvalue2', formatData(
-            d.value, cols[1],
+            d.value, cols[index1],
             options
         ))
     })
@@ -25777,13 +26954,15 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
         var d = dataReady[i]
         labels.push(
             formatData(
-                    d.data.key, cols[0],
+                    d.data.key, cols[index2],
                     options) + ": " +
             formatData(
-                    d.value, cols[1],
+                    d.value, cols[index1],
                     options
             )
         );
+        console.log(d.value);
+        console.log(cols[index1]);
     }
 
     const legendWrapLength = width / 2 - 50
@@ -25820,7 +26999,7 @@ function createPieChart(component, data, options, cols, fromDataMessenger=true, 
       .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
 }
 
-function createResponseRenderer(options={}){
+function QueryOutput(options={}){
     var responseRenderer = document.createElement('div');
     responseRenderer.options = {
         supportsSuggestions: true,
@@ -25830,23 +27009,30 @@ function createResponseRenderer(options={}){
         displayType: undefined,
         isFilteringTable: false,
         renderTooltips: true,
-        languageCode: 'en-US',
-        currencyCode: 'USD',
-        currencyDecimals: 2,
-        quantityDecimals: 1,
-        monthYearFormat: 'MMM YYYY',
-        dayMonthYearFormat: 'MMM DD, YYYY',
-        fontFamily: 'sans-serif',
-        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195']
+        dataFormatting:{
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY'
+        },
+        themeConfig: {
+            theme: 'light',
+            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
+            accentColor: undefined,
+            fontFamily: 'sans-serif',
+        },
     }
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
     }
-    responseRenderer.classList.add('chata-response-content-container');
-    responseRenderer.classList.add('renderer-container');
+    responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
+    responseRenderer.classList.add('autoql-vanilla-renderer-container');
     responseRenderer.style.setProperty(
         '--chata-drawer-font-family',
-        responseRenderer.options.fontFamily
+        responseRenderer.options.themeConfig.fontFamily
     )
     responseRenderer.setAttribute('data-componentid', uuidv4());
     var applyTableStyles = function(){
@@ -25865,15 +27051,16 @@ function createResponseRenderer(options={}){
 
     responseRenderer.addEventListener('click', function(e){
         if(e.target.hasAttribute('data-chartrenderer')){
-            var component = e.target.parentElement.parentElement.parentElement;
+            var component = e.target.parentElement.parentElement.parentElement.parentElement;
+            console.log(component);
             if(component.tagName == 'svg'){
                 component = component.parentElement;
             }
-            if(!component.chataBarContainer.options.disableDrilldowns){
-                var json = DataMessenger.responses[component.dataset.componentid];
+            if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
+                var json = ChataUtils.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
                 var topBar = component.chataBarContainer.getElementsByClassName(
-                    'chat-bar-text'
+                    'autoql-vanilla-chat-bar-text'
                 )[0]
                 var loading = putLoadingContainer(topBar);
                 let opts = mergeOptions([
@@ -25881,20 +27068,19 @@ function createResponseRenderer(options={}){
                     component.options
                 ]);
 
-                DataMessenger.sendDrilldownMessage(
+                ChataUtils.sendDrilldownMessage(
                     json, indexData,
                     opts,
                     'ChatBar', component, loading);
             }
         }
         if(e.target.parentElement.hasAttribute('data-indexrowrenderer')){
-            var component = e.target.parentElement.parentElement;
-            var responseRenderer = component.parentElement.parentElement;
-            if(!responseRenderer.chataBarContainer.options.disableDrilldowns){
-                var json = DataMessenger.responses[component.dataset.componentid];
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
+            if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
+                var json = ChataUtils.responses[component.dataset.componentid];
                 var indexData = e.target.parentElement.dataset.indexrowrenderer;
                 var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
-                    'chat-bar-text'
+                    'autoql-vanilla-chat-bar-text'
                 )[0]
                 var loading = putLoadingContainer(topBar);
                 let opts = mergeOptions([
@@ -25902,7 +27088,7 @@ function createResponseRenderer(options={}){
                     component.options
                 ]);
 
-                DataMessenger.sendDrilldownMessage(
+                ChataUtils.sendDrilldownMessage(
                     json, indexData,
                     opts,
                     'ChatBar', responseRenderer, loading);
@@ -25910,20 +27096,20 @@ function createResponseRenderer(options={}){
         }
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
-            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-            var json = cloneObject(DataMessenger.responses[component.dataset.componentid]);
+            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
+            var json = cloneObject(ChataUtils.responses[component.dataset.componentid]);
             json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
             json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
             var topBar = component.chataBarContainer.getElementsByClassName(
-                'chat-bar-text'
+                'autoql-vanilla-chat-bar-text'
             )[0]
             var loading = putLoadingContainer(topBar);
             let opts = mergeOptions([
                 component.chataBarContainer.options,
                 component.options
             ]);
-            DataMessenger.sendDrilldownMessage(
+            ChataUtils.sendDrilldownMessage(
                 json,
                 0,
                 opts,
@@ -25931,7 +27117,7 @@ function createResponseRenderer(options={}){
             );
         }
 
-        if(e.target.classList.contains('chata-suggestion-btn-renderer')){
+        if(e.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
             var parent = e.target.parentElement.parentElement.parentElement;
             parent.options.onSuggestionClick();
             parent.chataBarContainer.sendMessageToResponseRenderer(
@@ -25947,34 +27133,34 @@ function createResponseRenderer(options={}){
             if(e.target.nextSibling.classList.contains('up')){
                 e.target.nextSibling.classList.remove('up');
                 e.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[localuuid]);
-                var sortData = DataMessenger.sort(
+                var data = cloneObject(ChataUtils.responses[localuuid]);
+                var sortData = ChataUtils.sort(
                     data['data']['rows'],
                     'desc',
                     e.target.dataset.index,
                     e.target.dataset.type
                 );
-                DataMessenger.refreshTableData(
+                ChataUtils.refreshTableData(
                     tableElement,
                     sortData,
-                    DataMessenger.options
+                    ChataUtils.options
                 );
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
                 var data = cloneObject(
-                    DataMessenger.responses[localuuid]
+                    ChataUtils.responses[localuuid]
                 );
-                var sortData = DataMessenger.sort(
+                var sortData = ChataUtils.sort(
                     data['data']['rows'],
                     'asc',
                     parseInt(e.target.dataset.index),
                     e.target.dataset.type
                 );
-                DataMessenger.refreshTableData(
+                ChataUtils.refreshTableData(
                     tableElement,
                     sortData,
-                    DataMessenger.options
+                    ChataUtils.options
                 );
             }
         }
@@ -25984,20 +27170,20 @@ function createResponseRenderer(options={}){
             var tableElement = container.querySelector('[data-componentid]');
             var pivotArray = [];
             var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
+                ChataUtils.responses[tableElement.dataset.componentid]
             );
             var columns = json['data']['columns'];
             if(columns[0].type === 'DATE' &&
                 columns[0].name.includes('month')){
                 pivotArray = getDatePivotArray(
                     json,
-                    DataMessenger.options,
+                    ChataUtils.options,
                     cloneObject(json['data']['rows'])
                 );
             }else{
                 pivotArray = getPivotColumnArray(
                     json,
-                    DataMessenger.options,
+                    ChataUtils.options,
                     cloneObject(json['data']['rows'])
                 );
             }
@@ -26010,7 +27196,7 @@ function createResponseRenderer(options={}){
                     'desc'
                 );
                 //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
+                ChataUtils.refreshPivotTable(tableElement, sortData);
             }else{
                 e.target.nextSibling.classList.remove('down');
                 e.target.nextSibling.classList.add('up');
@@ -26020,7 +27206,7 @@ function createResponseRenderer(options={}){
                     'asc'
                 );
                 //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
+                ChataUtils.refreshPivotTable(tableElement, sortData);
             }
         }
     });
@@ -26028,18 +27214,30 @@ function createResponseRenderer(options={}){
     return responseRenderer;
 }
 
-function getChatBar(options){
+function QueryInput(options){
 
     var chataBarContainer = document.createElement('div');
-    chataBarContainer.classList.add('chata-bar-container');
+    chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
     chataBarContainer.classList.add('autosuggest-top');
     chataBarContainer.options = {
-        token: '',
-        apiKey: '',
-        customerId: '',
-        userId: '',
-        domain: '',
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableDrilldowns: true
+        },
         isDisabled: false,
         onSubmit: function(){},
         onResponseCallback: function(){},
@@ -26047,22 +27245,20 @@ function getChatBar(options){
         showLoadingDots: true,
         showChataIcon: true,
         enableVoiceRecord: true,
-        enableAutocomplete: true,
         autocompleteStyles: {},
-        enableSafetyNet: true,
-        disableDrilldowns: false,
-        demo: true,
-        fontFamily: 'sans-serif'
+        fontFamily: 'sans-serif',
+        placeholder: 'Type your queries here'
     }
+    chataBarContainer.autoCompleteTimer = undefined;
 
     chataBarContainer.addEventListener('click', function(e){
         if(e.target.classList.contains('suggestion-renderer')){
             var parent = e.target.parentElement.parentElement.parentElement.parentElement;
             var chatBarSuggestionList = parent.getElementsByClassName(
-                'chat-bar-autocomplete'
+                'autoql-vanilla-chat-bar-autocomplete'
             )[0];
             chatBarSuggestionList.style.display = 'none';
-            parent.sendMessageToResponseRenderer(e.target.textContent);
+            parent.sendMessageToResponseRenderer(e.target.textContent, 'user');
         }
     });
 
@@ -26070,19 +27266,25 @@ function getChatBar(options){
         chataBarContainer.options[key] = value;
     }
     const CHATA_ICON = chataBarContainer.options.showChataIcon ? `
-    <div class="chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
+    <div class="autoql-vanilla-chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
     ` : '';
 
     var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
 
     chataBarContainer.innerHTML = `
-    <div class="chat-bar-text">
-        <div class="chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
-            <ul class="chat-bar-autocomplete">
+    <div class="autoql-vanilla-chat-bar-text">
+        <div class="autoql-vanilla-chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
+            <ul class="autoql-vanilla-chat-bar-autocomplete">
             </ul>
         </div>
         ${CHATA_ICON}
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input-renderer chat-bar left-padding" placeholder="Ask me anything" value="" id="" ${disabled}>
+        <input
+            type="text"
+            autocomplete="off"
+            aria-autocomplete="list"
+            class="autoql-vanilla-chata-input-renderer chat-bar left-padding"
+            placeholder="${chataBarContainer.options.placeholder}"
+            value="" id="" ${disabled}>
     </div>
     `;
 
@@ -26091,38 +27293,44 @@ function getChatBar(options){
         chataBarContainer.options.fontFamily
     )
 
-    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('chata-input-renderer')[0];
+    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('autoql-vanilla-chata-input-renderer')[0];
     chataBarContainer.bind = function(responseRenderer){
         this.responseRenderer = responseRenderer;
         responseRenderer.chataBarContainer = chataBarContainer;
     }
 
-    chataBarContainer.onkeyup = function(){
-        if(chataBarContainer.options.enableAutocomplete){
-            var suggestionList = this.getElementsByClassName('chat-bar-autocomplete')[0];
+    chataBarContainer.onkeyup = function(event){
+        if(chataBarContainer.options.autoQLConfig.enableAutocomplete){
+            var suggestionList = this.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
             suggestionList.style.display = 'none';
+            clearTimeout(chataBarContainer.autoCompleteTimer);
             if(event.target.value){
-                DataMessenger.autocomplete(event.target.value, suggestionList, 'suggestion-renderer', chataBarContainer.options);
+                chataBarContainer.autoCompleteTimer = setTimeout(() => {
+                    console.log(chataBarContainer.options.authentication);
+                    ChataUtils.autocomplete(
+                        event.target.value,
+                        suggestionList,
+                        'suggestion-renderer',
+                        chataBarContainer.options
+                    );
+                }, 400);
             }
         }
     }
 
     chataBarContainer.onkeypress = function(event){
-        var suggestionList = event.target.parentElement.getElementsByClassName('chat-bar-autocomplete')[0];
-        suggestionList.style.display = 'none';
+        var suggestionList = event.target.parentElement.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
         if(event.keyCode == 13 && event.target.value){
-            try {
-                DataMessenger.xhr.onreadystatechange = null;
-                DataMessenger.xhr.abort();
-            } catch (e) {}
-            this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value);
+            clearTimeout(chataBarContainer.autoCompleteTimer);
+            suggestionList.style.display = 'none';
+            this.sendMessageToResponseRenderer(chataBarContainer.chatbar.value, 'user');
         }
     }
 
-    chataBarContainer.sendMessageToResponseRenderer = function(value){
+    chataBarContainer.sendMessageToResponseRenderer = function(value, source){
         chataBarContainer.options.onSubmit();
         var responseRenderer = this.responseRenderer;
-        var parent = this.getElementsByClassName('chat-bar-text')[0];
+        var parent = this.getElementsByClassName('autoql-vanilla-chat-bar-text')[0];
         this.chatbar.disabled = true;
         this.chatbar.value = '';
         if(this.options.showLoadingDots){
@@ -26133,33 +27341,33 @@ function getChatBar(options){
         // )}&projectId=${chataBarContainer.options.projectId}&unified_query_id=${uuidv4()}`;
         // const URL = `https://backend-staging.chata.ai/api/v1/query?q=${value}&project=1&unified_query_id=${uuidv4()}`;
 
-        const URL_SAFETYNET = chataBarContainer.options.demo
+        const URL_SAFETYNET = chataBarContainer.options.authentication.demo
           ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
             value
           )}&projectId=1`
-          : `${chataBarContainer.options.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+          : `${chataBarContainer.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             value
-          )}&key=${chataBarContainer.options.apiKey}&customer_id=${chataBarContainer.options.customerId}&user_id=${chataBarContainer.options.userId}`
+          )}&key=${chataBarContainer.options.authentication.apiKey}&customer_id=${chataBarContainer.options.authentication.customerId}&user_id=${chataBarContainer.options.authentication.userId}`
 
-        DataMessenger.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
+        ChataUtils.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
             }
-            if(suggestions.length > 0 && chataBarContainer.options.enableSafetyNet){
+            if(suggestions.length > 0 && chataBarContainer.options.autoQLConfig.enableQueryValidation){
                 responseRenderer.innerHTML = '';
                 chataBarContainer.chatbar.removeAttribute("disabled");
                 if(chataBarContainer.options.showLoadingDots){
                     parent.removeChild(responseLoadingContainer);
                 }
                 var suggestionArray = createSuggestionArray(jsonResponse);
-                var node = createSafetynetContent(suggestionArray, 'ChatBar');
+                var node = createSafetynetContent(suggestionArray, responseRenderer);
                 responseRenderer.appendChild(node);
                 chataBarContainer.options.onResponseCallback();
-                DataMessenger.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
-                DataMessenger.ajaxCall(value, function(jsonResponse){
-                    DataMessenger.responses[responseRenderer.dataset.componentid] = jsonResponse;
+                ChataUtils.ajaxCall(value, function(jsonResponse){
+                    ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
                     responseRenderer.innerHTML = '';
                     chataBarContainer.chatbar.removeAttribute("disabled");
                     if(chataBarContainer.options.showLoadingDots){
@@ -26183,15 +27391,15 @@ function getChatBar(options){
                                 <div>
                                     I'm not sure what you mean by <strong>"
                                     ${value}"</strong>. Did you mean:</div>`;
-                            DataMessenger.createSuggestions(
+                            ChataUtils.createSuggestions(
                                 wrapper,
                                 rows,
-                                'chata-suggestion-btn-renderer'
+                                'autoql-vanilla-chata-suggestion-btn-renderer'
                             );
                             responseRenderer.appendChild(wrapper)
                         }else if(cols.length == 1 && rows.length == 1){
                             if(cols[0]['name'] == 'Help Link'){
-                                responseRenderer.innerHTML = DataMessenger.createHelpContent(
+                                responseRenderer.innerHTML = ChataUtils.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
                             }else{
@@ -26205,21 +27413,25 @@ function getChatBar(options){
                         }else{
                             // table
                             var uuid = uuidv4();
-                            DataMessenger.responses[uuid] = jsonResponse;
+                            ChataUtils.responses[uuid] = jsonResponse;
                             var div = document.createElement('div');
-                            div.classList.add('chata-table-container');
-                            div.classList.add('chata-table-container-renderer');
+                            div.classList.add('autoql-vanilla-chata-table-container');
+                            div.classList.add('autoql-vanilla-chata-table-container-renderer');
                             var scrollbox = document.createElement('div');
-                            scrollbox.classList.add('chata-table-scrollbox');
+                            scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
                             scrollbox.appendChild(div);
                             responseRenderer.appendChild(scrollbox);
+                            let opts = mergeOptions([
+                                chataBarContainer.options,
+                                responseRenderer.options
+                            ]);
                             var table = createTable(
                                 jsonResponse,
                                 div,
-                                responseRenderer.options,
+                                opts,
                                 'append',
                                 uuid,
-                                'table-response-renderer',
+                                'autoql-vanilla-table-response-renderer',
                                 '[data-indexrowrenderer]'
                             );
                             table.classList.add('renderer-table');
@@ -26231,12 +27443,12 @@ function getChatBar(options){
                         switch(displayType){
                             case 'table':
                                 var uuid = uuidv4();
-                                DataMessenger.responses[uuid] = jsonResponse;
+                                ChataUtils.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
-                                div.classList.add('chata-table-container');
-                                div.classList.add('chata-table-container-renderer');
+                                div.classList.add('autoql-vanilla-chata-table-container');
+                                div.classList.add('autoql-vanilla-chata-table-container-renderer');
                                 var scrollbox = document.createElement('div');
-                                scrollbox.classList.add('chata-table-scrollbox');
+                                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
                                 scrollbox.appendChild(div);
                                 responseRenderer.appendChild(scrollbox);
                                 if(jsonResponse['data']['columns'].length == 1){
@@ -26247,13 +27459,17 @@ function getChatBar(options){
                                     );
                                     responseRenderer.innerHTML = `<div>${data}</div>`;
                                 }else{
+                                    var opts = mergeOptions([
+                                        chataBarContainer.options,
+                                        responseRenderer.options
+                                    ]);
                                     var table = createTable(
                                         jsonResponse,
                                         div,
-                                        responseRenderer.options,
+                                        opts,
                                         'append',
                                         uuid,
-                                        'table-response-renderer',
+                                        'autoql-vanilla-table-response-renderer',
                                         '[data-indexrowrenderer]'
                                     );
                                     table.classList.add('renderer-table');
@@ -26263,146 +27479,131 @@ function getChatBar(options){
                             break;
                             case 'date_pivot':
                                 var uuid = uuidv4();
-                                DataMessenger.responses[uuid] = jsonResponse;
+                                ChataUtils.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
-                                div.classList.add('chata-table-container');
-                                div.classList.add('chata-table-container-renderer');
+                                div.classList.add('autoql-vanilla-chata-table-container');
+                                div.classList.add('autoql-vanilla-chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = getDatePivotArray(jsonResponse, responseRenderer.options);
-                                var table = createPivotTable(pivotArray, div, 'append', uuid, 'table-response-renderer');
+                                var opts = mergeOptions([
+                                    chataBarContainer.options,
+                                    responseRenderer.options
+                                ]);
+                                var table = createPivotTable(pivotArray, div, opts, 'append', uuid, 'autoql-vanilla-table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
                             case 'pivot_column':
                                 var uuid = uuidv4();
-                                DataMessenger.responses[uuid] = jsonResponse;
+                                ChataUtils.responses[uuid] = jsonResponse;
                                 var div = document.createElement('div');
-                                div.classList.add('chata-table-container');
-                                div.classList.add('chata-table-container-renderer');
+                                div.classList.add('autoql-vanilla-chata-table-container');
+                                div.classList.add('autoql-vanilla-chata-table-container-renderer');
                                 responseRenderer.appendChild(div);
                                 var pivotArray = getPivotColumnArray(jsonResponse, responseRenderer.options);
-                                var table = createPivotTable(pivotArray, div, 'append', '', 'table-response-renderer');
+                                var opts = mergeOptions([
+                                    chataBarContainer.options,
+                                    responseRenderer.options
+                                ]);
+                                var table = createPivotTable(pivotArray, div, opts, 'append', '', 'table-response-renderer');
                                 table.classList.add('renderer-table');
                             break;
                             case 'line':
-                                var values = formatDataToBarChart(
-                                    jsonResponse,
-                                    responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var grouped = values[0];
-                                var hasNegativeValues = values[1];
-                                var cols = jsonResponse['data']['columns'];
+                                responseRenderer.appendChild(chartWrapper);
                                 createLineChart(
-                                    responseRenderer, grouped, cols,
-                                    hasNegativeValues, responseRenderer.options,
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'bar':
-                                var values = formatDataToBarChart(
-                                    jsonResponse,
-                                    responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var grouped = values[0];
-                                var hasNegativeValues = values[1];
-                                var cols = jsonResponse['data']['columns'];
+                                responseRenderer.appendChild(chartWrapper);
                                 createBarChart(
-                                    responseRenderer, grouped, cols,
-                                    hasNegativeValues, responseRenderer.options,
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'column':
-                                var values = formatDataToBarChart(
-                                    jsonResponse,
-                                    responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var grouped = values[0];
-                                var cols = jsonResponse['data']['columns'];
-                                var hasNegativeValues = values[1];
+                                responseRenderer.appendChild(chartWrapper);
                                 createColumnChart(
-                                    responseRenderer, grouped,cols,
-                                    hasNegativeValues, responseRenderer.options,
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
                                     false, 'data-chartrenderer',
                                     responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'heatmap':
-                                var values = formatDataToHeatmap(
-                                    jsonResponse, responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var labelsX = DataMessenger.getUniqueValues(values, row => row.labelX);
-                                var labelsY = DataMessenger.getUniqueValues(values, row => row.labelY);
-                                var cols = jsonResponse['data']['columns'];
-
+                                responseRenderer.appendChild(chartWrapper);
                                 createHeatmap(
-                                    responseRenderer, labelsX, labelsY,
-                                    values, cols, responseRenderer.options,
-                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
+                                    false, 'data-chartrenderer',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'bubble':
-                                var values = formatDataToHeatmap(
-                                    jsonResponse, responseRenderer.options
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var labelsX = DataMessenger.getUniqueValues(values, row => row.labelX);
-                                var labelsY = DataMessenger.getUniqueValues(values, row => row.labelY);
-                                var cols = jsonResponse['data']['columns'];
+                                responseRenderer.appendChild(chartWrapper);
                                 createBubbleChart(
-                                    responseRenderer, labelsX, labelsY,
-                                    values, cols, responseRenderer.options,
-                                    false, 'data-chartrenderer', responseRenderer.options.renderTooltips
+                                    chartWrapper,
+                                    jsonResponse, responseRenderer.options,
+                                    false, 'data-chartrenderer',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'help':
-                                responseRenderer.innerHTML = DataMessenger.createHelpContent(
+                                responseRenderer.innerHTML = ChataUtils.createHelpContent(
                                     jsonResponse['data']['rows'][0]
                                 );
                             break;
                             case 'stacked_bar':
-                                var data = jsonResponse['data']['rows'];
-                                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                                groups = groups.sort().reverse();
-                                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                                var cols = jsonResponse['data']['columns'];
-                                var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
+                                var chartWrapper = document.createElement(
+                                    'div'
+                                );
+                                responseRenderer.appendChild(chartWrapper);
                                 createStackedBarChart(
-                                    responseRenderer, dataGrouped, groups,
-                                    subgroups, cols,
+                                    chartWrapper, jsonResponse,
                                     responseRenderer.options, false,
-                                    'data-stackedchartindex', responseRenderer.options.renderTooltips
+                                    'data-stackedchartindex',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'stacked_column':
-                                var data = jsonResponse['data']['rows'];
-                                var groups = DataMessenger.getUniqueValues(
-                                    data, row => row[1]
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                groups = groups.sort().reverse();
-                                var subgroups = DataMessenger.getUniqueValues(
-                                    data, row => row[0]
-                                );
-                                var cols = jsonResponse['data']['columns'];
-
-                                var dataGrouped = DataMessenger.format3dData(
-                                    jsonResponse['data']['columns'],
-                                    data, groups
-                                );
+                                responseRenderer.appendChild(chartWrapper);
                                 createStackedColumnChart(
-                                    responseRenderer, dataGrouped, groups,
-                                    subgroups, cols,
+                                    chartWrapper, jsonResponse,
                                     responseRenderer.options, false,
-                                    'data-stackedchartindex', responseRenderer.options.renderTooltips
+                                    'data-stackedchartindex',
+                                    responseRenderer.options.renderTooltips
                                 );
                             break;
                             case 'pie':
-                                var data = DataMessenger.groupBy(
-                                    jsonResponse['data']['rows'], row => row[0]
+                                var chartWrapper = document.createElement(
+                                    'div'
                                 );
-                                var cols = jsonResponse['data']['columns'];
-                                createPieChart(responseRenderer, data,
-                                    dashboard.options, cols, false,
+                                responseRenderer.appendChild(chartWrapper);
+                                createPieChart(
+                                    chartWrapper, jsonResponse,
+                                    responseRenderer.options, false,
                                     'data-chartrenderer', true
                                 );
                                 break;
@@ -26411,7 +27612,7 @@ function getChatBar(options){
                         }
                     }
                     chataBarContainer.options.onResponseCallback();
-                }, chataBarContainer.options);
+                }, chataBarContainer.options, source);
             }
         }, chataBarContainer.options);
     }
@@ -26419,519 +27620,64 @@ function getChatBar(options){
     return chataBarContainer;
 }
 
-var DataMessenger = {
-    options: {
-        authentication: {
-            token: undefined,
-            apiKey: undefined,
-            customerId: undefined,
-            userId: undefined,
-            username: undefined,
-            domain: undefined,
-            demo: false
-        },
-        dataFormatting:{
-            currencyCode: 'USD',
-            languageCode: 'en-US',
-            currencyDecimals: 2,
-            quantityDecimals: 1,
-            comparisonDisplay: 'PERCENT',
-            monthYearFormat: 'MMM YYYY',
-            dayMonthYearFormat: 'MMM D, YYYY'
-        },
-        autoQLConfig: {
-            debug: false,
-            test: false,
-            enableAutocomplete: true,
-            enableQueryValidation: true,
-            enableQuerySuggestions: true,
-            enableColumnEditor: true,
-            enableDrilldowns: true
-        },
-        themeConfig: {
-            theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
-            accentColor: undefined,
-            fontFamily: 'sans-serif',
-        },
-        isVisible: false,
-        placement: 'right',
-        width: 500,
-        height: 500,
-        title: 'Data Messenger',
-        showHandle: true,
-        handleStyles: {},
-        onVisibleChange: function() {},
-        onHandleClick: function(){},
-        showMask: true,
-        shiftScreen: false,
-        onMaskClick: function(){},
-        maskClosable: true,
-        customerName: 'there',
-        maxMessages: -1,
-        clearOnClose: false,
-        enableVoiceRecord: true,
-        autocompleteStyles: {},
-        enableQueryInspirationTab: true,
-        isRecordVoiceActive: false,
-        inputPlaceholder: 'Ask me anything…'
-    },
-    responses: [],
+var ChataUtils = {
     xhr: new XMLHttpRequest(),
-    speechToText: getSpeech(),
-    finalTranscript: ''
+    responses: []
 };
 
-DataMessenger.init = function(elem, options, registerEventsFlag=true){
-    var rootElem = document.getElementById(elem);
-
-
-    if('authentication' in options){
-        for (var [key, value] of Object.entries(options['authentication'])) {
-            DataMessenger.options.authentication[key] = value;
-        }
-    }
-
-    if('dataFormatting' in options){
-        for (var [key, value] of Object.entries(options['dataFormatting'])) {
-            DataMessenger.options.dataFormatting[key] = value;
-        }
-    }
-
-    if('autoQLConfig' in options){
-        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
-            DataMessenger.options.autoQLConfig[key] = value;
-        }
-    }
-
-    if('themeConfig' in options){
-        for (var [key, value] of Object.entries(options['themeConfig'])) {
-            DataMessenger.options.themeConfig[key] = value;
-        }
-    }
-
-    for (var [key, value] of Object.entries(options)) {
-        if(typeof value !== 'object'){
-            console.log(typeof value);
-            console.log(value);
-            DataMessenger.options[key] = value;
-        }
-    }
-
-    if(!('introMessage' in options)){
-        DataMessenger.options.introMessage = "Hi " + DataMessenger.options.customerName+ "! I'm  here to help you access, search and analyze your data.";
-    }
-    if(!('onMaskClick' in options)){
-        DataMessenger.options.onMaskClick = DataMessenger.options.onHandleClick;
-    }
-    DataMessenger.rootElem = rootElem;
-    rootElem.classList.add('chata-drawer');
-    this.createHeader();
-    this.createDrawerContent();
-    this.createBar();
-    this.createWrapper();
-    this.createDrawerButton();
-    this.createQueryTabs();
-    this.createQueryTips();
-    this.registerEvents();
-
-    var isVisible = DataMessenger.options.isVisible;
-    DataMessenger.openDrawer();
-    DataMessenger.closeDrawer();
-
-    if(isVisible){
-        DataMessenger.openDrawer();
-    }else{
-        DataMessenger.closeDrawer();
-    }
-    const themeStyles = DataMessenger.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME
-    if ('accentColor' in options){
-        themeStyles['--chata-drawer-accent-color'] = options.themeConfig.accentColor;
-    }
-    for (let property in themeStyles) {
-        document.documentElement.style.setProperty(
-            property,
-            themeStyles[property],
-        );
-    }
-    DataMessenger.rootElem.style.setProperty(
-        '--chata-drawer-font-family',
-        DataMessenger.options.themeConfig['fontFamily']
-    );
-    if(DataMessenger.speechToText){
-        DataMessenger.speechToText.onresult = (event) => {
-            let interimTranscript = '';
-            for (let i = event.resultIndex, len = event.results.length; i < len; i++) {
-                let transcript = event.results[i][0].transcript;
-                if (event.results[i].isFinal) {
-                    DataMessenger.finalTranscript += transcript;
-                } else {
-                    interimTranscript += transcript;
-                }
-            }
-            console.log(DataMessenger.finalTranscript);
-            if(DataMessenger.finalTranscript !== ''){
-                var button = document.getElementById('chata-voice-record-button');
-                var chataInput = document.getElementById('chata-input');
-                DataMessenger.sendMessage(chataInput, DataMessenger.finalTranscript);
-                DataMessenger.speechToText.stop();
-                button.style.background = themeStyles['--chata-drawer-accent-color'];
-                DataMessenger.options.isRecordVoiceActive = false;
-            }
-        }
-    }
-    refreshTooltips();
-    return this;
+ChataUtils.getQueryInput = function(options={}){
+    return QueryInput(options);
 }
 
-DataMessenger.getChatBar = function(options={}){
-    return getChatBar(options);
+ChataUtils.getQueryOutput = function(options){
+    return QueryOutput(options);
 }
 
-DataMessenger.createResponseRenderer = function(options){
-    return createResponseRenderer(options);
-}
-
-DataMessenger.createQueryTips = function(){
-    const searchIcon = htmlToElement(SEARCH_ICON);
-    var container = document.createElement('div');
-    var textBar = document.createElement('div');
-    var queryTipsResultContainer = document.createElement('div');
-    var queryTipsResultPlaceHolder = document.createElement('div');
-    var chatBarInputIcon = document.createElement('div');
-
-    var input = document.createElement('input');
-
-    textBar.classList.add('text-bar');
-    textBar.classList.add('text-bar-animation');
-    chatBarInputIcon.classList.add('chat-bar-input-icon');
-    queryTipsResultContainer.classList.add('query-tips-result-container');
-    queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
-    queryTipsResultPlaceHolder.innerHTML = `
-        <p>Your query suggestions will show up here.<p>
-        <p>Click on the suggestion to execute it in Data Messenger<p>
-    `;
-
-    queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
-    chatBarInputIcon.appendChild(searchIcon);
-    textBar.appendChild(input);
-    textBar.appendChild(chatBarInputIcon);
-    container.appendChild(textBar);
-    container.appendChild(queryTipsResultContainer);
-    // <div class="chat-bar-loading-spinner"><div class="spinner-loader" style="width: 19px; height: 20px; color: rgb(153, 153, 153);"></div></div>
-
-    input.onkeypress = function(event){
-
-        if(event.keyCode == 13 && this.value){
-
-            console.log(this.value);
-            var temp = [
-                'list all sales',
-                'Sales per month last year',
-                'Total sales this year',
-                'All sales per customer',
-                'Sales per service per month',
-                'All Sales last year',
-                'Sales for porcelain sink',
-                'Sales per product per month',
-                'Sales per year',
-                'All sales over $1000',
-            ]
-            var chatBarLoadingSpinner = document.createElement('div');
-            var spinnerLoader = document.createElement('div');
-            var queryTipListContainer = document.createElement('div');
-            var paginationContainer = document.createElement('div');
-            var pagination = document.createElement('ul');
-            var paginationPrevious = document.createElement('li');
-            var aPrevious = document.createElement('a');
-            var aNext = document.createElement('a');
-            var paginationNext = document.createElement('li');
-
-            const pageSize = 10;
-            const pages = 10;
-            aPrevious.textContent = '←';
-            aNext.textContent = '→';
-
-            paginationContainer.setAttribute('id', 'react-paginate')
-            paginationContainer.classList.add('animated-item')
-            paginationContainer.classList.add('pagination')
-            paginationPrevious.classList.add('pagination-previous')
-            paginationNext.classList.add('pagination-next')
-            paginationPrevious.appendChild(aPrevious);
-            paginationNext.appendChild(aNext);
-
-            pagination.appendChild(paginationPrevious);
-
-            spinnerLoader.classList.add('spinner-loader');
-            chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
-            queryTipListContainer.classList.add('query-tip-list-container');
-            chatBarLoadingSpinner.appendChild(spinnerLoader);
-            textBar.appendChild(chatBarLoadingSpinner);
-            var interval = setInterval(function(){
-                textBar.removeChild(chatBarLoadingSpinner);
-                clearInterval(interval);
-                var delay = 0.08;
-                for (var i = 0; i < temp.length; i++) {
-                    var item = document.createElement('div');
-                    item.classList.add('animated-item');
-                    item.classList.add('query-tip-item');
-                    item.innerHTML = temp[i];
-                    item.style.animationDelay = (delay * i) + 's';
-                    item.onclick = function(event){
-                        chataInput = document.getElementById('chata-input');
-                        DataMessenger.tabsAnimation('flex', 'block');
-                        DataMessenger.queryTipsAnimation('none');
-                        chataInput.focus();
-                        var selectedQuery = event.target.textContent;
-                        var subQuery = '';
-                        console.log(selectedQuery);
-                        var index = 0;
-                        var int = setInterval(function () {
-                            subQuery += selectedQuery[index];
-                            console.log(selectedQuery[index]);
-                            if(index >= selectedQuery.length){
-                                clearInterval(int);
-                                var ev = new KeyboardEvent('keypress', {
-                                    keyCode: 13,
-                                    type: "keypress",
-                                    which: 13
-                                });
-                                chataInput.dispatchEvent(ev)
-                            }else{
-                                chataInput.value = subQuery;
-                            }
-                            index++;
-                        }, 85);
-
-                    }
-                    queryTipListContainer.appendChild(item);
-                }
-                queryTipsResultContainer.innerHTML = '';
-                queryTipsResultContainer.appendChild(queryTipListContainer);
-                for (var i = 0; i < 5; i++) {
-                    var li = document.createElement('li')
-                    var a = document.createElement('a')
-                    if(i == 0){
-                        li.classList.add('selected')
-                    }
-                    li.appendChild(a)
-                    if(i == 2){
-                        li.classList.add('break');
-                        a.textContent = '...';
-                    }else{
-                        a.textContent = (i+1);
-                    }
-                    pagination.appendChild(li)
-                }
-                pagination.appendChild(paginationNext);
-                paginationContainer.appendChild(pagination);
-                container.appendChild(paginationContainer)
-                if(DataMessenger.pagination){
-                    container.removeChild(DataMessenger.pagination);
-                }
-                DataMessenger.pagination = paginationContainer;
-            }, 600);
-        }
-    }
-
-    container.style.display = 'none';
-
-    input.classList.add('chata-input')
-    input.classList.add('left-padding')
-    input.setAttribute('placeholder', 'Enter a topic');
-    DataMessenger.queryTips = container;
-    DataMessenger.drawerContent.appendChild(container);
-}
-
-DataMessenger.createQueryTabs = function(){
-    var orientation = DataMessenger.options.placement;
-    var pageSwitcherShadowContainer = document.createElement('div');
-    var pageSwitcherContainer = document.createElement('div');
-    var tabDataMessenger = document.createElement('div');
-    var tabQueryTips = document.createElement('div');
-
-    var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
-    var queryTabsIcon = htmlToElement(QUERY_TIPS);
-
-    pageSwitcherShadowContainer.classList.add('page-switcher-shadow-container');
-    pageSwitcherShadowContainer.classList.add(orientation);
-
-    pageSwitcherContainer.classList.add('page-switcher-container');
-    pageSwitcherContainer.classList.add(orientation);
-
-    pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
-
-    tabDataMessenger.classList.add('tab');
-    tabDataMessenger.classList.add('active');
-    tabQueryTips.classList.add('tab');
-    tabDataMessenger.appendChild(dataMessengerIcon);
-    tabQueryTips.appendChild(queryTabsIcon);
-
-    pageSwitcherContainer.appendChild(tabDataMessenger)
-    pageSwitcherContainer.appendChild(tabQueryTips)
-
-
-    tabDataMessenger.onclick = function(event){
-        tabDataMessenger.classList.add('active');
-        tabQueryTips.classList.remove('active');
-        DataMessenger.tabsAnimation('flex', 'block');
-        DataMessenger.queryTipsAnimation('none');
-    }
-    tabQueryTips.onclick = function(event){
-        tabQueryTips.classList.add('active');
-        tabDataMessenger.classList.remove('active');
-        DataMessenger.tabsAnimation('none', 'none');
-        DataMessenger.queryTipsAnimation('block');
-
-    }
-
-    var tabs = pageSwitcherShadowContainer;
-    DataMessenger.rootElem.appendChild(tabs);
-    DataMessenger.queryTabs = tabs;
-    DataMessenger.queryTabsContainer = pageSwitcherContainer;
-
-}
-
-DataMessenger.tabsAnimation = function(displayNodes, displayBar){
-    var nodes = DataMessenger.drawerContent.childNodes;
-    for (var i = 0; i < nodes.length; i++) {
-        nodes[i].style.display = displayNodes;
-    }
-    DataMessenger.chataBarContainer.style.display = displayBar;
-    if(displayNodes == 'none'){
-        DataMessenger.headerTitle.innerHTML = 'What Can I Ask?';
-        DataMessenger.headerRight.style.visibility = 'hidden';
-    }else{
-        DataMessenger.headerTitle.innerHTML = DataMessenger.options.title;
-        DataMessenger.headerRight.style.visibility = 'visible';
-    }
-}
-
-DataMessenger.queryTipsAnimation = function(display){
-    DataMessenger.queryTips.style.display = display;
-}
-
-DataMessenger.createBar = function(){
-    const placeholder = DataMessenger.options.inputPlaceholder;
-    var chataBarContainer = document.createElement('div');
-    chataBarContainer.classList.add('chata-bar-container');
-    chataBarContainer.classList.add('chat-drawer-chat-bar');
-    chataBarContainer.classList.add('autosuggest-top');
-    var display = DataMessenger.options.enableVoiceRecord ? 'block' : 'none';
-    var htmlBar = `
-    <div class="watermark">
-        ${WATERMARK}
-        We run on AutoQL by Chata
-    </div>
-    <div class="auto-complete-suggestions">
-        <ul id="auto-complete-list">
-        </ul>
-    </div>
-    <div class="text-bar">
-        <input type="text" autocomplete="off" aria-autocomplete="list" class="chata-input" placeholder="${placeholder}" value="" id="chata-input">
-        <button style="display: ${display};" id="chata-voice-record-button" class="chat-voice-record-button chata-voice" data-tippy-content="Hold to Use Voice" data-for="chata-speech-to-text-tooltip" data-tippy-content-disable="false" currentitem="false">
-            <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false">
-        </button>
-    </div>
-    `;
-    chataBarContainer.innerHTML = htmlBar;
-    DataMessenger.chataBarContainer = chataBarContainer;
-    DataMessenger.rootElem.appendChild(chataBarContainer);
-}
-
-DataMessenger.createDrawerContent = function(){
-    var drawerContent = document.createElement('div');
-    var firstMessage = document.createElement('div');
-    var chatMessageBubble = document.createElement('div');
-    var scrollBox = document.createElement('div');
-    scrollBox.classList.add('chata-scrollbox');
-    chatMessageBubble.textContent = DataMessenger.options.introMessage;
-    drawerContent.classList.add('drawer-content');
-    firstMessage.classList.add('chat-single-message-container');
-    firstMessage.classList.add('response');
-    chatMessageBubble.classList.add('chat-message-bubble');
-
-    firstMessage.appendChild(chatMessageBubble);
-    drawerContent.appendChild(firstMessage);
-    scrollBox.appendChild(drawerContent);
-    DataMessenger.rootElem.appendChild(scrollBox);
-    DataMessenger.drawerContent = drawerContent;
-    DataMessenger.scrollBox = scrollBox;
-}
-
-DataMessenger.createHeader = function(){
-    var chatHeaderContainer = document.createElement('div');
-    var headerLeft = htmlToElement(`
-        <div class="chata-header-left">
-            <button class="chata-button close close-action" data-tippy-content="Close Drawer" currentitem="false"><svg class="close-action" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="close-action" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg></button>
-        </div>
-    `)
-    var headerTitle = htmlToElement(`
-        <div class="chata-header-center-container">
-            ${DataMessenger.options.title}
-        </div>
-    `)
-    var headerRight = htmlToElement(`
-        <div class="chata-header-right-container">
-            <button class="chata-button clear-all" data-tippy-content="Clear Messages">
-                ${CLEAR_ALL}
-            </button>
-        </div>
-    `)
-    var popover = htmlToElement(`
-        <div class="popover-container">
-            <div class="clear-messages-confirm-popover">
-                <div class="chata-confirm-text">
-                    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" class="chata-confirm-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"></path>
-                    </svg>
-                    Clear all messages?
-                </div>
-                <button class="chata-confirm-btn no">No</button>
-                <button class="chata-confirm-btn yes">Yes</button>
-            </div>
-        </div>
-    `)
-    headerRight.appendChild(popover);
-        // style="overflow: hidden; position: absolute; top: 48px; left: 964px; opacity: 1; transition: opacity 0.35s ease 0s;"
-        // <svg class="clear-all" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path class="clear-all" d="M5 13h14v-2H5v2zm-2 4h14v-2H3v2zM7 7v2h14V7H7z"></path></svg>
-    chatHeaderContainer.classList.add('chat-header-container');
-    chatHeaderContainer.appendChild(headerLeft);
-    chatHeaderContainer.appendChild(headerTitle);
-    chatHeaderContainer.appendChild(headerRight);
-
-    DataMessenger.rootElem.appendChild(chatHeaderContainer);
-    DataMessenger.headerRight = headerRight;
-    DataMessenger.headerTitle = headerTitle;
-}
-
-DataMessenger.sendDrilldownMessage = function(
-    json, indexData, options, context='DataMessenger',
+ChataUtils.sendDrilldownMessage = function(
+    json, indexData, options, context='ChataUtils',
     responseRenderer=undefined, loading=undefined){
+    var queryId = json['data']['query_id'];
     var obj = {};
+    var groupables = getGroupableFields(json);
     if(indexData != -1){
-        for (var i = 0; i < getGroupableCount(json); i++) {
-            var value = json['data']['rows'][parseInt(indexData)][i]
-            var colData = json['data']['columns'][i]['name'];
+        for (var i = 0; i < groupables.length; i++) {
+            var index = groupables[i].indexCol;
+            var value = json['data']['rows'][parseInt(indexData)][index];
+            var colData = json['data']['columns'][index]['name'];
             obj[colData] = value.toString();
         }
     }
 
     const URL = options.authentication.demo
       ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
+      : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
+    let data;
 
-    const data = {
-        query_id: json['data']['query_id'],
-        group_bys: obj,
-        username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-        customer_id: options.authentication.customerId || "",
-        user_id: options.authentication.userId || "",
-        debug: options.autoQLConfig.debug
+    if(options.authentication.demo){
+        data = {
+            query_id: queryId,
+            group_bys: obj,
+            username: 'demo',
+            customer_id: options.authentication.customerId || "",
+            user_id: options.authentication.userId || "",
+            debug: options.autoQLConfig.debug
+        }
+    }else{
+        var cols = [];
+        for(var [key, value] of Object.entries(obj)){
+            cols.push({
+                name: key,
+                value: value
+            })
+        }
+        data = {
+            debug: options.autoQLConfig.debug,
+            columns: cols
+        }
     }
 
-    if(context == 'DataMessenger'){
-        // var responseLoadingContainer = DataMessenger.putMessage(msg);
+    if(context == 'ChataUtils'){
+        // var responseLoadingContainer = ChataUtils.putMessage(msg);
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
@@ -26942,26 +27688,32 @@ DataMessenger.sendDrilldownMessage = function(
         }
 
         responseLoadingContainer.appendChild(responseLoading);
-        DataMessenger.drawerContent.appendChild(responseLoadingContainer);
-        DataMessenger.ajaxCallPost(URL, function(response){
-            DataMessenger.putTableResponse(response);
-            DataMessenger.drawerContent.removeChild(responseLoadingContainer);
+        ChataUtils.drawerContent.appendChild(responseLoadingContainer);
+        ChataUtils.ajaxCallPost(URL, function(response, status){
+            if(response['data']['rows'].length > 0){
+                ChataUtils.putTableResponse(response);
+            }else{
+                ChataUtils.putSimpleResponse(response);
+            }
+            ChataUtils.drawerContent.removeChild(responseLoadingContainer);
             refreshTooltips();
         }, data, options);
     }else{
-        DataMessenger.ajaxCallPost(URL, function(response){
+        ChataUtils.ajaxCallPost(URL, function(response, status){
             responseRenderer.innerHTML = '';
             var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
-                'chat-bar-text'
+                'autoql-vanilla-chat-bar-text'
             )[0]
             topBar.removeChild(loading);
             var uuid = uuidv4();
-            DataMessenger.responses[uuid] = response;
+            ChataUtils.responses[uuid] = response;
             var div = document.createElement('div');
-            div.classList.add('chata-table-container');
-            div.classList.add('chata-table-container-renderer');
-            responseRenderer.appendChild(div);
-            console.log(response);
+            div.classList.add('autoql-vanilla-chata-table-container');
+            div.classList.add('autoql-vanilla-chata-table-container-renderer');
+            var scrollbox = document.createElement('div');
+            scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+            scrollbox.appendChild(div);
+            responseRenderer.appendChild(scrollbox);
             if(response['data']['rows'].length == 0){
                 responseRenderer.innerHTML = `<div>No data found.</div>`;
             }
@@ -26969,655 +27721,23 @@ DataMessenger.sendDrilldownMessage = function(
                 var data = response['data'];
                 responseRenderer.innerHTML = `<div>${data}</div>`;
             }else{
-                createTable(response, div, options, 'append', uuid, 'table-response-renderer');
+                var table = createTable(
+                    response,
+                    div,
+                    options,
+                    'append',
+                    uuid,
+                    'autoql-vanilla-table-response-renderer',
+                    '[data-indexrowrenderer]'
+                );
+                table.classList.add('renderer-table');
+                scrollbox.insertBefore(table.headerElement, div);
             }
         }, data, options);
     }
 }
 
-DataMessenger.showColumnEditor = function(id){
-    var modal = new Modal({
-        destroyOnClose: true,
-        withFooter: true
-    })
-    var json = DataMessenger.responses[id];
-    var columns = json['data']['columns'];
-    var container = document.createElement('div');
-    var headerEditor = document.createElement('div');
-
-    container.style.padding = '0px 15px';
-    headerEditor.classList.add('col-visibility-header');
-    headerEditor.appendChild(htmlToElement(`
-        <div>Column Name</div>
-    `))
-    headerEditor.appendChild(htmlToElement(`
-        <div>Visible</div>
-    `))
-    container.appendChild(headerEditor);
-    modal.chataModal.classList.add('chata-modal-column-editor')
-    modal.setTitle('Show/Hide Columns')
-
-    for (var i = 0; i < columns.length; i++) {
-        var lineItem = document.createElement('div');
-        var colStr = columns[i]['display_name'] ||
-            columns[i]['name'];
-        var colName = formatColumnName(colStr);
-        var checkboxContainer = document.createElement('div');
-        var checkboxWrapper = document.createElement('div');
-        var mCheckbox = document.createElement('div');
-        var checkboxInput = document.createElement('input');
-        checkboxInput.setAttribute('type', 'checkbox');
-        checkboxInput.classList.add('m-checkbox__input')
-        checkboxContainer.style.width = '36px';
-        checkboxContainer.style.height = '36px';
-        checkboxWrapper.style.width = '36px';
-        checkboxWrapper.style.height = '36px';
-
-        mCheckbox.classList.add('m-checkbox')
-        checkboxWrapper.appendChild(mCheckbox);
-        checkboxWrapper.appendChild(checkboxInput);
-
-        checkboxContainer.appendChild(checkboxWrapper);
-        lineItem.classList.add('col-visibility-line-item')
-        lineItem.appendChild(htmlToElement(`
-            <div>${colName}</div>
-        `))
-        lineItem.appendChild(checkboxContainer);
-        container.appendChild(lineItem);
-    }
-    var cancelButton = htmlToElement(
-        `<div class="chata-btn default" style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
-    )
-    var saveButton = htmlToElement(
-        `<div class="chata-btn primary " style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
-    )
-
-    cancelButton.onclick = function(event){
-        modal.close();
-    }
-
-    modal.addView(container);
-    modal.addFooterElement(cancelButton);
-    modal.addFooterElement(saveButton);
-    modal.show();
-}
-
-DataMessenger.clickHandler = function(e){
-
-    if(DataMessenger.options.autoQLConfig.enableDrilldowns){
-        if(e.target.parentElement.dataset.hasDrilldown === 'true'){
-            var table = e.target.parentElement.parentElement;
-            var json = DataMessenger.responses[table.dataset.componentid];
-            var indexData = e.target.parentElement.dataset.indexrow;
-            DataMessenger.sendDrilldownMessage(json, indexData, DataMessenger.options);
-        }
-        if(e.target.hasAttribute('data-chartindex')){
-            var component = e.target.parentElement.parentElement.parentElement;
-            if(component.tagName == 'svg'){
-                component = component.parentElement;
-            }
-            if(component.tagName === 'g'){
-                component = component.parentElement.parentElement;
-            }
-            var json = DataMessenger.responses[component.dataset.componentid];
-            var indexData = e.target.dataset.chartindex;
-            DataMessenger.sendDrilldownMessage(json, indexData, DataMessenger.options);
-        }
-        if (e.target.hasAttribute('data-stackedchartindex')) {
-            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement;
-            var json = cloneObject(DataMessenger.responses[component.dataset.componentid]);
-            json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
-            json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
-            json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
-            DataMessenger.sendDrilldownMessage(json, 0, DataMessenger.options);
-        }
-
-        if(e.target.classList.contains('chata-single-response')){
-            var component = e.target.parentElement.parentElement;
-            var json = DataMessenger.responses[component.dataset.containerid];
-            DataMessenger.sendDrilldownMessage(json, -1, DataMessenger.options);
-
-        }
-    }
-
-    if(e.target){
-        var chataInput = document.getElementById('chata-input');
-        var suggestionList = document.getElementById('auto-complete-list');
-        if(e.target.classList.contains('bar') || e.target.classList.contains('line-dot')
-        || e.target.classList.contains('square') || e.target.classList.contains('circle')){
-            var selectedBars = e.target.parentElement.getElementsByClassName('active');
-            for (var i = 0; i < selectedBars.length; i++) {
-                selectedBars[i].classList.remove('active');
-            }
-            e.target.classList.add('active');
-        }
-
-        if(e.target.classList.contains('chata-confirm-btn')){
-            DataMessenger.closePopOver();
-            if(e.target.classList.contains('yes')){
-                DataMessenger.clearMessages();
-            }
-        }
-
-        if(e.target.classList.contains('close-action')){
-            DataMessenger.closeDrawer();
-        }
-
-        if(e.target.classList.contains('chata-voice')){
-            var button = document.getElementById('chata-voice-record-button');
-
-
-            if(DataMessenger.options.isRecordVoiceActive){
-                const themeStyles = DataMessenger.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME;
-                DataMessenger.options.isRecordVoiceActive = false;
-                DataMessenger.speechToText.stop();
-                button.style.background = themeStyles['--chata-drawer-accent-color'];
-            }else{
-                DataMessenger.finalTranscript = '';
-                button.style.background = 'red';
-                DataMessenger.options.isRecordVoiceActive = true;
-                DataMessenger.speechToText.start();
-            }
-        }
-
-        if(e.target.classList.contains('filter-table')){
-            if(e.target.tagName == 'svg'){
-                parent = e.target.parentElement.parentElement.parentElement;
-            }else if(e.target.tagName == 'path'){
-                parent = e.target.parentElement.parentElement.parentElement.parentElement;
-            }else{
-                parent = e.target.parentElement.parentElement;
-            }
-            var table = parent.getElementsByTagName('table')[0];
-            var inputs = table.headerElement.getElementsByClassName(
-                'tabulator-header-filter'
-            );
-            var arrows = table.headerElement.getElementsByClassName(
-                'tabulator-arrow'
-            );
-            for (var i = 0; i < inputs.length; i++) {
-                if(inputs[i].style.display == '' || inputs[i].style.display == 'none'){
-                    inputs[i].style.display = 'block';
-                }else{
-                    inputs[i].style.display = 'none';
-                }
-                arrows[i].classList.toggle('tabulator-filter');
-            }
-        }
-
-        if(e.target.classList.contains('delete-message')){
-            if(e.target.tagName == 'svg'){
-                parent = e.target.parentElement.parentElement.
-                parentElement.parentElement;
-            }else if(e.target.tagName == 'path'){
-                parent = e.target.parentElement.parentElement.
-                    parentElement.parentElement.parentElement;
-            }else{
-                parent = e.target.parentElement.parentElement.parentElement;
-            }
-            DataMessenger.drawerContent.removeChild(parent);
-        }
-
-        if(e.target.classList.contains('suggestion')){
-            console.log(e.target.textContent);
-            suggestionList.style.display = 'none';
-            DataMessenger.sendMessage(chataInput, e.target.textContent);
-        }
-        if(e.target.classList.contains('chata-suggestion-btn')){
-            if(!e.target.classList.contains('none-of-these-btn')){
-                DataMessenger.sendMessage(chataInput, e.target.textContent);
-            }else{
-                var responseLoadingContainer = DataMessenger.putMessage(
-                    e.target.textContent
-                );
-                var interval = setInterval(function(){
-                    DataMessenger.drawerContent.removeChild(responseLoadingContainer);
-                    DataMessenger.sendResponse('Thank you for your feedback.');
-                    clearInterval(interval);
-                }, 1300);
-            }
-        }
-        if(e.target.classList.contains('clipboard')){
-            if(e.target.tagName == 'svg'){
-                var json = DataMessenger.responses[e.target.parentElement.dataset.id];
-            }else if(e.target.tagName == 'path'){
-                var json = DataMessenger.responses[e.target.parentElement.parentElement.dataset.id];
-            }else{
-                var json = DataMessenger.responses[e.target.dataset.id];
-            }
-            copyTextToClipboard(DataMessenger.createCsvData(json, '\t'));
-        }
-        if(e.target.classList.contains('sql')){
-            let parent;
-            if(e.target.tagName == 'svg'){
-                parent = e.target.parentElement;
-            }else if(e.target.tagName == 'path'
-            || e.target.tagName == 'ellipse'){
-                parent = e.target.parentElement.parentElement;
-            }else{
-                parent = e.target;
-            }
-            var json = DataMessenger.responses[parent.dataset.id];
-            parent.classList.add('btn-green')
-            var interval = setInterval(function(){
-                parent.classList.remove('btn-green');
-                clearInterval(interval);
-            }, 1000);
-            copyTextToClipboard(json['data']['sql']);
-        }
-        if(e.target.classList.contains('show-hide-columns')){
-            if(e.target.tagName == 'svg'){
-                var id = e.target.parentElement.dataset.id
-            }else if(e.target.tagName == 'path'){
-                var id = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var id = e.target.dataset.id;
-            }
-            DataMessenger.showColumnEditor(id);
-        }
-        if(e.target.classList.contains('csv')){
-            if(e.target.tagName == 'svg'){
-                var json = DataMessenger.responses[e.target.parentElement.dataset.id];
-            }else if(e.target.tagName == 'path'){
-                var json = DataMessenger.responses[e.target.parentElement.parentElement.dataset.id];
-            }else{
-                var json = DataMessenger.responses[e.target.dataset.id];
-            }
-            var csvData = DataMessenger.createCsvData(json);
-            var link = document.createElement("a");
-            link.setAttribute('href', 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvData));
-            link.setAttribute('download', 'test.csv');
-            link.click();
-        }
-        if(e.target.classList.contains('column')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            console.log(tableElement);
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var data = applyFilter(tableElement.dataset.componentid);
-                var sortData = DataMessenger.sort(data, 'desc', e.target.dataset.index, e.target.dataset.type);
-                DataMessenger.refreshTableData(tableElement, sortData, DataMessenger.options);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var data = applyFilter(tableElement.dataset.componentid);
-                var sortData = DataMessenger.sort(data, 'asc', parseInt(e.target.dataset.index), e.target.dataset.type);
-                DataMessenger.refreshTableData(tableElement, sortData, DataMessenger.options);
-            }
-        }
-        if(e.target.classList.contains('column-pivot')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(DataMessenger.responses[tableElement.dataset.componentid]);
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(json, DataMessenger.options, cloneObject(json['data']['rows']));
-            }else{
-                pivotArray = getPivotColumnArray(json, DataMessenger.options, cloneObject(json['data']['rows']));
-            }
-            var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                rows.unshift([]); //Simulate header
-                var sortData = sortPivot(rows, e.target.dataset.index, 'desc');
-                // sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                rows.unshift([]); //Simulate header
-                var sortData = sortPivot(rows, e.target.dataset.index, 'asc');
-                // sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
-        }
-        if(e.target.classList.contains('pivot_table')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var columns = json['data']['columns'];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'pivot_column');
-            if(columns[0].type === 'DATE' &&
-            columns[0].name.includes('month')){
-                var pivotArray = getDatePivotArray(json, DataMessenger.options, json['data']['rows']);
-                createPivotTable(pivotArray, component);
-            }else{
-                var pivotArray = getPivotColumnArray(json, DataMessenger.options, json['data']['rows']);
-                createPivotTable(pivotArray, component);
-            }
-        }
-        if(e.target.classList.contains('column_chart')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            console.log('GROUPABLES: ' + getGroupableCount(json));
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'column');
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        DataMessenger.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(
-                        groups[i],
-                        json['data']['columns'][0],
-                        DataMessenger.options
-                    )
-                }
-                // var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedColumnChart(component, groups, dataGrouped, cols, DataMessenger.options);
-            }else{
-                var values = formatDataToBarChart(json, DataMessenger.options);
-                var grouped = values[0];
-                var cols = json['data']['columns'];
-
-                var hasNegativeValues = values[1];
-                createColumnChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
-            }
-        }
-        if(e.target.classList.contains('pie_chart')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'pie');
-            var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
-            var cols = json['data']['columns'];
-            createPieChart(component, data, DataMessenger.options, cols);
-        }
-        if(e.target.classList.contains('stacked_column_chart')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'stacked_column');
-            var data = cloneObject(json['data']['rows']);
-
-            var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-            groups = groups.sort().reverse();
-            var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-            var cols = json['data']['columns']
-
-            var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-            console.log(dataGrouped);
-            createStackedColumnChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
-        }
-        if(e.target.classList.contains('stacked_bar_chart')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'stacked_bar');
-            var data = cloneObject(json['data']['rows']);
-            var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-            groups = groups.sort().reverse();
-            var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-            var cols = json['data']['columns'];
-            var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-            createStackedBarChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
-        }
-        if(e.target.classList.contains('table')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'table');
-            createTable(json, component, DataMessenger.options);
-        }
-
-        if(e.target.classList.contains('bar_chart')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            console.log('ID REQUESTS: ' + idRequest);
-            console.log('GROUPABLES: ' + getGroupableCount(json));
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'bar');
-            var groupCount = getGroupableCount(json);
-            if(groupCount == 1 && json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                // var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns']
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedBarChart(component, groups, dataGrouped, cols, DataMessenger.options);
-            }else{
-                var values = formatDataToBarChart(json, DataMessenger.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createBarChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
-            }
-
-        }
-
-        if(e.target.classList.contains('line_chart')){
-            if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            DataMessenger.refreshToolbarButtons(component, 'line');
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                // var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedLineChart(component, groups, dataGrouped, cols, DataMessenger.options);
-                console.log(dataGrouped);
-            }else{
-                var values = formatDataToBarChart(json, DataMessenger.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createLineChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
-            }
-        }
-
-        if(e.target.classList.contains('heatmap')){
-            console.log(e.target.tagName);
-            if(e.target.tagName == 'BUTTON'){
-                var idRequest = e.target.dataset.id;
-            }
-            else if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var values = formatDataToHeatmap(json, DataMessenger.options);
-            var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-            var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-            labelsY = formatLabels(labelsY, json['data']['columns'][0], DataMessenger.options);
-            labelsX = formatLabels(labelsX, json['data']['columns'][1], DataMessenger.options);
-            var cols = json['data']['columns'];
-
-            createHeatmap(component, labelsX, labelsY, values, cols, DataMessenger.options);
-            DataMessenger.refreshToolbarButtons(component, 'heatmap');
-        }
-
-        if(e.target.classList.contains('bubble_chart')){
-            if(e.target.tagName == 'BUTTON'){
-                var idRequest = e.target.dataset.id;
-            }
-            else if(e.target.tagName == 'svg'){
-                var idRequest = e.target.parentElement.dataset.id;
-            }else{
-                var idRequest = e.target.parentElement.parentElement.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var values = formatDataToHeatmap(json, DataMessenger.options);
-            var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-            var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-            labelsY = formatLabels(labelsY, json['data']['columns'][0], DataMessenger.options);
-            labelsX = formatLabels(labelsX, json['data']['columns'][1], DataMessenger.options);
-
-            var cols = json['data']['columns'];
-            createBubbleChart(component, labelsX, labelsY, values, cols, DataMessenger.options);
-            DataMessenger.refreshToolbarButtons(component, 'bubble');
-        }
-        if(e.target.classList.contains('export_png')){
-            if(e.target.tagName == 'svg'){
-                idRequest = e.target.parentElement.dataset.id;
-            }else if(e.target.tagName == 'path'){
-                idRequest = e.target.parentElement.parentElement.dataset.id;
-            }else{
-                idRequest = e.target.dataset.id;
-            }
-            var json = DataMessenger.responses[idRequest];
-            var component = document.querySelectorAll(`[data-componentid='${idRequest}']`)[0];
-            var svg = component.getElementsByTagName('svg')[0];
-            var svgString = getSVGString(svg);
-            // svgToPng(svg);
-            svgString2Image( svgString, 2*component.clientWidth, 2*component.clientHeight);
-        }
-        if(e.target.classList.contains('clear-all')){
-            var confirm = document.querySelector('.popover-container');
-            confirm.style.visibility = 'visible';
-            confirm.style.opacity = 1;
-        }
-    }
-}
-
-DataMessenger.closePopOver = function(){
-    var confirm = document.querySelector('.popover-container');
-    confirm.style.opacity = 0;
-    confirm.style.visibility = 'hidden';
-}
-
-DataMessenger.drilldownHandler = function(e){
-
-}
-
-DataMessenger.sendResponse = function(text){
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
-    messageBubble.textContent = text;
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-}
-
-DataMessenger.registerEvents = function(){
-    var chataInput = document.getElementById('chata-input');
-    var suggestionList = document.getElementById('auto-complete-list');
-    document.addEventListener('click', function(e){
-        if(e.target.id == 'drawer-wrapper'){
-            if(DataMessenger.options.showMask && DataMessenger.options.maskClosable){
-                DataMessenger.options.onMaskClick();
-            }
-        }
-    })
-    // document.addEventListener('dblclick', DataMessenger.drilldownHandler);
-
-    DataMessenger.rootElem.addEventListener('click', DataMessenger.clickHandler);
-
-    chataInput.onkeyup = function(){
-        if(DataMessenger.options.autoQLConfig.enableAutocomplete){
-            suggestionList.style.display = 'none';
-            if(this.value){
-                DataMessenger.autocomplete(this.value, suggestionList, 'suggestion', DataMessenger.options);
-            }
-        }
-    }
-
-    chataInput.onkeypress = function(event){
-        if(event.keyCode == 13 && this.value){
-            try {
-                DataMessenger.xhr.onreadystatechange = null;
-                DataMessenger.xhr.abort();
-            } catch (e) {}
-            suggestionList.style.display = 'none';
-            DataMessenger.sendMessage(chataInput, this.value);
-        }
-    }
-}
-
-DataMessenger.clearMessages = function(){
-    [].forEach.call(DataMessenger.drawerContent.querySelectorAll('.chat-single-message-container'), function(e, index){
-        if(index == 0) return;
-        e.parentNode.removeChild(e);
-    });
-}
-
-DataMessenger.makeBarChartDomain = function(data, hasNegativeValues){
+ChataUtils.makeBarChartDomain = function(data, hasNegativeValues){
     if(hasNegativeValues){
         return d3.extent(data, function(d) { return d.value; });
     }else{
@@ -27627,7 +27747,7 @@ DataMessenger.makeBarChartDomain = function(data, hasNegativeValues){
     }
 }
 
-DataMessenger.getUniqueValues = function(data, getter){
+ChataUtils.getUniqueValues = function(data, getter){
     let unique = {};
     data.forEach(function(i) {
         if(!unique[getter(i)]) {
@@ -27637,7 +27757,7 @@ DataMessenger.getUniqueValues = function(data, getter){
     return Object.keys(unique);
 }
 
-DataMessenger.formatCompareData = function(col, data, groups){
+ChataUtils.formatCompareData = function(col, data, groups){
     var dataGrouped = [];
 
     for (var i = 0; i < groups.length; i++) {
@@ -27653,15 +27773,23 @@ DataMessenger.formatCompareData = function(col, data, groups){
     return dataGrouped;
 }
 
-DataMessenger.format3dData = function(cols, data, groups){
+ChataUtils.format3dData = function(json, groups){
     var dataGrouped = [];
+    var data = json['data']['rows'];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
 
     for (var i = 0; i < groups.length; i++) {
         var group = groups[i];
         dataGrouped.push({group: group});
         for (var x = 0; x < data.length; x++) {
-            if(data[x][1] == group){
-                dataGrouped[i][data[x][0]] = parseFloat(data[x][2]);
+            if(data[x][groupableIndex2] == group){
+                dataGrouped[i][data[x][groupableIndex1]]
+                    = parseFloat(data[x][notGroupableIndex]);
             }
         }
     }
@@ -27669,32 +27797,18 @@ DataMessenger.format3dData = function(cols, data, groups){
     return dataGrouped;
 }
 
-DataMessenger.groupBy = function(list, keyGetter) {
+ChataUtils.groupBy = function(list, keyGetter, indexData) {
     obj = {};
     list.forEach((item) => {
         const key = keyGetter(item);
         if (!obj.hasOwnProperty(key)) {
-            obj[key] = item[1];
+            obj[key] = item[indexData];
         }
     });
     return obj;
 }
 
-DataMessenger.refreshToolbarButtons = function(oldComponent, activeDisplayType){
-    var messageBubble = oldComponent.parentElement.parentElement.parentElement;
-    if(messageBubble.classList.contains('chata-response-content-container')){
-        messageBubble = messageBubble.parentElement;
-    }
-    console.log(messageBubble);
-    var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
-    var toolbarRight = messageBubble.getElementsByClassName('right')[0];
-    var actionType = ['table', 'pivot_column', 'date_pivot'].includes(activeDisplayType) ? 'csvCopy' : '';
-    toolbarLeft.innerHTML = DataMessenger.getSupportedDisplayTypes(oldComponent.dataset.componentid, activeDisplayType);
-    toolbarRight.innerHTML = DataMessenger.getActionButtons(oldComponent.dataset.componentid, actionType);
-    refreshTooltips();
-}
-
-DataMessenger.sort = function(data, operator, colIndex, colType){
+ChataUtils.sort = function(data, operator, colIndex, colType){
     var lines = data;
     var values = []
     for (var i = 0; i < lines.length; i++) {
@@ -27727,9 +27841,9 @@ DataMessenger.sort = function(data, operator, colIndex, colType){
     return sortedArray;
 }
 
-DataMessenger.refreshPivotTable = function(table, pivotArray){
+ChataUtils.refreshPivotTable = function(table, pivotArray){
     var rows = table.childNodes;
-    var cols = DataMessenger.responses[table.dataset.componentid]['columns'];
+    var cols = ChataUtils.responses[table.dataset.componentid]['columns'];
     for (var i = 0; i < rows.length; i++) {
         rows[i].style.display = 'table-row';
     }
@@ -27746,10 +27860,10 @@ DataMessenger.refreshPivotTable = function(table, pivotArray){
     }
 }
 
-DataMessenger.refreshTableData = function(table, newData, options){
+ChataUtils.refreshTableData = function(table, newData, options){
     var rows = newData;//table.childNodes;
     var nodes = table.childNodes;
-    var cols = DataMessenger.responses[table.dataset.componentid]['data']['columns'];
+    var cols = ChataUtils.responses[table.dataset.componentid]['data']['columns'];
     for (var i = 0; i < nodes.length; i++) {
         nodes[i].style.display = 'table-row';
     }
@@ -27764,7 +27878,95 @@ DataMessenger.refreshTableData = function(table, newData, options){
     }
 }
 
-DataMessenger.createCsvData = function(json, separator=','){
+ChataUtils.onClickColumn = function(evt, tableElement, options){
+    let sortBy;
+    let newClassArrow;
+    let parent = evt.target;
+    evt.preventDefault();
+
+    if(parent.tagName === 'INPUT'){
+        return;
+    }
+
+    if(parent.tagName === 'TH'){
+        parent = parent.childNodes[0];
+    }
+    if(tableElement.sort === 'asc'){
+        sortBy = 'desc';
+        newClassArrow = 'down';
+    }else{
+        sortBy = 'asc';
+        newClassArrow = 'up';
+    }
+
+    tableElement.sort = sortBy;
+    parent.nextSibling.classList.remove('up');
+    parent.nextSibling.classList.remove('down');
+    parent.nextSibling.classList.add(newClassArrow);
+
+    var data = applyFilter(tableElement.dataset.componentid);
+    var sortData = ChataUtils.sort(
+        data, sortBy, parent.dataset.index, parent.dataset.type
+    );
+
+    ChataUtils.refreshTableData(
+        tableElement, sortData, options
+    );
+}
+
+ChataUtils.onClickPivotColumn = function(evt, tableElement, options){
+    var pivotArray = [];
+    var json = cloneObject(ChataUtils.responses[
+        tableElement.dataset.componentid
+    ]);
+    var columns = json['data']['columns'];
+    let sortBy;
+    let newClassArrow;
+    let parent = evt.target;
+    evt.preventDefault();
+
+    if(parent.tagName === 'INPUT'){
+        return;
+    }
+
+    if(parent.tagName === 'TH'){
+        parent = parent.childNodes[0];
+    }
+
+    if(columns[0].type === 'DATE' &&
+        columns[0].name.includes('month')){
+        pivotArray = getDatePivotArray(
+            json, options, cloneObject(json['data']['rows'])
+        );
+    }else{
+        pivotArray = getPivotColumnArray(
+            json, options, cloneObject(json['data']['rows'])
+        );
+    }
+
+    if(tableElement.sort === 'asc'){
+        sortBy = 'desc';
+        newClassArrow = 'down';
+    }else{
+        sortBy = 'asc';
+        newClassArrow = 'up';
+    }
+
+    tableElement.sort = sortBy;
+    parent.nextSibling.classList.remove('up');
+    parent.nextSibling.classList.remove('down');
+    parent.nextSibling.classList.add(newClassArrow);
+
+    var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
+    rows.unshift([]); //Simulate header
+    var sortData = sortPivot(rows, parent.dataset.index, sortBy);
+    // sortData.unshift([]); //Simulate header
+    ChataUtils.refreshPivotTable(tableElement, sortData);
+
+}
+
+
+ChataUtils.createCsvData = function(json, separator=','){
     var output = '';
     var lines = json['data']['rows'];
     for(var i = 0; i<json['data']['columns'].length; i++){
@@ -27784,158 +27986,10 @@ DataMessenger.createCsvData = function(json, separator=','){
     return output
 }
 
-DataMessenger.closeDrawer = function(){
-    DataMessenger.options.isVisible = false;
-    DataMessenger.wrapper.style.opacity = 0;
-    DataMessenger.wrapper.style.height = 0;
-    DataMessenger.queryTabs.style.visibility = 'hidden';
-    var body = document.getElementsByTagName('body')[0];
-
-    if(DataMessenger.options.placement == 'right'){
-        DataMessenger.rootElem.style.right = 0;
-        DataMessenger.rootElem.style.top = 0;
-        if(DataMessenger.options.showHandle){
-            DataMessenger.drawerButton.style.display = 'flex';
-        }
-        if(DataMessenger.options.shiftScreen){
-            body.style.transform = 'translateX(0px)';
-        }else{
-            DataMessenger.rootElem.style.transform = 'translateX('+ DataMessenger.options.width +'px)';
-        }
-    }else if(DataMessenger.options.placement == 'left'){
-        DataMessenger.rootElem.style.left = 0;
-        DataMessenger.rootElem.style.top = 0;
-        if(DataMessenger.options.showHandle){
-            DataMessenger.drawerButton.style.display = 'flex';
-        }
-        if(DataMessenger.options.shiftScreen){
-            body.style.transform = 'translateX(0px)';
-        }else{
-            DataMessenger.rootElem.style.transform = 'translateX(-'+ DataMessenger.options.width +'px)';
-        }
-    }else if(DataMessenger.options.placement == 'bottom'){
-        DataMessenger.rootElem.style.bottom = '0';
-        DataMessenger.rootElem.style.transform = 'translateY('+ DataMessenger.options.height +'px)';
-
-        if(DataMessenger.options.showHandle){
-            DataMessenger.drawerButton.style.display = 'flex';
-        }
-    }else if(DataMessenger.options.placement == 'top'){
-        DataMessenger.rootElem.style.top = '0';
-        DataMessenger.rootElem.style.transform = 'translateY(-'+ DataMessenger.options.height +'px)';
-
-        if(DataMessenger.options.showHandle){
-            DataMessenger.drawerButton.style.display = 'flex';
-        }
-    }
-    if(DataMessenger.options.clearOnClose){
-        DataMessenger.clearMessages();
-    }
-    DataMessenger.options.onVisibleChange();
-}
-
-DataMessenger.openDrawer = function(){
-    DataMessenger.options.isVisible = true;
-    if(DataMessenger.options.enableQueryInspirationTab){
-        DataMessenger.queryTabs.style.visibility = 'visible';
-    }
-    var body = document.getElementsByTagName('body')[0];
-    if(DataMessenger.options.showMask){
-        DataMessenger.wrapper.style.opacity = .3;
-        DataMessenger.wrapper.style.height = '100%';
-    }
-    if(DataMessenger.options.placement == 'right'){
-        DataMessenger.rootElem.style.width = DataMessenger.options.width + 'px';
-        DataMessenger.rootElem.style.height = 'calc(100vh)';
-
-        DataMessenger.drawerButton.style.display = 'none';
-        DataMessenger.rootElem.style.right = 0;
-        DataMessenger.rootElem.style.top = 0;
-        if(DataMessenger.options.shiftScreen){
-            body.style.position = 'relative';
-            body.style.overflow = 'hidden';
-            body.style.transform = 'translateX(-'+ DataMessenger.options.width +'px)';
-            DataMessenger.rootElem.style.transform = 'translateX('+ DataMessenger.options.width +'px)';
-        }else{
-            DataMessenger.rootElem.style.transform = 'translateX(0px)';
-        }
-
-    }else if(DataMessenger.options.placement == 'left'){
-        DataMessenger.rootElem.style.width = DataMessenger.options.width + 'px';
-        DataMessenger.rootElem.style.height = 'calc(100vh)';
-        DataMessenger.rootElem.style.left = 0;
-        DataMessenger.rootElem.style.top = 0;
-        DataMessenger.drawerButton.style.display = 'none';
-        if(DataMessenger.options.shiftScreen){
-            body.style.position = 'relative';
-            body.style.overflow = 'hidden';
-            body.style.transform = 'translateX('+ DataMessenger.options.width +'px)';
-            DataMessenger.rootElem.style.transform = 'translateX(-'+ DataMessenger.options.width +'px)';
-        }else{
-            DataMessenger.rootElem.style.transform = 'translateX(0px)';
-        }
-    }else if(DataMessenger.options.placement == 'bottom'){
-        DataMessenger.rootElem.style.width = '100%';
-        DataMessenger.rootElem.style.height = DataMessenger.options.height + 'px';
-        DataMessenger.rootElem.style.bottom = 0;
-        DataMessenger.rootElem.style.left = 0;
-        DataMessenger.drawerButton.style.display = 'none';
-        DataMessenger.rootElem.style.transform = 'translateY(0)';
-    }else if(DataMessenger.options.placement == 'top'){
-        DataMessenger.rootElem.style.width = '100%';
-        DataMessenger.rootElem.style.height = DataMessenger.options.height + 'px';
-        DataMessenger.rootElem.style.top = 0;
-        DataMessenger.rootElem.style.left = 0;
-        DataMessenger.drawerButton.style.display = 'none';
-        DataMessenger.rootElem.style.transform = 'translateY(0)';
-    }
-    DataMessenger.options.onVisibleChange();
-}
-
-DataMessenger.createWrapper = function(rootElem){
-    var wrapper = document.createElement('div');
-    var body = document.getElementsByTagName('body')[0];
-    body.insertBefore(wrapper, rootElem);
-    wrapper.setAttribute('id', 'drawer-wrapper');
-    DataMessenger.wrapper = wrapper;
-    if(!DataMessenger.options.showMask){
-        DataMessenger.wrapper.style.opacity = 0;
-        DataMessenger.wrapper.style.height = 0;
-    }
-}
-
-DataMessenger.createDrawerButton = function(rootElem){
-    var drawerButton = document.createElement("div");
-    var drawerIcon = document.createElement("div");
-    drawerIcon.setAttribute("height", "22px");
-    drawerIcon.setAttribute("width", "22px");
-    drawerIcon.classList.add('chata-bubbles-icon');
-    drawerIcon.classList.add('open-action');
-    drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
-    drawerButton.classList.add('drawer-handle');
-    drawerButton.classList.add('open-action');
-    drawerButton.classList.add(DataMessenger.options.placement + '-btn');
-    drawerButton.appendChild(drawerIcon);
-    drawerButton.addEventListener('click', function(e){
-        DataMessenger.options.onHandleClick();
-        DataMessenger.openDrawer();
-    })
-    var body = document.getElementsByTagName('body')[0];
-    body.insertBefore(drawerButton, rootElem);
-    DataMessenger.drawerButton = drawerButton;
-    if(!DataMessenger.options.showHandle){
-        DataMessenger.drawerButton.style.display = 'none';
-    }
-    for (var [key, value] of Object.entries(DataMessenger.options.handleStyles)){
-        DataMessenger.drawerButton.style.setProperty(key, value, '');
-    }
-}
-
-DataMessenger.safetynetCall = function(url, callback, options){
+ChataUtils.safetynetCall = function(url, callback, options){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4){
-            console.log(xhr.status);
             var jsonResponse = undefined;
             if(xhr.status == 200){
                 jsonResponse = JSON.parse(xhr.responseText);
@@ -27949,24 +28003,29 @@ DataMessenger.safetynetCall = function(url, callback, options){
     xhr.send();
 }
 
-DataMessenger.ajaxCall = function(val, callback, options){
+ChataUtils.ajaxCall = function(val, callback, options, source){
     const url = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query`
     : `${options.authentication.domain}/autoql/api/v1/query?key=${options.authentication.apiKey}`
 
     const data = {
         text: val,
-        source: "data_messenger",
-        username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-        customer_id: options.authentication.customerId || "",
-        user_id: options.authentication.userId || "",
-        debug: options.autoQLConfig.debug
+        source: source,
+        // username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
+        // customer_id: options.authentication.customerId || "",
+        // user_id: options.authentication.userId || "",
+        debug: options.autoQLConfig.debug,
+        test: options.autoQLConfig.test
+    }
+    if(options.authentication.demo){
+        data['user_id'] = 'demo';
+        data['customer_id'] = 'demo';
     }
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4){
             var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            callback(jsonResponse, xhr.status);
         }
     };
     xhr.open('POST', url);
@@ -27978,7 +28037,28 @@ DataMessenger.ajaxCall = function(val, callback, options){
     xhr.send(JSON.stringify(data));
 }
 
-DataMessenger.ajaxCallPost = function(url, callback, data, options){
+ChataUtils.putCall = function(url, data, callback, options){
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+            var jsonResponse = JSON.parse(xhr.responseText);
+            callback(jsonResponse);
+        }
+    }
+
+    xhr.open('PUT', url);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    if(!options.authentication.demo){
+        xhr.setRequestHeader(
+            "Authorization", `Bearer ${options.authentication.token}`
+        );
+    }
+    xhr.send(JSON.stringify(data));
+
+}
+
+ChataUtils.ajaxCallPost = function(url, callback, data, options){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", url);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
@@ -27989,37 +28069,39 @@ DataMessenger.ajaxCallPost = function(url, callback, data, options){
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4){
             var jsonResponse = JSON.parse(xmlhttp.responseText);
-            callback(jsonResponse);
+            callback(jsonResponse, xmlhttp.status);
         }
     };
     xmlhttp.send(JSON.stringify(data));
 }
 
-DataMessenger.ajaxCallAutoComplete = function(url, callback, options){
+ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
 
-    DataMessenger.xhr.onreadystatechange = function() {
-        if (DataMessenger.xhr.readyState === 4){
-            var jsonResponse = JSON.parse(DataMessenger.xhr.responseText);
+    ChataUtils.xhr.onreadystatechange = function() {
+        if (ChataUtils.xhr.readyState === 4){
+            var jsonResponse = JSON.parse(ChataUtils.xhr.responseText);
             callback(jsonResponse);
         }
     };
-    DataMessenger.xhr.open('GET', url);
-    DataMessenger.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    DataMessenger.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${DataMessenger.options.authentication.token}` : undefined);
-    DataMessenger.xhr.send();
+    ChataUtils.xhr.open('GET', url);
+    ChataUtils.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    ChataUtils.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
+    ChataUtils.xhr.send();
 }
 
-DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='suggestion', options){
+ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggestion', options){
     const URL = options.authentication.demo
       ? `https://backend.chata.ai/api/v1/autocomplete?q=${encodeURIComponent(
         suggestion
       )}&projectid=1`
       : `${options.authentication.domain}/autoql/api/v1/query/autocomplete?text=${encodeURIComponent(
         suggestion
-      )}&key=${options.authentication.apiKey}&customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}`
+      )}&key=${options.authentication.apiKey}`
+      // &customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}
 
-    DataMessenger.ajaxCallAutoComplete(URL, function(jsonResponse){
+    ChataUtils.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
+        console.log(URL);
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
         if(matches.length > 0){
             for(var [key, value] of Object.entries(options.autocompleteStyles)){
@@ -28030,6 +28112,7 @@ DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='sugge
                 li.classList.add(liClass);
                 li.textContent = matches[i];
                 suggestionList.appendChild(li);
+                console.log(matches[i]);
             }
             suggestionList.style.display = 'block';
         }else{
@@ -28038,566 +28121,11 @@ DataMessenger.autocomplete = function(suggestion, suggestionList, liClass='sugge
     }, options);
 }
 
-DataMessenger.createHelpContent = function(link){
-    return `
-    Great news, I can help with that:
-    <br/>
-    <button onclick="window.open('${link}', '_blank')" class="chata-help-link-btn">
-    ${HELP_ICON}
-    Bar chart 2</button>
-    `;
-}
-
-DataMessenger.putHelpMessage = function(jsonResponse){
-    var div = document.createElement('div');
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
-    messageBubble.classList.add('full-width');
-
-    messageBubble.innerHTML = DataMessenger.createHelpContent(jsonResponse['data']['rows'][0]);
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-}
-
-DataMessenger.putSafetynetMessage = function(suggestionArray){
-    var div = document.createElement('div');
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
-    messageBubble.classList.add('full-width');
-
-    messageBubble.append(createSafetynetContent(suggestionArray));
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-    updateSelectWidth(containerMessage)
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-}
-
-DataMessenger.sendMessage = function(chataInput, textValue){
-    chataInput.disabled = true;
-    chataInput.value = '';
-    var responseLoadingContainer = DataMessenger.putMessage(textValue);
-    // const URL_SAFETYNET = `https://backend-staging.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
-    //   textValue
-    // )}&projectId=${DataMessenger.options.projectId}&unified_query_id=${uuidv4()}`;
-
-    const URL_SAFETYNET = DataMessenger.options.authentication.demo
-      ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
-        textValue
-      )}&projectId=1`
-      : `${DataMessenger.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
-        textValue
-      )}&key=${DataMessenger.options.authentication.apiKey}&customer_id=${DataMessenger.options.authentication.customerId}&user_id=${DataMessenger.options.authentication.userId}`
-
-
-    DataMessenger.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
-        var suggestions = {};
-        if(jsonResponse != undefined){
-            var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
-        }
-        if(statusCode != 200){
-            DataMessenger.drawerContent.removeChild(responseLoadingContainer);
-            chataInput.removeAttribute("disabled");
-            DataMessenger.sendResponse(`
-                Uh oh.. It looks like you don't have access to this resource.
-                Please double check that all the required authentication fields are provided.`
-            )
-        }else if(suggestions.length > 0 && DataMessenger.options.autoQLConfig.enableQueryValidation
-        && textValue != 'None of these'){
-            chataInput.removeAttribute("disabled");
-            DataMessenger.drawerContent.removeChild(responseLoadingContainer);
-
-            var suggestionArray = createSuggestionArray(jsonResponse);
-            DataMessenger.putSafetynetMessage(suggestionArray);
-        }else{
-            DataMessenger.ajaxCall(textValue, function(jsonResponse){
-                chataInput.removeAttribute("disabled");
-                DataMessenger.drawerContent.removeChild(responseLoadingContainer);
-                switch(jsonResponse['data']['display_type']){
-                    case 'suggestion':
-                        DataMessenger.putSuggestionResponse(jsonResponse, textValue);
-                    break;
-                    case 'table':
-                        if(jsonResponse['data']['columns'].length == 1){
-                            DataMessenger.putSimpleResponse(jsonResponse);
-                        }else{
-                            DataMessenger.putTableResponse(jsonResponse);
-                        }
-                    break;
-                    case 'data':
-                        var cols = jsonResponse['data']['columns'];
-                        var rows = jsonResponse['data']['rows'];
-                        if(cols.length == 1 && rows.length == 1){
-                            if(cols[0]['name'] == 'query_suggestion'){
-                                DataMessenger.putSuggestionResponse(jsonResponse, textValue);
-                            }else if(cols[0]['name'] == 'Help Link'){
-                                DataMessenger.putHelpMessage(jsonResponse);
-                            }else{
-                                DataMessenger.putSimpleResponse(jsonResponse);
-                            }
-                        }else{
-                            DataMessenger.putTableResponse(jsonResponse);
-                        }
-                    break;
-                    case 'compare_table':
-                        DataMessenger.putTableResponse(jsonResponse);
-                    break;
-                    case 'date_pivot':
-                        DataMessenger.putTableResponse(jsonResponse);
-                    break;
-                    case 'pivot_column':
-                        DataMessenger.putTableResponse(jsonResponse);
-                    break;
-                    case 'line':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse, DataMessenger.options);
-                        var grouped = values[0];
-                        var hasNegativeValues = values[1];
-                        var cols = jsonResponse['data']['columns'];
-                        createLineChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
-                        DataMessenger.refreshToolbarButtons(component, 'line');
-                    break;
-                    case 'bar':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse, DataMessenger.options);
-                        var grouped = values[0];
-                        var hasNegativeValues = values[1];
-                        var cols = jsonResponse['data']['columns'];
-                        createBarChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
-                        DataMessenger.refreshToolbarButtons(component, 'bar');
-                    break;
-                    case 'word_cloud':
-                        DataMessenger.putTableResponse(jsonResponse);
-                    break;
-                    case 'stacked_column':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        DataMessenger.refreshToolbarButtons(component, 'stacked_column');
-                        var data = cloneObject(jsonResponse['data']['rows']);
-
-                        var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                        groups = groups.sort().reverse();
-                        for (var i = 0; i < data.length; i++) {
-                            data[i][1] = formatData(data[i][1], jsonResponse['data']['columns'][1], DataMessenger.options);
-                        }
-                        for (var i = 0; i < groups.length; i++) {
-                            groups[i] = formatData(groups[i], jsonResponse['data']['columns'][1], DataMessenger.options)
-                        }
-                        var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                        var cols = jsonResponse['data']['columns']
-                        var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
-                        createStackedColumnChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
-                    break;
-                    case 'stacked_bar':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        DataMessenger.refreshToolbarButtons(component, 'stacked_bar');
-                        var data = cloneObject(jsonResponse['data']['rows']);
-
-                        var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                        groups = groups.sort().reverse();
-                        var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                        var cols = jsonResponse['data']['columns'];
-                        var dataGrouped = DataMessenger.format3dData(jsonResponse['data']['columns'], data, groups);
-                        createStackedBarChart(component, dataGrouped, groups, subgroups, cols, DataMessenger.options);
-                    break;
-                    case 'bubble':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToHeatmap(jsonResponse);
-                        var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                        var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0], DataMessenger.options);
-                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1], DataMessenger.options);
-
-                        var cols = jsonResponse['data']['columns'];
-                        createBubbleChart(component, labelsX, labelsY, values, cols, DataMessenger.options);
-                        DataMessenger.refreshToolbarButtons(component, 'bubble');
-                    break;
-                    case 'heatmap':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToHeatmap(jsonResponse);
-                        var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                        var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                        labelsY = formatLabels(labelsY, jsonResponse['data']['columns'][0], DataMessenger.options);
-                        labelsX = formatLabels(labelsX, jsonResponse['data']['columns'][1], DataMessenger.options);
-                        var cols = jsonResponse['data']['columns'];
-
-                        createHeatmap(component, labelsX, labelsY, values, cols, DataMessenger.options);
-                        DataMessenger.refreshToolbarButtons(component, 'heatmap');
-                    break;
-                    case 'pie':
-                        DataMessenger.putTableResponse(jsonResponse);
-                    break;
-                    case 'column':
-                        var component = DataMessenger.putTableResponse(jsonResponse);
-                        var values = formatDataToBarChart(jsonResponse, DataMessenger.options);
-                        var grouped = values[0];
-                        var hasNegativeValues = values[1];
-                        var cols = jsonResponse['data']['columns'];
-
-                        createColumnChart(component, grouped, cols, hasNegativeValues, DataMessenger.options);
-                        DataMessenger.refreshToolbarButtons(component, 'column');
-                    break;
-                    case 'help':
-                        DataMessenger.putHelpMessage(jsonResponse);
-                    break;
-                    default:
-                        // temporary
-                        jsonResponse['data'] = 'Error: There was no data supplied for this table';
-                        DataMessenger.putSimpleResponse(jsonResponse);
-                }
-                DataMessenger.checkMaxMessages();
-                refreshTooltips();
-            }, DataMessenger.options);
-        }
-    }, DataMessenger.options);
-
-
-}
-
-DataMessenger.putSimpleResponse = function(jsonResponse){
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('response');
-    var idRequest = uuidv4();
-    DataMessenger.responses[idRequest] = jsonResponse;
-    containerMessage.setAttribute('data-containerid', idRequest);
-    messageBubble.classList.add('chat-message-bubble');
-    toolbarButtons = DataMessenger.getActionButtons(idRequest, 'simple');
-    messageBubble.innerHTML = `
-    <div class="chat-message-toolbar right">
-        ${toolbarButtons}
-    </div>`;
-    var value = formatData(
-        jsonResponse['data']['rows'][0][0],
-        jsonResponse['data']['columns'][0],
-        DataMessenger.options
-    );
-    var div = document.createElement('div');
-    div.classList.add('chata-single-response');
-    div.appendChild(document.createTextNode(value));
-    messageBubble.appendChild(div);
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-}
-
-DataMessenger.getActionButtons = function(idRequest, type){
-    var request = DataMessenger.responses[idRequest];
-    var tooltipContent = request['data']['interpretation'];
-    var copySqlButton = '';
-    const deleteMessage = `
-        <button class="chata-toolbar-btn delete-message" data-tippy-content="Delete Message" data-id="${idRequest}">
-                ${DELETE_MESSAGE}
-        </button>`;
-    if(DataMessenger.options.autoQLConfig.debug){
-        copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-            ${COPY_SQL}
-        </button>`;
-    }
-    if(type == 'simple'){
-        return `
-        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
-            ${INFO_ICON}
-        </button>
-        ${copySqlButton}
-        ${deleteMessage}
-        `;
-    }else if (type == 'csvCopy'){
-        var filterButton = `
-            <button class="chata-toolbar-btn filter-table" data-tippy-content="Filter Table" data-id="${idRequest}">
-                ${FILTER_TABLE}
-            </button>
-        `;
-        var showHideColumnsButton = '';
-
-        if(request['data']['rows'].length == 1){
-            filterButton = '';
-        }
-        if(request['data']['rows'].length > 1 &&
-           request['data']['columns'].length > 1 &&
-           getNumberOfGroupables(request['data']['columns']) == 0 &&
-           DataMessenger.options.autoQLConfig.enableColumnEditor){
-            showHideColumnsButton = `
-                   <button class="chata-toolbar-btn show-hide-columns" data-tippy-content="Show/Hide Columns" data-id="${idRequest}">
-                       ${COLUMN_EDITOR}
-                   </button>
-               `;
-        }
-
-        return `
-        ${filterButton}
-        ${showHideColumnsButton}
-        <button class="chata-toolbar-btn clipboard" data-tippy-content="Copy to Clipboard" data-id="${idRequest}">
-            ${CLIPBOARD_ICON}
-        </button>
-        <button class="chata-toolbar-btn csv" data-tippy-content="Download as CSV" data-id="${idRequest}">
-            ${DOWNLOAD_CSV_ICON}
-        </button>
-        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
-            ${INFO_ICON}
-        </button>
-        ${copySqlButton}
-        ${deleteMessage}
-        `;
-    }else{
-        if(DataMessenger.options.autoQLConfig.debug){
-            copySqlButton = `<button class="chata-toolbar-btn sql" data-tippy-content="Copy SQL to Clipboard" data-id="${idRequest}">
-                ${COPY_SQL}
-            </button>`;
-        }
-        return `
-        <button class="chata-toolbar-btn export_png" data-tippy-content="Download as PNG" data-id="${idRequest}">
-            ${EXPORT_PNG_ICON}
-        </button>
-        <button class="chata-toolbar-btn chata-interpretation" data-id="${idRequest}">
-            ${INFO_ICON}
-        </button>
-        ${copySqlButton}
-        ${deleteMessage}
-        `;
-    }
-}
-
-DataMessenger.getSupportedDisplayTypesArray = function(){
+ChataUtils.getSupportedDisplayTypesArray = function(){
     return getSupportedDisplayTypesArray();
 }
 
-DataMessenger.getSupportedDisplayTypes = function(idRequest, ignore){
-    var json = DataMessenger.responses[idRequest];
-    var buttons = '';
-    var displayTypes = getSupportedDisplayTypes(json);
-
-    for (var i = 0; i < displayTypes.length; i++) {
-        console.log(displayTypes[i]);
-        if(displayTypes[i] == ignore)continue;
-        if(displayTypes[i] == 'table'){
-            buttons += DataMessenger.getTableButton(idRequest);
-        }
-        if(displayTypes[i] == 'column'){
-            buttons += DataMessenger.getColumnChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'bar'){
-            buttons += DataMessenger.getBarChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'pie' && json['data']['columns'].length == 2){
-            buttons += DataMessenger.getPieChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'line'){
-            buttons += DataMessenger.getLineChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'pivot_column'){
-            buttons += DataMessenger.getPivotTableButton(idRequest);
-        }
-        if(displayTypes[i] == 'heatmap'){
-            buttons += DataMessenger.getHeatmapChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'bubble'){
-            buttons += DataMessenger.getBubbleChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'stacked_column'){
-            buttons += DataMessenger.getStackedColumnChartButton(idRequest);
-        }
-        if(displayTypes[i] == 'stacked_bar'){
-            buttons += DataMessenger.getStackedBarChartButton(idRequest);
-        }
-    }
-    return buttons;
-}
-
-DataMessenger.getTableButton = function(idRequest){
-    return `
-    <button class="chata-toolbar-btn table" data-tippy-content="Table" data-id="${idRequest}">
-        ${TABLE_ICON}
-    </button>`;
-}
-
-DataMessenger.getPivotTableButton = function(idRequest){
-    return `
-    <button class="chata-toolbar-btn pivot_table" data-tippy-content="Pivot Table" data-id="${idRequest}">
-        ${PIVOT_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getColumnChartButton = function(idRequest){
-    return `
-    <button class="chata-toolbar-btn column_chart" data-tippy-content="Column Chart" data-id="${idRequest}">
-        ${COLUMN_CHART_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getBarChartButton = function(idRequest){
-    return `
-    <button class="chata-toolbar-btn bar_chart" data-tippy-content="Bar Chart" data-id="${idRequest}">
-        ${BAR_CHART_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getLineChartButton = function(idRequest) {
-    return `
-    <button class="chata-toolbar-btn line_chart" data-tippy-content="Line Chart" data-id="${idRequest}">
-        ${LINE_CHART_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getPieChartButton = function(idRequest) {
-    return `
-    <button class="chata-toolbar-btn pie_chart" data-tippy-content="Pie Chart" data-id="${idRequest}">
-        ${PIE_CHART_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getHeatmapChartButton = function(idRequest){
-    return `
-    <button class="chata-toolbar-btn heatmap" data-tippy-content="Heatmap" data-id="${idRequest}">
-        ${HEATMAP_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getBubbleChartButton = function(idRequest){
-    return `
-    <button class="chata-toolbar-btn bubble_chart" data-tippy-content="Bubble Chart" data-id="${idRequest}">
-        ${BUBBLE_CHART_ICON}
-    </button>
-    `;
-}
-
-DataMessenger.getStackedColumnChartButton = function(idRequest){
-    return `<button class="chata-toolbar-btn stacked_column_chart" data-tippy-content="Stacked Column Chart" data-id="${idRequest}">
-        ${STACKED_COLUMN_CHART_ICON}
-    </button>`;
-}
-
-DataMessenger.getStackedBarChartButton = function(idRequest){
-    return `<button class="chata-toolbar-btn stacked_bar_chart" data-tippy-content="Stacked Bar Chart" data-id="${idRequest}">
-        ${STACKED_BAR_CHART_ICON}
-    </button>`;
-}
-
-DataMessenger.putTableResponse = function(jsonResponse){
-    var data = jsonResponse['data']['rows'];
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-    var responseContentContainer = document.createElement('div');
-    var tableContainer = document.createElement('div');
-    var scrollbox = document.createElement('div');
-    var table = document.createElement('table');
-    var header = document.createElement('tr');
-    var groupField = getGroupableField(jsonResponse);
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
-    messageBubble.classList.add('full-width');
-    var idRequest = uuidv4();
-    DataMessenger.responses[idRequest] = jsonResponse;
-    var supportedDisplayTypes = DataMessenger.getSupportedDisplayTypes(idRequest, 'table');
-    var actions = DataMessenger.getActionButtons(idRequest, 'csvCopy');
-    var toolbar = '';
-    if(supportedDisplayTypes != ''){
-        toolbar += `
-        <div class="chat-message-toolbar left">
-            ${supportedDisplayTypes}
-        </div>
-        `
-    }
-    toolbar += `
-        <div class="chat-message-toolbar right">
-            ${actions}
-        </div>`;
-
-    messageBubble.innerHTML = toolbar;
-    tableContainer.classList.add('chata-table-container');
-    scrollbox.classList.add('chata-table-scrollbox');
-    responseContentContainer.classList.add('chata-response-content-container');
-    table.classList.add('table-response');
-    table.setAttribute('data-componentid', idRequest);
-    var dataLines = jsonResponse['data']['rows'];
-    var thArray = [];
-    for (var i = 0; i < jsonResponse['data']['columns'].length; i++) {
-        var colStr = jsonResponse['data']['columns'][i]['display_name'] ||
-            jsonResponse['data']['columns'][i]['name'];
-        var colName = formatColumnName(colStr);
-        var th = document.createElement('th');
-        var arrow = document.createElement('div');
-        var col = document .createElement('div');
-        col.textContent = colName;
-        arrow.classList.add('tabulator-arrow');
-        arrow.classList.add('up');
-        col.classList.add('column');
-        col.setAttribute('data-type', jsonResponse['data']['columns'][i]['type']);
-        col.setAttribute('data-index', i);
-        var divFilter = document.createElement('div');
-        var filter = document.createElement('input');
-        divFilter.classList.add('tabulator-header-filter');
-        divFilter.appendChild(filter);
-        filter.setAttribute('placeholder', 'Filter column');
-        filter.classList.add('filter-input');
-        filter.setAttribute('data-dataid', idRequest);
-        filter.setAttribute('data-inputindex', i);
-        filter.colType = jsonResponse['data']['columns'][i]['type'];
-        filter.onkeyup = function(event){
-            var _table = document.querySelector(`[data-componentid='${idRequest}']`);
-            var rows = applyFilter(idRequest);
-            DataMessenger.refreshTableData(_table, cloneObject(rows), DataMessenger.options, false);
-        }
-        col.appendChild(divFilter);
-        th.appendChild(col);
-        th.appendChild(arrow);
-        header.appendChild(th);
-        thArray.push(th);
-    }
-    header.classList.add('table-header');
-    scrollbox.appendChild(header);
-
-    for (var i = 0; i < dataLines.length; i++) {
-        var data = dataLines[i];
-        var tr = document.createElement('tr');
-        for (var x = 0; x < data.length; x++) {
-            value = formatData(
-                data[x], jsonResponse['data']['columns'][x],
-                DataMessenger.options
-            );
-            var td = document.createElement('td');
-            td.textContent = value;
-            tr.appendChild(td);
-        }
-        tr.setAttribute('data-indexrow', i);
-        if(typeof groupField !== 'number'){
-            tr.setAttribute('data-has-drilldown', true);
-        }else{
-            tr.setAttribute('data-has-drilldown', false);
-        }
-        table.appendChild(tr);
-    }
-    tableContainer.appendChild(table);
-    scrollbox.appendChild(tableContainer);
-    responseContentContainer.appendChild(scrollbox);
-    messageBubble.appendChild(responseContentContainer);
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-
-    var headerWidth = adjustTableWidth(table, thArray);
-    table.style.width = headerWidth + 'px';
-    header.style.width = headerWidth + 'px';
-    table.headerElement = header;
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-    return table;
-}
-
-DataMessenger.createSuggestions = function(responseContentContainer, data, classButton='chata-suggestion-btn'){
+ChataUtils.createSuggestions = function(responseContentContainer, data, classButton='autoql-vanilla-chata-suggestion-btn'){
     for (var i = 0; i < data.length; i++) {
         var div = document.createElement('div');
         var button = document.createElement('button');
@@ -28611,57 +28139,2710 @@ DataMessenger.createSuggestions = function(responseContentContainer, data, class
     }
 }
 
-DataMessenger.putSuggestionResponse = function(jsonResponse, query){
-    var data = jsonResponse['data']['rows'];
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-    var responseContentContainer = document.createElement('div');
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('response');
-    messageBubble.classList.add('chat-message-bubble');
-    messageBubble.classList.add('full-width');
-    responseContentContainer.classList.add('chata-response-content-container');
-    responseContentContainer.innerHTML = `<div>I'm not sure what you mean by <strong>"${query}"</strong>. Did you mean:</div>`;
-    DataMessenger.createSuggestions(responseContentContainer, data);
-    messageBubble.appendChild(responseContentContainer);
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-}
+function DataMessenger(elem, options){
+    var obj = this;
 
-DataMessenger.checkMaxMessages = function(){
-    if(DataMessenger.options.maxMessages > 2){
-        var messages = DataMessenger.drawerContent.querySelectorAll('.chat-single-message-container');
-        if(messages.length > DataMessenger.options.maxMessages){
-            messages[1].parentNode.removeChild(messages[1]);
+    obj.options = {
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+        dataFormatting:{
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY'
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableColumnVisibilityManager: true,
+            enableDrilldowns: true
+        },
+        themeConfig: {
+            theme: 'light',
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
+            accentColor: '#26a7df',
+            fontFamily: 'sans-serif',
+        },
+        isVisible: false,
+        placement: 'right',
+        width: 500,
+        height: 500,
+        resizable: true,
+        title: 'Data Messenger',
+        showHandle: true,
+        handleStyles: {},
+        onVisibleChange: function(datamessenger) {},
+        onHandleClick: function(datamessenger){},
+        showMask: true,
+        shiftScreen: false,
+        onMaskClick: function(datamessenger){},
+        maskClosable: true,
+        userDisplayName: 'there',
+        maxMessages: -1,
+        clearOnClose: false,
+        enableVoiceRecord: true,
+        autocompleteStyles: {},
+        enableExploreQueriesTab: true,
+        inputPlaceholder: 'Type your queries here',
+    };
+
+    obj.autoCompleteTimer = undefined;
+    obj.speechToText = getSpeech();
+    obj.finalTranscript = '';
+    obj.isRecordVoiceActive = false
+
+    var rootElem = document.querySelector(elem);
+
+    if('authentication' in options){
+        for (var [key, value] of Object.entries(options['authentication'])) {
+            obj.options.authentication[key] = value;
         }
     }
-}
 
-DataMessenger.putMessage = function(value){
-    var containerMessage = document.createElement('div');
-    var messageBubble = document.createElement('div');
-    var responseLoadingContainer = document.createElement('div');
-    var responseLoading = document.createElement('div');
-
-    responseLoadingContainer.classList.add('response-loading-container');
-    responseLoading.classList.add('response-loading');
-    for (var i = 0; i <= 3; i++) {
-        responseLoading.appendChild(document.createElement('div'));
+    if('dataFormatting' in options){
+        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+            obj.options.dataFormatting[key] = value;
+        }
     }
 
-    responseLoadingContainer.appendChild(responseLoading);
+    if('autoQLConfig' in options){
+        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
+            obj.options.autoQLConfig[key] = value;
+        }
+    }
 
-    containerMessage.classList.add('chat-single-message-container');
-    containerMessage.classList.add('request');
-    messageBubble.classList.add('chat-message-bubble');
-    messageBubble.textContent = value;
-    containerMessage.appendChild(messageBubble);
-    DataMessenger.drawerContent.appendChild(containerMessage);
-    DataMessenger.drawerContent.appendChild(responseLoadingContainer);
-    DataMessenger.scrollBox.scrollTop = DataMessenger.scrollBox.scrollHeight;
-    DataMessenger.checkMaxMessages();
-    return responseLoadingContainer;
+    if('themeConfig' in options){
+        for (var [key, value] of Object.entries(options['themeConfig'])) {
+            obj.options.themeConfig[key] = value;
+        }
+    }
+
+    for (var [key, value] of Object.entries(options)) {
+        if(typeof value !== 'object'){
+            obj.options[key] = value;
+        }
+    }
+
+    if(!('introMessage' in options)){
+        obj.options.introMessage = "Hi " +
+        obj.options.userDisplayName +
+        "! Let’s dive into your data. What can I help you discover today?";
+    }
+    if(!('onMaskClick' in options)){
+        obj.options.onMaskClick = obj.options.onHandleClick;
+    }
+
+    obj.rootElem = rootElem;
+    rootElem.classList.add('autoql-vanilla-chata-drawer');
+
+    obj.setOption = (option, value) => {
+        switch (option) {
+            case 'authentication':
+                obj.setObjectProp('authentication', value);
+                break;
+            case 'dataFormatting':
+                obj.setObjectProp('dataFormatting', value);
+                break;
+            case 'autoQLConfig':
+                obj.setObjectProp('autoQLConfig', value);
+                break;
+            case 'themeConfig':
+                obj.setObjectProp('themeConfig', value);
+                obj.applyStyles();
+                break;
+            case 'isVisible':
+                if(!value)obj.closeDrawer();
+                else obj.openDrawer();
+                break;
+            case 'placement':
+                obj.rootElem.removeAttribute('style');
+                obj.drawerButton.classList.remove(
+                    obj.options.placement + '-btn'
+                );
+                obj.queryTabs.classList.remove(obj.options.placement);
+                obj.queryTabsContainer.classList.remove(obj.options.placement);
+                obj.resizeHandler.classList.remove(obj.options.placement);
+                obj.options.placement = value;
+
+                obj.drawerButton.classList.add(
+                    obj.options.placement + '-btn'
+                );
+                obj.queryTabs.classList.add(obj.options.placement);
+                obj.queryTabsContainer.classList.add(obj.options.placement);
+                obj.resizeHandler.classList.add(obj.options.placement);
+                obj.openDrawer();
+                obj.closeDrawer();
+                break;
+            case 'width':
+                obj.options.width = parseInt(value);
+                if(obj.options.isVisible &&
+                    ['left', 'right'].includes(obj.options.placement)){
+                    obj.rootElem.style.width = value;
+                }
+                break;
+            case 'height':
+                obj.options.height = parseInt(value);
+                if(obj.options.isVisible &&
+                    ['top', 'bottom'].includes(obj.options.placement)){
+                    obj.rootElem.style.height = value;
+                }
+                break;
+            case 'resizable':
+                obj.options.resizable = value;
+                if(!value) obj.resizeHandler.style.visibility = 'hidden';
+                else obj.resizeHandler.style.visibility = 'visible';
+                break;
+            case 'title':
+                obj.options.title = value;
+                obj.headerTitle.innerHTML = obj.options.title;
+                break;
+            case 'showHandle':
+                obj.options.showHandle = value;
+                if(value && !obj.options.isVisible){
+                    obj.drawerButton.style.display = 'flex';
+                }
+                else obj.drawerButton.style.display = 'none';
+                break;
+            case 'handleStyles':
+                obj.applyHandleStyles();
+                break;
+            case 'showMask':
+                obj.options.showMask = value;
+                if(value){
+                    if(obj.options.isVisible){
+                        obj.wrapper.style.opacity = .3;
+                        obj.wrapper.style.height = '100%';
+                    }else{
+                        obj.wrapper.style.opacity = 0;
+                        obj.wrapper.style.height = 0;
+                    }
+                }else{
+                    obj.wrapper.style.opacity = 0;
+                    obj.wrapper.style.height = 0;
+                }
+                break;
+            case 'maxMessages':
+                obj.options.maxMessages = value;
+                obj.checkMaxMessages();
+                break;
+            case 'enableVoiceRecord':
+                obj.options.autoQLConfig.enableVoiceRecord = value;
+                var display = value ? 'block' : 'none';
+                obj.voiceRecordButton.style.display = display;
+                break;
+            case 'enableExploreQueriesTab':
+                obj.options.enableExploreQueriesTab = value;
+                if(value && obj.options.isVisible){
+                    obj.queryTabs.style.visibility = 'visible';
+                }else obj.queryTabs.style.visibility = 'hidden';
+                break;
+            case 'inputPlaceholder':
+                obj.options.inputPlaceholder = value;
+                obj.input.setAttribute('placeholder', value);
+            default:
+                obj.options[option] = value;
+        }
+    }
+
+    obj.setObjectProp = (key, _obj) => {
+        console.log(typeof _obj);
+        for (var [keyValue, value] of Object.entries(_obj)) {
+            obj.options[key][keyValue] = value;
+        }
+    }
+
+    obj.applyHandleStyles = () => {
+        for (var [key, value] of Object.entries(obj.options.handleStyles)){
+            obj.drawerButton.style.setProperty(key, value, '');
+        }
+    }
+
+    obj.createDrawerButton = () => {
+        var drawerButton = document.createElement("div");
+        var drawerIcon = document.createElement("div");
+        drawerIcon.setAttribute("height", "22px");
+        drawerIcon.setAttribute("width", "22px");
+        drawerIcon.classList.add('autoql-vanilla-chata-bubbles-icon');
+        drawerIcon.classList.add('open-action');
+        drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
+        drawerButton.classList.add('autoql-vanilla-drawer-handle');
+        drawerButton.classList.add('open-action');
+        drawerButton.classList.add(obj.options.placement + '-btn');
+        drawerButton.appendChild(drawerIcon);
+        drawerButton.addEventListener('click', function(e){
+            obj.options.onHandleClick(obj);
+            obj.openDrawer();
+        })
+        document.body.appendChild(drawerButton);
+        obj.drawerButton = drawerButton;
+        if(!obj.options.showHandle){
+            obj.drawerButton.style.display = 'none';
+        }
+        obj.applyHandleStyles();
+    }
+
+    obj.openDrawer = () => {
+        document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
+        console.log(obj.options.shiftScreen);
+        obj.options.isVisible = true;
+        obj.input.focus();
+        if(obj.options.enableExploreQueriesTab){
+            obj.queryTabs.style.visibility = 'visible';
+        }
+        var body = document.body;
+        if(obj.options.showMask){
+            obj.wrapper.style.opacity = .3;
+            obj.wrapper.style.height = '100%';
+        }
+        if(obj.options.placement == 'right'){
+            obj.rootElem.style.width = obj.options.width + 'px';
+            obj.rootElem.style.height = 'calc(100vh)';
+
+            obj.drawerButton.style.display = 'none';
+            obj.rootElem.style.right = 0;
+            obj.rootElem.style.top = 0;
+            if(obj.options.shiftScreen){
+                body.style.position = 'relative';
+                body.style.overflow = 'hidden';
+                body.style.transform = 'translateX(-'
+                    + obj.options.width +'px)';
+                obj.rootElem.style.transform = 'translateX('
+                + obj.options.width +'px)';
+            }else{
+                obj.rootElem.style.transform = 'translateX(0px)';
+            }
+
+        }else if(obj.options.placement == 'left'){
+            obj.rootElem.style.width = obj.options.width + 'px';
+            obj.rootElem.style.height = 'calc(100vh)';
+            obj.rootElem.style.left = 0;
+            obj.rootElem.style.top = 0;
+            obj.drawerButton.style.display = 'none';
+            if(obj.options.shiftScreen){
+                body.style.position = 'relative';
+                body.style.overflow = 'hidden';
+                body.style.transform = 'translateX('
+                    + obj.options.width +'px)';
+                obj.rootElem.style.transform = 'translateX(-'
+                    + obj.options.width +'px)';
+            }else{
+                obj.rootElem.style.transform = 'translateX(0px)';
+            }
+        }else if(obj.options.placement == 'bottom'){
+            obj.rootElem.style.width = '100%';
+            obj.rootElem.style.height = obj.options.height + 'px';
+            obj.rootElem.style.bottom = 0;
+            obj.rootElem.style.left = 0;
+            obj.drawerButton.style.display = 'none';
+            obj.rootElem.style.transform = 'translateY(0)';
+        }else if(obj.options.placement == 'top'){
+            obj.rootElem.style.width = '100%';
+            obj.rootElem.style.height = obj.options.height + 'px';
+            obj.rootElem.style.top = 0;
+            obj.rootElem.style.left = 0;
+            obj.drawerButton.style.display = 'none';
+            obj.rootElem.style.transform = 'translateY(0)';
+        }
+        obj.options.onVisibleChange(obj);
+    }
+
+    obj.closeDrawer = () => {
+        document.body.classList.remove(
+            'autoql-vanilla-chata-body-drawer-open'
+        );
+        obj.options.isVisible = false;
+        obj.wrapper.style.opacity = 0;
+        obj.wrapper.style.height = 0;
+        obj.queryTabs.style.visibility = 'hidden';
+        var body = document.body;
+
+        if(obj.options.placement == 'right'){
+            obj.rootElem.style.right = 0;
+            obj.rootElem.style.top = 0;
+            if(obj.options.showHandle){
+                obj.drawerButton.style.display = 'flex';
+            }
+            if(obj.options.shiftScreen){
+                body.style.transform = 'translateX(0px)';
+            }else{
+                obj.rootElem.style.transform = 'translateX('
+                + obj.options.width +'px)';
+            }
+        }else if(obj.options.placement == 'left'){
+            obj.rootElem.style.left = 0;
+            obj.rootElem.style.top = 0;
+            if(obj.options.showHandle){
+                obj.drawerButton.style.display = 'flex';
+            }
+            if(obj.options.shiftScreen){
+                body.style.transform = 'translateX(0px)';
+            }else{
+                obj.rootElem.style.transform = 'translateX(-'
+                + obj.options.width +'px)';
+            }
+        }else if(obj.options.placement == 'bottom'){
+            obj.rootElem.style.bottom = '0';
+            obj.rootElem.style.transform = 'translateY('
+            + obj.options.height +'px)';
+
+            if(obj.options.showHandle){
+                obj.drawerButton.style.display = 'flex';
+            }
+        }else if(obj.options.placement == 'top'){
+            obj.rootElem.style.top = '0';
+            obj.rootElem.style.transform = 'translateY(-'
+            + obj.options.height +'px)';
+
+            if(obj.options.showHandle){
+                obj.drawerButton.style.display = 'flex';
+            }
+        }
+        if(obj.options.clearOnClose){
+            obj.clearMessages();
+        }
+        body.removeAttribute('style');
+
+        obj.options.onVisibleChange(obj);
+    }
+
+    obj.createWrapper = () => {
+        var wrapper = document.createElement('div');
+        var body = document.body;
+        body.appendChild(wrapper, obj.rootElem);
+        wrapper.classList.add('autoql-vanilla-drawer-wrapper');
+        obj.wrapper = wrapper;
+        if(!obj.options.showMask){
+            obj.wrapper.style.opacity = 0;
+            obj.wrapper.style.height = 0;
+        }
+        wrapper.onclick = (evt) => {
+            if(obj.options.showMask && obj.options.maskClosable){
+                obj.options.onMaskClick(this);
+            }
+        }
+    }
+
+    obj.onLoadHandler = (evt) => {
+        if (document.readyState === "interactive" ||
+            document.readyState === "complete" ) {
+            obj.createDrawerButton();
+            obj.createWrapper();
+            obj.applyStyles();
+            obj.createHeader();
+            obj.createDrawerContent();
+            obj.createBar();
+            obj.createResizeHandler();
+            obj.createQueryTabs();
+            obj.createQueryTips();
+            obj.speechToTextEvent();
+
+            obj.openDrawer();
+            obj.closeDrawer();
+
+            refreshTooltips();
+
+            var isVisible = obj.options.isVisible;
+
+            if(isVisible){
+                obj.openDrawer();
+            }else{
+                obj.closeDrawer();
+            }
+
+            obj.rootElem.addEventListener('click', (evt) => {
+                // REPLACE WITH onclick event
+                if(evt.target.classList.contains('suggestion')){
+                    obj.autoCompleteList.style.display = 'none';
+                    obj.sendMessage(
+                        evt.target.textContent, 'data_messenger.user'
+                    );
+                }
+            });
+        }
+    }
+
+    obj.tabsAnimation = function(displayNodes, displayBar){
+        var nodes = obj.drawerContent.childNodes;
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].style.display = displayNodes;
+        }
+        obj.chataBarContainer.style.display = displayBar;
+        if(displayNodes == 'none'){
+            obj.headerTitle.innerHTML = 'Explore Queries';
+            obj.headerRight.style.visibility = 'hidden';
+        }else{
+            obj.headerTitle.innerHTML = obj.options.title;
+            obj.headerRight.style.visibility = 'visible';
+        }
+    }
+
+    obj.queryTipsAnimation = function(display){
+        obj.queryTips.style.display = display;
+    }
+
+    obj.createQueryTabs = function(){
+        var orientation = obj.options.placement;
+        var pageSwitcherShadowContainer = document.createElement('div');
+        var pageSwitcherContainer = document.createElement('div');
+        var tabChataUtils = document.createElement('div');
+        var tabQueryTips = document.createElement('div');
+
+        var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
+        var queryTabsIcon = htmlToElement(QUERY_TIPS);
+
+        pageSwitcherShadowContainer.classList.add(
+            'autoql-vanilla-page-switcher-shadow-container'
+        );
+        pageSwitcherShadowContainer.classList.add(orientation);
+
+        pageSwitcherContainer.classList.add(
+            'autoql-vanilla-page-switcher-container'
+        );
+        pageSwitcherContainer.classList.add(orientation);
+
+        pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
+
+        tabChataUtils.classList.add('tab');
+        tabChataUtils.classList.add('active');
+        tabChataUtils.setAttribute('data-tippy-content', 'Data Messenger');
+        tabQueryTips.classList.add('tab');
+        tabQueryTips.setAttribute('data-tippy-content', 'Explore Queries');
+
+        tabChataUtils.appendChild(dataMessengerIcon);
+        tabQueryTips.appendChild(queryTabsIcon);
+
+        pageSwitcherContainer.appendChild(tabChataUtils)
+        pageSwitcherContainer.appendChild(tabQueryTips)
+
+
+        tabChataUtils.onclick = function(event){
+            tabChataUtils.classList.add('active');
+            tabQueryTips.classList.remove('active');
+            obj.tabsAnimation('flex', 'block');
+            obj.queryTipsAnimation('none');
+        }
+        tabQueryTips.onclick = function(event){
+            tabQueryTips.classList.add('active');
+            tabChataUtils.classList.remove('active');
+            obj.tabsAnimation('none', 'none');
+            obj.queryTipsAnimation('block');
+
+        }
+
+        var tabs = pageSwitcherShadowContainer;
+        obj.rootElem.appendChild(tabs);
+        obj.queryTabs = tabs;
+        obj.queryTabsContainer = pageSwitcherContainer;
+        obj.tabChataUtils = tabChataUtils;
+        obj.tabQueryTips = tabQueryTips;
+        refreshTooltips();
+    }
+
+    obj.createQueryTips = function(){
+        const searchIcon = htmlToElement(SEARCH_ICON);
+        var container = document.createElement('div');
+        var textBar = document.createElement('div');
+        var queryTipsResultContainer = document.createElement('div');
+        var queryTipsResultPlaceHolder = document.createElement('div');
+        var chatBarInputIcon = document.createElement('div');
+
+        var input = document.createElement('input');
+
+        textBar.classList.add('autoql-vanilla-text-bar');
+        textBar.classList.add('autoql-vanilla-text-bar-animation');
+        chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
+        queryTipsResultContainer.classList.add(
+            'autoql-vanilla-query-tips-result-container'
+        );
+        queryTipsResultPlaceHolder.classList.add(
+            'query-tips-result-placeholder'
+        );
+        queryTipsResultPlaceHolder.innerHTML = `
+            <p>
+                Discover what you can ask by entering
+                a topic in the search bar above.
+            <p>
+            <p>
+                Simply click on any of the returned options
+                to run the query in Data Messenger.
+            <p>
+        `;
+
+        queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
+        chatBarInputIcon.appendChild(searchIcon);
+        textBar.appendChild(input);
+        textBar.appendChild(chatBarInputIcon);
+        container.appendChild(textBar);
+        container.appendChild(queryTipsResultContainer);
+
+        input.onkeypress = function(event){
+
+            if(event.keyCode == 13 && this.value){
+
+                var chatBarLoadingSpinner = document.createElement('div');
+                var searchVal = this.value;
+                var spinnerLoader = document.createElement('div');
+                spinnerLoader.classList.add('autoql-vanilla-spinner-loader');
+                chatBarLoadingSpinner.classList.add(
+                    'chat-bar-loading-spinner'
+                );
+                chatBarLoadingSpinner.appendChild(spinnerLoader);
+                textBar.appendChild(chatBarLoadingSpinner);
+                var options = obj.options;
+                const URL = obj.getRelatedQueriesPath(
+                    1, searchVal, obj.options
+                );
+
+                ChataUtils.safetynetCall(URL, function(response, s){
+                    textBar.removeChild(chatBarLoadingSpinner);
+                    obj.putRelatedQueries(
+                        response, queryTipsResultContainer,
+                        container, searchVal
+                    );
+                }, obj.options);
+            }
+        }
+
+        container.style.display = 'none';
+
+        input.classList.add('autoql-vanilla-chata-input')
+        input.classList.add('left-padding')
+        input.setAttribute('placeholder', 'Search relevant queries by topic');
+        obj.queryTips = container;
+        obj.drawerContent.appendChild(container);
+    }
+
+    obj.putRelatedQueries = (
+        response, queryTipsResultContainer, container, searchVal) => {
+        var delay = 0.08;
+        var list = response.data.items;
+        var queryTipListContainer = document.createElement('div');
+        var paginationContainer = document.createElement('div');
+        var pagination = document.createElement('ul');
+        var paginationPrevious = document.createElement('li');
+        var aPrevious = document.createElement('a');
+        var aNext = document.createElement('a');
+        var paginationNext = document.createElement('li');
+        var options = obj.options
+        var nextPath = response.data.pagination.next_url;
+        var previousPath = response.data.pagination.previous_url;
+        var nextUrl = `${options.authentication.domain}${nextPath}`;
+        var previousUrl = `${options.authentication.domain}${previousPath}`;
+
+
+        const pageSize = response.data.pagination.page_size;
+        const totalItems = response.data.pagination.total_items;
+        const pages = response.data.pagination.total_pages;
+        const currentPage = response.data.pagination.current_page;
+        aPrevious.textContent = '←';
+        aNext.textContent = '→';
+
+        paginationContainer.classList.add('autoql-vanilla-chata-paginate');
+        paginationContainer.classList.add('animated-item');
+        paginationContainer.classList.add('pagination');
+        paginationPrevious.classList.add('pagination-previous');
+        paginationNext.classList.add('pagination-next');
+        paginationPrevious.appendChild(aPrevious);
+        paginationNext.appendChild(aNext);
+
+        pagination.appendChild(paginationPrevious);
+
+        queryTipListContainer.classList.add('query-tip-list-container');
+
+        if(!nextPath){
+            paginationNext.classList.add('disabled');
+        }
+
+        if(!previousPath){
+            paginationPrevious.classList.add('disabled');
+        }
+
+        paginationNext.onclick = (evt) => {
+            if(!evt.target.classList.contains('disabled')){
+                ChataUtils.safetynetCall(nextUrl, function(response, s){
+                    obj.putRelatedQueries(
+                        response, queryTipsResultContainer, container, searchVal
+                    );
+                }, obj.options);
+            }
+        }
+
+        paginationPrevious.onclick = (evt) => {
+            if(!evt.target.classList.contains('disabled')){
+                ChataUtils.safetynetCall(previousUrl, function(response, s){
+                    obj.putRelatedQueries(
+                        response, queryTipsResultContainer, container, searchVal
+                    );
+                }, obj.options);
+            }
+        }
+
+        const dotEvent = (evt) => {
+            var page = evt.target.dataset.page;
+            var path = obj.getRelatedQueriesPath(
+                page, searchVal, obj.options
+            );
+            ChataUtils.safetynetCall(path, function(response, s){
+                obj.putRelatedQueries(
+                    response, queryTipsResultContainer,
+                    container, searchVal
+                );
+            }, obj.options);
+        }
+
+        for (var i = 0; i < list.length; i++) {
+            var item = document.createElement('div');
+            item.classList.add('animated-item');
+            item.classList.add('query-tip-item');
+            item.innerHTML = list[i];
+            item.style.animationDelay = (delay * i) + 's';
+            item.onclick = function(event){
+                chataInput = obj.input;
+                obj.tabChataUtils.classList.add('active');
+                obj.tabQueryTips.classList.remove('active');
+                obj.tabsAnimation('flex', 'block');
+                obj.queryTipsAnimation('none');
+                chataInput.focus();
+                var selectedQuery = event.target.textContent;
+                var subQuery = '';
+                var index = 0;
+                var int = setInterval(function () {
+                    subQuery += selectedQuery[index];
+                    if(index >= selectedQuery.length){
+                        clearInterval(int);
+                        var ev = new KeyboardEvent('keypress', {
+                            keyCode: 13,
+                            type: "keypress",
+                            which: 13
+                        });
+                        chataInput.dispatchEvent(ev)
+                    }else{
+                        chataInput.value = subQuery;
+                    }
+                    index++;
+                }, 85);
+
+            }
+            queryTipListContainer.appendChild(item);
+        }
+        queryTipsResultContainer.innerHTML = '';
+        queryTipsResultContainer.appendChild(queryTipListContainer);
+        // var totalPages = pages > 5 ? 5 : pages;
+        for (var i = 0; i < 3; i++) {
+            if(i >= pages)break;
+            var li = document.createElement('li')
+            var a = document.createElement('a')
+
+            if(i == currentPage-1){
+                li.classList.add('selected')
+            }
+            li.appendChild(a)
+            pagination.appendChild(li);
+
+            if(i == 2){
+                if(currentPage == 3){
+                    a.textContent = currentPage;
+                    var rightDots = document.createElement('li');
+                    var aDots = document.createElement('a');
+                    aDots.textContent = '...';
+                    rightDots.appendChild(aDots);
+                    pagination.appendChild(rightDots);
+                    aDots.setAttribute('data-page', currentPage+1);
+                    rightDots.onclick = dotEvent;
+                }else if(currentPage > 3 && currentPage <= pages-2){
+                    a.textContent = currentPage;
+                    li.classList.add('selected');
+                    var rightDots = document.createElement('li');
+                    var aDots = document.createElement('a');
+                    aDots.textContent = '...';
+                    rightDots.appendChild(aDots);
+                    aDots.setAttribute('data-page', currentPage+1);
+
+                    var leftDots = document.createElement('li');
+                    var aDotsLeft = document.createElement('a');
+                    aDotsLeft.textContent = '...';
+                    leftDots.appendChild(aDotsLeft);
+                    aDotsLeft.setAttribute('data-page', currentPage-1);
+                    pagination.insertBefore(leftDots, li);
+                    if(currentPage < pages-2){
+                        pagination.appendChild(rightDots);
+                    }
+
+                    rightDots.onclick = dotEvent;
+                    leftDots.onclick = dotEvent;
+
+                }else{
+                    a.textContent = '...';
+                }
+            }else{
+                a.textContent = (i+1);
+            }
+            if(currentPage > pages-2){
+                a.setAttribute('data-page', currentPage-1);
+            }else{
+                a.setAttribute('data-page', i+1);
+            }
+            li.onclick = dotEvent;
+
+        }
+
+        if(pages > 3){
+            for (var i = pages-2; i < pages; i++) {
+                if(i >= pages)break;
+                var li = document.createElement('li')
+                var a = document.createElement('a')
+                if(i == currentPage-1){
+                    li.classList.add('selected')
+                }
+                li.appendChild(a)
+                a.textContent = (i+1);
+                a.setAttribute('data-page', i+1);
+
+                li.onclick = (evt) => {
+                    var page = evt.target.dataset.page;
+                    var path = obj.getRelatedQueriesPath(
+                        page, searchVal, obj.options
+                    );
+                    ChataUtils.safetynetCall(path, function(response, s){
+                        obj.putRelatedQueries(
+                            response, queryTipsResultContainer,
+                            container, searchVal
+                        );
+                    }, obj.options);
+                }
+
+                pagination.appendChild(li);
+            }
+        }
+        pagination.appendChild(paginationNext);
+        paginationContainer.appendChild(pagination);
+        container.appendChild(paginationContainer)
+        if(obj.pagination){
+            container.removeChild(obj.pagination);
+        }
+        obj.pagination = paginationContainer;
+    }
+
+    obj.getRelatedQueriesPath = (page, searchVal, options) => {
+        const url = options.authentication.demo
+          ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
+          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
+          return url;
+    }
+
+    obj.createResizeHandler = function(){
+        var resize = document.createElement('div');
+        var startX, startY, startWidth, startHeight;
+        resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
+        resize.classList.add(obj.options.placement);
+
+        function resizeItem(e) {
+            let newWidth;
+            let newHeight;
+            switch (obj.options.placement) {
+                case 'left':
+                    newWidth = (startWidth + e.clientX - startX);
+                    break;
+                case 'right':
+                    newWidth = (startWidth + startX - e.clientX);
+                    break;
+                case 'top':
+                    newHeight = (startHeight + e.clientY - startY);
+                    break;
+                case 'bottom':
+                    newHeight = (startHeight + startY - e.clientY);
+                    break;
+                default:
+
+            }
+            if(['left', 'right'].includes(obj.options.placement)){
+                obj.rootElem.style.width = newWidth + 'px';
+                obj.options.width = newWidth;
+            }else{
+                obj.rootElem.style.height = newHeight + 'px';
+                obj.options.height = newHeight;
+            }
+        }
+
+        function stopResize(e) {
+            window.removeEventListener('mousemove', resizeItem, false);
+            window.removeEventListener('mouseup', stopResize, false);
+        }
+
+        function initResize(e){
+            startX = e.clientX;
+            startY = e.clientY;
+            startWidth = parseInt(
+                document.defaultView.getComputedStyle(
+                    obj.rootElem
+                ).width, 10);
+            startHeight = parseInt(
+                document.defaultView.getComputedStyle(
+                    obj.rootElem
+                ).height, 10);
+            window.addEventListener('mousemove', resizeItem, false);
+            window.addEventListener('mouseup', stopResize, false);
+        }
+
+        resize.addEventListener('mousedown', initResize, false);
+
+        obj.rootElem.appendChild(resize);
+        obj.resizeHandler = resize;
+        if(!obj.options.resizable){
+            obj.resizeHandler.style.visibility = 'hidden';
+        }
+    }
+
+    obj.createDrawerContent = () => {
+        var drawerContent = document.createElement('div');
+        var firstMessage = document.createElement('div');
+        var chatMessageBubble = document.createElement('div');
+        var scrollBox = document.createElement('div');
+        scrollBox.classList.add('autoql-vanilla-chata-scrollbox');
+        chatMessageBubble.textContent = obj.options.introMessage;
+        drawerContent.classList.add('autoql-vanilla-drawer-content');
+        firstMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        firstMessage.classList.add('response');
+        chatMessageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+
+        firstMessage.appendChild(chatMessageBubble);
+        drawerContent.appendChild(firstMessage);
+        scrollBox.appendChild(drawerContent);
+        obj.rootElem.appendChild(scrollBox);
+        obj.drawerContent = drawerContent;
+        obj.scrollBox = scrollBox;
+    }
+
+    obj.createHeader = () => {
+        var chatHeaderContainer = document.createElement('div');
+        var closeButton = htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-button close close-action"
+                data-tippy-content="Close Drawer" currentitem="false">
+                ${CLOSE_ICON}
+            </button>
+        `);
+        var clearAllButton = htmlToElement(`
+            <button class="autoql-vanilla-chata-button clear-all"
+            data-tippy-content="Clear Messages">
+                ${CLEAR_ALL}
+            </button>
+        `);
+
+        var headerLeft = htmlToElement(`
+            <div class="chata-header-left">
+            </div>
+        `)
+        var headerTitle = htmlToElement(`
+            <div class="autoql-vanilla-chata-header-center-container">
+                ${obj.options.title}
+            </div>
+        `)
+        var headerRight = htmlToElement(`
+            <div class="chata-header-right-container">
+            </div>
+        `)
+        var popover = htmlToElement(`
+            <div class="autoql-vanilla-popover-container">
+                <div class="autoql-vanilla-clear-messages-confirm-popover">
+                    <div class="autoql-vanilla-chata-confirm-text">
+                        ${POPOVER_ICON}
+                        Clear all queries & responses?
+                    </div>
+                    <button class="autoql-vanilla-chata-confirm-btn no">
+                        Cancel
+                    </button>
+                    <button class="autoql-vanilla-chata-confirm-btn yes">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        `)
+        chatHeaderContainer.classList.add(
+            'autoql-vanilla-chat-header-container'
+        );
+
+        closeButton.onclick = (evt) => {
+            obj.closeDrawer();
+        }
+
+        clearAllButton.onclick = (evt) => {
+            popover.style.visibility = 'visible';
+            popover.style.opacity = 1;
+        }
+
+        popover.addEventListener('click', (evt) => {
+            if(evt.target.classList.contains(
+                'autoql-vanilla-chata-confirm-btn')
+            ){
+                obj.closePopOver(popover);
+                if(evt.target.classList.contains('yes')){
+                    obj.clearMessages();
+                }
+            }
+        })
+
+        headerLeft.appendChild(closeButton);
+        headerRight.appendChild(clearAllButton);
+        headerRight.appendChild(popover);
+
+        chatHeaderContainer.appendChild(headerLeft);
+        chatHeaderContainer.appendChild(headerTitle);
+        chatHeaderContainer.appendChild(headerRight);
+        obj.rootElem.appendChild(chatHeaderContainer);
+        obj.headerRight = headerRight;
+        obj.headerTitle = headerTitle;
+    }
+
+    obj.closePopOver = (popover) => {
+        popover.style.visibility = 'hidden';
+        popover.style.opacity = 0;
+    }
+
+    obj.clearMessages = () => {
+        [].forEach.call(
+            obj.drawerContent.querySelectorAll(
+                '.autoql-vanilla-chat-single-message-container'
+            ),
+            (e, index) => {
+            if(index == 0) return;
+            e.parentNode.removeChild(e);
+        });
+    }
+
+    obj.autoCompleteHandler = (evt) => {
+        if(obj.options.autoQLConfig.enableAutocomplete){
+            obj.autoCompleteList.style.display = 'none';
+            clearTimeout(obj.autoCompleteTimer);
+            if(evt.target.value){
+                obj.autoCompleteTimer = setTimeout(() => {
+                    ChataUtils.autocomplete(
+                        evt.target.value,
+                        obj.autoCompleteList,
+                        'suggestion',
+                        obj.options
+                    );
+                }, 400);
+            }
+        }
+    }
+
+    obj.onEnterHandler = (evt) => {
+        if(evt.keyCode == 13 && obj.input.value){
+            clearTimeout(obj.autoCompleteTimer);
+            obj.autoCompleteList.style.display = 'none';
+            console.log('SEND MESSAGE');
+            obj.sendMessage(obj.input.value, 'data_messenger.user');
+        }
+    }
+
+    obj.createBar = () => {
+        const placeholder = obj.options.inputPlaceholder;
+        var chataBarContainer = document.createElement('div');
+        var autoComplete = document.createElement('div');
+        var autoCompleteList = document.createElement('ul');
+        var textBar = document.createElement('div');
+        var chataInput = document.createElement('input');
+        var voiceRecordButton = document.createElement('button');
+        var display = obj.options.enableVoiceRecord ? 'block' : 'none';
+        var watermark = htmlToElement(`
+            <div class="autoql-vanilla-watermark">
+                ${WATERMARK}
+                We run on AutoQL by Chata
+            </div>
+        `);
+
+        chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
+        chataBarContainer.classList.add('autoql-vanilla-chat-drawer-chat-bar');
+        chataBarContainer.classList.add('autoql-vanilla-autosuggest-top');
+        autoComplete.classList.add('autoql-vanilla-auto-complete-suggestions');
+        autoCompleteList.classList.add(
+            'autoql-vanilla-auto-complete-list'
+        );
+        textBar.classList.add('autoql-vanilla-text-bar');
+        chataInput.classList.add('autoql-vanilla-chata-input');
+        chataInput.setAttribute('autocomplete', 'off');
+        chataInput.setAttribute('placeholder', placeholder);
+        voiceRecordButton.classList.add(
+            'autoql-vanilla-chat-voice-record-button'
+        );
+        voiceRecordButton.classList.add(
+            'chata-voice'
+        );
+        voiceRecordButton.setAttribute(
+            'data-tippy-content',
+            'Hold to Use Voice'
+        );
+        voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
+
+        autoComplete.appendChild(autoCompleteList);
+        textBar.appendChild(chataInput);
+        textBar.appendChild(voiceRecordButton);
+        chataBarContainer.appendChild(watermark);
+        chataBarContainer.appendChild(autoComplete);
+        chataBarContainer.appendChild(textBar);
+
+        voiceRecordButton.onmouseup = (evt) => {
+            obj.speechToText.stop();
+            voiceRecordButton.style.backgroundColor =
+            obj.options.themeConfig.accentColor;
+            console.log(obj.options.themeConfig.accentColor);
+            console.log(obj.finalTranscript);
+            obj.input.value = obj.finalTranscript;
+            obj.isRecordVoiceActive = false;
+        }
+
+        voiceRecordButton.onmousedown = (evt) => {
+            obj.speechToText.start();
+            voiceRecordButton.style.backgroundColor = '#FF471A';
+            obj.isRecordVoiceActive = true;
+        }
+
+        obj.chataBarContainer = chataBarContainer;
+        obj.input = chataInput;
+        obj.voiceRecordButton = voiceRecordButton;
+        obj.autoCompleteList = autoCompleteList;
+        obj.rootElem.appendChild(chataBarContainer);
+        obj.input.onkeyup = obj.autoCompleteHandler;
+        obj.input.onkeypress = obj.onEnterHandler;
+
+    }
+
+    obj.speechToTextEvent = () => {
+        if(obj.speechToText){
+            obj.speechToText.onresult = (e) => {
+                let interimTranscript = '';
+                for (let i = e.resultIndex,
+                    len = e.results.length; i < len; i++) {
+                    let transcript = e.results[i][0].transcript;
+                    if (e.results[i].isFinal) {
+                        obj.finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                if(obj.finalTranscript !== ''){
+                    obj.input.value = obj.finalTranscript;
+                    obj.speechToText.stop();
+                    obj.voiceRecordButton.style.backgroundColor =
+                    obj.options.themeConfig.accentColor;
+                }
+            }
+        }
+    }
+
+    obj.applyStyles = () => {
+        const themeStyles = obj.options.themeConfig.theme === 'light'
+        ? LIGHT_THEME : DARK_THEME
+        if(options.themeConfig){
+            if ('accentColor' in options.themeConfig){
+                themeStyles['--chata-drawer-accent-color']
+                = options.themeConfig.accentColor;
+                obj.options.themeConfig.accentColor =
+                options.themeConfig.accentColor;
+            }
+        }
+
+        for (let property in themeStyles) {
+            document.documentElement.style.setProperty(
+                property,
+                themeStyles[property],
+            );
+        }
+
+        obj.rootElem.style.setProperty(
+            '--chata-drawer-font-family',
+            obj.options.themeConfig['fontFamily']
+        );
+    }
+
+    obj.checkMaxMessages = function(){
+        if(obj.options.maxMessages > 2){
+            var messages = obj.drawerContent.querySelectorAll(
+                '.autoql-vanilla-chat-single-message-container'
+            );
+
+            if(messages.length > obj.options.maxMessages){
+                messages[1].parentNode.removeChild(messages[1]);
+            }
+        }
+    }
+
+    obj.getActionOption = (svg, text, onClick, params) => {
+        var element = htmlToElement(`
+            <li>
+                <span data-test="chata-icon" class="chata-icon">
+                    ${svg}
+                </span>
+                ${text}
+            </li>
+        `);
+        element.onclick = (evt) => {
+            onClick.apply(null, params);
+        }
+        return element;
+    }
+
+    obj.getPopover = () => {
+        var optionsMenu = htmlToElement(`
+            <div class="chata-more-options-menu">
+            </div>
+        `);
+        var menu = htmlToElement(`
+            <div class="chata-popover-wrapper">
+            </div>`
+        );
+        var ul = htmlToElement(`
+            <ul class="chata-menu-list">
+            </ul>
+        `);
+        menu.ul = ul;
+        optionsMenu.appendChild(ul);
+        menu.appendChild(optionsMenu);
+        return menu;
+    }
+
+    obj.downloadCsvHandler = (idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        var csvData = ChataUtils.createCsvData(json);
+        var link = document.createElement("a");
+        link.setAttribute(
+            'href', 'data:text/csv;charset=utf-8,'
+            + encodeURIComponent(csvData)
+        );
+        link.setAttribute('download', 'table.csv');
+        link.click();
+    }
+
+    obj.copySqlHandler = (idRequest) => {
+        console.log(idRequest);
+        var json = ChataUtils.responses[idRequest];
+        console.log(json);
+        var sql = json['data']['sql'][0];
+        console.log(sql);
+        copyTextToClipboard(sql);
+    }
+
+    obj.copyHandler = (idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
+    }
+    obj.exportPNGHandler = (idRequest) => {
+        var component = document.querySelector(
+            `[data-componentid='${idRequest}']`
+        );
+        var svg = component.getElementsByTagName('svg')[0];
+        var svgString = getSVGString(svg);
+
+        svgString2Image(
+            svgString,
+            2*component.clientWidth,
+            2*component.clientHeight
+        );
+    }
+
+    obj.getMoreOptionsMenu = (options, idRequest, type) => {
+        var menu = obj.getPopover();
+        if(type === 'simple'){
+            menu.classList.add('chata-popover-single-message');
+        }
+
+        for (var i = 0; i < options.length; i++) {
+            let opt = options[i]
+            switch (opt) {
+                case 'csv':
+                    var action = obj.getActionOption(
+                        DOWNLOAD_CSV_ICON, 'Download as CSV',
+                        obj.downloadCsvHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                    break;
+                case 'copy':
+                    var action = obj.getActionOption(
+                        CLIPBOARD_ICON, 'Copy table to clipboard',
+                        obj.copyHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                    break;
+                case 'copy_sql':
+                    var action = obj.getActionOption(
+                        COPY_SQL, 'Copy generated query to clipboard',
+                        obj.copySqlHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                    break;
+                case 'png':
+                    var action = obj.getActionOption(
+                        EXPORT_PNG_ICON, 'Download as PNG',
+                        obj.exportPNGHandler,
+                        [idRequest]
+                    );
+                    menu.ul.appendChild(action);
+                default:
+
+            }
+        }
+
+        return menu;
+    }
+
+    obj.getReportProblemMenu = (toolbar, idRequest, type) => {
+        var menu = obj.getPopover();
+        if(type === 'simple'){
+            menu.classList.add('chata-popover-single-message');
+        }
+        menu.ul.appendChild(
+            obj.getActionOption(
+                '', 'The data is incorrect',
+                obj.sendReport,
+                [idRequest, obj.options, menu, toolbar]
+            )
+        );
+        menu.ul.appendChild(
+            obj.getActionOption(
+                '', 'The data is incomplete',
+                obj.sendReport,
+                [idRequest, obj.options, menu, toolbar]
+            )
+        );
+        menu.ul.appendChild(
+            obj.getActionOption(
+                '', 'Other...',
+                obj.openModalReport,
+                [idRequest, obj.options, menu, toolbar]
+            )
+        );
+
+        return menu;
+    }
+
+    obj.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
+        var button =  htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-toolbar-btn"
+                data-tippy-content="${tooltip}"
+                data-id="${idRequest}">
+                ${svg}
+            </button>
+        `)
+
+        button.onclick = (evt) => {
+            onClick.apply(null, [evt, idRequest, ...evtParams]);
+        }
+
+        return button;
+    }
+
+    obj.reportProblemHandler = (
+        evt, idRequest, reportProblem, toolbar) => {
+
+        reportProblem.classList.toggle('show');
+        toolbar.classList.toggle('show');
+    }
+
+    obj.moreOptionsHandler = (
+        evt, idRequest, moreOptions, toolbar) => {
+
+        moreOptions.classList.toggle('show');
+        toolbar.classList.toggle('show');
+    }
+
+    obj.filterTableHandler = (evt, idRequest) => {
+        var table = document.querySelector(
+            `[data-componentid="${idRequest}"]`
+        );
+        var inputs = table.headerElement.getElementsByClassName(
+            'autoql-vanilla-tabulator-header-filter'
+        );
+        var arrows = table.headerElement.getElementsByClassName(
+            'autoql-vanilla-tabulator-arrow'
+        );
+        for (var i = 0; i < inputs.length; i++) {
+            if(inputs[i].style.display == ''
+            || inputs[i].style.display == 'none'){
+                inputs[i].style.display = 'block';
+            }else{
+                inputs[i].style.display = 'none';
+            }
+            arrows[i].classList.toggle('tabulator-filter');
+        }
+    }
+
+    obj.openColumnEditorHandler = (evt, idRequest) => {
+        obj.showColumnEditor(idRequest);
+    }
+
+    obj.deleteMessageHandler = (evt, idRequest) => {
+        console.log(idRequest);
+        var table = obj.drawerContent.querySelector(
+            `[data-componentid="${idRequest}"]`
+        );
+        if(!table){
+            table = obj.drawerContent.querySelector(
+                `[data-containerid="${idRequest}"]`
+            );
+            obj.drawerContent.removeChild(
+                table
+            )
+        }else{
+            obj.drawerContent.removeChild(
+                table.parentElement.parentElement
+                .parentElement.parentElement.parentElement
+            );
+        }
+    }
+
+    obj.getActionToolbar = (idRequest, type, displayType) => {
+        var request = ChataUtils.responses[idRequest];
+        let moreOptionsArray = [];
+        var toolbar = htmlToElement(`
+            <div class="autoql-vanilla-chat-message-toolbar right">
+            </div>
+        `);
+
+        var reportProblem = obj.getReportProblemMenu(
+            toolbar,
+            idRequest,
+            type
+        );
+        reportProblem.classList.add('report-problem');
+
+
+        var reportProblemButton = obj.getActionButton(
+            REPORT_PROBLEM,
+            'Report a problem',
+            idRequest,
+            obj.reportProblemHandler,
+            [reportProblem, toolbar]
+        )
+
+        switch (type) {
+            case 'simple':
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                    toolbar.appendChild(
+                        obj.getActionButton(
+                            DELETE_MESSAGE,
+                            'Delete Message',
+                            idRequest,
+                            obj.deleteMessageHandler,
+                            [reportProblem, toolbar]
+                        )
+                    );
+                    moreOptionsArray.push('copy_sql');
+                }
+                break;
+            case 'csvCopy':
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        FILTER_TABLE,
+                        'Filter Table',
+                        idRequest,
+                        obj.filterTableHandler,
+                        []
+                    )
+                );
+                var columnVisibility = obj.options.
+                autoQLConfig.enableColumnVisibilityManager
+                if(columnVisibility && displayType !== 'pivot_table'){
+                    toolbar.appendChild(
+                        obj.getActionButton(
+                            COLUMN_EDITOR,
+                            'Show/Hide Columns',
+                            idRequest,
+                            obj.openColumnEditorHandler,
+                            []
+                        )
+                    );
+                }
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                }
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('csv');
+                moreOptionsArray.push('copy');
+                moreOptionsArray.push('copy_sql');
+                break;
+            case 'chart-view':
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                }
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('png');
+                moreOptionsArray.push('copy_sql');
+            default:
+
+        }
+
+        var moreOptions = obj.getMoreOptionsMenu(
+            moreOptionsArray,
+            idRequest,
+            type
+        );
+
+        var moreOptionsBtn = obj.getActionButton(
+            VERTICAL_DOTS,
+            'More options',
+            idRequest,
+            obj.moreOptionsHandler,
+            [moreOptions, toolbar]
+        )
+
+        if(request['reference_id'] !== '1.1.420'){
+            toolbar.appendChild(
+                moreOptionsBtn
+            );
+            toolbar.appendChild(moreOptions);
+            toolbar.appendChild(reportProblem);
+        }
+
+        return toolbar;
+    }
+
+    obj.refreshToolbarButtons = (oldComponent, ignore) => {
+        var messageBubble = oldComponent.parentElement
+            .parentElement.parentElement;
+        if(messageBubble.classList.contains(
+            'autoql-vanilla-chata-response-content-container'
+        )){
+            messageBubble = messageBubble.parentElement;
+        }
+
+        var scrollBox = messageBubble.querySelector(
+            '.autoql-vanilla-chata-table-scrollbox'
+        );
+        var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
+        var toolbarRight = messageBubble.getElementsByClassName('right')[0];
+
+        if(oldComponent.noColumnsElement){
+            oldComponent.parentElement.removeChild(
+                oldComponent.noColumnsElement
+            );
+            oldComponent.noColumnsElement = null;
+        }
+
+        scrollBox.scrollLeft = 0;
+
+        var actionType = ['table', 'pivot_table', 'date_pivot'].includes(
+            ignore
+        ) ? 'csvCopy' : 'chart-view';
+
+        toolbarLeft.innerHTML = ''
+        var displayTypes = obj.getDisplayTypesButtons(
+            oldComponent.dataset.componentid, ignore
+        );
+
+        for (var i = 0; i < displayTypes.length; i++) {
+            toolbarLeft.appendChild(displayTypes[i]);
+        }
+
+        var newToolbarRight = obj.getActionToolbar(
+            oldComponent.dataset.componentid, actionType, ignore
+        );
+        messageBubble.replaceChild(newToolbarRight, toolbarRight);
+
+        refreshTooltips();
+    }
+
+
+    obj.sendDrilldownMessage = (
+        json, indexData, options) =>{
+        var queryId = json['data']['query_id'];
+        var params = {};
+        var groupables = getGroupableFields(json);
+        if(indexData != -1){
+            for (var i = 0; i < groupables.length; i++) {
+                var index = groupables[i].indexCol;
+                var value = json['data']['rows'][parseInt(indexData)][index];
+                var colData = json['data']['columns'][index]['name'];
+                params[colData] = value.toString();
+            }
+        }
+
+        const URL = options.authentication.demo
+          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+          : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
+        let data;
+
+        if(options.authentication.demo){
+            data = {
+                query_id: queryId,
+                group_bys: params,
+                username: 'demo',
+                customer_id: options.authentication.customerId || "",
+                user_id: options.authentication.userId || "",
+                debug: options.autoQLConfig.debug
+            }
+        }else{
+            var cols = [];
+            for(var [key, value] of Object.entries(params)){
+                cols.push({
+                    name: key,
+                    value: value
+                })
+            }
+            data = {
+                debug: options.autoQLConfig.debug,
+                columns: cols
+            }
+        }
+
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+        obj.drawerContent.appendChild(responseLoadingContainer);
+        ChataUtils.ajaxCallPost(URL, function(response, status){
+            if(response['data']['rows'].length > 0){
+                obj.putTableResponse(response);
+            }else{
+                obj.putSimpleResponse(response);
+            }
+            obj.drawerContent.removeChild(responseLoadingContainer);
+            refreshTooltips();
+        }, data, options);
+
+    }
+
+    obj.rowClick = (evt, idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        var row = evt.target.parentElement;
+        var indexData = row.dataset.indexrow;
+        if(row.dataset.hasDrilldown === 'true'){
+            obj.sendDrilldownMessage(json, indexData, obj.options);
+        }
+    }
+
+    obj.chartElementClick = (evt, idRequest) => {
+        var json = ChataUtils.responses[idRequest];
+        var indexData = evt.target.dataset.chartindex;
+        obj.sendDrilldownMessage(json, indexData, obj.options);
+    }
+
+    obj.stackedChartElementClick = (evt, idRequest) => {
+        var json = cloneObject(ChataUtils.responses[idRequest]);
+        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1;
+        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2;
+        json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3;
+        obj.sendDrilldownMessage(json, 0, obj.options);
+    }
+
+    obj.updateSelectedBar = (evt, component) => {
+        var oldSelect = component.querySelector('.active');
+        if(oldSelect)oldSelect.classList.remove('active');
+        if(evt.target.tagName !== 'TD') evt.target.classList.add('active');
+    }
+
+    obj.componentClickHandler = (handler, component, selector) => {
+        var elements = component.querySelectorAll(selector);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].onclick = (evt) => {
+                handler.apply(null, [evt, component.dataset.componentid])
+                obj.updateSelectedBar(evt, component);
+
+            }
+        }
+    }
+
+    obj.registerDrilldownChartEvent = (component) => {
+        obj.componentClickHandler(
+            obj.chartElementClick, component, '[data-chartindex]'
+        )
+    }
+
+    obj.registerDrilldownStackedChartEvent = (component) => {
+        obj.componentClickHandler(
+            obj.stackedChartElementClick, component, '[data-stackedchartindex]'
+        )
+    }
+
+    obj.registerDrilldownTableEvent = (table) => {
+        obj.componentClickHandler(
+            obj.rowClick, table, 'tr'
+        )
+    }
+
+    obj.getComponent = (request) => {
+        return obj.drawerContent.querySelector(
+            `[data-componentid='${request}']`
+        )
+    }
+
+    obj.getRequest = (id) => {
+        return ChataUtils.responses[id];
+    }
+
+    obj.displayTableHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'table');
+        var table = createTable(json, component, obj.options);
+        obj.registerDrilldownTableEvent(table);
+    }
+    obj.displayColumChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'column');
+        createColumnChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
+    }
+
+    obj.displayBarChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'bar');
+        createBarChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
+    }
+
+    obj.displayPieChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'pie');
+        createPieChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
+    }
+
+    obj.displayLineChartHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'line');
+        createLineChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
+    }
+
+    obj.displayPivotTableHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        var columns = json['data']['columns'];
+        let pivotArray;
+        obj.refreshToolbarButtons(component, 'pivot_table');
+        if(columns[0].type === 'DATE' && columns[0].name.includes('month')){
+            pivotArray = getDatePivotArray(
+                json, obj.options, json['data']['rows']
+            );
+        }else{
+            pivotArray = getPivotColumnArray(
+                json, obj.options, json['data']['rows']
+            );
+        }
+        createPivotTable(pivotArray, component, obj.options);
+    }
+
+    obj.displayHeatmapHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'heatmap');
+        createHeatmap(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
+    }
+
+    obj.displayBubbleCharthandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'bubble');
+        createBubbleChart(component, json, obj.options);
+        obj.registerDrilldownChartEvent(component);
+    }
+
+    obj.displayStackedColumnHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_column');
+        createStackedColumnChart(
+            component, cloneObject(json), obj.options
+        );
+        obj.registerDrilldownStackedChartEvent(component);
+    }
+
+    obj.displayStackedBarHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_bar');
+        createStackedBarChart(
+            component, cloneObject(json), obj.options
+        );
+        obj.registerDrilldownStackedChartEvent(component);
+    }
+
+    obj.displayAreaHandler = (evt, idRequest) => {
+        var json = obj.getRequest(idRequest);
+        var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_line');
+        createAreaChart(
+            component, cloneObject(json), obj.options
+        );
+    }
+
+    obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
+        var button = htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-toolbar-btn"
+                data-tippy-content="${tooltip}"
+                data-id="${idRequest}">
+                ${svg}
+            </button>
+        `);
+
+        button.onclick = (evt) => {
+            onClick(evt, idRequest);
+        }
+
+        return button;
+    }
+
+    obj.getDisplayTypesButtons = (idRequest, ignore) => {
+        var json = ChataUtils.responses[idRequest];
+        var buttons = [];
+        var displayTypes = getSupportedDisplayTypes(json);
+        for (var i = 0; i < displayTypes.length; i++) {
+            let button;
+            if(displayTypes[i] == ignore)continue;
+            if(displayTypes[i] == 'table'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, TABLE_ICON, 'Table', obj.displayTableHandler
+                )
+            }
+            if(displayTypes[i] == 'column'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, COLUMN_CHART_ICON,
+                    'Column Chart', obj.displayColumChartHandler
+                );
+            }
+            if(displayTypes[i] == 'bar'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, BAR_CHART_ICON,
+                    'Bar Chart', obj.displayBarChartHandler
+                );
+            }
+            if(displayTypes[i] == 'pie'
+                && json['data']['columns'].length == 2){
+                button = obj.getDisplayTypeButton(
+                    idRequest, PIE_CHART_ICON,
+                    'Pie Chart', obj.displayPieChartHandler
+                );
+            }
+            if(displayTypes[i] == 'line'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, LINE_CHART_ICON,
+                    'Line Chart', obj.displayLineChartHandler
+                );
+            }
+            if(displayTypes[i] == 'pivot_table'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, PIVOT_ICON,
+                    'Pivot Table', obj.displayPivotTableHandler
+                );
+            }
+            if(displayTypes[i] == 'heatmap'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, HEATMAP_ICON,
+                    'Heatmap', obj.displayHeatmapHandler
+                );
+            }
+            if(displayTypes[i] == 'bubble'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, BUBBLE_CHART_ICON,
+                    'Bubble Chart', obj.displayBubbleCharthandler
+                );
+            }
+            if(displayTypes[i] == 'stacked_column'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, STACKED_COLUMN_CHART_ICON,
+                    'Stacked Column Chart', obj.displayStackedColumnHandler
+                );
+            }
+            if(displayTypes[i] == 'stacked_bar'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, STACKED_BAR_CHART_ICON,
+                    'Stacked Bar Chart', obj.displayStackedBarHandler
+                );
+            }
+
+            if(displayTypes[i] == 'stacked_line'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, STACKED_AREA_CHART_ICON,
+                    'Stacked Area Chart', obj.displayAreaHandler
+                );
+            }
+
+            if(button){
+                buttons.push(button);
+            }
+        }
+
+        return buttons;
+    }
+
+    obj.putMessage = (value) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('request');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.textContent = value;
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.drawerContent.appendChild(responseLoadingContainer);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        obj.checkMaxMessages();
+        return responseLoadingContainer;
+    }
+
+    obj.putTableResponse = (jsonResponse) => {
+        var data = jsonResponse['data']['rows'];
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        var tableContainer = document.createElement('div');
+        var scrollbox = document.createElement('div');
+        var table = document.createElement('table');
+        var header = document.createElement('tr');
+        var groupField = getGroupableField(jsonResponse);
+        var cols = jsonResponse['data']['columns'];
+        const options = obj.options.dataFormatting;
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        containerMessage.classList.add('autoql-vanilla-chat-message-response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        var idRequest = uuidv4();
+        ChataUtils.responses[idRequest] = jsonResponse;
+        var supportedDisplayTypes = obj.getDisplayTypesButtons(
+            idRequest, 'table'
+        );
+        var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
+        var toolbar = undefined;
+        if(supportedDisplayTypes.length > 0){
+            toolbar = htmlToElement(`
+                <div class="autoql-vanilla-chat-message-toolbar left">
+                </div>
+            `);
+            for (var i = 0; i < supportedDisplayTypes.length; i++) {
+                toolbar.appendChild(supportedDisplayTypes[i]);
+            }
+        }
+        if(toolbar){
+            messageBubble.appendChild(toolbar);
+        }
+        messageBubble.appendChild(actions);
+        tableContainer.classList.add('chata-table-container');
+        scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-container'
+        );
+        table.classList.add('autoql-vanilla-table-response');
+        table.setAttribute('data-componentid', idRequest);
+        var dataLines = jsonResponse['data']['rows'];
+        var thArray = [];
+        for (var i = 0; i < cols.length; i++) {
+            var colStr = cols[i]['display_name'] ||
+                cols[i]['name'];
+            var isVisible = true;
+            if('is_visible' in cols[i]){
+                isVisible = cols[i]['is_visible']
+                || false;
+            }
+            var colName = formatColumnName(colStr);
+            var th = document.createElement('th');
+            var arrow = document.createElement('div');
+            var col = document .createElement('div');
+            col.textContent = colName;
+            arrow.classList.add('autoql-vanilla-tabulator-arrow');
+            arrow.classList.add('up');
+            col.classList.add('column');
+            col.setAttribute('data-type', cols[i]['type']);
+            col.setAttribute('data-index', i);
+            var divFilter = document.createElement('div');
+            var filter = document.createElement('input');
+            divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
+            divFilter.appendChild(filter);
+            filter.setAttribute('placeholder', 'Filter column');
+            filter.classList.add('filter-input');
+            filter.setAttribute('data-dataid', idRequest);
+            filter.setAttribute('data-inputindex', i);
+            filter.colType = cols[i]['type'];
+            filter.onkeyup = function(event){
+                var _table = document.querySelector(
+                    `[data-componentid='${idRequest}']`
+                );
+                var rows = applyFilter(idRequest);
+                ChataUtils.refreshTableData(
+                    _table, cloneObject(rows), options, false
+                );
+            }
+            col.appendChild(divFilter);
+            th.appendChild(col);
+            th.appendChild(arrow);
+            th.onclick = (evt) => {
+                ChataUtils.onClickColumn(evt, table, options);
+            }
+            header.appendChild(th);
+            thArray.push(th);
+            if(!isVisible){
+                th.classList.add('chata-hidden');
+            }
+            th.addEventListener('contextmenu', function(e){
+                e.preventDefault();
+                let col;
+                if(e.target.tagName == 'DIV'){
+                    col = e.target;
+                }else{
+                    col = e.target.childNodes[0];
+                }
+                var popoverElements = document.querySelectorAll(
+                    '.autoql-vanilla-chata-tiny-popover-container'
+                );
+                [].forEach.call(popoverElements, function(e, i){
+                    e.parentNode.removeChild(e);
+                })
+                var popoverContainer = htmlToElement(`
+                    <div class="autoql-vanilla-chata-tiny-popover-container">
+                    </div>
+                `);
+                var popoverMenu = htmlToElement(`
+                    <div class="chata-context-menu">
+                    </div>
+                `)
+                var popoverList = htmlToElement(`
+                    <ul class="chata-context-menu-list">
+                    </ul>
+                `);
+
+                var popoverLi = htmlToElement(`
+                    <li>Hide Column</li>
+                `)
+
+                popoverLi.onclick = function(evt){
+                    var opts = obj.options
+                    const url = opts.authentication.demo
+                    ? `https://backend-staging.chata.ai/api/v1/chata/query`
+                    : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
+                    document.body.removeChild(popoverContainer);
+                    var parameters = [];
+                    var jsonCols = jsonResponse['data']['columns'];
+                    for (var i = 0; i < jsonCols.length; i++) {
+                        var visibility = col.dataset.index == i ? false : true;
+                        if(col.dataset.index == i){
+                            visibility = false;
+                            jsonResponse.data.columns[i].is_visible = false;
+                        }else{
+                            visibility = jsonCols[i].is_visible;
+                        }
+                        parameters.push({
+                            name: jsonCols[i].name,
+                            is_visible: visibility
+                        })
+                    }
+                    ChataUtils.putCall(
+                        url, {columns: parameters}, function(response){
+                        adjustTableWidth(
+                            table, thArray, jsonResponse['data']['columns']
+                        );
+                        hideShowTableCols(table);
+                    }, opts)
+                }
+
+                popoverContainer.appendChild(popoverMenu);
+                popoverMenu.appendChild(popoverList);
+                popoverList.appendChild(popoverLi);
+
+                popoverContainer.style.left = mouseX(e) + 'px';
+                popoverContainer.style.top = mouseY(e) + 'px';
+                document.body.appendChild(popoverContainer);
+            })
+        }
+        header.classList.add('autoql-vanilla-table-header');
+        scrollbox.appendChild(header);
+
+        for (var i = 0; i < dataLines.length; i++) {
+            var data = dataLines[i];
+            var tr = document.createElement('tr');
+            for (var x = 0; x < data.length; x++) {
+                var isVisible = true;
+                if('is_visible' in cols[x]){
+                    isVisible = cols[x]['is_visible']
+                    || false;
+                }
+                value = formatData(
+                    data[x], cols[x],
+                    obj.options
+                );
+                var td = document.createElement('td');
+                td.textContent = value;
+                if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
+                    options.comparisonDisplay == 'PERCENT'){
+                    if(parseFloat(value) >= 0){
+                        td.classList.add(
+                            'autoql-vanilla-comparison-value-positive'
+                        );
+                    }else{
+                        td.classList.add(
+                            'autoql-vanilla-comparison-value-negative'
+                        );
+                    }
+                }
+                tr.appendChild(td);
+                if(!isVisible){
+                    td.classList.add('chata-hidden');
+                }
+            }
+            tr.setAttribute('data-indexrow', i);
+            if(typeof groupField !== 'number'){
+                tr.setAttribute('data-has-drilldown', true);
+            }else{
+                tr.setAttribute('data-has-drilldown', false);
+            }
+            table.appendChild(tr);
+        }
+        tableContainer.appendChild(table);
+        scrollbox.appendChild(tableContainer);
+        responseContentContainer.appendChild(scrollbox);
+        messageBubble.appendChild(responseContentContainer);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+
+        var headerWidth = adjustTableWidth(table, thArray, cols);
+        table.style.width = headerWidth + 'px';
+        header.style.width = headerWidth + 'px';
+        table.headerElement = header;
+        if(!obj.options.authentication.demo){
+            allColHiddenMessage(table);
+        }
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        table.sort = 'asc';
+        obj.registerDrilldownTableEvent(table);
+        return table;
+    }
+
+    obj.sendReport = function(idRequest, options, menu, toolbar){
+        var json = ChataUtils.responses[idRequest];
+        var queryId = json['data']['query_id'];
+        const URL = options.authentication.demo
+          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+          : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
+
+        return new Promise(resolve => {
+            ChataUtils.putCall(
+                URL, {is_correct: false}, function(r, s){
+                    menu.classList.remove('show');
+                    toolbar.classList.remove('show');
+                    resolve();
+                }, options
+            )
+        })
+    }
+
+    obj.openModalReport = function(idRequest, options, menu, toolbar){
+        var modal = new Modal({
+            destroyOnClose: true,
+            withFooter: true
+        });
+        modal.setTitle('Report a Problem');
+        var container = document.createElement('div');
+        var textArea = document.createElement('textarea');
+        textArea.classList.add('autoql-vanilla-report-problem-text-area');
+        var cancelButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn default"
+            style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        )
+
+        var spinner = htmlToElement(`
+            <div class="autoql-vanilla-spinner-loader hidden"></div>
+        `)
+
+        var reportButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn primary"
+                style="padding: 5px 16px; margin: 2px 5px;">
+            </div>`
+        )
+
+        reportButton.appendChild(spinner);
+        reportButton.appendChild(document.createTextNode('Report'));
+        container.appendChild(document.createTextNode(
+            'Please tell us more about the problem you are experiencing:'
+        ));
+        container.appendChild(textArea);
+        modal.addView(container);
+        modal.addFooterElement(cancelButton);
+        modal.addFooterElement(reportButton);
+
+        cancelButton.onclick = (evt) => {
+            modal.close()
+        }
+
+        reportButton.onclick = async (evt) => {
+            var reportMessage = textArea.value;
+            spinner.classList.remove('hidden');
+            await ChataUtils.sendReport(idRequest, options, menu, toolbar);
+            modal.close();
+        }
+
+        modal.show();
+    }
+
+    obj.showColumnEditor = function(id){
+        var modal = new Modal({
+            destroyOnClose: true,
+            withFooter: true
+        })
+        var json = ChataUtils.responses[id];
+        var columns = json['data']['columns'];
+        var container = document.createElement('div');
+        var headerEditor = document.createElement('div');
+
+        var createCheckbox = (name, checked, colIndex, isLine=false) => {
+            var tick = htmlToElement(`
+                <div class="chata-checkbox-tick">
+                <span class="chata-icon">${TICK}</span>
+                </div>
+            `);
+            var checkboxContainer = document.createElement('div');
+            var checkboxWrapper = document.createElement('div');
+            var checkboxInput = document.createElement('input');
+            checkboxInput.setAttribute('type', 'checkbox');
+            checkboxInput.classList.add('m-checkbox__input');
+            if(name){
+                checkboxInput.setAttribute('data-col-name', name);
+            }
+            if(isLine){
+                checkboxInput.setAttribute('data-line', 'true');
+            }
+            checkboxInput.setAttribute('data-col-index', colIndex);
+            checkboxContainer.style.width = '36px';
+            checkboxContainer.style.height = '36px';
+            checkboxWrapper.style.width = '36px';
+            checkboxWrapper.style.height = '36px';
+            checkboxWrapper.style.position = 'relative';
+
+            if(checked){
+                checkboxInput.setAttribute('checked', 'true');
+            }
+
+            checkboxWrapper.appendChild(checkboxInput);
+            checkboxWrapper.appendChild(tick);
+
+            checkboxContainer.appendChild(checkboxWrapper);
+            checkboxContainer.input = checkboxInput;
+            return checkboxContainer;
+        }
+
+
+        container.style.padding = '0px 15px';
+        headerEditor.classList.add('col-visibility-header');
+        headerEditor.appendChild(htmlToElement(`
+            <div>Column Name</div>
+        `))
+        var divVisibility = htmlToElement(`
+            <div>Visibility</div>
+        `);
+        divVisibility.style.display = 'flex';
+        container.appendChild(headerEditor);
+        modal.chataModal.classList.add('chata-modal-column-editor')
+        modal.setTitle('Show/Hide Columns')
+        var headerCheckbox = createCheckbox(null, true, -1);
+        headerEditor.appendChild(divVisibility);
+        headerCheckbox.style.marginLeft = '12px';
+        headerCheckbox.style.marginTop = '1px';
+        divVisibility.appendChild(headerCheckbox);
+        for (var i = 0; i < columns.length; i++) {
+            var lineItem = document.createElement('div');
+            var isVisible = columns[i]['is_visible'] || false;
+            var colStr = columns[i]['display_name'] ||
+                columns[i]['name'];
+            var colName = formatColumnName(colStr);
+
+            lineItem.classList.add('col-visibility-line-item');
+            lineItem.appendChild(htmlToElement(`
+                <div>${colName}</div>
+            `))
+            var checkboxContainer = createCheckbox(
+                columns[i]['name'], isVisible, i, true
+            );
+
+            checkboxContainer.input.onchange = (evt) => {
+                var headerChecked = true;
+                var inputs = container.querySelectorAll('[data-line]');
+
+                for (var x = 0; x < inputs.length; x++) {
+                    if(!inputs[x].checked){
+                        headerChecked = false;
+                        break;
+                    }
+                }
+                headerCheckbox.input.checked = headerChecked;
+            }
+
+            if(!isVisible){
+                headerCheckbox.input.checked = false;
+            }
+            lineItem.appendChild(checkboxContainer);
+            container.appendChild(lineItem);
+        }
+
+        headerCheckbox.onchange = (evt) => {
+            var inputs = container.querySelectorAll('[data-line]');
+            for (var i = 0; i < inputs.length; i++) {
+                inputs[i].checked = evt.target.checked;
+            }
+        }
+
+        var cancelButton = htmlToElement(
+            `<div
+                class="autoql-vanilla-chata-btn default"
+                style="padding: 5px 16px; margin: 2px 5px;">
+                    Cancel
+                </div>`
+        )
+
+        var spinner = htmlToElement(`
+            <div class="autoql-vanilla-spinner-loader hidden"></div>
+        `)
+
+        var saveButton = htmlToElement(
+            `<div
+                class="autoql-vanilla-chata-btn primary"
+                style="padding: 5px 16px; margin: 2px 5px;">
+            </div>`
+        )
+
+        saveButton.appendChild(spinner);
+        saveButton.appendChild(document.createTextNode('Apply'));
+
+
+        cancelButton.onclick = function(event){
+            modal.close();
+        }
+
+        saveButton.onclick = function(event){
+            var opts = obj.options
+            const url = opts.authentication.demo
+            ? `https://backend-staging.chata.ai/api/v1/chata/query`
+            : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
+            this.classList.add('disabled');
+            spinner.classList.remove('hidden');
+            var inputs = container.querySelectorAll('[data-line]');
+            var data = [];
+            var table = document.querySelector(`[data-componentid='${id}']`);
+            var thArray = table.headerElement.getElementsByTagName('th');
+            for (var i = 0; i < inputs.length; i++) {
+                data.push({
+                    name: inputs[i].dataset.colName,
+                    is_visible: inputs[i].checked
+                })
+                json['data']['columns'][i]['is_visible'] = inputs[i].checked;
+            }
+            var headerWidth = adjustTableWidth(
+                table, thArray, json['data']['columns']
+            );
+            hideShowTableCols(table);
+            allColHiddenMessage(table);
+            table.style.width = headerWidth + 'px';
+            table.headerElement.style.width = headerWidth + 'px';
+            ChataUtils.putCall(url, {columns: data}, function(response){
+                modal.close();
+            }, opts)
+        }
+
+        modal.addView(container);
+        modal.addFooterElement(cancelButton);
+        modal.addFooterElement(saveButton);
+        modal.show();
+    }
+
+    obj.sendResponse = (text) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.textContent = text;
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.createSuggestions = function(responseContentContainer, data){
+        for (var i = 0; i < data.length; i++) {
+            var div = document.createElement('div');
+            var button = document.createElement('button');
+            button.classList.add('autoql-vanilla-chata-suggestion-btn');
+            button.textContent = data[i][0];
+            div.appendChild(button);
+            responseContentContainer.appendChild(div);
+            if(i == data.length-1){
+                button.classList.add('none-of-these-btn');
+                button.onclick = (evt) => {
+                    var responseLoadingContainer = obj.putMessage(
+                        evt.target.textContent
+                    );
+                    var interval = setInterval(function(){
+                        obj.drawerContent.removeChild(
+                            responseLoadingContainer
+                        );
+                        obj.sendResponse('Thank you for your feedback.');
+                        clearInterval(interval);
+                    }, 1300);
+                }
+            }else{
+                button.onclick = (evt) => {
+                    obj.sendMessage(
+                        evt.target.textContent, 'data_messenger.suggestion'
+                    );
+                }
+            }
+        }
+    }
+
+    obj.putSuggestionResponse = (jsonResponse, query) => {
+        var data = jsonResponse['data']['rows'];
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        var responseContentContainer = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-container'
+        );
+        responseContentContainer.innerHTML = `
+            <div>I'm not sure what you mean by <strong>"${query}"</strong>.
+            Did you mean:</div>
+        `;
+        obj.createSuggestions(responseContentContainer, data);
+        messageBubble.appendChild(responseContentContainer);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.putSimpleResponse = (jsonResponse) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        var idRequest = uuidv4();
+        ChataUtils.responses[idRequest] = jsonResponse;
+        containerMessage.setAttribute('data-containerid', idRequest);
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        toolbarButtons = obj.getActionToolbar(
+            idRequest, 'simple', 'table'
+        );
+        if(jsonResponse['reference_id'] !== '1.1.420'){
+            messageBubble.appendChild(toolbarButtons);
+        }
+        var value = ''
+        if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
+            value = formatData(
+                jsonResponse['data']['rows'][0][0],
+                jsonResponse['data']['columns'][0],
+                obj.options
+            );
+        }else{
+            value = jsonResponse['message'];
+        }
+        var div = document.createElement('div');
+        div.classList.add('autoql-vanilla-chata-single-response');
+        div.appendChild(document.createTextNode(value));
+        messageBubble.appendChild(div);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.putSafetynetMessage = function(suggestionArray){
+        var div = document.createElement('div');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+
+        messageBubble.append(createSafetynetContent(suggestionArray, obj));
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        // updateSelectWidth(containerMessage)
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.createHelpContent = function(link){
+        return `
+        Great news, I can help with that:
+        <br/>
+        <button
+            onclick="window.open('${link}', '_blank')"
+            class="autoql-vanilla-chata-help-link-btn">
+            ${HELP_ICON}
+            Bar chart 2
+        </button>
+        `;
+    }
+
+    obj.putHelpMessage = function(jsonResponse){
+        var div = document.createElement('div');
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('full-width');
+
+        messageBubble.innerHTML = obj.createHelpContent(
+            jsonResponse['data']['rows'][0]
+        );
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.sendMessage = (textValue, source) => {
+        obj.input.disabled = true;
+        obj.input.value = '';
+        var responseLoadingContainer = obj.putMessage(textValue);
+
+        const URL_SAFETYNET = obj.options.authentication.demo
+          ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+            textValue
+          )}&projectId=1`
+          : `${obj.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
+            textValue
+          )}&key=${obj.options.authentication.apiKey}&customer_id=${obj.options.authentication.customerId}&user_id=${obj.options.authentication.userId}`
+
+
+        ChataUtils.safetynetCall(
+            URL_SAFETYNET, function(jsonResponse, statusCode){
+            var suggestions = {};
+            if(jsonResponse != undefined){
+                var suggestions = jsonResponse['full_suggestion']
+                || jsonResponse['data']['replacements'];
+            }
+            if(statusCode != 200){
+                obj.drawerContent.removeChild(responseLoadingContainer);
+                obj.input.removeAttribute("disabled");
+                obj.sendResponse(`
+                    Uh oh.. It looks like you don't have access
+                    to this resource. Please double check that all the
+                    required authentication fields are provided.`
+                )
+            }else if(suggestions.length > 0
+                && obj.options.autoQLConfig.enableQueryValidation
+                && textValue != 'None of these'){
+                obj.input.removeAttribute("disabled");
+                obj.drawerContent.removeChild(responseLoadingContainer);
+
+                var suggestionArray = createSuggestionArray(jsonResponse);
+                obj.putSafetynetMessage(suggestionArray);
+
+            }else{
+                ChataUtils.ajaxCall(textValue, function(jsonResponse, status){
+                    obj.input.removeAttribute("disabled");
+                    obj.drawerContent.removeChild(responseLoadingContainer);
+                    switch(jsonResponse['data']['display_type']){
+                        case 'suggestion':
+                            obj.putSuggestionResponse(
+                                jsonResponse, textValue
+                            );
+                        break;
+                        case 'table':
+                            if(jsonResponse['data']['columns'].length == 1){
+                                obj.putSimpleResponse(jsonResponse);
+                            }else{
+                                obj.putTableResponse(jsonResponse);
+                            }
+                        break;
+                        case 'data':
+                            var cols = jsonResponse['data']['columns'];
+                            var rows = jsonResponse['data']['rows'];
+                            if(cols.length == 1 && rows.length == 1){
+                                if(cols[0]['name'] == 'query_suggestion'){
+                                    obj.putSuggestionResponse(
+                                        jsonResponse, textValue
+                                    );
+                                }else if(cols[0]['name'] == 'Help Link'){
+                                    obj.putHelpMessage(jsonResponse);
+                                }else{
+                                    obj.putSimpleResponse(jsonResponse);
+                                }
+                            }else{
+                                if(rows.length > 0){
+                                    obj.putTableResponse(jsonResponse);
+                                }else{
+                                    obj.putSimpleResponse(jsonResponse);
+                                }
+                            }
+                        break;
+                        case 'compare_table':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'date_pivot':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'pivot_table':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'line':
+                            var component = obj.putTableResponse(jsonResponse);
+                            createLineChart(
+                                component, jsonResponse, pbj.options
+                            );
+                            pbj.refreshToolbarButtons(component, 'line');
+                        break;
+                        case 'bar':
+                            var component = obj.putTableResponse(jsonResponse);
+                            createBarChart(
+                                component, jsonResponse, pbj.options
+                            );
+                            pbj.refreshToolbarButtons(component, 'bar');
+                        break;
+                        case 'word_cloud':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'stacked_column':
+                            var component = obj.putTableResponse(jsonResponse);
+                            obj.refreshToolbarButtons(
+                                component, 'stacked_column'
+                            );
+                            createStackedColumnChart(
+                                component, cloneObject(jsonResponse),
+                                obj.options
+                            );
+                        break;
+                        case 'stacked_bar':
+                            var component = obj.putTableResponse(jsonResponse);
+                            obj.refreshToolbarButtons(
+                                component, 'stacked_bar'
+                            );
+                            createStackedBarChart(
+                                component,
+                                cloneObject(jsonResponse), obj.options
+                            );
+                        break;
+                        case 'bubble':
+                            var component = obj.putTableResponse(
+                                jsonResponse
+                            );
+                            var cols = jsonResponse['data']['columns'];
+                            createBubbleChart(
+                                component, jsonResponse, obj.options
+                            );
+                            obj.refreshToolbarButtons(component, 'bubble');
+                        break;
+                        case 'heatmap':
+                            var component = obj.putTableResponse(jsonResponse);
+                            createHeatmap(
+                                component, jsonResponse, obj.options
+                            );
+                            obj.refreshToolbarButtons(component, 'heatmap');
+                        break;
+                        case 'pie':
+                            obj.putTableResponse(jsonResponse);
+                        break;
+                        case 'column':
+                            var component = obj.putTableResponse(
+                                jsonResponse
+                            );
+                            createColumnChart(
+                                component, jsonResponse, obj.options
+                            );
+                            obj.refreshToolbarButtons(component, 'column');
+                        break;
+                        case 'help':
+                            obj.putHelpMessage(jsonResponse);
+                        break;
+                        default:
+                            // temporary
+                            jsonResponse['data'] =
+                            'Error: There was no data supplied for this table';
+                            obj.putSimpleResponse(jsonResponse);
+                    }
+                    obj.checkMaxMessages();
+                    refreshTooltips();
+                }, obj.options, source);
+            }
+        }, obj.options);
+    }
+
+    document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
+    return obj;
 }
 
 function Modal(options={}){
@@ -28761,65 +30942,93 @@ function Tile(dashboard, options={}){
     var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
-    var drilldownOriginal = document.createElement('div');
-    var chartDrilldownContainer = document.createElement('div');
-    var drilldownTable = document.createElement('div');
+
+
+    var vizToolbarSplit = htmlToElement(`
+        <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
+            <button class="autoql-vanilla-chata-toolbar-btn">
+                <span class="autoql-vanilla-chata-icon" style="color: inherit;">
+                    ${SPLIT_VIEW}
+                </span>
+            </button>
+        </div>
+    `);
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
-    var modal = new Modal();
-    modal.chataBody.classList.add('chata-modal-full-height')
+
     chataDashboardItem.options = {
         query: '',
         title: '',
         displayType: 'table',
         w: 3,
         h: 2,
-        isSafetynet: false
+        isSafetynet: false,
+        isSplitView: false,
     }
 
     for (var [key, value] of Object.entries(options)) {
         chataDashboardItem.options[key] = value;
     }
+
+    chataDashboardItem.views = [
+        new TileView(
+            dashboard,
+            chataDashboardItem,
+            tileResponseContainer
+        )
+    ];
+
+    if(dashboard.options.splitView){
+        chataDashboardItem.views.push(
+            new TileView(
+                dashboard,
+                chataDashboardItem,
+                tileResponseContainer,
+                true
+            )
+        )
+    }
+
     const notExecutedText = options.notExecutedText
     || dashboard.options.notExecutedText;
     const placeHolderText = `
-        <div class="dashboard-tile-placeholder-text">
+        <div class="autoql-vanilla-dashboard-tile-placeholder-text">
             <em>${notExecutedText}</em>
         </div>
     `;
 
     const divider = `
-        <div class="dashboard-tile-title-divider">
+        <div class="autoql-vanilla-dashboard-tile-title-divider">
         </div>
     `;
 
     placeHolderDrag.innerHTML = `
-        <div class="placeholder-top"></div>
-        <div class="placeholder-content"></div>
+        <div class="autoql-vanilla-placeholder-top"></div>
+        <div class="autoql-vanilla-placeholder-content"></div>
     `
     var pixels = chataDashboardItem.options.h * 70;
     chataDashboardItem.style.height = pixels + 'px';
     tileResponseWrapper.style.height = 'calc(100% - 45px)';
     tileResponseContainer.style.height = 'calc(100%)';
     chataDashboardItem.view = tileResponseContainer;
-    drilldownOriginal.classList.add('chata-dashboard-drilldown-original');
-    drilldownTable.classList.add('chata-dashboard-drilldown-table');
-    chataDashboardItem.classList.add('chata-dashboard-item');
-    chataDashboardItem.classList.add(`chata-col-${chataDashboardItem.options.w}`);
-    itemContent.classList.add('item-content');
-    tileInputContainer.classList.add('dashboard-tile-input-container');
-    tileTitleContainer.classList.add('dashboard-tile-title-container');
-    tileTitle.classList.add('dashboard-tile-title-container');
 
-    tileResponseWrapper.classList.add('dashboard-tile-response-wrapper');
-    tileResponseContainer.classList.add('dashboard-tile-response-container');
-    tileTitle.classList.add('dashboard-tile-title');
-    resizeHandler.classList.add('resize-handler');
-    inputQuery.classList.add('dashboard-tile-input');
-    inputTitle.classList.add('dashboard-tile-input');
-    tilePlayBuytton.classList.add('dashboard-tile-play-button');
-    deleteButton.classList.add('dashboard-tile-delete-button');
-    placeHolderDrag.classList.add('item-content');
+    chataDashboardItem.classList.add('autoql-vanilla-chata-dashboard-item');
+    chataDashboardItem.classList.add(`autoql-vanilla-chata-col-${chataDashboardItem.options.w}`);
+    itemContent.classList.add('autoql-vanilla-item-content');
+    tileInputContainer.classList.add('autoql-vanilla-dashboard-tile-input-container');
+    tileTitleContainer.classList.add('autoql-vanilla-dashboard-tile-title-container');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container');
+
+    tileResponseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper');
+    tileResponseContainer.classList.add('autoql-vanilla-dashboard-tile-response-container');
+    tileResponseContainer.classList.add('chata-flex');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
+    resizeHandler.classList.add('autoql-vanilla-resize-handler');
+    inputQuery.classList.add('autoql-vanilla-dashboard-tile-input');
+    inputTitle.classList.add('autoql-vanilla-dashboard-tile-input');
+    tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button');
+    deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button');
+    placeHolderDrag.classList.add('autoql-vanilla-item-content');
     inputQuery.classList.add('query');
     inputTitle.classList.add('title');
 
@@ -28831,7 +31040,7 @@ function Tile(dashboard, options={}){
 
     tileResponseContainer.innerHTML = placeHolderText;
 
-    drilldownOriginal.appendChild(chartDrilldownContainer);
+
     tileInputContainer.appendChild(inputQuery);
     tileInputContainer.appendChild(inputTitle);
     tileInputContainer.appendChild(tilePlayBuytton);
@@ -28895,6 +31104,13 @@ function Tile(dashboard, options={}){
             startWidth: startWidth,
             startHeight: startHeight
         };
+        if(chataDashboardItem.options.isSplitView){
+            chataDashboardItem.views.map(view => {
+                view.refreshView(false);
+            })
+        }else{
+            chataDashboardItem.views[0].refreshView(false);
+        }
     }
 
     chataDashboardItem.itemContent = itemContent;
@@ -28946,7 +31162,7 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.inputQuery.onkeypress = function(evt){
         if(evt.keyCode == 13 && this.value){
-            chataDashboardItem.runQuery();
+            chataDashboardItem.runQuery('dashboards.user');
         }
     }
     chataDashboardItem.startEditing = function(){
@@ -28978,66 +31194,99 @@ function Tile(dashboard, options={}){
         chataDashboardItem.inputQuery.focus();
     }
 
-    chataDashboardItem.runQuery = function(){
-        var val = '';
-        if(chataDashboardItem.options.isSafetynet){
-            val = chataDashboardItem.getSafetynetValues().join(' ');
+    chataDashboardItem.runQuery = async () => {
+        tileResponseContainer.innerHTML = '';
+        if(!chataDashboardItem.options.isSplitView){
+            chataDashboardItem.views[0].runQuery('dashboards.user');
         }else{
-            val = chataDashboardItem.inputQuery.value;
-        }
-        if(val != ''){
-            var loadingContainer = chataDashboardItem.showLoadingDots();
-            DataMessenger.safetynetCall(chataDashboardItem.safetynet(val),
-                function(json, statusCode){
-                var suggestions = json['full_suggestion'] ||
-                json['data']['replacements'];
-                if(suggestions.length > 0){
-                    const message = `
-                    Before I can try to find your answer,
-                    I need your help understanding a term you used that I don't see in your data.
-                    Click the dropdown to view suggestions so I can ensure you get the right data
-                    `
-                    chataDashboardItem.options.isSafetynet = true;
-                    tileResponseContainer.removeChild(loadingContainer);
-                    var suggestionArray = createSuggestionArray(json);
-                    var responseContentContainer = document.createElement('div');
-                    responseContentContainer.innerHTML = `<div>${message}</div>`;
-                    responseContentContainer.classList.add(
-                        'chata-response-content-container'
-                    );
-                    responseContentContainer.classList.add(
-                        'chata-response-content-center'
-                    );
-                    createSafetynetBody(
-                        responseContentContainer,
-                        suggestionArray
-                    );
-                    tileResponseContainer.appendChild(
-                        responseContentContainer
-                    );
-                    updateSelectWidth(responseContentContainer);
-                }else{
-                    chataDashboardItem.options.isSafetynet = false;
-                    DataMessenger.ajaxCall(val, function(json){
-                        tileResponseContainer.removeChild(loadingContainer);
-
-                        DataMessenger.responses[uuid] = json;
-                        var displayType = chataDashboardItem.options.displayType
-                        || 'table';
-                        chataDashboardItem.refreshItem(
-                            displayType,
-                            uuid,
-                            tileResponseContainer
-                        );
-                    }, dashboard.options);
+            if(!chataDashboardItem.views[0].isSafetynet){
+                tileResponseContainer.classList.add('chata-flex');
+                loadingContainer = chataDashboardItem.showLoadingDots();
+                var elements = []
+                for (var i = 0; i < chataDashboardItem.views.length; i++) {
+                    await chataDashboardItem.views[i].runQuery('dashboards.user', false, false);
                 }
-            }, dashboard.options)
+                tileResponseContainer.removeChild(loadingContainer);
+                tileResponseContainer.classList.remove('chata-flex');
+                chataDashboardItem.views.map(view => {
+                    view.refreshView();
+                    elements.push(view.tileWrapper);
+                });
 
+                Split(elements, {
+                    direction: 'vertical',
+                    sizes: [50, 50],
+                    minSize: [0, 0],
+                    gutterSize: 7,
+                    cursor: 'row-resize',
+                    onDragEnd: () => {
+                        chataDashboardItem.views.map(
+                            view => view.refreshView(false)
+                        );
+                    }
+                })
+            }else{
+                chataDashboardItem.views[0].runQuery('dashboards.user');
+            }
+        }
+        if(dashboard.options.splitView){
+            itemContent.appendChild(vizToolbarSplit);
+            vizToolbarSplit.onclick = function(evt){
+                tileResponseContainer.innerHTML = '';
+                if(!chataDashboardItem.options.isSplitView){
+                    tileResponseContainer.classList.remove('chata-flex');
+                    chataDashboardItem.options.isSplitView = true;
+                    var splitContainer = document.createElement('div');
+                    var ids = [];
+
+                    chataDashboardItem.views.map(view => {
+                        if(view.isSecond){
+                            var viewUUID = view.uuid;
+                            var firstUUID = chataDashboardItem.views[0].uuid;
+                            if(!ChataUtils.responses[viewUUID]){
+                                ChataUtils.responses[viewUUID] = cloneObject(
+                                    ChataUtils.responses[firstUUID]
+                                );
+                            }
+                            view.internalDisplayType = 'table';
+                        }
+                        ids.push(view.tileWrapper);
+                        view.tileWrapper.classList.add('overflow');
+                        view.refreshView();
+                    });
+
+                    Split(ids, {
+                        direction: 'vertical',
+                        sizes: [50, 50],
+                        minSize: [0, 0],
+                        gutterSize: 7,
+                        cursor: 'row-resize',
+                        onDragEnd: () => {
+                            chataDashboardItem.views.map(
+                                view => view.refreshView(false)
+                            );
+                        }
+                    })
+
+                    chataDashboardItem.views.map(
+                        view => view.refreshView(false)
+                    );
+                }else{
+                    chataDashboardItem.views[0].tileWrapper.classList.remove(
+                        'overflow'
+                    );
+                    chataDashboardItem.views[0].tileWrapper
+                        .style.height = '100%';
+                    chataDashboardItem.options.isSplitView = false;
+                    chataDashboardItem.views[0].refreshView();
+                    tileResponseContainer.classList.add('chata-flex');
+                }
+            }
         }
     }
 
-    chataDashboardItem.getSafetynetValues = function(){
-        return getSafetynetValues(tileResponseContainer);
+    chataDashboardItem.getSafetynetValues = function(tileWrapper){
+        return getSafetynetValues(tileWrapper);
     }
 
     chataDashboardItem.safetynet = function(textValue){
@@ -29045,7 +31294,7 @@ function Tile(dashboard, options={}){
           ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
             textValue
           )}&projectId=1`
-          : `${dashboard.options.authentication.domain}/api/v1/chata/safetynet?text=${encodeURIComponent(
+          : `${dashboard.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
           )}&key=${dashboard.options.authentication.apiKey}&customer_id=${dashboard.options.authentication.customerId}&user_id=${dashboard.options.authentication.userId}`;
         return URL_SAFETYNET;
@@ -29055,7 +31304,7 @@ function Tile(dashboard, options={}){
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('tile-response-loading-container');
+        responseLoadingContainer.classList.add('autoql-vanilla-tile-response-loading-container');
         responseLoading.classList.add('response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
@@ -29073,22 +31322,601 @@ function Tile(dashboard, options={}){
     }
 
     tilePlayBuytton.onclick = function(event){
-        chataDashboardItem.runQuery();
+        chataDashboardItem.runQuery('dashboards.user');
     }
 
-    chataDashboardItem.createVizToolbar = function(json, uuid, ignoreDisplayType){
+    chataDashboardItem.getDisplayTypes = function(json){
+        return getSupportedDisplayTypes(json);
+    }
+
+    itemContent.onclick = function(evt){
+    };
+
+    chataDashboardItem.updateSelectedBars = function(elem){
+        var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');
+        for (var i = 0; i < selectedBars.length; i++) {
+            selectedBars[i].classList.remove('active');
+        }
+        elem.classList.add('active');
+    }
+
+    chataDashboardItem.getDrilldownData = function(json, indexData, options){
+        var queryId = json['data']['query_id'];
+        var params = {};
+        var groupables = getGroupableFields(json);
+        if(indexData != -1){
+            for (var i = 0; i < groupables.length; i++) {
+                var index = groupables[i].indexCol;
+                var value = json['data']['rows'][parseInt(indexData)][index];
+                var colData = json['data']['columns'][index]['name'];
+                params[colData] = value.toString();
+            }
+        }
+        let data;
+
+        if(options.authentication.demo){
+            data = {
+                query_id: queryId,
+                group_bys: params,
+                username: 'demo',
+                customer_id: options.authentication.customerId || "",
+                user_id: options.authentication.userId || "",
+                debug: options.autoQLConfig.debug
+            }
+        }else{
+            var cols = [];
+            for(var [key, value] of Object.entries(params)){
+                cols.push({
+                    name: key,
+                    value: value
+                })
+            }
+            data = {
+                debug: options.autoQLConfig.debug,
+                columns: cols
+            }
+        }
+        return data;
+    }
+
+    chataDashboardItem.sendDrilldownMessage = function(queryId, data, options, _uuid, callback){
+        const URL = options.authentication.demo
+          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+          : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
+        ChataUtils.ajaxCallPost(URL, function(response){
+            ChataUtils.responses[_uuid] = response;
+            callback();
+        }, data, options);
+    }
+
+    return chataDashboardItem;
+}
+
+
+function InputToolbar(text, tileWrapper) {
+    var tileToolbar = htmlToElement(`
+        <div class="autoql-vanilla-tile-toolbar autoql-vanilla-input-toolbar">
+        </div>
+    `)
+
+    var input = htmlToElement(`
+        <input class="autoql-vanilla-dashboard-tile-input query second"
+        placeholder="Query" value="${text}"
+        style="width: 0px;">
+    `)
+
+    var btn = htmlToElement(`
+        <button class="autoql-vanilla-chata-toolbar-btn autoql-vanilla-input-toolbar-btn">
+            <span class="autoql-vanilla-chata-icon autoql-vanilla-chata-toolbar-icon">
+                ${INPUT_BUBBLES}
+            </span>
+        </button>
+    `)
+
+    var arrowIcon = htmlToElement(`
+        <span class="autoql-vanilla-chata-icon"
+        style="position: absolute; top: 5px; left: 31px; font-size: 10px;">
+            ${LEFT_ARROW}
+        </span>
+    `)
+
+
+    btn.onclick = (evt) => {
+        if(input.classList.contains('open')){
+            input.classList.remove('open');
+            input.style.width = 0;
+        }else{
+            input.classList.add('open');
+            input.style.width = (tileWrapper.offsetWidth - 56) + 'px';
+        }
+    }
+
+    btn.appendChild(arrowIcon);
+    tileToolbar.appendChild(btn);
+    tileToolbar.appendChild(input);
+
+    this.btn = btn;
+    this.tileToolbar = tileToolbar;
+    this.arrowIcon = arrowIcon;
+    this.input = input;
+
+    return this;
+}
+
+
+
+function TileView(dashboard, chataDashboardItem,
+    tileResponseContainer, isSecond=false){
+    var obj = this
+    var chartDrilldownContainer = document.createElement('div');
+    var tileWrapper = document.createElement('div');
+    var drilldownTable = document.createElement('div');
+    var drilldownOriginal = document.createElement('div');
+    var responseUUID = uuidv4();
+    var modal = new Modal();
+
+    modal.chataBody.classList.add('chata-modal-full-height');
+    drilldownTable.classList.add('autoql-vanilla-chata-dashboard-drilldown-table');
+    drilldownOriginal.classList.add('autoql-vanilla-chata-dashboard-drilldown-original');
+    tileWrapper.classList.add('autoql-vanilla-chata-tile-wrapper');
+    tileWrapper.setAttribute('id', responseUUID);
+
+    obj.uuid = responseUUID;
+    obj.tileWrapper = tileWrapper;
+    obj.internalDisplayType = chataDashboardItem.options.displayType;
+    obj.isSecond = isSecond;
+
+    drilldownOriginal.appendChild(chartDrilldownContainer);
+
+    obj.getSafetynetBody = (json) => {
+        const message = `
+        Before I can try to find your answer,
+        I need your help understanding a term you used that
+        I don't see in your data.
+        Click the dropdown to view suggestions so
+        I can ensure you get the right data
+        `
+        var suggestionArray = createSuggestionArray(json);
+        var responseContentContainer = document.createElement(
+            'div'
+        );
+        responseContentContainer.innerHTML = `
+            <div>${message}</div>
+        `;
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-container'
+        );
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-center'
+        );
+        createSafetynetBody(
+            responseContentContainer,
+            suggestionArray
+        );
+
+        return responseContentContainer;
+    }
+
+    obj.runQuery = (source, showLoadingDots=true, refreshItem=true) => {
+        return new Promise(resolve => {
+            var val = '';
+            if(obj.isSafetynet && !obj.isSecond){
+                val = chataDashboardItem.getSafetynetValues(
+                    tileWrapper
+                ).join(' ');
+            }else{
+                if(obj.isSecond){
+                    val = obj.inputToolbar.input.value;
+                    obj.internalQuery = val;
+                }else{
+                    val = chataDashboardItem.inputQuery.value;
+                }
+            }
+            if(val != ''){
+                let loadingContainer;
+                if(showLoadingDots){
+                    loadingContainer = chataDashboardItem.showLoadingDots();
+                }
+                ChataUtils.safetynetCall(chataDashboardItem.safetynet(val),
+                    function(json, statusCode){
+                    var suggestions = json['full_suggestion'] ||
+                    json['data']['replacements'];
+                    if(suggestions.length > 0){
+
+                        obj.isSafetynet = true;
+
+                        if(loadingContainer){
+                            tileResponseContainer.removeChild(loadingContainer);
+                        }
+                        tileWrapper.innerHTML = '';
+                        var responseContentContainer = obj.getSafetynetBody(
+                            json
+                        );
+                        tileWrapper.appendChild(
+                            responseContentContainer
+                        );
+                        updateSelectWidth(responseContentContainer);
+                        tileResponseContainer.appendChild(tileWrapper);
+
+                        resolve();
+                    }else{
+                        obj.isSafetynet = false;
+                        ChataUtils.ajaxCall(val, function(json){
+                            if(loadingContainer){
+                                tileResponseContainer.removeChild(
+                                    loadingContainer
+                                );
+                            }
+
+                            ChataUtils.responses[responseUUID] = json;
+                            var displayType =
+                            obj.internalDisplayType
+                            || 'table';
+                            if(refreshItem){
+                                obj.refreshItem(
+                                    displayType,
+                                    responseUUID,
+                                    tileWrapper
+                                );
+                            }
+                            resolve();
+                        }, dashboard.options, source);
+                    }
+                }, dashboard.options)
+            }
+        })
+    }
+
+    obj.refreshView = (append=true) => {
+        var displayType = this.internalDisplayType;
+        var uuid = this.uuid;
+        this.refreshItem(displayType, uuid, tileWrapper, append);
+    }
+
+    obj.refreshDrilldownView =(view) =>{
+        var displayType = this.internalDisplayType;
+        var uuid = this.uuid;
+        this.refreshItem(displayType, uuid, view, false);
+    }
+
+    obj.refreshItem = (displayType, _uuid, view, append=true) => {
+        var json = ChataUtils.responses[_uuid];
+        var supportedDisplayTypes = getSupportedDisplayTypes(json);
+        if(append){
+            tileResponseContainer.appendChild(view);
+        }
+        container = view;
+        container.innerHTML = '';
+        if(!supportedDisplayTypes.includes(displayType)){
+            displayType = 'table';
+        }
+        if(supportedDisplayTypes.includes('suggestion')){
+            displayType = 'suggestion';
+        }
+        if(json['data']['rows'].length == 0){
+            console.log(displayType + '!==' + 'safetynet');
+            container.innerHTML = 'No data found.';
+            return 0;
+        }
+        switch (displayType) {
+            case 'safetynet':
+                var responseContentContainer = obj.getSafetynetBody(
+                    json
+                );
+                view.appendChild(
+                    responseContentContainer
+                );
+                updateSelectWidth(responseContentContainer);
+            break;
+            case 'table':
+                var div = createTableContainer();
+                var scrollbox = document.createElement('div');
+                var tableWrapper = document.createElement('div');
+                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+                tableWrapper.classList.add('wrapper');
+                tableWrapper.classList.add('flex');
+                tableWrapper.appendChild(div);
+                scrollbox.appendChild(tableWrapper);
+                container.appendChild(scrollbox);
+                if(json['data']['columns'].length == 1){
+                    var data = formatData(
+                        json['data']['rows'][0][0],
+                        json['data']['columns'][0],
+                        dashboard.options
+                    );
+                    container.innerHTML =
+                    `<div>
+                        <a class="autoql-vanilla-single-value-response">
+                            ${data}
+                        <a/>
+                    </div>`;
+                }else{
+                    var table = createTable(
+                        json, div, dashboard.options,
+                        'append', _uuid, 'autoql-vanilla-table-response-renderer',
+                        '[data-indexrowrenderer]'
+                    );
+                    table.classList.add('autoql-vanilla-renderer-table');
+                    tableWrapper.insertBefore(table.headerElement, div);
+                }
+                break;
+            case 'bar':
+            var chartWrapper = document.createElement('div');
+            container.appendChild(chartWrapper);
+            if(json['data']['display_type'] == 'compare_table'
+                || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChataUtils.getUniqueValues(
+                    data, row => row[0]
+                );
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0],
+                        ChataUtils.options
+                    );
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(
+                        groups[i],
+                        json['data']['columns'][0],
+                        ChataUtils.options
+                    )
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = ChataUtils.formatCompareData(
+                    json['data']['columns'], data, groups
+                );
+                createGroupedBarChart(
+                    chartWrapper,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
+                createBarChart(
+                    chartWrapper, json, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }
+
+                break;
+            case 'column':
+            var chartWrapper = document.createElement('div');
+            container.appendChild(chartWrapper);
+            if(json['data']['display_type'] == 'compare_table'
+                || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChataUtils.getUniqueValues(
+                    data, row => row[0]
+                );
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0],
+                        ChataUtils.options
+                    );
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(groups[i],
+                        json['data']['columns'][0],
+                        ChataUtils.options
+                    )
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = ChataUtils.formatCompareData(
+                    json['data']['columns'],
+                    data,
+                    groups
+                );
+                createGroupedColumnChart(
+                    chartWrapper,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
+                createColumnChart(
+                    chartWrapper,json, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }
+
+                break;
+            case 'line':
+            var chartWrapper = document.createElement('div');
+            container.appendChild(chartWrapper);
+            if(json['data']['display_type'] == 'compare_table'
+                || json['data']['columns'].length >= 3){
+                var data = cloneObject(json['data']['rows']);
+
+                var groups = ChataUtils.getUniqueValues(
+                    data, row => row[0]
+                );
+
+                groups = groups.sort();
+                for (var i = 0; i < data.length; i++) {
+                    data[i][0] = formatData(
+                        data[i][0],
+                        json['data']['columns'][0],
+                        ChataUtils.options
+                    );
+                }
+                for (var i = 0; i < groups.length; i++) {
+                    groups[i] = formatData(
+                        groups[i],
+                        json['data']['columns'][0],
+                        ChataUtils.options
+                    );
+                }
+                var cols = json['data']['columns'];
+                var dataGrouped = ChataUtils.formatCompareData(
+                    json['data']['columns'], data, groups
+                );
+                createGroupedLineChart(
+                    chartWrapper,
+                    groups,
+                    dataGrouped,
+                    cols,
+                    dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }else{
+                createLineChart(
+                    chartWrapper, json, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+            }
+
+                break;
+            case 'heatmap':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+
+                createHeatmap(chartWrapper,
+                    json,
+                    dashboard.options, false,
+                    'data-tilechart', true);
+                break;
+            case 'bubble':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createBubbleChart(
+                    chartWrapper, json, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+                break;
+            case 'stacked_bar':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createStackedBarChart(
+                    chartWrapper, json,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                break;
+            case 'stacked_column':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createStackedColumnChart(
+                    chartWrapper, json,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                break;
+            case 'pie':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createPieChart(chartWrapper, json,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                break;
+            case 'pivot_column':
+                var div = createTableContainer();
+                // var tableWrapper = document.createElement('div');
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+                // tableWrapper.classList.add('wrapper');
+                // tableWrapper.classList.add('flex');
+                // tableWrapper.appendChild(div);
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
+                var pivotArray = [];
+                var columns = json['data']['columns'];
+                if(columns[0].type === 'DATE' &&
+                columns[0].name.includes('month')){
+                    pivotArray = getDatePivotArray(
+                        json, dashboard.options, json['data']['rows']
+                    );
+                }else{
+                    pivotArray = getPivotColumnArray(
+                        json, dashboard.options, json['data']['rows']
+                    );
+                }
+                var table = createPivotTable(
+                    pivotArray, div, dashboard.options,
+                    'append', _uuid, 'autoql-vanilla-table-response-renderer'
+                );
+                scrollbox.insertBefore(table.headerElement, div);
+                break;
+            case 'suggestion':
+                var responseContentContainer = document.createElement('div');
+                responseContentContainer.classList.add(
+                    'autoql-vanilla-chata-response-content-container'
+                );
+                responseContentContainer.classList.add(
+                    'autoql-vanilla-chata-response-content-center'
+                );
+                var val = ''
+                if(obj.isSecond){
+                    val = obj.internalQuery;
+                }else{
+                    val = chataDashboardItem.inputQuery.value;
+                }
+                responseContentContainer.innerHTML = `
+                    <div>I'm not sure what you mean by
+                        <strong>"${val}"</strong>. Did you mean:
+                    </div>`;
+                container.appendChild(responseContentContainer);
+                var rows = json['data']['rows'];
+                ChataUtils.createSuggestions(
+                    responseContentContainer,
+                    rows,
+                    'autoql-vanilla-chata-suggestion-btn-renderer'
+                );
+                break;
+            default:
+            container.innerHTML = "Oops! We didn't understand that query.";
+        }
+        obj.createVizToolbar(json, _uuid, displayType);
+    }
+
+    obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {
         var displayTypes = chataDashboardItem.getDisplayTypes(json);
-        [].forEach.call(itemContent.querySelectorAll('.tile-toolbar'),
+        [].forEach.call(tileWrapper.querySelectorAll(
+            '.autoql-vanilla-tile-toolbar'
+        ),
         function(e, index){
             e.parentNode.removeChild(e);
         });
+
+        if(obj.isSecond){
+            if(!obj.internalQuery){
+                obj.internalQuery = chataDashboardItem.inputQuery.value;
+            }
+            var inputToolbar = new InputToolbar(obj.internalQuery, tileWrapper);
+            obj.inputToolbar = inputToolbar;
+            tileWrapper.appendChild(inputToolbar.tileToolbar);
+            obj.inputToolbar.input.onkeypress = (evt) => {
+                if(evt.keyCode == 13 && evt.target.value){
+                    chataDashboardItem.runQuery('dashboards.user');
+                }
+            }
+        }
+
         if(displayTypes.length > 1){
             var vizToolbar = document.createElement('div');
-            vizToolbar.classList.add('tile-toolbar');
+            vizToolbar.classList.add('autoql-vanilla-tile-toolbar');
             for (var i = 0; i < displayTypes.length; i++) {
                 if(displayTypes[i] == ignoreDisplayType)continue;
                 var button = document.createElement('button');
-                button.classList.add('chata-toolbar-btn');
+                button.classList.add('autoql-vanilla-chata-toolbar-btn');
                 button.setAttribute('data-displaytype', displayTypes[i]);
                 if(displayTypes[i] == 'table'){
                     button.innerHTML = TABLE_ICON;
@@ -29105,7 +31933,8 @@ function Tile(dashboard, options={}){
                 if(displayTypes[i] == 'line'){
                     button.innerHTML = LINE_CHART_ICON;
                 }
-                if(displayTypes[i] == 'date_pivot' || displayTypes[i] == 'pivot_column'){
+                if(displayTypes[i] == 'date_pivot'
+                    || displayTypes[i] == 'pivot_column'){
                     button.innerHTML = PIVOT_ICON;
                 }
                 if(displayTypes[i] == 'heatmap'){
@@ -29126,300 +31955,130 @@ function Tile(dashboard, options={}){
                         dashboard.lastEvent.type = 'display_type';
                         dashboard.lastEvent.value = {
                             tile: chataDashboardItem,
-                            displayType: chataDashboardItem.options.displayType
+                            displayType: obj.internalDisplayType
                         };
 
-                        chataDashboardItem.options.displayType = this.dataset.displaytype;
-                        chataDashboardItem.refreshItem(
+                        obj.internalDisplayType =
+                        this.dataset.displaytype;
+                        obj.refreshItem(
                             this.dataset.displaytype,
                             uuid,
-                            tileResponseContainer
+                            tileWrapper,
+                            false
                         )
                     }
                 }
             }
-            itemContent.appendChild(vizToolbar);
+            tileWrapper.appendChild(vizToolbar);
         }
     }
 
-    chataDashboardItem.getDisplayTypes = function(json){
-        return getSupportedDisplayTypes(json);
-    }
-
-    chataDashboardItem.refreshItem = function(displayType, _uuid, view){
-        var json = DataMessenger.responses[_uuid];
-        var supportedDisplayTypes = getSupportedDisplayTypes(json);
-        container = view;
-        container.innerHTML = '';
-        if(!supportedDisplayTypes.includes(displayType)){
-            displayType = 'table';
-        }
-        if(supportedDisplayTypes.includes('suggestion')){
-            displayType = 'suggestion';
-        }
-        this.createVizToolbar(json, _uuid, displayType);
-        if(json['data']['rows'].length == 0){
-            container.innerHTML = 'No data found.';
-            return 0;
-        }
-        switch (displayType) {
-            case 'table':
-                var div = createTableContainer();
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('chata-table-scrollbox');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                if(json['data']['columns'].length == 1){
-                    var data = formatData(
-                        json['data']['rows'][0][0],
-                        json['data']['columns'][0],
-                        dashboard.options
-                    );
-                    container.innerHTML =
-                    `<div>
-                        <a class="single-value-response">${data}<a/>
-                    </div>`;
-                }else{
-                    var table = createTable(
-                        json, div, dashboard.options,
-                        'append', _uuid, 'table-response-renderer',
-                        '[data-indexrowrenderer]'
-                    );
-                    table.classList.add('renderer-table');
-                    scrollbox.insertBefore(table.headerElement, div);
-                }
-                break;
-            case 'bar':
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedBarChart(
-                    container,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createBarChart(
-                    container, grouped, cols,
-                    hasNegativeValues, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
+    obj.tileWrapper.addEventListener('click', function(e){
+        if(e.target.dataset.tilechart){
+            chataDashboardItem.updateSelectedBars(e.target);
+            var query = chataDashboardItem.inputQuery.value;
+            var indexData = parseInt(e.target.dataset.tilechart);
+            modal.clearViews();
+            drilldownTable.innerHTML = '';
+            modal.addView(drilldownOriginal);
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var json = cloneObject(
+                ChataUtils.responses[obj.uuid]
+            );
+            var drilldownUUID = uuidv4();
+            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
+               chataDashboardItem.options.displayType == 'stacked_column'){
+                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
+                   indexData = 0;
             }
+            obj.refreshItem(
+                chataDashboardItem.options.displayType,
+                obj.uuid,
+                chartDrilldownContainer,
+                false
+            )
 
-                break;
-            case 'column':
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData, dashboard.options);
+            var queryId = json['data']['query_id'];
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('autoql-vanilla-tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                queryId,
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    obj.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable,
+                        false
+                    )
+                    obj.createVizToolbar(
+                        json, obj.uuid, obj.internalDisplayType
+                    )
                 }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedColumnChart(
-                    container,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
+            )
+            modal.show();
+            obj.refreshDrilldownView(chartDrilldownContainer);
+        }else if (e.target.parentElement.dataset.indexrowrenderer ||
+        e.target.classList.contains('autoql-vanilla-single-value-response')){
+            let query;
+            if(obj.isSecond){
+                query = obj.internalQuery;
             }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var cols = json['data']['columns'];
-                var hasNegativeValues = values[1];
-                createColumnChart(
-                    container, grouped, cols,
-                    hasNegativeValues, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
+                query = chataDashboardItem.inputQuery.value;
             }
-
-                break;
-            case 'line':
-            if(json['data']['display_type'] == 'compare_table' || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = DataMessenger.getUniqueValues(data, row => row[0]);
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(data[i][0], json['data']['columns'][0], DataMessenger.options);
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i], json['data']['columns'][0], DataMessenger.options)
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.formatCompareData(json['data']['columns'], data, groups);
-                createGroupedLineChart(
-                    container,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
-                var values = formatDataToBarChart(json, dashboard.options);
-                var grouped = values[0];
-                var hasNegativeValues = values[1];
-                var cols = json['data']['columns'];
-                createLineChart(
-                    container, grouped, cols,
-                    hasNegativeValues, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
+            modal.clearViews();
+            drilldownTable.innerHTML = '';
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var drilldownValue = '';
+            var indexData = e.target.parentElement.dataset.indexrowrenderer;
+            var json = cloneObject(
+                ChataUtils.responses[obj.uuid]
+            );
+            if(e.target.classList.contains('autoql-vanilla-single-value-response')){
+                json['data']['rows'][0][0] = e.target.textContent;
+                indexData = -1;
             }
-
-                break;
-            case 'heatmap':
-                var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
-
-                var cols = json['data']['columns'];
-
-                createHeatmap(container,
-                    labelsX, labelsY, values, cols,
-                    dashboard.options, false,
-                    'data-tilechart', true);
-                break;
-            case 'bubble':
-                var values = formatDataToHeatmap(json, dashboard.options);
-                var labelsX = DataMessenger.getUniqueValues(values, row => row.unformatX);
-                var labelsY = DataMessenger.getUniqueValues(values, row => row.unformatY);
-                labelsY = formatLabels(labelsY, json['data']['columns'][0], dashboard.options);
-                labelsX = formatLabels(labelsX, json['data']['columns'][1], dashboard.options);
-
-                var cols = json['data']['columns'];
-                createBubbleChart(
-                    container, labelsX, labelsY,
-                    values, cols, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-                break;
-            case 'stacked_bar':
-                var data = cloneObject(json['data']['rows']);
-                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                groups = groups.sort().reverse();
-                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-                createStackedBarChart(
-                    container, dataGrouped, groups,
-                    subgroups, cols,
-                    dashboard.options, false,
-                    'data-tilechart', true
-                );
-                break;
-            case 'stacked_column':
-                var data = cloneObject(json['data']['rows']);
-                var groups = DataMessenger.getUniqueValues(data, row => row[1]);
-                groups = groups.sort().reverse();
-                var subgroups = DataMessenger.getUniqueValues(data, row => row[0]);
-                var cols = json['data']['columns'];
-                var dataGrouped = DataMessenger.format3dData(json['data']['columns'], data, groups);
-                createStackedColumnChart(
-                    container, dataGrouped, groups,
-                    subgroups, cols,
-                    dashboard.options, false,
-                    'data-tilechart', true
-                );
-                break;
-            case 'pie':
-                var data = DataMessenger.groupBy(json['data']['rows'], row => row[0]);
-                var cols = json['data']['columns'];
-                createPieChart(container, data,
-                    dashboard.options, cols, false,
-                    'data-tilechart', true
-                );
-                break;
-            case 'pivot_column':
-                var div = createTableContainer();
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('chata-table-scrollbox');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                var pivotArray = [];
-                var columns = json['data']['columns'];
-                if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                    pivotArray = getDatePivotArray(
-                        json, dashboard.options, json['data']['rows']
-                    );
-                }else{
-                    pivotArray = getPivotColumnArray(
-                        json, dashboard.options, json['data']['rows']
-                    );
+            var drilldownUUID = uuidv4();
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, indexData, dashboard.options);
+            var queryId = json['data']['query_id'];
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add('autoql-vanilla-tile-response-loading-container');
+            chataDashboardItem.sendDrilldownMessage(
+                queryId,
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    obj.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable,
+                        false
+                    )
+                    obj.createVizToolbar(
+                        json, obj.uuid, obj.internalDisplayType
+                    )
                 }
-                var table = createPivotTable(
-                    pivotArray, div, 'append', uuid, 'table-response-renderer'
-                );
-                scrollbox.insertBefore(table.headerElement, div);
-                break;
-            case 'suggestion':
-                var responseContentContainer = document.createElement('div');
-                responseContentContainer.classList.add(
-                    'chata-response-content-container'
-                );
-                responseContentContainer.classList.add(
-                    'chata-response-content-center'
-                );
-                responseContentContainer.innerHTML = `
-                    <div>I'm not sure what you mean by
-                        <strong>"${inputQuery.value}"</strong>. Did you mean:
-                    </div>`;
-                container.appendChild(responseContentContainer);
-                var rows = json['data']['rows'];
-                DataMessenger.createSuggestions(
-                    responseContentContainer,
-                    rows,
-                    'chata-suggestion-btn-renderer'
-                );
-                break;
-            default:
-            container.innerHTML = "Oops! We didn't understand that query.";
+            )
+            modal.show();
         }
-    }
+    });
 
     modal.addEvent('click', function(e){
         if(e.target.dataset.tilechart){
             chataDashboardItem.updateSelectedBars(e.target)
             var json = cloneObject(
-                DataMessenger.responses[uuid]
+                ChataUtils.responses[obj.uuid]
             );
-            console.log(json);
             var drilldownUUID = uuidv4();
             var indexData = parseInt(e.target.dataset.tilechart);
 
@@ -29434,336 +32093,44 @@ function Tile(dashboard, options={}){
             }
             var drilldownData = chataDashboardItem.getDrilldownData(
                 json, indexData , dashboard.options);
+            var queryId = json['data']['query_id'];
             var dots = putLoadingContainer(drilldownTable);
             dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
+            dots.classList.add('autoql-vanilla-tile-response-loading-container');
             chataDashboardItem.sendDrilldownMessage(
+                queryId,
                 drilldownData,
                 dashboard.options,
                 drilldownUUID,
                 function(){
-                    chataDashboardItem.refreshItem(
+                    obj.refreshItem(
                         'table',
                         drilldownUUID,
-                        drilldownTable
+                        drilldownTable,
+                        false
                     )
-                    chataDashboardItem.createVizToolbar(
-                        json, uuid, chataDashboardItem.options.displayType
+                    obj.createVizToolbar(
+                        json, obj.uuid, chataDashboardItem.options.displayType
                     )
                 }
             )
-        }
-
-        if(e.target.classList.contains('column')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            console.log(container);
-            var localuuid = tableElement.dataset.componentid;
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[localuuid]);
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'desc',
-                    e.target.dataset.index,
-                    e.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var data = cloneObject(
-                    DataMessenger.responses[localuuid]
-                );
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'asc',
-                    parseInt(e.target.dataset.index),
-                    e.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
-            }
-        }
-
-        if(e.target.classList.contains('column-pivot')){
-            var container = e.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
-            );
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }else{
-                pivotArray = getPivotColumnArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }
-            if(e.target.nextSibling.classList.contains('up')){
-                e.target.nextSibling.classList.remove('up');
-                e.target.nextSibling.classList.add('down');
-                var sortData = sortPivot(
-                    pivotArray,
-                    e.target.dataset.index,
-                    'desc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                e.target.nextSibling.classList.remove('down');
-                e.target.nextSibling.classList.add('up');
-                var sortData = sortPivot(
-                    pivotArray,
-                    e.target.dataset.index,
-                    'asc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
         }
 
     });
 
-    itemContent.onclick = function(evt){
-        if(evt.target.classList.contains('chata-suggestion-btn-renderer')){
-            inputQuery.value = evt.target.textContent;
-            chataDashboardItem.runQuery();
-        }
-        if(evt.target.classList.contains('column')){
-            var container = evt.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var uuid = tableElement.dataset.componentid;
-            if(evt.target.nextSibling.classList.contains('up')){
-                evt.target.nextSibling.classList.remove('up');
-                evt.target.nextSibling.classList.add('down');
-                var data = cloneObject(DataMessenger.responses[uuid]);
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'desc',
-                    evt.target.dataset.index,
-                    evt.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
+    tileWrapper.onclick = (evt) => {
+        if(evt.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
+            if(obj.isSecond){
+                obj.internalQuery = evt.target.textContent;
+                obj.inputToolbar.input.value = evt.target.textContent;
             }else{
-                evt.target.nextSibling.classList.remove('down');
-                evt.target.nextSibling.classList.add('up');
-                var data = cloneObject(
-                    DataMessenger.responses[uuid]
-                );
-                var sortData = DataMessenger.sort(
-                    data['data']['rows'],
-                    'asc',
-                    parseInt(evt.target.dataset.index),
-                    evt.target.dataset.type
-                );
-                DataMessenger.refreshTableData(
-                    tableElement,
-                    sortData,
-                    DataMessenger.options
-                );
+                chataDashboardItem.inputQuery.value = evt.target.textContent;
             }
+            chataDashboardItem.runQuery('dashboards.suggestion');
         }
-
-        if(evt.target.classList.contains('column-pivot')){
-            var container = evt.target.parentElement.parentElement.parentElement;
-            var tableElement = container.querySelector('[data-componentid]');
-            var pivotArray = [];
-            var json = cloneObject(
-                DataMessenger.responses[tableElement.dataset.componentid]
-            );
-            var columns = json['data']['columns'];
-            if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                pivotArray = getDatePivotArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }else{
-                pivotArray = getPivotColumnArray(
-                    json,
-                    DataMessenger.options,
-                    cloneObject(json['data']['rows'])
-                );
-            }
-            if(evt.target.nextSibling.classList.contains('up')){
-                evt.target.nextSibling.classList.remove('up');
-                evt.target.nextSibling.classList.add('down');
-                var sortData = sortPivot(
-                    pivotArray,
-                    evt.target.dataset.index,
-                    'desc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }else{
-                evt.target.nextSibling.classList.remove('down');
-                evt.target.nextSibling.classList.add('up');
-                var sortData = sortPivot(
-                    pivotArray,
-                    evt.target.dataset.index,
-                    'asc'
-                );
-                //sortData.unshift([]); //Simulate header
-                DataMessenger.refreshPivotTable(tableElement, sortData);
-            }
-        }
-
-    };
-
-    chataDashboardItem.updateSelectedBars = function(elem){
-        var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');
-        for (var i = 0; i < selectedBars.length; i++) {
-            selectedBars[i].classList.remove('active');
-        }
-        elem.classList.add('active');
     }
 
-    chataDashboardItem.itemContent.addEventListener('click', function(e){
-        if(e.target.dataset.tilechart){
-            chataDashboardItem.updateSelectedBars(e.target)
-            var query = chataDashboardItem.inputQuery.value;
-            var indexData = parseInt(e.target.dataset.tilechart);
-            modal.clearViews();
-            drilldownTable.innerHTML = '';
-            modal.addView(drilldownOriginal);
-            modal.addView(drilldownTable);
-            modal.setTitle(query);
-            var json = cloneObject(
-                DataMessenger.responses[uuid]
-            );
-            var drilldownUUID = uuidv4();
-            if(chataDashboardItem.options.displayType == 'stacked_bar' ||
-               chataDashboardItem.options.displayType == 'stacked_column'){
-                   json['data']['rows'][0][0] = e.target.dataset.colvalue1;
-                   indexData = 0;
-            }
-            chataDashboardItem.refreshItem(
-                chataDashboardItem.options.displayType,
-                uuid,
-                chartDrilldownContainer
-            )
-
-            var drilldownData = chataDashboardItem.getDrilldownData(
-                json, indexData, dashboard.options);
-            var dots = putLoadingContainer(drilldownTable);
-            dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
-            chataDashboardItem.sendDrilldownMessage(
-                drilldownData,
-                dashboard.options,
-                drilldownUUID,
-                function(){
-                    chataDashboardItem.refreshItem(
-                        'table',
-                        drilldownUUID,
-                        drilldownTable
-                    )
-                    chataDashboardItem.createVizToolbar(
-                        json, uuid, chataDashboardItem.options.displayType
-                    )
-                }
-            )
-            modal.show();
-        }else if (e.target.parentElement.dataset.indexrowrenderer ||
-        e.target.classList.contains('single-value-response')){
-            var query = chataDashboardItem.inputQuery.value;
-            modal.clearViews();
-            drilldownTable.innerHTML = '';
-            modal.addView(drilldownTable);
-            modal.setTitle(query);
-            var drilldownValue = '';
-            var indexData = e.target.parentElement.dataset.indexrowrenderer;
-            var json = cloneObject(
-                DataMessenger.responses[uuid]
-            );
-            if(e.target.classList.contains('single-value-response')){
-                json['data']['rows'][0][0] = e.target.textContent;
-                indexData = -1;
-            }
-            var drilldownUUID = uuidv4();
-            var drilldownData = chataDashboardItem.getDrilldownData(
-                json, indexData, dashboard.options);
-            var dots = putLoadingContainer(drilldownTable);
-            dots.classList.remove('chat-bar-loading');
-            dots.classList.add('tile-response-loading-container');
-            chataDashboardItem.sendDrilldownMessage(
-                drilldownData,
-                dashboard.options,
-                drilldownUUID,
-                function(){
-                    chataDashboardItem.refreshItem(
-                        'table',
-                        drilldownUUID,
-                        drilldownTable
-                    )
-                    chataDashboardItem.createVizToolbar(
-                        DataMessenger.responses[uuid],
-                        uuid, chataDashboardItem.options.displayType
-                    )
-                }
-            )
-            modal.show();
-        }
-    });
-    chataDashboardItem.getDrilldownData = function(json, indexData, options){
-        const URL = options.authentication.demo
-          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
-
-        var obj = {};
-        var groupableCount = getGroupableCount(json);
-        if(indexData != -1){
-            for (var i = 0; i < groupableCount; i++) {
-                var value = json['data']['rows'][parseInt(indexData)][i];
-                var colData = json['data']['columns'][i]['name'];
-                obj[colData] = value.toString();
-            }
-        }
-
-        const data = {
-            query_id: json['data']['query_id'],
-            group_bys: obj,
-            username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-            customer_id: options.authentication.customerId || "",
-            user_id: options.authentication.userId || "",
-            debug: options.autoQLConfig.debug
-        }
-        return data;
-    }
-
-    chataDashboardItem.sendDrilldownMessage = function(data, options, _uuid, callback){
-        const URL = options.authentication.demo
-          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.authentication.domain}/api/v1/chata/query/drilldown?key=${options.authentication.apiKey}`;
-        DataMessenger.ajaxCallPost(URL, function(response){
-            DataMessenger.responses[_uuid] = response;
-            callback();
-        }, data, options);
-    }
-
-    return chataDashboardItem;
+    return obj;
 }
 
 function Dashboard(selector, options={}){
@@ -29828,6 +32195,9 @@ function Dashboard(selector, options={}){
         executeOnMount:	true,
         executeOnStopEditing: true,
         notExecutedText: 'Hit "Execute" to run this dashboard',
+        splitView: true,
+        secondDisplayType: 'table',
+        secondDisplayPercentage: 25
     }
 
     if('authentication' in options){
@@ -29876,6 +32246,7 @@ function Dashboard(selector, options={}){
             minBounceBackAngle: 10
         },
         layoutEasing: 'cubic-bezier(0.215, 0.61, 0.355, 1)',
+        layoutOnInit: true,
         dragEnabled: true,
         dragSort: function () {
             return [grid];
@@ -29908,7 +32279,7 @@ function Dashboard(selector, options={}){
             if(event.target.tagName == 'SPAN'){
                 return false;
             }
-            if(event.target.classList.contains('item-content')){
+            if(event.target.classList.contains('autoql-vanilla-item-content')){
                 if (obj.grid._settings.dragEnabled) {
                     if(event.type == 'start'){
                         obj.showPlaceHolders();
@@ -29926,7 +32297,7 @@ function Dashboard(selector, options={}){
         }
     });
 
-    grid._element.classList.add('chata-dashboard');
+    grid._element.classList.add('autoql-vanilla-chata-dashboard');
 
     obj.grid = grid;
     obj.tiles = items;
@@ -30105,8 +32476,7 @@ function Dashboard(selector, options={}){
     });
 
     obj.applyCSS();
-    obj.grid.refreshItems();
-
+    obj.grid.refreshItems().layout();
     return obj;
 }
 
@@ -31300,6 +33670,10 @@ function SettingsItem(title, message){
     wrapper.appendChild(header);
     return wrapper;
 }
+
+/*! Split.js - v1.5.11 */
+!function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Split=t()}(this,function(){"use strict";var L=window,T=L.document,N="addEventListener",R="removeEventListener",q="getBoundingClientRect",H="horizontal",I=function(){return!1},W=L.attachEvent&&!L[N],i=["","-webkit-","-moz-","-o-"].filter(function(e){var t=T.createElement("div");return t.style.cssText="width:"+e+"calc(9px)",!!t.style.length}).shift()+"calc",s=function(e){return"string"==typeof e||e instanceof String},X=function(e){if(s(e)){var t=T.querySelector(e);if(!t)throw new Error("Selector "+e+" did not match a DOM element");return t}return e},Y=function(e,t,n){var r=e[t];return void 0!==r?r:n},G=function(e,t,n,r){if(t){if("end"===r)return 0;if("center"===r)return e/2}else if(n){if("start"===r)return 0;if("center"===r)return e/2}return e},J=function(e,t){var n=T.createElement("div");return n.className="gutter gutter-"+t,n},K=function(e,t,n){var r={};return s(t)?r[e]=t:r[e]=W?t+"%":i+"("+t+"% - "+n+"px)",r},P=function(e,t){var n;return(n={})[e]=t+"px",n};return function(e,i){void 0===i&&(i={});var u,t,s,o,r,a,l=e;Array.from&&(l=Array.from(l));var c=X(l[0]).parentNode,n=getComputedStyle?getComputedStyle(c):null,f=n?n.flexDirection:null,m=Y(i,"sizes")||l.map(function(){return 100/l.length}),h=Y(i,"minSize",100),d=Array.isArray(h)?h:l.map(function(){return h}),g=Y(i,"expandToMin",!1),v=Y(i,"gutterSize",10),p=Y(i,"gutterAlign","center"),y=Y(i,"snapOffset",30),z=Y(i,"dragInterval",1),S=Y(i,"direction",H),b=Y(i,"cursor",S===H?"col-resize":"row-resize"),_=Y(i,"gutter",J),E=Y(i,"elementStyle",K),w=Y(i,"gutterStyle",P);function k(t,e,n,r){var i=E(u,e,n,r);Object.keys(i).forEach(function(e){t.style[e]=i[e]})}function x(){return a.map(function(e){return e.size})}function M(e){return"touches"in e?e.touches[0][t]:e[t]}function U(e){var t=a[this.a],n=a[this.b],r=t.size+n.size;t.size=e/this.size*r,n.size=r-e/this.size*r,k(t.element,t.size,this._b,t.i),k(n.element,n.size,this._c,n.i)}function O(){var e=a[this.a].element,t=a[this.b].element,n=e[q](),r=t[q]();this.size=n[u]+r[u]+this._b+this._c,this.start=n[s],this.end=n[o]}function C(s){var o=function(e){if(!getComputedStyle)return null;var t=getComputedStyle(e);if(!t)return null;var n=e[r];return 0===n?null:n-=S===H?parseFloat(t.paddingLeft)+parseFloat(t.paddingRight):parseFloat(t.paddingTop)+parseFloat(t.paddingBottom)}(c);if(null===o)return s;if(d.reduce(function(e,t){return e+t},0)>o)return s;var a=0,u=[],e=s.map(function(e,t){var n=o*e/100,r=G(v,0===t,t===s.length-1,p),i=d[t]+r;return n<i?(a+=i-n,u.push(0),i):(u.push(n-i),n)});return 0===a?s:e.map(function(e,t){var n=e;if(0<a&&0<u[t]-a){var r=Math.min(a,u[t]-a);a-=r,n=e-r}return n/o*100})}function D(e){if(!("button"in e&&0!==e.button)){var t=this,n=a[t.a].element,r=a[t.b].element;t.dragging||Y(i,"onDragStart",I)(x()),e.preventDefault(),t.dragging=!0,t.move=function(e){var t,n=a[this.a],r=a[this.b];this.dragging&&(t=M(e)-this.start+(this._b-this.dragOffset),1<z&&(t=Math.round(t/z)*z),t<=n.minSize+y+this._b?t=n.minSize+this._b:t>=this.size-(r.minSize+y+this._c)&&(t=this.size-(r.minSize+this._c)),U.call(this,t),Y(i,"onDrag",I)())}.bind(t),t.stop=function(){var e=this,t=a[e.a].element,n=a[e.b].element;e.dragging&&Y(i,"onDragEnd",I)(x()),e.dragging=!1,L[R]("mouseup",e.stop),L[R]("touchend",e.stop),L[R]("touchcancel",e.stop),L[R]("mousemove",e.move),L[R]("touchmove",e.move),e.stop=null,e.move=null,t[R]("selectstart",I),t[R]("dragstart",I),n[R]("selectstart",I),n[R]("dragstart",I),t.style.userSelect="",t.style.webkitUserSelect="",t.style.MozUserSelect="",t.style.pointerEvents="",n.style.userSelect="",n.style.webkitUserSelect="",n.style.MozUserSelect="",n.style.pointerEvents="",e.gutter.style.cursor="",e.parent.style.cursor="",T.body.style.cursor=""}.bind(t),L[N]("mouseup",t.stop),L[N]("touchend",t.stop),L[N]("touchcancel",t.stop),L[N]("mousemove",t.move),L[N]("touchmove",t.move),n[N]("selectstart",I),n[N]("dragstart",I),r[N]("selectstart",I),r[N]("dragstart",I),n.style.userSelect="none",n.style.webkitUserSelect="none",n.style.MozUserSelect="none",n.style.pointerEvents="none",r.style.userSelect="none",r.style.webkitUserSelect="none",r.style.MozUserSelect="none",r.style.pointerEvents="none",t.gutter.style.cursor=b,t.parent.style.cursor=b,T.body.style.cursor=b,O.call(t),t.dragOffset=M(e)-t.end}}S===H?(u="width",t="clientX",s="left",o="right",r="clientWidth"):"vertical"===S&&(u="height",t="clientY",s="top",o="bottom",r="clientHeight"),m=C(m);var A=[];function j(e){var t=e.i===A.length,n=t?A[e.i-1]:A[e.i];O.call(n);var r=t?n.size-e.minSize-n._c:e.minSize+n._b;U.call(n,r)}function F(e){var s=C(e);s.forEach(function(e,t){if(0<t){var n=A[t-1],r=a[n.a],i=a[n.b];r.size=s[t-1],i.size=e,k(r.element,r.size,n._b,r.i),k(i.element,i.size,n._c,i.i)}})}function B(n,r){A.forEach(function(t){if(!0!==r?t.parent.removeChild(t.gutter):(t.gutter[R]("mousedown",t._a),t.gutter[R]("touchstart",t._a)),!0!==n){var e=E(u,t.a.size,t._b);Object.keys(e).forEach(function(e){a[t.a].element.style[e]="",a[t.b].element.style[e]=""})}})}return(a=l.map(function(e,t){var n,r,i,s={element:X(e),size:m[t],minSize:d[t],i:t};if(0<t&&((n={a:t-1,b:t,dragging:!1,direction:S,parent:c})._b=G(v,t-1==0,!1,p),n._c=G(v,!1,t===l.length-1,p),"row-reverse"===f||"column-reverse"===f)){var o=n.a;n.a=n.b,n.b=o}if(!W&&0<t){var a=_(t,S,s.element);r=a,i=w(u,v,t),Object.keys(i).forEach(function(e){r.style[e]=i[e]}),n._a=D.bind(n),a[N]("mousedown",n._a),a[N]("touchstart",n._a),c.insertBefore(a,s.element),n.gutter=a}return k(s.element,s.size,G(v,0===t,t===l.length-1,p),t),0<t&&A.push(n),s})).forEach(function(e){var t=e.element[q]()[u];t<e.minSize&&(g?j(e):e.minSize=t)}),W?{setSizes:F,destroy:B}:{setSizes:F,getSizes:x,collapse:function(e){j(a[e])},destroy:B,parent:c,pairs:A}}});
+//# sourceMappingURL=split.min.js.map
 
 // d3.tip
 // Copyright (c) 2013 Justin Palmer

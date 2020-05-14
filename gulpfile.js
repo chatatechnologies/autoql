@@ -16,6 +16,7 @@ gulp.task('scripts', function() {
             "src/svgIcons.js",
             "src/constants.js",
             "src/utils.js",
+            "src/ChataChartHelpers.js",
             "src/Safetynet.js",
             "src/ChataTable.js",
             "src/ChataHeatmapChart.js",
@@ -25,12 +26,14 @@ gulp.task('scripts', function() {
             "src/ChataLineChart.js",
             "src/ChataStackedColumnChart.js",
             "src/ChataStackedBarChart.js",
+            "src/ChataAreaChart.js",
             "src/ChataGroupedColumnChart.js",
             "src/ChataGroupedLineChart.js",
             "src/ChataGroupedBarChart.js",
             "src/ChataPieChart.js",
-            "src/ResponseRenderer.js",
-            "src/ChatBar.js",
+            "src/QueryOutput.js",
+            "src/QueryInput.js",
+            "src/ChataUtils.js",
             "src/DataMessenger.js",
             "src/Modal.js",
             "src/Tile.js",
@@ -40,6 +43,7 @@ gulp.task('scripts', function() {
             "src/NotificationSettingsModal.js",
             "src/Settings.js",
             "src/SettingsItem.js",
+            "src/split.min.js"
         ], { base: './' }))
         .pipe(concat('autoql.js'))
         .pipe(minify())

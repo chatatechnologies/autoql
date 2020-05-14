@@ -11,8 +11,7 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     var groupableIndex1 = groupables[0].indexCol;
     var groupableIndex2 = groupables[1].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
-
-
+    var columns = json['data']['columns'];
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
@@ -22,8 +21,9 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
+    // var data = responseToArrayObjects(json, groups);
     var data = ChataUtils.format3dData(json, groups);
-
+    console.log(data);
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
     var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
@@ -140,7 +140,6 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
         }
         return sum;
     });
-    console.log(maxValue);
 
     var y = d3.scaleLinear()
     .domain([0, maxValue])
@@ -161,75 +160,38 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-    console.log(subgroups);
+
+    // var sumstat = d3.nest()
+    // .key(function(d) { return d.group;})
+    // .entries(data);
+
+    // console.log(sumstat);
+    // console.log(subgroups);
     var stackedData = d3.stack()
     .keys(subgroups)
+    .value(function(d, key){
+        // if(isNaN())
+        var val = parseFloat(d[key]);
+        if(isNaN(val)){
+            return 0
+        }
+        return val;
+    })
     (data)
 
     console.log(stackedData);
 
-    // svg.append("g")
-    // .selectAll("g")
-    // .data(stackedData)
-    // .enter().append("g")
-    // .attr("fill", function(d) {
-    //     return color(d.key);
-    // })
-    // .selectAll("rect")
-    // .data(function(d) { return d; })
-    // .enter().append("rect")
-    // .each(function (d, i) {
-    //     var pos = d[1];
-    //     var sum = 0;
-    //     for (var [key, value] of Object.entries(d.data)){
-    //         if(key == 'group')continue;
-    //         sum += parseFloat(value);
-    //         if(sum == pos){
-    //             d.value = value;
-    //             d.labelY = key;
-    //             break;
-    //         }
-    //     }
-    //     d3.select(this).attr(valueClass, i)
-    //     .attr('data-col1', col1)
-    //     .attr('data-col2', col2)
-    //     .attr('data-col3', col3)
-    //     .attr('data-colvalue1', d.labelY)
-    //     .attr('data-colvalue2', formatData(
-    //         d.data.group, cols[groupableIndex2], options
-    //     ))
-    //     .attr('data-colvalue3', formatData(
-    //         d.value, cols[notGroupableIndex],
-    //         options
-    //     ))
-    //     .attr('data-unformatvalue1', d.labelY)
-    //     .attr('data-unformatvalue2', d.data.group)
-    //     .attr('data-unformatvalue3', d.value)
-    // })
-    // .attr('opacity', '0.7')
-    // .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-    // .attr("x", function(d) {
-    //     if(d.data.group.length < 15){
-    //         return x(d.data.group);
-    //     }else{
-    //         return x(d.data.group.slice(0,15)+'...');
-    //     }
-    // })
-    // .attr("y", function(d) {
-    //     if(isNaN(d[1])){
-    //         return 0;
-    //     }else{
-    //         return Math.abs(y(d[1])) + 0.5;
-    //     }
-    // })
-    // .attr("height", function(d) {
-    //     if(isNaN([d[1]])){
-    //         return 0;
-    //     }else{
-    //         return Math.abs(y(d[0]) - y(d[1]) - 0.5);
-    //     }
-    // })
-    // .attr("width",x.bandwidth())
+    svg.selectAll("mylayers")
+    .data(stackedData)
+    .enter()
+    .append("path")
+    .style("fill", function(d, i) { return color(d[i].data.group); })
+    .attr('opacity', '0.7')
+    .attr("d", d3.area()
+        .x(function(d, i) { return x(d.data.group); })
+        .y0(function(d) { return y(d[0]); })
+        .y1(function(d) { return y(d[1]); })
+    )
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')

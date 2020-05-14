@@ -95,6 +95,31 @@ const getGroupableFields = (json) => {
     return groupables;
 }
 
+const responseToArrayObjects = (json, groups) => {
+    var dataGrouped = [];
+    var data = json['data']['rows'];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        dataGrouped.push({key: group, values: []});
+        for (var x = 0; x < data.length; x++) {
+            if(data[x][groupableIndex2] == group){
+                dataGrouped[i].values.push(
+                    data[x]
+                )
+            }
+        }
+    }
+
+    return dataGrouped;
+}
+
 const getMinAndMaxValues = (data) => {
     const maxValuesFromArrays = []
     const minValuesFromArrays = []

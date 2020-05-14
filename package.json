@@ -18,7 +18,7 @@
   "homepage": "https://gitlab.com/vicente_rincon/widget#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
-    "gulp-clean-css": "^4.2.0",
+    "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-minify": "^3.1.0",
     "gulp-order": "^1.2.0"

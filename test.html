@@ -124,6 +124,7 @@
     d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered.csv", function(data) {
 
         // group the data: one array for each value of the X axis.
+        console.log(data);
         var sumstat = d3.nest()
         .key(function(d) { return d.year;})
         .entries(data);
