@@ -23,7 +23,6 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     var cols = json['data']['columns'];
     // var data = responseToArrayObjects(json, groups);
     var data = ChataUtils.format3dData(json, groups);
-    console.log(data);
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
     var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
@@ -161,16 +160,9 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     svg.append("g")
     .call(yAxis).select(".domain").remove();
 
-    // var sumstat = d3.nest()
-    // .key(function(d) { return d.group;})
-    // .entries(data);
-
-    // console.log(sumstat);
-    // console.log(subgroups);
     var stackedData = d3.stack()
     .keys(subgroups)
     .value(function(d, key){
-        // if(isNaN())
         var val = parseFloat(d[key]);
         if(isNaN(val)){
             return 0
@@ -178,7 +170,23 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
         return val;
     })
     (data)
+    var points = [];
+    for (var i = 0; i < stackedData.length; i++) {
+        for (var _x = 0; _x < stackedData[i].length; _x++) {
+            var seriesValues = stackedData[i][_x].data;
+            for (var [key, value] of Object.entries(seriesValues)) {
+                if(key === 'group')continue;
+                points.push({
+                    group: seriesValues.group,
+                    y: value,
+                    y1: stackedData[i][_x][1],
+                    y0: stackedData[i][_x][0]
+                })
+            }
+        }
+    }
 
+    console.log(points);
     console.log(stackedData);
 
     svg.selectAll("mylayers")
@@ -192,6 +200,32 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
         .y0(function(d) { return y(d[0]); })
         .y1(function(d) { return y(d[1]); })
     )
+
+    svg.selectAll("circle")
+    .data(points)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("r", 4)
+    .attr('class', 'tooltip-2d line-dot')
+    .attr('stroke', function(d) {'transparent' })
+    .attr('stroke-width', '3')
+    .attr('stroke-opacity', '0.7')
+    .attr("fill", 'transparent')
+    .attr("fill-opacity", '1')
+    .on("mouseover", function(d, i){
+        d3.select(this).
+        attr("stroke", color(d.group))
+        .attr('fill', 'white')
+    })
+    .on("mouseout", function(d, i){
+        d3.select(this).
+        attr("stroke", 'transparent')
+        .attr('fill', 'transparent')
+    })
+    .attr("cx", function(d) { return x(d.group); })
+    .attr("cy", function(d) { return y(d.y); });
+
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
