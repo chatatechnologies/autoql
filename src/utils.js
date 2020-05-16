@@ -969,6 +969,18 @@ function hideShowTableCols(table){
     }
 }
 
+function getStringWidth(string){
+    const div = document.createElement('div')
+    div.innerHTML = string;
+    div.style.display = 'inline-block';
+    div.style.position = 'absolute';
+    div.style.visibility = 'hidden';
+    document.body.appendChild(div);
+    var width = div.offsetWidth;
+    document.body.removeChild(div);
+    return width;
+}
+
 function allColHiddenMessage(table){
     const requestId = table.dataset.componentid;
     const json = ChataUtils.responses[requestId];

@@ -96,22 +96,26 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
 
-    var textContainerY = labelXContainer.append('text')
+    // Y AXIS
+    var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
     .attr('y', -margin.left + margin.right)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
-
     textContainerY.append('tspan')
     .text(col2)
 
-    textContainerY.append('tspan')
-    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    .text('▼')
-    .style('font-size', '8px')
+    if(hasLegend){
+        textContainerY.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+    }
 
-    var textContainerX = labelYContainer.append('text')
+
+    // X AXIS
+    var textContainerX = labelXContainer.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.marginLabel + 3)
     .attr('text-anchor', 'middle')
@@ -120,10 +124,40 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     textContainerX.append('tspan')
     .text(col1);
 
-    textContainerX.append('tspan')
-    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    .text('▼')
-    .style('font-size', '8px')
+
+    if(hasLegend){
+        textContainerX.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+
+        labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const yWidthRect = getStringWidth(col1) + paddingRect;
+        const _x = (width / 2) - (yWidthRect/2) - (paddingRect/2);
+        const _y = height - (margin.marginLabel/2) + 3;
+        labelXContainer.append('rect')
+        .attr('x', _x)
+        .attr('y', _y)
+        .attr('height', 24)
+        .attr('width', yWidthRect + paddingRect)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+        labelXContainer.on('mouseup', (evt) => {
+            console.log(labelXContainer);
+            var popoverSelector = new PopoverChartSelector({
+                left: d3.event.clientX + 'px',
+                top: d3.event.clientY + 'px'
+            });
+            console.log();
+            // console.log(d3.mouse(this)[0]);
+        })
+    }
+
 
     var x = d3.scaleBand()
     .domain(data.map(function(d) {

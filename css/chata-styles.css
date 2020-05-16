@@ -1743,6 +1743,23 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-chata-axis-selector-arrow{
     opacity: 1 !important;
 }
+.autoql-vanilla-x-axis-label-border, .autoql-vanilla-y-axis-label-border {
+    stroke: transparent;
+    opacity: .5;
+    transition: stroke .3s ease;
+    z-index: 3;
+}
+
+.autoql-vanilla-x-axis-label-border:hover, .autoql-vanilla-y-axis-label-border:hover{
+}
+
+.autoql-vanilla-chart-selector{
+    cursor: pointer;
+}
+.autoql-vanilla-chart-selector:hover .autoql-vanilla-x-axis-label-border,
+.autoql-vanilla-chart-selector:hover .autoql-vanilla-y-axis-label-border {
+    stroke: #508bb8;
+}
 
 @-webkit-keyframes fadeIn {
   0% {
