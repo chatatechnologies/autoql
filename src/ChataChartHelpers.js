@@ -1,8 +1,12 @@
-const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
+const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
     var columns = json['data']['columns'];
-
+    var seriesIndexes = []
+    seriesCols.map((col) => {
+        seriesIndexes.push(col.index);
+    })
+    console.log(seriesIndexes);
     var seriesData = [];
     // console.log(groupable.length);
     // console.log(colu.length);
@@ -13,22 +17,23 @@ const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
             let label = formatData(
                 data[i][group.indexCol], group.jsonCol, options
             );
-
+            var colName = columns[group.indexCol].display_name ||
+            columns[group.indexCol].name;
             var serie = {
                 label: label,
                 values: [
                     {
                         value: parseFloat(data[i][value.indexCol]),
-                        group: formatColumnName(columns[group.indexCol].name),
-                        index: i
+                        group: formatColumnName(colName),
+                        index: value.indexCol
                     }
                 ]
             }
             seriesData.push(serie);
         }
     }else{
-        seriesData = groupByIndex(data, columns, 0, [1,2]);
-        console.log(seriesData);
+        // seriesData = groupByIndex(data, columns, 0, [1,2]);
+        seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
     }
 
     return seriesData;
@@ -38,9 +43,12 @@ const getObjectValues = (item, columns, seriesIndexes) => {
     var values = []
     for (var i = 0; i < seriesIndexes.length; i++) {
         var obj = {};
+        var colName = columns[seriesIndexes[i]]['display_name'] ||
+        columns[seriesIndexes[i]]['name'];
+
         obj['value'] = item[seriesIndexes[i]];
         obj['index'] = seriesIndexes[i];
-        obj['group'] = formatColumnName(columns[seriesIndexes[i]]['name']);
+        obj['group'] = formatColumnName(colName);
         values.push(obj);
     }
     return values;
@@ -148,3 +156,22 @@ const groupBy = (items, key) => items.reduce(
     }),
     {},
 );
+
+const getIndexesByType = (cols) => {
+    var output = {};
+    for (var i = 0; i < cols.length; i++) {
+        var col = cols[i];
+        if(!output[col.type]){
+            output[col.type] = [
+                {col: col, index: i}
+            ]
+        }else{
+            output[col.type].push({
+                col: col,
+                index: i
+            })
+        }
+    }
+
+    return output;
+}

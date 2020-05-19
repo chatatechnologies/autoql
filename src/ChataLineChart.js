@@ -1,6 +1,4 @@
 function createLineChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var data = makeGroups(json, options, [], -1);
-    const minMaxValues = getMinAndMaxValues(data);
     var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -9,11 +7,42 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     var groupableField = getGroupableField(json);
     var notGroupableField = getNotGroupableField(json);
+    var groupables = getGroupables(json);
+    var indexList = getIndexesByType(cols);
+    var xIndexes = [];
+    var yIndexes = [];
 
-    var index1 = notGroupableField.indexCol;
-    var index2 = groupableField.indexCol;
-    console.log(index2);
-    console.log(index1);
+    console.log(groupables);
+
+    if(indexList['STRING']){
+        xIndexes.push(...indexList['STRING'])
+    }
+
+    if(indexList['DATE']){
+        xIndexes.push(...indexList['DATE'])
+    }
+
+    if(indexList['DATE_STRING']){
+        xIndexes.push(...indexList['DATE_STRING'])
+    }
+
+    console.log(yIndexes);
+
+    if(!indexList['DOLLAR_AMT']){
+        yIndexes = indexList['DOLLAR_AMT'];
+    }else if(indexList['QUANTITY']){
+        yIndexes = indexList['QUANTITY'];
+    }
+
+    console.log(xIndexes);
+    console.log(yIndexes);
+
+    var data = makeGroups(json, options, yIndexes, xIndexes[0].index);
+    const minMaxValues = getMinAndMaxValues(data);
+    var index1 = yIndexes[0].index;
+    var index2 = xIndexes[0].index;
+
+
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
@@ -124,8 +153,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     textContainerX.append('tspan')
     .text(col1);
 
-
-    if(hasLegend){
+    if(yIndexes.length > 0){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -148,12 +176,10 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
         labelXContainer.on('mouseup', (evt) => {
-            console.log(labelXContainer);
             var popoverSelector = new PopoverChartSelector({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            });
-            console.log();
+            }, xIndexes);
             // console.log(d3.mouse(this)[0]);
         })
     }
