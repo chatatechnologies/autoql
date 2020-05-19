@@ -1648,7 +1648,6 @@ function DataMessenger(elem, options){
             elements[i].onclick = (evt) => {
                 handler.apply(null, [evt, component.dataset.componentid])
                 obj.updateSelectedBar(evt, component);
-
             }
         }
     }

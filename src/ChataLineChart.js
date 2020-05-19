@@ -2,18 +2,20 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-
-    var cols = json['data']['columns'];
-
-    var groupableField = getGroupableField(json);
-    var notGroupableField = getNotGroupableField(json);
-    var groupables = getGroupables(json);
+    var cols = enumerateCols(json);
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
 
-    console.log(groupables);
-
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            xAxis: {
+                xAxisIndex: 0,
+                currentLi: 0,
+            }
+        }
+    }
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
     }
@@ -26,21 +28,17 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         xIndexes.push(...indexList['DATE_STRING'])
     }
 
-    console.log(yIndexes);
-
-    if(!indexList['DOLLAR_AMT']){
+    if(indexList['DOLLAR_AMT']){
         yIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
     }
 
-    console.log(xIndexes);
-    console.log(yIndexes);
-
-    var data = makeGroups(json, options, yIndexes, xIndexes[0].index);
+    var xAxisIndex = metadataComponent.metadata.xAxis.xAxisIndex;
+    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
     var index1 = yIndexes[0].index;
-    var index2 = xIndexes[0].index;
+    var index2 = cols[xAxisIndex].index;
 
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
@@ -135,13 +133,12 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     textContainerY.append('tspan')
     .text(col2)
 
-    if(hasLegend){
+    if(yIndexes.length > 1){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
         .style('font-size', '8px')
     }
-
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
@@ -153,7 +150,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     textContainerX.append('tspan')
     .text(col1);
 
-    if(yIndexes.length > 0){
+    if(xIndexes.length > 1){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -162,8 +159,13 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
         const paddingRect = 15;
         const yWidthRect = getStringWidth(col1) + paddingRect;
+        var _y = 0;
         const _x = (width / 2) - (yWidthRect/2) - (paddingRect/2);
-        const _y = height - (margin.marginLabel/2) + 3;
+        if(hasLegend){
+            _y = height - (margin.marginLabel/2) + 3;
+        }else{
+            _y = height + (margin.marginLabel/2) + 6;
+        }
         labelXContainer.append('rect')
         .attr('x', _x)
         .attr('y', _y)
@@ -176,11 +178,27 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
         labelXContainer.on('mouseup', (evt) => {
-            var popoverSelector = new PopoverChartSelector({
+            const selectedItem = metadataComponent.metadata.xAxis.currentLi;
+            var popoverSelector = new ChataChartListPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            }, xIndexes);
-            // console.log(d3.mouse(this)[0]);
+            }, xIndexes, (evt, popover) => {
+                var xAxisIndex = evt.target.dataset.popoverIndex;
+                var currentLi = evt.target.dataset.popoverPosition;
+                metadataComponent.metadata.xAxis.xAxisIndex = xAxisIndex;
+                metadataComponent.metadata.xAxis.currentLi = currentLi;
+                createLineChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+
+            popoverSelector.setSelectedItem(selectedItem)
         })
     }
 
@@ -200,7 +218,9 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     if(barWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index2], options);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -208,7 +228,9 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index2], options);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .style("text-anchor", "center")
@@ -260,7 +282,10 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', d.label)
+        .attr('data-colvalue1', formatData(
+            d.label, cols[index2],
+            options
+        ))
         .attr('data-colvalue2',formatData(
             d.value, cols[index1],
             options

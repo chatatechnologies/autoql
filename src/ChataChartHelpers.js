@@ -47,7 +47,7 @@ const getObjectValues = (item, columns, seriesIndexes) => {
         columns[seriesIndexes[i]]['name'];
 
         obj['value'] = item[seriesIndexes[i]];
-        obj['index'] = seriesIndexes[i];
+        obj['index'] = i;
         obj['group'] = formatColumnName(colName);
         values.push(obj);
     }
@@ -75,6 +75,15 @@ const convertoTo2DChartData = (groupedData) => {
         })
     }
     return output;
+}
+
+const enumerateCols = (json) => {
+    var clone = cloneObject(json['data']['columns']);
+    for (var i = 0; i < clone.length; i++) {
+        clone[i].index = i;
+    }
+
+    return clone;
 }
 
 const getLabel = (label) => {
@@ -174,4 +183,10 @@ const getIndexesByType = (cols) => {
     }
 
     return output;
+}
+
+const getMetadataElement = (component, isDataMessenger) => {
+    if(isDataMessenger){
+        return component.parentElement.parentElement
+    }
 }
