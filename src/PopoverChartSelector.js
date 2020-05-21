@@ -27,6 +27,18 @@ function PopoverChartSelector(position) {
     return obj;
 }
 
+function ChataChartSeriesPopover(position, series, onClick){
+    var obj = this;
+    var popover = new PopoverChartSelector(position);
+    obj.createContent = () => {
+        popover.appendContent(htmlToElement('<div>TEST</div>'))
+    }
+    obj.createContent();
+    popover.show();
+    console.log(series);
+    return popover;
+}
+
 function ChataChartListPopover(position, indexes, onClick){
     var obj = this;
     var popover = new PopoverChartSelector(position);

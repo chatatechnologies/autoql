@@ -10,8 +10,8 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
-            xAxis: {
-                xAxisIndex: 0,
+            groupBy: {
+                index: 0,
                 currentLi: 0,
             }
         }
@@ -34,7 +34,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         yIndexes = indexList['QUANTITY'];
     }
 
-    var xAxisIndex = metadataComponent.metadata.xAxis.xAxisIndex;
+    var xAxisIndex = metadataComponent.metadata.groupBy.index;
     var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
     var index1 = yIndexes[0].index;
@@ -126,7 +126,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -margin.left + margin.right + 5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -138,6 +138,45 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
         .style('font-size', '8px')
+        labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col1) + paddingRect;
+
+        labelYContainer.append('rect')
+        .attr('x', 66)
+        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+        .attr('height', xWidthRect + paddingRect)
+        .attr('width', 24)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('transform', 'rotate(-180)')
+        .attr('class', 'autoql-vanilla-y-axis-label-border')
+
+        labelYContainer.on('mouseup', (evt) => {
+            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+            var popoverSelector = new ChataChartSeriesPopover({
+                left: d3.event.clientX + 'px',
+                top: d3.event.clientY + 'px'
+            }, yIndexes, (evt, popover) => {
+                // var yAxisIndex = evt.target.dataset.popoverIndex;
+                // var currentLi = evt.target.dataset.popoverPosition;
+                // metadataComponent.metadata.groupBy.index = yAxisIndex;
+                // metadataComponent.metadata.groupBy.currentLi = currentLi;
+                // createColumnChart(
+                //     component,
+                //     json,
+                //     options,
+                //     fromChataUtils,
+                //     valueClass,
+                //     renderTooltips
+                // )
+                popover.close();
+            });
+
+            // popoverSelector.setSelectedItem(selectedItem)
+        })
     }
 
     // X AXIS
@@ -158,9 +197,9 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
         const paddingRect = 15;
-        const yWidthRect = getStringWidth(col1) + paddingRect;
+        const xWidthRect = getStringWidth(col1) + paddingRect;
         var _y = 0;
-        const _x = (width / 2) - (yWidthRect/2) - (paddingRect/2);
+        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
         if(hasLegend){
             _y = height - (margin.marginLabel/2) + 3;
         }else{
@@ -170,7 +209,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('x', _x)
         .attr('y', _y)
         .attr('height', 24)
-        .attr('width', yWidthRect + paddingRect)
+        .attr('width', xWidthRect + paddingRect)
         .attr('fill', 'transparent')
         .attr('stroke', '#508bb8')
         .attr('stroke-width', '1px')
@@ -178,15 +217,15 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
         labelXContainer.on('mouseup', (evt) => {
-            const selectedItem = metadataComponent.metadata.xAxis.currentLi;
+            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
-                metadataComponent.metadata.xAxis.xAxisIndex = xAxisIndex;
-                metadataComponent.metadata.xAxis.currentLi = currentLi;
+                metadataComponent.metadata.groupBy.index = xAxisIndex;
+                metadataComponent.metadata.groupBy.currentLi = currentLi;
                 createLineChart(
                     component,
                     json,
