@@ -28,7 +28,8 @@ function PopoverChartSelector(position) {
 }
 
 
-function ChataChartSeriesPopover(position, cols, onClick){
+function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
+
     var createCheckbox = (column, checked=false) => {
         var colObj = column.col;
         var colName = colObj.display_name || colObj.name;
@@ -41,16 +42,22 @@ function ChataChartSeriesPopover(position, cols, onClick){
         var checkboxWrapper = document.createElement('div');
         var checkboxInput = document.createElement('input');
         checkboxInput.setAttribute('type', 'checkbox');
+
         checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
         if(name){
             checkboxInput.setAttribute('data-col-name', colName);
         }
         checkboxInput.setAttribute('data-col-index', column.index);
-        checkboxContainer.style.width = '18px';
+        checkboxInput.col = column;
+        tick.style.top = '3px';
+        tick.style.left = '23px';
+        checkboxInput.style.marginTop = '4.5px';
+        checkboxInput.style.marginLeft = '20px';
+
+        checkboxContainer.style.width = '38px';
         checkboxContainer.style.height = '18px';
-        checkboxWrapper.style.width = '18px';
+        checkboxWrapper.style.width = '38px';
         checkboxWrapper.style.height = '18px';
-        checkboxWrapper.style.marginTop = '4.5px';
         checkboxWrapper.style.position = 'relative';
 
         if(checked){
@@ -64,8 +71,13 @@ function ChataChartSeriesPopover(position, cols, onClick){
         checkboxContainer.input = checkboxInput;
         return checkboxContainer;
     }
+
     var obj = this;
     var indexList = getIndexesByType(cols);
+    var seriesIndexes = [];
+    activeSeries.map((col) => {
+        seriesIndexes.push(col.index);
+    })
     var series = {};
     if(indexList['DOLLAR_AMT']){
         series['Currency'] = [...indexList['DOLLAR_AMT']]
@@ -77,8 +89,20 @@ function ChataChartSeriesPopover(position, cols, onClick){
 
     var popover = new PopoverChartSelector(position);
     obj.createContent = () => {
+        const applyButton = htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-btn primary"
+                style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
+                    Apply
+            </button>
+        `);
         var content = document.createElement('div');
+        var wrapper = document.createElement('div');
+        var buttonWrapper = document.createElement('div');
+
         content.classList.add('autoql-vanilla-axis-selector-container');
+        buttonWrapper.style.backgroundColor = 'rgb(255, 255, 255)';
+        buttonWrapper.style.padding = '5px';
 
         for(var [key, value] of Object.entries(series)){
             var header = document.createElement('div');
@@ -90,10 +114,13 @@ function ChataChartSeriesPopover(position, cols, onClick){
             header.classList.add('number-selector-header');
             header.innerHTML = key;
             content.appendChild(header);
+
             for (var i = 0; i < cols.length; i++) {
                 var listItem = document.createElement('div');
                 var colName = document.createElement('div');
-                var checkbox = createCheckbox(cols[i]);
+                var colIndex = cols[i].index;
+                var isChecked = seriesIndexes.includes(colIndex);
+                var checkbox = createCheckbox(cols[i], isChecked);
                 var n = cols[i].col.display_name ||
                 cols[i].col.name;
                 colName.innerHTML = formatColumnName(n);
@@ -105,11 +132,27 @@ function ChataChartSeriesPopover(position, cols, onClick){
             content.appendChild(selectableList);
         }
 
-        popover.appendContent(content);
+        applyButton.onclick = (evt) => {
+            var inputs = content.querySelectorAll(
+                '.autoql-vanilla-m-checkbox__input'
+            );
+            var activeSeries = []
+            for (var i = 0; i < inputs.length; i++) {
+                if(inputs[i].checked){
+                    activeSeries.push(inputs[i].col);
+                }
+            }
+
+            onClick(evt, popover, activeSeries);
+        }
+
+        buttonWrapper.appendChild(applyButton);
+        wrapper.appendChild(content);
+        wrapper.appendChild(buttonWrapper);
+        popover.appendContent(wrapper);
     }
     obj.createContent();
     popover.show();
-    console.log(series);
     return popover;
 }
 

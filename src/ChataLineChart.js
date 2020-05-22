@@ -7,15 +7,6 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     var xIndexes = [];
     var yIndexes = [];
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        metadataComponent.metadata = {
-            groupBy: {
-                index: 0,
-                currentLi: 0,
-            }
-        }
-    }
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
     }
@@ -33,11 +24,22 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
     }
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            },
+            series: yIndexes
+        }
+    }
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
-    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
+    var activeSeries = metadataComponent.metadata.series;
+    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
-    var index1 = yIndexes[0].index;
+    var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
 
 
@@ -155,27 +157,21 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
         labelYContainer.on('mouseup', (evt) => {
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            }, cols, (evt, popover) => {
-                // var yAxisIndex = evt.target.dataset.popoverIndex;
-                // var currentLi = evt.target.dataset.popoverPosition;
-                // metadataComponent.metadata.groupBy.index = yAxisIndex;
-                // metadataComponent.metadata.groupBy.currentLi = currentLi;
-                // createColumnChart(
-                //     component,
-                //     json,
-                //     options,
-                //     fromChataUtils,
-                //     valueClass,
-                //     renderTooltips
-                // )
+            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+                metadataComponent.metadata.series = _activeSeries;
+                createLineChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
                 popover.close();
             });
-
-            // popoverSelector.setSelectedItem(selectedItem)
         })
     }
 

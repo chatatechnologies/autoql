@@ -1,5 +1,5 @@
 function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 130, marginLabel: 50},
+    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -7,15 +7,6 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     var xIndexes = [];
     var yIndexes = [];
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        metadataComponent.metadata = {
-            groupBy: {
-                index: 0,
-                currentLi: 0,
-            }
-        }
-    }
     if(indexList['STRING']){
         yIndexes.push(...indexList['STRING'])
     }
@@ -34,10 +25,21 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         xIndexes = indexList['QUANTITY'];
     }
 
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            },
+            series: xIndexes
+        }
+    }
     var yAxisIndex = metadataComponent.metadata.groupBy.index;
-    var data = makeGroups(json, options, xIndexes, cols[yAxisIndex].index);
+    var activeSeries = metadataComponent.metadata.series;
+    var data = makeGroups(json, options, activeSeries, cols[yAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
-    var index1 = xIndexes[0].index;
+    var index1 = activeSeries[0].index;
     var index2 = cols[yAxisIndex].index;
 
 
@@ -210,7 +212,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         if(hasLegend){
             _y = height - (margin.marginLabel/2) + 3;
         }else{
-            _y = height + (margin.marginLabel/2) + 6;
+            _y = height + (margin.marginLabel/2) + 28;
         }
         labelXContainer.append('rect')
         .attr('x', _x)
@@ -228,8 +230,16 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            }, cols, (evt, popover) => {
-
+            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+                metadataComponent.metadata.series = _activeSeries;
+                createBarChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
                 popover.close();
             });
         })

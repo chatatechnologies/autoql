@@ -1798,8 +1798,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-list-item {
-    /* padding-left: 25px; */
-    /* padding-right: 15px; */
+    padding-left: 25px;
+    padding-right: 15px;
     font-size: 12px;
     line-height: 28px;
 }
@@ -1817,7 +1817,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input{
     width: 18px !important;
     height: 18px !important;
-    margin: auto !important;
 }
 
 .autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input .autoql-vanilla-chata-checkbox-tick{

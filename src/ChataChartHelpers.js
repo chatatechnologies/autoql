@@ -6,7 +6,6 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     seriesCols.map((col) => {
         seriesIndexes.push(col.index);
     })
-    console.log(seriesIndexes);
     var seriesData = [];
     // console.log(groupable.length);
     // console.log(colu.length);
@@ -32,7 +31,6 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             seriesData.push(serie);
         }
     }else{
-        // seriesData = groupByIndex(data, columns, 0, [1,2]);
         seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
     }
 

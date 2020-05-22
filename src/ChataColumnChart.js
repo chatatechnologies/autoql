@@ -1,6 +1,6 @@
 function createColumnChart(component, json, options, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 50},
+    var margin = {top: 5, right: 10, bottom: 60, left: 90, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
@@ -9,15 +9,6 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     var xIndexes = [];
     var yIndexes = [];
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        metadataComponent.metadata = {
-            groupBy: {
-                index: 0,
-                currentLi: 0,
-            }
-        }
-    }
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
     }
@@ -36,10 +27,22 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         yIndexes = indexList['QUANTITY'];
     }
 
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            },
+            series: yIndexes
+        }
+    }
+
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
-    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
+    var activeSeries = metadataComponent.metadata.series;
+    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
-    var index1 = yIndexes[0].index;
+    var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
@@ -160,27 +163,21 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
         labelYContainer.on('mouseup', (evt) => {
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            }, cols, (evt, popover) => {
-                // var yAxisIndex = evt.target.dataset.popoverIndex;
-                // var currentLi = evt.target.dataset.popoverPosition;
-                // metadataComponent.metadata.groupBy.index = yAxisIndex;
-                // metadataComponent.metadata.groupBy.currentLi = currentLi;
-                // createColumnChart(
-                //     component,
-                //     json,
-                //     options,
-                //     fromChataUtils,
-                //     valueClass,
-                //     renderTooltips
-                // )
+            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+                metadataComponent.metadata.series = _activeSeries;
+                createColumnChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
                 popover.close();
             });
-
-            // popoverSelector.setSelectedItem(selectedItem)
         })
     }
 
