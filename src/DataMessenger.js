@@ -2216,7 +2216,7 @@ function DataMessenger(elem, options){
 
         var createCheckbox = (name, checked, colIndex, isLine=false) => {
             var tick = htmlToElement(`
-                <div class="chata-checkbox-tick">
+                <div class="autoql-vanilla-chata-checkbox-tick">
                 <span class="chata-icon">${TICK}</span>
                 </div>
             `);
@@ -2224,7 +2224,7 @@ function DataMessenger(elem, options){
             var checkboxWrapper = document.createElement('div');
             var checkboxInput = document.createElement('input');
             checkboxInput.setAttribute('type', 'checkbox');
-            checkboxInput.classList.add('m-checkbox__input');
+            checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
             if(name){
                 checkboxInput.setAttribute('data-col-name', name);
             }

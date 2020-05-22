@@ -204,7 +204,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
 
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
         const paddingRect = 15;
-        const xWidthRect = getStringWidth(col1) + paddingRect;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
         var _y = 0;
         const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
         if(hasLegend){
@@ -228,8 +228,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            }, xIndexes, (evt, popover) => {
-                
+            }, cols, (evt, popover) => {
+
                 popover.close();
             });
         })

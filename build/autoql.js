@@ -23416,6 +23416,18 @@ function hideShowTableCols(table){
     }
 }
 
+function getStringWidth(string){
+    const div = document.createElement('div')
+    div.innerHTML = string;
+    div.style.display = 'inline-block';
+    div.style.position = 'absolute';
+    div.style.visibility = 'hidden';
+    document.body.appendChild(div);
+    var width = div.offsetWidth;
+    document.body.removeChild(div);
+    return width;
+}
+
 function allColHiddenMessage(table){
     const requestId = table.dataset.componentid;
     const json = ChataUtils.responses[requestId];
@@ -23479,11 +23491,15 @@ function mouseY(evt) {
     }
 }
 
-const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
+const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
     var columns = json['data']['columns'];
-
+    var seriesIndexes = []
+    seriesCols.map((col) => {
+        seriesIndexes.push(col.index);
+    })
+    console.log(seriesIndexes);
     var seriesData = [];
     // console.log(groupable.length);
     // console.log(colu.length);
@@ -23494,22 +23510,23 @@ const makeGroups = (json, options, seriesIndexes=[], labelIndex=-1) => {
             let label = formatData(
                 data[i][group.indexCol], group.jsonCol, options
             );
-
+            var colName = columns[group.indexCol].display_name ||
+            columns[group.indexCol].name;
             var serie = {
                 label: label,
                 values: [
                     {
                         value: parseFloat(data[i][value.indexCol]),
-                        group: formatColumnName(columns[group.indexCol].name),
-                        index: i
+                        group: formatColumnName(colName),
+                        index: value.indexCol
                     }
                 ]
             }
             seriesData.push(serie);
         }
     }else{
-        seriesData = groupByIndex(data, columns, 0, [1,2]);
-        console.log(seriesData);
+        // seriesData = groupByIndex(data, columns, 0, [1,2]);
+        seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
     }
 
     return seriesData;
@@ -23519,9 +23536,12 @@ const getObjectValues = (item, columns, seriesIndexes) => {
     var values = []
     for (var i = 0; i < seriesIndexes.length; i++) {
         var obj = {};
+        var colName = columns[seriesIndexes[i]]['display_name'] ||
+        columns[seriesIndexes[i]]['name'];
+
         obj['value'] = item[seriesIndexes[i]];
-        obj['index'] = seriesIndexes[i];
-        obj['group'] = formatColumnName(columns[seriesIndexes[i]]['name']);
+        obj['index'] = i;
+        obj['group'] = formatColumnName(colName);
         values.push(obj);
     }
     return values;
@@ -23550,6 +23570,15 @@ const convertoTo2DChartData = (groupedData) => {
     return output;
 }
 
+const enumerateCols = (json) => {
+    var clone = cloneObject(json['data']['columns']);
+    for (var i = 0; i < clone.length; i++) {
+        clone[i].index = i;
+    }
+
+    return clone;
+}
+
 const getLabel = (label) => {
     if(label.length < 18){
         return label;
@@ -23574,6 +23603,31 @@ const getGroupableFields = (json) => {
     }
 
     return groupables;
+}
+
+const responseToArrayObjects = (json, groups) => {
+    var dataGrouped = [];
+    var data = json['data']['rows'];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    for (var i = 0; i < groups.length; i++) {
+        var group = groups[i];
+        dataGrouped.push({key: group, values: []});
+        for (var x = 0; x < data.length; x++) {
+            if(data[x][groupableIndex2] == group){
+                dataGrouped[i].values.push(
+                    data[x]
+                )
+            }
+        }
+    }
+
+    return dataGrouped;
 }
 
 const getMinAndMaxValues = (data) => {
@@ -23604,6 +23658,31 @@ const groupBy = (items, key) => items.reduce(
     }),
     {},
 );
+
+const getIndexesByType = (cols) => {
+    var output = {};
+    for (var i = 0; i < cols.length; i++) {
+        var col = cols[i];
+        if(!output[col.type]){
+            output[col.type] = [
+                {col: col, index: i}
+            ]
+        }else{
+            output[col.type].push({
+                col: col,
+                index: i
+            })
+        }
+    }
+
+    return output;
+}
+
+const getMetadataElement = (component, isDataMessenger) => {
+    if(isDataMessenger){
+        return component.parentElement.parentElement
+    }
+}
 
 function createSafetynetContent(suggestionArray, context){
     const message = `
@@ -24622,18 +24701,47 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
 }
 
 function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var data = makeGroups(json, options, [], -1);
-    const minMaxValues = getMinAndMaxValues(data);
     var margin = {top: 5, right: 10, bottom: 50, left: 130, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
-    var cols = json['data']['columns'];
+    var cols = enumerateCols(json);
+    var indexList = getIndexesByType(cols);
+    var xIndexes = [];
+    var yIndexes = [];
 
-    var groupableField = getGroupableField(json);
-    var notGroupableField = getNotGroupableField(json);
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            }
+        }
+    }
+    if(indexList['STRING']){
+        yIndexes.push(...indexList['STRING'])
+    }
 
-    var index1 = notGroupableField.indexCol;
-    var index2 = groupableField.indexCol;
+    if(indexList['DATE']){
+        yIndexes.push(...indexList['DATE'])
+    }
+
+    if(indexList['DATE_STRING']){
+        yIndexes.push(...indexList['DATE_STRING'])
+    }
+
+    if(indexList['DOLLAR_AMT']){
+        xIndexes = indexList['DOLLAR_AMT'];
+    }else if(indexList['QUANTITY']){
+        xIndexes = indexList['QUANTITY'];
+    }
+
+    var yAxisIndex = metadataComponent.metadata.groupBy.index;
+    var data = makeGroups(json, options, xIndexes, cols[yAxisIndex].index);
+    const minMaxValues = getMinAndMaxValues(data);
+    var index1 = xIndexes[0].index;
+    var index2 = cols[yAxisIndex].index;
+
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
@@ -24722,20 +24830,112 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('text')
+    var labelXContainer = svg.append('g');
+    var labelYContainer = svg.append('g');
+
+    // Y AXIS
+    var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -margin.left + margin.right + 5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
-    .text(col1);
+    textContainerY.append('tspan')
+    .text(col1)
 
-    svg.append('text')
+    // if(yIndexes.length > 1){
+    //     textContainerY.append('tspan')
+    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    //     .text('▼')
+    //     .style('font-size', '8px')
+    //     labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+    //     const paddingRect = 15;
+    //     const xWidthRect = getStringWidth(col1) + paddingRect;
+    //
+    //     labelYContainer.append('rect')
+    //     .attr('x', 105)
+    //     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+    //     .attr('height', xWidthRect + paddingRect)
+    //     .attr('width', 24)
+    //     .attr('fill', 'transparent')
+    //     .attr('stroke', '#508bb8')
+    //     .attr('stroke-width', '1px')
+    //     .attr('rx', '4')
+    //     .attr('transform', 'rotate(-180)')
+    //     .attr('class', 'autoql-vanilla-y-axis-label-border')
+    //
+    //     labelYContainer.on('mouseup', (evt) => {
+    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+    //         var popoverSelector = new ChataChartListPopover({
+    //             left: d3.event.clientX + 'px',
+    //             top: d3.event.clientY + 'px'
+    //         }, yIndexes, (evt, popover) => {
+    //             var yAxisIndex = evt.target.dataset.popoverIndex;
+    //             var currentLi = evt.target.dataset.popoverPosition;
+    //             metadataComponent.metadata.groupBy.index = yAxisIndex;
+    //             metadataComponent.metadata.groupBy.currentLi = currentLi;
+    //             createBarChart(
+    //                 component,
+    //                 json,
+    //                 options,
+    //                 fromChataUtils,
+    //                 valueClass,
+    //                 renderTooltips
+    //             )
+    //             popover.close();
+    //         });
+    //
+    //         popoverSelector.setSelectedItem(selectedItem)
+    //     })
+    // }
+
+    // X AXIS
+    var textContainerX = labelXContainer.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.marginLabel)
     .attr('text-anchor', 'middle')
     .attr("class", "autoql-vanilla-x-axis-label")
+    textContainerX.append('tspan')
     .text(col2);
+
+    // if(xIndexes.length > 1){
+    //     textContainerX.append('tspan')
+    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    //     .text('▼')
+    //     .style('font-size', '8px')
+    //
+    //     labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+    //     const paddingRect = 15;
+    //     const xWidthRect = getStringWidth(col2) + paddingRect;
+    //     var _y = 0;
+    //     const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
+    //     if(hasLegend){
+    //         _y = height - (margin.marginLabel/2) + 3;
+    //     }else{
+    //         _y = height + (margin.marginLabel/2) + 6;
+    //     }
+    //     labelXContainer.append('rect')
+    //     .attr('x', _x)
+    //     .attr('y', _y - 20)
+    //     .attr('height', 24)
+    //     .attr('width', xWidthRect + paddingRect)
+    //     .attr('fill', 'transparent')
+    //     .attr('stroke', '#508bb8')
+    //     .attr('stroke-width', '1px')
+    //     .attr('rx', '4')
+    //     .attr('class', 'autoql-vanilla-x-axis-label-border')
+    //
+    //     labelXContainer.on('mouseup', (evt) => {
+    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+    //         var popoverSelector = new ChataChartSeriesPopover({
+    //             left: d3.event.clientX + 'px',
+    //             top: d3.event.clientY + 'px'
+    //         }, xIndexes, (evt, popover) => {
+    //
+    //             popover.close();
+    //         });
+    //     })
+    // }
 
     if(tickWidth < 135){
         svg.append("g")
@@ -24764,7 +24964,9 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     svg.append("g")
     .attr("class", "y axis")
     .style('opacity','1')
-    .call(yAxis)
+    .call(yAxis.tickFormat(function(d){
+        return formatData(d, cols[index2], options)
+    }))
 
     var slice = svg.selectAll(".slice")
     .data(data)
@@ -24775,13 +24977,22 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     });
 
     slice.selectAll("rect")
-    .data(function(d) { return d.values; })
+    .data(function(d) {
+        for (var i = 0; i < d.values.length; i++) {
+            d.values[i].label = d.label;
+        }
+        return d.values;
+    })
     .enter().append("rect")
     .each(function (d, i) {
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', data[d.index].label)
+        .attr('data-colvalue1', formatData(
+            d.label,
+            cols[index2],
+            options
+        ))
         .attr('data-colvalue2', formatData(
             d.value,
             cols[index1],
@@ -24838,19 +25049,47 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
 
 function createColumnChart(component, json, options, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-    var data = makeGroups(json, options, [], -1);
-    const minMaxValues = getMinAndMaxValues(data);
     var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
-    var cols = json['data']['columns'];
+    var cols = enumerateCols(json);
+    var indexList = getIndexesByType(cols);
+    var xIndexes = [];
+    var yIndexes = [];
 
-    var groupableField = getGroupableField(json);
-    var notGroupableField = getNotGroupableField(json);
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            }
+        }
+    }
+    if(indexList['STRING']){
+        xIndexes.push(...indexList['STRING'])
+    }
 
-    var index1 = notGroupableField.indexCol;
-    var index2 = groupableField.indexCol;
+    if(indexList['DATE']){
+        xIndexes.push(...indexList['DATE'])
+    }
+
+    if(indexList['DATE_STRING']){
+        xIndexes.push(...indexList['DATE_STRING'])
+    }
+
+    if(indexList['DOLLAR_AMT']){
+        yIndexes = indexList['DOLLAR_AMT'];
+    }else if(indexList['QUANTITY']){
+        yIndexes = indexList['QUANTITY'];
+    }
+
+    var xAxisIndex = metadataComponent.metadata.groupBy.index;
+    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
+    const minMaxValues = getMinAndMaxValues(data);
+    var index1 = yIndexes[0].index;
+    var index2 = cols[xAxisIndex].index;
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
@@ -24925,6 +25164,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .range(options.themeConfig.chartColors);
 
 
+
     var svg = d3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
@@ -24933,20 +25173,128 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('text')
+    var labelXContainer = svg.append('g');
+    var labelYContainer = svg.append('g');
+
+    // Y AXIS
+    var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -margin.left + margin.right + 5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
-    .text(col2);
 
-    svg.append('text')
+    textContainerY.append('tspan')
+    .text(col2)
+
+    // if(yIndexes.length > 1){
+    //     textContainerY.append('tspan')
+    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    //     .text('▼')
+    //     .style('font-size', '8px')
+    //     labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+    //     const paddingRect = 15;
+    //     const xWidthRect = getStringWidth(col2) + paddingRect;
+    //
+    //     labelYContainer.append('rect')
+    //     .attr('x', 66)
+    //     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+    //     .attr('height', xWidthRect + paddingRect)
+    //     .attr('width', 24)
+    //     .attr('fill', 'transparent')
+    //     .attr('stroke', '#508bb8')
+    //     .attr('stroke-width', '1px')
+    //     .attr('rx', '4')
+    //     .attr('transform', 'rotate(-180)')
+    //     .attr('class', 'autoql-vanilla-y-axis-label-border')
+    //
+    //     labelYContainer.on('mouseup', (evt) => {
+    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+    //         var popoverSelector = new ChataChartSeriesPopover({
+    //             left: d3.event.clientX + 'px',
+    //             top: d3.event.clientY + 'px'
+    //         }, yIndexes, (evt, popover) => {
+    //             // var yAxisIndex = evt.target.dataset.popoverIndex;
+    //             // var currentLi = evt.target.dataset.popoverPosition;
+    //             // metadataComponent.metadata.groupBy.index = yAxisIndex;
+    //             // metadataComponent.metadata.groupBy.currentLi = currentLi;
+    //             // createColumnChart(
+    //             //     component,
+    //             //     json,
+    //             //     options,
+    //             //     fromChataUtils,
+    //             //     valueClass,
+    //             //     renderTooltips
+    //             // )
+    //             popover.close();
+    //         });
+    //
+    //         // popoverSelector.setSelectedItem(selectedItem)
+    //     })
+    // }
+
+
+    // X AXIS
+    var textContainerX = labelXContainer.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.marginLabel - 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
+
+    textContainerX.append('tspan')
     .text(col1);
+
+    // if(xIndexes.length > 1){
+    //     textContainerX.append('tspan')
+    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    //     .text('▼')
+    //     .style('font-size', '8px')
+    //
+    //     labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+    //     const paddingRect = 15;
+    //     const xWidthRect = getStringWidth(col1) + paddingRect;
+    //     var _y = 0;
+    //     const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
+    //     if(hasLegend){
+    //         _y = height - (margin.marginLabel/2) - 3;
+    //     }else{
+    //         _y = height + (margin.marginLabel/2) + 6;
+    //     }
+    //     labelXContainer.append('rect')
+    //     .attr('x', _x)
+    //     .attr('y', _y)
+    //     .attr('height', 24)
+    //     .attr('width', xWidthRect + paddingRect)
+    //     .attr('fill', 'transparent')
+    //     .attr('stroke', '#508bb8')
+    //     .attr('stroke-width', '1px')
+    //     .attr('rx', '4')
+    //     .attr('class', 'autoql-vanilla-x-axis-label-border')
+    //
+    //     labelXContainer.on('mouseup', (evt) => {
+    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+    //         var popoverSelector = new ChataChartListPopover({
+    //             left: d3.event.clientX + 'px',
+    //             top: d3.event.clientY + 'px'
+    //         }, xIndexes, (evt, popover) => {
+    //             var xAxisIndex = evt.target.dataset.popoverIndex;
+    //             var currentLi = evt.target.dataset.popoverPosition;
+    //             metadataComponent.metadata.groupBy.index = xAxisIndex;
+    //             metadataComponent.metadata.groupBy.currentLi = currentLi;
+    //             createColumnChart(
+    //                 component,
+    //                 json,
+    //                 options,
+    //                 fromChataUtils,
+    //                 valueClass,
+    //                 renderTooltips
+    //             )
+    //             popover.close();
+    //         });
+    //
+    //         popoverSelector.setSelectedItem(selectedItem)
+    //     })
+    // }
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -24955,7 +25303,9 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     if(barWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index2], options)
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -24963,7 +25313,9 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index2], options)
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .style("text-anchor", "center")
@@ -24988,13 +25340,24 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     });
 
     slice.selectAll("rect")
-    .data(function(d) { return d.values; })
+    .data(function(d) {
+        for (var i = 0; i < d.values.length; i++) {
+            d.values[i].label = d.label;
+        }
+        return d.values;
+    })
     .enter().append("rect")
     .each(function (d, i) {
+        console.log(d.index);
+        console.log(i);
+        console.log(data[d.index]);
         d3.select(this).attr(valueClass, d.index)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', data[d.index].label)
+        .attr('data-colvalue1', formatData(
+            d.label, cols[index2],
+            options
+        ))
         .attr('data-colvalue2', formatData(
             d.value, cols[index1],
             options
@@ -25047,21 +25410,48 @@ function createColumnChart(component, json, options, fromChataUtils=true,
 }
 
 function createLineChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var data = makeGroups(json, options, [], -1);
-    const minMaxValues = getMinAndMaxValues(data);
     var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40},
     width = component.parentElement.clientWidth - margin.left;
     var height;
+    var cols = enumerateCols(json);
+    var indexList = getIndexesByType(cols);
+    var xIndexes = [];
+    var yIndexes = [];
 
-    var cols = json['data']['columns'];
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            }
+        }
+    }
+    if(indexList['STRING']){
+        xIndexes.push(...indexList['STRING'])
+    }
 
-    var groupableField = getGroupableField(json);
-    var notGroupableField = getNotGroupableField(json);
+    if(indexList['DATE']){
+        xIndexes.push(...indexList['DATE'])
+    }
 
-    var index1 = notGroupableField.indexCol;
-    var index2 = groupableField.indexCol;
-    console.log(index2);
-    console.log(index1);
+    if(indexList['DATE_STRING']){
+        xIndexes.push(...indexList['DATE_STRING'])
+    }
+
+    if(indexList['DOLLAR_AMT']){
+        yIndexes = indexList['DOLLAR_AMT'];
+    }else if(indexList['QUANTITY']){
+        yIndexes = indexList['QUANTITY'];
+    }
+
+    var xAxisIndex = metadataComponent.metadata.groupBy.index;
+    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
+    const minMaxValues = getMinAndMaxValues(data);
+    var index1 = yIndexes[0].index;
+    var index2 = cols[xAxisIndex].index;
+
+
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
@@ -25144,22 +25534,64 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
 
-    var textContainerY = labelXContainer.append('text')
+    // Y AXIS
+    var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -margin.left + margin.right + 5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
-
     textContainerY.append('tspan')
     .text(col2)
 
-    textContainerY.append('tspan')
-    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    .text('▼')
-    .style('font-size', '8px')
+    // if(yIndexes.length > 1){
+    //     textContainerY.append('tspan')
+    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    //     .text('▼')
+    //     .style('font-size', '8px')
+    //     labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+    //     const paddingRect = 15;
+    //     const xWidthRect = getStringWidth(col2) + paddingRect;
+    //
+    //     labelYContainer.append('rect')
+    //     .attr('x', 66)
+    //     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+    //     .attr('height', xWidthRect + paddingRect)
+    //     .attr('width', 24)
+    //     .attr('fill', 'transparent')
+    //     .attr('stroke', '#508bb8')
+    //     .attr('stroke-width', '1px')
+    //     .attr('rx', '4')
+    //     .attr('transform', 'rotate(-180)')
+    //     .attr('class', 'autoql-vanilla-y-axis-label-border')
+    //
+    //     labelYContainer.on('mouseup', (evt) => {
+    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+    //         var popoverSelector = new ChataChartSeriesPopover({
+    //             left: d3.event.clientX + 'px',
+    //             top: d3.event.clientY + 'px'
+    //         }, yIndexes, (evt, popover) => {
+    //             // var yAxisIndex = evt.target.dataset.popoverIndex;
+    //             // var currentLi = evt.target.dataset.popoverPosition;
+    //             // metadataComponent.metadata.groupBy.index = yAxisIndex;
+    //             // metadataComponent.metadata.groupBy.currentLi = currentLi;
+    //             // createColumnChart(
+    //             //     component,
+    //             //     json,
+    //             //     options,
+    //             //     fromChataUtils,
+    //             //     valueClass,
+    //             //     renderTooltips
+    //             // )
+    //             popover.close();
+    //         });
+    //
+    //         // popoverSelector.setSelectedItem(selectedItem)
+    //     })
+    // }
 
-    var textContainerX = labelYContainer.append('text')
+    // X AXIS
+    var textContainerX = labelXContainer.append('text')
     .attr('x', width / 2)
     .attr('y', height + margin.marginLabel + 3)
     .attr('text-anchor', 'middle')
@@ -25167,11 +25599,59 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     textContainerX.append('tspan')
     .text(col1);
+    // 
+    // if(xIndexes.length > 1){
+    //     textContainerX.append('tspan')
+    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    //     .text('▼')
+    //     .style('font-size', '8px')
+    //
+    //     labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+    //     const paddingRect = 15;
+    //     const xWidthRect = getStringWidth(col1) + paddingRect;
+    //     var _y = 0;
+    //     const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
+    //     if(hasLegend){
+    //         _y = height - (margin.marginLabel/2) + 3;
+    //     }else{
+    //         _y = height + (margin.marginLabel/2) + 6;
+    //     }
+    //     labelXContainer.append('rect')
+    //     .attr('x', _x)
+    //     .attr('y', _y)
+    //     .attr('height', 24)
+    //     .attr('width', xWidthRect + paddingRect)
+    //     .attr('fill', 'transparent')
+    //     .attr('stroke', '#508bb8')
+    //     .attr('stroke-width', '1px')
+    //     .attr('rx', '4')
+    //     .attr('class', 'autoql-vanilla-x-axis-label-border')
+    //
+    //     labelXContainer.on('mouseup', (evt) => {
+    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+    //         var popoverSelector = new ChataChartListPopover({
+    //             left: d3.event.clientX + 'px',
+    //             top: d3.event.clientY + 'px'
+    //         }, xIndexes, (evt, popover) => {
+    //             var xAxisIndex = evt.target.dataset.popoverIndex;
+    //             var currentLi = evt.target.dataset.popoverPosition;
+    //             metadataComponent.metadata.groupBy.index = xAxisIndex;
+    //             metadataComponent.metadata.groupBy.currentLi = currentLi;
+    //             createLineChart(
+    //                 component,
+    //                 json,
+    //                 options,
+    //                 fromChataUtils,
+    //                 valueClass,
+    //                 renderTooltips
+    //             )
+    //             popover.close();
+    //         });
+    //
+    //         popoverSelector.setSelectedItem(selectedItem)
+    //     })
+    // }
 
-    textContainerX.append('tspan')
-    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    .text('▼')
-    .style('font-size', '8px')
 
     var x = d3.scaleBand()
     .domain(data.map(function(d) {
@@ -25188,7 +25668,9 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     if(barWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index2], options);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -25196,7 +25678,9 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index2], options);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .style("text-anchor", "center")
@@ -25248,7 +25732,10 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', d.label)
+        .attr('data-colvalue1', formatData(
+            d.label, cols[index2],
+            options
+        ))
         .attr('data-colvalue2',formatData(
             d.value, cols[index1],
             options
@@ -25824,8 +26311,7 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     var groupableIndex1 = groupables[0].indexCol;
     var groupableIndex2 = groupables[1].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
-
-
+    var columns = json['data']['columns'];
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
@@ -25835,8 +26321,8 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
+    // var data = responseToArrayObjects(json, groups);
     var data = ChataUtils.format3dData(json, groups);
-
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
     var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
@@ -25953,7 +26439,6 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
         }
         return sum;
     });
-    console.log(maxValue);
 
     var y = d3.scaleLinear()
     .domain([0, maxValue])
@@ -25974,75 +26459,73 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-    console.log(subgroups);
+
     var stackedData = d3.stack()
     .keys(subgroups)
+    .value(function(d, key){
+        var val = parseFloat(d[key]);
+        if(isNaN(val)){
+            return 0
+        }
+        return val;
+    })
     (data)
+    var points = [];
+    for (var i = 0; i < stackedData.length; i++) {
+        for (var _x = 0; _x < stackedData[i].length; _x++) {
+            var seriesValues = stackedData[i][_x].data;
+            for (var [key, value] of Object.entries(seriesValues)) {
+                if(key === 'group')continue;
+                points.push({
+                    group: seriesValues.group,
+                    y: value,
+                    y1: stackedData[i][_x][1],
+                    y0: stackedData[i][_x][0]
+                })
+            }
+        }
+    }
 
+    console.log(points);
     console.log(stackedData);
 
-    // svg.append("g")
-    // .selectAll("g")
-    // .data(stackedData)
-    // .enter().append("g")
-    // .attr("fill", function(d) {
-    //     return color(d.key);
-    // })
-    // .selectAll("rect")
-    // .data(function(d) { return d; })
-    // .enter().append("rect")
-    // .each(function (d, i) {
-    //     var pos = d[1];
-    //     var sum = 0;
-    //     for (var [key, value] of Object.entries(d.data)){
-    //         if(key == 'group')continue;
-    //         sum += parseFloat(value);
-    //         if(sum == pos){
-    //             d.value = value;
-    //             d.labelY = key;
-    //             break;
-    //         }
-    //     }
-    //     d3.select(this).attr(valueClass, i)
-    //     .attr('data-col1', col1)
-    //     .attr('data-col2', col2)
-    //     .attr('data-col3', col3)
-    //     .attr('data-colvalue1', d.labelY)
-    //     .attr('data-colvalue2', formatData(
-    //         d.data.group, cols[groupableIndex2], options
-    //     ))
-    //     .attr('data-colvalue3', formatData(
-    //         d.value, cols[notGroupableIndex],
-    //         options
-    //     ))
-    //     .attr('data-unformatvalue1', d.labelY)
-    //     .attr('data-unformatvalue2', d.data.group)
-    //     .attr('data-unformatvalue3', d.value)
-    // })
-    // .attr('opacity', '0.7')
-    // .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-    // .attr("x", function(d) {
-    //     if(d.data.group.length < 15){
-    //         return x(d.data.group);
-    //     }else{
-    //         return x(d.data.group.slice(0,15)+'...');
-    //     }
-    // })
-    // .attr("y", function(d) {
-    //     if(isNaN(d[1])){
-    //         return 0;
-    //     }else{
-    //         return Math.abs(y(d[1])) + 0.5;
-    //     }
-    // })
-    // .attr("height", function(d) {
-    //     if(isNaN([d[1]])){
-    //         return 0;
-    //     }else{
-    //         return Math.abs(y(d[0]) - y(d[1]) - 0.5);
-    //     }
-    // })
-    // .attr("width",x.bandwidth())
+    svg.selectAll("mylayers")
+    .data(stackedData)
+    .enter()
+    .append("path")
+    .style("fill", function(d, i) { return color(d[i].data.group); })
+    .attr('opacity', '0.7')
+    .attr("d", d3.area()
+        .x(function(d, i) { return x(d.data.group); })
+        .y0(function(d) { return y(d[0]); })
+        .y1(function(d) { return y(d[1]); })
+    )
+
+    svg.selectAll("circle")
+    .data(points)
+    .enter()
+    .append("circle")
+    .attr("class", "dot")
+    .attr("r", 4)
+    .attr('class', 'tooltip-2d line-dot')
+    .attr('stroke', function(d) {'transparent' })
+    .attr('stroke-width', '3')
+    .attr('stroke-opacity', '0.7')
+    .attr("fill", 'transparent')
+    .attr("fill-opacity", '1')
+    .on("mouseover", function(d, i){
+        d3.select(this).
+        attr("stroke", color(d.group))
+        .attr('fill', 'white')
+    })
+    .on("mouseout", function(d, i){
+        d3.select(this).
+        attr("stroke", 'transparent')
+        .attr('fill', 'transparent')
+    })
+    .attr("cx", function(d) { return x(d.group); })
+    .attr("cy", function(d) { return y(d.y); });
+
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
@@ -29789,7 +30272,6 @@ function DataMessenger(elem, options){
             elements[i].onclick = (evt) => {
                 handler.apply(null, [evt, component.dataset.componentid])
                 obj.updateSelectedBar(evt, component);
-
             }
         }
     }
@@ -33995,3 +34477,93 @@ d3.tip = function() {
 
   return tip
 };
+
+function PopoverChartSelector(position) {
+    var obj = this;
+    var popover = document.createElement('div');
+    popover.classList.add('autoql-vanilla-popover-selector');
+    obj.popover = popover;
+
+    obj.show = () => {
+        popover.style.visibility = 'visible';
+        popover.style.left = position.left
+        popover.style.top = position.top
+        popover.style.opacity = 1;
+        return obj;
+    }
+
+    obj.close = () => {
+        popover.style.visibility = 'hidden';
+        popover.style.opacity = 0;
+        document.body.removeChild(popover);
+    }
+
+    obj.appendContent = (elem) => {
+        popover.appendChild(elem);
+    }
+
+    document.body.appendChild(popover);
+
+    return obj;
+}
+
+function ChataChartSeriesPopover(position, series, onClick){
+    var obj = this;
+    var popover = new PopoverChartSelector(position);
+    obj.createContent = () => {
+        popover.appendContent(htmlToElement('<div>TEST</div>'))
+    }
+    obj.createContent();
+    popover.show();
+    console.log(series);
+    return popover;
+}
+
+function ChataChartListPopover(position, indexes, onClick){
+    var obj = this;
+    var popover = new PopoverChartSelector(position);
+    var elements = [];
+    obj.createContent = () => {
+        var selectorContainer = document.createElement('div');
+        var selectorContent = document.createElement('ul');
+
+        selectorContainer.classList.add(
+            'autoql-vanilla-axis-selector-container'
+        )
+        selectorContent.classList.add(
+            'autoql-vanilla-axis-selector-content'
+        )
+        for (var i = 0; i < indexes.length; i++) {
+            selectorContent.appendChild(obj.createListItem(indexes[i], i));
+        }
+        selectorContainer.appendChild(selectorContent);
+        popover.appendContent(selectorContainer);
+    }
+
+    obj.createListItem = (colObj, i) => {
+        console.log(colObj);
+        var name = colObj.col['display_name']  || colObj.col['name'];
+        var li = document.createElement('li');
+        li.classList.add('autoql-vanilla-string-select-list-item');
+        li.innerHTML = formatColumnName(name);
+        li.setAttribute('data-popover-index', colObj.index);
+        li.setAttribute('data-popover-type', colObj.col.type);
+        li.setAttribute('data-popover-position', i);
+
+        li.onclick = (evt) => {
+            onClick(evt, popover);
+        }
+        elements.push(li);
+        return li;
+    }
+
+    popover.setSelectedItem = (index) => {
+        elements.map(elem => elem.classList.remove('active'));
+        elements[parseInt(index)].classList.add('active');
+    }
+
+    obj.createContent();
+    popover.show();
+
+    return popover;
+}

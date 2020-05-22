@@ -48,8 +48,10 @@
         <script src="src/SettingsItem.js"></script>
         <script src="src/split.min.js"></script> -->
 
-        <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/55efbaf2-93e5-4d47-87bb-98031bc70cad/autoqlstyles.css">
-        <script src="https://ucarecdn.com/f475fc7c-f367-4d71-b808-b2f863acb8d2/autoqlmin.js"></script>
+        <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/1d20fef8-09f2-49c9-acf7-c8558de4c5de/autoqlstyles.css">
+        <script src="https://ucarecdn.com/43ddda07-232b-4d9f-ad0f-2bb156720f1c/autoqlmin.js"></script>
+        <!-- <link rel="stylesheet" type="text/css" href="build/autoql-styles.css">
+        <script src="build/autoql-min.js"></script> -->
 
     </head>
     <body>
@@ -61,19 +63,32 @@
         </div>
     </body>
     <script>
-        var chata = DataMessenger.init('datamessenger', {
-            authentication: {
-                demo: true
-            },
-            themeConfig: {
-                chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            },
-            maskClosable: true,
-            onMaskClick: function(){
-                console.log('FOOO');
-                DataMessenger.closeDrawer();
-            }
-        });
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkwMDgzMTYyLCAiZXhwIjogMTU5MDEwNDc2MiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.cjEn5klnMhOIbl1ULEgmQoixmpxnlgoKB8zkp4KX-Xhit_R8V74suoitRD8IpGvpZNSsfpw53yKmuwavFd0qgvPxy9wuiAecSViEPZQcPiTGtOKUynUxyQu_afxMdWB6uSVnS_2wxstm64B0ddm5njjTq3W5UiSRxDD-94cZPsioIu9rCyrYFgJmsVRc86lEbOqHaFutGtW_t5rNohA2dQC6KsufQ0rwyJ2wK1mwoT1lFYdHNBAbjYRzp80E3u9X2mPLNl_J2L4HnUTX9Sj2TJKJ34bDQEMpWQk5P-DreZwBR7SKUpVi5G79lZmd0w8PQ__CTDO2hXDrQzrXmKWl7A==`;
+    var datamessenger = new DataMessenger('#datamessenger', {
+        authentication: {
+            // demo: true
+            token: _token,
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            customerId: 'spira-demo3',
+            userId: 'vidhya@chata.ai',
+            domain: 'https://spira-staging.chata.io',
+            demo: false
+        },
+        themeConfig: {
+            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        placement: 'right',
+        onMaskClick: function(datamessenger){
+            datamessenger.closeDrawer();
+            console.log(DataMessenger.name);
+            console.log(QueryOutput.name);
+        },
+        resizable: true,
+        width: 550
+    })
         var dashboard = new Dashboard('.chata', {
             themeConfig: {
                 chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],

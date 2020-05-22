@@ -27,11 +27,85 @@ function PopoverChartSelector(position) {
     return obj;
 }
 
-function ChataChartSeriesPopover(position, series, onClick){
+
+function ChataChartSeriesPopover(position, cols, onClick){
+    var createCheckbox = (column, checked=false) => {
+        var colObj = column.col;
+        var colName = colObj.display_name || colObj.name;
+        var tick = htmlToElement(`
+            <div class="autoql-vanilla-chata-checkbox-tick">
+            <span class="chata-icon">${TICK}</span>
+            </div>
+        `);
+        var checkboxContainer = document.createElement('div');
+        var checkboxWrapper = document.createElement('div');
+        var checkboxInput = document.createElement('input');
+        checkboxInput.setAttribute('type', 'checkbox');
+        checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
+        if(name){
+            checkboxInput.setAttribute('data-col-name', colName);
+        }
+        checkboxInput.setAttribute('data-col-index', column.index);
+        checkboxContainer.style.width = '18px';
+        checkboxContainer.style.height = '18px';
+        checkboxWrapper.style.width = '18px';
+        checkboxWrapper.style.height = '18px';
+        checkboxWrapper.style.marginTop = '4.5px';
+        checkboxWrapper.style.position = 'relative';
+
+        if(checked){
+            checkboxInput.setAttribute('checked', 'true');
+        }
+
+        checkboxWrapper.appendChild(checkboxInput);
+        checkboxWrapper.appendChild(tick);
+
+        checkboxContainer.appendChild(checkboxWrapper);
+        checkboxContainer.input = checkboxInput;
+        return checkboxContainer;
+    }
     var obj = this;
+    var indexList = getIndexesByType(cols);
+    var series = {};
+    if(indexList['DOLLAR_AMT']){
+        series['Currency'] = [...indexList['DOLLAR_AMT']]
+    }
+
+    if(indexList['QUANTITY']){
+        series['Quantity'] = [...indexList['QUANTITY']]
+    }
+
     var popover = new PopoverChartSelector(position);
     obj.createContent = () => {
-        popover.appendContent(htmlToElement('<div>TEST</div>'))
+        var content = document.createElement('div');
+        content.classList.add('autoql-vanilla-axis-selector-container');
+
+        for(var [key, value] of Object.entries(series)){
+            var header = document.createElement('div');
+            var selectableList = document.createElement('div');
+            selectableList.classList.add(
+                'autoql-vanilla-chata-selectable-list'
+            );
+            var cols = series[key];
+            header.classList.add('number-selector-header');
+            header.innerHTML = key;
+            content.appendChild(header);
+            for (var i = 0; i < cols.length; i++) {
+                var listItem = document.createElement('div');
+                var colName = document.createElement('div');
+                var checkbox = createCheckbox(cols[i]);
+                var n = cols[i].col.display_name ||
+                cols[i].col.name;
+                colName.innerHTML = formatColumnName(n);
+                listItem.classList.add('autoql-vanilla-chata-list-item');
+                listItem.appendChild(colName);
+                listItem.appendChild(checkbox);
+                selectableList.appendChild(listItem);
+            }
+            content.appendChild(selectableList);
+        }
+
+        popover.appendContent(content);
     }
     obj.createContent();
     popover.show();
@@ -62,7 +136,7 @@ function ChataChartListPopover(position, indexes, onClick){
 
     obj.createListItem = (colObj, i) => {
         console.log(colObj);
-        var name = colObj.col['display_name']  || colObj.col['name'];
+        var name = colObj.col['display_name'] || colObj.col['name'];
         var li = document.createElement('li');
         li.classList.add('autoql-vanilla-string-select-list-item');
         li.innerHTML = formatColumnName(name);

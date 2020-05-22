@@ -28,14 +28,14 @@
     height: 36px; */
 }
 
-.chata-modal-container .m-checkbox__input {
+.chata-modal-container .autoql-vanilla-m-checkbox__input {
     border-color: var(--chata-drawer-accent-color);
     box-sizing: border-box !important;
     padding: 0 !important;
     opacity: 1 !important;
 }
 
-.m-checkbox__input {
+.autoql-vanilla-m-checkbox__input {
     position: relative !important;
     flex-shrink: 0 !important;
     width: 20px !important;
@@ -54,11 +54,11 @@
     pointer-events: all !important;
 }
 
-.chata-drawer .m-checkbox__input:before, .chata-modal-container .m-checkbox__input:before {
+.chata-drawer .autoql-vanilla-m-checkbox__input:before, .chata-modal-container .autoql-vanilla-m-checkbox__input:before {
     background: var(--chata-drawer-accent-color) !important;
 }
 
-.m-checkbox__input:before {
+.autoql-vanilla-m-checkbox__input:before {
     content: " " !important;
     position: absolute !important;
     top: 50% !important;
@@ -71,14 +71,14 @@
     cursor: pointer !important;
 }
 
-.m-checkbox__input:checked:before, .m-checkbox__input:indeterminate:before {
+.autoql-vanilla-m-checkbox__input:checked:before, .autoql-vanilla-m-checkbox__input:indeterminate:before {
     top: 0px !important;
     right: 0px !important;
     bottom: 0px !important;
     left: 0px !important;
 }
 
-.chata-checkbox-tick {
+.autoql-vanilla-chata-checkbox-tick {
     position: absolute;
     color: #fff;
     top: 0px;

@@ -140,7 +140,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .style('font-size', '8px')
         labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
         const paddingRect = 15;
-        const xWidthRect = getStringWidth(col1) + paddingRect;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
 
         labelYContainer.append('rect')
         .attr('x', 66)
@@ -159,7 +159,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX + 'px',
                 top: d3.event.clientY + 'px'
-            }, yIndexes, (evt, popover) => {
+            }, cols, (evt, popover) => {
                 // var yAxisIndex = evt.target.dataset.popoverIndex;
                 // var currentLi = evt.target.dataset.popoverPosition;
                 // metadataComponent.metadata.groupBy.index = yAxisIndex;
