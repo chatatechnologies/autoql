@@ -1587,6 +1587,12 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     display: inline-block;
 }
 
+.autoql-vanilla-chata-btn.disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
 .autoql-vanilla-chata-btn.default {
     color: inherit;
     border: 1px solid #a7a7a7;

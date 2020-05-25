@@ -164,8 +164,8 @@ function createColumnChart(component, json, options, fromChataUtils=true,
 
         labelYContainer.on('mouseup', (evt) => {
             var popoverSelector = new ChataChartSeriesPopover({
-                left: d3.event.clientX + 'px',
-                top: d3.event.clientY + 'px'
+                left: d3.event.clientX,
+                top: d3.event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createColumnChart(
@@ -222,8 +222,8 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         labelXContainer.on('mouseup', (evt) => {
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX + 'px',
-                top: d3.event.clientY + 'px'
+                left: d3.event.clientX,
+                top: d3.event.clientY
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;

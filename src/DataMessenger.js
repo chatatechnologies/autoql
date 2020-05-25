@@ -1572,8 +1572,8 @@ function DataMessenger(elem, options){
                 query_id: queryId,
                 group_bys: params,
                 username: 'demo',
-                customer_id: options.authentication.customerId || "",
-                user_id: options.authentication.userId || "",
+                // customer_id: options.authentication.customerId || "",
+                // user_id: options.authentication.userId || "",
                 debug: options.autoQLConfig.debug
             }
         }else{
@@ -2543,7 +2543,7 @@ function DataMessenger(elem, options){
           )}&projectId=1`
           : `${obj.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
-          )}&key=${obj.options.authentication.apiKey}&customer_id=${obj.options.authentication.customerId}&user_id=${obj.options.authentication.userId}`
+          )}&key=${obj.options.authentication.apiKey}`
 
 
         ChataUtils.safetynetCall(

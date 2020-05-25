@@ -6,9 +6,13 @@ function PopoverChartSelector(position) {
 
     obj.show = () => {
         popover.style.visibility = 'visible';
-        popover.style.left = position.left
-        popover.style.top = position.top
         popover.style.opacity = 1;
+        popover.style.left = position.left + 'px'
+        if((position.top + 300) > window.screen.height){
+            popover.style.top = (position.top - 300) + 'px';
+        }else{
+            popover.style.top = position.top + 'px';
+        }
         return obj;
     }
 
@@ -29,6 +33,53 @@ function PopoverChartSelector(position) {
 
 
 function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
+    var obj = this;
+    var indexList = getIndexesByType(cols);
+    var seriesIndexes = [];
+    activeSeries.map((col) => {
+        seriesIndexes.push(col.index);
+    })
+    var content = document.createElement('div');
+    var popover = new PopoverChartSelector(position);
+    var series = {};
+    const applyButton = htmlToElement(`
+        <button
+            class="autoql-vanilla-chata-btn primary"
+            style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
+                Apply
+        </button>
+    `);
+
+    var deselectCheckBox = () => {
+        const type = obj.groupType;
+        var inputs = content.querySelectorAll(
+            `[data-col-type="${type}"]`
+        );
+
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].removeAttribute('checked')
+        }
+    }
+
+    var enableApplyButton = (evt) => {
+        const count = selectedCount();
+        if(count == 0){
+            applyButton.setAttribute('disabled', 'true');
+            applyButton.classList.add('disabled');
+        }else{
+            applyButton.removeAttribute('disabled');
+            applyButton.classList.remove('disabled');
+        }
+    }
+
+    var selectedCount = () => {
+        var inputs = content.querySelectorAll(
+            '[data-col-type]:checked'
+        );
+        return inputs.length;
+    }
+
+    content.classList.add('autoql-vanilla-axis-selector-container');
 
     var createCheckbox = (column, checked=false) => {
         var colObj = column.col;
@@ -48,6 +99,7 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
             checkboxInput.setAttribute('data-col-name', colName);
         }
         checkboxInput.setAttribute('data-col-index', column.index);
+        checkboxInput.setAttribute('data-col-type', colObj.type);
         checkboxInput.col = column;
         tick.style.top = '3px';
         tick.style.left = '23px';
@@ -64,6 +116,15 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
             checkboxInput.setAttribute('checked', 'true');
         }
 
+        checkboxInput.onchange = (evt) => {
+            var type = evt.target.dataset.colType;
+            if(type !== obj.groupType){
+                deselectCheckBox();
+                obj.groupType = type;
+            }
+            enableApplyButton();
+        }
+
         checkboxWrapper.appendChild(checkboxInput);
         checkboxWrapper.appendChild(tick);
 
@@ -72,13 +133,6 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         return checkboxContainer;
     }
 
-    var obj = this;
-    var indexList = getIndexesByType(cols);
-    var seriesIndexes = [];
-    activeSeries.map((col) => {
-        seriesIndexes.push(col.index);
-    })
-    var series = {};
     if(indexList['DOLLAR_AMT']){
         series['Currency'] = [...indexList['DOLLAR_AMT']]
     }
@@ -87,20 +141,10 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         series['Quantity'] = [...indexList['QUANTITY']]
     }
 
-    var popover = new PopoverChartSelector(position);
     obj.createContent = () => {
-        const applyButton = htmlToElement(`
-            <button
-                class="autoql-vanilla-chata-btn primary"
-                style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
-                    Apply
-            </button>
-        `);
-        var content = document.createElement('div');
         var wrapper = document.createElement('div');
         var buttonWrapper = document.createElement('div');
 
-        content.classList.add('autoql-vanilla-axis-selector-container');
         buttonWrapper.style.backgroundColor = 'rgb(255, 255, 255)';
         buttonWrapper.style.padding = '5px';
 
@@ -120,6 +164,10 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
                 var colName = document.createElement('div');
                 var colIndex = cols[i].index;
                 var isChecked = seriesIndexes.includes(colIndex);
+                if(isChecked && !obj.groupType){
+                    console.log(cols[i].col.type);
+                    obj.groupType = cols[i].col.type;
+                }
                 var checkbox = createCheckbox(cols[i], isChecked);
                 var n = cols[i].col.display_name ||
                 cols[i].col.name;

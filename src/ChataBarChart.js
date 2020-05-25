@@ -167,8 +167,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         labelYContainer.on('mouseup', (evt) => {
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX + 'px',
-                top: d3.event.clientY + 'px'
+                left: d3.event.clientX,
+                top: d3.event.clientY
             }, yIndexes, (evt, popover) => {
                 var yAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
@@ -228,8 +228,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         labelXContainer.on('mouseup', (evt) => {
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartSeriesPopover({
-                left: d3.event.clientX + 'px',
-                top: d3.event.clientY + 'px'
+                left: d3.event.clientX,
+                top: d3.event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createBarChart(

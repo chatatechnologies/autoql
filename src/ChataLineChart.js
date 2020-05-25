@@ -158,8 +158,8 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
         labelYContainer.on('mouseup', (evt) => {
             var popoverSelector = new ChataChartSeriesPopover({
-                left: d3.event.clientX + 'px',
-                top: d3.event.clientY + 'px'
+                left: d3.event.clientX,
+                top: d3.event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createLineChart(
@@ -215,8 +215,8 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         labelXContainer.on('mouseup', (evt) => {
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX + 'px',
-                top: d3.event.clientY + 'px'
+                left: d3.event.clientX,
+                top: d3.event.clientY
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
