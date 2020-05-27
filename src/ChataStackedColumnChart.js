@@ -8,8 +8,21 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata3D){
+        metadataComponent.metadata3D = {
+            groupBy: {
+                groupable1: 0,
+                groupable2: 1,
+            },
+        }
+    }
+
+    var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
+    var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
+    var groupCols = groupables.map((groupable, i) => {
+        return {col: groupable.jsonCol, index: i}
+    });
     var notGroupableIndex = notGroupableField.indexCol;
 
 
@@ -22,7 +35,9 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
-    var data = ChataUtils.format3dData(json, groups);
+    var data = ChataUtils.format3dData(
+        json, groups, metadataComponent.metadata3D
+    );
 
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -87,12 +102,63 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
-    svg.append('text')
+
+    // X AXIS
+    var labelXContainer = svg.append('g');
+    var textContainerX = labelXContainer.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + (margin.bottom - 10))
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
+
+    textContainerX.append('tspan')
     .text(col2);
+
+    textContainerX.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+
+    labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(col2) + paddingRect;
+    const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+    const _y = height + (margin.bottom/2);
+
+    labelXContainer.append('rect')
+    .attr('x', _x)
+    .attr('y', _y)
+    .attr('height', 20)
+    .attr('width', xWidthRect + paddingRect)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+    labelXContainer.on('mouseup', (evt) => {
+        var popoverSelector = new ChataChartListPopover({
+            left: d3.event.clientX,
+            top: d3.event.clientY
+        }, groupCols, (evt, popover) => {
+
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+            metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+            createStackedColumnChart(
+                component,
+                json,
+                options,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+            popover.close();
+        });
+
+    })
 
 
     var x = d3.scaleBand()
@@ -161,7 +227,6 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-    console.log(subgroups);
     var stackedData = d3.stack()
     .keys(subgroups)
     (data)

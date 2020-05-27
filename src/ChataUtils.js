@@ -151,14 +151,13 @@ ChataUtils.formatCompareData = function(col, data, groups){
     return dataGrouped;
 }
 
-ChataUtils.format3dData = function(json, groups){
+ChataUtils.format3dData = function(json, groups, metadata){
     var dataGrouped = [];
     var data = json['data']['rows'];
-    var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var groupableIndex1 = metadata.groupBy.groupable1;
+    var groupableIndex2 = metadata.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
 
     for (var i = 0; i < groups.length; i++) {

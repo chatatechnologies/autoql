@@ -8,7 +8,7 @@ function PopoverChartSelector(position) {
         popover.style.visibility = 'visible';
         popover.style.opacity = 1;
         popover.style.left = position.left + 'px'
-        if((position.top + 300) > window.screen.height){
+        if((position.top + popover.clientHeight + 100) > window.screen.height){
             popover.style.top = (position.top - 300) + 'px';
         }else{
             popover.style.top = position.top + 'px';
