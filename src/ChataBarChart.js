@@ -284,6 +284,22 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         return "translate(0,"+ y0(getLabel(d.label)) +")";
     });
 
+    const calculateWidth = (d) => {
+        if(minMaxValues.min < 0){
+            return Math.abs(x(d.value) - x(0));
+        }else{
+            return x(d.value);
+        }
+    }
+
+    const getXRect = (d) => {
+        if(minMaxValues.min < 0){
+            return x(Math.min(0, d.value));
+        }else{
+            return 0;
+        }
+    }
+
     slice.selectAll("rect")
     .data(function(d) {
         for (var i = 0; i < d.values.length; i++) {
@@ -307,8 +323,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
             options
         ))
     })
-    .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
-    .attr("x", function(d) { return x(Math.min(0, d.value)); })
+    .attr("width", function(d) { return calculateWidth(d) })
+    .attr("x", function(d) { return getXRect(d) })
     .attr("y", function(d) { return y1(d.group); })
     .attr("height", function(d) { return y1.bandwidth() })
     .attr('fill-opacity', '0.7')

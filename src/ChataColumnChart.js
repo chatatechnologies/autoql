@@ -287,6 +287,15 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         return "translate(" + x0(getLabel(d.label)) + ",0)";
     });
 
+
+    const calculateHeight = (d) => {
+        if(minMaxValues.min < 0){
+            return Math.abs(y(d.value) - y(0));
+        }else{
+            return (height - margin.bottom) - y(d.value);
+        }
+    }
+
     slice.selectAll("rect")
     .data(function(d) {
         for (var i = 0; i < d.values.length; i++) {
@@ -296,9 +305,6 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     })
     .enter().append("rect")
     .each(function (d, i) {
-        console.log(d.index);
-        console.log(i);
-        console.log(data[d.index]);
         d3.select(this).attr(valueClass, d.index)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
@@ -317,7 +323,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
-    .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
+    .attr("height", function(d) { return calculateHeight(d) })
 
     if(hasLegend){
         var svgLegend = svg.append('g')

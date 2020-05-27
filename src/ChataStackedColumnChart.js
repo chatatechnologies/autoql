@@ -145,16 +145,18 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
 
             var selectedIndex = evt.target.dataset.popoverIndex;
             var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
-            metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-            metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
-            createStackedColumnChart(
-                component,
-                json,
-                options,
-                fromChataUtils,
-                valueClass,
-                renderTooltips
-            )
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createStackedColumnChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
             popover.close();
         });
 
@@ -302,7 +304,9 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort())
+        .domain(subgroups.sort().map(elem => {
+            return formatChartData(elem, cols[groupableIndex1], options);
+        }))
         .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()

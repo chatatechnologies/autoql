@@ -146,7 +146,13 @@ const getMinAndMaxValues = (data) => {
     }
     let maxValue = d3.max(maxValuesFromArrays);
     let minValue = d3.min(minValuesFromArrays);
-
+    if (maxValue === minValue) {
+        if (minValue > 0) {
+            minValue = 0
+        } else if (minValue < 0) {
+            maxValue = 0
+        }
+    }
     return {
         min: minValue,
         max: maxValue
@@ -184,7 +190,5 @@ const getIndexesByType = (cols) => {
 }
 
 const getMetadataElement = (component, isDataMessenger) => {
-    if(isDataMessenger){
-        return component.parentElement.parentElement
-    }
+    return component.parentElement.parentElement
 }

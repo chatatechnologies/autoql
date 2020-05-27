@@ -5,12 +5,24 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata3D){
+        metadataComponent.metadata3D = {
+            groupBy: {
+                groupable1: 0,
+                groupable2: 1,
+            },
+        }
+    }
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var groupCols = groupables.map((groupable, i) => {
+        return {col: groupable.jsonCol, index: i}
+    });
+
+    var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
+    var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
 
 
@@ -23,7 +35,9 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
-    var data = ChataUtils.format3dData(json, groups);
+    var data = ChataUtils.format3dData(
+        json, groups, metadataComponent.metadata3D
+    );
 
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -78,13 +92,62 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('text')
+    var labelYContainer = svg.append('g');
+
+    // Y AXIS
+    var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -margin.left + margin.right + 4.5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
+
+    textContainerY.append('tspan')
     .text(col2);
+
+    textContainerY.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+    labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(col2) + paddingRect;
+
+    labelYContainer.append('rect')
+    .attr('x', 75.5)
+    .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+    .attr('height', xWidthRect + paddingRect)
+    .attr('width', 23)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('transform', 'rotate(-180)')
+    .attr('class', 'autoql-vanilla-y-axis-label-border')
+
+    labelYContainer.on('mouseup', (evt) => {
+        var popoverSelector = new ChataChartListPopover({
+            left: d3.event.clientX,
+            top: d3.event.clientY
+        }, groupCols, (evt, popover) => {
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createStackedBarChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        });
+
+    })
 
     svg.append('text')
     .attr('x', chartWidth / 2)
@@ -221,7 +284,9 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort())
+        .domain(subgroups.sort().map(elem => {
+            return formatChartData(elem, cols[groupableIndex1], options);
+        }))
         .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()

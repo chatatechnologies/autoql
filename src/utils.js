@@ -89,7 +89,7 @@ function formatData(val, col, allOptions={}){
                 value = val;
             }
     }
-    return value;
+    return value || '';
 }
 
 function formatColumnName(col){

@@ -8,9 +8,23 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata3D){
+        metadataComponent.metadata3D = {
+            groupBy: {
+                groupable1: 0,
+                groupable2: 1,
+            },
+        }
+    }
+
+    var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
+    var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
+    var groupCols = groupables.map((groupable, i) => {
+        return {col: groupable.jsonCol, index: i}
+    });
+
     var columns = json['data']['columns'];
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
@@ -22,7 +36,10 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     );
     var cols = json['data']['columns'];
     // var data = responseToArrayObjects(json, groups);
-    var data = ChataUtils.format3dData(json, groups);
+    var data = ChataUtils.format3dData(
+        json, groups, metadataComponent.metadata3D
+    );
+    console.log(data);
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
     var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
@@ -86,12 +103,63 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
-    svg.append('text')
+    // X AXIS
+    var labelXContainer = svg.append('g');
+    var textContainerX = labelXContainer.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + (margin.bottom - 10))
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
+    textContainerX.append('tspan')
     .text(col2);
+
+    textContainerX.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+
+    labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(col2) + paddingRect;
+    const X = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+    const Y = height + (margin.bottom/2);
+
+    labelXContainer.append('rect')
+    .attr('x', X)
+    .attr('y', Y)
+    .attr('height', 20)
+    .attr('width', xWidthRect + paddingRect)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+    labelXContainer.on('mouseup', (evt) => {
+        var popoverSelector = new ChataChartListPopover({
+            left: d3.event.clientX,
+            top: d3.event.clientY
+        }, groupCols, (evt, popover) => {
+
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createAreaChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        });
+
+    })
 
 
     var x = d3.scaleBand()
@@ -179,15 +247,12 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
                 points.push({
                     group: seriesValues.group,
                     y: value,
-                    y1: stackedData[i][_x][1],
-                    y0: stackedData[i][_x][0]
+                    y1: stackedData[i][_x][groupableIndex2],
+                    y0: stackedData[i][_x][groupableIndex1]
                 })
             }
         }
     }
-
-    console.log(points);
-    console.log(stackedData);
 
     svg.selectAll("mylayers")
     .data(stackedData)
@@ -235,7 +300,9 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort())
+        .domain(subgroups.sort().map(elem => {
+            return formatChartData(elem, cols[groupableIndex1], options);
+        }))
         .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()

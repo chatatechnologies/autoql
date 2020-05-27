@@ -20,8 +20,6 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         labelsX, cols[groupableIndex2], options
     );
 
-    console.log(data);
-
     var height;
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
