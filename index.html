@@ -12,6 +12,7 @@
     <link rel="stylesheet" type="text/css" href="css/Spinner.css">
     <link rel="stylesheet" type="text/css" href="css/PopoverMenu.css">
     <link rel="stylesheet" type="text/css" href="css/PopoverChartSelector.css">
+    <link rel="stylesheet" type="text/css" href="css/Cascader.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -32,6 +33,7 @@
     <script src="src/svgIcons.js"></script>
     <script src="src/constants.js"></script>
     <script src="src/utils.js"></script>
+    <script src="src/Cascader.js"></script>
     <script src="src/ChataChartHelpers.js"></script>
     <script src="src/Safetynet.js"></script>
     <script src="src/ChataTable.js"></script>
@@ -871,7 +873,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkwNjAwNzg0LCAiZXhwIjogMTU5MDYyMjM4NCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.OyahehcpMJU7aRR0fLkoQ5yUcwMHlL64OmBJtxNpptBoZuARydE3gVIOeGRkBnWexefn8HaYCos1lxBxldI9oTW7XUUHbNKzXDa1XnSkeg_qgHVBEunzdzLXu4opPVvjPzgXJAjFgS2n9U7A7PBJx2L6LaOE_3Tc7gBceQJO3n4PLLIUJoPnMOFQ93PrDeNqMwHHVifFAqOvHJLQIirzQr6_LoWI5hPL1OJURViO6h6ssvDE7y6R_RXnW4Av0RmSIsWvArbVSC0Lg4mwL0ft9VcdRrWWx6YcbH7NxVJtox382_7vc5VIW9cWDs9VcG0uae7iH8jIAzKmy0xas7JZcA==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkwNjgyNDE0LCAiZXhwIjogMTU5MDcwNDAxNCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.Rlw0pu3Zab6gMptFTIkPjTj70zqPjPTZixPglBt72JdVXw1MAAfiWer004-FKBJwAmX33lmb1neSiOE-kLJtSGPlbohyEQYG69gnooHAll_anXtPyZlczrHwoYRvTkaU0NZXLCha0jUjxX--2xfYoXXWJAYCCjjqiLyyX-54F1XdCElTFuWn8FwTP1drPqI8nTGzPhSihHxsniVqOfrgfKcpYBpTSHEJlG_RLrAcqg_rhMQvl15YkCb4L2YQgnfye4n3demryiAt5b_FykpfGZxi_5_ELGvyKRm5uK631fD0qLDNGaQYCfOgM9wCw2s2Mo6jnZdZj5Hzy1a0-nL8Zg==`;
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
             // demo: true

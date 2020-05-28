@@ -60,6 +60,7 @@ function DataMessenger(elem, options){
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         inputPlaceholder: 'Type your queries here',
+        activeIntegrator: ''
     };
 
     obj.autoCompleteTimer = undefined;
@@ -110,6 +111,9 @@ function DataMessenger(elem, options){
 
     obj.rootElem = rootElem;
     rootElem.classList.add('autoql-vanilla-chata-drawer');
+    obj.options.activeIntegrator = getActiveIntegrator(
+        obj.options.authentication.domain
+    );
 
     obj.setOption = (option, value) => {
         switch (option) {
@@ -406,6 +410,7 @@ function DataMessenger(elem, options){
             obj.applyStyles();
             obj.createHeader();
             obj.createDrawerContent();
+            obj.createIntroMessageTopics();
             obj.createBar();
             obj.createResizeHandler();
             obj.createQueryTabs();
@@ -889,6 +894,16 @@ function DataMessenger(elem, options){
         obj.rootElem.appendChild(scrollBox);
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
+    }
+
+    obj.createIntroMessageTopics = () => {
+        const topics = getIntroMessageTopics(obj.options.activeIntegrator);
+        if(topics){
+            console.log(topics);
+            const topicsWidget = new Cascader(topics);
+            obj.drawerContent.appendChild(topicsWidget._elem);
+            obj.topicsWidget = topicsWidget;
+        }
     }
 
     obj.createHeader = () => {

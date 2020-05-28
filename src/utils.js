@@ -1043,3 +1043,120 @@ function mouseY(evt) {
         return null;
     }
 }
+
+const getActiveIntegrator = (domain) => {
+    if (domain.includes('spira')) {
+        return 'spira'
+    } else if (domain.includes('locate')) {
+        return 'locate'
+    } else if (domain.includes('purefacts')) {
+        return 'purefacts'
+    } else if (domain.includes('bluelink')) {
+        return 'bluelink'
+    } else if (domain.includes('lefort')) {
+        return 'lefort'
+    } else if (domain.includes('nbccontest')) {
+        return 'nb-comp'
+    }
+
+    return '';
+}
+
+getIntroMessageTopics = (integrator) => {
+    if (integrator === 'spira') {
+        return [
+            {
+                label: 'Jobs',
+                value: 'jobs',
+                children: [
+                    {
+                        label: 'List all jobs',
+                        value: 'all-jobs'
+                    },
+                    {
+                        label: 'All jobs in bid state',
+                        value: 'total-jobs'
+                    },
+                    {
+                        label: 'All jobs open from last year',
+                        value: 'total-jobs-by-status'
+                    }
+                ]
+            },
+            {
+                label: 'Tickets',
+                value: 'tickets',
+                children: [
+                    {
+                        label: 'Total tickets',
+                        value: 'total-tickets'
+                    },
+                    {
+                        label: 'Total tickets in 2019 by month',
+                        value: 'tickets-2019'
+                    },
+                    {
+                        label: 'List tickets in void status',
+                        value: 'tickets-void'
+                    }
+                ]
+            },
+            {
+                label: 'Estimates',
+                value: 'estimates',
+                children: [
+                    {
+                        label: 'Total estimates',
+                        value: 'total-estimates'
+                    },
+                    {
+                        label: 'Total estimates by year',
+                        value: 'estimates-by-year'
+                    },
+                    {
+                        label: 'List estimates over 10000',
+                        value: 'estimates-over-10000'
+                    }
+                ]
+            },
+            {
+                label: 'Revenue',
+                value: 'revenue',
+                children: [
+                    {
+                        label: 'Total revenue this year',
+                        value: 'revenue-this-year'
+                    },
+                    {
+                        label: 'Total revenue this month',
+                        value: 'revenue-this-month'
+                    },
+                    {
+                        label: 'Total revenue by area in 2019',
+                        value: 'revenue-2019'
+                    }
+                ]
+            },
+            {
+                label: 'Utilization',
+                value: 'Utilization',
+                children: [
+                    {
+                        label: 'Total utilization by personnel',
+                        value: 'personnel'
+                    },
+                    {
+                        label: 'Total hour utilization by resource',
+                        value: 'resource'
+                    },
+                    {
+                        label: 'Total utilization days by project customer',
+                        value: 'customer'
+                    }
+                ]
+            }
+        ]
+    }
+
+    return undefined
+}
