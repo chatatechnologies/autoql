@@ -19,6 +19,31 @@
     max-width: calc(100% - 20px);
 }
 
+.autoql-vanilla-chata-cascader .options-container .option .option-execute-icon {
+    opacity: 0;
+    color: #fff;
+    font-size: 16px;
+    vertical-align: middle;
+}
+
+.autoql-vanilla-chata-cascader .options-container .option.active .option-execute-icon,
+.autoql-vanilla-chata-cascader .options-container .option:hover .option-execute-icon {
+    opacity: 1;
+}
+
+.autoql-vanilla-chata-cascader .options-container .options-title {
+    padding: 4px 4px 4px 10px;
+    font-weight: 600;
+}
+
+.autoql-vanilla-chata-cascader .options-container:not(:last-child) {
+    border-right: 1px solid hsla(0,0%,82.7%,.32);
+}
+
+.autoql-vanilla-chata-cascader .options-container.hidden {
+    max-width: 0;
+    visibility: hidden;
+}
 
 .autoql-vanilla-chata-cascader .options-container .option.active,
 .autoql-vanilla-chata-cascader .options-container .option:hover {
@@ -33,6 +58,13 @@
     justify-content: space-between;
     border-radius: 2px;
     padding: 4px 4px 4px 10px;
+}
+
+.autoql-vanilla-chata-cascader .options-container .cascader-back-arrow {
+    position: absolute;
+    cursor: pointer;
+    top: 15px;
+    left: 0;
 }
 
 

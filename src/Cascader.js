@@ -25,19 +25,74 @@ function Cascader(topics){
     content.appendChild(
         document.createElement('br')
     );
-    for(var i = 0; i<topics.length; i++){
-        var label = topics[i].label;
-        var active = i == 0 ? 'active' : '';
+
+    obj.makeOpt = (opt, active='') => {
         var opt = htmlToElement(`
             <div class="option ${active}">
-                <span>${label} </span>
+                <span>${opt} </span>
                 <span class="chata-icon option-arrow">
                     ${OPTION_ARROW}
                 </span>
             </div>
         `);
+
+        return opt;
+    }
+
+    for(var i = 0; i<topics.length; i++){
+        var label = topics[i].label;
+        var active = i == 0 ? 'active' : '';
+        var opt = obj.makeOpt(label, active);
+        opt.setAttribute('data-index-topic', i);
         options.push(opt);
         optionsContainer.appendChild(opt);
+        opt.onclick = (evt) => {
+            var target = evt.target;
+            if(!target.classList.contains('option')){
+                target = target.parentElement;
+            }
+            optionsContainer.classList.add('hidden');
+                chataCascader.appendChild(
+                obj.createOptions(target.dataset.indexTopic)
+            )
+        }
+    }
+
+    obj.createOptions = (parentIndex) => {
+        var topic = topics[parseInt(parentIndex)];
+        console.log(topic);
+        var childrenOptionsContainer = document.createElement('div');
+        const arrow = htmlToElement(`
+            <span class="chata-icon cascader-back-arrow">
+                ${TOPICS_ARROW}
+            </span>`
+        );
+
+        const title = htmlToElement(`
+            <div class="options-title">${topic.label}</div>
+        `)
+
+        childrenOptionsContainer.classList.add('options-container');
+        childrenOptionsContainer.appendChild(arrow);
+        childrenOptionsContainer.appendChild(title);
+
+        for (var i = 0; i < topic.children.length; i++) {
+
+            var label = topic.children[i].label;
+            var active = i == 0 ? 'active' : '';
+            var opt = obj.makeOpt(label, active);
+            opt.setAttribute('data-index-topic', i);
+            childrenOptionsContainer.appendChild(opt);
+            opt.onclick = (evt) => {
+                console.log('TEST');
+            }
+        }
+
+        arrow.onclick = (evt) => {
+            optionsContainer.classList.remove('hidden');
+            chataCascader.removeChild(childrenOptionsContainer);
+        }
+        return childrenOptionsContainer;
     }
 
     content.appendChild(topicsContainer);
