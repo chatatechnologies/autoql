@@ -507,7 +507,6 @@ function DataMessenger(elem, options){
             tabChataUtils.classList.remove('active');
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('block');
-
         }
 
         var tabs = pageSwitcherShadowContainer;
@@ -591,6 +590,7 @@ function DataMessenger(elem, options){
         input.setAttribute('placeholder', 'Search relevant queries by topic');
         obj.queryTips = container;
         obj.drawerContent.appendChild(container);
+        obj.queryTipsInput = input;
     }
 
     obj.putRelatedQueries = (
@@ -900,7 +900,7 @@ function DataMessenger(elem, options){
         const topics = getIntroMessageTopics(obj.options.activeIntegrator);
         if(topics){
             console.log(topics);
-            const topicsWidget = new Cascader(topics);
+            const topicsWidget = new Cascader(topics, obj);
             obj.drawerContent.appendChild(topicsWidget._elem);
             obj.topicsWidget = topicsWidget;
         }

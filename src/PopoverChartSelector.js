@@ -9,9 +9,9 @@ function PopoverChartSelector(position) {
         popover.style.opacity = 1;
         popover.style.left = position.left + 'px'
         if((position.top + popover.clientHeight + 100) > window.screen.height){
-            popover.style.top = (position.top - 300) + 'px';
+            popover.style.top = ((position.top + window.pageYOffset) - popover.clientHeight + 100) + 'px';
         }else{
-            popover.style.top = position.top + 'px';
+            popover.style.top = (position.top + window.pageYOffset) + 'px';
         }
         return obj;
     }

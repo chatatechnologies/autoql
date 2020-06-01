@@ -166,16 +166,27 @@ function Dashboard(selector, options={}){
 
     obj.grid = grid;
     obj.tiles = items;
+
     for (var i = 0; i < options.tiles.length; i++) {
         var opts = {
             w: options.tiles[i].w,
             h: options.tiles[i].h,
+            x: options.tiles[i].x,
+            y: options.tiles[i].y,
             query: options.tiles[i].query,
             title: options.tiles[i].title,
             displayType: options.tiles[i].displayType
         }
         items.push(new Tile(obj, opts));
     }
+
+    items.sort((a, b) => {
+        console.log(a.options);
+        console.log(b.options);
+        if (a.options.y == b.options.y) return a.options.x - b.options.x;
+        return a.options.y - b.options.y;
+    })
+
     obj.grid.add(obj.tiles);
     obj.grid._settings.dragEnabled = false;
 
