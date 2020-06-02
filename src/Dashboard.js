@@ -181,8 +181,6 @@ function Dashboard(selector, options={}){
     }
 
     items.sort((a, b) => {
-        console.log(a.options);
-        console.log(b.options);
         if (a.options.y == b.options.y) return a.options.x - b.options.x;
         return a.options.y - b.options.y;
     })

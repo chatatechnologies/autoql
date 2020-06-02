@@ -711,147 +711,31 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 break;
             case 'bar':
-            var chartWrapper = document.createElement('div');
-            container.appendChild(chartWrapper);
-            if(json['data']['display_type'] == 'compare_table'
-                || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChataUtils.getUniqueValues(
-                    data, row => row[0]
-                );
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(
-                        groups[i],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    )
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = ChataUtils.formatCompareData(
-                    json['data']['columns'], data, groups
-                );
-                createGroupedBarChart(
-                    chartWrapper,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 createBarChart(
                     chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
-            }
-
                 break;
             case 'column':
-            var chartWrapper = document.createElement('div');
-            container.appendChild(chartWrapper);
-            if(json['data']['display_type'] == 'compare_table'
-                || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChataUtils.getUniqueValues(
-                    data, row => row[0]
-                );
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    )
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = ChataUtils.formatCompareData(
-                    json['data']['columns'],
-                    data,
-                    groups
-                );
-                createGroupedColumnChart(
-                    chartWrapper,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 createColumnChart(
                     chartWrapper,json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
-            }
-
                 break;
             case 'line':
-            var chartWrapper = document.createElement('div');
-            container.appendChild(chartWrapper);
-            if(json['data']['display_type'] == 'compare_table'
-                || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChataUtils.getUniqueValues(
-                    data, row => row[0]
-                );
-
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(
-                        groups[i],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = ChataUtils.formatCompareData(
-                    json['data']['columns'], data, groups
-                );
-                createGroupedLineChart(
-                    chartWrapper,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 createLineChart(
                     chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
-            }
-
                 break;
             case 'heatmap':
                 var chartWrapper = document.createElement('div');

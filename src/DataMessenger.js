@@ -531,6 +531,7 @@ function DataMessenger(elem, options){
         textBar.classList.add('autoql-vanilla-text-bar');
         textBar.classList.add('autoql-vanilla-text-bar-animation');
         chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
+        container.classList.add('autoql-vanilla-querytips-container');
         queryTipsResultContainer.classList.add(
             'autoql-vanilla-query-tips-result-container'
         );

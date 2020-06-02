@@ -16,6 +16,7 @@ gulp.task('scripts', function() {
             "src/svgIcons.js",
             "src/constants.js",
             "src/utils.js",
+            "src/Cascader.js",
             "src/ChataChartHelpers.js",
             "src/Safetynet.js",
             "src/ChataTable.js",
@@ -43,7 +44,8 @@ gulp.task('scripts', function() {
             "src/NotificationSettingsModal.js",
             "src/Settings.js",
             "src/SettingsItem.js",
-            "src/split.min.js"
+            "src/split.min.js",
+            "src/PopoverChartSelector.js",    
         ], { base: './' }))
         .pipe(concat('autoql.js'))
         .pipe(minify())

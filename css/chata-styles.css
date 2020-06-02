@@ -1411,6 +1411,12 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     top: 20px;
 }
 
+.autoql-vanilla-querytips-container{
+    font-family: sans-serif;
+    line-height: 1.5;
+    font-size: 14px;
+}
+
 .autoql-vanilla-query-tips-result-container {
     color: var(--chata-drawer-text-color-primary);
     padding: 0 20px;
@@ -1480,7 +1486,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     animation-fill-mode: both;
 }
 
-.autoql-vanilla-query-tips-result-container query-tip-item:hover {
+.autoql-vanilla-query-tips-result-container .query-tip-item:hover {
     font-weight: bold;
     color: var(--chata-drawer-accent-color);
 }

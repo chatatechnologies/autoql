@@ -22390,6 +22390,31 @@ const REMOVE_ELEMENT = `
     </svg>
 `;
 
+const OPTION_ARROW = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M715.8 493.5L335 165.1c-14.2-12.2-35-1.2-35 18.5v656.8c0 19.7 20.8 30.7 35 18.5l380.8-328.4c10.9-9.4 10.9-27.6 0-37z"></path>
+</svg>
+`;
+
+const OPTION_ARROW_CIRCLE = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+</svg>
+`
+
+const EXPLORE_QUERIES = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M632 888H392c-4.4 0-8 3.6-8 8v32c0 17.7 14.3 32 32 32h192c17.7 0 32-14.3 32-32v-32c0-4.4-3.6-8-8-8zM512 64c-181.1 0-328 146.9-328 328 0 121.4 66 227.4 164 284.1V792c0 17.7 14.3 32 32 32h264c17.7 0 32-14.3 32-32V676.1c98-56.7 164-162.7 164-284.1 0-181.1-146.9-328-328-328zm127.9 549.8L604 634.6V752H420V634.6l-35.9-20.8C305.4 568.3 256 484.5 256 392c0-141.4 114.6-256 256-256s256 114.6 256 256c0 92.5-49.4 176.3-128.1 221.8z"></path>
+</svg>
+`
+
+const TOPICS_ARROW = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M689 165.1L308.2 493.5c-10.9 9.4-10.9 27.5 0 37L689 858.9c14.2 12.2 35 1.2 35-18.5V183.6c0-19.7-20.8-30.7-35-18.5z">
+    </path>
+</svg>
+`
+
 const LIGHT_THEME = {
   '--chata-drawer-accent-color': '#28a8e0',
   '--chata-drawer-background-color': '#fff',
@@ -22536,7 +22561,7 @@ function formatData(val, col, allOptions={}){
                 value = val;
             }
     }
-    return value;
+    return value || '';
 }
 
 function formatColumnName(col){
@@ -23491,6 +23516,311 @@ function mouseY(evt) {
     }
 }
 
+const getActiveIntegrator = (domain) => {
+    if (domain.includes('spira')) {
+        return 'spira'
+    } else if (domain.includes('locate')) {
+        return 'locate'
+    } else if (domain.includes('purefacts')) {
+        return 'purefacts'
+    } else if (domain.includes('bluelink')) {
+        return 'bluelink'
+    } else if (domain.includes('lefort')) {
+        return 'lefort'
+    } else if (domain.includes('nbccontest')) {
+        return 'nb-comp'
+    }
+
+    return '';
+}
+
+getIntroMessageTopics = (integrator) => {
+    if (integrator === 'spira') {
+        return [
+            {
+                label: 'Jobs',
+                value: 'jobs',
+                children: [
+                    {
+                        label: 'List all jobs',
+                        value: 'all-jobs'
+                    },
+                    {
+                        label: 'All jobs in bid state',
+                        value: 'total-jobs'
+                    },
+                    {
+                        label: 'All jobs open from last year',
+                        value: 'total-jobs-by-status'
+                    }
+                ]
+            },
+            {
+                label: 'Tickets',
+                value: 'tickets',
+                children: [
+                    {
+                        label: 'Total tickets',
+                        value: 'total-tickets'
+                    },
+                    {
+                        label: 'Total tickets in 2019 by month',
+                        value: 'tickets-2019'
+                    },
+                    {
+                        label: 'List tickets in void status',
+                        value: 'tickets-void'
+                    }
+                ]
+            },
+            {
+                label: 'Estimates',
+                value: 'estimates',
+                children: [
+                    {
+                        label: 'Total estimates',
+                        value: 'total-estimates'
+                    },
+                    {
+                        label: 'Total estimates by year',
+                        value: 'estimates-by-year'
+                    },
+                    {
+                        label: 'List estimates over 10000',
+                        value: 'estimates-over-10000'
+                    }
+                ]
+            },
+            {
+                label: 'Revenue',
+                value: 'revenue',
+                children: [
+                    {
+                        label: 'Total revenue this year',
+                        value: 'revenue-this-year'
+                    },
+                    {
+                        label: 'Total revenue this month',
+                        value: 'revenue-this-month'
+                    },
+                    {
+                        label: 'Total revenue by area in 2019',
+                        value: 'revenue-2019'
+                    }
+                ]
+            },
+            {
+                label: 'Utilization',
+                value: 'Utilization',
+                children: [
+                    {
+                        label: 'Total utilization by personnel',
+                        value: 'personnel'
+                    },
+                    {
+                        label: 'Total hour utilization by resource',
+                        value: 'resource'
+                    },
+                    {
+                        label: 'Total utilization days by project customer',
+                        value: 'customer'
+                    }
+                ]
+            }
+        ]
+    }
+
+    return undefined
+}
+
+function Cascader(topics, datamessenger){
+    var obj = this;
+    var message = document.createElement('div');
+    var chatMessageBubble = document.createElement('div');
+    var content = document.createElement('div');
+    var topicsContainer = document.createElement('div');
+    var chataCascader = document.createElement('div');
+    var optionsContainer = document.createElement('div');
+    var options = [];
+
+    message.classList.add('autoql-vanilla-chat-single-message-container');
+    message.classList.add('response');
+    topicsContainer.classList.add('autoql-vanilla-topics-container');
+    chataCascader.classList.add('autoql-vanilla-chata-cascader');
+    optionsContainer.classList.add('options-container');
+    chatMessageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+    message.appendChild(chatMessageBubble);
+    chatMessageBubble.appendChild(content);
+
+    obj._elem = message;
+
+    content.appendChild(
+        document.createTextNode('Some things you can ask me:')
+    );
+
+    content.appendChild(
+        document.createElement('br')
+    );
+
+    obj.keyAnimation = (text) => {
+        chataInput = datamessenger.input;
+        obj.inputAnimation(text, chataInput);
+    }
+
+    obj.queryTipsInputAnimation = (text) => {
+        var input = datamessenger.queryTipsInput;
+        obj.inputAnimation(text, input);
+    }
+
+    obj.inputAnimation = (text, input) => {
+        input.focus();
+        var selectedQuery = text;
+        var subQuery = '';
+        var index = 0;
+        var int = setInterval(function () {
+            subQuery += selectedQuery[index];
+            if(index >= selectedQuery.length){
+                clearInterval(int);
+                var evt = new KeyboardEvent('keypress', {
+                    keyCode: 13,
+                    type: "keypress",
+                    which: 13
+                });
+                input.dispatchEvent(evt)
+            }else{
+                input.value = subQuery;
+            }
+            index++;
+        }, 65);
+    }
+
+    obj.showQueryTips = () => {
+        datamessenger.tabQueryTips.classList.add('active');
+        datamessenger.tabChataUtils.classList.remove('active');
+        datamessenger.tabsAnimation('none', 'none');
+        datamessenger.queryTipsAnimation('block');
+    }
+
+    obj.makeOpt = (opt, svg, active='', extraClass='') => {
+        var opt = htmlToElement(`
+            <div class="option ${active}">
+                <span>${opt} </span>
+                <span class="chata-icon ${extraClass}">
+                    ${svg}
+                </span>
+            </div>
+        `);
+
+        return opt;
+    }
+
+    for(var i = 0; i<topics.length; i++){
+        var label = topics[i].label;
+        var active = i == 0 ? 'active' : '';
+        var opt = obj.makeOpt(label, OPTION_ARROW, active, 'option-arrow');
+        opt.setAttribute('data-index-topic', i);
+        options.push(opt);
+        optionsContainer.appendChild(opt);
+        opt.onclick = (evt) => {
+            var target = evt.target;
+            if(!target.classList.contains('option')){
+                target = target.parentElement;
+            }
+            optionsContainer.classList.add('hidden');
+                chataCascader.appendChild(
+                obj.createOptions(target.dataset.indexTopic)
+            )
+        }
+    }
+
+    obj.createOptions = (parentIndex) => {
+        var topic = topics[parseInt(parentIndex)];
+        var childrenOptionsContainer = document.createElement('div');
+        var optionList = [];
+        const arrow = htmlToElement(`
+            <span class="chata-icon cascader-back-arrow">
+                ${TOPICS_ARROW}
+            </span>`
+        );
+
+        const title = htmlToElement(`
+            <div class="options-title">${topic.label}</div>
+        `)
+
+        const seeMore = htmlToElement(`
+            <div class="option">
+                <span>
+                    <span class="chata-icon">${EXPLORE_QUERIES}</span>
+                     See more...
+                </span>
+            </div>
+        `)
+
+        childrenOptionsContainer.classList.add('options-container');
+        childrenOptionsContainer.appendChild(arrow);
+        childrenOptionsContainer.appendChild(title);
+
+        for (var i = 0; i < topic.children.length; i++) {
+
+            var label = topic.children[i].label;
+            var opt = obj.makeOpt(
+                label, OPTION_ARROW_CIRCLE, '', 'option-execute-icon'
+            );
+            opt.setAttribute('data-index-topic', i);
+            childrenOptionsContainer.appendChild(opt);
+            optionList.push(opt);
+        }
+
+        optionList.map(opt => {
+            opt.onclick = (evt) => {
+                obj.keyAnimation(opt.textContent.trim());
+            }
+        })
+
+        arrow.onclick = (evt) => {
+            optionsContainer.classList.remove('hidden');
+            chataCascader.removeChild(childrenOptionsContainer);
+        }
+
+        seeMore.onclick = (evt) => {
+            obj.showQueryTips();
+            obj.queryTipsInputAnimation(topic.label);
+        }
+
+        childrenOptionsContainer.appendChild(seeMore);
+        return childrenOptionsContainer;
+    }
+
+    content.appendChild(topicsContainer);
+    topicsContainer.appendChild(chataCascader);
+    chataCascader.appendChild(optionsContainer);
+
+    content.appendChild(
+        document.createTextNode('Use')
+    );
+    var link = htmlToElement(`
+        <span class="autoql-vanilla-intro-qi-link">
+            <span class="chata-icon undefined" style="margin-right: -3px;">
+                ${EXPLORE_QUERIES}
+            </span> Explore Queries
+        </span>
+    `);
+    content.appendChild(
+        link
+    )
+
+    link.onclick = (evt) => {
+        obj.showQueryTips();
+    }
+
+
+    content.appendChild(
+        document.createTextNode(' to further explore the possibilities.')
+    );
+
+    return obj;
+}
+
 const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
@@ -23499,7 +23829,6 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     seriesCols.map((col) => {
         seriesIndexes.push(col.index);
     })
-    console.log(seriesIndexes);
     var seriesData = [];
     // console.log(groupable.length);
     // console.log(colu.length);
@@ -23525,7 +23854,6 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             seriesData.push(serie);
         }
     }else{
-        // seriesData = groupByIndex(data, columns, 0, [1,2]);
         seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
     }
 
@@ -23641,7 +23969,13 @@ const getMinAndMaxValues = (data) => {
     }
     let maxValue = d3.max(maxValuesFromArrays);
     let minValue = d3.min(minValuesFromArrays);
-
+    if (maxValue === minValue) {
+        if (minValue > 0) {
+            minValue = 0
+        } else if (minValue < 0) {
+            maxValue = 0
+        }
+    }
     return {
         min: minValue,
         max: maxValue
@@ -23679,9 +24013,7 @@ const getIndexesByType = (cols) => {
 }
 
 const getMetadataElement = (component, isDataMessenger) => {
-    if(isDataMessenger){
-        return component.parentElement.parentElement
-    }
+    return component.parentElement.parentElement
 }
 
 function createSafetynetContent(suggestionArray, context){
@@ -24267,8 +24599,6 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         labelsX, cols[groupableIndex2], options
     );
 
-    console.log(data);
-
     var height;
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -24701,7 +25031,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
 }
 
 function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 130, marginLabel: 50},
+    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -24709,15 +25039,6 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     var xIndexes = [];
     var yIndexes = [];
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        metadataComponent.metadata = {
-            groupBy: {
-                index: 0,
-                currentLi: 0,
-            }
-        }
-    }
     if(indexList['STRING']){
         yIndexes.push(...indexList['STRING'])
     }
@@ -24736,10 +25057,21 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         xIndexes = indexList['QUANTITY'];
     }
 
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            },
+            series: xIndexes
+        }
+    }
     var yAxisIndex = metadataComponent.metadata.groupBy.index;
-    var data = makeGroups(json, options, xIndexes, cols[yAxisIndex].index);
+    var activeSeries = metadataComponent.metadata.series;
+    var data = makeGroups(json, options, activeSeries, cols[yAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
-    var index1 = xIndexes[0].index;
+    var index1 = activeSeries[0].index;
     var index2 = cols[yAxisIndex].index;
 
 
@@ -24843,51 +25175,51 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     textContainerY.append('tspan')
     .text(col1)
 
-    // if(yIndexes.length > 1){
-    //     textContainerY.append('tspan')
-    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    //     .text('▼')
-    //     .style('font-size', '8px')
-    //     labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-    //     const paddingRect = 15;
-    //     const xWidthRect = getStringWidth(col1) + paddingRect;
-    //
-    //     labelYContainer.append('rect')
-    //     .attr('x', 105)
-    //     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-    //     .attr('height', xWidthRect + paddingRect)
-    //     .attr('width', 24)
-    //     .attr('fill', 'transparent')
-    //     .attr('stroke', '#508bb8')
-    //     .attr('stroke-width', '1px')
-    //     .attr('rx', '4')
-    //     .attr('transform', 'rotate(-180)')
-    //     .attr('class', 'autoql-vanilla-y-axis-label-border')
-    //
-    //     labelYContainer.on('mouseup', (evt) => {
-    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-    //         var popoverSelector = new ChataChartListPopover({
-    //             left: d3.event.clientX + 'px',
-    //             top: d3.event.clientY + 'px'
-    //         }, yIndexes, (evt, popover) => {
-    //             var yAxisIndex = evt.target.dataset.popoverIndex;
-    //             var currentLi = evt.target.dataset.popoverPosition;
-    //             metadataComponent.metadata.groupBy.index = yAxisIndex;
-    //             metadataComponent.metadata.groupBy.currentLi = currentLi;
-    //             createBarChart(
-    //                 component,
-    //                 json,
-    //                 options,
-    //                 fromChataUtils,
-    //                 valueClass,
-    //                 renderTooltips
-    //             )
-    //             popover.close();
-    //         });
-    //
-    //         popoverSelector.setSelectedItem(selectedItem)
-    //     })
-    // }
+    if(yIndexes.length > 1){
+        textContainerY.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+        labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col1) + paddingRect;
+
+        labelYContainer.append('rect')
+        .attr('x', 105)
+        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+        .attr('height', xWidthRect + paddingRect)
+        .attr('width', 24)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('transform', 'rotate(-180)')
+        .attr('class', 'autoql-vanilla-y-axis-label-border')
+
+        labelYContainer.on('mouseup', (evt) => {
+            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+            var popoverSelector = new ChataChartListPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, yIndexes, (evt, popover) => {
+                var yAxisIndex = evt.target.dataset.popoverIndex;
+                var currentLi = evt.target.dataset.popoverPosition;
+                metadataComponent.metadata.groupBy.index = yAxisIndex;
+                metadataComponent.metadata.groupBy.currentLi = currentLi;
+                createBarChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+
+            popoverSelector.setSelectedItem(selectedItem)
+        })
+    }
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
@@ -24898,44 +25230,52 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     textContainerX.append('tspan')
     .text(col2);
 
-    // if(xIndexes.length > 1){
-    //     textContainerX.append('tspan')
-    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    //     .text('▼')
-    //     .style('font-size', '8px')
-    //
-    //     labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
-    //     const paddingRect = 15;
-    //     const xWidthRect = getStringWidth(col2) + paddingRect;
-    //     var _y = 0;
-    //     const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
-    //     if(hasLegend){
-    //         _y = height - (margin.marginLabel/2) + 3;
-    //     }else{
-    //         _y = height + (margin.marginLabel/2) + 6;
-    //     }
-    //     labelXContainer.append('rect')
-    //     .attr('x', _x)
-    //     .attr('y', _y - 20)
-    //     .attr('height', 24)
-    //     .attr('width', xWidthRect + paddingRect)
-    //     .attr('fill', 'transparent')
-    //     .attr('stroke', '#508bb8')
-    //     .attr('stroke-width', '1px')
-    //     .attr('rx', '4')
-    //     .attr('class', 'autoql-vanilla-x-axis-label-border')
-    //
-    //     labelXContainer.on('mouseup', (evt) => {
-    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-    //         var popoverSelector = new ChataChartSeriesPopover({
-    //             left: d3.event.clientX + 'px',
-    //             top: d3.event.clientY + 'px'
-    //         }, xIndexes, (evt, popover) => {
-    //
-    //             popover.close();
-    //         });
-    //     })
-    // }
+    if(xIndexes.length > 1){
+        textContainerX.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+
+        labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
+        var _y = 0;
+        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
+        if(hasLegend){
+            _y = height - (margin.marginLabel/2) + 3;
+        }else{
+            _y = height + (margin.marginLabel/2) + 28;
+        }
+        labelXContainer.append('rect')
+        .attr('x', _x)
+        .attr('y', _y - 20)
+        .attr('height', 24)
+        .attr('width', xWidthRect + paddingRect)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+        labelXContainer.on('mouseup', (evt) => {
+            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+            var popoverSelector = new ChataChartSeriesPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+                metadataComponent.metadata.series = _activeSeries;
+                createBarChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+        })
+    }
 
     if(tickWidth < 135){
         svg.append("g")
@@ -24976,6 +25316,22 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         return "translate(0,"+ y0(getLabel(d.label)) +")";
     });
 
+    const calculateWidth = (d) => {
+        if(minMaxValues.min < 0){
+            return Math.abs(x(d.value) - x(0));
+        }else{
+            return x(d.value);
+        }
+    }
+
+    const getXRect = (d) => {
+        if(minMaxValues.min < 0){
+            return x(Math.min(0, d.value));
+        }else{
+            return 0;
+        }
+    }
+
     slice.selectAll("rect")
     .data(function(d) {
         for (var i = 0; i < d.values.length; i++) {
@@ -24999,8 +25355,8 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
             options
         ))
     })
-    .attr("width", function(d) { return Math.abs(x(d.value) - x(0)); })
-    .attr("x", function(d) { return x(Math.min(0, d.value)); })
+    .attr("width", function(d) { return calculateWidth(d) })
+    .attr("x", function(d) { return getXRect(d) })
     .attr("y", function(d) { return y1(d.group); })
     .attr("height", function(d) { return y1.bandwidth() })
     .attr('fill-opacity', '0.7')
@@ -25049,7 +25405,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
 
 function createColumnChart(component, json, options, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 50},
+    var margin = {top: 5, right: 10, bottom: 60, left: 90, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
@@ -25058,15 +25414,6 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     var xIndexes = [];
     var yIndexes = [];
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        metadataComponent.metadata = {
-            groupBy: {
-                index: 0,
-                currentLi: 0,
-            }
-        }
-    }
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
     }
@@ -25085,10 +25432,22 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         yIndexes = indexList['QUANTITY'];
     }
 
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            },
+            series: yIndexes
+        }
+    }
+
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
-    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
+    var activeSeries = metadataComponent.metadata.series;
+    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
-    var index1 = yIndexes[0].index;
+    var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
@@ -25187,51 +25546,45 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     textContainerY.append('tspan')
     .text(col2)
 
-    // if(yIndexes.length > 1){
-    //     textContainerY.append('tspan')
-    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    //     .text('▼')
-    //     .style('font-size', '8px')
-    //     labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-    //     const paddingRect = 15;
-    //     const xWidthRect = getStringWidth(col2) + paddingRect;
-    //
-    //     labelYContainer.append('rect')
-    //     .attr('x', 66)
-    //     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-    //     .attr('height', xWidthRect + paddingRect)
-    //     .attr('width', 24)
-    //     .attr('fill', 'transparent')
-    //     .attr('stroke', '#508bb8')
-    //     .attr('stroke-width', '1px')
-    //     .attr('rx', '4')
-    //     .attr('transform', 'rotate(-180)')
-    //     .attr('class', 'autoql-vanilla-y-axis-label-border')
-    //
-    //     labelYContainer.on('mouseup', (evt) => {
-    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-    //         var popoverSelector = new ChataChartSeriesPopover({
-    //             left: d3.event.clientX + 'px',
-    //             top: d3.event.clientY + 'px'
-    //         }, yIndexes, (evt, popover) => {
-    //             // var yAxisIndex = evt.target.dataset.popoverIndex;
-    //             // var currentLi = evt.target.dataset.popoverPosition;
-    //             // metadataComponent.metadata.groupBy.index = yAxisIndex;
-    //             // metadataComponent.metadata.groupBy.currentLi = currentLi;
-    //             // createColumnChart(
-    //             //     component,
-    //             //     json,
-    //             //     options,
-    //             //     fromChataUtils,
-    //             //     valueClass,
-    //             //     renderTooltips
-    //             // )
-    //             popover.close();
-    //         });
-    //
-    //         // popoverSelector.setSelectedItem(selectedItem)
-    //     })
-    // }
+    if(yIndexes.length > 1){
+        textContainerY.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+        labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
+
+        labelYContainer.append('rect')
+        .attr('x', 66)
+        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+        .attr('height', xWidthRect + paddingRect)
+        .attr('width', 24)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('transform', 'rotate(-180)')
+        .attr('class', 'autoql-vanilla-y-axis-label-border')
+
+        labelYContainer.on('mouseup', (evt) => {
+            var popoverSelector = new ChataChartSeriesPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+                metadataComponent.metadata.series = _activeSeries;
+                createColumnChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+        })
+    }
 
 
     // X AXIS
@@ -25244,57 +25597,57 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     textContainerX.append('tspan')
     .text(col1);
 
-    // if(xIndexes.length > 1){
-    //     textContainerX.append('tspan')
-    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    //     .text('▼')
-    //     .style('font-size', '8px')
-    //
-    //     labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
-    //     const paddingRect = 15;
-    //     const xWidthRect = getStringWidth(col1) + paddingRect;
-    //     var _y = 0;
-    //     const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
-    //     if(hasLegend){
-    //         _y = height - (margin.marginLabel/2) - 3;
-    //     }else{
-    //         _y = height + (margin.marginLabel/2) + 6;
-    //     }
-    //     labelXContainer.append('rect')
-    //     .attr('x', _x)
-    //     .attr('y', _y)
-    //     .attr('height', 24)
-    //     .attr('width', xWidthRect + paddingRect)
-    //     .attr('fill', 'transparent')
-    //     .attr('stroke', '#508bb8')
-    //     .attr('stroke-width', '1px')
-    //     .attr('rx', '4')
-    //     .attr('class', 'autoql-vanilla-x-axis-label-border')
-    //
-    //     labelXContainer.on('mouseup', (evt) => {
-    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-    //         var popoverSelector = new ChataChartListPopover({
-    //             left: d3.event.clientX + 'px',
-    //             top: d3.event.clientY + 'px'
-    //         }, xIndexes, (evt, popover) => {
-    //             var xAxisIndex = evt.target.dataset.popoverIndex;
-    //             var currentLi = evt.target.dataset.popoverPosition;
-    //             metadataComponent.metadata.groupBy.index = xAxisIndex;
-    //             metadataComponent.metadata.groupBy.currentLi = currentLi;
-    //             createColumnChart(
-    //                 component,
-    //                 json,
-    //                 options,
-    //                 fromChataUtils,
-    //                 valueClass,
-    //                 renderTooltips
-    //             )
-    //             popover.close();
-    //         });
-    //
-    //         popoverSelector.setSelectedItem(selectedItem)
-    //     })
-    // }
+    if(xIndexes.length > 1){
+        textContainerX.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+
+        labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col1) + paddingRect;
+        var _y = 0;
+        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
+        if(hasLegend){
+            _y = height - (margin.marginLabel/2) - 3;
+        }else{
+            _y = height + (margin.marginLabel/2) + 6;
+        }
+        labelXContainer.append('rect')
+        .attr('x', _x)
+        .attr('y', _y)
+        .attr('height', 24)
+        .attr('width', xWidthRect + paddingRect)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+        labelXContainer.on('mouseup', (evt) => {
+            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+            var popoverSelector = new ChataChartListPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, xIndexes, (evt, popover) => {
+                var xAxisIndex = evt.target.dataset.popoverIndex;
+                var currentLi = evt.target.dataset.popoverPosition;
+                metadataComponent.metadata.groupBy.index = xAxisIndex;
+                metadataComponent.metadata.groupBy.currentLi = currentLi;
+                createColumnChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+
+            popoverSelector.setSelectedItem(selectedItem)
+        })
+    }
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -25339,6 +25692,15 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         return "translate(" + x0(getLabel(d.label)) + ",0)";
     });
 
+
+    const calculateHeight = (d) => {
+        if(minMaxValues.min < 0){
+            return Math.abs(y(d.value) - y(0));
+        }else{
+            return (height - margin.bottom) - y(d.value);
+        }
+    }
+
     slice.selectAll("rect")
     .data(function(d) {
         for (var i = 0; i < d.values.length; i++) {
@@ -25348,9 +25710,6 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     })
     .enter().append("rect")
     .each(function (d, i) {
-        console.log(d.index);
-        console.log(i);
-        console.log(data[d.index]);
         d3.select(this).attr(valueClass, d.index)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
@@ -25369,7 +25728,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .attr('fill-opacity', '0.7')
     .attr('class', 'tooltip-2d bar')
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
-    .attr("height", function(d) { return Math.abs(y(d.value) - y(0)); })
+    .attr("height", function(d) { return calculateHeight(d) })
 
     if(hasLegend){
         var svgLegend = svg.append('g')
@@ -25418,15 +25777,6 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     var xIndexes = [];
     var yIndexes = [];
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        metadataComponent.metadata = {
-            groupBy: {
-                index: 0,
-                currentLi: 0,
-            }
-        }
-    }
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
     }
@@ -25444,11 +25794,22 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
     }
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: 0,
+                currentLi: 0,
+            },
+            series: yIndexes
+        }
+    }
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
-    var data = makeGroups(json, options, yIndexes, cols[xAxisIndex].index);
+    var activeSeries = metadataComponent.metadata.series;
+    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
-    var index1 = yIndexes[0].index;
+    var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
 
 
@@ -25544,51 +25905,45 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     textContainerY.append('tspan')
     .text(col2)
 
-    // if(yIndexes.length > 1){
-    //     textContainerY.append('tspan')
-    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    //     .text('▼')
-    //     .style('font-size', '8px')
-    //     labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-    //     const paddingRect = 15;
-    //     const xWidthRect = getStringWidth(col2) + paddingRect;
-    //
-    //     labelYContainer.append('rect')
-    //     .attr('x', 66)
-    //     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-    //     .attr('height', xWidthRect + paddingRect)
-    //     .attr('width', 24)
-    //     .attr('fill', 'transparent')
-    //     .attr('stroke', '#508bb8')
-    //     .attr('stroke-width', '1px')
-    //     .attr('rx', '4')
-    //     .attr('transform', 'rotate(-180)')
-    //     .attr('class', 'autoql-vanilla-y-axis-label-border')
-    //
-    //     labelYContainer.on('mouseup', (evt) => {
-    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-    //         var popoverSelector = new ChataChartSeriesPopover({
-    //             left: d3.event.clientX + 'px',
-    //             top: d3.event.clientY + 'px'
-    //         }, yIndexes, (evt, popover) => {
-    //             // var yAxisIndex = evt.target.dataset.popoverIndex;
-    //             // var currentLi = evt.target.dataset.popoverPosition;
-    //             // metadataComponent.metadata.groupBy.index = yAxisIndex;
-    //             // metadataComponent.metadata.groupBy.currentLi = currentLi;
-    //             // createColumnChart(
-    //             //     component,
-    //             //     json,
-    //             //     options,
-    //             //     fromChataUtils,
-    //             //     valueClass,
-    //             //     renderTooltips
-    //             // )
-    //             popover.close();
-    //         });
-    //
-    //         // popoverSelector.setSelectedItem(selectedItem)
-    //     })
-    // }
+    if(yIndexes.length > 1){
+        textContainerY.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+        labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
+
+        labelYContainer.append('rect')
+        .attr('x', 66)
+        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+        .attr('height', xWidthRect + paddingRect)
+        .attr('width', 24)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('transform', 'rotate(-180)')
+        .attr('class', 'autoql-vanilla-y-axis-label-border')
+
+        labelYContainer.on('mouseup', (evt) => {
+            var popoverSelector = new ChataChartSeriesPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+                metadataComponent.metadata.series = _activeSeries;
+                createLineChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+        })
+    }
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
@@ -25599,58 +25954,58 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
 
     textContainerX.append('tspan')
     .text(col1);
-    // 
-    // if(xIndexes.length > 1){
-    //     textContainerX.append('tspan')
-    //     .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    //     .text('▼')
-    //     .style('font-size', '8px')
-    //
-    //     labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
-    //     const paddingRect = 15;
-    //     const xWidthRect = getStringWidth(col1) + paddingRect;
-    //     var _y = 0;
-    //     const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
-    //     if(hasLegend){
-    //         _y = height - (margin.marginLabel/2) + 3;
-    //     }else{
-    //         _y = height + (margin.marginLabel/2) + 6;
-    //     }
-    //     labelXContainer.append('rect')
-    //     .attr('x', _x)
-    //     .attr('y', _y)
-    //     .attr('height', 24)
-    //     .attr('width', xWidthRect + paddingRect)
-    //     .attr('fill', 'transparent')
-    //     .attr('stroke', '#508bb8')
-    //     .attr('stroke-width', '1px')
-    //     .attr('rx', '4')
-    //     .attr('class', 'autoql-vanilla-x-axis-label-border')
-    //
-    //     labelXContainer.on('mouseup', (evt) => {
-    //         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-    //         var popoverSelector = new ChataChartListPopover({
-    //             left: d3.event.clientX + 'px',
-    //             top: d3.event.clientY + 'px'
-    //         }, xIndexes, (evt, popover) => {
-    //             var xAxisIndex = evt.target.dataset.popoverIndex;
-    //             var currentLi = evt.target.dataset.popoverPosition;
-    //             metadataComponent.metadata.groupBy.index = xAxisIndex;
-    //             metadataComponent.metadata.groupBy.currentLi = currentLi;
-    //             createLineChart(
-    //                 component,
-    //                 json,
-    //                 options,
-    //                 fromChataUtils,
-    //                 valueClass,
-    //                 renderTooltips
-    //             )
-    //             popover.close();
-    //         });
-    //
-    //         popoverSelector.setSelectedItem(selectedItem)
-    //     })
-    // }
+
+    if(xIndexes.length > 1){
+        textContainerX.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+
+        labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col1) + paddingRect;
+        var _y = 0;
+        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
+        if(hasLegend){
+            _y = height - (margin.marginLabel/2) + 3;
+        }else{
+            _y = height + (margin.marginLabel/2) + 6;
+        }
+        labelXContainer.append('rect')
+        .attr('x', _x)
+        .attr('y', _y)
+        .attr('height', 24)
+        .attr('width', xWidthRect + paddingRect)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+        labelXContainer.on('mouseup', (evt) => {
+            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+            var popoverSelector = new ChataChartListPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, xIndexes, (evt, popover) => {
+                var xAxisIndex = evt.target.dataset.popoverIndex;
+                var currentLi = evt.target.dataset.popoverPosition;
+                metadataComponent.metadata.groupBy.index = xAxisIndex;
+                metadataComponent.metadata.groupBy.currentLi = currentLi;
+                createLineChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+                popover.close();
+            });
+
+            popoverSelector.setSelectedItem(selectedItem)
+        })
+    }
 
 
     var x = d3.scaleBand()
@@ -25800,8 +26155,21 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata3D){
+        metadataComponent.metadata3D = {
+            groupBy: {
+                groupable1: 0,
+                groupable2: 1,
+            },
+        }
+    }
+
+    var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
+    var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
+    var groupCols = groupables.map((groupable, i) => {
+        return {col: groupable.jsonCol, index: i}
+    });
     var notGroupableIndex = notGroupableField.indexCol;
 
 
@@ -25814,7 +26182,9 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
-    var data = ChataUtils.format3dData(json, groups);
+    var data = ChataUtils.format3dData(
+        json, groups, metadataComponent.metadata3D
+    );
 
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -25879,12 +26249,65 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
-    svg.append('text')
+
+    // X AXIS
+    var labelXContainer = svg.append('g');
+    var textContainerX = labelXContainer.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + (margin.bottom - 10))
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
+
+    textContainerX.append('tspan')
     .text(col2);
+
+    textContainerX.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+
+    labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(col2) + paddingRect;
+    const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+    const _y = height + (margin.bottom/2);
+
+    labelXContainer.append('rect')
+    .attr('x', _x)
+    .attr('y', _y)
+    .attr('height', 20)
+    .attr('width', xWidthRect + paddingRect)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+    labelXContainer.on('mouseup', (evt) => {
+        var popoverSelector = new ChataChartListPopover({
+            left: d3.event.clientX,
+            top: d3.event.clientY
+        }, groupCols, (evt, popover) => {
+
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createStackedColumnChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        });
+
+    })
 
 
     var x = d3.scaleBand()
@@ -25953,7 +26376,6 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-    console.log(subgroups);
     var stackedData = d3.stack()
     .keys(subgroups)
     (data)
@@ -26029,7 +26451,9 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort())
+        .domain(subgroups.sort().map(elem => {
+            return formatChartData(elem, cols[groupableIndex1], options);
+        }))
         .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
@@ -26059,12 +26483,24 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
     var chartWidth = width - wLegendBox;
     var height;
     var legendBoxMargin = 15;
-
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata3D){
+        metadataComponent.metadata3D = {
+            groupBy: {
+                groupable1: 0,
+                groupable2: 1,
+            },
+        }
+    }
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var groupCols = groupables.map((groupable, i) => {
+        return {col: groupable.jsonCol, index: i}
+    });
+
+    var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
+    var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
 
 
@@ -26077,7 +26513,9 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
         data, row => row[groupableIndex1]
     );
     var cols = json['data']['columns'];
-    var data = ChataUtils.format3dData(json, groups);
+    var data = ChataUtils.format3dData(
+        json, groups, metadataComponent.metadata3D
+    );
 
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
@@ -26132,13 +26570,62 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")");
 
-    svg.append('text')
+    var labelYContainer = svg.append('g');
+
+    // Y AXIS
+    var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -margin.left + margin.right + 4.5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
+
+    textContainerY.append('tspan')
     .text(col2);
+
+    textContainerY.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+    labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(col2) + paddingRect;
+
+    labelYContainer.append('rect')
+    .attr('x', 75.5)
+    .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+    .attr('height', xWidthRect + paddingRect)
+    .attr('width', 23)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('transform', 'rotate(-180)')
+    .attr('class', 'autoql-vanilla-y-axis-label-border')
+
+    labelYContainer.on('mouseup', (evt) => {
+        var popoverSelector = new ChataChartListPopover({
+            left: d3.event.clientX,
+            top: d3.event.clientY
+        }, groupCols, (evt, popover) => {
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createStackedBarChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        });
+
+    })
 
     svg.append('text')
     .attr('x', chartWidth / 2)
@@ -26275,7 +26762,9 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort())
+        .domain(subgroups.sort().map(elem => {
+            return formatChartData(elem, cols[groupableIndex1], options);
+        }))
         .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
@@ -26308,9 +26797,23 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata3D){
+        metadataComponent.metadata3D = {
+            groupBy: {
+                groupable1: 0,
+                groupable2: 1,
+            },
+        }
+    }
+
+    var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
+    var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
+    var groupCols = groupables.map((groupable, i) => {
+        return {col: groupable.jsonCol, index: i}
+    });
+
     var columns = json['data']['columns'];
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
@@ -26322,7 +26825,10 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     );
     var cols = json['data']['columns'];
     // var data = responseToArrayObjects(json, groups);
-    var data = ChataUtils.format3dData(json, groups);
+    var data = ChataUtils.format3dData(
+        json, groups, metadataComponent.metadata3D
+    );
+    console.log(data);
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
     var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
@@ -26386,12 +26892,63 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
-    svg.append('text')
+    // X AXIS
+    var labelXContainer = svg.append('g');
+    var textContainerX = labelXContainer.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + (margin.bottom - 10))
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
+    textContainerX.append('tspan')
     .text(col2);
+
+    textContainerX.append('tspan')
+    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+    .text('▼')
+    .style('font-size', '8px')
+
+    labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(col2) + paddingRect;
+    const X = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+    const Y = height + (margin.bottom/2);
+
+    labelXContainer.append('rect')
+    .attr('x', X)
+    .attr('y', Y)
+    .attr('height', 20)
+    .attr('width', xWidthRect + paddingRect)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+    labelXContainer.on('mouseup', (evt) => {
+        var popoverSelector = new ChataChartListPopover({
+            left: d3.event.clientX,
+            top: d3.event.clientY
+        }, groupCols, (evt, popover) => {
+
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createAreaChart(
+                    component,
+                    json,
+                    options,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        });
+
+    })
 
 
     var x = d3.scaleBand()
@@ -26479,15 +27036,12 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
                 points.push({
                     group: seriesValues.group,
                     y: value,
-                    y1: stackedData[i][_x][1],
-                    y0: stackedData[i][_x][0]
+                    y1: stackedData[i][_x][groupableIndex2],
+                    y0: stackedData[i][_x][groupableIndex1]
                 })
             }
         }
     }
-
-    console.log(points);
-    console.log(stackedData);
 
     svg.selectAll("mylayers")
     .data(stackedData)
@@ -26535,7 +27089,9 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort())
+        .domain(subgroups.sort().map(elem => {
+            return formatChartData(elem, cols[groupableIndex1], options);
+        }))
         .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
@@ -28256,14 +28812,13 @@ ChataUtils.formatCompareData = function(col, data, groups){
     return dataGrouped;
 }
 
-ChataUtils.format3dData = function(json, groups){
+ChataUtils.format3dData = function(json, groups, metadata){
     var dataGrouped = [];
     var data = json['data']['rows'];
-    var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var groupableIndex1 = metadata.groupBy.groupable1;
+    var groupableIndex2 = metadata.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
 
     for (var i = 0; i < groups.length; i++) {
@@ -28684,6 +29239,7 @@ function DataMessenger(elem, options){
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         inputPlaceholder: 'Type your queries here',
+        activeIntegrator: ''
     };
 
     obj.autoCompleteTimer = undefined;
@@ -28734,6 +29290,9 @@ function DataMessenger(elem, options){
 
     obj.rootElem = rootElem;
     rootElem.classList.add('autoql-vanilla-chata-drawer');
+    obj.options.activeIntegrator = getActiveIntegrator(
+        obj.options.authentication.domain
+    );
 
     obj.setOption = (option, value) => {
         switch (option) {
@@ -29030,6 +29589,7 @@ function DataMessenger(elem, options){
             obj.applyStyles();
             obj.createHeader();
             obj.createDrawerContent();
+            obj.createIntroMessageTopics();
             obj.createBar();
             obj.createResizeHandler();
             obj.createQueryTabs();
@@ -29126,7 +29686,6 @@ function DataMessenger(elem, options){
             tabChataUtils.classList.remove('active');
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('block');
-
         }
 
         var tabs = pageSwitcherShadowContainer;
@@ -29151,6 +29710,7 @@ function DataMessenger(elem, options){
         textBar.classList.add('autoql-vanilla-text-bar');
         textBar.classList.add('autoql-vanilla-text-bar-animation');
         chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
+        container.classList.add('autoql-vanilla-querytips-container');
         queryTipsResultContainer.classList.add(
             'autoql-vanilla-query-tips-result-container'
         );
@@ -29210,6 +29770,7 @@ function DataMessenger(elem, options){
         input.setAttribute('placeholder', 'Search relevant queries by topic');
         obj.queryTips = container;
         obj.drawerContent.appendChild(container);
+        obj.queryTipsInput = input;
     }
 
     obj.putRelatedQueries = (
@@ -29513,6 +30074,16 @@ function DataMessenger(elem, options){
         obj.rootElem.appendChild(scrollBox);
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
+    }
+
+    obj.createIntroMessageTopics = () => {
+        const topics = getIntroMessageTopics(obj.options.activeIntegrator);
+        if(topics){
+            console.log(topics);
+            const topicsWidget = new Cascader(topics, obj);
+            obj.drawerContent.appendChild(topicsWidget._elem);
+            obj.topicsWidget = topicsWidget;
+        }
     }
 
     obj.createHeader = () => {
@@ -30196,8 +30767,8 @@ function DataMessenger(elem, options){
                 query_id: queryId,
                 group_bys: params,
                 username: 'demo',
-                customer_id: options.authentication.customerId || "",
-                user_id: options.authentication.userId || "",
+                // customer_id: options.authentication.customerId || "",
+                // user_id: options.authentication.userId || "",
                 debug: options.autoQLConfig.debug
             }
         }else{
@@ -30840,7 +31411,7 @@ function DataMessenger(elem, options){
 
         var createCheckbox = (name, checked, colIndex, isLine=false) => {
             var tick = htmlToElement(`
-                <div class="chata-checkbox-tick">
+                <div class="autoql-vanilla-chata-checkbox-tick">
                 <span class="chata-icon">${TICK}</span>
                 </div>
             `);
@@ -30848,7 +31419,7 @@ function DataMessenger(elem, options){
             var checkboxWrapper = document.createElement('div');
             var checkboxInput = document.createElement('input');
             checkboxInput.setAttribute('type', 'checkbox');
-            checkboxInput.classList.add('m-checkbox__input');
+            checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
             if(name){
                 checkboxInput.setAttribute('data-col-name', name);
             }
@@ -31167,7 +31738,7 @@ function DataMessenger(elem, options){
           )}&projectId=1`
           : `${obj.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
-          )}&key=${obj.options.authentication.apiKey}&customer_id=${obj.options.authentication.customerId}&user_id=${obj.options.authentication.userId}`
+          )}&key=${obj.options.authentication.apiKey}`
 
 
         ChataUtils.safetynetCall(
@@ -32123,147 +32694,31 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 break;
             case 'bar':
-            var chartWrapper = document.createElement('div');
-            container.appendChild(chartWrapper);
-            if(json['data']['display_type'] == 'compare_table'
-                || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChataUtils.getUniqueValues(
-                    data, row => row[0]
-                );
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(
-                        groups[i],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    )
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = ChataUtils.formatCompareData(
-                    json['data']['columns'], data, groups
-                );
-                createGroupedBarChart(
-                    chartWrapper,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 createBarChart(
                     chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
-            }
-
                 break;
             case 'column':
-            var chartWrapper = document.createElement('div');
-            container.appendChild(chartWrapper);
-            if(json['data']['display_type'] == 'compare_table'
-                || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChataUtils.getUniqueValues(
-                    data, row => row[0]
-                );
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(groups[i],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    )
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = ChataUtils.formatCompareData(
-                    json['data']['columns'],
-                    data,
-                    groups
-                );
-                createGroupedColumnChart(
-                    chartWrapper,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 createColumnChart(
                     chartWrapper,json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
-            }
-
                 break;
             case 'line':
-            var chartWrapper = document.createElement('div');
-            container.appendChild(chartWrapper);
-            if(json['data']['display_type'] == 'compare_table'
-                || json['data']['columns'].length >= 3){
-                var data = cloneObject(json['data']['rows']);
-
-                var groups = ChataUtils.getUniqueValues(
-                    data, row => row[0]
-                );
-
-                groups = groups.sort();
-                for (var i = 0; i < data.length; i++) {
-                    data[i][0] = formatData(
-                        data[i][0],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                for (var i = 0; i < groups.length; i++) {
-                    groups[i] = formatData(
-                        groups[i],
-                        json['data']['columns'][0],
-                        ChataUtils.options
-                    );
-                }
-                var cols = json['data']['columns'];
-                var dataGrouped = ChataUtils.formatCompareData(
-                    json['data']['columns'], data, groups
-                );
-                createGroupedLineChart(
-                    chartWrapper,
-                    groups,
-                    dataGrouped,
-                    cols,
-                    dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                );
-            }else{
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
                 createLineChart(
                     chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 );
-            }
-
                 break;
             case 'heatmap':
                 var chartWrapper = document.createElement('div');
@@ -32783,16 +33238,25 @@ function Dashboard(selector, options={}){
 
     obj.grid = grid;
     obj.tiles = items;
+
     for (var i = 0; i < options.tiles.length; i++) {
         var opts = {
             w: options.tiles[i].w,
             h: options.tiles[i].h,
+            x: options.tiles[i].x,
+            y: options.tiles[i].y,
             query: options.tiles[i].query,
             title: options.tiles[i].title,
             displayType: options.tiles[i].displayType
         }
         items.push(new Tile(obj, opts));
     }
+
+    items.sort((a, b) => {
+        if (a.options.y == b.options.y) return a.options.x - b.options.x;
+        return a.options.y - b.options.y;
+    })
+
     obj.grid.add(obj.tiles);
     obj.grid._settings.dragEnabled = false;
 
@@ -34157,6 +34621,261 @@ function SettingsItem(title, message){
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Split=t()}(this,function(){"use strict";var L=window,T=L.document,N="addEventListener",R="removeEventListener",q="getBoundingClientRect",H="horizontal",I=function(){return!1},W=L.attachEvent&&!L[N],i=["","-webkit-","-moz-","-o-"].filter(function(e){var t=T.createElement("div");return t.style.cssText="width:"+e+"calc(9px)",!!t.style.length}).shift()+"calc",s=function(e){return"string"==typeof e||e instanceof String},X=function(e){if(s(e)){var t=T.querySelector(e);if(!t)throw new Error("Selector "+e+" did not match a DOM element");return t}return e},Y=function(e,t,n){var r=e[t];return void 0!==r?r:n},G=function(e,t,n,r){if(t){if("end"===r)return 0;if("center"===r)return e/2}else if(n){if("start"===r)return 0;if("center"===r)return e/2}return e},J=function(e,t){var n=T.createElement("div");return n.className="gutter gutter-"+t,n},K=function(e,t,n){var r={};return s(t)?r[e]=t:r[e]=W?t+"%":i+"("+t+"% - "+n+"px)",r},P=function(e,t){var n;return(n={})[e]=t+"px",n};return function(e,i){void 0===i&&(i={});var u,t,s,o,r,a,l=e;Array.from&&(l=Array.from(l));var c=X(l[0]).parentNode,n=getComputedStyle?getComputedStyle(c):null,f=n?n.flexDirection:null,m=Y(i,"sizes")||l.map(function(){return 100/l.length}),h=Y(i,"minSize",100),d=Array.isArray(h)?h:l.map(function(){return h}),g=Y(i,"expandToMin",!1),v=Y(i,"gutterSize",10),p=Y(i,"gutterAlign","center"),y=Y(i,"snapOffset",30),z=Y(i,"dragInterval",1),S=Y(i,"direction",H),b=Y(i,"cursor",S===H?"col-resize":"row-resize"),_=Y(i,"gutter",J),E=Y(i,"elementStyle",K),w=Y(i,"gutterStyle",P);function k(t,e,n,r){var i=E(u,e,n,r);Object.keys(i).forEach(function(e){t.style[e]=i[e]})}function x(){return a.map(function(e){return e.size})}function M(e){return"touches"in e?e.touches[0][t]:e[t]}function U(e){var t=a[this.a],n=a[this.b],r=t.size+n.size;t.size=e/this.size*r,n.size=r-e/this.size*r,k(t.element,t.size,this._b,t.i),k(n.element,n.size,this._c,n.i)}function O(){var e=a[this.a].element,t=a[this.b].element,n=e[q](),r=t[q]();this.size=n[u]+r[u]+this._b+this._c,this.start=n[s],this.end=n[o]}function C(s){var o=function(e){if(!getComputedStyle)return null;var t=getComputedStyle(e);if(!t)return null;var n=e[r];return 0===n?null:n-=S===H?parseFloat(t.paddingLeft)+parseFloat(t.paddingRight):parseFloat(t.paddingTop)+parseFloat(t.paddingBottom)}(c);if(null===o)return s;if(d.reduce(function(e,t){return e+t},0)>o)return s;var a=0,u=[],e=s.map(function(e,t){var n=o*e/100,r=G(v,0===t,t===s.length-1,p),i=d[t]+r;return n<i?(a+=i-n,u.push(0),i):(u.push(n-i),n)});return 0===a?s:e.map(function(e,t){var n=e;if(0<a&&0<u[t]-a){var r=Math.min(a,u[t]-a);a-=r,n=e-r}return n/o*100})}function D(e){if(!("button"in e&&0!==e.button)){var t=this,n=a[t.a].element,r=a[t.b].element;t.dragging||Y(i,"onDragStart",I)(x()),e.preventDefault(),t.dragging=!0,t.move=function(e){var t,n=a[this.a],r=a[this.b];this.dragging&&(t=M(e)-this.start+(this._b-this.dragOffset),1<z&&(t=Math.round(t/z)*z),t<=n.minSize+y+this._b?t=n.minSize+this._b:t>=this.size-(r.minSize+y+this._c)&&(t=this.size-(r.minSize+this._c)),U.call(this,t),Y(i,"onDrag",I)())}.bind(t),t.stop=function(){var e=this,t=a[e.a].element,n=a[e.b].element;e.dragging&&Y(i,"onDragEnd",I)(x()),e.dragging=!1,L[R]("mouseup",e.stop),L[R]("touchend",e.stop),L[R]("touchcancel",e.stop),L[R]("mousemove",e.move),L[R]("touchmove",e.move),e.stop=null,e.move=null,t[R]("selectstart",I),t[R]("dragstart",I),n[R]("selectstart",I),n[R]("dragstart",I),t.style.userSelect="",t.style.webkitUserSelect="",t.style.MozUserSelect="",t.style.pointerEvents="",n.style.userSelect="",n.style.webkitUserSelect="",n.style.MozUserSelect="",n.style.pointerEvents="",e.gutter.style.cursor="",e.parent.style.cursor="",T.body.style.cursor=""}.bind(t),L[N]("mouseup",t.stop),L[N]("touchend",t.stop),L[N]("touchcancel",t.stop),L[N]("mousemove",t.move),L[N]("touchmove",t.move),n[N]("selectstart",I),n[N]("dragstart",I),r[N]("selectstart",I),r[N]("dragstart",I),n.style.userSelect="none",n.style.webkitUserSelect="none",n.style.MozUserSelect="none",n.style.pointerEvents="none",r.style.userSelect="none",r.style.webkitUserSelect="none",r.style.MozUserSelect="none",r.style.pointerEvents="none",t.gutter.style.cursor=b,t.parent.style.cursor=b,T.body.style.cursor=b,O.call(t),t.dragOffset=M(e)-t.end}}S===H?(u="width",t="clientX",s="left",o="right",r="clientWidth"):"vertical"===S&&(u="height",t="clientY",s="top",o="bottom",r="clientHeight"),m=C(m);var A=[];function j(e){var t=e.i===A.length,n=t?A[e.i-1]:A[e.i];O.call(n);var r=t?n.size-e.minSize-n._c:e.minSize+n._b;U.call(n,r)}function F(e){var s=C(e);s.forEach(function(e,t){if(0<t){var n=A[t-1],r=a[n.a],i=a[n.b];r.size=s[t-1],i.size=e,k(r.element,r.size,n._b,r.i),k(i.element,i.size,n._c,i.i)}})}function B(n,r){A.forEach(function(t){if(!0!==r?t.parent.removeChild(t.gutter):(t.gutter[R]("mousedown",t._a),t.gutter[R]("touchstart",t._a)),!0!==n){var e=E(u,t.a.size,t._b);Object.keys(e).forEach(function(e){a[t.a].element.style[e]="",a[t.b].element.style[e]=""})}})}return(a=l.map(function(e,t){var n,r,i,s={element:X(e),size:m[t],minSize:d[t],i:t};if(0<t&&((n={a:t-1,b:t,dragging:!1,direction:S,parent:c})._b=G(v,t-1==0,!1,p),n._c=G(v,!1,t===l.length-1,p),"row-reverse"===f||"column-reverse"===f)){var o=n.a;n.a=n.b,n.b=o}if(!W&&0<t){var a=_(t,S,s.element);r=a,i=w(u,v,t),Object.keys(i).forEach(function(e){r.style[e]=i[e]}),n._a=D.bind(n),a[N]("mousedown",n._a),a[N]("touchstart",n._a),c.insertBefore(a,s.element),n.gutter=a}return k(s.element,s.size,G(v,0===t,t===l.length-1,p),t),0<t&&A.push(n),s})).forEach(function(e){var t=e.element[q]()[u];t<e.minSize&&(g?j(e):e.minSize=t)}),W?{setSizes:F,destroy:B}:{setSizes:F,getSizes:x,collapse:function(e){j(a[e])},destroy:B,parent:c,pairs:A}}});
 //# sourceMappingURL=split.min.js.map
 
+function PopoverChartSelector(position) {
+    var obj = this;
+    var popover = document.createElement('div');
+    popover.classList.add('autoql-vanilla-popover-selector');
+    obj.popover = popover;
+
+    obj.show = () => {
+        popover.style.visibility = 'visible';
+        popover.style.opacity = 1;
+        popover.style.left = position.left + 'px'
+        if((position.top + popover.clientHeight + 100) > window.screen.height){
+            popover.style.top = ((position.top + window.pageYOffset) - popover.clientHeight + 100) + 'px';
+        }else{
+            popover.style.top = (position.top + window.pageYOffset) + 'px';
+        }
+        return obj;
+    }
+
+    obj.close = () => {
+        popover.style.visibility = 'hidden';
+        popover.style.opacity = 0;
+        document.body.removeChild(popover);
+    }
+
+    obj.appendContent = (elem) => {
+        popover.appendChild(elem);
+    }
+
+    document.body.appendChild(popover);
+
+    return obj;
+}
+
+
+function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
+    var obj = this;
+    var indexList = getIndexesByType(cols);
+    var seriesIndexes = [];
+    activeSeries.map((col) => {
+        seriesIndexes.push(col.index);
+    })
+    var content = document.createElement('div');
+    var popover = new PopoverChartSelector(position);
+    var series = {};
+    const applyButton = htmlToElement(`
+        <button
+            class="autoql-vanilla-chata-btn primary"
+            style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
+                Apply
+        </button>
+    `);
+
+    var deselectCheckBox = () => {
+        const type = obj.groupType;
+        var inputs = content.querySelectorAll(
+            `[data-col-type="${type}"]`
+        );
+
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].removeAttribute('checked')
+        }
+    }
+
+    var enableApplyButton = (evt) => {
+        const count = selectedCount();
+        if(count == 0){
+            applyButton.setAttribute('disabled', 'true');
+            applyButton.classList.add('disabled');
+        }else{
+            applyButton.removeAttribute('disabled');
+            applyButton.classList.remove('disabled');
+        }
+    }
+
+    var selectedCount = () => {
+        var inputs = content.querySelectorAll(
+            '[data-col-type]:checked'
+        );
+        return inputs.length;
+    }
+
+    content.classList.add('autoql-vanilla-axis-selector-container');
+
+    var createCheckbox = (column, checked=false) => {
+        var colObj = column.col;
+        var colName = colObj.display_name || colObj.name;
+        var tick = htmlToElement(`
+            <div class="autoql-vanilla-chata-checkbox-tick">
+            <span class="chata-icon">${TICK}</span>
+            </div>
+        `);
+        var checkboxContainer = document.createElement('div');
+        var checkboxWrapper = document.createElement('div');
+        var checkboxInput = document.createElement('input');
+        checkboxInput.setAttribute('type', 'checkbox');
+
+        checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
+        if(name){
+            checkboxInput.setAttribute('data-col-name', colName);
+        }
+        checkboxInput.setAttribute('data-col-index', column.index);
+        checkboxInput.setAttribute('data-col-type', colObj.type);
+        checkboxInput.col = column;
+        tick.style.top = '3px';
+        tick.style.left = '23px';
+        checkboxInput.style.marginTop = '4.5px';
+        checkboxInput.style.marginLeft = '20px';
+
+        checkboxContainer.style.width = '38px';
+        checkboxContainer.style.height = '18px';
+        checkboxWrapper.style.width = '38px';
+        checkboxWrapper.style.height = '18px';
+        checkboxWrapper.style.position = 'relative';
+
+        if(checked){
+            checkboxInput.setAttribute('checked', 'true');
+        }
+
+        checkboxInput.onchange = (evt) => {
+            var type = evt.target.dataset.colType;
+            if(type !== obj.groupType){
+                deselectCheckBox();
+                obj.groupType = type;
+            }
+            enableApplyButton();
+        }
+
+        checkboxWrapper.appendChild(checkboxInput);
+        checkboxWrapper.appendChild(tick);
+
+        checkboxContainer.appendChild(checkboxWrapper);
+        checkboxContainer.input = checkboxInput;
+        return checkboxContainer;
+    }
+
+    if(indexList['DOLLAR_AMT']){
+        series['Currency'] = [...indexList['DOLLAR_AMT']]
+    }
+
+    if(indexList['QUANTITY']){
+        series['Quantity'] = [...indexList['QUANTITY']]
+    }
+
+    obj.createContent = () => {
+        var wrapper = document.createElement('div');
+        var buttonWrapper = document.createElement('div');
+
+        buttonWrapper.style.backgroundColor = 'rgb(255, 255, 255)';
+        buttonWrapper.style.padding = '5px';
+
+        for(var [key, value] of Object.entries(series)){
+            var header = document.createElement('div');
+            var selectableList = document.createElement('div');
+            selectableList.classList.add(
+                'autoql-vanilla-chata-selectable-list'
+            );
+            var cols = series[key];
+            header.classList.add('number-selector-header');
+            header.innerHTML = key;
+            content.appendChild(header);
+
+            for (var i = 0; i < cols.length; i++) {
+                var listItem = document.createElement('div');
+                var colName = document.createElement('div');
+                var colIndex = cols[i].index;
+                var isChecked = seriesIndexes.includes(colIndex);
+                if(isChecked && !obj.groupType){
+                    console.log(cols[i].col.type);
+                    obj.groupType = cols[i].col.type;
+                }
+                var checkbox = createCheckbox(cols[i], isChecked);
+                var n = cols[i].col.display_name ||
+                cols[i].col.name;
+                colName.innerHTML = formatColumnName(n);
+                listItem.classList.add('autoql-vanilla-chata-list-item');
+                listItem.appendChild(colName);
+                listItem.appendChild(checkbox);
+                selectableList.appendChild(listItem);
+            }
+            content.appendChild(selectableList);
+        }
+
+        applyButton.onclick = (evt) => {
+            var inputs = content.querySelectorAll(
+                '.autoql-vanilla-m-checkbox__input'
+            );
+            var activeSeries = []
+            for (var i = 0; i < inputs.length; i++) {
+                if(inputs[i].checked){
+                    activeSeries.push(inputs[i].col);
+                }
+            }
+
+            onClick(evt, popover, activeSeries);
+        }
+
+        buttonWrapper.appendChild(applyButton);
+        wrapper.appendChild(content);
+        wrapper.appendChild(buttonWrapper);
+        popover.appendContent(wrapper);
+    }
+    obj.createContent();
+    popover.show();
+    return popover;
+}
+
+function ChataChartListPopover(position, indexes, onClick){
+    var obj = this;
+    var popover = new PopoverChartSelector(position);
+    var elements = [];
+    obj.createContent = () => {
+        var selectorContainer = document.createElement('div');
+        var selectorContent = document.createElement('ul');
+
+        selectorContainer.classList.add(
+            'autoql-vanilla-axis-selector-container'
+        )
+        selectorContent.classList.add(
+            'autoql-vanilla-axis-selector-content'
+        )
+        for (var i = 0; i < indexes.length; i++) {
+            selectorContent.appendChild(obj.createListItem(indexes[i], i));
+        }
+        selectorContainer.appendChild(selectorContent);
+        popover.appendContent(selectorContainer);
+    }
+
+    obj.createListItem = (colObj, i) => {
+        console.log(colObj);
+        var name = colObj.col['display_name'] || colObj.col['name'];
+        var li = document.createElement('li');
+        li.classList.add('autoql-vanilla-string-select-list-item');
+        li.innerHTML = formatColumnName(name);
+        li.setAttribute('data-popover-index', colObj.index);
+        li.setAttribute('data-popover-type', colObj.col.type);
+        li.setAttribute('data-popover-position', i);
+
+        li.onclick = (evt) => {
+            onClick(evt, popover);
+        }
+        elements.push(li);
+        return li;
+    }
+
+    popover.setSelectedItem = (index) => {
+        elements.map(elem => elem.classList.remove('active'));
+        elements[parseInt(index)].classList.add('active');
+    }
+
+    obj.createContent();
+    popover.show();
+
+    return popover;
+}
+
 // d3.tip
 // Copyright (c) 2013 Justin Palmer
 // ES6 / D3 v4 Adaption Copyright (c) 2016 Constantin Gavrilete
@@ -34477,93 +35196,3 @@ d3.tip = function() {
 
   return tip
 };
-
-function PopoverChartSelector(position) {
-    var obj = this;
-    var popover = document.createElement('div');
-    popover.classList.add('autoql-vanilla-popover-selector');
-    obj.popover = popover;
-
-    obj.show = () => {
-        popover.style.visibility = 'visible';
-        popover.style.left = position.left
-        popover.style.top = position.top
-        popover.style.opacity = 1;
-        return obj;
-    }
-
-    obj.close = () => {
-        popover.style.visibility = 'hidden';
-        popover.style.opacity = 0;
-        document.body.removeChild(popover);
-    }
-
-    obj.appendContent = (elem) => {
-        popover.appendChild(elem);
-    }
-
-    document.body.appendChild(popover);
-
-    return obj;
-}
-
-function ChataChartSeriesPopover(position, series, onClick){
-    var obj = this;
-    var popover = new PopoverChartSelector(position);
-    obj.createContent = () => {
-        popover.appendContent(htmlToElement('<div>TEST</div>'))
-    }
-    obj.createContent();
-    popover.show();
-    console.log(series);
-    return popover;
-}
-
-function ChataChartListPopover(position, indexes, onClick){
-    var obj = this;
-    var popover = new PopoverChartSelector(position);
-    var elements = [];
-    obj.createContent = () => {
-        var selectorContainer = document.createElement('div');
-        var selectorContent = document.createElement('ul');
-
-        selectorContainer.classList.add(
-            'autoql-vanilla-axis-selector-container'
-        )
-        selectorContent.classList.add(
-            'autoql-vanilla-axis-selector-content'
-        )
-        for (var i = 0; i < indexes.length; i++) {
-            selectorContent.appendChild(obj.createListItem(indexes[i], i));
-        }
-        selectorContainer.appendChild(selectorContent);
-        popover.appendContent(selectorContainer);
-    }
-
-    obj.createListItem = (colObj, i) => {
-        console.log(colObj);
-        var name = colObj.col['display_name']  || colObj.col['name'];
-        var li = document.createElement('li');
-        li.classList.add('autoql-vanilla-string-select-list-item');
-        li.innerHTML = formatColumnName(name);
-        li.setAttribute('data-popover-index', colObj.index);
-        li.setAttribute('data-popover-type', colObj.col.type);
-        li.setAttribute('data-popover-position', i);
-
-        li.onclick = (evt) => {
-            onClick(evt, popover);
-        }
-        elements.push(li);
-        return li;
-    }
-
-    popover.setSelectedItem = (index) => {
-        elements.map(elem => elem.classList.remove('active'));
-        elements[parseInt(index)].classList.add('active');
-    }
-
-    obj.createContent();
-    popover.show();
-
-    return popover;
-}

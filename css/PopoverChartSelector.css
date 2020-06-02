@@ -6,6 +6,7 @@
     box-shadow: 0 0 8px rgba(0,0,0,.15);
     transition: opacity .2s ease 0s!important;
     opacity: 0;
+    font-family: sans-serif;
 }
 
 .autoql-vanilla-axis-selector-container {
