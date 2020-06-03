@@ -415,6 +415,7 @@ function DataMessenger(elem, options){
             obj.createResizeHandler();
             obj.createQueryTabs();
             obj.createQueryTips();
+            obj.createNotifications();
             obj.speechToTextEvent();
 
             obj.openDrawer();
@@ -461,16 +462,57 @@ function DataMessenger(elem, options){
         obj.queryTips.style.display = display;
     }
 
+    obj.createNotifications = function() {
+        const container = htmlToElement(`
+            <div
+                style="text-align: center; margin-top: 100px;">
+                <span style="opacity: 0.6;">
+                    You don't have any notifications yet.</span>
+                <br>
+            </div>
+        `)
+        const button = htmlToElement(`
+            <button class="autoql-vanilla-chata-btn primary"
+            style="padding: 5px 16px; margin: 10px 5px 2px;">
+                Create a New Notification
+            </button>
+        `)
+
+        container.appendChild(button);
+
+        button.onclick = (evt) => {
+            var configModal = new Modal({
+                withFooter: true,
+                destroyOnClose: true
+            })
+            var modalView = new NotificationSettingsModal();
+            configModal.chataModal.style.width = 'vw';
+            configModal.addView(modalView);
+            configModal.setTitle('Custom Notification');
+            configModal.show();
+        }
+
+        container.style.display = 'none';
+        obj.notificationsContainer = container;
+        obj.drawerContent.appendChild(container);
+    }
+
+    obj.notificationsAnimation = function (display){
+        obj.notificationsContainer.style.display = display;
+    }
+
     obj.createQueryTabs = function(){
         var orientation = obj.options.placement;
         var pageSwitcherShadowContainer = document.createElement('div');
         var pageSwitcherContainer = document.createElement('div');
         var tabChataUtils = document.createElement('div');
         var tabQueryTips = document.createElement('div');
+        var tabNotifications = document.createElement('div');
+
 
         var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
         var queryTabsIcon = htmlToElement(QUERY_TIPS);
-
+        var notificationTabIcon = htmlToElement(NOTIFICATIONS_ICON);
         pageSwitcherShadowContainer.classList.add(
             'autoql-vanilla-page-switcher-shadow-container'
         );
@@ -488,25 +530,43 @@ function DataMessenger(elem, options){
         tabChataUtils.setAttribute('data-tippy-content', 'Data Messenger');
         tabQueryTips.classList.add('tab');
         tabQueryTips.setAttribute('data-tippy-content', 'Explore Queries');
+        tabNotifications.classList.add('tab');
+        tabNotifications.setAttribute('data-tippy-content', 'Notifications');
 
         tabChataUtils.appendChild(dataMessengerIcon);
         tabQueryTips.appendChild(queryTabsIcon);
+        tabNotifications.appendChild(notificationTabIcon);
+
 
         pageSwitcherContainer.appendChild(tabChataUtils)
         pageSwitcherContainer.appendChild(tabQueryTips)
-
+        pageSwitcherContainer.appendChild(tabNotifications)
 
         tabChataUtils.onclick = function(event){
             tabChataUtils.classList.add('active');
             tabQueryTips.classList.remove('active');
+            tabNotifications.classList.remove('active');
             obj.tabsAnimation('flex', 'block');
             obj.queryTipsAnimation('none');
+            obj.notificationsAnimation('none');
         }
         tabQueryTips.onclick = function(event){
             tabQueryTips.classList.add('active');
             tabChataUtils.classList.remove('active');
+            tabNotifications.classList.remove('active');
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('block');
+            obj.notificationsAnimation('none');
+        }
+
+        tabNotifications.onclick = function(event){
+            console.log('TEST');
+            tabNotifications.classList.add('active');
+            tabQueryTips.classList.remove('active');
+            tabChataUtils.classList.remove('active');
+            obj.tabsAnimation('none', 'none');
+            obj.queryTipsAnimation('none');
+            obj.notificationsAnimation('block');
         }
 
         var tabs = pageSwitcherShadowContainer;
@@ -515,6 +575,8 @@ function DataMessenger(elem, options){
         obj.queryTabsContainer = pageSwitcherContainer;
         obj.tabChataUtils = tabChataUtils;
         obj.tabQueryTips = tabQueryTips;
+        obj.tabNotifications = tabNotifications;
+
         refreshTooltips();
     }
 

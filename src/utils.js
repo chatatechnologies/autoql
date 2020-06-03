@@ -910,7 +910,7 @@ const getSupportedDisplayTypes = response => {
 //     return ['table']
 // }
 
-function adjustTableWidth(table, thArray, cols,
+async function adjustTableWidth(table, thArray, cols,
     selector='[data-indexrow]', offset=0){
 
     var headerWidth = 0;
@@ -918,6 +918,9 @@ function adjustTableWidth(table, thArray, cols,
     var tdEl = rowsElements[0].getElementsByTagName('td');
     var sizes = [];
     for (var x = 0; x < tdEl.length; x++) {
+
+        if(cols[x] && 'is_visible' in cols[x] && !cols[x]['is_visible'])continue;
+
         const div = document.createElement('div')
         div.innerHTML = thArray[x].textContent;
         div.style.display = 'inline-block';
@@ -926,9 +929,6 @@ function adjustTableWidth(table, thArray, cols,
         document.body.appendChild(div);
 
         w = tdEl[x].offsetWidth;
-
-        if(cols[x] && 'is_visible' in cols[x] && !cols[x]['is_visible'])continue;
-
 
         if(div.offsetWidth > tdEl[x].offsetWidth){
             w = div.offsetWidth + 70;
