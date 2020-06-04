@@ -1,0 +1,29 @@
+.autoql-vanilla-chata-table .tabulator-row {
+    border-bottom: 1px solid var(--chata-drawer-border-color);
+}
+
+.autoql-vanilla-chata-table .tabulator-row .tabulator-cell{
+    border-right: 1px solid var(--chata-drawer-border-color);
+}
+
+.autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=asc] .tabulator-col-content .tabulator-arrow, .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=none] .tabulator-col-content .tabulator-arrow {
+    border-bottom: 4px solid rgba(0,0,0,.2)!important;
+}
+
+.autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col:hover .tabulator-col-content .tabulator-arrow {
+    opacity: 1!important;
+}
+.autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
+    opacity: 0;
+    border-left: 4px solid transparent!important;
+    border-right: 4px solid transparent!important;
+    right: 4px;
+    top: calc(50% - 3px);
+}
+
+.autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=desc] .tabulator-col-content .tabulator-arrow {
+    border-top: 4px solid rgba(0,0,0,.2)!important;
+}
+.autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col:hover .tabulator-col-content .tabulator-arrow {
+    opacity: 1!important;
+}

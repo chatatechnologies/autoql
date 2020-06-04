@@ -3,6 +3,9 @@
 <head>
     <meta charset="utf-8">
     <title></title>
+    <link rel="stylesheet" type="text/css" href="css/Tabulator.css">
+    <link rel="stylesheet" type="text/css" href="css/TabulatorBootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/ChataTable.css">
     <link rel="stylesheet" type="text/css" href="css/chata-styles.css">
     <link rel="stylesheet" type="text/css" href="css/Dashboard.css">
     <link rel="stylesheet" type="text/css" href="css/Modal.css">
@@ -24,6 +27,7 @@
     <script src="src/tippy.min.js"></script>
     <script src="src/muuri.min.js"></script>
     <script src="src/moment.js"></script>
+    <script src="src/tabulator.min.js"></script>
 
     <!-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" /> -->
     <!-- <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script> -->
@@ -873,15 +877,15 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkxMjE3ODM2LCAiZXhwIjogMTU5MTIzOTQzNiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJxYm8tMSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.OFev6jLaQz3diDPenJdHdJrRUltWP2R4E549O5ecCaEy7eOF7Rxl2YcbdrPSxZuGYF0qduGw8qzDDS5vZPger_STEA1zP7g3bdMTyd9OK4TAA4A8DPx-YKl-CTdfCTl1BLqmi82pguE3RFd69Cx7l5l71cmkYTVa_My26SKESgtRZY8Eg-HgqBsJVgSI_1G0SfoArYZgEMjHoZBB4RJ_wApQuA4tYe8Fhe0sCtR408DubFQyTHmhCPcUxzZs8EYS6HmjFIitiCpDxs3CO24b3rimT68_RHU4mJhDcGKulSUzWbBvk1D7AqHtsKZKSKlv-_DHAfrm8GGwowIf9UpIQA==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkxMzAwOTM1LCAiZXhwIjogMTU5MTMyMjUzNSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.NVx2izuFDixsvSJxcNyNs2JEiIPKqW5ULeI_1c62Bt-WwObVN7z2LXQWKpxQUmNVCMkfIbIm34mmLEkqvn01zccn6V-WpJVnf5GjC9xFVb31aSzrI2j0OlvyPFNT4e-L11OTSNNzmOFtMye3Hgh-5Z_cqd9G6cwDIfdVbKxtWzaPzHF7EvUsiL2MMC3k-i56GJ9OfzqbswM3X6u6BVNlr_mt_KBlF4tZbLcyiMxrrg0oaOQmMyY1JUmEybpv0-gGvlNJOjHk5txQBUZyR3N4CuvZZ6KrpCB7Nvk7pKO3mVG_1V2kW_vTiH9PeRvqHNr_8oVqzp24FceoG6n5OI_6Ew==`;
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
             // demo: true
             token: _token,
-            // apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            // domain: 'https://spira-staging.chata.io',
-            apiKey: 'AIzaSyDX28JVW248PmBwN8_xRROWvO0a2BWH67o',
-            domain: 'https://accounting-demo-staging.chata.io',
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            domain: 'https://spira-staging.chata.io',
+            // apiKey: 'AIzaSyDX28JVW248PmBwN8_xRROWvO0a2BWH67o',
+            // domain: 'https://accounting-demo-staging.chata.io',
             demo: false
             // customerId: 'spira-demo3',
             // userId: 'vidhya@chata.ai',

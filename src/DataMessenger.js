@@ -1995,8 +1995,9 @@ function DataMessenger(elem, options){
         var responseContentContainer = document.createElement('div');
         var tableContainer = document.createElement('div');
         var scrollbox = document.createElement('div');
-        var table = document.createElement('table');
-        var header = document.createElement('tr');
+        var tableWrapper = document.createElement('div');
+        // var table = document.createElement('table');
+        // var header = document.createElement('tr');
         var groupField = getGroupableField(jsonResponse);
         var cols = jsonResponse['data']['columns'];
         const options = obj.options.dataFormatting;
@@ -2027,193 +2028,269 @@ function DataMessenger(elem, options){
             messageBubble.appendChild(toolbar);
         }
         messageBubble.appendChild(actions);
-        tableContainer.classList.add('chata-table-container');
+        tableContainer.classList.add('autoql-vanilla-chata-table-container');
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
         responseContentContainer.classList.add(
             'autoql-vanilla-chata-response-content-container'
         );
-        table.classList.add('autoql-vanilla-table-response');
-        table.setAttribute('data-componentid', idRequest);
-        var dataLines = jsonResponse['data']['rows'];
-        var thArray = [];
-        for (var i = 0; i < cols.length; i++) {
-            var colStr = cols[i]['display_name'] ||
-                cols[i]['name'];
-            var isVisible = true;
-            if('is_visible' in cols[i]){
-                isVisible = cols[i]['is_visible']
-                || false;
-            }
-            var colName = formatColumnName(colStr);
-            var th = document.createElement('th');
-            var arrow = document.createElement('div');
-            var col = document .createElement('div');
-            col.textContent = colName;
-            arrow.classList.add('autoql-vanilla-tabulator-arrow');
-            arrow.classList.add('up');
-            col.classList.add('column');
-            col.setAttribute('data-type', cols[i]['type']);
-            col.setAttribute('data-index', i);
-            var divFilter = document.createElement('div');
-            var filter = document.createElement('input');
-            divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
-            divFilter.appendChild(filter);
-            filter.setAttribute('placeholder', 'Filter column');
-            filter.classList.add('filter-input');
-            filter.setAttribute('data-dataid', idRequest);
-            filter.setAttribute('data-inputindex', i);
-            filter.colType = cols[i]['type'];
-            filter.onkeyup = function(event){
-                var _table = document.querySelector(
-                    `[data-componentid='${idRequest}']`
-                );
-                var rows = applyFilter(idRequest);
-                ChataUtils.refreshTableData(
-                    _table, cloneObject(rows), options, false
-                );
-            }
-            col.appendChild(divFilter);
-            th.appendChild(col);
-            th.appendChild(arrow);
-            th.onclick = (evt) => {
-                ChataUtils.onClickColumn(evt, table, options);
-            }
-            header.appendChild(th);
-            thArray.push(th);
-            if(!isVisible){
-                th.classList.add('chata-hidden');
-            }
-            th.addEventListener('contextmenu', function(e){
-                e.preventDefault();
-                let col;
-                if(e.target.tagName == 'DIV'){
-                    col = e.target;
-                }else{
-                    col = e.target.childNodes[0];
-                }
-                var popoverElements = document.querySelectorAll(
-                    '.autoql-vanilla-chata-tiny-popover-container'
-                );
-                [].forEach.call(popoverElements, function(e, i){
-                    e.parentNode.removeChild(e);
-                })
-                var popoverContainer = htmlToElement(`
-                    <div class="autoql-vanilla-chata-tiny-popover-container">
-                    </div>
-                `);
-                var popoverMenu = htmlToElement(`
-                    <div class="chata-context-menu">
-                    </div>
-                `)
-                var popoverList = htmlToElement(`
-                    <ul class="chata-context-menu-list">
-                    </ul>
-                `);
-
-                var popoverLi = htmlToElement(`
-                    <li>Hide Column</li>
-                `)
-
-                popoverLi.onclick = function(evt){
-                    var opts = obj.options
-                    const url = opts.authentication.demo
-                    ? `https://backend-staging.chata.ai/api/v1/chata/query`
-                    : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
-                    document.body.removeChild(popoverContainer);
-                    var parameters = [];
-                    var jsonCols = jsonResponse['data']['columns'];
-                    for (var i = 0; i < jsonCols.length; i++) {
-                        var visibility = col.dataset.index == i ? false : true;
-                        if(col.dataset.index == i){
-                            visibility = false;
-                            jsonResponse.data.columns[i].is_visible = false;
-                        }else{
-                            visibility = jsonCols[i].is_visible;
-                        }
-                        parameters.push({
-                            name: jsonCols[i].name,
-                            is_visible: visibility
-                        })
-                    }
-                    ChataUtils.putCall(
-                        url, {columns: parameters}, function(response){
-                        adjustTableWidth(
-                            table, thArray, jsonResponse['data']['columns']
-                        );
-                        hideShowTableCols(table);
-                    }, opts)
-                }
-
-                popoverContainer.appendChild(popoverMenu);
-                popoverMenu.appendChild(popoverList);
-                popoverList.appendChild(popoverLi);
-
-                popoverContainer.style.left = mouseX(e) + 'px';
-                popoverContainer.style.top = mouseY(e) + 'px';
-                document.body.appendChild(popoverContainer);
-            })
-        }
-        header.classList.add('autoql-vanilla-table-header');
-        scrollbox.appendChild(header);
-
-        for (var i = 0; i < dataLines.length; i++) {
-            var data = dataLines[i];
-            var tr = document.createElement('tr');
-            for (var x = 0; x < data.length; x++) {
-                var isVisible = true;
-                if('is_visible' in cols[x]){
-                    isVisible = cols[x]['is_visible']
-                    || false;
-                }
-                value = formatData(
-                    data[x], cols[x],
-                    obj.options
-                );
-                var td = document.createElement('td');
-                td.textContent = value;
-                if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
-                    options.comparisonDisplay == 'PERCENT'){
-                    if(parseFloat(value) >= 0){
-                        td.classList.add(
-                            'autoql-vanilla-comparison-value-positive'
-                        );
-                    }else{
-                        td.classList.add(
-                            'autoql-vanilla-comparison-value-negative'
-                        );
-                    }
-                }
-                tr.appendChild(td);
-                if(!isVisible){
-                    td.classList.add('chata-hidden');
-                }
-            }
-            tr.setAttribute('data-indexrow', i);
-            if(typeof groupField !== 'number'){
-                tr.setAttribute('data-has-drilldown', true);
-            }else{
-                tr.setAttribute('data-has-drilldown', false);
-            }
-            table.appendChild(tr);
-        }
-        tableContainer.appendChild(table);
+        tableWrapper.setAttribute('data-componentid', idRequest);
+        tableWrapper.classList.add('autoql-vanilla-chata-table');
+        var tabledata = [
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+            {name:"Oli Bob", progress:"12", gender:"red", rating:""},
+            {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
+            {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
+            {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
+            {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
+        ];
+        // table.classList.add('autoql-vanilla-table-response');
+        // table.setAttribute('data-componentid', idRequest);
+        // var dataLines = jsonResponse['data']['rows'];
+        // var thArray = [];
+        // for (var i = 0; i < cols.length; i++) {
+        //     var colStr = cols[i]['display_name'] ||
+        //         cols[i]['name'];
+        //     var isVisible = true;
+        //     if('is_visible' in cols[i]){
+        //         isVisible = cols[i]['is_visible']
+        //         || false;
+        //     }
+        //     var colName = formatColumnName(colStr);
+        //     var th = document.createElement('th');
+        //     var arrow = document.createElement('div');
+        //     var col = document .createElement('div');
+        //     col.textContent = colName;
+        //     arrow.classList.add('autoql-vanilla-tabulator-arrow');
+        //     arrow.classList.add('up');
+        //     col.classList.add('column');
+        //     col.setAttribute('data-type', cols[i]['type']);
+        //     col.setAttribute('data-index', i);
+        //     var divFilter = document.createElement('div');
+        //     var filter = document.createElement('input');
+        //     divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
+        //     divFilter.appendChild(filter);
+        //     filter.setAttribute('placeholder', 'Filter column');
+        //     filter.classList.add('filter-input');
+        //     filter.setAttribute('data-dataid', idRequest);
+        //     filter.setAttribute('data-inputindex', i);
+        //     filter.colType = cols[i]['type'];
+        //     filter.onkeyup = function(event){
+        //         var _table = document.querySelector(
+        //             `[data-componentid='${idRequest}']`
+        //         );
+        //         var rows = applyFilter(idRequest);
+        //         ChataUtils.refreshTableData(
+        //             _table, cloneObject(rows), options, false
+        //         );
+        //     }
+        //     col.appendChild(divFilter);
+        //     th.appendChild(col);
+        //     th.appendChild(arrow);
+        //     th.onclick = (evt) => {
+        //         ChataUtils.onClickColumn(evt, table, options);
+        //     }
+        //     header.appendChild(th);
+        //     thArray.push(th);
+        //     if(!isVisible){
+        //         th.classList.add('chata-hidden');
+        //     }
+        //     th.addEventListener('contextmenu', function(e){
+        //         e.preventDefault();
+        //         let col;
+        //         if(e.target.tagName == 'DIV'){
+        //             col = e.target;
+        //         }else{
+        //             col = e.target.childNodes[0];
+        //         }
+        //         var popoverElements = document.querySelectorAll(
+        //             '.autoql-vanilla-chata-tiny-popover-container'
+        //         );
+        //         [].forEach.call(popoverElements, function(e, i){
+        //             e.parentNode.removeChild(e);
+        //         })
+        //         var popoverContainer = htmlToElement(`
+        //             <div class="autoql-vanilla-chata-tiny-popover-container">
+        //             </div>
+        //         `);
+        //         var popoverMenu = htmlToElement(`
+        //             <div class="chata-context-menu">
+        //             </div>
+        //         `)
+        //         var popoverList = htmlToElement(`
+        //             <ul class="chata-context-menu-list">
+        //             </ul>
+        //         `);
+        //
+        //         var popoverLi = htmlToElement(`
+        //             <li>Hide Column</li>
+        //         `)
+        //
+        //         popoverLi.onclick = function(evt){
+        //             var opts = obj.options
+        //             const url = opts.authentication.demo
+        //             ? `https://backend-staging.chata.ai/api/v1/chata/query`
+        //             : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
+        //             document.body.removeChild(popoverContainer);
+        //             var parameters = [];
+        //             var jsonCols = jsonResponse['data']['columns'];
+        //             for (var i = 0; i < jsonCols.length; i++) {
+        //                 var visibility = col.dataset.index == i ? false : true;
+        //                 if(col.dataset.index == i){
+        //                     visibility = false;
+        //                     jsonResponse.data.columns[i].is_visible = false;
+        //                 }else{
+        //                     visibility = jsonCols[i].is_visible;
+        //                 }
+        //                 parameters.push({
+        //                     name: jsonCols[i].name,
+        //                     is_visible: visibility
+        //                 })
+        //             }
+        //             ChataUtils.putCall(
+        //                 url, {columns: parameters}, function(response){
+        //                 adjustTableWidth(
+        //                     table, thArray, jsonResponse['data']['columns']
+        //                 );
+        //                 hideShowTableCols(table);
+        //             }, opts)
+        //         }
+        //
+        //         popoverContainer.appendChild(popoverMenu);
+        //         popoverMenu.appendChild(popoverList);
+        //         popoverList.appendChild(popoverLi);
+        //
+        //         popoverContainer.style.left = mouseX(e) + 'px';
+        //         popoverContainer.style.top = mouseY(e) + 'px';
+        //         document.body.appendChild(popoverContainer);
+        //     })
+        // }
+        // header.classList.add('autoql-vanilla-table-header');
+        // scrollbox.appendChild(header);
+        //
+        // for (var i = 0; i < dataLines.length; i++) {
+        //     var data = dataLines[i];
+        //     var tr = document.createElement('tr');
+        //     for (var x = 0; x < data.length; x++) {
+        //         var isVisible = true;
+        //         if('is_visible' in cols[x]){
+        //             isVisible = cols[x]['is_visible']
+        //             || false;
+        //         }
+        //         value = formatData(
+        //             data[x], cols[x],
+        //             obj.options
+        //         );
+        //         var td = document.createElement('td');
+        //         td.textContent = value;
+        //         if(['PERCENT', 'RATIO'].includes(cols[x]['type']) &&
+        //             options.comparisonDisplay == 'PERCENT'){
+        //             if(parseFloat(value) >= 0){
+        //                 td.classList.add(
+        //                     'autoql-vanilla-comparison-value-positive'
+        //                 );
+        //             }else{
+        //                 td.classList.add(
+        //                     'autoql-vanilla-comparison-value-negative'
+        //                 );
+        //             }
+        //         }
+        //         tr.appendChild(td);
+        //         if(!isVisible){
+        //             td.classList.add('chata-hidden');
+        //         }
+        //     }
+        //     tr.setAttribute('data-indexrow', i);
+        //     if(typeof groupField !== 'number'){
+        //         tr.setAttribute('data-has-drilldown', true);
+        //     }else{
+        //         tr.setAttribute('data-has-drilldown', false);
+        //     }
+        //     table.appendChild(tr);
+        // }
+        // tableContainer.appendChild(table);
+        tableContainer.appendChild(tableWrapper);
         scrollbox.appendChild(tableContainer);
         responseContentContainer.appendChild(scrollbox);
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
 
-        var headerWidth = adjustTableWidth(table, thArray, cols);
-        table.style.width = headerWidth + 'px';
-        header.style.width = headerWidth + 'px';
-        table.headerElement = header;
-        if(!obj.options.authentication.demo){
-            allColHiddenMessage(table);
-        }
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        table.sort = 'asc';
-        obj.registerDrilldownTableEvent(table);
-        return table;
+        var _table = new Tabulator(`[data-componentid='${idRequest}']`, {
+            layout: 'fitDataFill',
+            textSize: '9px',
+            movableColumns: true,
+            progressiveRender: true,
+            progressiveRenderSize: 5,
+            progressiveRenderMargin: 100,
+            downloadConfig: {
+                columnGroups: false,
+                rowGroups: false,
+                columnCalcs: false,
+            },
+            columns:[
+                {title:"Name", field:"name"},
+                {title:"Progress", field:"progress", sorter:"number"},
+                {title:"Gender", field:"gender"},
+                {title:"Rating", field:"rating"},
+            ],
+            data: tabledata
+        })
+
+        // var headerWidth = adjustTableWidth(table, thArray, cols);
+        // table.style.width = headerWidth + 'px';
+        // header.style.width = headerWidth + 'px';
+        // table.headerElement = header;
+        // if(!obj.options.authentication.demo){
+        //     allColHiddenMessage(table);
+        // }
+        // obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        // table.sort = 'asc';
+        // obj.registerDrilldownTableEvent(table);
+        return _table;
     }
 
     obj.sendReport = function(idRequest, options, menu, toolbar){
