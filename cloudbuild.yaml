@@ -7,13 +7,15 @@ steps:
     args:
       - "-exc"
       - |
+        ls -al build
         ls -al
         npm set progress=false
         npm install
-        npm run test
+        #npm run test
+        gulp --version
         gulp scripts
         gulp css
-        ls -al
+        ls -al build
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: update CDN
     entrypoint: /bin/bash
