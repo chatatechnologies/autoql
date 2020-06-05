@@ -1,5 +1,19 @@
 steps:
+  
   # Clone the repository and check tags
+  - name: node
+    id: install dependencies
+    entrypoint: /bin/bash
+    args:
+      - "-exc"
+      - |
+        ls -al
+        npm set progress=false
+        npm install
+        npm run test
+        gulp scripts
+        gulp css
+        ls -al
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: update CDN
     entrypoint: /bin/bash
