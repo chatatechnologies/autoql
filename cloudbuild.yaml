@@ -7,7 +7,7 @@ steps:
     args:
       - "-exc"
       - |
-        ls -al build
+        #ls -al build
         ls -al
         npm set progress=false
         npm install
