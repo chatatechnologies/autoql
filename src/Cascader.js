@@ -1,4 +1,4 @@
-function Cascader(topics){
+function Cascader(topics, datamessenger){
     var obj = this;
     var message = document.createElement('div');
     var chatMessageBubble = document.createElement('div');
@@ -22,16 +22,56 @@ function Cascader(topics){
     content.appendChild(
         document.createTextNode('Some things you can ask me:')
     );
+
     content.appendChild(
         document.createElement('br')
     );
 
-    obj.makeOpt = (opt, active='') => {
+    obj.keyAnimation = (text) => {
+        chataInput = datamessenger.input;
+        obj.inputAnimation(text, chataInput);
+    }
+
+    obj.queryTipsInputAnimation = (text) => {
+        var input = datamessenger.queryTipsInput;
+        obj.inputAnimation(text, input);
+    }
+
+    obj.inputAnimation = (text, input) => {
+        input.focus();
+        var selectedQuery = text;
+        var subQuery = '';
+        var index = 0;
+        var int = setInterval(function () {
+            subQuery += selectedQuery[index];
+            if(index >= selectedQuery.length){
+                clearInterval(int);
+                var evt = new KeyboardEvent('keypress', {
+                    keyCode: 13,
+                    type: "keypress",
+                    which: 13
+                });
+                input.dispatchEvent(evt)
+            }else{
+                input.value = subQuery;
+            }
+            index++;
+        }, 65);
+    }
+
+    obj.showQueryTips = () => {
+        datamessenger.tabQueryTips.classList.add('active');
+        datamessenger.tabChataUtils.classList.remove('active');
+        datamessenger.tabsAnimation('none', 'none');
+        datamessenger.queryTipsAnimation('block');
+    }
+
+    obj.makeOpt = (opt, svg, active='', extraClass='') => {
         var opt = htmlToElement(`
             <div class="option ${active}">
                 <span>${opt} </span>
-                <span class="chata-icon option-arrow">
-                    ${OPTION_ARROW}
+                <span class="chata-icon ${extraClass}">
+                    ${svg}
                 </span>
             </div>
         `);
@@ -42,7 +82,7 @@ function Cascader(topics){
     for(var i = 0; i<topics.length; i++){
         var label = topics[i].label;
         var active = i == 0 ? 'active' : '';
-        var opt = obj.makeOpt(label, active);
+        var opt = obj.makeOpt(label, OPTION_ARROW, active, 'option-arrow');
         opt.setAttribute('data-index-topic', i);
         options.push(opt);
         optionsContainer.appendChild(opt);
@@ -60,8 +100,8 @@ function Cascader(topics){
 
     obj.createOptions = (parentIndex) => {
         var topic = topics[parseInt(parentIndex)];
-        console.log(topic);
         var childrenOptionsContainer = document.createElement('div');
+        var optionList = [];
         const arrow = htmlToElement(`
             <span class="chata-icon cascader-back-arrow">
                 ${TOPICS_ARROW}
@@ -72,6 +112,15 @@ function Cascader(topics){
             <div class="options-title">${topic.label}</div>
         `)
 
+        const seeMore = htmlToElement(`
+            <div class="option">
+                <span>
+                    <span class="chata-icon">${EXPLORE_QUERIES}</span>
+                     See more...
+                </span>
+            </div>
+        `)
+
         childrenOptionsContainer.classList.add('options-container');
         childrenOptionsContainer.appendChild(arrow);
         childrenOptionsContainer.appendChild(title);
@@ -79,19 +128,31 @@ function Cascader(topics){
         for (var i = 0; i < topic.children.length; i++) {
 
             var label = topic.children[i].label;
-            var active = i == 0 ? 'active' : '';
-            var opt = obj.makeOpt(label, active);
+            var opt = obj.makeOpt(
+                label, OPTION_ARROW_CIRCLE, '', 'option-execute-icon'
+            );
             opt.setAttribute('data-index-topic', i);
             childrenOptionsContainer.appendChild(opt);
-            opt.onclick = (evt) => {
-                console.log('TEST');
-            }
+            optionList.push(opt);
         }
+
+        optionList.map(opt => {
+            opt.onclick = (evt) => {
+                obj.keyAnimation(opt.textContent.trim());
+            }
+        })
 
         arrow.onclick = (evt) => {
             optionsContainer.classList.remove('hidden');
             chataCascader.removeChild(childrenOptionsContainer);
         }
+
+        seeMore.onclick = (evt) => {
+            obj.showQueryTips();
+            obj.queryTipsInputAnimation(topic.label);
+        }
+
+        childrenOptionsContainer.appendChild(seeMore);
         return childrenOptionsContainer;
     }
 
@@ -102,15 +163,21 @@ function Cascader(topics){
     content.appendChild(
         document.createTextNode('Use')
     );
-
-    content.appendChild(
-        htmlToElement(`
-            <span class="autoql-vanilla-intro-qi-link">
+    var link = htmlToElement(`
+        <span class="autoql-vanilla-intro-qi-link">
             <span class="chata-icon undefined" style="margin-right: -3px;">
                 ${EXPLORE_QUERIES}
-            </span> Explore Queries</span>
-        `)
+            </span> Explore Queries
+        </span>
+    `);
+    content.appendChild(
+        link
     )
+
+    link.onclick = (evt) => {
+        obj.showQueryTips();
+    }
+
 
     content.appendChild(
         document.createTextNode(' to further explore the possibilities.')

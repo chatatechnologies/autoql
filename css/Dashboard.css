@@ -242,7 +242,7 @@
 .autoql-vanilla-dashboard-tile-title-container{
     cursor: default;
 }
-.autoql-vanilla-dashboard-tile-title-container .dashboard-tile-title {
+.autoql-vanilla-dashboard-tile-title-container .autoql-vanilla-dashboard-tile-title {
     color: var(--chata-dashboard-accent-color);
     font-weight: bold;
     font-size: 17px;
