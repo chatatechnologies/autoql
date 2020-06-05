@@ -10,9 +10,9 @@ steps:
         echo COMMIT_SHA: $COMMIT_SHA
         echo TAG_NAME: $TAG_NAME
         if [ -n $TAG_NAME ];then
-          gsutil cp ./build/** gs://chata-caas-cdn/autoql/$tag
+          gsutil cp ./build/** gs://chata-caas-cdn/autoql/”$TAG_NAME“
           if [[ $PROJECT_ID = "production-245514" ]]; then
-            gsutil rsync -d -r gs://chata-caas-cdn/autoql/$tag gs://chata-caas-cdn/autoql/latest
+            gsutil rsync -d -r gs://chata-caas-cdn/autoql/“$TAG_NAME” gs://chata-caas-cdn/autoql/latest
           fi
         fi
 
