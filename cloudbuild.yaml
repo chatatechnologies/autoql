@@ -1,5 +1,4 @@
 steps:
-  
   # Clone the repository and check tags
   - name: node
     id: install dependencies
@@ -8,7 +7,6 @@ steps:
       - "-exc"
       - |
         pwd
-        ls -al
         npm set progress=false
         npm install
         npm run test
@@ -16,8 +14,6 @@ steps:
         npx gulp scripts
         npx gulp css
         ls -al build
-        #cp -R build/* /workspace/build/
-        #ls -al build
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: update CDN
     entrypoint: /bin/bash
@@ -27,7 +23,7 @@ steps:
         echo BRANCH_NAME: $BRANCH_NAME
         echo COMMIT_SHA: $COMMIT_SHA
         echo TAG_NAME: $TAG_NAME
-        if [ -n $TAG_NAME ];then
+        if [ -n "$TAG_NAME" ];then
           gsutil cp -r /workspace/build/** gs://chata-caas-cdn/autoql/${TAG_NAME}
           if [[ $PROJECT_ID = "production-245514" ]]; then
             gsutil rsync -d -r gs://chata-caas-cdn/autoql/${TAG_NAME} gs://chata-caas-cdn/autoql/latest
