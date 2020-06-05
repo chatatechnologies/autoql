@@ -1,0 +1,67 @@
+steps:
+  # Clone the repository and check tags
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    id: update CDN
+    entrypoint: /bin/bash
+    args:
+      - "-exc"
+      - |
+        echo BRANCH_NAME: $BRANCH_NAME
+        echo COMMIT_SHA: $COMMIT_SHA
+        echo TAG_NAME: $TAG_NAME
+        if [ -n $TAG_NAME ];then
+          gsutil cp ./build/** gs://chata-caas-cdn/autoql/$tag
+          if [[ $PROJECT_ID = "production-245514" ]]; then
+            gsutil rsync -d -r gs://chata-caas-cdn/autoql/$tag gs://chata-caas-cdn/autoql/latest
+          fi
+        fi
+
+substitutions:
+  _SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+
+  _HELM_REPO_URL_STAG: gs://chata-helm-repo-dev
+  _HELM_CONFIG_FILE_STAG: stag-values.yaml
+  _GKE_CLUSTER_STAG: chata-staging-1
+  _COMPUTE_ZONE_STAG: us-central1-f
+  _TAG_REG_STAG: ^v[0-9]+.[0-9]+.[0-9]+-(alpha|beta)(.[0-9]+)?$
+
+  _HELM_REPO_URL_PREPROD: gs://chata-helm-repo-preprod
+  _HELM_CONFIG_FILE_PREPROD: preprod-values.yaml
+  _GKE_CLUSTER_PREPROD: chata-preprod
+  _COMPUTE_ZONE_PREPROD: us-central1-a
+  _TAG_REG_PREPROD: ^v[0-9]+.[0-9]+.[0-9]+-rc(.[0-9]+)?$
+
+  _HELM_REPO_URL_PROD: gs://chata-helm-repo
+  _HELM_CONFIG_FILE_PROD: prod-values.yaml
+  _GKE_CLUSTER_PROD: chata-production-cluster-2
+  _COMPUTE_ZONE_PROD: us-central1-a
+  _TAG_REG_PROD: ^v[0-9]+.[0-9]+.[0-9]+$
+
+  _HELM_REPO_URL_CSTAG: gs://chata-caas-helm-repo-dev
+  _HELM_CONFIG_FILE_CSTAG: stag-values.yaml
+  _GKE_CLUSTER_CSTAG: net-staging
+  _COMPUTE_ZONE_CSTAG: us-east1-b
+  _TAG_REG_CSTAG: ^v[0-9]+.[0-9]+.[0-9]+-(alpha|beta)(.[0-9]+)?$
+
+  _HELM_REPO_URL_CPROD: gs://chata-caas-helm-repo
+  _HELM_CONFIG_FILE_CPROD: prod-values.yaml
+  _GKE_CLUSTER_CPROD: net-production
+  _COMPUTE_ZONE_CPROD: us-east1-b
+  _TAG_REG_CPROD: ^v[0-9]+.[0-9]+.[0-9]+$
+
+options:
+  substitution_option: "ALLOW_LOOSE"
+
+timeout: 7200s
+
+tags:
+  [
+    "$REPO_NAME",
+    "$COMMIT_SHA",
+    "$SHORT_SHA",
+    "$PROJECT_ID",
+    "$BRANCH_NAME",
+    "$TAG_NAME",
+    "$REVISION_ID",
+    "$BUILD_ID",
+  ]
