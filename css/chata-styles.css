@@ -624,8 +624,8 @@ body{
 .autoql-vanilla-chata-table-scrollbox{
     width: 100%;
     height: 100%;
-    overflow: auto;
-    visibility: hidden;
+    overflow: hidden;
+    visibility: visible;
 }
 
 .chata-hidden-scrollbox{

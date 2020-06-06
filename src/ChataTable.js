@@ -341,3 +341,33 @@ function createPivotTable(pivotArray, oldComponent, options, action='replace', u
     table.sort = 'asc';
     return table;
 }
+
+function ChataTable(idRequest, json, options, onRowClick, onRender = () => {}){
+
+    var tableData = getTableData(json, options);
+    var columns = getColumnsData(json);
+
+    var table = new Tabulator(`[data-componentid='${idRequest}']`, {
+        layout: 'fitDataFill',
+        textSize: '9px',
+        virtualDomBuffer:300,
+        movableColumns: true,
+        progressiveRender: true,
+        progressiveRenderSize: 5,
+        progressiveRenderMargin: 100,
+        downloadConfig: {
+            columnGroups: false,
+            rowGroups: false,
+            columnCalcs: false,
+        },
+        columns: columns,
+        data: tableData,
+        renderComplete: onRender,
+        rowClick: onRowClick
+    })
+    table.setHeight('100%');
+
+    this.table = table;
+
+    return this;
+}
