@@ -680,6 +680,7 @@ function tooltipCharts(){
         }
     })
 }
+
 function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.headerElement.getElementsByTagName('input');
@@ -1161,23 +1162,55 @@ getIntroMessageTopics = (integrator) => {
     return undefined
 }
 
+function ChataHeaderFilterWrapper(col){
+    // console.log(headerValue);
+    // console.log(rowValue);
+    // console.log(rowData);
+    // console.log(filterParams);
+    // console.log(type);
+    this.col = col;
+
+    this.callFilter = (headerValue, rowValue, rowData, filterParams) => {
+        console.log(this.col);
+
+        return true;
+    }
+
+    return this;
+}
+
 function getColumnsData(json){
     const columns = json['data']['columns'];
     var columnsData = []
+    var filters = [];
     for (var i = 0; i < columns.length; i++) {
-        var colName = columns[i]['display_name'] || columns[i]['name'];
+        var col = columns[i];
+        var colName = col['display_name'] || col['name'];
+        var isVisible = true;
+        if('is_visible' in col){
+            isVisible = col['is_visible']
+            || false;
+        }
+        filters.push(new ChataHeaderFilterWrapper(col));
+        console.log(filters);
+        if(!isVisible)continue;
+
         columnsData.push({
             title: formatColumnName(colName),
             field: colName,
+            headerFilter:"input",
+            foo: 'FOO BAR',
+            headerFilterFunc: (headerValue, rowValue, rowData, filterParams) => {
+                console.log(i);
+                // return filters[i].callFilter(
+                //     headerValue, rowValue, rowData, filterParams
+                // )
+
+            }
         })
     }
 
-    // columnsData = [
-    //     {title:"Name", field:"name"},
-    //     {title:"Progress", field:"progress", sorter:"number"},
-    //     {title:"Gender", field:"gender"},
-    //     {title:"Rating", field:"rating"},
-    // ]
+    console.log(filters[0].col);
 
     return columnsData;
 }
@@ -1197,58 +1230,6 @@ function getTableData(json, options) {
 
         tableData.push(rowData);
     }
-    console.log(tableData);
-    // var tableData = [
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    //     {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-    //     {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-    //     {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-    //     {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-    //     {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    // ];
+
     return tableData;
 }

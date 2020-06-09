@@ -367,7 +367,20 @@ function ChataTable(idRequest, json, options, onRowClick, onRender = () => {}){
     })
     table.setHeight('100%');
 
-    this.table = table;
+    table.toggleFilters = () => {
+        var domTable = table.element;
+        var filters = domTable.querySelectorAll('.tabulator-header-filter');
+        for (var i = 0; i < filters.length; i++) {
+            var filter = filters[i];
+            if(filter.style.display == 'none'){
+                filter.style.display = 'inline-block';
+            }else{
+                filter.style.display = 'none';
+            }
+        }
+    }
 
-    return this;
+    table.toggleFilters();
+
+    return table;
 }

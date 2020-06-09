@@ -1410,21 +1410,8 @@ function DataMessenger(elem, options){
         var table = document.querySelector(
             `[data-componentid="${idRequest}"]`
         );
-        var inputs = table.headerElement.getElementsByClassName(
-            'autoql-vanilla-tabulator-header-filter'
-        );
-        var arrows = table.headerElement.getElementsByClassName(
-            'autoql-vanilla-tabulator-arrow'
-        );
-        for (var i = 0; i < inputs.length; i++) {
-            if(inputs[i].style.display == ''
-            || inputs[i].style.display == 'none'){
-                inputs[i].style.display = 'block';
-            }else{
-                inputs[i].style.display = 'none';
-            }
-            arrows[i].classList.toggle('tabulator-filter');
-        }
+        var tabulator = table.tabulator;
+        tabulator.toggleFilters();
     }
 
     obj.openColumnEditorHandler = (evt, idRequest) => {
@@ -1762,13 +1749,14 @@ function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'table');
-        var table = ChataTable(
+        var table = new ChataTable(
             idRequest,
             json,
             obj.options,
             obj.onRowClick,
             obj.onRenderTable
         );
+        component.tabulator = table;
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
@@ -2065,7 +2053,9 @@ function DataMessenger(elem, options){
             obj.onRenderTable
         );
 
-        return table;
+        tableWrapper.tabulator = table;
+
+        return tableWrapper;
     }
 
     obj.sendReport = function(idRequest, options, menu, toolbar){

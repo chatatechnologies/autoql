@@ -55,3 +55,22 @@
 .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
     background-color: transparent;
 }
+
+.autoql-vanilla-chata-table .tabulator-header-filter input:focus {
+    border: 1px solid #28a8e0 !important;
+    box-shadow: none !important;
+}
+.autoql-vanilla-chata-table .tabulator-header-filter input {
+    border: 1px solid var(--chata-drawer-border-color) !important;
+    border-radius: 4px !important;
+    background: transparent;
+    padding: 4px 9px!important;
+    outline: none!important;
+    height: 30px !important;
+    font-size: 14px !important;
+    font-weight: normal;
+}
+
+.autoql-vanilla-chata-table .tabulator-col {
+    height: auto!important;
+}
