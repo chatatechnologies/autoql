@@ -300,11 +300,12 @@ function getPivotColumnArray(json, options, _data){
                 json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
-            row.push(formatData(
-                data[x],
-                json['data']['columns'][x],
-                options
-            ));
+            // row.push(formatData(
+            //     data[x],
+            //     json['data']['columns'][x],
+            //     options
+            // ));
+            row.push(data[x]);
         }
         values.push(row);
     }
@@ -359,13 +360,15 @@ function getDatePivotArray(json, options, _data){
                     row.unshift(
                         MONTH_NAMES[date.getMonth()], date.getFullYear()
                     );
+                    console.log(row);
                     break;
                 default:
-                    row.push(formatData(
-                        data[x], json['data']['columns'][x],
-                        options
-                    )
-                );
+                    // row.push(formatData(
+                    //     data[x], json['data']['columns'][x],
+                    //     options
+                    // )
+                    // );  
+                    row.push(data[x])
             }
         }
         values.push(row);
@@ -1177,59 +1180,4 @@ function ChataHeaderFilterWrapper(col){
     }
 
     return this;
-}
-
-function getColumnsData(json){
-    const columns = json['data']['columns'];
-    var columnsData = []
-    var filters = [];
-    for (var i = 0; i < columns.length; i++) {
-        var col = columns[i];
-        var colName = col['display_name'] || col['name'];
-        var isVisible = true;
-        if('is_visible' in col){
-            isVisible = col['is_visible']
-            || false;
-        }
-        filters.push(new ChataHeaderFilterWrapper(col));
-        console.log(filters);
-        if(!isVisible)continue;
-
-        columnsData.push({
-            title: formatColumnName(colName),
-            field: colName,
-            headerFilter:"input",
-            foo: 'FOO BAR',
-            headerFilterFunc: (headerValue, rowValue, rowData, filterParams) => {
-                console.log(i);
-                // return filters[i].callFilter(
-                //     headerValue, rowValue, rowData, filterParams
-                // )
-
-            }
-        })
-    }
-
-    console.log(filters[0].col);
-
-    return columnsData;
-}
-
-function getTableData(json, options) {
-    const data = json['data']['rows'];
-    const columns = json['data']['columns'];
-    var tableData = [];
-    for (var i = 0; i < data.length; i++) {
-        var row = data[i];
-        var rowData = {}
-        for (var x = 0; x < row.length; x++) {
-            var col = columns[x];
-            var colName = col['display_name'] || col['name'];
-            rowData[colName] = formatData(row[x], col, options);
-        }
-
-        tableData.push(rowData);
-    }
-
-    return tableData;
 }

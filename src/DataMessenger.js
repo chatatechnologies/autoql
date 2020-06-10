@@ -1637,8 +1637,6 @@ function DataMessenger(elem, options){
                 query_id: queryId,
                 group_bys: params,
                 username: 'demo',
-                // customer_id: options.authentication.customerId || "",
-                // user_id: options.authentication.userId || "",
                 debug: options.autoQLConfig.debug
             }
         }else{
@@ -1746,12 +1744,10 @@ function DataMessenger(elem, options){
     }
 
     obj.displayTableHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'table');
         var table = new ChataTable(
             idRequest,
-            json,
             obj.options,
             obj.onRowClick,
             obj.onRenderTable
@@ -1793,19 +1789,8 @@ function DataMessenger(elem, options){
     obj.displayPivotTableHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        var columns = json['data']['columns'];
-        let pivotArray;
         obj.refreshToolbarButtons(component, 'pivot_table');
-        if(columns[0].type === 'DATE' && columns[0].name.includes('month')){
-            pivotArray = getDatePivotArray(
-                json, obj.options, json['data']['rows']
-            );
-        }else{
-            pivotArray = getPivotColumnArray(
-                json, obj.options, json['data']['rows']
-            );
-        }
-        createPivotTable(pivotArray, component, obj.options);
+        ChataPivotTable(idRequest, obj.options, obj.onRenderTable);
     }
 
     obj.displayHeatmapHandler = (evt, idRequest) => {
@@ -1985,8 +1970,14 @@ function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
-    obj.onRowClick = (e, row) => {
-        console.log(row);
+    obj.onRowClick = (e, row, json) => {
+        var index = 0;
+        if(getGroupableFields(json).length > 0){
+            for(var[key, value] of Object.entries(row._row.data)){
+                json['data']['rows'][0][index++] = value;
+            }
+            obj.sendDrilldownMessage(json, 0, obj.options);
+        }
     }
 
     obj.putTableResponse = (jsonResponse) => {
@@ -2047,7 +2038,6 @@ function DataMessenger(elem, options){
 
         var table = new ChataTable(
             idRequest,
-            jsonResponse,
             obj.options,
             obj.onRowClick,
             obj.onRenderTable
@@ -2267,21 +2257,20 @@ function DataMessenger(elem, options){
             var inputs = container.querySelectorAll('[data-line]');
             var data = [];
             var table = document.querySelector(`[data-componentid='${id}']`);
-            var thArray = table.headerElement.getElementsByTagName('th');
+            const tableCols = table.tabulator.getColumns();
             for (var i = 0; i < inputs.length; i++) {
+                var colName = inputs[i].dataset.colName;
                 data.push({
-                    name: inputs[i].dataset.colName,
+                    name: colName,
                     is_visible: inputs[i].checked
                 })
                 json['data']['columns'][i]['is_visible'] = inputs[i].checked;
+                if(inputs[i].checked){
+                    tableCols[i].show();
+                }else{
+                    tableCols[i].hide();
+                }
             }
-            var headerWidth = adjustTableWidth(
-                table, thArray, json['data']['columns']
-            );
-            hideShowTableCols(table);
-            allColHiddenMessage(table);
-            table.style.width = headerWidth + 'px';
-            table.headerElement.style.width = headerWidth + 'px';
             ChataUtils.putCall(url, {columns: data}, function(response){
                 modal.close();
             }, opts)
