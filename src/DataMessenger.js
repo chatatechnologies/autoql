@@ -540,7 +540,7 @@ function DataMessenger(elem, options){
 
         pageSwitcherContainer.appendChild(tabChataUtils)
         pageSwitcherContainer.appendChild(tabQueryTips)
-        pageSwitcherContainer.appendChild(tabNotifications)
+        // pageSwitcherContainer.appendChild(tabNotifications)
 
         tabChataUtils.onclick = function(event){
             tabChataUtils.classList.add('active');
