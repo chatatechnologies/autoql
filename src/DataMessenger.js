@@ -1790,7 +1790,11 @@ function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pivot_table');
-        ChataPivotTable(idRequest, obj.options, obj.onRenderTable);
+        var table = new ChataPivotTable(
+            idRequest, obj.options, obj.onCellClick, obj.onRenderTable
+        );
+
+        component.tabulator = table;
     }
 
     obj.displayHeatmapHandler = (evt, idRequest) => {
@@ -1980,6 +1984,19 @@ function DataMessenger(elem, options){
         }
     }
 
+    obj.onCellClick = (e, cell, json) => {
+        const columns = json['data']['columns'];
+        const selectedColumn = cell._cell.column;
+        const row = cell._cell.row;
+        if(selectedColumn.definition.index != 0){
+            console.log(selectedColumn);
+            console.log(row);
+            console.log(columns[1].name);
+            console.log(columns[0].name);
+        }
+
+    }
+
     obj.putTableResponse = (jsonResponse) => {
         var data = jsonResponse['data']['rows'];
         var containerMessage = document.createElement('div');
@@ -2107,7 +2124,7 @@ function DataMessenger(elem, options){
         reportButton.onclick = async (evt) => {
             var reportMessage = textArea.value;
             spinner.classList.remove('hidden');
-            await ChataUtils.sendReport(idRequest, options, menu, toolbar);
+            await sendReport.sendReport(idRequest, options, menu, toolbar);
             modal.close();
         }
 

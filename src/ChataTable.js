@@ -188,7 +188,14 @@ function getPivotColumns(json, pivotColumns, options){
         columnsData.push({
             title: title,
             field: col,
+            index: index,
             headerFilter: "input",
+            headerFilterFunc: (
+                headerValue, rowValue, rowData, filterParams) => {
+                return callTableFilter(
+                    columns[colIndex], headerValue, rowValue, options
+                );
+            },
             formatter: (cell, formatterParams, onRendered) => {
                 let value;
                 if(
@@ -200,7 +207,8 @@ function getPivotColumns(json, pivotColumns, options){
                     value = cell.getValue();
                 }
                 return formatData(value, columns[colIndex], options);
-            }
+            },
+            frozen: colIndex == 0 ? true : false
         })
     });
 
@@ -243,7 +251,7 @@ function getColumnsData(json, options){
             headerFilterFunc: (
                 headerValue, rowValue, rowData, filterParams) => {
                 return callTableFilter(col, headerValue, rowValue, options);
-            }
+            },
         })
     })
     return columnsData;
@@ -267,7 +275,7 @@ function getTableData(json, options) {
     return tableData;
 }
 
-function ChataPivotTable(idRequest, options, onRender = () => {}){
+function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}){
     var json = ChataUtils.responses[idRequest];
     var cols = json['data']['columns'];
     let pivotArray;
@@ -301,8 +309,8 @@ function ChataPivotTable(idRequest, options, onRender = () => {}){
         columns: columns,
         data: tableData,
         renderComplete: onRender,
-        rowClick: (e, row) =>{
-            onRowClick(e, row, cloneObject(json));
+        cellClick: (e, cell) =>{
+            onCellClick(e, cell, cloneObject(json));
         }
     })
     table.setHeight('100%');
@@ -326,7 +334,7 @@ function ChataPivotTable(idRequest, options, onRender = () => {}){
 }
 
 function ChataTable(
-    idRequest, options, onRowClick, isPivot=false, onRender = () => {}){
+    idRequest, options, onRowClick, onRender = () => {}){
 
     var json = ChataUtils.responses[idRequest];
     var tableData = getTableData(json, options);

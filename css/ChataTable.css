@@ -74,3 +74,9 @@
 .autoql-vanilla-chata-table .tabulator-col {
     height: auto!important;
 }
+
+.autoql-vanilla-chata-table .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left,
+.autoql-vanilla-chata-table .tabulator-header .tabulator-frozen.tabulator-frozen-left {
+    border-right: 2px solid #ddd;
+    background: var(--chata-drawer-background-color);
+}
