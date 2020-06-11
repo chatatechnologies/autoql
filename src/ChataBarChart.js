@@ -1,4 +1,4 @@
-function createBarChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -165,6 +165,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
         labelYContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
                 left: d3.event.clientX,
@@ -178,6 +179,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -226,6 +228,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
         labelXContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX,
@@ -236,6 +239,7 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -368,5 +372,19 @@ function createBarChart(component, json, options, fromChataUtils=true, valueClas
     }
 
     tooltipCharts();
+    onUpdate(component);
 
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createBarChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

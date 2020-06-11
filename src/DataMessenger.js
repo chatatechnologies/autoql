@@ -60,6 +60,8 @@ function DataMessenger(elem, options){
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         inputPlaceholder: 'Type your queries here',
+        enableDynamicCharting: true,
+        queryQuickStartTopics: undefined,
         activeIntegrator: ''
     };
 
@@ -98,6 +100,10 @@ function DataMessenger(elem, options){
         if(typeof value !== 'object'){
             obj.options[key] = value;
         }
+    }
+
+    if('queryQuickStartTopics' in options){
+        obj.options['queryQuickStartTopics'] = options.queryQuickStartTopics;
     }
 
     if(!('introMessage' in options)){
@@ -327,6 +333,8 @@ function DataMessenger(elem, options){
     }
 
     obj.closeDrawer = () => {
+        obj.closePopOver(obj.clearMessagePop);
+        closeAllChartPopovers();
         document.body.classList.remove(
             'autoql-vanilla-chata-body-drawer-open'
         );
@@ -417,7 +425,7 @@ function DataMessenger(elem, options){
             obj.createQueryTips();
             obj.createNotifications();
             obj.speechToTextEvent();
-
+            obj.registerWindowClicks();
             obj.openDrawer();
             obj.closeDrawer();
 
@@ -746,6 +754,7 @@ function DataMessenger(elem, options){
                 obj.tabQueryTips.classList.remove('active');
                 obj.tabsAnimation('flex', 'block');
                 obj.queryTipsAnimation('none');
+                obj.notificationsAnimation('none');
                 chataInput.focus();
                 var selectedQuery = event.target.textContent;
                 var subQuery = '';
@@ -874,9 +883,14 @@ function DataMessenger(elem, options){
           return url;
     }
 
+    obj.getRecommendationPath = (options, text) => {
+        return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
+    }
+
     obj.createResizeHandler = function(){
         var resize = document.createElement('div');
         var startX, startY, startWidth, startHeight;
+        var timer;
         resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
         resize.classList.add(obj.options.placement);
 
@@ -906,6 +920,11 @@ function DataMessenger(elem, options){
                 obj.rootElem.style.height = newHeight + 'px';
                 obj.options.height = newHeight;
             }
+            clearTimeout(timer);
+            timer = setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+                console.log('DISPATCH');
+            }, 100);
         }
 
         function stopResize(e) {
@@ -937,6 +956,75 @@ function DataMessenger(elem, options){
         }
     }
 
+    obj.registerWindowClicks = () => {
+        const excludeElementsForClearMessages = [
+            'clear-all',
+            'autoql-vanilla-clear-messages-confirm-popover',
+            'autoql-vanilla-chata-confirm-text',
+            'autoql-vanilla-chata-confirm-icon'
+        ]
+
+        const excludeElementsForChartSelector = [
+            'autoql-vanilla-x-axis-label-border',
+            'autoql-vanilla-y-axis-label-border',
+            'autoql-vanilla-axis-selector-container',
+            'number-selector-header',
+            'chata-chart-selector-checkbox',
+            'autoql-vanilla-chata-col-selector-name',
+            'autoql-vanilla-button-wrapper-selector',
+            'autoql-vanilla-chata-list-item'
+        ]
+
+        const excludeElementsForToolbars = [
+            'autoql-vanilla-chata-toolbar-btn',
+            'autoql-vanilla-more-options',
+            'chata-more-options-menu'
+        ]
+
+        window.addEventListener('click', (evt) => {
+            console.log(evt.target);
+            var closePop = true;
+            var closeChartPopovers = true;
+            var closeToolbars = true;
+            for (var i = 0; i < excludeElementsForClearMessages.length; i++) {
+                var c = excludeElementsForClearMessages[i];
+                if(evt.target.classList.contains(c)){
+                    closePop = false;
+                    break;
+                }
+            }
+
+            for (var i = 0; i < excludeElementsForChartSelector.length; i++) {
+                var c = excludeElementsForChartSelector[i]
+                if(evt.target.classList.contains(c)){
+                    closeChartPopovers = false;
+                    break;
+                }
+            }
+
+
+            for (var i = 0; i < excludeElementsForToolbars.length; i++) {
+                var c = excludeElementsForToolbars[i]
+                if(evt.target.classList.contains(c)){
+                    closeToolbars = false;
+                    break;
+                }
+            }
+
+            if(closePop){
+                obj.closePopOver(obj.clearMessagePop);
+            }
+
+            if(closeChartPopovers){
+                closeAllChartPopovers();
+            }
+
+            if(closeToolbars){
+                closeAllToolbars();
+            }
+        })
+    }
+
     obj.createDrawerContent = () => {
         var drawerContent = document.createElement('div');
         var firstMessage = document.createElement('div');
@@ -950,6 +1038,7 @@ function DataMessenger(elem, options){
         );
         firstMessage.classList.add('response');
         chatMessageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        chatMessageBubble.classList.add('text');
 
         firstMessage.appendChild(chatMessageBubble);
         drawerContent.appendChild(firstMessage);
@@ -960,7 +1049,8 @@ function DataMessenger(elem, options){
     }
 
     obj.createIntroMessageTopics = () => {
-        const topics = getIntroMessageTopics(obj.options.activeIntegrator);
+        const topics = obj.options.queryQuickStartTopics;
+        console.log(obj.options.queryQuickStartTopics);
         if(topics){
             console.log(topics);
             const topicsWidget = new Cascader(topics, obj);
@@ -1023,6 +1113,7 @@ function DataMessenger(elem, options){
         }
 
         clearAllButton.onclick = (evt) => {
+            closeAllChartPopovers();
             popover.style.visibility = 'visible';
             popover.style.opacity = 1;
         }
@@ -1048,6 +1139,7 @@ function DataMessenger(elem, options){
         obj.rootElem.appendChild(chatHeaderContainer);
         obj.headerRight = headerRight;
         obj.headerTitle = headerTitle;
+        obj.clearMessagePop = popover;
     }
 
     obj.closePopOver = (popover) => {
@@ -1056,13 +1148,16 @@ function DataMessenger(elem, options){
     }
 
     obj.clearMessages = () => {
+        var size = 0;
+        if(obj.options.queryQuickStartTopics)size = 1;
         [].forEach.call(
             obj.drawerContent.querySelectorAll(
                 '.autoql-vanilla-chat-single-message-container'
             ),
             (e, index) => {
-            if(index == 0) return;
-            e.parentNode.removeChild(e);
+            if(index > size){
+                e.parentNode.removeChild(e);
+            }
         });
     }
 
@@ -1127,7 +1222,7 @@ function DataMessenger(elem, options){
         );
         voiceRecordButton.setAttribute(
             'data-tippy-content',
-            'Hold to Use Voice'
+            'Hold for voice-to-text'
         );
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
@@ -1401,7 +1496,7 @@ function DataMessenger(elem, options){
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
-
+        closeAllToolbars();
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
     }
@@ -1555,6 +1650,7 @@ function DataMessenger(elem, options){
             obj.moreOptionsHandler,
             [moreOptions, toolbar]
         )
+        moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
         if(request['reference_id'] !== '1.1.420'){
             toolbar.appendChild(
@@ -1568,12 +1664,19 @@ function DataMessenger(elem, options){
     }
 
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
+        closeAllChartPopovers();
         var messageBubble = oldComponent.parentElement
             .parentElement.parentElement;
         if(messageBubble.classList.contains(
             'autoql-vanilla-chata-response-content-container'
         )){
             messageBubble = messageBubble.parentElement;
+        }
+
+        if(['table', 'pivot_table'].includes(ignore)){
+            messageBubble.classList.remove('full-width');
+        }else{
+            messageBubble.classList.add('full-width');
         }
 
         var scrollBox = messageBubble.querySelector(
@@ -1668,7 +1771,7 @@ function DataMessenger(elem, options){
             if(response['data']['rows'].length > 0){
                 obj.putTableResponse(response);
             }else{
-                obj.putSimpleResponse(response);
+                obj.putSimpleResponse(response, '');
             }
             obj.drawerContent.removeChild(responseLoadingContainer);
             refreshTooltips();
@@ -1750,15 +1853,17 @@ function DataMessenger(elem, options){
             idRequest,
             obj.options,
             obj.onRowClick,
-            obj.onRenderTable
         );
         component.tabulator = table;
+        d3.select(window).on('resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
-        createColumnChart(component, json, obj.options);
+        createColumnChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1766,7 +1871,9 @@ function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bar');
-        createBarChart(component, json, obj.options);
+        createBarChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1782,7 +1889,9 @@ function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'line');
-        createLineChart(component, json, obj.options);
+        createLineChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1791,8 +1900,9 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pivot_table');
         var table = new ChataPivotTable(
-            idRequest, obj.options, obj.onCellClick, obj.onRenderTable
+            idRequest, obj.options, obj.onCellClick
         );
+        d3.select(window).on('resize.'+idRequest, null);
 
         component.tabulator = table;
     }
@@ -1818,7 +1928,8 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_column');
         createStackedColumnChart(
-            component, cloneObject(json), obj.options
+            component, cloneObject(json), obj.options,
+            obj.registerDrilldownStackedChartEvent
         );
         obj.registerDrilldownStackedChartEvent(component);
     }
@@ -1828,7 +1939,8 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_bar');
         createStackedBarChart(
-            component, cloneObject(json), obj.options
+            component, cloneObject(json), obj.options,
+            obj.registerDrilldownStackedChartEvent
         );
         obj.registerDrilldownStackedChartEvent(component);
     }
@@ -1838,7 +1950,8 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_line');
         createAreaChart(
-            component, cloneObject(json), obj.options
+            component, cloneObject(json), obj.options,
+            obj.registerDrilldownStackedChartEvent
         );
     }
 
@@ -1883,8 +1996,7 @@ function DataMessenger(elem, options){
                     'Bar Chart', obj.displayBarChartHandler
                 );
             }
-            if(displayTypes[i] == 'pie'
-                && json['data']['columns'].length == 2){
+            if(displayTypes[i] == 'pie'){
                 button = obj.getDisplayTypeButton(
                     idRequest, PIE_CHART_ICON,
                     'Pie Chart', obj.displayPieChartHandler
@@ -1970,10 +2082,6 @@ function DataMessenger(elem, options){
         return responseLoadingContainer;
     }
 
-    obj.onRenderTable = () => {
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-    }
-
     obj.onRowClick = (e, row, json) => {
         var index = 0;
         if(getGroupableFields(json).length > 0){
@@ -1989,10 +2097,11 @@ function DataMessenger(elem, options){
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
-            console.log(selectedColumn);
-            console.log(row);
-            console.log(columns[1].name);
-            console.log(columns[0].name);
+            var entries = Object.entries(row.data)[0];
+            json['data']['rows'][0][0] = entries[1];
+            json['data']['rows'][0][1] = selectedColumn.definition.field;
+            json['data']['rows'][0][2] = cell.getValue();
+            obj.sendDrilldownMessage(json, 0, obj.options);
         }
 
     }
@@ -2012,7 +2121,7 @@ function DataMessenger(elem, options){
         containerMessage.classList.add('response');
         containerMessage.classList.add('autoql-vanilla-chat-message-response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('full-width');
+        // messageBubble.classList.add('full-width');
         var idRequest = uuidv4();
 
         ChataUtils.responses[idRequest] = jsonResponse;
@@ -2057,10 +2166,13 @@ function DataMessenger(elem, options){
             idRequest,
             obj.options,
             obj.onRowClick,
-            obj.onRenderTable
         );
 
         tableWrapper.tabulator = table;
+
+        setTimeout(function(){
+            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        }, 350);
 
         return tableWrapper;
     }
@@ -2313,40 +2425,44 @@ function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
+    obj.inputAnimation = (text) => {
+        var input = obj.input;
+        var selectedQuery = text;
+        var subQuery = '';
+        var index = 0;
+        var int = setInterval(function () {
+            subQuery += selectedQuery[index];
+            if(index >= selectedQuery.length){
+                clearInterval(int);
+                var evt = new KeyboardEvent('keypress', {
+                    keyCode: 13,
+                    type: "keypress",
+                    which: 13
+                });
+                input.dispatchEvent(evt)
+            }else{
+                input.value = subQuery;
+            }
+            index++;
+        }, 60);
+    }
+
     obj.createSuggestions = function(responseContentContainer, data){
         for (var i = 0; i < data.length; i++) {
             var div = document.createElement('div');
             var button = document.createElement('button');
             button.classList.add('autoql-vanilla-chata-suggestion-btn');
-            button.textContent = data[i][0];
+            button.textContent = data[i];
             div.appendChild(button);
             responseContentContainer.appendChild(div);
-            if(i == data.length-1){
-                button.classList.add('none-of-these-btn');
-                button.onclick = (evt) => {
-                    var responseLoadingContainer = obj.putMessage(
-                        evt.target.textContent
-                    );
-                    var interval = setInterval(function(){
-                        obj.drawerContent.removeChild(
-                            responseLoadingContainer
-                        );
-                        obj.sendResponse('Thank you for your feedback.');
-                        clearInterval(interval);
-                    }, 1300);
-                }
-            }else{
-                button.onclick = (evt) => {
-                    obj.sendMessage(
-                        evt.target.textContent, 'data_messenger.suggestion'
-                    );
-                }
+            button.onclick = (evt) => {
+                obj.inputAnimation(evt.target.textContent);
             }
         }
     }
 
-    obj.putSuggestionResponse = (jsonResponse, query) => {
-        var data = jsonResponse['data']['rows'];
+    obj.putSuggestionResponse = (jsonResponse) => {
+        var data = jsonResponse['data']['items'];
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
@@ -2359,10 +2475,6 @@ function DataMessenger(elem, options){
         responseContentContainer.classList.add(
             'autoql-vanilla-chata-response-content-container'
         );
-        responseContentContainer.innerHTML = `
-            <div>I'm not sure what you mean by <strong>"${query}"</strong>.
-            Did you mean:</div>
-        `;
         obj.createSuggestions(responseContentContainer, data);
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
@@ -2370,7 +2482,7 @@ function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
-    obj.putSimpleResponse = (jsonResponse) => {
+    obj.putSimpleResponse = (jsonResponse, text) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         containerMessage.classList.add(
@@ -2384,7 +2496,9 @@ function DataMessenger(elem, options){
         toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );
-        if(jsonResponse['reference_id'] !== '1.1.420'){
+        if(jsonResponse['reference_id'] !== '1.1.420'
+        && jsonResponse['reference_id'] !== '1.9.502'
+        && jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
         var value = ''
@@ -2404,6 +2518,32 @@ function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        if(jsonResponse['reference_id'] === '1.1.430'){
+            // HERE
+            var responseLoadingContainer = document.createElement('div');
+            var responseLoading = document.createElement('div');
+
+            responseLoadingContainer.classList.add(
+                'response-loading-container'
+            );
+            responseLoading.classList.add('response-loading');
+            for (var i = 0; i <= 3; i++) {
+                responseLoading.appendChild(document.createElement('div'));
+            }
+
+            responseLoadingContainer.appendChild(responseLoading);
+            obj.drawerContent.appendChild(responseLoadingContainer);
+            const path = obj.getRecommendationPath(
+                obj.options,
+                text.split(' ').join(',')
+            );
+            ChataUtils.safetynetCall(path, function(response, s){
+                obj.drawerContent.removeChild(responseLoadingContainer);
+                console.log(response);
+                obj.putSuggestionResponse(response);
+            }, obj.options);
+            console.log(path);
+        }
     }
 
     obj.putSafetynetMessage = function(suggestionArray){
@@ -2503,12 +2643,12 @@ function DataMessenger(elem, options){
                     switch(jsonResponse['data']['display_type']){
                         case 'suggestion':
                             obj.putSuggestionResponse(
-                                jsonResponse, textValue
+                                jsonResponse
                             );
                         break;
                         case 'table':
                             if(jsonResponse['data']['columns'].length == 1){
-                                obj.putSimpleResponse(jsonResponse);
+                                obj.putSimpleResponse(jsonResponse, textValue);
                             }else{
                                 obj.putTableResponse(jsonResponse);
                             }
@@ -2519,18 +2659,18 @@ function DataMessenger(elem, options){
                             if(cols.length == 1 && rows.length == 1){
                                 if(cols[0]['name'] == 'query_suggestion'){
                                     obj.putSuggestionResponse(
-                                        jsonResponse, textValue
+                                        jsonResponse
                                     );
                                 }else if(cols[0]['name'] == 'Help Link'){
                                     obj.putHelpMessage(jsonResponse);
                                 }else{
-                                    obj.putSimpleResponse(jsonResponse);
+                                    obj.putSimpleResponse(jsonResponse, textValue);
                                 }
                             }else{
                                 if(rows.length > 0){
                                     obj.putTableResponse(jsonResponse);
                                 }else{
-                                    obj.putSimpleResponse(jsonResponse);
+                                    obj.putSimpleResponse(jsonResponse, textValue);
                                 }
                             }
                         break;
@@ -2616,7 +2756,7 @@ function DataMessenger(elem, options){
                             // temporary
                             jsonResponse['data'] =
                             'Error: There was no data supplied for this table';
-                            obj.putSimpleResponse(jsonResponse);
+                            obj.putSimpleResponse(jsonResponse, textValue);
                     }
                     obj.checkMaxMessages();
                     refreshTooltips();

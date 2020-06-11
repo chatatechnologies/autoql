@@ -1,4 +1,4 @@
-function createLineChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40},
     width = component.parentElement.clientWidth - margin.left;
     var height;
@@ -157,6 +157,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
         labelYContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX,
                 top: d3.event.clientY
@@ -166,6 +167,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -213,6 +215,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
         labelXContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
                 left: d3.event.clientX,
@@ -226,6 +229,7 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -373,4 +377,18 @@ function createLineChart(component, json, options, fromChataUtils=true, valueCla
     }
 
     tooltipCharts();
+    onUpdate(component)
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createLineChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

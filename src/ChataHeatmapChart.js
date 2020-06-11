@@ -223,4 +223,17 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     .attr('class', 'tooltip-3d square')
 
     tooltipCharts();
+
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createHeatmap(
+                component,
+                json,
+                options,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

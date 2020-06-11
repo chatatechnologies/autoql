@@ -1,4 +1,4 @@
-function createStackedColumnChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -138,6 +138,7 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
     .attr('class', 'autoql-vanilla-x-axis-label-border')
 
     labelXContainer.on('mouseup', (evt) => {
+        closeAllChartPopovers();
         var popoverSelector = new ChataChartListPopover({
             left: d3.event.clientX,
             top: d3.event.clientY
@@ -152,6 +153,7 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -327,4 +329,19 @@ function createStackedColumnChart(component, json, options, fromChataUtils=true,
       .attr('transform', `translate(${newX}, ${0})`)
 
     tooltipCharts();
+    onUpdate(component);
+
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createStackedColumnChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

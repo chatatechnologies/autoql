@@ -80,9 +80,9 @@ function Cascader(topics, datamessenger){
     }
 
     for(var i = 0; i<topics.length; i++){
-        var label = topics[i].label;
+        var topic = topics[i].topic;
         var active = i == 0 ? 'active' : '';
-        var opt = obj.makeOpt(label, OPTION_ARROW, active, 'option-arrow');
+        var opt = obj.makeOpt(topic, OPTION_ARROW, active, 'option-arrow');
         opt.setAttribute('data-index-topic', i);
         options.push(opt);
         optionsContainer.appendChild(opt);
@@ -109,7 +109,7 @@ function Cascader(topics, datamessenger){
         );
 
         const title = htmlToElement(`
-            <div class="options-title">${topic.label}</div>
+            <div class="options-title">${topic.topic}</div>
         `)
 
         const seeMore = htmlToElement(`
@@ -124,12 +124,13 @@ function Cascader(topics, datamessenger){
         childrenOptionsContainer.classList.add('options-container');
         childrenOptionsContainer.appendChild(arrow);
         childrenOptionsContainer.appendChild(title);
+        console.log(topic.queries);
+        const queries = Object.values(topic.queries);
+        for (var i = 0; i < queries.length; i++) {
 
-        for (var i = 0; i < topic.children.length; i++) {
-
-            var label = topic.children[i].label;
+            var query = queries[i];
             var opt = obj.makeOpt(
-                label, OPTION_ARROW_CIRCLE, '', 'option-execute-icon'
+                query, OPTION_ARROW_CIRCLE, '', 'option-execute-icon'
             );
             opt.setAttribute('data-index-topic', i);
             childrenOptionsContainer.appendChild(opt);
@@ -149,7 +150,7 @@ function Cascader(topics, datamessenger){
 
         seeMore.onclick = (evt) => {
             obj.showQueryTips();
-            obj.queryTipsInputAnimation(topic.label);
+            obj.queryTipsInputAnimation(topic.topic);
         }
 
         childrenOptionsContainer.appendChild(seeMore);

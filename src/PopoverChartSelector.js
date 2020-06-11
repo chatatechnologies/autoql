@@ -1,10 +1,8 @@
 function PopoverChartSelector(position) {
-    var obj = this;
     var popover = document.createElement('div');
     popover.classList.add('autoql-vanilla-popover-selector');
-    obj.popover = popover;
 
-    obj.show = () => {
+    popover.show = () => {
         popover.style.visibility = 'visible';
         popover.style.opacity = 1;
         popover.style.left = position.left + 'px'
@@ -13,22 +11,27 @@ function PopoverChartSelector(position) {
         }else{
             popover.style.top = (position.top + window.pageYOffset) + 'px';
         }
-        return obj;
+        popover.isOpen = true;
+        return popover;
     }
 
-    obj.close = () => {
+    popover.close = () => {
         popover.style.visibility = 'hidden';
         popover.style.opacity = 0;
         document.body.removeChild(popover);
     }
 
-    obj.appendContent = (elem) => {
+    popover.appendContent = (elem) => {
         popover.appendChild(elem);
+    }
+
+    popover.focusout = (evt) => {
+        console.log('SFDLMDKFDKFDJK');
     }
 
     document.body.appendChild(popover);
 
-    return obj;
+    return popover;
 }
 
 
@@ -86,7 +89,7 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         var colName = colObj.display_name || colObj.name;
         var tick = htmlToElement(`
             <div class="autoql-vanilla-chata-checkbox-tick">
-            <span class="chata-icon">${TICK}</span>
+                <span class="chata-icon">${TICK}</span>
             </div>
         `);
         var checkboxContainer = document.createElement('div');
@@ -95,6 +98,7 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         checkboxInput.setAttribute('type', 'checkbox');
 
         checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
+        checkboxInput.classList.add('chata-chart-selector-checkbox');
         if(name){
             checkboxInput.setAttribute('data-col-name', colName);
         }
@@ -147,7 +151,7 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
 
         buttonWrapper.style.backgroundColor = 'rgb(255, 255, 255)';
         buttonWrapper.style.padding = '5px';
-
+        buttonWrapper.classList.add('autoql-vanilla-button-wrapper-selector')
         for(var [key, value] of Object.entries(series)){
             var header = document.createElement('div');
             var selectableList = document.createElement('div');
@@ -173,6 +177,10 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
                 cols[i].col.name;
                 colName.innerHTML = formatColumnName(n);
                 listItem.classList.add('autoql-vanilla-chata-list-item');
+                colName.classList.add(
+                    'autoql-vanilla-chata-col-selector-name'
+                );
+
                 listItem.appendChild(colName);
                 listItem.appendChild(checkbox);
                 selectableList.appendChild(listItem);

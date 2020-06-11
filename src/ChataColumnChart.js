@@ -1,4 +1,4 @@
-function createColumnChart(component, json, options, fromChataUtils=true,
+function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 60, left: 90, marginLabel: 50},
     width = component.parentElement.clientWidth - margin.left;
@@ -117,7 +117,8 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .domain(groupNames)
     .range(options.themeConfig.chartColors);
 
-
+    const CHART_WIDTH = width + margin.left;
+    const CHART_HEIGHT = width + margin.left;
 
     var svg = d3.select(component)
     .append("svg")
@@ -125,7 +126,15 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + margin.left + "," + margin.top + ")")
+
+    // var svg = d3.select(component).append('svg')
+    // .attr("width", '100%')
+    // .attr("height", '100%')
+    // .attr('viewBox','0 0 '+Math.min(CHART_WIDTH, CHART_HEIGHT)+' '+Math.min(CHART_WIDTH, CHART_HEIGHT))
+    // .attr('preserveAspectRatio','xMidYMin meet')
+    // .append("g")
+    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -163,6 +172,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
         labelYContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
             var popoverSelector = new ChataChartSeriesPopover({
                 left: d3.event.clientX,
                 top: d3.event.clientY
@@ -172,6 +182,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -220,6 +231,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
         labelXContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
                 left: d3.event.clientX,
@@ -233,6 +245,7 @@ function createColumnChart(component, json, options, fromChataUtils=true,
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -361,4 +374,18 @@ function createColumnChart(component, json, options, fromChataUtils=true,
     }
 
     tooltipCharts();
+    onUpdate(component);
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createColumnChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

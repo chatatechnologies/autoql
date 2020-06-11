@@ -1,4 +1,4 @@
-function createAreaChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
+function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 5, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -137,6 +137,7 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
     .attr('class', 'autoql-vanilla-x-axis-label-border')
 
     labelXContainer.on('mouseup', (evt) => {
+        closeAllChartPopovers();
         var popoverSelector = new ChataChartListPopover({
             left: d3.event.clientX,
             top: d3.event.clientY
@@ -151,6 +152,7 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -323,4 +325,19 @@ function createAreaChart(component, json, options, fromChataUtils=true, valueCla
       .attr('transform', `translate(${newX}, ${0})`)
 
     tooltipCharts();
+    onUpdate(component);
+
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createAreaChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

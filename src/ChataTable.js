@@ -295,12 +295,8 @@ function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}){
 
     var table = new Tabulator(`[data-componentid='${idRequest}']`, {
         layout: 'fitDataFill',
-        textSize: '9px',
         virtualDomBuffer: 300,
         movableColumns: true,
-        progressiveRender: true,
-        progressiveRenderSize: 5,
-        progressiveRenderMargin: 100,
         downloadConfig: {
             columnGroups: false,
             rowGroups: false,
@@ -334,7 +330,7 @@ function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}){
 }
 
 function ChataTable(
-    idRequest, options, onRowClick, onRender = () => {}){
+    idRequest, options, onRowClick){
 
     var json = ChataUtils.responses[idRequest];
     var tableData = getTableData(json, options);
@@ -342,12 +338,8 @@ function ChataTable(
 
     var table = new Tabulator(`[data-componentid='${idRequest}']`, {
         layout: 'fitDataFill',
-        textSize: '9px',
         virtualDomBuffer: 300,
         movableColumns: true,
-        progressiveRender: true,
-        progressiveRenderSize: 5,
-        progressiveRenderMargin: 100,
         downloadConfig: {
             columnGroups: false,
             rowGroups: false,
@@ -355,7 +347,6 @@ function ChataTable(
         },
         columns: columns,
         data: tableData,
-        renderComplete: onRender,
         rowClick: (e, row) =>{
             onRowClick(e, row, cloneObject(json));
         }

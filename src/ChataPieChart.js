@@ -4,17 +4,25 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     var pieWidth;
     var height;
     var cols = json['data']['columns'];
+    var colsEnum = enumerateCols(json);
+    var indexList = getIndexesByType(colsEnum);
     var groupableField = getGroupableField(json);
     var notGroupableField = getNotGroupableField(json);
-    var index1 = notGroupableField.indexCol;
-    var index2 = groupableField.indexCol;
-
+    // var index1 = notGroupableField.indexCol;
+    // var index2 = groupableField.indexCol;
+    if(indexList['DOLLAR_AMT']){
+        index2 = indexList['DOLLAR_AMT'][0].index;
+    }else if(indexList['QUANTITY']){
+        index2 = indexList['QUANTITY'][0].index;
+    }
+    console.log(indexList);
+    index1 = indexList['STRING'][0].index;
     var data = ChataUtils.groupBy(
-        json['data']['rows'], row => row[index2], index1
+        json['data']['rows'], row => row[index1], index2
     );
 
-    var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
-    var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
+    var colStr1 = cols[index1]['display_name'] || cols[index1]['name'];
+    var colStr2 = cols[index2]['display_name'] || cols[index2]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     if(fromChataUtils){
@@ -88,9 +96,9 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
         d3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(d.data.key, cols[index2], options))
+        .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
         .attr('data-colvalue2', formatData(
-            d.value, cols[index1],
+            d.value, cols[index2],
             options
         ))
     })
@@ -149,15 +157,13 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
         var d = dataReady[i]
         labels.push(
             formatData(
-                    d.data.key, cols[index2],
+                    d.data.key, cols[index1],
                     options) + ": " +
             formatData(
-                    d.value, cols[index1],
+                    d.value, cols[index2],
                     options
             )
         );
-        console.log(d.value);
-        console.log(cols[index1]);
     }
 
     const legendWrapLength = width / 2 - 50
@@ -192,4 +198,18 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
 
     svgLegend
       .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+
+
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createPieChart(
+                component,
+                json,
+                options,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

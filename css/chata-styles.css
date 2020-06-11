@@ -269,7 +269,7 @@ body{
     margin: 10px 0px 10px 10px;
     padding: 13px;
     border-radius: 10px;
-    max-width: 85%;
+    max-width: calc(100% - 20px);
     word-wrap: break-word;
     font-family: var(--chata-drawer-font-family);
     font-size: 14px;
@@ -278,6 +278,10 @@ body{
     background: var(--chata-drawer-background-color);
     color: var(--chata-drawer-text-color-primary);
 
+}
+
+.autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {
+    max-width: 85%;
 }
 
 .autoql-vanilla-chat-message-response{
@@ -589,7 +593,7 @@ body{
 .autoql-vanilla-chata-suggestion-btn, .autoql-vanilla-chata-suggestion-btn-renderer {
     padding: 6px 14px;
     background: transparent;
-    border-radius: 8px;
+    border-radius: 4px;
     font-family: var(--chata-drawer-font-family);
     font-size: 12px;
     margin-top: 5px;
@@ -603,9 +607,13 @@ body{
 }
 
 .autoql-vanilla-chata-suggestion-btn:hover, .autoql-vanilla-chata-suggestion-btn-renderer:hover{
-    color: white;
-    background: var(--chata-drawer-accent-color);
-    border-color: transparent;
+    color: white !important;
+    background: var(--chata-drawer-accent-color) !important;
+    border-color: transparent !important;
+}
+
+.autoql-vanilla-chata-suggestion-btn:focus, .autoql-vanilla-chata-suggestion-btn-renderer:focus{
+    background: transparent;
 }
 
 .autoql-vanilla-chata-scrollbox::-webkit-scrollbar {

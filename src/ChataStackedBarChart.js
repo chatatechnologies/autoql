@@ -1,4 +1,4 @@
-function createStackedBarChart(component, json, options, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
+function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 100},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -126,6 +126,7 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
     .attr('class', 'autoql-vanilla-y-axis-label-border')
 
     labelYContainer.on('mouseup', (evt) => {
+        closeAllChartPopovers();
         var popoverSelector = new ChataChartListPopover({
             left: d3.event.clientX,
             top: d3.event.clientY
@@ -139,6 +140,7 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
                     component,
                     json,
                     options,
+                    onUpdate,
                     fromChataUtils,
                     valueClass,
                     renderTooltips
@@ -307,4 +309,19 @@ function createStackedBarChart(component, json, options, fromChataUtils=true, va
       .attr('transform', `translate(${newX}, ${0})`)
 
     tooltipCharts();
+    onUpdate(component);
+
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createStackedBarChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }

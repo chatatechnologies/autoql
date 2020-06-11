@@ -222,4 +222,17 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     .attr("opacity", "0.7")
     .attr('class', 'tooltip-3d circle')
     tooltipCharts();
+
+    d3.select(window).on(
+        "resize." + component.dataset.componentid, () => {
+            createBubbleChart(
+                component,
+                json,
+                options,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+    );
 }
