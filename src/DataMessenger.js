@@ -2074,6 +2074,7 @@ function DataMessenger(elem, options){
         );
         containerMessage.classList.add('request');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('single');
         messageBubble.textContent = value;
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
@@ -2494,6 +2495,7 @@ function DataMessenger(elem, options){
         ChataUtils.responses[idRequest] = jsonResponse;
         containerMessage.setAttribute('data-containerid', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('single')
         toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );

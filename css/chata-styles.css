@@ -278,7 +278,10 @@ body{
     background: var(--chata-drawer-background-color);
     color: var(--chata-drawer-text-color-primary);
     min-width: 317px;
+}
 
+.autoql-vanilla-chat-message-bubble.single{
+    min-width: auto;
 }
 
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {
