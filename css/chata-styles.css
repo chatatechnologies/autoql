@@ -277,6 +277,7 @@ body{
     border: 1px solid var(--chata-drawer-border-color);
     background: var(--chata-drawer-background-color);
     color: var(--chata-drawer-text-color-primary);
+    min-width: 317px;
 
 }
 
