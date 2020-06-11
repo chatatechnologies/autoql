@@ -31,7 +31,7 @@ steps:
         fi
 
 substitutions:
-  _SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
+  _SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
 
   _HELM_REPO_URL_STAG: gs://chata-helm-repo-dev
   _HELM_CONFIG_FILE_STAG: stag-values.yaml
