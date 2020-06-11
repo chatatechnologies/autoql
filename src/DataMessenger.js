@@ -972,13 +972,14 @@ function DataMessenger(elem, options){
             'chata-chart-selector-checkbox',
             'autoql-vanilla-chata-col-selector-name',
             'autoql-vanilla-button-wrapper-selector',
-            'autoql-vanilla-chata-list-item'
+            'autoql-vanilla-chata-list-item',
         ]
 
         const excludeElementsForToolbars = [
             'autoql-vanilla-chata-toolbar-btn',
             'autoql-vanilla-more-options',
-            'chata-more-options-menu'
+            'chata-more-options-menu',
+            'report_problem'
         ]
 
         window.addEventListener('click', (evt) => {
@@ -1489,7 +1490,7 @@ function DataMessenger(elem, options){
 
     obj.reportProblemHandler = (
         evt, idRequest, reportProblem, toolbar) => {
-
+        closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
     }
@@ -2236,7 +2237,7 @@ function DataMessenger(elem, options){
         reportButton.onclick = async (evt) => {
             var reportMessage = textArea.value;
             spinner.classList.remove('hidden');
-            await sendReport.sendReport(idRequest, options, menu, toolbar);
+            await obj.sendReport(idRequest, options, menu, toolbar);
             modal.close();
         }
 
