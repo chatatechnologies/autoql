@@ -23,16 +23,19 @@ steps:
         echo BRANCH_NAME: $BRANCH_NAME
         echo COMMIT_SHA: $COMMIT_SHA
         echo TAG_NAME: $TAG_NAME
+        shopt -s nocasematch
         if [ -n "$TAG_NAME" ];then
+          [[ $_DEBUG != "true" ]] && curl -X POST -H 'Content-Type: application/json' --data '{"text":"BEGINNING deploy of a new version from `'$PROJECT_ID/$REPO_NAME:$TAG_NAME'`"}' ${_SLACK_WEBHOOK_URL}
+
           gsutil cp -r /workspace/build/** gs://chata-caas-cdn/autoql/${TAG_NAME}
           if [[ $PROJECT_ID = "production-245514" ]]; then
             gsutil rsync -d -r gs://chata-caas-cdn/autoql/${TAG_NAME} gs://chata-caas-cdn/autoql/latest
           fi
+          [[ $_DEBUG != "true" ]] && curl -X POST -H 'Content-Type: application/json' --data '{"text":":white_check_mark: DEPLOY SUCCEEDED! `'$PROJECT_ID/$REPO_NAME:$TAG_NAME'`"}' ${_SLACK_WEBHOOK_URL}
+
         fi
 
 substitutions:
-  _SLACK_WEBHOOK_URL: https://hooks.slack.com/services/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
-
   _HELM_REPO_URL_STAG: gs://chata-helm-repo-dev
   _HELM_CONFIG_FILE_STAG: stag-values.yaml
   _GKE_CLUSTER_STAG: chata-staging-1
