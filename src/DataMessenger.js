@@ -1769,12 +1769,16 @@ function DataMessenger(elem, options){
         responseLoadingContainer.appendChild(responseLoading);
         obj.drawerContent.appendChild(responseLoadingContainer);
         ChataUtils.ajaxCallPost(URL, function(response, status){
-            if(response['data']['rows'].length > 0){
+            obj.drawerContent.removeChild(responseLoadingContainer);
+            console.log(response);
+            if(!response['data']['rows']){
+                obj.putClientResponse(ERROR_MESSAGE);
+            }
+            else if(response['data']['rows'].length > 0){
                 obj.putTableResponse(response);
             }else{
                 obj.putSimpleResponse(response, '');
             }
-            obj.drawerContent.removeChild(responseLoadingContainer);
             refreshTooltips();
         }, data, options);
 
@@ -2075,6 +2079,7 @@ function DataMessenger(elem, options){
         containerMessage.classList.add('request');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('single');
+        messageBubble.classList.add('text');
         messageBubble.textContent = value;
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
@@ -2484,6 +2489,27 @@ function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
+    obj.putClientResponse = (msg) => {
+        var containerMessage = document.createElement('div');
+        var messageBubble = document.createElement('div');
+        containerMessage.classList.add(
+            'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add('response');
+        var idRequest = uuidv4();
+        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('simple-response')
+        messageBubble.classList.add('no-hover-response')
+
+        var div = document.createElement('div');
+        div.classList.add('autoql-vanilla-chata-single-response');
+        div.appendChild(document.createTextNode(msg.toString()));
+        messageBubble.appendChild(div);
+        containerMessage.appendChild(messageBubble);
+        obj.drawerContent.appendChild(containerMessage);
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
     obj.putSimpleResponse = (jsonResponse, text) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
@@ -2495,7 +2521,7 @@ function DataMessenger(elem, options){
         ChataUtils.responses[idRequest] = jsonResponse;
         containerMessage.setAttribute('data-containerid', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('single')
+        messageBubble.classList.add('simple-response')
         toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );
@@ -2504,19 +2530,30 @@ function DataMessenger(elem, options){
         && jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
-        var value = ''
+        if(jsonResponse['reference_id'] === '1.1.211'){
+            messageBubble.classList.add('no-hover-response');
+        }
+        var value = '';
+        var hasDrilldown = false;
         if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
             value = formatData(
                 jsonResponse['data']['rows'][0][0],
                 jsonResponse['data']['columns'][0],
                 obj.options
             );
+            hasDrilldown = true;
+
         }else{
             value = jsonResponse['message'];
         }
         var div = document.createElement('div');
+        if(hasDrilldown){
+            div.onclick = (evt) => {
+                obj.sendDrilldownMessage(jsonResponse, 0, obj.options);
+            }
+        }
         div.classList.add('autoql-vanilla-chata-single-response');
-        div.appendChild(document.createTextNode(value));
+        div.appendChild(document.createTextNode(value.toString()));
         messageBubble.appendChild(div);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
@@ -2542,10 +2579,8 @@ function DataMessenger(elem, options){
             );
             ChataUtils.safetynetCall(path, function(response, s){
                 obj.drawerContent.removeChild(responseLoadingContainer);
-                console.log(response);
                 obj.putSuggestionResponse(response);
             }, obj.options);
-            console.log(path);
         }
     }
 

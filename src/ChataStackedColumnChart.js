@@ -1,5 +1,5 @@
 function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 80},
+    var margin = {top: 5, right: 10, bottom: 60, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
@@ -124,7 +124,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     const paddingRect = 15;
     const xWidthRect = getStringWidth(col2) + paddingRect;
     const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
-    const _y = height + (margin.bottom/2);
+    const _y = height + (margin.bottom/2) + 5;
 
     labelXContainer.append('rect')
     .attr('x', _x)
@@ -304,12 +304,21 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
+    function toggleDataRects(selector) {
+        svg
+        .selectAll(`[data-colvalue1="${selector}"]`)
+        .data(data)
+        .classed('hidden', function() {  // toggle "hidden" class
+            return !d3.select(this).classed('hidden');
+        });
+    }
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
         .domain(subgroups.sort().map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);
         }))
         .range(options.themeConfig.chartColors)
+
 
     var legendOrdinal = d3.legendColor()
     .shape(
@@ -322,6 +331,12 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .shapePadding(5)
     .labelWrap(legendWrapLength)
     .scale(legendScale)
+    .on('cellclick', function(d) {
+        toggleDataRects(d.trim());
+        console.log(d);
+        const legendCell = d3.select(this);
+        legendCell.classed('hidden', !legendCell.classed('hidden'));  // toggle opacity of legend item
+    });
     svgLegend.call(legendOrdinal)
 
     const newX = chartWidth + legendBoxMargin

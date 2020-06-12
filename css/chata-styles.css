@@ -284,6 +284,20 @@ body{
     min-width: auto;
 }
 
+.autoql-vanilla-chat-message-bubble.simple-response{
+    min-width: 125px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.autoql-vanilla-chat-message-bubble.no-hover-response .autoql-vanilla-chata-single-response:hover{
+    text-decoration: none;
+    color: rgb(93,93,93);
+    cursor: default;
+}
+
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {
     max-width: 85%;
 }
@@ -314,6 +328,15 @@ body{
     background-color: inherit;
     font-size: 14px;
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    font-size: 14px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 .autoql-vanilla-chat-single-message-container.request {
@@ -1203,6 +1226,18 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-stacked-rect:hover{
     opacity: 1;
+}
+
+.legendCells .hidden {
+    opacity: 0.2;
+}
+
+.legendCells .cell{
+    cursor: pointer;
+}
+
+.autoql-vanilla-stacked-rect.hidden{
+    opacity: 0;
 }
 
 .label{

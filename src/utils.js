@@ -57,6 +57,7 @@ function formatData(val, col, allOptions={}){
             }else{
                 value = parseInt(val);
             }
+
         break;
         case 'RATIO':
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
@@ -89,7 +90,8 @@ function formatData(val, col, allOptions={}){
                 value = val;
             }
     }
-    return value || '';
+    if(value === undefined)return '';
+    else return value;
 }
 
 function formatColumnName(col){

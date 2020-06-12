@@ -1,5 +1,5 @@
 function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 30, left: 100},
+    var margin = {top: 5, right: 10, bottom: 30, left: 142},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
@@ -114,7 +114,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     const xWidthRect = getStringWidth(col2) + paddingRect;
 
     labelYContainer.append('rect')
-    .attr('x', 75.5)
+    .attr('x', 117.5)
     .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
     .attr('height', xWidthRect + paddingRect)
     .attr('width', 23)
@@ -210,7 +210,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
-        return formatChartData(d, cols[groupableIndex2], options);
+        return getLabel(formatChartData(d, cols[groupableIndex2], options));
     })).select(".domain").remove();
 
     svg.append("g")

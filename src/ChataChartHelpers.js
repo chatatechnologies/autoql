@@ -85,10 +85,11 @@ const enumerateCols = (json) => {
 }
 
 const getLabel = (label) => {
-    if(label.length < 18){
+    if(!label)label = '';
+    if(label.length < 15){
         return label;
     }
-    return label.slice(0, 18);
+    return label.slice(0, 15) + ' ...';
 }
 
 const getGroupableFields = (json) => {

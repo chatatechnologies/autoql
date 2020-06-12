@@ -73,11 +73,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     if (barWidth < 16) {
         labelsX.forEach((element, index) => {
             if (index % intervalWidth === 0) {
-                if(element.toString().length < 18){
-                    xTickValues.push(element);
-                }else{
-                    xTickValues.push(element.toString().slice(0, 18));
-                }
+                xTickValues.push(getLabel(element));
             }
         });
     }
@@ -85,11 +81,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     if(barHeight < 16){
         labelsY.forEach((element, index) => {
             if (index % intervalHeight === 0) {
-                if(element.toString().length < 18){
-                    yTickValues.push(element);
-                }else{
-                    yTickValues.push(element.toString().slice(0, 18));
-                }
+                yTickValues.push(getLabel(element));
             }
         });
     }
@@ -113,11 +105,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(labelsX.map(function(d) {
-        if(d.length < 18){
-            return d;
-        }else{
-            return d.toString().slice(0, 18);
-        }
+        return getLabel(d)
     }))
     .padding(0.01);
 
@@ -148,11 +136,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     var y = d3.scaleBand()
     .range([ height - margin.bottom, 0])
     .domain(labelsY.map(function(d) {
-        if(d.length < 18){
-            return d;
-        }else{
-            return d.toString().slice(0, 18);
-        }
+        return getLabel(d);
     }))
     .padding(0.01);
 
@@ -175,17 +159,8 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         var xLabel = '';
         var yLabel = '';
 
-        if(d.labelX.toString().length < 18){
-            xLabel = d.labelX;
-        }else{
-            xLabel = d.labelX.toString().slice(0, 18);
-        }
-
-        if(d.labelY.toString().length < 18){
-            yLabel = d.labelY;
-        }else{
-            yLabel = d.labelY.toString().slice(0, 18);
-        }
+        xLabel = getLabel(d.labelX);
+        yLabel = getLabel(d.labelY);
         return xLabel+':'+yLabel;
     })
     .enter()
@@ -203,18 +178,11 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         ))
     })
     .attr("x", function(d) {
-        if(d.labelX.toString().length < 18){
-            return x(d.labelX);
-        }else{
-            return x(d.labelX.toString().slice(0, 18));
-        }
+        return x(getLabel(d.labelX));
+
     })
     .attr("y", function(d) {
-        if(d.labelY.length < 18){
-            return y(d.labelY);
-        }else{
-            return y(d.labelY.toString().slice(0, 18));
-        }
+        return y(getLabel(d.labelY));
     })
     .attr("width", x.bandwidth())
     .attr("height", y.bandwidth())
