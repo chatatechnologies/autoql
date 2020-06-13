@@ -24,7 +24,8 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
                     {
                         value: parseFloat(data[i][value.indexCol]),
                         group: formatColumnName(colName),
-                        index: value.indexCol
+                        index: value.indexCol,
+                        isVisible: true,
                     }
                 ]
             }
@@ -47,9 +48,40 @@ const getObjectValues = (item, columns, seriesIndexes) => {
         obj['value'] = item[seriesIndexes[i]];
         obj['index'] = i;
         obj['group'] = formatColumnName(colName);
+        obj['isVisible'] = true;
+
         values.push(obj);
     }
     return values;
+}
+
+const toggleSerie = (data, serie) => {
+    for (var i = 0; i < data.length; i++) {
+        for (var x = 0; x < data[i].values.length; x++) {
+            var value = data[i].values[x];
+            if(value.group === serie)value.isVisible = !value.isVisible;
+        }
+    }
+
+    return data;
+}
+
+const getVisibleSeries = (_data) => {
+    var visibleData = [];
+    const data = cloneObject(_data);
+    for (var i = 0; i < data.length; i++) {
+        var line = data[i];
+        var newLine = {
+            label: line.label
+        };
+        var visibleSeries = [];
+        for (var x = 0; x < line.values.length; x++) {
+            if(line.values[x].isVisible)visibleSeries.push(line.values[x]);
+        }
+        newLine['values'] = visibleSeries;
+        visibleData.push(newLine)
+    }
+    return visibleData
 }
 
 const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {

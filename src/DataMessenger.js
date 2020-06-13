@@ -923,7 +923,6 @@ function DataMessenger(elem, options){
             clearTimeout(timer);
             timer = setTimeout(() => {
                 window.dispatchEvent(new Event('resize'));
-                console.log('DISPATCH');
             }, 100);
         }
 

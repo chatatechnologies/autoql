@@ -292,15 +292,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         )
     )
 
-    var slice = svg.selectAll(".slice")
-    .data(data)
-    .enter().append("g")
-    .attr("class", "g")
-    .attr("transform",function(d) {
-        return "translate(" + x0(getLabel(d.label)) + ",0)";
-    });
-
-
     const calculateHeight = (d) => {
         if(minMaxValues.min < 0){
             return Math.abs(y(d.value) - y(0));
@@ -309,34 +300,52 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         }
     }
 
-    slice.selectAll("rect")
-    .data(function(d) {
-        for (var i = 0; i < d.values.length; i++) {
-            d.values[i].label = d.label;
-        }
-        return d.values;
-    })
-    .enter().append("rect")
-    .each(function (d, i) {
-        d3.select(this).attr(valueClass, d.index)
-        .attr('data-col1', col1)
-        .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(
-            d.label, cols[index2],
-            options
-        ))
-        .attr('data-colvalue2', formatData(
-            d.value, cols[index1],
-            options
-        ))
-    })
-    .attr("width", x1.bandwidth())
-    .attr("x", function(d) { return x1(d.group); })
-    .style("fill", function(d) { return colorScale(d.group) })
-    .attr('fill-opacity', '0.7')
-    .attr('class', 'tooltip-2d bar')
-    .attr("y", function(d) { return y(Math.max(0, d.value)); })
-    .attr("height", function(d) { return calculateHeight(d) })
+    var slice = undefined;
+
+    function createBars(){
+        var cloneData = getVisibleSeries(data);
+        if(slice)slice.remove();
+        slice = svg.selectAll(".slice")
+        .remove()
+        .data(cloneData)
+        .enter().append("g")
+        .attr("class", "g")
+        .attr("transform",function(d) {
+            return "translate(" + x0(getLabel(d.label)) + ",0)";
+        });
+
+        slice.selectAll("rect")
+        .data(function(d) {
+            for (var i = 0; i < d.values.length; i++) {
+                d.values[i].label = d.label;
+            }
+            return d.values;
+        })
+        .enter().append("rect")
+        .each(function (d, i) {
+            d3.select(this).attr(valueClass, d.index)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-colvalue1', formatData(
+                d.label, cols[index2],
+                options
+            ))
+            .attr('data-colvalue2', formatData(
+                d.value, cols[index1],
+                options
+            ))
+        })
+        .attr("width", x1.bandwidth())
+        .attr("x", function(d) { return x1(d.group); })
+        .style("fill", function(d) { return colorScale(d.group) })
+        .attr('fill-opacity', '0.7')
+        .attr('class', 'tooltip-2d bar')
+        .attr("y", function(d) { return y(Math.max(0, d.value)); })
+        .attr("height", function(d) { return calculateHeight(d) })
+
+        onUpdate(component);
+        tooltipCharts();
+    }
 
     if(hasLegend){
         var svgLegend = svg.append('g')
@@ -357,6 +366,12 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         .shapePadding(100)
         .labelWrap(legendWrapLength)
         .scale(colorScale)
+        .on('cellclick', function(d) {
+            data = toggleSerie(data, d.trim());
+            createBars();
+            const legendCell = d3.select(this);
+            legendCell.classed('hidden', !legendCell.classed('hidden'));
+        });
         svgLegend.call(legendOrdinal)
 
         let legendBBox
@@ -373,8 +388,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
     }
 
-    tooltipCharts();
-    onUpdate(component);
     d3.select(window).on(
         "resize." + component.dataset.componentid, () => {
             createColumnChart(
@@ -388,4 +401,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             )
         }
     );
+
+    createBars();
 }

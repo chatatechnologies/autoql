@@ -1236,7 +1236,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     cursor: pointer;
 }
 
-.autoql-vanilla-stacked-rect.hidden{
+.autoql-vanilla-stacked-rect.hidden,{
     opacity: 0;
 }
 

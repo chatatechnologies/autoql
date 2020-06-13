@@ -279,63 +279,68 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     .call(yAxis.tickFormat(function(d){
         return formatData(d, cols[index2], options)
     }))
+    let slice;
+    function createBars(){
+        var cloneData = getVisibleSeries(data);
+        if(slice)slice.remove()
+        slice = svg.selectAll(".slice")
+        .data(cloneData)
+        .enter().append("g")
+        .attr("class", "g")
+        .attr("transform",function(d) {
+            return "translate(0,"+ y0(getLabel(d.label)) +")";
+        });
 
-    var slice = svg.selectAll(".slice")
-    .data(data)
-    .enter().append("g")
-    .attr("class", "g")
-    .attr("transform",function(d) {
-        return "translate(0,"+ y0(getLabel(d.label)) +")";
-    });
-
-    const calculateWidth = (d) => {
-        if(minMaxValues.min < 0){
-            return Math.abs(x(d.value) - x(0));
-        }else{
-            return x(d.value);
+        const calculateWidth = (d) => {
+            if(minMaxValues.min < 0){
+                return Math.abs(x(d.value) - x(0));
+            }else{
+                return x(d.value);
+            }
         }
+
+        const getXRect = (d) => {
+            if(minMaxValues.min < 0){
+                return x(Math.min(0, d.value));
+            }else{
+                return 0;
+            }
+        }
+
+        slice.selectAll("rect")
+        .data(function(d) {
+            for (var i = 0; i < d.values.length; i++) {
+                d.values[i].label = d.label;
+            }
+            return d.values;
+        })
+        .enter().append("rect")
+        .each(function (d, i) {
+            d3.select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-colvalue1', formatData(
+                d.label,
+                cols[index2],
+                options
+            ))
+            .attr('data-colvalue2', formatData(
+                d.value,
+                cols[index1],
+                options
+            ))
+        })
+        .attr("width", function(d) { return calculateWidth(d) })
+        .attr("x", function(d) { return getXRect(d) })
+        .attr("y", function(d) { return y1(d.group); })
+        .attr("height", function(d) { return y1.bandwidth() })
+        .attr('fill-opacity', '0.7')
+        .attr('class', 'tooltip-2d bar')
+        .style("fill", function(d) { return colorScale(d.group) })
+
+        tooltipCharts();
+        onUpdate(component);
     }
-
-    const getXRect = (d) => {
-        if(minMaxValues.min < 0){
-            return x(Math.min(0, d.value));
-        }else{
-            return 0;
-        }
-    }
-
-    slice.selectAll("rect")
-    .data(function(d) {
-        for (var i = 0; i < d.values.length; i++) {
-            d.values[i].label = d.label;
-        }
-        return d.values;
-    })
-    .enter().append("rect")
-    .each(function (d, i) {
-        d3.select(this).attr(valueClass, i)
-        .attr('data-col1', col1)
-        .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(
-            d.label,
-            cols[index2],
-            options
-        ))
-        .attr('data-colvalue2', formatData(
-            d.value,
-            cols[index1],
-            options
-        ))
-    })
-    .attr("width", function(d) { return calculateWidth(d) })
-    .attr("x", function(d) { return getXRect(d) })
-    .attr("y", function(d) { return y1(d.group); })
-    .attr("height", function(d) { return y1.bandwidth() })
-    .attr('fill-opacity', '0.7')
-    .attr('class', 'tooltip-2d bar')
-    .style("fill", function(d) { return colorScale(d.group) })
-
-
     if(hasLegend){
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
@@ -355,6 +360,12 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .shapePadding(100)
         .labelWrap(legendWrapLength)
         .scale(colorScale)
+        .on('cellclick', function(d) {
+            data = toggleSerie(data, d.trim());
+            createBars();
+            const legendCell = d3.select(this);
+            legendCell.classed('hidden', !legendCell.classed('hidden'));
+        });
         svgLegend.call(legendOrdinal)
 
         let legendBBox
@@ -371,9 +382,6 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
     }
 
-    tooltipCharts();
-    onUpdate(component);
-
     d3.select(window).on(
         "resize." + component.dataset.componentid, () => {
             createBarChart(
@@ -387,4 +395,6 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
             )
         }
     );
+
+    createBars();
 }

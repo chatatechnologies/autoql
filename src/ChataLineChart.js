@@ -67,12 +67,6 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         })
     })
     var grouped = groupBy(allData, 'group');
-    var dataReady = allGroup.map( function(grpName) {
-        return {
-            name: grpName,
-            values: grouped[grpName]
-        };
-    });
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
@@ -289,57 +283,77 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     );
     svg.append("g").call(yAxis).select(".domain").remove();
 
+    let lines;
+    let points;
     var line = d3.line()
     .x(function(d) { return x(getLabel(d.label)) + xShift })
     .y(function(d) { return y(d.value) })
-    svg.selectAll("myLines")
-    .data(dataReady)
-    .enter()
-    .append("path")
-    .attr("d", function(d){ return line(d.values) } )
-    .attr("stroke", function(d){ return colorScale(d.name) })
-    .style("stroke-width", 1)
-    .style("fill", "none")
-    .attr('opacity', '0.7')
 
-    svg
-    .selectAll("dot")
-    .data(dataReady)
-    .enter()
-    .append("g")
-    .style("fill", function(d){ return colorScale(d.name) })
-    .selectAll("myDots")
-    .data(function(d){
-        for (var i = 0; i < d.values.length; i++) {
-            d.values[i].name = d.name;
-        }
-        return d.values;
-    })
-    .enter()
-    .append("circle")
-    .each(function (d, i) {
-        d3.select(this).attr(valueClass, i)
-        .attr('data-col1', col1)
-        .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(
-            d.label, cols[index2],
-            options
-        ))
-        .attr('data-colvalue2',formatData(
-            d.value, cols[index1],
-            options
-        ))
-    })
-    .attr("cx", function(d) {
-        return x(getLabel(d.label)) + xShift
-    })
-    .attr("cy", function(d) { return y(d.value) })
-    .attr("r", 3)
-    .attr('stroke', function(d) { return colorScale(d.name) })
-    .attr('stroke-width', '2')
-    .attr('stroke-opacity', '0.7')
-    .attr("fill", 'white')
-    .attr('class', 'tooltip-2d line-dot')
+    function createLines(){
+        if(lines)lines.remove()
+        if(points)points.remove()
+        var cloneData = getVisibleSeries(data);
+        var visibleGroups = cloneData[0].values.map(function(d) {
+            return d.group;
+        });
+        var dataReady = visibleGroups.map( function(grpName) {
+            return {
+                name: grpName,
+                values: grouped[grpName]
+            };
+        });
+
+        lines = svg.selectAll("myLines")
+        .data(dataReady)
+        .enter()
+        .append("path")
+        .attr("d", function(d){ return line(d.values) } )
+        .attr("stroke", function(d){ return colorScale(d.name) })
+        .style("stroke-width", 1)
+        .style("fill", "none")
+        .attr('opacity', '0.7')
+
+        points = svg
+        .selectAll("dot")
+        .data(dataReady)
+        .enter()
+        .append("g")
+        .style("fill", function(d){ return colorScale(d.name) })
+        .selectAll("myDots")
+        .data(function(d){
+            for (var i = 0; i < d.values.length; i++) {
+                d.values[i].name = d.name;
+            }
+            return d.values;
+        })
+        .enter()
+        .append("circle")
+        .each(function (d, i) {
+            d3.select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-colvalue1', formatData(
+                d.label, cols[index2],
+                options
+            ))
+            .attr('data-colvalue2',formatData(
+                d.value, cols[index1],
+                options
+            ))
+        })
+        .attr("cx", function(d) {
+            return x(getLabel(d.label)) + xShift
+        })
+        .attr("cy", function(d) { return y(d.value) })
+        .attr("r", 3)
+        .attr('stroke', function(d) { return colorScale(d.name) })
+        .attr('stroke-width', '2')
+        .attr('stroke-opacity', '0.7')
+        .attr("fill", 'white')
+        .attr('class', 'tooltip-2d line-dot')
+        tooltipCharts();
+        onUpdate(component)
+    }
 
     if(hasLegend){
         var svgLegend = svg.append('g')
@@ -360,6 +374,12 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .shapePadding(100)
         .labelWrap(legendWrapLength)
         .scale(colorScale)
+        .on('cellclick', function(d) {
+            data = toggleSerie(data, d.trim());
+            createLines();
+            const legendCell = d3.select(this);
+            legendCell.classed('hidden', !legendCell.classed('hidden'));
+        });
         svgLegend.call(legendOrdinal)
 
         let legendBBox
@@ -376,8 +396,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
     }
 
-    tooltipCharts();
-    onUpdate(component)
+    createLines();
+
     d3.select(window).on(
         "resize." + component.dataset.componentid, () => {
             createLineChart(

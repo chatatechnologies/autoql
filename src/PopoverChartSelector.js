@@ -25,10 +25,6 @@ function PopoverChartSelector(position) {
         popover.appendChild(elem);
     }
 
-    popover.focusout = (evt) => {
-        console.log('SFDLMDKFDKFDJK');
-    }
-
     document.body.appendChild(popover);
 
     return popover;
