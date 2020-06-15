@@ -34,6 +34,13 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
+    var allSubgroups = {}
+    subgroups.map(subgroup => {
+        allSubgroups[subgroup] = {
+            isVisible: true
+        };
+    })
+
     var cols = json['data']['columns'];
     var data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
@@ -210,7 +217,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         }
         return sum;
     });
-    console.log(maxValue);
 
     var y = d3.scaleLinear()
     .domain([0, maxValue])
@@ -221,7 +227,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .domain(subgroups)
     .range(options.themeConfig.chartColors)
 
-
     svg.append("g")
     .attr("class", "grid")
     .call(yAxis.tickFormat(function(d){
@@ -231,72 +236,82 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-    var stackedData = d3.stack()
-    .keys(subgroups)
-    (data)
 
-    svg.append("g")
-    .selectAll("g")
-    .data(stackedData)
-    .enter().append("g")
-    .attr("fill", function(d) {
-        return color(d.key);
-    })
-    .selectAll("rect")
-    .data(function(d) { return d; })
-    .enter().append("rect")
-    .each(function (d, i) {
-        var pos = d[1];
-        var sum = 0;
-        for (var [key, value] of Object.entries(d.data)){
-            if(key == 'group')continue;
-            sum += parseFloat(value);
-            if(sum == pos){
-                d.value = value;
-                d.labelY = key;
-                break;
+    let stackedG;
+
+    function createBars(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = d3.stack()
+        .keys(visibleGroups)
+        (data)
+        if(stackedG)stackedG.remove();
+
+        stackedG = svg.append("g")
+        .selectAll("g")
+        .data(stackedData)
+        .enter().append("g")
+        .attr("fill", function(d) {
+            return color(d.key);
+        })
+        .selectAll("rect")
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .each(function (d, i) {
+            var pos = d[1];
+            var sum = 0;
+            for (var [key, value] of Object.entries(d.data)){
+                if(key == 'group')continue;
+                sum += parseFloat(value);
+                if(sum == pos){
+                    d.value = value;
+                    d.labelY = key;
+                    break;
+                }
             }
-        }
-        d3.select(this).attr(valueClass, i)
-        .attr('data-col1', col1)
-        .attr('data-col2', col2)
-        .attr('data-col3', col3)
-        .attr('data-colvalue1', d.labelY)
-        .attr('data-colvalue2', formatData(
-            d.data.group, cols[groupableIndex2], options
-        ))
-        .attr('data-colvalue3', formatData(
-            d.value, cols[notGroupableIndex],
-            options
-        ))
-        .attr('data-unformatvalue1', d.labelY)
-        .attr('data-unformatvalue2', d.data.group)
-        .attr('data-unformatvalue3', d.value)
-    })
-    .attr('opacity', '0.7')
-    .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-    .attr("x", function(d) {
-        if(d.data.group.length < 15){
-            return x(d.data.group);
-        }else{
-            return x(d.data.group.slice(0,15)+'...');
-        }
-    })
-    .attr("y", function(d) {
-        if(isNaN(d[1])){
-            return 0;
-        }else{
-            return Math.abs(y(d[1])) + 0.5;
-        }
-    })
-    .attr("height", function(d) {
-        if(isNaN([d[1]])){
-            return 0;
-        }else{
-            return Math.abs(y(d[0]) - y(d[1]) - 0.5);
-        }
-    })
-    .attr("width",x.bandwidth())
+            d3.select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-col3', col3)
+            .attr('data-colvalue1', d.labelY)
+            .attr('data-colvalue2', formatData(
+                d.data.group, cols[groupableIndex2], options
+            ))
+            .attr('data-colvalue3', formatData(
+                d.value, cols[notGroupableIndex],
+                options
+            ))
+            .attr('data-unformatvalue1', d.labelY)
+            .attr('data-unformatvalue2', d.data.group)
+            .attr('data-unformatvalue3', d.value)
+        })
+        .attr('opacity', '0.7')
+        .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
+        .attr("x", function(d) {
+            if(d.data.group.length < 15){
+                return x(d.data.group);
+            }else{
+                return x(d.data.group.slice(0,15)+'...');
+            }
+        })
+        .attr("y", function(d) {
+            if(isNaN(d[1])){
+                return 0;
+            }else{
+                return Math.abs(y(d[1])) + 0.5;
+            }
+        })
+        .attr("height", function(d) {
+            if(isNaN([d[1]])){
+                return 0;
+            }else{
+                return Math.abs(y(d[0]) - y(d[1]) - 0.5);
+            }
+        })
+        .attr("width",x.bandwidth())
+
+        tooltipCharts();
+        onUpdate(component);
+    }
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
@@ -304,14 +319,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
-    function toggleDataRects(selector) {
-        svg
-        .selectAll(`[data-colvalue1="${selector}"]`)
-        .data(data)
-        .classed('hidden', function() {  // toggle "hidden" class
-            return !d3.select(this).classed('hidden');
-        });
-    }
     const legendWrapLength = wLegendBox - 28;
     legendScale = d3.scaleOrdinal()
         .domain(subgroups.sort().map(elem => {
@@ -332,10 +339,10 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .labelWrap(legendWrapLength)
     .scale(legendScale)
     .on('cellclick', function(d) {
-        toggleDataRects(d.trim());
-        console.log(d);
+        allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
+        createBars();
         const legendCell = d3.select(this);
-        legendCell.classed('hidden', !legendCell.classed('hidden'));  // toggle opacity of legend item
+        legendCell.classed('hidden', !legendCell.classed('hidden'));
     });
     svgLegend.call(legendOrdinal)
 
@@ -343,8 +350,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     svgLegend
       .attr('transform', `translate(${newX}, ${0})`)
 
-    tooltipCharts();
-    onUpdate(component);
 
     d3.select(window).on(
         "resize." + component.dataset.componentid, () => {
@@ -359,4 +364,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
             )
         }
     );
+
+    createBars();
 }

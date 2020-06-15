@@ -34,12 +34,18 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
+    var allSubgroups = {}
+    subgroups.map(subgroup => {
+        allSubgroups[subgroup] = {
+            isVisible: true
+        };
+    })
+
     var cols = json['data']['columns'];
     // var data = responseToArrayObjects(json, groups);
     var data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
-    console.log(data);
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
     var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
@@ -230,69 +236,80 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     svg.append("g")
     .call(yAxis).select(".domain").remove();
 
-    var stackedData = d3.stack()
-    .keys(subgroups)
-    .value(function(d, key){
-        var val = parseFloat(d[key]);
-        if(isNaN(val)){
-            return 0
-        }
-        return val;
-    })
-    (data)
-    var points = [];
-    for (var i = 0; i < stackedData.length; i++) {
-        for (var _x = 0; _x < stackedData[i].length; _x++) {
-            var seriesValues = stackedData[i][_x].data;
-            for (var [key, value] of Object.entries(seriesValues)) {
-                if(key === 'group')continue;
-                points.push({
-                    group: seriesValues.group,
-                    y: value,
-                    y1: stackedData[i][_x][groupableIndex2],
-                    y0: stackedData[i][_x][groupableIndex1]
-                })
+    let layers;
+    let layerPoints;
+    function createLayers(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = d3.stack()
+        .keys(visibleGroups)
+        .value(function(d, key){
+            var val = parseFloat(d[key]);
+            if(isNaN(val)){
+                return 0
+            }
+            return val;
+        })
+        (data)
+
+        if(layers)layers.remove();
+        if(layerPoints)layers.remove();
+
+        var points = [];
+        for (var i = 0; i < stackedData.length; i++) {
+            for (var _x = 0; _x < stackedData[i].length; _x++) {
+                var seriesValues = stackedData[i][_x].data;
+                for (var [key, value] of Object.entries(seriesValues)) {
+                    if(key === 'group')continue;
+                    points.push({
+                        group: seriesValues.group,
+                        y: value,
+                        y1: stackedData[i][_x][groupableIndex2],
+                        y0: stackedData[i][_x][groupableIndex1]
+                    })
+                }
             }
         }
+
+        layers = svg.selectAll("mylayers")
+        .data(stackedData)
+        .enter()
+        .append("path")
+        .style("fill", function(d, i) { return color(d[i].data.group); })
+        .attr('opacity', '0.7')
+        .attr("d", d3.area()
+            .x(function(d, i) { return x(d.data.group); })
+            .y0(function(d) { return y(d[0]); })
+            .y1(function(d) { return y(d[1]); })
+        )
+
+        layerPoints = svg.selectAll("circle")
+        .data(points)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("r", 4)
+        .attr('class', 'tooltip-2d line-dot')
+        .attr('stroke', function(d) {'transparent' })
+        .attr('stroke-width', '3')
+        .attr('stroke-opacity', '0.7')
+        .attr("fill", 'transparent')
+        .attr("fill-opacity", '1')
+        .on("mouseover", function(d, i){
+            d3.select(this).
+            attr("stroke", color(d.group))
+            .attr('fill', 'white')
+        })
+        .on("mouseout", function(d, i){
+            d3.select(this).
+            attr("stroke", 'transparent')
+            .attr('fill', 'transparent')
+        })
+        .attr("cx", function(d) { return x(d.group); })
+        .attr("cy", function(d) { return y(d.y); });
+
+        tooltipCharts();
+        onUpdate(component);
     }
-
-    svg.selectAll("mylayers")
-    .data(stackedData)
-    .enter()
-    .append("path")
-    .style("fill", function(d, i) { return color(d[i].data.group); })
-    .attr('opacity', '0.7')
-    .attr("d", d3.area()
-        .x(function(d, i) { return x(d.data.group); })
-        .y0(function(d) { return y(d[0]); })
-        .y1(function(d) { return y(d[1]); })
-    )
-
-    svg.selectAll("circle")
-    .data(points)
-    .enter()
-    .append("circle")
-    .attr("class", "dot")
-    .attr("r", 4)
-    .attr('class', 'tooltip-2d line-dot')
-    .attr('stroke', function(d) {'transparent' })
-    .attr('stroke-width', '3')
-    .attr('stroke-opacity', '0.7')
-    .attr("fill", 'transparent')
-    .attr("fill-opacity", '1')
-    .on("mouseover", function(d, i){
-        d3.select(this).
-        attr("stroke", color(d.group))
-        .attr('fill', 'white')
-    })
-    .on("mouseout", function(d, i){
-        d3.select(this).
-        attr("stroke", 'transparent')
-        .attr('fill', 'transparent')
-    })
-    .attr("cx", function(d) { return x(d.group); })
-    .attr("cy", function(d) { return y(d.y); });
-
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
@@ -318,14 +335,17 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     .shapePadding(5)
     .labelWrap(legendWrapLength)
     .scale(legendScale)
+    .on('cellclick', function(d) {
+        allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
+        createLayers();
+        const legendCell = d3.select(this);
+        legendCell.classed('hidden', !legendCell.classed('hidden'));
+    });
     svgLegend.call(legendOrdinal)
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
       .attr('transform', `translate(${newX}, ${0})`)
-
-    tooltipCharts();
-    onUpdate(component);
 
     d3.select(window).on(
         "resize." + component.dataset.componentid, () => {
@@ -340,4 +360,6 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             )
         }
     );
+
+    createLayers();
 }
