@@ -93,7 +93,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }
 
     var x0 = d3.scaleBand()
-    .rangeRound([0, width]).padding(.1);
+    .range([0, width]).padding(.1);
     var x1 = d3.scaleBand();
     var y = d3.scaleLinear()
 
@@ -108,7 +108,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         margin.marginLabel = 10;
     }
     x0.domain(labelsNames);
-    x1.domain(groupNames).rangeRound([0, x0.bandwidth()]).padding(.1);
+    x1.domain(groupNames).range([0, x0.bandwidth()]).padding(.1);
     y
     .range([ height - (margin.bottom), 0 ])
     .domain([minMaxValues.min, minMaxValues.max]).nice()
@@ -323,9 +323,14 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         })
         .enter().append("rect")
         .each(function (d, i) {
+            console.log(d);
+            console.log(i);
+            var _col = cols[d.index];
+            var serieName = _col['display_name'] || _col['name'];
+            console.log();
             d3.select(this).attr(valueClass, d.index)
             .attr('data-col1', col1)
-            .attr('data-col2', col2)
+            .attr('data-col2', d.group)
             .attr('data-colvalue1', formatData(
                 d.label, cols[index2],
                 options

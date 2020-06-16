@@ -257,6 +257,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .data(function(d) { return d; })
         .enter().append("rect")
         .each(function (d, i) {
+            console.log(d);
             var pos = d[1];
             var sum = 0;
             for (var [key, value] of Object.entries(d.data)){
@@ -268,24 +269,28 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
                     break;
                 }
             }
-            d3.select(this).attr(valueClass, i)
-            .attr('data-col1', col1)
-            .attr('data-col2', col2)
-            .attr('data-col3', col3)
-            .attr('data-colvalue1', d.labelY)
-            .attr('data-colvalue2', formatData(
-                d.data.group, cols[groupableIndex2], options
-            ))
-            .attr('data-colvalue3', formatData(
-                d.value, cols[notGroupableIndex],
-                options
-            ))
-            .attr('data-unformatvalue1', d.labelY)
-            .attr('data-unformatvalue2', d.data.group)
-            .attr('data-unformatvalue3', d.value)
+            if(d.labelY && d.data.group && d.value){
+                d3.select(this).attr(valueClass, i)
+                .attr('data-col1', col1)
+                .attr('data-col2', col2)
+                .attr('data-col3', col3)
+                .attr('data-colvalue1', d.labelY)
+                .attr('data-colvalue2', formatData(
+                    d.data.group, cols[groupableIndex2], options
+                ))
+                .attr('data-colvalue3', formatData(
+                    d.value, cols[notGroupableIndex],
+                    options
+                ))
+                .attr('data-unformatvalue1', d.labelY)
+                .attr('data-unformatvalue2', d.data.group)
+                .attr('data-unformatvalue3', d.value)
+                .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
+            }else{
+                d3.select(this).attr('class','autoql-vanilla-stacked-rect')
+            }
         })
         .attr('opacity', '0.7')
-        .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
         .attr("x", function(d) {
             if(d.data.group.length < 15){
                 return x(d.data.group);

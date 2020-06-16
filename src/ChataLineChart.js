@@ -331,7 +331,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .each(function (d, i) {
             d3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
-            .attr('data-col2', col2)
+            .attr('data-col2', d.group)
             .attr('data-colvalue1', formatData(
                 d.label, cols[index2],
                 options

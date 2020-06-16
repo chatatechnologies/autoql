@@ -110,11 +110,11 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     }
 
     y0
-    .rangeRound([height - margin.bottom, 0])
+    .range([height - margin.bottom, 0])
     .domain(categoriesNames)
     .padding(.1);
 
-    y1.domain(groupNames).rangeRound([0, y0.bandwidth()]).padding(.1);
+    y1.domain(groupNames).range([0, y0.bandwidth()]).padding(.1);
     x.domain([minMaxValues.min, minMaxValues.max]).nice();
 
     var colorScale = d3.scaleOrdinal()
@@ -249,6 +249,10 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         })
     }
 
+    if(yTickValues.length > 0){
+        yAxis.tickValues(yTickValues);
+    }
+
     if(tickWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
@@ -318,7 +322,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .each(function (d, i) {
             d3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
-            .attr('data-col2', col2)
+            .attr('data-col2', d.group)
             .attr('data-colvalue1', formatData(
                 d.label,
                 cols[index2],

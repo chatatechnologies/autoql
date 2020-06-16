@@ -30,7 +30,7 @@
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
   margin: 45px auto;
   width: 800px;
-  max-width: 1100px;
+  max-width: 90vw;
   max-height: 95vh;
   margin-top: 25px;
   animation: createBox 0.25s cubic-bezier(0.19, 1, 0.22, 1);

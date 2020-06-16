@@ -696,10 +696,10 @@ function DataMessenger(elem, options){
         paginationNext.classList.add('pagination-next');
         paginationPrevious.appendChild(aPrevious);
         paginationNext.appendChild(aNext);
-
         pagination.appendChild(paginationPrevious);
 
         queryTipListContainer.classList.add('query-tip-list-container');
+
 
         if(!nextPath){
             paginationNext.classList.add('disabled');
@@ -868,7 +868,13 @@ function DataMessenger(elem, options){
             }
         }
         pagination.appendChild(paginationNext);
-        paginationContainer.appendChild(pagination);
+        if(totalItems != 0){
+            paginationContainer.appendChild(pagination);
+        }else{
+            queryTipsResultContainer.appendChild(document.createTextNode(`
+                Sorry, I couldn’t find any queries matching your input. Try entering a different topic or keyword instead.
+            `))
+        }
         container.appendChild(paginationContainer)
         if(obj.pagination){
             container.removeChild(obj.pagination);

@@ -1049,7 +1049,6 @@ function mouseY(evt) {
 }
 
 const getActiveIntegrator = (domain) => {
-    console.log(domain);
     if (domain.includes('spira')) {
         return 'spira'
     } else if (domain.includes('locate')) {
@@ -1061,7 +1060,11 @@ const getActiveIntegrator = (domain) => {
     } else if (domain.includes('lefort')) {
         return 'lefort'
     } else if (domain.includes('nbccontest')) {
-        return 'nb-comp'
+        return 'nbcomp'
+    } else if (domain.includes('vitruvi')) {
+        return 'vitruvi'
+    } else if (domain.includes('accounting-demo')) {
+        return 'demo'
     }
 
     return '';
