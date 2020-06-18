@@ -11,7 +11,6 @@ function createSafetynetContent(suggestionArray, context){
         </span>
     Run Query</button>
     `;
-    // onclick="runQuery(event, '${context}')"
 
     const runQueryButton = htmlToElement(runQueryButtonHtml);
     runQueryButton.onclick = function(event){
@@ -34,51 +33,67 @@ function createSafetynetContent(suggestionArray, context){
     createSafetynetBody(safetynetQuery, suggestionArray);
     safetyNetContainer.appendChild(runQueryButton);
     responseContentContainer.appendChild(safetyNetContainer);
-
-    // var f = htmlToElement(`<div class="autoql-vanilla-chata-safety-net-container">
-    //     <div class="autoql-vanilla-chata-safety-net-description">
-    //         I need your help matching a term you used to the exact corresponding term in your database. Verify by selecting the correct term from the menu below:
-    //     </div>
-    //     <span>
-    //         <div class="autoql-vanilla-chata-safety-net-query">
-    //          <span>
-    //             <span>sales by </span>
-    //             <div class="autoql-vanilla-chata-safety-net-selector-container">
-    //             <div class="autoql-vanilla-chata-safetynet-select" data-test="chata-select">first class</div>
-    //         </div>
-    //     </span>
-    //     </div>
-    //     <button class="autoql-vanilla-chata-safety-net-execute-btn">
-    //         <span class="chata-icon autoql-vanilla-chata-execute-query-icon" data-test="chata-icon">
-    //             <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    //                 <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
-    //             </svg>
-    //         </span>Run Query
-    //     </button>
-    //     </span>
-    // </div>`);
-    // responseContentContainer.appendChild(f);
-
-    // <div class="chata-safety-net-query">
-    //     <span>
-    //         <span>show me </span>
-    //         <div class="chata-safety-net-selector-container">
-    //             <div class="chata-select chata-safetynet-select" data-test="chata-select">
-    //                 carson
-    //             </div>
-    //         </div>
-    //     </span>
-    //     <span>
-    //         <span>who created last bill</span>
-    //     </span>
-    // </div>
     return responseContentContainer;
+}
+
+function SafetynetSelector(suggestionList, position, parent){
+    var wrapper = document.createElement('div');
+    var ul = document.createElement('ul');
+    var widthList = [];
+    const list = suggestionList['suggestionList'];
+    wrapper.classList.add('autoql-vanilla-safetynet-selector');
+    parent.appendChild(wrapper);
+    wrapper.show = () => {
+        wrapper.style.visibility = 'visible';
+        wrapper.style.opacity = '1';
+        wrapper.isOpen = true;
+    }
+
+    wrapper.hide = () => {
+        wrapper.style.visibility = 'hide';
+        wrapper.style.opacity = '0';
+        parent.removeChild(wrapper);
+    }
+
+    list.map(el => {
+        var li = document.createElement('li');
+        li.classList.add('autoql-vanilla-safetynet-item')
+        var textContent = el['text'];
+        const div = document.createElement('div')
+        div.style.display = 'inline-block';
+        div.style.position = 'absolute';
+        div.style.visibility = 'hidden';
+
+        if(el.value_label){
+            textContent += ` (${el.value_label})`;
+        }
+        li.setAttribute('data-satefynet-value', el['text']);
+        li.innerHTML = textContent;
+        div.innerHTML = textContent;
+        document.body.appendChild(div);
+        widthList.push(parseFloat(div.clientWidth)+45);
+        document.body.removeChild(div);
+        ul.appendChild(li);
+
+        li.onclick = (evt) => {
+            console.log(evt.target.dataset.satefynetValue);
+        }
+    })
+
+    var width = Math.max.apply(null, widthList);
+    wrapper.style.width =  width + 'px';
+    wrapper.style.top = '20px';
+    wrapper.style.left = -(width/2) + 'px';
+    wrapper.appendChild(ul);
+
+    return wrapper;
 }
 
 function createSafetynetBody(responseContentContainer, suggestionArray){
     const safetyDeleteButtonHtml = `
         ${DELETE_ICON}
     `;
+
     for (var i = 0; i < suggestionArray.length; i++) {
         var suggestion = suggestionArray[i];
         if(suggestion['type'] == 'word'){
@@ -88,47 +103,50 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
             responseContentContainer.append(span);
         }else{
             var div = document.createElement('div');
-            var select = document.createElement('select');
+            var select = document.createElement('div');
+            select.innerHTML = 'FOOO';
             select.classList.add('autoql-vanilla-chata-safetynet-select');
-            select.style.width = '47px';
             div.classList.add('autoql-vanilla-chata-safety-net-selector-container');
 
-            var suggestionList = suggestion['suggestionList'];
-            for (var x = 0; x < suggestionList.length; x++) {
-                var option = document.createElement('option');
-                var textContent = suggestionList[x]['text'];
-                if(suggestionList[x].value_label){
-                    textContent += ` (${suggestionList[x].value_label})`;
-                }
-                option.setAttribute('value', suggestionList[x]['text']);
-                option.textContent = textContent;
-                select.appendChild(option);
+            select.onclick = (evt) => {
+                closeAllSafetynetSelectors();
+                var selector = new SafetynetSelector(suggestion, {
+                    left: evt.clientX,
+                    top: evt.clientY,
+                }, select);
+                selector.show();
             }
-            // var safetyDeleteButton = htmlToElement(safetyDeleteButtonHtml);
-            // safetyDeleteButton.onclick = function(event){
-            //     deleteSuggestion(event);
+            // var suggestionList = suggestion['suggestionList'];
+            // for (var x = 0; x < suggestionList.length; x++) {
+            //     var option = document.createElement('option');
+            //     var textContent = suggestionList[x]['text'];
+            //     if(suggestionList[x].value_label){
+            //         textContent += ` (${suggestionList[x].value_label})`;
+            //     }
+            //     option.setAttribute('value', suggestionList[x]['text']);
+            //     option.textContent = textContent;
+            //     select.appendChild(option);
             // }
-            select.onchange = (evt) => {
-                console.log(evt.target.value);
-                if(evt.target.value === 'delete'){
-                    evt.target.parentElement.parentElement.removeChild(
-                        evt.target.parentElement
-                    )
-                }
-                updateSelect(evt.target);
-            }
-            var o = document.createElement('option');
-            var deleteOption = document.createElement('option');
-            o.setAttribute('value', suggestion['word'] + '(Original term)');
-            deleteOption.setAttribute('value', 'delete');
-            o.textContent = suggestion['word'];
-            deleteOption.textContent = 'Remove term';
-            deleteOption.style.color = '#d84830';
-            select.appendChild(o);
-            select.appendChild(deleteOption);
-            select.classList.add('safetynet-value');
+            // select.onchange = (evt) => {
+            //     console.log(evt.target.value);
+            //     if(evt.target.value === 'delete'){
+            //         evt.target.parentElement.parentElement.removeChild(
+            //             evt.target.parentElement
+            //         )
+            //     }
+            //     updateSelect(evt.target);
+            // }
+            // var o = document.createElement('option');
+            // var deleteOption = document.createElement('option');
+            // o.setAttribute('value', suggestion['word'] + '(Original term)');
+            // deleteOption.setAttribute('value', 'delete');
+            // o.textContent = suggestion['word'];
+            // deleteOption.textContent = 'Remove term';
+            // deleteOption.style.color = '#d84830';
+            // select.appendChild(o);
+            // select.appendChild(deleteOption);
+            // select.classList.add('safetynet-value');
             div.appendChild(select);
-            // div.appendChild(safetyDeleteButton);
             responseContentContainer.appendChild(div);
         }
     }

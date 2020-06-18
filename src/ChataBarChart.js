@@ -32,7 +32,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {
-                index: 0,
+                index: xIndexes[0].index,
                 currentLi: 0,
             },
             series: xIndexes

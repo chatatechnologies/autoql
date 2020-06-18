@@ -1311,6 +1311,15 @@ function closeAllChartPopovers(){
     }
 }
 
+function closeAllSafetynetSelectors(){
+    var list = document.querySelectorAll(
+        '.autoql-vanilla-safetynet-selector'
+    )
+    for (var i = 0; i < list.length; i++) {
+        if(list[i].isOpen)list[i].hide();
+    }
+}
+
 function closeAllToolbars(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-chat-message-toolbar.show'

@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="css/PopoverMenu.css">
     <link rel="stylesheet" type="text/css" href="css/PopoverChartSelector.css">
     <link rel="stylesheet" type="text/css" href="css/Cascader.css">
+    <link rel="stylesheet" type="text/css" href="css/Safetynet.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -877,7 +878,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkyNDM3OTAzLCAiZXhwIjogMTU5MjQ1OTUwMywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.SrgT7STZqyNqcj7YzY9LBOJhEDQ9pztFnjm4ua6ouS72Ap9fcMO3JhtEkmUCOq0woDt5ZyxTgbFhPttl4oa-qW4y4cusIwAKruomVxCKayk8QnXPg43cCbR4JVHWvm-8cYLGXTOBWXQ0P9tqeJ6vDUakiSxz-NnnvcV210mO8oYKmDq_UYEfBC3WTqIGGudgTNLibhsTQiuIdMMdSZbMEkdUtDCHetZw8IqWPjU2ISDIEPphRwcyetv4I2hir3Hyadf0NGqMAT05oRoj3fOi4U4HT9J-r-HSpNEnVgiX0HFn_PXSrapmCU_2CPFl0TGu67OWXiB8bghnoT8s1E6nIQ==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkyNDk3ODU0LCAiZXhwIjogMTU5MjUxOTQ1NCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.P6GkfHjkdRz_xhGUtUxo1zvq3uAK_Bsoa4Q5OSbETIbT04lPcpW7YsYekLVKh1T8rvbdiLqBhg7mfXfd6NRmDmy_eRV_4ZCgwBsFySaEA1NK_UXWCuIjWnKmvPIzvNZznytJUUTmnN8zRzPA1-JPwrFDKGVukgtk70raNmmgPFrpbtqZaF-xe4GRcqVc7tF_jg9Il4Y9VTS0De7jLWjlFR_hFKClBMLBlPdRG4tksWX4p9TysEdPALOuH-W513bES_Qr1QUQ7JB0HEzaLhRNxnpXSysxZYWAqDWcGMPEA5mg4UmGfBP2tTj_fU9IsskxsA8JCubn984QSVCEJnBU1Q==`;
     const domain = 'https://spira-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
     console.log(topics);
@@ -908,6 +909,7 @@
         resizable: true,
         width: 550,
         queryQuickStartTopics: topics,
+        enableDynamicCharting: true,
     })
     // var datamessenger = new DataMessenger('#chata', {
     //     authentication: {

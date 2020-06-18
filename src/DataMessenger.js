@@ -987,11 +987,24 @@ function DataMessenger(elem, options){
             'report_problem'
         ]
 
+        const excludeElementsForSafetynet = [
+            'autoql-vanilla-safetynet-selector',
+            'autoql-vanilla-chata-safetynet-select',
+        ]
+
         window.addEventListener('click', (evt) => {
-            console.log(evt.target);
             var closePop = true;
             var closeChartPopovers = true;
             var closeToolbars = true;
+            var closeSafetynetSelectors = true;
+
+            for (var i = 0; i < excludeElementsForSafetynet.length; i++) {
+                var c = excludeElementsForSafetynet[i];
+                if(evt.target.classList.contains(c)){
+                    closeSafetynetSelectors = false;
+                }
+            }
+
             for (var i = 0; i < excludeElementsForClearMessages.length; i++) {
                 var c = excludeElementsForClearMessages[i];
                 if(evt.target.classList.contains(c)){
@@ -1027,6 +1040,10 @@ function DataMessenger(elem, options){
 
             if(closeToolbars){
                 closeAllToolbars();
+            }
+
+            if(closeSafetynetSelectors){
+                closeAllSafetynetSelectors();
             }
         })
     }

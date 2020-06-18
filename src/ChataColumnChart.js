@@ -35,7 +35,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {
-                index: 0,
+                index: xIndexes[0].index,
                 currentLi: 0,
             },
             series: yIndexes

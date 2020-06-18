@@ -32,12 +32,14 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {
-                index: 0,
+                index: xIndexes[0].index,
                 currentLi: 0,
             },
             series: yIndexes
         }
     }
+
+    console.log();
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;
@@ -45,7 +47,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
-
+    console.log(cols[xAxisIndex]);
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
