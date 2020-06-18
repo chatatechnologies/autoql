@@ -6,6 +6,10 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
+    let chartWidth;
+    var legendOrientation = 'horizontal';
+    var shapePadding = 100;
+    const legendBoxMargin = 15;
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
@@ -51,7 +55,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     var labelsNames = data.map(function(d) { return d.label; });
     var allGroup = data[0].values.map(function(d) { return d.group; });
     var hasLegend = allGroup.length > 1;
-    if(hasLegend){
+    if(hasLegend && allGroup.length < 3){
         margin.bottom = 70;
         margin.marginLabel = 10;
     }
@@ -108,6 +112,16 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
             }
         });
     }
+
+    if(allGroup.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - 135;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
+
+
     var svg = d3.select(component)
     .append("svg")
     .attr("width", width + margin.left + margin.right)
@@ -129,7 +143,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     textContainerY.append('tspan')
     .text(col2)
 
-    if(yIndexes.length > 1){
+    if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -173,7 +187,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
-    .attr('x', width / 2)
+    .attr('x', chartWidth / 2)
     .attr('y', height + margin.marginLabel + 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
@@ -181,7 +195,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     textContainerX.append('tspan')
     .text(col1);
 
-    if(xIndexes.length > 1){
+    if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -191,8 +205,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         const paddingRect = 15;
         const xWidthRect = getStringWidth(col1) + paddingRect;
         var _y = 0;
-        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
-        if(hasLegend){
+        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+        if(hasLegend && allGroup.length < 3){
             _y = height - (margin.marginLabel/2) + 3;
         }else{
             _y = height + (margin.marginLabel/2) + 6;
@@ -240,7 +254,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     .domain(data.map(function(d) {
         return getLabel(d.label)
     }))
-    .range([ 0, width]);
+    .range([ 0, chartWidth]);
 
     var xAxis = d3.axisBottom(x);
     const xShift = x.bandwidth() / 2;
@@ -279,7 +293,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     .call(yAxis.tickFormat(function(d){
         return formatChartData(d, cols[index1], options)}
     )
-    .tickSize(-width)
+    .tickSize(-chartWidth)
     );
     svg.append("g").call(yAxis).select(".domain").remove();
 
@@ -370,8 +384,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
             .type(d3.symbolCircle)
             .size(70)()
         )
-        .orient('horizontal')
-        .shapePadding(100)
+        .orient(legendOrientation)
+        .shapePadding(shapePadding)
         .labelWrap(legendWrapLength)
         .scale(colorScale)
         .on('cellclick', function(d) {
@@ -382,18 +396,28 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         });
         svgLegend.call(legendOrdinal)
 
-        let legendBBox
-        const legendElement = svgLegend.node()
-        if (legendElement) {
-            legendBBox = legendElement.getBBox()
-        }
+        if(legendOrientation === 'vertical'){
+            const newX = chartWidth + legendBoxMargin
+            svgLegend
+              .attr('transform', `translate(${newX}, ${0})`)
+        }else{
 
-        const legendHeight = legendBBox.height
-        const legendWidth = legendBBox.width
-        const legendXPosition = width / 2 - (legendWidth/2)
-        const legendYPosition = height + 45
-        svgLegend
-        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+            let legendBBox
+            const legendElement = svgLegend.node()
+            if (legendElement) {
+                legendBBox = legendElement.getBBox()
+            }
+
+            const legendHeight = legendBBox.height
+            const legendWidth = legendBBox.width
+            const legendXPosition = width / 2 - (legendWidth/2)
+            const legendYPosition = height + 45
+            svgLegend
+            .attr(
+                'transform',
+                `translate(${legendXPosition}, ${legendYPosition})`
+            )
+        }
     }
 
     createLines();

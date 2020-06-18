@@ -6,7 +6,10 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
-
+    let chartWidth;
+    var legendOrientation = 'horizontal';
+    var shapePadding = 100;
+    const legendBoxMargin = 15;
     if(indexList['STRING']){
         yIndexes.push(...indexList['STRING'])
     }
@@ -87,27 +90,34 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         });
     }
 
+
+
+    var categoriesNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 80;
+        margin.marginLabel = 0;
+    }
+
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - 135;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
+
     var y0 = d3.scaleBand();
     var y1 = d3.scaleBand();
 
     var x = d3.scaleLinear()
-    .range([0, width]);
+    .range([0, chartWidth]);
 
     var xAxis = d3.axisBottom(x)
     .tickSize(0)
 
     var yAxis = d3.axisLeft(y0)
-
-
-    var categoriesNames = data.map(function(d) { return getLabel(d.label); });
-    var groupNames = data[0].values.map(function(d) { return d.group; });
-
-
-    var hasLegend = groupNames.length > 1;
-    if(hasLegend){
-        margin.bottom = 80;
-        margin.marginLabel = 0;
-    }
 
     y0
     .range([height - margin.bottom, 0])
@@ -143,7 +153,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     textContainerY.append('tspan')
     .text(col1)
 
-    if(yIndexes.length > 1){
+    if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -193,14 +203,14 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
-    .attr('x', width / 2)
+    .attr('x', chartWidth / 2)
     .attr('y', height + margin.marginLabel)
     .attr('text-anchor', 'middle')
     .attr("class", "autoql-vanilla-x-axis-label")
     textContainerX.append('tspan')
     .text(col2);
 
-    if(xIndexes.length > 1){
+    if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -210,8 +220,8 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         const paddingRect = 15;
         const xWidthRect = getStringWidth(col2) + paddingRect;
         var _y = 0;
-        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
-        if(hasLegend){
+        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+        if(hasLegend && groupNames.length < 3){
             _y = height - (margin.marginLabel/2) + 3;
         }else{
             _y = height + (margin.marginLabel/2) + 28;
@@ -351,7 +361,6 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .style('fill-opacity', '0.7')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
-
         const legendWrapLength = width / 2 - 50
         var legendOrdinal = d3.legendColor()
         .shape(
@@ -360,9 +369,9 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
             .type(d3.symbolCircle)
             .size(70)()
         )
-        .orient('horizontal')
-        .shapePadding(100)
+        .orient(legendOrientation)
         .labelWrap(legendWrapLength)
+        .shapePadding(shapePadding)
         .scale(colorScale)
         .on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
@@ -372,18 +381,28 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         });
         svgLegend.call(legendOrdinal)
 
-        let legendBBox
-        const legendElement = svgLegend.node()
-        if (legendElement) {
-            legendBBox = legendElement.getBBox()
+
+        if(legendOrientation === 'vertical'){
+            const newX = chartWidth + legendBoxMargin
+            console.log(newX);
+            svgLegend
+              .attr('transform', `translate(${newX}, ${0})`)
+        }else{
+
+            let legendBBox
+            const legendElement = svgLegend.node()
+            if (legendElement) {
+                legendBBox = legendElement.getBBox()
+            }
+
+            const legendHeight = legendBBox.height
+            const legendWidth = legendBBox.width
+            const legendXPosition = width / 2 - (legendWidth/2)
+            const legendYPosition = height + 25
+            svgLegend
+            .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
         }
 
-        const legendHeight = legendBBox.height
-        const legendWidth = legendBBox.width
-        const legendXPosition = width / 2 - (legendWidth/2)
-        const legendYPosition = height + 25
-        svgLegend
-        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
     }
 
     d3.select(window).on(

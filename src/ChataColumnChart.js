@@ -8,6 +8,10 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
+    let chartWidth;
+    var legendOrientation = 'horizontal';
+    var shapePadding = 100;
+    const legendBoxMargin = 15;
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
@@ -92,21 +96,31 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         });
     }
 
+
+    var labelsNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = groupNames.length > 1;
+
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 90;
+        margin.marginLabel = 10;
+    }
+
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - 135;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
+
     var x0 = d3.scaleBand()
-    .range([0, width]).padding(.1);
+    .range([0, chartWidth]).padding(.1);
     var x1 = d3.scaleBand();
     var y = d3.scaleLinear()
 
     var xAxis = d3.axisBottom(x0)
     var yAxis = d3.axisLeft(y)
-
-    var labelsNames = data.map(function(d) { return getLabel(d.label); });
-    var groupNames = data[0].values.map(function(d) { return d.group; });
-    var hasLegend = groupNames.length > 1;
-    if(hasLegend){
-        margin.bottom = 90;
-        margin.marginLabel = 10;
-    }
     x0.domain(labelsNames);
     x1.domain(groupNames).range([0, x0.bandwidth()]).padding(.1);
     y
@@ -117,9 +131,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     .domain(groupNames)
     .range(options.themeConfig.chartColors);
 
-    const CHART_WIDTH = width + margin.left;
-    const CHART_HEIGHT = width + margin.left;
-
     var svg = d3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
@@ -127,14 +138,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     .append("g")
     .attr("transform",
     "translate(" + margin.left + "," + margin.top + ")")
-
-    // var svg = d3.select(component).append('svg')
-    // .attr("width", '100%')
-    // .attr("height", '100%')
-    // .attr('viewBox','0 0 '+Math.min(CHART_WIDTH, CHART_HEIGHT)+' '+Math.min(CHART_WIDTH, CHART_HEIGHT))
-    // .attr('preserveAspectRatio','xMidYMin meet')
-    // .append("g")
-    // .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -150,7 +153,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     textContainerY.append('tspan')
     .text(col2)
 
-    if(yIndexes.length > 1){
+    if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -195,7 +198,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
-    .attr('x', width / 2)
+    .attr('x', chartWidth / 2)
     .attr('y', height + margin.marginLabel - 3)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
@@ -203,7 +206,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     textContainerX.append('tspan')
     .text(col1);
 
-    if(xIndexes.length > 1){
+    if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
         .text('▼')
@@ -213,8 +216,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         const paddingRect = 15;
         const xWidthRect = getStringWidth(col1) + paddingRect;
         var _y = 0;
-        const _x = (width / 2) - (xWidthRect/2) - (paddingRect/2);
-        if(hasLegend){
+        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+        if(hasLegend && groupNames.length < 3){
             _y = height - (margin.marginLabel/2) - 3;
         }else{
             _y = height + (margin.marginLabel/2) + 6;
@@ -286,7 +289,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     .attr("class", "grid")
     .call(
         yAxis
-        .tickSize(-width)
+        .tickSize(-chartWidth)
         .tickFormat(function(d){
             return formatChartData(d, cols[index1], options)}
         )
@@ -323,11 +326,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         })
         .enter().append("rect")
         .each(function (d, i) {
-            console.log(d);
-            console.log(i);
             var _col = cols[d.index];
             var serieName = _col['display_name'] || _col['name'];
-            console.log();
             d3.select(this).attr(valueClass, d.index)
             .attr('data-col1', col1)
             .attr('data-col2', d.group)
@@ -367,9 +367,9 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             .type(d3.symbolCircle)
             .size(70)()
         )
-        .orient('horizontal')
-        .shapePadding(100)
+        .orient(legendOrientation)
         .labelWrap(legendWrapLength)
+        .shapePadding(shapePadding)
         .scale(colorScale)
         .on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
@@ -379,18 +379,28 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         });
         svgLegend.call(legendOrdinal)
 
-        let legendBBox
-        const legendElement = svgLegend.node()
-        if (legendElement) {
-            legendBBox = legendElement.getBBox()
-        }
+        if(legendOrientation === 'vertical'){
+            const newX = chartWidth + legendBoxMargin
+            svgLegend
+              .attr('transform', `translate(${newX}, ${0})`)
+        }else{
 
-        const legendHeight = legendBBox.height
-        const legendWidth = legendBBox.width
-        const legendXPosition = width / 2 - (legendWidth/2)
-        const legendYPosition = height + 25
-        svgLegend
-        .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+            let legendBBox
+            const legendElement = svgLegend.node()
+            if (legendElement) {
+                legendBBox = legendElement.getBBox()
+            }
+
+            const legendHeight = legendBBox.height
+            const legendWidth = legendBBox.width
+            const legendXPosition = width / 2 - (legendWidth/2)
+            const legendYPosition = height + 45
+            svgLegend
+            .attr(
+                'transform',
+                `translate(${legendXPosition}, ${legendYPosition})`
+            )
+        }
     }
 
     d3.select(window).on(
