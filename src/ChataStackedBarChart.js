@@ -111,51 +111,54 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     textContainerY.append('tspan')
     .text(col2);
 
-    textContainerY.append('tspan')
-    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    .text('▼')
-    .style('font-size', '8px')
-    labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-    const paddingRect = 15;
-    const xWidthRect = getStringWidth(col2) + paddingRect;
+    if(options.enableDynamicCharting){
+        textContainerY.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+        labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
 
-    labelYContainer.append('rect')
-    .attr('x', 117.5)
-    .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-    .attr('height', xWidthRect + paddingRect)
-    .attr('width', 23)
-    .attr('fill', 'transparent')
-    .attr('stroke', '#508bb8')
-    .attr('stroke-width', '1px')
-    .attr('rx', '4')
-    .attr('transform', 'rotate(-180)')
-    .attr('class', 'autoql-vanilla-y-axis-label-border')
+        labelYContainer.append('rect')
+        .attr('x', 117.5)
+        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
+        .attr('height', xWidthRect + paddingRect)
+        .attr('width', 23)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('transform', 'rotate(-180)')
+        .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-    labelYContainer.on('mouseup', (evt) => {
-        closeAllChartPopovers();
-        var popoverSelector = new ChataChartListPopover({
-            left: d3.event.clientX,
-            top: d3.event.clientY
-        }, groupCols, (evt, popover) => {
-            var selectedIndex = evt.target.dataset.popoverIndex;
-            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
-            if(selectedIndex != oldGroupable){
-                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
-                createStackedBarChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
-            }
-            popover.close();
-        });
+        labelYContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
+            var popoverSelector = new ChataChartListPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, groupCols, (evt, popover) => {
+                var selectedIndex = evt.target.dataset.popoverIndex;
+                var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+                if(selectedIndex != oldGroupable){
+                    metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                    createStackedBarChart(
+                        component,
+                        json,
+                        options,
+                        onUpdate,
+                        fromChataUtils,
+                        valueClass,
+                        renderTooltips
+                    )
+                }
+                popover.close();
+            });
 
-    })
+        })
+
+    }
 
     svg.append('text')
     .attr('x', chartWidth / 2)

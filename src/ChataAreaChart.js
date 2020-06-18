@@ -119,55 +119,59 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     textContainerX.append('tspan')
     .text(col2);
 
-    textContainerX.append('tspan')
-    .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-    .text('▼')
-    .style('font-size', '8px')
 
-    labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+    if(options.enableDynamicCharting){
+        textContainerX.append('tspan')
+        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+        .text('▼')
+        .style('font-size', '8px')
+        labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
 
-    const paddingRect = 15;
-    const xWidthRect = getStringWidth(col2) + paddingRect;
-    const X = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
-    const Y = height + (margin.bottom/2);
+        const paddingRect = 15;
+        const xWidthRect = getStringWidth(col2) + paddingRect;
+        const X = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
+        const Y = height + (margin.bottom/2);
 
-    labelXContainer.append('rect')
-    .attr('x', X)
-    .attr('y', Y)
-    .attr('height', 20)
-    .attr('width', xWidthRect + paddingRect)
-    .attr('fill', 'transparent')
-    .attr('stroke', '#508bb8')
-    .attr('stroke-width', '1px')
-    .attr('rx', '4')
-    .attr('class', 'autoql-vanilla-x-axis-label-border')
+        labelXContainer.append('rect')
+        .attr('x', X)
+        .attr('y', Y)
+        .attr('height', 20)
+        .attr('width', xWidthRect + paddingRect)
+        .attr('fill', 'transparent')
+        .attr('stroke', '#508bb8')
+        .attr('stroke-width', '1px')
+        .attr('rx', '4')
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-    labelXContainer.on('mouseup', (evt) => {
-        closeAllChartPopovers();
-        var popoverSelector = new ChataChartListPopover({
-            left: d3.event.clientX,
-            top: d3.event.clientY
-        }, groupCols, (evt, popover) => {
+        labelXContainer.on('mouseup', (evt) => {
+            closeAllChartPopovers();
+            var popoverSelector = new ChataChartListPopover({
+                left: d3.event.clientX,
+                top: d3.event.clientY
+            }, groupCols, (evt, popover) => {
 
-            var selectedIndex = evt.target.dataset.popoverIndex;
-            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
-            if(selectedIndex != oldGroupable){
-                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
-                createAreaChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
-            }
-            popover.close();
-        });
+                var selectedIndex = evt.target.dataset.popoverIndex;
+                var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+                if(selectedIndex != oldGroupable){
+                    metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                    createAreaChart(
+                        component,
+                        json,
+                        options,
+                        onUpdate,
+                        fromChataUtils,
+                        valueClass,
+                        renderTooltips
+                    )
+                }
+                popover.close();
+            });
 
-    })
+        })
+    }
+
+
 
 
     var x = d3.scaleBand()
