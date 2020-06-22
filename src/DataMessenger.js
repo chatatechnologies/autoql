@@ -1656,6 +1656,17 @@ function DataMessenger(elem, options){
                 );
                 moreOptionsArray.push('png');
                 moreOptionsArray.push('copy_sql');
+            case 'safety-net':
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+            break;
             default:
 
         }
@@ -1675,7 +1686,7 @@ function DataMessenger(elem, options){
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
-        if(request['reference_id'] !== '1.1.420'){
+        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'){
             toolbar.appendChild(
                 moreOptionsBtn
             );
@@ -2606,19 +2617,23 @@ function DataMessenger(elem, options){
         }
     }
 
-    obj.putSafetynetMessage = function(suggestionArray){
+    obj.putSafetynetMessage = function(jsonResponse){
+        var suggestionArray = createSuggestionArray(jsonResponse);
         var div = document.createElement('div');
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
-
+        var uuid = uuidv4();
+        ChataUtils.responses[uuid] = jsonResponse
+        var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');
-
+        messageBubble.appendChild(toolbar);
         messageBubble.append(createSafetynetContent(suggestionArray, obj));
+
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         // updateSelectWidth(containerMessage)
@@ -2693,8 +2708,7 @@ function DataMessenger(elem, options){
                 obj.input.removeAttribute("disabled");
                 obj.drawerContent.removeChild(responseLoadingContainer);
 
-                var suggestionArray = createSuggestionArray(jsonResponse);
-                obj.putSafetynetMessage(suggestionArray);
+                obj.putSafetynetMessage(jsonResponse);
 
             }else{
                 ChataUtils.ajaxCall(textValue, function(jsonResponse, status){

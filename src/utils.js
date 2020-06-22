@@ -159,11 +159,7 @@ function getSafetynetValues(node){
     var nodes = node.getElementsByClassName('safetynet-value');
     var words = [];
     for (var i = 0; i < nodes.length; i++) {
-        if(nodes[i].tagName == 'SPAN'){
-            words.push(nodes[i].textContent.trim());
-        }else{
-            words.push(nodes[i].value.trim());
-        }
+        words.push(nodes[i].textContent.trim());
     }
     return words;
 }

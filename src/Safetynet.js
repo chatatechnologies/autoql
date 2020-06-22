@@ -14,6 +14,7 @@ function createSafetynetContent(suggestionArray, context){
 
     const runQueryButton = htmlToElement(runQueryButtonHtml);
     runQueryButton.onclick = function(event){
+        closeAllSafetynetSelectors();
         runQuery(event, context);
     }
     var responseContentContainer = document.createElement('div');
@@ -40,9 +41,15 @@ function SafetynetSelector(suggestionList, position, parent){
     var wrapper = document.createElement('div');
     var ul = document.createElement('ul');
     var widthList = [];
+    var height = 0;
     const list = suggestionList['suggestionList'];
+    const removeIcon = htmlToElement(`
+        <span class="chata-icon">
+            ${REMOVE_ELEMENT}
+        </span>
+    `);
     wrapper.classList.add('autoql-vanilla-safetynet-selector');
-    parent.appendChild(wrapper);
+    document.body.appendChild(wrapper);
     wrapper.show = () => {
         wrapper.style.visibility = 'visible';
         wrapper.style.opacity = '1';
@@ -52,38 +59,62 @@ function SafetynetSelector(suggestionList, position, parent){
     wrapper.hide = () => {
         wrapper.style.visibility = 'hide';
         wrapper.style.opacity = '0';
-        parent.removeChild(wrapper);
+        document.body.removeChild(wrapper);
     }
 
     list.map(el => {
         var li = document.createElement('li');
         li.classList.add('autoql-vanilla-safetynet-item')
         var textContent = el['text'];
-        const div = document.createElement('div')
-        div.style.display = 'inline-block';
-        div.style.position = 'absolute';
-        div.style.visibility = 'hidden';
-
         if(el.value_label){
             textContent += ` (${el.value_label})`;
         }
         li.setAttribute('data-satefynet-value', el['text']);
         li.innerHTML = textContent;
-        div.innerHTML = textContent;
-        document.body.appendChild(div);
-        widthList.push(parseFloat(div.clientWidth)+45);
-        document.body.removeChild(div);
+        widthList.push(parseFloat(getTextWidth(textContent))+45);
+        height += getTextHeight(textContent);
         ul.appendChild(li);
 
         li.onclick = (evt) => {
-            console.log(evt.target.dataset.satefynetValue);
+            parent.innerHTML = evt.target.dataset.satefynetValue;
         }
     })
 
+    var li = document.createElement('li');
+    li.classList.add('autoql-vanilla-safetynet-item');
+    li.classList.add('remove-term');
+    li.appendChild(removeIcon);
+    li.appendChild(document.createTextNode('Remove term'))
+    ul.appendChild(li);
+
+    li.onclick = (evt) => {
+        var topParent = parent.parentElement;
+        topParent.removeChild(parent);
+    }
+
+
     var width = Math.max.apply(null, widthList);
+    var parentWidth = getTextWidth(parent.textContent);
+    var offsetX = parseFloat(width + position.left);
+    var top = (position.top + window.pageYOffset) + 'px';
+    var left = (position.left - width/2);
+
+    if((height + position.top + 95) > window.screen.height){
+        var top = ((position.top + window.pageYOffset) - height - 45) + 'px';
+    }
+
+    if(left <= 0){
+        left = 95;
+    }
+
+    if(left+width > window.screen.width){
+        left = window.screen.width - width - 45;
+    }
+
     wrapper.style.width =  width + 'px';
-    wrapper.style.top = '20px';
-    wrapper.style.left = -(width/2) + 'px';
+    wrapper.style.top = top;
+    wrapper.style.left = left + 'px';
+
     wrapper.appendChild(ul);
 
     return wrapper;
@@ -104,9 +135,12 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
         }else{
             var div = document.createElement('div');
             var select = document.createElement('div');
-            select.innerHTML = 'FOOO';
+            select.innerHTML = suggestion['suggestionList'][0]['text'];
             select.classList.add('autoql-vanilla-chata-safetynet-select');
-            div.classList.add('autoql-vanilla-chata-safety-net-selector-container');
+            select.classList.add('safetynet-value');
+            div.classList.add(
+                'autoql-vanilla-chata-safety-net-selector-container'
+            );
 
             select.onclick = (evt) => {
                 closeAllSafetynetSelectors();
@@ -116,36 +150,6 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
                 }, select);
                 selector.show();
             }
-            // var suggestionList = suggestion['suggestionList'];
-            // for (var x = 0; x < suggestionList.length; x++) {
-            //     var option = document.createElement('option');
-            //     var textContent = suggestionList[x]['text'];
-            //     if(suggestionList[x].value_label){
-            //         textContent += ` (${suggestionList[x].value_label})`;
-            //     }
-            //     option.setAttribute('value', suggestionList[x]['text']);
-            //     option.textContent = textContent;
-            //     select.appendChild(option);
-            // }
-            // select.onchange = (evt) => {
-            //     console.log(evt.target.value);
-            //     if(evt.target.value === 'delete'){
-            //         evt.target.parentElement.parentElement.removeChild(
-            //             evt.target.parentElement
-            //         )
-            //     }
-            //     updateSelect(evt.target);
-            // }
-            // var o = document.createElement('option');
-            // var deleteOption = document.createElement('option');
-            // o.setAttribute('value', suggestion['word'] + '(Original term)');
-            // deleteOption.setAttribute('value', 'delete');
-            // o.textContent = suggestion['word'];
-            // deleteOption.textContent = 'Remove term';
-            // deleteOption.style.color = '#d84830';
-            // select.appendChild(o);
-            // select.appendChild(deleteOption);
-            // select.classList.add('safetynet-value');
             div.appendChild(select);
             responseContentContainer.appendChild(div);
         }
@@ -198,12 +202,28 @@ function createSuggestionArray(jsonResponse){
     return suggestionArray;
 }
 
-function getTextWidth(text, font) {
-    var canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement("canvas"));
-    var context = canvas.getContext("2d");
-    context.font = font;
-    var metrics = context.measureText(text);
-    return metrics.width;
+function dummyElement(text){
+    const div = document.createElement('div')
+    div.style.display = 'inline-block';
+    div.style.position = 'absolute';
+    div.style.visibility = 'hidden';
+    div.innerHTML = text;
+    document.body.appendChild(div);
+    return div;
+}
+
+function getTextWidth(text) {
+    const div = dummyElement(text);
+    const width = div.clientWidth;
+    document.body.removeChild(div);
+    return width;
+}
+
+function getTextHeight(text){
+    const div = dummyElement(text);
+    const height = div.clientHeight;
+    document.body.removeChild(div);
+    return height;
 }
 
 function updateSelectWidth(container){
