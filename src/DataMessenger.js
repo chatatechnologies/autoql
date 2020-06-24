@@ -1537,7 +1537,6 @@ function DataMessenger(elem, options){
     }
 
     obj.deleteMessageHandler = (evt, idRequest) => {
-        console.log(idRequest);
         var table = obj.drawerContent.querySelector(
             `[data-componentid="${idRequest}"]`
         );
@@ -1724,6 +1723,7 @@ function DataMessenger(elem, options){
                 oldComponent.noColumnsElement
             );
             oldComponent.noColumnsElement = null;
+            oldComponent.style.display = 'block';
         }
 
         scrollBox.scrollLeft = 0;
@@ -1817,6 +1817,41 @@ function DataMessenger(elem, options){
 
     }
 
+    obj.createLoadingDots = () => {
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+
+        return responseLoadingContainer;
+    }
+
+    obj.sendDrilldownClientSide = (json, indexValue, filterBy) => {
+        var newJson = cloneObject(json);
+        var newData = [];
+        var oldData = newJson['data']['rows'];
+
+        for (var i = 0; i < oldData.length; i++) {
+            if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
+        }
+
+        newJson.data.rows = newData;
+
+        var loading = obj.createLoadingDots();
+        obj.drawerContent.appendChild(loading);
+        setTimeout(() => {
+            obj.putTableResponse(newJson);
+            obj.drawerContent.removeChild(loading);
+
+        }, 300)
+    }
+
     obj.rowClick = (evt, idRequest) => {
         var json = ChataUtils.responses[idRequest];
         var row = evt.target.parentElement;
@@ -1829,7 +1864,13 @@ function DataMessenger(elem, options){
     obj.chartElementClick = (evt, idRequest) => {
         var json = ChataUtils.responses[idRequest];
         var indexData = evt.target.dataset.chartindex;
-        obj.sendDrilldownMessage(json, indexData, obj.options);
+        var colValue = evt.target.dataset.colvalue1;
+        var groupableCount = getNumberOfGroupables(json['data']['columns']);
+        if(groupableCount > 0){
+            obj.sendDrilldownMessage(json, indexData, obj.options);
+        }else{
+            obj.sendDrilldownClientSide(json, 0, colValue);
+        }
     }
 
     obj.stackedChartElementClick = (evt, idRequest) => {
@@ -1893,6 +1934,7 @@ function DataMessenger(elem, options){
             obj.onRowClick,
         );
         component.tabulator = table;
+        allColHiddenMessage(component);
         d3.select(window).on('resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
@@ -2014,6 +2056,7 @@ function DataMessenger(elem, options){
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
+        console.log(displayTypes);
         for (var i = 0; i < displayTypes.length; i++) {
             let button;
             if(displayTypes[i] == ignore)continue;
@@ -2213,7 +2256,7 @@ function DataMessenger(elem, options){
         setTimeout(function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
-
+        allColHiddenMessage(tableWrapper);
         return tableWrapper;
     }
 
@@ -2439,9 +2482,11 @@ function DataMessenger(elem, options){
                 }else{
                     tableCols[i].hide();
                 }
+                table.tabulator.redraw();
             }
             ChataUtils.putCall(url, {columns: data}, function(response){
                 modal.close();
+                allColHiddenMessage(table);
             }, opts)
         }
 

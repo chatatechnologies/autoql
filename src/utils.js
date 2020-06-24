@@ -800,6 +800,8 @@ const supports2DCharts = columns => {
         columns
     )
 
+    console.log(amounts);
+
     return amounts.amountOfNumberColumns > 0
     && amounts.amountOfStringColumns > 0
 }
@@ -838,6 +840,7 @@ const getSupportedDisplayTypes = response => {
             }
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
+            console.log('supports2DCharts');
             const supportedDisplayTypes = ['table', 'bar', 'column', 'line']
             supportedDisplayTypes.push('pie')
                 const dateColumn = columns.find(
@@ -853,6 +856,7 @@ const getSupportedDisplayTypes = response => {
                         supportedDisplayTypes.push('pivot_table')
                     }
                 }
+                console.log('RETURN: ' + supportedDisplayTypes);
                 return supportedDisplayTypes
             }
             return ['table']
@@ -1015,8 +1019,11 @@ function allColHiddenMessage(table){
 
     if(isAllHidden){
         message.style.display = 'flex';
+        table.style.display = 'none';
     }else{
         message.style.display = 'none';
+        table.style.display = 'block';
+        table.tabulator.redraw();
     }
 }
 

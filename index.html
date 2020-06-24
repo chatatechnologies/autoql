@@ -878,7 +878,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkyODU1NjAxLCAiZXhwIjogMTU5Mjg3NzIwMSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.WbjjoRPstt0uSL27eUqG74aR0Tu7t0Gn6BhewH_34nN4OT8zQrrMaks0vrvogEFUQpXm9PMmRr7aDPOZxG-u_sVKO2Vq416f7h04ICipNlLQYvMI8f3GhK6dXk9vuuepoURg8zWhskixEzoLaMC6ItelqK5BDnLK-72195IwT89NVKckMA0PsF4G88lblqo7Vu4fzYLrxewk_joiZAQYRkAD3082tO2LgsKOqPlkTAXWPEkzjOs-hzWZ4UX_-6q0ZSkWU2LW_Gh2xZzjdvYZP302B756i4L_wgUNVDiSUCbfjis25PbmNrPHARl8i6UKUMnG-v7-5p7PJdH41csn8A==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkyOTYyODg0LCAiZXhwIjogMTU5Mjk4NDQ4NCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.p7szvBz21Eq4PGU9eA3ppfE6nEzpcO-Ry4jcS5Mo3NUVGcbcLYqNE9fKxCZc2uteG9TsUPQJR1krXqfc1tpTGp6WnsBYvbgTyvgWyhf0JCmZ2coOvwbiUwcc742LbNXBv9Cg50UfJUJ04kJ4cDsVX-l5t3ObLJNbfBaqKGej4J0I084XGSY2klBE6BFaYBaSdYnKjB0f-aLieDHbvpSiBJYQcSNykhjtj3GB28PeUJ2thPCZauKyOqrdYTJsN9xV8VdeuRrldAN8HDzLHRGoIBbWqIf1FiPkS-FN9QybnBBw3axhEJGo0M-oyqDRxXUgDPlhpUo6-mW2PWTTNEBLOA==`;
     const domain = 'https://spira-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
     console.log(topics);
@@ -903,8 +903,6 @@
         placement: 'right',
         onMaskClick: function(datamessenger){
             datamessenger.closeDrawer();
-            console.log(DataMessenger.name);
-            console.log(QueryOutput.name);
         },
         resizable: true,
         width: 550,

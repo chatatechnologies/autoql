@@ -1,143 +1,8 @@
-function createPivotTable(pivotArray, oldComponent, options, action='replace', uuid='', tableClass='autoql-vanilla-table-response'){
-    var header = document.createElement('tr');
-    var table = document.createElement('table');
-    var jsonResponse = ChataUtils.responses[
-        oldComponent.dataset.componentid || uuid
-    ]
-    var groupField = getGroupableField(jsonResponse);
-
-    var thArray = [];
-    table.classList.add(tableClass);
-    oldComponent.parentElement.parentElement.classList.remove(
-        'chata-hidden-scrollbox'
-    );
-    if(oldComponent.dataset.componentid){
-        table.setAttribute('data-componentid', oldComponent.dataset.componentid);
-        if(oldComponent.parentElement.classList.contains('chata-chart-container')){
-            oldComponent.parentElement.classList.remove('chata-chart-container');
-            oldComponent.parentElement.classList.add('chata-table-container');
-        }
-    }else{
-        table.setAttribute('data-componentid', uuid);
-    }
-    for (var i = 0; i < pivotArray[0].length; i++) {
-        var colName = pivotArray[0][i];
-        var th = document.createElement('th');
-        var arrow = document.createElement('div');
-        var col = document.createElement('div');
-        col.textContent = colName;
-        arrow.classList.add('autoql-vanilla-tabulator-arrow');
-        arrow.classList.add('up');
-        col.classList.add('column-pivot');
-        col.setAttribute('data-type', 'PIVOT');
-        col.setAttribute('data-index', i);
-        var divFilter = document.createElement('div');
-        var filter = document.createElement('input');
-        divFilter.classList.add('autoql-vanilla-tabulator-header-filter');
-        divFilter.appendChild(filter);
-        filter.setAttribute('placeholder', 'Filter column');
-        if(i == 0){
-            filter.colType = ChataUtils.responses[
-                oldComponent.dataset.componentid || uuid
-            ]['data']['columns'][0];
-        }else if(i >= 1){
-            filter.colType = ChataUtils.responses[
-                oldComponent.dataset.componentid || uuid
-            ]['data']['columns'][2];
-        }
-        filter.onkeyup = function(event){
-            var _json = cloneObject(
-                ChataUtils.responses[oldComponent.dataset.componentid]
-            );
-            var _table = document.querySelector(
-                `[data-componentid='${oldComponent.dataset.componentid}']`
-            );
-
-            var _columns = _json['data']['columns'];
-            if(_columns[0].type === 'DATE' &&
-                _columns[0].name.includes('month')){
-                var pivotArray = getDatePivotArray(
-                    _json,
-                    options,
-                    cloneObject(_json['data']['rows'])
-                );
-            }else{
-                var pivotArray = getPivotColumnArray(
-                    _json,
-                    options,
-                    cloneObject(_json['data']['rows'])
-                );
-            }
-            pivotArray.shift();
-            var rows = applyFilter(oldComponent.dataset.componentid, pivotArray);
-            // rows.unshift([]);
-            ChataUtils.refreshPivotTable(_table, rows);
-        }
-        col.appendChild(divFilter);
-        if(i == 0){
-            th.classList.add('autoql-vanilla-sticky-col');
-        }
-        th.appendChild(col);
-        th.appendChild(arrow);
-        th.onclick = (evt) => {
-            ChataUtils.onClickPivotColumn(evt, table, options);
-        }
-        header.appendChild(th);
-        thArray.push(th);
-    }
-    header.classList.add('autoql-vanilla-table-header');
-
-    for (var i = 1; i < pivotArray.length; i++) {
-        var tr = document.createElement('tr');
-        for (var x = 0; x < pivotArray[i].length; x++) {
-            var td = document.createElement('td');
-            td.textContent = pivotArray[i][x];
-            if(x == 0){
-                td.classList.add('autoql-vanilla-sticky-col');
-            }
-            tr.appendChild(td);
-        }
-        if(action == 'replace'){
-            tr.setAttribute('data-indexrow', i);
-        }else{
-            tr.setAttribute('data-indexrowrenderer', i);
-        }
-        if(typeof groupField !== 'number'){
-            tr.setAttribute('data-has-drilldown', true);
-        }else{
-            tr.setAttribute('data-has-drilldown', false);
-        }
-        table.appendChild(tr);
-    }
-    let selector;
-    if(action == 'replace'){
-        if(oldComponent.headerElement){
-            oldComponent.parentElement.parentElement.replaceChild(
-                header, oldComponent.headerElement
-            );
-            selector = '[data-indexrow]';
-        }else{
-            oldComponent.parentElement.parentElement.insertBefore(
-                header, oldComponent.parentElement
-            );
-        }
-        oldComponent.parentElement.replaceChild(table, oldComponent);
-    }else{
-        oldComponent.appendChild(table);
-        selector = '[data-indexrowrenderer]';
-    }
-    var cols = jsonResponse['data']['columns'];
-    console.log(cols);
-    let headerWidth = adjustTableWidth(table, thArray, cols, selector, 25);
-    table.style.width = (headerWidth) + 'px';
-    header.style.width = (headerWidth) + 'px';
-    table.headerElement = header;
-    table.sort = 'asc';
-    return table;
-}
-
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
+
+    if(!rowValue)rowValue = '';
+
     if(colType == 'DATE'){
         var formatDate = formatData(
             rowValue,
@@ -335,8 +200,10 @@ function ChataTable(
     var json = ChataUtils.responses[idRequest];
     var tableData = getTableData(json, options);
     var columns = getColumnsData(json, options);
-
-    var table = new Tabulator(`[data-componentid='${idRequest}']`, {
+    const component = document.querySelector(
+        `[data-componentid='${idRequest}']`
+    );
+    var table = new Tabulator(component, {
         layout: 'fitDataFill',
         virtualDomBuffer: 300,
         movableColumns: true,
@@ -349,7 +216,7 @@ function ChataTable(
         data: tableData,
         rowClick: (e, row) =>{
             onRowClick(e, row, cloneObject(json));
-        }
+        },
     })
     table.setHeight('100%');
 
