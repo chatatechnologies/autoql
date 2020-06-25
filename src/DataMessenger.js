@@ -428,7 +428,6 @@ function DataMessenger(elem, options){
             obj.registerWindowClicks();
             obj.openDrawer();
             obj.closeDrawer();
-
             refreshTooltips();
 
             var isVisible = obj.options.isVisible;
@@ -1865,11 +1864,12 @@ function DataMessenger(elem, options){
         var json = ChataUtils.responses[idRequest];
         var indexData = evt.target.dataset.chartindex;
         var colValue = evt.target.dataset.colvalue1;
+        var indexValue = evt.target.dataset.filterindex;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
         if(groupableCount > 0){
             obj.sendDrilldownMessage(json, indexData, obj.options);
         }else{
-            obj.sendDrilldownClientSide(json, 0, colValue);
+            obj.sendDrilldownClientSide(json, indexValue, colValue);
         }
     }
 
@@ -2272,6 +2272,7 @@ function DataMessenger(elem, options){
                 URL, {is_correct: false}, function(r, s){
                     menu.classList.remove('show');
                     toolbar.classList.remove('show');
+                    new AntdMessage('Thank you for your feedback.', 3000);
                     resolve();
                 }, options
             )

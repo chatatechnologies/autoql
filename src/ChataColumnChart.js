@@ -339,6 +339,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
                 d.value, cols[index1],
                 options
             ))
+            .attr('data-filterindex', index2)
+            
         })
         .attr("width", x1.bandwidth())
         .attr("x", function(d) { return x1(d.group); })

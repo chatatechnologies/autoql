@@ -356,6 +356,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
                 d.value, cols[index1],
                 options
             ))
+            .attr('data-filterindex', index2)
+            
         })
         .attr("cx", function(d) {
             return x(getLabel(d.label)) + xShift

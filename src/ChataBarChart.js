@@ -343,6 +343,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
                 cols[index1],
                 options
             ))
+            .attr('data-filterindex', index2)
         })
         .attr("width", function(d) { return calculateWidth(d) })
         .attr("x", function(d) { return getXRect(d) })

@@ -361,12 +361,12 @@ function Tile(dashboard, options={}){
 
     chataDashboardItem.safetynet = function(textValue){
         const URL_SAFETYNET = dashboard.options.authentication.demo
-          ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
-            textValue
-          )}&projectId=1`
-          : `${dashboard.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
-            textValue
-          )}&key=${dashboard.options.authentication.apiKey}&customer_id=${dashboard.options.authentication.customerId}&user_id=${dashboard.options.authentication.userId}`;
+            ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+              textValue
+            )}&projectId=1`
+            : `${dashboard.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
+              textValue
+            )}&key=${dashboard.options.authentication.apiKey}`
         return URL_SAFETYNET;
     }
 
