@@ -92,9 +92,14 @@ function SafetynetSelector(suggestionList, position, parent){
         topParent.removeChild(parent);
     }
 
-
-    var width = Math.max.apply(null, widthList);
+    console.log(widthList);
+    var width = 0;
     var parentWidth = getTextWidth(parent.textContent);
+    if(widthList.length){
+        width = Math.max.apply(null, widthList);
+    }else{
+        width = parentWidth + 95;
+    }
     var offsetX = parseFloat(width + position.left);
     var top = (position.top + window.pageYOffset) + 'px';
     var left = (position.left - width/2);

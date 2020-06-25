@@ -1654,6 +1654,7 @@ function DataMessenger(elem, options){
                 );
                 moreOptionsArray.push('png');
                 moreOptionsArray.push('copy_sql');
+            break;
             case 'safety-net':
                 toolbar.appendChild(
                     obj.getActionButton(
@@ -1839,16 +1840,22 @@ function DataMessenger(elem, options){
         for (var i = 0; i < oldData.length; i++) {
             if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
         }
-
-        newJson.data.rows = newData;
-
         var loading = obj.createLoadingDots();
         obj.drawerContent.appendChild(loading);
-        setTimeout(() => {
-            obj.putTableResponse(newJson);
-            obj.drawerContent.removeChild(loading);
+        if(newData.length > 0){
+            newJson.data.rows = newData;
 
-        }, 300)
+            setTimeout(() => {
+                obj.putTableResponse(newJson);
+                obj.drawerContent.removeChild(loading);
+
+            }, 400)
+        }else{
+            setTimeout(() => {
+                obj.putClientResponse('No Data found.')
+                obj.drawerContent.removeChild(loading);
+            }, 400)
+        }
     }
 
     obj.rowClick = (evt, idRequest) => {
@@ -2674,6 +2681,7 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.setAttribute('data-containerid', uuid);
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');
