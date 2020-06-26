@@ -191,7 +191,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     tooltipCharts();
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createBubbleChart(
                 component,
                 json,

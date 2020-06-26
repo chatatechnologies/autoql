@@ -357,7 +357,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
                 options
             ))
             .attr('data-filterindex', index2)
-            
+
         })
         .attr("cx", function(d) {
             return x(getLabel(d.label)) + xShift
@@ -427,7 +427,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     createLines();
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createLineChart(
                 component,
                 json,

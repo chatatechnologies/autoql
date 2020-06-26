@@ -407,7 +407,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     }
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createBarChart(
                 component,
                 json,

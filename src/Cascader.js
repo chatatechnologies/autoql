@@ -16,7 +16,7 @@ function Cascader(topics, datamessenger){
     chatMessageBubble.classList.add('autoql-vanilla-chat-message-bubble');
     message.appendChild(chatMessageBubble);
     chatMessageBubble.appendChild(content);
-
+    message.style.maxHeight = 'unset';
     obj._elem = message;
 
     content.appendChild(

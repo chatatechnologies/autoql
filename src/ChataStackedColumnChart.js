@@ -358,7 +358,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
 
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createStackedColumnChart(
                 component,
                 json,

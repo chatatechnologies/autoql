@@ -193,7 +193,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     tooltipCharts();
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createHeatmap(
                 component,
                 json,

@@ -352,7 +352,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
       .attr('transform', `translate(${newX}, ${0})`)
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createAreaChart(
                 component,
                 json,

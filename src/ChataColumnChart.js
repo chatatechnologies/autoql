@@ -102,7 +102,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     var hasLegend = groupNames.length > 1;
 
     if(hasLegend && groupNames.length < 3){
-        margin.bottom = 90;
+        margin.bottom = 70;
         margin.marginLabel = 10;
     }
 
@@ -340,7 +340,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
                 options
             ))
             .attr('data-filterindex', index2)
-            
+
         })
         .attr("width", x1.bandwidth())
         .attr("x", function(d) { return x1(d.group); })
@@ -396,7 +396,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             const legendHeight = legendBBox.height
             const legendWidth = legendBBox.width
             const legendXPosition = width / 2 - (legendWidth/2)
-            const legendYPosition = height + 45
+            const legendYPosition = height + 35
             svgLegend
             .attr(
                 'transform',
@@ -406,7 +406,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createColumnChart(
                 component,
                 json,

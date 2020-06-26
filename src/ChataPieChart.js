@@ -201,7 +201,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
 
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createPieChart(
                 component,
                 json,

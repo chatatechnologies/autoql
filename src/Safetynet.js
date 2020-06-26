@@ -92,7 +92,6 @@ function SafetynetSelector(suggestionList, position, parent){
         topParent.removeChild(parent);
     }
 
-    console.log(widthList);
     var width = 0;
     var parentWidth = getTextWidth(parent.textContent);
     if(widthList.length){

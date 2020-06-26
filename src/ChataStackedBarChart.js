@@ -334,7 +334,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
       .attr('transform', `translate(${newX}, ${0})`)
 
     d3.select(window).on(
-        "resize." + component.dataset.componentid, () => {
+        "chata-resize." + component.dataset.componentid, () => {
             createStackedBarChart(
                 component,
                 json,

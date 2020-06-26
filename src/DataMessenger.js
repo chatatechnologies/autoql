@@ -927,7 +927,9 @@ function DataMessenger(elem, options){
             }
             clearTimeout(timer);
             timer = setTimeout(() => {
-                window.dispatchEvent(new Event('resize'));
+
+                window.dispatchEvent(new CustomEvent('chata-resize', {}));
+
             }, 100);
         }
 
@@ -1852,7 +1854,7 @@ function DataMessenger(elem, options){
             }, 400)
         }else{
             setTimeout(() => {
-                obj.putClientResponse('No Data found.')
+                obj.putClientResponse('No data found.')
                 obj.drawerContent.removeChild(loading);
             }, 400)
         }
@@ -2690,7 +2692,6 @@ function DataMessenger(elem, options){
 
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
-        // updateSelectWidth(containerMessage)
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
