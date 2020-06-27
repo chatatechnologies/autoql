@@ -345,9 +345,11 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .enter()
         .append("circle")
         .each(function (d, i) {
+            var group = col2;
+            if(allGroup.length > 1)group = d.group
             d3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
-            .attr('data-col2', d.group)
+            .attr('data-col2', group)
             .attr('data-colvalue1', formatData(
                 d.label, cols[index2],
                 options

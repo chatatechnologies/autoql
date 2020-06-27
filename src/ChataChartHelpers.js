@@ -16,6 +16,7 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             let label = formatData(
                 data[i][group.indexCol], group.jsonCol, options
             );
+            if(!label || label == '')continue;
             var colName = columns[group.indexCol].display_name ||
             columns[group.indexCol].name;
             var serie = {
