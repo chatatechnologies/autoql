@@ -129,8 +129,7 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
         ${DELETE_ICON}
     `;
 
-    for (var i = 0; i < suggestionArray.length; i++) {
-        var suggestion = suggestionArray[i];
+    suggestionArray.map((suggestion) => {
         if(suggestion['type'] == 'word'){
             var span = document.createElement('span');
             span.textContent = ' ' + suggestion['word'] + ' ';
@@ -145,7 +144,6 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
             div.classList.add(
                 'autoql-vanilla-chata-safety-net-selector-container'
             );
-
             select.onclick = (evt) => {
                 closeAllSafetynetSelectors();
                 var selector = new SafetynetSelector(suggestion, {
@@ -157,25 +155,30 @@ function createSafetynetBody(responseContentContainer, suggestionArray){
             div.appendChild(select);
             responseContentContainer.appendChild(div);
         }
-    }
+    })
 }
 
 function createSuggestionArray(jsonResponse){
-    // {"reference_id": "1.1.240", "data": {"text": "foo bar", "replacements": [{"start": 0, "end": 7, "suggestions": [{"text": "chinese elecronics for weigh bar", "value_label": "Part"}, {"text": "domestic electronics for weigh bar", "value_label": "Part"}]}]}, "message": "Success"}
-    // {"full_suggestion": [{"end": 3, "suggestion_list": [{"text": "for"}], "start": 0}], "query": "foo bar"}
-
     var fullSuggestion = jsonResponse['full_suggestion']
     || jsonResponse['data']['replacements'];
     var query = jsonResponse['query'] || jsonResponse['data']['text'];
     var words = [];
-    var start = fullSuggestion[0]['start'];
-    var end = fullSuggestion[0]['end'];
-    if(end == query.length && start == 0){
-        words.push(query);
-    }else{
-        words = query.split(' ');
-    }
     var suggestionArray = [];
+    let lastEndIndex = 0;
+
+    fullSuggestion.map((suggestion, index) => {
+        words.push(query.slice(lastEndIndex, suggestion.start))
+        words.push(query.slice(suggestion.start, suggestion.end))
+
+        if (index === fullSuggestion.length - 1) {
+            var lastWord = query.slice(suggestion.end, query.length);
+            if(lastWord != ''){
+                words.push(lastWord);
+            }
+        }
+        lastEndIndex = suggestion.end
+    })
+
     for (var i = 0; i < words.length; i++) {
         var w = words[i];
         var hasSuggestion = false;
@@ -186,6 +189,10 @@ function createSuggestionArray(jsonResponse){
             if(word == w){
                 let suggestions = fullSuggestion[x]['suggestion_list']
                 || fullSuggestion[x]['suggestions'];
+                suggestions.push({
+                    text: word,
+                    value_label: 'Original term'
+                })
                 suggestionArray.push({
                     word: word,
                     type: 'suggestion',

@@ -1,5 +1,5 @@
 function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 80},
+    var margin = {top: 5, right: 10, bottom: 60, left: 80, bottomChart: 0},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
@@ -52,6 +52,34 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
+    const barWidth = chartWidth / groups.length;
+    const rotateLabels = barWidth < 135;
+    const interval = Math.ceil((groups.length * 16) / width);
+    var allLengths = [];
+    var xTickValues = [];
+    if (barWidth < 16) {
+        groups.forEach((element, index) => {
+            if (index % interval === 0) {
+                if(element.length < 15){
+                    xTickValues.push(element);
+                }else{
+                    xTickValues.push(element.slice(0, 15) + '...');
+                }
+            }
+        });
+    }
+
+    groups.map(element => allLengths.push(getLabel(element).length));
+    let longestString = Math.max.apply(null, allLengths);
+
+    if(rotateLabels){
+        var m = longestString * 3;
+        margin.bottomChart = m;
+    }else{
+        margin.bottomChart = 13;
+    }
+
+    console.log(margin.bottomChart);
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
@@ -79,20 +107,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-    const barWidth = chartWidth / groups.length;
-    const interval = Math.ceil((groups.length * 16) / width);
-    var xTickValues = [];
-    if (barWidth < 16) {
-        groups.forEach((element, index) => {
-            if (index % interval === 0) {
-                if(element.length < 15){
-                    xTickValues.push(element);
-                }else{
-                    xTickValues.push(element.slice(0, 15)+ '...');
-                }
-            }
-        });
-    }
     var svg = d3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
@@ -189,9 +203,9 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
     }
-    if(barWidth < 135){
+    if(rotateLabels){
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[groupableIndex2], options);
         }))
@@ -201,7 +215,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .style("text-anchor", "end");
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[groupableIndex2], options);
         }))
@@ -221,7 +235,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
 
     var y = d3.scaleLinear()
     .domain([0, maxValue])
-    .range([ height - margin.bottom, 0 ]);
+    .range([ height - margin.bottomChart, 0 ]);
     var yAxis = d3.axisLeft(y);
 
     var color = d3.scaleOrdinal()
@@ -258,7 +272,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .data(function(d) { return d; })
         .enter().append("rect")
         .each(function (d, i) {
-            console.log(d);
             var pos = d[1];
             var sum = 0;
             for (var [key, value] of Object.entries(d.data)){
@@ -296,7 +309,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
             if(d.data.group.length < 15){
                 return x(d.data.group);
             }else{
-                return x(d.data.group.slice(0,15)+'...');
+                return x(d.data.group.slice(0,15) + '...')
             }
         })
         .attr("y", function(d) {

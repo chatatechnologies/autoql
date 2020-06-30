@@ -2557,6 +2557,8 @@ function DataMessenger(elem, options){
     }
 
     obj.putSuggestionResponse = (jsonResponse) => {
+        var uuid = uuidv4();
+        ChataUtils.responses[uuid] = jsonResponse;
         var data = jsonResponse['data']['items'];
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
@@ -2564,12 +2566,17 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.setAttribute('data-containerid', uuid);
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('full-width');
         responseContentContainer.classList.add(
             'autoql-vanilla-chata-response-content-container'
         );
+
+        messageBubble.appendChild(toolbarButtons = obj.getActionToolbar(
+            uuid, 'safety-net', ''
+        ))
+
         obj.createSuggestions(responseContentContainer, data);
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
@@ -2618,8 +2625,15 @@ function DataMessenger(elem, options){
         && jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
-        if(jsonResponse['reference_id'] === '1.1.211'){
+        if(jsonResponse['reference_id'] === '1.1.211'
+        || jsonResponse['reference_id'] === '1.1.430'){
             messageBubble.classList.add('no-hover-response');
+        }
+
+        if(jsonResponse['reference_id'] === '1.1.430'){
+            messageBubble.appendChild(toolbarButtons = obj.getActionToolbar(
+                idRequest, 'safety-net', ''
+            ))
         }
         var value = '';
         var hasDrilldown = false;

@@ -1,6 +1,6 @@
 function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 90, marginLabel: 50},
+    var margin = {top: 5, right: 10, bottom: 60, left: 90, marginLabel: 50, bottomChart: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
@@ -54,6 +54,67 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
 
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
+    const barWidth = width / data.length;
+    const rotateLabels = barWidth < 135;
+    const interval = Math.ceil((data.length * 16) / width);
+    var xTickValues = [];
+    var allLengths = [];
+    if (barWidth < 16) {
+        data.forEach((element, index) => {
+            if (index % interval === 0) {
+                xTickValues.push(getLabel(element.label));
+            }
+        });
+    }
+
+    var labelsNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = groupNames.length > 1;
+
+
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 70;
+        margin.marginLabel = 10;
+    }
+
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - 135;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
+
+    data.forEach((item, i) => {
+        allLengths.push(getLabel(item.label).length);
+    });
+
+    let longestString = 0;
+    var extraMargin = hasLegend ? 15 : 0;
+    var increment = 5;
+    longestString = Math.max.apply(null, allLengths);
+    if(longestString <= 4)longestString = 5;
+    if(!hasLegend)increment = 3;
+
+    if(legendOrientation == 'horizontal'){
+        if(rotateLabels){
+            var m = longestString * increment + extraMargin;
+            if(hasLegend && m <= 50) m = 55;
+            margin.bottomChart = m;
+        }else{
+            margin.bottomChart = 13 + extraMargin;
+        }
+
+    }else{
+        if(rotateLabels){
+            var m = longestString * 3;
+            if(hasLegend && m <= 50) m = 55;
+            margin.bottomChart = m;
+        }else{
+            margin.bottomChart = 13;
+        }
+
+    }
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
@@ -85,35 +146,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         'chata-hidden-scrollbox'
     );
 
-    const barWidth = width / data.length;
-    const interval = Math.ceil((data.length * 16) / width);
-    var xTickValues = [];
-    if (barWidth < 16) {
-        data.forEach((element, index) => {
-            if (index % interval === 0) {
-                xTickValues.push(getLabel(element.label));
-            }
-        });
-    }
-
-
-    var labelsNames = data.map(function(d) { return getLabel(d.label); });
-    var groupNames = data[0].values.map(function(d) { return d.group; });
-    var hasLegend = groupNames.length > 1;
-
-    if(hasLegend && groupNames.length < 3){
-        margin.bottom = 70;
-        margin.marginLabel = 10;
-    }
-
-    if(groupNames.length < 3){
-        chartWidth = width;
-    }else{
-        chartWidth = width - 135;
-        legendOrientation = 'vertical';
-        shapePadding = 5;
-    }
-
     var x0 = d3.scaleBand()
     .range([0, chartWidth]).padding(.1);
     var x1 = d3.scaleBand();
@@ -124,7 +156,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     x0.domain(labelsNames);
     x1.domain(groupNames).range([0, x0.bandwidth()]).padding(.1);
     y
-    .range([ height - (margin.bottom), 0 ])
+    .range([ height - (margin.bottomChart), 0 ])
     .domain([minMaxValues.min, minMaxValues.max]).nice()
 
     var colorScale = d3.scaleOrdinal()
@@ -264,9 +296,9 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         xAxis.tickValues(xTickValues);
     }
 
-    if(barWidth < 135){
+    if(rotateLabels){
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[index2], options)
         }))
@@ -276,7 +308,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         .style("text-anchor", "end")
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[index2], options)
         }))
@@ -299,7 +331,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         if(minMaxValues.min < 0){
             return Math.abs(y(d.value) - y(0));
         }else{
-            return (height - margin.bottom) - y(d.value);
+            return (height - margin.bottomChart) - y(d.value);
         }
     }
 

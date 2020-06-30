@@ -1340,3 +1340,51 @@ function closeAllToolbars(){
         submenus[i].classList.remove('show');
     }
 }
+
+
+getSuggestionLists = (query, fullSuggestions) => {
+    const suggestionLists = []
+    if (fullSuggestions.length) {
+        fullSuggestions.forEach((suggestionInfo, index) => {
+            console.log('INDEX: ' + index);
+            const originalWord = query.slice(
+                suggestionInfo.start,
+                suggestionInfo.end
+            )
+
+            // Add ID to each original suggestion
+            const originalSuggestionList = suggestionInfo.suggestions.map(
+                suggestion => {
+                    return {
+                        index: i,
+                        ...suggestion,
+                    }
+                }
+            )
+
+            // Add original query value to suggestion list
+            const list = [
+                ...originalSuggestionList,
+                { text: originalWord, value_label: 'Original term' },
+            ]
+
+            suggestionLists.push(list)
+        })
+    }
+    return suggestionLists
+}
+
+getPlainTextList = (query, fullSuggestions) => {
+    const textList = []
+    let lastEndIndex = 0
+
+    fullSuggestions.forEach((fullSuggestion, index) => {
+        textList.push(query.slice(lastEndIndex, fullSuggestion.start))
+        if (index === fullSuggestions.length - 1) {
+            textList.push(query.slice(fullSuggestion.end, query.length))
+        }
+        lastEndIndex = fullSuggestion.end
+    })
+
+    return textList
+}
