@@ -132,9 +132,7 @@ function copyTextToClipboard(text) {
     try {
         var successful = document.execCommand('copy');
         var msg = successful ? 'successful' : 'unsuccessful';
-        console.log('Fallback: Copying text command was ' + msg);
     } catch (err) {
-        console.error('Fallback: Oops, unable to copy', err);
     }
 
     document.body.removeChild(textArea);
@@ -312,11 +310,9 @@ function getPivotColumnArray(json, options, _data){
 }
 
 function sortPivot(pivotArray, colIndex, operator){
-    console.log(pivotArray);
     pivotArray.shift();
     pivotArray.shift();
 
-    console.log(pivotArray[0]);
 
     if(operator == 'asc'){
         var comparator = function(a, b) {
@@ -358,7 +354,6 @@ function getDatePivotArray(json, options, _data){
                     row.unshift(
                         MONTH_NAMES[date.getMonth()], date.getFullYear()
                     );
-                    console.log(row);
                     break;
                 default:
                     // row.push(formatData(
@@ -572,8 +567,6 @@ function formatDataToBarChart(json, options){
     var groupableField = getGroupableField(json);
     var notGroupableField = getNotGroupableField(json);
 
-    console.log('GROUPABLE FIELD');
-    console.log(groupableField);
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = {};
@@ -800,8 +793,6 @@ const supports2DCharts = columns => {
         columns
     )
 
-    console.log(amounts);
-
     return amounts.amountOfNumberColumns > 0
     && amounts.amountOfStringColumns > 0
 }
@@ -840,7 +831,6 @@ const getSupportedDisplayTypes = response => {
             }
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
-            console.log('supports2DCharts');
             const supportedDisplayTypes = ['table', 'bar', 'column', 'line']
             supportedDisplayTypes.push('pie')
                 const dateColumn = columns.find(
@@ -856,7 +846,6 @@ const getSupportedDisplayTypes = response => {
                         supportedDisplayTypes.push('pivot_table')
                     }
                 }
-                console.log('RETURN: ' + supportedDisplayTypes);
                 return supportedDisplayTypes
             }
             return ['table']
@@ -1074,7 +1063,6 @@ const getActiveIntegrator = (domain) => {
 }
 
 getIntroMessageTopics = (integrator) => {
-    console.log(integrator);
     const topics =
     {
         spira: [
@@ -1346,7 +1334,6 @@ getSuggestionLists = (query, fullSuggestions) => {
     const suggestionLists = []
     if (fullSuggestions.length) {
         fullSuggestions.forEach((suggestionInfo, index) => {
-            console.log('INDEX: ' + index);
             const originalWord = query.slice(
                 suggestionInfo.start,
                 suggestionInfo.end

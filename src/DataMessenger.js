@@ -1394,13 +1394,16 @@ function DataMessenger(elem, options){
         var json = ChataUtils.responses[idRequest];
         console.log(json);
         var sql = json['data']['sql'][0];
-        console.log(sql);
         copyTextToClipboard(sql);
+        new AntdMessage(
+            'Successfully copied generated query to clipboard!', 3000
+        )
     }
 
     obj.copyHandler = (idRequest) => {
         var json = ChataUtils.responses[idRequest];
         copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
+        new AntdMessage('Successfully copied table to clipboard!', 3000)
     }
     obj.exportPNGHandler = (idRequest) => {
         var component = document.querySelector(
@@ -2065,7 +2068,7 @@ function DataMessenger(elem, options){
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
-        console.log(displayTypes);
+
         for (var i = 0; i < displayTypes.length; i++) {
             let button;
             if(displayTypes[i] == ignore)continue;

@@ -79,8 +79,6 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         margin.bottomChart = 13;
     }
 
-    console.log(margin.bottomChart);
-
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);

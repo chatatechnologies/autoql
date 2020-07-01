@@ -1,5 +1,5 @@
 function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50},
+    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50, chartLeft: 120},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -32,7 +32,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {
-                index: xIndexes[0].index,
+                index: yIndexes[0].index,
                 currentLi: 0,
             },
             series: xIndexes
@@ -51,6 +51,8 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
+    const rotateLabels = tickWidth < 135;
+
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight
@@ -82,6 +84,8 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     const barHeight = height / data.length;
     const interval = Math.ceil((data.length * 16) / height);
     var yTickValues = [];
+    var allLengths = [];
+
     if (barHeight < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
@@ -90,7 +94,15 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         });
     }
 
+    data.forEach((item, i) => {
+        allLengths.push(getLabel(item.label).length);
+    });
 
+    let longestStringWidth = Math.max.apply(null, allLengths);
+
+    margin.chartLeft = longestStringWidth * 10;
+    if(margin.chartLeft < 70) margin.chartLeft = 70;
+    if(margin.chartLeft > 140) margin.chartLeft = 140;
 
     var categoriesNames = data.map(function(d) { return getLabel(d.label); });
     var groupNames = data[0].values.map(function(d) { return d.group; });
@@ -103,7 +115,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - 135;
+        chartWidth = width - margin.chartLeft;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -138,7 +150,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + margin.chartLeft + "," + margin.top + ")");
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -146,7 +158,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right + 5)
+    .attr('y', -margin.chartLeft + margin.right + 5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -163,7 +175,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         const xWidthRect = getStringWidth(col1) + paddingRect;
 
         labelYContainer.append('rect')
-        .attr('x', 105)
+        .attr('x', margin.chartLeft - 25)
         .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
         .attr('height', xWidthRect + paddingRect)
         .attr('width', 24)
@@ -263,7 +275,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         yAxis.tickValues(yTickValues);
     }
 
-    if(tickWidth < 135){
+    if(rotateLabels){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
         .call(xAxis)
@@ -387,7 +399,6 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin
-            console.log(newX);
             svgLegend
               .attr('transform', `translate(${newX}, ${0})`)
         }else{

@@ -108,13 +108,15 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }else{
         if(rotateLabels){
             var m = longestString * 3;
-            if(hasLegend && m <= 50) m = 55;
             margin.bottomChart = m;
         }else{
             margin.bottomChart = 13;
         }
 
     }
+
+    console.log(margin.bottomChart);
+    
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){

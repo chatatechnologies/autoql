@@ -1,13 +1,13 @@
 function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 30, left: 142},
+    var margin = {top: 5, right: 10, bottom: 30, left: 142, chartLeft: 140},
     width = component.parentElement.clientWidth - margin.left;
-    var wLegendBox = 140;
-    var chartWidth = width - wLegendBox;
+    margin.chartLeft = 90;
     var height;
     var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
     var metadataComponent = getMetadataElement(component, fromChataUtils);
+    var allLengths = [];
     if(!metadataComponent.metadata3D){
         metadataComponent.metadata3D = {
             groupBy: {
@@ -17,6 +17,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         }
     }
 
+
     var groupCols = groupables.map((groupable, i) => {
         return {col: groupable.jsonCol, index: i}
     });
@@ -25,21 +26,35 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
 
-
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
     );
+
     groups = groups.sort().reverse();
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
+
+    groups.map(element => allLengths.push(getLabel(element).length));
+    let longestString = Math.max.apply(null, allLengths);
+
+    margin.chartLeft = longestString * 10;
+
+    if(margin.chartLeft < 90) margin.chartLeft = 90;
+    if(margin.chartLeft > 140) margin.chartLeft = 140;
+
+    var chartWidth = width - margin.chartLeft;
+    var wLegendBox = width - chartWidth;
+
+
     var allSubgroups = {}
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true
         };
     })
+
     var cols = json['data']['columns'];
     var data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
@@ -96,14 +111,14 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + margin.chartLeft + "," + margin.top + ")");
 
     var labelYContainer = svg.append('g');
 
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right + 4.5)
+    .attr('y', -margin.chartLeft + margin.right + 4.5)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -121,7 +136,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         const xWidthRect = getStringWidth(col2) + paddingRect;
 
         labelYContainer.append('rect')
-        .attr('x', 117.5)
+        .attr('x', margin.chartLeft - 25)
         .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
         .attr('height', xWidthRect + paddingRect)
         .attr('width', 23)
@@ -303,7 +318,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
-    const legendWrapLength = wLegendBox - 28;
+    const legendWrapLength = wLegendBox;
     legendScale = d3.scaleOrdinal()
         .domain(subgroups.sort().map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);

@@ -80,8 +80,10 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         'chata-hidden-scrollbox'
     );
     const barWidth = chartWidth / groups.length;
+    const rotateLabels = barWidth < 135;
     const interval = Math.ceil((groups.length * 16) / width);
     var xTickValues = [];
+    var allLengths = [];
     if (barWidth < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
@@ -93,6 +95,17 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             }
         });
     }
+
+    groups.map(element => allLengths.push(getLabel(element).length));
+    let longestString = Math.max.apply(null, allLengths);
+
+    if(rotateLabels){
+        var m = longestString * 3;
+        margin.bottomChart = m;
+    }else{
+        margin.bottomChart = 13;
+    }
+
     var svg = d3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
@@ -190,9 +203,9 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
     }
-    if(barWidth < 135){
+    if(rotateLabels){
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[groupableIndex2], options);
         }))
@@ -202,7 +215,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .style("text-anchor", "end");
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[groupableIndex2], options);
         }))
@@ -222,7 +235,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     var y = d3.scaleLinear()
     .domain([0, maxValue])
-    .range([ height - margin.bottom, 0 ]);
+    .range([ height - margin.bottomChart, 0 ]);
     var yAxis = d3.axisLeft(y);
 
     var color = d3.scaleOrdinal()

@@ -88,8 +88,6 @@ const getVisibleSeries = (_data) => {
 const getVisibleGroups = (groups) => {
     var visibleGroups = [];
     for(var [key, value] of Object.entries(groups)){
-        console.log(groups);
-        console.log(key);
         if(groups[key].isVisible)visibleGroups.push(key)
     }
 

@@ -97,6 +97,14 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     if(longestString <= 4)longestString = 5;
     if(!hasLegend)increment = 3;
 
+    if(allGroup.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - 135;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
+
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){
             var m = longestString * increment + extraMargin;
@@ -109,7 +117,6 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     }else{
         if(rotateLabels){
             var m = longestString * 3;
-            if(hasLegend && m <= 50) m = 55;
             margin.bottomChart = m;
         }else{
             margin.bottomChart = 13;
@@ -147,14 +154,6 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-
-    if(allGroup.length < 3){
-        chartWidth = width;
-    }else{
-        chartWidth = width - 135;
-        legendOrientation = 'vertical';
-        shapePadding = 5;
-    }
 
 
     var svg = d3.select(component)
