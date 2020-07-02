@@ -39,23 +39,6 @@ const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     return seriesData;
 }
 
-const getObjectValues = (item, columns, seriesIndexes) => {
-    var values = []
-    for (var i = 0; i < seriesIndexes.length; i++) {
-        var obj = {};
-        var colName = columns[seriesIndexes[i]]['display_name'] ||
-        columns[seriesIndexes[i]]['name'];
-
-        obj['value'] = item[seriesIndexes[i]];
-        obj['index'] = i;
-        obj['group'] = formatColumnName(colName);
-        obj['isVisible'] = true;
-
-        values.push(obj);
-    }
-    return values;
-}
-
 const toggleSerie = (data, serie) => {
     for (var i = 0; i < data.length; i++) {
         for (var x = 0; x < data[i].values.length; x++) {
@@ -94,16 +77,52 @@ const getVisibleGroups = (groups) => {
     return visibleGroups
 }
 
+const getObjectValues = (item, columns, seriesIndexes, labelIndex, items, key) => {
+    var values = []
+    for (var i = 0; i < seriesIndexes.length; i++) {
+        var obj = {};
+        var colName = columns[seriesIndexes[i]]['display_name'] ||
+        columns[seriesIndexes[i]]['name'];
+
+        obj['value'] = sumEquals(items, labelIndex, key, seriesIndexes[i]);
+        obj['index'] = i;
+        obj['group'] = formatColumnName(colName);
+        obj['isVisible'] = true;
+
+        values.push(obj);
+
+    }
+    return values;
+}
+
 const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
 
     obj = {};
     items.forEach((item) => {
         const key = item[labelIndex];
         if (!obj[key]) {
-            obj[key] = getObjectValues(item, columns, seriesIndexes);
+            obj[key] = getObjectValues(
+                item,
+                columns,
+                seriesIndexes,
+                labelIndex,
+                items,
+                key
+            );
         }
     });
     return convertoTo2DChartData(obj);
+}
+
+const sumEquals = (items, labelIndex, key, serieIndex) => {
+    var sum = 0;
+    items.forEach((item) => {
+        const label = item[labelIndex];
+        if(label === key){
+            sum += item[serieIndex];
+        }
+    })
+    return sum;
 }
 
 const convertoTo2DChartData = (groupedData) => {

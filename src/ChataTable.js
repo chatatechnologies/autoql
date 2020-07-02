@@ -58,7 +58,8 @@ function getPivotColumns(json, pivotColumns, options){
             headerFilterFunc: (
                 headerValue, rowValue, rowData, filterParams) => {
                 return callTableFilter(
-                    columns[colIndex], headerValue, rowValue, options
+                    columns[colIndex],
+                    headerValue.toLowerCase(), rowValue, options
                 );
             },
             formatter: (cell, formatterParams, onRendered) => {
@@ -115,7 +116,8 @@ function getColumnsData(json, options){
             },
             headerFilterFunc: (
                 headerValue, rowValue, rowData, filterParams) => {
-                return callTableFilter(col, headerValue, rowValue, options);
+                return callTableFilter(col,
+                    headerValue.toLowerCase(), rowValue, options);
             },
         })
     })
@@ -176,14 +178,34 @@ function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}){
     })
     table.setHeight('100%');
 
+    table.addFilterTag = (col) => {
+        const colTitle = col.querySelector('.tabulator-col-title');
+        const tag = htmlToElement(`
+            <span class="autoql-vanilla-filter-tag">F</span>
+        `);
+
+        colTitle.insertBefore(tag, colTitle.firstChild);
+    }
+
+    table.removeFilterTag = (col) => {
+        const colTitle = col.querySelector('.tabulator-col-title');
+        const tag = colTitle.querySelector('.autoql-vanilla-filter-tag');
+        if(tag)colTitle.removeChild(tag);
+    }
+
     table.toggleFilters = () => {
         var domTable = table.element;
         var filters = domTable.querySelectorAll('.tabulator-header-filter');
         for (var i = 0; i < filters.length; i++) {
             var filter = filters[i];
+            var input = filter.children[0];
             if(filter.style.display == 'none'){
                 filter.style.display = 'inline-block';
+                table.removeFilterTag(filter.parentElement);
             }else{
+                if(input.value){
+                    table.addFilterTag(filter.parentElement);
+                }
                 filter.style.display = 'none';
             }
         }
@@ -220,17 +242,38 @@ function ChataTable(
     })
     table.setHeight('100%');
 
+    table.addFilterTag = (col) => {
+        const colTitle = col.querySelector('.tabulator-col-title');
+        const tag = htmlToElement(`
+            <span class="autoql-vanilla-filter-tag">F</span>
+        `);
+
+        colTitle.insertBefore(tag, colTitle.firstChild);
+    }
+
+    table.removeFilterTag = (col) => {
+        const colTitle = col.querySelector('.tabulator-col-title');
+        const tag = colTitle.querySelector('.autoql-vanilla-filter-tag');
+        if(tag)colTitle.removeChild(tag);
+    }
+
     table.toggleFilters = () => {
         var domTable = table.element;
         var filters = domTable.querySelectorAll('.tabulator-header-filter');
         for (var i = 0; i < filters.length; i++) {
             var filter = filters[i];
+            var input = filter.children[0];
             if(filter.style.display == 'none'){
                 filter.style.display = 'inline-block';
+                table.removeFilterTag(filter.parentElement);
             }else{
+                if(input.value){
+                    table.addFilterTag(filter.parentElement);
+                }
                 filter.style.display = 'none';
             }
         }
+
     }
 
     table.toggleFilters();
