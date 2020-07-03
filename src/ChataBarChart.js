@@ -1,5 +1,5 @@
 function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50, chartLeft: 120},
+    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50, chartLeft: 120, bottomChart: 60},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -81,6 +81,22 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
+    var categoriesNames = data.map(function(d) { return getLabel(d.label); });
+    var groupNames = data[0].values.map(function(d) { return d.group; });
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 80;
+        margin.marginLabel = 0;
+    }
+
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - margin.chartLeft;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
+
     const barHeight = height / data.length;
     const interval = Math.ceil((data.length * 16) / height);
     var yTickValues = [];
@@ -99,25 +115,35 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     });
 
     let longestStringWidth = Math.max.apply(null, allLengths);
+    let longestStringHeight = minMaxValues.max.toString().length;
+    var extraMargin = hasLegend ? 15 : 0;
+
+    var increment = 5;
+
+    if(longestStringHeight <= 4)longestStringHeight = 5;
+    if(!hasLegend)increment = 2;
 
     margin.chartLeft = longestStringWidth * 10;
     if(margin.chartLeft < 70) margin.chartLeft = 70;
     if(margin.chartLeft > 140) margin.chartLeft = 140;
 
-    var categoriesNames = data.map(function(d) { return getLabel(d.label); });
-    var groupNames = data[0].values.map(function(d) { return d.group; });
-    var hasLegend = groupNames.length > 1;
-    if(hasLegend && groupNames.length < 3){
-        margin.bottom = 80;
-        margin.marginLabel = 0;
-    }
+    if(legendOrientation == 'horizontal'){
+        if(rotateLabels){
+            var m = longestStringHeight * increment + extraMargin;
+            if(hasLegend && m <= 50) m = 55;
+            margin.bottomChart = m;
+        }else{
+            margin.bottomChart = 13 + extraMargin;
+        }
 
-    if(groupNames.length < 3){
-        chartWidth = width;
     }else{
-        chartWidth = width - margin.chartLeft;
-        legendOrientation = 'vertical';
-        shapePadding = 5;
+        if(rotateLabels){
+            var m = longestStringHeight * 3;
+            margin.bottomChart = m;
+        }else{
+            margin.bottomChart = 13;
+        }
+
     }
 
     var y0 = d3.scaleBand();
@@ -132,7 +158,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     var yAxis = d3.axisLeft(y0)
 
     y0
-    .range([height - margin.bottom, 0])
+    .range([height - margin.bottomChart, 0])
     .domain(categoriesNames)
     .padding(.1);
 
@@ -277,7 +303,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
     if(rotateLabels){
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis)
         .selectAll("text")
         .style("color", '#fff')
@@ -285,7 +311,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .style("text-anchor", "end");
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis)
         .selectAll("text")
         .style("color", '#fff')
@@ -295,7 +321,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     svg.append("g")
         .attr("class", "grid")
         .call(xAxis
-            .tickSize(height - margin.bottom)
+            .tickSize(height - margin.bottomChart)
             .tickFormat("")
         );
 

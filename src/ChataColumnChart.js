@@ -115,9 +115,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
 
     }
 
-    console.log(margin.bottomChart);
-    
-
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
             height = component.parentElement.parentElement.clientHeight

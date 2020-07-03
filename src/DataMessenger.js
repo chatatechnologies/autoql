@@ -1838,6 +1838,8 @@ function DataMessenger(elem, options){
     }
 
     obj.sendDrilldownClientSide = (json, indexValue, filterBy) => {
+        console.log('FILTER BY ' + filterBy);
+        // console.log('FILTER BY ' + filterBy);
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
@@ -1868,6 +1870,7 @@ function DataMessenger(elem, options){
         var row = evt.target.parentElement;
         var indexData = row.dataset.indexrow;
         if(row.dataset.hasDrilldown === 'true'){
+            console.log('FOOOOOOOOOOOOO');
             obj.sendDrilldownMessage(json, indexData, obj.options);
         }
     }
@@ -1878,7 +1881,7 @@ function DataMessenger(elem, options){
         var colValue = evt.target.dataset.colvalue1;
         var indexValue = evt.target.dataset.filterindex;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
-        if(groupableCount > 0){
+        if(groupableCount == 1 || groupableCount == 2){
             obj.sendDrilldownMessage(json, indexData, obj.options);
         }else{
             obj.sendDrilldownClientSide(json, indexValue, colValue);
@@ -2179,7 +2182,8 @@ function DataMessenger(elem, options){
 
     obj.onRowClick = (e, row, json) => {
         var index = 0;
-        if(getGroupableFields(json).length > 0){
+        var groupableCount = getNumberOfGroupables(json);
+        if(groupableCount > 0){
             for(var[key, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
             }

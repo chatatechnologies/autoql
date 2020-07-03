@@ -8,15 +8,40 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     var indexList = getIndexesByType(colsEnum);
     var groupableField = getGroupableField(json);
     var notGroupableField = getNotGroupableField(json);
-    // var index1 = notGroupableField.indexCol;
-    // var index2 = groupableField.indexCol;
-    if(indexList['DOLLAR_AMT']){
-        index2 = indexList['DOLLAR_AMT'][0].index;
-    }else if(indexList['QUANTITY']){
-        index2 = indexList['QUANTITY'][0].index;
+    var xIndexes = [];
+    var yIndexes = [];
+
+    if(indexList['STRING']){
+        xIndexes.push(...indexList['STRING'])
     }
-    console.log(indexList);
-    index1 = indexList['STRING'][0].index;
+
+    if(indexList['DATE']){
+        xIndexes.push(...indexList['DATE'])
+    }
+
+    if(indexList['DATE_STRING']){
+        xIndexes.push(...indexList['DATE_STRING'])
+    }
+
+    if(indexList['DOLLAR_AMT']){
+        yIndexes = indexList['DOLLAR_AMT'];
+    }else if(indexList['QUANTITY']){
+        yIndexes = indexList['QUANTITY'];
+    }
+
+    var metadataComponent = getMetadataElement(component, fromChataUtils);
+    if(!metadataComponent.metadata){
+        metadataComponent.metadata = {
+            groupBy: {
+                index: xIndexes[0].index,
+                currentLi: 0,
+            },
+            series: yIndexes
+        }
+    }
+
+    var index1 = metadataComponent.metadata.groupBy.index;
+    var index2 = metadataComponent.metadata.series[0].index;
     var data = ChataUtils.groupBy(
         json['data']['rows'], row => row[index1], index2
     );
@@ -101,6 +126,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
             d.value, cols[index2],
             options
         ))
+        .attr('data-filterindex', index1)
     })
     .attr('d', arc)
     .attr('fill', function(d){ return(color(d.data.key)) })

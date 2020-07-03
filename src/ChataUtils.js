@@ -128,7 +128,8 @@ ChataUtils.makeBarChartDomain = function(data, hasNegativeValues){
 ChataUtils.getUniqueValues = function(data, getter){
     let unique = {};
     data.forEach(function(i) {
-        if(!unique[getter(i)]) {
+        console.log();
+        if(!unique[getter(i)] && typeof getter(i) === 'string') {
             unique[getter(i)] = true;
         }
     });
@@ -180,8 +181,11 @@ ChataUtils.groupBy = function(list, keyGetter, indexData) {
         const key = keyGetter(item);
         if (!obj.hasOwnProperty(key)) {
             obj[key] = item[indexData];
+        }else{
+            obj[key] += item[indexData];
         }
     });
+
     return obj;
 }
 

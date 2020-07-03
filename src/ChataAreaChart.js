@@ -252,7 +252,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-
+    console.log(allSubgroups);
     let layers;
     let layerPoints;
     function createLayers(){
@@ -267,6 +267,8 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             return val;
         })
         (data)
+
+        console.log(stackedData);
 
         if(layers)layers.remove();
         if(layerPoints)layers.remove();

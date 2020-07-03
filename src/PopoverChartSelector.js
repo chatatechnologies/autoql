@@ -230,7 +230,6 @@ function ChataChartListPopover(position, indexes, onClick){
     }
 
     obj.createListItem = (colObj, i) => {
-        console.log(colObj);
         var name = colObj.col['display_name'] || colObj.col['name'];
         var li = document.createElement('li');
         li.classList.add('autoql-vanilla-string-select-list-item');
