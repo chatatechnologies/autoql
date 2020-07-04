@@ -733,9 +733,7 @@ function htmlToElement(html) {
 
 function createTableContainer(){
     var div = document.createElement('div');
-    div.classList.add('chata-table-container');
-    div.classList.add('chata-table-container-renderer');
-
+    div.classList.add('autoql-vanilla-chata-table');
     return div;
 }
 

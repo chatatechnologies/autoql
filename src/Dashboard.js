@@ -62,8 +62,9 @@ function Dashboard(selector, options={}){
         notExecutedText: 'Hit "Execute" to run this dashboard',
         splitView: true,
         secondDisplayType: 'table',
-        secondDisplayPercentage: 25
-    }
+        secondDisplayPercentage: 25,
+        enableDynamicCharting: true
+}
 
     if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
@@ -168,6 +169,7 @@ function Dashboard(selector, options={}){
     obj.tiles = items;
 
     for (var i = 0; i < options.tiles.length; i++) {
+        console.log(options.tiles[i].query);
         var opts = {
             w: options.tiles[i].w,
             h: options.tiles[i].h,

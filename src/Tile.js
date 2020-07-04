@@ -40,6 +40,10 @@ function Tile(dashboard, options={}){
         chataDashboardItem.options[key] = value;
     }
 
+    chataDashboardItem.options.title = chataDashboardItem.options.query;
+    console.log();
+    // console.log(options.query);
+
     chataDashboardItem.views = [
         new TileView(
             dashboard,
@@ -193,7 +197,8 @@ function Tile(dashboard, options={}){
     chataDashboardItem.placeHolderDrag = placeHolderDrag;
     chataDashboardItem.tileInputContainer.style.display = 'none';
     chataDashboardItem.placeHolderDrag.style.display = 'none';
-    chataDashboardItem.tileTitle.textContent = options.title;
+    chataDashboardItem.tileTitle.textContent = options.title
+    || chataDashboardItem.options.query;
     chataDashboardItem.inputQuery.value = chataDashboardItem.options.query;
     chataDashboardItem.inputTitle.value = chataDashboardItem.options.title;
 
@@ -664,7 +669,6 @@ function TileView(dashboard, chataDashboardItem,
             displayType = 'suggestion';
         }
         if(json['data']['rows'].length == 0){
-            console.log(displayType + '!==' + 'safetynet');
             container.innerHTML = 'No data found.';
             return 0;
         }
@@ -679,15 +683,6 @@ function TileView(dashboard, chataDashboardItem,
                 updateSelectWidth(responseContentContainer);
             break;
             case 'table':
-                var div = createTableContainer();
-                var scrollbox = document.createElement('div');
-                var tableWrapper = document.createElement('div');
-                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-                tableWrapper.classList.add('wrapper');
-                tableWrapper.classList.add('flex');
-                tableWrapper.appendChild(div);
-                scrollbox.appendChild(tableWrapper);
-                container.appendChild(scrollbox);
                 if(json['data']['columns'].length == 1){
                     var data = formatData(
                         json['data']['rows'][0][0],
@@ -701,13 +696,20 @@ function TileView(dashboard, chataDashboardItem,
                         <a/>
                     </div>`;
                 }else{
-                    var table = createTable(
-                        json, div, dashboard.options,
-                        'append', _uuid, 'autoql-vanilla-table-response-renderer',
-                        '[data-indexrowrenderer]'
+                    var div = createTableContainer();
+                    div.setAttribute('data-componentid', _uuid)
+                    container.appendChild(div);
+                    var scrollbox = document.createElement('div');
+                    scrollbox.classList.add(
+                        'autoql-vanilla-chata-table-scrollbox'
                     );
-                    table.classList.add('autoql-vanilla-renderer-table');
-                    tableWrapper.insertBefore(table.headerElement, div);
+                    scrollbox.classList.add('no-full-width');
+                    scrollbox.appendChild(div);
+                    container.appendChild(scrollbox);
+                    var table = new ChataTable(_uuid, dashboard.options, () => {
+                        console.log('ON ROW CLICK');
+                        window.dispatchEvent(new Event('resize'));
+                    })
                 }
                 break;
             case 'bar':
@@ -715,7 +717,7 @@ function TileView(dashboard, chataDashboardItem,
                 container.appendChild(chartWrapper);
                 createBarChart(
                     chartWrapper, json, dashboard.options,
-                    false, 'data-tilechart',
+                    () => {}, false, 'data-tilechart',
                     true
                 );
                 break;
@@ -723,8 +725,8 @@ function TileView(dashboard, chataDashboardItem,
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
                 createColumnChart(
-                    chartWrapper,json, dashboard.options,
-                    false, 'data-tilechart',
+                    chartWrapper, json, dashboard.options,
+                    () => {}, false, 'data-tilechart',
                     true
                 );
                 break;
@@ -733,7 +735,7 @@ function TileView(dashboard, chataDashboardItem,
                 container.appendChild(chartWrapper);
                 createLineChart(
                     chartWrapper, json, dashboard.options,
-                    false, 'data-tilechart',
+                    () => {}, false, 'data-tilechart',
                     true
                 );
                 break;
@@ -760,7 +762,7 @@ function TileView(dashboard, chataDashboardItem,
                 container.appendChild(chartWrapper);
                 createStackedBarChart(
                     chartWrapper, json,
-                    dashboard.options, false,
+                    dashboard.options, () => {}, false,
                     'data-tilechart', true
                 );
                 break;
@@ -769,7 +771,7 @@ function TileView(dashboard, chataDashboardItem,
                 container.appendChild(chartWrapper);
                 createStackedColumnChart(
                     chartWrapper, json,
-                    dashboard.options, false,
+                    dashboard.options, () => {}, false,
                     'data-tilechart', true
                 );
                 break;
@@ -781,33 +783,20 @@ function TileView(dashboard, chataDashboardItem,
                     'data-tilechart', true
                 );
                 break;
-            case 'pivot_column':
+            case 'pivot_table':
                 var div = createTableContainer();
-                // var tableWrapper = document.createElement('div');
+                div.setAttribute('data-componentid', _uuid)
+                container.appendChild(div);
                 var scrollbox = document.createElement('div');
-                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-                // tableWrapper.classList.add('wrapper');
-                // tableWrapper.classList.add('flex');
-                // tableWrapper.appendChild(div);
+                scrollbox.classList.add(
+                    'autoql-vanilla-chata-table-scrollbox'
+                );
+                scrollbox.classList.add('no-full-width');
                 scrollbox.appendChild(div);
                 container.appendChild(scrollbox);
-                var pivotArray = [];
-                var columns = json['data']['columns'];
-                if(columns[0].type === 'DATE' &&
-                columns[0].name.includes('month')){
-                    pivotArray = getDatePivotArray(
-                        json, dashboard.options, json['data']['rows']
-                    );
-                }else{
-                    pivotArray = getPivotColumnArray(
-                        json, dashboard.options, json['data']['rows']
-                    );
-                }
-                var table = createPivotTable(
-                    pivotArray, div, dashboard.options,
-                    'append', _uuid, 'autoql-vanilla-table-response-renderer'
-                );
-                scrollbox.insertBefore(table.headerElement, div);
+                var table = new ChataPivotTable(_uuid, dashboard.options, () => {
+                    console.log('ON CELL CLICK');
+                })
                 break;
             case 'suggestion':
                 var responseContentContainer = document.createElement('div');
@@ -887,8 +876,7 @@ function TileView(dashboard, chataDashboardItem,
                 if(displayTypes[i] == 'line'){
                     button.innerHTML = LINE_CHART_ICON;
                 }
-                if(displayTypes[i] == 'date_pivot'
-                    || displayTypes[i] == 'pivot_column'){
+                if(displayTypes[i] == 'pivot_table'){
                     button.innerHTML = PIVOT_ICON;
                 }
                 if(displayTypes[i] == 'heatmap'){

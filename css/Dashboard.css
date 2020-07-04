@@ -713,6 +713,10 @@
     height: 100%;
 }
 
+.autoql-vanilla-chata-table-scrollbox.no-full-width{
+    width: unset;
+}
+
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
 
