@@ -1870,7 +1870,6 @@ function DataMessenger(elem, options){
         var row = evt.target.parentElement;
         var indexData = row.dataset.indexrow;
         if(row.dataset.hasDrilldown === 'true'){
-            console.log('FOOOOOOOOOOOOO');
             obj.sendDrilldownMessage(json, indexData, obj.options);
         }
     }
@@ -2182,7 +2181,7 @@ function DataMessenger(elem, options){
 
     obj.onRowClick = (e, row, json) => {
         var index = 0;
-        var groupableCount = getNumberOfGroupables(json);
+        var groupableCount = getNumberOfGroupables(json['data']['columns']);
         if(groupableCount > 0){
             for(var[key, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
