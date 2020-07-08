@@ -11,6 +11,7 @@ function formatData(val, col, allOptions={}){
     switch (type) {
         case 'DOLLAR_AMT':
             val = parseFloat(val);
+            if(isNaN(val))val = 0;
             const sigDigs = String(parseInt(val.toFixed(2))).length
             if(val != 0){
                 value = new Intl.NumberFormat(options.languageCode, {

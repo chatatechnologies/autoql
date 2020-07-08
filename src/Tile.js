@@ -723,14 +723,50 @@ function TileView(dashboard, chataDashboardItem,
         const columns = json['data']['columns'];
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
-        // if(selectedColumn.definition.index != 0){
-        //     var entries = Object.entries(row.data)[0];
-        //     json['data']['rows'][0][0] = entries[1];
-        //     json['data']['rows'][0][1] = selectedColumn.definition.field;
-        //     json['data']['rows'][0][2] = cell.getValue();
-        //     obj.sendDrilldownMessage(json, 0, obj.options);
-        // }
+        let query;
+        if(selectedColumn.definition.index != 0){
+            var entries = Object.entries(row.data)[0];
+            json['data']['rows'][0][0] = entries[1];
+            json['data']['rows'][0][1] = selectedColumn.definition.field;
+            json['data']['rows'][0][2] = cell.getValue();
+            if(obj.isSecond){
+                query = obj.internalQuery;
+            }else{
+                query = chataDashboardItem.inputQuery.value;
+            }
 
+            modal.clearViews();
+            drilldownTable.innerHTML = '';
+            modal.addView(drilldownTable);
+            modal.setTitle(query);
+            var drilldownUUID = uuidv4();
+            var drilldownData = chataDashboardItem.getDrilldownData(
+                json, 0, dashboard.options);
+            var queryId = json['data']['query_id'];
+            var dots = putLoadingContainer(drilldownTable);
+            dots.classList.remove('chat-bar-loading');
+            dots.classList.add(
+                'autoql-vanilla-tile-response-loading-container'
+            );
+            chataDashboardItem.sendDrilldownMessage(
+                queryId,
+                drilldownData,
+                dashboard.options,
+                drilldownUUID,
+                function(){
+                    obj.refreshItem(
+                        'table',
+                        drilldownUUID,
+                        drilldownTable,
+                        false
+                    )
+                    obj.createVizToolbar(
+                        json, obj.uuid, obj.internalDisplayType
+                    )
+                }
+            )
+            modal.show();
+        }
     }
 
     obj.copyMetadata = () => {

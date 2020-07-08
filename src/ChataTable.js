@@ -108,7 +108,7 @@ function getColumnsData(json, options){
         }
         columnsData.push({
             title: formatColumnName(colName),
-            field: colName,
+            field: 'col' + index,
             headerFilter: "input",
             visible: isVisible,
             formatter: (cell, formatterParams, onRendered) => {
@@ -121,6 +121,7 @@ function getColumnsData(json, options){
             },
         })
     })
+
     return columnsData;
 }
 
@@ -134,10 +135,11 @@ function getTableData(json, options) {
         for (var x = 0; x < row.length; x++) {
             var col = columns[x];
             var colName = col['display_name'] || col['name'];
-            rowData[colName] = row[x];
+            rowData['col' + x] = row[x];
         }
         tableData.push(rowData);
     }
+
 
     return tableData;
 }

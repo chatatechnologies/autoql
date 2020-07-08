@@ -880,15 +880,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTk0MDkxOTM3LCAiZXhwIjogMTU5NDExMzUzNywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiXX0=.sB-AiqEp79p-EcUbPepa0cZzB3TH89ey_KxPwHoZUKFp46l0Q3Cw5POrc8u1M0-sUDPVlpFGgMkfS5uyKn8uoqXauaBdsLanErvy-6AyOqfdw4FBJeD9oWnF4OihgfHrQPnll-LqaYYtBUOJ1xVNK-57K3FbGczTQpdoj7Iup6g8dXaPqoXjqFcIOKy-HKbRqrSiZOPmxkBOOtuSGyeIUhnq9MxZmhk0Nyi7lJYrAWlTWo15DOlDLqW0esThF9PtD9egMEVPfXA3meBcuA3HjQVtOBv5rUlK44enstmpRTWmspL-BlM2xPQgKPOS2gkUk8s6BWcqo_I0GeN5KnW2Rw==`;
-    const domain = 'https://spira-staging.chata.io';
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTk0MTY3MzM1LCAiZXhwIjogMTU5NDE4ODkzNSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJwdXJlZmFjdHMtZGVtbzEiLCAidXNlcl9pZCI6ICJ2aWRoeWFAY2hhdGEuYWkiLCAiZGlzcGxheV9uYW1lIjogInZpZGh5YUBjaGF0YS5haSIsICJyZXNvdXJjZV9hY2Nlc3MiOiBbIi9hdXRvcWwvYXBpL3YxL3J1bGVzIiwgIi9hdXRvcWwvYXBpL3YxL3J1bGVzLyoqIiwgIi9hdXRvcWwvYXBpL3YxL3F1ZXJ5IiwgIi9hdXRvcWwvYXBpL3YxL3F1ZXJ5LyoqIl19.PyEguIjTHgc78Zpbd0Jx9oWBOsClHFKKu5y46NJ2qTHPR6HHR4Cocljphh9RFxJk-onfp7XsNwOmB85V4GjCmquF4MvE4KhHDRkHcjSWdL4gOYTPZO9lZVmLrm82Bm3UbDA2ppQIpVMjfjGnn6JvMaUoufXxtXKO0cQaE2zOs-5U6RjRnk7F0PN9Y_T8LvNBFcEVG_RjpmW2uHcHO5CRAlnSSFwyEmbOzqYnuyAi_cQ9tXvoBBS7t8OGfYVsa_zNRiFETYUHhoa9t79H3lGRjWRL4SHnN0YkI0nSpmcjuxOuOnk3-t6J_VQf3jMmMiVRMheglM2dDs6gYVbhuZvhvA==`;
+    // const domain = 'https://spira-staging.chata.io';
+    const domain = 'https://purefacts-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
     console.log(topics);
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
             // demo: true
             token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            // apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            apiKey: 'AIzaSyBxoR51Cw8UryZWmMdAkktBUO83ukMFFO0',
             domain: domain,
             // apiKey: 'AIzaSyDX28JVW248PmBwN8_xRROWvO0a2BWH67o',
             // domain: 'https://accounting-demo-staging.chata.io',
