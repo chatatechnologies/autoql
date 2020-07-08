@@ -32,6 +32,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
+    console.log('metadata Chart: ');
+    console.log(metadataComponent);
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {

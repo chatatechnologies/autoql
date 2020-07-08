@@ -525,6 +525,8 @@ function TileView(dashboard, chataDashboardItem,
     tileResponseContainer, isSecond=false){
     var obj = this
     var chartDrilldownContainer = document.createElement('div');
+    var parentChartDrilldownContainer = document.createElement('div');
+
     var tileWrapper = document.createElement('div');
     var drilldownTable = document.createElement('div');
     var drilldownOriginal = document.createElement('div');
@@ -542,7 +544,11 @@ function TileView(dashboard, chataDashboardItem,
     obj.internalDisplayType = chataDashboardItem.options.displayType;
     obj.isSecond = isSecond;
 
-    drilldownOriginal.appendChild(chartDrilldownContainer);
+    parentChartDrilldownContainer.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
+    parentChartDrilldownContainer.appendChild(chartDrilldownContainer);
+    drilldownOriginal.appendChild(parentChartDrilldownContainer);
 
     obj.getSafetynetBody = (json) => {
         const message = `
@@ -725,6 +731,11 @@ function TileView(dashboard, chataDashboardItem,
         //     obj.sendDrilldownMessage(json, 0, obj.options);
         // }
 
+    }
+
+    obj.copyMetadata = () => {
+        chartDrilldownContainer.parentElement.metadata =
+        tileResponseContainer.metadata
     }
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
@@ -1024,6 +1035,7 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.tileWrapper.addEventListener('click', function(e){
         if(e.target.dataset.tilechart){
+            obj.copyMetadata();
             chataDashboardItem.updateSelectedBars(e.target);
             var query = chataDashboardItem.inputQuery.value;
             var indexData = parseInt(e.target.dataset.tilechart);
