@@ -34,12 +34,14 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
+    subgroups.sort();
     var allSubgroups = {}
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true
         };
     })
+
 
     var cols = json['data']['columns'];
     // var data = responseToArrayObjects(json, groups);
@@ -196,7 +198,8 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         }
     }))
     .range([0, chartWidth])
-    .padding([0.2]);
+    .paddingInner(1)
+    .paddingOuter(0)
 
     var xAxis = d3.axisBottom(x);
 
@@ -235,7 +238,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     var y = d3.scaleLinear()
     .domain([0, maxValue])
-    .range([ height - margin.bottomChart, 0 ]);
+    .range([ height - margin.bottomChart, 0]).nice();
     var yAxis = d3.axisLeft(y);
 
     var color = d3.scaleOrdinal()
@@ -252,7 +255,6 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     );
     svg.append("g")
     .call(yAxis).select(".domain").remove();
-    console.log(allSubgroups);
     let layers;
     let layerPoints;
     function createLayers(){
@@ -262,7 +264,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .value(function(d, key){
             var val = parseFloat(d[key]);
             if(isNaN(val)){
-                return 0
+                return 0;
             }
             return val;
         })
@@ -281,6 +283,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
                     if(key === 'group')continue;
                     points.push({
                         group: seriesValues.group,
+                        key: key,
                         y: value,
                         y1: stackedData[i][_x][groupableIndex2],
                         y0: stackedData[i][_x][groupableIndex1]
@@ -293,12 +296,18 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .data(stackedData)
         .enter()
         .append("path")
-        .style("fill", function(d, i) { return color(d[i].data.group); })
+        .style("fill", function(d, i) { if(d[i]) return color(d.key); else return 'transparent' })
         .attr('opacity', '0.7')
         .attr("d", d3.area()
-            .x(function(d, i) { return x(d.data.group); })
-            .y0(function(d) { return y(d[0]); })
-            .y1(function(d) { return y(d[1]); })
+            .x(function(d, i) {
+                if(d.data.group.length < 15){
+                    return x(d.data.group);
+                }else{
+                    return x(d.data.group.slice(0,15) + '...')
+                }
+            })
+            .y0(function(d) { return Math.abs(y(d[0])); })
+            .y1(function(d) { return Math.abs(y(d[1])); })
         )
 
         layerPoints = svg.selectAll("circle")
@@ -313,6 +322,29 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .attr('stroke-opacity', '0.7')
         .attr("fill", 'transparent')
         .attr("fill-opacity", '1')
+        .each(function(d, i){
+            console.log(d.y);
+            console.log(d.group);
+            console.log(d.key);
+            if(d.y && d.group && d.key){
+                d3.select(this).attr(valueClass, i)
+                .attr('data-col1', col1)
+                .attr('data-col2', col2)
+                .attr('data-col3', col3)
+                .attr('data-colvalue1', d.key)
+                .attr('data-colvalue2', formatData(
+                    d.group, cols[groupableIndex2], options
+                ))
+                .attr('data-colvalue3', formatData(
+                    d.y, cols[notGroupableIndex],
+                    options
+                ))
+                .attr('data-unformatvalue1', d.key)
+                .attr('data-unformatvalue2', d.group)
+                .attr('data-unformatvalue3', d.y)
+                .attr('class', 'tooltip-3d')
+            }
+        })
         .on("mouseover", function(d, i){
             d3.select(this).
             attr("stroke", color(d.group))
@@ -323,7 +355,13 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             attr("stroke", 'transparent')
             .attr('fill', 'transparent')
         })
-        .attr("cx", function(d) { return x(d.group); })
+        .attr("cx", function(d) {
+            if(d.group.length < 15){
+                return x(d.group);
+            }else{
+                return x(d.group.slice(0,15) + '...')
+            }
+        })
         .attr("cy", function(d) { return y(d.y); });
 
         tooltipCharts();

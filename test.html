@@ -113,32 +113,65 @@
 
     <div id="foo" data-containerid="1"></div>
     <script>
-    var tabledata = [
-        {name:"Oli Bob", progress:"12", gender:"red", rating:""},
-        {name:"Mary May", progress:"1", gender:"blue", rating:"14/05/1982"},
-        {name:"Christine Lobowski", progress:"42", gender:"green", rating:"22/05/1982"},
-        {name:"Brendon Philips", progress:"125", gender:"orange", rating:"01/08/1980"},
-        {name:"Margret Marmajuke", progress:"16", gender:"yellow", rating:"31/01/1999"},
-    ];
-    var table = new Tabulator("[data-componentid='tabulator']", {
-        layout: 'fitDataFill',
-        textSize: '9px',
-        movableColumns: true,
-        progressiveRender: true,
-        progressiveRenderSize: 5,
-        progressiveRenderMargin: 100,
-        downloadConfig: {
-            columnGroups: false,
-            rowGroups: false,
-            columnCalcs: false,
-        },
-        columns:[
-            {title:"Name", field:"name"},
-            {title:"Progress", field:"progress", sorter:"number"},
-            {title:"Gender", field:"gender"},
-            {title:"Rating", field:"rating"},
-        ],
-        data: tabledata
+    // set the dimensions and margins of the graph
+    var margin = {top: 20, right: 30, bottom: 30, left: 55},
+    width = 460 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
+
+    // append the svg object to the body of the page
+    var svg = d3.select("#foo")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform",
+    "translate(" + margin.left + "," + margin.top + ")");
+
+    // Parse the Data
+    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/5_OneCatSevNumOrdered_wide.csv", function(data) {
+        console.log(data);
+        // List of groups = header of the csv files
+        var keys = data.columns.slice(1)
+        console.log(data.columns[0]);
+        // Add X axis
+        var x = d3.scaleLinear()
+        .domain(d3.extent(data, function(d) { return d.year; }))
+        .range([ 0, width ]);
+        svg.append("g")
+        .attr("transform", "translate(0," + height + ")")
+        .call(d3.axisBottom(x).ticks(5));
+
+        // Add Y axis
+        var y = d3.scaleLinear()
+        .domain([0, 200000])
+        .range([ height, 0 ]);
+        svg.append("g")
+        .call(d3.axisLeft(y));
+
+        // color palette
+        var color = d3.scaleOrdinal()
+        .domain(keys)
+        .range(['#e41a1c','#377eb8','#4daf4a','#984ea3','#ff7f00','#ffff33','#a65628','#f781bf'])
+
+        //stack the data?
+        var stackedData = d3.stack()
+        .keys(keys)
+        (data)
+        console.log("This is the stack result: ", stackedData)
+
+        // Show the areas
+        svg
+        .selectAll("mylayers")
+        .data(stackedData)
+        .enter()
+        .append("path")
+        .style("fill", function(d) { console.log(d.key) ; return color(d.key); })
+        .attr("d", d3.area()
+        .x(function(d, i) { return x(d.data.year); })
+        .y0(function(d) { return y(d[0]); })
+        .y1(function(d) { return y(d[1]); })
+        )
+
     })
     // // set the dimensions and margins of the graph
     // var margin = {top: 10, right: 30, bottom: 30, left: 60},

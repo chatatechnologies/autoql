@@ -166,8 +166,10 @@ ChataUtils.format3dData = function(json, groups, metadata){
         dataGrouped.push({group: group});
         for (var x = 0; x < data.length; x++) {
             if(data[x][groupableIndex2] == group){
-                dataGrouped[i][data[x][groupableIndex1]]
+                if(typeof data[x][groupableIndex1] === 'string'){
+                    dataGrouped[i][data[x][groupableIndex1]]
                     = parseFloat(data[x][notGroupableIndex]);
+                }
             }
         }
     }

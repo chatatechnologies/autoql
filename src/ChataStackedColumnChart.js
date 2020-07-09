@@ -258,7 +258,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .keys(visibleGroups)
         (data)
         if(stackedG)stackedG.remove();
-
+        console.log(stackedData);
         stackedG = svg.append("g")
         .selectAll("g")
         .data(stackedData)
