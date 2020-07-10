@@ -2667,7 +2667,6 @@ function DataMessenger(elem, options){
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         if(jsonResponse['reference_id'] === '1.1.430'){
-            // HERE
             var responseLoadingContainer = document.createElement('div');
             var responseLoading = document.createElement('div');
 

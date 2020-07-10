@@ -323,9 +323,6 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .attr("fill", 'transparent')
         .attr("fill-opacity", '1')
         .each(function(d, i){
-            console.log(d.y);
-            console.log(d.group);
-            console.log(d.key);
             if(d.y && d.group && d.key){
                 d3.select(this).attr(valueClass, i)
                 .attr('data-col1', col1)

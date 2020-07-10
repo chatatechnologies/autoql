@@ -16,13 +16,23 @@ function Tile(dashboard, options={}){
 
     var vizToolbarSplit = htmlToElement(`
         <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
-            <button class="autoql-vanilla-chata-toolbar-btn">
-                <span class="autoql-vanilla-chata-icon" style="color: inherit;">
-                    ${SPLIT_VIEW}
-                </span>
-            </button>
         </div>
     `);
+
+    var vizToolbarSplitButton = htmlToElement(`
+        <button class="autoql-vanilla-chata-toolbar-btn">
+        </button>
+    `);
+
+    var vizToolbarSplitContent = htmlToElement(`
+        <span class="autoql-vanilla-chata-icon" style="color: inherit;">
+            ${SPLIT_VIEW}
+        </span>
+    `);
+
+    vizToolbarSplit.appendChild(vizToolbarSplitButton);
+    vizToolbarSplitButton.appendChild(vizToolbarSplitContent);
+
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
 
@@ -125,10 +135,15 @@ function Tile(dashboard, options={}){
 
     tileResponseWrapper.appendChild(tileResponseContainer);
 
-    itemContent.appendChild(tileInputContainer);
-    itemContent.appendChild(tileTitleContainer);
-    itemContent.appendChild(tileResponseWrapper);
-    itemContent.appendChild(resizeHandler);
+
+    var itemContentWrapper = document.createElement('div');
+    itemContentWrapper.classList.add('autoql-vanilla-item-content-wrapper');
+    itemContentWrapper.appendChild(tileInputContainer);
+    itemContentWrapper.appendChild(tileTitleContainer);
+    itemContentWrapper.appendChild(tileResponseWrapper);
+    itemContentWrapper.appendChild(resizeHandler);
+    itemContent.appendChild(itemContentWrapper);
+
     chataDashboardItem.appendChild(itemContent);
     chataDashboardItem.appendChild(placeHolderDrag);
 
@@ -313,7 +328,7 @@ function Tile(dashboard, options={}){
                     chataDashboardItem.options.isSplitView = true;
                     var splitContainer = document.createElement('div');
                     var ids = [];
-
+                    vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
                     chataDashboardItem.views.map(view => {
                         if(view.isSecond){
                             var viewUUID = view.uuid;
@@ -355,6 +370,7 @@ function Tile(dashboard, options={}){
                     chataDashboardItem.options.isSplitView = false;
                     chataDashboardItem.views[0].refreshView();
                     tileResponseContainer.classList.add('chata-flex');
+                    vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
                 }
             }
         }
@@ -788,6 +804,13 @@ function TileView(dashboard, chataDashboardItem,
         if(supportedDisplayTypes.includes('suggestion')){
             displayType = 'suggestion';
         }
+
+        if(json['reference_id'] === '1.1.550' ||
+           json['reference_id'] === '1.1.430'){
+            container.innerHTML = json['message'];
+            return 0;
+        }
+
         if(json['data']['rows'].length == 0){
             container.innerHTML = 'No data found.';
             return 0;

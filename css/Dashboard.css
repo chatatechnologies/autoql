@@ -48,15 +48,18 @@
     position: relative;
     width: 100%;
     height: 100%;
-    /* min-width: 320px;
-    min-height: 140px; */
     background: #fff;
     color: rgb(64, 64, 64);
     font-family: var(--chata-dashboard-font-family), sans-serif;
     overflow: hidden;
     border-radius: 4px;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
-    padding: 21px;
+    padding: 15px 15px 20px 15px;
+    background: white;
+}
+
+.autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-item-content {
+    background-color: #f7f7f7;
 }
 
 .autoql-vanilla-chata-tile-wrapper {
@@ -69,6 +72,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.autoql-vanilla-item-content-wrapper{
+    height: 100%;
+    background: white;
+    padding: 2.5px;
 }
 
 .autoql-vanilla-chata-tile-wrapper.overflow{
@@ -89,8 +98,10 @@
     z-index: 10;
     border: 1px solid hsla(0,0%,82.7%,.32);
     position: absolute;
-    bottom: -25px;
-    left: -17px;
+    /* bottom: -25px;
+    left: -17px; */
+    bottom: -8px;
+    left: 35px;
     -webkit-transition: opacity .3s ease,color .3s ease;
     transition: opacity .3s ease,color .3s ease;
     visibility: hidden;
@@ -99,7 +110,8 @@
 
 .autoql-vanilla-split-view-btn {
     bottom: 7px;
-    left: calc(50% - 20px);
+    /* left: calc(50% - 20px); */
+    left: 7px;
 }
 
 .autoql-vanilla-tile-toolbar .autoql-vanilla-chata-toolbar-btn {
@@ -128,6 +140,7 @@
     display: -webkit-box;
     display: flex;
     width: 100%;
+    padding: 6.5px 5px;
     /* height: 100%; */
 }
 
@@ -142,7 +155,7 @@
 }
 .autoql-vanilla-dashboard-tile-input-container .autoql-vanilla-dashboard-tile-input {
     width: 0;
-    padding: 12px !important;
+    padding: 15px !important;
     border: 1px solid rgb(0, 0, 0, 0.1);
     outline: none !important;
     color: #356f90 !important;
@@ -192,7 +205,7 @@
 
 .autoql-vanilla-dashboard-tile-play-button svg {
     cursor: pointer;
-    width: 20px;
+    width: 25px;
     height: 33px;
     margin-left: 10px;
     color: #366f90;
