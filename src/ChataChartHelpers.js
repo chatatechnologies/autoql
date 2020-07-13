@@ -145,12 +145,14 @@ const enumerateCols = (json) => {
     return clone;
 }
 
-const getLabel = (label) => {
+const formatLabel = (label) => {
     if(!label)label = '';
-    if(label.length < 15){
+    if(label === 'null')label = 'Untitled Category';
+    if(label.length < 20){
         return label;
     }
     return label.slice(0, 15) + ' ...';
+
 }
 
 const getGroupableFields = (json) => {

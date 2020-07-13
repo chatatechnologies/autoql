@@ -89,16 +89,12 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     if (barWidth < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
-                if(element.length < 15){
-                    xTickValues.push(element);
-                }else{
-                    xTickValues.push(element.slice(0, 15)+ '...');
-                }
+                xTickValues.push(element);
             }
         });
     }
 
-    groups.map(element => allLengths.push(getLabel(element).length));
+    groups.map(element => allLengths.push(formatLabel(element).length));
     let longestString = Math.max.apply(null, allLengths);
 
     if(rotateLabels){
@@ -191,11 +187,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     var x = d3.scaleBand()
     .domain(groups.map(function(element){
-        if(element.length < 15){
-            return element;
-        }else{
-            return element.slice(0, 15) + '...';
-        }
+        return element;
     }))
     .range([0, chartWidth])
     .paddingInner(1)
@@ -210,7 +202,9 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[groupableIndex2], options);
+            return formatLabel(
+                formatChartData(d, cols[groupableIndex2], options)
+            )
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -220,7 +214,9 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[groupableIndex2], options);
+            return formatLabel(
+                formatChartData(d, cols[groupableIndex2], options)
+            )
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -300,11 +296,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .attr('opacity', '0.7')
         .attr("d", d3.area()
             .x(function(d, i) {
-                if(d.data.group.length < 15){
-                    return x(d.data.group);
-                }else{
-                    return x(d.data.group.slice(0,15) + '...')
-                }
+                return x(d.data.group);
             })
             .y0(function(d) { return Math.abs(y(d[0])); })
             .y1(function(d) { return Math.abs(y(d[1])); })
@@ -353,11 +345,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             .attr('fill', 'transparent')
         })
         .attr("cx", function(d) {
-            if(d.group.length < 15){
-                return x(d.group);
-            }else{
-                return x(d.group.slice(0,15) + '...')
-            }
+            return x(d.group);
         })
         .attr("cy", function(d) { return y(d.y); });
 

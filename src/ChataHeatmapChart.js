@@ -73,7 +73,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     if (barWidth < 16) {
         labelsX.forEach((element, index) => {
             if (index % intervalWidth === 0) {
-                xTickValues.push(getLabel(element));
+                xTickValues.push(element);
             }
         });
     }
@@ -81,7 +81,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     if(barHeight < 16){
         labelsY.forEach((element, index) => {
             if (index % intervalHeight === 0) {
-                yTickValues.push(getLabel(element));
+                yTickValues.push(element);
             }
         });
     }
@@ -105,7 +105,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     var x = d3.scaleBand()
     .range([ 0, width ])
     .domain(labelsX.map(function(d) {
-        return getLabel(d)
+        return d
     }))
     .padding(0.01);
 
@@ -118,7 +118,9 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     if(barWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatLabel(d)
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -126,7 +128,9 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatLabel(d);
+        }))
         .selectAll("text")
         .style("color", '#fff')
         .style("text-anchor", "center");
@@ -136,7 +140,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     var y = d3.scaleBand()
     .range([ height - margin.bottom, 0])
     .domain(labelsY.map(function(d) {
-        return getLabel(d);
+        return d;
     }))
     .padding(0.01);
 
@@ -147,7 +151,9 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     }
 
     svg.append("g")
-    .call(yAxis);
+    .call(yAxis.tickFormat(function(d){
+        return formatLabel(d);
+    }));
 
     var colorScale = d3.scaleLinear()
     .range([0, 1])
@@ -159,8 +165,8 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         var xLabel = '';
         var yLabel = '';
 
-        xLabel = getLabel(d.labelX);
-        yLabel = getLabel(d.labelY);
+        xLabel = d.labelX;
+        yLabel = d.labelY;
         return xLabel+':'+yLabel;
     })
     .enter()
@@ -178,11 +184,11 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         ))
     })
     .attr("x", function(d) {
-        return x(getLabel(d.labelX));
+        return x(d.labelX);
 
     })
     .attr("y", function(d) {
-        return y(getLabel(d.labelY));
+        return y(d.labelY);
     })
     .attr("width", x.bandwidth())
     .attr("height", y.bandwidth())

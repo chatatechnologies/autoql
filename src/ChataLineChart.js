@@ -82,12 +82,12 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     if (barWidth < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
-                xTickValues.push(getLabel(element.label));
+                xTickValues.push(element.label);
             }
         });
     }
     data.forEach((item, i) => {
-        allLengths.push(getLabel(item.label).length);
+        allLengths.push(formatLabel(item.label).length);
     });
 
     let longestString = 0;
@@ -286,7 +286,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     var x = d3.scaleBand()
     .domain(data.map(function(d) {
-        return getLabel(d.label)
+        return d.label
     }))
     .range([ 0, chartWidth]);
 
@@ -300,7 +300,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index2], options);
+            return formatLabel(formatChartData(d, cols[index2], options));
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -310,7 +310,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index2], options);
+            return formatLabel(formatChartData(d, cols[index2], options));
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -334,7 +334,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     let lines;
     let points;
     var line = d3.line()
-    .x(function(d) { return x(getLabel(d.label)) + xShift })
+    .x(function(d) { return x(d.label) + xShift })
     .y(function(d) { return y(d.value) })
 
     function createLines(){
@@ -394,7 +394,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
         })
         .attr("cx", function(d) {
-            return x(getLabel(d.label)) + xShift
+            return x(d.label) + xShift
         })
         .attr("cy", function(d) { return y(d.value) })
         .attr("r", 3)

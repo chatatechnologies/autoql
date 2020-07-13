@@ -81,7 +81,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-    var categoriesNames = data.map(function(d) { return getLabel(d.label); });
+    var categoriesNames = data.map(function(d) { return d.label; });
     var groupNames = data[0].values.map(function(d) { return d.group; });
     var hasLegend = groupNames.length > 1;
     if(hasLegend && groupNames.length < 3){
@@ -105,13 +105,13 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     if (barHeight < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
-                yTickValues.push(getLabel(element.label));
+                yTickValues.push(element.label);
             }
         });
     }
 
     data.forEach((item, i) => {
-        allLengths.push(getLabel(item.label).length);
+        allLengths.push(formatLabel(item.label).length);
     });
 
     let longestStringWidth = Math.max.apply(null, allLengths);
@@ -329,7 +329,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     .attr("class", "y axis")
     .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
-        return formatData(d, cols[index2], options)
+        return formatLabel(formatData(d, cols[index2], options))
     }))
     let slice;
     function createBars(){
@@ -340,7 +340,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .enter().append("g")
         .attr("class", "g")
         .attr("transform",function(d) {
-            return "translate(0,"+ y0(getLabel(d.label)) +")";
+            return "translate(0,"+ y0(d.label) +")";
         });
 
         const calculateWidth = (d) => {

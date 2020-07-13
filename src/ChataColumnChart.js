@@ -32,8 +32,6 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
-    console.log('metadata Chart: ');
-    console.log(metadataComponent);
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {
@@ -64,15 +62,18 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     if (barWidth < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
-                xTickValues.push(getLabel(element.label));
+                xTickValues.push(element.label);
             }
         });
     }
-
-    var labelsNames = data.map(function(d) { return getLabel(d.label); });
+    xTickValues.sort();
+    var labelsNames = data.map(function(d) { return d.label; });
     var groupNames = data[0].values.map(function(d) { return d.group; });
     var hasLegend = groupNames.length > 1;
 
+    console.log(xTickValues);
+    console.log(labelsNames);
+    console.log(groupNames);
 
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 70;
@@ -88,7 +89,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }
 
     data.forEach((item, i) => {
-        allLengths.push(getLabel(item.label).length);
+        allLengths.push(formatLabel(item.label).length);
     });
 
     let longestString = 0;
@@ -301,7 +302,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index2], options)
+            return formatLabel(formatChartData(d, cols[index2], options))
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -311,7 +312,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index2], options)
+            return formatLabel(formatChartData(d, cols[index2], options))
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -347,7 +348,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         .enter().append("g")
         .attr("class", "g")
         .attr("transform",function(d) {
-            return "translate(" + x0(getLabel(d.label)) + ",0)";
+            return "translate(" + x0(d.label) + ",0)";
         });
 
         slice.selectAll("rect")

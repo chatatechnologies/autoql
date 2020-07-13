@@ -36,7 +36,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         data, row => row[groupableIndex1]
     );
 
-    groups.map(element => allLengths.push(getLabel(element).length));
+    groups.map(element => allLengths.push(formatLabel(element).length));
     let longestString = Math.max.apply(null, allLengths);
 
     margin.chartLeft = longestString * 10;
@@ -234,7 +234,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
-        return getLabel(formatChartData(d, cols[groupableIndex2], options));
+        return formatLabel(formatChartData(d, cols[groupableIndex2], options));
     })).select(".domain").remove();
 
     svg.append("g")

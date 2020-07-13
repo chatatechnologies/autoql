@@ -60,16 +60,12 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     if (barWidth < 16) {
         groups.forEach((element, index) => {
             if (index % interval === 0) {
-                if(element.length < 15){
-                    xTickValues.push(element);
-                }else{
-                    xTickValues.push(element.slice(0, 15) + '...');
-                }
+                xTickValues.push(element);
             }
         });
     }
 
-    groups.map(element => allLengths.push(getLabel(element).length));
+    groups.map(element => allLengths.push(formatLabel(element).length));
     let longestString = Math.max.apply(null, allLengths);
 
     if(rotateLabels){
@@ -187,11 +183,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
 
     var x = d3.scaleBand()
     .domain(groups.map(function(element){
-        if(element.length < 15){
-            return element;
-        }else{
-            return element.slice(0, 15) + '...';
-        }
+        return element;
     }))
     .range([0, chartWidth])
     .padding([0.2]);
@@ -205,7 +197,9 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[groupableIndex2], options);
+            return formatLabel(
+                formatChartData(d, cols[groupableIndex2], options)
+            );
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -215,7 +209,9 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[groupableIndex2], options);
+            return formatLabel(
+                formatChartData(d, cols[groupableIndex2], options)
+            );
         }))
         .selectAll("text")
         .style("color", '#fff')
@@ -304,11 +300,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         })
         .attr('opacity', '0.7')
         .attr("x", function(d) {
-            if(d.data.group.length < 15){
-                return x(d.data.group);
-            }else{
-                return x(d.data.group.slice(0,15) + '...')
-            }
+            return x(d.data.group);
         })
         .attr("y", function(d) {
             if(isNaN(d[1])){

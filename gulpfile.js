@@ -11,6 +11,7 @@ gulp.task('scripts', function() {
             "src/tippy.min.js",
             "src/muuri.min.js",
             "src/moment.js",
+            "src/Tabulator.min.js",
             "src/d3.v4.js",
             "src/d3-legend.js",
             "src/svgIcons.js",
@@ -45,7 +46,8 @@ gulp.task('scripts', function() {
             "src/Settings.js",
             "src/SettingsItem.js",
             "src/split.min.js",
-            "src/PopoverChartSelector.js",    
+            "src/PopoverChartSelector.js",
+            "src/AntdMessage.js"
         ], { base: './' }))
         .pipe(concat('autoql.js'))
         .pipe(minify())
