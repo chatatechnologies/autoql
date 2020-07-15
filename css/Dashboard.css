@@ -89,6 +89,11 @@
     left: 0px;
 }
 
+.autoql-vanilla-tile-toolbar.actions-toolbar{
+    right: 5px !important;
+    left: unset !important;
+}
+
 .autoql-vanilla-tile-toolbar{
     z-index: 1000;
     background: #fff;

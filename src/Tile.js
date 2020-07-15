@@ -970,6 +970,162 @@ function TileView(dashboard, chataDashboardItem,
             container.innerHTML = "Oops! We didn't understand that query.";
         }
         obj.createVizToolbar(json, _uuid, displayType);
+        obj.createactionToolbar(_uuid, 'csvCopy', displayType);
+    }
+
+    obj.sendReport = function(idRequest, options, menu, toolbar){
+        return ChataUtils.sendReport(idRequest, options, menu, toolbar);
+    }
+
+    obj.getActionOption = (svg, text, onClick, params) => {
+        return ChataUtils.getActionButton(svg, text, onClick, params);
+    }
+
+    obj.getPopover = () => {
+        return ChataUtils.getPopover();
+    }
+
+    obj.createactionToolbar = (idRequest, type, displayType) => {
+        var request = ChataUtils.responses[idRequest];
+        let moreOptionsArray = [];
+        var toolbar = htmlToElement(`
+            <div class="autoql-vanilla-tile-toolbar actions-toolbar">
+            </div>
+        `);
+
+        var reportProblem = ChataUtils.getReportProblemMenu(
+            toolbar,
+            idRequest,
+            type,
+            dashboard.options
+        );
+
+        reportProblem.classList.add('report-problem');
+
+        var reportProblemButton = ChataUtils.getActionButton(
+            REPORT_PROBLEM,
+            'Report a problem',
+            idRequest,
+            ChataUtils.reportProblemHandler,
+            [reportProblem, toolbar]
+        )
+
+        switch (type) {
+            case 'simple':
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                    toolbar.appendChild(
+                        ChataUtils.getActionButton(
+                            DELETE_MESSAGE,
+                            'Delete Message',
+                            idRequest,
+                            obj.deleteMessageHandler,
+                            [reportProblem, toolbar]
+                        )
+                    );
+                    moreOptionsArray.push('copy_sql');
+                }
+                break;
+            case 'csvCopy':
+                toolbar.appendChild(
+                    ChataUtils.getActionButton(
+                        FILTER_TABLE,
+                        'Filter Table',
+                        idRequest,
+                        obj.filterTableHandler,
+                        []
+                    )
+                );
+                var columnVisibility = dashboard.options.
+                autoQLConfig.enableColumnVisibilityManager
+                if(columnVisibility && displayType !== 'pivot_table'){
+                    toolbar.appendChild(
+                        ChataUtils.getActionButton(
+                            COLUMN_EDITOR,
+                            'Show/Hide Columns',
+                            idRequest,
+                            obj.openColumnEditorHandler,
+                            []
+                        )
+                    );
+                }
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                }
+                toolbar.appendChild(
+                    ChataUtils.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('csv');
+                moreOptionsArray.push('copy');
+                moreOptionsArray.push('copy_sql');
+                break;
+            case 'chart-view':
+                if(request['reference_id'] !== '1.1.420'){
+                    toolbar.appendChild(
+                        reportProblemButton
+                    );
+                }
+                toolbar.appendChild(
+                    ChataUtils.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+                moreOptionsArray.push('png');
+                moreOptionsArray.push('copy_sql');
+            break;
+            case 'safety-net':
+                toolbar.appendChild(
+                    ChataUtils.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+            break;
+            default:
+
+        }
+
+        var moreOptions = ChataUtils.getMoreOptionsMenu(
+            moreOptionsArray,
+            idRequest,
+            type
+        );
+
+        var moreOptionsBtn = ChataUtils.getActionButton(
+            VERTICAL_DOTS,
+            'More options',
+            idRequest,
+            obj.moreOptionsHandler,
+            [moreOptions, toolbar]
+        )
+        moreOptionsBtn.classList.add('autoql-vanilla-more-options');
+
+        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'){
+            toolbar.appendChild(
+                moreOptionsBtn
+            );
+            toolbar.appendChild(moreOptions);
+            toolbar.appendChild(reportProblem);
+        }
+        tileWrapper.appendChild(toolbar);
+        return toolbar;
     }
 
     obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {

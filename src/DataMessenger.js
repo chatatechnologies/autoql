@@ -1344,37 +1344,11 @@ function DataMessenger(elem, options){
     }
 
     obj.getActionOption = (svg, text, onClick, params) => {
-        var element = htmlToElement(`
-            <li>
-                <span data-test="chata-icon" class="chata-icon">
-                    ${svg}
-                </span>
-                ${text}
-            </li>
-        `);
-        element.onclick = (evt) => {
-            onClick.apply(null, params);
-        }
-        return element;
+        return ChataUtils.getActionOption(svg, text, onClick, params);
     }
 
     obj.getPopover = () => {
-        var optionsMenu = htmlToElement(`
-            <div class="chata-more-options-menu">
-            </div>
-        `);
-        var menu = htmlToElement(`
-            <div class="chata-popover-wrapper">
-            </div>`
-        );
-        var ul = htmlToElement(`
-            <ul class="chata-menu-list">
-            </ul>
-        `);
-        menu.ul = ul;
-        optionsMenu.appendChild(ul);
-        menu.appendChild(optionsMenu);
-        return menu;
+        return ChataUtils.getPopover();
     }
 
     obj.downloadCsvHandler = (idRequest) => {
@@ -1420,98 +1394,19 @@ function DataMessenger(elem, options){
     }
 
     obj.getMoreOptionsMenu = (options, idRequest, type) => {
-        var menu = obj.getPopover();
-        if(type === 'simple'){
-            menu.classList.add('chata-popover-single-message');
-        }
-
-        for (var i = 0; i < options.length; i++) {
-            let opt = options[i]
-            switch (opt) {
-                case 'csv':
-                    var action = obj.getActionOption(
-                        DOWNLOAD_CSV_ICON, 'Download as CSV',
-                        obj.downloadCsvHandler,
-                        [idRequest]
-                    );
-                    menu.ul.appendChild(action);
-                    break;
-                case 'copy':
-                    var action = obj.getActionOption(
-                        CLIPBOARD_ICON, 'Copy table to clipboard',
-                        obj.copyHandler,
-                        [idRequest]
-                    );
-                    menu.ul.appendChild(action);
-                    break;
-                case 'copy_sql':
-                    var action = obj.getActionOption(
-                        COPY_SQL, 'Copy generated query to clipboard',
-                        obj.copySqlHandler,
-                        [idRequest]
-                    );
-                    menu.ul.appendChild(action);
-                    break;
-                case 'png':
-                    var action = obj.getActionOption(
-                        EXPORT_PNG_ICON, 'Download as PNG',
-                        obj.exportPNGHandler,
-                        [idRequest]
-                    );
-                    menu.ul.appendChild(action);
-                default:
-
-            }
-        }
-
-        return menu;
+        return ChataUtils.getMoreOptionsMenu(options, idRequest, type);
     }
 
     obj.getReportProblemMenu = (toolbar, idRequest, type) => {
-        var menu = obj.getPopover();
-        if(type === 'simple'){
-            menu.classList.add('chata-popover-single-message');
-        }
-        menu.ul.appendChild(
-            obj.getActionOption(
-                '', 'The data is incorrect',
-                obj.sendReport,
-                [idRequest, obj.options, menu, toolbar]
-            )
+        return ChataUtils.getReportProblemMenu(
+            toolbar, idRequest, type, obj.options
         );
-        menu.ul.appendChild(
-            obj.getActionOption(
-                '', 'The data is incomplete',
-                obj.sendReport,
-                [idRequest, obj.options, menu, toolbar]
-            )
-        );
-        menu.ul.appendChild(
-            obj.getActionOption(
-                '', 'Other...',
-                obj.openModalReport,
-                [idRequest, obj.options, menu, toolbar]
-            )
-        );
-
-        return menu;
     }
 
     obj.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
-        var button =  htmlToElement(`
-            <button
-                class="autoql-vanilla-chata-toolbar-btn"
-                data-tippy-content="${tooltip}"
-                data-id="${idRequest}">
-                ${svg}
-            </button>
-        `)
-
-        button.onclick = (evt) => {
-            onClick.apply(null, [evt, idRequest, ...evtParams]);
-        }
-
-        return button;
+        return ChataUtils.getActionButton(
+            svg, tooltip, idRequest, onClick, evtParams
+        );
     }
 
     obj.reportProblemHandler = (
@@ -2276,70 +2171,11 @@ function DataMessenger(elem, options){
     }
 
     obj.sendReport = function(idRequest, options, menu, toolbar){
-        var json = ChataUtils.responses[idRequest];
-        var queryId = json['data']['query_id'];
-        const URL = options.authentication.demo
-          ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-          : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
-
-        return new Promise(resolve => {
-            ChataUtils.putCall(
-                URL, {is_correct: false}, function(r, s){
-                    menu.classList.remove('show');
-                    toolbar.classList.remove('show');
-                    new AntdMessage('Thank you for your feedback.', 3000);
-                    resolve();
-                }, options
-            )
-        })
+        return ChataUtils.sendReport(idRequest, options, menu, toolbar);
     }
 
-    obj.openModalReport = function(idRequest, options, menu, toolbar){
-        var modal = new Modal({
-            destroyOnClose: true,
-            withFooter: true
-        });
-        modal.setTitle('Report a Problem');
-        var container = document.createElement('div');
-        var textArea = document.createElement('textarea');
-        textArea.classList.add('autoql-vanilla-report-problem-text-area');
-        var cancelButton = htmlToElement(
-            `<div class="autoql-vanilla-chata-btn default"
-            style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
-        )
-
-        var spinner = htmlToElement(`
-            <div class="autoql-vanilla-spinner-loader hidden"></div>
-        `)
-
-        var reportButton = htmlToElement(
-            `<div class="autoql-vanilla-chata-btn primary"
-                style="padding: 5px 16px; margin: 2px 5px;">
-            </div>`
-        )
-
-        reportButton.appendChild(spinner);
-        reportButton.appendChild(document.createTextNode('Report'));
-        container.appendChild(document.createTextNode(
-            'Please tell us more about the problem you are experiencing:'
-        ));
-        container.appendChild(textArea);
-        modal.addView(container);
-        modal.addFooterElement(cancelButton);
-        modal.addFooterElement(reportButton);
-
-        cancelButton.onclick = (evt) => {
-            modal.close()
-        }
-
-        reportButton.onclick = async (evt) => {
-            var reportMessage = textArea.value;
-            spinner.classList.remove('hidden');
-            await obj.sendReport(idRequest, options, menu, toolbar);
-            modal.close();
-        }
-
-        modal.show();
+    obj.openModalReport = function(idRequest, options, menu, toolbar) {
+        ChataUtils.openModalReport(idRequest, options, menu, toolbar);
     }
 
     obj.showColumnEditor = function(id){
