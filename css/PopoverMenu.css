@@ -29,9 +29,14 @@
     display: block;
 }
 
+.chata-popover-wrapper.up{
+    top: -129px;
+}
+
 .autoql-vanilla-chat-message-toolbar.show{
     display: block;
 }
+
 
 .chata-more-options-menu, .report-problem-menu {
     background: var(--chata-drawer-background-color);

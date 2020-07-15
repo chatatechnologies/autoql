@@ -124,10 +124,7 @@ function formatDate(date) {
 function copyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
-    // textArea.style.display = 'inline-block';
-    // textArea.style.position = 'absolute';
     document.body.appendChild(textArea);
-    textArea.focus();
     textArea.select();
 
     try {

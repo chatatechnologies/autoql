@@ -1204,6 +1204,9 @@
                                                 userId: userId.value,
                                                 domain: domain.value,
                                             },
+                                            autoQLConfig: {
+                                                debug: true
+                                            },
                                             tiles: json[0]['data'],
                                             onChangeCallback: function() {
                                                 console.log('Dashboard onChangeCallback');

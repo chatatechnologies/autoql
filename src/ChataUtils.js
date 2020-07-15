@@ -60,18 +60,54 @@ ChataUtils.reportProblemHandler = (
     toolbar.classList.toggle('show');
 }
 
-ChataUtils.downloadCsvHandler = () => {
 
+ChataUtils.downloadCsvHandler = (idRequest) => {
+    var json = ChataUtils.responses[idRequest];
+    var csvData = ChataUtils.createCsvData(json);
+    var link = document.createElement("a");
+    link.setAttribute(
+        'href', 'data:text/csv;charset=utf-8,'
+        + encodeURIComponent(csvData)
+    );
+    link.setAttribute('download', 'table.csv');
+    link.click();
 }
-ChataUtils.copyHandler = () => {
 
+ChataUtils.copySqlHandler = (idRequest) => {
+    var json = ChataUtils.responses[idRequest];
+    var sql = json['data']['sql'][0];
+    copyTextToClipboard(sql);
+    new AntdMessage(
+        'Successfully copied generated query to clipboard!', 3000
+    )
 }
-ChataUtils.copySqlHandler = () => {
 
+ChataUtils.copyHandler = (idRequest) => {
+    var json = ChataUtils.responses[idRequest];
+    copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
+    new AntdMessage('Successfully copied table to clipboard!', 3000)
+}
+ChataUtils.exportPNGHandler = (idRequest) => {
+    var component = document.querySelector(
+        `[data-componentid='${idRequest}']`
+    );
+    var svg = component.getElementsByTagName('svg')[0];
+    var svgString = getSVGString(svg);
+
+    svgString2Image(
+        svgString,
+        2*component.clientWidth,
+        2*component.clientHeight
+    );
 }
 
-ChataUtils.exportPNGHandler = () => {
-    
+ChataUtils.filterTableHandler = (evt, idRequest) => {
+    console.log(idRequest);
+    var table = document.querySelector(
+        `[data-componentid="${idRequest}"]`
+    );
+    var tabulator = table.tabulator;
+    tabulator.toggleFilters();
 }
 
 ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
@@ -131,7 +167,6 @@ ChataUtils.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
             ${svg}
         </button>
     `)
-
     button.onclick = (evt) => {
         onClick.apply(null, [evt, idRequest, ...evtParams]);
     }
@@ -739,3 +774,78 @@ ChataUtils.createSuggestions = function(responseContentContainer, data, classBut
         }
     }
 }
+
+ChataUtils.registerWindowClicks = (evt) => {
+    const excludeElementsForChartSelector = [
+        'autoql-vanilla-x-axis-label-border',
+        'autoql-vanilla-y-axis-label-border',
+        'autoql-vanilla-axis-selector-container',
+        'number-selector-header',
+        'chata-chart-selector-checkbox',
+        'autoql-vanilla-chata-col-selector-name',
+        'autoql-vanilla-button-wrapper-selector',
+        'autoql-vanilla-chata-list-item',
+    ]
+
+    const excludeElementsForToolbars = [
+        'autoql-vanilla-chata-toolbar-btn',
+        'autoql-vanilla-more-options',
+        'chata-more-options-menu',
+        'report_problem'
+    ]
+
+    const excludeElementsForSafetynet = [
+        'autoql-vanilla-safetynet-selector',
+        'autoql-vanilla-chata-safetynet-select',
+    ]
+
+    window.addEventListener('click', (evt) => {
+        var closePop = true;
+        var closeChartPopovers = true;
+        var closeToolbars = true;
+        var closeSafetynetSelectors = true;
+
+        for (var i = 0; i < excludeElementsForSafetynet.length; i++) {
+            var c = excludeElementsForSafetynet[i];
+            if(evt.target.classList.contains(c)){
+                closeSafetynetSelectors = false;
+            }
+        }
+
+
+        for (var i = 0; i < excludeElementsForChartSelector.length; i++) {
+            var c = excludeElementsForChartSelector[i]
+            if(evt.target.classList.contains(c)){
+                closeChartPopovers = false;
+                break;
+            }
+        }
+
+
+        for (var i = 0; i < excludeElementsForToolbars.length; i++) {
+            var c = excludeElementsForToolbars[i]
+            if(evt.target.classList.contains(c)){
+                closeToolbars = false;
+                break;
+            }
+        }
+
+
+        if(closeChartPopovers){
+            closeAllChartPopovers();
+        }
+
+        if(closeToolbars){
+            closeAllToolbars();
+        }
+
+        if(closeSafetynetSelectors){
+            closeAllSafetynetSelectors();
+        }
+    })
+}
+
+
+(function(){
+    ChataUtils.registerWindowClicks();
+})()

@@ -852,6 +852,7 @@ function TileView(dashboard, chataDashboardItem,
                     var table = new ChataTable(
                         _uuid, dashboard.options, obj.onRowClick
                     )
+                    div.tabulator = table;
                 }
                 break;
             case 'bar':
@@ -939,6 +940,7 @@ function TileView(dashboard, chataDashboardItem,
                 var table = new ChataPivotTable(
                     _uuid, dashboard.options, obj.onCellClick
                 )
+                div.tabulator = table;
                 break;
             case 'suggestion':
                 var responseContentContainer = document.createElement('div');
@@ -985,6 +987,20 @@ function TileView(dashboard, chataDashboardItem,
         return ChataUtils.getPopover();
     }
 
+    obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
+        reportProblem.classList.toggle('show');
+        reportProblem.classList.add('up');
+        toolbar.classList.toggle('show');
+    }
+
+    obj.moreOptionsHandler = (
+        evt, idRequest, moreOptions, toolbar) => {
+        closeAllToolbars();
+        moreOptions.classList.toggle('show');
+        moreOptions.classList.add('up');
+        toolbar.classList.toggle('show');
+    }
+
     obj.createactionToolbar = (idRequest, type, displayType) => {
         var request = ChataUtils.responses[idRequest];
         let moreOptionsArray = [];
@@ -1000,13 +1016,11 @@ function TileView(dashboard, chataDashboardItem,
             dashboard.options
         );
 
-        reportProblem.classList.add('report-problem');
-
         var reportProblemButton = ChataUtils.getActionButton(
             REPORT_PROBLEM,
             'Report a problem',
             idRequest,
-            ChataUtils.reportProblemHandler,
+            obj.reportProblemHandler,
             [reportProblem, toolbar]
         )
 
@@ -1034,7 +1048,7 @@ function TileView(dashboard, chataDashboardItem,
                         FILTER_TABLE,
                         'Filter Table',
                         idRequest,
-                        obj.filterTableHandler,
+                        ChataUtils.filterTableHandler,
                         []
                     )
                 );
