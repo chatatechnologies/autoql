@@ -322,6 +322,7 @@ function Tile(dashboard, options={}){
         if(dashboard.options.splitView){
             itemContent.appendChild(vizToolbarSplit);
             vizToolbarSplit.onclick = function(evt){
+                vizToolbarSplit.classList.toggle('is-split');
                 tileResponseContainer.innerHTML = '';
                 if(!chataDashboardItem.options.isSplitView){
                     tileResponseContainer.classList.remove('chata-flex');
@@ -554,6 +555,7 @@ function TileView(dashboard, chataDashboardItem,
     drilldownOriginal.classList.add('autoql-vanilla-chata-dashboard-drilldown-original');
     tileWrapper.classList.add('autoql-vanilla-chata-tile-wrapper');
     tileWrapper.setAttribute('id', responseUUID);
+    // tileWrapper.setAttribute('data-componentid', responseUUID);
 
     obj.uuid = responseUUID;
     obj.tileWrapper = tileWrapper;
@@ -793,6 +795,12 @@ function TileView(dashboard, chataDashboardItem,
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
         var json = ChataUtils.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
+        var toolbarType = 'csvCopy';
+        if(!['table', 'pivot_table'].includes(displayType)){
+            tileWrapper.setAttribute('data-componentid', _uuid)
+        }else{
+            tileWrapper.removeAttribute('data-componentid', _uuid)
+        }
         if(append){
             tileResponseContainer.appendChild(view);
         }
@@ -863,6 +871,7 @@ function TileView(dashboard, chataDashboardItem,
                     () => {}, false, 'data-tilechart',
                     true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'column':
                 var chartWrapper = document.createElement('div');
@@ -872,6 +881,7 @@ function TileView(dashboard, chataDashboardItem,
                     () => {}, false, 'data-tilechart',
                     true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'line':
                 var chartWrapper = document.createElement('div');
@@ -881,15 +891,19 @@ function TileView(dashboard, chataDashboardItem,
                     () => {}, false, 'data-tilechart',
                     true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'heatmap':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
 
-                createHeatmap(chartWrapper,
+                createHeatmap(
+                    chartWrapper,
                     json,
                     dashboard.options, false,
-                    'data-tilechart', true);
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
                 break;
             case 'bubble':
                 var chartWrapper = document.createElement('div');
@@ -899,6 +913,7 @@ function TileView(dashboard, chataDashboardItem,
                     false, 'data-tilechart',
                     true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'stacked_bar':
                 var chartWrapper = document.createElement('div');
@@ -908,6 +923,7 @@ function TileView(dashboard, chataDashboardItem,
                     dashboard.options, () => {}, false,
                     'data-tilechart', true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'stacked_column':
                 var chartWrapper = document.createElement('div');
@@ -917,6 +933,7 @@ function TileView(dashboard, chataDashboardItem,
                     dashboard.options, () => {}, false,
                     'data-tilechart', true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'pie':
                 var chartWrapper = document.createElement('div');
@@ -925,6 +942,7 @@ function TileView(dashboard, chataDashboardItem,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
+                toolbarType = 'chart-view';
                 break;
             case 'pivot_table':
                 var div = createTableContainer();
@@ -972,7 +990,7 @@ function TileView(dashboard, chataDashboardItem,
             container.innerHTML = "Oops! We didn't understand that query.";
         }
         obj.createVizToolbar(json, _uuid, displayType);
-        obj.createactionToolbar(_uuid, 'csvCopy', displayType);
+        obj.createactionToolbar(_uuid, toolbarType, displayType);
     }
 
     obj.sendReport = function(idRequest, options, menu, toolbar){
@@ -999,6 +1017,10 @@ function TileView(dashboard, chataDashboardItem,
         moreOptions.classList.toggle('show');
         moreOptions.classList.add('up');
         toolbar.classList.toggle('show');
+    }
+
+    obj.openColumnEditorHandler = (evt, id, options) => {
+        ChataUtils.showColumnEditor(id, options);
     }
 
     obj.createactionToolbar = (idRequest, type, displayType) => {
@@ -1061,7 +1083,7 @@ function TileView(dashboard, chataDashboardItem,
                             'Show/Hide Columns',
                             idRequest,
                             obj.openColumnEditorHandler,
-                            []
+                            [dashboard.options]
                         )
                     );
                 }

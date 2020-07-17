@@ -368,6 +368,176 @@ ChataUtils.sendDrilldownMessage = function(
     }
 }
 
+ChataUtils.showColumnEditor = (id, options) => {
+    var modal = new Modal({
+        destroyOnClose: true,
+        withFooter: true
+    })
+    var json = ChataUtils.responses[id];
+    var columns = json['data']['columns'];
+    var container = document.createElement('div');
+    var headerEditor = document.createElement('div');
+
+    var createCheckbox = (name, checked, colIndex, isLine=false) => {
+        var tick = htmlToElement(`
+            <div class="autoql-vanilla-chata-checkbox-tick">
+            <span class="chata-icon">${TICK}</span>
+            </div>
+        `);
+        var checkboxContainer = document.createElement('div');
+        var checkboxWrapper = document.createElement('div');
+        var checkboxInput = document.createElement('input');
+        checkboxInput.setAttribute('type', 'checkbox');
+        checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
+        if(name){
+            checkboxInput.setAttribute('data-col-name', name);
+        }
+        if(isLine){
+            checkboxInput.setAttribute('data-line', 'true');
+        }
+        checkboxInput.setAttribute('data-col-index', colIndex);
+        checkboxContainer.style.width = '36px';
+        checkboxContainer.style.height = '36px';
+        checkboxWrapper.style.width = '36px';
+        checkboxWrapper.style.height = '36px';
+        checkboxWrapper.style.position = 'relative';
+
+        if(checked){
+            checkboxInput.setAttribute('checked', 'true');
+        }
+
+        checkboxWrapper.appendChild(checkboxInput);
+        checkboxWrapper.appendChild(tick);
+
+        checkboxContainer.appendChild(checkboxWrapper);
+        checkboxContainer.input = checkboxInput;
+        return checkboxContainer;
+    }
+
+
+    container.style.padding = '0px 15px';
+    headerEditor.classList.add('col-visibility-header');
+    headerEditor.appendChild(htmlToElement(`
+        <div>Column Name</div>
+    `))
+    var divVisibility = htmlToElement(`
+        <div>Visibility</div>
+    `);
+    divVisibility.style.display = 'flex';
+    container.appendChild(headerEditor);
+    modal.chataModal.classList.add('chata-modal-column-editor')
+    modal.setTitle('Show/Hide Columns')
+    var headerCheckbox = createCheckbox(null, true, -1);
+    headerEditor.appendChild(divVisibility);
+    headerCheckbox.style.marginLeft = '12px';
+    headerCheckbox.style.marginTop = '1px';
+    divVisibility.appendChild(headerCheckbox);
+    for (var i = 0; i < columns.length; i++) {
+        var lineItem = document.createElement('div');
+        var isVisible = columns[i]['is_visible'] || false;
+        var colStr = columns[i]['display_name'] ||
+            columns[i]['name'];
+        var colName = formatColumnName(colStr);
+
+        lineItem.classList.add('col-visibility-line-item');
+        lineItem.appendChild(htmlToElement(`
+            <div>${colName}</div>
+        `))
+        var checkboxContainer = createCheckbox(
+            columns[i]['name'], isVisible, i, true
+        );
+
+        checkboxContainer.input.onchange = (evt) => {
+            var headerChecked = true;
+            var inputs = container.querySelectorAll('[data-line]');
+
+            for (var x = 0; x < inputs.length; x++) {
+                if(!inputs[x].checked){
+                    headerChecked = false;
+                    break;
+                }
+            }
+            headerCheckbox.input.checked = headerChecked;
+        }
+
+        if(!isVisible){
+            headerCheckbox.input.checked = false;
+        }
+        lineItem.appendChild(checkboxContainer);
+        container.appendChild(lineItem);
+    }
+
+    headerCheckbox.onchange = (evt) => {
+        var inputs = container.querySelectorAll('[data-line]');
+        for (var i = 0; i < inputs.length; i++) {
+            inputs[i].checked = evt.target.checked;
+        }
+    }
+
+    var cancelButton = htmlToElement(
+        `<div
+            class="autoql-vanilla-chata-btn default"
+            style="padding: 5px 16px; margin: 2px 5px;">
+                Cancel
+            </div>`
+    )
+
+    var spinner = htmlToElement(`
+        <div class="autoql-vanilla-spinner-loader hidden"></div>
+    `)
+
+    var saveButton = htmlToElement(
+        `<div
+            class="autoql-vanilla-chata-btn primary"
+            style="padding: 5px 16px; margin: 2px 5px;">
+        </div>`
+    )
+
+    saveButton.appendChild(spinner);
+    saveButton.appendChild(document.createTextNode('Apply'));
+
+
+    cancelButton.onclick = function(event){
+        modal.close();
+    }
+
+    saveButton.onclick = function(event){
+        var opts = options
+        const url = opts.authentication.demo
+        ? `https://backend-staging.chata.ai/api/v1/chata/query`
+        : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
+        this.classList.add('disabled');
+        spinner.classList.remove('hidden');
+        var inputs = container.querySelectorAll('[data-line]');
+        var data = [];
+        var table = document.querySelector(`[data-componentid='${id}']`);
+        const tableCols = table.tabulator.getColumns();
+        for (var i = 0; i < inputs.length; i++) {
+            var colName = inputs[i].dataset.colName;
+            data.push({
+                name: colName,
+                is_visible: inputs[i].checked
+            })
+            json['data']['columns'][i]['is_visible'] = inputs[i].checked;
+            if(inputs[i].checked){
+                tableCols[i].show();
+            }else{
+                tableCols[i].hide();
+            }
+            table.tabulator.redraw();
+        }
+        ChataUtils.putCall(url, {columns: data}, function(response){
+            modal.close();
+            allColHiddenMessage(table);
+        }, opts)
+    }
+
+    modal.addView(container);
+    modal.addFooterElement(cancelButton);
+    modal.addFooterElement(saveButton);
+    modal.show();
+}
+
 ChataUtils.makeBarChartDomain = function(data, hasNegativeValues){
     if(hasNegativeValues){
         return d3.extent(data, function(d) { return d.value; });

@@ -119,6 +119,11 @@
     left: 7px;
 }
 
+.autoql-vanilla-split-view-btn.is-split{
+    bottom: 55px !important;
+    left: 17px !important;
+}
+
 .autoql-vanilla-tile-toolbar .autoql-vanilla-chata-toolbar-btn {
     height: 28px;
     width: 28px;
