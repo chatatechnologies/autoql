@@ -177,7 +177,8 @@ function Dashboard(selector, options={}){
             y: options.tiles[i].y,
             query: options.tiles[i].query,
             title: options.tiles[i].title,
-            displayType: options.tiles[i].displayType
+            displayType: options.tiles[i].displayType,
+            // isSplitView: options.tiles[i].splitView
         }
         items.push(new Tile(obj, opts));
     }
@@ -198,7 +199,7 @@ function Dashboard(selector, options={}){
     }
 
     obj.stopEditing = function(){
-        obj.tiles.forEach(function(tile){
+        obj.tiles.forEach(function(tile, index){
             tile.stopEditing();
         })
         if(obj.options.executeOnStopEditing){
@@ -232,9 +233,12 @@ function Dashboard(selector, options={}){
         }
     }
 
-    obj.run = function(){
-        obj.tiles.forEach(function(tile){
-            tile.runQuery();
+    obj.run = async function(){
+        obj.tiles.forEach(async function(tile, index){
+            await tile.runQuery();
+            if(options.tiles[index].splitView){
+                tile.switchToSplit();
+            }
         });
         obj.onChangeCallback();
     }

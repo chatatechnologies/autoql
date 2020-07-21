@@ -51,8 +51,6 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.options.title = chataDashboardItem.options.query;
-    console.log();
-    // console.log(options.query);
 
     chataDashboardItem.views = [
         new TileView(
@@ -284,10 +282,73 @@ function Tile(dashboard, options={}){
         chataDashboardItem.inputQuery.focus();
     }
 
+    chataDashboardItem.switchToSplit = () => {
+        vizToolbarSplit.classList.toggle('is-split');
+        tileResponseContainer.innerHTML = '';
+        if(!chataDashboardItem.options.isSplitView){
+            tileResponseContainer.classList.remove('chata-flex');
+            chataDashboardItem.options.isSplitView = true;
+            var splitContainer = document.createElement('div');
+            var ids = [];
+            vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
+            chataDashboardItem.views.map(view => {
+                if(view.isSecond){
+                    var viewUUID = view.uuid;
+                    var firstUUID = chataDashboardItem.views[0].uuid;
+                    if(!ChataUtils.responses[viewUUID]){
+                        ChataUtils.responses[viewUUID] = cloneObject(
+                            ChataUtils.responses[firstUUID]
+                        );
+                    }
+                    view.internalDisplayType = 'table';
+                }
+                ids.push(view.tileWrapper);
+                view.tileWrapper.classList.add('overflow');
+                view.refreshView();
+            });
+
+            Split(ids, {
+                direction: 'vertical',
+                sizes: [50, 50],
+                minSize: [0, 0],
+                gutterSize: 7,
+                cursor: 'row-resize',
+                onDragEnd: () => {
+                    chataDashboardItem.views.map(
+                        view => view.refreshView(false)
+                    );
+                }
+            })
+
+            chataDashboardItem.views.map(
+                view => view.refreshView(false)
+            );
+        }else{
+            chataDashboardItem.views[0].tileWrapper.classList.remove(
+                'overflow'
+            );
+            chataDashboardItem.views[0].tileWrapper
+                .style.height = '100%';
+            chataDashboardItem.options.isSplitView = false;
+            chataDashboardItem.views[0].refreshView();
+            tileResponseContainer.classList.add('chata-flex');
+            vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
+        }
+    }
+
     chataDashboardItem.runQuery = async () => {
         tileResponseContainer.innerHTML = '';
         if(!chataDashboardItem.options.isSplitView){
-            chataDashboardItem.views[0].runQuery('dashboards.user');
+            return new Promise(async function(resolve, reject) {
+                await chataDashboardItem.views[0].runQuery('dashboards.user');
+                if(dashboard.options.splitView){
+                    itemContent.appendChild(vizToolbarSplit);
+                    vizToolbarSplit.onclick = function(evt){
+                        chataDashboardItem.switchToSplit();
+                    }
+                }
+                resolve();
+            });
         }else{
             if(!chataDashboardItem.views[0].isSafetynet){
                 tileResponseContainer.classList.add('chata-flex');
@@ -322,59 +383,10 @@ function Tile(dashboard, options={}){
         if(dashboard.options.splitView){
             itemContent.appendChild(vizToolbarSplit);
             vizToolbarSplit.onclick = function(evt){
-                vizToolbarSplit.classList.toggle('is-split');
-                tileResponseContainer.innerHTML = '';
-                if(!chataDashboardItem.options.isSplitView){
-                    tileResponseContainer.classList.remove('chata-flex');
-                    chataDashboardItem.options.isSplitView = true;
-                    var splitContainer = document.createElement('div');
-                    var ids = [];
-                    vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
-                    chataDashboardItem.views.map(view => {
-                        if(view.isSecond){
-                            var viewUUID = view.uuid;
-                            var firstUUID = chataDashboardItem.views[0].uuid;
-                            if(!ChataUtils.responses[viewUUID]){
-                                ChataUtils.responses[viewUUID] = cloneObject(
-                                    ChataUtils.responses[firstUUID]
-                                );
-                            }
-                            view.internalDisplayType = 'table';
-                        }
-                        ids.push(view.tileWrapper);
-                        view.tileWrapper.classList.add('overflow');
-                        view.refreshView();
-                    });
-
-                    Split(ids, {
-                        direction: 'vertical',
-                        sizes: [50, 50],
-                        minSize: [0, 0],
-                        gutterSize: 7,
-                        cursor: 'row-resize',
-                        onDragEnd: () => {
-                            chataDashboardItem.views.map(
-                                view => view.refreshView(false)
-                            );
-                        }
-                    })
-
-                    chataDashboardItem.views.map(
-                        view => view.refreshView(false)
-                    );
-                }else{
-                    chataDashboardItem.views[0].tileWrapper.classList.remove(
-                        'overflow'
-                    );
-                    chataDashboardItem.views[0].tileWrapper
-                        .style.height = '100%';
-                    chataDashboardItem.options.isSplitView = false;
-                    chataDashboardItem.views[0].refreshView();
-                    tileResponseContainer.classList.add('chata-flex');
-                    vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
-                }
+                chataDashboardItem.switchToSplit();
             }
         }
+
     }
 
     chataDashboardItem.getSafetynetValues = function(tileWrapper){
@@ -606,6 +618,18 @@ function TileView(dashboard, chataDashboardItem,
                 ).join(' ');
             }else{
                 if(obj.isSecond){
+                    // if(!obj.inputToolbar){
+                    //     var inputToolbar = new InputToolbar(
+                    //         chataDashboardItem.inputQuery.value, tileWrapper
+                    //     );
+                    //     obj.inputToolbar = inputToolbar;
+                    //     tileWrapper.appendChild(inputToolbar.tileToolbar);
+                    //     obj.inputToolbar.input.onkeypress = (evt) => {
+                    //         if(evt.keyCode == 13 && evt.target.value){
+                    //             chataDashboardItem.runQuery('dashboards.user');
+                    //         }
+                    //     }
+                    // }
                     val = obj.inputToolbar.input.value;
                     obj.internalQuery = val;
                 }else{
@@ -686,7 +710,6 @@ function TileView(dashboard, chataDashboardItem,
         if(groupableCount > 0){
             for(var[key, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
-                console.log(value);
             }
             if(obj.isSecond){
                 query = obj.internalQuery;
