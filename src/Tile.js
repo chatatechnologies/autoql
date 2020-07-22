@@ -104,6 +104,7 @@ function Tile(dashboard, options={}){
     tileResponseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper');
     tileResponseContainer.classList.add('autoql-vanilla-dashboard-tile-response-container');
     tileResponseContainer.classList.add('chata-flex');
+    // tileResponseContainer.classList.add('chata-hidden-scrollbox');
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
     resizeHandler.classList.add('autoql-vanilla-resize-handler');
     inputQuery.classList.add('autoql-vanilla-dashboard-tile-input');
@@ -355,9 +356,12 @@ function Tile(dashboard, options={}){
                 loadingContainer = chataDashboardItem.showLoadingDots();
                 var elements = []
                 for (var i = 0; i < chataDashboardItem.views.length; i++) {
-                    await chataDashboardItem.views[i].runQuery('dashboards.user', false, false);
+                    await chataDashboardItem.views[i].runQuery(
+                        'dashboards.user', false, false
+                    );
                 }
-                tileResponseContainer.removeChild(loadingContainer);
+                // tileResponseContainer.removeChild(loadingContainer);
+                tileResponseContainer.innerHTML = '';
                 tileResponseContainer.classList.remove('chata-flex');
                 chataDashboardItem.views.map(view => {
                     view.refreshView();
@@ -618,18 +622,6 @@ function TileView(dashboard, chataDashboardItem,
                 ).join(' ');
             }else{
                 if(obj.isSecond){
-                    // if(!obj.inputToolbar){
-                    //     var inputToolbar = new InputToolbar(
-                    //         chataDashboardItem.inputQuery.value, tileWrapper
-                    //     );
-                    //     obj.inputToolbar = inputToolbar;
-                    //     tileWrapper.appendChild(inputToolbar.tileToolbar);
-                    //     obj.inputToolbar.input.onkeypress = (evt) => {
-                    //         if(evt.keyCode == 13 && evt.target.value){
-                    //             chataDashboardItem.runQuery('dashboards.user');
-                    //         }
-                    //     }
-                    // }
                     val = obj.inputToolbar.input.value;
                     obj.internalQuery = val;
                 }else{
@@ -819,11 +811,11 @@ function TileView(dashboard, chataDashboardItem,
         var json = ChataUtils.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
         var toolbarType = 'csvCopy';
-        if(!['table', 'pivot_table'].includes(displayType)){
-            tileWrapper.setAttribute('data-componentid', _uuid)
-        }else{
-            tileWrapper.removeAttribute('data-componentid', _uuid)
-        }
+        // if(!['table', 'pivot_table'].includes(displayType)){
+        //     tileWrapper.setAttribute('data-componentid', _uuid)
+        // }else{
+        //     tileWrapper.removeAttribute('data-componentid', _uuid)
+        // }
         if(append){
             tileResponseContainer.appendChild(view);
         }

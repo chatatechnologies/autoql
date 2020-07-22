@@ -218,8 +218,7 @@ function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}){
     return table;
 }
 
-function ChataTable(
-    idRequest, options, onRowClick){
+function ChataTable(idRequest, options, onRowClick, onRenderedTable=()=>{}){
 
     var json = ChataUtils.responses[idRequest];
     var tableData = getTableData(json, options);
@@ -229,7 +228,7 @@ function ChataTable(
     );
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
-        virtualDomBuffer: 300,
+        virtualDomBuffer: 50,
         movableColumns: true,
         downloadConfig: {
             columnGroups: false,

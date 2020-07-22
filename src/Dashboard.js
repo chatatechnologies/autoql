@@ -233,18 +233,20 @@ function Dashboard(selector, options={}){
         }
     }
 
-    obj.run = async function(){
+    obj.run = async function(isOnMount=false){
         obj.tiles.forEach(async function(tile, index){
             await tile.runQuery();
-            if(options.tiles[index].splitView){
-                tile.switchToSplit();
+            if(isOnMount){
+                if(options.tiles[index].splitView){
+                    tile.switchToSplit();
+                }
             }
         });
         obj.onChangeCallback();
     }
 
     if(obj.options.executeOnMount){
-        obj.run();
+        obj.run(true);
     }
 
     if(obj.options.isEditing){
