@@ -6,7 +6,7 @@ function PopoverChartSelector(position) {
         popover.style.visibility = 'visible';
         popover.style.opacity = 1;
         popover.style.left = position.left + 'px'
-        if((position.top + popover.clientHeight + 150) > window.screen.height){
+        if((position.top + popover.clientHeight + 185) > window.screen.height){
             popover.style.top = ((position.top + window.pageYOffset) - popover.clientHeight + 100) + 'px';
         }else{
             popover.style.top = (position.top + window.pageYOffset) + 'px';
@@ -56,7 +56,7 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         );
 
         for (var i = 0; i < inputs.length; i++) {
-            inputs[i].removeAttribute('checked')
+            inputs[i].checked = false;
         }
     }
 
@@ -118,7 +118,9 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
 
         checkboxInput.onchange = (evt) => {
             var type = evt.target.dataset.colType;
+            console.log(type);
             if(type !== obj.groupType){
+                console.log('deselectCheckBox');
                 deselectCheckBox();
                 obj.groupType = type;
             }

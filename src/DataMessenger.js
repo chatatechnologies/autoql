@@ -2074,7 +2074,7 @@ function DataMessenger(elem, options){
     }
 
     obj.showColumnEditor = function(id){
-        ChataUtils.showColumnEditor(id);
+        ChataUtils.showColumnEditor(id, obj.options);
     }
 
     obj.sendResponse = (text) => {

@@ -177,7 +177,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     svg.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.bottom)
+    .attr('y', height + margin.bottom - 7)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col3);
