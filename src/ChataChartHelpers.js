@@ -254,5 +254,6 @@ const getIndexesByType = (cols) => {
 }
 
 const getMetadataElement = (component, isDataMessenger) => {
-    return component.parentElement.parentElement
+    if(isDataMessenger)return component.parentElement.parentElement
+    else return component.parentElement
 }

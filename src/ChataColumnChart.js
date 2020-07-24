@@ -71,10 +71,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     var groupNames = data[0].values.map(function(d) { return d.group; });
     var hasLegend = groupNames.length > 1;
 
-    console.log(xTickValues);
-    console.log(labelsNames);
-    console.log(groupNames);
-
+    
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 70;
         margin.marginLabel = 10;

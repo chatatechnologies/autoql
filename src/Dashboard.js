@@ -125,7 +125,6 @@ function Dashboard(selector, options={}){
                 .replace(/[()]/g, '')
                 .replace(/px/g, '').split(' ');
                 var sum = 0;
-                console.log(item);
                 for (var i = 0; i < values.length; i++) {
                     sum += parseFloat(values[i]) * parseInt(item._id);
                 }
@@ -169,7 +168,6 @@ function Dashboard(selector, options={}){
     obj.tiles = items;
 
     for (var i = 0; i < options.tiles.length; i++) {
-        console.log(options.tiles[i].query);
         var opts = {
             w: options.tiles[i].w,
             h: options.tiles[i].h,
@@ -318,7 +316,6 @@ function Dashboard(selector, options={}){
             case 'tile_added':
                 const addedTile = obj.lastEvent.value.tile
                 const lastInsertIndex = obj.lastEvent.value.index
-                console.log(addedTile);
                 obj.grid.remove(addedTile, {layout:true})
                 addedTile.parentElement.removeChild(addedTile);
                 obj.lastEvent.type = 'remove'
@@ -349,7 +346,6 @@ function Dashboard(selector, options={}){
     })
 
     grid.on('remove', function (items, indices) {
-        console.log(items[0], indices[0]);
         obj.lastEvent.type = 'remove';
         obj.lastEvent.value = {
             item: items[0]._element,

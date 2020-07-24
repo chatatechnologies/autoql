@@ -231,7 +231,6 @@ function DataMessenger(elem, options){
     }
 
     obj.setObjectProp = (key, _obj) => {
-        console.log(typeof _obj);
         for (var [keyValue, value] of Object.entries(_obj)) {
             obj.options[key][keyValue] = value;
         }
@@ -269,7 +268,6 @@ function DataMessenger(elem, options){
 
     obj.openDrawer = () => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
-        console.log(obj.options.shiftScreen);
         obj.options.isVisible = true;
         obj.input.focus();
         if(obj.options.enableExploreQueriesTab){
@@ -567,7 +565,6 @@ function DataMessenger(elem, options){
         }
 
         tabNotifications.onclick = function(event){
-            console.log('TEST');
             tabNotifications.classList.add('active');
             tabQueryTips.classList.remove('active');
             tabChataUtils.classList.remove('active');
@@ -1011,9 +1008,7 @@ function DataMessenger(elem, options){
 
     obj.createIntroMessageTopics = () => {
         const topics = obj.options.queryQuickStartTopics;
-        console.log(obj.options.queryQuickStartTopics);
         if(topics){
-            console.log(topics);
             const topicsWidget = new Cascader(topics, obj);
             obj.drawerContent.appendChild(topicsWidget._elem);
             obj.topicsWidget = topicsWidget;
@@ -1143,7 +1138,6 @@ function DataMessenger(elem, options){
         if(evt.keyCode == 13 && obj.input.value){
             clearTimeout(obj.autoCompleteTimer);
             obj.autoCompleteList.style.display = 'none';
-            console.log('SEND MESSAGE');
             obj.sendMessage(obj.input.value, 'data_messenger.user');
         }
     }
@@ -1198,8 +1192,6 @@ function DataMessenger(elem, options){
             obj.speechToText.stop();
             voiceRecordButton.style.backgroundColor =
             obj.options.themeConfig.accentColor;
-            console.log(obj.options.themeConfig.accentColor);
-            console.log(obj.finalTranscript);
             obj.input.value = obj.finalTranscript;
             obj.isRecordVoiceActive = false;
         }
@@ -1598,7 +1590,6 @@ function DataMessenger(elem, options){
         obj.drawerContent.appendChild(responseLoadingContainer);
         ChataUtils.ajaxCallPost(URL, function(response, status){
             obj.drawerContent.removeChild(responseLoadingContainer);
-            console.log(response);
             if(!response['data']['rows']){
                 obj.putClientResponse(ERROR_MESSAGE);
             }
@@ -1628,7 +1619,6 @@ function DataMessenger(elem, options){
     }
 
     obj.sendDrilldownClientSide = (json, indexValue, filterBy) => {
-        console.log('FILTER BY ' + filterBy);
         // console.log('FILTER BY ' + filterBy);
         var newJson = cloneObject(json);
         var newData = [];

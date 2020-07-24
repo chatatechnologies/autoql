@@ -628,6 +628,7 @@ function TileView(dashboard, chataDashboardItem,
                     val = chataDashboardItem.inputQuery.value;
                 }
             }
+            obj.clearMetadata();
             if(val != ''){
                 let loadingContainer;
                 if(showLoadingDots){
@@ -1179,6 +1180,10 @@ function TileView(dashboard, chataDashboardItem,
         return toolbar;
     }
 
+    obj.clearMetadata = () => {
+        tileWrapper.metadata = undefined;
+    }
+
     obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {
         var displayTypes = chataDashboardItem.getDisplayTypes(json);
         [].forEach.call(tileWrapper.querySelectorAll(
@@ -1200,6 +1205,7 @@ function TileView(dashboard, chataDashboardItem,
                     chataDashboardItem.runQuery('dashboards.user');
                 }
             }
+
         }
 
         if(displayTypes.length > 1){
