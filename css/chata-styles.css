@@ -28,6 +28,7 @@
     justify-content: center;
     align-items: center;
     vertical-align:middle;
+    color: #28a8e0;
     background: var(--chata-drawer-background-color);
     /* left: -40px;
     border-radius: 4px 0 0 4px; */

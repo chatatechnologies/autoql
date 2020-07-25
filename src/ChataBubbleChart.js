@@ -158,8 +158,11 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     }));
 
     var radiusScale = d3.scaleLinear()
-    .range([0, 2 * Math.min(x.bandwidth(), y.bandwidth())])
-    .domain([0, d3.max(data, function(d) { return d.value; })]);
+    .range([0, Math.min(x.bandwidth(), y.bandwidth())])
+    .domain([
+        d3.min(data, function(d) { return d.value; }),
+        d3.max(data, function(d) { return d.value; })
+    ]);
 
     svg.selectAll()
     .data(data, function(d) {

@@ -1322,23 +1322,36 @@ function DataMessenger(elem, options){
         obj.showColumnEditor(idRequest);
     }
 
-    obj.deleteMessageHandler = (evt, idRequest) => {
-        var table = obj.drawerContent.querySelector(
-            `[data-componentid="${idRequest}"]`
+    obj.getLastMessageBubble = () => {
+        var bubbles = obj.drawerContent.querySelectorAll(
+            '.autoql-vanilla-chat-single-message-container'
         );
-        if(!table){
-            table = obj.drawerContent.querySelector(
-                `[data-containerid="${idRequest}"]`
-            );
-            obj.drawerContent.removeChild(
-                table
-            )
-        }else{
-            obj.drawerContent.removeChild(
-                table.parentElement.parentElement
-                .parentElement.parentElement.parentElement
-            );
+
+        return bubbles[bubbles.length-1];
+    }
+
+    obj.deleteMessageHandler = (evt, idRequest) => {
+        var bubble = obj.drawerContent.querySelector(
+            `[data-bubble-id="${idRequest}"]`
+        );
+
+        obj.drawerContent.removeChild(bubble);
+        if(bubble.relatedMessage){
+            obj.drawerContent.removeChild(bubble.relatedMessage)
         }
+        // if(!table){
+        //     table = obj.drawerContent.querySelector(
+        //         `[data-containerid="${idRequest}"]`
+        //     );
+        //     obj.drawerContent.removeChild(
+        //         table
+        //     )
+        // }else{
+        //     obj.drawerContent.removeChild(
+        //         table.parentElement.parentElement
+        //         .parentElement.parentElement.parentElement
+        //     );
+        // }
     }
 
     obj.getActionToolbar = (idRequest, type, displayType) => {
@@ -1992,15 +2005,21 @@ function DataMessenger(elem, options){
         var tableContainer = document.createElement('div');
         var scrollbox = document.createElement('div');
         var tableWrapper = document.createElement('div');
+        var lastBubble = obj.getLastMessageBubble();
+        var idRequest = uuidv4();
+
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+
+        containerMessage.setAttribute('data-bubble-id', idRequest);
+
+        containerMessage.relatedMessage = lastBubble;
 
         containerMessage.classList.add('response');
         containerMessage.classList.add('autoql-vanilla-chat-message-response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         // messageBubble.classList.add('full-width');
-        var idRequest = uuidv4();
 
         ChataUtils.responses[idRequest] = jsonResponse;
         var supportedDisplayTypes = obj.getDisplayTypesButtons(
@@ -2124,10 +2143,13 @@ function DataMessenger(elem, options){
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
+        var lastBubble = obj.getLastMessageBubble();
+
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
-        containerMessage.setAttribute('data-containerid', uuid);
+        containerMessage.setAttribute('data-bubble-id', uuid);
+        containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         responseContentContainer.classList.add(
@@ -2169,13 +2191,15 @@ function DataMessenger(elem, options){
     obj.putSimpleResponse = (jsonResponse, text) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
+        var lastBubble = obj.getLastMessageBubble();
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
         containerMessage.classList.add('response');
+        containerMessage.relatedMessage = lastBubble;
         var idRequest = uuidv4();
         ChataUtils.responses[idRequest] = jsonResponse;
-        containerMessage.setAttribute('data-containerid', idRequest);
+        containerMessage.setAttribute('data-bubble-id', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response')
         toolbarButtons = obj.getActionToolbar(
@@ -2252,12 +2276,14 @@ function DataMessenger(elem, options){
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var uuid = uuidv4();
+        var lastBubble = obj.getLastMessageBubble();
         ChataUtils.responses[uuid] = jsonResponse
         var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
-        containerMessage.setAttribute('data-containerid', uuid);
+        containerMessage.setAttribute('data-bubble-id', uuid);
+        containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');
