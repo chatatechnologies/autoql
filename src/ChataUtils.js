@@ -22,6 +22,10 @@ ChataUtils.sendReport = (idRequest, options, menu, toolbar) => {
     })
 }
 
+ChataUtils.getRecommendationPath = (options, text) => {
+    return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
+}
+
 
 ChataUtils.getReportProblemMenu = (toolbar, idRequest, type, options) => {
     var menu = ChataUtils.getPopover();
@@ -936,12 +940,9 @@ ChataUtils.createSuggestions = function(responseContentContainer, data, classBut
         var div = document.createElement('div');
         var button = document.createElement('button');
         button.classList.add(classButton);
-        button.textContent = data[i][0];
+        button.textContent = data[i];
         div.appendChild(button);
         responseContentContainer.appendChild(div);
-        if(i == data.length-1){
-            button.classList.add('none-of-these-btn');
-        }
     }
 }
 

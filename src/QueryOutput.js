@@ -23,6 +23,7 @@ function QueryOutput(options={}){
             accentColor: undefined,
             fontFamily: 'sans-serif',
         },
+        enableDynamicCharting: true
     }
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
@@ -53,24 +54,32 @@ function QueryOutput(options={}){
             var component = e.target.parentElement.parentElement.parentElement.parentElement;
             console.log(component);
             if(component.tagName == 'svg'){
+                component = component.parentElement.parentElement;
+            }
+            if(component.tagName == 'DIV' && !component.dataset.componentid){
                 component = component.parentElement;
             }
             if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = ChataUtils.responses[component.dataset.componentid];
                 var indexData = e.target.dataset.chartrenderer;
+                var colValue = e.target.dataset.colvalue1;
+                var indexValue = e.target.dataset.filterindex;
                 var topBar = component.chataBarContainer.getElementsByClassName(
                     'autoql-vanilla-chat-bar-text'
                 )[0]
-                var loading = putLoadingContainer(topBar);
-                let opts = mergeOptions([
-                    component.chataBarContainer.options,
-                    component.options
-                ]);
 
-                ChataUtils.sendDrilldownMessage(
-                    json, indexData,
-                    opts,
-                    'ChatBar', component, loading);
+                var groupableCount = getNumberOfGroupables(
+                    json['data']['columns']
+                );
+                if(groupableCount == 1 || groupableCount == 2){
+                    component.chataBarContainer.sendDrilldownMessage(
+                        json, indexData
+                    );
+                }else{
+                    component.chataBarContainer.sendDrilldownClientSide(
+                        json, indexValue, colValue
+                    );
+                }
             }
         }
 
@@ -83,16 +92,8 @@ function QueryOutput(options={}){
             var topBar = component.chataBarContainer.getElementsByClassName(
                 'autoql-vanilla-chat-bar-text'
             )[0]
-            var loading = putLoadingContainer(topBar);
-            let opts = mergeOptions([
-                component.chataBarContainer.options,
-                component.options
-            ]);
-            ChataUtils.sendDrilldownMessage(
-                json,
-                0,
-                opts,
-                'ChatBar', component, loading
+            component.chataBarContainer.sendDrilldownMessage(
+                json, indexData
             );
         }
 

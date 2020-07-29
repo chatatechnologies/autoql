@@ -111,6 +111,38 @@ function QueryInput(options){
         }
     }
 
+    chataBarContainer.sendDrilldownClientSide = (json, indexValue, filterBy) => {
+        var newJson = cloneObject(json);
+        var newData = [];
+        var oldData = newJson['data']['rows'];
+
+        for (var i = 0; i < oldData.length; i++) {
+            if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
+        }
+        var parent = chataBarContainer.getElementsByClassName(
+            'autoql-vanilla-chat-bar-text'
+        )[0];
+        if(chataBarContainer.options.showLoadingDots){
+            var responseLoadingContainer = putLoadingContainer(parent);
+        }
+
+        if(newData.length > 0){
+            newJson.data.rows = newData;
+
+            setTimeout(() => {
+                chataBarContainer.refreshView(newJson);
+                if(chataBarContainer.options.showLoadingDots){
+                    parent.removeChild(responseLoadingContainer);
+                }
+            }, 400)
+        }else{
+            setTimeout(() => {
+                responseRenderer.innerHTML = 'No data found.';
+                obj.drawerContent.removeChild(loading);
+            }, 400)
+        }
+    }
+
     chataBarContainer.sendDrilldownMessage = (json, indexData) => {
         let opts = mergeOptions([
             chataBarContainer.options,
@@ -223,7 +255,7 @@ function QueryInput(options){
             }else{
                 ChataUtils.ajaxCall(value, function(jsonResponse){
                     // AQUI1
-                    chataBarContainer.refreshView(jsonResponse)
+                    chataBarContainer.refreshView(jsonResponse, value)
                     parent.removeChild(responseLoadingContainer);
                     chataBarContainer.chatbar.removeAttribute("disabled");
                 }, chataBarContainer.options, source);
@@ -232,12 +264,35 @@ function QueryInput(options){
     }
 
     chataBarContainer.refreshView = (
-        jsonResponse) => {
+        jsonResponse, text='') => {
         var responseRenderer = chataBarContainer.responseRenderer;
         ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
         responseRenderer.innerHTML = '';
+
+        if(jsonResponse['reference_id'] === '1.1.430'){
+            responseRenderer.innerHTML = jsonResponse['message'];
+            const path = ChataUtils.getRecommendationPath(
+                chataBarContainer.options,
+                text.split(' ').join(',')
+            );
+            ChataUtils.safetynetCall(path, function(response, s){
+                var wrapper = document.createElement('div');
+                var rows = response['data']['items'];
+                console.log(rows);
+                ChataUtils.createSuggestions(
+                    wrapper,
+                    rows,
+                    'autoql-vanilla-chata-suggestion-btn-renderer'
+                );
+                responseRenderer.appendChild(wrapper)
+            }, chataBarContainer.options);
+            chataBarContainer.options.onResponseCallback();
+            return;
+        }
+
         let displayType;
         var sup = getSupportedDisplayTypes(jsonResponse);
+        console.log(sup);
         if(sup.includes(responseRenderer.options.displayType)){
             displayType = responseRenderer.options.displayType;
         }else{
@@ -356,8 +411,8 @@ function QueryInput(options){
                     createLineChart(
                         chartWrapper,
                         jsonResponse, responseRenderer.options,
+                        () => {},
                         false, 'data-chartrenderer',
-                        responseRenderer.options.renderTooltips
                     );
                 break;
                 case 'bar':
@@ -368,8 +423,8 @@ function QueryInput(options){
                     createBarChart(
                         chartWrapper,
                         jsonResponse, responseRenderer.options,
+                        () => {},
                         false, 'data-chartrenderer',
-                        responseRenderer.options.renderTooltips
                     );
                 break;
                 case 'column':
@@ -380,8 +435,8 @@ function QueryInput(options){
                     createColumnChart(
                         chartWrapper,
                         jsonResponse, responseRenderer.options,
+                        () => {},
                         false, 'data-chartrenderer',
-                        responseRenderer.options.renderTooltips
                     );
                 break;
                 case 'heatmap':
@@ -393,7 +448,6 @@ function QueryInput(options){
                         chartWrapper,
                         jsonResponse, responseRenderer.options,
                         false, 'data-chartrenderer',
-                        responseRenderer.options.renderTooltips
                     );
                 break;
                 case 'bubble':
@@ -405,7 +459,6 @@ function QueryInput(options){
                         chartWrapper,
                         jsonResponse, responseRenderer.options,
                         false, 'data-chartrenderer',
-                        responseRenderer.options.renderTooltips
                     );
                 break;
                 case 'help':
@@ -420,9 +473,9 @@ function QueryInput(options){
                     responseRenderer.appendChild(chartWrapper);
                     createStackedBarChart(
                         chartWrapper, jsonResponse,
-                        responseRenderer.options, false,
+                        responseRenderer.options,
+                        () => {}, false,
                         'data-stackedchartindex',
-                        responseRenderer.options.renderTooltips
                     );
                 break;
                 case 'stacked_column':
@@ -432,9 +485,21 @@ function QueryInput(options){
                     responseRenderer.appendChild(chartWrapper);
                     createStackedColumnChart(
                         chartWrapper, jsonResponse,
-                        responseRenderer.options, false,
+                        responseRenderer.options, () => {},
+                        false,
                         'data-stackedchartindex',
-                        responseRenderer.options.renderTooltips
+                    );
+                break;
+                case 'stacked_line':
+                    var chartWrapper = document.createElement(
+                        'div'
+                    );
+                    responseRenderer.appendChild(chartWrapper);
+                    createAreaChart(
+                        chartWrapper, jsonResponse,
+                        responseRenderer.options, () => {},
+                        false,
+                        'data-stackedchartindex',
                     );
                 break;
                 case 'pie':
