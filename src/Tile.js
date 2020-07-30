@@ -166,18 +166,34 @@ function Tile(dashboard, options={}){
     }
 
     function resizeItem(e) {
+        var resizeWidth = false;
+        var resizeHeight = false;
+        var maxWidth = chataDashboardItem.parentElement.offsetWidth - 22;
+
         var newWidth = (startWidth + e.clientX - startX);
         var newHeight = (startHeight + e.clientY - startY);
-        if(newWidth < 320){
-            newWidth = 320;
-        }else if(newWidth >= chataDashboardItem.parentElement.offsetWidth - 22){
-            newWidth = chataDashboardItem.parentElement.offsetWidth - 22;
+
+
+        if(newWidth % 50 == 0)resizeWidth = true;
+        if(newHeight % 50 == 0)resizeHeight = true;
+
+        if(resizeWidth){
+            if(newWidth < 320){
+                newWidth = 320;
+            }else if(newWidth >= maxWidth){
+                newWidth = maxWidth;
+            }
+            chataDashboardItem.style.width = newWidth + 'px';
         }
-        if(newHeight < 140){
-            newHeight = 140;
+
+        if(resizeHeight){
+            if(newHeight < 140){
+                newHeight = 140;
+            }
+            chataDashboardItem.style.height = newHeight + 'px';
         }
-        chataDashboardItem.style.width = newWidth + 'px';
-        chataDashboardItem.style.height = newHeight + 'px';
+
+
         dashboard.grid.refreshItems(chataDashboardItem).layout();
 
     }
@@ -812,11 +828,6 @@ function TileView(dashboard, chataDashboardItem,
         var json = ChataUtils.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
         var toolbarType = 'csvCopy';
-        // if(!['table', 'pivot_table'].includes(displayType)){
-        //     tileWrapper.setAttribute('data-componentid', _uuid)
-        // }else{
-        //     tileWrapper.removeAttribute('data-componentid', _uuid)
-        // }
         if(append){
             tileResponseContainer.appendChild(view);
         }
