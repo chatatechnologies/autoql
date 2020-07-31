@@ -42,6 +42,10 @@
     border-radius: 50%;
 }
 
+.autoql-vanilla-icon-blue{
+    color: #28a8e0;
+}
+
 .autoql-vanilla-drawer-handle.right-btn{
     top: 55px;
     right: 10px;

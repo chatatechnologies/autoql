@@ -8,8 +8,8 @@ function Tile(dashboard, options={}){
     var tileResponseContainer = document.createElement('div');
     var resizeHandler = document.createElement('span');
     var deleteButton = document.createElement('span');
-    var inputQuery = document.createElement('input');
-    var inputTitle = document.createElement('input');
+    // var inputQuery = document.createElement('input');
+    // var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
 
@@ -107,16 +107,16 @@ function Tile(dashboard, options={}){
     // tileResponseContainer.classList.add('chata-hidden-scrollbox');
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
     resizeHandler.classList.add('autoql-vanilla-resize-handler');
-    inputQuery.classList.add('autoql-vanilla-dashboard-tile-input');
-    inputTitle.classList.add('autoql-vanilla-dashboard-tile-input');
+    // inputQuery.classList.add('autoql-vanilla-dashboard-tile-input');
+    // inputTitle.classList.add('autoql-vanilla-dashboard-tile-input');
     tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button');
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button');
     placeHolderDrag.classList.add('autoql-vanilla-item-content');
-    inputQuery.classList.add('query');
-    inputTitle.classList.add('title');
+    // inputQuery.classList.add('query');
+    // inputTitle.classList.add('title');
 
-    inputQuery.setAttribute('placeholder', 'Query');
-    inputTitle.setAttribute('placeholder', 'Title (optional)');
+    // inputQuery.setAttribute('placeholder', 'Query');
+    // inputTitle.setAttribute('placeholder', 'Title (optional)');
 
     tilePlayBuytton.innerHTML = TILE_RUN_QUERY;
     deleteButton.innerHTML = DASHBOARD_DELETE_ICON;
@@ -124,8 +124,41 @@ function Tile(dashboard, options={}){
     tileResponseContainer.innerHTML = placeHolderText;
 
 
-    tileInputContainer.appendChild(inputQuery);
-    tileInputContainer.appendChild(inputTitle);
+    var inputContainer1 = new InputContainer([
+        'chata-rule-input',
+        'dashboard-tile-left-input-container'
+    ])
+
+    var inputContainer2 = new InputContainer([
+        'chata-rule-input',
+        'dashboard-tile-right-input-container'
+    ])
+
+    var queryInput = new ChataInput('input', {
+        placeholder: 'Type a query in your own words',
+        type: "single"
+    }, QUERY);
+
+    var queryInput2 = new ChataInput('input', {
+        placeholder: 'Add descriptive title (optional)',
+        type: "single"
+    }, NOTEBOOK);
+
+    inputContainer1.appendChild(queryInput.input);
+    inputContainer1.appendChild(queryInput.spanIcon);
+    inputContainer2.appendChild(queryInput2.input);
+    inputContainer2.appendChild(queryInput2.spanIcon);
+    queryInput.spanIcon.classList.add('autoql-vanilla-icon-blue');
+    queryInput2.spanIcon.classList.add('autoql-vanilla-icon-blue');
+    queryInput.input.classList.add('autoql-vanilla-icon-blue');
+    queryInput2.input.classList.add('autoql-vanilla-icon-blue');
+    queryInput.input.classList.add('query');
+    queryInput2.input.classList.add('title');
+    // tileInputContainer.appendChild(inputQuery);
+    // tileInputContainer.appendChild(inputTitle);
+    tileInputContainer.appendChild(inputContainer1);
+    tileInputContainer.appendChild(inputContainer2);
+
     tileInputContainer.appendChild(tilePlayBuytton);
     tileInputContainer.appendChild(deleteButton);
 
@@ -218,8 +251,8 @@ function Tile(dashboard, options={}){
     }
 
     chataDashboardItem.itemContent = itemContent;
-    chataDashboardItem.inputQuery = inputQuery;
-    chataDashboardItem.inputTitle = inputTitle;
+    chataDashboardItem.inputQuery = queryInput.input;
+    chataDashboardItem.inputTitle = queryInput2.input;
     chataDashboardItem.tileTitle = tileTitle;
     chataDashboardItem.resizeHandler = resizeHandler;
     chataDashboardItem.tileInputContainer = tileInputContainer;
