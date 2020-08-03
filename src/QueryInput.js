@@ -1,5 +1,4 @@
 function QueryInput(options){
-
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
@@ -197,6 +196,10 @@ function QueryInput(options){
     chataBarContainer.onRowClick = (e, row, json) => {
         var index = 0;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
+        var groupables = getGroupables(json);
+        responseRenderer.options.onDataClick(
+            groupables, json['data']['query_id']
+        );
         if(groupableCount > 0){
             for(var[key, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
@@ -248,7 +251,7 @@ function QueryInput(options){
                     parent.removeChild(responseLoadingContainer);
                 }
                 var suggestionArray = createSuggestionArray(jsonResponse);
-                var node = createSafetynetContent(suggestionArray, responseRenderer);
+                var node = createSafetynetContent(suggestionArray, chataBarContainer);
                 responseRenderer.appendChild(node);
                 chataBarContainer.options.onResponseCallback();
                 ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;

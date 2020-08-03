@@ -3,10 +3,10 @@ function QueryOutput(options={}){
     responseRenderer.options = {
         supportsSuggestions: true,
         onSuggestionClick: function() {},
+        onDataClick: (groupByObject, queryID) => {},
         tableBorderColor: undefined,
         tableHoverColor: undefined,
         displayType: undefined,
-        isFilteringTable: false,
         renderTooltips: true,
         dataFormatting:{
             currencyCode: 'USD',
@@ -61,6 +61,8 @@ function QueryOutput(options={}){
             }
             if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = ChataUtils.responses[component.dataset.componentid];
+                var groupables = getGroupables(json);
+                var queryId = json['data']['query_id'];
                 var indexData = e.target.dataset.chartrenderer;
                 var colValue = e.target.dataset.colvalue1;
                 var indexValue = e.target.dataset.filterindex;
@@ -80,12 +82,16 @@ function QueryOutput(options={}){
                         json, indexValue, colValue
                     );
                 }
+
             }
+            responseRenderer.options.onDataClick(groupables, queryId);
         }
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
             var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
             var json = cloneObject(ChataUtils.responses[component.dataset.componentid]);
+            var groupables = getGroupables(json);
+            var queryId = json['data']['query_id'];
             json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
             json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
             json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
@@ -95,11 +101,11 @@ function QueryOutput(options={}){
             component.chataBarContainer.sendDrilldownMessage(
                 json, indexData
             );
+            responseRenderer.options.onDataClick(groupables, queryId);
         }
 
         if(e.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
             var parent = e.target.parentElement.parentElement.parentElement;
-            parent.options.onSuggestionClick();
             parent.chataBarContainer.sendMessageToResponseRenderer(
                 e.target.textContent
             );

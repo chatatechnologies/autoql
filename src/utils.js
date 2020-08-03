@@ -161,6 +161,7 @@ function getSafetynetValues(node){
 }
 
 function runQuery(event, objContext){
+
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement.parentElement;
     }else if(event.target.tagName == 'path'){
@@ -169,6 +170,7 @@ function runQuery(event, objContext){
         var node = event.target.parentElement;
     }
     var words = getSafetynetValues(node);
+
     switch (objContext.constructor) {
         case DataMessenger:
             objContext.sendMessage(
@@ -176,11 +178,10 @@ function runQuery(event, objContext){
                 'data_messenger.validation'
             );
             break;
-        case QueryOutput:
-            node.parentElement.chataBarContainer.sendMessageToResponseRenderer(
+        default:
+            objContext.sendMessageToResponseRenderer(
                 words.join(' ')
             );
-        default:
         ;
     }
 }

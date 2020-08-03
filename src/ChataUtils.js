@@ -261,11 +261,11 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
 }
 
 ChataUtils.getQueryInput = function(options={}){
-    return QueryInput(options);
+    return new QueryInput(options);
 }
 
 ChataUtils.getQueryOutput = function(options){
-    return QueryOutput(options);
+    return new QueryOutput(options);
 }
 
 ChataUtils.sendDrilldownMessage = function(
