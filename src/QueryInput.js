@@ -196,14 +196,15 @@ function QueryInput(options){
     chataBarContainer.onRowClick = (e, row, json) => {
         var index = 0;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
-        var groupables = getGroupables(json);
-        responseRenderer.options.onDataClick(
-            groupables, json['data']['query_id']
-        );
+
         if(groupableCount > 0){
             for(var[key, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
             }
+            var clickedData = getClickedData(json, ...json['data']['rows'][0])
+            responseRenderer.options.onDataClick(
+                clickedData, json['data']['query_id']
+            );
             chataBarContainer.sendDrilldownMessage(json, 0);
         }
     }
@@ -217,6 +218,10 @@ function QueryInput(options){
             json['data']['rows'][0][0] = entries[1];
             json['data']['rows'][0][1] = selectedColumn.definition.field;
             json['data']['rows'][0][2] = cell.getValue();
+            var clickedData = getClickedData(json, ...json['data']['rows'][0])
+            responseRenderer.options.onDataClick(
+                clickedData, json['data']['query_id']
+            );
             chataBarContainer.sendDrilldownMessage(json, 0);
         }
     }

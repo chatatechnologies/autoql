@@ -180,7 +180,6 @@
             </div>
 
             <div class="my-container">
-                <div class=""><span class="flow-text">Data source</span></div>
                 <div class="prop prop-column" style="display: none">
                     <h6 class="">Demo data</h6>
                     <div class="switch">
@@ -204,7 +203,7 @@
                     </div>
 
                     <div class="prop prop-column">
-                        <h6>User ID (email)</h6>
+                        <h6>User Email</h6>
                         <input type="text" name="userId" value="" placeholder="" class="validate">
                         <!-- <input type="text" name="userId" value="vidhya@chata.ai" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your user ID" data-success=""></span>
@@ -254,26 +253,83 @@
                 </div>
 
                 <div class="">
-                    <h4 style="text-align: center;">Drawer Props</h4>
+                    <h4 style="text-align: center;">Customize Widgets</h4>
                     <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload"><i class="small material-icons left">replay</i> <span>Reload Drawer</span></button>
-                    <button type="button" name="button" class="waves-effect waves-light btn blue" onclick="ChatDrawer.openDrawer()"><i class="small material-icons left">format_indent_decrease</i>Open Drawer</button>
+                    <button type="button" name="button" class="waves-effect waves-light btn blue" id="open-drawer"><i class="small material-icons left">format_indent_decrease</i>Open Data Messenger</button>
                 </div>
+                <h5 style="text-align: center;">AutoQL API Configuration Options</h5>
 
                 <div class="prop prop-column">
-                    <h6 class="">Show Drawer Handle</h6>
+                    <h6 class="">Enable Autocomplete</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" name="showHandle" checked>
+                            <input type="checkbox" checked name="enableAutocomplete">
                             <span class="lever"></span>
                         </label>
                     </div>
                 </div>
 
                 <div class="prop prop-column">
-                    <h6 class="">Show Mask</h6>
+                    <h6 class="">Enable Query Validation</h6>
                     <div class="switch">
                         <label>
-                            <input type="checkbox" name="showMask" checked>
+                            <input type="checkbox" checked name="enableQueryValidation">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Drilldowns</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="enableDrilldowns" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Column Visibility Editor</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableColumnVisibilityManager">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Notifications</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableNotifications">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Debug Mode (Show copy to SQL button in message toolbar)</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="debug">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <h5 style="text-align: center;">UI Configuration Options</h5>
+
+
+                <div class="prop prop-column">
+                    <h6 class="">Show Data Messenger Button</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="showHandle" checked>
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -288,6 +344,17 @@
                         </label>
                     </div>
                 </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Darken Background Behind Data Messenger</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="showMask" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
 
                 <div class="">
                     <h6 style="text-align: center;">Theme</h6>
@@ -304,7 +371,7 @@
                 </div>
 
                 <div class="">
-                    <h6 style="text-align: center;">Drawer Placement</h6>
+                    <h6 style="text-align: center;">Data Messenger Placement</h6>
                     <div>
                         <label>
                             <input name="placement" type="radio" value="top" />
@@ -321,6 +388,20 @@
                         <label>
                             <input name="placement" value="right" type="radio" checked />
                             <span>Right</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="">
+                    <h6 style="text-align: center;">Default Tab</h6>
+                    <div>
+                        <label>
+                            <input name="" type="radio" value="top" checked/>
+                            <span>data-messenger</span>
+                        </label>
+                        <label>
+                            <input name="" value="bottom" type="radio" />
+                            <span>explore-queries</span>
                         </label>
                     </div>
                 </div>
@@ -385,11 +466,11 @@
                 </div>
 
                 <div class="prop prop-column">
-                    <h6>Customer Name</h6>
+                    <h6>User Display Name</h6>
                     <span class="info-text">
                         (Must click 'Reload Drawer' to apply this)
                     </span>
-                    <input type="text" name="userDisplayName" value="Oscar" placeholder="Customer Name" class="reload-prop">
+                    <input type="text" name="userDisplayName" value="Oscar" placeholder="User Display Name" class="reload-prop">
                 </div>
 
 
@@ -399,6 +480,14 @@
                         (Must click 'Reload Drawer' to apply this)
                     </span>
                     <input type="text" name="introMessage" value="" placeholder="Intro message" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Query Input Placeholder</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="inputPlaceholder" value="" placeholder="Intro message" class="reload-prop">
                 </div>
 
                 <div class="prop prop-column">
@@ -458,6 +547,16 @@
                 </div>
 
                 <div class="prop prop-column">
+                    <h6 class="">Enable Dynamic Charting</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="enableDynamicCharting" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
                     <h6>Dashboard Title Color</h6>
                     <input type="text" name="titleColor" value="#28a8e0" placeholder="Font Family" class="reload-dashboard-prop">
                 </div>
@@ -497,50 +596,10 @@
                 </div>
 
                 <div class="prop prop-column">
-                    <h6 class="">Enable Autocomplete</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" checked name="enableAutocomplete">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="prop prop-column">
-                    <h6 class="">Enable Safety Net</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" checked name="enableQueryValidation">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="prop prop-column">
-                    <h6 class="">Enable Drilldowns</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" name="enableDrilldowns" checked>
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="prop prop-column">
-                    <h6 class="">Enable Query Inspiration Tab</h6>
+                    <h6 class="">Enable Explore Queries Tab</h6>
                     <div class="switch">
                         <label>
                             <input type="checkbox" checked name="enableExploreQueriesTab">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="prop prop-column">
-                    <h6 class="">Enable Column Visibility Editor</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" checked name="enableColumnVisibilityManager">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -551,26 +610,6 @@
                     <div class="switch">
                         <label>
                             <input type="checkbox" checked name="enableVoiceRecord">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="prop prop-column">
-                    <h6 class="">Debug Mode (Show copy to SQL button in message toolbar)</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" checked name="debug">
-                            <span class="lever"></span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="prop prop-column">
-                    <h6 class="">Test Mode (Provides extra logging on the server side)</h6>
-                    <div class="switch">
-                        <label>
-                            <input type="checkbox" checked name="test">
                             <span class="lever"></span>
                         </label>
                     </div>
@@ -886,7 +925,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTk2NDEwMjMxLCAiZXhwIjogMTU5NjQzMTgzMSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiXX0=.pTOEwWhKYgLQ2Lg8aSbfk5weMWgaXC1mUeoaYxSiwsSqbPnNf1hafHSp1iQr-mIOyzMxP4KmCEBffknD4JleSkd2rMLO2DyeKX4zi27uLwR34i2xvqDaMe7ALl6YGNvOaQDfAmcgiRGvoJtcSMLKvspmICkZpZco_fcdxOuuOc-27e5xj9hiodiKPiK0nCIkWwIb8IuVdjyp8-s6A72soH5GyPuJQsfPUsGmFuuD2j7ECSx06c0z_tbo-SNzuQzBmR0xVN7V4tXwGrR8DuAJHbs8QcPrZdbQl-_J8NAiKOxy09_uV-cCOOJ-zEFJpPwmHeK_Ivmd1VNljtBin1GuVg==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTk2NTA4MzY3LCAiZXhwIjogMTU5NjUyOTk2NywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiXX0=.hvQ4t-bJzFyaqX1hLeVIQ2TxC2QK9eACW3pNMNLaxBl2sz_4uFfG58y9h6q6AJSvyk56SKvhVM90Jrr57ZMr9fCaaje32EVy5Sz8k-tJjNG36QGrlec__aSuT9kiFyzJ-32vqKxDK9FmhVhc3kb6bEDL8tN5ajaiFc_zqn1d2dxi1uxRpnIQ2nBV-WwuVsNEva_DA9f7Etf8Z_kJeXUgfaNW0qQnlt3-H_N3aopZt6e3liw7DvFovEKzZhbLwgWVHpsnZLR3xDqsz8MmeY2PgIXpXsMUKLDDhbWq7uoxmTVeBTAnFCW2lWh8K4M1OiESzHq-sVakO5zqSLvSQzsZEw==`;
     const domain = 'https://spira-staging.chata.io';
     // const domain = 'https://purefacts-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
@@ -975,7 +1014,7 @@
         autoCompletePlacement: 'bottom',
     });
     var responseRenderer = ChataUtils.getQueryOutput({
-        displayType: 'stacked_bar',
+        displayType: 'table',
         onDataClick: (groupByObject, queryId) => {
             console.log(groupByObject);
             console.log(queryId);
@@ -1049,17 +1088,24 @@
         var enableColumnVisibilityManager = document.querySelector('[name="enableColumnVisibilityManager"]')
         var titleColor = document.querySelector('[name="titleColor"]')
         var comparisonDisplay = document.querySelector('[name="comparisonDisplay"]')
-        var test = document.querySelector('[name="test"]')
+        var enableDynamicCharting = document.querySelector('[name="enableDynamicCharting"]')
 
-        test.onchange = (evt) => {
-            datamessenger.setOption('autoQLConfig', {
-                test: event.target.checked
-            });
-        }
+        // var test = document.querySelector('[name="test"]')
+
+        // test.onchange = (evt) => {
+        //     datamessenger.setOption('autoQLConfig', {
+        //         test: event.target.checked
+        //     });
+        // }
 
         comparisonDisplay.onchange = (evt) => {
             datamessenger.setOption('comparisonDisplay', evt.target.checked);
         }
+
+        enableDynamicCharting.onchange = (evt) => {
+            datamessenger.setOption('enableDynamicCharting', evt.target.checked);
+        }
+
 
         dashboardTab.style.display = 'none';
 
@@ -1352,6 +1398,7 @@
         }
 
         var reload = document.getElementById('reload');
+        var openDrawer = document.getElementById('open-drawer');
         var themeKeys = ['fontFamily'];
         var formattingKeys = [
             'currencyCode',
@@ -1371,6 +1418,11 @@
             'enableColumnVisibilityManager',
             'enableDrilldowns',
         ]
+
+        openDrawer.onclick = (evt) => {
+            datamessenger.openDrawer();
+        }
+
         reload.onclick = function(event){
             var propsEls = document.getElementsByClassName('reload-prop');
             for (var i = 0; i < propsEls.length; i++) {

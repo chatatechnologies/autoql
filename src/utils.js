@@ -262,14 +262,34 @@ function getNotGroupableField(json){
 
 
 function getGroupables(json){
+    var clone = cloneObject(json);
     var cont = 0;
     var groups = []
-    for (var i = 0; i < json['data']['columns'].length; i++) {
-        if(json['data']['columns'][i]['groupable']){
-            groups.push(json['data']['columns'][i]);
+    for (var i = 0; i < clone['data']['columns'].length; i++) {
+        if(clone['data']['columns'][i]['groupable']){
+            clone['data']['columns'][i].index = i;
+            groups.push(clone['data']['columns'][i]);
         }
     }
     return groups;
+}
+
+function getClickedData(json, ...params){
+    var groupables = getGroupables(json);
+    var data = {
+        supportedByAPI: true,
+        data: []
+    }
+
+    for (var i = 0; i < groupables.length; i++) {
+        var indexData = groupables[i].index;
+        data.data.push({
+            name: groupables[i].name,
+            value: params[indexData]
+        })
+    }
+
+    return data;
 }
 
 function getGroupableCount(json){

@@ -52,7 +52,6 @@ function QueryOutput(options={}){
     responseRenderer.addEventListener('click', function(e){
         if(e.target.hasAttribute('data-chartrenderer')){
             var component = e.target.parentElement.parentElement.parentElement.parentElement;
-            console.log(component);
             if(component.tagName == 'svg'){
                 component = component.parentElement.parentElement;
             }
@@ -61,11 +60,13 @@ function QueryOutput(options={}){
             }
             if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = ChataUtils.responses[component.dataset.componentid];
-                var groupables = getGroupables(json);
                 var queryId = json['data']['query_id'];
                 var indexData = e.target.dataset.chartrenderer;
                 var colValue = e.target.dataset.colvalue1;
                 var indexValue = e.target.dataset.filterindex;
+                var clickedData = getClickedData(
+                    json, ...json['data']['rows'][indexData]
+                );
                 var topBar = component.chataBarContainer.getElementsByClassName(
                     'autoql-vanilla-chat-bar-text'
                 )[0]
@@ -84,7 +85,7 @@ function QueryOutput(options={}){
                 }
 
             }
-            responseRenderer.options.onDataClick(groupables, queryId);
+            responseRenderer.options.onDataClick(clickedData, queryId);
         }
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
@@ -92,16 +93,23 @@ function QueryOutput(options={}){
             var json = cloneObject(ChataUtils.responses[component.dataset.componentid]);
             var groupables = getGroupables(json);
             var queryId = json['data']['query_id'];
-            json['data']['rows'][0][0] = e.target.dataset.unformatvalue1;
-            json['data']['rows'][0][1] = e.target.dataset.unformatvalue2;
-            json['data']['rows'][0][2] = e.target.dataset.unformatvalue3;
+
+            var val1 = e.target.dataset.unformatvalue1;
+            var val2 = e.target.dataset.unformatvalue2;
+            var val3 = e.target.dataset.unformatvalue3;
+
+            var clickedData = getClickedData(json, val1, val2, val3);
+            json['data']['rows'][0][0] = val1;
+            json['data']['rows'][0][1] = val2;
+            json['data']['rows'][0][2] = val3;
+
             var topBar = component.chataBarContainer.getElementsByClassName(
                 'autoql-vanilla-chat-bar-text'
             )[0]
             component.chataBarContainer.sendDrilldownMessage(
                 json, indexData
             );
-            responseRenderer.options.onDataClick(groupables, queryId);
+            responseRenderer.options.onDataClick(clickedData, queryId);
         }
 
         if(e.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
