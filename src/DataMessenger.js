@@ -270,10 +270,11 @@ function DataMessenger(elem, options){
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
         obj.options.isVisible = true;
         obj.input.focus();
+        obj.initialScroll = window.scrollY;
+        var body = document.body;
         if(obj.options.enableExploreQueriesTab){
             obj.queryTabs.style.visibility = 'visible';
         }
-        var body = document.body;
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
             obj.wrapper.style.height = '100%';
@@ -286,6 +287,7 @@ function DataMessenger(elem, options){
             obj.rootElem.style.right = 0;
             obj.rootElem.style.top = 0;
             if(obj.options.shiftScreen){
+                window.scrollTo(0, 0);
                 body.style.position = 'relative';
                 body.style.overflow = 'hidden';
                 body.style.transform = 'translateX(-'
@@ -303,6 +305,7 @@ function DataMessenger(elem, options){
             obj.rootElem.style.top = 0;
             obj.drawerButton.style.display = 'none';
             if(obj.options.shiftScreen){
+                window.scrollTo(0, 0);
                 body.style.position = 'relative';
                 body.style.overflow = 'hidden';
                 body.style.transform = 'translateX('
@@ -318,14 +321,32 @@ function DataMessenger(elem, options){
             obj.rootElem.style.bottom = 0;
             obj.rootElem.style.left = 0;
             obj.drawerButton.style.display = 'none';
-            obj.rootElem.style.transform = 'translateY(0)';
+            if(obj.options.shiftScreen){
+                window.scrollTo(0, document.body.scrollHeight);
+                body.style.position = 'relative';
+                body.style.overflow = 'hidden';
+                body.style.transform = 'translateY(-'
+                    + obj.options.height +'px)';
+                    obj.rootElem.style.transform = 'translateY('
+                        + obj.options.height +'px)';
+            }else{
+                obj.rootElem.style.transform = 'translateY(0)';
+            }
         }else if(obj.options.placement == 'top'){
             obj.rootElem.style.width = '100%';
             obj.rootElem.style.height = obj.options.height + 'px';
             obj.rootElem.style.top = 0;
             obj.rootElem.style.left = 0;
             obj.drawerButton.style.display = 'none';
-            obj.rootElem.style.transform = 'translateY(0)';
+            if(obj.options.shiftScreen){
+                window.scrollTo(0, 0);
+                body.style.position = 'relative';
+                body.style.overflow = 'hidden';
+                body.style.transform = 'translateY('
+                    + obj.options.height +'px)';
+            }else{
+                obj.rootElem.style.transform = 'translateY(0)';
+            }
         }
         obj.options.onVisibleChange(obj);
     }
@@ -350,6 +371,7 @@ function DataMessenger(elem, options){
             }
             if(obj.options.shiftScreen){
                 body.style.transform = 'translateX(0px)';
+                window.scrollTo(0, obj.initialScroll);
             }else{
                 obj.rootElem.style.transform = 'translateX('
                 + obj.options.width +'px)';
@@ -362,6 +384,7 @@ function DataMessenger(elem, options){
             }
             if(obj.options.shiftScreen){
                 body.style.transform = 'translateX(0px)';
+                window.scrollTo(0, obj.initialScroll);
             }else{
                 obj.rootElem.style.transform = 'translateX(-'
                 + obj.options.width +'px)';
@@ -374,6 +397,11 @@ function DataMessenger(elem, options){
             if(obj.options.showHandle){
                 obj.drawerButton.style.display = 'flex';
             }
+
+            if(obj.options.shiftScreen){
+                window.scrollTo(0, obj.initialScroll);
+            }
+
         }else if(obj.options.placement == 'top'){
             obj.rootElem.style.top = '0';
             obj.rootElem.style.transform = 'translateY(-'
@@ -382,7 +410,12 @@ function DataMessenger(elem, options){
             if(obj.options.showHandle){
                 obj.drawerButton.style.display = 'flex';
             }
+
+            if(obj.options.shiftScreen){
+                window.scrollTo(0, obj.initialScroll);
+            }
         }
+        
         if(obj.options.clearOnClose){
             obj.clearMessages();
         }
@@ -411,6 +444,7 @@ function DataMessenger(elem, options){
     obj.onLoadHandler = (evt) => {
         if (document.readyState === "interactive" ||
             document.readyState === "complete" ) {
+            obj.initialScroll = window.scrollY;
             obj.createDrawerButton();
             obj.createWrapper();
             obj.applyStyles();
