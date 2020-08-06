@@ -225,6 +225,19 @@ function DataMessenger(elem, options){
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
                 obj.input.setAttribute('placeholder', value);
+            case 'userDisplayName':
+                obj.options.userDisplayName = value;
+                console.log('USER DISPLAY NAME');
+                obj.options.introMessage = "Hi " +
+                obj.options.userDisplayName +
+                `! Let’s dive into your data.
+                What can I help you discover today?`;
+                obj.introMessageBubble.textContent = obj.options.introMessage;
+            break;
+            case 'introMessage':
+                obj.options.introMessage = value
+                obj.introMessageBubble.textContent = value;
+            break;
             default:
                 obj.options[option] = value;
         }
@@ -415,7 +428,7 @@ function DataMessenger(elem, options){
                 window.scrollTo(0, obj.initialScroll);
             }
         }
-        
+
         if(obj.options.clearOnClose){
             obj.clearMessages();
         }
@@ -1038,6 +1051,7 @@ function DataMessenger(elem, options){
         obj.rootElem.appendChild(scrollBox);
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
+        obj.introMessageBubble = chatMessageBubble;
     }
 
     obj.createIntroMessageTopics = () => {

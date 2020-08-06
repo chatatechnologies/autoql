@@ -13,16 +13,12 @@ function formatData(val, col, allOptions={}){
             val = parseFloat(val);
             if(isNaN(val))val = 0;
             const sigDigs = String(parseInt(val.toFixed(2))).length
-            if(val != 0){
-                value = new Intl.NumberFormat(options.languageCode, {
-                        style: 'currency',
-                        currency: options.currencyCode,
-                        minimumFractionDigits: options.currencyDecimals
-                    }
-                ).format(val);
-            }else{
-                value = val.toFixed(2);
-            }
+            value = new Intl.NumberFormat(options.languageCode, {
+                style: 'currency',
+                currency: options.currencyCode,
+                // currency: options.currencyCode,
+                minimumFractionDigits: options.currencyDecimals
+            }).format(val);
         break;
         case 'DATE':
             var colName = col.name;

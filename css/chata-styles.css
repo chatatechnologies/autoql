@@ -878,7 +878,8 @@ tr td.chata-hidden{
     font-size: 16px;
     line-height: 28px;
     vertical-align: top;
-    color: var(--chata-drawer-text-color-primary);
+    /* color: var(--chata-drawer-text-color-primary); */
+    color: rgb(38, 167, 233);
     cursor: pointer;
     outline: none !important;
 }

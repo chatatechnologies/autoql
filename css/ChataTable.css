@@ -81,6 +81,9 @@
     background: var(--chata-drawer-background-color);
 }
 
+.tabulator .tabulator-header{
+    background: var(--chata-drawer-background-color);
+}
 
 .autoql-vanilla-filter-tag {
     color: #2ecc40;
