@@ -69,6 +69,7 @@ function DataMessenger(elem, options){
     obj.speechToText = getSpeech();
     obj.finalTranscript = '';
     obj.isRecordVoiceActive = false
+    obj.zIndexBubble = 1000000;
 
     var rootElem = document.querySelector(elem);
 
@@ -2007,6 +2008,7 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
         containerMessage.classList.add('request');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('single');
@@ -2059,6 +2061,9 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
 
         containerMessage.setAttribute('data-bubble-id', idRequest);
 
@@ -2140,6 +2145,8 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.textContent = text;
@@ -2196,6 +2203,8 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
         containerMessage.setAttribute('data-bubble-id', uuid);
         containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
@@ -2221,6 +2230,8 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
         containerMessage.classList.add('response');
         var idRequest = uuidv4();
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
@@ -2243,6 +2254,8 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
         containerMessage.classList.add('response');
         containerMessage.relatedMessage = lastBubble;
         var idRequest = uuidv4();
@@ -2330,6 +2343,8 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
         containerMessage.setAttribute('data-bubble-id', uuid);
         containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
@@ -2364,6 +2379,8 @@ function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.style.zIndex = --obj.zIndexBubble;
+
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');

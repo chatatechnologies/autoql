@@ -318,6 +318,8 @@ body{
     max-height: 85%;
     -webkit-animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
     animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+    /* z-index: 1000; */
+    position: relative;
 }
 
 .autoql-vanilla-chata-animation-message{
@@ -878,8 +880,7 @@ tr td.chata-hidden{
     font-size: 16px;
     line-height: 28px;
     vertical-align: top;
-    /* color: var(--chata-drawer-text-color-primary); */
-    color: rgb(38, 167, 233);
+    color: var(--chata-drawer-accent-color);
     cursor: pointer;
     outline: none !important;
 }
