@@ -1,6 +1,7 @@
 function QueryInput(options){
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
+    chataBarContainer.classList.add('query-input');
     chataBarContainer.classList.add('chat-drawer-chat-bar');
     chataBarContainer.classList.add('autosuggest-top');
     chataBarContainer.options = {

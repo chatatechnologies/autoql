@@ -363,6 +363,9 @@ body{
 
 .autoql-vanilla-chata-bar-container {
     position: relative;
+}
+
+.autoql-vanilla-chata-bar-container.query-input{
     display: flex;
 }
 
