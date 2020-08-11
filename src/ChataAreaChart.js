@@ -1,5 +1,5 @@
 function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
-    var margin = {top: 5, right: 10, bottom: 50, left: 80},
+    var margin = {top: 15, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;

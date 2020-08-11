@@ -28,8 +28,10 @@
     justify-content: center;
     align-items: center;
     vertical-align:middle;
-    color: #28a8e0;
-    background: var(--chata-drawer-background-color);
+    background-color: #26a7df;
+    color: #fff;
+    /* color: #28a8e0; */
+    /* background: var(--chata-drawer-background-color); */
     /* left: -40px;
     border-radius: 4px 0 0 4px; */
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
@@ -305,10 +307,6 @@ body{
 
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {
     max-width: 85%;
-}
-
-.autoql-vanilla-chat-message-response{
-    min-height: 380px;
 }
 
 .autoql-vanilla-chat-single-message-container.response {

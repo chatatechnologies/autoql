@@ -1,5 +1,5 @@
 function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 50, left: 90, marginLabel: 40, bottomChart: 0},
+    var margin = {top: 15, right: 10, bottom: 50, left: 90, marginLabel: 40, bottomChart: 0},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -330,9 +330,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         return formatChartData(d, cols[index1], options)}
     )
     .tickSize(-chartWidth)
-    );
-    svg.append("g").call(yAxis).select(".domain").remove();
-
+    ).select(".domain").remove();
+    
     let lines;
     let points;
     var line = d3.line()

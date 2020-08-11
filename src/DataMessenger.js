@@ -1545,15 +1545,20 @@ function DataMessenger(elem, options){
         return toolbar;
     }
 
-    obj.refreshToolbarButtons = (oldComponent, ignore) => {
-        closeAllChartPopovers();
-        var messageBubble = oldComponent.parentElement
-            .parentElement.parentElement;
+    obj.getParentFromComponent = (component) => {
+        var messageBubble = component.parentElement.parentElement.parentElement;
         if(messageBubble.classList.contains(
             'autoql-vanilla-chata-response-content-container'
         )){
             messageBubble = messageBubble.parentElement;
         }
+
+        return messageBubble;
+    }
+
+    obj.refreshToolbarButtons = (oldComponent, ignore) => {
+        closeAllChartPopovers();
+        var messageBubble = obj.getParentFromComponent(oldComponent);
 
         if(['table', 'pivot_table'].includes(ignore)){
             messageBubble.classList.remove('full-width');
@@ -1790,6 +1795,7 @@ function DataMessenger(elem, options){
             obj.onRowClick,
         );
         component.tabulator = table;
+        table.parentContainer = obj.getParentFromComponent(component);
         allColHiddenMessage(component);
         d3.select(window).on('resize.'+idRequest, null);
     }
@@ -2119,7 +2125,7 @@ function DataMessenger(elem, options){
         );
 
         tableWrapper.tabulator = table;
-
+        table.parentContainer = obj.getParentFromComponent(tableWrapper);
         setTimeout(function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);

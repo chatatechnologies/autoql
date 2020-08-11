@@ -989,6 +989,9 @@ function getStringWidth(string){
 
 function allColHiddenMessage(table){
     const requestId = table.dataset.componentid;
+    var csvHandlerOption = table.tabulator.parentContainer.querySelector(
+        '[data-name-option="csv-handler"]'
+    );
     const json = ChataUtils.responses[requestId];
     var cols = json['data']['columns'];
     var isAllHidden = true;
@@ -1022,9 +1025,11 @@ function allColHiddenMessage(table){
     if(isAllHidden){
         message.style.display = 'flex';
         table.style.display = 'none';
+        csvHandlerOption.style.display = 'none';
     }else{
         message.style.display = 'none';
         table.style.display = 'block';
+        csvHandlerOption.style.display = 'block';
         table.tabulator.redraw();
     }
 }

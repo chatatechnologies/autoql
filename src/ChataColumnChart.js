@@ -1,6 +1,6 @@
 function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 90, marginLabel: 50, bottomChart: 50},
+    var margin = {top: 15, right: 10, bottom: 60, left: 90, marginLabel: 50, bottomChart: 50},
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
@@ -71,7 +71,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     var groupNames = data[0].values.map(function(d) { return d.group; });
     var hasLegend = groupNames.length > 1;
 
-    
+
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 70;
         margin.marginLabel = 10;

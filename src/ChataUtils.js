@@ -129,6 +129,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
                 );
+                action.setAttribute('data-name-option', 'csv-handler');
                 menu.ul.appendChild(action);
                 break;
             case 'copy':
@@ -514,7 +515,8 @@ ChataUtils.showColumnEditor = (id, options) => {
         spinner.classList.remove('hidden');
         var inputs = container.querySelectorAll('[data-line]');
         var data = [];
-        var table = document.querySelector(`[data-componentid='${id}']`);
+        var table = document.querySelector(`[data-componentid='${id}']`);    
+
         const tableCols = table.tabulator.getColumns();
         for (var i = 0; i < inputs.length; i++) {
             var colName = inputs[i].dataset.colName;
@@ -779,9 +781,10 @@ ChataUtils.onClickPivotColumn = function(evt, tableElement, options){
 ChataUtils.createCsvData = function(json, separator=','){
     var output = '';
     var lines = json['data']['rows'];
-    for(var i = 0; i<json['data']['columns'].length; i++){
-        var colStr = json['data']['columns'][i]['display_name'] ||
-            json['data']['columns'][i]['name'];
+    var cols = json['data']['columns'];
+    for(var i = 0; i<cols.length; i++){
+        if(!cols[i]['is_visible'])continue;
+        var colStr = cols[i]['display_name'] || cols[i]['name'];
         var colName = formatColumnName(colStr);
         output += colName + separator;
     }
@@ -789,6 +792,7 @@ ChataUtils.createCsvData = function(json, separator=','){
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         for (var x = 0; x < data.length; x++) {
+            if(!cols[x]['is_visible'])continue;
             output += data[x] + separator;
         }
         output += '\n';

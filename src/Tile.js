@@ -921,6 +921,7 @@ function TileView(dashboard, chataDashboardItem,
                         _uuid, dashboard.options, obj.onRowClick
                     )
                     div.tabulator = table;
+                    table.parentContainer = tileWrapper;
                 }
                 break;
             case 'bar':
