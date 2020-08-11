@@ -363,6 +363,12 @@ body{
 
 .autoql-vanilla-chata-bar-container {
     position: relative;
+    display: flex;
+}
+
+.autoql-vanilla-wrapper-input{
+    position: relative;
+    width: 100%;
 }
 
 .autoql-vanilla-watermark {

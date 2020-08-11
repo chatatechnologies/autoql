@@ -36,12 +36,13 @@ function QueryInput(options){
 
     chataBarContainer.addEventListener('click', function(e){
         if(e.target.classList.contains('suggestion-renderer')){
-            var parent = e.target.parentElement.parentElement.parentElement.parentElement;
-            var chatBarSuggestionList = parent.getElementsByClassName(
+            var chatBarSuggestionList = chataBarContainer.getElementsByClassName(
                 'autoql-vanilla-chat-bar-autocomplete'
             )[0];
             chatBarSuggestionList.style.display = 'none';
-            parent.sendMessageToResponseRenderer(e.target.textContent, 'user');
+            chataBarContainer.sendMessageToResponseRenderer(
+                e.target.textContent, 'user'
+            );
         }
     });
 
@@ -52,15 +53,37 @@ function QueryInput(options){
     <div class="autoql-vanilla-chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
     ` : '';
 
-    var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
+    chataBarContainer.speechToText = getSpeech();
+    chataBarContainer.finalTranscript = '';
+    chataBarContainer.isRecordVoiceActive = false
 
-    chataBarContainer.innerHTML = `
-    <div class="autoql-vanilla-chat-bar-text">
-        <div class="autoql-vanilla-chat-bar-auto-complete-suggestions ${chataBarContainer.options.autoCompletePlacement}">
-            <ul class="autoql-vanilla-chat-bar-autocomplete">
-            </ul>
+    var voiceRecordButton = document.createElement('button');
+    var display = chataBarContainer.options.enableVoiceRecord ? 'block' : 'none';
+    voiceRecordButton.classList.add(
+        'autoql-vanilla-chat-voice-record-button'
+    );
+    voiceRecordButton.classList.add(
+        'chata-voice'
+    );
+    voiceRecordButton.setAttribute(
+        'data-tippy-content',
+        'Hold for voice-to-text'
+    );
+    voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
+    chataBarContainer.voiceRecordButton = voiceRecordButton;
+    var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
+    var wrapperInput = document.createElement('div');
+    wrapperInput.classList.add('autoql-vanilla-wrapper-input');
+    var suggestionContainer = htmlToElement(`
+        <div class="autoql-vanilla-chat-bar-text">
+            <div class="autoql-vanilla-chat-bar-auto-complete-suggestions
+                ${chataBarContainer.options.autoCompletePlacement}">
+                <ul class="autoql-vanilla-chat-bar-autocomplete">
+                </ul>
+            </div>
         </div>
-        ${CHATA_ICON}
+    `);
+    var input = htmlToElement(`
         <input
             type="text"
             autocomplete="off"
@@ -68,15 +91,42 @@ function QueryInput(options){
             class="autoql-vanilla-chata-input-renderer chat-bar left-padding"
             placeholder="${chataBarContainer.options.placeholder}"
             value="" id="" ${disabled}>
-    </div>
-    `;
+    `)
+    wrapperInput.appendChild(suggestionContainer);
+    wrapperInput.appendChild(htmlToElement(CHATA_ICON));
+    wrapperInput.appendChild(input);
+
+    chataBarContainer.input = input;
+    chataBarContainer.suggestionContainer = suggestionContainer;
+    // chataBarContainer.innerHTML = `
+    // <div class="autoql-vanilla-chat-bar-text">
+    // </div>
+    // `;
+
+    chataBarContainer.appendChild(wrapperInput);
+    chataBarContainer.appendChild(voiceRecordButton);
+
+    voiceRecordButton.onmouseup = (evt) => {
+        chataBarContainer.speechToText.stop();
+        voiceRecordButton.style.backgroundColor = '#26a7df';
+        chataBarContainer.input.value = chataBarContainer.finalTranscript;
+        chataBarContainer.isRecordVoiceActive = false;
+    }
+
+    voiceRecordButton.onmousedown = (evt) => {
+        chataBarContainer.speechToText.start();
+        voiceRecordButton.style.backgroundColor = '#FF471A';
+        chataBarContainer.isRecordVoiceActive = true;
+    }
 
     chataBarContainer.style.setProperty(
         '--chata-drawer-font-family',
         chataBarContainer.options.fontFamily
     )
 
-    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName('autoql-vanilla-chata-input-renderer')[0];
+    chataBarContainer.chatbar = chataBarContainer.getElementsByClassName(
+        'autoql-vanilla-chata-input-renderer'
+    )[0];
     chataBarContainer.bind = function(responseRenderer){
         this.responseRenderer = responseRenderer;
         responseRenderer.chataBarContainer = chataBarContainer;
@@ -84,7 +134,9 @@ function QueryInput(options){
 
     chataBarContainer.onkeyup = function(event){
         if(chataBarContainer.options.autoQLConfig.enableAutocomplete){
-            var suggestionList = this.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
+            var suggestionList = this.suggestionContainer.getElementsByClassName(
+                'autoql-vanilla-chat-bar-autocomplete'
+            )[0];
             suggestionList.style.display = 'none';
             clearTimeout(chataBarContainer.autoCompleteTimer);
             if(event.target.value){
@@ -102,7 +154,7 @@ function QueryInput(options){
     }
 
     chataBarContainer.onkeypress = function(event){
-        var suggestionList = event.target.parentElement.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
+        var suggestionList =chataBarContainer.getElementsByClassName('autoql-vanilla-chat-bar-autocomplete')[0];
         if(event.keyCode == 13 && event.target.value){
             clearTimeout(chataBarContainer.autoCompleteTimer);
             suggestionList.style.display = 'none';
@@ -137,7 +189,7 @@ function QueryInput(options){
         }else{
             setTimeout(() => {
                 responseRenderer.innerHTML = 'No data found.';
-                obj.drawerContent.removeChild(loading);
+                parent.removeChild(loading);
             }, 400)
         }
     }
