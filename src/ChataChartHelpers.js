@@ -77,7 +77,8 @@ const getVisibleGroups = (groups) => {
     return visibleGroups
 }
 
-const getObjectValues = (item, columns, seriesIndexes, labelIndex, items, key) => {
+const getObjectValues = (
+    item, columns, seriesIndexes, labelIndex, items, key) => {
     var values = []
     for (var i = 0; i < seriesIndexes.length; i++) {
         var obj = {};
@@ -256,4 +257,24 @@ const getIndexesByType = (cols) => {
 const getMetadataElement = (component, isDataMessenger) => {
     if(isDataMessenger)return component.parentElement.parentElement
     else return component.parentElement
+}
+
+
+const getChartDimensions = (chatContainer, displayType) => {
+    let chartWidth = 0
+    let chartHeight = 0
+
+    if (chatContainer) {
+        chartWidth = chatContainer.clientWidth - 70
+        chartHeight = 0.85 * chatContainer.clientHeight - 40
+    }
+
+    if (displayType === 'pie' && chartHeight > 330) {
+        chartHeight = 330
+    }
+
+    return {
+        width: chartWidth,
+        heigth: chartHeight
+    }
 }

@@ -1429,21 +1429,22 @@ function DataMessenger(elem, options){
 
         switch (type) {
             case 'simple':
-                if(request['reference_id'] !== '1.1.420'){
+                console.log(request['reference_id']);
+                if(request['reference_id'] !== '1.1.420' && request['reference_id'] !== '1.9.502'){
                     toolbar.appendChild(
                         reportProblemButton
                     );
-                    toolbar.appendChild(
-                        obj.getActionButton(
-                            DELETE_MESSAGE,
-                            'Delete Message',
-                            idRequest,
-                            obj.deleteMessageHandler,
-                            [reportProblem, toolbar]
-                        )
-                    );
                     moreOptionsArray.push('copy_sql');
                 }
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
                 break;
             case 'csvCopy':
                 toolbar.appendChild(
@@ -1534,7 +1535,7 @@ function DataMessenger(elem, options){
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
-        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'){
+        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net' && request['reference_id'] !== '1.9.502'){
             toolbar.appendChild(
                 moreOptionsBtn
             );
@@ -1559,7 +1560,15 @@ function DataMessenger(elem, options){
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
         closeAllChartPopovers();
         var messageBubble = obj.getParentFromComponent(oldComponent);
-
+        var chartContainer = oldComponent.getElementsByTagName('svg');
+        if(chartContainer.length){
+            if(messageBubble.parentElement.style.maxHeight == '85%'){
+                messageBubble.parentElement.style.maxHeight =
+                chartContainer[0].getAttribute('height') + 'px';
+            }
+        }else{
+            messageBubble.parentElement.style.maxHeight = '85%';
+        }
         if(['table', 'pivot_table'].includes(ignore)){
             messageBubble.classList.remove('full-width');
         }else{
@@ -1788,7 +1797,6 @@ function DataMessenger(elem, options){
 
     obj.displayTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'table');
         var table = new ChataTable(
             idRequest,
             obj.options,
@@ -1796,54 +1804,55 @@ function DataMessenger(elem, options){
         );
         component.tabulator = table;
         table.parentContainer = obj.getParentFromComponent(component);
+        obj.refreshToolbarButtons(component, 'table');
         allColHiddenMessage(component);
         d3.select(window).on('resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'column');
         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.refreshToolbarButtons(component, 'column');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayBarChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'bar');
         createBarChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.refreshToolbarButtons(component, 'bar');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayPieChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'pie');
         createPieChart(component, json, obj.options);
+        obj.refreshToolbarButtons(component, 'pie');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayLineChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'line');
         createLineChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.refreshToolbarButtons(component, 'line');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'pivot_table');
         var table = new ChataPivotTable(
             idRequest, obj.options, obj.onCellClick
         );
+        obj.refreshToolbarButtons(component, 'pivot_table');
         d3.select(window).on('resize.'+idRequest, null);
 
         component.tabulator = table;
@@ -1852,49 +1861,49 @@ function DataMessenger(elem, options){
     obj.displayHeatmapHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'heatmap');
         createHeatmap(component, json, obj.options);
+        obj.refreshToolbarButtons(component, 'heatmap');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayBubbleCharthandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'bubble');
         createBubbleChart(component, json, obj.options);
+        obj.refreshToolbarButtons(component, 'bubble');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayStackedColumnHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'stacked_column');
         createStackedColumnChart(
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
+        obj.refreshToolbarButtons(component, 'stacked_column');
         obj.registerDrilldownStackedChartEvent(component);
     }
 
     obj.displayStackedBarHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'stacked_bar');
         createStackedBarChart(
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
+        obj.refreshToolbarButtons(component, 'stacked_bar');
         obj.registerDrilldownStackedChartEvent(component);
     }
 
     obj.displayAreaHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'stacked_line');
         createAreaChart(
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
+        obj.refreshToolbarButtons(component, 'stacked_line');
     }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
@@ -2273,12 +2282,12 @@ function DataMessenger(elem, options){
             idRequest, 'simple', 'table'
         );
         if(jsonResponse['reference_id'] !== '1.1.420'
-        && jsonResponse['reference_id'] !== '1.9.502'
         && jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
         if(jsonResponse['reference_id'] === '1.1.211'
-        || jsonResponse['reference_id'] === '1.1.430'){
+        || jsonResponse['reference_id'] === '1.1.430'
+        || jsonResponse['reference_id'] === '1.9.502'){
             messageBubble.classList.add('no-hover-response');
         }
 
