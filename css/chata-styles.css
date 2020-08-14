@@ -274,7 +274,7 @@ body{
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble {
     position: relative;
     /* margin: 10px 0px 10px 10px; */
-    margin: 10px -10px 10px 10px;    
+    margin: 10px -10px 10px 10px;
     padding: 13px;
     border-radius: 10px;
     max-width: calc(100% - 20px);
@@ -533,7 +533,9 @@ body{
     position: relative;
  /* padding-left: 20px; */
     margin-left: 10px;
+    z-index: 100000000;
 }
+
 
 .autoql-vanilla-auto-complete-suggestions ul{
     box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);

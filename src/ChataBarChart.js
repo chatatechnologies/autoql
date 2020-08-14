@@ -125,7 +125,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
     margin.chartLeft = longestStringWidth * 10;
     if(margin.chartLeft < 70) margin.chartLeft = 70;
-    if(margin.chartLeft > 140) margin.chartLeft = 140;
+    if(margin.chartLeft > 120) margin.chartLeft = 120;
 
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){

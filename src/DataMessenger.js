@@ -1350,13 +1350,17 @@ function DataMessenger(elem, options){
         closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
+        var y = mouseY(evt) + reportProblem.clientHeight + 120;
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
         closeAllToolbars();
+        var y = mouseY(evt) + moreOptions.clientHeight + 120;
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
     obj.filterTableHandler = (evt, idRequest) => {
@@ -1430,7 +1434,8 @@ function DataMessenger(elem, options){
         switch (type) {
             case 'simple':
                 console.log(request['reference_id']);
-                if(request['reference_id'] !== '1.1.420' && request['reference_id'] !== '1.9.502'){
+                if(request['reference_id'] !== '1.1.420'
+                    && request['reference_id'] !== '1.9.502'){
                     toolbar.appendChild(
                         reportProblemButton
                     );
@@ -1564,7 +1569,9 @@ function DataMessenger(elem, options){
         if(chartContainer.length){
             if(messageBubble.parentElement.style.maxHeight == '85%'){
                 messageBubble.parentElement.style.maxHeight =
-                chartContainer[0].getAttribute('height') + 'px';
+                (
+                    parseInt(chartContainer[0].getAttribute('height')) + 55
+                ) + 'px';
             }
         }else{
             messageBubble.parentElement.style.maxHeight = '85%';
@@ -2078,7 +2085,7 @@ function DataMessenger(elem, options){
         );
 
         containerMessage.style.zIndex = --obj.zIndexBubble;
-
+        containerMessage.style.maxHeight = '85%';
 
         containerMessage.setAttribute('data-bubble-id', idRequest);
 

@@ -228,7 +228,7 @@ function ChataTable(idRequest, options, onRowClick, onRenderedTable=()=>{}){
     );
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
-        virtualDomBuffer: 250,
+        virtualDomBuffer: 350,
         movableColumns: true,
         downloadConfig: {
             columnGroups: false,

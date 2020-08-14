@@ -992,6 +992,11 @@ function allColHiddenMessage(table){
     var csvHandlerOption = table.tabulator.parentContainer.querySelector(
         '[data-name-option="csv-handler"]'
     );
+
+    var csvCopyOption = table.tabulator.parentContainer.querySelector(
+        '[data-name-option="copy-csv-handler"]'
+    );
+
     const json = ChataUtils.responses[requestId];
     var cols = json['data']['columns'];
     var isAllHidden = true;
@@ -1026,10 +1031,13 @@ function allColHiddenMessage(table){
         message.style.display = 'flex';
         table.style.display = 'none';
         csvHandlerOption.style.display = 'none';
+        csvCopyOption.style.display = 'none';
+
     }else{
         message.style.display = 'none';
         table.style.display = 'block';
         csvHandlerOption.style.display = 'block';
+        csvCopyOption.style.display = 'block';
         table.tabulator.redraw();
     }
 }

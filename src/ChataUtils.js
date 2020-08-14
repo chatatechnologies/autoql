@@ -138,6 +138,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                     ChataUtils.copyHandler,
                     [idRequest]
                 );
+                action.setAttribute('data-name-option', 'copy-csv-handler');
                 menu.ul.appendChild(action);
                 break;
             case 'copy_sql':
@@ -515,7 +516,7 @@ ChataUtils.showColumnEditor = (id, options) => {
         spinner.classList.remove('hidden');
         var inputs = container.querySelectorAll('[data-line]');
         var data = [];
-        var table = document.querySelector(`[data-componentid='${id}']`);    
+        var table = document.querySelector(`[data-componentid='${id}']`);
 
         const tableCols = table.tabulator.getColumns();
         for (var i = 0; i < inputs.length; i++) {
