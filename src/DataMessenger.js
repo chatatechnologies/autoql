@@ -1392,19 +1392,6 @@ function DataMessenger(elem, options){
         if(bubble.relatedMessage){
             obj.drawerContent.removeChild(bubble.relatedMessage)
         }
-        // if(!table){
-        //     table = obj.drawerContent.querySelector(
-        //         `[data-containerid="${idRequest}"]`
-        //     );
-        //     obj.drawerContent.removeChild(
-        //         table
-        //     )
-        // }else{
-        //     obj.drawerContent.removeChild(
-        //         table.parentElement.parentElement
-        //         .parentElement.parentElement.parentElement
-        //     );
-        // }
     }
 
     obj.getActionToolbar = (idRequest, type, displayType) => {
@@ -1677,9 +1664,9 @@ function DataMessenger(elem, options){
                 obj.putClientResponse(ERROR_MESSAGE);
             }
             else if(response['data']['rows'].length > 0){
-                obj.putTableResponse(response);
+                obj.putTableResponse(response, true);
             }else{
-                obj.putSimpleResponse(response, '');
+                obj.putSimpleResponse(response, '', true);
             }
             refreshTooltips();
         }, data, options);
@@ -1716,7 +1703,7 @@ function DataMessenger(elem, options){
             newJson.data.rows = newData;
 
             setTimeout(() => {
-                obj.putTableResponse(newJson);
+                obj.putTableResponse(newJson, true);
                 obj.drawerContent.removeChild(loading);
 
             }, 400)
@@ -2069,7 +2056,7 @@ function DataMessenger(elem, options){
 
     }
 
-    obj.putTableResponse = (jsonResponse) => {
+    obj.putTableResponse = (jsonResponse, isDrilldown=false) => {
         var data = jsonResponse['data']['rows'];
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
@@ -2088,8 +2075,12 @@ function DataMessenger(elem, options){
         containerMessage.style.maxHeight = '85%';
 
         containerMessage.setAttribute('data-bubble-id', idRequest);
+        console.log('IS DRILL ' + isDrilldown);
+        if(!isDrilldown){
+            console.log('AQUI');
+            containerMessage.relatedMessage = lastBubble;
+        }
 
-        containerMessage.relatedMessage = lastBubble;
 
         containerMessage.classList.add('response');
         containerMessage.classList.add('autoql-vanilla-chat-message-response');
@@ -2269,7 +2260,7 @@ function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
-    obj.putSimpleResponse = (jsonResponse, text) => {
+    obj.putSimpleResponse = (jsonResponse, text, isDrilldown=false) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -2279,7 +2270,8 @@ function DataMessenger(elem, options){
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.classList.add('response');
-        containerMessage.relatedMessage = lastBubble;
+        if(!isDrilldown)containerMessage.relatedMessage = lastBubble;
+
         var idRequest = uuidv4();
         ChataUtils.responses[idRequest] = jsonResponse;
         containerMessage.setAttribute('data-bubble-id', idRequest);

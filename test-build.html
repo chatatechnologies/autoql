@@ -3,25 +3,47 @@
     <head>
         <meta charset="utf-8">
         <title></title>
-        <!-- <link rel="stylesheet" type="text/css" href="css/chata-styles.css">
+        <!-- <link rel="stylesheet" type="text/css" href="https://cdn.chata.io/autoql/latest/autoql-styles.css">
+        <script src="https://cdn.chata.io/autoql/latest/autoql.js"></script> -->
+
+        <link rel="stylesheet" type="text/css" href="css/Tabulator.css">
+        <link rel="stylesheet" type="text/css" href="css/TabulatorBootstrap.css">
+        <link rel="stylesheet" type="text/css" href="css/ChataTable.css">
+        <link rel="stylesheet" type="text/css" href="css/chata-styles.css">
         <link rel="stylesheet" type="text/css" href="css/Dashboard.css">
         <link rel="stylesheet" type="text/css" href="css/Modal.css">
         <link rel="stylesheet" type="text/css" href="css/ColumnEditor.css">
         <link rel="stylesheet" type="text/css" href="css/Notifications.css">
         <link rel="stylesheet" type="text/css" href="css/NotificationSettings.css">
         <link rel="stylesheet" type="text/css" href="css/Spinner.css">
-        <link rel="stylesheet" type="text/css" href="css/PopoverMenu.css"> -->
+        <link rel="stylesheet" type="text/css" href="css/PopoverMenu.css">
+        <link rel="stylesheet" type="text/css" href="css/PopoverChartSelector.css">
+        <link rel="stylesheet" type="text/css" href="css/Cascader.css">
+        <link rel="stylesheet" type="text/css" href="css/Safetynet.css">
+        <link rel="stylesheet" type="text/css" href="css/Antd.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+        <!--Let browser know website is optimized for mobile-->
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <script src="src/popper.min.js"></script>
         <script src="src/tippy.min.js"></script>
         <script src="src/muuri.min.js"></script>
         <script src="src/moment.js"></script>
+        <script src="src/Tabulator.min.js"></script>
 
+        <!-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" /> -->
+        <!-- <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script> -->
+        <!-- <script src="https://unpkg.com/muuri@0.8.0/dist/muuri.min.js"></script> -->
         <script src="src/d3.v4.js"></script>
         <script src="src/d3-legend.js"></script>
         <script src="src/svgIcons.js"></script>
         <script src="src/constants.js"></script>
         <script src="src/utils.js"></script>
+        <script src="src/Cascader.js"></script>
+        <script src="src/ChataChartHelpers.js"></script>
         <script src="src/Safetynet.js"></script>
         <script src="src/ChataTable.js"></script>
         <script src="src/ChataHeatmapChart.js"></script>
@@ -31,12 +53,14 @@
         <script src="src/ChataLineChart.js"></script>
         <script src="src/ChataStackedColumnChart.js"></script>
         <script src="src/ChataStackedBarChart.js"></script>
+        <script src="src/ChataAreaChart.js"></script>
         <script src="src/ChataGroupedColumnChart.js"></script>
         <script src="src/ChataGroupedLineChart.js"></script>
         <script src="src/ChataGroupedBarChart.js"></script>
         <script src="src/ChataPieChart.js"></script>
         <script src="src/QueryOutput.js"></script>
         <script src="src/QueryInput.js"></script>
+        <script src="src/ChataUtils.js"></script>
         <script src="src/DataMessenger.js"></script>
         <script src="src/Modal.js"></script>
         <script src="src/Tile.js"></script>
@@ -47,11 +71,9 @@
         <script src="src/Settings.js"></script>
         <script src="src/SettingsItem.js"></script>
         <script src="src/split.min.js"></script>
+        <script src="src/PopoverChartSelector.js"></script>
+        <script src="src/AntdMessage.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/f9308421-68dd-457c-b450-a61fadf9d804/autoqlstyles.css">
-        <!-- <script src="https://ucarecdn.com/45a57804-06f7-4670-bd12-012d27813ff1/autoqlmin.js"></script> -->
-        <!-- <link rel="stylesheet" type="text/css" href="build/autoql-styles.css">
-        <script src="build/autoql-min.js"></script> -->
 
     </head>
     <body>
@@ -63,7 +85,7 @@
         </div>
     </body>
     <script>
-    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTkxMTIzNjg4LCAiZXhwIjogMTU5MTE0NTI4OCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiXX0=.ICZ9O46p79KH6nLtAv0FkHkA83RHw9l985RIPT2GpmnJGzUcv-PBqGNdUbFNwf2Qw5_lJjtAdahewJGuZR32fSH4RTT9VcE8z51FEmFNLA1Fu92d55YNDKsUZiEu8vJ_ctTkitL4O0lF5YQI0MfSxyh-JFvuAbK1HCzQFGyiqg_ecTAKKWujemodmXcL2dwYgrh9OAHvTXYyUoUR4-RSdFqrgh1Pe_s_1sh_w0xIf3pthdYdJ1uVPr0aGftwZ39ItYLaHMA3ObLhxVRsiE3lLmCsWuwkN7D-WINw7e9yQeys_urTgaDl4mvCkogV9gIzblwvb9_ZZbjDkjvCPD-iyQ==`;
+    var _token = `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTk3NDk5NTQ0LCAiZXhwIjogMTU5NzUyMTE0NCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiXX0=.AYnKw9WeGT-3j-4-IBMEFaZb7JITtexTitIMRykFOOWYmW1StojsLKoH7edjpufqQ6Np8EVXIn9_eSkp-9KYe_xjfhrJN6CWv-cXI0Fv3RAxaaEc67MLxqCFzBdB3_wLxtSretEYwLrHAz-ZqxxE67k-_QZYf8Sq6pyy1Nues0d4S-ib2Qj8ml5wvZEuoRsRjh6HJVJ9HzRBGCjdyVLqvs1NfZ_99XtzL-W7FNsQ5VnOxtmB6sVG46kXg4flyWWg7leOkU-HUiQBX5qXvzmYHYF_oofpUIEX-Ufnf3AwYjqT6kUYJ11i-PxSt_mGrbClJ82DBlt-w66DdwoNdztLCQ==`;
     var datamessenger = new DataMessenger('#datamessenger', {
         authentication: {
             // demo: true
@@ -94,7 +116,12 @@
                 chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
             },
             authentication: {
-                demo: true,
+                token: _token,
+                apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+                customerId: 'spira-demo3',
+                userId: 'vidhya@chata.ai',
+                domain: 'https://spira-staging.chata.io',
+                demo: false
             },
             tiles: [
                 {

@@ -331,7 +331,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     )
     .tickSize(-chartWidth)
     ).select(".domain").remove();
-    
+
     let lines;
     let points;
     var line = d3.line()
