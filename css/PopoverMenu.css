@@ -37,6 +37,10 @@
     display: block;
 }
 
+.more-options-icon svg path{
+    fill: unset;
+}
+
 
 .chata-more-options-menu, .report-problem-menu {
     background: var(--chata-drawer-background-color);

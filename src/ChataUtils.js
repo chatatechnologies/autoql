@@ -183,7 +183,7 @@ ChataUtils.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
 ChataUtils.getActionOption = (svg, text, onClick, params) => {
     var element = htmlToElement(`
         <li>
-            <span data-test="chata-icon" class="chata-icon">
+            <span class="chata-icon more-options-icon">
                 ${svg}
             </span>
             ${text}

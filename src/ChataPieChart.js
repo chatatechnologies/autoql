@@ -125,11 +125,9 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
         .attr('data-colvalue2', formatData(
             d.value, cols[index2],
             options
-        ))
-        .attr('data-filterindex', index1)
+        ))._groups[0][0].style.fill = color(d.data.key)
     })
     .attr('d', arc)
-    .attr('fill', function(d){ return(color(d.data.key)) })
     .style('fill-opacity', 0.85)
     .on('mouseover', function(d) {
         d3.select(this).style('fill-opacity', 1)
@@ -238,4 +236,5 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
             )
         }
     );
+
 }
