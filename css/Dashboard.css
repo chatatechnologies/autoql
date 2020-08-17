@@ -510,8 +510,14 @@
     width: calc(100.0% - 22px);
 }
 
-.autoql-vanilla-dashboard-tile-response-container svg .autoql-vanilla-chata-dashboard line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
-.autoql-vanilla-dashboard-tile-response-container svg .autoql-vanilla-chata-dashboard path {stroke-width: 0;}
+.autoql-vanilla-dashboard-tile-response-container svg .autoql-vanilla-chata-dashboard line {
+    stroke: currentColor !important;
+    stroke-opacity: 1 !important;
+    shape-rendering: crispEdges !important;
+}
+.autoql-vanilla-dashboard-tile-response-container svg .autoql-vanilla-chata-dashboard path {
+    stroke-width: 0 !important;
+}
 
 .autoql-vanilla-dashboard-tile-response-container svg .domain{
     stroke: #d3d3d352 !important;
@@ -523,20 +529,26 @@
 
 }
 .autoql-vanilla-dashboard-tile-response-container line{
-    stroke-width: 1px;
-    stroke: currentColor;
-    opacity: 0.15;
-    shape-rendering: crispedges;
+    stroke-width: 1px !important;
+    stroke: currentColor !important;
+    opacity: 0.15 !important;
+    shape-rendering: crispedges !important;
 }
 
 .autoql-vanilla-dashboard-tile-response-container text{
-    font-family: var(--chata-dashboard-font-family);
-    letter-spacing: 0.04em;
-    fill: var(--chata-dashboard-text-color-primary);
+    font-family: var(--chata-dashboard-font-family) !important;
+    letter-spacing: 0.04em !important;
+    fill: var(--chata-dashboard-text-color-primary) !important;
 }
 
-.autoql-vanilla-chata-dashboard-drilldown-original svg .autoql-vanilla-chata-dashboard line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
-.autoql-vanilla-chata-dashboard-drilldown-original svg .autoql-vanilla-chata-dashboard path {stroke-width: 0;}
+.autoql-vanilla-chata-dashboard-drilldown-original svg .autoql-vanilla-chata-dashboard line {
+    stroke: currentColor !important;
+    stroke-opacity: 1;
+    shape-rendering: crispEdges !important;
+}
+.autoql-vanilla-chata-dashboard-drilldown-original svg .autoql-vanilla-chata-dashboard path {
+    stroke-width: 0 !important;
+}
 
 .autoql-vanilla-chata-dashboard-drilldown-original svg .domain{
     stroke: #d3d3d352 !important;
@@ -548,16 +560,16 @@
 
 }
 .autoql-vanilla-chata-dashboard-drilldown-original line{
-    stroke-width: 1px;
-    stroke: currentColor;
-    opacity: 0.15;
-    shape-rendering: crispedges;
+    stroke-width: 1px !important;
+    stroke: currentColor !important;
+    opacity: 0.15 !important;
+    shape-rendering: crispedges !important;
 }
 
 .autoql-vanilla-chata-dashboard-drilldown-original text{
-    font-family: var(--chata-dashboard-font-family);
-    letter-spacing: 0.04em;
-    fill: var(--chata-dashboard-text-color-primary);
+    font-family: var(--chata-dashboard-font-family) !important;
+    letter-spacing: 0.04em !important;
+    fill: var(--chata-dashboard-text-color-primary) !important;
 }
 
 .autoql-vanilla-single-value-response{

@@ -1424,7 +1424,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 .autoql-vanilla-page-switcher-container .tab.active {
   background: var(--chata-drawer-background-color);
-  color: var(--chata-drawer-text-color-primary);
+  color: var(--chata-drawer-text-color-primary) !important;
   font-weight: bold;
   position: relative;
   z-index: 2;
