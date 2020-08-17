@@ -4,6 +4,10 @@
     margin: 0px;
 }
 
+.chata-modal-close-btn path{
+    fill: unset;
+}
+
 .chata-modal-container {
   position: fixed !important;
   top: 0;

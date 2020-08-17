@@ -510,6 +510,14 @@
     width: calc(100.0% - 22px);
 }
 
+.chata-input-icon svg path{
+    fill: unset;
+}
+
+.autoql-vanilla-dashboard-tile-play-button svg path{
+    fill: unset;
+}
+
 .autoql-vanilla-dashboard-tile-response-container svg .autoql-vanilla-chata-dashboard line {
     stroke: currentColor !important;
     stroke-opacity: 1 !important;
@@ -528,10 +536,21 @@
     fill-opacity: 0.7;
 
 }
+
+.autoql-vanilla-chata-toolbar-btn svg{
+    font: unset;
+}
+
+.autoql-vanilla-tile-toolbar .autoql-vanilla-chata-toolbar-btn svg line,
+.autoql-vanilla-tile-toolbar .autoql-vanilla-chata-toolbar-btn svg path{
+    opacity: 1 !important;
+    fill: unset;
+}
+
 .autoql-vanilla-dashboard-tile-response-container line{
     stroke-width: 1px !important;
     stroke: currentColor !important;
-    opacity: 0.15 !important;
+    opacity: 0.15;
     shape-rendering: crispedges !important;
 }
 
