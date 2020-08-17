@@ -4,6 +4,15 @@
     margin: 0px;
 }
 
+.autoql-vanilla-chata-drawer path{
+    fill: currentColor;
+}
+
+    
+.autoql-vanilla-chata-drawer line{
+    fill: currentColor;
+}
+
 .autoql-vanilla-chata-body-drawer-open{
     overflow: hidden;
     touch-action: none;
@@ -210,12 +219,20 @@ body{
     font-size: 20px;
     cursor: pointer;
     outline: none !important;
-
 }
+
+.autoql-vanilla-chat-message-toolbar.right .autoql-vanilla-chata-toolbar-btn path{
+    fill: unset;
+}
+
+.autoql-vanilla-chat-message-toolbar.right .autoql-vanilla-chata-toolbar-btn svg{
+    font: unset;
+}
+
 .autoql-vanilla-chata-button{
     background: none !important;
 }
-.autoql-vanilla-chata-button.close svg {
+.autoql-vanilla-chata-button.close-action svg {
     width: 30px;
     height: 30px;
     padding-top: 3px;
@@ -1012,6 +1029,7 @@ tr td.chata-hidden{
 
 .domain{
     stroke: transparent;
+    fill: unset !important;
 }
 .tick{
     stroke: var(--chata-drawer-border-color);

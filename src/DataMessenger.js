@@ -1068,7 +1068,7 @@ function DataMessenger(elem, options){
         var chatHeaderContainer = document.createElement('div');
         var closeButton = htmlToElement(`
             <button
-                class="autoql-vanilla-chata-button close close-action"
+                class="autoql-vanilla-chata-button close-action"
                 data-tippy-content="Close Drawer" currentitem="false">
                 ${CLOSE_ICON}
             </button>

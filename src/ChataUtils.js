@@ -143,7 +143,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                 break;
             case 'copy_sql':
                 var action = ChataUtils.getActionOption(
-                    COPY_SQL, 'Copy generated query to clipboard',
+                    CLIPBOARD_ICON, 'Copy generated query to clipboard',
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
