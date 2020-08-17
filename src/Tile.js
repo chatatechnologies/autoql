@@ -1051,7 +1051,6 @@ function TileView(dashboard, chataDashboardItem,
             container.innerHTML = "Oops! We didn't understand that query.";
         }
         obj.createVizToolbar(json, _uuid, displayType);
-        obj.createactionToolbar(_uuid, toolbarType, displayType);
     }
 
     obj.sendReport = function(idRequest, options, menu, toolbar){
@@ -1084,8 +1083,9 @@ function TileView(dashboard, chataDashboardItem,
         ChataUtils.showColumnEditor(id, options);
     }
 
-    obj.createactionToolbar = (idRequest, type, displayType) => {
+    obj.createactionToolbar = (idRequest, displayType) => {
         var request = ChataUtils.responses[idRequest];
+        var type = obj.getToolbarActionType(request, displayType);
         let moreOptionsArray = [];
         var toolbar = htmlToElement(`
             <div class="autoql-vanilla-tile-toolbar actions-toolbar">
@@ -1229,7 +1229,34 @@ function TileView(dashboard, chataDashboardItem,
         tileWrapper.metadata = undefined;
     }
 
+    obj.getToolbarActionType = (json, displayType) => {
+        var toolbarType = 'simple';
+        var displayTypes = chataDashboardItem.getDisplayTypes(json);
+        if(displayTypes.length > 1){
+            switch (displayType) {
+                case 'table':
+                case 'pivot_table':
+                    toolbarType = 'csvCopy';
+                    break;
+                case 'column':
+                case 'bar':
+                case 'pie':
+                case 'line':
+                case 'pivot_table':
+                case 'heatmap':
+                case 'bubble':
+                case 'stacked_column':
+                case 'stacked_bar':
+                    toolbarType = 'chart-view';
+                default:
+            }
+        }
+
+        return toolbarType;
+    }
+
     obj.createVizToolbar = (json, uuid, ignoreDisplayType) => {
+
         var displayTypes = chataDashboardItem.getDisplayTypes(json);
         [].forEach.call(tileWrapper.querySelectorAll(
             '.autoql-vanilla-tile-toolbar'
@@ -1313,6 +1340,7 @@ function TileView(dashboard, chataDashboardItem,
             }
             tileWrapper.appendChild(vizToolbar);
         }
+        obj.createactionToolbar(uuid, ignoreDisplayType);
     }
 
     obj.sendDrilldownClientSide = (json, indexValue, filterBy) => {
