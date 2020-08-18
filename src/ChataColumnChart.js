@@ -145,22 +145,28 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         'chata-hidden-scrollbox'
     );
 
-    var x0 = d3.scaleBand()
-    .range([0, chartWidth]).padding(.1);
-    var x1 = d3.scaleBand();
-    var y = d3.scaleLinear()
+    var x0 = SCALE_BAND()
+    var x1 = SCALE_BAND();
+    var y = SCALE_LINEAR();
+    // .range([0, chartWidth]).padding(.1);
 
-    var xAxis = d3.axisBottom(x0)
-    var yAxis = d3.axisLeft(y)
-    x0.domain(labelsNames);
-    x1.domain(groupNames).range([0, x0.bandwidth()]).padding(.1);
+    setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
+    setDomainRange(x1, groupNames, 0, getBandWidth(x0), false, .1)
+
+    // x0.domain(labelsNames);
+    // x1.domain(groupNames).range([0, x0.bandwidth()]).padding(.1);
     y
     .range([ height - (margin.bottomChart), 0 ])
     .domain([minMaxValues.min, minMaxValues.max]).nice()
 
-    var colorScale = d3.scaleOrdinal()
-    .domain(groupNames)
-    .range(options.themeConfig.chartColors);
+    var xAxis = getAxisBottom(x0)
+    var yAxis = getAxisLeft(y)
+
+
+    var colorScale = getColorScale(
+        groupNames,
+        options.themeConfig.chartColors
+    );
 
     var svg = d3.select(component)
     .append("svg")
@@ -375,7 +381,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             .attr('data-filterindex', index2)
 
         })
-        .attr("width", x1.bandwidth())
+        .attr("width", getBandWidth(x1))
         .attr("x", function(d) { return x1(d.group); })
         .style("fill", function(d) { return colorScale(d.group) })
         .attr('fill-opacity', '0.7')
