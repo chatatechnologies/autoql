@@ -126,7 +126,11 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
             d.value, cols[index2],
             options
         ))
-        // ._groups[0][0].style.fill = color(d.data.key)
+        if(MAJOR_D3_VERSION === '3'){
+            d3.select(this)[0][0].style.fill = color(d.data.key)    
+        }else{
+            d3.select(this)._groups[0][0].style.fill = color(d.data.key)
+        }
     })
     .attr('d', arc)
     .style('fill-opacity', 0.85)
@@ -193,28 +197,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
 
     const legendWrapLength = width / 2 - 50
     legendScale = getColorScale(labels, options.themeConfig.chartColors)
-    // d3.scaleOrdinal()
-    //     .domain(labels)
-    //     .range(options.themeConfig.chartColors)
-
-    var legendOrdinal = d3.legendColor()
-    .shape(
-        'path',
-        d3.symbol()
-        .type(d3.symbolCircle)
-        .size(75)()
-    )
-    .orient('vertical')
-    .shapePadding(5)
-    .labelWrap(legendWrapLength)
-    .scale(legendScale)
-
-    // var legendV = d3.legend.color()
-    // .shapeWidth(20)
-    // .cells(10)
-    // .title("Linear")
-    // .labelFormat(d3.format('.0f'))
-    // .scale(linearV);
+    var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical');
 
     svgLegend.call(legendOrdinal)
 

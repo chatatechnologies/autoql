@@ -95,3 +95,31 @@ const getPie = (fn) => {
         .value(fn)
     }
 }
+
+
+const getLegend = (scale, legendWrapLength, orient) => {
+    if(MAJOR_D3_VERSION === '3'){
+        return d3.legend.color()
+        .shape(
+            'path',
+            d3.svg.symbol().
+            type("circle")
+            .size(150)()
+        )
+        .orient(orient)
+        .shapePadding(5)
+        .scale(scale);
+    }else{
+        return d3.legendColor()
+        .shape(
+            'path',
+            d3.symbol()
+            .type(d3.symbolCircle)
+            .size(75)()
+        )
+        .orient(orient)
+        .shapePadding(5)
+        .labelWrap(legendWrapLength)
+        .scale(scale)
+    }
+}
