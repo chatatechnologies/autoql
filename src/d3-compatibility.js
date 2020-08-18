@@ -7,7 +7,7 @@ const getAxisBottom = (scale) => {
     let axis;
 
     if('function' === typeof d3.axisBottom){
-        axis = d3.axisLeft(scale);
+        axis = d3.axisBottom(scale);
     }else{
         axis = d3.svg.axis().scale(scale).orient("bottom");
     }
@@ -23,6 +23,15 @@ const getAxisLeft = (scale) => {
     }else{
         axis = d3.svg.axis().scale(scale).orient("left");
     }
-    
+
     return axis;
+}
+
+
+const getBandWidth = (scale) => {
+    if(MAJOR_D3_VERSION === '3'){
+        return scale.rangeBand;
+    }else{
+        return scale.bandwidth
+    }
 }

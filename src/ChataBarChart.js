@@ -146,16 +146,16 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
     }
 
-    var y0 = d3.scaleBand();
-    var y1 = d3.scaleBand();
+    var y0 = SCALE_BAND();
+    var y1 = SCALE_BAND();
 
-    var x = d3.scaleLinear()
+    var x = SCALE_LINEAR()
     .range([0, chartWidth]);
 
-    var xAxis = d3.axisBottom(x)
+    var xAxis = getAxisBottom(x)
     .tickSize(0)
 
-    var yAxis = d3.axisLeft(y0)
+    var yAxis = getAxisLeft(y0)
 
     y0
     .range([height - margin.bottomChart, 0])
