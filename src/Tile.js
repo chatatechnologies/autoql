@@ -1096,7 +1096,7 @@ function TileView(dashboard, chataDashboardItem,
             toolbar,
             idRequest,
             type,
-            dashboard.options
+            dashboard.options,
         );
 
         var reportProblemButton = ChataUtils.getActionButton(
@@ -1113,16 +1113,10 @@ function TileView(dashboard, chataDashboardItem,
                     toolbar.appendChild(
                         reportProblemButton
                     );
-                    toolbar.appendChild(
-                        ChataUtils.getActionButton(
-                            DELETE_MESSAGE,
-                            'Delete Message',
-                            idRequest,
-                            obj.deleteMessageHandler,
-                            [reportProblem, toolbar]
-                        )
-                    );
                     moreOptionsArray.push('copy_sql');
+                    reportProblem.classList.remove(
+                        'chata-popover-single-message'
+                    );
                 }
                 break;
             case 'csvCopy':
@@ -1153,15 +1147,6 @@ function TileView(dashboard, chataDashboardItem,
                         reportProblemButton
                     );
                 }
-                toolbar.appendChild(
-                    ChataUtils.getActionButton(
-                        DELETE_MESSAGE,
-                        'Delete Message',
-                        idRequest,
-                        obj.deleteMessageHandler,
-                        [reportProblem, toolbar]
-                    )
-                );
                 moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
                 moreOptionsArray.push('copy_sql');
@@ -1172,28 +1157,10 @@ function TileView(dashboard, chataDashboardItem,
                         reportProblemButton
                     );
                 }
-                toolbar.appendChild(
-                    ChataUtils.getActionButton(
-                        DELETE_MESSAGE,
-                        'Delete Message',
-                        idRequest,
-                        obj.deleteMessageHandler,
-                        [reportProblem, toolbar]
-                    )
-                );
                 moreOptionsArray.push('png');
                 moreOptionsArray.push('copy_sql');
             break;
             case 'safety-net':
-                toolbar.appendChild(
-                    ChataUtils.getActionButton(
-                        DELETE_MESSAGE,
-                        'Delete Message',
-                        idRequest,
-                        obj.deleteMessageHandler,
-                        [reportProblem, toolbar]
-                    )
-                );
             break;
             default:
 
@@ -1213,6 +1180,10 @@ function TileView(dashboard, chataDashboardItem,
             [moreOptions, toolbar]
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
+
+        if(type === 'simple'){
+            moreOptions.classList.remove('chata-popover-single-message');
+        }
 
         if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'){
             toolbar.appendChild(

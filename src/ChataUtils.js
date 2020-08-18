@@ -27,7 +27,8 @@ ChataUtils.getRecommendationPath = (options, text) => {
 }
 
 
-ChataUtils.getReportProblemMenu = (toolbar, idRequest, type, options) => {
+ChataUtils.getReportProblemMenu = (
+    toolbar, idRequest, type, options, singleMessage=false) => {
     var menu = ChataUtils.getPopover();
     if(type === 'simple'){
         menu.classList.add('chata-popover-single-message');
