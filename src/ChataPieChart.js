@@ -91,9 +91,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     var legendSpacing = 1;
 
     // define color scale
-    var color = d3.scaleOrdinal()
-    .domain(data)
-    .range(options.themeConfig.chartColors)
+    var color = getColorScale(data, options.themeConfig.chartColors)
 
     var svg = d3.select(component)
     .append('svg')
@@ -104,12 +102,14 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     var pieChartContainer = svg.append('g')
     .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
 
-    var arc = d3.arc()
-    .innerRadius(innerRadius)
-    .outerRadius(outerRadius);
+    var arc = getArc(
+        innerRadius,
+        outerRadius
+    )
 
-    var pie = d3.pie()
-    .value(function(d) {return d.value; })
+    var pie = getPie(
+        (d) => { return d.value }
+    )
     var dataReady = pie(d3.entries(data))
 
     // creating the chart
@@ -125,7 +125,8 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
         .attr('data-colvalue2', formatData(
             d.value, cols[index2],
             options
-        ))._groups[0][0].style.fill = color(d.data.key)
+        ))
+        // ._groups[0][0].style.fill = color(d.data.key)
     })
     .attr('d', arc)
     .style('fill-opacity', 0.85)
@@ -191,9 +192,10 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     }
 
     const legendWrapLength = width / 2 - 50
-    legendScale = d3.scaleOrdinal()
-        .domain(labels)
-        .range(options.themeConfig.chartColors)
+    legendScale = getColorScale(labels, options.themeConfig.chartColors)
+    // d3.scaleOrdinal()
+    //     .domain(labels)
+    //     .range(options.themeConfig.chartColors)
 
     var legendOrdinal = d3.legendColor()
     .shape(
@@ -206,6 +208,14 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     .shapePadding(5)
     .labelWrap(legendWrapLength)
     .scale(legendScale)
+
+    // var legendV = d3.legend.color()
+    // .shapeWidth(20)
+    // .cells(10)
+    // .title("Linear")
+    // .labelFormat(d3.format('.0f'))
+    // .scale(linearV);
+
     svgLegend.call(legendOrdinal)
 
     let legendBBox

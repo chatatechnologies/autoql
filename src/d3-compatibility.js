@@ -74,3 +74,24 @@ const getLine = (fnX, fnY) => {
         .y(fnY)
     }
 }
+
+const getArc = (iRadius, oRadius) => {
+    if(MAJOR_D3_VERSION === '3'){
+        return d3.svg.arc()
+        .innerRadius(iRadius)
+        .outerRadius(oRadius)
+    }else{
+        return d3.arc()
+        .innerRadius(iRadius)
+        .outerRadius(oRadius)
+    }
+}
+
+const getPie = (fn) => {
+    if(MAJOR_D3_VERSION === '3'){
+        return d3.layout.pie().value(fn);
+    }else{
+        return d3.pie()
+        .value(fn)
+    }
+}
