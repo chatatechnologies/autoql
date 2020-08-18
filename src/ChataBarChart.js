@@ -157,12 +157,30 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
     var yAxis = getAxisLeft(y0)
 
-    y0
-    .range([height - margin.bottomChart, 0])
-    .domain(categoriesNames)
-    .padding(.1);
+    // y0
+    // .range([height - margin.bottomChart, 0])
+    // .domain(categoriesNames)
+    // .padding(.1);
+    // y1.domain(groupNames).range([0, y0.bandwidth()]).padding(.1);
 
-    y1.domain(groupNames).range([0, y0.bandwidth()]).padding(.1);
+    setDomainRange(
+        y0,
+        categoriesNames,
+        height - margin.bottomChart,
+        0,
+        false,
+        .1
+    );
+
+    setDomainRange(
+        y1,
+        groupNames,
+        0,
+        getBandWidth(y0),
+        false,
+        .1
+    )
+
     x.domain([minMaxValues.min, minMaxValues.max]).nice();
 
     var colorScale = d3.scaleOrdinal()
@@ -388,7 +406,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .attr("width", function(d) { return calculateWidth(d) })
         .attr("x", function(d) { return getXRect(d) })
         .attr("y", function(d) { return y1(d.group); })
-        .attr("height", function(d) { return y1.bandwidth() })
+        .attr("height", function(d) { return getBandWidth(y1) })
         .attr('fill-opacity', '0.7')
         .attr('class', 'tooltip-2d bar')
         .style("fill", function(d) { return colorScale(d.group) })

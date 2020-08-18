@@ -30,8 +30,23 @@ const getAxisLeft = (scale) => {
 
 const getBandWidth = (scale) => {
     if(MAJOR_D3_VERSION === '3'){
-        return scale.rangeBand;
+        return scale.rangeBand()
     }else{
-        return scale.bandwidth
+        return scale.bandwidth()
     }
+}
+
+
+const setDomainRange = (
+    scale, domainValues, r1, r2, nice=false, padding=0) => {
+    if(MAJOR_D3_VERSION === '3'){
+        scale.domain(domainValues)
+        .rangeRoundBands([r1, r2], padding);
+    }else{
+        scale.range([r1, r2]).domain(domainValues)
+        if(padding > 0)scale.padding(padding);
+        if(nice)scale.nice();
+    }
+
+    return scale;
 }
