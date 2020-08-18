@@ -96,7 +96,6 @@ const getPie = (fn) => {
     }
 }
 
-
 const getLegend = (scale, legendWrapLength, orient) => {
     if(MAJOR_D3_VERSION === '3'){
         return d3.legend.color()
@@ -121,5 +120,24 @@ const getLegend = (scale, legendWrapLength, orient) => {
         .shapePadding(5)
         .labelWrap(legendWrapLength)
         .scale(scale)
+    }
+}
+
+const getStackedData = (visibleGroups, data) => {
+    if(MAJOR_D3_VERSION === '3'){
+        console.log(visibleGroups);
+        console.log(data);
+        return d3.layout.stack()(visibleGroups.map((group) => {
+            return data.map((d) => {
+                return {
+                    y: d.group,
+                    x: +d[group],
+                }
+            })
+        }))
+    }else{
+        return d3.stack()
+        .keys(visibleGroups)
+        (data)
     }
 }

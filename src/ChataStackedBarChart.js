@@ -191,14 +191,14 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         return sum;
     });
 
-    var x = d3.scaleLinear()
+    var x = SCALE_LINEAR()
     .domain([0, maxValue])
     .range([ 0, chartWidth ]);
 
     if(tickWidth < 135){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(d3.axisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
+        .call(getAxisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
             return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
@@ -208,7 +208,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(d3.axisBottom(x).tickFormat(function(d){
+        .call(getAxisBottom(x).tickFormat(function(d){
             return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
@@ -218,19 +218,26 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
 
     // Add Y axis
-    var y = d3.scaleBand()
-    .domain(groups)
-    .range([height - margin.bottom, 0])
-    .padding([0.2])
-    var yAxis = d3.axisLeft(y);
+    var y = SCALE_BAND()
+    setDomainRange(
+        y,
+        groups,
+        height - margin.bottom,
+        0,
+        false,
+        0.2
+    )
+
+    // .domain(groups)
+    // .range([height - margin.bottom, 0])
+    // .padding([0.2])
+    var yAxis = getAxisLeft(y);
 
     if(yTickValues.length > 0){
         yAxis.tickValues(yTickValues);
     }
 
-    var color = d3.scaleOrdinal()
-    .domain(subgroups)
-    .range(options.themeConfig.chartColors)
+    var color = getColorScale(subgroups, options.themeConfig.chartColors)
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
@@ -239,7 +246,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisBottom(x)
+    .call(getAxisBottom(x)
         .tickSize(height - margin.bottom)
         .tickFormat("")
     );
@@ -248,9 +255,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     function createBars(){
         var visibleGroups = getVisibleGroups(allSubgroups);
-        var stackedData = d3.stack()
-        .keys(visibleGroups)
-        (data)
+        var stackedData = getStackedData(visibleGroups, data);
         if(stackedG)stackedG.remove();
 
         stackedG = svg.append("g")
@@ -319,24 +324,16 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     .style('font-size', '10px')
 
     const legendWrapLength = wLegendBox;
-    legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort().map(elem => {
-            return formatChartData(elem, cols[groupableIndex1], options);
-        }))
-        .range(options.themeConfig.chartColors)
-
-    var legendOrdinal = d3.legendColor()
-    .shape(
-        'path',
-        d3.symbol()
-        .type(d3.symbolCircle)
-        .size(75)()
+    const legendValues = subgroups.sort().map(elem => {
+        return formatChartData(elem, cols[groupableIndex1], options);
+    });
+    legendScale = getColorScale(
+        legendValues,
+        options.themeConfig.chartColors
     )
-    .orient('vertical')
-    .shapePadding(5)
-    .labelWrap(legendWrapLength)
-    .scale(legendScale)
-    .on('cellclick', function(d) {
+
+    var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
+    legendOrdinal.on('cellclick', function(d) {
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createBars();
         const legendCell = d3.select(this);
