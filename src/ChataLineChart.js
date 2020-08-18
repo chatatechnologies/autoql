@@ -62,9 +62,15 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         margin.marginLabel = 10;
     }
     var allData = [];
-    var colorScale = d3.scaleOrdinal()
-    .domain(allGroup)
-    .range(options.themeConfig.chartColors);
+
+    // var colorScale = d3.scaleOrdinal()
+    // .domain(allGroup)
+    // .range(options.themeConfig.chartColors);
+
+    var colorScale = getColorScale(
+        allGroup,
+        options.themeConfig.chartColors
+    );
 
     data.map(function(d) {
         d.values.map(function(v){
@@ -286,14 +292,15 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     }
 
 
-    var x = d3.scaleBand()
-    .domain(data.map(function(d) {
-        return d.label
-    }))
-    .range([ 0, chartWidth]);
+    var x = SCALE_BAND();
+    setDomainRange(x, labelsNames, 0, chartWidth);
+    // .domain(data.map(function(d) {
+    //     return d.label
+    // }))
+    // .range([ 0, chartWidth]);
 
-    var xAxis = d3.axisBottom(x);
-    const xShift = x.bandwidth() / 2;
+    var xAxis = getAxisBottom(x);
+    const xShift = getBandWidth(x) / 2;
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -319,10 +326,10 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .style("text-anchor", "center")
     }
 
-    var y = d3.scaleLinear()
+    var y = SCALE_LINEAR()
     .domain([minMaxValues.min, minMaxValues.max])
     .range([ height - margin.bottomChart, 0 ]).nice();
-    var yAxis = d3.axisLeft(y);
+    var yAxis = getAxisLeft(y);
 
     svg.append("g")
     .attr("class", "grid")
@@ -334,9 +341,10 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     let lines;
     let points;
-    var line = d3.line()
-    .x(function(d) { return x(d.label) + xShift })
-    .y(function(d) { return y(d.value) })
+    var line = getLine(
+        (d) => { return x(d.label) + xShift },
+        (d) => { return y(d.value)}
+    )
 
     function createLines(){
         if(lines)lines.remove()

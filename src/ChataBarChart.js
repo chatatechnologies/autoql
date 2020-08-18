@@ -183,10 +183,6 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
 
     x.domain([minMaxValues.min, minMaxValues.max]).nice();
 
-    // var colorScale = d3.scaleOrdinal()
-    // .domain(groupNames)
-    // .range(options.themeConfig.chartColors);
-
     var colorScale = getColorScale(
         groupNames,
         options.themeConfig.chartColors

@@ -61,3 +61,16 @@ const getColorScale = (domainValues, range) => {
         .range(range);
     }
 }
+
+const getLine = (fnX, fnY) => {
+    if(MAJOR_D3_VERSION === '3'){
+        return d3.svg.line()
+		.x(fnX)
+		.y(fnY)
+		.interpolate("linear");
+    }else{
+        return d3.line()
+        .x(fnX)
+        .y(fnY)
+    }
+}

@@ -148,13 +148,10 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     var x0 = SCALE_BAND()
     var x1 = SCALE_BAND();
     var y = SCALE_LINEAR();
-    // .range([0, chartWidth]).padding(.1);
 
     setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
     setDomainRange(x1, groupNames, 0, getBandWidth(x0), false, .1)
 
-    // x0.domain(labelsNames);
-    // x1.domain(groupNames).range([0, x0.bandwidth()]).padding(.1);
     y
     .range([ height - (margin.bottomChart), 0 ])
     .domain([minMaxValues.min, minMaxValues.max]).nice()
