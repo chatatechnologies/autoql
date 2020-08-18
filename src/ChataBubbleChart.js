@@ -104,14 +104,24 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     .text(col2);
 
 
-    var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(labelsX.map(function(d) {
-        return d
-    }))
-    .padding(0.01);
+    var x = SCALE_BAND();
+    // d3.scaleBand()
+    setDomainRange(
+        x,
+        labelsX.map(function(d) {
+            return d
+        }),
+        0,
+        width,
+        false,
+        0.01
+    )
 
-    var xAxis = d3.axisBottom(x);
+    // .range([ 0, width ])
+    // .domain()
+    // .padding(0.01);
+
+    var xAxis = getAxisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -139,14 +149,22 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     }
 
 
-    var y = d3.scaleBand()
-    .range([ height - margin.bottom, 0])
-    .domain(labelsY.map(function(d) {
-        return d
-    }))
-    .padding(0.01);
+    var y = SCALE_BAND();
+    setDomainRange(
+        y,
+        labelsY.map(function(d) {
+            return d
+        }),
+        height - margin.bottom,
+        false,
+        0.01
+    )
 
-    var yAxis = d3.axisLeft(y);
+    // .range([ height - margin.bottom, 0])
+    // .domain()
+    // .padding(0.01);
+
+    var yAxis = getAxisLeft(y);
 
     if(yTickValues.length > 0){
         yAxis.tickValues(yTickValues);
@@ -157,8 +175,8 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
         return formatLabel(d);
     }));
 
-    var radiusScale = d3.scaleLinear()
-    .range([0, Math.min(x.bandwidth(), y.bandwidth())])
+    var radiusScale = SCALE_LINEAR()
+    .range([0, Math.min(getBandWidth(x), getBandWidth(y))])
     .domain([
         d3.min(data, function(d) { return d.value; }),
         d3.max(data, function(d) { return d.value; })
@@ -188,10 +206,10 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
         ))
     })
     .attr("cx", function (d) {
-        return x(d.labelX) + x.bandwidth() / 2;
+        return x(d.labelX) + getBandWidth(x) / 2;
     })
     .attr("cy", function (d) {
-        return y(d.labelY) + y.bandwidth() / 2;
+        return y(d.labelY) + getBandWidth(y) / 2;
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
     .attr("fill", options.themeConfig.chartColors[0])

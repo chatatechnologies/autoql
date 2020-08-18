@@ -422,18 +422,13 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .style('font-family', 'inherit')
         .style('font-size', '10px')
         const legendWrapLength = width / 2 - 50
-        var legendOrdinal = d3.legendColor()
-        .shape(
-            'path',
-            d3.symbol()
-            .type(d3.symbolCircle)
-            .size(70)()
-        )
-        .orient(legendOrientation)
-        .labelWrap(legendWrapLength)
-        .shapePadding(shapePadding)
-        .scale(colorScale)
-        .on('cellclick', function(d) {
+        var legendOrdinal = getLegend(
+            colorScale,
+            legendWrapLength,
+            legendOrientation
+        );
+
+        legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createBars();
             const legendCell = d3.select(this);
@@ -459,7 +454,10 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
             const legendXPosition = width / 2 - (legendWidth/2)
             const legendYPosition = height + 25
             svgLegend
-            .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+            .attr(
+                'transform',
+                `translate(${legendXPosition}, ${legendYPosition})`
+            )
         }
 
     }

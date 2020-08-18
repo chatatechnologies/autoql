@@ -424,18 +424,13 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .style('font-size', '10px')
 
         const legendWrapLength = width / 2 - 50
-        var legendOrdinal = d3.legendColor()
-        .shape(
-            'path',
-            d3.symbol()
-            .type(d3.symbolCircle)
-            .size(70)()
-        )
-        .orient(legendOrientation)
-        .shapePadding(shapePadding)
-        .labelWrap(legendWrapLength)
-        .scale(colorScale)
-        .on('cellclick', function(d) {
+        var legendOrdinal = getLegend(
+            colorScale,
+            legendWrapLength,
+            legendOrientation
+        );
+
+        legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createLines();
             const legendCell = d3.select(this);

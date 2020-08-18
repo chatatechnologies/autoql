@@ -102,14 +102,19 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     .text(col2);
 
 
-    var x = d3.scaleBand()
-    .range([ 0, width ])
-    .domain(labelsX.map(function(d) {
-        return d
-    }))
-    .padding(0.01);
-
-    var xAxis = d3.axisBottom(x);
+    var x = SCALE_BAND();
+    // d3.scaleBand()
+    setDomainRange(
+        x,
+        labelsX.map(function(d) {
+            return d
+        }),
+        0,
+        width,
+        false,
+        0.01
+    )
+    var xAxis = getAxisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -137,14 +142,18 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     }
 
 
-    var y = d3.scaleBand()
-    .range([ height - margin.bottom, 0])
-    .domain(labelsY.map(function(d) {
-        return d;
-    }))
-    .padding(0.01);
+    var y = SCALE_BAND();
+    setDomainRange(
+        y,
+        labelsY.map(function(d) {
+            return d
+        }),
+        height - margin.bottom,
+        false,
+        0.01
+    )
 
-    var yAxis = d3.axisLeft(y);
+    var yAxis = getAxisLeft(y);
 
     if(yTickValues.length > 0){
         yAxis.tickValues(yTickValues);
@@ -155,7 +164,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         return formatLabel(d);
     }));
 
-    var colorScale = d3.scaleLinear()
+    var colorScale = SCALE_LINEAR()
     .range([0, 1])
     .domain([0, d3.max(data, function(d) { return d.value; })]);
 
@@ -190,8 +199,8 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     .attr("y", function(d) {
         return y(d.labelY);
     })
-    .attr("width", x.bandwidth())
-    .attr("height", y.bandwidth())
+    .attr("width", getBandWidth(x))
+    .attr("height", getBandWidth(y))
     .attr("fill", options.themeConfig.chartColors[0])
     .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
     .attr('class', 'tooltip-3d square')
