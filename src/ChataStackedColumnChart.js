@@ -397,7 +397,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createBars();
         const legendCell = d3.select(this);
-        legendCell.classed('hidden', !legendCell.classed('hidden'));
+        legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
     svgLegend.call(legendOrdinal)
 

@@ -253,7 +253,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     let stackedG;
 
-    function barsV3(stackedG, stackedData){
+    function barsV3(stackedData){
         stackedG = svg.append("g")
         .selectAll('g')
         .data(stackedData)
@@ -303,7 +303,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     }
 
-    function barsV4(stackedG, stackedData){
+    function barsV4(stackedData){
         stackedG = svg.append("g")
         .selectAll("g")
         .data(stackedData)
@@ -365,9 +365,9 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         if(stackedG)stackedG.remove();
 
         if(MAJOR_D3_VERSION === '3'){
-            barsV3(stackedG, stackedData);
+            barsV3(stackedData);
         }else{
-            barsV4(stackedG, stackedData);
+            barsV4(stackedData);
         }
         tooltipCharts();
         onUpdate(component);
@@ -395,7 +395,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createBars();
         const legendCell = d3.select(this);
-        legendCell.classed('hidden', !legendCell.classed('hidden'));
+        legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
     svgLegend.call(legendOrdinal)
 

@@ -1262,15 +1262,15 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     opacity: 1;
 }
 
-.legendCells .hidden {
-    opacity: 0.2;
+.legendCells .disable-group {
+    opacity: 0.2 !important;
 }
 
 .legendCells .cell{
     cursor: pointer;
 }
 
-.autoql-vanilla-stacked-rect.hidden,{
+.autoql-vanilla-stacked-rect.hidden{
     opacity: 0;
 }
 

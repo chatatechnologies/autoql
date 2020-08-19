@@ -381,7 +381,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createLayers();
         const legendCell = d3.select(this);
-        legendCell.classed('hidden', !legendCell.classed('hidden'));
+        legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
     svgLegend.call(legendOrdinal)
 

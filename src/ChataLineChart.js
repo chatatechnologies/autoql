@@ -434,7 +434,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
             data = toggleSerie(data, d.trim());
             createLines();
             const legendCell = d3.select(this);
-            legendCell.classed('hidden', !legendCell.classed('hidden'));
+            legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
         svgLegend.call(legendOrdinal)
 

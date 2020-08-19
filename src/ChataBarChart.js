@@ -432,7 +432,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
             data = toggleSerie(data, d.trim());
             createBars();
             const legendCell = d3.select(this);
-            legendCell.classed('hidden', !legendCell.classed('hidden'));
+            legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
         svgLegend.call(legendOrdinal)
 

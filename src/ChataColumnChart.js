@@ -408,7 +408,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             data = toggleSerie(data, d.trim());
             createBars();
             const legendCell = d3.select(this);
-            legendCell.classed('hidden', !legendCell.classed('hidden'));
+            legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
         svgLegend.call(legendOrdinal)
 
