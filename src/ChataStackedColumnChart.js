@@ -261,6 +261,20 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
 
     function barsV3(stackedG, stackedData){
         console.log('VERSION 3');
+        var stackedG = svg.selectAll("g.cost")
+        .data(stackedData)
+        .enter().append("g")
+        .attr("class", "cost")
+        .style("fill", function(d, i) { console.log(d[i]); return color(d[i].component) })
+        .selectAll("rect")
+        .data(function(d) { return d; })
+        .enter()
+        .append("rect")
+        .attr("x", function(d) { return x(d.x); })
+        .attr("y", function(d) { return y(d.y0 + d.y) + 0.5; })
+        .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); })
+        .attr("width", getBandWidth(x))
+        .attr('opacity', '0.7')
     }
 
     function barsV4(stackedG, stackedData){
@@ -325,7 +339,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
                 return Math.abs(y(d[0]) - y(d[1]) - 0.5);
             }
         })
-        .attr("width",x.bandwidth())
+        .attr("width", x.bandwidth())
     }
 
     function createBars(){

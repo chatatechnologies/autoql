@@ -130,8 +130,9 @@ const getStackedData = (visibleGroups, data) => {
         return d3.layout.stack()(visibleGroups.map((group) => {
             return data.map((d) => {
                 return {
-                    y: d.group,
-                    x: +d[group] || 0,
+                    x: d.group,
+                    y: +d[group] || 0,
+                    component: group
                 }
             })
         }))
