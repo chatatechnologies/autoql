@@ -253,8 +253,55 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     let stackedG;
 
+    const invertData = (dataset) => {
+        var inverted = dataset.map(function (group) {
+            return group.map(function (d) {
+                // Invert the x and y values, and y0 becomes x0
+                return {
+                    x: d.y,
+                    y: d.x,
+                    x0: d.y0,
+                    component: d.component
+                };
+            });
+        })
+
+        return inverted;
+    }
+
     function barsV3(stackedG, stackedData){
         console.log('VERSION 3');
+        stackedData = invertData(stackedData);
+
+        stackedG = svg.append("g")
+        .selectAll('g')
+        .data(stackedData)
+        .enter()
+        .append('g')
+        .style('fill', function (d, i) {
+            return color(d[i].component);
+        })
+        .selectAll('rect')
+        .data(function (d) {
+            return d;
+        })
+        .enter()
+        .append('rect')
+        .attr('x', function (d) {
+            console.log(x(d.x0));
+            return x(d.x0);
+        })
+        .attr('y', function (d, i) {
+            return y(d.y);
+        })
+        .attr('height', function (d) {
+            return getBandWidth(y);
+        })
+        .attr('width', function (d) {
+            return x(d.x);
+        })
+        .attr('opacity', '0.7')
+
     }
 
     function barsV4(stackedG, stackedData){
@@ -316,7 +363,6 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     function createBars(){
         var visibleGroups = getVisibleGroups(allSubgroups);
         var stackedData = getStackedData(visibleGroups, data);
-        console.log(stackedData);
         if(stackedG)stackedG.remove();
 
         if(MAJOR_D3_VERSION === '3'){

@@ -262,10 +262,10 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     function barsV3(stackedG, stackedData){
         var stackedG = svg.selectAll("g.cost")
         .data(stackedData)
-        .enter().append("g")
+        .enter()
+        .append("g")
         .attr("class", "cost")
         .style("fill", function(d, i) {
-            console.log(d);
             if(d[i]) return color(d[i].component); else return 'transparent'
         })
         .selectAll("rect")
