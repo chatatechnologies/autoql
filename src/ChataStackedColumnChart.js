@@ -260,16 +260,38 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     let stackedG;
 
     function barsV3(stackedG, stackedData){
-        console.log('VERSION 3');
         var stackedG = svg.selectAll("g.cost")
         .data(stackedData)
         .enter().append("g")
         .attr("class", "cost")
-        .style("fill", function(d, i) { console.log(d[i]); return color(d[i].component) })
+        .style("fill", function(d, i) {
+            console.log(d);
+            if(d[i]) return color(d[i].component); else return 'transparent'
+        })
         .selectAll("rect")
         .data(function(d) { return d; })
         .enter()
         .append("rect")
+        .each(function(d, i){
+            // console.log(d);
+            if(!d)return;
+            d3.select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-col3', col3)
+            .attr('data-colvalue1', d.component)
+            .attr('data-colvalue2', formatData(
+                d.x, cols[groupableIndex2], options
+            ))
+            .attr('data-colvalue3', formatData(
+                d.y, cols[notGroupableIndex],
+                options
+            ))
+            .attr('data-unformatvalue1', d.component)
+            .attr('data-unformatvalue2', d.x)
+            .attr('data-unformatvalue3', d.y)
+            .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
+        })
         .attr("x", function(d) { return x(d.x); })
         .attr("y", function(d) { return y(d.y0 + d.y) + 0.5; })
         .attr("height", function(d) { return y(d.y0) - y(d.y0 + d.y); })
