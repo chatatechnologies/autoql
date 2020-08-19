@@ -253,11 +253,11 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     let stackedG;
 
-    function createBars(){
-        var visibleGroups = getVisibleGroups(allSubgroups);
-        var stackedData = getStackedData(visibleGroups, data);
-        if(stackedG)stackedG.remove();
+    function barsV3(stackedG, stackedData){
+        console.log('VERSION 3');
+    }
 
+    function barsV4(stackedG, stackedData){
         stackedG = svg.append("g")
         .selectAll("g")
         .data(stackedData)
@@ -311,6 +311,19 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
             }
             return Math.abs(x(d[0]) - x(d[1]));
         })
+    }
+
+    function createBars(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = getStackedData(visibleGroups, data);
+        console.log(stackedData);
+        if(stackedG)stackedG.remove();
+
+        if(MAJOR_D3_VERSION === '3'){
+            barsV3(stackedG, stackedData);
+        }else{
+            barsV4(stackedG, stackedData);
+        }
         tooltipCharts();
         onUpdate(component);
 

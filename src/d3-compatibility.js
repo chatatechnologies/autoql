@@ -131,7 +131,7 @@ const getStackedData = (visibleGroups, data) => {
             return data.map((d) => {
                 return {
                     y: d.group,
-                    x: +d[group],
+                    x: +d[group] || 0,
                 }
             })
         }))

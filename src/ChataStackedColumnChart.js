@@ -181,14 +181,24 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     }
 
 
-    var x = d3.scaleBand()
-    .domain(groups.map(function(element){
-        return element;
-    }))
-    .range([0, chartWidth])
-    .padding([0.2]);
+    // var x = d3.scaleBand()
+    // .domain(groups.map(function(element){
+    //     return element;
+    // }))
+    // .range([0, chartWidth])
+    // .padding([0.2]);
 
-    var xAxis = d3.axisBottom(x);
+    var x = SCALE_BAND()
+    setDomainRange(
+        x,
+        groups,
+        0,
+        chartWidth,
+        false,
+        0.2
+    )
+
+    var xAxis = getAxisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -227,14 +237,15 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         return sum;
     });
 
-    var y = d3.scaleLinear()
+    var y = SCALE_LINEAR()
     .domain([0, maxValue])
     .range([ height - margin.bottomChart, 0 ]);
-    var yAxis = d3.axisLeft(y);
+    var yAxis = getAxisLeft(y);
 
-    var color = d3.scaleOrdinal()
-    .domain(subgroups)
-    .range(options.themeConfig.chartColors)
+    var color = getColorScale(subgroups, options.themeConfig.chartColors)
+    // d3.scaleOrdinal()
+    // .domain(subgroups)
+    // .range(options.themeConfig.chartColors)
 
     svg.append("g")
     .attr("class", "grid")
@@ -248,13 +259,11 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
 
     let stackedG;
 
-    function createBars(){
-        var visibleGroups = getVisibleGroups(allSubgroups);
-        var stackedData = d3.stack()
-        .keys(visibleGroups)
-        (data)
-        if(stackedG)stackedG.remove();
-        console.log(stackedData);
+    function barsV3(stackedG, stackedData){
+        console.log('VERSION 3');
+    }
+
+    function barsV4(stackedG, stackedData){
         stackedG = svg.append("g")
         .selectAll("g")
         .data(stackedData)
@@ -317,7 +326,18 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
             }
         })
         .attr("width",x.bandwidth())
+    }
 
+    function createBars(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = getStackedData(visibleGroups, data);
+        if(stackedG)stackedG.remove();
+
+        if(MAJOR_D3_VERSION === '3'){
+            barsV3(stackedG, stackedData);
+        }else{
+            barsV4(stackedG, stackedData);
+        }
         tooltipCharts();
         onUpdate(component);
     }
@@ -329,24 +349,15 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .style('font-size', '10px')
 
     const legendWrapLength = wLegendBox - 28;
-    legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort().map(elem => {
-            return formatChartData(elem, cols[groupableIndex1], options);
-        }))
-        .range(options.themeConfig.chartColors)
-
-
-    var legendOrdinal = d3.legendColor()
-    .shape(
-        'path',
-        d3.symbol()
-        .type(d3.symbolCircle)
-        .size(75)()
+    const legendValues = subgroups.sort().map(elem => {
+        return formatChartData(elem, cols[groupableIndex1], options);
+    });
+    legendScale = getColorScale(
+        legendValues,
+        options.themeConfig.chartColors
     )
-    .orient('vertical')
-    .shapePadding(5)
-    .labelWrap(legendWrapLength)
-    .scale(legendScale)
+
+    var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
     .on('cellclick', function(d) {
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createBars();
