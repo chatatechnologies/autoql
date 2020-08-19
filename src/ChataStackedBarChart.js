@@ -287,6 +287,26 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         })
         .enter()
         .append('rect')
+        .each(function(d, i){
+            // console.log(d);
+            if(!d)return;
+            d3.select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-col3', col3)
+            .attr('data-colvalue1', d.component)
+            .attr('data-colvalue2', formatData(
+                d.y, cols[groupableIndex2], options
+            ))
+            .attr('data-colvalue3', formatData(
+                d.x, cols[notGroupableIndex],
+                options
+            ))
+            .attr('data-unformatvalue1', d.component)
+            .attr('data-unformatvalue2', d.y)
+            .attr('data-unformatvalue3', d.x)
+            .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
+        })
         .attr('x', function (d) {
             console.log(x(d.x0));
             return x(d.x0);
