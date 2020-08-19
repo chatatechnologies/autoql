@@ -125,16 +125,16 @@ const getLegend = (scale, legendWrapLength, orient) => {
 
 const getStackedData = (visibleGroups, data) => {
     if(MAJOR_D3_VERSION === '3'){
-        console.log(visibleGroups);
-        console.log(data);
         return d3.layout.stack()(visibleGroups.map((group) => {
-            return data.map((d) => {
+            var dataGroup = data.map((d) => {
                 return {
                     x: d.group,
                     y: +d[group] || 0,
                     component: group
                 }
             })
+            dataGroup.key = group;
+            return dataGroup
         }))
     }else{
         return d3.stack()

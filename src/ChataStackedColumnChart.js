@@ -266,14 +266,13 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .append("g")
         .attr("class", "cost")
         .style("fill", function(d, i) {
-            if(d[i]) return color(d[i].component); else return 'transparent'
+            return color(d.key);
         })
         .selectAll("rect")
         .data(function(d) { return d; })
         .enter()
         .append("rect")
         .each(function(d, i){
-            // console.log(d);
             if(!d)return;
             d3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)

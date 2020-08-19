@@ -253,33 +253,14 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     let stackedG;
 
-    const invertData = (dataset) => {
-        var inverted = dataset.map(function (group) {
-            return group.map(function (d) {
-                // Invert the x and y values, and y0 becomes x0
-                return {
-                    x: d.y,
-                    y: d.x,
-                    x0: d.y0,
-                    component: d.component
-                };
-            });
-        })
-
-        return inverted;
-    }
-
     function barsV3(stackedG, stackedData){
-        console.log('VERSION 3');
-        stackedData = invertData(stackedData);
-
         stackedG = svg.append("g")
         .selectAll('g')
         .data(stackedData)
         .enter()
         .append('g')
         .style('fill', function (d, i) {
-            return color(d[i].component);
+            return color(d.key);
         })
         .selectAll('rect')
         .data(function (d) {
@@ -288,7 +269,6 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         .enter()
         .append('rect')
         .each(function(d, i){
-            // console.log(d);
             if(!d)return;
             d3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
@@ -296,29 +276,28 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
             .attr('data-col3', col3)
             .attr('data-colvalue1', d.component)
             .attr('data-colvalue2', formatData(
-                d.y, cols[groupableIndex2], options
+                d.x, cols[groupableIndex2], options
             ))
             .attr('data-colvalue3', formatData(
-                d.x, cols[notGroupableIndex],
+                d.y, cols[notGroupableIndex],
                 options
             ))
             .attr('data-unformatvalue1', d.component)
-            .attr('data-unformatvalue2', d.y)
-            .attr('data-unformatvalue3', d.x)
+            .attr('data-unformatvalue2', d.x)
+            .attr('data-unformatvalue3', d.y)
             .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
         })
         .attr('x', function (d) {
-            console.log(x(d.x0));
-            return x(d.x0);
+            return x(d.y0);
         })
         .attr('y', function (d, i) {
-            return y(d.y);
+            return y(d.x);
         })
         .attr('height', function (d) {
             return getBandWidth(y);
         })
         .attr('width', function (d) {
-            return x(d.x);
+            return x(d.y);
         })
         .attr('opacity', '0.7')
 
