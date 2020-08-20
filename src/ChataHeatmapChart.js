@@ -148,6 +148,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         labelsY.map(function(d) {
             return d
         }),
+        0,
         height - margin.bottom,
         false,
         0.01

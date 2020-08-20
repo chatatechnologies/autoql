@@ -155,6 +155,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
         labelsY.map(function(d) {
             return d
         }),
+        0,
         height - margin.bottom,
         false,
         0.01

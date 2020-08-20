@@ -103,7 +103,7 @@ const getLegend = (scale, legendWrapLength, orient) => {
             'path',
             d3.svg.symbol().
             type("circle")
-            .size(150)()
+            .size(75)()
         )
         .orient(orient)
         .shapePadding(5)
