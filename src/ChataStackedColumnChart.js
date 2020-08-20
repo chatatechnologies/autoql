@@ -239,7 +239,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
 
     var y = SCALE_LINEAR()
     .domain([0, maxValue])
-    .range([ height - margin.bottomChart, 0 ]);
+    .range([ height - margin.bottomChart, 0 ]).nice();
     var yAxis = getAxisLeft(y);
 
     var color = getColorScale(subgroups, options.themeConfig.chartColors)

@@ -193,7 +193,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     var x = SCALE_LINEAR()
     .domain([0, maxValue])
-    .range([ 0, chartWidth ]);
+    .range([ 0, chartWidth ]).nice();
 
     if(tickWidth < 135){
         svg.append("g")

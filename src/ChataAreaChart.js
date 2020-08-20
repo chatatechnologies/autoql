@@ -185,15 +185,29 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
 
 
-    var x = d3.scaleBand()
-    .domain(groups.map(function(element){
-        return element;
-    }))
-    .range([0, chartWidth])
-    .paddingInner(1)
-    .paddingOuter(0)
+    var x = SCALE_BAND()
+    setDomainRange(
+        x,
+        groups.map(function(element){
+            return element;
+        }),
+        0,
+        chartWidth,
+        false,
+        0
+    )
 
-    var xAxis = d3.axisBottom(x);
+    // .domain()
+    // .range([0, chartWidth])
+    if(MAJOR_D3_VERSION === '3'){
+        // x.padding([1,0])
+        // x.rangeRoundBands([0, chartWidth], [0, 1]);
+    }else{
+        x.paddingInner(1)
+        .paddingOuter(0)
+    }
+
+    var xAxis = getAxisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -232,15 +246,12 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         return sum;
     });
 
-    var y = d3.scaleLinear()
+    var y = SCALE_LINEAR()
     .domain([0, maxValue])
     .range([ height - margin.bottomChart, 0]).nice();
-    var yAxis = d3.axisLeft(y);
+    var yAxis = getAxisLeft(y);
 
-    var color = d3.scaleOrdinal()
-    .domain(subgroups)
-    .range(options.themeConfig.chartColors)
-
+    var color = getColorScale(subgroups, options.themeConfig.chartColors)
 
     svg.append("g")
     .attr("class", "grid")
@@ -360,24 +371,15 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     .style('font-size', '10px')
 
     const legendWrapLength = wLegendBox - 28;
-    legendScale = d3.scaleOrdinal()
-        .domain(subgroups.sort().map(elem => {
+    legendScale = getColorScale(
+        subgroups.sort().map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);
-        }))
-        .range(options.themeConfig.chartColors)
-
-    var legendOrdinal = d3.legendColor()
-    .shape(
-        'path',
-        d3.symbol()
-        .type(d3.symbolCircle)
-        .size(75)()
+        }),
+        options.themeConfig.chartColors
     )
-    .orient('vertical')
-    .shapePadding(5)
-    .labelWrap(legendWrapLength)
-    .scale(legendScale)
-    .on('cellclick', function(d) {
+    var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
+
+    legendOrdinal.on('cellclick', function(d) {
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createLayers();
         const legendCell = d3.select(this);
@@ -403,5 +405,5 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         }
     );
 
-    createLayers();
+    // createLayers();
 }
