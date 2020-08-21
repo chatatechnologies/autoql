@@ -264,24 +264,12 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     .call(yAxis).select(".domain").remove();
     let layers;
     let layerPoints;
-    function createLayers(){
-        var visibleGroups = getVisibleGroups(allSubgroups);
-        var stackedData = d3.stack()
-        .keys(visibleGroups)
-        .value(function(d, key){
-            var val = parseFloat(d[key]);
-            if(isNaN(val)){
-                return 0;
-            }
-            return val;
-        })
-        (data)
 
-        console.log(stackedData);
+    function layersV3(stackedData){
+        console.log('VERSION 3');
+    }
 
-        if(layers)layers.remove();
-        if(layerPoints)layers.remove();
-
+    function layersV4(stackedData){
         var points = [];
         for (var i = 0; i < stackedData.length; i++) {
             for (var _x = 0; _x < stackedData[i].length; _x++) {
@@ -309,7 +297,9 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .data(stackedData)
         .enter()
         .append("path")
-        .style("fill", function(d, i) { if(d[i]) return color(d.key); else return 'transparent' })
+        .style("fill", function(d, i) {
+            if(d[i]) return color(d.key); else return 'transparent'
+        })
         .attr('opacity', '0.7')
         .attr("d", area)
 
@@ -359,6 +349,22 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             return x(d.group);
         })
         .attr("cy", function(d) { return y(d.y); });
+    }
+
+    function createLayers(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = getStackedAreaData(visibleGroups, data);
+
+        console.log(stackedData);
+
+        if(layers)layers.remove();
+        if(layerPoints)layers.remove();
+
+        if(MAJOR_D3_VERSION === '3'){
+            layersV3(stackedData);
+        }else{
+            layersV4(stackedData);
+        }
 
         tooltipCharts();
         onUpdate(component);

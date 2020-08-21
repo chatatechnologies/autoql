@@ -98,7 +98,10 @@ const getPie = (fn) => {
 
 const getArea = (xFn, y0Fn, y1Fn) => {
     if(MAJOR_D3_VERSION === '3'){
-
+        return d3.svg.area()
+        .x(xFn)
+        .y0(y0Fn)
+        .y1(y1Fn)
     }else{
         return d3.area()
         .x(xFn)
@@ -131,6 +134,33 @@ const getLegend = (scale, legendWrapLength, orient) => {
         .shapePadding(5)
         .labelWrap(legendWrapLength)
         .scale(scale)
+    }
+}
+
+const getStackedAreaData = (visibleGroups, data) => {
+    if(MAJOR_D3_VERSION === '3'){
+        return d3.layout.stack()(visibleGroups.map((group) => {
+            var dataGroup = data.map((d) => {
+                return {
+                    x: d.group,
+                    y: +d[group] || 0,
+                    component: group
+                }
+            })
+            dataGroup.key = group;
+            return dataGroup
+        }))
+    }else{
+        return d3.stack()
+        .keys(visibleGroups)
+        .value(function(d, key){
+            var val = parseFloat(d[key]);
+            if(isNaN(val)){
+                return 0;
+            }
+            return val;
+        })
+        (data)
     }
 }
 
