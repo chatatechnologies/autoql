@@ -96,6 +96,17 @@ const getPie = (fn) => {
     }
 }
 
+const getArea = (xFn, y0Fn, y1Fn) => {
+    if(MAJOR_D3_VERSION === '3'){
+
+    }else{
+        return d3.area()
+        .x(xFn)
+        .y0(y0Fn)
+        .y1(y1Fn)
+    }
+}
+
 const getLegend = (scale, legendWrapLength, orient) => {
     if(MAJOR_D3_VERSION === '3'){
         return d3.legend.color()

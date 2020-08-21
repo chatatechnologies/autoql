@@ -299,19 +299,19 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             }
         }
 
+        const area = getArea(
+            (d, i) => { return x(d.data.group) },
+            (d) => { return Math.abs(y(d[0])) },
+            (d) => { return Math.abs(y(d[1])) }
+        )
+
         layers = svg.selectAll("mylayers")
         .data(stackedData)
         .enter()
         .append("path")
         .style("fill", function(d, i) { if(d[i]) return color(d.key); else return 'transparent' })
         .attr('opacity', '0.7')
-        .attr("d", d3.area()
-            .x(function(d, i) {
-                return x(d.data.group);
-            })
-            .y0(function(d) { return Math.abs(y(d[0])); })
-            .y1(function(d) { return Math.abs(y(d[1])); })
-        )
+        .attr("d", area)
 
         layerPoints = svg.selectAll("circle")
         .data(points)
@@ -405,5 +405,5 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         }
     );
 
-    // createLayers();
+    createLayers();
 }
