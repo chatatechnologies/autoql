@@ -207,25 +207,21 @@ function Tile(dashboard, options={}){
         var newHeight = (startHeight + e.clientY - startY);
 
 
-        if(newWidth % 50 == 0)resizeWidth = true;
-        if(newHeight % 50 == 0)resizeHeight = true;
+        // if(newWidth % 50 == 0)resizeWidth = true;
+        // if(newHeight % 50 == 0)resizeHeight = true;
 
+        if(newWidth < 320){
+            newWidth = 320;
+        }else if(newWidth >= maxWidth){
+            newWidth = maxWidth;
+        }
+        chataDashboardItem.style.width = newWidth + 'px';
         if(resizeWidth){
-            if(newWidth < 320){
-                newWidth = 320;
-            }else if(newWidth >= maxWidth){
-                newWidth = maxWidth;
-            }
-            chataDashboardItem.style.width = newWidth + 'px';
         }
-
-        if(resizeHeight){
-            if(newHeight < 140){
-                newHeight = 140;
-            }
-            chataDashboardItem.style.height = newHeight + 'px';
+        if(newHeight < 140){
+            newHeight = 140;
         }
-
+        chataDashboardItem.style.height = newHeight + 'px';
 
         dashboard.grid.refreshItems(chataDashboardItem).layout();
 
