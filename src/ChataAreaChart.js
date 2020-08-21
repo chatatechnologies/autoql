@@ -266,7 +266,22 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     let layerPoints;
 
     function layersV3(stackedData){
-        console.log('VERSION 3');
+        const area = getArea(
+            (d, i) => { console.log(d.data); return x(d.x) },
+            (d) => { return Math.abs(y(d.y0)) },
+            (d) => { return Math.abs(y(d.y0 + d.y)) }
+        )
+
+        layers = svg.selectAll("mylayers")
+        .data(stackedData)
+        .enter()
+        .append("path")
+        .style("fill", function(d, i) {
+            console.log(d.key);
+            return color(d.key);
+        })
+        .attr('opacity', '0.7')
+        .attr("d", area)
     }
 
     function layersV4(stackedData){
@@ -288,7 +303,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         }
 
         const area = getArea(
-            (d, i) => { return x(d.data.group) },
+            (d, i) => { console.log(d.data); return x(d.data.group) },
             (d) => { return Math.abs(y(d[0])) },
             (d) => { return Math.abs(y(d[1])) }
         )
@@ -298,6 +313,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .enter()
         .append("path")
         .style("fill", function(d, i) {
+            console.log(d.key);
             if(d[i]) return color(d.key); else return 'transparent'
         })
         .attr('opacity', '0.7')

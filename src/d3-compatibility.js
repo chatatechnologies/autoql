@@ -143,7 +143,7 @@ const getStackedAreaData = (visibleGroups, data) => {
             var dataGroup = data.map((d) => {
                 return {
                     x: d.group,
-                    y: +d[group] || 0,
+                    y: d[group] || 0,
                     component: group
                 }
             })
