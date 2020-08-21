@@ -357,14 +357,14 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             .attr('fill', 'white')
         })
         .on("mouseout", function(d, i){
-            d3.select(this).
-            attr("stroke", 'transparent')
+            d3.select(this)
+            .attr("stroke", 'transparent')
             .attr('fill', 'transparent')
         })
         .attr("cx", function(d) {
             return x(d.group);
         })
-        .attr("cy", function(d) { return y(d.y); });
+        .attr("cy", function(d) { return y(d.y + d.y0); });
     }
 
     function createLayers(){
