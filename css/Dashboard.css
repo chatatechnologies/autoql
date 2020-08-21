@@ -137,6 +137,15 @@
     outline: none!important;
 }
 
+.autoql-vanilla-split-view-btn{
+    color: #508bb8;
+}
+
+.autoql-vanilla-chata-toolbar-btn .autoql-vanilla-chata-icon svg g path,
+.autoql-vanilla-chata-toolbar-btn .autoql-vanilla-chata-icon svg path{
+    fill: currentColor !important;
+}
+
 .autoql-vanilla-chata-dashboard-item .autoql-vanilla-item-content:hover .actions-toolbar{
     visibility: visible;
     opacity: 1;

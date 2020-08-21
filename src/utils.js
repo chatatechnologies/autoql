@@ -654,7 +654,8 @@ function refreshTooltips(){
     });
     tippy('[data-tippy-content]', {
         theme: 'chata',
-        delay: [500]
+        delay: [500],
+        dynamicTitle: true
     })
 }
 

@@ -20,7 +20,7 @@ function Tile(dashboard, options={}){
     `);
 
     var vizToolbarSplitButton = htmlToElement(`
-        <button class="autoql-vanilla-chata-toolbar-btn">
+        <button class="autoql-vanilla-chata-toolbar-btn" data-tippy-content="Split View">
         </button>
     `);
 
@@ -143,6 +143,10 @@ function Tile(dashboard, options={}){
         placeholder: 'Add descriptive title (optional)',
         type: "single"
     }, NOTEBOOK);
+
+    queryInput.input.setAttribute('data-tippy-content', 'Query')
+    queryInput2.input.setAttribute('data-tippy-content', 'Title')
+
 
     inputContainer1.appendChild(queryInput.input);
     inputContainer1.appendChild(queryInput.spanIcon);
@@ -337,6 +341,7 @@ function Tile(dashboard, options={}){
             var splitContainer = document.createElement('div');
             var ids = [];
             vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
+            vizToolbarSplitButton.setAttribute('data-tippy-content','Single View');
             chataDashboardItem.views.map(view => {
                 if(view.isSecond){
                     var viewUUID = view.uuid;
@@ -379,7 +384,9 @@ function Tile(dashboard, options={}){
             chataDashboardItem.views[0].refreshView();
             tileResponseContainer.classList.add('chata-flex');
             vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
+            vizToolbarSplitButton.setAttribute('data-tippy-content','Split View');
         }
+        refreshTooltips();
     }
 
     chataDashboardItem.runQuery = async () => {
@@ -560,7 +567,9 @@ function InputToolbar(text, tileWrapper) {
     `)
 
     var btn = htmlToElement(`
-        <button class="autoql-vanilla-chata-toolbar-btn autoql-vanilla-input-toolbar-btn">
+        <button
+            class="autoql-vanilla-chata-toolbar-btn autoql-vanilla-input-toolbar-btn"
+            data-tippy-content="Query">
             <span class="autoql-vanilla-chata-icon autoql-vanilla-chata-toolbar-icon">
                 ${INPUT_BUBBLES}
             </span>
@@ -1257,33 +1266,49 @@ function TileView(dashboard, chataDashboardItem,
                 button.setAttribute('data-displaytype', displayTypes[i]);
                 if(displayTypes[i] == 'table'){
                     button.innerHTML = TABLE_ICON;
+                    button.setAttribute('data-tippy-content', 'Table');
                 }
                 if(displayTypes[i] == 'column'){
                     button.innerHTML = COLUMN_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Column Chart');
                 }
                 if(displayTypes[i] == 'bar'){
                     button.innerHTML = BAR_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Bar Chart');
                 }
                 if(displayTypes[i] == 'pie'){
                     button.innerHTML = PIE_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Pie Chart');
                 }
                 if(displayTypes[i] == 'line'){
                     button.innerHTML = LINE_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Line Chart');
                 }
                 if(displayTypes[i] == 'pivot_table'){
                     button.innerHTML = PIVOT_ICON;
+                    button.setAttribute('data-tippy-content', 'Pivot Table');
                 }
                 if(displayTypes[i] == 'heatmap'){
                     button.innerHTML = HEATMAP_ICON;
+                    button.setAttribute('data-tippy-content', 'Heatmap');
                 }
                 if(displayTypes[i] == 'bubble'){
                     button.innerHTML = BUBBLE_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Bubble Chart');
                 }
                 if(displayTypes[i] == 'stacked_column'){
                     button.innerHTML = STACKED_COLUMN_CHART_ICON;
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Column Chart'
+                    );
                 }
                 if(displayTypes[i] == 'stacked_bar'){
                     button.innerHTML = STACKED_BAR_CHART_ICON;
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Bar Chart'
+                    );
                 }
                 if(button.innerHTML != ''){
                     vizToolbar.appendChild(button);
@@ -1308,6 +1333,7 @@ function TileView(dashboard, chataDashboardItem,
             tileWrapper.appendChild(vizToolbar);
         }
         obj.createactionToolbar(uuid, ignoreDisplayType);
+        refreshTooltips();
     }
 
     obj.sendDrilldownClientSide = (json, indexValue, filterBy) => {
@@ -1488,6 +1514,8 @@ function TileView(dashboard, chataDashboardItem,
             chataDashboardItem.runQuery('dashboards.suggestion');
         }
     }
+
+    refreshTooltips();
 
     return obj;
 }
