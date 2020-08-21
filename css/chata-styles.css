@@ -997,33 +997,33 @@ tr td.chata-hidden{
     width: auto; */
 }
 .hm0{
-    opacity: 0.5;
-    fill: currentColor;
+    opacity: 0.5 !important;
+    fill: currentColor !important;
 }
 .hm1 {
-    fill: currentColor;
+    fill: currentColor !important;
 }
 .hm2 {
-    opacity: 0.15;
-    fill: currentColor;
+    opacity: 0.15 !important;
+    fill: currentColor !important;
     enable-background: new;
 }
 .hm3 {
-    opacity: 0.6;
-    fill: currentColor;
+    opacity: 0.6 !important;
+    fill: currentColor !important;
     enable-background: new;
 }
 .hm4 {
-    opacity: 0.65;
-    fill: currentColor;
+    opacity: 0.65 !important;
+    fill: currentColor !important;
     enable-background: new;
 }
 .hm5 {
-    fill: currentColor;
+    fill: currentColor !important;
 }
 
 .hm6 {
-    fill: currentColor;
+    fill: currentColor !important;
 }
 
 .domain{
@@ -1323,6 +1323,11 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .chart-icon-svg-0, .chata-icon-svg-0 {
     fill: currentColor;
+}
+
+.pie_chart{
+
+    fill: currentColor !important;
 }
 
 .tippy-tooltip.chata-theme {
