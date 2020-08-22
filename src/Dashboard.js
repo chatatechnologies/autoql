@@ -63,7 +63,8 @@ function Dashboard(selector, options={}){
         splitView: true,
         secondDisplayType: 'table',
         secondDisplayPercentage: 25,
-        enableDynamicCharting: true
+        enableDynamicCharting: true,
+        dashboardId: -1
 }
 
     if('authentication' in options){

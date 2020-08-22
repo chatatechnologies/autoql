@@ -668,7 +668,9 @@
                         </label>
                     </div>
                 </div>
+            </div>
 
+            <div class="dashboard-toolbar-container" style="display: flex; justify-content: center; background: rgb(250, 250, 250); padding: 10px;">
                 <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display: none;" id="add-tile">
                     <i aria-label="icon: plus" class="anticon anticon-plus">
                         <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
@@ -678,7 +680,6 @@
                     </i>
                     <span>Add Tile</span>
                 </button>
-
                 <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display: none;" id="undo">
                     <i aria-label="icon: rollback" class="anticon anticon-rollback">
                         <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="rollback" width="1em" height="1em" fill="currentColor" aria-hidden="true">
@@ -689,6 +690,15 @@
                         </svg>
                     </i>
                     <span>Undo</span>
+                </button>
+
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display:none" id="saveDashboard">
+                    <span role="img" aria-label="save" class="anticon anticon-save"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="save" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                        <path d="M893.3 293.3L730.7 130.7c-7.5-7.5-16.7-13-26.7-16V112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V338.5c0-17-6.7-33.2-18.7-45.2zM384 184h256v104H384V184zm456 656H184V184h136v136c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V205.8l136 136V840zM512 442c-79.5 0-144 64.5-144 144s64.5 144 144 144 144-64.5 144-144-64.5-144-144-144zm0 224c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z">
+                        </path>
+                    </svg>
+                    </span>
+                    <span>Save Dashboard</span>
                 </button>
             </div>
 
@@ -1260,6 +1270,7 @@
                                     if(xhrDasboard.readyState === 4){
                                         var json = JSON.parse(xhrDasboard.responseText);
                                         console.log(json[0]['data']);
+                                        console.log(json[0]['id']);
                                         dashboard = new Dashboard('.grid-1', {
                                             themeConfig: {
                                                 chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
@@ -1281,7 +1292,8 @@
                                             },
                                             executeOnMount: true,
                                             executeOnStopEditing: false,
-                                            splitView: true
+                                            splitView: true,
+                                            dashboardId: json[0]['id']
                                             // fontFamily: 'monospace'
                                         });
                                     }
@@ -1593,6 +1605,7 @@
         var startEditing = document.getElementById('start-editing')
         var stopEditing = document.getElementById('stop-editing')
         var addTile = document.getElementById('add-tile')
+        var saveDashboard = document.getElementById('saveDashboard')
         var undo = document.getElementById('undo')
         var runDashboard = document.getElementById('runDashboard')
         var execute = document.getElementById('execute')
@@ -1605,6 +1618,7 @@
             stopEditing.style.display = 'block';
             addTile.style.display = 'block';
             undo.style.display = 'block';
+            saveDashboard.style.display = 'block';
         }
 
         stopEditing.onclick = function(){
@@ -1613,6 +1627,36 @@
             addTile.style.display = 'none';
             undo.style.display = 'none';
             startEditing.style.display = 'block';
+            saveDashboard.style.display = 'none';
+        }
+
+        saveDashboard.onclick = (evt) => {
+            var filteredTiles = dashboard.tiles.map(function(tile) {
+                return {
+                    ...tile.options,
+                    queryResponse: undefined
+                }
+            })
+            var name = getActiveIntegrator(domain);
+            var newData = {
+                name: name,
+                data: filteredTiles
+            }
+            xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4){
+                    console.log(xhr.responseText);
+                }
+            }
+            const url = `https://backend-staging.chata.io/api/v1/dashboards/${dashboard.options.dashboardId}?key=${dashboard.options.authentication.apiKey}`
+            xhr.open('PUT', url);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader(
+                "Authorization", `Bearer ${dashboard.options.authentication.token}`
+            );
+            console.log(newData);
+            xhr.send(JSON.stringify(newData));
+
         }
 
         addTile.onclick = function(){
