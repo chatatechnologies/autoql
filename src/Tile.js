@@ -1001,6 +1001,16 @@ function TileView(dashboard, chataDashboardItem,
                 );
                 toolbarType = 'chart-view';
                 break;
+            case 'stacked_line':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createAreaChart(
+                    chartWrapper, json,
+                    dashboard.options, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+            break;
             case 'pie':
                 var chartWrapper = document.createElement('div');
                 container.appendChild(chartWrapper);
@@ -1305,6 +1315,13 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 if(displayTypes[i] == 'stacked_bar'){
                     button.innerHTML = STACKED_BAR_CHART_ICON;
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Area Chart'
+                    );
+                }
+                if(displayTypes[i] == 'stacked_line'){
+                    button.innerHTML = STACKED_AREA_CHART_ICON;
                     button.setAttribute(
                         'data-tippy-content',
                         'Stacked Bar Chart'
