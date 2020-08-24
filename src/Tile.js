@@ -885,7 +885,7 @@ function TileView(dashboard, chataDashboardItem,
     obj.copyMetadata = () => {
         // tileResponseContainer.metadata
         console.log(parentChartDrilldownContainer);
-        parentChartDrilldownContainer.metadata = tileWrapper.metadata
+        chartDrilldownContainer.metadata = tileWrapper.metadata
     }
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
