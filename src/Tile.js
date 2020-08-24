@@ -36,6 +36,30 @@ function Tile(dashboard, options={}){
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
 
+    chataDashboardItem.getData = () => {
+        console.log(chataDashboardItem.options);
+        const o = chataDashboardItem.options;
+        return {
+            dataConfig: {numberColumnIndex: 0, numberColumnIndices: [0], stringColumnIndex: -1, stringColumnIndices: []},
+            displayType: o.displayType,
+            h: o.h,
+            i: o.i,
+            isNewTile: false,
+            key: o.key,
+            maxH: o.maxH,
+            minH: o.minH,
+            minW: o.minW,
+            moved: false,
+            query: o.query,
+            skipSafetyNet: false,
+            static: false,
+            title: o.title,
+            w: o.w,
+            x: o.x,
+            y: o.y
+        }
+    }
+
     chataDashboardItem.options = {
         query: '',
         title: '',
