@@ -1269,8 +1269,9 @@
                                     dashboardTab.style.display = 'inline-block';
                                     if(xhrDasboard.readyState === 4){
                                         var json = JSON.parse(xhrDasboard.responseText);
-                                        console.log(json[0]['data']);
-                                        console.log(json[0]['id']);
+                                        console.log(json);
+                                        console.log(json[1]['data']);
+                                        console.log(json[1]['id']);
                                         dashboard = new Dashboard('.grid-1', {
                                             themeConfig: {
                                                 chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
@@ -1286,14 +1287,14 @@
                                             autoQLConfig: {
                                                 debug: true
                                             },
-                                            tiles: json[0]['data'],
+                                            tiles: json[1]['data'],
                                             onChangeCallback: function() {
                                                 console.log('Dashboard onChangeCallback');
                                             },
                                             executeOnMount: true,
                                             executeOnStopEditing: false,
                                             splitView: true,
-                                            dashboardId: json[0]['id']
+                                            dashboardId: json[1]['id']
                                             // fontFamily: 'monospace'
                                         });
                                     }

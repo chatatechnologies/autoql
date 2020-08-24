@@ -736,6 +736,7 @@ function TileView(dashboard, chataDashboardItem,
                         resolve();
                     }else{
                         obj.isSafetynet = false;
+                        obj.clearMetadata();
                         ChataUtils.ajaxCall(val, function(json){
                             if(loadingContainer){
                                 tileResponseContainer.removeChild(
@@ -882,8 +883,9 @@ function TileView(dashboard, chataDashboardItem,
     }
 
     obj.copyMetadata = () => {
-        chartDrilldownContainer.parentElement.metadata =
-        tileResponseContainer.metadata
+        // tileResponseContainer.metadata
+        console.log(tileWrapper.metadata);
+        chartDrilldownContainer.parentElement.metadata = tileWrapper.metadata
     }
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
@@ -1406,8 +1408,10 @@ function TileView(dashboard, chataDashboardItem,
             modal.show();
             obj.refreshDrilldownView(chartDrilldownContainer);
         }else{
+            modal.show();
+            obj.refreshDrilldownView(chartDrilldownContainer);
+            drilldownTable.innerHTML = 'No Data Found.'
             setTimeout(() => {
-                obj.refreshDrilldownView(chartDrilldownContainer);
             }, 400)
         }
     }
