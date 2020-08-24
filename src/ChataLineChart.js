@@ -29,8 +29,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         yIndexes = indexList['QUANTITY'];
     }
     var metadataComponent = getMetadataElement(component, fromChataUtils);
-    console.log('METADATA: ' + metadataComponent.metadata);
     console.log(metadataComponent);
+    console.log(metadataComponent.metadata);
     if(!metadataComponent.metadata){
         console.log('REGISTER METADATA');
         metadataComponent.metadata = {

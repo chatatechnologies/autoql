@@ -884,8 +884,8 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.copyMetadata = () => {
         // tileResponseContainer.metadata
-        console.log(tileWrapper.metadata);
-        chartDrilldownContainer.parentElement.metadata = tileWrapper.metadata
+        console.log(parentChartDrilldownContainer);
+        parentChartDrilldownContainer.metadata = tileWrapper.metadata
     }
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
@@ -1239,6 +1239,7 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.clearMetadata = () => {
         tileWrapper.metadata = undefined;
+        console.log('CLEAR METADATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
     }
 
     obj.getToolbarActionType = (json, displayType) => {
@@ -1420,7 +1421,12 @@ function TileView(dashboard, chataDashboardItem,
         if(e.target.dataset.tilechart){
             obj.copyMetadata();
             chataDashboardItem.updateSelectedBars(e.target);
-            var query = chataDashboardItem.inputQuery.value;
+            let query;
+            if(obj.isSecond){
+                query = obj.inputToolbar.input.value;
+            }else{
+                query = chataDashboardItem.inputQuery.value;
+            }
             var indexData = parseInt(e.target.dataset.tilechart);
             var colValue = e.target.dataset.colvalue1;
             var indexValue = e.target.dataset.filterindex;

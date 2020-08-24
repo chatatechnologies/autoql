@@ -118,9 +118,7 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
 
         checkboxInput.onchange = (evt) => {
             var type = evt.target.dataset.colType;
-            console.log(type);
             if(type !== obj.groupType){
-                console.log('deselectCheckBox');
                 deselectCheckBox();
                 obj.groupType = type;
             }
@@ -167,7 +165,6 @@ function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
                 var colIndex = cols[i].index;
                 var isChecked = seriesIndexes.includes(colIndex);
                 if(isChecked && !obj.groupType){
-                    console.log(cols[i].col.type);
                     obj.groupType = cols[i].col.type;
                 }
                 var checkbox = createCheckbox(cols[i], isChecked);
