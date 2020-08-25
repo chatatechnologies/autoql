@@ -67,8 +67,8 @@
     <script src="src/NotificationList.js"></script>
     <script src="src/Notification.js"></script>
     <script src="src/NotificationSettingsModal.js"></script>
-    <script src="src/Settings.js"></script>
-    <script src="src/SettingsItem.js"></script>
+    <script src="src/NotificationSettings.js"></script>
+    <script src="src/NotificationSettingsItem.js"></script>
     <script src="src/split.min.js"></script>
     <script src="src/PopoverChartSelector.js"></script>
     <script src="src/AntdMessage.js"></script>
@@ -199,41 +199,41 @@
 
                     <div class="prop prop-column">
                         <h6>Project ID</h6>
-                        <!-- <input type="text" name="customerId" value="" placeholder="" class="validate"> -->
-                        <input type="text" name="customerId" value="spira-demo3" placeholder="" class="validate">
+                        <input type="text" name="customerId" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="customerId" value="spira-demo3" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your project ID" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>User Email</h6>
-                        <!-- <input type="text" name="userId" value="" placeholder="" class="validate"> -->
-                        <input type="text" name="userId" value="vidhya@chata.ai" placeholder="" class="validate">
+                        <input type="text" name="userId" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="userId" value="vidhya@chata.ai" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your user ID" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>API key</h6>
-                        <!-- <input type="text" name="apiKey" value="" placeholder="" class="validate"> -->
-                        <input type="text" name="apiKey" value="AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU" placeholder="" class="validate">
+                        <input type="text" name="apiKey" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="apiKey" value="AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your API key" data-success=""></span>
                     </div>
                     <div class="prop prop-column">
                         <h6>Domain URL</h6>
-                        <!-- <input type="text" name="domain" value="" placeholder="" class="validate"> -->
-                        <input type="text" name="domain" value="https://spira-staging.chata.io" placeholder="" class="validate">
+                        <input type="text" name="domain" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="domain" value="https://spira-staging.chata.io" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your domain URL" data-success=""></span>
                     </div>
                     <div class="prop prop-column">
                         <h6>Username</h6>
-                        <!-- <input type="text" id="username" value="" placeholder="" class="validate"> -->
-                        <input type="text" id="username" value="admin" placeholder="" class="validate">
+                        <input type="text" id="username" value="" placeholder="" class="validate">
+                        <!-- <input type="text" id="username" value="admin" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your username" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>Password</h6>
-                        <!-- <input type="password" id="password" value="" placeholder="" class="validate"> -->
-                        <input type="password" id="password" value="admin123" placeholder="" class="validate">
+                        <input type="password" id="password" value="" placeholder="" class="validate">
+                        <!-- <input type="password" id="password" value="admin123" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your password" data-success=""></span>
                     </div>
                     <div class="">
@@ -971,22 +971,14 @@
         enableDynamicCharting: true,
         placement: 'right'
     })
-    // var datamessenger = new DataMessenger('#chata', {
-    //     authentication: {
-    //         demo: true
-    //     },
-    //     autoQLConfig: {
-    //         debug: true
-    //     },
-    //     title: 'TEST',
-    //     placement: 'right',
-    //     onMaskClick: function(datamessenger){
-    //         datamessenger.closeDrawer();
-    //     }
-    // })
-    var settingsList = new NotificationSettings([
-        new SettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000')
+
+
+    var settingsList = new NotificationSettings('#test4', [
+        new NotificationSettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000'),
+        new NotificationSettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000')
     ])
+
+
     var notificationList = new NotificationList([
         new Notification({
             id: 1,
@@ -1013,9 +1005,10 @@
             last_triggered: new Date()
         }),
     ]);
-    document.getElementById('test5').appendChild(notificationList);
-    document.getElementById('test4').appendChild(settingsList);
+    // document.getElementById('test5').appendChild(notificationList);
+    // document.getElementById('test4').appendChild(settingsList);
     //Create the components
+
     let queryInput = ChataUtils.getQueryInput({
         authentication: {
             token: _token,

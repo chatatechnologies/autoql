@@ -1,4 +1,4 @@
-function SettingsItem(title, message){
+function NotificationSettingsItem(title, message){
     var wrapper = document.createElement('div');
     var header = document.createElement('div');
     var settingsDisplayName = document.createElement('div');
