@@ -29,9 +29,14 @@
     display: block;
 }
 
-.chata-popover-wrapper.up{
+.chata-popover-wrapper.up-table{
     top: -129px;
 }
+
+.chata-popover-wrapper.up-chart{
+    top: -92px;
+}
+
 
 .autoql-vanilla-chat-message-toolbar.show{
     display: block;

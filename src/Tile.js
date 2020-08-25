@@ -1107,16 +1107,28 @@ function TileView(dashboard, chataDashboardItem,
     }
 
     obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
+        let popoverClass;
+        if(['table', 'pivot_table'].includes(obj.internalDisplayType)){
+            popoverClass = 'up-table';
+        }else{
+            popoverClass = 'up-chart';
+        }
         reportProblem.classList.toggle('show');
-        reportProblem.classList.add('up');
+        reportProblem.classList.add(popoverClass);
         toolbar.classList.toggle('show');
     }
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
+        let popoverClass;
+        if(['table', 'pivot_table'].includes(obj.internalDisplayType)){
+            popoverClass = 'up-table';
+        }else{
+            popoverClass = 'up-chart';
+        }
         closeAllToolbars();
         moreOptions.classList.toggle('show');
-        moreOptions.classList.add('up');
+        moreOptions.classList.add(popoverClass);
         toolbar.classList.toggle('show');
     }
 
