@@ -22,7 +22,9 @@ function NotificationSettingsItem(title, message){
     displayNameMessage.classList.add('chata-notification-setting-display-name-message');
     settingsActions.classList.add('chata-notification-setting-actions')
     displayName.innerHTML = title;
-    displayNameMessage.innerHTML = message;
+    if(message){
+        displayNameMessage.innerHTML = ' - ' + message;
+    }
 
 
     settingsActions.appendChild(chataCheckbox)

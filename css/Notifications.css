@@ -338,6 +338,8 @@
     overflow: hidden;
     text-overflow: ellipsis;
     padding-right: 10px;
+    color: rgba(0,0,0,.65);
+    font-size: 14px;
 }
 
 .notification-group-wrapper .notification-and-or-break {

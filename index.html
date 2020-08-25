@@ -974,12 +974,12 @@
 
 
     var settingsList = new NotificationSettings('#test4', [
-        new NotificationSettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000'),
-        new NotificationSettingsItem('Transactions exceeded $1000', ' - We detected a transaction over $1000')
+        new NotificationSettingsItem('Transactions exceeded $1000', 'We detected a transaction over $1000'),
+        new NotificationSettingsItem('Transactions exceeded $1000', 'We detected a transaction over $1000')
     ])
 
 
-    var notificationList = new NotificationList([
+    var notificationList = new NotificationList('#test5',[
         new Notification({
             id: 1,
             displayName: 'Transactions exceeded $1000',
