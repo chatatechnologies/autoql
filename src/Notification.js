@@ -20,29 +20,6 @@ function Notification(options={}){
     var dismissIcon = htmlToElement(DISMISS);
     var calendarIcon = htmlToElement(CALENDAR);
 
-    // <div class="chata-notification-details">
-    //     <div class="chata-notification-details-title">Conditions:</div>
-    //         <div class="notification-rules-container read-only">
-    //             <div>
-    //                 <div class="notification-read-only-group  no-border">
-    //                     <div>
-    //                         <span class="read-only-rule-term">Total estimates by ticket type this year</span>
-    //                         <span class="read-only-rule-term">&gt;</span>
-    //                         <span class="read-only-rule-term">1000</span>
-    //                     </div>
-    //                 </div>
-    //             </div>
-    //         </div>
-    //     <div class="chata-notification-details-title">Description:
-    //         </div>
-    //         <div>
-    //     </div>
-    // </div>
-
-
-
-
-
     item.classList.add('chata-notification-list-item');
     item.classList.add('triggered');
 
@@ -81,7 +58,7 @@ function Notification(options={}){
     `));
 
     responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
-
+    notificationRulesContainer.appendChild(new NotificationGroup(['Tickets', '>', '1000']))
 
     chartContainer.appendChild(notificationQueryTitle);
     chartContainer.appendChild(responseContentContainer);
