@@ -133,7 +133,7 @@
 .chata-notification-list-container .chata-notification-expanded-content {
     width: 100%;
     /* height: 205px; */
-    padding: 5px 20px 0;
+    /* padding: 5px 20px 0; */
     display: flex;
     flex-direction: column;
     justify-content: stretch;
@@ -486,4 +486,15 @@
     margin-bottom: 2px;
     margin-top: 2px;
     border-radius: 4px;
+}
+
+
+.chata-notification-list-item .chata-notification-extra-content {
+    flex: 0 1;
+    flex-basis: 55px;
+    text-align: center;
+    padding: 8px;
+    border-top: 1px solid rgba(0,0,0,.05);
+    display: flex;
+    justify-content: space-between;
 }

@@ -19,6 +19,13 @@ function Notification(options={}){
     var detailsContainer = document.createElement('div');
     var dismissIcon = htmlToElement(DISMISS);
     var calendarIcon = htmlToElement(CALENDAR);
+    var extraContent = document.createElement('div');
+    var btnTurnNotification = document.createElement('button');
+    var editNotification = document.createElement('button');
+    var turnNotificationText = document.createTextNode(
+        'Turn off these notifications'
+    );
+    var editNotificationText = document.createTextNode('Edit Notification');
 
     item.classList.add('chata-notification-list-item');
     item.classList.add('triggered');
@@ -45,7 +52,24 @@ function Notification(options={}){
     notificationDetailsTitle2.classList.add('chata-notification-details-title');
     notificationRulesContainer.classList.add('notification-rules-container');
     notificationRulesContainer.classList.add('read-only');
+    extraContent.classList.add('chata-notification-extra-content');
+    btnTurnNotification.classList.add('autoql-vanilla-chata-btn');
+    btnTurnNotification.classList.add('default');
+    btnTurnNotification.classList.add('large');
+    editNotification.classList.add('autoql-vanilla-chata-btn');
+    editNotification.classList.add('default');
+    editNotification.classList.add('large');
+
     notificationQueryTitle.innerHTML = 'Test title';
+
+    btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
+    editNotification.innerHTML = EDIT_NOTIFICATION;
+
+    btnTurnNotification.appendChild(turnNotificationText);
+    editNotification.appendChild(editNotificationText);
+
+    extraContent.appendChild(btnTurnNotification);
+    extraContent.appendChild(editNotification);
 
     displayName.appendChild(document.createTextNode(options.displayName));
 
@@ -84,6 +108,7 @@ function Notification(options={}){
     item.appendChild(alertStrip);
 
     expandedContent.appendChild(detailsContainer);
+    expandedContent.appendChild(extraContent);
 
     header.onclick = function(evt){
         var expanded = document.getElementsByClassName(

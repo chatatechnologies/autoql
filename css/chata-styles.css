@@ -1692,8 +1692,13 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-btn.default {
     color: inherit;
-    border: 1px solid #a7a7a7;
+    border: 1px solid rgba(0,0,0,.15);
     background: inherit;
+}
+
+.autoql-vanilla-chata-btn.large {
+    padding: 5px 16px;
+    margin: 2px 5px;
 }
 
 .autoql-vanilla-chata-btn.primary {
