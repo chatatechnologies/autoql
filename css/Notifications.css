@@ -139,7 +139,7 @@
     justify-content: stretch;
     transition: height .2s ease;
     height: 0;
-    opacity: 0;
+    /* opacity: 0; */
 }
 
 .chata-notification-expanded-content.visible{
@@ -413,7 +413,7 @@
     overflow: hidden;
 }
 
-.chata-notification-list-item .chata-notification-data-container .chata-notificaton-chart-container {
+.chata-notification-list-item .chata-notification-data-container .chata-notification-chart-container {
     flex: 1 1;
     height: 100%;
     width: 0;
@@ -434,4 +434,38 @@
     margin: 0 10px;
     padding-top: 20px;
     padding-bottom: 7px;
+}
+
+.chata-response-content-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    font-size: 14px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.chata-response-content-container.table {
+    max-height: 100vh!important;
+}
+
+.chata-notification-list-item .chata-notification-list-item-header {
+    border-bottom: 1px solid rgba(0,0,0,.04);
+}
+
+.chata-notification-list-item .chata-notification-details-container .chata-notification-details {
+    flex: 1 1;
+    padding: 0 20px 20px;
+    opacity: .9;
+    border-left: 1px solid rgba(0,0,0,.05);
+}
+
+.chata-notification-list-item .chata-notification-details-title {
+    font-weight: 600;
+    padding-top: 20px;
+    padding-bottom: 5px;
 }

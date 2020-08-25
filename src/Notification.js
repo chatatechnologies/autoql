@@ -10,20 +10,38 @@ function Notification(options={}){
     var dataContainer = document.createElement('div');
     var chartContainer = document.createElement('div');
     var responseContentContainer = document.createElement('div');
+    var notificationDetails = document.createElement('div');
+    var notificationDetailsTitle = document.createElement('div');
+    var notificationDetailsTitle2 = document.createElement('div');
+    var notificationRulesContainer = document.createElement('div');
     var notificationQueryTitle = document.createElement('div');
     var alertStrip = document.createElement('div');
     var detailsContainer = document.createElement('div');
     var dismissIcon = htmlToElement(DISMISS);
     var calendarIcon = htmlToElement(CALENDAR);
 
-    // <div class="chata-notification-data-container">
-    //     <div class="chata-notificaton-chart-container">
-    //         <div class="chata-notification-query-title">Total Tickets</div>
-    //         <div id="chata-response-content-container-b39c9135-105c-4b27-b8e5-ee20eba4b76c" class="chata-response-content-container table">
-    //             <a class="single-value-response ">$1,361,422.33</a>
+    // <div class="chata-notification-details">
+    //     <div class="chata-notification-details-title">Conditions:</div>
+    //         <div class="notification-rules-container read-only">
+    //             <div>
+    //                 <div class="notification-read-only-group  no-border">
+    //                     <div>
+    //                         <span class="read-only-rule-term">Total estimates by ticket type this year</span>
+    //                         <span class="read-only-rule-term">&gt;</span>
+    //                         <span class="read-only-rule-term">1000</span>
+    //                     </div>
+    //                 </div>
+    //             </div>
     //         </div>
+    //     <div class="chata-notification-details-title">Description:
+    //         </div>
+    //         <div>
     //     </div>
     // </div>
+
+
+
+
 
     item.classList.add('chata-notification-list-item');
     item.classList.add('triggered');
@@ -41,22 +59,40 @@ function Notification(options={}){
     timestamp.classList.add('chata-notification-timestamp');
     detailsContainer.classList.add('chata-notification-details-container');
     dataContainer.classList.add('chata-notification-data-container');
-    chartContainer.classList.add('chata-notificaton-chart-container');
+    chartContainer.classList.add('chata-notification-chart-container');
     notificationQueryTitle.classList.add('chata-notification-query-title');
-
+    responseContentContainer.classList.add('chata-response-content-container');
+    responseContentContainer.classList.add('table');
+    notificationDetails.classList.add('chata-notification-details');
+    notificationDetailsTitle.classList.add('chata-notification-details-title');
+    notificationDetailsTitle2.classList.add('chata-notification-details-title');
+    notificationRulesContainer.classList.add('notification-rules-container');
+    notificationRulesContainer.classList.add('read-only');
     notificationQueryTitle.innerHTML = 'Test title';
 
     displayName.appendChild(document.createTextNode(options.displayName));
 
     description.innerHTML = 'Test description';
+    notificationDetailsTitle.innerHTML = 'Conditions: ';
+    notificationDetailsTitle2.innerHTML = 'Description: ';
     timestamp.appendChild(htmlToElement(`
         <span class="chata-icon calendar">${CALENDAR}<span>
         Today at 11:20am
     `));
 
+    responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
+
+
     chartContainer.appendChild(notificationQueryTitle);
+    chartContainer.appendChild(responseContentContainer);
     dataContainer.appendChild(chartContainer);
+
+    notificationDetails.appendChild(notificationDetailsTitle);
+    notificationDetails.appendChild(notificationRulesContainer);
+    notificationDetails.appendChild(notificationDetailsTitle2);
+
     detailsContainer.appendChild(dataContainer);
+    detailsContainer.appendChild(notificationDetails);
 
     displayNameContainer.appendChild(displayName);
     displayNameContainer.appendChild(description);
