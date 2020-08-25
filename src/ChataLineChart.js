@@ -29,10 +29,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         yIndexes = indexList['QUANTITY'];
     }
     var metadataComponent = getMetadataElement(component, fromChataUtils);
-    console.log(metadataComponent);
-    console.log(metadataComponent.metadata);
     if(!metadataComponent.metadata){
-        console.log('REGISTER METADATA');
         metadataComponent.metadata = {
             groupBy: {
                 index: xIndexes[0].index,

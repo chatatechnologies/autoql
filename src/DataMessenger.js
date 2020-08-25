@@ -228,7 +228,6 @@ function DataMessenger(elem, options){
                 obj.input.setAttribute('placeholder', value);
             case 'userDisplayName':
                 obj.options.userDisplayName = value;
-                console.log('USER DISPLAY NAME');
                 obj.options.introMessage = "Hi " +
                 obj.options.userDisplayName +
                 `! Let’s dive into your data.
@@ -1420,7 +1419,6 @@ function DataMessenger(elem, options){
 
         switch (type) {
             case 'simple':
-                console.log(request['reference_id']);
                 if(request['reference_id'] !== '1.1.420'
                     && request['reference_id'] !== '1.9.502'){
                     toolbar.appendChild(
@@ -2075,9 +2073,7 @@ function DataMessenger(elem, options){
         containerMessage.style.maxHeight = '85%';
 
         containerMessage.setAttribute('data-bubble-id', idRequest);
-        console.log('IS DRILL ' + isDrilldown);
         if(!isDrilldown){
-            console.log('AQUI');
             containerMessage.relatedMessage = lastBubble;
         }
 
