@@ -20,9 +20,16 @@
 }
 
 .chata-step-title {
-    font-weight: 500;
+    font-weight: 700;
     font-size: 15px;
     line-height: 15px;
+    padding: 2px;
+    cursor: pointer;
+    transition: color .2s ease;
+}
+
+.chata-step-title:hover{
+    color: var(--chata-messenger-accent-color,#26a7df);
 }
 
 .chata-step-content {
