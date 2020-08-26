@@ -16,52 +16,19 @@ function NotificationSettingsModal(){
         </span>
     `);
     wrapper.classList.add('chata-steps-container');
-    var step1 = createStep('Appearance');
-    var step2 = createStep(
+    var step1 = createStep(
         'Notification Conditions',
         'Notify me when the following conditions are met'
     );
+    var step2 = createStep('Frequency');
     var step3 = createStep(
         'Data Return',
         'Return the data from this query when the notification is triggered'
     );
-    var step4 = createStep('Frequency');
-    step4.classList.add('complete');
-    // STEP 1
-    var titleContainer = new InputContainer(
-        ['chata-notification-display-name-input']
-    )
-    var messageContainer = new InputContainer(
-        ['chata-notification-message-input']
-    )
-    var titleInput = new ChataInput('input', {
-        placeholder: 'Title (max 50 characters)',
-        maxlength: '50',
-        type: "single"
-    }, NOTEBOOK);
-    var messageArea = new ChataInput('textarea', {
-        placeholder: 'Notification Message (max 200 characters)',
-        maxlength: '200',
-        type: 'multi',
-        style: "margin-top: 0px; margin-bottom: 0px; height: 120px;"
-    });
-    titleContainer.appendChild(titleInput.input);
-    titleContainer.appendChild(titleInput.spanIcon);
-    messageContainer.appendChild(messageArea.input);
-    step1.addElement(titleContainer);
-    step1.addElement(messageContainer);
-    console.log(step1.classList);
-    titleInput.input.onkeyup = function(evt){
-        if(evt.target.value != ''){
-            if(!step1.classList.contains('complete')){
-                step1.classList.add('complete');
-            }
-        }else{
-            step1.classList.remove('complete');
-        }
-    }
+    var step4 = createStep('Appearance');
+    // step4.classList.add('complete');
 
-    // STEP 2
+    // STEP 1
     var ruleContainer = document.createElement('div');
     var onChangeAndOr = (evt) => {
         var groups = document.getElementsByClassName(
@@ -85,9 +52,9 @@ function NotificationSettingsModal(){
     ruleContainer.classList.add('notification-rule-outer-container');
     ruleContainer.appendChild(group);
     ruleContainer.appendChild(btnAddGroup);
-    step2.addElement(parentSelect);
-    step2.addElement(ruleContainer);
-    ruleContainer.step = step2;
+    step1.addElement(parentSelect);
+    step1.addElement(ruleContainer);
+    ruleContainer.step = step1;
     btnAddGroup.onclick = function(evt){
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
@@ -104,32 +71,11 @@ function NotificationSettingsModal(){
         showLeftAndOr(parentSelect, ruleContainer);
         checkStep2(ruleContainer);
     }
-    step2.onkeyup = function(evt){
+    step1.onkeyup = function(evt){
         checkStep2(ruleContainer);
     }
 
-    // STEP 3
-    var queryReturnContainer = new InputContainer(
-        ['chata-notification-display-name-input']
-    )
-    var queryReturnInput = new ChataInput('input', {
-        placeholder: 'Query',
-        type: "single"
-    }, QUERY);
-    queryReturnContainer.appendChild(queryReturnInput.input);
-    queryReturnContainer.appendChild(queryReturnInput.spanIcon);
-    step3.addElement(queryReturnContainer);
-    queryReturnInput.input.onkeyup = function(evt){
-        if(evt.target.value != ''){
-            if(!step3.classList.contains('complete')){
-                step3.classList.add('complete');
-            }
-        }else{
-            step3.classList.remove('complete');
-        }
-    }
-
-    // STEP 4
+    // STEP 2
     var label = document.createTextNode('Notify me')
     var selectFrequency = document.createElement('div');
     var relativeDiv = document.createElement('div');
@@ -200,12 +146,68 @@ function NotificationSettingsModal(){
     var frequencySettingsContainer = document.createElement('div');
     frequencySettingsContainer.classList.add('frequency-settings-container');
 
-    step4.addClass('notification-frequency-step');
+    step2.addClass('notification-frequency-step');
     frequencySettingsContainer.appendChild(label);
     frequencySettingsContainer.appendChild(selectFrequency);
     frequencySettingsContainer.appendChild(relativeDiv);
-    step4.addElement(frequencySettingsContainer);
-    step4.addElement(frequencyBox);
+    step2.addElement(frequencySettingsContainer);
+    step2.addElement(frequencyBox);
+
+    // STEP 3
+    var queryReturnContainer = new InputContainer(
+        ['chata-notification-display-name-input']
+    )
+    var queryReturnInput = new ChataInput('input', {
+        placeholder: 'Query',
+        type: "single"
+    }, QUERY);
+    queryReturnContainer.appendChild(queryReturnInput.input);
+    queryReturnContainer.appendChild(queryReturnInput.spanIcon);
+    step3.addElement(queryReturnContainer);
+    queryReturnInput.input.onkeyup = function(evt){
+        if(evt.target.value != ''){
+            if(!step3.classList.contains('complete')){
+                step3.classList.add('complete');
+            }
+        }else{
+            step3.classList.remove('complete');
+        }
+    }
+
+    // STEP 4
+    var titleContainer = new InputContainer(
+        ['chata-notification-display-name-input']
+    )
+    var messageContainer = new InputContainer(
+        ['chata-notification-message-input']
+    )
+    var titleInput = new ChataInput('input', {
+        placeholder: 'Title (max 50 characters)',
+        maxlength: '50',
+        type: "single"
+    }, NOTEBOOK);
+    var messageArea = new ChataInput('textarea', {
+        placeholder: 'Notification Message (max 200 characters)',
+        maxlength: '200',
+        type: 'multi',
+        style: "margin-top: 0px; margin-bottom: 0px; height: 120px;"
+    });
+    titleContainer.appendChild(titleInput.input);
+    titleContainer.appendChild(titleInput.spanIcon);
+    messageContainer.appendChild(messageArea.input);
+    step4.addElement(titleContainer);
+    step4.addElement(messageContainer);
+    console.log(step4.classList);
+    titleInput.input.onkeyup = function(evt){
+        if(evt.target.value != ''){
+            if(!step4.classList.contains('complete')){
+                step4.classList.add('complete');
+            }
+        }else{
+            step4.classList.remove('complete');
+        }
+    }
+
     wrapper.appendChild(step1);
     wrapper.appendChild(step2);
     wrapper.appendChild(step3);
