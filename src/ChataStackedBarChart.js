@@ -364,7 +364,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         var stackedData = getStackedData(visibleGroups, data);
         if(stackedG)stackedG.remove();
 
-        if(MAJOR_D3_VERSION === '3'){
+        if(getD3Version() === '3'){
             barsV3(stackedData);
         }else{
             barsV4(stackedData);

@@ -199,7 +199,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     // .domain()
     // .range([0, chartWidth])
-    if(MAJOR_D3_VERSION === '3'){
+    if(getD3Version() === '3'){
         // x.padding([1,0])
         // x.rangeRoundBands([0, chartWidth], [0, 1]);
     }else{
@@ -393,7 +393,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         if(layers)layers.remove();
         if(layerPoints)layers.remove();
 
-        if(MAJOR_D3_VERSION === '3'){
+        if(getD3Version() === '3'){
             layersV3(stackedData);
         }else{
             layersV4(stackedData);

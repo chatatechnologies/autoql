@@ -126,8 +126,8 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
             d.value, cols[index2],
             options
         ))
-        if(MAJOR_D3_VERSION === '3'){
-            d3.select(this)[0][0].style.fill = color(d.data.key)    
+        if(getD3Version() === '3'){
+            d3.select(this)[0][0].style.fill = color(d.data.key)
         }else{
             d3.select(this)._groups[0][0].style.fill = color(d.data.key)
         }
