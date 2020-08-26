@@ -52,6 +52,8 @@ const setDomainRange = (
 }
 
 const getColorScale = (domainValues, range) => {
+    console.log(MAJOR_D3_VERSION);
+    console.log(d3.version.split('.')[0]);
     if(MAJOR_D3_VERSION === '3'){
         return d3.scale.ordinal().domain(domainValues)
         .range(range);
