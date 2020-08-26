@@ -5,7 +5,8 @@ function NotificationSettingsModal(){
     );
     var btnAddGroup = htmlToElement(`
         <span>
-            <div class="chata-btn default notification-rule-add-btn-outer"
+            <div class="autoql-vanilla-chata-btn default
+            notification-rule-add-btn-outer"
             style="padding: 5px 16px; margin: 2px 5px;">
                 <span data-test="chata-icon" class="chata-icon">
                     ${ADD_GROUP}

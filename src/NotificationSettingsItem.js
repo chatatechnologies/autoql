@@ -34,11 +34,11 @@ function NotificationSettingsItem(title, message){
     header.appendChild(settingsActions);
     header.onclick = function(evt){
         var cancelButton = htmlToElement(
-            `<div class="chata-btn default"
+            `<div class="autoql-vanilla-chata-btn default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
         )
         var saveButton = htmlToElement(
-            `<div class="chata-btn primary "
+            `<div class="autoql-vanilla-chata-btn primary "
                 style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
         )
 

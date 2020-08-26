@@ -121,5 +121,36 @@ function Notification(options={}){
         expandedContent.classList.toggle('visible');
     }
 
+    editNotification.onclick = function(evt){
+        var cancelButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn default"
+                style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        )
+        var saveButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn primary "
+                style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+        )
+
+        var configModal = new Modal({
+            withFooter: true,
+            destroyOnClose: true
+        })
+        var modalView = new NotificationSettingsModal();
+        configModal.chataModal.style.width = '95vw';
+
+        configModal.addView(modalView);
+        configModal.setTitle('Custom Notification');
+        configModal.addFooterElement(cancelButton);
+        configModal.addFooterElement(saveButton);
+        configModal.show();
+        refreshTooltips();
+        cancelButton.onclick = (e) => {
+            configModal.close();
+        }
+        saveButton.onclick = (e) => {
+            configModal.close();
+        }
+    }
+
     return item;
 }
