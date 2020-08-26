@@ -1281,14 +1281,14 @@
                                             autoQLConfig: {
                                                 debug: true
                                             },
-                                            tiles: json[1]['data'],
+                                            tiles: json[4]['data'],
                                             onChangeCallback: function() {
                                                 console.log('Dashboard onChangeCallback');
                                             },
                                             executeOnMount: true,
                                             executeOnStopEditing: false,
                                             splitView: true,
-                                            dashboardId: json[1]['id']
+                                            dashboardId: json[4]['id']
                                             // fontFamily: 'monospace'
                                         });
                                     }
@@ -1654,7 +1654,7 @@
                 "Authorization", `Bearer ${dashboard.options.authentication.token}`
             );
             console.log(newData);
-            xhr.send(JSON.stringify(newData));
+            // xhr.send(JSON.stringify(newData));
 
         }
 

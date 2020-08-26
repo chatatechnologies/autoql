@@ -1,6 +1,6 @@
 .autoql-vanilla-popover-selector{
     position: absolute;
-    z-index: 9999;
+    z-index: 100000001;
     border: 1px solid hsla(0,0%,67.1%,.32);
     border-radius: 4px;
     box-shadow: 0 0 8px rgba(0,0,0,.15);
@@ -10,7 +10,7 @@
 }
 
 .autoql-vanilla-axis-selector-container {
-    z-index: 9999;
+    z-index: 100000001;
     background: var(--chata-output-background-color);
     background: white;
     padding: 5px 0;
