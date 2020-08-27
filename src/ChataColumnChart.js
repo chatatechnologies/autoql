@@ -404,6 +404,9 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             legendOrientation
         );
 
+        legendOrdinal.shapePadding(shapePadding);
+        
+
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createBars();

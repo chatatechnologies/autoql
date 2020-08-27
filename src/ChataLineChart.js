@@ -427,6 +427,9 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
             legendOrientation
         );
 
+        legendOrdinal.shapePadding(shapePadding);
+        
+
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createLines();

@@ -281,6 +281,7 @@ function DataMessenger(elem, options){
 
     obj.openDrawer = () => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
+        obj.rootElem.style.zIndex = 2000;
         obj.options.isVisible = true;
         obj.input.focus();
         obj.initialScroll = window.scrollY;

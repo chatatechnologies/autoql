@@ -428,6 +428,8 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
             legendOrientation
         );
 
+        legendOrdinal.shapePadding(shapePadding);
+
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createBars();
