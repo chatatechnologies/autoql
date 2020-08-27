@@ -364,11 +364,60 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         var stackedData = getStackedData(visibleGroups, data);
         if(stackedG)stackedG.remove();
 
-        if(getD3Version() === '3'){
-            barsV3(stackedData);
-        }else{
-            barsV4(stackedData);
-        }
+        stackedG = svg.append("g")
+        .selectAll("g")
+        .data(stackedData)
+        .enter().append("g")
+        .attr("fill", function(d) { return color(d.key) })
+        .selectAll("rect")
+        .data(function(d) { return d; })
+        .enter().append("rect")
+        .each(function (d, i) {
+            var pos = d[1];
+            var sum = 0;
+            for (var [key, value] of Object.entries(d.data)){
+                if(key == 'group')continue;
+                sum += parseFloat(value);
+                if(sum == pos){
+                    d.value = value;
+                    d.labelY = key;
+                    break;
+                }
+            }
+            chataD3.select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-col3', col3)
+            .attr('data-colvalue1', d.labelY)
+            .attr('data-colvalue2', formatData(
+                d.data.group, cols[groupableIndex2], options
+            ))
+            .attr('data-colvalue3', formatData(
+                d.value, cols[notGroupableIndex],
+                options
+            ))
+            .attr('data-unformatvalue1', d.labelY)
+            .attr('data-unformatvalue2', d.data.group)
+            .attr('data-unformatvalue3', d.value)
+
+        })
+        .attr('opacity', '0.7')
+        .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
+        .attr("x", function(d) {
+            return x(d[0]);
+        })
+        .attr("y", function(d) { return y(d.data.group) })
+        .attr("height", function(d) {
+            return y.bandwidth();
+        })
+        .attr("width",function(d){
+            var d1 = d[1];
+            if(isNaN(d1)){
+                return 0;
+            }
+            return Math.abs(x(d[0]) - x(d[1]));
+        })
+
         tooltipCharts();
         onUpdate(component);
 

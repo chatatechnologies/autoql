@@ -265,7 +265,48 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     let layers;
     let layerPoints;
 
-    function addPoints(points){
+    function createLayers(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = getStackedAreaData(visibleGroups, data);
+
+        console.log(stackedData);
+
+        if(layers)layers.remove();
+        if(layerPoints)layers.remove();
+
+        var points = [];
+        for (var i = 0; i < stackedData.length; i++) {
+            for (var _x = 0; _x < stackedData[i].length; _x++) {
+                var seriesValues = stackedData[i][_x].data;
+                for (var [key, value] of Object.entries(seriesValues)) {
+                    if(key === 'group')continue;
+                    points.push({
+                        group: seriesValues.group,
+                        key: key,
+                        y: value,
+                        y0: stackedData[i][_x][groupableIndex1]
+                    })
+                }
+            }
+        }
+
+        const area = getArea(
+            (d, i) => { return x(d.data.group) },
+            (d) => { return Math.abs(y(d[0])) },
+            (d) => { return Math.abs(y(d[1])) }
+        )
+
+        layers = svg.selectAll("mylayers")
+        .data(stackedData)
+        .enter()
+        .append("path")
+        .style("fill", function(d, i) {
+            console.log(d.key);
+            if(d[i]) return color(d.key); else return 'transparent'
+        })
+        .attr('opacity', '0.7')
+        .attr("d", area)
+
         layerPoints = svg.selectAll("circle")
         .data(points)
         .enter()
@@ -312,92 +353,6 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             return x(d.group);
         })
         .attr("cy", function(d) { return y(d.y + d.y0); });
-    }
-
-    function layersV3(stackedData){
-        const area = getArea(
-            (d, i) => { return x(d.x) },
-            (d) => { return Math.abs(y(d.y0)) },
-            (d) => { return Math.abs(y(d.y0 + d.y)) }
-        )
-
-        var points = [];
-
-        for (var i = 0; i < stackedData.length; i++) {
-            for (var j = 0; j < stackedData[i].length; j++) {
-                var newPoint = stackedData[i][j];
-                points.push({
-                    group: newPoint.x,
-                    key: newPoint.component,
-                    y: newPoint.y,
-                    y0: newPoint.y0
-                })
-            }
-        }
-
-        layers = svg.selectAll("mylayers")
-        .data(stackedData)
-        .enter()
-        .append("path")
-        .style("fill", function(d, i) {
-            return color(d.key);
-        })
-        .attr('opacity', '0.7')
-        .attr("d", area)
-
-        addPoints(points);
-    }
-
-    function layersV4(stackedData){
-        var points = [];
-        for (var i = 0; i < stackedData.length; i++) {
-            for (var _x = 0; _x < stackedData[i].length; _x++) {
-                var seriesValues = stackedData[i][_x].data;
-                for (var [key, value] of Object.entries(seriesValues)) {
-                    if(key === 'group')continue;
-                    points.push({
-                        group: seriesValues.group,
-                        key: key,
-                        y: value,
-                        y0: stackedData[i][_x][groupableIndex1]
-                    })
-                }
-            }
-        }
-
-        const area = getArea(
-            (d, i) => { return x(d.data.group) },
-            (d) => { return Math.abs(y(d[0])) },
-            (d) => { return Math.abs(y(d[1])) }
-        )
-
-        layers = svg.selectAll("mylayers")
-        .data(stackedData)
-        .enter()
-        .append("path")
-        .style("fill", function(d, i) {
-            console.log(d.key);
-            if(d[i]) return color(d.key); else return 'transparent'
-        })
-        .attr('opacity', '0.7')
-        .attr("d", area)
-        addPoints(points);
-    }
-
-    function createLayers(){
-        var visibleGroups = getVisibleGroups(allSubgroups);
-        var stackedData = getStackedAreaData(visibleGroups, data);
-
-        console.log(stackedData);
-
-        if(layers)layers.remove();
-        if(layerPoints)layers.remove();
-
-        if(getD3Version() === '3'){
-            layersV3(stackedData);
-        }else{
-            layersV4(stackedData);
-        }
 
         tooltipCharts();
         onUpdate(component);

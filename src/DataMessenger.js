@@ -1801,7 +1801,7 @@ function DataMessenger(elem, options){
         table.parentContainer = obj.getParentFromComponent(component);
         obj.refreshToolbarButtons(component, 'table');
         allColHiddenMessage(component);
-        chataD3.select(window).on('resize.'+idRequest, null);
+        chataD3.select(window).on('chata-resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
@@ -1848,7 +1848,7 @@ function DataMessenger(elem, options){
             idRequest, obj.options, obj.onCellClick
         );
         obj.refreshToolbarButtons(component, 'pivot_table');
-        chataD3.select(window).on('resize.'+idRequest, null);
+        chataD3.select(window).on('chata-resize.'+idRequest, null);
 
         component.tabulator = table;
     }

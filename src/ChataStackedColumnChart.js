@@ -35,13 +35,18 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         data, row => row[groupableIndex1]
     );
     var allSubgroups = {}
+    var legendGroups = {};
+    var cols = json['data']['columns'];
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true
         };
+        legendGroups[formatChartData(subgroup, cols[groupableIndex1], options)] = {
+            value: subgroup
+        }
     })
 
-    var cols = json['data']['columns'];
+
     var data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
@@ -299,6 +304,14 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     }
 
     function barsV4(stackedG, stackedData){
+
+    }
+
+    function createBars(){
+        var visibleGroups = getVisibleGroups(allSubgroups);
+        var stackedData = getStackedData(visibleGroups, data);
+        if(stackedG)stackedG.remove();
+
         stackedG = svg.append("g")
         .selectAll("g")
         .data(stackedData)
@@ -361,18 +374,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
             }
         })
         .attr("width", x.bandwidth())
-    }
 
-    function createBars(){
-        var visibleGroups = getVisibleGroups(allSubgroups);
-        var stackedData = getStackedData(visibleGroups, data);
-        if(stackedG)stackedG.remove();
-
-        if(getD3Version() === '3'){
-            barsV3(stackedG, stackedData);
-        }else{
-            barsV4(stackedG, stackedData);
-        }
         tooltipCharts();
         onUpdate(component);
     }
