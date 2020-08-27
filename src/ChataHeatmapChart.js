@@ -53,7 +53,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
         'chata-hidden-scrollbox'
     );
 
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -103,7 +103,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
 
 
     var x = SCALE_BAND();
-    // d3.scaleBand()
+    // chataD3.scaleBand()
     setDomainRange(
         x,
         labelsX.map(function(d) {
@@ -167,7 +167,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
 
     var colorScale = SCALE_LINEAR()
     .range([0, 1])
-    .domain([0, d3.max(data, function(d) { return d.value; })]);
+    .domain([0, chataD3.max(data, function(d) { return d.value; })]);
 
 
     svg.selectAll()
@@ -182,7 +182,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
     .enter()
     .append("rect")
     .each(function (d, i) {
-        d3.select(this).attr(valueClass, i)
+        chataD3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-col3', col3)
@@ -208,7 +208,7 @@ function createHeatmap(component, json, options, fromChataUtils=true, valueClass
 
     tooltipCharts();
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createHeatmap(
                 component,

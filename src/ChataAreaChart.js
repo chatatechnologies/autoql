@@ -104,7 +104,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         margin.bottomChart = 13;
     }
 
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -157,8 +157,8 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX,
-                top: d3.event.clientY
+                left: chataD3.event.clientX,
+                top: chataD3.event.clientY
             }, groupCols, (evt, popover) => {
 
                 var selectedIndex = evt.target.dataset.popoverIndex;
@@ -237,7 +237,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .style("text-anchor", "center");
     }
 
-    var maxValue = d3.max(data, function(d) {
+    var maxValue = chataD3.max(data, function(d) {
         var sum = 0;
         for (var [key, value] of Object.entries(d)){
             if(key == 'group')continue;
@@ -280,7 +280,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .attr("fill-opacity", '1')
         .each(function(d, i){
             if(d.y && d.group && d.key){
-                d3.select(this).attr(valueClass, i)
+                chataD3.select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
                 .attr('data-col3', col3)
@@ -299,12 +299,12 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
             }
         })
         .on("mouseover", function(d, i){
-            d3.select(this).
+            chataD3.select(this).
             attr("stroke", color(d.group))
             .attr('fill', 'white')
         })
         .on("mouseout", function(d, i){
-            d3.select(this)
+            chataD3.select(this)
             .attr("stroke", 'transparent')
             .attr('fill', 'transparent')
         })
@@ -421,7 +421,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     legendOrdinal.on('cellclick', function(d) {
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createLayers();
-        const legendCell = d3.select(this);
+        const legendCell = chataD3.select(this);
         legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
     svgLegend.call(legendOrdinal)
@@ -430,7 +430,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     svgLegend
       .attr('transform', `translate(${newX}, ${0})`)
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createAreaChart(
                 component,

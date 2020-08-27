@@ -206,11 +206,11 @@ const getMinAndMaxValues = (data) => {
 
     for (var i = 0; i < data.length; i++) {
         var serieValues = data[i].values;
-        maxValuesFromArrays.push(d3.max(serieValues, s => s.value));
-        minValuesFromArrays.push(d3.min(serieValues, s => s.value));
+        maxValuesFromArrays.push(chataD3.max(serieValues, s => s.value));
+        minValuesFromArrays.push(chataD3.min(serieValues, s => s.value));
     }
-    let maxValue = d3.max(maxValuesFromArrays);
-    let minValue = d3.min(minValuesFromArrays);
+    let maxValue = chataD3.max(maxValuesFromArrays);
+    let minValue = chataD3.min(minValuesFromArrays);
     if (maxValue === minValue) {
         if (minValue > 0) {
             minValue = 0

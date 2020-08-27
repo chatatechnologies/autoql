@@ -93,7 +93,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     // define color scale
     var color = getColorScale(data, options.themeConfig.chartColors)
 
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append('svg')
     .attr('width', width)
     .attr('height', height)
@@ -110,7 +110,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     var pie = getPie(
         (d) => { return d.value }
     )
-    var dataReady = pie(d3.entries(data))
+    var dataReady = pie(chataD3.entries(data))
 
     // creating the chart
     var path = pieChartContainer.selectAll('path')
@@ -118,7 +118,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
     .enter()
     .append('path')
     .each(function(d, i){
-        d3.select(this).attr(valueClass, i)
+        chataD3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
@@ -127,18 +127,18 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
             options
         ))
         if(getD3Version() === '3'){
-            d3.select(this)[0][0].style.fill = color(d.data.key)
+            chataD3.select(this)[0][0].style.fill = color(d.data.key)
         }else{
-            d3.select(this)._groups[0][0].style.fill = color(d.data.key)
+            chataD3.select(this)._groups[0][0].style.fill = color(d.data.key)
         }
     })
     .attr('d', arc)
     .style('fill-opacity', 0.85)
     .on('mouseover', function(d) {
-        d3.select(this).style('fill-opacity', 1)
+        chataD3.select(this).style('fill-opacity', 1)
     })
     .on('mouseout', function(d) {
-        d3.select(this).style('fill-opacity', 0.85)
+        chataD3.select(this).style('fill-opacity', 0.85)
     })
     .on('click', function(d) {
         svg
@@ -152,7 +152,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
             return 'translate(0,0)';
         });
 
-        d3.select(this)
+        chataD3.select(this)
         .transition()
         .duration(500)
         .attr('transform', function(d) {
@@ -217,7 +217,7 @@ function createPieChart(component, json, options, fromChataUtils=true, valueClas
       .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
 
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createPieChart(
                 component,

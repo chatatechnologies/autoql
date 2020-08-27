@@ -101,7 +101,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -155,8 +155,8 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX,
-                top: d3.event.clientY
+                left: chataD3.event.clientX,
+                top: chataD3.event.clientY
             }, groupCols, (evt, popover) => {
 
                 var selectedIndex = evt.target.dataset.popoverIndex;
@@ -181,7 +181,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     }
 
 
-    // var x = d3.scaleBand()
+    // var x = chataD3.scaleBand()
     // .domain(groups.map(function(element){
     //     return element;
     // }))
@@ -228,7 +228,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .style("text-anchor", "center");
     }
 
-    var maxValue = d3.max(data, function(d) {
+    var maxValue = chataD3.max(data, function(d) {
         var sum = 0;
         for (var [key, value] of Object.entries(d)){
             if(key == 'group')continue;
@@ -243,7 +243,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     var yAxis = getAxisLeft(y);
 
     var color = getColorScale(subgroups, options.themeConfig.chartColors)
-    // d3.scaleOrdinal()
+    // chataD3.scaleOrdinal()
     // .domain(subgroups)
     // .range(options.themeConfig.chartColors)
 
@@ -274,7 +274,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
         .append("rect")
         .each(function(d, i){
             if(!d)return;
-            d3.select(this).attr(valueClass, i)
+            chataD3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
             .attr('data-col2', col2)
             .attr('data-col3', col3)
@@ -322,7 +322,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
                 }
             }
             if(d.labelY && d.data.group && d.value){
-                d3.select(this).attr(valueClass, i)
+                chataD3.select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
                 .attr('data-col3', col3)
@@ -339,7 +339,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
                 .attr('data-unformatvalue3', d.value)
                 .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
             }else{
-                d3.select(this).attr('class','autoql-vanilla-stacked-rect')
+                chataD3.select(this).attr('class','autoql-vanilla-stacked-rect')
             }
         })
         .attr('opacity', '0.7')
@@ -396,7 +396,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
     .on('cellclick', function(d) {
         allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
         createBars();
-        const legendCell = d3.select(this);
+        const legendCell = chataD3.select(this);
         legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
     svgLegend.call(legendOrdinal)
@@ -406,7 +406,7 @@ function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fro
       .attr('transform', `translate(${newX}, ${0})`)
 
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createStackedColumnChart(
                 component,

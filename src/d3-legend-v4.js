@@ -3,7 +3,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, function (exports) { 'use strict';
 
   function ascending(a, b) {
@@ -468,7 +468,7 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, (function (exports) { 'use strict';
 
 var prefix = "$";
@@ -687,7 +687,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, (function (exports) { 'use strict';
 
 var define = function(constructor, factory, prototype) {
@@ -1212,7 +1212,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, function (exports) { 'use strict';
 
   var noop = {value: function() {}};
@@ -1308,7 +1308,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, function (exports) { 'use strict';
 
   // Computes the decimal coefficient and exponent of the specified number x with
@@ -1638,7 +1638,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3-color')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3-color'], factory) :
-  (factory((global.d3 = global.d3 || {}),global.d3));
+  (factory((global.chataD3 = global.chataD3 || {}),global.chataD3));
 }(this, (function (exports,d3Color) { 'use strict';
 
 function basis(t1, v0, v1, v2, v3) {
@@ -2185,7 +2185,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3-array'), require('d3-collection'), require('d3-interpolate'), require('d3-format'), require('d3-time'), require('d3-time-format'), require('d3-color')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3-array', 'd3-collection', 'd3-interpolate', 'd3-format', 'd3-time', 'd3-time-format', 'd3-color'], factory) :
-  (factory((global.d3 = global.d3 || {}),global.d3,global.d3,global.d3,global.d3,global.d3,global.d3,global.d3));
+  (factory((global.chataD3 = global.chataD3 || {}),global.chataD3,global.chataD3,global.chataD3,global.chataD3,global.chataD3,global.chataD3,global.chataD3));
 }(this, function (exports,d3Array,d3Collection,d3Interpolate,d3Format,d3Time,d3TimeFormat,d3Color) { 'use strict';
 
   var array = Array.prototype;
@@ -3088,7 +3088,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, function (exports) { 'use strict';
 
   var xhtml = "http://www.w3.org/1999/xhtml";
@@ -4062,7 +4062,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3-time')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3-time'], factory) :
-  (factory((global.d3 = global.d3 || {}),global.d3));
+  (factory((global.chataD3 = global.chataD3 || {}),global.chataD3));
 }(this, (function (exports,d3Time) { 'use strict';
 
 function localDate(d) {
@@ -4652,7 +4652,7 @@ Object.defineProperty(exports, '__esModule', { value: true });
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports) :
   typeof define === 'function' && define.amd ? define(['exports'], factory) :
-  (factory((global.d3 = global.d3 || {})));
+  (factory((global.chataD3 = global.chataD3 || {})));
 }(this, (function (exports) { 'use strict';
 
 var t0 = new Date;
@@ -5512,7 +5512,7 @@ exports.default = {
   d3_calcType: function d3_calcType(scale, ascending, cells, labels, labelFormat, labelDelimiter) {
     var type = scale.invertExtent ? d3_quantLegend(scale, labelFormat, labelDelimiter) : scale.ticks ? d3_linearLegend(scale, cells, labelFormat) : d3_ordinalLegend(scale);
 
-    //for d3.scaleSequential that doesn't have a range function
+    //for chataD3.scaleSequential that doesn't have a range function
     var range = scale.range && scale.range() || scale.domain();
     type.labels = d3_mergeLabels(type.labels, labels, scale.domain(), range, labelDelimiter);
 
@@ -6124,9 +6124,9 @@ var _helpers2 = _interopRequireDefault(_helpers);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-d3.legendColor = _color2.default;
-d3.legendSize = _size2.default;
-d3.legendSymbol = _symbol2.default;
-d3.legendHelpers = _helpers2.default;
+chataD3.legendColor = _color2.default;
+chataD3.legendSize = _size2.default;
+chataD3.legendSymbol = _symbol2.default;
+chataD3.legendHelpers = _helpers2.default;
 
 },{"./color":11,"./helpers":12,"./size":14,"./symbol":15}]},{},[16])

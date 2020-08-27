@@ -53,7 +53,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
             }
         });
     }
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -76,11 +76,11 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
     .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col1);
 
-    var maxValue = d3.max(data, function(d) {
+    var maxValue = chataD3.max(data, function(d) {
         return Math.max(d['value1'], d['value2']);
     });
 
-    var minValue = d3.min(data, function(d) {
+    var minValue = chataD3.min(data, function(d) {
         var sum = 0;
         return Math.min(d['value1'], d['value2']);
     });
@@ -90,10 +90,10 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
     }
 
 
-    var x = d3.scaleLinear()
+    var x = chataD3.scaleLinear()
     .domain([minValue, maxValue])
     .range([0, width]);
-    var xAxis = d3.axisBottom(x);
+    var xAxis = chataD3.axisBottom(x);
     xAxis.tickSize(0);
 
     xAxis.tickFormat(function(d){
@@ -109,7 +109,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
 
 
     // Add Y axis
-    var y = d3.scaleBand()
+    var y = chataD3.scaleBand()
     .domain(
         groups.map(function(d) {
             if(d < 18){
@@ -121,7 +121,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
     )
     .range([ 0, height ])
     .padding([0.02]);
-    var axisLeft = d3.axisLeft(y);
+    var axisLeft = chataD3.axisLeft(y);
 
     if(yTickValues.length > 0){
         axisLeft.tickValues(yTickValues);
@@ -133,18 +133,18 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
 
     svg.append("g")
     .attr("class", "grid")
-    .call(d3.axisBottom(x)
+    .call(chataD3.axisBottom(x)
         .tickSize(height)
         .tickFormat("")
     );
 
-    var xSubgroup = d3.scaleBand()
+    var xSubgroup = chataD3.scaleBand()
     .domain(subgroups)
     .range([0, y.bandwidth()])
     .padding([0.01])
 
     // color palette = one color per subgroup
-    var color = d3.scaleOrdinal()
+    var color = chataD3.scaleOrdinal()
     .domain(subgroups)
     .range(options.themeConfig.chartColors)
 
@@ -168,7 +168,7 @@ function createGroupedBarChart(component, groups, data, cols, options, fromChata
     .enter().append("rect")
     .each(function (d, i) {
         var nameCol2 = d.key == 'value1' ? col2 : col3;
-        d3.select(this)
+        chataD3.select(this)
         .attr(valueClass, indexCount)
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)

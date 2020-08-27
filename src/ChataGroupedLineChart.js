@@ -53,7 +53,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
             }
         });
     }
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -86,12 +86,12 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
         };
     });
 
-    var color = d3.scaleOrdinal()
+    var color = chataD3.scaleOrdinal()
     .domain(subgroups)
     .range(options.themeConfig.chartColors)
 
 
-    var x = d3.scaleBand()
+    var x = chataD3.scaleBand()
     .domain(groups.map(function(d) {
         if(d < 18){
             return d;
@@ -102,7 +102,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .range([0, width])
     .padding([0.2]);
 
-    var xAxis = d3.axisBottom(x);
+    var xAxis = chataD3.axisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -126,12 +126,12 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     }
 
     // Add Y axis
-    var maxValue = d3.max(data, function(d) {
+    var maxValue = chataD3.max(data, function(d) {
         var sum = 0;
         return Math.max(d['value1'], d['value2']);
     });
 
-    var minValue = d3.min(data, function(d) {
+    var minValue = chataD3.min(data, function(d) {
         var sum = 0;
         return Math.min(d['value1'], d['value2']);
     });
@@ -141,10 +141,10 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     }
 
     // Add Y axis
-    var y = d3.scaleLinear()
+    var y = chataD3.scaleLinear()
     .domain([minValue, maxValue])
     .range([ height, 0 ]);
-    var axisLeft = d3.axisLeft(y);
+    var axisLeft = chataD3.axisLeft(y);
 
     svg.append("g")
     .attr("class", "grid")
@@ -155,7 +155,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     );
 
     // Add the lines
-    var line = d3.line()
+    var line = chataD3.line()
     .x(function(d) { return x(d.group) })
     .y(function(d) { return y(+d.value) })
     svg.selectAll("myLines")
@@ -190,7 +190,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .append("circle")
     .each(function (d, i) {
         var nameCol2 = d.key == 'value1' ? col2 : col3;
-        d3.select(this)
+        chataD3.select(this)
         .attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)
@@ -208,7 +208,7 @@ function createGroupedLineChart(component, groups, data, cols, options, fromChat
     .attr('stroke-width', '2')
     .attr('stroke-opacity', '0.7')
     .attr("fill", 'white')
-    
+
     var nodeWidth = (d) => d.getBBox().width;
 
     const legend = svg.append('g')

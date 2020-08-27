@@ -1,17 +1,17 @@
-const SCALE_LINEAR = d3.scaleLinear || d3.scale.linear;
-const SCALE_BAND = d3.scaleBand || d3.scale.ordinal;
+const SCALE_LINEAR = chataD3.scaleLinear || chataD3.scale.linear;
+const SCALE_BAND = chataD3.scaleBand || chataD3.scale.ordinal;
 
 const getD3Version = () => {
-    return d3.version.split('.')[0];
+    return chataD3.version.split('.')[0];
 }
 
 const getAxisBottom = (scale) => {
     let axis;
 
-    if('function' === typeof d3.axisBottom){
-        axis = d3.axisBottom(scale);
+    if('function' === typeof chataD3.axisBottom){
+        axis = chataD3.axisBottom(scale);
     }else{
-        axis = d3.svg.axis().scale(scale).orient("bottom");
+        axis = chataD3.svg.axis().scale(scale).orient("bottom");
     }
 
     return axis;
@@ -20,10 +20,10 @@ const getAxisBottom = (scale) => {
 const getAxisLeft = (scale) => {
     let axis;
 
-    if('function' === typeof d3.axisLeft){
-        axis = d3.axisLeft(scale);
+    if('function' === typeof chataD3.axisLeft){
+        axis = chataD3.axisLeft(scale);
     }else{
-        axis = d3.svg.axis().scale(scale).orient("left");
+        axis = chataD3.svg.axis().scale(scale).orient("left");
     }
 
     return axis;
@@ -55,12 +55,12 @@ const setDomainRange = (
 
 const getColorScale = (domainValues, range) => {
     console.log(getD3Version());
-    console.log(d3.version.split('.')[0]);
+    console.log(chataD3.version.split('.')[0]);
     if(getD3Version() === '3'){
-        return d3.scale.ordinal().domain(domainValues)
+        return chataD3.scale.ordinal().domain(domainValues)
         .range(range);
     }else{
-        return d3.scaleOrdinal()
+        return chataD3.scaleOrdinal()
         .domain(domainValues)
         .range(range);
     }
@@ -68,12 +68,12 @@ const getColorScale = (domainValues, range) => {
 
 const getLine = (fnX, fnY) => {
     if(getD3Version() === '3'){
-        return d3.svg.line()
+        return chataD3.svg.line()
 		.x(fnX)
 		.y(fnY)
 		.interpolate("linear");
     }else{
-        return d3.line()
+        return chataD3.line()
         .x(fnX)
         .y(fnY)
     }
@@ -81,11 +81,11 @@ const getLine = (fnX, fnY) => {
 
 const getArc = (iRadius, oRadius) => {
     if(getD3Version() === '3'){
-        return d3.svg.arc()
+        return chataD3.svg.arc()
         .innerRadius(iRadius)
         .outerRadius(oRadius)
     }else{
-        return d3.arc()
+        return chataD3.arc()
         .innerRadius(iRadius)
         .outerRadius(oRadius)
     }
@@ -93,21 +93,21 @@ const getArc = (iRadius, oRadius) => {
 
 const getPie = (fn) => {
     if(getD3Version() === '3'){
-        return d3.layout.pie().value(fn);
+        return chataD3.layout.pie().value(fn);
     }else{
-        return d3.pie()
+        return chataD3.pie()
         .value(fn)
     }
 }
 
 const getArea = (xFn, y0Fn, y1Fn) => {
     if(getD3Version() === '3'){
-        return d3.svg.area()
+        return chataD3.svg.area()
         .x(xFn)
         .y0(y0Fn)
         .y1(y1Fn)
     }else{
-        return d3.area()
+        return chataD3.area()
         .x(xFn)
         .y0(y0Fn)
         .y1(y1Fn)
@@ -116,10 +116,10 @@ const getArea = (xFn, y0Fn, y1Fn) => {
 
 const getLegend = (scale, legendWrapLength, orient) => {
     if(getD3Version() === '3'){
-        return d3.legend.color()
+        return chataD3.legend.color()
         .shape(
             'path',
-            d3.svg.symbol().
+            chataD3.svg.symbol().
             type("circle")
             .size(75)()
         )
@@ -127,11 +127,11 @@ const getLegend = (scale, legendWrapLength, orient) => {
         .shapePadding(5)
         .scale(scale);
     }else{
-        return d3.legendColor()
+        return chataD3.legendColor()
         .shape(
             'path',
-            d3.symbol()
-            .type(d3.symbolCircle)
+            chataD3.symbol()
+            .type(chataD3.symbolCircle)
             .size(75)()
         )
         .orient(orient)
@@ -143,7 +143,7 @@ const getLegend = (scale, legendWrapLength, orient) => {
 
 const getStackedAreaData = (visibleGroups, data) => {
     if(getD3Version() === '3'){
-        return d3.layout.stack()(visibleGroups.map((group) => {
+        return chataD3.layout.stack()(visibleGroups.map((group) => {
             var dataGroup = data.map((d) => {
                 return {
                     x: d.group,
@@ -155,7 +155,7 @@ const getStackedAreaData = (visibleGroups, data) => {
             return dataGroup
         }))
     }else{
-        return d3.stack()
+        return chataD3.stack()
         .keys(visibleGroups)
         .value(function(d, key){
             var val = parseFloat(d[key]);
@@ -170,7 +170,7 @@ const getStackedAreaData = (visibleGroups, data) => {
 
 const getStackedData = (visibleGroups, data) => {
     if(getD3Version() === '3'){
-        return d3.layout.stack()(visibleGroups.map((group) => {
+        return chataD3.layout.stack()(visibleGroups.map((group) => {
             var dataGroup = data.map((d) => {
                 return {
                     x: d.group,
@@ -182,7 +182,7 @@ const getStackedData = (visibleGroups, data) => {
             return dataGroup
         }))
     }else{
-        return d3.stack()
+        return chataD3.stack()
         .keys(visibleGroups)
         (data)
     }

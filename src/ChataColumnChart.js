@@ -165,7 +165,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         options.themeConfig.chartColors
     );
 
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -211,8 +211,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartSeriesPopover({
-                left: d3.event.clientX,
-                top: d3.event.clientY
+                left: chataD3.event.clientX,
+                top: chataD3.event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createColumnChart(
@@ -271,8 +271,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX,
-                top: d3.event.clientY
+                left: chataD3.event.clientX,
+                top: chataD3.event.clientY
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
@@ -364,7 +364,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             var serieName = _col['display_name'] || _col['name'];
             var group = col2;
             if(groupNames.length > 1)group = d.group
-            d3.select(this).attr(valueClass, d.index)
+            chataD3.select(this).attr(valueClass, d.index)
             .attr('data-col1', col1)
             .attr('data-col2', group)
             .attr('data-colvalue1', formatData(
@@ -407,7 +407,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createBars();
-            const legendCell = d3.select(this);
+            const legendCell = chataD3.select(this);
             legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
         svgLegend.call(legendOrdinal)
@@ -436,7 +436,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         }
     }
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createColumnChart(
                 component,

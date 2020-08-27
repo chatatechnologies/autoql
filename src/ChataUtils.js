@@ -548,9 +548,9 @@ ChataUtils.showColumnEditor = (id, options) => {
 
 ChataUtils.makeBarChartDomain = function(data, hasNegativeValues){
     if(hasNegativeValues){
-        return d3.extent(data, function(d) { return d.value; });
+        return chataD3.extent(data, function(d) { return d.value; });
     }else{
-        return [0, d3.max(data, function(d) {
+        return [0, chataD3.max(data, function(d) {
             return d.value;
         })];
     }

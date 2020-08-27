@@ -53,7 +53,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
             }
         });
     }
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -77,7 +77,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     .text(col1);
 
 
-    var x = d3.scaleBand()
+    var x = chataD3.scaleBand()
     .domain(groups.map(function(d) {
         if(d < 18){
             return d;
@@ -88,7 +88,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     .range([0, width])
     .padding([0.2]);
 
-    var xAxis = d3.axisBottom(x);
+    var xAxis = chataD3.axisBottom(x);
 
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
@@ -112,12 +112,12 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     }
 
 
-    var maxValue = d3.max(data, function(d) {
+    var maxValue = chataD3.max(data, function(d) {
         var sum = 0;
         return Math.max(d['value1'], d['value2']);
     });
 
-    var minValue = d3.min(data, function(d) {
+    var minValue = chataD3.min(data, function(d) {
         var sum = 0;
         return Math.min(d['value1'], d['value2']);
     });
@@ -128,10 +128,10 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
 
 
     // Add Y axis
-    var y = d3.scaleLinear()
+    var y = chataD3.scaleLinear()
     .domain([minValue, maxValue])
     .range([ height, 0 ]);
-    var axisLeft = d3.axisLeft(y);
+    var axisLeft = chataD3.axisLeft(y);
 
     svg.append("g")
     .attr("class", "grid")
@@ -142,13 +142,13 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     );
 
     // Another scale for subgroup position?
-    var xSubgroup = d3.scaleBand()
+    var xSubgroup = chataD3.scaleBand()
     .domain(subgroups)
     .range([0, x.bandwidth()])
     .padding([0.05])
 
     // color palette = one color per subgroup
-    var color = d3.scaleOrdinal()
+    var color = chataD3.scaleOrdinal()
     .domain(subgroups)
     .range(options.themeConfig.chartColors)
 
@@ -173,7 +173,7 @@ function createGroupedColumnChart(component, groups, data, cols, options, fromCh
     .enter().append("rect")
     .each(function (d, i) {
         var nameCol2 = d.key == 'value1' ? col2 : col3;
-        d3.select(this)
+        chataD3.select(this)
         .attr(valueClass, indexCount)
         .attr('data-col1', col1)
         .attr('data-col2', nameCol2)

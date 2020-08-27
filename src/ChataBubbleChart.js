@@ -54,7 +54,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -105,7 +105,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
 
 
     var x = SCALE_BAND();
-    // d3.scaleBand()
+    // chataD3.scaleBand()
     setDomainRange(
         x,
         labelsX.map(function(d) {
@@ -179,8 +179,8 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     var radiusScale = SCALE_LINEAR()
     .range([0, Math.min(getBandWidth(x), getBandWidth(y))])
     .domain([
-        d3.min(data, function(d) { return d.value; }),
-        d3.max(data, function(d) { return d.value; })
+        chataD3.min(data, function(d) { return d.value; }),
+        chataD3.max(data, function(d) { return d.value; })
     ]);
 
     svg.selectAll()
@@ -195,7 +195,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     .enter()
     .append("circle")
     .each(function (d, i) {
-        d3.select(this).attr(valueClass, i)
+        chataD3.select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-col3', col3)
@@ -218,7 +218,7 @@ function createBubbleChart(component, json, options, fromChataUtils=true, valueC
     .attr('class', 'tooltip-3d circle')
     tooltipCharts();
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createBubbleChart(
                 component,

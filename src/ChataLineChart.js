@@ -60,7 +60,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     }
     var allData = [];
 
-    // var colorScale = d3.scaleOrdinal()
+    // var colorScale = chataD3.scaleOrdinal()
     // .domain(allGroup)
     // .range(options.themeConfig.chartColors);
 
@@ -161,7 +161,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
     );
 
 
-    var svg = d3.select(component)
+    var svg = chataD3.select(component)
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -206,8 +206,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartSeriesPopover({
-                left: d3.event.clientX,
-                top: d3.event.clientY
+                left: chataD3.event.clientX,
+                top: chataD3.event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createLineChart(
@@ -265,8 +265,8 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: d3.event.clientX,
-                top: d3.event.clientY
+                left: chataD3.event.clientX,
+                top: chataD3.event.clientY
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
@@ -385,7 +385,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .each(function (d, i) {
             var group = col2;
             if(allGroup.length > 1)group = d.group
-            d3.select(this).attr(valueClass, i)
+            chataD3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
             .attr('data-col2', group)
             .attr('data-colvalue1', formatData(
@@ -430,7 +430,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());
             createLines();
-            const legendCell = d3.select(this);
+            const legendCell = chataD3.select(this);
             legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
         svgLegend.call(legendOrdinal)
@@ -461,7 +461,7 @@ function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     createLines();
 
-    d3.select(window).on(
+    chataD3.select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createLineChart(
                 component,
