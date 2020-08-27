@@ -1017,6 +1017,10 @@ function DataMessenger(elem, options){
 
         window.addEventListener('click', (evt) => {
             var closePop = true;
+            var closeAutoComplete = true;
+            if(evt.target.classList.contains('autoql-vanilla-chata-input')){
+                closeAutoComplete=false;
+            }
             for (var i = 0; i < excludeElementsForClearMessages.length; i++) {
                 var c = excludeElementsForClearMessages[i];
                 if(evt.target.classList.contains(c)){
@@ -1027,6 +1031,10 @@ function DataMessenger(elem, options){
 
             if(closePop){
                 obj.closePopOver(obj.clearMessagePop);
+            }
+
+            if(closeAutoComplete){
+                obj.autoCompleteList.style.display = 'none';
             }
         })
     }
@@ -1178,7 +1186,7 @@ function DataMessenger(elem, options){
                         'suggestion',
                         obj.options
                     );
-                }, 400);
+                }, 200);
             }
         }
     }
@@ -1236,6 +1244,10 @@ function DataMessenger(elem, options){
         chataBarContainer.appendChild(watermark);
         chataBarContainer.appendChild(autoComplete);
         chataBarContainer.appendChild(textBar);
+
+        chataInput.onfocus = (evt) => {
+            obj.autoCompleteHandler(evt);
+        }
 
         voiceRecordButton.onmouseup = (evt) => {
             obj.speechToText.stop();
