@@ -1438,15 +1438,17 @@ function DataMessenger(elem, options){
                 );
                 break;
             case 'csvCopy':
+                var filterBtn = obj.getActionButton(
+                    FILTER_TABLE,
+                    'Filter Table',
+                    idRequest,
+                    obj.filterTableHandler,
+                    []
+                )
                 toolbar.appendChild(
-                    obj.getActionButton(
-                        FILTER_TABLE,
-                        'Filter Table',
-                        idRequest,
-                        obj.filterTableHandler,
-                        []
-                    )
+                    filterBtn
                 );
+                filterBtn.setAttribute('data-name-option', 'filter-action');
                 var columnVisibility = obj.options.
                 autoQLConfig.enableColumnVisibilityManager
                 if(columnVisibility && displayType !== 'pivot_table'){

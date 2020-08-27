@@ -1843,6 +1843,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     color: black;
 }
 
+.autoql-vanilla-no-columns-error-message .warning-icon svg * {
+    fill: unset;
+}
+
+.autoql-vanilla-no-columns-error-message .eye-icon svg * {
+    fill: unset;
+}
+
 .autoql-vanilla-no-columns-error-message .eye-icon {
     vertical-align: bottom;
     line-height: 18px;
