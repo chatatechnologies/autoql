@@ -49,13 +49,19 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
 
     var allSubgroups = {}
+    var legendGroups = {};
+    var cols = json['data']['columns'];
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true
         };
+        legendGroups[
+            formatChartData(subgroup, cols[groupableIndex1], options)
+        ] = {
+            value: subgroup
+        }
     })
 
-    var cols = json['data']['columns'];
     var data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
@@ -228,9 +234,6 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
         0.2
     )
 
-    // .domain(groups)
-    // .range([height - margin.bottom, 0])
-    // .padding([0.2])
     var yAxis = getAxisLeft(y);
 
     if(yTickValues.length > 0){
@@ -252,112 +255,6 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     );
 
     let stackedG;
-
-    function barsV3(stackedData){
-        stackedG = svg.append("g")
-        .selectAll('g')
-        .data(stackedData)
-        .enter()
-        .append('g')
-        .style('fill', function (d, i) {
-            return color(d.key);
-        })
-        .selectAll('rect')
-        .data(function (d) {
-            return d;
-        })
-        .enter()
-        .append('rect')
-        .each(function(d, i){
-            if(!d)return;
-            chataD3.select(this).attr(valueClass, i)
-            .attr('data-col1', col1)
-            .attr('data-col2', col2)
-            .attr('data-col3', col3)
-            .attr('data-colvalue1', d.component)
-            .attr('data-colvalue2', formatData(
-                d.x, cols[groupableIndex2], options
-            ))
-            .attr('data-colvalue3', formatData(
-                d.y, cols[notGroupableIndex],
-                options
-            ))
-            .attr('data-unformatvalue1', d.component)
-            .attr('data-unformatvalue2', d.x)
-            .attr('data-unformatvalue3', d.y)
-            .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-        })
-        .attr('x', function (d) {
-            return x(d.y0);
-        })
-        .attr('y', function (d, i) {
-            return y(d.x);
-        })
-        .attr('height', function (d) {
-            return getBandWidth(y);
-        })
-        .attr('width', function (d) {
-            return x(d.y);
-        })
-        .attr('opacity', '0.7')
-
-    }
-
-    function barsV4(stackedData){
-        stackedG = svg.append("g")
-        .selectAll("g")
-        .data(stackedData)
-        .enter().append("g")
-        .attr("fill", function(d) { return color(d.key) })
-        .selectAll("rect")
-        .data(function(d) { return d; })
-        .enter().append("rect")
-        .each(function (d, i) {
-            var pos = d[1];
-            var sum = 0;
-            for (var [key, value] of Object.entries(d.data)){
-                if(key == 'group')continue;
-                sum += parseFloat(value);
-                if(sum == pos){
-                    d.value = value;
-                    d.labelY = key;
-                    break;
-                }
-            }
-            chataD3.select(this).attr(valueClass, i)
-            .attr('data-col1', col1)
-            .attr('data-col2', col2)
-            .attr('data-col3', col3)
-            .attr('data-colvalue1', d.labelY)
-            .attr('data-colvalue2', formatData(
-                d.data.group, cols[groupableIndex2], options
-            ))
-            .attr('data-colvalue3', formatData(
-                d.value, cols[notGroupableIndex],
-                options
-            ))
-            .attr('data-unformatvalue1', d.labelY)
-            .attr('data-unformatvalue2', d.data.group)
-            .attr('data-unformatvalue3', d.value)
-
-        })
-        .attr('opacity', '0.7')
-        .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-        .attr("x", function(d) {
-            return x(d[0]);
-        })
-        .attr("y", function(d) { return y(d.data.group) })
-        .attr("height", function(d) {
-            return y.bandwidth();
-        })
-        .attr("width",function(d){
-            var d1 = d[1];
-            if(isNaN(d1)){
-                return 0;
-            }
-            return Math.abs(x(d[0]) - x(d[1]));
-        })
-    }
 
     function createBars(){
         var visibleGroups = getVisibleGroups(allSubgroups);
@@ -388,7 +285,9 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
             .attr('data-col1', col1)
             .attr('data-col2', col2)
             .attr('data-col3', col3)
-            .attr('data-colvalue1', d.labelY)
+            .attr('data-colvalue1', formatData(
+                d.labelY, cols[groupableIndex1], options
+            ))
             .attr('data-colvalue2', formatData(
                 d.data.group, cols[groupableIndex2], options
             ))
@@ -431,7 +330,7 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
     .style('font-size', '10px')
 
     const legendWrapLength = wLegendBox;
-    const legendValues = subgroups.sort().map(elem => {
+    const legendValues = subgroups.map(elem => {
         return formatChartData(elem, cols[groupableIndex1], options);
     });
     legendScale = getColorScale(
@@ -441,7 +340,10 @@ function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromCh
 
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
     legendOrdinal.on('cellclick', function(d) {
-        allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
+        var unformatGroup = legendGroups[d].value;
+        allSubgroups[unformatGroup].isVisible =
+        !allSubgroups[unformatGroup].isVisible;
+
         createBars();
         const legendCell = chataD3.select(this);
         legendCell.classed('disable-group', !legendCell.classed('disable-group'));

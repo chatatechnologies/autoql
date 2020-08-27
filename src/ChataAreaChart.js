@@ -36,15 +36,21 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     );
     subgroups.sort();
     var allSubgroups = {}
+    var cols = json['data']['columns'];
+    var legendGroups = {};
+
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true
         };
+        legendGroups[
+            formatChartData(subgroup, cols[groupableIndex1], options)
+        ] = {
+            value: subgroup
+        }
     })
 
 
-    var cols = json['data']['columns'];
-    // var data = responseToArrayObjects(json, groups);
     var data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
@@ -325,7 +331,9 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
                 .attr('data-col3', col3)
-                .attr('data-colvalue1', d.key)
+                .attr('data-colvalue1', formatData(
+                    d.key, cols[groupableIndex1], options
+                ))
                 .attr('data-colvalue2', formatData(
                     d.group, cols[groupableIndex2], options
                 ))
@@ -366,7 +374,7 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
 
     const legendWrapLength = wLegendBox - 28;
     legendScale = getColorScale(
-        subgroups.sort().map(elem => {
+        subgroups.map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);
         }),
         options.themeConfig.chartColors
@@ -374,7 +382,10 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
 
     legendOrdinal.on('cellclick', function(d) {
-        allSubgroups[d].isVisible = !allSubgroups[d].isVisible;
+        var unformatGroup = legendGroups[d].value;
+        allSubgroups[unformatGroup].isVisible =
+        !allSubgroups[unformatGroup].isVisible;
+
         createLayers();
         const legendCell = chataD3.select(this);
         legendCell.classed('disable-group', !legendCell.classed('disable-group'));
