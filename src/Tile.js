@@ -1108,21 +1108,6 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         let popoverClass;
-        // var json = ChataUtils.responses[idRequest];
-        // if(['table', 'pivot_table'].includes(obj.internalDisplayType)){
-        //     var isAllHidden = allColsHidden(json);
-        //     if(isAllHidden){
-        //         popoverClass = 'up-table-single';
-        //         reportProblem.classList.remove('up-table');
-        //     }else{
-        //         popoverClass = 'up-table';
-        //         reportProblem.classList.remove('up-table-single');
-        //     }
-        // }else if(json.data.columns.length === 1){
-        //     popoverClass = 'up-table-single';
-        // }else{
-        //     popoverClass = 'up-chart';
-        // }
         reportProblem.classList.toggle('show');
         reportProblem.classList.add('up-table');
         toolbar.classList.toggle('show');

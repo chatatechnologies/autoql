@@ -1,5 +1,5 @@
 function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 130, marginLabel: 50, chartLeft: 120, bottomChart: 60},
+    var margin = {top: 5, right: 10, bottom: 60, left: 160, marginLabel: 50, chartLeft: 120, bottomChart: 60},
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -109,23 +109,26 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
             }
         });
     }
-
-    data.forEach((item, i) => {
-        allLengths.push(formatLabel(item.label).length);
-    });
-
+    if(yTickValues.length > 0){
+        for (var i = 0; i < yTickValues.length; i++) {
+            allLengths.push(formatLabel(yTickValues[i]).length);
+        }
+    }else{
+        data.forEach((item, i) => {
+            allLengths.push(formatLabel(item.label).length);
+        });
+    }
     let longestStringWidth = Math.max.apply(null, allLengths);
     let longestStringHeight = minMaxValues.max.toString().length;
     var extraMargin = hasLegend ? 15 : 0;
-
     var increment = 5;
-
+    var factor = 10;
     if(longestStringHeight <= 4)longestStringHeight = 5;
     if(!hasLegend)increment = 2;
 
-    margin.chartLeft = longestStringWidth * 10;
-    if(margin.chartLeft < 70) margin.chartLeft = 70;
-    if(margin.chartLeft > 120) margin.chartLeft = 120;
+    margin.chartLeft = longestStringWidth * factor;
+    if(margin.chartLeft <= 75) margin.chartLeft = 85;
+    if(margin.chartLeft > 150) margin.chartLeft = 150;
 
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){
