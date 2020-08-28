@@ -319,14 +319,18 @@ function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUti
         .append("circle")
         .attr("class", "dot")
         .attr("r", 4)
-        .attr('class', 'tooltip-2d line-dot')
+        .attr('class', 'line-dot')
         .attr('stroke', function(d) {'transparent' })
         .attr('stroke-width', '3')
         .attr('stroke-opacity', '0.7')
         .attr("fill", 'transparent')
         .attr("fill-opacity", '1')
         .each(function(d, i){
+            console.log(d.y);
+            console.log(d.group);
+            console.log(d.key);
             if(d.y && d.group && d.key){
+                console.log('IFFF');
                 chataD3.select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
