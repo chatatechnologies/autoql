@@ -125,6 +125,7 @@ body{
     align-items: center;
     color:white;
     position: relative;
+    z-index: 100000003;
 }
 
 .autoql-vanilla-popover-container{

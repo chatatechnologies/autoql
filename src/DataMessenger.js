@@ -2301,11 +2301,6 @@ function DataMessenger(elem, options){
             messageBubble.classList.add('no-hover-response');
         }
 
-        if(jsonResponse['reference_id'] === '1.1.430'){
-            messageBubble.appendChild(toolbarButtons = obj.getActionToolbar(
-                idRequest, 'safety-net', ''
-            ))
-        }
         var value = '';
         var hasDrilldown = false;
         if(jsonResponse['data'].rows && jsonResponse['data'].rows.length > 0){
