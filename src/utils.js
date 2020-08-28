@@ -988,6 +988,19 @@ function getStringWidth(string){
     return width;
 }
 
+function allColsHidden(json){
+    var cols = json['data']['columns'];
+    var isAllHidden = true;
+    for (var i = 0; i < cols.length; i++) {
+        if(cols[i].is_visible){
+            isAllHidden = false;
+            break;
+        }
+    }
+
+    return isAllHidden;
+}
+
 function allColHiddenMessage(table){
     const requestId = table.dataset.componentid;
     var csvHandlerOption = table.tabulator.parentContainer.querySelector(
@@ -1002,14 +1015,7 @@ function allColHiddenMessage(table){
         '[data-name-option="filter-action"]'
     );
     const json = ChataUtils.responses[requestId];
-    var cols = json['data']['columns'];
-    var isAllHidden = true;
-    for (var i = 0; i < cols.length; i++) {
-        if(cols[i].is_visible){
-            isAllHidden = false;
-            break;
-        }
-    }
+    var isAllHidden = allColsHidden(json);
     let message;
     if(table.noColumnsElement){
         message = table.noColumnsElement;

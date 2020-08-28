@@ -1108,21 +1108,41 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         let popoverClass;
-        if(['table', 'pivot_table'].includes(obj.internalDisplayType)){
-            popoverClass = 'up-table';
-        }else{
-            popoverClass = 'up-chart';
-        }
+        // var json = ChataUtils.responses[idRequest];
+        // if(['table', 'pivot_table'].includes(obj.internalDisplayType)){
+        //     var isAllHidden = allColsHidden(json);
+        //     if(isAllHidden){
+        //         popoverClass = 'up-table-single';
+        //         reportProblem.classList.remove('up-table');
+        //     }else{
+        //         popoverClass = 'up-table';
+        //         reportProblem.classList.remove('up-table-single');
+        //     }
+        // }else if(json.data.columns.length === 1){
+        //     popoverClass = 'up-table-single';
+        // }else{
+        //     popoverClass = 'up-chart';
+        // }
         reportProblem.classList.toggle('show');
-        reportProblem.classList.add(popoverClass);
+        reportProblem.classList.add('up-table');
         toolbar.classList.toggle('show');
     }
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
         let popoverClass;
+        var json = ChataUtils.responses[idRequest];
         if(['table', 'pivot_table'].includes(obj.internalDisplayType)){
-            popoverClass = 'up-table';
+            var isAllHidden = allColsHidden(json);
+            if(isAllHidden){
+                popoverClass = 'up-table-single';
+                moreOptions.classList.remove('up-table');
+            }else{
+                popoverClass = 'up-table';
+                moreOptions.classList.remove('up-table-single');
+            }
+        }else if(json.data.columns.length === 1){
+            popoverClass = 'up-table-single';
         }else{
             popoverClass = 'up-chart';
         }
@@ -1173,15 +1193,18 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 break;
             case 'csvCopy':
+                var filterBtn = ChataUtils.getActionButton(
+                    FILTER_TABLE,
+                    'Filter Table',
+                    idRequest,
+                    ChataUtils.filterTableHandler,
+                    []
+                )
                 toolbar.appendChild(
-                    ChataUtils.getActionButton(
-                        FILTER_TABLE,
-                        'Filter Table',
-                        idRequest,
-                        ChataUtils.filterTableHandler,
-                        []
-                    )
+                    filterBtn
                 );
+                filterBtn.setAttribute('data-name-option', 'filter-action');
+
                 var columnVisibility = dashboard.options.
                 autoQLConfig.enableColumnVisibilityManager
                 if(columnVisibility && displayType !== 'pivot_table'){

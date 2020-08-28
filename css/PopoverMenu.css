@@ -37,6 +37,10 @@
     top: -92px;
 }
 
+.chata-popover-wrapper.up-table-single{
+    top: -59px;
+}
+
 
 .autoql-vanilla-chat-message-toolbar.show{
     display: block;
