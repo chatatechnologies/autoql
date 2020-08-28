@@ -165,6 +165,11 @@ function runQuery(event, objContext){
     }else{
         var node = event.target.parentElement;
     }
+    if(node.classList.contains('autoql-vanilla-chata-safety-net-execute-btn')){
+        node = node.parentElement;
+    }
+    // autoql-vanilla-chata-safety-net-execute-btn
+    console.log(node);
     var words = getSafetynetValues(node);
 
     switch (objContext.constructor) {
