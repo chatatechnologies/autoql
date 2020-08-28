@@ -1804,6 +1804,7 @@ function DataMessenger(elem, options){
 
     obj.displayTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'table');
         var table = new ChataTable(
             idRequest,
             obj.options,
@@ -1811,55 +1812,54 @@ function DataMessenger(elem, options){
         );
         component.tabulator = table;
         table.parentContainer = obj.getParentFromComponent(component);
-        obj.refreshToolbarButtons(component, 'table');
         allColHiddenMessage(component);
         chataD3.select(window).on('chata-resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'column');
         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.refreshToolbarButtons(component, 'column');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayBarChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'bar');
         createBarChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.refreshToolbarButtons(component, 'bar');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayPieChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        createPieChart(component, json, obj.options);
         obj.refreshToolbarButtons(component, 'pie');
+        createPieChart(component, json, obj.options);
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayLineChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'line');
         createLineChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.refreshToolbarButtons(component, 'line');
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'pivot_table');
         var table = new ChataPivotTable(
             idRequest, obj.options, obj.onCellClick
         );
-        obj.refreshToolbarButtons(component, 'pivot_table');
         chataD3.select(window).on('chata-resize.'+idRequest, null);
 
         component.tabulator = table;
@@ -1868,49 +1868,49 @@ function DataMessenger(elem, options){
     obj.displayHeatmapHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        createHeatmap(component, json, obj.options);
         obj.refreshToolbarButtons(component, 'heatmap');
+        createHeatmap(component, json, obj.options);
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayBubbleCharthandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        createBubbleChart(component, json, obj.options);
         obj.refreshToolbarButtons(component, 'bubble');
+        createBubbleChart(component, json, obj.options);
         obj.registerDrilldownChartEvent(component);
     }
 
     obj.displayStackedColumnHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_column');
         createStackedColumnChart(
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
-        obj.refreshToolbarButtons(component, 'stacked_column');
         obj.registerDrilldownStackedChartEvent(component);
     }
 
     obj.displayStackedBarHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_bar');
         createStackedBarChart(
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
-        obj.refreshToolbarButtons(component, 'stacked_bar');
         obj.registerDrilldownStackedChartEvent(component);
     }
 
     obj.displayAreaHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+        obj.refreshToolbarButtons(component, 'stacked_line');
         createAreaChart(
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
-        obj.refreshToolbarButtons(component, 'stacked_line');
     }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
