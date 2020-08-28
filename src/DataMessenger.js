@@ -1738,7 +1738,7 @@ function DataMessenger(elem, options){
     }
 
     obj.chartElementClick = (evt, idRequest) => {
-        var json = ChataUtils.responses[idRequest];
+        var json = cloneObject(ChataUtils.responses[idRequest]);
         var indexData = evt.target.dataset.chartindex;
         var colValue = evt.target.dataset.colvalue1;
         var indexValue = evt.target.dataset.filterindex;

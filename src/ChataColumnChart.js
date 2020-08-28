@@ -338,8 +338,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
     }
 
     var slice = undefined;
-
     function createBars(){
+        rectIndex = 0;
         var cloneData = getVisibleSeries(data);
         if(slice)slice.remove();
         slice = svg.selectAll(".slice")
@@ -364,7 +364,8 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
             var serieName = _col['display_name'] || _col['name'];
             var group = col2;
             if(groupNames.length > 1)group = d.group
-            chataD3.select(this).attr(valueClass, d.index)
+            chataD3.select(this).attr(valueClass, rectIndex++)
+
             .attr('data-col1', col1)
             .attr('data-col2', group)
             .attr('data-colvalue1', formatData(
@@ -405,7 +406,7 @@ function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataU
         );
 
         legendOrdinal.shapePadding(shapePadding);
-        
+
 
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.trim());

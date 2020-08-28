@@ -355,6 +355,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
     }))
     let slice;
     function createBars(){
+        var rectIndex = 0;
         var cloneData = getVisibleSeries(data);
         if(slice)slice.remove()
         slice = svg.selectAll(".slice")
@@ -392,7 +393,7 @@ function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtil
         .each(function (d, i) {
             var group = col2;
             if(groupNames.length > 1)group = d.group
-            chataD3.select(this).attr(valueClass, i)
+            chataD3.select(this).attr(valueClass, rectIndex++)
             .attr('data-col1', col1)
             .attr('data-col2', group)
             .attr('data-colvalue1', formatData(
