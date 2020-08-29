@@ -520,7 +520,6 @@
     transition-timing-function: ease;
     transition-property: height,opacity,margin;
     transition-duration: .5s;
-    pointer-events: none;
     height: 10px;
     opacity: 0;
     margin: 0;

@@ -992,9 +992,9 @@ function createStep(title, subtitle=''){
                 stepContentContainer.style.height = 'auto';
             }, 500)
         }else{
-            stepContentContainer.style.height = getHeightForChildrens(
-                stepContentContainer
-            ) + 'px';
+            // stepContentContainer.style.height = getHeightForChildrens(
+            //     stepContentContainer
+            // ) + 'px';
             stepContentContainer.style.height = '10px';
         }
     }
