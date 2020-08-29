@@ -108,14 +108,17 @@
 .chata-step-dot {
     position: absolute;
     top: 0;
-    left: -8px;
-    height: 15px;
-    width: 15px;
+    left: -11px;
+    height: 20px;
+    width: 20px;
     background: #fff;
-    border-radius: 8px;
+    border-radius: 15px;
     border: 1px solid #d3d3d3;
     -webkit-transition: all .5s ease;
     transition: all .5s ease;
+    text-align: center;
+    font-size: 10.5px;
+    color: #d3d3d3;
 }
 
 .chata-step-subtitle {
@@ -395,6 +398,7 @@
 .chata-step-container.complete .chata-step-dot {
     border-color: var(--chata-drawer-accent-color);
     background: var(--chata-drawer-accent-color);
+    color: white;
 }
 
 .chata-step-container.complete {

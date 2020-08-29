@@ -18,14 +18,16 @@ function NotificationSettingsModal(){
     wrapper.classList.add('chata-steps-container');
     var step1 = createStep(
         'Notification Conditions',
+        '1',
         'Notify me when the following conditions are met'
     );
-    var step2 = createStep('Frequency');
+    var step2 = createStep('Frequency', '2');
     var step3 = createStep(
         'Data Return',
+        '3',
         'Return the data from this query when the notification is triggered'
     );
-    var step4 = createStep('Appearance');
+    var step4 = createStep('Appearance', '4');
     // step4.classList.add('complete');
 
     // STEP 1
@@ -963,7 +965,7 @@ function getHeightForChildrens(parent){
     return totalH;
 }
 
-function createStep(title, subtitle=''){
+function createStep(title, nStep, subtitle=''){
     var step = document.createElement('div');
     var titleEl = document.createElement('div');
     var stepContent = document.createElement('div');
@@ -974,6 +976,7 @@ function createStep(title, subtitle=''){
     titleEl.classList.add('chata-step-title');
     stepContent.classList.add('chata-step-content');
     stepDot.classList.add('chata-step-dot');
+    stepDot.innerHTML = nStep;
     stepContentContainer.classList.add('chata-step-content-container')
     titleEl.innerHTML = title;
 
