@@ -977,25 +977,36 @@ function createStep(title, subtitle=''){
     stepContentContainer.classList.add('chata-step-content-container')
     titleEl.innerHTML = title;
 
-    titleEl.onclick = (evt) => {
-        // var steps = document.querySelectorAll('.chata-step-container');
-        // for (var i = 0; i < steps.length; i++) {
-        //     if(step == steps[i])continue;
-        //     steps[i].classList.remove('active');
-        // }
-        step.classList.toggle('active');
-        if(step.classList.contains('active')){
-            stepContentContainer.style.height = getHeightForChildrens(
-                stepContentContainer
-            ) + 'px';
-            setTimeout(() => {
-                stepContentContainer.style.height = 'auto';
-            }, 500)
-        }else{
-            // stepContentContainer.style.height = getHeightForChildrens(
-            //     stepContentContainer
-            // ) + 'px';
+    step.closeStep = () => {
+        stepContentContainer.style.height = getHeightForChildrens(
+            stepContentContainer
+        ) + 'px';
+        step.classList.remove('active');
+        setTimeout(() => {
             stepContentContainer.style.height = '10px';
+        }, 1)
+    }
+
+    step.expand = () => {
+        step.classList.add('active');
+        stepContentContainer.style.height = getHeightForChildrens(
+            stepContentContainer
+        ) + 'px';
+        setTimeout(() => {
+            stepContentContainer.style.height = 'auto';
+        }, 500)
+    }
+
+    titleEl.onclick = (evt) => {
+        var steps = document.querySelectorAll('.chata-step-container');
+        for (var i = 0; i < steps.length; i++) {
+            if(step == steps[i])continue;
+            steps[i].closeStep();
+        }
+        if(!step.classList.contains('active')){
+            step.expand();
+        }else{
+            step.closeStep();
         }
     }
 
