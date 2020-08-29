@@ -981,13 +981,8 @@ function createStep(title, nStep, subtitle=''){
     titleEl.innerHTML = title;
 
     step.closeStep = () => {
-        stepContentContainer.style.height = getHeightForChildrens(
-            stepContentContainer
-        ) + 'px';
         step.classList.remove('active');
-        setTimeout(() => {
-            stepContentContainer.style.height = '10px';
-        }, 1)
+        stepContentContainer.style.height = '10px';
     }
 
     step.expand = () => {
@@ -995,9 +990,6 @@ function createStep(title, nStep, subtitle=''){
         stepContentContainer.style.height = getHeightForChildrens(
             stepContentContainer
         ) + 'px';
-        setTimeout(() => {
-            stepContentContainer.style.height = 'auto';
-        }, 500)
     }
 
     titleEl.onclick = (evt) => {
