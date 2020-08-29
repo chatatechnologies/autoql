@@ -32,9 +32,6 @@
     color: var(--chata-messenger-accent-color,#26a7df);
 }
 
-.chata-step-content {
-    padding: 15px 15px 25px;
-}
 
 .chata-input-container {
     position: relative;
@@ -512,4 +509,27 @@
     min-width: 145px;
     width: calc(100% + 70px);
     left: -35px;
+}
+
+.chata-step-container.active .chata-step-content-container{
+    height: auto;
+    opacity: 1;
+}
+
+.chata-step-content-container {
+    transition-timing-function: ease;
+    transition-property: height,opacity,margin;
+    transition-duration: .5s;
+    pointer-events: none;
+    height: 10px;
+    opacity: 0;
+    margin: 0;
+}
+
+.chata-step-content {
+    transition-timing-function: ease;
+    transition-property: height,opacity,margin;
+    transition-duration: .5s;
+    overflow: hidden;
+    padding: 15px 15px 25px;
 }

@@ -959,22 +959,40 @@ function createStep(title, subtitle=''){
     var stepContent = document.createElement('div');
     var contentWrapper = document.createElement('div');
     var stepDot = document.createElement('div');
+    var stepContentContainer = document.createElement('div');
     step.classList.add('chata-step-container');
     titleEl.classList.add('chata-step-title');
     stepContent.classList.add('chata-step-content');
     stepDot.classList.add('chata-step-dot');
+    stepContentContainer.classList.add('chata-step-content-container')
     titleEl.innerHTML = title;
+
+    titleEl.onclick = (evt) => {
+        // var steps = document.querySelectorAll('.chata-step-container');
+        // for (var i = 0; i < steps.length; i++) {
+        //     if(step == steps[i])continue;
+        //     steps[i].classList.remove('active');
+        // }
+        step.classList.toggle('active');
+        if(step.classList.contains('active')){
+            // stepContent.style.height = '256px';
+            stepContentContainer.style.height = 'auto';
+        }else{
+            stepContentContainer.style.height = '10px';
+        }
+    }
 
     step.appendChild(titleEl);
     if(subtitle !== ''){
         subtitleEl = document.createElement('div');
         subtitleEl.classList.add('chata-step-subtitle');
         subtitleEl.innerHTML = subtitle;
-        step.appendChild(subtitleEl);
+        stepContentContainer.appendChild(subtitleEl);
     }
 
     stepContent.appendChild(contentWrapper);
-    step.appendChild(stepContent);
+    stepContentContainer.appendChild(stepContent);
+    step.appendChild(stepContentContainer);
     step.appendChild(stepDot);
     step.addElement = (elem) => {
         contentWrapper.appendChild(elem);
@@ -985,5 +1003,10 @@ function createStep(title, subtitle=''){
     step.addClass = (className) => {
         contentWrapper.classList.add(className);
     }
+
+    step.addContent = (elem) => {
+        stepContent.appendChild(elem);
+    }
+
     return step;
 }
