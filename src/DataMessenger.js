@@ -475,7 +475,6 @@ function DataMessenger(elem, options){
             obj.openDrawer();
             obj.closeDrawer();
             refreshTooltips();
-
             var isVisible = obj.options.isVisible;
 
             if(isVisible){
@@ -484,15 +483,10 @@ function DataMessenger(elem, options){
                 obj.closeDrawer();
             }
 
-            obj.rootElem.addEventListener('click', (evt) => {
-                // REPLACE WITH onclick event
-                if(evt.target.classList.contains('suggestion')){
-                    obj.autoCompleteList.style.display = 'none';
-                    obj.sendMessage(
-                        evt.target.textContent, 'data_messenger.user'
-                    );
-                }
-            });
+            // obj.rootElem.addEventListener('click', (evt) => {
+            //     // REPLACE WITH onclick event
+            //
+            // });
         }
     }
 
@@ -1015,7 +1009,7 @@ function DataMessenger(elem, options){
             'autoql-vanilla-chata-confirm-icon'
         ]
 
-        window.addEventListener('click', (evt) => {
+        obj.rootElem.addEventListener('click', (evt) => {
             var closePop = true;
             var closeAutoComplete = true;
             if(evt.target.classList.contains('autoql-vanilla-chata-input')){
@@ -1035,6 +1029,13 @@ function DataMessenger(elem, options){
 
             if(closeAutoComplete){
                 obj.autoCompleteList.style.display = 'none';
+            }
+
+            if(evt.target.classList.contains('suggestion')){
+                obj.autoCompleteList.style.display = 'none';
+                obj.sendMessage(
+                    evt.target.textContent, 'data_messenger.user'
+                );
             }
         })
     }

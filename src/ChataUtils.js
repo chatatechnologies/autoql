@@ -953,6 +953,8 @@ ChataUtils.createSuggestions = function(responseContentContainer, data, classBut
 }
 
 ChataUtils.registerWindowClicks = (evt) => {
+    console.log('WINDOW CLICKS!!!');
+    console.log(window);
     const excludeElementsForChartSelector = [
         'autoql-vanilla-x-axis-label-border',
         'autoql-vanilla-y-axis-label-border',
@@ -976,7 +978,8 @@ ChataUtils.registerWindowClicks = (evt) => {
         'autoql-vanilla-chata-safetynet-select',
     ]
 
-    window.addEventListener('click', (evt) => {
+    document.body.addEventListener('click', (evt) => {
+        console.log('FOOOO');
         var closePop = true;
         var closeChartPopovers = true;
         var closeToolbars = true;
@@ -1022,7 +1025,17 @@ ChataUtils.registerWindowClicks = (evt) => {
     })
 }
 
-
 (function(){
-    ChataUtils.registerWindowClicks();
+    var initEvents = () => {
+        setTimeout(() => {
+            ChataUtils.registerWindowClicks();
+        }, 3000)
+    }
+    document.addEventListener("DOMContentLoaded", function(event) {
+        try {
+            window.addEventListener("load", initEvents, false);
+        } catch(e) {
+            window.onload = initEvents;
+        }
+    });
 })()
