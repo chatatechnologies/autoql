@@ -512,7 +512,7 @@
 }
 
 .chata-step-container.active .chata-step-content-container{
-    height: auto;
+    /* height: auto; */
     opacity: 1;
 }
 
@@ -524,12 +524,12 @@
     height: 10px;
     opacity: 0;
     margin: 0;
+    overflow: hidden;
 }
 
 .chata-step-content {
     transition-timing-function: ease;
     transition-property: height,opacity,margin;
     transition-duration: .5s;
-    overflow: hidden;
     padding: 15px 15px 25px;
 }

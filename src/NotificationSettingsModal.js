@@ -953,6 +953,16 @@ function ConditionGroup(parent, parentSelect, first=false){
     return groupWrapper;
 }
 
+function getHeightForChildrens(parent){
+    var child = parent.childNodes;
+    var totalH = 0
+    for (var i = 0; i < child.length; i++) {
+        totalH += child[i].offsetHeight;
+    }
+
+    return totalH;
+}
+
 function createStep(title, subtitle=''){
     var step = document.createElement('div');
     var titleEl = document.createElement('div');
@@ -975,9 +985,16 @@ function createStep(title, subtitle=''){
         // }
         step.classList.toggle('active');
         if(step.classList.contains('active')){
-            // stepContent.style.height = '256px';
-            stepContentContainer.style.height = 'auto';
+            stepContentContainer.style.height = getHeightForChildrens(
+                stepContentContainer
+            ) + 'px';
+            setTimeout(() => {
+                stepContentContainer.style.height = 'auto';
+            }, 500)
         }else{
+            stepContentContainer.style.height = getHeightForChildrens(
+                stepContentContainer
+            ) + 'px';
             stepContentContainer.style.height = '10px';
         }
     }
