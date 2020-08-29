@@ -1,7 +1,8 @@
 function NotificationSettingsModal(){
     var wrapper = document.createElement('div');
     var frequencyBox = FrequencyBox(
-        "Notify me as soon as this happens, then don't notify me again."
+        `Notify me as soon as this happens,
+        but don't notify me again until the first of the next month.`
     );
     var btnAddGroup = htmlToElement(`
         <span>
@@ -90,7 +91,6 @@ function NotificationSettingsModal(){
     var popupFrequency = PopupContainer([
         {text: 'Once, When this happens', active:true},
         {text: 'Every time this happens', active:false},
-        {text: 'On a schedule', active:false},
     ]);
 
     popupFrequency.classList.add('frequency-popup');
@@ -110,7 +110,8 @@ function NotificationSettingsModal(){
                     view.style.visibility = 'hidden';
                     frequencyBox.setMessage(
                         `Notify me as soon as this happens,
-                        then don't notify me again.`
+                        but don't notify me again until
+                        the first of the next month.`
                     );
                     break;
                 case 1:
@@ -136,10 +137,10 @@ function NotificationSettingsModal(){
     selectFrequency.appendChild(popupFrequency);
 
     showFrequencyView(relativeDiv, 0);
-    var view = monthlyView();
-    relativeDiv.appendChild(view);
-    relativeDiv.dateSelectView = view;
-    view.style.visibility = 'hidden';
+    // var view = monthlyView();
+    // relativeDiv.appendChild(view);
+    // relativeDiv.dateSelectView = view;
+    // view.style.visibility = 'hidden';
 
     selectFrequency.appendChild(frequencyValue);
     selectFrequency.onclick = function(){
@@ -249,7 +250,6 @@ function frequencyView(parentElement, popupValues, label, followText){
     `)
     var checkboxContainer = htmlToElement(`
         <div class="chata-checkbox">
-            <div style="width:5px;"></div>
             <div class="chata-checkbox-label">Repeat</div>
         </div>
     `);
@@ -258,7 +258,7 @@ function frequencyView(parentElement, popupValues, label, followText){
             style="display: inline-block; vertical-align: middle;">
         </div>
     `);
-    checkboxContainer.insertAdjacentElement('afterbegin', checkboxInput)
+    // checkboxContainer.insertAdjacentElement('afterbegin', checkboxInput)
     checkboxFrequency.appendChild(checkboxContainer);
     parentElement.appendChild(checkboxFrequency);
     parentElement.style.visibility = 'visible';
@@ -274,23 +274,23 @@ function frequencyView(parentElement, popupValues, label, followText){
     var popupFrequencySelect = PopupContainer(popupValues);
     frequencyButton.appendChild(labelContent);
     frequencyButton.appendChild(popupFrequencySelect);
-    frequencyButton.style.visibility = 'hidden';
+    frequencyButton.style.display = 'inline-block';
 
-    checkboxInput.onchange = (evt) => {
-        if(evt.target.checked){
-            frequencyButton.style.visibility = 'visible';
-            repeatFollowText.style.visibility='visible'
-            if(parentElement.dateSelectView){
-                parentElement.dateSelectView.style.visibility = 'visible';
-            }
-        }else{
-            frequencyButton.style.visibility = 'hidden';
-            repeatFollowText.style.visibility='hidden';
-            if(parentElement.dateSelectView){
-                parentElement.dateSelectView.style.visibility = 'hidden';
-            }
-        }
-    }
+    // checkboxInput.onchange = (evt) => {
+    //     if(evt.target.checked){
+    //         frequencyButton.style.visibility = 'visible';
+    //         repeatFollowText.style.visibility='visible'
+    //         if(parentElement.dateSelectView){
+    //             parentElement.dateSelectView.style.visibility = 'visible';
+    //         }
+    //     }else{
+    //         frequencyButton.style.visibility = 'hidden';
+    //         repeatFollowText.style.visibility='hidden';
+    //         if(parentElement.dateSelectView){
+    //             parentElement.dateSelectView.style.visibility = 'hidden';
+    //         }
+    //     }
+    // }
     frequencyButton.onclick = (evt) => {
         popupFrequencySelect.toggleVisibility();
         console.log('toggleVisibility');
@@ -298,12 +298,24 @@ function frequencyView(parentElement, popupValues, label, followText){
 
     parentElement.appendChild(frequencyButton);
     if(followText){
-        parentElement.appendChild(repeatFollowText);
+        // parentElement.appendChild(repeatFollowText);
     }
 
     popupFrequencySelect.setValue = (text) => {
         labelContent.textContent = text;
     }
+
+    popupFrequencySelect.hideFrequency = () => {
+        checkboxContainer.style.display = 'none';
+        frequencyButton.style.display = 'none';
+    }
+
+    popupFrequencySelect.showFrequency = () => {
+        checkboxContainer.style.display = 'inline-block';
+        frequencyButton.style.display = 'inline-block';
+    }
+
+    popupFrequencySelect
 
     return popupFrequencySelect;
 }
@@ -391,45 +403,45 @@ function onFrequencyPopupClick(evt, frequencyElement, indexZero=false){
     frequencyElement.popup.setValue(evt.target.textContent);
     switch (index) {
         case 1:
-            var view = weeklyView();
-            if(!frequencyElement.dateSelectView){
-                frequencyElement.appendChild(view);
-            }else{
-                frequencyElement.replaceChild(
-                    view, frequencyElement.dateSelectView
-                );
-            }
-            frequencyElement.dateSelectView = view;
+            // var view = weeklyView();
+            // if(!frequencyElement.dateSelectView){
+            //     frequencyElement.appendChild(view);
+            // }else{
+            //     frequencyElement.replaceChild(
+            //         view, frequencyElement.dateSelectView
+            //     );
+            // }
+            // frequencyElement.dateSelectView = view;
             break;
         case 2:
-            var view = monthlyView();
-            if(!frequencyElement.dateSelectView){
-                frequencyElement.appendChild(view);
-            }else{
-                frequencyElement.replaceChild(
-                    view, frequencyElement.dateSelectView
-                );
-            }
-            frequencyElement.dateSelectView = view;
+            // var view = monthlyView();
+            // if(!frequencyElement.dateSelectView){
+            //     frequencyElement.appendChild(view);
+            // }else{
+            //     frequencyElement.replaceChild(
+            //         view, frequencyElement.dateSelectView
+            //     );
+            // }
+            // frequencyElement.dateSelectView = view;
             break;
         case 3:
-            var view = yearlyView();
-            if(!frequencyElement.dateSelectView){
-                frequencyElement.appendChild(view);
-            }else{
-                frequencyElement.replaceChild(
-                    view, frequencyElement.dateSelectView
-                );
-            }
-            frequencyElement.dateSelectView = view;
+            // var view = yearlyView();
+            // if(!frequencyElement.dateSelectView){
+            //     frequencyElement.appendChild(view);
+            // }else{
+            //     frequencyElement.replaceChild(
+            //         view, frequencyElement.dateSelectView
+            //     );
+            // }
+            // frequencyElement.dateSelectView = view;
             break;
         default:
-            if(frequencyElement.dateSelectView){
-                frequencyElement.removeChild(
-                    frequencyElement.dateSelectView
-                );
-                frequencyElement.dateSelectView = null;
-            }
+            // if(frequencyElement.dateSelectView){
+            //     frequencyElement.removeChild(
+            //         frequencyElement.dateSelectView
+            //     );
+            //     frequencyElement.dateSelectView = null;
+            // }
             break;
     }
 }
@@ -441,7 +453,7 @@ function showFrequencyView(frequencyElement, type){
                 {text: 'Daily', active:false},
                 {text: 'Weekly', active:false},
                 {text: 'Monthly', active:true},
-                {text: 'Yearly', active:false},
+                // {text: 'Yearly', active:false},
             ], 'Monthly', true);
             frequencyElement.popup = popup;
             popup.onclick = (evt) => {
@@ -449,19 +461,20 @@ function showFrequencyView(frequencyElement, type){
             }
             break;
         case 1:
-            var popup = frequencyView(frequencyElement, [
-                {text: 'Certains days of week', active:false},
-                {text: 'Certains days of the month', active:true},
-                {text: 'Certains months of the year', active:false},
-            ], 'Certains days of the month', false);
-            frequencyElement.popup = popup;
-            popup.classList.add('large-popup');
-            popup.onclick = (evt) => {
-                onFrequencyPopupClick(evt, frequencyElement, true);
-            }
-            break;
+            frequencyElement.innerHTML = '';
+            // var popup = frequencyView(frequencyElement, [
+            //     {text: 'Certains days of week', active:false},
+            //     {text: 'Certains days of the month', active:true},
+            //     {text: 'Certains months of the year', active:false},
+            // ], 'Certains days of the month', false);
+            // frequencyElement.popup = popup;
+            // popup.classList.add('large-popup');
+            // popup.onclick = (evt) => {
+            //     onFrequencyPopupClick(evt, frequencyElement, true);
+            // }
+            // break;
         case 2:
-            frequencyElement.innerHTML = ''
+            frequencyElement.innerHTML = '';
             break;
         default:
             break;
@@ -766,6 +779,7 @@ function GroupLine(params){
 
     chataSelect.onclick = function(){
         popup.toggleVisibility();
+        console.log('AQUI');
     }
 
     chataSelectTermType.onclick = function(){
