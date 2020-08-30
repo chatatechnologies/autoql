@@ -1,5 +1,6 @@
-function NotificationSettingsItem(title, message){
+function NotificationSettingsItem(options) {
     var wrapper = document.createElement('div');
+    wrapper.options = options;
     var header = document.createElement('div');
     var settingsDisplayName = document.createElement('div');
 
@@ -21,9 +22,9 @@ function NotificationSettingsItem(title, message){
     displayName.classList.add('chata-notification-setting-display-name-title');
     displayNameMessage.classList.add('chata-notification-setting-display-name-message');
     settingsActions.classList.add('chata-notification-setting-actions')
-    displayName.innerHTML = title;
-    if(message){
-        displayNameMessage.innerHTML = ' - ' + message;
+    displayName.innerHTML = wrapper.options.title;
+    if(wrapper.options.message){
+        displayNameMessage.innerHTML = ' - ' + wrapper.options.message;
     }
 
 

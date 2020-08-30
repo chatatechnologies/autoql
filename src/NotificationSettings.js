@@ -57,14 +57,16 @@ function NotificationSettings(selector, options){
 
     wrapper.loadRules = () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}&type=user`;
-        console.log(URL);
-        console.log('RULESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
+        ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
+            var items = jsonResponse['data']['rules'];
+            for (var i = 0; i < items.length; i++) {
+                notificationSettingsContainer.appendChild(
+                    new NotificationSettingsItem(items[i])
+                );
+            }
+        }, wrapper.options)
     }
 
-
-    // for (var i = 0; i < items.length; i++) {
-    //     notificationSettingsContainer.appendChild(items[i]);
-    // }
 
     notificationAddContainer.onclick = (evt) => {
         var configModal = new Modal({

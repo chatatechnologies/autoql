@@ -281,7 +281,7 @@
 .chata-settings-container{
     height: calc(100vh - 48px);
     background: rgb(250, 250, 250);
-    overflow: auto;
+    /* overflow: auto; */
 }
 
 .chata-checkbox__input:before {
