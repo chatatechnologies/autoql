@@ -973,13 +973,6 @@
         placement: 'right'
     })
 
-
-    var settingsList = new NotificationSettings('#test4', [
-        new NotificationSettingsItem('Transactions exceeded $1000', 'We detected a transaction over $1000'),
-        new NotificationSettingsItem('Transactions exceeded $1000', 'We detected a transaction over $1000')
-    ])
-
-
     var notificationList = new NotificationList('#test5',[
         new Notification({
             id: 1,
@@ -1265,6 +1258,16 @@
                                 xhrDasboard.onreadystatechange = function(){
                                     dashboardTab.style.display = 'inline-block';
                                     if(xhrDasboard.readyState === 4){
+                                        var settingsList = new NotificationSettings('#test4', {
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            }
+                                        })
                                         var json = JSON.parse(xhrDasboard.responseText);
                                         dashboard = new Dashboard('.grid-1', {
                                             themeConfig: {

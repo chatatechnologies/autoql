@@ -1,7 +1,25 @@
-function NotificationSettings(selector, items=[]){
+function NotificationSettings(selector, options){
+    console.log(options);
     var parent = document.querySelector(selector);
-    var obj = this;
     var wrapper = document.createElement('div');
+    wrapper.options = {
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+    }
+
+    if('authentication' in options){
+        for (var [key, value] of Object.entries(options['authentication'])) {
+            wrapper.options.authentication[key] = value;
+        }
+    }
+
     var titleContainer = document.createElement('div');
     var helpMessage = htmlToElement(`
         <div style="padding-left: 10px; opacity: 0.8;">
@@ -37,9 +55,16 @@ function NotificationSettings(selector, items=[]){
     wrapper.appendChild(titleContainer);
     wrapper.appendChild(notificationSettingsContainer);
 
-    for (var i = 0; i < items.length; i++) {
-        notificationSettingsContainer.appendChild(items[i]);
+    wrapper.loadRules = () => {
+        const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}&type=user`;
+        console.log(URL);
+        console.log('RULESSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS');
     }
+
+
+    // for (var i = 0; i < items.length; i++) {
+    //     notificationSettingsContainer.appendChild(items[i]);
+    // }
 
     notificationAddContainer.onclick = (evt) => {
         var configModal = new Modal({
@@ -53,6 +78,7 @@ function NotificationSettings(selector, items=[]){
         configModal.show();
     }
 
+    wrapper.loadRules();
     if(parent)parent.appendChild(wrapper);
     return wrapper
 }
