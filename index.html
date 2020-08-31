@@ -973,32 +973,32 @@
         placement: 'right'
     })
 
-    var notificationList = new NotificationList('#test5',[
-        new Notification({
-            id: 1,
-            displayName: 'Transactions exceeded $1000',
-            triggered: true,
-            expanded: false,
-            enabled: true,
-            last_triggered: new Date()
-        }),
-        new Notification({
-            id: 2,
-            displayName: 'Over budget this month',
-            triggered: true,
-            expanded: false,
-            enabled: true,
-            last_triggered: new Date()
-        }),
-        new Notification({
-            id: 3,
-            displayName: 'Balance fell below $500',
-            triggered: false,
-            expanded: false,
-            enabled: true,
-            last_triggered: new Date()
-        }),
-    ]);
+    // var notificationList = new NotificationList('#test5',[
+    //     new Notification({
+    //         id: 1,
+    //         displayName: 'Transactions exceeded $1000',
+    //         triggered: true,
+    //         expanded: false,
+    //         enabled: true,
+    //         last_triggered: new Date()
+    //     }),
+    //     new Notification({
+    //         id: 2,
+    //         displayName: 'Over budget this month',
+    //         triggered: true,
+    //         expanded: false,
+    //         enabled: true,
+    //         last_triggered: new Date()
+    //     }),
+    //     new Notification({
+    //         id: 3,
+    //         displayName: 'Balance fell below $500',
+    //         triggered: false,
+    //         expanded: false,
+    //         enabled: true,
+    //         last_triggered: new Date()
+    //     }),
+    // ]);
     // document.getElementById('test5').appendChild(notificationList);
     // document.getElementById('test4').appendChild(settingsList);
     //Create the components
@@ -1268,6 +1268,18 @@
                                                 domain: domain.value,
                                             }
                                         })
+
+                                        var notificationList = new NotificationList('#test5', {
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            }
+                                        })
+
                                         var json = JSON.parse(xhrDasboard.responseText);
                                         dashboard = new Dashboard('.grid-1', {
                                             themeConfig: {

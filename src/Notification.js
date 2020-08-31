@@ -71,9 +71,9 @@ function Notification(options={}){
     extraContent.appendChild(btnTurnNotification);
     extraContent.appendChild(editNotification);
 
-    displayName.appendChild(document.createTextNode(options.displayName));
+    displayName.appendChild(document.createTextNode(options.rule_title));
 
-    description.innerHTML = 'Test description';
+    description.innerHTML = options.rule_message
     notificationDetailsTitle.innerHTML = 'Conditions: ';
     notificationDetailsTitle2.innerHTML = 'Description: ';
     timestamp.appendChild(htmlToElement(`
