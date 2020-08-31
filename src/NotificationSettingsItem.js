@@ -33,7 +33,6 @@ function NotificationSettingsItem(options) {
         }
         const URL = `${wrapper.options.authentication.domain}/autoql/api/v1/rules/${wrapper.options.id}?key=${options.authentication.apiKey}`;
         ChataUtils.putCall(URL, payload, (jsonResponse) => {
-            console.log(jsonResponse);
         }, wrapper.options)
     }
 

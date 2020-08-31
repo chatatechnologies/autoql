@@ -82,6 +82,8 @@ function Notification(options={}){
     `));
 
     responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
+    // console.log(options.rule_expression);
+    console.log(RuleParser.convert(options.rule_expression));
     notificationRulesContainer.appendChild(new NotificationGroup(['Tickets', '>', '1000']))
 
     chartContainer.appendChild(notificationQueryTitle);
