@@ -36,12 +36,16 @@ function NotificationList(selector, options){
 
     wrapper.getNotifications = () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=0&limit=10`;
+        var timeOut = 0;
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             var items = jsonResponse['data']['notifications'];
             for (var i = 0; i < items.length; i++) {
                 container.appendChild(
                     new Notification(items[i])
                 );
+                // setTimeout(function () {
+                // }, timeOut);
+                // timeOut += 50;
             }
         }, wrapper.options)
     }
