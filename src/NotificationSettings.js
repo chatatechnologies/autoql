@@ -60,6 +60,7 @@ function NotificationSettings(selector, options){
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             var items = jsonResponse['data']['rules'];
             for (var i = 0; i < items.length; i++) {
+                items[i].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.appendChild(
                     new NotificationSettingsItem(items[i])
                 );
