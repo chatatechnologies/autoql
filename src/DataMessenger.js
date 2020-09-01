@@ -2292,8 +2292,15 @@ function DataMessenger(elem, options){
         toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );
-        if(jsonResponse['reference_id'] !== '1.1.420'
-        && jsonResponse['reference_id'] !== '1.1.430'){
+
+        if(jsonResponse['reference_id'] !== '1.1.420' &&
+           jsonResponse['reference_id'] !== '1.1.430'){
+            messageBubble.appendChild(toolbarButtons);
+        }
+        if(jsonResponse['reference_id'] === '1.1.430'){
+            toolbarButtons = obj.getActionToolbar(
+                idRequest, 'safety-net', ''
+            );
             messageBubble.appendChild(toolbarButtons);
         }
         if(jsonResponse['reference_id'] === '1.1.211'
