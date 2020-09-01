@@ -282,6 +282,7 @@ body{
   max-height: calc(100% - 150px);
   overflow: auto;
   visibility: hidden;
+  scroll-behavior: smooth;
 }
 
 .autoql-vanilla-drawer-content, .autoql-vanilla-chata-scrollbox:hover, .autoql-vanilla-chata-scrollbox:focus {

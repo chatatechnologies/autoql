@@ -1624,8 +1624,14 @@ function DataMessenger(elem, options){
             oldComponent.dataset.componentid, actionType, ignore
         );
         messageBubble.replaceChild(newToolbarRight, toolbarRight);
-
+        obj.setScrollBubble(messageBubble);
         refreshTooltips();
+    }
+
+    obj.setScrollBubble = (messageBubble) => {
+        setTimeout(() => {
+            obj.scrollBox.scrollTop = messageBubble.dataset.chataScrollValue;
+        }, 200)
     }
 
 
@@ -2165,6 +2171,10 @@ function DataMessenger(elem, options){
         tableWrapper.tabulator = table;
         table.parentContainer = obj.getParentFromComponent(tableWrapper);
         setTimeout(function(){
+            var sPos = obj.scrollBox.scrollHeight - obj.scrollBox.clientHeight;
+            messageBubble.setAttribute(
+                'data-chata-scroll-value', sPos
+            );
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
         allColHiddenMessage(tableWrapper);
