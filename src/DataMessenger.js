@@ -2377,6 +2377,7 @@ function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        refreshTooltips();
     }
 
     obj.createHelpContent = function(link){
