@@ -82,9 +82,11 @@ function Notification(options={}){
     `));
 
     responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
-    // console.log(options.rule_expression);
-    console.log(RuleParser.convert(options.rule_expression));
-    notificationRulesContainer.appendChild(new NotificationGroup(['Tickets', '>', '1000']))
+
+    var parsedRules = RuleParser.convert(options.rule_expression);
+    for (var i = 0; i < parsedRules.length; i++) {
+        notificationRulesContainer.appendChild(new NotificationGroup(parsedRules[i]))
+    }
 
     chartContainer.appendChild(notificationQueryTitle);
     chartContainer.appendChild(responseContentContainer);
@@ -121,6 +123,10 @@ function Notification(options={}){
             expanded[i].classList.remove('visible');
         }
         expandedContent.classList.toggle('visible');
+
+        if(expandedContent.classList.contains('visible')){
+            item.execute();
+        }
     }
 
     editNotification.onclick = function(evt){
@@ -152,6 +158,13 @@ function Notification(options={}){
         saveButton.onclick = (e) => {
             configModal.close();
         }
+    }
+
+    item.execute = () => {
+        responseContentContainer.innerHTML = '';
+        var dots = putLoadingContainer(responseContentContainer);
+        dots.style.top = 'unset';
+        dots.style.right = 'unset';
     }
 
     return item;
