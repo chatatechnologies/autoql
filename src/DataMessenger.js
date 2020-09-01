@@ -1567,8 +1567,7 @@ function DataMessenger(elem, options){
         return messageBubble;
     }
 
-    obj.refreshToolbarButtons = (oldComponent, ignore) => {
-        closeAllChartPopovers();
+    obj.setHeightBubble = (oldComponent) => {
         var messageBubble = obj.getParentFromComponent(oldComponent);
         var chartContainer = oldComponent.getElementsByTagName('svg');
         if(chartContainer.length){
@@ -1581,6 +1580,11 @@ function DataMessenger(elem, options){
         }else{
             messageBubble.parentElement.style.maxHeight = '85%';
         }
+    }
+
+    obj.refreshToolbarButtons = (oldComponent, ignore) => {
+        closeAllChartPopovers();
+        var messageBubble = obj.getParentFromComponent(oldComponent);
         if(['table', 'pivot_table'].includes(ignore)){
             messageBubble.classList.remove('full-width');
         }else{
@@ -1818,6 +1822,7 @@ function DataMessenger(elem, options){
         component.tabulator = table;
         table.parentContainer = obj.getParentFromComponent(component);
         allColHiddenMessage(component);
+        obj.setHeightBubble(component);
         chataD3.select(window).on('chata-resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
@@ -1827,6 +1832,7 @@ function DataMessenger(elem, options){
         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1837,6 +1843,7 @@ function DataMessenger(elem, options){
         createBarChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1845,6 +1852,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pie');
         createPieChart(component, json, obj.options);
+        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1855,6 +1863,7 @@ function DataMessenger(elem, options){
         createLineChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1865,6 +1874,7 @@ function DataMessenger(elem, options){
         var table = new ChataPivotTable(
             idRequest, obj.options, obj.onCellClick
         );
+        obj.setHeightBubble(component);
         chataD3.select(window).on('chata-resize.'+idRequest, null);
 
         component.tabulator = table;
@@ -1875,6 +1885,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'heatmap');
         createHeatmap(component, json, obj.options);
+        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1883,6 +1894,7 @@ function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bubble');
         createBubbleChart(component, json, obj.options);
+        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -1894,6 +1906,7 @@ function DataMessenger(elem, options){
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
+        obj.setHeightBubble(component);
         obj.registerDrilldownStackedChartEvent(component);
     }
 
@@ -1905,6 +1918,7 @@ function DataMessenger(elem, options){
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
+        obj.setHeightBubble(component);
         obj.registerDrilldownStackedChartEvent(component);
     }
 
@@ -1916,6 +1930,7 @@ function DataMessenger(elem, options){
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
+        obj.setHeightBubble(component);
     }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
