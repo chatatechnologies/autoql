@@ -2231,7 +2231,7 @@ function DataMessenger(elem, options){
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.setAttribute('data-bubble-id', uuid);
-        containerMessage.relatedMessage = lastBubble;
+        // containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         responseContentContainer.classList.add(
@@ -2335,6 +2335,7 @@ function DataMessenger(elem, options){
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         if(jsonResponse['reference_id'] === '1.1.430'){
+            containerMessage.setAttribute('suggestion-message', '1');
             var responseLoadingContainer = document.createElement('div');
             var responseLoading = document.createElement('div');
 
