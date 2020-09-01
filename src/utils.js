@@ -168,16 +168,15 @@ function runQuery(event, objContext){
     if(node.classList.contains('autoql-vanilla-chata-safety-net-execute-btn')){
         node = node.parentElement;
     }
-    // autoql-vanilla-chata-safety-net-execute-btn
-    console.log(node);
     var words = getSafetynetValues(node);
 
     switch (objContext.constructor) {
         case DataMessenger:
-            objContext.sendMessage(
-                words.join(' '),
-                'data_messenger.validation'
-            );
+            objContext.keyboardAnimation(words.join(' '));
+            // objContext.sendMessage(
+            //     words.join(' '),
+            //     'data_messenger.validation'
+            // );
             break;
         default:
             objContext.sendMessageToResponseRenderer(

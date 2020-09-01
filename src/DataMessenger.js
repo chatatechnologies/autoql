@@ -702,6 +702,28 @@ function DataMessenger(elem, options){
         obj.queryTipsInput = input;
     }
 
+    obj.keyboardAnimation = (text) => {
+        var chataInput = obj.input;
+        chataInput.focus();
+        var subQuery = '';
+        var index = 0;
+        var int = setInterval(function () {
+            subQuery += text[index];
+            if(index >= text.length){
+                clearInterval(int);
+                var ev = new KeyboardEvent('keypress', {
+                    keyCode: 13,
+                    type: "keypress",
+                    which: 13
+                });
+                chataInput.dispatchEvent(ev)
+            }else{
+                chataInput.value = subQuery;
+            }
+            index++;
+        }, 85);
+    }
+
     obj.putRelatedQueries = (
         response, queryTipsResultContainer, container, searchVal) => {
         var delay = 0.08;
@@ -787,31 +809,13 @@ function DataMessenger(elem, options){
             item.innerHTML = list[i];
             item.style.animationDelay = (delay * i) + 's';
             item.onclick = function(event){
-                chataInput = obj.input;
                 obj.tabChataUtils.classList.add('active');
                 obj.tabQueryTips.classList.remove('active');
                 obj.tabsAnimation('flex', 'block');
                 obj.queryTipsAnimation('none');
                 obj.notificationsAnimation('none');
-                chataInput.focus();
                 var selectedQuery = event.target.textContent;
-                var subQuery = '';
-                var index = 0;
-                var int = setInterval(function () {
-                    subQuery += selectedQuery[index];
-                    if(index >= selectedQuery.length){
-                        clearInterval(int);
-                        var ev = new KeyboardEvent('keypress', {
-                            keyCode: 13,
-                            type: "keypress",
-                            which: 13
-                        });
-                        chataInput.dispatchEvent(ev)
-                    }else{
-                        chataInput.value = subQuery;
-                    }
-                    index++;
-                }, 85);
+                obj.keyboardAnimation(selectedQuery);
 
             }
             queryTipListContainer.appendChild(item);
