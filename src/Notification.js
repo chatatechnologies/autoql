@@ -178,7 +178,7 @@ function Notification(options, parentOptions){
         jsonResponse.data['columns'] = cols;
         jsonResponse.data['rows'] = rows;
         var displayType = jsonResponse.query_result['data']['display_type'];
-
+        displayType = 'column';
         switch (displayType) {
             case 'data':
                 if(cols.length == 1 && rows[0].length === 1){
@@ -203,6 +203,122 @@ function Notification(options, parentOptions){
                     );
                     div.tabulator = table;
                 }
+                break;
+            case 'bar':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createBarChart(
+                    chartWrapper, jsonResponse, item.parentOptions,
+                    () => {}, false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'column':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createColumnChart(
+                    chartWrapper, jsonResponse, item.parentOptions,
+                    () => {}, false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'line':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createLineChart(
+                    chartWrapper, jsonResponse, item.parentOptions,
+                    () => {}, false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'heatmap':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+
+                createHeatmap(
+                    chartWrapper,
+                    jsonResponse,
+                    item.parentOptions, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'bubble':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createBubbleChart(
+                    chartWrapper, jsonResponse, item.parentOptions,
+                    false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'stacked_bar':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createStackedBarChart(
+                    chartWrapper, jsonResponse,
+                    item.parentOptions, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'stacked_column':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createStackedColumnChart(
+                    chartWrapper, jsonResponse,
+                    item.parentOptions, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'stacked_line':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createAreaChart(
+                    chartWrapper, jsonResponse,
+                    item.parentOptions, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'pie':
+                var chartWrapper = document.createElement('div');
+                chartWrapper.style.paddingTop = '15px';
+                responseContentContainer.appendChild(chartWrapper);
+                createPieChart(chartWrapper, jsonResponse,
+                    item.parentOptions, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'pivot_table':
+                var div = createTableContainer();
+                div.setAttribute('data-componentid', _uuid)
+                responseContentContainer.appendChild(div);
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add(
+                    'autoql-vanilla-chata-table-scrollbox'
+                );
+                scrollbox.classList.add('no-full-width');
+                scrollbox.appendChild(div);
+                responseContentContainer.appendChild(scrollbox);
+                var table = new ChataPivotTable(
+                    _uuid, item.parentOptions, () => {}
+                )
+                div.tabulator = table;
                 break;
             default:
 

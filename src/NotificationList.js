@@ -29,6 +29,17 @@ function NotificationList(selector, options){
             enableColumnVisibilityManager: true,
             enableDrilldowns: true
         },
+        themeConfig: {
+            theme: 'light',
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
+            accentColor: '#26a7df',
+            fontFamily: 'sans-serif',
+        },
+        enableDynamicCharting: true
     }
 
     if('authentication' in options){
