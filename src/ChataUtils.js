@@ -375,7 +375,7 @@ ChataUtils.sendDrilldownMessage = function(
     }
 }
 
-ChataUtils.showColumnEditor = (id, options) => {
+ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     var modal = new Modal({
         destroyOnClose: true,
         withFooter: true
@@ -537,6 +537,7 @@ ChataUtils.showColumnEditor = (id, options) => {
         ChataUtils.putCall(url, {columns: data}, function(response){
             modal.close();
             allColHiddenMessage(table);
+            onHideCols();
         }, opts)
     }
 

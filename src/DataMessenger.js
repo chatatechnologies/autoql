@@ -1630,7 +1630,8 @@ function DataMessenger(elem, options){
 
     obj.setScrollBubble = (messageBubble) => {
         setTimeout(() => {
-            obj.scrollBox.scrollTop = messageBubble.dataset.chataScrollValue;
+            messageBubble.parentElement.scrollIntoView();
+            // obj.scrollBox.scrollTop = messageBubble.dataset.chataScrollValue;
         }, 200)
     }
 
@@ -2190,7 +2191,12 @@ function DataMessenger(elem, options){
     }
 
     obj.showColumnEditor = function(id){
-        ChataUtils.showColumnEditor(id, obj.options);
+        ChataUtils.showColumnEditor(id, obj.options, () => {
+            var component = obj.rootElem.querySelector(
+                `[data-componentid='${id}']`
+            );
+            obj.setScrollBubble(obj.getParentFromComponent(component));
+        });
     }
 
     obj.sendResponse = (text) => {
