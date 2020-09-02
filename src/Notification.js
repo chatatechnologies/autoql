@@ -24,6 +24,8 @@ function Notification(options, parentOptions){
     var extraContent = document.createElement('div');
     var btnTurnNotification = document.createElement('button');
     var editNotification = document.createElement('button');
+    var notificationReadOnlyGroup = document.createElement('div');
+    notificationReadOnlyGroup.classList.add('notification-read-only-group')
     var turnNotificationText = document.createTextNode(
         'Turn off these notifications'
     );
@@ -86,8 +88,14 @@ function Notification(options, parentOptions){
     responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
 
     var parsedRules = RuleParser.convert(options.rule_expression);
+    notificationRulesContainer.appendChild(notificationReadOnlyGroup);
     for (var i = 0; i < parsedRules.length; i++) {
-        notificationRulesContainer.appendChild(new NotificationGroup(parsedRules[i]))
+        var rule = parsedRules[i];
+        for (var x = 0; x < rule.length; x++) {
+            notificationReadOnlyGroup.appendChild(
+                new NotificationGroup(rule[x])
+            )
+        }
     }
 
     chartContainer.appendChild(notificationQueryTitle);
