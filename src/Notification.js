@@ -2,6 +2,7 @@ function Notification(options, parentOptions){
     var item = document.createElement('div')
     item.options = options;
     item.parentOptions = parentOptions;
+    item.displayType = '';
     var header = document.createElement('div');
     var displayNameContainer = document.createElement('div');
     var displayName = document.createElement('div');
@@ -172,14 +173,15 @@ function Notification(options, parentOptions){
     }
 
     item.refreshContent = (jsonResponse) => {
+        responseContentContainer.innerHTML = '';
         var cols = jsonResponse.query_result['data']['columns'];
         var rows = jsonResponse.query_result['data']['rows'];
+        var displayType = jsonResponse.query_result['data']['display_type'];
         jsonResponse['data'] = {};
         jsonResponse.data['columns'] = cols;
         jsonResponse.data['rows'] = rows;
-        var displayType = jsonResponse.query_result['data']['display_type'];
-        displayType = 'column';
-        switch (displayType) {
+        jsonResponse.data['display_type'] = displayType;
+        switch (item.displayType) {
             case 'data':
                 if(cols.length == 1 && rows[0].length === 1){
                     var value = rows[0][0];
@@ -323,6 +325,83 @@ function Notification(options, parentOptions){
             default:
 
         }
+
+        item.createVizToolbar(jsonResponse);
+    }
+
+    item.createVizToolbar = (json) => {
+        var displayTypes = getSupportedDisplayTypes(json);
+        if(displayTypes.length > 1){
+            var vizToolbar = document.createElement('div');
+            for (var i = 0; i < displayTypes.length; i++) {
+                if(displayTypes[i] == item.displayType)continue;
+                var button = document.createElement('button');
+                button.classList.add('autoql-vanilla-chata-toolbar-btn');
+                button.setAttribute('data-displaytype', displayTypes[i]);
+                if(displayTypes[i] == 'table'){
+                    button.innerHTML = TABLE_ICON;
+                    button.setAttribute('data-tippy-content', 'Table');
+                }
+                if(displayTypes[i] == 'column'){
+                    button.innerHTML = COLUMN_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Column Chart');
+                }
+                if(displayTypes[i] == 'bar'){
+                    button.innerHTML = BAR_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Bar Chart');
+                }
+                if(displayTypes[i] == 'pie'){
+                    button.innerHTML = PIE_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Pie Chart');
+                }
+                if(displayTypes[i] == 'line'){
+                    button.innerHTML = LINE_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Line Chart');
+                }
+                if(displayTypes[i] == 'pivot_table'){
+                    button.innerHTML = PIVOT_ICON;
+                    button.setAttribute('data-tippy-content', 'Pivot Table');
+                }
+                if(displayTypes[i] == 'heatmap'){
+                    button.innerHTML = HEATMAP_ICON;
+                    button.setAttribute('data-tippy-content', 'Heatmap');
+                }
+                if(displayTypes[i] == 'bubble'){
+                    button.innerHTML = BUBBLE_CHART_ICON;
+                    button.setAttribute('data-tippy-content', 'Bubble Chart');
+                }
+                if(displayTypes[i] == 'stacked_column'){
+                    button.innerHTML = STACKED_COLUMN_CHART_ICON;
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Column Chart'
+                    );
+                }
+                if(displayTypes[i] == 'stacked_bar'){
+                    button.innerHTML = STACKED_BAR_CHART_ICON;
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Area Chart'
+                    );
+                }
+                if(displayTypes[i] == 'stacked_line'){
+                    button.innerHTML = STACKED_AREA_CHART_ICON;
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Bar Chart'
+                    );
+                }
+                if(button.innerHTML != ''){
+                    vizToolbar.appendChild(button);
+                    button.onclick = function(event){
+                        item.displayType = this.dataset.displaytype;
+                        item.refreshContent(json);
+                    }
+                }
+            }
+            console.log(vizToolbar);
+            dataContainer.appendChild(vizToolbar);
+        }
     }
 
     item.execute = () => {
@@ -336,6 +415,7 @@ function Notification(options, parentOptions){
         dots.style.right = 'unset';
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             ChataUtils.responses[uuid] = jsonResponse;
+            item.displayType = jsonResponse.query_result['data']['display_type'];
             responseContentContainer.removeChild(dots);
             item.refreshContent(jsonResponse);
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
