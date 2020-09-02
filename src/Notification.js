@@ -63,8 +63,8 @@ function Notification(options, parentOptions){
     editNotification.classList.add('autoql-vanilla-chata-btn');
     editNotification.classList.add('default');
     editNotification.classList.add('large');
-
-    notificationQueryTitle.innerHTML = 'Test title';
+    console.log(options);
+    notificationQueryTitle.innerHTML = options.rule_title;
 
     btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
     editNotification.innerHTML = EDIT_NOTIFICATION;
@@ -170,6 +170,23 @@ function Notification(options, parentOptions){
         }
     }
 
+    item.refreshContent = (jsonResponse) => {
+        var cols = jsonResponse.query_result['data']['columns'];
+        var rows = jsonResponse.query_result['data']['rows'];
+        var displayType = jsonResponse.query_result['data']['display_type'];
+
+        switch (displayType) {
+            case 'data':
+                var value = rows[0][0];
+                responseContentContainer.innerHTML = `
+                    <a class="single-value-response ">${value}</a>
+                `;
+                break;
+            default:
+
+        }
+    }
+
     item.execute = () => {
         responseContentContainer.innerHTML = '';
         var pOpts = item.parentOptions.authentication;
@@ -182,6 +199,7 @@ function Notification(options, parentOptions){
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             console.log(jsonResponse);
             responseContentContainer.removeChild(dots);
+            item.refreshContent(jsonResponse);
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
     }
 
