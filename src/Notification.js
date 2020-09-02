@@ -1,5 +1,7 @@
-function Notification(options={}){
+function Notification(options, parentOptions){
     var item = document.createElement('div')
+    item.options = options;
+    item.parentOptions = parentOptions;
     var header = document.createElement('div');
     var displayNameContainer = document.createElement('div');
     var displayName = document.createElement('div');
@@ -162,9 +164,17 @@ function Notification(options={}){
 
     item.execute = () => {
         responseContentContainer.innerHTML = '';
+        var pOpts = item.parentOptions.authentication;
+        var opts = item.options;
+        const DOMAIN = 'https://backend-staging.chata.io'
+        const URL = `${DOMAIN}/api/v1/rule-notifications/${opts.id}?key=${pOpts.apiKey}`;
         var dots = putLoadingContainer(responseContentContainer);
         dots.style.top = 'unset';
         dots.style.right = 'unset';
+        ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
+            console.log(jsonResponse);
+            responseContentContainer.removeChild(dots);
+        }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
     }
 
     return item;

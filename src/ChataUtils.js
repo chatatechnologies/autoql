@@ -803,7 +803,7 @@ ChataUtils.createCsvData = function(json, separator=','){
     return output
 }
 
-ChataUtils.safetynetCall = function(url, callback, options){
+ChataUtils.safetynetCall = function(url, callback, options, extraHeaders=[]){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === 4){
@@ -815,6 +815,10 @@ ChataUtils.safetynetCall = function(url, callback, options){
         }
     };
     xhr.open('GET', url);
+    for (var obj of extraHeaders) {
+        var key = Object.entries(obj)[0];
+        xhr.setRequestHeader(key[0], key[1]);
+    }
     // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
     xhr.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     xhr.send();

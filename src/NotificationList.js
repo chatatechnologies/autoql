@@ -41,7 +41,7 @@ function NotificationList(selector, options){
             var items = jsonResponse['data']['notifications'];
             for (var i = 0; i < items.length; i++) {
                 container.appendChild(
-                    new Notification(items[i])
+                    new Notification(items[i], wrapper.options)
                 );
                 // setTimeout(function () {
                 // }, timeOut);
