@@ -62,7 +62,8 @@ function DataMessenger(elem, options){
         inputPlaceholder: 'Type your queries here',
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
-        activeIntegrator: ''
+        activeIntegrator: '',
+        xhr: new XMLHttpRequest()
     };
 
     obj.autoCompleteTimer = undefined;
@@ -1189,15 +1190,19 @@ function DataMessenger(elem, options){
                         evt.target.value,
                         obj.autoCompleteList,
                         'suggestion',
-                        obj.options
+                        obj.options,
                     );
-                }, 200);
+                }, 150);
             }
         }
     }
 
     obj.onEnterHandler = (evt) => {
         if(evt.keyCode == 13 && obj.input.value){
+            try {
+                obj.options.xhr.abort();
+            } catch (e) {
+            }
             clearTimeout(obj.autoCompleteTimer);
             obj.autoCompleteList.style.display = 'none';
             obj.sendMessage(obj.input.value, 'data_messenger.user');

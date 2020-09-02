@@ -894,16 +894,28 @@ ChataUtils.ajaxCallPost = function(url, callback, data, options){
 
 ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
 
-    ChataUtils.xhr.onreadystatechange = function() {
-        if (ChataUtils.xhr.readyState === 4){
-            var jsonResponse = JSON.parse(ChataUtils.xhr.responseText);
+    options.xhr.onreadystatechange = function() {
+        if (options.xhr.readyState === 4){
+            console.log(options.xhr.responseText);
+            var jsonResponse = {
+                data: {
+                    matches: []
+                }
+            }
+            if(options.xhr.responseText){
+                jsonResponse = JSON.parse(options.xhr.responseText);
+            }
             callback(jsonResponse);
         }
     };
-    ChataUtils.xhr.open('GET', url);
-    ChataUtils.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    ChataUtils.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
-    ChataUtils.xhr.send();
+    // ChataUtils.xhr.open('GET', url);
+    // ChataUtils.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    // ChataUtils.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
+    // ChataUtils.xhr.send();
+    options.xhr.open('GET', url);
+    options.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
+    options.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
+    options.xhr.send();
 }
 
 ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggestion', options){
@@ -918,7 +930,6 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
 
     ChataUtils.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
-        console.log(URL);
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
         if(matches.length > 0){
             for(var [key, value] of Object.entries(options.autocompleteStyles)){
@@ -929,7 +940,6 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
                 li.classList.add(liClass);
                 li.textContent = matches[i];
                 suggestionList.appendChild(li);
-                console.log(matches[i]);
             }
             suggestionList.style.display = 'block';
         }else{
