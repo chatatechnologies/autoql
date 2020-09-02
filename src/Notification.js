@@ -25,6 +25,7 @@ function Notification(options, parentOptions){
     var btnTurnNotification = document.createElement('button');
     var editNotification = document.createElement('button');
     var notificationReadOnlyGroup = document.createElement('div');
+    var uuid = uuidv4();
     notificationReadOnlyGroup.classList.add('notification-read-only-group')
     var turnNotificationText = document.createTextNode(
         'Turn off these notifications'
@@ -65,7 +66,7 @@ function Notification(options, parentOptions){
     editNotification.classList.add('large');
     console.log(options);
     notificationQueryTitle.innerHTML = options.rule_title;
-
+    responseContentContainer.setAttribute('data-container-id', uuid);
     btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
     editNotification.innerHTML = EDIT_NOTIFICATION;
 
@@ -173,14 +174,35 @@ function Notification(options, parentOptions){
     item.refreshContent = (jsonResponse) => {
         var cols = jsonResponse.query_result['data']['columns'];
         var rows = jsonResponse.query_result['data']['rows'];
+        jsonResponse['data'] = {};
+        jsonResponse.data['columns'] = cols;
+        jsonResponse.data['rows'] = rows;
         var displayType = jsonResponse.query_result['data']['display_type'];
 
         switch (displayType) {
             case 'data':
-                var value = rows[0][0];
-                responseContentContainer.innerHTML = `
-                    <a class="single-value-response ">${value}</a>
-                `;
+                if(cols.length == 1 && rows[0].length === 1){
+                    var value = rows[0][0];
+                    responseContentContainer.innerHTML = `
+                        <a class="single-value-response ">${value}</a>
+                    `;
+                }else{
+                    var div = createTableContainer();
+                    div.setAttribute('data-componentid', uuid)
+                    var scrollbox = document.createElement('div');
+                    scrollbox.classList.add(
+                        'autoql-vanilla-chata-table-scrollbox'
+                    );
+                    // scrollbox.classList.add('no-full-width');
+                    scrollbox.appendChild(div);
+                    responseContentContainer.appendChild(scrollbox);
+                    var table = new ChataTable(
+                        uuid,
+                        item.parentOptions,
+                        (e, row, json) => {},
+                    );
+                    div.tabulator = table;
+                }
                 break;
             default:
 
@@ -197,7 +219,7 @@ function Notification(options, parentOptions){
         dots.style.top = 'unset';
         dots.style.right = 'unset';
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
-            console.log(jsonResponse);
+            ChataUtils.responses[uuid] = jsonResponse;
             responseContentContainer.removeChild(dots);
             item.refreshContent(jsonResponse);
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])

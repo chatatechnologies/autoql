@@ -11,6 +11,24 @@ function NotificationList(selector, options){
             domain: undefined,
             demo: false
         },
+        dataFormatting:{
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY'
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableColumnVisibilityManager: true,
+            enableDrilldowns: true
+        },
     }
 
     if('authentication' in options){
