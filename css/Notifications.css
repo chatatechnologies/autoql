@@ -499,6 +499,15 @@
     justify-content: space-between;
 }
 
+.autoql-vanilla-chata-notification-viz-switcher {
+    flex: 0 0 50px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50px;
+    padding: 10px;
+    border-left: 1px solid rgba(0,0,0,.05);
+}
+
 @keyframes slideIn{
     0% {
         opacity: 0;
@@ -508,5 +517,5 @@
     100% {
         opacity: 1;
         top: 0;
-    }    
+    }
 }

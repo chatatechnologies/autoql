@@ -181,6 +181,13 @@ function Notification(options, parentOptions){
         jsonResponse.data['columns'] = cols;
         jsonResponse.data['rows'] = rows;
         jsonResponse.data['display_type'] = displayType;
+
+        var vizToolbar = dataContainer.querySelector(
+            '.autoql-vanilla-chata-notification-viz-switcher'
+        )
+
+        if(vizToolbar)dataContainer.removeChild(vizToolbar);
+
         switch (item.displayType) {
             case 'data':
                 if(cols.length == 1 && rows[0].length === 1){
@@ -333,12 +340,17 @@ function Notification(options, parentOptions){
         var displayTypes = getSupportedDisplayTypes(json);
         if(displayTypes.length > 1){
             var vizToolbar = document.createElement('div');
+            vizToolbar.classList.add(
+                'autoql-vanilla-chata-notification-viz-switcher'
+            );
             for (var i = 0; i < displayTypes.length; i++) {
-                if(displayTypes[i] == item.displayType)continue;
+                if(displayTypes[i] == item.displayType ||
+                    (displayTypes[i] === 'table' && item.displayType === 'data'))continue;
                 var button = document.createElement('button');
                 button.classList.add('autoql-vanilla-chata-toolbar-btn');
                 button.setAttribute('data-displaytype', displayTypes[i]);
                 if(displayTypes[i] == 'table'){
+                    button.setAttribute('data-displaytype', 'data');
                     button.innerHTML = TABLE_ICON;
                     button.setAttribute('data-tippy-content', 'Table');
                 }
