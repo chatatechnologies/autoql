@@ -1743,7 +1743,8 @@ function DataMessenger(elem, options){
             }, 400)
         }else{
             setTimeout(() => {
-                obj.putClientResponse('No data found.')
+                console.log('AQUIIIIIIIIIIIIIIIIII');
+                obj.putClientResponse('No data found.', true, json);
                 obj.drawerContent.removeChild(loading);
             }, 400)
         }
@@ -2289,19 +2290,28 @@ function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
-    obj.putClientResponse = (msg) => {
+    obj.putClientResponse = (msg, json={}, withDeleteBtn=false) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
+        var uuid = uuidv4();
+        ChataUtils.responses[uuid] = json;
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.classList.add('response');
-        var idRequest = uuidv4();
+        containerMessage.setAttribute('data-bubble-id', uuid);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response')
         messageBubble.classList.add('no-hover-response')
+
+        if(withDeleteBtn){
+            toolbarButtons = obj.getActionToolbar(
+                uuid, 'safety-net', ''
+            );
+            messageBubble.appendChild(toolbarButtons);
+        }
 
         var div = document.createElement('div');
         div.classList.add('autoql-vanilla-chata-single-response');

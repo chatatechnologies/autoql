@@ -70,11 +70,9 @@ function Notification(options, parentOptions){
     editNotification.classList.add('autoql-vanilla-chata-btn');
     editNotification.classList.add('default');
     editNotification.classList.add('large');
-    console.log(options);
     notificationQueryTitle.innerHTML = options.rule_title;
     responseContentContainer.setAttribute('data-container-id', uuid);
     // btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
-    console.log(turnNotificationIcon);
     btnTurnNotification.appendChild(turnNotificationIcon);
     editNotification.innerHTML = EDIT_NOTIFICATION;
 
@@ -418,7 +416,6 @@ function Notification(options, parentOptions){
                     }
                 }
             }
-            console.log(vizToolbar);
             dataContainer.appendChild(vizToolbar);
         }
     }
@@ -454,7 +451,6 @@ function Notification(options, parentOptions){
     item.formatTimestamp();
 
     item.toggleTurnOffNotificationText = () => {
-        console.log(item.ruleOptions.status);
         if(item.ruleOptions.status == 'INACTIVE'){
             turnNotificationIcon.innerHTML = TURN_ON_NOTIFICATION;
             turnNotificationText.textContent = 'Turn these notifications back on';
