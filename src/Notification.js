@@ -188,11 +188,16 @@ function Notification(options, parentOptions){
     }
 
     dismissIcon.onclick = (evt) => {
-        console.log('CLICK ICON');
-        console.log(item.ruleOptions);
-        console.log(item.options);
+        var pOpts = item.parentOptions.authentication;
+        const URL = `${pOpts.domain}/autoql/api/v1/rules/notifications/${item.options.id}?key=${pOpts.apiKey}`;
+        var payload = {
+            state: 'DISMISSED'
+        }
         item.options.state = 'DISMISSED';
-        item.toggleDismissIcon();
+        ChataUtils.putCall(URL, payload, (jsonResponse) => {
+            console.log(jsonResponse);
+            item.toggleDismissIcon();
+        }, item.parentOptions)
     }
 
     item.refreshContent = (jsonResponse) => {
