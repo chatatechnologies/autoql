@@ -508,6 +508,13 @@
     border-left: 1px solid rgba(0,0,0,.05);
 }
 
+.chata-notification-list-item .chata-notification-data-container line {
+    stroke-width: 1px !important;
+    stroke: currentColor !important;
+    opacity: 0.15;
+    shape-rendering: crispedges !important;
+}
+
 @keyframes slideIn{
     0% {
         opacity: 0;
