@@ -92,7 +92,6 @@ function Notification(options, parentOptions){
     notificationDetailsTitle2.innerHTML = 'Description: ';
     timestamp.appendChild(htmlToElement(`
         <span class="chata-icon calendar">${CALENDAR}<span>
-        Today at 11:20am
     `));
 
     responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
@@ -427,6 +426,17 @@ function Notification(options, parentOptions){
     btnTurnNotification.onclick = (evt) => {
         item.toggleStatus();
     }
+
+    item.formatTimestamp = () => {
+        var createdAt = parseInt(item.options.created_at)*1000;
+        timestamp.appendChild(
+            document.createTextNode(moment(createdAt).format('MMMM Do, YYYY'))
+        );
+        console.log(moment(createdAt).format('MMMM Do, YYYY'));
+        // moment().format('MMMM Do YYYY, h:mm:ss a');
+    }
+
+    item.formatTimestamp();
 
     item.toggleTurnOffNotificationText = () => {
         console.log(item.ruleOptions.status);
