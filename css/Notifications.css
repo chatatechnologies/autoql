@@ -67,7 +67,6 @@
     flex-direction: row;
     justify-content: space-between;
     padding-left: 25px;
-    padding-right: 10px;
     cursor: pointer;
 }
 
@@ -394,6 +393,7 @@
 .chata-notification-list-item .chata-notification-display-name-container .chata-notification-timestamp {
     font-size: 12px;
     opacity: .5;
+    color: rgba(0,0,0,.6);
 }
 
 .chata-notification-list-item .chata-notification-details-container {
@@ -513,6 +513,35 @@
     stroke: currentColor !important;
     opacity: 0.15;
     shape-rendering: crispedges !important;
+}
+
+
+.chata-notification-list-item .chata-notification-delete-icon {
+    font-size: 18px;
+    margin-top: 3px;
+    margin-right: 3px;
+    /* opacity: 0; */
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 20px;
+    display: inline-block;
+    line-height: 20px;
+    background-color: transparent;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-list-item .chata-notification-dismiss-icon {
+    font-size: 21px;
+    width: 40px;
+    height: 40px;
+    border-radius: 26px;
+    line-height: 20px;
+    background-color: transparent;
+    transition: background-color .2s ease;
+    cursor: pointer;
+    margin-top: 15px;
 }
 
 @keyframes slideIn{

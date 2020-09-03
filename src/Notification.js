@@ -21,11 +21,19 @@ function Notification(options, parentOptions){
     var alertStrip = document.createElement('div');
     var detailsContainer = document.createElement('div');
     var dismissIcon = htmlToElement(DISMISS);
+    var dismissBtn = document.createElement('div');
     var calendarIcon = htmlToElement(CALENDAR);
     var extraContent = document.createElement('div');
     var btnTurnNotification = document.createElement('button');
     var editNotification = document.createElement('button');
     var notificationReadOnlyGroup = document.createElement('div');
+    // chata-notification-delete-icon close
+    var dismissIconContainer = htmlToElement(`
+        <span
+            class="chata-icon chata-notification-dismiss-icon notification-off"
+            data-tippy-content="Delete">
+        </span>
+    `);
     var turnNotificationIcon = htmlToElement(`
         <span>
             ${TURN_ON_NOTIFICATION}
@@ -47,6 +55,7 @@ function Notification(options, parentOptions){
     header.classList.add('chata-notification-list-item-header');
     displayName.classList.add('chata-notification-display-name');
     dismissIcon.classList.add('chata-notification-dismiss-icon');
+    dismissBtn.classList.add('chata-notification-dismiss-btn');
     dataTitle.classList.add('chata-notification-data-title');
     expandedContent.classList.add('chata-notification-expanded-content');
     alertStrip.classList.add('chata-notification-alert-strip');
@@ -119,9 +128,10 @@ function Notification(options, parentOptions){
     displayNameContainer.appendChild(displayName);
     displayNameContainer.appendChild(description);
     displayNameContainer.appendChild(timestamp);
-
+    dismissIconContainer.appendChild(dismissIcon);
+    dismissBtn.appendChild(dismissIconContainer);
     header.appendChild(displayNameContainer);
-    header.appendChild(dismissIcon);
+    header.appendChild(dismissBtn);
 
 
     item.appendChild(header);
@@ -131,7 +141,7 @@ function Notification(options, parentOptions){
     expandedContent.appendChild(detailsContainer);
     expandedContent.appendChild(extraContent);
 
-    header.onclick = function(evt){
+    displayNameContainer.onclick = function(evt){
         var expanded = document.getElementsByClassName(
             'chata-notification-expanded-content'
         );
@@ -175,6 +185,10 @@ function Notification(options, parentOptions){
         saveButton.onclick = (e) => {
             configModal.close();
         }
+    }
+
+    dismissIcon.onclick = (evt) => {
+
     }
 
     item.refreshContent = (jsonResponse) => {
