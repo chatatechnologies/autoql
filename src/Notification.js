@@ -188,7 +188,11 @@ function Notification(options, parentOptions){
     }
 
     dismissIcon.onclick = (evt) => {
-
+        console.log('CLICK ICON');
+        console.log(item.ruleOptions);
+        console.log(item.options);
+        item.options.state = 'DISMISSED';
+        item.toggleDismissIcon();
     }
 
     item.refreshContent = (jsonResponse) => {
@@ -492,6 +496,15 @@ function Notification(options, parentOptions){
         }, item.parentOptions)
     }
 
+    item.toggleDismissIcon = () => {
+        if(item.options.state === 'DISMISSED'){
+            dismissIconContainer.classList.add('chata-notification-delete-icon');
+            dismissIconContainer.classList.remove('notification-off');
+            dismissIconContainer.classList.remove('chata-notification-dismiss-icon');
+            dismissIconContainer.innerHTML = SVG_X;
+            item.classList.remove('triggered');
+        }
+    };
 
     item.getRuleStatus = () => {
         var pOpts = item.parentOptions.authentication;
@@ -501,6 +514,7 @@ function Notification(options, parentOptions){
             ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
                 item.ruleOptions = jsonResponse.data;
                 item.toggleTurnOffNotificationText();
+                item.toggleDismissIcon();
                 resolve();
             }, item.parentOptions)
         });
@@ -525,5 +539,6 @@ function Notification(options, parentOptions){
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
     }
 
+    item.toggleDismissIcon();
     return item;
 }

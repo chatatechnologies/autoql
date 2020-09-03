@@ -520,7 +520,7 @@
     font-size: 18px;
     margin-top: 3px;
     margin-right: 3px;
-    /* opacity: 0; */
+    opacity: 0;
     width: 36px;
     height: 36px;
     padding: 9px;
@@ -542,6 +542,18 @@
     transition: background-color .2s ease;
     cursor: pointer;
     margin-top: 15px;
+}
+
+.chata-notification-list-item .chata-notification-dismiss-icon svg:hover {
+    background-color: #ececec;
+}
+
+.chata-notification-list-item:hover .chata-notification-delete-icon{
+    opacity: 1;
+}
+
+.chata-notification-list-item .chata-notification-delete-icon:hover {
+    background-color: #ececec;
 }
 
 @keyframes slideIn{
