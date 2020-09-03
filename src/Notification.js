@@ -418,6 +418,28 @@ function Notification(options, parentOptions){
     }
 
 
+    btnTurnNotification.onclick = (evt) => {
+        item.toggleStatus();
+    }
+
+    item.toggleStatus = () => {
+        var pOpts = item.parentOptions.authentication;
+        const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
+
+        var state = btnTurnNotification.dataset.notificationState;
+        var payload = {
+            status: 'ACTIVE'
+        }
+        if(['ACTIVE', 'WAITING'].includes(item.ruleOptions.status)){
+            payload.status = 'INACTIVE';
+        }
+
+        ChataUtils.putCall(URL, payload, (jsonResponse) => {
+            console.log(jsonResponse);
+        }, item.parentOptions)
+    }
+
+
     item.getRuleStatus = () => {
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
@@ -429,7 +451,6 @@ function Notification(options, parentOptions){
                 resolve();
             }, item.parentOptions)
         });
-
     }
 
     item.execute = async () => {
