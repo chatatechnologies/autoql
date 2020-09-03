@@ -72,6 +72,7 @@ function Notification(options, parentOptions){
     editNotification.innerHTML = EDIT_NOTIFICATION;
 
     btnTurnNotification.appendChild(turnNotificationText);
+    btnTurnNotification.setAttribute('data-notification-state', 'active');
     editNotification.appendChild(editNotificationText);
 
     extraContent.appendChild(btnTurnNotification);
@@ -416,7 +417,22 @@ function Notification(options, parentOptions){
         }
     }
 
-    item.execute = () => {
+
+    item.getRuleStatus = () => {
+        var pOpts = item.parentOptions.authentication;
+        const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
+
+        return new Promise((resolve, reject) => {
+            ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
+                item.ruleOptions = jsonResponse.data;
+                console.log(jsonResponse);
+                resolve();
+            }, item.parentOptions)
+        });
+
+    }
+
+    item.execute = async () => {
         responseContentContainer.innerHTML = '';
         var pOpts = item.parentOptions.authentication;
         var opts = item.options;
@@ -425,6 +441,8 @@ function Notification(options, parentOptions){
         var dots = putLoadingContainer(responseContentContainer);
         dots.style.top = 'unset';
         dots.style.right = 'unset';
+
+        await item.getRuleStatus();
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             ChataUtils.responses[uuid] = jsonResponse;
             item.displayType = jsonResponse.query_result['data']['display_type'];
