@@ -26,6 +26,11 @@ function Notification(options, parentOptions){
     var btnTurnNotification = document.createElement('button');
     var editNotification = document.createElement('button');
     var notificationReadOnlyGroup = document.createElement('div');
+    var turnNotificationIcon = htmlToElement(`
+        <span>
+            ${TURN_ON_NOTIFICATION}
+        </span>
+    `);
     var uuid = uuidv4();
     notificationReadOnlyGroup.classList.add('notification-read-only-group')
     var turnNotificationText = document.createTextNode(
@@ -68,7 +73,9 @@ function Notification(options, parentOptions){
     console.log(options);
     notificationQueryTitle.innerHTML = options.rule_title;
     responseContentContainer.setAttribute('data-container-id', uuid);
-    btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
+    // btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
+    console.log(turnNotificationIcon);
+    btnTurnNotification.appendChild(turnNotificationIcon);
     editNotification.innerHTML = EDIT_NOTIFICATION;
 
     btnTurnNotification.appendChild(turnNotificationText);
@@ -417,9 +424,19 @@ function Notification(options, parentOptions){
         }
     }
 
-
     btnTurnNotification.onclick = (evt) => {
         item.toggleStatus();
+    }
+
+    item.toggleTurnOffNotificationText = () => {
+        console.log(item.ruleOptions.status);
+        if(item.ruleOptions.status == 'INACTIVE'){
+            turnNotificationIcon.innerHTML = TURN_ON_NOTIFICATION;
+            turnNotificationText.textContent = 'Turn these notifications back on';
+        }else{
+            turnNotificationIcon.innerHTML = DISMISS;
+            turnNotificationText.textContent = 'Turn off these notifications';
+        }
     }
 
     item.toggleStatus = () => {
@@ -435,7 +452,8 @@ function Notification(options, parentOptions){
         }
 
         ChataUtils.putCall(URL, payload, (jsonResponse) => {
-            console.log(jsonResponse);
+            item.ruleOptions = jsonResponse.data;
+            item.toggleTurnOffNotificationText();
         }, item.parentOptions)
     }
 
@@ -447,7 +465,7 @@ function Notification(options, parentOptions){
         return new Promise((resolve, reject) => {
             ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
                 item.ruleOptions = jsonResponse.data;
-                console.log(jsonResponse);
+                item.toggleTurnOffNotificationText();
                 resolve();
             }, item.parentOptions)
         });

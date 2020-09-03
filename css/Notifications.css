@@ -10,7 +10,7 @@
     color: #26a7df;
     height: 100%;
     padding: 20px;
-    overflow: hidden;
+    /* overflow: hidden; */
 }
 
 .chata-notification-list-container .chata-notification-dismiss-all {
