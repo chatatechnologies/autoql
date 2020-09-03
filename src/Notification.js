@@ -429,11 +429,26 @@ function Notification(options, parentOptions){
 
     item.formatTimestamp = () => {
         var createdAt = parseInt(item.options.created_at)*1000;
+        let date = '';
+        const time = moment(createdAt).format('h:mma')
+        const day = moment(createdAt).format('MM-DD-YY')
+        const today = moment().format('MM-DD-YY')
+        const yesterday = moment()
+        .subtract(1, 'd')
+        .format('MM-DD-YY')
+
+        if (day === today) {
+            date = `Today at ${time}`
+        } else if (day === yesterday) {
+            date = `Yesterday at ${time}`
+        } else if (moment().isSame(createdAt, 'year')) {
+            date = `${moment(timestamp).format('MMMM Do')} at ${time}`
+        }else{
+            date = `${moment(timestamp).format('MMMM Do, YYYY')} at ${time}`
+        }
         timestamp.appendChild(
-            document.createTextNode(moment(createdAt).format('MMMM Do, YYYY'))
+            document.createTextNode(date)
         );
-        console.log(moment(createdAt).format('MMMM Do, YYYY'));
-        // moment().format('MMMM Do YYYY, h:mm:ss a');
     }
 
     item.formatTimestamp();
