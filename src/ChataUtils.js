@@ -879,6 +879,33 @@ ChataUtils.putCall = function(url, data, callback, options){
 
 }
 
+ChataUtils.deleteCall = function(url, callback, options, extraHeaders=[]){
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function(){
+        if(xhr.readyState === 4){
+            var jsonResponse = JSON.parse(xhr.responseText);
+            callback(jsonResponse);
+        }
+    }
+
+    xhr.open('DELETE', url);
+    for (var obj of extraHeaders) {
+        var key = Object.entries(obj)[0];
+        xhr.setRequestHeader(key[0], key[1]);
+    }
+
+
+    if(!options.authentication.demo){
+        xhr.setRequestHeader(
+            "authorization", `Bearer ${options.authentication.token}`
+        );
+    }
+
+    xhr.send();
+
+}
+
 ChataUtils.ajaxCallPost = function(url, callback, data, options){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", url);

@@ -195,7 +195,6 @@ function Notification(options, parentOptions){
         }
         item.options.state = 'DISMISSED';
         ChataUtils.putCall(URL, payload, (jsonResponse) => {
-            console.log(jsonResponse);
             item.toggleDismissIcon();
         }, item.parentOptions)
     }
@@ -503,10 +502,18 @@ function Notification(options, parentOptions){
 
     item.toggleDismissIcon = () => {
         if(item.options.state === 'DISMISSED'){
+            var pOpts = item.parentOptions.authentication;
             dismissIconContainer.classList.add('chata-notification-delete-icon');
             dismissIconContainer.classList.remove('notification-off');
             dismissIconContainer.classList.remove('chata-notification-dismiss-icon');
             dismissIconContainer.innerHTML = SVG_X;
+            dismissIconContainer.onclick = (evt) => {
+                const URL = `${pOpts.domain}/autoql/api/v1/rules/notifications/${item.options.id}?key=${pOpts.apiKey}`;
+                ChataUtils.deleteCall(URL, (jsonResponse) => {
+                    item.parentElement.removeChild(item);
+                },
+                item.parentOptions)
+            }
             item.classList.remove('triggered');
         }
     };
