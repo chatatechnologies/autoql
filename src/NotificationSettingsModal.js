@@ -1112,12 +1112,18 @@ function ChataModalStep(title, nStep, subtitle=''){
 
 function getStep1Values(step1){
     var groups = document.querySelectorAll('.notification-group-wrapper');
+    var operators = document.querySelectorAll('.notification-group-wrapper');
+    console.log(operators);
     var expression = [];
+    // for (var w = 0; w < operators.length; w++) {
+    //     // if(operators[w].textContent === 'ANY')condition = 'OR'
+    // }
     for (var i = 0; i < groups.length; i++) {
+        var condition = 'AND';
         var termValue = {
-            id: 'HARCODED',
-            term_type: 'HARCODED',
-            condition: 'HARCODED',
+            id: uuidv4(),
+            term_type: 'group',
+            condition: condition,
             term_value: []
         }
         var group = groups[i];
@@ -1132,6 +1138,8 @@ function getStep1Values(step1){
                 ...l.getValues()
             })
         })
-        console.log(term);
+        expression.push(term);
     }
+
+    console.log(JSON.stringify(expression));
 }
