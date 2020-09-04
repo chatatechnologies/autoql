@@ -10,7 +10,7 @@ function getOperator(condition){
         case 'GREATER_THAN':
             return '>'
             break;
-        case 'LOWER_THAN':
+        case 'LESS_THAN':
             return '<'
             break;
         default:

@@ -861,6 +861,12 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
     var chataSelect = document.createElement('div');
     var secondContainer = document.createElement('div');
     var chataSelectTermType = document.createElement('div');
+    var uuid = uuidv4();
+    var groupValues = {
+        id: uuid,
+        term_type: 'group',
+        condition: 'AND'
+    }
     this.groupLines = [];
     var obj = this;
     var spanBubbleIcon = htmlToElement(`
@@ -869,7 +875,8 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
         </span>
     `);
     var onChangeAndOr = (evt) => {
-
+        if(evt.target.textContent === 'ALL')groupValues.condition = 'AND';
+        else groupValues.condition = 'OR';
     }
 
     var onDeleteLine = (evt, elem) => {
@@ -1006,6 +1013,11 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
     groupWrapper.getLines = () => {
         return obj.groupLines;
     }
+
+    groupWrapper.getValues = () => {
+        return groupValues;
+    }
+
     groupContainer.appendChild(defaultGroup);
     groupContainer.appendChild(rulaAndOrSelect);
     groupContainer.appendChild(notificationGroupDeleteBtn);
@@ -1100,10 +1112,26 @@ function ChataModalStep(title, nStep, subtitle=''){
 
 function getStep1Values(step1){
     var groups = document.querySelectorAll('.notification-group-wrapper');
+    var expression = [];
     for (var i = 0; i < groups.length; i++) {
-        var lines = groups[i].getLines();
+        var termValue = {
+            id: 'HARCODED',
+            term_type: 'HARCODED',
+            condition: 'HARCODED',
+            term_value: []
+        }
+        var group = groups[i];
+        var term = {
+            ...group.getValues(),
+            term_value: []
+        }
+        var lines = group.getLines();
+        var groupValues = group.getValues();
         lines.map((l) => {
-            console.log(l.getValues());
+            term.term_value.push({
+                ...l.getValues()
+            })
         })
+        console.log(term);
     }
 }
