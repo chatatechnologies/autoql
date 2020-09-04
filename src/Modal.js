@@ -1,4 +1,4 @@
-function Modal(options={}){
+function Modal(options={}, onShow=()=>{}){
     var obj = this;
     obj.options = {
         destroyOnClose: false,
@@ -37,6 +37,7 @@ function Modal(options={}){
     obj.show = function(){
         modalContainer.style.visibility = 'visible';
         obj.isOpen = true;
+        onShow();
     }
 
     obj.close = function(){

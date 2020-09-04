@@ -70,12 +70,15 @@ function NotificationSettings(selector, options){
 
 
     notificationAddContainer.onclick = (evt) => {
+        var modalView = new NotificationSettingsModal();
         var configModal = new Modal({
             withFooter: true,
             destroyOnClose: true
+        }, () => {
+            modalView.step1.expand();
         })
-        var modalView = new NotificationSettingsModal();
-        configModal.chataModal.style.width = 'vw';
+        configModal.chataModal.style.width = '95vw';
+
         configModal.addView(modalView);
         configModal.setTitle('Custom Notification');
         configModal.show();

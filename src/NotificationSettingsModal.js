@@ -1,4 +1,4 @@
-function NotificationSettingsModal(){
+function NotificationSettingsModal(mode='create'){
     var wrapper = document.createElement('div');
     var frequencyBox = FrequencyBox(
         `Notify me as soon as this happens,
@@ -17,18 +17,18 @@ function NotificationSettingsModal(){
         </span>
     `);
     wrapper.classList.add('chata-steps-container');
-    var step1 = createStep(
+    var step1 = new ChataModalStep(
         'Notification Conditions',
         '1',
         'Notify me when the following conditions are met'
     );
-    var step2 = createStep('Frequency', '2');
-    var step3 = createStep(
+    var step2 = new ChataModalStep('Frequency', '2');
+    var step3 = new ChataModalStep(
         'Data Return',
         '3',
         'Return the data from this query when the notification is triggered'
     );
-    var step4 = createStep('Appearance', '4');
+    var step4 = new ChataModalStep('Appearance', '4');
     // step4.classList.add('complete');
 
     // STEP 1
@@ -215,6 +215,16 @@ function NotificationSettingsModal(){
     wrapper.appendChild(step2);
     wrapper.appendChild(step3);
     wrapper.appendChild(step4);
+
+    if(mode === 'edit'){
+    }
+    // step1.closeStep();
+
+    wrapper.step1 = step1;
+    wrapper.step2 = step2;
+    wrapper.step3 = step3;
+    wrapper.step4 = step4;
+
 
     return wrapper;
 }
@@ -979,7 +989,7 @@ function getHeightForChildrens(parent){
     return totalH;
 }
 
-function createStep(title, nStep, subtitle=''){
+function ChataModalStep(title, nStep, subtitle=''){
     var step = document.createElement('div');
     var titleEl = document.createElement('div');
     var stepContent = document.createElement('div');
@@ -992,6 +1002,7 @@ function createStep(title, nStep, subtitle=''){
     stepDot.classList.add('chata-step-dot');
     stepDot.innerHTML = nStep;
     stepContentContainer.classList.add('chata-step-content-container')
+    stepContentContainer.style.height = '10px';
     titleEl.innerHTML = title;
 
     step.closeStep = () => {
@@ -1044,6 +1055,8 @@ function createStep(title, nStep, subtitle=''){
     step.addContent = (elem) => {
         stepContent.appendChild(elem);
     }
+
+    step.titleEl = titleEl;
 
     return step;
 }
