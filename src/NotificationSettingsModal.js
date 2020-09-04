@@ -225,6 +225,8 @@ function NotificationSettingsModal(mode='create'){
     }
     // step1.closeStep();
 
+    step1.getValues = getStep1Values;
+
     wrapper.step1 = step1;
     wrapper.step2 = step2;
     wrapper.step3 = step3;
@@ -725,7 +727,6 @@ function GroupLine(params){
     ]);
 
     popup.onclick = (evt) => {
-        console.log(evt.target.tagName);
         if(evt.target.tagName === 'LI'){
             var val = evt.target.textContent;
             ruleContainer.conditionValue = val;
@@ -786,6 +787,23 @@ function GroupLine(params){
         }else{
             return !val1 || !val2;
         }
+    }
+
+    ruleContainer.getValues = () => {
+        var queryValues = {
+            id: uuidv4(),
+            term_type: 'query',
+            condition: ruleContainer.conditionValue,
+            term_value: queryInput.input.value
+        }
+
+        var constantValues = {
+            id: uuidv4(),
+            term_type: 'constant',
+            condition: 'TERMINATOR',
+            term_value: queryInput2.input.value
+        }
+        return [queryValues, constantValues]
     }
 
     chataRuleDeleteBtn.onclick = function(evt){
@@ -984,6 +1002,10 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
         onSelectRule: onSelectRule
     });
     obj.groupLines.push(defaultGroup);
+
+    groupWrapper.getLines = () => {
+        return obj.groupLines;
+    }
     groupContainer.appendChild(defaultGroup);
     groupContainer.appendChild(rulaAndOrSelect);
     groupContainer.appendChild(notificationGroupDeleteBtn);
@@ -1074,4 +1096,14 @@ function ChataModalStep(title, nStep, subtitle=''){
     step.stepContentContainer = stepContentContainer;
 
     return step;
+}
+
+function getStep1Values(step1){
+    var groups = document.querySelectorAll('.notification-group-wrapper');
+    for (var i = 0; i < groups.length; i++) {
+        var lines = groups[i].getLines();
+        lines.map((l) => {
+            console.log(l.getValues());
+        })
+    }
 }
