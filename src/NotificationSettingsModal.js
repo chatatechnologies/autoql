@@ -48,7 +48,7 @@ function NotificationSettingsModal(mode='create'){
         onChangeAndOr
     );
     parentSelect.operator = 'AND';
-    var group = new ConditionGroup(ruleContainer, parentSelect, true);
+    var group = new ConditionGroup(step1, ruleContainer, parentSelect, true);
     parentSelect.style.visibility = 'hidden';
     parentSelect.style.display = 'none';
 
@@ -63,7 +63,9 @@ function NotificationSettingsModal(mode='create'){
             'notification-group-wrapper'
         );
         var isFirst = groups.length === 0 ? true : false;
-        var newGroup = new ConditionGroup(ruleContainer, parentSelect, isFirst);
+        var newGroup = new ConditionGroup(
+            step1, ruleContainer, parentSelect, isFirst
+        );
         ruleContainer.insertBefore(newGroup, btnAddGroup);
         if(groups.length >= 1){
             groups[0].setAsFirtsAndOrBreak();
@@ -73,6 +75,9 @@ function NotificationSettingsModal(mode='create'){
         }
         showLeftAndOr(parentSelect, ruleContainer);
         checkStep2(ruleContainer);
+        step1.stepContentContainer.style.height = getHeightForChildrens(
+            step1.stepContentContainer
+        ) + 'px';
     }
     step1.onkeyup = function(evt){
         checkStep2(ruleContainer);
@@ -831,7 +836,7 @@ function GroupLine(params){
     return ruleContainer;
 }
 
-function ConditionGroup(parent, parentSelect, first=false){
+function ConditionGroup(step1, parent, parentSelect, first=false){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
     var ruleContainer = document.createElement('div');
@@ -861,6 +866,9 @@ function ConditionGroup(parent, parentSelect, first=false){
         obj.groupLines.splice(index, 1);
         groupContainer.removeChild(elem);
         checkStep2(parent);
+        step1.stepContentContainer.style.height = getHeightForChildrens(
+            step1.stepContentContainer
+        ) + 'px';
     }
 
     var onSelectRule = () => {
@@ -907,6 +915,9 @@ function ConditionGroup(parent, parentSelect, first=false){
         }
         showLeftAndOr(parentSelect, parent);
         checkStep2(parent);
+        step1.stepContentContainer.style.height = getHeightForChildrens(
+            step1.stepContentContainer
+        ) + 'px';
     }
 
     addRuleButton.onclick = function(evt){
@@ -917,6 +928,9 @@ function ConditionGroup(parent, parentSelect, first=false){
         obj.groupLines.push(newGroupLine);
         groupContainer.insertBefore(newGroupLine, notificationRuleAddBtn);
         checkStep2(parent);
+        step1.stepContentContainer.style.height = getHeightForChildrens(
+            step1.stepContentContainer
+        ) + 'px';
     }
 
     groupWrapper.setAsFirtsAndOrBreak = function(){
@@ -1057,6 +1071,7 @@ function ChataModalStep(title, nStep, subtitle=''){
     }
 
     step.titleEl = titleEl;
+    step.stepContentContainer = stepContentContainer;
 
     return step;
 }

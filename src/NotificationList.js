@@ -72,9 +72,6 @@ function NotificationList(selector, options){
                 container.appendChild(
                     new Notification(items[i], wrapper.options)
                 );
-                // setTimeout(function () {
-                // }, timeOut);
-                // timeOut += 50;
             }
         }, wrapper.options)
     }

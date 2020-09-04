@@ -69,7 +69,16 @@ function NotificationSettings(selector, options){
     }
 
 
+
     notificationAddContainer.onclick = (evt) => {
+        var cancelButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn default"
+                style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        )
+        var saveButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn primary "
+                style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+        )
         var modalView = new NotificationSettingsModal();
         var configModal = new Modal({
             withFooter: true,
@@ -81,7 +90,16 @@ function NotificationSettings(selector, options){
 
         configModal.addView(modalView);
         configModal.setTitle('Custom Notification');
+        configModal.addFooterElement(cancelButton);
+        configModal.addFooterElement(saveButton);
         configModal.show();
+        refreshTooltips();
+        cancelButton.onclick = (e) => {
+            configModal.close();
+        }
+        saveButton.onclick = (e) => {
+            configModal.close();
+        }
     }
 
     wrapper.loadRules();
