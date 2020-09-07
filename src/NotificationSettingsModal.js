@@ -94,6 +94,7 @@ function NotificationSettingsModal(mode='create'){
     frequencyValue.innerHTML = 'Select a frequency';
     frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
     frequencyValue.style.fontStyle = 'italic';
+    frequencyValue.classList.add('autoql-vanilla-frequency-value');
     frequencyValue.indexValue = 1;
     var popupFrequency = PopupContainer([
         {text: 'Once, When this happens', active:true},
@@ -124,6 +125,9 @@ function NotificationSettingsModal(mode='create'){
                         but don't notify me again until
                         the first of the next month.`
                     );
+                    frequencyValue.setAttribute(
+                        'data-frequency-event', 'SINGLE_EVENT'
+                    )
                     break;
                 case 1:
                     var view = monthlyView();
@@ -133,6 +137,9 @@ function NotificationSettingsModal(mode='create'){
                     frequencyBox.setMessage(`
                         Notify me every time this happens.
                     `);
+                    frequencyValue.setAttribute(
+                        'data-frequency-event', 'REPEAT_EVENT'
+                    )
                     break;
                 case 2:
                     frequencyBox.setMessage(`
@@ -295,6 +302,7 @@ function frequencyView(parentElement, popupValues, label, followText){
         </div>
     `);
     var popupFrequencySelect = PopupContainer(popupValues);
+
     frequencyButton.appendChild(labelContent);
     frequencyButton.appendChild(popupFrequencySelect);
     frequencyButton.style.display = 'inline-block';
@@ -324,8 +332,27 @@ function frequencyView(parentElement, popupValues, label, followText){
         // parentElement.appendChild(repeatFollowText);
     }
 
+    popupFrequencySelect.convertValue = (text) => {
+        switch (text) {
+            case 'Monthly':
+                return 'MONTH';
+                break;
+            case 'Daily':
+                return 'DAY';
+                break;
+            case 'Weekly':
+                return 'WEEK';
+                break;
+            default:
+
+        }
+    }
+
     popupFrequencySelect.setValue = (text) => {
         labelContent.textContent = text;
+        labelContent.setAttribute(
+            'data-frequency-value', popupFrequencySelect.convertValue(text)
+        )
     }
 
     popupFrequencySelect.hideFrequency = () => {
@@ -338,7 +365,9 @@ function frequencyView(parentElement, popupValues, label, followText){
         frequencyButton.style.display = 'inline-block';
     }
 
-    popupFrequencySelect
+    labelContent.setAttribute(
+        'data-frequency-value', popupFrequencySelect.convertValue(label)
+    )
 
     return popupFrequencySelect;
 }
@@ -1139,13 +1168,9 @@ function ChataModalStep(title, nStep, subtitle=''){
     return step;
 }
 
-function getStep2Values(step2){
-
-}
-
-function getStep1Values(step1){
-    var groups = document.querySelectorAll('.notification-group-wrapper');
-    var operators = document.querySelectorAll('.notification-and-or-text');
+function getStep1Values(){
+    var groups = this.querySelectorAll('.notification-group-wrapper');
+    var operators = this.querySelectorAll('.notification-and-or-text');
     var expression = [];
 
     for (var i = 0; i < groups.length; i++) {
@@ -1181,5 +1206,6 @@ function getStep1Values(step1){
         expression.push(termValue)
     }
 
+    return JSON.stringify(expression);
     console.log(JSON.stringify(expression));
 }
