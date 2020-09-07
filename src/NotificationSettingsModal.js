@@ -1112,33 +1112,51 @@ function ChataModalStep(title, nStep, subtitle=''){
 
 function getStep1Values(step1){
     var groups = document.querySelectorAll('.notification-group-wrapper');
-    var operators = document.querySelectorAll('.notification-group-wrapper');
+    var operators = document.querySelectorAll('.notification-and-or-text');
     console.log(operators);
     var expression = [];
     // for (var w = 0; w < operators.length; w++) {
     //     // if(operators[w].textContent === 'ANY')condition = 'OR'
     // }
+    // for (var i = 0; i < groups.length; i++) {
+    //     var condition = 'AND';
+    //     var termValue = {
+    //         id: uuidv4(),
+    //         term_type: 'group',
+    //         condition: condition,
+    //         term_value: []
+    //     }
+    //     var group = groups[i];
+    //     var term = {
+    //         ...group.getValues(),
+    //         term_value: []
+    //     }
+    //     var lines = group.getLines();
+    //     var groupValues = group.getValues();
+    //     lines.map((l) => {
+    //         term.term_value.push({
+    //             ...l.getValues()
+    //         })
+    //     })
+    //     expression.push(term);
+    // }
+
     for (var i = 0; i < groups.length; i++) {
         var condition = 'AND';
+        if(operators[i]){
+            if(operators[i].textContent === 'ANY')condition = 'OR';
+        }else{
+            condition = 'TERMINATOR';
+        }
+
         var termValue = {
             id: uuidv4(),
             term_type: 'group',
             condition: condition,
             term_value: []
         }
-        var group = groups[i];
-        var term = {
-            ...group.getValues(),
-            term_value: []
-        }
-        var lines = group.getLines();
-        var groupValues = group.getValues();
-        lines.map((l) => {
-            term.term_value.push({
-                ...l.getValues()
-            })
-        })
-        expression.push(term);
+
+        expression.push(termValue)
     }
 
     console.log(JSON.stringify(expression));
