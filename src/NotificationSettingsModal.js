@@ -74,13 +74,13 @@ function NotificationSettingsModal(mode='create'){
             groups[0].showNotificationAndOrBreak();
         }
         showLeftAndOr(parentSelect, ruleContainer);
-        checkStep2(ruleContainer);
+        checkStep1(ruleContainer);
         step1.stepContentContainer.style.height = getHeightForChildrens(
             step1.stepContentContainer
         ) + 'px';
     }
     step1.onkeyup = function(evt){
-        checkStep2(ruleContainer);
+        checkStep1(ruleContainer);
     }
 
     // STEP 2
@@ -91,7 +91,9 @@ function NotificationSettingsModal(mode='create'){
     relativeDiv.style.position = 'relative';
     selectFrequency.classList.add('chata-select');
     frequencyValue = document.createElement('div');
-    frequencyValue.innerHTML = 'Once, When this happens';
+    frequencyValue.innerHTML = 'Select a frequency';
+    frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
+    frequencyValue.style.fontStyle = 'italic';
     frequencyValue.indexValue = 1;
     var popupFrequency = PopupContainer([
         {text: 'Once, When this happens', active:true},
@@ -107,11 +109,15 @@ function NotificationSettingsModal(mode='create'){
             frequencyValue.innerHTML = val;
             relativeDiv.dateSelectView = null;
             showFrequencyView(relativeDiv, index);
+            step2.classList.add('complete');
+            frequencyValue.style.color = 'inherit';
+            frequencyValue.style.fontStyle = 'inherit';
             switch (index) {
                 case 0:
                     var view = monthlyView();
                     relativeDiv.appendChild(view);
                     relativeDiv.dateSelectView = view;
+                    frequencyValue.indexValue = 1;
                     view.style.visibility = 'hidden';
                     frequencyBox.setMessage(
                         `Notify me as soon as this happens,
@@ -141,7 +147,7 @@ function NotificationSettingsModal(mode='create'){
 
     selectFrequency.appendChild(popupFrequency);
 
-    showFrequencyView(relativeDiv, 0);
+    // showFrequencyView(relativeDiv, 0);
     // var view = monthlyView();
     // relativeDiv.appendChild(view);
     // relativeDiv.dateSelectView = view;
@@ -271,7 +277,7 @@ function frequencyView(parentElement, popupValues, label, followText){
         </div>
     `);
     var checkboxFrequency = htmlToElement(`
-        <div data-test="chata-checkbox"
+        <div
             style="display: inline-block; vertical-align: middle;">
         </div>
     `);
@@ -498,7 +504,7 @@ function showFrequencyView(frequencyElement, type){
     }
 }
 
-function checkStep2(ruleContainer){
+function checkStep1(ruleContainer){
     var groups = document.getElementsByClassName(
         'notification-group-wrapper'
     );
@@ -913,14 +919,14 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
         }
         obj.groupLines.splice(index, 1);
         groupContainer.removeChild(elem);
-        checkStep2(parent);
+        checkStep1(parent);
         step1.stepContentContainer.style.height = getHeightForChildrens(
             step1.stepContentContainer
         ) + 'px';
     }
 
     var onSelectRule = () => {
-        checkStep2(parent);
+        checkStep1(parent);
     }
 
     var rulaAndOrSelect = notificationRuleAndOrSelect(
@@ -962,7 +968,7 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
             groups[0].showNotificationAndOrBreak();
         }
         showLeftAndOr(parentSelect, parent);
-        checkStep2(parent);
+        checkStep1(parent);
         step1.stepContentContainer.style.height = getHeightForChildrens(
             step1.stepContentContainer
         ) + 'px';
@@ -975,7 +981,7 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
         });
         obj.groupLines.push(newGroupLine);
         groupContainer.insertBefore(newGroupLine, notificationRuleAddBtn);
-        checkStep2(parent);
+        checkStep1(parent);
         step1.stepContentContainer.style.height = getHeightForChildrens(
             step1.stepContentContainer
         ) + 'px';
@@ -1131,6 +1137,10 @@ function ChataModalStep(title, nStep, subtitle=''){
     step.stepContentContainer = stepContentContainer;
 
     return step;
+}
+
+function getStep2Values(step2){
+
 }
 
 function getStep1Values(step1){
