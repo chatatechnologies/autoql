@@ -789,21 +789,44 @@ function GroupLine(params){
         }
     }
 
+    ruleContainer.getOperator = () => {
+        switch (ruleContainer.conditionValue) {
+            case '>':
+                return 'GREATER_THAN'
+                break;
+            case '<':
+                return 'LESS_THAN'
+            case '=':
+                return 'EQUALS'
+            case '∃':
+                return 'EXISTS'
+            default:
+
+        }
+    }
+
     ruleContainer.getValues = () => {
+        var terms = [];
+
         var queryValues = {
             id: uuidv4(),
             term_type: 'query',
-            condition: ruleContainer.conditionValue,
+            condition: ruleContainer.getOperator(),
             term_value: queryInput.input.value
         }
 
-        var constantValues = {
-            id: uuidv4(),
-            term_type: 'constant',
-            condition: 'TERMINATOR',
-            term_value: queryInput2.input.value
+        terms.push(queryValues)
+        if(queryValues.condition != 'EXISTS'){
+            var constantValues = {
+                id: uuidv4(),
+                term_type: 'constant',
+                condition: 'TERMINATOR',
+                term_value: queryInput2.input.value
+            }
+            terms.push(constantValues)
         }
-        return [queryValues, constantValues]
+
+        return terms
     }
 
     chataRuleDeleteBtn.onclick = function(evt){
@@ -1139,6 +1162,9 @@ function getStep1Values(step1){
             }
             if(index == lines.length-1)termGroup.condition = 'TERMINATOR';
 
+            termGroup.term_value.push(
+                ...l.getValues()
+            )
             termValue.term_value.push(termGroup)
         })
 
