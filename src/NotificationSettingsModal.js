@@ -182,6 +182,7 @@ function NotificationSettingsModal(mode='create'){
         placeholder: 'Query',
         type: "single"
     }, QUERY);
+    queryReturnInput.input.classList.add('autoql-vanilla-query-return-input');
     queryReturnContainer.appendChild(queryReturnInput.input);
     queryReturnContainer.appendChild(queryReturnInput.spanIcon);
     step3.addElement(queryReturnContainer);
@@ -240,7 +241,7 @@ function NotificationSettingsModal(mode='create'){
 
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
-
+    step3.getValues = getStep3Values;
 
     wrapper.step1 = step1;
     wrapper.step2 = step2;
@@ -1170,6 +1171,12 @@ function ChataModalStep(title, nStep, subtitle=''){
     return step;
 }
 
+function getStep3Values(){
+    var input = this.querySelector('.autoql-vanilla-query-return-input');
+    console.log(input.value);
+    return input.value;
+}
+
 function getStep2Values(){
     var fEvent = this.querySelector('[data-frequency-event]');
     var fValue = this.querySelector('[data-frequency-value]');
@@ -1183,7 +1190,6 @@ function getStep2Values(){
     return values;
 
 }
-
 
 function getStep1Values(){
     var groups = this.querySelectorAll('.notification-group-wrapper');
