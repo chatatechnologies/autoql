@@ -239,6 +239,8 @@ function NotificationSettingsModal(mode='create'){
     // step1.closeStep();
 
     step1.getValues = getStep1Values;
+    step2.getValues = getStep2Values;
+
 
     wrapper.step1 = step1;
     wrapper.step2 = step2;
@@ -1168,6 +1170,21 @@ function ChataModalStep(title, nStep, subtitle=''){
     return step;
 }
 
+function getStep2Values(){
+    var fEvent = this.querySelector('[data-frequency-event]');
+    var fValue = this.querySelector('[data-frequency-value]');
+    var values = {
+        notification_type: fEvent.dataset.frequencyEvent,
+        reset_period: null
+    }
+
+    if(fValue)values.reset_period = fValue.dataset.frequencyValue
+    console.log(values);
+    return values;
+
+}
+
+
 function getStep1Values(){
     var groups = this.querySelectorAll('.notification-group-wrapper');
     var operators = this.querySelectorAll('.notification-and-or-text');
@@ -1206,6 +1223,6 @@ function getStep1Values(){
         expression.push(termValue)
     }
 
-    return JSON.stringify(expression);
     console.log(JSON.stringify(expression));
+    return JSON.stringify(expression);
 }

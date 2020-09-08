@@ -99,6 +99,8 @@ function NotificationSettings(selector, options){
         }
         saveButton.onclick = (e) => {
             modalView.step1.getValues();
+            modalView.step2.getValues();
+
             // configModal.close();
         }
     }
