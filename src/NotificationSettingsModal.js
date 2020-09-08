@@ -238,12 +238,11 @@ function NotificationSettingsModal(mode='create', rule={}){
 
     const loadRules = async () => {
         var groups = RuleParser.convert(rule.expression, false);
-        console.log(groups);
         await groups.map((group, index) => {
             var isFirst = index === 0;
             ruleContainer.appendChild(
                 new ConditionGroup(
-                    step1, ruleContainer, parentSelect, isFirst
+                    step1, ruleContainer, parentSelect, isFirst, group
                 )
             );
         })
@@ -802,17 +801,6 @@ function GroupLine(params, expression=[]){
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
 
-    if(expression.length){
-        inputContainer1.input.value = expression[0]
-        chataSelect.conditionElement.innerHTML = expression[1];
-        if(expression[1] !== '∃'){
-            inputContainer2.input.value = expression[2]
-        }else{
-            secondContainer.style.visibility = 'hidden';
-            secondContainer.style.display = 'none';
-        }
-    }
-
     popup.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){
             var val = evt.target.textContent;
@@ -961,10 +949,23 @@ function GroupLine(params, expression=[]){
     ruleContainer.appendChild(secondContainer);
     ruleContainer.appendChild(chataRuleDeleteBtn);
     ruleContainer.setAttribute('data-uuid', uuid);
+
+
+    if(expression.length){
+        queryInput.input.value = expression[0]
+        chataSelect.conditionElement.innerHTML = expression[1];
+        if(expression[1] !== '∃'){
+            queryInput2.input.value = expression[2]
+        }else{
+            secondContainer.style.visibility = 'hidden';
+            secondContainer.style.display = 'none';
+        }
+    }
+
     return ruleContainer;
 }
 
-function ConditionGroup(step1, parent, parentSelect, first=false){
+function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
     var ruleContainer = document.createElement('div');
@@ -1113,12 +1114,25 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
 
     chataSelect.innerHTML = '&gt;';
     secondContainer.classList.add('chata-rule-second-input-container');
+    if(lines.length){
+        lines.map((line) => {
+            console.log(line);
+            var groupLine = new GroupLine({
+                onDeleteLine: onDeleteLine,
+                onSelectRule: onSelectRule
+            }, line)
 
-    var defaultGroup = new GroupLine({
-        onDeleteLine: onDeleteLine,
-        onSelectRule: onSelectRule
-    });
-    obj.groupLines.push(defaultGroup);
+            obj.groupLines.push(groupLine)
+            groupContainer.appendChild(groupLine);
+        })
+    }else{
+        var defaultGroup = new GroupLine({
+            onDeleteLine: onDeleteLine,
+            onSelectRule: onSelectRule
+        });
+        obj.groupLines.push(defaultGroup);
+        groupContainer.appendChild(defaultGroup);
+    }
 
     groupWrapper.getLines = () => {
         return obj.groupLines;
@@ -1128,7 +1142,6 @@ function ConditionGroup(step1, parent, parentSelect, first=false){
         return groupValues;
     }
 
-    groupContainer.appendChild(defaultGroup);
     groupContainer.appendChild(rulaAndOrSelect);
     groupContainer.appendChild(notificationGroupDeleteBtn);
     groupContainer.appendChild(notificationRuleAddBtn);
