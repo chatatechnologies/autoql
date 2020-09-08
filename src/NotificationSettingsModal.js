@@ -32,22 +32,34 @@ function NotificationSettingsModal(mode='create', rule={}){
     // step4.classList.add('complete');
 
     // STEP 1
-    var ruleContainer = document.createElement('div');
-    var onChangeAndOr = (evt) => {
+    const updateAndOr = (element) => {
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
         );
-        var newText = evt.target.textContent === 'ALL' ? 'AND' : 'OR';
+        var newText = element.operator === 'OR' ? 'AND' : 'OR';
         for (var i = 0; i < groups.length; i++) {
             groups[i].notificationAndOrBreak.setText(newText);
         }
-        parentSelect.operator = newText;
+
+        return newText;
+    }
+    var ruleContainer = document.createElement('div');
+    var onChangeAndOr = (evt) => {
+        parentSelect.operator = updateAndOr(parentSelect);
     }
     var parentSelect = notificationRuleAndOrSelect(
         'of the following:',
         onChangeAndOr
     );
     parentSelect.operator = 'AND';
+
+    if(mode === 'edit'){
+        if(rule.expression[0].condition != 'AND'){
+            var text = updateAndOr(parentSelect);
+            parentSelect.operator = text;
+            parentSelect.radio.toggleButtons(text);
+        }
+    }
 
     parentSelect.style.visibility = 'hidden';
     parentSelect.style.display = 'none';
@@ -663,13 +675,23 @@ function createRadio(onChange){
     radio.appendChild(btnAll);
     radio.appendChild(btnAny);
     radio.onclick = function(evt){
-        console.log(evt.target);
         if(!evt.target.classList.contains('active')){
             btnAny.classList.toggle('active');
             btnAll.classList.toggle('active');
         }
         onChange(evt);
     }
+
+    radio.toggleButtons = (text) => {
+        if(text === 'OR'){
+            btnAny.classList.add('active');
+            btnAll.classList.remove('active');
+        }else{
+            btnAny.classList.remove('active');
+            btnAll.classList.add('active');
+        }
+    }
+
     return radio;
 }
 
@@ -681,7 +703,7 @@ function notificationRuleAndOrSelect(text, onChange){
     div.innerHTML = 'Match';
     div.appendChild(radio);
     div.appendChild(document.createTextNode(text));
-
+    div.radio = radio;
     return div;
 }
 
@@ -1116,7 +1138,6 @@ function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
     secondContainer.classList.add('chata-rule-second-input-container');
     if(lines.length){
         lines.map((line) => {
-            console.log(line);
             var groupLine = new GroupLine({
                 onDeleteLine: onDeleteLine,
                 onSelectRule: onSelectRule
