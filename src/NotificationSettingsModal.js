@@ -254,7 +254,10 @@ function NotificationSettingsModal(mode='create', rule={}){
             var isFirst = index === 0;
             ruleContainer.appendChild(
                 new ConditionGroup(
-                    step1, ruleContainer, parentSelect, isFirst, group
+                    step1, ruleContainer, parentSelect, isFirst, {
+                        ...rule.expression[index],
+                        parsedLines: group
+                    }
                 )
             );
         })
@@ -987,7 +990,7 @@ function GroupLine(params, expression=[]){
     return ruleContainer;
 }
 
-function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
+function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
     var ruleContainer = document.createElement('div');
@@ -999,6 +1002,11 @@ function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
         id: uuid,
         term_type: 'group',
         condition: 'AND'
+    }
+    if(ruleLines){
+        groupValues.id = ruleLines.id
+        groupValues.term_type = ruleLines.term_type
+        groupValues.condition = ruleLines.condition
     }
     this.groupLines = [];
     var obj = this;
@@ -1033,9 +1041,12 @@ function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
         checkStep1(parent);
     }
 
-    var rulaAndOrSelect = notificationRuleAndOrSelect(
+    var ruleAndOrSelect = notificationRuleAndOrSelect(
         ' conditions', onChangeAndOr
     );
+    if(groupValues.condition === 'OR'){
+        ruleAndOrSelect.radio.toggleButtons('OR');
+    }
     var notificationGroupDeleteBtn = htmlToElement(`
         <div
             class="chata-notification-group-delete-btn"
@@ -1136,8 +1147,8 @@ function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
 
     chataSelect.innerHTML = '&gt;';
     secondContainer.classList.add('chata-rule-second-input-container');
-    if(lines.length){
-        lines.map((line) => {
+    if(ruleLines){
+        ruleLines.parsedLines.map((line) => {
             var groupLine = new GroupLine({
                 onDeleteLine: onDeleteLine,
                 onSelectRule: onSelectRule
@@ -1163,7 +1174,7 @@ function ConditionGroup(step1, parent, parentSelect, first=false, lines=[]){
         return groupValues;
     }
 
-    groupContainer.appendChild(rulaAndOrSelect);
+    groupContainer.appendChild(ruleAndOrSelect);
     groupContainer.appendChild(notificationGroupDeleteBtn);
     groupContainer.appendChild(notificationRuleAddBtn);
     groupWrapper.appendChild(groupContainer);
