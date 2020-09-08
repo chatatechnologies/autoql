@@ -251,7 +251,7 @@ function NotificationSettingsModal(mode='create'){
     wrapper.step2 = step2;
     wrapper.step3 = step3;
     wrapper.step4 = step4;
-
+    wrapper.getValues = getNotificationValues;
 
     return wrapper;
 }
@@ -1175,13 +1175,21 @@ function ChataModalStep(title, nStep, subtitle=''){
     return step;
 }
 
+function getNotificationValues(){
+    console.log(this);
+    return {
+        expression: [
+            ...this.step1.getValues()
+        ],
+        ...this.step2.getValues(),
+        ...this.step3.getValues(),
+        ...this.step4.getValues()
+    }
+}
+
 function getStep4Values(){
     var title = this.querySelector('.autoql-vanilla-notification-title-input');
     var message = this.querySelector('.autoql-vanilla-notification-message');
-    console.log({
-        title: title.value,
-        message: message.value
-    });
     return {
         title: title.value,
         message: message.value
@@ -1248,5 +1256,5 @@ function getStep1Values(){
     }
 
     console.log(JSON.stringify(expression));
-    return JSON.stringify(expression);
+    return expression;
 }
