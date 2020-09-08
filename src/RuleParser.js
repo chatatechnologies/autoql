@@ -18,7 +18,7 @@ function getOperator(condition){
     }
 }
 
-function convert(rules){
+function convert(rules, addTopOperator=true){
     var parsedRules = [];
     for (var i = 0; i < rules.length; i++) {
         var termValue = rules[i]['term_value'];
@@ -33,7 +33,9 @@ function convert(rules){
                 rule.push(cTerm.term_value);
                 if(operator)rule.push(operator);
             }
-			if(topOperator !== 'TERMINATOR')rule.push(topOperator);
+			if(topOperator !== 'TERMINATOR' && addTopOperator){
+				rule.push(topOperator);
+			}
 			group.push(rule);
         }
         parsedRules.push(group)

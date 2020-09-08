@@ -1,4 +1,4 @@
-function NotificationSettingsModal(mode='create'){
+function NotificationSettingsModal(mode='create', rule={}){
     var wrapper = document.createElement('div');
     var frequencyBox = FrequencyBox(
         `Notify me as soon as this happens,
@@ -48,13 +48,12 @@ function NotificationSettingsModal(mode='create'){
         onChangeAndOr
     );
     parentSelect.operator = 'AND';
-    var group = new ConditionGroup(step1, ruleContainer, parentSelect, true);
+
     parentSelect.style.visibility = 'hidden';
     parentSelect.style.display = 'none';
 
     ruleContainer.classList.add('notification-rule-outer-container');
-    ruleContainer.appendChild(group);
-    ruleContainer.appendChild(btnAddGroup);
+
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
     ruleContainer.step = step1;
@@ -237,9 +236,44 @@ function NotificationSettingsModal(mode='create'){
     wrapper.appendChild(step3);
     wrapper.appendChild(step4);
 
-    if(mode === 'edit'){
+    const loadRules = async () => {
+        var groups = RuleParser.convert(rule.expression, false);
+        console.log(groups);
+        await groups.map((group, index) => {
+            var isFirst = index === 0;
+            ruleContainer.appendChild(
+                new ConditionGroup(
+                    step1, ruleContainer, parentSelect, isFirst
+                )
+            );
+        })
+
+        var groups = document.getElementsByClassName(
+            'notification-group-wrapper'
+        );
+
+        if(groups.length >= 1){
+            groups[0].setAsFirtsAndOrBreak();
+        }
+
+        if(groups.length > 1){
+            groups[0].showNotificationAndOrBreak();
+        }
+
+        showLeftAndOr(parentSelect, ruleContainer);
+        checkStep1(ruleContainer);
     }
-    // step1.closeStep();
+
+    if(mode === 'edit'){
+        loadRules();
+    }else{
+        var group = new ConditionGroup(
+            step1, ruleContainer, parentSelect, true
+        );
+        ruleContainer.appendChild(group);
+    }
+
+    ruleContainer.appendChild(btnAddGroup);
 
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
@@ -719,7 +753,7 @@ function PopupContainer(options=[]){
     return container
 }
 
-function GroupLine(params){
+function GroupLine(params, expression=[]){
     var secondContainer = document.createElement('div');
     var chataSelectTermType = document.createElement('div');
     var chataSelect = document.createElement('div');
@@ -767,6 +801,17 @@ function GroupLine(params){
         {text: '=', dataTip: 'Equals', active:false},
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
+
+    if(expression.length){
+        inputContainer1.input.value = expression[0]
+        chataSelect.conditionElement.innerHTML = expression[1];
+        if(expression[1] !== '∃'){
+            inputContainer2.input.value = expression[2]
+        }else{
+            secondContainer.style.visibility = 'hidden';
+            secondContainer.style.display = 'none';
+        }
+    }
 
     popup.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){

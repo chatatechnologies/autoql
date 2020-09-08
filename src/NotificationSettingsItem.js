@@ -72,7 +72,9 @@ function NotificationSettingsItem(options) {
                 withFooter: true,
                 destroyOnClose: true
             })
-            var modalView = new NotificationSettingsModal();
+            var modalView = new NotificationSettingsModal(
+                'edit', wrapper.options
+            );
             configModal.chataModal.style.width = '95vw';
 
             configModal.addView(modalView);

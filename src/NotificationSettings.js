@@ -121,8 +121,6 @@ function NotificationSettings(selector, options){
                 )
                 configModal.close();
             }, modalView.getValues(), o)
-
-            // configModal.close();
         }
     }
 
