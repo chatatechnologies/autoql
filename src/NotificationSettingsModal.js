@@ -230,7 +230,6 @@ function NotificationSettingsModal(mode='create', rule={}){
     messageContainer.appendChild(messageArea.input);
     step4.addElement(titleContainer);
     step4.addElement(messageContainer);
-    console.log(step4.classList);
     titleInput.input.onkeyup = function(evt){
         if(evt.target.value != ''){
             if(!step4.classList.contains('complete')){
@@ -295,6 +294,11 @@ function NotificationSettingsModal(mode='create', rule={}){
     if(mode === 'edit'){
         loadRules();
         setFrequency();
+        queryReturnInput.input.value = rule.query;
+        titleInput.input.value = rule.title;
+        messageArea.input.value = rule.message;
+        step3.classList.add('complete');
+        step4.classList.add('complete');
     }else{
         var group = new ConditionGroup(
             step1, ruleContainer, parentSelect, true
@@ -1165,7 +1169,7 @@ function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
 
     chataSelect.innerHTML = '&gt;';
     secondContainer.classList.add('chata-rule-second-input-container');
-    if(ruleLines){
+    if(ruleLines.parsedLines){
         ruleLines.parsedLines.map((line) => {
             var groupLine = new GroupLine({
                 onDeleteLine: onDeleteLine,
