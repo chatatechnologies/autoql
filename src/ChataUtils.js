@@ -910,7 +910,6 @@ ChataUtils.ajaxCallPost = function(url, callback, data, options){
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.open("POST", url);
     xmlhttp.setRequestHeader("Content-Type", "application/json");
-    // xmlhttp.setRequestHeader("Access-Control-Allow-Origin","*");
     if(!options.authentication.demo){
         xmlhttp.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     }

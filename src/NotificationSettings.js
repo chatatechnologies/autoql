@@ -12,11 +12,26 @@ function NotificationSettings(selector, options){
             domain: undefined,
             demo: false
         },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableColumnVisibilityManager: true,
+            enableDrilldowns: true
+        },
     }
 
     if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
             wrapper.options.authentication[key] = value;
+        }
+    }
+
+    if('autoQLConfig' in options){
+        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
+            wrapper.options.autoQLConfig[key] = value;
         }
     }
 
@@ -98,7 +113,14 @@ function NotificationSettings(selector, options){
             configModal.close();
         }
         saveButton.onclick = (e) => {
-            console.log(modalView.getValues());
+            var o = wrapper.options
+            const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
+            ChataUtils.ajaxCallPost(URL, (json, status) => {
+                notificationSettingsContainer.insertAdjacentElement(
+                    'afterbegin', new NotificationSettingsItem(json['data'])
+                )
+                configModal.close();
+            }, modalView.getValues(), o)
 
             // configModal.close();
         }
