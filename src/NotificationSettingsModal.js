@@ -102,13 +102,11 @@ function NotificationSettingsModal(mode='create', rule={}){
     relativeDiv.style.position = 'relative';
     selectFrequency.classList.add('chata-select');
     frequencyValue = document.createElement('div');
-    frequencyValue.innerHTML = 'Select a frequency';
-    frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
-    frequencyValue.style.fontStyle = 'italic';
+
     frequencyValue.classList.add('autoql-vanilla-frequency-value');
     frequencyValue.indexValue = 1;
     var popupFrequency = PopupContainer([
-        {text: 'Once, When this happens', active:true},
+        {text: 'Once, when this happens', active:true},
         {text: 'Every time this happens', active:false},
     ]);
 
@@ -278,13 +276,33 @@ function NotificationSettingsModal(mode='create', rule={}){
         checkStep1(ruleContainer);
     }
 
+    const setFrequency = () => {
+        if(rule.notification_type === 'REPEAT_EVENT'){
+            frequencyValue.innerHTML = 'Every time this happens';
+        }else {
+            frequencyValue.innerHTML = 'Once, when this happens';
+            showFrequencyView(relativeDiv, 0);
+        }
+        frequencyValue.setAttribute(
+            'data-frequency-event', rule.notification_type
+        )
+        step2.classList.add('complete');
+
+        frequencyValue.style.color = 'inherit';
+        frequencyValue.style.fontStyle = 'inherit';
+    }
+
     if(mode === 'edit'){
         loadRules();
+        setFrequency();
     }else{
         var group = new ConditionGroup(
             step1, ruleContainer, parentSelect, true
         );
         ruleContainer.appendChild(group);
+        frequencyValue.innerHTML = 'Select a frequency';
+        frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
+        frequencyValue.style.fontStyle = 'italic';
     }
 
     ruleContainer.appendChild(btnAddGroup);
