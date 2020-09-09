@@ -51,6 +51,16 @@ function NotificationSettingsItem(options) {
         displayNameMessage.innerHTML = ' - ' + wrapper.options.message;
     }
 
+    const onDeleteNotification = (evt, modal) => {
+        var o = wrapper.options
+        const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
+        ChataUtils.deleteCall(URL, (json) => {
+            if(json.message === 'ok'){
+                wrapper.parentNode.removeChild(wrapper);
+            }
+            modal.close();
+        }, o)
+    }
 
     settingsActions.appendChild(chataCheckbox)
     settingsDisplayName.appendChild(displayName);
@@ -58,38 +68,6 @@ function NotificationSettingsItem(options) {
     header.appendChild(settingsDisplayName);
     header.appendChild(settingsActions);
     header.onclick = function(evt){
-        var footerWrapper = document.createElement('div');
-        footerWrapper.style.display = 'flex';
-        footerWrapper.style.justifyContent = 'space-between';
-        var wrap = htmlToElement('<div></div>');
-        var wrap2 = htmlToElement('<div></div>');
-
-        var deleteButton = htmlToElement(`
-            <button
-                class="autoql-vanilla-chata-btn danger large">
-                    Delete Notification
-            </button>
-        `)
-
-        var cancelButton = htmlToElement(
-            `<div class="autoql-vanilla-chata-btn default"
-                style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
-        )
-        var saveButton = htmlToElement(
-            `<div class="autoql-vanilla-chata-btn primary "
-                style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
-        )
-
-        wrap.appendChild(deleteButton);
-        wrap2.appendChild(cancelButton);
-        wrap2.appendChild(saveButton);
-        footerWrapper.appendChild(
-            wrap
-        )
-        footerWrapper.appendChild(
-            wrap2
-        )
-
         var target = evt.target;
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
@@ -103,6 +81,41 @@ function NotificationSettingsItem(options) {
                 modalView.step1.expand();
             })
             configModal.chataModal.style.width = '95vw';
+            var footerWrapper = document.createElement('div');
+            footerWrapper.style.display = 'flex';
+            footerWrapper.style.justifyContent = 'space-between';
+            var wrap = htmlToElement('<div></div>');
+            var wrap2 = htmlToElement('<div></div>');
+
+            var deleteButton = htmlToElement(`
+                <button
+                    class="autoql-vanilla-chata-btn danger large">
+                        Delete Notification
+                </button>
+            `)
+
+            deleteButton.onclick = (evt) => {
+                onDeleteNotification(evt, configModal);
+            };
+
+            var cancelButton = htmlToElement(
+                `<div class="autoql-vanilla-chata-btn default"
+                    style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+            )
+            var saveButton = htmlToElement(
+                `<div class="autoql-vanilla-chata-btn primary "
+                    style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+            )
+
+            wrap.appendChild(deleteButton);
+            wrap2.appendChild(cancelButton);
+            wrap2.appendChild(saveButton);
+            footerWrapper.appendChild(
+                wrap
+            )
+            footerWrapper.appendChild(
+                wrap2
+            )
 
             configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
