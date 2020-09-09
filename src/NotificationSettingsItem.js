@@ -71,13 +71,15 @@ function NotificationSettingsItem(options) {
         var target = evt.target;
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
-            var configModal = new Modal({
-                withFooter: true,
-                destroyOnClose: true
-            })
             var modalView = new NotificationSettingsModal(
                 'edit', wrapper.options
             );
+            var configModal = new Modal({
+                withFooter: true,
+                destroyOnClose: true
+            }, () => {
+                modalView.step1.expand();
+            })
             configModal.chataModal.style.width = '95vw';
 
             configModal.addView(modalView);

@@ -1339,7 +1339,7 @@ function getStep1Values(){
         var group = groups[i];
         var lines = group.getLines();
         if(operators[i]){
-            if(operators[i].textContent === 'ANY')condition = 'OR';
+            condition = operators[i].textContent
         }else{
             condition = 'TERMINATOR';
         }
