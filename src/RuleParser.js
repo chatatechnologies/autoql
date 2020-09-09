@@ -14,7 +14,7 @@ function getOperator(condition){
             return '<';
             break;
 		case 'EXISTS':
-			return '∃';
+			return 'Exists';
         default:
             return ''
     }
@@ -42,6 +42,9 @@ function convert(rules, addTopOperator=true){
 			group.push(rule);
         }
         parsedRules.push(group)
+		if(rules[i].condition !== 'TERMINATOR' && addTopOperator){
+			group.push([rules[i].condition])
+		}
     }
 
     return parsedRules;

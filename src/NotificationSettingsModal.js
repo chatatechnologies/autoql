@@ -1002,9 +1002,11 @@ function GroupLine(params, expression=[]){
         queryInput.input.value = expression[0]
         ruleContainer.conditionValue = expression[1];
         chataSelect.conditionElement.innerHTML = expression[1];
-        if(expression[1] !== '∃'){
+        if(expression[1] !== 'Exists'){
             queryInput2.input.value = expression[2]
         }else{
+            ruleContainer.conditionValue = '∃';
+            chataSelect.conditionElement.innerHTML = '∃';
             secondContainer.style.visibility = 'hidden';
             secondContainer.style.display = 'none';
         }

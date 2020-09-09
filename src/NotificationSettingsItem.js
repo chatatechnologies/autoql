@@ -1,5 +1,4 @@
 function NotificationSettingsItem(options) {
-    console.log(options);
     var wrapper = document.createElement('div');
     wrapper.options = options;
     var header = document.createElement('div');

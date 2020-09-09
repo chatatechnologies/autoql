@@ -26,7 +26,6 @@ function Notification(options, parentOptions){
     var extraContent = document.createElement('div');
     var btnTurnNotification = document.createElement('button');
     var editNotification = document.createElement('button');
-    var notificationReadOnlyGroup = document.createElement('div');
     // chata-notification-delete-icon close
     var dismissIconContainer = htmlToElement(`
         <span
@@ -40,7 +39,7 @@ function Notification(options, parentOptions){
         </span>
     `);
     var uuid = uuidv4();
-    notificationReadOnlyGroup.classList.add('notification-read-only-group')
+
     var turnNotificationText = document.createTextNode(
         'Turn off these notifications'
     );
@@ -101,16 +100,31 @@ function Notification(options, parentOptions){
         <span class="chata-icon calendar">${CALENDAR}<span>
     `));
 
-    responseContentContainer.innerHTML = '<a class="single-value-response ">$1,361,422.33</a>'
-
     var parsedRules = RuleParser.convert(options.rule_expression);
-    notificationRulesContainer.appendChild(notificationReadOnlyGroup);
     for (var i = 0; i < parsedRules.length; i++) {
+        var notificationReadOnlyGroup = document.createElement('div');
+        notificationReadOnlyGroup.classList.add('notification-read-only-group')
+        notificationRulesContainer.appendChild(notificationReadOnlyGroup);
         var rule = parsedRules[i];
         for (var x = 0; x < rule.length; x++) {
-            notificationReadOnlyGroup.appendChild(
-                new NotificationGroup(rule[x])
-            )
+            if(rule[x].length === 1){
+                notificationRulesContainer.appendChild(
+                    htmlToElement(`
+                        <div style="text-align: center; margin: 2px;">
+                            <span
+                                class="read-only-rule-term"
+                                style="width: 100%;">
+                                ${rule[x][0]}
+                            </span>
+                        </div>
+                    `)
+                )
+                break;
+            }else{
+                notificationReadOnlyGroup.appendChild(
+                    new NotificationGroup(rule[x])
+                )
+            }
         }
     }
 
@@ -150,7 +164,8 @@ function Notification(options, parentOptions){
             expanded[i].classList.remove('visible');
         }
         expandedContent.classList.toggle('visible');
-
+        console.log(options.rule_expression);
+        console.log(RuleParser.convert(options.rule_expression));
         if(expandedContent.classList.contains('visible')){
             item.execute();
         }
