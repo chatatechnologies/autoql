@@ -1,5 +1,6 @@
 function NotificationSettingsModal(mode='create', rule={}){
     var wrapper = document.createElement('div');
+    wrapper.mode = mode;
     var frequencyBox = FrequencyBox(
         `Notify me as soon as this happens,
         but don't notify me again until the first of the next month.`
@@ -1288,7 +1289,6 @@ function ChataModalStep(title, nStep, subtitle=''){
 }
 
 function getNotificationValues(){
-    console.log(this);
     return {
         expression: [
             ...this.step1.getValues()

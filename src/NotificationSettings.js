@@ -116,6 +116,7 @@ function NotificationSettings(selector, options){
             var o = wrapper.options
             const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
             ChataUtils.ajaxCallPost(URL, (json, status) => {
+                json['data'].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.insertAdjacentElement(
                     'afterbegin', new NotificationSettingsItem(json['data'])
                 )

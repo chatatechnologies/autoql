@@ -87,6 +87,14 @@ function NotificationSettingsItem(options) {
                 configModal.close();
             }
             saveButton.onclick = (e) => {
+                var o = wrapper.options
+                const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
+                var values = modalView.getValues();
+                values.id = wrapper.options.id
+                alert(URL);
+                ChataUtils.putCall(URL, values, (jsonResponse) => {
+                    console.log(jsonResponse);
+                }, o)
                 configModal.close();
             }
         }
