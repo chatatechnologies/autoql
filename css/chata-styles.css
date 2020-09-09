@@ -1703,6 +1703,17 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin: 2px 5px;
 }
 
+.autoql-vanilla-chata-btn.danger:hover {
+    background-color: #ca0b00;
+    color: #fff;
+}
+
+.autoql-vanilla-chata-btn.danger {
+    color: #ca0b00;
+    border: 1px solid #ca0b00;
+    background: inherit;
+}
+
 .autoql-vanilla-chata-btn.primary {
     background: var(--chata-drawer-accent-color);
     border: 1px solid var(--chata-drawer-accent-color);

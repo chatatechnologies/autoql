@@ -58,6 +58,19 @@ function NotificationSettingsItem(options) {
     header.appendChild(settingsDisplayName);
     header.appendChild(settingsActions);
     header.onclick = function(evt){
+        var footerWrapper = document.createElement('div');
+        footerWrapper.style.display = 'flex';
+        footerWrapper.style.justifyContent = 'space-between';
+        var wrap = htmlToElement('<div></div>');
+        var wrap2 = htmlToElement('<div></div>');
+
+        var deleteButton = htmlToElement(`
+            <button
+                class="autoql-vanilla-chata-btn danger large">
+                    Delete Notification
+            </button>
+        `)
+
         var cancelButton = htmlToElement(
             `<div class="autoql-vanilla-chata-btn default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
@@ -65,6 +78,16 @@ function NotificationSettingsItem(options) {
         var saveButton = htmlToElement(
             `<div class="autoql-vanilla-chata-btn primary "
                 style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+        )
+
+        wrap.appendChild(deleteButton);
+        wrap2.appendChild(cancelButton);
+        wrap2.appendChild(saveButton);
+        footerWrapper.appendChild(
+            wrap
+        )
+        footerWrapper.appendChild(
+            wrap2
         )
 
         var target = evt.target;
@@ -83,8 +106,7 @@ function NotificationSettingsItem(options) {
 
             configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
-            configModal.addFooterElement(cancelButton);
-            configModal.addFooterElement(saveButton);
+            configModal.addFooterElement(footerWrapper);
             configModal.show();
             refreshTooltips();
             cancelButton.onclick = (e) => {
