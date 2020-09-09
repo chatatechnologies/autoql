@@ -6,15 +6,22 @@
 }(this, (function (exports) { 'use strict';
 
 function NotificationButton(options={}){
-    console.log(options);
-    var button = htmlToElement(`
-        <div class="chata-notifications-button-container" style="font-size: 18px;">
-        <span class="chata-icon chata-notifications-button notification">
-            ${NOTIFICATION_BUTTON}
-        </span>
-        <div class="chata-notifications-badge">12</div>
-        </div>
-    `)
+    var button = document.createElement('div');
+    var icon = document.createElement('span');
+    var badge = document.createElement('div');
+
+    badge.classList.add('chata-notifications-badge');
+    icon.classList.add('autoql-vanilla-chata-icon');
+    icon.classList.add('chata-notifications-button');
+    icon.classList.add('notification');
+    icon.innerHTML = NOTIFICATION_BUTTON;
+    button.classList.add('chata-notifications-button-container');
+    button.style.fontSize = '18px';
+
+    badge.innerHTML = '5';
+
+    button.appendChild(icon);
+    button.appendChild(badge);
 
     return button;
 }
