@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="css/Cascader.css">
     <link rel="stylesheet" type="text/css" href="css/Safetynet.css">
     <link rel="stylesheet" type="text/css" href="css/Antd.css">
+    <link rel="stylesheet" type="text/css" href="css/ChataNotificationButton.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
@@ -74,6 +75,7 @@
     <script src="src/split.min.js"></script>
     <script src="src/PopoverChartSelector.js"></script>
     <script src="src/AntdMessage.js"></script>
+    <script src="src/ChataNotificationButton.js"></script>
 
 
     <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/fd4b2bdf-fbc1-4ab2-af8b-5a1efc0f7285/chatastyles.css">
@@ -169,8 +171,8 @@
                 </li>
                 <li class="tab col s2 test-tab query-input-tab"><a class="" href="#test3">Query Input/Query Output</a></li>
                 <li class="tab col s2 test-tab notification-settings"><a class="" href="#test4">Notification Settings</a></li>
-                <li class="tab col s1 test-tab notification-list"><a class="" href="#test5">
-                    <svg id="notification-icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-notifications-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M257 120.471c7.083 0 23.911 4.479 23.911 4.479 45.589 10.447 77.678 52.439 77.678 99.85V352.412l9.321 9.364 7.788 7.823H136.302l7.788-7.823 9.321-9.364V224.8c0-47.41 32.089-89.403 77.678-99.85 0 0 18.043-4.479 23.911-4.479M256 48c-17.602 0-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2zm41.411 374.4h-82.823c0 22.881 18.633 41.6 41.412 41.6s41.411-18.719 41.411-41.6z"></path></svg>
+                <li class="tab col s1 test-tab notification-list"><a id="test_5" href="#test5">
+                    <!-- <svg id="notification-icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-notifications-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M257 120.471c7.083 0 23.911 4.479 23.911 4.479 45.589 10.447 77.678 52.439 77.678 99.85V352.412l9.321 9.364 7.788 7.823H136.302l7.788-7.823 9.321-9.364V224.8c0-47.41 32.089-89.403 77.678-99.85 0 0 18.043-4.479 23.911-4.479M256 48c-17.602 0-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2zm41.411 374.4h-82.823c0 22.881 18.633 41.6 41.412 41.6s41.411-18.719 41.411-41.6z"></path></svg> -->
                 </a></li>
             </ul>
         </div>
@@ -939,11 +941,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
     <script>
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
+
     var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNTk5MTU3ODEwLCAiZXhwIjogMTU5OTE3OTQxMCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiJdfQ==.vAtbwZ_s787nywy-kBcuHqRZXzMqv06abpYDkhwa_ahLXZ24GEbVdTgTAkXqvChSSmu7PXPrCGoxqKwGamCfUov9BChVMWxJ6yJ0YZuNCSt8gOuqqb5xpjK9zEwOxR1PELRGl4TQVEUWSgp7PJwVdeCETSRkPe7-349nW3ifzwPlr2zKQYItnLpUkeKAS_BkKzhxCfPUgAK5XNe0ZsdtHVNeyJ5ihHi3WWnSBYVrwB5oYg7rYZt2fVMjU1r8yYodEh8V-PfdGj1reyCKeCOHaWA_uM_acIqOomgEmTJd0Y9DkXtK-tAGBnCrEBdFZLHP3m7LFSpeHKx-Hr-oMlYUjw==`;
     const domain = 'https://spira-staging.chata.io';
     // const domain = 'https://purefacts-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
     console.log(topics);
+    var x = new ChataNotificationButton.NotificationButton();
+    document.getElementById('test_5').appendChild(x);
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
             // demo: true
