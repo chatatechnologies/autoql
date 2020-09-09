@@ -1,4 +1,5 @@
 function NotificationSettingsItem(options) {
+    console.log(options);
     var wrapper = document.createElement('div');
     wrapper.options = options;
     var header = document.createElement('div');
@@ -17,7 +18,9 @@ function NotificationSettingsItem(options) {
 
     chataSwitch.appendChild(checkbox);
     chataSwitch.appendChild(slider);
-
+    if(['ACTIVE', 'WAITING'].includes(options.status)){
+        checkbox.checked = true;
+    }
     var chataCheckbox = htmlToElement(`
         <div class="chata-checkbox">
         </div>
@@ -91,7 +94,6 @@ function NotificationSettingsItem(options) {
                 const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
                 var values = modalView.getValues();
                 values.id = wrapper.options.id
-                alert(URL);
                 ChataUtils.putCall(URL, values, (jsonResponse) => {
                     console.log(jsonResponse);
                 }, o)

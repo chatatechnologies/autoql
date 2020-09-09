@@ -958,7 +958,6 @@ function GroupLine(params, expression=[]){
 
     chataSelect.onclick = function(){
         popup.toggleVisibility();
-        console.log('AQUI');
     }
 
     chataSelectTermType.onclick = function(){
@@ -1001,6 +1000,7 @@ function GroupLine(params, expression=[]){
 
     if(expression.length){
         queryInput.input.value = expression[0]
+        ruleContainer.conditionValue = expression[1];
         chataSelect.conditionElement.innerHTML = expression[1];
         if(expression[1] !== '∃'){
             queryInput2.input.value = expression[2]
