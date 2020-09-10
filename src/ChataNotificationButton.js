@@ -8,6 +8,7 @@
 }(this, (function (exports) { 'use strict';
 
 function NotificationButton(selector, options={}){
+	const NOTIFICATION_POLLING_INTERVAL = 60000
 	this.options = {
 		authentication: {
             token: undefined,
@@ -57,9 +58,25 @@ function NotificationButton(selector, options={}){
 		this.badge.innerHTML = val;
 	}
 
-	this.poolInterval() => {
-		setInterval(function(){ alert("Hello"); }, 20000);
+	this.poolInterval = async () => {
+		var response = await this.getNotificationCount();
+		console.log(response);
+		setInterval(
+			() => {
+
+			}, NOTIFICATION_POLLING_INTERVAL
+		);
 	}
+
+	this.getNotificationCount = (unacknowledged=0) => {
+		var o = this.options.authentication
+		const url = `${o.domain}/autoql/api/v1/rules/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`
+		return new Promise(function(resolve, reject) {
+			resolve(0);
+		});
+	}
+
+	this.poolInterval();
 
     return this;
 }
