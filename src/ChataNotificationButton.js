@@ -8,6 +8,24 @@
 }(this, (function (exports) { 'use strict';
 
 function NotificationButton(selector, options={}){
+	this.options = {
+		authentication: {
+            token: undefined,
+            apiKey: undefined,
+            customerId: undefined,
+            userId: undefined,
+            username: undefined,
+            domain: undefined,
+            demo: false
+        },
+	}
+
+	if('authentication' in options){
+        for (var [key, value] of Object.entries(options['authentication'])) {
+            obj.options.authentication[key] = value;
+        }
+    }
+
 	var parent = document.querySelector(selector);
     var button = document.createElement('div');
     var icon = document.createElement('span');
@@ -37,6 +55,10 @@ function NotificationButton(selector, options={}){
 
 	this.setBadgeValue = (val) => {
 		this.badge.innerHTML = val;
+	}
+
+	this.poolInterval() => {
+		setInterval(function(){ alert("Hello"); }, 20000);
 	}
 
     return this;
