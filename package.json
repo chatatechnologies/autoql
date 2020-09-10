@@ -1,27 +1,25 @@
 {
-  "name": "vanillajs-widget",
+  "name": "vanilla-autoql",
   "version": "1.0.0",
   "description": "Javascript widget library",
-  "main": "buid/ChatDrawer.js",
   "scripts": {
     "test": "echo \"no test specified\" "
   },
   "repository": {
     "type": "git",
-    "url": "git+https://gitlab.com/vicente_rincon/widget.git"
+    "url": "https://github.com/chatatechnologies/autoql"
   },
   "author": "Oscar Ramirez",
   "license": "ISC",
-  "bugs": {
-    "url": "https://gitlab.com/vicente_rincon/widget/issues"
-  },
-  "homepage": "https://gitlab.com/vicente_rincon/widget#readme",
+  "homepage": "https://github.com/chatatechnologies/autoql/blob/master/README.md",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
     "gulp-concat": "^2.6.1",
     "gulp-minify": "^3.1.0",
-    "gulp-order": "^1.2.0"
+    "gulp-order": "^1.2.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   },
   "dependencies": {}
 }

@@ -1,10 +1,10 @@
-function formatChartData(val, col, options){
+export function formatChartData(val, col, options){
     var clone = cloneObject(options);
     clone.dataFormatting.currencyDecimals = 0;
     return formatData(val, col, clone);
 }
 
-function formatData(val, col, allOptions={}){
+export function formatData(val, col, allOptions={}){
     const options = allOptions.dataFormatting;
     value = '';
     let type = col['type'];
@@ -91,19 +91,19 @@ function formatData(val, col, allOptions={}){
     else return value;
 }
 
-function formatColumnName(col){
+export function formatColumnName(col){
     return col.replace(/__/g, ' ').replace(/_/g, ' ').
     replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); })
 }
 
-function uuidv4() {
+export function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
         var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
         return v.toString(16);
     });
 }
 
-function formatDate(date) {
+export function formatDate(date) {
     var day = date.getDate();
     var monthIndex = date.getMonth();
     var year = date.getFullYear();
@@ -117,7 +117,7 @@ function formatDate(date) {
     return MONTH_NAMES[monthIndex] + ' ' + year;
 }
 
-function copyTextToClipboard(text) {
+export function copyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
     document.body.appendChild(textArea);
@@ -132,7 +132,7 @@ function copyTextToClipboard(text) {
     document.body.removeChild(textArea);
 }
 
-function putLoadingContainer(target){
+export function putLoadingContainer(target){
     var responseLoadingContainer = document.createElement('div');
     var responseLoading = document.createElement('div');
 
@@ -147,7 +147,7 @@ function putLoadingContainer(target){
     return responseLoadingContainer;
 }
 
-function getSafetynetValues(node){
+export function getSafetynetValues(node){
     var nodes = node.getElementsByClassName('safetynet-value');
     var words = [];
     for (var i = 0; i < nodes.length; i++) {
@@ -156,7 +156,7 @@ function getSafetynetValues(node){
     return words;
 }
 
-function runQuery(event, objContext){
+export function runQuery(event, objContext){
 
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement.parentElement;
@@ -186,7 +186,7 @@ function runQuery(event, objContext){
     }
 }
 
-function deleteSuggestion(event){
+export function deleteSuggestion(event){
     if(event.target.tagName == 'svg'){
         var node = event.target.parentElement;
     }else{
@@ -195,8 +195,7 @@ function deleteSuggestion(event){
     node.parentElement.removeChild(node);
 }
 
-
-function csvTo2dArray(parseMe) {
+export function csvTo2dArray(parseMe) {
     const splitFinder = /,|\r?\n|"(\\"|[^"])*?"/g;
     let currentRow = [];
     const rowsOut = [currentRow];
@@ -225,7 +224,7 @@ function csvTo2dArray(parseMe) {
     return rowsOut;
 }
 
-function getGroupableField(json){
+export function getGroupableField(json){
     var r = {
         indexCol: -1,
         jsonCol: {},
@@ -242,7 +241,7 @@ function getGroupableField(json){
     return -1;
 }
 
-function getNotGroupableField(json){
+export function getNotGroupableField(json){
     var r = {
         indexCol: -1,
         jsonCol: {},
@@ -259,9 +258,7 @@ function getNotGroupableField(json){
     return -1;
 }
 
-
-
-function getGroupables(json){
+export function getGroupables(json){
     var clone = cloneObject(json);
     var cont = 0;
     var groups = []
@@ -274,7 +271,7 @@ function getGroupables(json){
     return groups;
 }
 
-function getClickedData(json, ...params){
+export function getClickedData(json, ...params){
     var groupables = getGroupables(json);
     var data = {
         supportedByAPI: true,
@@ -292,7 +289,7 @@ function getClickedData(json, ...params){
     return data;
 }
 
-function getGroupableCount(json){
+export function getGroupableCount(json){
     var cont = 0;
     for (var i = 0; i < json['data']['columns'].length; i++) {
         if(json['data']['columns'][i]['groupable']){
@@ -302,7 +299,7 @@ function getGroupableCount(json){
     return cont;
 }
 
-function getPivotColumnArray(json, options, _data){
+export function getPivotColumnArray(json, options, _data){
     var lines = _data;
     var values = [];
     var firstColName = '';
@@ -328,7 +325,7 @@ function getPivotColumnArray(json, options, _data){
     return pivotArray;
 }
 
-function sortPivot(pivotArray, colIndex, operator){
+export function sortPivot(pivotArray, colIndex, operator){
     pivotArray.shift();
     pivotArray.shift();
 
@@ -358,7 +355,7 @@ function sortPivot(pivotArray, colIndex, operator){
     return cloneObject(pivotArray.sort(comparator));
 }
 
-function getDatePivotArray(json, options, _data){
+export function getDatePivotArray(json, options, _data){
     var lines = _data;
     var values = [];
     for (var i = 0; i < lines.length; i++) {
@@ -390,7 +387,7 @@ function getDatePivotArray(json, options, _data){
     return pivotArray;
 }
 
-function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
+export function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
     var result = {}, ret = [];
     var newCols = [];
     for (var i = 0; i < dataArray.length; i++) {
@@ -423,7 +420,7 @@ function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstColName) {
     return ret;
 }
 
-function getSVGString(svgNode) {
+export function getSVGString(svgNode) {
     svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
     var cssStyleText = getCSSStyles( svgNode );
     appendCSS( cssStyleText, svgNode );
@@ -494,7 +491,7 @@ function getSVGString(svgNode) {
     }
 }
 
-function svgString2Image(svgString, width, height) {
+export function svgString2Image(svgString, width, height) {
     var imgsrc = 'data:image/svg+xml;base64,'+ btoa(
         unescape(encodeURIComponent(svgString))
     );
@@ -519,7 +516,7 @@ function svgString2Image(svgString, width, height) {
     image.src = imgsrc;
 }
 
-function mergeOptions(objList){
+export function mergeOptions(objList){
     var output = [];
     for (var i = 0; i < objList.length; i++) {
         let obj = objList[i];
@@ -530,7 +527,7 @@ function mergeOptions(objList){
     return output;
 }
 
-function getSpeech(button){
+export function getSpeech(button){
     window.SpeechRecognition =
     window.webkitSpeechRecognition || window.SpeechRecognition;
     if(window.SpeechRecognition){
@@ -544,7 +541,7 @@ function getSpeech(button){
     }
 }
 
-function formatLabels(labels, col, options){
+export function formatLabels(labels, col, options){
     labels = labels.sort();
     for (var i = 0; i < labels.length; i++) {
         labels[i] = formatData(labels[i], col, options);
@@ -552,7 +549,7 @@ function formatLabels(labels, col, options){
     return labels;
 }
 
-function formatDataToHeatmap(json, options){
+export function formatDataToHeatmap(json, options){
     var lines = json['data']['rows'];
     var values = [];
     var groupables = getGroupableFields(json);
@@ -578,7 +575,7 @@ function formatDataToHeatmap(json, options){
     return values;
 }
 
-function formatDataToBarChart(json, options){
+export function formatDataToBarChart(json, options){
     var lines = json['data']['rows'];
     var values = [];
     var col1 = json['data']['columns'][0];
@@ -604,7 +601,7 @@ function formatDataToBarChart(json, options){
     return [values, hasNegativeValues];
 }
 
-function getSupportedDisplayTypesArray(){
+export function getSupportedDisplayTypesArray(){
     return [
         'table',
         // 'date_pivot',
@@ -619,8 +616,7 @@ function getSupportedDisplayTypesArray(){
     ];
 }
 
-
-function cloneObject(source) {
+export function cloneObject(source) {
     if (Object.prototype.toString.call(source) === '[object Array]') {
         var clone = [];
         for (var i=0; i<source.length; i++) {
@@ -640,7 +636,7 @@ function cloneObject(source) {
     }
 }
 
-function refreshTooltips(){
+export function refreshTooltips(){
     tippy('.chata-interpretation', {
         theme: 'chata',
         onShow: function(instance){
@@ -663,7 +659,7 @@ function refreshTooltips(){
     })
 }
 
-function tooltipCharts(){
+export function tooltipCharts(){
     var get2dContent = (instance) => {
         var dataset = instance.reference.dataset;
         var content  = `<span class='title-tip'>${dataset.col1}:</span> <span class="text-tip">${dataset.colvalue1}</span>`;
@@ -695,7 +691,7 @@ function tooltipCharts(){
     })
 }
 
-function applyFilter(idRequest, array){
+export function applyFilter(idRequest, array){
     var _table = document.querySelector(`[data-componentid='${idRequest}']`);
     var inputs = _table.headerElement.getElementsByTagName('input');
     var json = ChataUtils.responses[_table.dataset.componentid];
@@ -744,20 +740,20 @@ function applyFilter(idRequest, array){
     return rows;
 }
 
-function htmlToElement(html) {
+export function htmlToElement(html) {
     var template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
     return template.content.firstChild;
 }
 
-function createTableContainer(){
+export function createTableContainer(){
     var div = document.createElement('div');
     div.classList.add('autoql-vanilla-chata-table');
     return div;
 }
 
-const getNumberOfGroupables = columns => {
+export const getNumberOfGroupables = columns => {
     if (columns) {
         let numberOfGroupables = 0
         columns.forEach(col => {
@@ -770,12 +766,12 @@ const getNumberOfGroupables = columns => {
     return null
 }
 
-const supportsRegularPivotTable = columns => {
+export const supportsRegularPivotTable = columns => {
     const hasTwoGroupables = getNumberOfGroupables(columns) === 2
     return hasTwoGroupables && columns.length === 3
 }
 
-const isColumnNumberType = col => {
+export const isColumnNumberType = col => {
     const type = col.type
     return (
         type === 'DOLLAR_AMT' ||
@@ -785,12 +781,12 @@ const isColumnNumberType = col => {
     )
 }
 
-const isColumnStringType = col => {
+export const isColumnStringType = col => {
     const  type = col.type
     return type === 'STRING' || type === 'DATE_STRING' || type === 'DATE'
 }
 
-const getColumnTypeAmounts = columns => {
+export const getColumnTypeAmounts = columns => {
     let amountOfStringColumns = 0
     let amountOfNumberColumns = 0
 
@@ -805,7 +801,7 @@ const getColumnTypeAmounts = columns => {
     return { amountOfNumberColumns, amountOfStringColumns }
 }
 
-const supports2DCharts = columns => {
+export const supports2DCharts = columns => {
     const amounts =
     getColumnTypeAmounts(
         columns
@@ -815,7 +811,7 @@ const supports2DCharts = columns => {
     && amounts.amountOfStringColumns > 0
 }
 
-const getSupportedDisplayTypes = response => {
+export const getSupportedDisplayTypes = response => {
     try {
         if (!response.data.display_type) {
             return []
@@ -873,56 +869,7 @@ const getSupportedDisplayTypes = response => {
         }
 }
 
-// const getSupportedDisplayTypes = response => {
-//     // For CaaS there should be 3 types: data, suggestion, help
-//     const displayType = response['data']['display_type']
-//
-//     if (displayType === 'suggestion' || displayType === 'help') {
-//         return [displayType]
-//     }
-//
-//     const columns = response['data']['columns'];
-//
-//     if (!columns) {
-//         return []
-//     }
-//
-//     if (getNumberOfGroupables(columns) === 1) {
-//         // Is direct key-value query (ie. Avg days to pay per customer)
-//         const supportedDisplayTypes = ['bar', 'column', 'line', 'table']
-//
-//         if (columns.length === 2) {
-//             supportedDisplayTypes.push('pie')
-//         }
-//
-//         // create pivot based on month and year
-//         if (
-//             columns[0].type === 'DATE' &&
-//             columns[0].name.includes('month') &&
-//             columns.length === 2
-//         ) {
-//             supportedDisplayTypes.push('pivot_column')
-//         }
-//         return supportedDisplayTypes
-//     } else if (getNumberOfGroupables(columns) === 2) {
-//         // Is pivot query (ie. Sale per customer per month)
-//         return [
-//             'multi_line',
-//             'stacked_bar',
-//             'stacked_column',
-//             'bubble',
-//             'heatmap',
-//             'table',
-//             'pivot_column'
-//         ]
-//     }
-//
-//     // We should always be able to display the table type by default
-//     return ['table']
-// }
-
-async function adjustTableWidth(table, thArray, cols,
-    selector='[data-indexrow]', offset=0){
+export async function adjustTableWidth(table, thArray, cols, selector='[data-indexrow]', offset=0){
 
     var headerWidth = 0;
     var rowsElements = table.querySelectorAll(selector);
@@ -955,7 +902,7 @@ async function adjustTableWidth(table, thArray, cols,
     return headerWidth;
 }
 
-function hideShowTableCols(table){
+export function hideShowTableCols(table){
     var json = ChataUtils.responses[table.dataset.componentid];
     var cols = json['data']['columns'];
     const thList = table.headerElement.childNodes;
@@ -980,7 +927,7 @@ function hideShowTableCols(table){
     }
 }
 
-function getStringWidth(string){
+export function getStringWidth(string){
     const div = document.createElement('div')
     div.innerHTML = string;
     div.style.display = 'inline-block';
@@ -992,7 +939,7 @@ function getStringWidth(string){
     return width;
 }
 
-function allColsHidden(json){
+export function allColsHidden(json){
     var cols = json['data']['columns'];
     var isAllHidden = true;
     for (var i = 0; i < cols.length; i++) {
@@ -1005,7 +952,7 @@ function allColsHidden(json){
     return isAllHidden;
 }
 
-function allColHiddenMessage(table){
+export function allColHiddenMessage(table){
     const requestId = table.dataset.componentid;
     var csvHandlerOption = table.tabulator.parentContainer.querySelector(
         '[data-name-option="csv-handler"]'
@@ -1058,7 +1005,7 @@ function allColHiddenMessage(table){
     }
 }
 
-function mouseX(evt) {
+export function mouseX(evt) {
     if (evt.pageX) {
         return evt.pageX;
     } else if (evt.clientX) {
@@ -1070,7 +1017,7 @@ function mouseX(evt) {
     }
 }
 
-function mouseY(evt) {
+export function mouseY(evt) {
     if(evt.pageY){
         return evt.pageY;
     }else if (evt.clientY){
@@ -1082,7 +1029,7 @@ function mouseY(evt) {
     }
 }
 
-const getActiveIntegrator = (domain) => {
+export const getActiveIntegrator = (domain) => {
     if (domain.includes('spira')) {
         return 'spira'
     } else if (domain.includes('locate')) {
@@ -1104,7 +1051,7 @@ const getActiveIntegrator = (domain) => {
     return '';
 }
 
-getIntroMessageTopics = (integrator) => {
+export const getIntroMessageTopics = (integrator) => {
     const topics =
     {
         spira: [
@@ -1335,7 +1282,7 @@ getIntroMessageTopics = (integrator) => {
     return topics[integrator]
 }
 
-function closeAllChartPopovers(){
+export function closeAllChartPopovers(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-popover-selector'
     )
@@ -1344,7 +1291,7 @@ function closeAllChartPopovers(){
     }
 }
 
-function closeAllSafetynetSelectors(){
+export function closeAllSafetynetSelectors(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-safetynet-selector'
     )
@@ -1353,7 +1300,7 @@ function closeAllSafetynetSelectors(){
     }
 }
 
-function closeAllToolbars(){
+export function closeAllToolbars(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-chat-message-toolbar.show'
     )
@@ -1371,8 +1318,7 @@ function closeAllToolbars(){
     }
 }
 
-
-function getSuggestionLists (query, fullSuggestions) {
+export function getSuggestionLists (query, fullSuggestions) {
     const suggestionLists = []
     if (fullSuggestions.length) {
         fullSuggestions.forEach((suggestionInfo, index) => {
@@ -1403,7 +1349,7 @@ function getSuggestionLists (query, fullSuggestions) {
     return suggestionLists
 }
 
-function getPlainTextList(query, fullSuggestions) {
+export function getPlainTextList(query, fullSuggestions) {
     const textList = []
     let lastEndIndex = 0
 
