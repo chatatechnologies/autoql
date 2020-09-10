@@ -2,10 +2,13 @@
 	typeof exports === 'object' &&
     typeof module !== 'undefined' ? factory(exports) :
 	typeof define === 'function' && define.amd ? define(['exports'], factory) :
-	(factory((global.ChataNotificationButton = global.ChataNotificationButton || {})));
+	(factory(
+		(global.ChataNotificationButton = global.ChataNotificationButton || {})
+	));
 }(this, (function (exports) { 'use strict';
 
-function NotificationButton(options={}){
+function NotificationButton(selector, options={}){
+	var parent = document.querySelector(selector);
     var button = document.createElement('div');
     var icon = document.createElement('span');
     var badge = document.createElement('div');
@@ -23,7 +26,20 @@ function NotificationButton(options={}){
     button.appendChild(icon);
     button.appendChild(badge);
 
-    return button;
+	parent.appendChild(button);
+
+	this.button = button;
+	this.badge = badge;
+
+	button.onclick = (evt) => {
+		badge.style.visibility = 'hidden';
+	}
+
+	this.setBadgeValue = (val) => {
+		this.badge.innerHTML = val;
+	}
+
+    return this;
 }
 
 exports.NotificationButton = NotificationButton;

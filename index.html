@@ -947,8 +947,7 @@
     // const domain = 'https://purefacts-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
     console.log(topics);
-    var x = new ChataNotificationButton.NotificationButton();
-    document.getElementById('test_5').appendChild(x);
+    var x = new ChataNotificationButton.NotificationButton('#test_5');
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
             // demo: true
