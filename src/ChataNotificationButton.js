@@ -8,7 +8,8 @@
 }(this, (function (exports) { 'use strict';
 
 function NotificationButton(selector, options={}){
-	const NOTIFICATION_POLLING_INTERVAL = 60000
+	const NOTIFICATION_POLLING_INTERVAL = 18000
+	var obj = this;
 	this.options = {
 		authentication: {
             token: undefined,
@@ -20,6 +21,8 @@ function NotificationButton(selector, options={}){
             demo: false
         },
 	}
+
+	obj.unacknowledged = 0;
 
 	if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
@@ -49,21 +52,32 @@ function NotificationButton(selector, options={}){
 
 	this.button = button;
 	this.badge = badge;
+	badge.style.visibility = 'hidden';
 
 	button.onclick = (evt) => {
 		badge.style.visibility = 'hidden';
 	}
 
 	this.setBadgeValue = (val) => {
+		badge.style.visibility = 'visible';
 		this.badge.innerHTML = val;
 	}
 
 	this.poolInterval = async () => {
 		var response = await this.getNotificationCount();
 		console.log(response);
+		if(response.data.unacknowledged){
+			obj.unacknowledged = response.data.unacknowledged
+		}
+		this.setBadgeValue(obj.unacknowledged);
 		setInterval(
 			() => {
-
+				var response = await = obj.getNotificationCount(
+					obj.unacknowledged
+				)
+				if(respone.data.unacknowledged){
+					obj.unacknowledged = response.data.unacknowledged
+				}
 			}, NOTIFICATION_POLLING_INTERVAL
 		);
 	}
@@ -72,7 +86,9 @@ function NotificationButton(selector, options={}){
 		var o = this.options.authentication
 		const url = `${o.domain}/autoql/api/v1/rules/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`
 		return new Promise(function(resolve, reject) {
-			resolve(0);
+			ChataUtils.safetynetCall(url, (json) => {
+				resolve(json);
+			}, obj.options)
 		});
 	}
 

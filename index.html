@@ -947,7 +947,7 @@
     // const domain = 'https://purefacts-staging.chata.io';
     const topics = getIntroMessageTopics(getActiveIntegrator(domain));
     console.log(topics);
-    var x = new ChataNotificationButton.NotificationButton('#test_5');
+
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
             // demo: true
@@ -1286,6 +1286,16 @@
                                         })
 
                                         var json = JSON.parse(xhrDasboard.responseText);
+                                        var x = new ChataNotificationButton.NotificationButton('#test_5', {
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            }
+                                        });
                                         dashboard = new Dashboard('.grid-1', {
                                             themeConfig: {
                                                 chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
