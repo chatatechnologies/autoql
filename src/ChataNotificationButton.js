@@ -71,12 +71,13 @@ function NotificationButton(selector, options={}){
 		}
 		this.setBadgeValue(obj.unacknowledged);
 		setInterval(
-			() => {
-				var response = await = obj.getNotificationCount(
+			async () => {
+				var response = await obj.getNotificationCount(
 					obj.unacknowledged
 				)
-				if(respone.data.unacknowledged){
+				if(response.data.unacknowledged){
 					obj.unacknowledged = response.data.unacknowledged
+					this.setBadgeValue(obj.unacknowledged);
 				}
 			}, NOTIFICATION_POLLING_INTERVAL
 		);
