@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"no test specified\" ",
     "build": "babel src_node -d lib --plugins transform-import-styles",
-    "watch": "webpack --w --mode development",
+    "build-cdn": "webpack --mode=production --config webpack.config.js",
+    "watch": "webpack --w --mode development --config webpack-test.config.js",
     "prepublish": "babel src_node -d lib"
   },
   "repository": {
