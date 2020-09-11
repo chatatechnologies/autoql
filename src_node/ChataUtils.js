@@ -2,13 +2,17 @@ import {
     htmlToElement,
     closeAllChartPopovers,
     closeAllToolbars,
-    closeAllSafetynetSelectors
+    closeAllSafetynetSelectors,
+    formatColumnName,
+    allColHiddenMessage
 } from './Utils'
 import {
     DOWNLOAD_CSV_ICON,
     CLIPBOARD_ICON,
-    EXPORT_PNG_ICON
+    EXPORT_PNG_ICON,
+    TICK
 } from './Svg'
+import { Modal } from './Modal'
 import '../css/PopoverMenu.css'
 
 

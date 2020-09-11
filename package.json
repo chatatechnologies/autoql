@@ -7,7 +7,7 @@
     "build": "babel src_node -d lib --plugins transform-import-styles",
     "build-cdn": "webpack --mode=production --config webpack.config.js",
     "watch": "webpack --w --mode development --config webpack-test.config.js",
-    "prepublish": "babel src_node -d lib"
+    "prepublish": "babel src_node -d lib --plugins transform-import-styles"
   },
   "repository": {
     "type": "git",
@@ -35,6 +35,7 @@
   "dependencies": {
     "babel-plugin-import-css-to-jss": "^3.1.1",
     "babel-template": "^6.26.0",
+    "moment": "^2.27.0",
     "style-loader": "^1.2.1",
     "tabulator-tables": "^4.8.0",
     "tippy.js": "^6.2.6"

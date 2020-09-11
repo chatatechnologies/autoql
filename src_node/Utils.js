@@ -1,5 +1,6 @@
-import { ChataUtils } from './ChataUtils';
+import { ChataUtils } from './ChataUtils'
 import { WARNING, COLUMN_EDITOR } from './Svg'
+import moment from 'moment'
 
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);

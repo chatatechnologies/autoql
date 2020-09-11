@@ -8,7 +8,9 @@ import {
     closeAllChartPopovers,
     uuidv4,
     getSupportedDisplayTypes,
-    allColHiddenMessage
+    allColHiddenMessage,
+    closeAllToolbars,
+    mouseY
 } from './Utils'
 import { LIGHT_THEME } from './Constants'
 import {
