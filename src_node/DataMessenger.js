@@ -1,3 +1,4 @@
+import { test, test2 } from './Share'
 import { Cascader } from './Cascader'
 import { ChataTable, ChataPivotTable } from './ChataTable'
 import { ChataUtils } from './ChataUtils'
@@ -44,7 +45,7 @@ import '../css/chata-styles.css'
 
 export function DataMessenger(elem, options){
     var obj = this;
-
+    console.log(test2);
     obj.options = {
         authentication: {
             token: undefined,
