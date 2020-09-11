@@ -1,3 +1,32 @@
+import * as chataD3 from 'd3'
+import {
+    enumerateCols,
+    getIndexesByType,
+    getMetadataElement,
+    makeGroups,
+    getMinAndMaxValues,
+    formatLabel,
+    getVisibleSeries
+} from './ChataChartHelpers'
+import {
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+    getBandWidth,
+    getColorScale
+} from './d3-compatibility'
+import {
+    formatColumnName,
+    getStringWidth,
+    formatData,
+    formatChartData,
+    closeAllChartPopovers,
+} from '../Utils'
+import { tooltipCharts } from '../Tooltips'
+
+
 export function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 60, left: 160, marginLabel: 50, chartLeft: 120, bottomChart: 60},
     width = component.parentElement.clientWidth - margin.left;

@@ -1,4 +1,5 @@
 import * as chataD3 from 'd3'
+import { cloneObject, formatColumnName } from '../Utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -99,8 +100,7 @@ export const getObjectValues = (
 }
 
 export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
-
-    obj = {};
+    var obj = {};
     items.forEach((item) => {
         const key = item[labelIndex];
         if (!obj[key]) {

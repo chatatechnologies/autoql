@@ -1,4 +1,4 @@
-import { * as chataD3 } from 'd3'
+import * as chataD3 from 'd3'
 
 export const SCALE_LINEAR = chataD3.scaleLinear || chataD3.scale.linear;
 export const SCALE_BAND = chataD3.scaleBand || chataD3.scale.ordinal;
