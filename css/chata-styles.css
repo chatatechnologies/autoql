@@ -1340,6 +1340,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   font-family: sans-serif;
 }
 
+.tippy-box[data-theme~='chata-theme'] {
+    background-color: black;
+    /* color: var(--chata-drawer-hover-color); */
+    color: white;
+    font-size: 15px;
+    font-family: sans-serif;
+}
+
 .autoql-vanilla-chata-response-content-container *:focus {
     outline: none !important;
 }

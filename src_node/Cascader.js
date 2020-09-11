@@ -1,6 +1,8 @@
 import {
     OPTION_ARROW,
-    EXPLORE_QUERIES
+    EXPLORE_QUERIES,
+    TOPICS_ARROW,
+    OPTION_ARROW_CIRCLE,
 } from './Svg'
 import { htmlToElement  } from './Utils'
 

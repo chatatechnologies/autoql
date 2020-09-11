@@ -2,6 +2,7 @@ import {
     getSpeech,
     getActiveIntegrator,
     htmlToElement,
+    closeAllChartPopovers
 } from './Utils'
 import { Cascader } from './Cascader'
 import { LIGHT_THEME } from './Constants'
@@ -15,8 +16,11 @@ import {
     DATA_MESSENGER,
     QUERY_TIPS,
     NOTIFICATIONS_ICON,
+    SEARCH_ICON
 } from './Svg'
 import { refreshTooltips } from './Tooltips'
+import '../css/chata-styles.css'
+import '../css/Cascader.css'
 
 export function DataMessenger(elem, options){
     var obj = this;
