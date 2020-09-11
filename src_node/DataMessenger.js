@@ -1,5 +1,23 @@
-import { getSpeech, getActiveIntegrator } from './Utils'
-import { CHATA_BUBBLES_ICON } from './Svg'
+import {
+    getSpeech,
+    getActiveIntegrator,
+    htmlToElement,
+} from './Utils'
+import { Cascader } from './Cascader'
+import { LIGHT_THEME } from './Constants'
+import {
+    CHATA_BUBBLES_ICON,
+    CLOSE_ICON,
+    CLEAR_ALL,
+    POPOVER_ICON,
+    WATERMARK,
+    VOICE_RECORD_IMAGE,
+    DATA_MESSENGER,
+    QUERY_TIPS,
+    NOTIFICATIONS_ICON,
+} from './Svg'
+import { refreshTooltips } from './Tooltips'
+
 export function DataMessenger(elem, options){
     var obj = this;
 
