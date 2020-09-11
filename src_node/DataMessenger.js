@@ -12,6 +12,17 @@ import {
     closeAllToolbars,
     mouseY
 } from './Utils'
+import {
+    createAreaChart,
+    createBarChart,
+    createBubbleChart,
+    createColumnChart,
+    createHeatmap,
+    createLineChart,
+    createPieChart,
+    createStackedBarChart,
+    createStackedColumnChart
+} from './Charts'
 import { LIGHT_THEME } from './Constants'
 import {
     CHATA_BUBBLES_ICON,
