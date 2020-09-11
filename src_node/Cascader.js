@@ -5,6 +5,7 @@ import {
     OPTION_ARROW_CIRCLE,
 } from './Svg'
 import { htmlToElement  } from './Utils'
+import '../css/Cascader.css'
 
 export function Cascader(topics, datamessenger){
     var obj = this;

@@ -35,11 +35,10 @@ import {
     FILTER_TABLE,
     COLUMN_EDITOR,
     DELETE_MESSAGE,
-    VERTICAL_DOTS 
+    VERTICAL_DOTS
 } from './Svg'
 import { refreshTooltips } from './Tooltips'
 import '../css/chata-styles.css'
-import '../css/Cascader.css'
 
 export function DataMessenger(elem, options){
     var obj = this;
