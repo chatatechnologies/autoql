@@ -1,9 +1,17 @@
-import { htmlToElement } from './Utils'
+import {
+    htmlToElement,
+    closeAllChartPopovers,
+    closeAllToolbars,
+    closeAllSafetynetSelectors
+} from './Utils'
 import {
     DOWNLOAD_CSV_ICON,
     CLIPBOARD_ICON,
     EXPORT_PNG_ICON
 } from './Svg'
+import '../css/PopoverMenu.css'
+
+
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
     responses: []

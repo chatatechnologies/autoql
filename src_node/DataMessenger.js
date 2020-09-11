@@ -1,13 +1,15 @@
+import { Cascader } from './Cascader'
+import { ChataTable, ChataPivotTable } from './ChataTable'
+import { ChataUtils } from './ChataUtils'
 import {
     getSpeech,
     getActiveIntegrator,
     htmlToElement,
     closeAllChartPopovers,
     uuidv4,
-    getSupportedDisplayTypes
+    getSupportedDisplayTypes,
+    allColHiddenMessage
 } from './Utils'
-import { Cascader } from './Cascader'
-import { ChataUtils } from './ChataUtils'
 import { LIGHT_THEME } from './Constants'
 import {
     CHATA_BUBBLES_ICON,

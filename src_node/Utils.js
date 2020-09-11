@@ -1,3 +1,6 @@
+import { ChataUtils } from './ChataUtils';
+import { WARNING, COLUMN_EDITOR } from './Svg'
+
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);
     clone.dataFormatting.currencyDecimals = 0;
@@ -6,7 +9,7 @@ export function formatChartData(val, col, options){
 
 export function formatData(val, col, allOptions={}){
     const options = allOptions.dataFormatting;
-    value = '';
+    var value = '';
     let type = col['type'];
     switch (type) {
         case 'DOLLAR_AMT':
