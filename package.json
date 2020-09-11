@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"no test specified\" ",
     "build": "webpack -p",
-    "watch": "webpack --w --mode development"
+    "watch": "webpack --w --mode development",
+    "prepublish": "babel src -d lib"
   },
   "repository": {
     "type": "git",
@@ -15,6 +16,7 @@
   "license": "ISC",
   "homepage": "https://github.com/chatatechnologies/autoql/blob/master/README.md",
   "devDependencies": {
+    "@babel/cli": "^7.11.6",
     "@babel/core": "^7.11.6",
     "@babel/preset-env": "^7.11.5",
     "babel-loader": "^8.1.0",

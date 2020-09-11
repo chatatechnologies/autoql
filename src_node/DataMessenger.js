@@ -2,9 +2,12 @@ import {
     getSpeech,
     getActiveIntegrator,
     htmlToElement,
-    closeAllChartPopovers
+    closeAllChartPopovers,
+    uuidv4,
+    getSupportedDisplayTypes
 } from './Utils'
 import { Cascader } from './Cascader'
+import { ChataUtils } from './ChataUtils'
 import { LIGHT_THEME } from './Constants'
 import {
     CHATA_BUBBLES_ICON,
@@ -16,7 +19,23 @@ import {
     DATA_MESSENGER,
     QUERY_TIPS,
     NOTIFICATIONS_ICON,
-    SEARCH_ICON
+    SEARCH_ICON,
+    TABLE_ICON,
+    COLUMN_CHART_ICON,
+    BAR_CHART_ICON,
+    PIE_CHART_ICON,
+    LINE_CHART_ICON,
+    PIVOT_ICON,
+    HEATMAP_ICON,
+    BUBBLE_CHART_ICON,
+    STACKED_COLUMN_CHART_ICON,
+    STACKED_BAR_CHART_ICON,
+    STACKED_AREA_CHART_ICON,
+    REPORT_PROBLEM,
+    FILTER_TABLE,
+    COLUMN_EDITOR,
+    DELETE_MESSAGE,
+    VERTICAL_DOTS 
 } from './Svg'
 import { refreshTooltips } from './Tooltips'
 import '../css/chata-styles.css'
