@@ -1,5 +1,7 @@
 import { PopoverChartSelector } from './PopoverChartSelector'
-
+import { getIndexesByType } from './ChataChartHelpers'
+import { htmlToElement, formatColumnName } from '../Utils'
+import { TICK } from '../Svg'
 
 export function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
     var obj = this;

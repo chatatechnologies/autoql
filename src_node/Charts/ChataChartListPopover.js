@@ -1,5 +1,5 @@
 import { PopoverChartSelector } from './PopoverChartSelector'
-
+import { formatColumnName } from '../Utils'
 
 export function ChataChartListPopover(position, indexes, onClick){
     var obj = this;
