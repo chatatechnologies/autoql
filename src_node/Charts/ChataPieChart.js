@@ -131,7 +131,12 @@ export function createPieChart(component, json, options, fromChataUtils=true, va
     )
     var colorLabels = []
 
-    var dataReady = pie(Object.entries(data))
+    const entries = (map) => {
+        var entries = [];
+        for (var key in map) entries.push({key: key, value: map[key]});
+        return entries;
+    }
+    var dataReady = pie(entries(data))
     for (var i = 0; i < dataReady.length; i++) {
         var d = dataReady[i]
         colorLabels.push(d.data.key);
