@@ -1,3 +1,35 @@
+import * as chataD3 from 'd3'
+import { ChataChartListPopover } from './ChataChartListPopover'
+import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
+
+import {
+    enumerateCols,
+    getIndexesByType,
+    getMetadataElement,
+    makeGroups,
+    getMinAndMaxValues,
+    formatLabel,
+    getVisibleSeries
+} from './ChataChartHelpers'
+import {
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+    getBandWidth,
+    getColorScale,
+    getLegend
+} from './d3-compatibility'
+import {
+    formatColumnName,
+    getStringWidth,
+    formatData,
+    formatChartData,
+    closeAllChartPopovers,
+} from '../Utils'
+import { tooltipCharts } from '../Tooltips'
+
 export function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 15, right: 10, bottom: 60, left: 90, marginLabel: 50, bottomChart: 50},
@@ -211,8 +243,8 @@ export function createColumnChart(component, json, options, onUpdate=()=>{}, fro
         labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartSeriesPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: event.clientX,
+                top: event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createColumnChart(
@@ -271,8 +303,8 @@ export function createColumnChart(component, json, options, onUpdate=()=>{}, fro
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: event.clientX,
+                top: event.clientY
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
@@ -339,7 +371,7 @@ export function createColumnChart(component, json, options, onUpdate=()=>{}, fro
 
     var slice = undefined;
     function createBars(){
-        rectIndex = 0;
+        var rectIndex = 0;
         var cloneData = getVisibleSeries(data);
         if(slice)slice.remove();
         slice = svg.selectAll(".slice")

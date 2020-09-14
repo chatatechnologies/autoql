@@ -628,7 +628,7 @@ ChataUtils.format3dData = function(json, groups, metadata){
 }
 
 ChataUtils.groupBy = function(list, keyGetter, indexData) {
-    obj = {};
+    var obj = {};
     list.forEach((item) => {
         const key = keyGetter(item);
         if (!obj.hasOwnProperty(key)) {

@@ -1,3 +1,24 @@
+import * as chataD3 from 'd3'
+import {
+    enumerateCols,
+    getIndexesByType,
+    getMetadataElement,
+} from './ChataChartHelpers'
+import {
+    getColorScale,
+    getLegend,
+    getArc,
+    getPie
+} from './d3-compatibility'
+import {
+    formatColumnName,
+    formatData,
+    getGroupableField,
+    getNotGroupableField
+} from '../Utils'
+import { tooltipCharts } from '../Tooltips'
+import { ChataUtils } from '../ChataUtils'
+
 export function createPieChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = 20;
     var width = component.parentElement.clientWidth;
@@ -90,8 +111,6 @@ export function createPieChart(component, json, options, fromChataUtils=true, va
     var legendRectSize = 15;
     var legendSpacing = 1;
 
-    // define color scale
-    var color = getColorScale(data, options.themeConfig.chartColors)
 
     var svg = chataD3.select(component)
     .append('svg')
@@ -110,8 +129,15 @@ export function createPieChart(component, json, options, fromChataUtils=true, va
     var pie = getPie(
         (d) => { return d.value }
     )
-    var dataReady = pie(chataD3.entries(data))
+    var colorLabels = []
 
+    var dataReady = pie(Object.entries(data))
+    for (var i = 0; i < dataReady.length; i++) {
+        var d = dataReady[i]
+        colorLabels.push(d.data.key);
+    }
+
+    var color = getColorScale(colorLabels, options.themeConfig.chartColors)
     // creating the chart
     var path = pieChartContainer.selectAll('path')
     .data(dataReady)
@@ -126,11 +152,7 @@ export function createPieChart(component, json, options, fromChataUtils=true, va
             d.value, cols[index2],
             options
         ))
-        if(getD3Version() === '3'){
-            chataD3.select(this)[0][0].style.fill = color(d.data.key)
-        }else{
-            chataD3.select(this)._groups[0][0].style.fill = color(d.data.key)
-        }
+        chataD3.select(this)._groups[0][0].style.fill = color(d.data.key)
     })
     .attr('d', arc)
     .style('fill-opacity', 0.85)
@@ -196,7 +218,7 @@ export function createPieChart(component, json, options, fromChataUtils=true, va
     }
 
     const legendWrapLength = width / 2 - 50
-    legendScale = getColorScale(labels, options.themeConfig.chartColors)
+    var legendScale = getColorScale(labels, options.themeConfig.chartColors)
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical');
 
     svgLegend.call(legendOrdinal)

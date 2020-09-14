@@ -1,3 +1,37 @@
+import * as chataD3 from 'd3'
+import { ChataChartListPopover } from './ChataChartListPopover'
+import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
+
+import {
+    enumerateCols,
+    getIndexesByType,
+    getMetadataElement,
+    makeGroups,
+    getMinAndMaxValues,
+    formatLabel,
+    getVisibleSeries,
+    groupBy
+} from './ChataChartHelpers'
+import {
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+    getBandWidth,
+    getColorScale,
+    getLegend,
+    getLine
+} from './d3-compatibility'
+import {
+    formatColumnName,
+    getStringWidth,
+    formatData,
+    formatChartData,
+    closeAllChartPopovers,
+} from '../Utils'
+import { tooltipCharts } from '../Tooltips'
+
 export function createLineChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 15, right: 10, bottom: 50, left: 90, marginLabel: 40, bottomChart: 0},
     width = component.parentElement.clientWidth - margin.left;
@@ -206,8 +240,8 @@ export function createLineChart(component, json, options, onUpdate=()=>{}, fromC
         labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartSeriesPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: event.clientX,
+                top: event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createLineChart(
@@ -265,8 +299,8 @@ export function createLineChart(component, json, options, onUpdate=()=>{}, fromC
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: event.clientX,
+                top: event.clientY
             }, xIndexes, (evt, popover) => {
                 var xAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
