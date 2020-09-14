@@ -1,7 +1,9 @@
 import * as chataD3 from 'd3'
+import { legendColor } from 'd3-svg-legend'
+import { symbolCircle } from 'd3-shape'
 
-export const SCALE_LINEAR = chataD3.scaleLinear || chataD3.scale.linear;
-export const SCALE_BAND = chataD3.scaleBand || chataD3.scale.ordinal;
+export const SCALE_LINEAR = chataD3.scaleLinear;
+export const SCALE_BAND = chataD3.scaleBand;
 
 export const getD3Version = () => {
     return chataD3.version.split('.')[0];
@@ -66,11 +68,11 @@ export const getArea = (xFn, y0Fn, y1Fn) => {
 }
 
 export const getLegend = (scale, legendWrapLength, orient) => {
-    return chataD3.legendColor()
+    return legendColor()
     .shape(
         'path',
         chataD3.symbol()
-        .type(chataD3.symbolCircle)
+        .type(symbolCircle)
         .size(75)()
     )
     .orient(orient)

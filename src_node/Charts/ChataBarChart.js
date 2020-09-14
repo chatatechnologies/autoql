@@ -267,8 +267,8 @@ export function createBarChart(component, json, options, onUpdate=()=>{}, fromCh
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: evt.clientX,
+                top: evt.clientY
             }, yIndexes, (evt, popover) => {
                 var yAxisIndex = evt.target.dataset.popoverIndex;
                 var currentLi = evt.target.dataset.popoverPosition;
@@ -330,8 +330,8 @@ export function createBarChart(component, json, options, onUpdate=()=>{}, fromCh
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartSeriesPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: evt.clientX,
+                top: evt.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createBarChart(
