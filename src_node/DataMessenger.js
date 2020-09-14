@@ -2335,7 +2335,7 @@ export function DataMessenger(elem, options){
             'autoql-vanilla-chata-response-content-container'
         );
 
-        messageBubble.appendChild(toolbarButtons = obj.getActionToolbar(
+        messageBubble.appendChild(obj.getActionToolbar(
             uuid, 'safety-net', ''
         ))
 
@@ -2395,7 +2395,7 @@ export function DataMessenger(elem, options){
         containerMessage.setAttribute('data-bubble-id', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response')
-        toolbarButtons = obj.getActionToolbar(
+        var toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );
 

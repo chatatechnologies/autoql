@@ -1,4 +1,7 @@
 import * as chataD3 from 'd3'
+import { ChataChartListPopover } from './ChataChartListPopover'
+import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
+
 import {
     enumerateCols,
     getIndexesByType,
@@ -15,7 +18,8 @@ import {
     getAxisLeft,
     setDomainRange,
     getBandWidth,
-    getColorScale
+    getColorScale,
+    getLegend
 } from './d3-compatibility'
 import {
     formatColumnName,
