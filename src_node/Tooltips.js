@@ -4,6 +4,7 @@ import 'tippy.js/dist/tippy.css';
 export function refreshTooltips(){
     tippy('.chata-interpretation', {
         theme: 'chata-theme',
+        allowHTML: true,
         onShow: function(instance){
             var data = ChataUtils.responses[instance.reference.dataset.id]['data'];
             var content  = `
@@ -18,6 +19,7 @@ export function refreshTooltips(){
     });
     tippy('[data-tippy-content]', {
         theme: 'chata-theme',
+        allowHTML: true,
         delay: [500],
         dynamicTitle: true
     })
@@ -40,6 +42,7 @@ export function tooltipCharts(){
 
     tippy('.tooltip-2d', {
         theme: 'chata-theme',
+        allowHTML: true,
         onShow: function(instance){
             instance.setContent(
                 get2dContent(instance)
@@ -49,6 +52,7 @@ export function tooltipCharts(){
 
     tippy('.tooltip-3d', {
         theme: 'chata-theme',
+        allowHTML: true,
         onShow: function(instance){
             var dataset = instance.reference.dataset;
             var content = get2dContent(instance);

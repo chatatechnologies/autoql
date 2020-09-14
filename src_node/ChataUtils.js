@@ -13,6 +13,7 @@ import {
     TICK
 } from './Svg'
 import { Modal } from './Modal'
+import { AntdMessage } from './AntdMessage'
 import '../css/PopoverMenu.css'
 
 
