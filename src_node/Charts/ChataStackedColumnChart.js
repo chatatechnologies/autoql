@@ -1,4 +1,37 @@
-export function createStackedColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
+import * as chataD3 from 'd3'
+import { ChataChartListPopover } from './ChataChartListPopover'
+import { tooltipCharts } from '../Tooltips'
+import {
+    getGroupableFields,
+    getMetadataElement,
+    formatLabel,
+    getVisibleGroups,
+} from './ChataChartHelpers'
+import {
+    getColorScale,
+    getStackedData,
+    getLegend,
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+} from './d3-compatibility'
+import {
+    getStringWidth,
+    getNotGroupableField,
+    cloneObject,
+    formatChartData,
+    formatColumnName,
+    closeAllChartPopovers,
+    formatData
+} from '../Utils'
+import { ChataUtils } from '../ChataUtils'
+
+export function createStackedColumnChart(
+    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+    valueClass='data-stackedchartindex', renderTooltips=true){
+
     var margin = {top: 5, right: 10, bottom: 60, left: 80, bottomChart: 0},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
@@ -53,9 +86,12 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
         json, groups, metadataComponent.metadata3D
     );
 
-    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
-    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
-    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
+    var colStr1 = cols[groupableIndex1]['display_name']
+    || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name']
+    || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name']
+    || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
@@ -84,7 +120,10 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+            height =
+            component.parentElement.parentElement.clientHeight - (
+                margin.top + margin.bottom + 3
+            );
 
             if(height < 250){
                 height = 300;
@@ -93,7 +132,10 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight
+        - (
+            margin.bottom + margin.top
+        );
     }
     component.innerHTML = '';
     component.innerHTML = '';
@@ -104,7 +146,9 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -162,15 +206,18 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartListPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: evt.clientX,
+                top: evt.clientY
             }, groupCols, (evt, popover) => {
 
                 var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+                var oldGroupable
+                = metadataComponent.metadata3D.groupBy.groupable2;
                 if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                    metadataComponent.metadata3D.groupBy.groupable2
+                    = selectedIndex;
+                    metadataComponent.metadata3D.groupBy.groupable1
+                    = oldGroupable;
                     createStackedColumnChart(
                         component,
                         json,
@@ -212,7 +259,9 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
     }
     if(rotateLabels){
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
+        .attr(
+            "transform", "translate(0," + (height - margin.bottomChart) + ")"
+        )
         .call(xAxis.tickFormat(function(d){
             return formatLabel(
                 formatChartData(d, cols[groupableIndex2], options)
@@ -224,7 +273,9 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
         .style("text-anchor", "end");
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
+        .attr(
+            "transform", "translate(0," + (height - margin.bottomChart) + ")"
+        )
         .call(xAxis.tickFormat(function(d){
             return formatLabel(
                 formatChartData(d, cols[groupableIndex2], options)
@@ -313,7 +364,9 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
                 .attr('data-unformatvalue3', d.value)
                 .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
             }else{
-                chataD3.select(this).attr('class','autoql-vanilla-stacked-rect')
+                chataD3.select(this).attr(
+                    'class','autoql-vanilla-stacked-rect'
+                )
             }
         })
         .attr('opacity', '0.7')
@@ -350,7 +403,7 @@ export function createStackedColumnChart(component, json, options, onUpdate=()=>
     const legendValues = subgroups.map(elem => {
         return formatChartData(elem, cols[groupableIndex1], options);
     });
-    legendScale = getColorScale(
+    var legendScale = getColorScale(
         legendValues,
         options.themeConfig.chartColors
     )

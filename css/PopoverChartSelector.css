@@ -17,6 +17,7 @@
     max-height: 300px;
     min-width: 150px;
     overflow-y: auto;
+    overflow-x: hidden;
 }
 
 .autoql-vanilla-axis-selector-container .autoql-vanilla-axis-selector-content {

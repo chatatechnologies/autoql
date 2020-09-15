@@ -28,7 +28,10 @@ import {
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 
-export function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
+export function createStackedBarChart(
+    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+    valueClass='data-stackedchartindex', renderTooltips=true){
+
     var margin = {top: 5, right: 10, bottom: 30, left: 142, chartLeft: 140},
     width = component.parentElement.clientWidth - margin.left;
     margin.chartLeft = 90;
@@ -96,9 +99,12 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
         json, groups, metadataComponent.metadata3D
     );
 
-    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
-    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
-    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
+    var colStr1 = cols[groupableIndex1]['display_name']
+    || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name']
+    || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name']
+    || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
@@ -106,7 +112,9 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
     const tickWidth = (width - margin.left - margin.right) / 6
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight - (
+                margin.top + margin.bottom + 3
+            );
             if(height < 250){
                 height = 300;
             }
@@ -114,7 +122,9 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight - (
+            margin.bottom + margin.top
+        );
     }
     component.innerHTML = '';
     component.innerHTML = '';
@@ -125,7 +135,9 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
@@ -186,14 +198,17 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
         labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartListPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: evt.clientX,
+                top: evt.clientY
             }, groupCols, (evt, popover) => {
                 var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+                var oldGroupable
+                = metadataComponent.metadata3D.groupBy.groupable2;
                 if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                    metadataComponent.metadata3D.groupBy.groupable2
+                    = selectedIndex;
+                    metadataComponent.metadata3D.groupBy.groupable1
+                    = oldGroupable;
                     createStackedBarChart(
                         component,
                         json,
@@ -376,7 +391,9 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
 
         createBars();
         const legendCell = chataD3.select(this);
-        legendCell.classed('disable-group', !legendCell.classed('disable-group'));
+        legendCell.classed(
+            'disable-group', !legendCell.classed('disable-group')
+        );
     });
     svgLegend.call(legendOrdinal)
 
