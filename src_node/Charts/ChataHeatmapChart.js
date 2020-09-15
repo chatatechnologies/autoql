@@ -1,3 +1,26 @@
+import * as chataD3 from 'd3'
+import {
+    formatLabel,
+    getGroupableFields,
+    formatDataToHeatmap
+} from './ChataChartHelpers'
+import {
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+    getBandWidth,
+} from './d3-compatibility'
+import {
+    formatColumnName,
+    formatData,
+    formatLabels,
+    getNotGroupableField,
+} from '../Utils'
+import { tooltipCharts } from '../Tooltips'
+import { ChataUtils } from '../ChataUtils'
+
 export function createHeatmap(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;

@@ -1,3 +1,34 @@
+import * as chataD3 from 'd3'
+import { ChataChartListPopover } from './ChataChartListPopover'
+import { tooltipCharts } from '../Tooltips'
+import {
+    getGroupableFields,
+    getMetadataElement,
+    formatLabel,
+    getVisibleGroups,
+} from './ChataChartHelpers'
+import {
+    getColorScale,
+    getLegend,
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+    getStackedAreaData,
+    getArea
+} from './d3-compatibility'
+import {
+    getStringWidth,
+    getNotGroupableField,
+    cloneObject,
+    formatChartData,
+    formatColumnName,
+    closeAllChartPopovers,
+    formatData
+} from '../Utils'
+import { ChataUtils } from '../ChataUtils'
+
 export function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 15, right: 10, bottom: 50, left: 80},
     width = component.parentElement.clientWidth - margin.left;
@@ -163,8 +194,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
             var popoverSelector = new ChataChartListPopover({
-                left: chataD3.event.clientX,
-                top: chataD3.event.clientY
+                left: evt.clientX,
+                top: evt.clientY
             }, groupCols, (evt, popover) => {
 
                 var selectedIndex = evt.target.dataset.popoverIndex;
@@ -203,15 +234,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         0
     )
 
-    // .domain()
-    // .range([0, chartWidth])
-    if(getD3Version() === '3'){
-        // x.padding([1,0])
-        // x.rangeRoundBands([0, chartWidth], [0, 1]);
-    }else{
-        x.paddingInner(1)
-        .paddingOuter(0)
-    }
+    x.paddingInner(1)
+    .paddingOuter(0)
 
     var xAxis = getAxisBottom(x);
 
@@ -377,7 +401,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     .style('font-size', '10px')
 
     const legendWrapLength = wLegendBox - 28;
-    legendScale = getColorScale(
+    var legendScale = getColorScale(
         subgroups.map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);
         }),

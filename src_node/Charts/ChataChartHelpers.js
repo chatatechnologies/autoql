@@ -1,5 +1,11 @@
 import * as chataD3 from 'd3'
-import { cloneObject, formatColumnName } from '../Utils'
+import {
+    cloneObject,
+    formatColumnName,
+    getGroupableField,
+    getNotGroupableField,
+    formatData
+} from '../Utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -280,4 +286,30 @@ export const getChartDimensions = (chatContainer, displayType) => {
         width: chartWidth,
         heigth: chartHeight
     }
+}
+
+export function formatDataToHeatmap(json, options){
+    var lines = json['data']['rows'];
+    var values = [];
+    var groupables = getGroupableFields(json);
+    var notGroupableField = getNotGroupableField(json);
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
+    var notGroupableIndex = notGroupableField.indexCol;
+
+    var col1 = json['data']['columns'][groupableIndex1];
+    var col2 = json['data']['columns'][groupableIndex2];
+
+    for (var i = 0; i < lines.length; i++) {
+        var data = lines[i];
+        var row = {};
+        row['labelY'] = formatData(data[groupableIndex1], col1, options);
+        row['labelX'] = formatData(data[groupableIndex2], col2, options);
+        row['unformatY'] = data[groupableIndex1];
+        row['unformatX'] = data[groupableIndex2];
+        var value = parseFloat(data[notGroupableIndex]);
+        row['value'] = value;
+        values.push(row);
+    }
+    return values;
 }
