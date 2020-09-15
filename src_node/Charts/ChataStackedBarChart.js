@@ -1,3 +1,33 @@
+import * as chataD3 from 'd3'
+import { ChataChartListPopover } from './ChataChartListPopover'
+import { tooltipCharts } from '../Tooltips'
+import {
+    getGroupableFields,
+    getMetadataElement,
+    formatLabel,
+    getVisibleGroups,
+} from './ChataChartHelpers'
+import {
+    getColorScale,
+    getStackedData,
+    getLegend,
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+} from './d3-compatibility'
+import {
+    getStringWidth,
+    getNotGroupableField,
+    cloneObject,
+    formatChartData,
+    formatColumnName,
+    closeAllChartPopovers,
+    formatData
+} from '../Utils'
+import { ChataUtils } from '../ChataUtils'
+
 export function createStackedBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true){
     var margin = {top: 5, right: 10, bottom: 30, left: 142, chartLeft: 140},
     width = component.parentElement.clientWidth - margin.left;
@@ -333,7 +363,7 @@ export function createStackedBarChart(component, json, options, onUpdate=()=>{},
     const legendValues = subgroups.map(elem => {
         return formatChartData(elem, cols[groupableIndex1], options);
     });
-    legendScale = getColorScale(
+    var legendScale = getColorScale(
         legendValues,
         options.themeConfig.chartColors
     )

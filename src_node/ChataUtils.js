@@ -4,7 +4,8 @@ import {
     closeAllToolbars,
     closeAllSafetynetSelectors,
     formatColumnName,
-    allColHiddenMessage
+    allColHiddenMessage,
+    getNotGroupableField
 } from './Utils'
 import {
     DOWNLOAD_CSV_ICON,
