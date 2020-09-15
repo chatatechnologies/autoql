@@ -2,7 +2,9 @@ import { ChataUtils } from './ChataUtils';
 import Tabulator from 'tabulator-tables';
 import {
     formatData,
-    formatColumnName
+    formatColumnName,
+    getDatePivotArray,
+    getPivotColumnArray,
 } from './Utils';
 import '../css/Tabulator.css';
 import '../css/TabulatorBootstrap.css';
@@ -97,7 +99,7 @@ function getPivotData(pivotArray, pivotColumns){
         var line = pivotArray[i];
         var row = {};
         for (var x = 0; x < line.length; x++) {
-            colName = pivotColumns[x].field;
+            var colName = pivotColumns[x].field;
             row[colName] = line[x];
         }
         tableData.push(row);

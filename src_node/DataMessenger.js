@@ -1,6 +1,7 @@
 import { Cascader } from './Cascader'
 import { ChataTable, ChataPivotTable } from './ChataTable'
 import { ChataUtils } from './ChataUtils'
+import { select } from 'd3-selection';
 import {
     getSpeech,
     getActiveIntegrator,
@@ -10,7 +11,8 @@ import {
     getSupportedDisplayTypes,
     allColHiddenMessage,
     closeAllToolbars,
-    mouseY
+    mouseY,
+    cloneObject
 } from './Utils'
 import {
     createAreaChart,
@@ -1892,7 +1894,7 @@ export function DataMessenger(elem, options){
         table.parentContainer = obj.getParentFromComponent(component);
         allColHiddenMessage(component);
         obj.setHeightBubble(component);
-        chataD3.select(window).on('chata-resize.'+idRequest, null);
+        select(window).on('chata-resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
@@ -1944,7 +1946,7 @@ export function DataMessenger(elem, options){
             idRequest, obj.options, obj.onCellClick
         );
         obj.setHeightBubble(component);
-        chataD3.select(window).on('chata-resize.'+idRequest, null);
+        select(window).on('chata-resize.'+idRequest, null);
 
         component.tabulator = table;
     }
