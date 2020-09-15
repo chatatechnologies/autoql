@@ -14,7 +14,8 @@ import {
     closeAllToolbars,
     mouseY,
     cloneObject,
-    getNumberOfGroupables
+    getNumberOfGroupables,
+    formatData
 } from './Utils'
 import {
     createAreaChart,
@@ -2367,7 +2368,7 @@ export function DataMessenger(elem, options){
         messageBubble.classList.add('no-hover-response')
 
         if(withDeleteBtn){
-            toolbarButtons = obj.getActionToolbar(
+            var toolbarButtons = obj.getActionToolbar(
                 uuid, 'safety-net', ''
             );
             messageBubble.appendChild(toolbarButtons);

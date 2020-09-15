@@ -6,7 +6,10 @@ import {
     closeAllSafetynetSelectors,
     formatColumnName,
     allColHiddenMessage,
-    getNotGroupableField
+    getNotGroupableField,
+    getSVGString,
+    copyTextToClipboard,
+    svgString2Image
 } from './Utils'
 import {
     DOWNLOAD_CSV_ICON,

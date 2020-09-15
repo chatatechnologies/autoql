@@ -5,6 +5,7 @@ import {
     formatColumnName,
     getDatePivotArray,
     getPivotColumnArray,
+    cloneObject
 } from './Utils';
 import '../css/Tabulator.css';
 import '../css/TabulatorBootstrap.css';
