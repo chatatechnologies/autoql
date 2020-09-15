@@ -1,4 +1,30 @@
-export function createBubbleChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+import * as chataD3 from 'd3'
+import {
+    formatLabel,
+    getGroupableFields,
+    formatDataToHeatmap
+} from './ChataChartHelpers'
+import {
+    SCALE_BAND,
+    SCALE_LINEAR,
+    getAxisBottom,
+    getAxisLeft,
+    setDomainRange,
+    getBandWidth,
+} from './d3-compatibility'
+import {
+    formatColumnName,
+    formatData,
+    formatLabels,
+    getNotGroupableField,
+} from '../Utils'
+import { tooltipCharts } from '../Tooltips'
+import { ChataUtils } from '../ChataUtils'
+
+export function createBubbleChart(
+    component, json, options, fromChataUtils=true,
+    valueClass='data-chartindex', renderTooltips=true){
+        
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
 
@@ -22,16 +48,21 @@ export function createBubbleChart(component, json, options, fromChataUtils=true,
 
 
     var height;
-    var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
-    var colStr2 = cols[groupableIndex2]['display_name'] || cols[groupableIndex2]['name'];
-    var colStr3 = cols[notGroupableIndex]['display_name'] || cols[notGroupableIndex]['name'];
+    var colStr1 = cols[groupableIndex1]['display_name']
+    || cols[groupableIndex1]['name'];
+    var colStr2 = cols[groupableIndex2]['display_name']
+    || cols[groupableIndex2]['name'];
+    var colStr3 = cols[notGroupableIndex]['display_name']
+    || cols[notGroupableIndex]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight - (
+                margin.top + margin.bottom + 3
+            );
             if(height < 250){
                 height = 300;
             }
@@ -39,7 +70,9 @@ export function createBubbleChart(component, json, options, fromChataUtils=true,
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight - (
+            margin.bottom + margin.top
+        );
     }
     component.innerHTML = '';
     component.innerHTML = '';
@@ -50,7 +83,9 @@ export function createBubbleChart(component, json, options, fromChataUtils=true,
         component.headerElement = null;
     }
     component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+    component.parentElement.classList.add(
+        'autoql-vanilla-chata-chart-container'
+    );
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );

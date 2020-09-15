@@ -2,6 +2,7 @@ import { Cascader } from './Cascader'
 import { ChataTable, ChataPivotTable } from './ChataTable'
 import { ChataUtils } from './ChataUtils'
 import { select } from 'd3-selection';
+import { getGroupableFields } from './Charts/ChataChartHelpers'
 import {
     getSpeech,
     getActiveIntegrator,
@@ -12,7 +13,8 @@ import {
     allColHiddenMessage,
     closeAllToolbars,
     mouseY,
-    cloneObject
+    cloneObject,
+    getNumberOfGroupables
 } from './Utils'
 import {
     createAreaChart,

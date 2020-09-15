@@ -21,7 +21,10 @@ import {
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 
-export function createHeatmap(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+export function createHeatmap(
+    component, json, options, fromChataUtils=true,
+    valueClass='data-chartindex', renderTooltips=true){
+        
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
 
