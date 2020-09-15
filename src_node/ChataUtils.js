@@ -1,3 +1,4 @@
+import "regenerator-runtime/runtime.js";
 import {
     htmlToElement,
     closeAllChartPopovers,
@@ -264,8 +265,9 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     container.appendChild(document.createTextNode(
         'Please tell us more about the problem you are experiencing:'
     ));
-    container.appendChild(textArea);
+
     modal.addView(container);
+    modal.addView(textArea);
     modal.addFooterElement(cancelButton);
     modal.addFooterElement(reportButton);
 
