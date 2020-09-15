@@ -3,6 +3,7 @@ import { ChataTable, ChataPivotTable } from './ChataTable'
 import { ChataUtils } from './ChataUtils'
 import { select } from 'd3-selection';
 import { getGroupableFields } from './Charts/ChataChartHelpers'
+import { createSafetynetContent, createSuggestionArray } from './Safetynet'
 import {
     getSpeech,
     getActiveIntegrator,

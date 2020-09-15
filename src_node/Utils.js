@@ -1,4 +1,5 @@
 import { ChataUtils } from './ChataUtils'
+import { DataMessenger } from './DataMessenger'
 import { WARNING, COLUMN_EDITOR } from './Svg'
 import moment from 'moment'
 
