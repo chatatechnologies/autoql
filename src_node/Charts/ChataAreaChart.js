@@ -299,8 +299,6 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         var visibleGroups = getVisibleGroups(allSubgroups);
         var stackedData = getStackedAreaData(visibleGroups, data);
 
-        console.log(stackedData);
-
         if(layers)layers.remove();
         if(layerPoints)layers.remove();
 
@@ -331,7 +329,6 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .enter()
         .append("path")
         .style("fill", function(d, i) {
-            console.log(d.key);
             if(d[i]) return color(d.key); else return 'transparent'
         })
         .attr('opacity', '0.7')
@@ -350,11 +347,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr("fill", 'transparent')
         .attr("fill-opacity", '1')
         .each(function(d, i){
-            console.log(d.y);
-            console.log(d.group);
-            console.log(d.key);
             if(d.y && d.group && d.key){
-                console.log('IFFF');
                 chataD3.select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
@@ -410,7 +403,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
 
     legendOrdinal.on('cellclick', function(d) {
-        var unformatGroup = legendGroups[d].value;
+        var unformatGroup = legendGroups[d.target.textContent].value;
         allSubgroups[unformatGroup].isVisible =
         !allSubgroups[unformatGroup].isVisible;
 

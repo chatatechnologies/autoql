@@ -9,7 +9,8 @@ import {
     makeGroups,
     getMinAndMaxValues,
     formatLabel,
-    getVisibleSeries
+    getVisibleSeries,
+    toggleSerie
 } from './ChataChartHelpers'
 import {
     SCALE_BAND,
@@ -31,8 +32,18 @@ import {
 import { tooltipCharts } from '../Tooltips'
 
 
-export function createBarChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 5, right: 10, bottom: 60, left: 160, marginLabel: 50, chartLeft: 120, bottomChart: 60},
+export function createBarChart(
+    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+    valueClass='data-chartindex', renderTooltips=true){
+    var margin = {
+        top: 5,
+        right: 10,
+        bottom: 60,
+        left: 160,
+        marginLabel: 50,
+        chartLeft: 120,
+        bottomChart: 60
+    },
     width = component.parentElement.clientWidth - margin.left;
     var height;
     var cols = enumerateCols(json);
@@ -468,7 +479,7 @@ export function createBarChart(component, json, options, onUpdate=()=>{}, fromCh
         legendOrdinal.shapePadding(shapePadding);
 
         legendOrdinal.on('cellclick', function(d) {
-            data = toggleSerie(data, d.trim());
+            data = toggleSerie(data, d.target.textContent.trim());
             createBars();
             const legendCell = chataD3.select(this);
             legendCell.classed('disable-group', !legendCell.classed('disable-group'));

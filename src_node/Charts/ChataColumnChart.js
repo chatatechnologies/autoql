@@ -9,7 +9,8 @@ import {
     makeGroups,
     getMinAndMaxValues,
     formatLabel,
-    getVisibleSeries
+    getVisibleSeries,
+    toggleSerie
 } from './ChataChartHelpers'
 import {
     SCALE_BAND,
@@ -30,9 +31,17 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
-export function createColumnChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+export function createColumnChart(
+    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-    var margin = {top: 15, right: 10, bottom: 60, left: 90, marginLabel: 50, bottomChart: 50},
+    var margin = {
+        top: 15,
+        right: 10,
+        bottom: 60,
+        left: 90,
+        marginLabel: 50,
+        bottomChart: 50
+    },
     width = component.parentElement.clientWidth - margin.left;
     var height;
 
@@ -441,10 +450,12 @@ export function createColumnChart(component, json, options, onUpdate=()=>{}, fro
 
 
         legendOrdinal.on('cellclick', function(d) {
-            data = toggleSerie(data, d.trim());
+            data = toggleSerie(data, d.target.textContent.trim());
             createBars();
             const legendCell = chataD3.select(this);
-            legendCell.classed('disable-group', !legendCell.classed('disable-group'));
+            legendCell.classed(
+                'disable-group', !legendCell.classed('disable-group')
+            );
         });
         svgLegend.call(legendOrdinal)
 

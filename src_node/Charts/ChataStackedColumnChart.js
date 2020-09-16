@@ -410,7 +410,7 @@ export function createStackedColumnChart(
 
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
     .on('cellclick', function(d) {
-        var unformatGroup = legendGroups[d].value;
+        var unformatGroup = legendGroups[d.target.textContent].value;
         allSubgroups[unformatGroup].isVisible =
         !allSubgroups[unformatGroup].isVisible;
 

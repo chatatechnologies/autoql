@@ -19,7 +19,10 @@ import {
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 
-export function createPieChart(component, json, options, fromChataUtils=true, valueClass='data-chartindex', renderTooltips=true){
+export function createPieChart(
+    component, json, options, fromChataUtils=true,
+    valueClass='data-chartindex', renderTooltips=true){
+
     var margin = 20;
     var width = component.parentElement.clientWidth;
     var pieWidth;
