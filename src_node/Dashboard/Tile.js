@@ -15,6 +15,18 @@ import {
 import { Modal } from '../Modal'
 import { ChataInput, InputContainer } from '../ChataComponents'
 import { ChataUtils } from '../ChataUtils'
+import { ChataTable, ChataPivotTable } from '../ChataTable'
+import {
+    createAreaChart,
+    createBarChart,
+    createBubbleChart,
+    createColumnChart,
+    createHeatmap,
+    createLineChart,
+    createPieChart,
+    createStackedBarChart,
+    createStackedColumnChart
+} from '../Charts'
 
 export function Tile(dashboard, options={}){
     var chataDashboardItem = document.createElement('div');

@@ -30,7 +30,7 @@ export function Dashboard(selector, options={}){
             domain: undefined,
             demo: false
         },
-        dataFormatting:{
+        dataFormatting: {
             currencyCode: 'USD',
             languageCode: 'en-US',
             currencyDecimals: 2,
