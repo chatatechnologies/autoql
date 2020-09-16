@@ -1,3 +1,6 @@
+import { DASHBOARD_LIGHT_THEME } from '../Constants'
+import Muuri from 'Muuri'
+
 export function Dashboard(selector, options={}){
     var items = [];
     var obj = this;
@@ -168,7 +171,7 @@ export function Dashboard(selector, options={}){
     obj.grid = grid;
     obj.tiles = items;
 
-    for (var i = 0; i < options.tiles.length; i++) {
+    for (var i = 0; i < obj.options.tiles.length; i++) {
         var opts = {
             ...options.tiles[i]
         }

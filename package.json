@@ -39,6 +39,7 @@
     "d3": "^6.1.1",
     "d3-svg-legend": "^2.25.6",
     "moment": "^2.27.0",
+    "muuri": "^0.9.3",
     "regenerator-runtime": "^0.13.7",
     "style-loader": "^1.2.1",
     "tabulator-tables": "^4.8.0",
