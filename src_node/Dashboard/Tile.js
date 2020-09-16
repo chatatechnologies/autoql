@@ -1,6 +1,8 @@
 import {
     htmlToElement,
-    uuidv4
+    uuidv4,
+    getSupportedDisplayTypes,
+    createTableContainer
 } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
@@ -11,6 +13,8 @@ import {
     NOTEBOOK
 } from '../Svg'
 import { Modal } from '../Modal'
+import { ChataInput, InputContainer } from '../ChataComponents'
+import { ChataUtils } from '../ChataUtils'
 
 export function Tile(dashboard, options={}){
     var chataDashboardItem = document.createElement('div');
@@ -22,8 +26,6 @@ export function Tile(dashboard, options={}){
     var tileResponseContainer = document.createElement('div');
     var resizeHandler = document.createElement('span');
     var deleteButton = document.createElement('span');
-    // var inputQuery = document.createElement('input');
-    // var inputTitle = document.createElement('input');
     var tilePlayBuytton = document.createElement('div');
     var placeHolderDrag = document.createElement('div');
 
@@ -34,7 +36,9 @@ export function Tile(dashboard, options={}){
     `);
 
     var vizToolbarSplitButton = htmlToElement(`
-        <button class="autoql-vanilla-chata-toolbar-btn" data-tippy-content="Split View">
+        <button
+        class="autoql-vanilla-chata-toolbar-btn"
+        data-tippy-content="Split View">
         </button>
     `);
 
@@ -156,19 +160,11 @@ export function Tile(dashboard, options={}){
         'autoql-vanilla-dashboard-tile-response-container'
     );
     tileResponseContainer.classList.add('chata-flex');
-    // tileResponseContainer.classList.add('chata-hidden-scrollbox');
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
     resizeHandler.classList.add('autoql-vanilla-resize-handler');
-    // inputQuery.classList.add('autoql-vanilla-dashboard-tile-input');
-    // inputTitle.classList.add('autoql-vanilla-dashboard-tile-input');
     tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button');
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button');
     placeHolderDrag.classList.add('autoql-vanilla-item-content');
-    // inputQuery.classList.add('query');
-    // inputTitle.classList.add('title');
-
-    // inputQuery.setAttribute('placeholder', 'Query');
-    // inputTitle.setAttribute('placeholder', 'Title (optional)');
 
     tilePlayBuytton.innerHTML = TILE_RUN_QUERY;
     deleteButton.innerHTML = DASHBOARD_DELETE_ICON;
@@ -210,8 +206,6 @@ export function Tile(dashboard, options={}){
     queryInput2.input.classList.add('autoql-vanilla-icon-blue');
     queryInput.input.classList.add('query');
     queryInput2.input.classList.add('title');
-    // tileInputContainer.appendChild(inputQuery);
-    // tileInputContainer.appendChild(inputTitle);
     tileInputContainer.appendChild(inputContainer1);
     tileInputContainer.appendChild(inputContainer2);
 
@@ -468,7 +462,6 @@ export function Tile(dashboard, options={}){
                         'dashboards.user', false, false
                     );
                 }
-                // tileResponseContainer.removeChild(loadingContainer);
                 tileResponseContainer.innerHTML = '';
                 tileResponseContainer.classList.remove('chata-flex');
                 chataDashboardItem.views.map(view => {
@@ -688,7 +681,6 @@ function TileView(dashboard, chataDashboardItem,
     );
     tileWrapper.classList.add('autoql-vanilla-chata-tile-wrapper');
     tileWrapper.setAttribute('id', responseUUID);
-    // tileWrapper.setAttribute('data-componentid', responseUUID);
 
     obj.uuid = responseUUID;
     obj.tileWrapper = tileWrapper;
@@ -922,7 +914,6 @@ function TileView(dashboard, chataDashboardItem,
     }
 
     obj.copyMetadata = () => {
-        // tileResponseContainer.metadata
         console.log(parentChartDrilldownContainer);
         chartDrilldownContainer.metadata = tileWrapper.metadata
     }
@@ -934,7 +925,7 @@ function TileView(dashboard, chataDashboardItem,
         if(append){
             tileResponseContainer.appendChild(view);
         }
-        container = view;
+        var container = view;
         container.innerHTML = '';
         if(!supportedDisplayTypes.includes(displayType)){
             displayType = 'table';
