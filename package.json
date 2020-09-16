@@ -42,6 +42,7 @@
     "moment": "^2.27.0",
     "muuri": "^0.9.3",
     "regenerator-runtime": "^0.13.7",
+    "split.js": "^1.6.2",
     "style-loader": "^1.2.1",
     "tabulator-tables": "^4.8.0",
     "tippy.js": "^6.2.6"

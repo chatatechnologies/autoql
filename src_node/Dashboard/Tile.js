@@ -5,6 +5,7 @@ import {
     createTableContainer,
     cloneObject
 } from '../Utils'
+import Split from 'split.js'
 import { refreshTooltips } from '../Tooltips'
 import {
     SPLIT_VIEW,
@@ -305,6 +306,7 @@ export function Tile(dashboard, options={}){
         chataDashboardItem.style.height = newHeight + 'px';
 
         dashboard.grid.refreshItems(chataDashboardItem).layout();
+        dashboard.grid.refreshItems();
 
     }
 
