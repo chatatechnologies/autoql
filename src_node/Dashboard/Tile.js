@@ -2,7 +2,8 @@ import {
     htmlToElement,
     uuidv4,
     getSupportedDisplayTypes,
-    createTableContainer
+    createTableContainer,
+    cloneObject
 } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
@@ -10,7 +11,25 @@ import {
     TILE_RUN_QUERY,
     DASHBOARD_DELETE_ICON,
     QUERY,
-    NOTEBOOK
+    NOTEBOOK,
+    TABLE_ICON,
+    COLUMN_CHART_ICON,
+    BAR_CHART_ICON,
+    PIE_CHART_ICON,
+    LINE_CHART_ICON,
+    PIVOT_ICON,
+    HEATMAP_ICON,
+    BUBBLE_CHART_ICON,
+    STACKED_COLUMN_CHART_ICON,
+    STACKED_BAR_CHART_ICON,
+    STACKED_AREA_CHART_ICON,
+    REPORT_PROBLEM,
+    VERTICAL_DOTS,
+    SPLIT_VIEW_ACTIVE,
+    FILTER_TABLE,
+    COLUMN_EDITOR,
+    INPUT_BUBBLES,
+    LEFT_ARROW
 } from '../Svg'
 import { Modal } from '../Modal'
 import { ChataInput, InputContainer } from '../ChataComponents'
@@ -324,7 +343,7 @@ export function Tile(dashboard, options={}){
     chataDashboardItem.inputTitle.value = chataDashboardItem.options.title;
 
     const setState = (event, reference) => {
-        state = {
+        var state = {
             inputValue: event.target.value,
             element: reference,
         }

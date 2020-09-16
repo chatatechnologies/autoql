@@ -1,0 +1,57 @@
+.autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+    background: #fff;
+    line-height: 32px;
+    min-height: 34px;
+    padding: 0 10px;
+    width: 100%;
+    outline: none!important;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-transition-property: border-color,color,opacity;
+    transition-property: border-color,color,opacity;
+}
+
+.autoql-vanilla-chata-input-container .chata-input-icon {
+    position: absolute;
+    left: 12px;
+    top: 8px;
+    opacity: .4;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+}
+
+.autoql-vanilla-chata-input-container .chata-input-icon svg {
+    height: 17px;
+    width: 17px;
+}
+
+.autoql-vanilla-chata-input-container {
+    position: relative;
+    margin: 2px 5px;
+    display: inline-block;
+}
+
+.autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings {
+    border: 1px solid rgba(0,0,0,.1);
+    border-radius: 4px;
+    background: #fff;
+    line-height: 32px;
+    min-height: 34px;
+    padding: 0 10px;
+    width: 100%;
+    outline: none!important;
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    -webkit-transition-property: border-color,color,opacity;
+    transition-property: border-color,color,opacity;
+}
+
+.autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings.area{
+    overflow: auto;
+    resize: vertical;
+}
+.autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings.with-icon {
+    padding-left: 38px;
+}

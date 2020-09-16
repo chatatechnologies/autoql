@@ -1,7 +1,10 @@
+import '../../css/ChataInput.css'
+
+
 export function ChataInput(tag, elementProps, svgIcon=undefined){
     let input;
     input = document.createElement(tag);
-    input.classList.add('chata-input-settings')
+    input.classList.add('autoql-vanilla-chata-input-settings')
     if(tag === 'input'){
         input.classList.add('with-icon');
         var span = document.createElement('span');

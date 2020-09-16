@@ -40,7 +40,6 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    console.log(response.data[0].data);
     dashboard = new Dashboard('#dashboard', {
         authentication: {
             token: _token,
@@ -55,4 +54,5 @@ get(DASHBOARD_URL, {
         },
         tiles: response.data[0].data
     })
+    dashboard.startEditing()
 })
