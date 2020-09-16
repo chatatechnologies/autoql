@@ -1,5 +1,7 @@
 import { DASHBOARD_LIGHT_THEME } from '../Constants'
+import { Tile } from './Tile'
 import Muuri from 'Muuri'
+import '../../css/Dashboard.css'
 
 export function Dashboard(selector, options={}){
     var items = [];
@@ -170,8 +172,7 @@ export function Dashboard(selector, options={}){
 
     obj.grid = grid;
     obj.tiles = items;
-
-    for (var i = 0; i < obj.options.tiles.length; i++) {
+    for (var i = 0; i < options.tiles.length; i++) {
         var opts = {
             ...options.tiles[i]
         }

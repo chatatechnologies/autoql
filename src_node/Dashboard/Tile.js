@@ -1,3 +1,17 @@
+import {
+    htmlToElement,
+    uuidv4
+} from '../Utils'
+import { refreshTooltips } from '../Tooltips'
+import {
+    SPLIT_VIEW,
+    TILE_RUN_QUERY,
+    DASHBOARD_DELETE_ICON,
+    QUERY,
+    NOTEBOOK
+} from '../Svg'
+import { Modal } from '../Modal'
+
 export function Tile(dashboard, options={}){
     var chataDashboardItem = document.createElement('div');
     var itemContent = document.createElement('div');
@@ -40,23 +54,27 @@ export function Tile(dashboard, options={}){
         console.log(chataDashboardItem.options);
         const o = chataDashboardItem.options;
         return {
-            dataConfig: {numberColumnIndex: 0, numberColumnIndices: [0], stringColumnIndex: -1, stringColumnIndices: []},
-            displayType: o.displayType,
-            h: o.h,
-            i: o.i,
-            isNewTile: false,
-            key: o.key,
-            maxH: o.maxH,
-            minH: o.minH,
-            minW: o.minW,
-            moved: false,
-            query: o.query,
-            skipSafetyNet: false,
-            static: false,
-            title: o.title,
-            w: o.w,
-            x: o.x,
-            y: o.y
+            dataConfig: {
+                numberColumnIndex: 0,
+                numberColumnIndices: [0],
+                stringColumnIndex: -1,
+                stringColumnIndices: []},
+                displayType: o.displayType,
+                h: o.h,
+                i: o.i,
+                isNewTile: false,
+                key: o.key,
+                maxH: o.maxH,
+                minH: o.minH,
+                minW: o.minW,
+                moved: false,
+                query: o.query,
+                skipSafetyNet: false,
+                static: false,
+                title: o.title,
+                w: o.w,
+                x: o.x,
+                y: o.y
         }
     }
 
@@ -119,14 +137,24 @@ export function Tile(dashboard, options={}){
     chataDashboardItem.view = tileResponseContainer;
 
     chataDashboardItem.classList.add('autoql-vanilla-chata-dashboard-item');
-    chataDashboardItem.classList.add(`autoql-vanilla-chata-col-${chataDashboardItem.options.w}`);
+    chataDashboardItem.classList.add(
+        `autoql-vanilla-chata-col-${chataDashboardItem.options.w}`
+    );
     itemContent.classList.add('autoql-vanilla-item-content');
-    tileInputContainer.classList.add('autoql-vanilla-dashboard-tile-input-container');
-    tileTitleContainer.classList.add('autoql-vanilla-dashboard-tile-title-container');
+    tileInputContainer.classList.add(
+        'autoql-vanilla-dashboard-tile-input-container'
+    );
+    tileTitleContainer.classList.add(
+        'autoql-vanilla-dashboard-tile-title-container'
+    );
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container');
 
-    tileResponseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper');
-    tileResponseContainer.classList.add('autoql-vanilla-dashboard-tile-response-container');
+    tileResponseWrapper.classList.add(
+        'autoql-vanilla-dashboard-tile-response-wrapper'
+    );
+    tileResponseContainer.classList.add(
+        'autoql-vanilla-dashboard-tile-response-container'
+    );
     tileResponseContainer.classList.add('chata-flex');
     // tileResponseContainer.classList.add('chata-hidden-scrollbox');
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
@@ -365,7 +393,9 @@ export function Tile(dashboard, options={}){
             var splitContainer = document.createElement('div');
             var ids = [];
             vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
-            vizToolbarSplitButton.setAttribute('data-tippy-content','Single View');
+            vizToolbarSplitButton.setAttribute(
+                'data-tippy-content','Single View'
+            );
             chataDashboardItem.views.map(view => {
                 if(view.isSecond){
                     var viewUUID = view.uuid;
@@ -408,7 +438,9 @@ export function Tile(dashboard, options={}){
             chataDashboardItem.views[0].refreshView();
             tileResponseContainer.classList.add('chata-flex');
             vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
-            vizToolbarSplitButton.setAttribute('data-tippy-content','Split View');
+            vizToolbarSplitButton.setAttribute(
+                'data-tippy-content','Split View'
+            );
         }
         refreshTooltips();
     }
@@ -518,7 +550,8 @@ export function Tile(dashboard, options={}){
     };
 
     chataDashboardItem.updateSelectedBars = function(elem){
-        var selectedBars = chataDashboardItem.itemContent.getElementsByClassName('active');
+        var selectedBars =
+        chataDashboardItem.itemContent.getElementsByClassName('active');
         for (var i = 0; i < selectedBars.length; i++) {
             selectedBars[i].classList.remove('active');
         }
@@ -592,9 +625,11 @@ function InputToolbar(text, tileWrapper) {
 
     var btn = htmlToElement(`
         <button
-            class="autoql-vanilla-chata-toolbar-btn autoql-vanilla-input-toolbar-btn"
+            class="autoql-vanilla-chata-toolbar-btn
+            autoql-vanilla-input-toolbar-btn"
             data-tippy-content="Query">
-            <span class="autoql-vanilla-chata-icon autoql-vanilla-chata-toolbar-icon">
+            <span class="autoql-vanilla-chata-icon
+            autoql-vanilla-chata-toolbar-icon">
                 ${INPUT_BUBBLES}
             </span>
         </button>
@@ -645,8 +680,12 @@ function TileView(dashboard, chataDashboardItem,
     var modal = new Modal();
 
     modal.chataBody.classList.add('chata-modal-full-height');
-    drilldownTable.classList.add('autoql-vanilla-chata-dashboard-drilldown-table');
-    drilldownOriginal.classList.add('autoql-vanilla-chata-dashboard-drilldown-original');
+    drilldownTable.classList.add(
+        'autoql-vanilla-chata-dashboard-drilldown-table'
+    );
+    drilldownOriginal.classList.add(
+        'autoql-vanilla-chata-dashboard-drilldown-original'
+    );
     tileWrapper.classList.add('autoql-vanilla-chata-tile-wrapper');
     tileWrapper.setAttribute('id', responseUUID);
     // tileWrapper.setAttribute('data-componentid', responseUUID);
@@ -1302,7 +1341,9 @@ function TileView(dashboard, chataDashboardItem,
             if(!obj.internalQuery){
                 obj.internalQuery = chataDashboardItem.inputQuery.value;
             }
-            var inputToolbar = new InputToolbar(obj.internalQuery, tileWrapper);
+            var inputToolbar = new InputToolbar(
+                obj.internalQuery, tileWrapper
+            );
             obj.inputToolbar = inputToolbar;
             tileWrapper.appendChild(inputToolbar.tileToolbar);
             obj.inputToolbar.input.onkeypress = (evt) => {
