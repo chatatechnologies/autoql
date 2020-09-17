@@ -578,9 +578,21 @@ export function Notification(options, parentOptions){
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             ChataUtils.responses[uuid] = jsonResponse;
             console.log(jsonResponse);
-            item.displayType = jsonResponse.query_result['data']['display_type'];
             responseContentContainer.removeChild(dots);
-            item.refreshContent(jsonResponse);
+            if(jsonResponse.query_result.data){
+                item.displayType = jsonResponse.query_result['data']['display_type'];
+                item.refreshContent(jsonResponse);
+            }else{
+                responseContentContainer.innerHTML = `
+                    <span>Oops! It looks like our system is experiencing an issue.
+                    Try querying again. If the problem persists, please
+                    <a target="_blank" href="mailto:support@chata.ai">
+                        contact our team directly
+                    </a>.
+                    We'll look into this issue right away and
+                    be in touch with you shortly.</span>
+                `;
+            }
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
     }
 
