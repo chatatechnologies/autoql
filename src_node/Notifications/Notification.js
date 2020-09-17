@@ -1,5 +1,11 @@
-import { htmlToElement } from '../Utils'
-
+import { htmlToElement, uuidv4 } from '../Utils'
+import {
+    DISMISS,
+    CALENDAR,
+    TURN_ON_NOTIFICATION,
+    EDIT_NOTIFICATION
+} from '../Svg'
+import { convert } from '../RuleParser'
 
 export function Notification(options, parentOptions){
     var item = document.createElement('div')
@@ -103,7 +109,7 @@ export function Notification(options, parentOptions){
         <span class="chata-icon calendar">${CALENDAR}<span>
     `));
 
-    var parsedRules = RuleParser.convert(options.rule_expression);
+    var parsedRules = convert(options.rule_expression);
     for (var i = 0; i < parsedRules.length; i++) {
         var notificationReadOnlyGroup = document.createElement('div');
         notificationReadOnlyGroup.classList.add('notification-read-only-group')
@@ -168,7 +174,7 @@ export function Notification(options, parentOptions){
         }
         expandedContent.classList.toggle('visible');
         console.log(options.rule_expression);
-        console.log(RuleParser.convert(options.rule_expression));
+        console.log(convert(options.rule_expression));
         if(expandedContent.classList.contains('visible')){
             item.execute();
         }
