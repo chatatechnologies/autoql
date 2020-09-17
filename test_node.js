@@ -37,7 +37,7 @@ var datamessenger = new DataMessenger('#datamessenger', {
     placement: 'right'
 })
 
-let queryInput = new QueryInput('#query-input', {
+var queryInput = new QueryInput('#query-input', {
     authentication: {
         token: _token,
         apiKey: apiKey,
@@ -45,6 +45,11 @@ let queryInput = new QueryInput('#query-input', {
     },
     autoCompletePlacement: 'bottom',
 });
+
+var queryOutput = new QueryOutput('#query-output', {
+    displayType: 'line',
+})
+queryInput.bind(queryOutput)
 
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {

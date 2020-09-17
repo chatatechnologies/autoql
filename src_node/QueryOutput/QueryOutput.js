@@ -1,4 +1,14 @@
-export function QueryOutput(options={}){
+import {
+    getClickedData,
+    getNumberOfGroupables,
+    getGroupables,
+    uuidv4,
+    cloneObject
+} from '../Utils'
+import { ChataUtils } from '../ChataUtils'
+
+export function QueryOutput(selector, options={}){
+    const PARENT = document.querySelector(selector);
     var responseRenderer = document.createElement('div');
     responseRenderer.options = {
         supportsSuggestions: true,
@@ -36,7 +46,7 @@ export function QueryOutput(options={}){
     )
     responseRenderer.setAttribute('data-componentid', uuidv4());
     var applyTableStyles = function(){
-        css = '';
+        var css = '';
         var style = document.createElement('style');
         if(responseRenderer.options.tableBorderColor !== undefined){
             css += `.renderer-table tr{ border-color: ${responseRenderer.options.tableBorderColor}; }`;
@@ -120,6 +130,8 @@ export function QueryOutput(options={}){
         }
 
     });
+
+    PARENT.appendChild(responseRenderer);
 
     return responseRenderer;
 }

@@ -5,8 +5,24 @@ import {
 } from '../Svg'
 import {
     getSpeech,
-    htmlToElement
+    htmlToElement,
+    putLoadingContainer,
+    getSupportedDisplayTypes,
+    uuidv4,
+    mergeOptions,
+    createTableContainer
 } from '../Utils'
+import {
+    createAreaChart,
+    createBarChart,
+    createBubbleChart,
+    createColumnChart,
+    createHeatmap,
+    createLineChart,
+    createPieChart,
+    createStackedBarChart,
+    createStackedColumnChart
+} from '../Charts'
 
 
 export function QueryInput(selector, options){
@@ -328,7 +344,6 @@ export function QueryInput(selector, options){
                 ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
                 ChataUtils.ajaxCall(value, function(jsonResponse){
-                    // AQUI1
                     chataBarContainer.refreshView(jsonResponse, value)
                     parent.removeChild(responseLoadingContainer);
                     chataBarContainer.chatbar.removeAttribute("disabled");
