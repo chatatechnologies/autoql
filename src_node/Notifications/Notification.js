@@ -1,4 +1,10 @@
-import { htmlToElement, uuidv4 } from '../Utils'
+import { NotificationGroup } from './NotificationGroup'
+import { ChataUtils } from '../ChataUtils'
+import {
+    htmlToElement,
+    uuidv4,
+    putLoadingContainer
+} from '../Utils'
 import {
     DISMISS,
     CALENDAR,
@@ -6,6 +12,8 @@ import {
     EDIT_NOTIFICATION
 } from '../Svg'
 import { convert } from '../RuleParser'
+import moment from 'moment'
+
 
 export function Notification(options, parentOptions){
     var item = document.createElement('div')
@@ -569,6 +577,7 @@ export function Notification(options, parentOptions){
         await item.getRuleStatus();
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             ChataUtils.responses[uuid] = jsonResponse;
+            console.log(jsonResponse);
             item.displayType = jsonResponse.query_result['data']['display_type'];
             responseContentContainer.removeChild(dots);
             item.refreshContent(jsonResponse);
