@@ -1,5 +1,6 @@
 import { DataMessenger } from './src_node/DataMessenger'
 import { Dashboard } from './src_node/Dashboard'
+import { NotificationsIcon } from './src_node/Notifications'
 import { get } from 'axios';
 import { getActiveIntegrator, getIntroMessageTopics } from './src_node/Utils'
 
@@ -7,9 +8,7 @@ var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxM
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}`;
-// const domain = 'https://purefacts-staging.chata.io';
 const topics = getIntroMessageTopics(getActiveIntegrator(domain));
-console.log(topics);
 let dashboard;
 var datamessenger = new DataMessenger('#datamessenger', {
     authentication: {
@@ -34,25 +33,33 @@ var datamessenger = new DataMessenger('#datamessenger', {
     placement: 'right'
 })
 
+var nButton = new NotificationsIcon('#notification-icon', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+})
+
 get(DASHBOARD_URL, {
     headers: {
         'Authorization': 'Bearer ' + _token,
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    dashboard = new Dashboard('#dashboard', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        tiles: response.data[0].data
-    })
-    dashboard.startEditing()
+    // dashboard = new Dashboard('#dashboard', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     tiles: response.data[0].data
+    // })
+    // dashboard.startEditing()
 })
