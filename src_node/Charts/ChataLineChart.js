@@ -454,6 +454,7 @@ export function createLineChart(
         .attr('stroke-opacity', '0.7')
         .attr("fill", 'white')
         .attr('class', 'tooltip-2d line-dot')
+        .style('opacity', '0')
         tooltipCharts();
         onUpdate(component)
     }

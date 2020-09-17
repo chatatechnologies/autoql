@@ -1091,6 +1091,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     fill: #a5cd39 !important;
 }
 
+.line-dot:hover{
+    opacity: 1 !important;
+}
+
 .chart-full-width{
     width: 100%;
 }
