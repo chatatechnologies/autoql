@@ -4,6 +4,7 @@ import { NotificationsIcon } from './src_node'
 import { QueryInput } from './src_node'
 import { QueryOutput } from './src_node'
 import { NotificationList } from './src_node'
+import { DataAlertsSettings } from './src_node'
 
 import { get } from 'axios';
 import { getActiveIntegrator, getIntroMessageTopics } from './src_node/Utils'
@@ -37,6 +38,14 @@ var datamessenger = new DataMessenger('#datamessenger', {
     placement: 'right'
 })
 
+var alerts = DataAlertsSettings('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    }
+})
+
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
 //         token: _token,
@@ -51,13 +60,13 @@ var datamessenger = new DataMessenger('#datamessenger', {
 // })
 // queryInput.bind(queryOutput)
 
-var notificationList = new NotificationList('#notification-list', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    }
-})
+// var notificationList = new NotificationList('#notification-list', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     }
+// })
 
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {
