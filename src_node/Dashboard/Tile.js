@@ -3,8 +3,13 @@ import {
     uuidv4,
     getSupportedDisplayTypes,
     createTableContainer,
-    cloneObject
+    cloneObject,
+    allColsHidden,
+    closeAllToolbars,
+    getNumberOfGroupables,
+    putLoadingContainer
 } from '../Utils'
+import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import Split from 'split.js'
 import { refreshTooltips } from '../Tooltips'
 import {
