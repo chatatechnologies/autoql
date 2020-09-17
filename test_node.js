@@ -1,6 +1,10 @@
-import { DataMessenger } from './src_node/DataMessenger'
-import { Dashboard } from './src_node/Dashboard'
-import { NotificationsIcon } from './src_node/Notifications'
+import { DataMessenger } from './src_node'
+import { Dashboard } from './src_node'
+import { NotificationsIcon } from './src_node'
+import { QueryInput } from './src_node'
+import { QueryOutput } from './src_node'
+
+
 import { get } from 'axios';
 import { getActiveIntegrator, getIntroMessageTopics } from './src_node/Utils'
 
@@ -33,13 +37,22 @@ var datamessenger = new DataMessenger('#datamessenger', {
     placement: 'right'
 })
 
-var nButton = new NotificationsIcon('#notification-icon', {
+let queryInput = new QueryInput('#query-input', {
     authentication: {
         token: _token,
         apiKey: apiKey,
         domain: domain,
     },
-})
+    autoCompletePlacement: 'bottom',
+});
+
+// var nButton = new NotificationsIcon('#notification-icon', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+// })
 
 get(DASHBOARD_URL, {
     headers: {
