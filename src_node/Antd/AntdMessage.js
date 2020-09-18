@@ -1,6 +1,6 @@
-import { htmlToElement } from './Utils'
-import { ANTD_INFO_ICON } from './Svg'
-import '../css/Antd.css'
+import { htmlToElement } from '../Utils'
+import { ANTD_INFO_ICON } from '../Svg'
+import './Antd.css'
 
 export function AntdMessage(text, duration){
     var obj = this;

@@ -18,7 +18,7 @@ import {
     TICK
 } from './Svg'
 import { Modal } from './Modal'
-import { AntdMessage } from './AntdMessage'
+import { AntdMessage } from './Antd'
 import '../css/PopoverMenu.css'
 
 

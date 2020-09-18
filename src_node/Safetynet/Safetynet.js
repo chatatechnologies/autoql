@@ -2,9 +2,9 @@ import {
     closeAllSafetynetSelectors,
     htmlToElement,
     runQuery
-} from './Utils'
-import { RUN_QUERY, DELETE_ICON, REMOVE_ELEMENT } from './Svg'
-import '../css/Safetynet.css'
+} from '../Utils'
+import { RUN_QUERY, DELETE_ICON, REMOVE_ELEMENT } from '../Svg'
+import './Safetynet.css'
 
 export function createSafetynetContent(suggestionArray, context){
     const message = `
