@@ -1,9 +1,9 @@
-import { Cascader } from './Cascader'
-import { ChataTable, ChataPivotTable } from './ChataTable'
-import { ChataUtils } from './ChataUtils'
+import { Cascader } from '../Cascader'
+import { ChataTable, ChataPivotTable } from '../ChataTable'
+import { ChataUtils } from '../ChataUtils'
 import { select } from 'd3-selection';
-import { getGroupableFields } from './Charts/ChataChartHelpers'
-import { createSafetynetContent, createSuggestionArray } from './Safetynet'
+import { getGroupableFields } from '../Charts/ChataChartHelpers'
+import { createSafetynetContent, createSuggestionArray } from '../Safetynet'
 import {
     getSpeech,
     getActiveIntegrator,
@@ -17,7 +17,7 @@ import {
     cloneObject,
     getNumberOfGroupables,
     formatData
-} from './Utils'
+} from '../Utils'
 import {
     createAreaChart,
     createBarChart,
@@ -28,8 +28,8 @@ import {
     createPieChart,
     createStackedBarChart,
     createStackedColumnChart
-} from './Charts'
-import { LIGHT_THEME } from './Constants'
+} from '../Charts'
+import { LIGHT_THEME } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -57,9 +57,9 @@ import {
     COLUMN_EDITOR,
     DELETE_MESSAGE,
     VERTICAL_DOTS
-} from './Svg'
-import { refreshTooltips } from './Tooltips'
-import '../css/chata-styles.css'
+} from '../Svg'
+import { refreshTooltips } from '../Tooltips'
+import '../../css/chata-styles.css'
 
 export function DataMessenger(elem, options){
     var obj = this;

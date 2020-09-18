@@ -1,4 +1,4 @@
-import { ChataUtils } from './ChataUtils';
+import { ChataUtils } from '../ChataUtils';
 import Tabulator from 'tabulator-tables';
 import {
     formatData,
@@ -6,10 +6,10 @@ import {
     getDatePivotArray,
     getPivotColumnArray,
     cloneObject
-} from './Utils';
-import '../css/Tabulator.css';
-import '../css/TabulatorBootstrap.css';
-import '../css/ChataTable.css';
+} from '../Utils';
+import './Tabulator.css';
+import './TabulatorBootstrap.css';
+import './ChataTable.css';
 
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type

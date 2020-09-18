@@ -1,7 +1,7 @@
 import { DASHBOARD_LIGHT_THEME } from '../Constants'
 import { Tile } from './Tile'
 import Muuri from 'Muuri'
-import '../../css/Dashboard.css'
+import './Dashboard.css'
 
 export function Dashboard(selector, options={}){
     var items = [];

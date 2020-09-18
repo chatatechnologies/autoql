@@ -441,23 +441,6 @@ body{
     color: var(--chata-drawer-text-color-placeholder);
 }
 
-.autoql-vanilla-chata-input-renderer {
-    padding: 10px !important;
-    padding-left: 20px !important;
-    margin: 10px !important;
-    height: 42px !important;
-    box-sizing: border-box !important;
-    border-radius: 24px !important;
-    font-size: 16px !important;
-    font-family: var(--chata-drawer-font-family) !important;
-    letter-spacing: 0.04em !important;
-    outline: none !important;
-    width: calc(100% - 20px) !important;
-    background: white !important;
-    border: 1px solid #d3d3d352 !important;
-    color: #5d5d5d !important;
-}
-
 .autoql-vanilla-chat-voice-record-button {
     width: 40px;
     height: 40px;
@@ -482,6 +465,23 @@ body{
     display: block;
     width: 100%;
     position: relative;
+}
+
+.autoql-vanilla-chata-input-renderer {
+    padding: 10px !important;
+    padding-left: 20px !important;
+    margin: 10px !important;
+    height: 42px !important;
+    box-sizing: border-box !important;
+    border-radius: 24px !important;
+    font-size: 16px !important;
+    font-family: var(--chata-drawer-font-family) !important;
+    letter-spacing: 0.04em !important;
+    outline: none !important;
+    width: calc(100% - 20px) !important;
+    background: white !important;
+    border: 1px solid #d3d3d352 !important;
+    color: #5d5d5d !important;
 }
 
 .autoql-vanilla-chat-bar-auto-complete-suggestions{
