@@ -1,7 +1,9 @@
 import { NotificationSettingsItem } from './NotificationSettingsItem'
+import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { ChataUtils } from '../ChataUtils'
 import { Modal } from '../Modal'
 import { htmlToElement } from '../Utils'
+import { refreshTooltips } from '../Tooltips'
 import {
     ADD_NOTIFICATION
 } from '../Svg'
@@ -98,10 +100,17 @@ export function DataAlertsSettings(selector, options){
             `<div class="autoql-vanilla-chata-btn default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
         )
+        var spinner = htmlToElement(`
+            <div class="autoql-vanilla-spinner-loader hidden"></div>
+        `)
         var saveButton = htmlToElement(
             `<div class="autoql-vanilla-chata-btn primary "
-                style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+                style="padding: 5px 16px; margin: 2px 5px;"></div>`
         )
+
+        saveButton.appendChild(spinner);
+        saveButton.appendChild(document.createTextNode('Save'));
+
         var modalView = new NotificationSettingsModal();
         var configModal = new Modal({
             withFooter: true,
@@ -121,6 +130,8 @@ export function DataAlertsSettings(selector, options){
             configModal.close();
         }
         saveButton.onclick = (e) => {
+            spinner.classList.remove('hidden')
+            saveButton.setAttribute('disabled', 'true')
             var o = wrapper.options
             const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
             ChataUtils.ajaxCallPost(URL, (json, status) => {

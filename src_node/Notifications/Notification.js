@@ -196,12 +196,19 @@ export function Notification(options, parentOptions){
         )
         var saveButton = htmlToElement(
             `<div class="autoql-vanilla-chata-btn primary "
-                style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
+                style="padding: 5px 16px; margin: 2px 5px;"></div>`
         )
-        console.log(item.options);
+        var spinner = htmlToElement(`
+            <div class="autoql-vanilla-spinner-loader hidden"></div>
+        `)
+
         var modalView = new NotificationSettingsModal(
             'edit', item.ruleOptions
         );
+
+        saveButton.appendChild(spinner);
+        saveButton.appendChild(document.createTextNode('Save'));
+
 
         var configModal = new Modal({
             withFooter: true,
@@ -221,14 +228,15 @@ export function Notification(options, parentOptions){
             configModal.close();
         }
         saveButton.onclick = (e) => {
+            spinner.classList.remove('hidden')
             var o = item.parentOptions
             const URL = `${o.authentication.domain}/autoql/api/v1/rules/${item.ruleOptions.id}?key=${o.authentication.apiKey}`;
             var values = modalView.getValues();
             values.id = item.options.id
+            saveButton.setAttribute('disabled', 'true')
             ChataUtils.putCall(URL, values, (jsonResponse) => {
-                console.log(jsonResponse);
+                configModal.close();
             }, o)
-            configModal.close();
         }
     }
 

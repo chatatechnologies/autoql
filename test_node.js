@@ -38,13 +38,13 @@ var datamessenger = new DataMessenger('#datamessenger', {
     placement: 'right'
 })
 //
-// var alerts = DataAlertsSettings('#alert-settings', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     }
-// })
+var alerts = DataAlertsSettings('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    }
+})
 
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -60,13 +60,13 @@ var datamessenger = new DataMessenger('#datamessenger', {
 // })
 // queryInput.bind(queryOutput)
 
-var notificationList = new NotificationList('#notification-list', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    }
-})
+// var notificationList = new NotificationList('#notification-list', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     }
+// })
 
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {
