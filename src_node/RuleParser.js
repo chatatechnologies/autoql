@@ -31,7 +31,6 @@ function convert(rules, addTopOperator=true){
 			var rule = [];
             for (var j = 0; j < term.term_value.length; j++) {
                 var cTerm = term.term_value[j];
-				console.log(cTerm);
                 var operator = getOperator(cTerm.condition);
                 rule.push(cTerm.term_value);
                 if(operator)rule.push(operator);

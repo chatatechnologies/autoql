@@ -1,3 +1,10 @@
+import { ChataUtils } from '../ChataUtils'
+import { NotificationSettingsModal } from './NotificationSettingsModal'
+import { Modal } from '../Modal'
+import { htmlToElement } from '../Utils'
+import { refreshTooltips } from '../Tooltips'
+
+
 export function NotificationSettingsItem(options) {
     var wrapper = document.createElement('div');
     wrapper.options = options;

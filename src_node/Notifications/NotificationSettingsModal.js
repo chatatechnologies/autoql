@@ -1,3 +1,15 @@
+import { htmlToElement, uuidv4 } from '../Utils'
+import {
+    ADD_GROUP,
+    QUERY,
+    NOTEBOOK,
+    INPUT_BUBBLES,
+    INPUT_DELETE
+} from '../Svg'
+import { convert } from '../RuleParser'
+import { ChataInput, InputContainer } from '../ChataComponents'
+
+
 export function NotificationSettingsModal(mode='create', rule={}){
     var wrapper = document.createElement('div');
     wrapper.mode = mode;
@@ -102,7 +114,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
 
     relativeDiv.style.position = 'relative';
     selectFrequency.classList.add('chata-select');
-    frequencyValue = document.createElement('div');
+    var frequencyValue = document.createElement('div');
 
     frequencyValue.classList.add('autoql-vanilla-frequency-value');
     frequencyValue.indexValue = 1;
@@ -247,7 +259,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
     wrapper.appendChild(step4);
 
     const loadRules = async () => {
-        var groups = RuleParser.convert(rule.expression, false);
+        var groups = convert(rule.expression, false);
         await groups.map((group, index) => {
             var isFirst = index === 0;
             ruleContainer.appendChild(
@@ -654,36 +666,36 @@ function marginLeft(groups, marginValue){
     }
 }
 
-function ChataInput(tag, elementProps, svgIcon=undefined){
-    let input;
-    input = document.createElement(tag);
-    input.classList.add('chata-input-settings')
-    if(tag === 'input'){
-        input.classList.add('with-icon');
-        var span = document.createElement('span');
-        span.classList.add('chata-icon');
-        span.classList.add('chata-input-icon');
-        span.innerHTML = svgIcon;
-        this.spanIcon = span;
-    }else{
-        input.classList.add('area');
-    }
-    for (var [key, value] of Object.entries(elementProps)) {
-        input.setAttribute(key, value);
-    }
-
-    this.input = input;
-    return this
-}
-
-function InputContainer(classList=[]){
-    var container = document.createElement('div');
-    container.classList.add('chata-input-container');
-    for (var i = 0; i < classList.length; i++) {
-        container.classList.add(classList[i]);
-    }
-    return container;
-}
+// function ChataInput(tag, elementProps, svgIcon=undefined){
+//     let input;
+//     input = document.createElement(tag);
+//     input.classList.add('chata-input-settings')
+//     if(tag === 'input'){
+//         input.classList.add('with-icon');
+//         var span = document.createElement('span');
+//         span.classList.add('chata-icon');
+//         span.classList.add('chata-input-icon');
+//         span.innerHTML = svgIcon;
+//         this.spanIcon = span;
+//     }else{
+//         input.classList.add('area');
+//     }
+//     for (var [key, value] of Object.entries(elementProps)) {
+//         input.setAttribute(key, value);
+//     }
+//
+//     this.input = input;
+//     return this
+// }
+//
+// function InputContainer(classList=[]){
+//     var container = document.createElement('div');
+//     container.classList.add('chata-input-container');
+//     for (var i = 0; i < classList.length; i++) {
+//         container.classList.add(classList[i]);
+//     }
+//     return container;
+// }
 
 function createRadio(onChange){
     var radio = document.createElement('div');
@@ -1260,7 +1272,7 @@ function ChataModalStep(title, nStep, subtitle=''){
 
     step.appendChild(titleEl);
     if(subtitle !== ''){
-        subtitleEl = document.createElement('div');
+        var subtitleEl = document.createElement('div');
         subtitleEl.classList.add('chata-step-subtitle');
         subtitleEl.innerHTML = subtitle;
         stepContentContainer.appendChild(subtitleEl);
