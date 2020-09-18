@@ -986,7 +986,7 @@ function GroupLine(params, expression=[]){
     chataSelectTermType.classList.add('chata-rule-term-type-selector');
     secondContainer.classList.add('chata-rule-second-input-container');
     secondContainer.appendChild(inputContainer2);
-    secondContainer.appendChild(chataSelectTermType);
+    // secondContainer.appendChild(chataSelectTermType);
 
     chataSelect.classList.add('chata-select');
     chataSelect.classList.add('chata-rule-condition-select');

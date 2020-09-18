@@ -1,5 +1,7 @@
 import { NotificationGroup } from './NotificationGroup'
 import { ChataUtils } from '../ChataUtils'
+import { Modal } from '../Modal'
+import { NotificationSettingsModal } from './NotificationSettingsModal'
 import {
     htmlToElement,
     uuidv4,
@@ -13,6 +15,7 @@ import {
 } from '../Svg'
 import { convert } from '../RuleParser'
 import moment from 'moment'
+import { refreshTooltips } from '../Tooltips'
 
 
 export function Notification(options, parentOptions){
@@ -181,8 +184,6 @@ export function Notification(options, parentOptions){
             expanded[i].classList.remove('visible');
         }
         expandedContent.classList.toggle('visible');
-        console.log(options.rule_expression);
-        console.log(convert(options.rule_expression));
         if(expandedContent.classList.contains('visible')){
             item.execute();
         }
@@ -197,12 +198,17 @@ export function Notification(options, parentOptions){
             `<div class="autoql-vanilla-chata-btn primary "
                 style="padding: 5px 16px; margin: 2px 5px;">Save</div>`
         )
+        console.log(item.options);
+        var modalView = new NotificationSettingsModal(
+            'edit', item.ruleOptions
+        );
 
         var configModal = new Modal({
             withFooter: true,
             destroyOnClose: true
+        }, () => {
+            modalView.step1.expand();
         })
-        var modalView = new NotificationSettingsModal();
         configModal.chataModal.style.width = '95vw';
 
         configModal.addView(modalView);
@@ -215,6 +221,13 @@ export function Notification(options, parentOptions){
             configModal.close();
         }
         saveButton.onclick = (e) => {
+            var o = item.parentOptions
+            const URL = `${o.authentication.domain}/autoql/api/v1/rules/${item.ruleOptions.id}?key=${o.authentication.apiKey}`;
+            var values = modalView.getValues();
+            values.id = item.options.id
+            ChataUtils.putCall(URL, values, (jsonResponse) => {
+                console.log(jsonResponse);
+            }, o)
             configModal.close();
         }
     }

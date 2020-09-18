@@ -9,7 +9,7 @@ import { DataAlertsSettings } from './src_node'
 import { get } from 'axios';
 import { getActiveIntegrator, getIntroMessageTopics } from './src_node/Utils'
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAwMzY2MTI2LCAiZXhwIjogMTYwMDM4NzcyNiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ==.Y2NMvEdIkXwUJyOOU1mivs0T9VBktPN7Okh1ag5CWb71iZJnSwBjUYxGf2A2So_uOBUYVlpeYvwTsXIEg9qjnpzVFXtuXm6cTrHUW0vPPAnsUV2rJ9dODT7JoY5Q_yvRKUDrEBGkV3bUhQhxppdBGt4RqkimzGya_K9iSpMmYQoYr1lfJ8Ryz-oUDosrqA4aoMJs_iVPjmJWK_HXRWF5YepLw7DSMDWI-v5cFtWnf49hnzzwCbTKg5OWPq0nbf8zPzlV2AmkolaBCjfp-3FZJDc8ZUSEfo-LZq7Fj5eXC3xS--JTNQVd1g7bW_x7iBKHYf4bnOWDGWqw0o_AMNy_9g==`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAwMzk0NzI1LCAiZXhwIjogMTYwMDQxNjMyNSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ==.VB69X0QXkd57U7v66aAO8B4zZsrxL472mz6KbLeKme-ZN7T5_UHzPRQBBuVH2_B-VdCrUsP-IwPj04qspmnaLcCvCC3kILeCaBzRHn8ZO0tSZvtzPqOnCvlAn7bQk7UMkVvbFU1qd0L2x-fblZC_DzRNn7DUM4Qz8AaoG4QLLsX5ruNqru30QaurpBxxAlTcyw2nW1CQ869EusbzQsJF2g6DSI4aWD6qFwwlUns7vjQAeRAjtmR8IbfqRHOm2Bjg1--fybxmQS5xxyKobifSgXlr_70Z30UiHd9dQSrtsh4_9qQmTwTcVarcTbRpQPo9R9AoIeNCKErKmSUVA592Kw==`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}`;
@@ -37,14 +37,14 @@ var datamessenger = new DataMessenger('#datamessenger', {
     enableDynamicCharting: true,
     placement: 'right'
 })
-
-var alerts = DataAlertsSettings('#alert-settings', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    }
-})
+//
+// var alerts = DataAlertsSettings('#alert-settings', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     }
+// })
 
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -60,13 +60,13 @@ var alerts = DataAlertsSettings('#alert-settings', {
 // })
 // queryInput.bind(queryOutput)
 
-// var notificationList = new NotificationList('#notification-list', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     }
-// })
+var notificationList = new NotificationList('#notification-list', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    }
+})
 
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {
