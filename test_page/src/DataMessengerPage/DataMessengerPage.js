@@ -1,10 +1,15 @@
 import React, { Component } from 'react';
+import { AuthenticationForm } from '../AuthenticationForm'
+import './DataMessengerPage.css'
 
 export class DataMessengerPage extends Component {
 
     render = () => {
         return (
-            <div>DataMessengerPage</div>
+            <div className="props-page">
+                <h1>Authentication</h1>
+                <AuthenticationForm/>
+            </div>
         )
     }
 
