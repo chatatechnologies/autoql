@@ -19,7 +19,7 @@ const getBaseUrl = () => {
 }
 
 const getStoredProp = (name) => {
-    console.log(name);
+    console.log(localStorage.getItem(name));
     return localStorage.getItem(name)
 }
 
@@ -35,6 +35,10 @@ export class AuthenticationForm extends Component {
         email: '',
         password: '',
 
+    }
+
+    componentDidMount = () => {
+        console.log(this.state);
     }
 
     getJWT = async (loginToken) => {
@@ -134,6 +138,12 @@ export class AuthenticationForm extends Component {
         return (
             <Form
             {...layout}
+            initialValues={{
+                projectId: this.state.projectId,
+                displayName: this.state.displayName,
+                apiKey: this.state.apiKey,
+                domain: this.state.domain,
+            }}
             style={{ marginTop: '20px' }}
             onFinish={this.onLogin}>
                 <Form.Item
