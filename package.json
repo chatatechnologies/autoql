@@ -7,7 +7,7 @@
     "build-npm": "babel src -d lib --plugins transform-import-styles",
     "build-cdn": "webpack --mode=production --config webpack.config.js",
     "watch": "webpack --w --mode development --config webpack-test.config.js",
-    "prepublish": "babel src -d lib --plugins transform-import-styles"
+    "prepare": "babel src -d lib --plugins transform-import-styles"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
     "axios": "^0.20.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-transform-import-styles": "0.0.11",
+    "case-sensitive-paths-webpack-plugin": "^2.3.0",
     "css-loader": "^4.3.0",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.3.0",
