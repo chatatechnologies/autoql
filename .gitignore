@@ -7,3 +7,6 @@ dist/
 lib/
 test/
 cdn/
+test_page/src
+test_page/public
+test_page/node_modules
