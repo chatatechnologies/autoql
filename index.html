@@ -1000,7 +1000,7 @@
 
     //Bind the chatBar to responseRenderer
     queryInput.bind(responseRenderer);
-    
+
         let dashboard;
 
         var instances;
@@ -1231,7 +1231,7 @@
                                 xhrDasboard.onreadystatechange = function(){
                                     dashboardTab.style.display = 'inline-block';
                                     if(xhrDasboard.readyState === 4){
-                                        var settingsList = new NotificationSettings('#test4', {
+                                        var settingsList = new DataAlertsSettings('#test4', {
                                             authentication: {
                                                 demo: false,
                                                 token: token,
@@ -1254,7 +1254,7 @@
                                         })
 
                                         var json = JSON.parse(xhrDasboard.responseText);
-                                        var x = new ChataNotificationButton.NotificationButton('#test_5', {
+                                        var x = new NotificationsIcon('#test_5', {
                                             authentication: {
                                                 demo: false,
                                                 token: token,

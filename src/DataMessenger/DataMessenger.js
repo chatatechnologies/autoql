@@ -29,7 +29,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
-import { LIGHT_THEME } from '../Constants'
+import { LIGHT_THEME, DARK_THEME } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
