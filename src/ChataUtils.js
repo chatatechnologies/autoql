@@ -1,4 +1,28 @@
-var ChataUtils = {
+import "regenerator-runtime/runtime.js";
+import {
+    htmlToElement,
+    closeAllChartPopovers,
+    closeAllToolbars,
+    closeAllSafetynetSelectors,
+    formatColumnName,
+    allColHiddenMessage,
+    getNotGroupableField,
+    getSVGString,
+    copyTextToClipboard,
+    svgString2Image
+} from './Utils'
+import {
+    DOWNLOAD_CSV_ICON,
+    CLIPBOARD_ICON,
+    EXPORT_PNG_ICON,
+    TICK
+} from './Svg'
+import { Modal } from './Modal'
+import { AntdMessage } from './Antd'
+import '../css/PopoverMenu.css'
+
+
+export var ChataUtils = {
     xhr: new XMLHttpRequest(),
     responses: []
 };
@@ -244,8 +268,9 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     container.appendChild(document.createTextNode(
         'Please tell us more about the problem you are experiencing:'
     ));
-    container.appendChild(textArea);
+
     modal.addView(container);
+    modal.addView(textArea);
     modal.addFooterElement(cancelButton);
     modal.addFooterElement(reportButton);
 
@@ -610,7 +635,7 @@ ChataUtils.format3dData = function(json, groups, metadata){
 }
 
 ChataUtils.groupBy = function(list, keyGetter, indexData) {
-    obj = {};
+    var obj = {};
     list.forEach((item) => {
         const key = keyGetter(item);
         if (!obj.hasOwnProperty(key)) {

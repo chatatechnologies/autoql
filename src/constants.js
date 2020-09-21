@@ -1,4 +1,4 @@
-const LIGHT_THEME = {
+export const LIGHT_THEME = {
   '--chata-drawer-accent-color': '#28a8e0',
   '--chata-drawer-background-color': '#fff',
   '--chata-drawer-border-color': '#d3d3d352',
@@ -7,7 +7,7 @@ const LIGHT_THEME = {
   '--chata-drawer-text-color-placeholder': '#0000009c'
 }
 
-const DASHBOARD_LIGHT_THEME = {
+export const DASHBOARD_LIGHT_THEME = {
   '--chata-dashboard-accent-color': '#28a8e0',
   '--chata-dashboard-background-color': '#fff',
   '--chata-dashboard-border-color': '#d3d3d352',
@@ -17,7 +17,7 @@ const DASHBOARD_LIGHT_THEME = {
 }
 
 
-const DARK_THEME = {
+export const DARK_THEME = {
   '--chata-drawer-accent-color': '#525252', // dark gray
   // '--chata-drawer-accent-color': '#193a48', // dark blue
   '--chata-drawer-background-color': '#636363',
@@ -27,14 +27,14 @@ const DARK_THEME = {
   '--chata-drawer-text-color-placeholder': '#ffffff9c'
 }
 
-const MONTH_NAMES = [
+export const MONTH_NAMES = [
     "January", "February", "March",
     "April", "May", "June", "July",
     "August", "September", "October",
     "November", "December"
 ];
 
-const DISPLAY_TYPES_2D = [
+export const DISPLAY_TYPES_2D = [
     'table',
     'column',
     'bar',
@@ -43,7 +43,7 @@ const DISPLAY_TYPES_2D = [
     'pie'
 ];
 
-const DISPLAY_TYPES_3D  = [
+export const DISPLAY_TYPES_3D  = [
     'table',
     // 'date_pivot',
     'pivot_column',
@@ -53,7 +53,7 @@ const DISPLAY_TYPES_3D  = [
     'stacked_column'
 ];
 
-const ERROR_MESSAGE = `
+export const ERROR_MESSAGE = `
 Oops! It looks like our system is experiencing an issue.
 Try querying again. If the problem persists,
 please send an email to our team at support@chata.ai.

@@ -1,4 +1,12 @@
-function Modal(options={}, onShow=()=>{}){
+import { htmlToElement } from './Utils'
+import {
+    DASHBOARD_DELETE_ICON
+} from './Svg'
+import '../css/Modal.css'
+import '../css/ColumnEditor.css'
+import '../css/Spinner.css'
+
+export function Modal(options={}, onShow=()=>{}){
     var obj = this;
     obj.options = {
         destroyOnClose: false,

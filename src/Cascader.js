@@ -1,4 +1,13 @@
-function Cascader(topics, datamessenger){
+import {
+    OPTION_ARROW,
+    EXPLORE_QUERIES,
+    TOPICS_ARROW,
+    OPTION_ARROW_CIRCLE,
+} from './Svg'
+import { htmlToElement  } from './Utils'
+import '../css/Cascader.css'
+
+export function Cascader(topics, datamessenger){
     var obj = this;
     var message = document.createElement('div');
     var chatMessageBubble = document.createElement('div');
