@@ -28,7 +28,6 @@ class App extends React.Component{
             autoQLConfig: {
                 debug: true
             },
-            placement: 'right',
             onMaskClick: function(datamessenger){
                 datamessenger.closeDrawer();
             },

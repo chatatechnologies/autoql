@@ -1,6 +1,6 @@
 import { DASHBOARD_LIGHT_THEME } from '../Constants'
 import { Tile } from './Tile'
-import Muuri from 'Muuri'
+import Muuri from 'muuri'
 import './Dashboard.css'
 
 export function Dashboard(selector, options={}){
