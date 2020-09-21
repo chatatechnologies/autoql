@@ -20,11 +20,9 @@ export class AuthenticationForm extends Component {
         this.setState({
             isAuthenticating: true
         })
-        console.log('LOGIN');
     }
 
     logoutUser = () => {
-        console.log('LOGOUT');
     }
 
     render = () => {
@@ -115,7 +113,7 @@ export class AuthenticationForm extends Component {
                     }}
                     value={this.state.password}
                     />
-            </Form.Item>
+                </Form.Item>
                 <Form.Item {...tailLayout}>
                     <Button
                     type="primary"
