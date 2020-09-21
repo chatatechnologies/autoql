@@ -12,12 +12,8 @@ export class WidgetsMenu extends Component{
     render = () => {
         return (
             <Menu
-            onClick={({key}) => {
-                this.setState({
-                    currentPage: key
-                })
-            }}
-            selectedKeys={[this.state.currentPage]}
+            onClick={this.props.onClick}
+            selectedKeys={[this.props.currentPage]}
             mode="horizontal">
                 <Menu.Item key="drawer">
                     Data Messenger
