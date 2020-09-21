@@ -2,24 +2,122 @@ import React, { Component } from 'react'
 import {
     Form,
     Button,
-    Input
+    Input,
+    message
 } from 'antd'
+import axios from 'axios'
+import uuid from 'uuid'
 
+const setStoredProp = (name, value) => {
+    console.log(name);
+    console.log(value);
+    localStorage.setItem(name, value)
+}
+
+const getBaseUrl = () => {
+    return 'https://backend-staging.chata.io'
+}
+
+const getStoredProp = (name) => {
+    console.log(name);
+    return localStorage.getItem(name)
+}
 
 export class AuthenticationForm extends Component {
 
     state = {
         isAuthenticating: false,
-        projectId: '',
-        apiKey: '',
-        displayName: '',
-        domain: '',
+        isAuthenticated: false,
+        domain: getStoredProp('domain-url') || '',
+        projectId: getStoredProp('customer-id') || '',
+        displayName: getStoredProp('user-id') || '',
+        apiKey: getStoredProp('api-key') || '',
+        email: '',
+        password: '',
+
+    }
+
+    getJWT = async (loginToken) => {
+        try {
+            if (!loginToken) {
+                throw new Error('Invalid Login Token')
+            }
+
+            const baseUrl = getBaseUrl()
+            let url = `${baseUrl}/api/v1/jwt?display_name=${this.state.displayName}&project_id=${this.state.projectId}`
+
+            // Use login token to get JWT token
+            const jwtResponse = await axios.get(url, {
+                headers: {
+                    Authorization: `Bearer ${loginToken}`,
+                },
+            })
+
+            // Put jwt token into storage
+            const jwtToken = jwtResponse.data
+            setStoredProp('jwtToken', jwtToken)
+
+            if (this.authTimer) {
+                clearTimeout(this.authTimer)
+            }
+            this.authTimer = setTimeout(() => {
+                this.setState({
+                    isAuthenticated: false,
+                })
+            }, 2.16e7)
+
+            return Promise.resolve(jwtToken)
+        } catch (error) {
+            this.setState({ isAuthenticating: false })
+        }
     }
 
     onLogin = async () => {
-        this.setState({
-            isAuthenticating: true
-        })
+        try {
+            this.setState({
+                isAuthenticating: true,
+            })
+            const baseUrl = getBaseUrl()
+
+            const loginFormData = new FormData()
+            loginFormData.append('username', this.state.email)
+            loginFormData.append('password', this.state.password)
+            const loginResponse = await axios.post(
+                `${baseUrl}/api/v1/login`,
+                loginFormData,
+                {
+                    headers: {
+                        // 'Access-Control-Allow-Origin': '*'
+                    },
+                }
+            )
+
+            const loginToken = loginResponse.data
+            setStoredProp('loginToken', loginToken)
+
+            const jwt = await this.getJWT(loginToken)
+            this.props.onLogin({
+                token: jwt,
+                domain: this.state.domain,
+                apiKey: this.state.apiKey
+            })
+            this.setState({
+                isAuthenticating: false
+            })
+
+            message.success('Login Sucessful!', 0.8)
+        } catch (error) {
+            console.error(error)
+            setStoredProp('loginToken', null)
+            setStoredProp('jwtToken', null)
+            this.setState({
+                isAuthenticated: false,
+                isAuthenticating: false,
+                activeIntegrator: null,
+                componentKey: uuid.v4(),
+            })
+            message.error('Invalid Credentials')
+        }
     }
 
     logoutUser = () => {
@@ -49,6 +147,7 @@ export class AuthenticationForm extends Component {
                     onChange={(e) => {
                         this.setState({ projectId: e.target.value })
                     }}
+                    onBlur={(e) => setStoredProp('customer-id', e.target.value)}
                     value={this.state.projectId}
                     />
                 </Form.Item>
@@ -61,6 +160,7 @@ export class AuthenticationForm extends Component {
                     onChange={(e) => {
                         this.setState({ displayName: e.target.value })
                     }}
+                    onBlur={(e) => setStoredProp('user-id', e.target.value)}
                     value={this.state.displayName}
                     />
                 </Form.Item>
@@ -74,6 +174,7 @@ export class AuthenticationForm extends Component {
                     onChange={(e) => {
                         this.setState({ apiKey: e.target.value })
                     }}
+                    onBlur={(e) => setStoredProp('api-key', e.target.value)}
                     value={this.state.apiKey}
                     />
                 </Form.Item>
@@ -88,6 +189,7 @@ export class AuthenticationForm extends Component {
                     onChange={(e) => {
                         this.setState({ domain: e.target.value })
                     }}
+                    onBlur={(e) => setStoredProp('domain-url', e.target.value)}
                     value={this.state.domain}
                 />
                 </Form.Item>

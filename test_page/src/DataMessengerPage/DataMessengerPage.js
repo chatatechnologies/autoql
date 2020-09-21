@@ -8,7 +8,7 @@ export class DataMessengerPage extends Component {
         return (
             <div className="props-page">
                 <h1>Authentication</h1>
-                <AuthenticationForm/>
+                <AuthenticationForm onLogin={this.props.onLogin}/>
             </div>
         )
     }

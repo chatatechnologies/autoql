@@ -15,6 +15,32 @@ class App extends React.Component{
     }
 
     componentDidMount = () => {
+        this.renderDataMessenger()
+    }
+
+    onLogin = (values) => {
+        this.datamessenger.setOption('authentication', {
+            ...values
+        })
+    }
+
+    renderActivePage = () => {
+        const { currentPage } = this.state
+        let widgetPage = null
+        switch (currentPage) {
+            case 'drawer':
+                widgetPage = <DataMessengerPage onLogin={this.onLogin}/>
+                break
+            case 'dashboard':
+                widgetPage = <DashboardPage/>
+                break
+            default:
+        }
+
+        return widgetPage
+    }
+
+    renderDataMessenger = () => {
         this.datamessenger = new DataMessenger('#datamessenger', {
             authentication: {
                 token: this._token,
@@ -37,26 +63,6 @@ class App extends React.Component{
             enableDynamicCharting: true,
             placement: 'right'
         })
-    }
-
-    renderActivePage = () => {
-        const { currentPage } = this.state
-        let widgetPage = null
-        switch (currentPage) {
-            case 'drawer':
-                widgetPage = <DataMessengerPage/>
-                break
-            case 'dashboard':
-                widgetPage = <DashboardPage/>
-                break
-            default:
-        }
-
-        return widgetPage
-    }
-
-    renderDataMessenger = () => {
-
     }
 
     renderMenu = () => {
