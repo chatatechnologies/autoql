@@ -37,7 +37,7 @@ export function Cascader(topics, datamessenger){
     );
 
     obj.keyAnimation = (text) => {
-        chataInput = datamessenger.input;
+        var chataInput = datamessenger.input;
         obj.inputAnimation(text, chataInput);
     }
 
@@ -65,7 +65,7 @@ export function Cascader(topics, datamessenger){
                 input.value = subQuery;
             }
             index++;
-        }, 65);
+        }, 50);
     }
 
     obj.showQueryTips = () => {
