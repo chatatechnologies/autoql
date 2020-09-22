@@ -3,13 +3,20 @@ import { AuthenticationForm } from '../AuthenticationForm'
 import {
     Switch,
     Button,
-    Radio
+    Radio,
+    Input,
+    InputNumber
 } from 'antd'
+import { sortable } from 'react-sortable'
+import { Item } from './Item'
 import {
     ReloadOutlined,
-    MenuFoldOutlined
+    MenuFoldOutlined,
+    CloseOutlined
 } from '@ant-design/icons'
 import './DataMessengerPage.css'
+
+const SortableItem = sortable(Item)
 
 export class DataMessengerPage extends Component {
 
@@ -60,6 +67,31 @@ export class DataMessengerPage extends Component {
         activeDashboardId: undefined,
         enableDynamicCharting: true,
         defaultTab: 'data-messenger',
+    }
+
+    renderChartColorsList = () => {
+        const { chartColors } = this.state
+        var listItems = chartColors.map((item, i) => {
+            return (
+                <SortableItem
+                key={i}
+                onSortItems={this.onSortChartColors}
+                items={chartColors}
+                sortId={i}
+                >
+                {item}
+                <CloseOutlined
+                style={{ float: 'right', cursor: 'pointer', marginTop: '3px' }}
+                onClick={() => {
+                    const newChartColors = this.state.chartColors.filter(
+                        (color) => color !== item
+                    )
+                    this.setState({ chartColors: newChartColors })
+                }}
+                />
+                </SortableItem>
+            )
+        })
     }
 
     onChangeRadioGroup = (propName, e) => {
@@ -113,6 +145,7 @@ export class DataMessengerPage extends Component {
     render = () => {
         return (
             <div className="props-page">
+                <div>
                 <h1>Authentication</h1>
                 <AuthenticationForm onLogin={this.props.onLogin}/>
                 {this.createBooleanRadioGroup('Show UI Overlay', 'uiOverlay', [
@@ -206,6 +239,219 @@ export class DataMessengerPage extends Component {
                     ['data-messenger', 'explore-queries'],
                     true,
                 )}
+                <h4>Currency Code</h4>
+                <Input
+                type="text"
+                onBlur={(e) => {
+                    this.setState({ currencyCode: e.target.value })
+                }}
+                style={{ width: '55px' }}
+                defaultValue={this.state.currencyCode}
+                />
+                <h4>Language Code</h4>
+                <Input
+                type="text"
+                onBlur={(e) => {
+                    this.setState({ languageCode: e.target.value })
+                }}
+                style={{ width: '55px' }}
+                defaultValue={this.state.languageCode}
+                />
+                <h4>Format for Month, Year</h4>
+                <h6>
+                    Don't know the syntax for formats?{' '}
+                    <a href="https://devhints.io/moment" target="_blank">
+                        View the cheat sheet
+                    </a>
+                </h6>
+                <Input
+                type="text"
+                onBlur={(e) => {
+                    this.setState({ monthFormat: e.target.value })
+                }}
+                defaultValue={this.state.monthFormat}
+                />
+                <h4>Format for Day, Month, Year</h4>
+                <h6>
+                    Don't know the syntax for formats?{' '}
+                    <a href="https://devhints.io/moment" target="_blank">
+                        View the cheat sheet
+                    </a>
+                </h6>
+
+                <Input
+                type="text"
+                onBlur={(e) => {
+                    this.setState({ dayFormat: e.target.value })
+                }}
+                defaultValue={this.state.dayFormat}
+                />
+                <h4>Number of Decimals for Currency Values</h4>
+                <InputNumber
+                type="number"
+                onChange={(e) => {
+                    this.setState({ currencyDecimals: e })
+                }}
+                value={this.state.currencyDecimals}
+                />
+                <h4>Number of Decimals for Quantity Values</h4>
+                <InputNumber
+                type="number"
+                onChange={(e) => {
+                    this.setState({ quantityDecimals: e })
+                }}
+                value={this.state.quantityDecimals}
+                />
+                <h4>User Display Name</h4>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ userDisplayName: e.target.value })
+                }}
+                value={this.state.userDisplayName}
+                />
+                <h4>Intro Message</h4>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ introMessage: e.target.value })
+                }}
+                value={this.state.introMessage}
+                />
+                <h4>Query Input Placeholder</h4>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ inputPlaceholder: e.target.value })
+                }}
+                value={this.state.inputPlaceholder}
+                />
+                {this.createBooleanRadioGroup(
+                    'Clear All Messages on Close',
+                    'clearOnClose',
+                    [true, false]
+                )}
+                <h4>Height</h4>
+                <h5>Only for top/bottom placement</h5>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <InputNumber
+                // type="number"
+                onChange={(e) => {
+                    this.setState({ height: e })
+                }}
+                value={this.state.height}
+                />
+                <h4>Width</h4>
+                <h5>Only for left/right placement</h5>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <InputNumber
+                type="number"
+                onChange={(e) => {
+                    this.setState({ width: e })
+                }}
+                value={this.state.width}
+                />
+                <h4>Title</h4>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ title: e.target.value })
+                }}
+                value={this.state.title}
+                />
+                <h4>Font Family</h4>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ fontFamily: e.target.value })
+                }}
+                value={this.state.fontFamily}
+                />
+                <h4>Chart Colors</h4>
+                <h5>
+                This is an array of colors used for the charts. If the data scale is
+                larger than the color array, it will repeat the colors. Any solid
+                color formats are accepted. Hit "enter" to add a color.
+                </h5>
+                {this.renderChartColorsList()}
+                {this.createBooleanRadioGroup(
+                    'Enable Dynamic Charting',
+                    'enableDynamicCharting',
+                    [true, false]
+                )}
+                <h4>Dashboard Title Color</h4>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ dashboardTitleColor: e.target.value })
+                }}
+                value={this.state.dashboardTitleColor}
+                />
+                <h4>Dashboard Background Color</h4>
+                <Input
+                type="text"
+                onChange={(e) => {
+                    this.setState({ dashboardBackground: e.target.value })
+                }}
+                value={this.state.dashboardBackground}
+                />
+                <h4>Light Theme Accent Color</h4>
+                <h5>
+                For production version, the user will just choose "accentColor" and it
+                <br />
+                will be applied to whatever theme. If not provided, the default color
+                <br />
+                will be used
+                </h5>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <Input
+                type="color"
+                onChange={(e) => {
+                    this.setState({ lightAccentColor: e.target.value })
+                }}
+                value={this.state.lightAccentColor}
+                />
+                <h4>Dark Theme Accent Color</h4>
+                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
+                <Input
+                type="color"
+                onChange={(e) => {
+                    this.setState({ darkAccentColor: e.target.value })
+                }}
+                value={this.state.darkAccentColor}
+                />
+                <h4>Maximum Number of Messages</h4>
+                <InputNumber
+                type="number"
+                onChange={(e) => {
+                    this.setState({ maxMessages: e })
+                }}
+                value={this.state.maxMessages}
+                />
+                {this.createBooleanRadioGroup(
+                    'Display comparisons as Percent',
+                    'comparisonDisplay',
+                    [true, false]
+                )}
+                {this.createBooleanRadioGroup(
+                    'Enable Explore Queries Tab',
+                    'enableExploreQueriesTab',
+                    [true, false]
+                )}
+                {this.createBooleanRadioGroup(
+                    'Enable Notifications Tab',
+                    'enableNotificationsTab',
+                    [true, false]
+                )}
+                {this.createBooleanRadioGroup(
+                    'Enable Speech to Text',
+                    'enableVoiceRecord',
+                    [true, false]
+                )}
+                </div>
             </div>
         )
     }
