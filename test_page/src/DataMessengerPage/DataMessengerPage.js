@@ -87,6 +87,9 @@ export class DataMessengerPage extends Component {
                         (color) => color !== item
                     )
                     this.setState({ chartColors: newChartColors })
+                    this.props.setDMOption('themeConfig', {
+                        chartColors: newChartColors
+                    })
                 }}
                 />
                 </SortableItem>
@@ -113,6 +116,9 @@ export class DataMessengerPage extends Component {
                         this.setState(
                             { chartColors: newChartColors, newColorInput: '' }
                         )
+                        this.props.setDMOption('themeConfig', {
+                            chartColors: newChartColors
+                        })
                     }
                 }}
             />
@@ -277,6 +283,9 @@ export class DataMessengerPage extends Component {
                 type="text"
                 onBlur={(e) => {
                     this.setState({ currencyCode: e.target.value })
+                    this.props.setDMOption('dataFormatting', {
+                        currencyCode: e.target.value
+                    })
                 }}
                 style={{ width: '55px' }}
                 defaultValue={this.state.currencyCode}
@@ -286,6 +295,9 @@ export class DataMessengerPage extends Component {
                 type="text"
                 onBlur={(e) => {
                     this.setState({ languageCode: e.target.value })
+                    this.props.setDMOption('dataFormatting', {
+                        languageCode: e.target.value
+                    })
                 }}
                 style={{ width: '55px' }}
                 defaultValue={this.state.languageCode}
@@ -301,6 +313,9 @@ export class DataMessengerPage extends Component {
                 type="text"
                 onBlur={(e) => {
                     this.setState({ monthFormat: e.target.value })
+                    this.props.setDMOption('dataFormatting', {
+                        monthYearFormat: e.target.value
+                    })
                 }}
                 defaultValue={this.state.monthFormat}
                 />
@@ -316,6 +331,9 @@ export class DataMessengerPage extends Component {
                 type="text"
                 onBlur={(e) => {
                     this.setState({ dayFormat: e.target.value })
+                    this.props.setDMOption('dataFormatting', {
+                        dayMonthYearFormat: e.target.value
+                    })
                 }}
                 defaultValue={this.state.dayFormat}
                 />
@@ -324,6 +342,9 @@ export class DataMessengerPage extends Component {
                 type="number"
                 onChange={(e) => {
                     this.setState({ currencyDecimals: e })
+                    this.props.setDMOption('dataFormatting', {
+                        currencyDecimals: e.target.value
+                    })
                 }}
                 value={this.state.currencyDecimals}
                 />
@@ -332,24 +353,27 @@ export class DataMessengerPage extends Component {
                 type="number"
                 onChange={(e) => {
                     this.setState({ quantityDecimals: e })
+                    this.props.setDMOption('dataFormatting', {
+                        quantityDecimals: e.target.value
+                    })
                 }}
                 value={this.state.quantityDecimals}
                 />
                 <h4>User Display Name</h4>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <Input
                 type="text"
                 onChange={(e) => {
                     this.setState({ userDisplayName: e.target.value })
+                    this.props.setDMOption('userDisplayName', e.target.value)
                 }}
                 value={this.state.userDisplayName}
                 />
                 <h4>Intro Message</h4>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <Input
                 type="text"
                 onChange={(e) => {
                     this.setState({ introMessage: e.target.value })
+                    this.props.setDMOption('introMessage', e.target.value)
                 }}
                 value={this.state.introMessage}
                 />
@@ -358,31 +382,36 @@ export class DataMessengerPage extends Component {
                 type="text"
                 onChange={(e) => {
                     this.setState({ inputPlaceholder: e.target.value })
+                    this.props.setDMOption('inputPlaceholder', e.target.value)
+
                 }}
                 value={this.state.inputPlaceholder}
                 />
                 {this.createBooleanRadioGroup(
                     'Clear All Messages on Close',
                     'clearOnClose',
-                    [true, false]
-                )}
+                    [true, false],
+                    this.onChangeDMProp
+                    )}
                 <h4>Height</h4>
                 <h5>Only for top/bottom placement</h5>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <InputNumber
                 // type="number"
                 onChange={(e) => {
                     this.setState({ height: e })
+                    this.props.setDMOption('height', e)
+
                 }}
                 value={this.state.height}
                 />
                 <h4>Width</h4>
                 <h5>Only for left/right placement</h5>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <InputNumber
                 type="number"
                 onChange={(e) => {
                     this.setState({ width: e })
+                    this.props.setDMOption('width', e)
+
                 }}
                 value={this.state.width}
                 />
@@ -413,7 +442,8 @@ export class DataMessengerPage extends Component {
                 {this.createBooleanRadioGroup(
                     'Enable Dynamic Charting',
                     'enableDynamicCharting',
-                    [true, false]
+                    [true, false],
+                    this.onChangeDMProp
                 )}
                 <h4>Dashboard Title Color</h4>
                 <Input
@@ -439,11 +469,15 @@ export class DataMessengerPage extends Component {
                 <br />
                 will be used
                 </h5>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <Input
                 type="color"
                 onChange={(e) => {
                     this.setState({ lightAccentColor: e.target.value })
+                    console.log('ACCENT COLOR');
+                    console.log(e.target.value);
+                    this.props.setDMOption('themeConfig', {
+                        accentColor: 'dark'
+                    })
                 }}
                 value={this.state.lightAccentColor}
                 />
@@ -453,6 +487,9 @@ export class DataMessengerPage extends Component {
                 type="color"
                 onChange={(e) => {
                     this.setState({ darkAccentColor: e.target.value })
+                    this.props.setDMOption('themeConfig', {
+                        accentColor: e.target.value
+                    })
                 }}
                 value={this.state.darkAccentColor}
                 />
@@ -461,28 +498,33 @@ export class DataMessengerPage extends Component {
                 type="number"
                 onChange={(e) => {
                     this.setState({ maxMessages: e })
+                    this.props.setDMOption('maxMessages', e)
                 }}
                 value={this.state.maxMessages}
                 />
                 {this.createBooleanRadioGroup(
                     'Display comparisons as Percent',
                     'comparisonDisplay',
-                    [true, false]
+                    [true, false],
+                    this.onChangeDMProp
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Explore Queries Tab',
                     'enableExploreQueriesTab',
-                    [true, false]
+                    [true, false],
+                    this.onChangeDMProp
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Notifications Tab',
                     'enableNotificationsTab',
-                    [true, false]
+                    [true, false],
+                    this.onChangeDMProp
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Speech to Text',
                     'enableVoiceRecord',
-                    [true, false]
+                    [true, false],
+                    this.onChangeDMProp
                 )}
                 </div>
             </div>
