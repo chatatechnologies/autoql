@@ -4,7 +4,6 @@ import {
     Button,
     Input,
     message,
-    Switch
 } from 'antd'
 import axios from 'axios'
 import uuid from 'uuid'
@@ -124,7 +123,7 @@ export class AuthenticationForm extends Component {
             message.error('Invalid Credentials')
         }
     }
-    
+
     logoutUser = () => {
     }
 

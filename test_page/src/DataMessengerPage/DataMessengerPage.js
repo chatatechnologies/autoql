@@ -92,6 +92,32 @@ export class DataMessengerPage extends Component {
                 </SortableItem>
             )
         })
+        return (
+            <div>
+                <ul
+                style={{ padding: 0, marginBottom: '3px' }}
+                className="sortable-list">
+                    {listItems}
+                </ul>
+                <Input
+                placeholder="New Color"
+                value={this.state.newColorInput}
+                onChange={
+                    (e) => this.setState({ newColorInput: e.target.value })
+                }
+                onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                        const newChartColors = [
+                            ...this.state.chartColors, e.target.value
+                        ]
+                        this.setState(
+                            { chartColors: newChartColors, newColorInput: '' }
+                        )
+                    }
+                }}
+            />
+            </div>
+        )
     }
 
     onChangeRadioGroup = (propName, e) => {
@@ -101,6 +127,7 @@ export class DataMessengerPage extends Component {
     onChangeDMProp = (propName, e) => {
         console.log(propName);
         this.setState({ [propName]: e })
+        this.props.setDMOption(propName, e)
     }
 
     createBooleanRadioGroup = (
@@ -127,7 +154,13 @@ export class DataMessengerPage extends Component {
             {reload && <h6>(Must click 'Reload Data Messenger' to apply this)</h6>}
             <Radio.Group
             defaultValue={this.state[propName]}
-            onChange={(e) => this.setState({ [propName]: e.target.value })}
+            onChange={(e) => {
+                this.setState({ [propName]: e.target.value })
+                if(propName === 'theme')this.props.setDMOption('themeConfig', {
+                    'theme': e.target.value
+                })
+                else this.props.setDMOption(propName, e.target.value)
+            }}
             buttonStyle="solid"
             >
             {propValues.map((propValue) => {
@@ -160,7 +193,7 @@ export class DataMessengerPage extends Component {
                     Reload Data Messenger
                 </Button>
                 <Button
-                onClick={() => this.setState({ isVisible: true })}
+                onClick={() => this.props.showDM()}
                 type="primary"
                 icon={<MenuFoldOutlined />}>
                     Open Data Messenger

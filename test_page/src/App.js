@@ -24,12 +24,24 @@ class App extends React.Component{
         })
     }
 
+    setDMOption = (propName, e) => {
+        this.datamessenger.setOption(propName, e)
+    }
+
+    openDrawer = () => {
+        this.datamessenger.openDrawer()
+    }
+
     renderActivePage = () => {
         const { currentPage } = this.state
         let widgetPage = null
         switch (currentPage) {
             case 'drawer':
-                widgetPage = <DataMessengerPage onLogin={this.onLogin}/>
+                widgetPage =
+                <DataMessengerPage
+                    onLogin={this.onLogin}
+                    setDMOption={this.setDMOption}
+                    showDM={this.openDrawer}/>
                 break
             case 'dashboard':
                 widgetPage = <DashboardPage/>
