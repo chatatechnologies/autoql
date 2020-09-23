@@ -25,3 +25,15 @@
     color: #fff;
     font-size: .5em;
 }
+
+.chata-notifications-badge-dot {
+  position: absolute;
+  display: inline-block;
+  border: 2px solid #fff;
+  background: #f5222d;
+  border-radius: 50%;
+  height: 0.6em;
+  width: 0.6em;
+  left: 0.5em;
+  top: -2px;
+}

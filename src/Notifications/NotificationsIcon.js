@@ -15,6 +15,11 @@ export function NotificationsIcon(selector, options={}){
             domain: undefined,
             demo: false
         },
+		overflowCount: 99,
+		useDot: false,
+		clearCountOnClick: true,
+		onNewNotification: () => {},
+		onErrorCallback: (error) => {}
 	}
 
 	obj.unacknowledged = 0;
@@ -29,8 +34,12 @@ export function NotificationsIcon(selector, options={}){
     var button = document.createElement('div');
     var icon = document.createElement('span');
     var badge = document.createElement('div');
+	if(obj.options.useDot){
+		badge.classList.add('chata-notifications-badge-dot');
+	}else{
+		badge.classList.add('chata-notifications-badge');
 
-    badge.classList.add('chata-notifications-badge');
+	}
     icon.classList.add('autoql-vanilla-chata-icon');
     icon.classList.add('chata-notifications-button');
     icon.classList.add('notification');
@@ -38,7 +47,6 @@ export function NotificationsIcon(selector, options={}){
     button.classList.add('chata-notifications-button-container');
     button.style.fontSize = '18px';
 
-    badge.innerHTML = '5';
 
     button.appendChild(icon);
     button.appendChild(badge);
@@ -50,12 +58,20 @@ export function NotificationsIcon(selector, options={}){
 	badge.style.visibility = 'hidden';
 
 	button.onclick = (evt) => {
-		badge.style.visibility = 'hidden';
+		if(obj.options.clearCountOnClick){
+			badge.style.visibility = 'hidden';
+		}
 	}
 
 	this.setBadgeValue = (val) => {
-		badge.style.visibility = 'visible';
-		this.badge.innerHTML = val;
+		if(parseInt(val) > 0 && !obj.options.useDot){
+			badge.style.visibility = 'visible';
+			if(val > obj.options.overflowCount)val = `${obj.options.overflowCount}+`
+			this.badge.innerHTML = val;
+			this.options.onNewNotification()
+		}else{
+			badge.style.visibility = 'visible';
+		}
 	}
 
 	this.poolInterval = async () => {
