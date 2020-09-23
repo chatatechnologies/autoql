@@ -1,13 +1,13 @@
 {
   "name": "autoql",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Javascript widget library",
   "scripts": {
     "test": "echo \"no test specified\" ",
     "build-npm": "babel src -d lib --plugins transform-import-styles",
     "build-cdn": "webpack --mode=production --config webpack.config.js",
     "watch": "webpack --w --mode development --config webpack-test.config.js",
-    "prepare": "babel src -d lib --plugins transform-import-styles"
+    "prepublish": "babel src -d lib --plugins transform-import-styles"
   },
   "repository": {
     "type": "git",
