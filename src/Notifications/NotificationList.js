@@ -45,12 +45,24 @@ export function NotificationList(selector, options){
             accentColor: '#26a7df',
             fontFamily: 'sans-serif',
         },
-        enableDynamicCharting: true
+        enableDynamicCharting: true,
+        onExpandCallback: (notification) => {},
+        onCollapseCallback: (notification) => {},
+        activeNotificationData: undefined,
+        showNotificationDetails: true,
+        onErrorCallback: (error) => {},
+        onSuccessCallback: (message) => {}
     }
 
     if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
             wrapper.options.authentication[key] = value;
+        }
+    }
+
+    for (var [key, value] of Object.entries(options)) {
+        if(typeof value !== 'object'){
+            wrapper.options[key] = value;
         }
     }
 

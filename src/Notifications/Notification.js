@@ -5,7 +5,8 @@ import { NotificationSettingsModal } from './NotificationSettingsModal'
 import {
     htmlToElement,
     uuidv4,
-    putLoadingContainer
+    putLoadingContainer,
+    getSupportedDisplayTypes
 } from '../Utils'
 import {
     DISMISS,
@@ -23,6 +24,7 @@ export function Notification(options, parentOptions){
     item.options = options;
     item.parentOptions = parentOptions;
     item.displayType = '';
+    item.jsonData = {}
     var header = document.createElement('div');
     var displayNameContainer = document.createElement('div');
     var displayName = document.createElement('div');
@@ -176,6 +178,9 @@ export function Notification(options, parentOptions){
     expandedContent.appendChild(extraContent);
 
     displayNameContainer.onclick = function(evt){
+        if(!parentOptions.showNotificationDetails){
+            return
+        }
         var expanded = document.getElementsByClassName(
             'chata-notification-expanded-content'
         );
@@ -186,6 +191,8 @@ export function Notification(options, parentOptions){
         expandedContent.classList.toggle('visible');
         if(expandedContent.classList.contains('visible')){
             item.execute();
+        }else{
+            parentOptions.onCollapseCallback(item.jsonData);
         }
     }
 
@@ -235,6 +242,9 @@ export function Notification(options, parentOptions){
             values.id = item.options.id
             saveButton.setAttribute('disabled', 'true')
             ChataUtils.putCall(URL, values, (jsonResponse) => {
+                if(jsonResponse.message == 'ok'){
+                    parentOptions.onSuccessCallback(jsonResponse.message);
+                }
                 configModal.close();
             }, o)
         }
@@ -549,6 +559,9 @@ export function Notification(options, parentOptions){
 
         ChataUtils.putCall(URL, payload, (jsonResponse) => {
             item.ruleOptions = jsonResponse.data;
+            if(jsonResponse.message == 'ok'){
+                parentOptions.onSuccessCallback(jsonResponse.message);
+            }
             item.toggleTurnOffNotificationText();
         }, item.parentOptions)
     }
@@ -598,20 +611,31 @@ export function Notification(options, parentOptions){
         await item.getRuleStatus();
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             ChataUtils.responses[uuid] = jsonResponse;
-            console.log(jsonResponse);
             responseContentContainer.removeChild(dots);
             if(jsonResponse.query_result.data){
-                item.displayType = jsonResponse.query_result['data']['display_type'];
+                item.displayType =
+                jsonResponse.query_result['data']['display_type'];
                 item.refreshContent(jsonResponse);
+                parentOptions.onExpandCallback(
+                    jsonResponse.query_result['data']
+                )
+                parentOptions.activeNotificationData =
+                jsonResponse.query_result['data'];
+                item.jsonData = jsonResponse.query_result['data'];
+                if(status !== 200){
+                    parentOptions.onErrorCallback(
+                        jsonResponse.message
+                    )
+                }
             }else{
                 responseContentContainer.innerHTML = `
-                    <span>Oops! It looks like our system is experiencing an issue.
-                    Try querying again. If the problem persists, please
-                    <a target="_blank" href="mailto:support@chata.ai">
-                        contact our team directly
-                    </a>.
-                    We'll look into this issue right away and
-                    be in touch with you shortly.</span>
+                <span>Oops! It looks like our system is experiencing an issue.
+                Try querying again. If the problem persists, please
+                <a target="_blank" href="mailto:support@chata.ai">
+                contact our team directly
+                </a>.
+                We'll look into this issue right away and
+                be in touch with you shortly.</span>
                 `;
             }
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])

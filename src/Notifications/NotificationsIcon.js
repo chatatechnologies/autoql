@@ -30,6 +30,12 @@ export function NotificationsIcon(selector, options={}){
         }
     }
 
+	for (var [key, value] of Object.entries(options)) {
+        if(typeof value !== 'object'){
+            obj.options[key] = value;
+        }
+    }
+
 	var parent = document.querySelector(selector);
     var button = document.createElement('div');
     var icon = document.createElement('span');
