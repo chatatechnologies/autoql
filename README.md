@@ -76,3 +76,27 @@ var datamessenger = new DataMessenger('#datamessenger', {
     placement: 'right'
 })
 ```
+
+Dashboard Example
+
+```
+import { Dashboard } from 'autoql';
+```
+Mount Dashboard
+
+```
+var dashboard = new Dashboard('#dashboard', {
+    authentication: {
+        apiKey: "your-api-key",
+        domain: "https://yourdomain.com",
+        token: "yourToken"
+    },
+    themeConfig: {
+        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    },
+    autoQLConfig: {
+        debug: true
+    },
+    tiles: arrayOfTiles
+})
+```
