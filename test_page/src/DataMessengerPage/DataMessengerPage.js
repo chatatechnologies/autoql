@@ -473,10 +473,8 @@ export class DataMessengerPage extends Component {
                 type="color"
                 onChange={(e) => {
                     this.setState({ lightAccentColor: e.target.value })
-                    console.log('ACCENT COLOR');
-                    console.log(e.target.value);
                     this.props.setDMOption('themeConfig', {
-                        accentColor: 'dark'
+                        accentColor: e.target.value
                     })
                 }}
                 value={this.state.lightAccentColor}

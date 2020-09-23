@@ -1371,14 +1371,8 @@ export function DataMessenger(elem, options){
     obj.applyStyles = () => {
         const themeStyles = obj.options.themeConfig.theme === 'light'
         ? LIGHT_THEME : DARK_THEME
-        if(options.themeConfig){
-            if ('accentColor' in options.themeConfig){
-                themeStyles['--chata-drawer-accent-color']
-                = options.themeConfig.accentColor;
-                obj.options.themeConfig.accentColor =
-                options.themeConfig.accentColor;
-            }
-        }
+        themeStyles['--chata-drawer-accent-color']
+        = obj.options.themeConfig.accentColor;
 
         for (let property in themeStyles) {
             document.documentElement.style.setProperty(
