@@ -189,6 +189,9 @@ export function DataMessenger(elem, options){
         switch (option) {
             case 'authentication':
                 obj.setObjectProp('authentication', value);
+                obj.options.activeIntegrator = getActiveIntegrator(
+                    obj.options.authentication.domain
+                );
                 break;
             case 'dataFormatting':
                 obj.setObjectProp('dataFormatting', value);
@@ -301,6 +304,9 @@ export function DataMessenger(elem, options){
                 obj.options.introMessage = value
                 obj.introMessageBubble.textContent = value;
             break;
+            case 'queryQuickStartTopics':
+                obj.options.queryQuickStartTopics = value;
+                obj.createIntroMessageTopics();
             default:
                 obj.options[option] = value;
         }
@@ -1133,9 +1139,17 @@ export function DataMessenger(elem, options){
 
     obj.createIntroMessageTopics = () => {
         const topics = obj.options.queryQuickStartTopics;
+        if(obj.topicsWidget){
+            obj.drawerContent.removeChild(
+                obj.topicsWidget._elem
+            )
+        }
         if(topics){
             const topicsWidget = new Cascader(topics, obj);
-            obj.drawerContent.appendChild(topicsWidget._elem);
+            // obj.drawerContent.appendChild(topicsWidget._elem);
+            obj.drawerContent.insertBefore(
+                topicsWidget._elem, obj.introMessageBubble.nextSibling
+            )
             obj.topicsWidget = topicsWidget;
         }
     }
