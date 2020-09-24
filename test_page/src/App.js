@@ -14,7 +14,12 @@ class App extends React.Component{
 
     state = {
         currentPage: 'drawer',
-        isLogged: false
+        isLogged: false,
+        authentication: {
+            token: '',
+            domain: '',
+            apiKey: ''
+        }
     }
 
     componentDidMount = () => {
@@ -26,7 +31,10 @@ class App extends React.Component{
             ...values
         })
         this.setState({
-            isLogged: true
+            isLogged: true,
+            authentication: {
+                ...values
+            }
         })
         const topics = getIntroMessageTopics(getActiveIntegrator(
             this.datamessenger.options.authentication.domain
@@ -54,7 +62,9 @@ class App extends React.Component{
                     showDM={this.openDrawer}/>
                 break
             case 'dashboard':
-                widgetPage = <DashboardPage/>
+                widgetPage =
+                    <DashboardPage
+                    authentication={this.state.authentication}/>
                 break
             default:
         }
