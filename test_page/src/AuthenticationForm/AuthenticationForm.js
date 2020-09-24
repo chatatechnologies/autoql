@@ -9,8 +9,6 @@ import axios from 'axios'
 import uuid from 'uuid'
 
 const setStoredProp = (name, value) => {
-    console.log(name);
-    console.log(value);
     localStorage.setItem(name, value)
 }
 
@@ -19,7 +17,6 @@ const getBaseUrl = () => {
 }
 
 const getStoredProp = (name) => {
-    console.log(localStorage.getItem(name));
     return localStorage.getItem(name)
 }
 
@@ -38,7 +35,6 @@ export class AuthenticationForm extends Component {
     }
 
     componentDidMount = () => {
-        console.log(this.state);
     }
 
     getJWT = async (loginToken) => {
