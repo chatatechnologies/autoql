@@ -33,6 +33,7 @@ export function DataAlertsSettings(selector, options){
             enableColumnVisibilityManager: true,
             enableDrilldowns: true
         },
+        onErrorCallback: (message) => {}
     }
 
     if('authentication' in options){
@@ -85,6 +86,9 @@ export function DataAlertsSettings(selector, options){
     wrapper.loadRules = () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}&type=user`;
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
+            if(status !== 200){
+                wrapper.options.onErrorCallback(jsonResponse.message)
+            }
             var items = jsonResponse['data']['rules'];
             for (var i = 0; i < items.length; i++) {
                 items[i].authentication = wrapper.options.authentication;
@@ -135,6 +139,9 @@ export function DataAlertsSettings(selector, options){
             var o = wrapper.options
             const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
             ChataUtils.ajaxCallPost(URL, (json, status) => {
+                if(status !== 200){
+                    wrapper.options.onErrorCallback(json.message)
+                }
                 json['data'].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.insertAdjacentElement(
                     'afterbegin', new NotificationSettingsItem(json['data'])
