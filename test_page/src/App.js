@@ -13,7 +13,8 @@ class App extends React.Component{
     datamessenger = null
 
     state = {
-        currentPage: 'drawer'
+        currentPage: 'drawer',
+        isLogged: false
     }
 
     componentDidMount = () => {
@@ -24,10 +25,12 @@ class App extends React.Component{
         this.datamessenger.setOption('authentication', {
             ...values
         })
+        this.setState({
+            isLogged: true
+        })
         const topics = getIntroMessageTopics(getActiveIntegrator(
             this.datamessenger.options.authentication.domain
         ))
-        console.log(topics);
         this.datamessenger.setOption('queryQuickStartTopics', topics)
     }
 
@@ -85,8 +88,10 @@ class App extends React.Component{
     }
 
     renderMenu = () => {
-        return (<WidgetsMenu
+        return (
+            <WidgetsMenu
             currentPage={this.state.currentPage}
+            isLogged={this.state.isLogged}
             onClick={({key}) => {
                 this.setState({
                     currentPage: key

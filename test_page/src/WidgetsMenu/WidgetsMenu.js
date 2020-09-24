@@ -2,14 +2,11 @@ import React, { Component, Fragment } from 'react'
 import {
     Menu
 } from 'antd'
+import './WidgetsMenu.css'
 
 export class WidgetsMenu extends Component{
-
-    state = {
-        currentPage: 'drawer'
-    }
-
     render = () => {
+        console.log(this.props.isLogged);
         return (
             <Fragment>
                 <Menu
@@ -19,16 +16,23 @@ export class WidgetsMenu extends Component{
                     <Menu.Item key="drawer">
                         Data Messenger
                     </Menu.Item>
-                    <Menu.Item key="dashboard">
+                    <Menu.Item
+                    key="dashboard"
+                    className={this.props.isLogged ? '' : 'chata-hidden'}>
                         Dashboard
                     </Menu.Item>
-                    <Menu.Item key="chatbar">
+                    <Menu.Item
+                        key="chatbar"
+                        className={this.props.isLogged ? '' : 'chata-hidden'}>
                         QueryInput / QueryOutput
                     </Menu.Item>
-                    <Menu.Item key="settings">
+                    <Menu.Item
+                        key="settings"
+                        className={this.props.isLogged ? '' : 'chata-hidden'}>
                         Notification Settings
                     </Menu.Item>
-                    <Menu.Item key="notifications">
+                    <Menu.Item key="notifications"
+                    className={this.props.isLogged ? '' : 'chata-hidden'}>
 
                     </Menu.Item>
                 </Menu>
