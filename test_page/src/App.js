@@ -2,6 +2,7 @@ import React from 'react'
 import { WidgetsMenu } from './WidgetsMenu'
 import { DashboardPage } from './DashboardPage'
 import { DataMessengerPage } from './DataMessengerPage'
+import { QueryOutputInputPage } from './QueryOutputInputPage'
 import { DataMessenger } from 'autoql'
 import { getActiveIntegrator, getIntroMessageTopics } from './Utils'
 
@@ -66,6 +67,10 @@ class App extends React.Component{
                     <DashboardPage
                     authentication={this.state.authentication}/>
                 break
+            case 'chatbar':
+                widgetPage =
+                    <QueryOutputInputPage
+                    authentication={this.state.authentication}/>
             default:
         }
 

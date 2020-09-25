@@ -10,7 +10,8 @@ import {
     getSupportedDisplayTypes,
     uuidv4,
     mergeOptions,
-    createTableContainer
+    createTableContainer,
+    cloneObject
 } from '../Utils'
 import {
     createAreaChart,
