@@ -4,6 +4,8 @@ import { DashboardPage } from './DashboardPage'
 import { DataMessengerPage } from './DataMessengerPage'
 import { QueryOutputInputPage } from './QueryOutputInputPage'
 import { DataMessenger } from 'autoql'
+import { NotificationsIcon } from 'autoql'
+
 import { getActiveIntegrator, getIntroMessageTopics } from './Utils'
 
 
@@ -12,6 +14,7 @@ class App extends React.Component{
     domain = 'https://spira-staging.chata.io';
     apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
     datamessenger = null
+    notificationsIcon = null
 
     state = {
         currentPage: 'drawer',
@@ -41,6 +44,11 @@ class App extends React.Component{
             this.datamessenger.options.authentication.domain
         ))
         this.datamessenger.setOption('queryQuickStartTopics', topics)
+        this.notificationsIcon = new NotificationsIcon('#notifications-icon', {
+            authentication: {
+                ...values
+            }
+        })
     }
 
     setDMOption = (propName, e) => {
@@ -105,6 +113,7 @@ class App extends React.Component{
     renderMenu = () => {
         return (
             <WidgetsMenu
+            notificationButton={this.notificationsIcon}
             currentPage={this.state.currentPage}
             isLogged={this.state.isLogged}
             onClick={({key}) => {

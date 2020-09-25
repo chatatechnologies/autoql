@@ -493,7 +493,7 @@ export function Tile(dashboard, options={}){
         }else{
             if(!chataDashboardItem.views[0].isSafetynet){
                 tileResponseContainer.classList.add('chata-flex');
-                loadingContainer = chataDashboardItem.showLoadingDots();
+                var loadingContainer = chataDashboardItem.showLoadingDots();
                 var elements = []
                 for (var i = 0; i < chataDashboardItem.views.length; i++) {
                     await chataDashboardItem.views[i].runQuery(

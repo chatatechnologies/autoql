@@ -5,8 +5,8 @@ import {
 import './WidgetsMenu.css'
 
 export class WidgetsMenu extends Component{
+
     render = () => {
-        console.log(this.props.isLogged);
         return (
             <Fragment>
                 <Menu
@@ -32,8 +32,8 @@ export class WidgetsMenu extends Component{
                         Notification Settings
                     </Menu.Item>
                     <Menu.Item key="notifications"
+                    id="notifications-icon"
                     className={this.props.isLogged ? '' : 'chata-hidden'}>
-
                     </Menu.Item>
                 </Menu>
             </Fragment>

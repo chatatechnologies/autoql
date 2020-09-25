@@ -75,7 +75,7 @@ export function NotificationsIcon(selector, options={}){
 			if(val > obj.options.overflowCount)val = `${obj.options.overflowCount}+`
 			this.badge.innerHTML = val;
 			this.options.onNewNotification()
-		}else{
+		}else if(parseInt(val) > 0){
 			badge.style.visibility = 'visible';
 		}
 	}
