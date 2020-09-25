@@ -1,6 +1,4 @@
 import React, { Component, Fragment } from 'react'
-import { Dashboard } from 'autoql'
-import axios from 'axios'
 import { DataAlertsSettings } from 'autoql'
 
 
