@@ -3,6 +3,7 @@ import { WidgetsMenu } from './WidgetsMenu'
 import { DashboardPage } from './DashboardPage'
 import { DataMessengerPage } from './DataMessengerPage'
 import { QueryOutputInputPage } from './QueryOutputInputPage'
+import { DataAlertsSettingsPage } from './DataAlertsSettingsPage'
 import { DataMessenger } from 'autoql'
 import { NotificationsIcon } from 'autoql'
 
@@ -79,6 +80,12 @@ class App extends React.Component{
                 widgetPage =
                     <QueryOutputInputPage
                     authentication={this.state.authentication}/>
+                break
+            case 'settings':
+                widgetPage =
+                    <DataAlertsSettingsPage
+                    authentication={this.state.authentication}/>
+                break
             default:
         }
 
