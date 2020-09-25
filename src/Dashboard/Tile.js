@@ -1327,7 +1327,6 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.clearMetadata = () => {
         tileWrapper.metadata = undefined;
-        console.log('CLEAR METADATAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
     }
 
     obj.getToolbarActionType = (json, displayType) => {
