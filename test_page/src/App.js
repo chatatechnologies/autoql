@@ -47,7 +47,8 @@ class App extends React.Component{
         this.notificationsIcon = new NotificationsIcon('#notifications-icon', {
             authentication: {
                 ...values
-            }
+            },
+            useDot: true
         })
     }
 

@@ -65,6 +65,18 @@ export function NotificationsIcon(selector, options={}){
 
 	button.onclick = (evt) => {
 		if(obj.options.clearCountOnClick){
+			var o = obj.options.authentication
+			const url = `${o.domain}/autoql/api/v1/rules/notifications?key=${o.apiKey}`
+			ChataUtils.putCall(url, {
+				notification_id: null,
+				state: 'ACKNOWLEDGED'
+			}, (jsonResponse) => {
+				if(jsonResponse.message == 'ok'){
+					obj.unacknowledged = 0;
+				}else{
+					obj.options.onErrorCallback(jsonResponse.message)
+				}
+	        }, obj.options)
 			badge.style.visibility = 'hidden';
 		}
 	}
@@ -82,7 +94,6 @@ export function NotificationsIcon(selector, options={}){
 
 	this.poolInterval = async () => {
 		var response = await this.getNotificationCount();
-		console.log(response);
 		if(response.data.unacknowledged){
 			obj.unacknowledged = response.data.unacknowledged
 		}

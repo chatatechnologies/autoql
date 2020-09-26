@@ -44,13 +44,13 @@ setTimeout(() => {
     datamessenger.setOption('queryQuickStartTopics', topics);
 
 }, 300)
-var alerts = DataAlertsSettings('#alert-settings', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    }
-})
+// var alerts = DataAlertsSettings('#alert-settings', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     }
+// })
 
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -81,13 +81,14 @@ var alerts = DataAlertsSettings('#alert-settings', {
 //     }
 // })
 
-// var nButton = new NotificationsIcon('#notification-icon', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-// })
+var nButton = new NotificationsIcon('#notification-icon', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    useDot: true
+})
 
 get(DASHBOARD_URL, {
     headers: {
