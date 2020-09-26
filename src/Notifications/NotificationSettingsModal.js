@@ -414,7 +414,6 @@ function frequencyView(parentElement, popupValues, label, followText){
     // }
     frequencyButton.onclick = (evt) => {
         popupFrequencySelect.toggleVisibility();
-        console.log('toggleVisibility');
     }
 
     parentElement.appendChild(frequencyButton);
@@ -1040,7 +1039,7 @@ function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
         term_type: 'group',
         condition: 'AND'
     }
-    if(ruleLines){
+    if(ruleLines.id){
         groupValues.id = ruleLines.id
         groupValues.term_type = ruleLines.term_type
         groupValues.condition = ruleLines.condition
@@ -1338,7 +1337,6 @@ function getStep2Values(){
     }
 
     if(fValue)values.reset_period = fValue.dataset.frequencyValue
-    console.log(values);
     return values;
 
 }
@@ -1370,7 +1368,9 @@ function getStep1Values(){
                 ...group.getValues(),
                 term_value: []
             }
-            if(index == lines.length-1)termGroup.condition = 'TERMINATOR';
+            if(index == lines.length-1){
+                termGroup.condition = 'TERMINATOR';
+            }
 
             termGroup.term_value.push(
                 ...l.getValues()
@@ -1381,6 +1381,5 @@ function getStep1Values(){
         expression.push(termValue)
     }
 
-    console.log(JSON.stringify(expression));
     return expression;
 }
