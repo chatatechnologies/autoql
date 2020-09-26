@@ -48,7 +48,7 @@ class App extends React.Component{
             authentication: {
                 ...values
             },
-            useDot: true
+            useDot: false
         })
     }
 
