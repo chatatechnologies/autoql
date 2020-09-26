@@ -6,7 +6,10 @@ import {
 import {
     EditOutlined,
     PlayCircleOutlined,
-    StopOutlined
+    StopOutlined,
+    PlusOutlined,
+    RollbackOutlined,
+    SaveOutlined
 } from '@ant-design/icons'
 
 import axios from 'axios'
@@ -43,7 +46,16 @@ export class DashboardPage extends Component {
                 },
                 tiles: response.data[0].data,
                 executeOnStopEditing: false,
-                executeOnMount: false
+                executeOnMount: false,
+                notExecutedText: `To get started, enter a query and click
+                <svg stroke="currentColor" fill="currentColor"
+                stroke-width="0" viewBox="0 0 24 24"
+                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
+                    12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
+                    18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+                    </path>
+                </svg>`
             })
         })
     }
@@ -56,7 +68,17 @@ export class DashboardPage extends Component {
 
         if(isEditing)this.dashboard.startEditing()
         else this.dashboard.stopEditing()
+    }
 
+    addTile = () => {
+        this.dashboard.addTile(
+            {
+                title: '',
+                query: '',
+                w: 6,
+                h: 5,
+            }
+        );
     }
 
     render = () => {
@@ -87,6 +109,26 @@ export class DashboardPage extends Component {
                         style={{ marginLeft: '10px' }}>
                         Log Current Tile State
                     </Button>
+                    <div
+                        style={{
+                            marginTop: '10px',
+                            display: this.state.isEditing ? 'block' : 'none'
+                        }}>
+                        <Button
+                            type="primary"
+                            onClick={() => {this.addTile()}}
+                            icon={<PlusOutlined />}> Add Tile</Button>
+                        <Button
+                            type="primary"
+                            onClick={() => {this.dashboard.undo()}}
+                            style={{ marginLeft: '10px' }}
+                            icon={<RollbackOutlined />}>Undo</Button>
+                        <Button
+                            type="primary"
+                            onClick={() => {}}
+                            style={{ marginLeft: '10px' }}
+                            icon={<SaveOutlined  />}>Save Dashboard</Button>
+                    </div>
                 </div>
                 <div id="dashboard"></div>
             </div>
