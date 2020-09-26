@@ -264,7 +264,9 @@ export function Dashboard(selector, options={}){
     obj.undo = function(){
         var oldValue = obj.oldState.inputValue;
         var newValue = obj.lastState.inputValue;
-        obj.lastState.element.value = oldValue;
+        if(typeof obj.lastState.element !== 'string'){
+            obj.lastState.element.value = oldValue;
+        }
         obj.lastState.inputValue = oldValue;
         obj.oldState.inputValue = newValue;
         switch (obj.lastEvent.type) {
