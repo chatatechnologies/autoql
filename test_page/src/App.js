@@ -26,11 +26,18 @@ class App extends React.Component{
             apiKey: ''
         },
         dashboards: [],
-        activeDashboard: null
+        dashboardNames: [],
+        activeDashboard: 0,
     }
 
     componentDidMount = () => {
         this.renderDataMessenger()
+    }
+
+    onChangeDashboard = (val) => {
+        this.setState({
+            activeDashboard: val
+        })
     }
 
     onLogin = (values) => {
@@ -62,10 +69,15 @@ class App extends React.Component{
                 'Integrator-Domain': values.domain
             }
         }).then(function(response){
-            console.log(response.data);
+            var names = [];
+            response.data.map(dashboard => {
+                names.push(dashboard.name)
+            })
+
             obj.setState({
-                activeDashboard: response.data[0],
-                dashboards: response.data
+                dashboards: response.data,
+                dashboardNames: names,
+                activeDashboard: 0
             })
         })
 
@@ -93,7 +105,10 @@ class App extends React.Component{
             case 'dashboard':
                 widgetPage =
                     <DashboardPage
-                    dashboardData={this.state.activeDashboard}
+                    onSelectDashboard={this.onChangeDashboard}
+                    activeDashboard={this.state.activeDashboard}
+                    dashboardNames={this.state.dashboardNames}
+                    dashboards={this.state.dashboards}
                     authentication={this.state.authentication}/>
                 break
             case 'chatbar':

@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { Dashboard } from 'autoql'
 import {
-    Button
+    Button,
+    Select
 } from 'antd'
 import {
     EditOutlined,
@@ -11,20 +12,39 @@ import {
     RollbackOutlined,
     SaveOutlined
 } from '@ant-design/icons'
+const { Option } = Select
 
-import axios from 'axios'
 export class DashboardPage extends Component {
     dashboard = null
 
     state = {
-        isEditing: false
+        isEditing: false,
+    }
+
+    renderSelector = () => {
+        const { dashboardNames } = this.props
+        var options = []
+        dashboardNames.map((name, index) => {
+            options.push(
+                <Option value={index} key={index}>{name}</Option>
+            )
+        })
+
+        return (
+            <Select
+                onChange={(val) => {this.props.onSelectDashboard(val)}}
+                style={{ minWidth: '200px' }}
+                defaultValue={0}>
+                {options}
+            </Select>
+        )
     }
 
     componentDidMount = () => {
         var obj = this
         const { authentication } = this.props
-        if(this.props.dashboardData){
-            console.log(this.props.dashboardData.data);
+        if(this.props.dashboards){
+            console.log('UPDATE');
             obj.dashboard = new Dashboard('#dashboard', {
                 authentication: {
                     token: authentication.token,
@@ -39,7 +59,7 @@ export class DashboardPage extends Component {
                 autoQLConfig: {
                     debug: true
                 },
-                tiles: this.props.dashboardData.data,
+                tiles: this.props.dashboards[this.props.activeDashboard].data,
                 executeOnStopEditing: false,
                 executeOnMount: false,
                 notExecutedText: `To get started, enter a query and click
@@ -87,6 +107,11 @@ export class DashboardPage extends Component {
                     background: 'rgb(250,250,250)',
                     padding: '10px'
                 }}>
+                    <div style={{
+                        marginBottom: '10px'
+                    }}>
+                        {this.renderSelector()}
+                    </div>
                     <Button
                         onClick={() => {this.toggleEditing()}}
                         type="default"
