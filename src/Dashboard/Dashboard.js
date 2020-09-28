@@ -244,6 +244,7 @@ export function Dashboard(selector, options={}){
             tile: tile,
             index: -1
         }
+        obj.checkIsEmpty()
     }
 
     obj.run = async function(isOnMount=false){
@@ -371,16 +372,16 @@ export function Dashboard(selector, options={}){
     });
 
     obj.isEmpty = () => {
-        return obj.grid.getItems().length === 0
+        return obj.grid._element.querySelectorAll(
+            '.autoql-vanilla-chata-dashboard-item'
+        ).length === 0
     }
 
     obj.checkIsEmpty = () => {
-        console.log(obj.isEmpty());
-        console.log(obj.grid.getItems());
         if(obj.isEmpty()){
-            emptyDashboardMessage.display = 'block';
+            emptyDashboardMessage.style.display = 'block';
         }else{
-            emptyDashboardMessage.display = 'none';
+            emptyDashboardMessage.style.display = 'none';
         }
     }
 
@@ -403,8 +404,8 @@ export function Dashboard(selector, options={}){
     }
 
     parent.appendChild(emptyDashboardMessage);
-
     obj.applyCSS();
     obj.grid.refreshItems().layout();
+    obj.checkIsEmpty()
     return obj;
 }

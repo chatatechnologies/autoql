@@ -22,7 +22,7 @@
 .autoql-vanilla-chata-dashboard {
     position: relative;
     width: 100%;
-    background: transparent;
+    background: #fafafa;
     /* border: 5px solid transparent; */
     font-family: var(--chata-dashboard-font-family);
 }
