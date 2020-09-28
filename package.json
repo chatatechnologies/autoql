@@ -30,6 +30,7 @@
     "gulp-concat": "^2.6.1",
     "gulp-minify": "^3.1.0",
     "gulp-order": "^1.2.0",
+    "unminified-webpack-plugin": "^2.0.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   },

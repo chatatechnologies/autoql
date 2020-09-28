@@ -3,8 +3,8 @@ const path = require('path')
 module.exports = {
     entry: './src/index.js',
     output: {
-        filename: 'index.js',
-        path: path.resolve(__dirname, 'cdn'),
+        filename: 'autoql-min.js',
+        path: path.resolve(__dirname, 'build'),
         libraryTarget: 'umd',
         globalObject: 'this'
     },
@@ -17,4 +17,7 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.jsx', '.css']
     },
+    optimization: {
+        minimize: true
+    }
 }
