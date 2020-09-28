@@ -612,7 +612,7 @@ export function Notification(options, parentOptions){
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             ChataUtils.responses[uuid] = jsonResponse;
             responseContentContainer.removeChild(dots);
-            if(jsonResponse.query_result.data){
+            if(status === 200){
                 item.displayType =
                 jsonResponse.query_result['data']['display_type'];
                 item.refreshContent(jsonResponse);
@@ -622,12 +622,8 @@ export function Notification(options, parentOptions){
                 parentOptions.activeNotificationData =
                 jsonResponse.query_result['data'];
                 item.jsonData = jsonResponse.query_result['data'];
-                if(status !== 200){
-                    parentOptions.onErrorCallback(
-                        jsonResponse.message
-                    )
-                }
             }else{
+                console.log(jsonResponse);
                 responseContentContainer.innerHTML = `
                 <span>Oops! It looks like our system is experiencing an issue.
                 Try querying again. If the problem persists, please
@@ -637,6 +633,11 @@ export function Notification(options, parentOptions){
                 We'll look into this issue right away and
                 be in touch with you shortly.</span>
                 `;
+                if(jsonResponse){
+                    parentOptions.onErrorCallback(
+                        jsonResponse.message
+                    )
+                }
             }
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
     }
