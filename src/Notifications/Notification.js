@@ -524,10 +524,11 @@ export function Notification(options, parentOptions){
         } else if (day === yesterday) {
             date = `Yesterday at ${time}`
         } else if (moment().isSame(createdAt, 'year')) {
-            date = `${moment(timestamp).format('MMMM Do')} at ${time}`
+            date = `${moment(createdAt).format('MMMM Do')} at ${time}`
         }else{
-            date = `${moment(timestamp).format('MMMM Do, YYYY')} at ${time}`
+            date = `${moment(createdAt).format('MMMM Do, YYYY')} at ${time}`
         }
+        console.log(date);
         timestamp.appendChild(
             document.createTextNode(date)
         );
