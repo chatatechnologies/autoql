@@ -551,7 +551,9 @@ export function Tile(dashboard, options={}){
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('autoql-vanilla-tile-response-loading-container');
+        responseLoadingContainer.classList.add(
+            'autoql-vanilla-tile-response-loading-container'
+        );
         responseLoading.classList.add('response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
@@ -564,9 +566,12 @@ export function Tile(dashboard, options={}){
     }
 
     deleteButton.onclick = function(){
-        dashboard.grid.remove(chataDashboardItem, {layout:true})
+        dashboard.grid.remove(chataDashboardItem, {
+            layout:true, removeElements: true
+        })
         chataDashboardItem.parentElement.removeChild(chataDashboardItem);
         window.dispatchEvent(new Event('resize'));
+        dashboard.checkIsEmpty();
     }
 
     tilePlayBuytton.onclick = function(event){

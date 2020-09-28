@@ -528,7 +528,6 @@ export function Notification(options, parentOptions){
         }else{
             date = `${moment(createdAt).format('MMMM Do, YYYY')} at ${time}`
         }
-        console.log(date);
         timestamp.appendChild(
             document.createTextNode(date)
         );

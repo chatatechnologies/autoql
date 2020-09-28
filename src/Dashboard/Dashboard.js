@@ -1,6 +1,7 @@
 import { DASHBOARD_LIGHT_THEME } from '../Constants'
 import { Tile } from './Tile'
 import Muuri from 'muuri'
+import { htmlToElement } from '../Utils'
 import './Dashboard.css'
 
 export function Dashboard(selector, options={}){
@@ -109,7 +110,22 @@ export function Dashboard(selector, options={}){
         );
     }
     obj.onChangeCallback = obj.options.onChangeCallback;
-    var grid = new Muuri(selector, {
+    const emptyDashboardMessage = htmlToElement(`
+        <div class="empty-dashboard-message-container">
+        </div>
+    `)
+    const newTileMessage = htmlToElement(`
+        <span class="empty-dashboard-new-tile-btn">
+            New Tile
+        </span>
+    `)
+    emptyDashboardMessage.appendChild(newTileMessage)
+    emptyDashboardMessage.appendChild(
+        document.createTextNode('Add a  to get started')
+    );
+    var parent = document.querySelector(selector);
+
+    var grid = new Muuri(parent, {
         layoutDuration: 400,
         showDuration: 0,
         dragSortHeuristics: {
@@ -178,6 +194,7 @@ export function Dashboard(selector, options={}){
         }
         items.push(new Tile(obj, opts));
     }
+    obj.options.tiles = options.tiles || [];
 
     items.sort((a, b) => {
         if (a.options.y == b.options.y) return a.options.x - b.options.x;
@@ -352,6 +369,40 @@ export function Dashboard(selector, options={}){
             index: indices[0]
         }
     });
+
+    obj.isEmpty = () => {
+        return obj.grid.getItems().length === 0
+    }
+
+    obj.checkIsEmpty = () => {
+        console.log(obj.isEmpty());
+        console.log(obj.grid.getItems());
+        if(obj.isEmpty()){
+            emptyDashboardMessage.display = 'block';
+        }else{
+            emptyDashboardMessage.display = 'none';
+        }
+    }
+
+    newTileMessage.onclick = (evt) => {
+        obj.addTile({
+            title: '',
+            query: '',
+            w: 6,
+            h: 5,
+            notExecutedText: `To get started, enter a query and click
+            <svg stroke="currentColor" fill="currentColor"
+            stroke-width="0" viewBox="0 0 24 24"
+            height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
+            12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
+            18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+            </path>
+            </svg>`
+        })
+    }
+
+    parent.appendChild(emptyDashboardMessage);
 
     obj.applyCSS();
     obj.grid.refreshItems().layout();

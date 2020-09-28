@@ -781,6 +781,21 @@
     width: unset;
 }
 
+.empty-dashboard-message-container {
+    font-family: var(--chata-dashboard-font-family);
+    letter-spacing: .02em;
+    text-align: center;
+    padding: 100px;
+    height: 100%;
+    width: 100%;
+}
+
+.empty-dashboard-new-tile-btn {
+    color: var(--chata-dashboard-accent-color);
+    font-weight: 700;
+    cursor: pointer;
+}
+
 /* .dashboard-tile-response-container svg .tick {stroke: #000; stroke-opacity: 0.15 !important;} */
 
 
