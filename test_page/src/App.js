@@ -34,9 +34,14 @@ class App extends React.Component{
         this.renderDataMessenger()
     }
 
-    onChangeDashboard = (val) => {
+    onChangeDashboard = (val, dashboardpage) => {
         this.setState({
             activeDashboard: val
+        }, () => {
+            var dashboardEl = document.getElementById('dashboard')
+            dashboardEl.innerHTML = '';
+            dashboardEl.classList.remove('muuri')
+            dashboardpage.instanceDashboard()
         })
     }
 

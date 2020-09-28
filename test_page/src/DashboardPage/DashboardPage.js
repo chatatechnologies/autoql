@@ -32,7 +32,9 @@ export class DashboardPage extends Component {
 
         return (
             <Select
-                onChange={(val) => {this.props.onSelectDashboard(val)}}
+                onChange={(val) => {
+                    this.props.onSelectDashboard(val, this)
+                }}
                 style={{ minWidth: '200px' }}
                 defaultValue={0}>
                 {options}
@@ -40,38 +42,43 @@ export class DashboardPage extends Component {
         )
     }
 
-    componentDidMount = () => {
-        var obj = this
+    componentDidUpdate = () => {
+    }
+
+    instanceDashboard = () => {
         const { authentication } = this.props
+        this.dashboard = new Dashboard('#dashboard', {
+            authentication: {
+                token: authentication.token,
+                apiKey: authentication.apiKey,
+                domain: authentication.domain,
+            },
+            themeConfig: {
+                chartColors: [
+                    '#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'
+                ],
+            },
+            autoQLConfig: {
+                debug: true
+            },
+            tiles: this.props.dashboards[this.props.activeDashboard].data,
+            executeOnStopEditing: false,
+            executeOnMount: false,
+            notExecutedText: `To get started, enter a query and click
+            <svg stroke="currentColor" fill="currentColor"
+            stroke-width="0" viewBox="0 0 24 24"
+            height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
+            12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
+            18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+            </path>
+            </svg>`
+        })
+    }
+
+    componentDidMount = () => {
         if(this.props.dashboards){
-            console.log('UPDATE');
-            obj.dashboard = new Dashboard('#dashboard', {
-                authentication: {
-                    token: authentication.token,
-                    apiKey: authentication.apiKey,
-                    domain: authentication.domain,
-                },
-                themeConfig: {
-                    chartColors: [
-                        '#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'
-                    ],
-                },
-                autoQLConfig: {
-                    debug: true
-                },
-                tiles: this.props.dashboards[this.props.activeDashboard].data,
-                executeOnStopEditing: false,
-                executeOnMount: false,
-                notExecutedText: `To get started, enter a query and click
-                <svg stroke="currentColor" fill="currentColor"
-                stroke-width="0" viewBox="0 0 24 24"
-                height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
-                12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
-                18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
-                </path>
-                </svg>`
-            })
+            this.instanceDashboard()
         }
     }
 
