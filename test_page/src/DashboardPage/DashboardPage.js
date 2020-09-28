@@ -23,13 +23,8 @@ export class DashboardPage extends Component {
     componentDidMount = () => {
         var obj = this
         const { authentication } = this.props
-        const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${authentication.apiKey}`
-        axios.get(DASHBOARD_URL, {
-            headers: {
-                'Authorization': 'Bearer ' + authentication.token,
-                'Integrator-Domain': authentication.domain
-            }
-        }).then(function(response){
+        if(this.props.dashboardData){
+            console.log(this.props.dashboardData.data);
             obj.dashboard = new Dashboard('#dashboard', {
                 authentication: {
                     token: authentication.token,
@@ -44,20 +39,20 @@ export class DashboardPage extends Component {
                 autoQLConfig: {
                     debug: true
                 },
-                tiles: response.data[0].data,
+                tiles: this.props.dashboardData.data,
                 executeOnStopEditing: false,
                 executeOnMount: false,
                 notExecutedText: `To get started, enter a query and click
                 <svg stroke="currentColor" fill="currentColor"
                 stroke-width="0" viewBox="0 0 24 24"
                 height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
-                    12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
-                    18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
-                    </path>
+                <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
+                12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
+                18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+                </path>
                 </svg>`
             })
-        })
+        }
     }
 
     toggleEditing = () => {

@@ -7,6 +7,7 @@ import { DataAlertsSettingsPage } from './DataAlertsSettingsPage'
 import { DataMessenger } from 'autoql'
 import { NotificationsIcon } from 'autoql'
 import { NotificationListPage } from './NotificationListPage'
+import axios from 'axios'
 
 import { getActiveIntegrator, getIntroMessageTopics } from './Utils'
 
@@ -23,7 +24,9 @@ class App extends React.Component{
             token: '',
             domain: '',
             apiKey: ''
-        }
+        },
+        dashboards: [],
+        activeDashboard: null
     }
 
     componentDidMount = () => {
@@ -31,6 +34,7 @@ class App extends React.Component{
     }
 
     onLogin = (values) => {
+        var obj = this
         this.datamessenger.setOption('authentication', {
             ...values
         })
@@ -50,6 +54,21 @@ class App extends React.Component{
             },
             useDot: false
         })
+
+        const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${values.apiKey}`
+        axios.get(DASHBOARD_URL, {
+            headers: {
+                'Authorization': 'Bearer ' + values.token,
+                'Integrator-Domain': values.domain
+            }
+        }).then(function(response){
+            console.log(response.data);
+            obj.setState({
+                activeDashboard: response.data[0],
+                dashboards: response.data
+            })
+        })
+
     }
 
     setDMOption = (propName, e) => {
@@ -74,6 +93,7 @@ class App extends React.Component{
             case 'dashboard':
                 widgetPage =
                     <DashboardPage
+                    dashboardData={this.state.activeDashboard}
                     authentication={this.state.authentication}/>
                 break
             case 'chatbar':
