@@ -127,6 +127,10 @@
     opacity: 1;
 }
 
+.copy-sql-modal-content .sql-copied {
+    color: #2aca4d!important;
+}
+
 @keyframes createBox {
   from {
     transform: scale(0);

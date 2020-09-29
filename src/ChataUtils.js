@@ -16,7 +16,9 @@ import {
     DOWNLOAD_CSV_ICON,
     CLIPBOARD_ICON,
     EXPORT_PNG_ICON,
-    TICK
+    TICK,
+    CHECK,
+    COPY_SQL
 } from './Svg'
 import { refreshTooltips } from './Tooltips'
 import { Modal } from './Modal'
@@ -144,11 +146,22 @@ ChataUtils.copySqlHandler = (idRequest) => {
         modal.close()
     }
 
+    copyButton.onclick = (evt) => {
+        if(!copyButton.classList.contains('sql-copied')){
+            copyButton.classList.add('sql-copied');
+            copyButton.appendChild(htmlToElement(`
+                <span class="chata-icon">
+                    ${CHECK}
+                </span>
+            `));
+        }
 
-    // copyTextToClipboard(sql);
-    // new AntdMessage(
-    //     'Successfully copied generated query to clipboard!', 3000
-    // )
+        copyTextToClipboard(sql);
+        new AntdMessage(
+            'Successfully copied generated query to clipboard!', 3000
+        )
+
+    }
 }
 
 ChataUtils.copyHandler = (idRequest) => {
@@ -208,7 +221,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                 break;
             case 'copy_sql':
                 var action = ChataUtils.getActionOption(
-                    CLIPBOARD_ICON, 'View generated SQL',
+                    COPY_SQL, 'View generated SQL',
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
