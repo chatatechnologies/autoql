@@ -11,6 +11,7 @@ import {
     copyTextToClipboard,
     svgString2Image
 } from './Utils'
+import sqlFormatter from "sql-formatter";
 import {
     DOWNLOAD_CSV_ICON,
     CLIPBOARD_ICON,
@@ -115,6 +116,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
     var text = document.createElement('textarea');
     text.classList.add('copy-sql-formatted-text');
     text.setAttribute('disabled', 'true');
+    text.value = sqlFormatter.format(sql);
     modalContent.classList.add('copy-sql-modal-content');
     copyButton.classList.add('autoql-vanilla-chata-btn');
     copyButton.classList.add('copy-sql-btn');
@@ -141,6 +143,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
     okBtn.onclick = (evt) => {
         modal.close()
     }
+
 
     // copyTextToClipboard(sql);
     // new AntdMessage(
