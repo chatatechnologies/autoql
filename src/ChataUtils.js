@@ -105,10 +105,33 @@ ChataUtils.downloadCsvHandler = (idRequest) => {
 ChataUtils.copySqlHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
     var sql = json['data']['sql'][0];
-    copyTextToClipboard(sql);
-    new AntdMessage(
-        'Successfully copied generated query to clipboard!', 3000
+    var okBtn = htmlToElement(
+        `<div class="autoql-vanilla-chata-btn primary "
+        style="padding: 5px 16px; margin: 2px 5px;">Ok</div>`
     )
+    var modalContent = document.createElement('div');
+    var text = document.createElement('textarea');
+    text.classList.add('copy-sql-formatted-text');
+    text.setAttribute('disabled', 'true');
+    modalContent.classList.add('copy-sql-modal-content');
+    modalContent.appendChild(text);
+    var modal = new Modal({
+        destroyOnClose: true,
+        withFooter: true
+    });
+    modal.setTitle('Generated SQL');
+    modal.addView(modalContent);
+    modal.addFooterElement(okBtn);
+    modal.show(okBtn);
+
+    okBtn.onclick = (evt) => {
+        modal.close()
+    }
+
+    // copyTextToClipboard(sql);
+    // new AntdMessage(
+    //     'Successfully copied generated query to clipboard!', 3000
+    // )
 }
 
 ChataUtils.copyHandler = (idRequest) => {
@@ -168,7 +191,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                 break;
             case 'copy_sql':
                 var action = ChataUtils.getActionOption(
-                    CLIPBOARD_ICON, 'Copy generated query to clipboard',
+                    CLIPBOARD_ICON, 'View generated SQL',
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
