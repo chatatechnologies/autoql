@@ -132,7 +132,7 @@ function SafetynetSelector(suggestionList, position, parent){
     return wrapper;
 }
 
-function createSafetynetBody(responseContentContainer, suggestionArray){
+export function createSafetynetBody(responseContentContainer, suggestionArray){
     const safetyDeleteButtonHtml = `
         ${DELETE_ICON}
     `;
