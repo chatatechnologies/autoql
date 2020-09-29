@@ -15,13 +15,14 @@ function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
 
     if(!rowValue)rowValue = '';
-
-    if(colType == 'DATE'){
+    console.log(colType);
+    if(colType == 'DATE' || colType == 'DATE_STRING'){
         var formatDate = formatData(
             rowValue,
             col,
             options
     );
+        console.log(formatDate);
         return formatDate.toLowerCase().includes(headerValue);
     }else if(
         colType == 'DOLLAR_AMT' ||
