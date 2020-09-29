@@ -10,6 +10,7 @@ import {
     putLoadingContainer
 } from '../Utils'
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
+import { createSafetynetContent, createSuggestionArray } from '../Safetynet'
 import Split from 'split.js'
 import { refreshTooltips } from '../Tooltips'
 import {
