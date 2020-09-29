@@ -12,7 +12,8 @@ import {
     DISMISS,
     CALENDAR,
     TURN_ON_NOTIFICATION,
-    EDIT_NOTIFICATION
+    EDIT_NOTIFICATION,
+    SVG_X
 } from '../Svg'
 import { convert } from '../RuleParser'
 import moment from 'moment'

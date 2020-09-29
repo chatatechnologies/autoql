@@ -81,6 +81,32 @@ export function NotificationList(selector, options){
     container.appendChild(dismissAllButton);
     wrapper.appendChild(container);
 
+    dismissContent.onclick = () => {
+        wrapper.dismissAll()
+    }
+
+    wrapper.dismissAll = () => {
+        var opts = wrapper.options.authentication;
+        const URL = `${opts.domain}/autoql/api/v1/rules/notifications?key=${opts.apiKey}`;
+        var payload = {
+            state: 'DISMISSED'
+        }
+        ChataUtils.putCall(URL, payload, (jsonResponse) => {
+            console.log(jsonResponse);
+            wrapper.toggleAll()
+        }, wrapper.options)
+    }
+
+    wrapper.toggleAll = () => {
+        var elItems = container.querySelectorAll(
+            '.chata-notification-list-item'
+        )
+        for (var i = 0; i < elItems.length; i++) {
+            elItems[i].options.state = 'DISMISSED';
+            elItems[i].toggleDismissIcon();
+        }
+    }
+
     wrapper.getNotifications = () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=0&limit=10`;
         var timeOut = 0;
