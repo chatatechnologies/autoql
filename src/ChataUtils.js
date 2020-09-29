@@ -17,6 +17,7 @@ import {
     EXPORT_PNG_ICON,
     TICK
 } from './Svg'
+import { refreshTooltips } from './Tooltips'
 import { Modal } from './Modal'
 import { AntdMessage } from './Antd'
 import '../css/PopoverMenu.css'
@@ -105,6 +106,7 @@ ChataUtils.downloadCsvHandler = (idRequest) => {
 ChataUtils.copySqlHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
     var sql = json['data']['sql'][0];
+    var copyButton = document.createElement('button');
     var okBtn = htmlToElement(
         `<div class="autoql-vanilla-chata-btn primary "
         style="padding: 5px 16px; margin: 2px 5px;">Ok</div>`
@@ -114,7 +116,19 @@ ChataUtils.copySqlHandler = (idRequest) => {
     text.classList.add('copy-sql-formatted-text');
     text.setAttribute('disabled', 'true');
     modalContent.classList.add('copy-sql-modal-content');
+    copyButton.classList.add('autoql-vanilla-chata-btn');
+    copyButton.classList.add('copy-sql-btn');
+    copyButton.classList.add('default');
+    copyButton.classList.add('large');
+    copyButton.setAttribute('data-tippy-content', 'Copy to Clipboard');
+    copyButton.appendChild(htmlToElement(`
+        <span class="chata-icon">
+            ${CLIPBOARD_ICON}
+        </span>
+    `))
+
     modalContent.appendChild(text);
+    modalContent.appendChild(copyButton);
     var modal = new Modal({
         destroyOnClose: true,
         withFooter: true
@@ -123,7 +137,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
     modal.addView(modalContent);
     modal.addFooterElement(okBtn);
     modal.show(okBtn);
-
+    refreshTooltips()
     okBtn.onclick = (evt) => {
         modal.close()
     }

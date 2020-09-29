@@ -101,6 +101,32 @@
     height: calc(100vh - 90px);
 }
 
+.copy-sql-modal-content {
+    position: relative;
+    height: 60vh;
+}
+
+.copy-sql-modal-content .copy-sql-formatted-text {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    resize: none;
+}
+
+.copy-sql-modal-content .copy-sql-btn {
+    /* color: var(--chata-options-toolbar-text-color); */
+    background-color: #fff;
+    position: absolute;
+    top: 3px;
+    right: 0;
+    opacity: 0;
+    transition: opacity .3s ease;
+}
+
+.copy-sql-modal-content:hover .copy-sql-btn {
+    opacity: 1;
+}
+
 @keyframes createBox {
   from {
     transform: scale(0);
