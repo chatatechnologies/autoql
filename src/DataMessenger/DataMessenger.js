@@ -3,7 +3,8 @@ import { ChataTable, ChataPivotTable } from '../ChataTable'
 import { ChataUtils } from '../ChataUtils'
 import { Modal } from '../Modal'
 import {
-    NotificationSettingsModal
+    NotificationSettingsModal,
+    NotificationsIcon
 } from '../Notifications'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -125,6 +126,7 @@ export function DataMessenger(elem, options){
         enableVoiceRecord: true,
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
+        enableNotificationsTab: true,
         inputPlaceholder: 'Type your queries here',
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
@@ -291,8 +293,8 @@ export function DataMessenger(elem, options){
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
                 if(value && obj.options.isVisible){
-                    obj.queryTabs.style.visibility = 'visible';
-                }else obj.queryTabs.style.visibility = 'hidden';
+                    obj.queryTabs.style.display = 'block';
+                }else obj.queryTabs.style.display = 'none';
                 break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
@@ -362,6 +364,11 @@ export function DataMessenger(elem, options){
         var body = document.body;
         if(obj.options.enableExploreQueriesTab){
             obj.queryTabs.style.visibility = 'visible';
+            obj.tabQueryTips.style.display = 'block';
+        }
+        if(obj.options.enableNotificationsTab){
+            obj.queryTabs.style.visibility = 'visible';
+            obj.tabNotifications.style.display = 'block';
         }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
@@ -449,6 +456,8 @@ export function DataMessenger(elem, options){
         obj.wrapper.style.opacity = 0;
         obj.wrapper.style.height = 0;
         obj.queryTabs.style.visibility = 'hidden';
+        obj.tabNotifications.style.display = 'none';
+        obj.tabQueryTips.style.display = 'none';
         var body = document.body;
 
         if(obj.options.placement == 'right'){
@@ -654,13 +663,14 @@ export function DataMessenger(elem, options){
     }
 
     obj.createQueryTabs = function(){
+        var tabId = uuidv4();
         var orientation = obj.options.placement;
         var pageSwitcherShadowContainer = document.createElement('div');
         var pageSwitcherContainer = document.createElement('div');
         var tabChataUtils = document.createElement('div');
         var tabQueryTips = document.createElement('div');
         var tabNotifications = document.createElement('div');
-
+        tabNotifications.setAttribute('id', tabId);
 
         var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
         var queryTabsIcon = htmlToElement(QUERY_TIPS);
@@ -687,12 +697,10 @@ export function DataMessenger(elem, options){
 
         tabChataUtils.appendChild(dataMessengerIcon);
         tabQueryTips.appendChild(queryTabsIcon);
-        tabNotifications.appendChild(notificationTabIcon);
-
 
         pageSwitcherContainer.appendChild(tabChataUtils)
         pageSwitcherContainer.appendChild(tabQueryTips)
-        pageSwitcherContainer.appendChild(tabNotifications)
+        pageSwitcherContainer.appendChild(tabNotifications);
 
         tabChataUtils.onclick = function(event){
             tabChataUtils.classList.add('active');
@@ -722,12 +730,21 @@ export function DataMessenger(elem, options){
 
         var tabs = pageSwitcherShadowContainer;
         obj.rootElem.appendChild(tabs);
+        if(obj.options.enableNotificationsTab){
+            var notificationIcon = new NotificationsIcon(`[id="${tabId}"]`, {
+                authentication: {
+                    ...obj.options.authentication,
+                },
+                useDot: true
+            })
+            obj.notificationIcon = notificationIcon;
+        }
         obj.queryTabs = tabs;
         obj.queryTabsContainer = pageSwitcherContainer;
         obj.tabChataUtils = tabChataUtils;
         obj.tabQueryTips = tabQueryTips;
         obj.tabNotifications = tabNotifications;
-
+        obj.tabId = tabId;
         refreshTooltips();
     }
 

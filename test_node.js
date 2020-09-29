@@ -35,7 +35,9 @@ var datamessenger = new DataMessenger('#datamessenger', {
     width: 550,
     // queryQuickStartTopics: topics,
     enableDynamicCharting: true,
-    placement: 'right'
+    placement: 'right',
+    enableExploreQueriesTab: true,
+    enableNotificationsTab: true
 })
 setTimeout(() => {
     datamessenger.setOption('queryQuickStartTopics', topics);
