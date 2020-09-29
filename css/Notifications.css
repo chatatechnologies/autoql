@@ -9,8 +9,13 @@
 .chata-notification-list-container {
     color: #26a7df;
     height: 100%;
-    padding: 20px;
+    padding: 20px !important;
+    text-align: left;
     /* overflow: hidden; */
+}
+
+.chata-notification-list-container path{
+    fill: unset !important;
 }
 
 .chata-notification-list-container .chata-notification-dismiss-all {

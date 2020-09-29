@@ -4,7 +4,8 @@ import { ChataUtils } from '../ChataUtils'
 import { Modal } from '../Modal'
 import {
     NotificationSettingsModal,
-    NotificationsIcon
+    NotificationsIcon,
+    NotificationList
 } from '../Notifications'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -593,12 +594,11 @@ export function DataMessenger(elem, options){
     }
 
     obj.createNotifications = function() {
+        var notificationsContainerId = uuidv4();
         const container = htmlToElement(`
             <div
-                style="text-align: center; margin-top: 100px;">
-                <span style="opacity: 0.6;">
-                    You don't have any notifications yet.</span>
-                <br>
+                id=${notificationsContainerId}>
+
             </div>
         `)
         const button = htmlToElement(`
@@ -608,7 +608,7 @@ export function DataMessenger(elem, options){
             </button>
         `)
 
-        container.appendChild(button);
+        // container.appendChild(button);
 
         button.onclick = (evt) => {
             var modalView = new NotificationSettingsModal();
@@ -655,15 +655,25 @@ export function DataMessenger(elem, options){
 
         container.style.display = 'none';
         obj.notificationsContainer = container;
+        obj.notificationsContainerId = notificationsContainerId;
         obj.drawerContent.appendChild(container);
     }
 
     obj.notificationsAnimation = function (display){
         obj.notificationsContainer.style.display = display;
+        obj.notificationsContainer.innerHTML = '';
+        var id = obj.notificationsContainerId;
+        var notificationList = new NotificationList(`[id="${id}"]`, {
+            authentication: {
+                ...obj.options.authentication
+            },
+            showNotificationDetails: true,
+        })
     }
 
     obj.createQueryTabs = function(){
         var tabId = uuidv4();
+
         var orientation = obj.options.placement;
         var pageSwitcherShadowContainer = document.createElement('div');
         var pageSwitcherContainer = document.createElement('div');

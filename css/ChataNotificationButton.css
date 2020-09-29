@@ -37,3 +37,7 @@
   left: 0.5em;
   top: -2px;
 }
+
+.chata-notifications-button svg path{
+    fill: unset !important;
+}
