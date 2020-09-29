@@ -1,1 +1,5 @@
-export { createSafetynetContent, createSuggestionArray } from './Safetynet'
+export {
+    createSafetynetContent,
+    createSuggestionArray,
+    createSafetynetBody
+} from './Safetynet'

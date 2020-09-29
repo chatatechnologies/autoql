@@ -1,6 +1,10 @@
 import { Cascader } from '../Cascader'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
 import { ChataUtils } from '../ChataUtils'
+import { Modal } from '../Modal'
+import {
+    NotificationSettingsModal
+} from '../Notifications'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet'
@@ -184,6 +188,7 @@ export function DataMessenger(elem, options){
     obj.options.activeIntegrator = getActiveIntegrator(
         obj.options.authentication.domain
     );
+
 
     obj.setOption = (option, value) => {
         switch (option) {
@@ -597,15 +602,46 @@ export function DataMessenger(elem, options){
         container.appendChild(button);
 
         button.onclick = (evt) => {
+            var modalView = new NotificationSettingsModal();
             var configModal = new Modal({
                 withFooter: true,
                 destroyOnClose: true
-            })
-            var modalView = new NotificationSettingsModal();
-            configModal.chataModal.style.width = 'vw';
+            }, () => {modalView.step1.expand();})
+            var cancelButton = htmlToElement(
+                `<div class="autoql-vanilla-chata-btn default"
+                style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+            )
+            var spinner = htmlToElement(`
+                <div class="autoql-vanilla-spinner-loader hidden"></div>
+                `)
+            var saveButton = htmlToElement(
+                `<div class="autoql-vanilla-chata-btn primary "
+                style="padding: 5px 16px; margin: 2px 5px;"></div>`
+            )
+
+            saveButton.appendChild(spinner);
+            saveButton.appendChild(document.createTextNode('Save'));
+            configModal.addFooterElement(cancelButton);
+            configModal.addFooterElement(saveButton);
+            configModal.show();
+            refreshTooltips();
+            configModal.chataModal.style.width = '95vw';
             configModal.addView(modalView);
             configModal.setTitle('Custom Notification');
             configModal.show();
+            cancelButton.onclick = (e) => {
+                configModal.close();
+            }
+            saveButton.onclick = (e) => {
+                spinner.classList.remove('hidden')
+                saveButton.setAttribute('disabled', 'true')
+                var o = obj.options
+                const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
+                ChataUtils.ajaxCallPost(URL, (json, status) => {
+                    console.log(json);
+                    configModal.close();
+                }, modalView.getValues(), o)
+            }
         }
 
         container.style.display = 'none';
@@ -656,7 +692,7 @@ export function DataMessenger(elem, options){
 
         pageSwitcherContainer.appendChild(tabChataUtils)
         pageSwitcherContainer.appendChild(tabQueryTips)
-        // pageSwitcherContainer.appendChild(tabNotifications)
+        pageSwitcherContainer.appendChild(tabNotifications)
 
         tabChataUtils.onclick = function(event){
             tabChataUtils.classList.add('active');
