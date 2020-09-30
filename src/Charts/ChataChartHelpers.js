@@ -44,7 +44,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     }else{
         seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
     }
-
     return seriesData;
 }
 

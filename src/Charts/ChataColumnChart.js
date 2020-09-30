@@ -343,6 +343,8 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
+            const colType = cols[index2].type
+            if(colType === 'DATE' || colType === 'DATE_STRING')return d
             return formatLabel(formatChartData(d, cols[index2], options))
         }))
         .selectAll("text")
@@ -353,6 +355,8 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
+            const colType = cols[index2].type
+            if(colType === 'DATE' || colType === 'DATE_STRING')return d
             return formatLabel(formatChartData(d, cols[index2], options))
         }))
         .selectAll("text")

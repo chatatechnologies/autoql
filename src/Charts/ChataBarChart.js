@@ -199,10 +199,6 @@ export function createBarChart(
     var x = SCALE_LINEAR()
     .range([0, chartWidth]);
 
-    var xAxis = getAxisBottom(x)
-    .tickSize(0)
-
-    var yAxis = getAxisLeft(y0)
 
     // y0
     // .range([height - margin.bottomChart, 0])
@@ -227,7 +223,11 @@ export function createBarChart(
         false,
         .1
     )
+    console.log(categoriesNames);
+    var xAxis = getAxisBottom(x)
+    .tickSize(0)
 
+    var yAxis = getAxisLeft(y0)
     x.domain([minMaxValues.min, minMaxValues.max]).nice();
 
     var colorScale = getColorScale(
@@ -370,7 +370,9 @@ export function createBarChart(
     if(rotateLabels){
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index1], options)}
+        ))
         .selectAll("text")
         .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -378,7 +380,9 @@ export function createBarChart(
     }else{
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
-        .call(xAxis)
+        .call(xAxis.tickFormat(function(d){
+            return formatChartData(d, cols[index1], options)}
+        ))
         .selectAll("text")
         .style("color", '#fff')
         .style("text-anchor", "center");
@@ -395,6 +399,8 @@ export function createBarChart(
     .attr("class", "y axis")
     .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
+        const colType = cols[index2].type
+        if(colType === 'DATE' || colType === 'DATE_STRING')return d
         return formatLabel(formatData(d, cols[index2], options))
     }))
     let slice;
