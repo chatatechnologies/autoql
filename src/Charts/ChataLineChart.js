@@ -434,13 +434,18 @@ export function createLineChart(
         .each(function (d, i) {
             var group = col2;
             if(allGroup.length > 1)group = d.group
+            const type = cols[index2].type;
+            var toolTipColValue1 = d.label
+            if(type !== 'DATE' && type !== 'DATE_STRING'){
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+            }
             chataD3.select(this).attr(valueClass, i)
             .attr('data-col1', col1)
             .attr('data-col2', group)
-            .attr('data-colvalue1', formatData(
-                d.label, cols[index2],
-                options
-            ))
+            .attr('data-colvalue1', toolTipColValue1)
             .attr('data-colvalue2',formatData(
                 d.value, cols[index1],
                 options
