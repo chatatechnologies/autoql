@@ -245,7 +245,7 @@ function getTextHeight(text){
     return height;
 }
 
-function updateSelectWidth(container){
+export function updateSelectWidth(container){
     var selects = document.querySelectorAll('.chata-safetynet-select');
     for (var i = 0; i < selects.length; i++) {
         updateSelect(selects[i]);

@@ -297,6 +297,12 @@ export function DataMessenger(elem, options){
                     obj.queryTabs.style.display = 'block';
                 }else obj.queryTabs.style.display = 'none';
                 break;
+            case 'enableNotificationsTab':
+                obj.options.enableNotificationsTab = value;
+                if(value && obj.options.isVisible){
+                    obj.tabNotifications.style.display = 'block';
+                }else obj.tabNotifications.style.display = 'none';
+                break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
                 obj.input.setAttribute('placeholder', value);

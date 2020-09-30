@@ -1,5 +1,6 @@
 export {
     createSafetynetContent,
     createSuggestionArray,
-    createSafetynetBody
+    createSafetynetBody,
+    updateSelectWidth
 } from './Safetynet'
