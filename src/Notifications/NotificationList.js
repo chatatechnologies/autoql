@@ -50,6 +50,7 @@ export function NotificationList(selector, options){
         onCollapseCallback: (notification) => {},
         activeNotificationData: undefined,
         showNotificationDetails: true,
+        showDescription: true,
         onErrorCallback: (error) => {},
         onSuccessCallback: (message) => {}
     }

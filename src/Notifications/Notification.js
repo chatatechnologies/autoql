@@ -643,6 +643,10 @@ export function Notification(options, parentOptions){
         }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
     }
 
+    if(!parentOptions.showDescription){
+        notificationDetails.style.display = 'none';
+    }
+
     item.toggleDismissIcon();
     return item;
 }

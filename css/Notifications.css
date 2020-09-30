@@ -573,6 +573,10 @@
     border-radius: 4px;
 }
 
+.single-value-response{
+    font-size: 32px;
+}
+
 @keyframes slideIn{
     0% {
         opacity: 0;
