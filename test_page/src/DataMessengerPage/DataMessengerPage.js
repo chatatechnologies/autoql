@@ -157,7 +157,6 @@ export class DataMessengerPage extends Component {
         return (
             <div>
             <h4>{title}</h4>
-            {reload && <h6>(Must click 'Reload Data Messenger' to apply this)</h6>}
             <Radio.Group
             defaultValue={this.state[propName]}
             onChange={(e) => {
@@ -192,12 +191,6 @@ export class DataMessengerPage extends Component {
                     false,
                 ])}
                 <h1>Customize Widgets</h1>
-                <Button
-                onClick={this.reloadDataMessenger}
-                style={{ marginRight: '10px' }}
-                icon={<ReloadOutlined />}>
-                    Reload Data Messenger
-                </Button>
                 <Button
                 onClick={() => this.props.showDM()}
                 type="primary"
@@ -424,11 +417,13 @@ export class DataMessengerPage extends Component {
                 value={this.state.title}
                 />
                 <h4>Font Family</h4>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <Input
                 type="text"
                 onChange={(e) => {
                     this.setState({ fontFamily: e.target.value })
+                    this.props.setDMOption('themeConfig', {
+                        fontFamily: e.target.value
+                    })
                 }}
                 value={this.state.fontFamily}
                 />
@@ -480,7 +475,6 @@ export class DataMessengerPage extends Component {
                 value={this.state.lightAccentColor}
                 />
                 <h4>Dark Theme Accent Color</h4>
-                <h6>(Must click 'Reload Data Messenger' to apply this)</h6>
                 <Input
                 type="color"
                 onChange={(e) => {

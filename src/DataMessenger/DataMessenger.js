@@ -302,6 +302,7 @@ export function DataMessenger(elem, options){
                 if(value && obj.options.isVisible){
                     obj.tabNotifications.style.display = 'block';
                 }else obj.tabNotifications.style.display = 'none';
+                obj.instanceNotificationIcon();
                 break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
@@ -746,7 +747,20 @@ export function DataMessenger(elem, options){
 
         var tabs = pageSwitcherShadowContainer;
         obj.rootElem.appendChild(tabs);
+        obj.queryTabs = tabs;
+        obj.queryTabsContainer = pageSwitcherContainer;
+        obj.tabChataUtils = tabChataUtils;
+        obj.tabQueryTips = tabQueryTips;
+        obj.tabNotifications = tabNotifications;
+        obj.tabId = tabId;
+        obj.instanceNotificationIcon();
+        refreshTooltips();
+    }
+
+    obj.instanceNotificationIcon = () => {
         if(obj.options.enableNotificationsTab){
+            var tabId = obj.tabId;
+            if(obj.notificationIcon)return
             var notificationIcon = new NotificationsIcon(`[id="${tabId}"]`, {
                 authentication: {
                     ...obj.options.authentication,
@@ -755,13 +769,6 @@ export function DataMessenger(elem, options){
             })
             obj.notificationIcon = notificationIcon;
         }
-        obj.queryTabs = tabs;
-        obj.queryTabsContainer = pageSwitcherContainer;
-        obj.tabChataUtils = tabChataUtils;
-        obj.tabQueryTips = tabQueryTips;
-        obj.tabNotifications = tabNotifications;
-        obj.tabId = tabId;
-        refreshTooltips();
     }
 
     obj.createQueryTips = function(){

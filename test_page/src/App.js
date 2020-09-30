@@ -158,6 +158,7 @@ class App extends React.Component{
             resizable: true,
             width: 550,
             enableDynamicCharting: true,
+            enableNotificationsTab: true,
             placement: 'right'
         })
     }
