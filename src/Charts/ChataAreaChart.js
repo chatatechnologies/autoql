@@ -1,4 +1,5 @@
-import * as chataD3 from 'd3'
+import { selectAll, select } from 'd3-selection'
+import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { tooltipCharts } from '../Tooltips'
 import {
@@ -141,7 +142,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         margin.bottomChart = 13;
     }
 
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -267,7 +268,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .style("text-anchor", "center");
     }
 
-    var maxValue = chataD3.max(data, function(d) {
+    var maxValue = max(data, function(d) {
         var sum = 0;
         for (var [key, value] of Object.entries(d)){
             if(key == 'group')continue;
@@ -348,7 +349,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr("fill-opacity", '1')
         .each(function(d, i){
             if(d.y && d.group && d.key){
-                chataD3.select(this).attr(valueClass, i)
+                select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
                 .attr('data-col3', col3)
@@ -369,12 +370,12 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
             }
         })
         .on("mouseover", function(d, i){
-            chataD3.select(this).
+            select(this).
             attr("stroke", color(d.group))
             .attr('fill', 'white')
         })
         .on("mouseout", function(d, i){
-            chataD3.select(this)
+            select(this)
             .attr("stroke", 'transparent')
             .attr('fill', 'transparent')
         })
@@ -408,7 +409,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         !allSubgroups[unformatGroup].isVisible;
 
         createLayers();
-        const legendCell = chataD3.select(this);
+        const legendCell = select(this);
         legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
     svgLegend.call(legendOrdinal)
@@ -417,7 +418,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     svgLegend
       .attr('transform', `translate(${newX}, ${0})`)
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createAreaChart(
                 component,

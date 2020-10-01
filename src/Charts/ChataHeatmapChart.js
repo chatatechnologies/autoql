@@ -1,4 +1,5 @@
-import * as chataD3 from 'd3'
+import { select } from 'd3-selection'
+import { max } from 'd3-array'
 import {
     formatLabel,
     getGroupableFields,
@@ -79,7 +80,7 @@ export function createHeatmap(
         'chata-hidden-scrollbox'
     );
 
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -193,7 +194,7 @@ export function createHeatmap(
 
     var colorScale = SCALE_LINEAR()
     .range([0, 1])
-    .domain([0, chataD3.max(data, function(d) { return d.value; })]);
+    .domain([0, max(data, function(d) { return d.value; })]);
 
 
     svg.selectAll()
@@ -208,7 +209,7 @@ export function createHeatmap(
     .enter()
     .append("rect")
     .each(function (d, i) {
-        chataD3.select(this).attr(valueClass, i)
+        select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-col3', col3)
@@ -234,7 +235,7 @@ export function createHeatmap(
 
     tooltipCharts();
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createHeatmap(
                 component,

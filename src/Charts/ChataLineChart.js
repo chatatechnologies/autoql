@@ -1,4 +1,4 @@
-import * as chataD3 from 'd3'
+import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
 
@@ -105,10 +105,6 @@ export function createLineChart(
     }
     var allData = [];
 
-    // var colorScale = chataD3.scaleOrdinal()
-    // .domain(allGroup)
-    // .range(options.themeConfig.chartColors);
-
     var colorScale = getColorScale(
         allGroup,
         options.themeConfig.chartColors
@@ -206,7 +202,7 @@ export function createLineChart(
     );
 
 
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
@@ -442,7 +438,7 @@ export function createLineChart(
                     options
                 )
             }
-            chataD3.select(this).attr(valueClass, i)
+            select(this).attr(valueClass, i)
             .attr('data-col1', col1)
             .attr('data-col2', group)
             .attr('data-colvalue1', toolTipColValue1)
@@ -488,7 +484,7 @@ export function createLineChart(
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.target.textContent.trim());
             createLines();
-            const legendCell = chataD3.select(this);
+            const legendCell = select(this);
             legendCell.classed(
                 'disable-group', !legendCell.classed('disable-group')
             );
@@ -521,7 +517,7 @@ export function createLineChart(
 
     createLines();
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createLineChart(
                 component,

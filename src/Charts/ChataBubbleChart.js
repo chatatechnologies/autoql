@@ -1,4 +1,5 @@
-import * as chataD3 from 'd3'
+import { select } from 'd3-selection'
+import { max, min } from 'd3-array'
 import {
     formatLabel,
     getGroupableFields,
@@ -24,7 +25,7 @@ import { ChataUtils } from '../ChataUtils'
 export function createBubbleChart(
     component, json, options, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
-        
+
     var margin = {top: 5, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
 
@@ -89,7 +90,7 @@ export function createBubbleChart(
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -214,8 +215,8 @@ export function createBubbleChart(
     var radiusScale = SCALE_LINEAR()
     .range([0, Math.min(getBandWidth(x), getBandWidth(y))])
     .domain([
-        chataD3.min(data, function(d) { return d.value; }),
-        chataD3.max(data, function(d) { return d.value; })
+        min(data, function(d) { return d.value; }),
+        max(data, function(d) { return d.value; })
     ]);
 
     svg.selectAll()
@@ -230,7 +231,7 @@ export function createBubbleChart(
     .enter()
     .append("circle")
     .each(function (d, i) {
-        chataD3.select(this).attr(valueClass, i)
+        select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-col3', col3)
@@ -253,7 +254,7 @@ export function createBubbleChart(
     .attr('class', 'tooltip-3d circle')
     tooltipCharts();
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createBubbleChart(
                 component,

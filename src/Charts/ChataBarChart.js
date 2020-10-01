@@ -1,4 +1,4 @@
-import * as chataD3 from 'd3'
+import { selectAll, select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
 
@@ -236,7 +236,7 @@ export function createBarChart(
     );
 
 
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -451,7 +451,7 @@ export function createBarChart(
                     options
                 )
             }
-            chataD3.select(this).attr(valueClass, rectIndex++)
+            select(this).attr(valueClass, rectIndex++)
             .attr('data-col1', col1)
             .attr('data-col2', group)
             .attr('data-colvalue1', toolTipColValue1)
@@ -491,7 +491,7 @@ export function createBarChart(
         legendOrdinal.on('cellclick', function(d) {
             data = toggleSerie(data, d.target.textContent.trim());
             createBars();
-            const legendCell = chataD3.select(this);
+            const legendCell = select(this);
             legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
         svgLegend.call(legendOrdinal)
@@ -522,7 +522,7 @@ export function createBarChart(
 
     }
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createBarChart(
                 component,

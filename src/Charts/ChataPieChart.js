@@ -1,4 +1,4 @@
-import * as chataD3 from 'd3'
+import { select } from 'd3-selection'
 import {
     enumerateCols,
     getIndexesByType,
@@ -115,7 +115,7 @@ export function createPieChart(
     var legendSpacing = 1;
 
 
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append('svg')
     .attr('width', width)
     .attr('height', height)
@@ -152,7 +152,7 @@ export function createPieChart(
     .enter()
     .append('path')
     .each(function(d, i){
-        chataD3.select(this).attr(valueClass, i)
+        select(this).attr(valueClass, i)
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
@@ -160,15 +160,15 @@ export function createPieChart(
             d.value, cols[index2],
             options
         ))
-        chataD3.select(this)._groups[0][0].style.fill = color(d.data.key)
+        select(this)._groups[0][0].style.fill = color(d.data.key)
     })
     .attr('d', arc)
     .style('fill-opacity', 0.85)
     .on('mouseover', function(d) {
-        chataD3.select(this).style('fill-opacity', 1)
+        select(this).style('fill-opacity', 1)
     })
     .on('mouseout', function(d) {
-        chataD3.select(this).style('fill-opacity', 0.85)
+        select(this).style('fill-opacity', 0.85)
     })
     .on('click', function(d) {
         svg
@@ -182,7 +182,7 @@ export function createPieChart(
             return 'translate(0,0)';
         });
 
-        chataD3.select(this)
+        select(this)
         .transition()
         .duration(500)
         .attr('transform', function(d) {
@@ -247,7 +247,7 @@ export function createPieChart(
       .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
 
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createPieChart(
                 component,

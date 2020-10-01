@@ -1,4 +1,5 @@
-import * as chataD3 from 'd3'
+import { select } from 'd3-selection'
+import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { tooltipCharts } from '../Tooltips'
 import {
@@ -152,7 +153,7 @@ export function createStackedColumnChart(
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -286,7 +287,7 @@ export function createStackedColumnChart(
         .style("text-anchor", "center");
     }
 
-    var maxValue = chataD3.max(data, function(d) {
+    var maxValue = max(data, function(d) {
         var sum = 0;
         for (var [key, value] of Object.entries(d)){
             if(key == 'group')continue;
@@ -345,7 +346,7 @@ export function createStackedColumnChart(
                 }
             }
             if(d.labelY && d.data.group && d.value){
-                chataD3.select(this).attr(valueClass, i)
+                select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
                 .attr('data-col3', col3)
@@ -364,7 +365,7 @@ export function createStackedColumnChart(
                 .attr('data-unformatvalue3', d.value)
                 .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
             }else{
-                chataD3.select(this).attr(
+                select(this).attr(
                     'class','autoql-vanilla-stacked-rect'
                 )
             }
@@ -415,7 +416,7 @@ export function createStackedColumnChart(
         !allSubgroups[unformatGroup].isVisible;
 
         createBars();
-        const legendCell = chataD3.select(this);
+        const legendCell = select(this);
         legendCell.classed('disable-group', !legendCell.classed(
             'disable-group'
         ));
@@ -427,7 +428,7 @@ export function createStackedColumnChart(
       .attr('transform', `translate(${newX}, ${0})`)
 
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createStackedColumnChart(
                 component,

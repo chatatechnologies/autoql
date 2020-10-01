@@ -1,4 +1,5 @@
-import * as chataD3 from 'd3'
+import { select } from 'd3-selection'
+import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { tooltipCharts } from '../Tooltips'
 import {
@@ -153,7 +154,7 @@ export function createStackedBarChart(
             }
         });
     }
-    var svg = chataD3.select(component)
+    var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
@@ -233,7 +234,7 @@ export function createStackedBarChart(
     .attr('class', 'autoql-vanilla-x-axis-label')
     .text(col3);
 
-    var maxValue = chataD3.max(data, function(d) {
+    var maxValue = max(data, function(d) {
         var sum = 0;
         for (var [key, value] of Object.entries(d)){
             if(key == 'group')continue;
@@ -326,7 +327,7 @@ export function createStackedBarChart(
                     break;
                 }
             }
-            chataD3.select(this).attr(valueClass, i)
+            select(this).attr(valueClass, i)
             .attr('data-col1', col1)
             .attr('data-col2', col2)
             .attr('data-col3', col3)
@@ -390,7 +391,7 @@ export function createStackedBarChart(
         !allSubgroups[unformatGroup].isVisible;
 
         createBars();
-        const legendCell = chataD3.select(this);
+        const legendCell = select(this);
         legendCell.classed(
             'disable-group', !legendCell.classed('disable-group')
         );
@@ -401,7 +402,7 @@ export function createStackedBarChart(
     svgLegend
       .attr('transform', `translate(${newX}, ${0})`)
 
-    chataD3.select(window).on(
+    select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createStackedBarChart(
                 component,
