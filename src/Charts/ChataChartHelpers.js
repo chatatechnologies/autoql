@@ -1,4 +1,4 @@
-import * as chataD3 from 'd3'
+import { min, max } from 'd3-array'
 import {
     cloneObject,
     formatColumnName,
@@ -213,11 +213,11 @@ export const getMinAndMaxValues = (data) => {
 
     for (var i = 0; i < data.length; i++) {
         var serieValues = data[i].values;
-        maxValuesFromArrays.push(chataD3.max(serieValues, s => s.value));
-        minValuesFromArrays.push(chataD3.min(serieValues, s => s.value));
+        maxValuesFromArrays.push(max(serieValues, s => s.value));
+        minValuesFromArrays.push(min(serieValues, s => s.value));
     }
-    let maxValue = chataD3.max(maxValuesFromArrays);
-    let minValue = chataD3.min(minValuesFromArrays);
+    let maxValue = max(maxValuesFromArrays);
+    let minValue = min(minValuesFromArrays);
     if (maxValue === minValue) {
         if (minValue > 0) {
             minValue = 0

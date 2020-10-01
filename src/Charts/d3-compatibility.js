@@ -1,9 +1,10 @@
-import * as chataD3 from 'd3'
+import { scaleOrdinal, scaleBand, scaleLinear } from 'd3-scale'
+import { axisBottom, axisLeft } from 'd3-axis'
+import { pie, area, line, symbolCircle, symbol } from 'd3-shape'
 import { legendColor } from 'd3-svg-legend'
-import { symbolCircle } from 'd3-shape'
 
-export const SCALE_LINEAR = chataD3.scaleLinear;
-export const SCALE_BAND = chataD3.scaleBand;
+export const SCALE_LINEAR = scaleLinear;
+export const SCALE_BAND = scaleBand;
 
 export const getD3Version = () => {
     return chataD3.version.split('.')[0];
@@ -11,18 +12,17 @@ export const getD3Version = () => {
 
 export const getAxisBottom = (scale) => {
     let axis;
-    axis = chataD3.axisBottom(scale);
+    axis = axisBottom(scale);
     return axis;
 }
 
 export const getAxisLeft = (scale) => {
     let axis;
 
-    axis = chataD3.axisLeft(scale);
+    axis = axisLeft(scale);
 
     return axis;
 }
-
 
 export const getBandWidth = (scale) => {
     return scale.bandwidth()
@@ -38,13 +38,13 @@ export const setDomainRange = (
 }
 
 export const getColorScale = (domainValues, range) => {
-    return chataD3.scaleOrdinal()
+    return scaleOrdinal()
     .domain(domainValues)
     .range(range);
 }
 
 export const getLine = (fnX, fnY) => {
-    return chataD3.line()
+    return line()
     .x(fnX)
     .y(fnY)
 }
@@ -56,12 +56,12 @@ export const getArc = (iRadius, oRadius) => {
 }
 
 export const getPie = (fn) => {
-    return chataD3.pie()
+    return pie()
     .value(fn)
 }
 
 export const getArea = (xFn, y0Fn, y1Fn) => {
-    return chataD3.area()
+    return area()
     .x(xFn)
     .y0(y0Fn)
     .y1(y1Fn)
@@ -71,7 +71,7 @@ export const getLegend = (scale, legendWrapLength, orient) => {
     return legendColor()
     .shape(
         'path',
-        chataD3.symbol()
+        symbol()
         .type(symbolCircle)
         .size(75)()
     )
