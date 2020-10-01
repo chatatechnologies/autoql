@@ -200,6 +200,9 @@ export function DataMessenger(elem, options){
                 obj.options.activeIntegrator = getActiveIntegrator(
                     obj.options.authentication.domain
                 );
+                if(obj.notificationIcon){
+                    obj.notificationIcon.setOption('authentication', value)
+                }
                 break;
             case 'dataFormatting':
                 obj.setObjectProp('dataFormatting', value);

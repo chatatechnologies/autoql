@@ -81,6 +81,22 @@ export function NotificationsIcon(selector, options={}){
 		}
 	}
 
+	this.setOption = (option, value) => {
+		switch (option) {
+			case 'authentication':
+				obj.setObjectProp('authentication', value);
+				break;
+			default:
+
+		}
+	}
+
+	obj.setObjectProp = (key, _obj) => {
+		for (var [keyValue, value] of Object.entries(_obj)) {
+			obj.options[key][keyValue] = value;
+		}
+	}
+
 	this.setBadgeValue = (val) => {
 		if(parseInt(val) > 0 && !obj.options.useDot){
 			badge.style.visibility = 'visible';

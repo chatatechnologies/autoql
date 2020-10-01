@@ -81,14 +81,14 @@ setTimeout(() => {
 //     }
 // })
 
-// var nButton = new NotificationsIcon('#notification-icon', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     useDot: true
-// })
+var nButton = new NotificationsIcon('#notification-icon', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    useDot: true
+})
 
 get(DASHBOARD_URL, {
     headers: {
@@ -96,19 +96,19 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    dashboard = new Dashboard('#dashboard', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        tiles: response.data[0].data
-    })
-    dashboard.startEditing()
+    // dashboard = new Dashboard('#dashboard', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     tiles: response.data[0].data
+    // })
+    // dashboard.startEditing()
 })
