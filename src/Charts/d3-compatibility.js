@@ -2,6 +2,7 @@ import { scaleOrdinal, scaleBand, scaleLinear } from 'd3-scale'
 import { axisBottom, axisLeft } from 'd3-axis'
 import { pie, area, line, symbolCircle, symbol } from 'd3-shape'
 import { legendColor } from 'd3-svg-legend'
+import 'd3-transition'
 
 export const SCALE_LINEAR = scaleLinear;
 export const SCALE_BAND = scaleBand;
