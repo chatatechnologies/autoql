@@ -1651,6 +1651,7 @@ export function DataMessenger(elem, options){
                 moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
                 moreOptionsArray.push('copy_sql');
+                moreOptionsArray.push('notification');
                 break;
             case 'chart-view':
                 if(request['reference_id'] !== '1.1.420'){
@@ -1669,6 +1670,7 @@ export function DataMessenger(elem, options){
                 );
                 moreOptionsArray.push('png');
                 moreOptionsArray.push('copy_sql');
+                moreOptionsArray.push('notification');
             break;
             case 'safety-net':
                 toolbar.appendChild(

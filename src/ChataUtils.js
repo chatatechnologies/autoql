@@ -18,7 +18,8 @@ import {
     EXPORT_PNG_ICON,
     TICK,
     CHECK,
-    COPY_SQL
+    COPY_SQL,
+    NOTIFICATION_BUTTON
 } from './Svg'
 import { refreshTooltips } from './Tooltips'
 import { Modal } from './Modal'
@@ -184,12 +185,15 @@ ChataUtils.exportPNGHandler = (idRequest) => {
 }
 
 ChataUtils.filterTableHandler = (evt, idRequest) => {
-    console.log(idRequest);
     var table = document.querySelector(
         `[data-componentid="${idRequest}"]`
     );
     var tabulator = table.tabulator;
     tabulator.toggleFilters();
+}
+
+ChataUtils.createNotificationHandler = (evt, idRequest) => {
+    
 }
 
 ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
@@ -234,6 +238,16 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                     [idRequest]
                 );
                 menu.ul.appendChild(action);
+                break;
+            case 'notification':
+                var action = ChataUtils.getActionOption(
+                    NOTIFICATION_BUTTON, 'Create a notification from this query...',
+                    ChataUtils.createNotificationHandler,
+                    [idRequest]
+                );
+                menu.ul.appendChild(action);
+
+                break;
             default:
 
         }
