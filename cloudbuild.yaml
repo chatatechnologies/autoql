@@ -11,7 +11,7 @@ steps:
         npm install
         npm run test
         npx webpack --version
-        npm run build-cdn
+        npx webpack --mode=production --config webpack.config.js
         ls -al build
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: update CDN
