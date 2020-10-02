@@ -10,8 +10,8 @@ steps:
         npm set progress=false
         npm install
         npm run test
-        npx rollup --version
-        npx rollup -c
+        npx webpack --version
+        npm run build-cdn
         ls -al build
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     id: update CDN
