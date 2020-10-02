@@ -1,21 +1,9 @@
 import postcss from 'rollup-plugin-postcss'
 import babel from 'rollup-plugin-babel'
 import { nodeResolve } from '@rollup/plugin-node-resolve';
-import pkg from './package.json'
 import commonjs from 'rollup-plugin-commonjs'
-
-const external = [
-  ...Object.keys(pkg.peerDependencies || {}),
-  ...Object.keys(pkg.dependencies || {}),
-]
-
-const makeExternalPredicate = externalArr => {
-    if (externalArr.length === 0) {
-        return () => false
-    }
-    const pattern = new RegExp(`^(${externalArr.join('|')})($|/)`)
-    return id => pattern.test(id)
-}
+import globals from 'rollup-plugin-node-globals';
+import builtins from 'rollup-plugin-node-builtins';
 
 
 export default {
@@ -38,6 +26,7 @@ export default {
         postcss({
             extract: 'autoql-styles.css'
         }),
+        globals(),
+        builtins(),
     ],
-    external: external,
 };
