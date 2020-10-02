@@ -10,7 +10,7 @@ import {
     getSVGString,
     copyTextToClipboard,
     svgString2Image
-} from './Utils'
+} from '../Utils'
 import sqlFormatter from "sql-formatter";
 import {
     DOWNLOAD_CSV_ICON,
@@ -20,12 +20,12 @@ import {
     CHECK,
     COPY_SQL,
     NOTIFICATION_BUTTON
-} from './Svg'
-import { refreshTooltips } from './Tooltips'
-import { Modal } from './Modal'
-import { NotificationSettingsModal } from './Notifications'
-import { AntdMessage } from './Antd'
-import '../css/PopoverMenu.css'
+} from '../Svg'
+import { refreshTooltips } from '../Tooltips'
+import { Modal } from '../Modal'
+import { NotificationSettingsModal } from '../Notifications'
+import { AntdMessage } from '../Antd'
+import '../../css/PopoverMenu.css'
 
 
 export var ChataUtils = {

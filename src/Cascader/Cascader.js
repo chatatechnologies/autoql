@@ -3,9 +3,9 @@ import {
     EXPLORE_QUERIES,
     TOPICS_ARROW,
     OPTION_ARROW_CIRCLE,
-} from './Svg'
-import { htmlToElement  } from './Utils'
-import '../css/Cascader.css'
+} from '../Svg'
+import { htmlToElement  } from '../Utils'
+import './Cascader.css'
 
 export function Cascader(topics, datamessenger){
     var obj = this;

@@ -1,10 +1,10 @@
-import { htmlToElement } from './Utils'
+import { htmlToElement } from '../Utils'
 import {
     DASHBOARD_DELETE_ICON
-} from './Svg'
-import '../css/Modal.css'
-import '../css/ColumnEditor.css'
-import '../css/Spinner.css'
+} from '../Svg'
+import './Modal.css'
+import './ColumnEditor.css'
+import './Spinner.css'
 
 export function Modal(options={}, onShow=()=>{}){
     var obj = this;
