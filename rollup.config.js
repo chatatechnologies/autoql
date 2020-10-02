@@ -8,7 +8,7 @@ import globals from 'rollup-plugin-node-globals';
 export default {
     input: 'src/index.js',
     output: {
-        file: 'build/bundle.js',
+        file: 'build/autoql-min.js',
         format: 'umd',
         name: 'ChataAI',
     },
