@@ -1502,7 +1502,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.getMoreOptionsMenu = (options, idRequest, type) => {
-        return ChataUtils.getMoreOptionsMenu(options, idRequest, type);
+        return ChataUtils.getMoreOptionsMenu(options, idRequest, type, obj);
     }
 
     obj.getReportProblemMenu = (toolbar, idRequest, type) => {

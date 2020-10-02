@@ -23,6 +23,7 @@ import {
 } from './Svg'
 import { refreshTooltips } from './Tooltips'
 import { Modal } from './Modal'
+import { NotificationSettingsModal } from './Notifications'
 import { AntdMessage } from './Antd'
 import '../css/PopoverMenu.css'
 
@@ -192,12 +193,51 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
     tabulator.toggleFilters();
 }
 
-ChataUtils.createNotificationHandler = (evt, idRequest) => {
-    
+ChataUtils.createNotificationHandler = (idRequest, caller) => {
+    var o = caller.options;
+    var modalView = new NotificationSettingsModal();
+    var configModal = new Modal({
+        withFooter: true,
+        destroyOnClose: true
+    }, () => {modalView.step1.expand();})
+    var cancelButton = htmlToElement(
+        `<div class="autoql-vanilla-chata-btn default"
+        style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+    )
+    var spinner = htmlToElement(`
+        <div class="autoql-vanilla-spinner-loader hidden"></div>
+        `)
+    var saveButton = htmlToElement(
+        `<div class="autoql-vanilla-chata-btn primary "
+        style="padding: 5px 16px; margin: 2px 5px;"></div>`
+    )
+
+    saveButton.appendChild(spinner);
+    saveButton.appendChild(document.createTextNode('Save'));
+    configModal.addFooterElement(cancelButton);
+    configModal.addFooterElement(saveButton);
+    configModal.show();
+    refreshTooltips();
+    configModal.chataModal.style.width = '95vw';
+    configModal.addView(modalView);
+    configModal.setTitle('Custom Notification');
+    configModal.show();
+    cancelButton.onclick = (e) => {
+        configModal.close();
+    }
+    saveButton.onclick = (e) => {
+        spinner.classList.remove('hidden')
+        saveButton.setAttribute('disabled', 'true')
+        const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
+        ChataUtils.ajaxCallPost(URL, (json, status) => {
+            configModal.close();
+        }, modalView.getValues(), o)
+    }
 }
 
-ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
+ChataUtils.getMoreOptionsMenu = (options, idRequest, type, caller=undefined) => {
     var menu = ChataUtils.getPopover();
+    console.log(caller);
     if(type === 'simple'){
         menu.classList.add('chata-popover-single-message');
     }
@@ -241,9 +281,10 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type) => {
                 break;
             case 'notification':
                 var action = ChataUtils.getActionOption(
-                    NOTIFICATION_BUTTON, 'Create a notification from this query...',
+                    NOTIFICATION_BUTTON,
+                    'Create a notification from this query...',
                     ChataUtils.createNotificationHandler,
-                    [idRequest]
+                    [idRequest, caller]
                 );
                 menu.ul.appendChild(action);
 
@@ -273,6 +314,7 @@ ChataUtils.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
 }
 
 ChataUtils.getActionOption = (svg, text, onClick, params) => {
+    console.log(params);
     var element = htmlToElement(`
         <li>
             <span class="chata-icon more-options-icon">
