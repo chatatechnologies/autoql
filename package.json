@@ -1,6 +1,6 @@
 {
   "name": "autoql",
-  "version": "0.0.6",
+  "version": "1.0.0",
   "description": "Javascript widget library",
   "scripts": {
     "test": "echo \"no test specified\" ",
