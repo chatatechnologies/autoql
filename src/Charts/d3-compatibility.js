@@ -1,15 +1,11 @@
 import { scaleOrdinal, scaleBand, scaleLinear } from 'd3-scale'
 import { axisBottom, axisLeft } from 'd3-axis'
-import { pie, area, line, symbolCircle, symbol } from 'd3-shape'
+import { pie, area, line, symbolCircle, symbol, arc, stack } from 'd3-shape'
 import { legendColor } from 'd3-svg-legend'
 import 'd3-transition'
 
 export const SCALE_LINEAR = scaleLinear;
 export const SCALE_BAND = scaleBand;
-
-export const getD3Version = () => {
-    return chataD3.version.split('.')[0];
-}
 
 export const getAxisBottom = (scale) => {
     let axis;
@@ -83,7 +79,7 @@ export const getLegend = (scale, legendWrapLength, orient) => {
 }
 
 export const getStackedAreaData = (visibleGroups, data) => {
-    return chataD3.stack()
+    return stack()
     .keys(visibleGroups)
     .value(function(d, key){
         var val = parseFloat(d[key]);
@@ -96,7 +92,7 @@ export const getStackedAreaData = (visibleGroups, data) => {
 }
 
 export const getStackedData = (visibleGroups, data) => {
-    return chataD3.stack()
+    return stack()
     .keys(visibleGroups)
     (data)
 }
