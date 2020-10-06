@@ -1788,7 +1788,6 @@ export function DataMessenger(elem, options){
     obj.setScrollBubble = (messageBubble) => {
         setTimeout(() => {
             messageBubble.parentElement.scrollIntoView();
-            // obj.scrollBox.scrollTop = messageBubble.dataset.chataScrollValue;
         }, 200)
     }
 
@@ -1978,14 +1977,18 @@ export function DataMessenger(elem, options){
 
     obj.displayTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
+        var parentContainer = obj.getParentFromComponent(component);
         obj.refreshToolbarButtons(component, 'table');
         var table = new ChataTable(
             idRequest,
             obj.options,
             obj.onRowClick,
+            () => {
+                parentContainer.parentElement.scrollIntoView()
+            }
         );
         component.tabulator = table;
-        table.parentContainer = obj.getParentFromComponent(component);
+        table.parentContainer = parentContainer;
         allColHiddenMessage(component);
         obj.setHeightBubble(component);
         select(window).on('chata-resize.'+idRequest, null);
@@ -2320,20 +2323,21 @@ export function DataMessenger(elem, options){
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
-
+        var parentContainer = obj.getParentFromComponent(tableWrapper);
         var table = new ChataTable(
             idRequest,
             obj.options,
             obj.onRowClick,
+            () => {
+                console.log(parentContainer);
+                console.log(parentContainer.parentElement);
+                parentContainer.parentElement.scrollIntoView()
+            }
         );
 
         tableWrapper.tabulator = table;
-        table.parentContainer = obj.getParentFromComponent(tableWrapper);
+        table.parentContainer = parentContainer;
         setTimeout(function(){
-            var sPos = obj.scrollBox.scrollHeight - obj.scrollBox.clientHeight;
-            messageBubble.setAttribute(
-                'data-chata-scroll-value', sPos
-            );
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
         allColHiddenMessage(tableWrapper);

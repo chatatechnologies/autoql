@@ -110,7 +110,7 @@ function getPivotData(pivotArray, pivotColumns){
     return tableData;
 }
 
-function getColumnsData(json, options){
+function getColumnsData(json, options, onHeaderClick){
     const columns = json['data']['columns'];
     var columnsData = []
     columns.map((col, index) => {
@@ -133,6 +133,9 @@ function getColumnsData(json, options){
                 return callTableFilter(col,
                     headerValue.toLowerCase(), rowValue, options);
             },
+            headerClick: (e, column) => {
+                onHeaderClick()
+            }
         })
     })
 
@@ -232,11 +235,12 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
     return table;
 }
 
-export function ChataTable(idRequest, options, onRowClick, onRenderedTable=()=>{}){
+export function ChataTable(
+    idRequest, options, onRowClick, onHeaderClick=()=>{}){
 
     var json = ChataUtils.responses[idRequest];
     var tableData = getTableData(json, options);
-    var columns = getColumnsData(json, options);
+    var columns = getColumnsData(json, options, onHeaderClick);
     const component = document.querySelector(
         `[data-componentid='${idRequest}']`
     );
