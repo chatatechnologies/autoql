@@ -9,7 +9,7 @@ import { DataAlertsSettings } from './src'
 import { get } from 'axios';
 import { getActiveIntegrator, getIntroMessageTopics } from './src/Utils'
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAxOTM2ODY3LCAiZXhwIjogMTYwMTk1ODQ2NywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyJdfQ.bHsakNVBAhXhzplpT-xx3fX-_F61STu1wgmfZke7WB-wVJDebsQD5mQ4RzCRzrf-Xwj9if8GHYiAu9cvMw6lV4fKKa4-qKyD46EOy3aM2Ur_OyUmp1ja983qcmWkqudzzcQOTIrVClbd3H2Kr3uZgg0eauIVDe1GfNhFxfWfZDhpTizas_n2zEMxn_9xMsg74r7k8LGg_ULM-KKB8BCl4emBmRYA297_ZLuvA-jaDp7dT7nU_qJ5X1KwW_xlHkURFMYh-927dR7TLr_xT4ZIAZPqT0ggv7QtpRHEMW7QA6Qok09RBmh9FI8nJzusVac-G_PVkzrx3mZx8_HA1IGcBw`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAyMDAxNTM3LCAiZXhwIjogMTYwMjAyMzEzNywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ.vanORca6V9wKXos4NHFvK-tDjd2BFI4PfqnvmGUw4tCyklHMR13mxcmsFMiwQJ72t98A3dzpSNsX4ZsqHC757jHX9DSEfSGRuZoNKkY_4-FGjlxGVolgFCPxYvwgLaAbGqeFpktdSJ231UVRv_SSIxN23dZ9UE5L6pl-db6ZCdZq0kxju1XT2hmT753OSHysPNajryn62eoLH6cIYag9gAHbGtlW9sPGvWLrgBt7yl5PLt-N519PbtXyjU4nGe2VA105mPHy6llpGc9FapJwvSUKk4F4rR8bxkWvBvGjg_QX6Hda5OhpmhdAuFy7GeUQPElhBYx1IYcHni9zQfrX2g`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}`;
@@ -44,13 +44,13 @@ setTimeout(() => {
     datamessenger.setOption('enableNotificationsTab', true);
 
 }, 300)
-// var alerts = DataAlertsSettings('#alert-settings', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     }
-// })
+var alerts = DataAlertsSettings('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    }
+})
 
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -96,19 +96,19 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    dashboard = new Dashboard('#dashboard', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        tiles: response.data[0].data
-    })
-    dashboard.startEditing()
+    // dashboard = new Dashboard('#dashboard', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     tiles: response.data[0].data
+    // })
+    // dashboard.startEditing()
 })

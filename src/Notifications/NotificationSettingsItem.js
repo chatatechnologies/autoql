@@ -3,7 +3,9 @@ import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
 import { htmlToElement } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
-
+import {
+    EDIT_ALERT
+} from '../Svg'
 
 export function NotificationSettingsItem(options) {
     var wrapper = document.createElement('div');
@@ -46,6 +48,11 @@ export function NotificationSettingsItem(options) {
     }
 
     chataCheckbox.appendChild(chataSwitch);
+    var editIcon = htmlToElement(`
+        <span class="chata-icon chata-notification-action-btn edit">
+            ${EDIT_ALERT}
+        </span>
+    `)
 
     wrapper.classList.add('chata-notification-setting-item');
     header.classList.add('chata-notification-setting-item-header');
@@ -69,6 +76,7 @@ export function NotificationSettingsItem(options) {
         }, o)
     }
 
+    settingsActions.appendChild(editIcon);
     settingsActions.appendChild(chataCheckbox)
     settingsDisplayName.appendChild(displayName);
     settingsDisplayName.appendChild(displayNameMessage);
