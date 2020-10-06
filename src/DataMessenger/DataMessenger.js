@@ -2329,9 +2329,9 @@ export function DataMessenger(elem, options){
             obj.options,
             obj.onRowClick,
             () => {
-                console.log(parentContainer);
-                console.log(parentContainer.parentElement);
-                parentContainer.parentElement.scrollIntoView()
+                setTimeout(function () {
+                    parentContainer.parentElement.scrollIntoView()
+                }, 350);
             }
         );
 
