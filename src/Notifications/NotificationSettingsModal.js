@@ -30,18 +30,14 @@ export function NotificationSettingsModal(mode='create', rule={}){
         </span>
     `);
     wrapper.classList.add('chata-steps-container');
-    var step1 = new ChataModalStep(
-        'Notification Conditions',
-        '1',
-        'Notify me when the following conditions are met'
-    );
-    var step2 = new ChataModalStep('Frequency', '2');
+    var step1 = new ChataModalStep('Set up your Alert','1',);
+    var step2 = new ChataModalStep('Schedule Frequency', '2');
     var step3 = new ChataModalStep(
-        'Data Return',
+        'Manage Alert Preferences',
         '3',
-        'Return the data from this query when the notification is triggered'
+        'When this Alert is triggered:'
     );
-    var step4 = new ChataModalStep('Appearance', '4');
+    // var step4 = new ChataModalStep('Appearance', '4');
     // step4.classList.add('complete');
 
     // STEP 1
@@ -241,22 +237,23 @@ export function NotificationSettingsModal(mode='create', rule={}){
     titleContainer.appendChild(titleInput.input);
     titleContainer.appendChild(titleInput.spanIcon);
     messageContainer.appendChild(messageArea.input);
-    step4.addElement(titleContainer);
-    step4.addElement(messageContainer);
-    titleInput.input.onkeyup = function(evt){
-        if(evt.target.value != ''){
-            if(!step4.classList.contains('complete')){
-                step4.classList.add('complete');
-            }
-        }else{
-            step4.classList.remove('complete');
-        }
-    }
+
+    // step4.addElement(titleContainer);
+    // step4.addElement(messageContainer);
+    // titleInput.input.onkeyup = function(evt){
+    //     if(evt.target.value != ''){
+    //         if(!step4.classList.contains('complete')){
+    //             step4.classList.add('complete');
+    //         }
+    //     }else{
+    //         step4.classList.remove('complete');
+    //     }
+    // }
 
     wrapper.appendChild(step1);
     wrapper.appendChild(step2);
     wrapper.appendChild(step3);
-    wrapper.appendChild(step4);
+    // wrapper.appendChild(step4);
 
     const loadRules = async () => {
         var groups = convert(rule.expression, false);
@@ -311,7 +308,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
         step3.classList.add('complete');
-        step4.classList.add('complete');
+        // step4.classList.add('complete');
     }else{
         var group = new ConditionGroup(
             step1, ruleContainer, parentSelect, true
@@ -327,13 +324,13 @@ export function NotificationSettingsModal(mode='create', rule={}){
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
     step3.getValues = getStep3Values;
-    step4.getValues = getStep4Values;
+    // step4.getValues = getStep4Values;
 
 
     wrapper.step1 = step1;
     wrapper.step2 = step2;
     wrapper.step3 = step3;
-    wrapper.step4 = step4;
+    // wrapper.step4 = step4;
     wrapper.getValues = getNotificationValues;
 
     return wrapper;
@@ -1312,7 +1309,7 @@ function getNotificationValues(){
         ],
         ...this.step2.getValues(),
         ...this.step3.getValues(),
-        ...this.step4.getValues()
+        // ...this.step4.getValues()
     }
 }
 
