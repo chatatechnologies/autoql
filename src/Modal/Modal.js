@@ -44,17 +44,25 @@ export function Modal(options={}, onShow=()=>{}){
     obj.chataFooter = chataFooter;
     obj.show = function(){
         modalContainer.style.visibility = 'visible';
+        setTimeout(() => {
+            chataModal.style.transform = 'scale(1)';
+        }, .5)
+
         obj.isOpen = true;
         onShow();
     }
 
     obj.close = function(){
-        modalContainer.style.visibility = 'hidden';
+        chataModal.style.transform = 'scale(0)';
         obj.isOpen = false;
-        if(obj.options.destroyOnClose){
-            obj.destroy();
-        }
-        obj.clearViews();
+
+        setTimeout(() => {
+            modalContainer.style.visibility = 'hidden';
+            if(obj.options.destroyOnClose){
+                obj.destroy();
+            }
+            obj.clearViews();
+        }, 250)
     }
 
     obj.destroy = function(){

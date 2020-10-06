@@ -33,11 +33,17 @@
   border-radius: 4px;
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
   margin: 45px auto;
-  width: 800px;
+  width: 80vw;
   max-width: 90vw;
   max-height: 95vh;
   margin-top: 25px;
-  animation: createBox 0.25s cubic-bezier(0.19, 1, 0.22, 1);
+  transform: scale(0);
+  transition: all .2s ease-in-out;
+  /* animation: createBox 0.25s cubic-bezier(0.19, 1, 0.22, 1); */
+}
+
+.chata-modal.open{
+    transform: scale(1);
 }
 
 .chata-modal-header {

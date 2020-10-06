@@ -65,7 +65,7 @@ var alerts = DataAlertsSettings('#alert-settings', {
 //     displayType: 'line',
 // })
 // queryInput.bind(queryOutput)
-
+//
 // var notificationList = new NotificationList('#notification-list', {
 //     authentication: {
 //         token: _token,
@@ -80,7 +80,7 @@ var alerts = DataAlertsSettings('#alert-settings', {
 //         console.log(notification);
 //     }
 // })
-
+//
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {
 //         token: _token,
