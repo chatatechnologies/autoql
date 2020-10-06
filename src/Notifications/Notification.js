@@ -80,7 +80,7 @@ export function Notification(options, parentOptions){
     var dismissIconContainer = htmlToElement(`
         <span
             class="chata-icon chata-notification-dismiss-icon notification-off"
-            data-tippy-content="Delete">
+            data-tippy-content="Dismiss">
         </span>
     `);
     var turnNotificationIcon = htmlToElement(`
@@ -93,7 +93,7 @@ export function Notification(options, parentOptions){
     var turnNotificationText = document.createTextNode(
         'Turn off these notifications'
     );
-    var editNotificationText = document.createTextNode('Edit Notification');
+    var editNotificationText = document.createTextNode('Edit Data Alert');
 
     item.classList.add('chata-notification-list-item');
     item.classList.add('triggered');
@@ -222,6 +222,7 @@ export function Notification(options, parentOptions){
         }else{
             parentOptions.onCollapseCallback(item.jsonData);
         }
+        refreshTooltips()
     }
 
     editNotification.onclick = function(evt){
@@ -443,6 +444,7 @@ export function Notification(options, parentOptions){
         }
 
         item.createVizToolbar(jsonResponse);
+        refreshTooltips()
     }
 
     item.createVizToolbar = (json) => {
@@ -558,10 +560,10 @@ export function Notification(options, parentOptions){
     item.toggleTurnOffNotificationText = () => {
         if(item.ruleOptions.status == 'INACTIVE'){
             turnNotificationIcon.innerHTML = TURN_ON_NOTIFICATION;
-            turnNotificationText.textContent = 'Turn these notifications back on';
+            turnNotificationText.textContent = 'Turn Data Alert On';
         }else{
             turnNotificationIcon.innerHTML = DISMISS;
-            turnNotificationText.textContent = 'Turn off these notifications';
+            turnNotificationText.textContent = 'Turn Data Alert Off';
         }
     }
 

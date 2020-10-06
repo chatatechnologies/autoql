@@ -438,8 +438,8 @@
     border-bottom: 1px solid rgba(0,0,0,.1);
     text-align: center;
     margin: 0 10px;
-    padding-top: 20px;
-    padding-bottom: 7px;
+    /* padding-top: 20px;
+    padding-bottom: 7px; */
 }
 
 .chata-response-content-container{
@@ -581,6 +581,10 @@
 
 .single-value-response{
     font-size: 32px;
+}
+
+.tabulator-row .tabulator-cell{
+    padding:8px 4px;
 }
 
 @keyframes slideIn{
