@@ -497,3 +497,9 @@
 .chata-notification-setting-actions{
     display: flex;
 }
+
+.chata-step-content p {
+    margin-bottom: .5em;
+    margin-top: .5em;
+    padding-left: 8px;
+}

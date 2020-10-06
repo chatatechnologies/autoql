@@ -40,6 +40,14 @@ export function NotificationSettingsModal(mode='create', rule={}){
     // step4.classList.add('complete');
 
     // STEP 1
+    var titleContainer = new InputContainer(
+        ['chata-notification-display-name-input']
+    )
+    var titleInput = new ChataInput('input', {
+        placeholder: 'Name',
+        maxlength: '50',
+        type: "single"
+    }, NOTEBOOK);
     const updateAndOr = (element) => {
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
@@ -51,6 +59,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
 
         return newText;
     }
+    titleContainer.appendChild(titleInput.input);
+    titleContainer.appendChild(titleInput.spanIcon);
+
     var ruleContainer = document.createElement('div');
     var onChangeAndOr = (evt) => {
         parentSelect.operator = updateAndOr(parentSelect);
@@ -71,9 +82,14 @@ export function NotificationSettingsModal(mode='create', rule={}){
 
     parentSelect.style.visibility = 'hidden';
     parentSelect.style.display = 'none';
-
     ruleContainer.classList.add('notification-rule-outer-container');
-
+    step1.addElement(htmlToElement(`
+        <p>Name:<p/>
+    `))
+    step1.addElement(titleContainer);
+    step1.addElement(htmlToElement(`
+        <p>Conditions:<p/>
+    `))
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
     ruleContainer.step = step1;
@@ -214,17 +230,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
     }
 
     // STEP 4
-    var titleContainer = new InputContainer(
-        ['chata-notification-display-name-input']
-    )
     var messageContainer = new InputContainer(
         ['chata-notification-message-input']
     )
-    var titleInput = new ChataInput('input', {
-        placeholder: 'Title (max 50 characters)',
-        maxlength: '50',
-        type: "single"
-    }, NOTEBOOK);
     var messageArea = new ChataInput('textarea', {
         placeholder: 'Notification Message (max 200 characters)',
         maxlength: '200',
@@ -233,12 +241,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
     });
     titleInput.input.classList.add('autoql-vanilla-notification-title-input');
     messageArea.input.classList.add('autoql-vanilla-notification-message');
-    titleContainer.appendChild(titleInput.input);
-    titleContainer.appendChild(titleInput.spanIcon);
     messageContainer.appendChild(messageArea.input);
 
-    // step4.addElement(titleContainer);
-    // step4.addElement(messageContainer);
+    step3.addElement(messageContainer);
     // titleInput.input.onkeyup = function(evt){
     //     if(evt.target.value != ''){
     //         if(!step4.classList.contains('complete')){
