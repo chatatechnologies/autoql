@@ -64,12 +64,20 @@
 }
 
 .notification-rule-add-btn-outer {
+    display: inline-block;
+    height: 35px;
+    width: 35px !important;
+    border-radius: 20px !important;
+    background: var(--chata-drawer-accent-color, #26a7df) !important;
+    color: #fff !important;
+    line-height: 38px;
     text-align: center;
-    border-style: dashed!important;
-    height: 38px;
-    line-height: 25px;
-    margin: 15px 0 0!important;
-    overflow: hidden;
+    font-size: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.13);
+    transition: all .2s ease;
+    margin-right: 5px;
+    margin-top: 3px;
+    cursor: pointer;
 }
 
 .notification-rule-outer-container {

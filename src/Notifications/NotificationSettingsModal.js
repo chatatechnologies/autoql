@@ -8,7 +8,7 @@ import {
 } from '../Svg'
 import { convert } from '../RuleParser'
 import { ChataInput, InputContainer } from '../ChataComponents'
-
+import { refreshTooltips } from '../Tooltips'
 
 export function NotificationSettingsModal(mode='create', rule={}){
     var wrapper = document.createElement('div');
@@ -21,11 +21,10 @@ export function NotificationSettingsModal(mode='create', rule={}){
         <span>
             <div class="autoql-vanilla-chata-btn default
             notification-rule-add-btn-outer"
-            style="padding: 5px 16px; margin: 2px 5px;">
+                data-tippy-content="Add Condition Group">
                 <span data-test="chata-icon" class="chata-icon">
                     ${ADD_GROUP}
                 </span>
-                Add Condition Group
             </div>
         </span>
     `);
@@ -57,7 +56,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
         parentSelect.operator = updateAndOr(parentSelect);
     }
     var parentSelect = notificationRuleAndOrSelect(
-        'of the following:',
+        'of the following conditions are met:',
         onChangeAndOr
     );
     parentSelect.operator = 'AND';
@@ -332,7 +331,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
     wrapper.step3 = step3;
     // wrapper.step4 = step4;
     wrapper.getValues = getNotificationValues;
-
+    refreshTooltips()
     return wrapper;
 }
 
@@ -734,7 +733,7 @@ function notificationRuleAndOrSelect(text, onChange){
     var radio = createRadio(onChange);
     div.classList.add('notification-rule-and-or-select');
     div.style.marginBottom = '10px';
-    div.innerHTML = 'Match';
+    div.innerHTML = 'Notify me when';
     div.appendChild(radio);
     div.appendChild(document.createTextNode(text));
     div.radio = radio;
@@ -1075,7 +1074,7 @@ function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
     }
 
     var ruleAndOrSelect = notificationRuleAndOrSelect(
-        ' conditions', onChangeAndOr
+        ' of the following conditions are met:', onChangeAndOr
     );
     if(groupValues.condition === 'OR'){
         ruleAndOrSelect.radio.toggleButtons('OR');
