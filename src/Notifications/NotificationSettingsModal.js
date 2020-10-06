@@ -1295,6 +1295,10 @@ function ChataModalStep(title, nStep, subtitle=''){
         stepContent.appendChild(elem);
     }
 
+    step.findElement = (selector) => {
+        return contentWrapper.querySelector(selector);
+    }
+
     step.titleEl = titleEl;
     step.stepContentContainer = stepContentContainer;
 

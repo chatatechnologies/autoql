@@ -282,7 +282,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
             case 'notification':
                 var action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
-                    'Create a notification from this query...',
+                    'Create a Data Alert...',
                     ChataUtils.createNotificationHandler,
                     [idRequest, extraParams]
                 );

@@ -1316,14 +1316,13 @@ function TileView(dashboard, chataDashboardItem,
             val = chataDashboardItem.inputQuery.value;
         }
 
-        console.log(val);
-
         var moreOptions = ChataUtils.getMoreOptionsMenu(
             moreOptionsArray,
             idRequest,
             type,
             {
-                caller: dashboard
+                caller: dashboard,
+                query: val
             }
         );
 

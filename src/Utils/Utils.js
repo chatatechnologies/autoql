@@ -1286,3 +1286,7 @@ export function getPlainTextList(query, fullSuggestions) {
 
     return textList
 }
+
+export function getFirstNotificationLine (step1) {
+    return step1.findElement('.autoql-vanilla-chata-input-settings')
+}
