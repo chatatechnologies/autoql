@@ -14,7 +14,7 @@
     /* overflow: hidden; */
 }
 
-.chata-notification-list-container path{
+.chata-notification-dismiss-icon path{
     fill: unset !important;
 }
 
@@ -416,6 +416,7 @@
     justify-content: stretch;
     flex: 3 3;
     overflow: hidden;
+    cursor: default;
 }
 
 .chata-notification-list-item .chata-notification-data-container .chata-notification-chart-container {
@@ -511,6 +512,11 @@
     flex-basis: 50px;
     padding: 10px;
     border-left: 1px solid rgba(0,0,0,.05);
+    text-align: center;
+}
+
+.autoql-vanilla-chata-notification-viz-switcher .autoql-vanilla-chata-toolbar-btn{
+    vertical-align: bottom;
 }
 
 .chata-notification-list-item .chata-notification-data-container line {

@@ -1,11 +1,16 @@
 import { NotificationGroup } from './NotificationGroup'
 import { ChataUtils } from '../ChataUtils'
+import {
+    ChataTable,
+    ChataPivotTable
+} from '../ChataTable'
 import { Modal } from '../Modal'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import {
     htmlToElement,
     uuidv4,
     putLoadingContainer,
+    createTableContainer,
     getSupportedDisplayTypes
 } from '../Utils'
 import {
@@ -13,8 +18,30 @@ import {
     CALENDAR,
     TURN_ON_NOTIFICATION,
     EDIT_NOTIFICATION,
-    SVG_X
+    SVG_X,
+    TABLE_ICON,
+    COLUMN_CHART_ICON,
+    BAR_CHART_ICON,
+    PIE_CHART_ICON,
+    LINE_CHART_ICON,
+    PIVOT_ICON,
+    HEATMAP_ICON,
+    BUBBLE_CHART_ICON,
+    STACKED_COLUMN_CHART_ICON,
+    STACKED_BAR_CHART_ICON,
+    STACKED_AREA_CHART_ICON
 } from '../Svg'
+import {
+    createAreaChart,
+    createBarChart,
+    createBubbleChart,
+    createColumnChart,
+    createHeatmap,
+    createLineChart,
+    createPieChart,
+    createStackedBarChart,
+    createStackedColumnChart
+} from '../Charts'
 import { convert } from '../RuleParser'
 import moment from 'moment'
 import { refreshTooltips } from '../Tooltips'
@@ -313,7 +340,6 @@ export function Notification(options, parentOptions){
                     () => {}, false, 'data-tilechart',
                     true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'column':
                 var chartWrapper = document.createElement('div');
@@ -324,7 +350,6 @@ export function Notification(options, parentOptions){
                     () => {}, false, 'data-tilechart',
                     true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'line':
                 var chartWrapper = document.createElement('div');
@@ -335,7 +360,6 @@ export function Notification(options, parentOptions){
                     () => {}, false, 'data-tilechart',
                     true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'heatmap':
                 var chartWrapper = document.createElement('div');
@@ -348,7 +372,6 @@ export function Notification(options, parentOptions){
                     item.parentOptions, false,
                     'data-tilechart', true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'bubble':
                 var chartWrapper = document.createElement('div');
@@ -359,7 +382,6 @@ export function Notification(options, parentOptions){
                     false, 'data-tilechart',
                     true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'stacked_bar':
                 var chartWrapper = document.createElement('div');
@@ -370,7 +392,6 @@ export function Notification(options, parentOptions){
                     item.parentOptions, () => {}, false,
                     'data-tilechart', true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'stacked_column':
                 var chartWrapper = document.createElement('div');
@@ -381,7 +402,6 @@ export function Notification(options, parentOptions){
                     item.parentOptions, () => {}, false,
                     'data-tilechart', true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'stacked_line':
                 var chartWrapper = document.createElement('div');
@@ -392,7 +412,6 @@ export function Notification(options, parentOptions){
                     item.parentOptions, () => {}, false,
                     'data-tilechart', true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'pie':
                 var chartWrapper = document.createElement('div');
@@ -402,7 +421,6 @@ export function Notification(options, parentOptions){
                     item.parentOptions, false,
                     'data-tilechart', true
                 );
-                toolbarType = 'chart-view';
                 break;
             case 'pivot_table':
                 var div = createTableContainer();
@@ -502,6 +520,7 @@ export function Notification(options, parentOptions){
                     }
                 }
             }
+            console.log(vizToolbar);
             dataContainer.appendChild(vizToolbar);
         }
     }
