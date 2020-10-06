@@ -1502,7 +1502,9 @@ export function DataMessenger(elem, options){
     }
 
     obj.getMoreOptionsMenu = (options, idRequest, type) => {
-        return ChataUtils.getMoreOptionsMenu(options, idRequest, type, obj);
+        return ChataUtils.getMoreOptionsMenu(options, idRequest, type, {
+            caller: this
+        });
     }
 
     obj.getReportProblemMenu = (toolbar, idRequest, type) => {
@@ -1702,7 +1704,8 @@ export function DataMessenger(elem, options){
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
-        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net' && request['reference_id'] !== '1.9.502'){
+        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'
+        && request['reference_id'] !== '1.9.502'){
             toolbar.appendChild(
                 moreOptionsBtn
             );

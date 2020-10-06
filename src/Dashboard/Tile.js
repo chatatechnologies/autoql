@@ -1289,6 +1289,7 @@ function TileView(dashboard, chataDashboardItem,
                 moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
                 moreOptionsArray.push('copy_sql');
+                moreOptionsArray.push('notification');
                 break;
             case 'chart-view':
                 if(request['reference_id'] !== '1.1.420'){
@@ -1298,6 +1299,7 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 moreOptionsArray.push('png');
                 moreOptionsArray.push('copy_sql');
+                moreOptionsArray.push('notification');
             break;
             case 'safety-net':
             break;
@@ -1305,10 +1307,24 @@ function TileView(dashboard, chataDashboardItem,
 
         }
 
+        let val = ''
+
+        if(obj.isSecond){
+            val = obj.inputToolbar.input.value;
+            obj.internalQuery = val;
+        }else{
+            val = chataDashboardItem.inputQuery.value;
+        }
+
+        console.log(val);
+
         var moreOptions = ChataUtils.getMoreOptionsMenu(
             moreOptionsArray,
             idRequest,
-            type
+            type,
+            {
+                caller: dashboard
+            }
         );
 
         var moreOptionsBtn = ChataUtils.getActionButton(

@@ -110,6 +110,7 @@ ChataUtils.downloadCsvHandler = (idRequest) => {
 
 ChataUtils.copySqlHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
+    console.log(JSON.stringify(json));
     var sql = json['data']['sql'][0];
     var copyButton = document.createElement('button');
     var okBtn = htmlToElement(
@@ -193,8 +194,8 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
     tabulator.toggleFilters();
 }
 
-ChataUtils.createNotificationHandler = (idRequest, caller) => {
-    var o = caller.options;
+ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
+    var o = extraParams.caller.options;
     var modalView = new NotificationSettingsModal();
     var configModal = new Modal({
         withFooter: true,
@@ -235,9 +236,8 @@ ChataUtils.createNotificationHandler = (idRequest, caller) => {
     }
 }
 
-ChataUtils.getMoreOptionsMenu = (options, idRequest, type, caller=undefined) => {
+ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
     var menu = ChataUtils.getPopover();
-    console.log(caller);
     if(type === 'simple'){
         menu.classList.add('chata-popover-single-message');
     }
@@ -284,7 +284,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, caller=undefined) => 
                     NOTIFICATION_BUTTON,
                     'Create a notification from this query...',
                     ChataUtils.createNotificationHandler,
-                    [idRequest, caller]
+                    [idRequest, extraParams]
                 );
                 menu.ul.appendChild(action);
 
@@ -314,7 +314,6 @@ ChataUtils.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
 }
 
 ChataUtils.getActionOption = (svg, text, onClick, params) => {
-    console.log(params);
     var element = htmlToElement(`
         <li>
             <span class="chata-icon more-options-icon">

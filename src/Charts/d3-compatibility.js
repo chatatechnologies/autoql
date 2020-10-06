@@ -47,7 +47,7 @@ export const getLine = (fnX, fnY) => {
 }
 
 export const getArc = (iRadius, oRadius) => {
-    return chataD3.arc()
+    return arc()
     .innerRadius(iRadius)
     .outerRadius(oRadius)
 }
