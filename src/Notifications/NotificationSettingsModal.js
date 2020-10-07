@@ -271,29 +271,21 @@ export function NotificationSettingsModal(mode='create', rule={}){
         ['chata-notification-display-name-input']
     )
     var queryReturnInput = new ChataInput('input', {
-        placeholder: 'Query',
+        placeholder: 'Type query here',
         type: "single"
     }, QUERY);
     queryReturnInput.input.classList.add('autoql-vanilla-query-return-input');
     queryReturnContainer.appendChild(queryReturnInput.input);
     queryReturnContainer.appendChild(queryReturnInput.spanIcon);
+    step3.addElement(htmlToElement(`
+        <p>Return the data from this query:</p>
+    `))
     step3.addElement(queryReturnContainer);
-    queryReturnInput.input.onkeyup = function(evt){
-        if(evt.target.value != ''){
-            if(!step3.classList.contains('complete')){
-                step3.classList.add('complete');
-            }
-        }else{
-            step3.classList.remove('complete');
-        }
-    }
-
-    // STEP 4
     var messageContainer = new InputContainer(
         ['chata-notification-message-input']
     )
     var messageArea = new ChataInput('textarea', {
-        placeholder: 'Notification Message (max 200 characters)',
+        placeholder: 'Compose a short message to accompany your triggered Alert',
         maxlength: '200',
         type: 'multi',
         style: "margin-top: 0px; margin-bottom: 0px; height: 120px;"
@@ -302,6 +294,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
     messageArea.input.classList.add('autoql-vanilla-notification-message');
     messageContainer.appendChild(messageArea.input);
 
+    step3.addElement(htmlToElement(`
+        <p>Send the following message:</p>
+    `))
     step3.addElement(messageContainer);
     // titleInput.input.onkeyup = function(evt){
     //     if(evt.target.value != ''){
@@ -312,6 +307,16 @@ export function NotificationSettingsModal(mode='create', rule={}){
     //         step4.classList.remove('complete');
     //     }
     // }
+
+    queryReturnInput.input.onkeyup = function(evt){
+        if(evt.target.value != '' && titleInput){
+            if(!step3.classList.contains('complete')){
+                step3.classList.add('complete');
+            }
+        }else{
+            step3.classList.remove('complete');
+        }
+    }
 
     wrapper.appendChild(step1);
     wrapper.appendChild(step2);
