@@ -18,8 +18,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
     var wrapper = document.createElement('div');
     wrapper.mode = mode;
     var frequencyBox = FrequencyBox(
-        `Notify me as soon as this happens,
-        but don't notify me again until the first of the next month.`
+        `You will be notified as soon as this happens.
+        If the Alert is triggered multiple times,
+        you will only be notified on a monthly basis.`
     );
     var btnAddGroup = htmlToElement(`
         <span>
@@ -219,7 +220,20 @@ export function NotificationSettingsModal(mode='create', rule={}){
             value: 'REPEAT_EVENT',
             checked: false
         }
-    ])
+    ], (evt) => {
+        if(evt.target.value === 'SINGLE_EVENT'){
+            frequencyBox.setMessage(
+                `You will be notified as soon as this happens.
+                If the Alert is triggered multiple times,
+                you will only be notified on a monthly basis.`
+            );
+        }else{
+            frequencyBox.setMessage(`
+                You will be notified as soon as this happens,
+                any time this happens.
+            `);
+        }
+    })
 
     var repeatRadio = new ChataRadio([
         {
@@ -237,7 +251,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
             value: 'MONTH',
             checked: true
         }
-    ])
+    ], (evt) => {
+
+    })
     frequencySettingsContainer.appendChild(triggerRadio)
     frequencySettingsContainer.appendChild(htmlToElement(`
         <p>Repeat</p>
@@ -391,9 +407,9 @@ function FrequencyBox(message){
     var messageContent = document.createElement('span');
     messageContent.innerHTML = message;
     box.classList.add('frequency-description-box');
-    box.appendChild(htmlToElement(`
-        <div class="frequency-description-title">Description:</div>
-    `));
+    // box.appendChild(htmlToElement(`
+    //     <div class="frequency-description-title">Description:</div>
+    // `));
     box.appendChild(messageContent);
 
     parent.setMessage = (newMessage) => {

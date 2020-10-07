@@ -4,7 +4,7 @@ import {
 } from '../Utils'
 import './ChataRadio.css'
 
-export function ChataRadio(options){
+export function ChataRadio(options, onChange){
     var wrapper = document.createElement('div')
     wrapper.classList.add('chata-radio-btn-container')
     var uuid = uuidv4()
@@ -22,6 +22,12 @@ export function ChataRadio(options){
         if(opt.checked)input.setAttribute('checked', 'true')
         label.innerHTML = opt.label
         input.setAttribute('value', opt.value)
+
+        input.onchange = (evt) => {
+            wrapper.selectedValue = evt.target.value
+            console.log(wrapper.selectedValue);
+            onChange(evt)
+        }
 
         p.appendChild(input)
         p.appendChild(label)
