@@ -7,7 +7,11 @@ import {
     INPUT_DELETE
 } from '../Svg'
 import { convert } from '../RuleParser'
-import { ChataInput, InputContainer } from '../ChataComponents'
+import {
+    ChataInput,
+    InputContainer,
+    ChataRadio
+} from '../ChataComponents'
 import { refreshTooltips } from '../Tooltips'
 
 export function NotificationSettingsModal(mode='create', rule={}){
@@ -201,9 +205,13 @@ export function NotificationSettingsModal(mode='create', rule={}){
     frequencySettingsContainer.classList.add('frequency-settings-container');
 
     step2.addClass('notification-frequency-step');
-    frequencySettingsContainer.appendChild(label);
-    frequencySettingsContainer.appendChild(selectFrequency);
-    frequencySettingsContainer.appendChild(relativeDiv);
+    frequencySettingsContainer.appendChild(htmlToElement(`
+        <p>Trigger Data Alert:</p>
+    `))
+    frequencySettingsContainer.appendChild(new ChataRadio())
+    // frequencySettingsContainer.appendChild(label);
+    // frequencySettingsContainer.appendChild(selectFrequency);
+    // frequencySettingsContainer.appendChild(relativeDiv);
     step2.addElement(frequencySettingsContainer);
     step2.addElement(frequencyBox);
 
