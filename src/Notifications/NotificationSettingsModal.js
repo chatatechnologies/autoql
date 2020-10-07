@@ -208,7 +208,42 @@ export function NotificationSettingsModal(mode='create', rule={}){
     frequencySettingsContainer.appendChild(htmlToElement(`
         <p>Trigger Data Alert:</p>
     `))
-    frequencySettingsContainer.appendChild(new ChataRadio())
+    var triggerRadio = new ChataRadio([
+        {
+            label: 'Once, when this happens',
+            value: 'SINGLE_EVENT',
+            checked: true
+        },
+        {
+            label: 'Every time this happens',
+            value: 'REPEAT_EVENT',
+            checked: false
+        }
+    ])
+
+    var repeatRadio = new ChataRadio([
+        {
+            label: 'Daily',
+            value: 'DAY',
+            checked: false
+        },
+        {
+            label: 'Weekly',
+            value: 'WEEK',
+            checked: false
+        },
+        {
+            label: 'Monthly',
+            value: 'MONTH',
+            checked: true
+        }
+    ])
+    frequencySettingsContainer.appendChild(triggerRadio)
+    frequencySettingsContainer.appendChild(htmlToElement(`
+        <p>Repeat</p>
+    `))
+    frequencySettingsContainer.appendChild(repeatRadio)
+
     // frequencySettingsContainer.appendChild(label);
     // frequencySettingsContainer.appendChild(selectFrequency);
     // frequencySettingsContainer.appendChild(relativeDiv);
