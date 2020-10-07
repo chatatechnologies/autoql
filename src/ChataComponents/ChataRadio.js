@@ -7,6 +7,7 @@ import './ChataRadio.css'
 export function ChataRadio(options){
     var wrapper = document.createElement('div')
     wrapper.classList.add('chata-radio-btn-container')
+    var uuid = uuidv4()
 
     for (var i = 0; i < options.length; i++) {
         var opt = options[i]
@@ -14,6 +15,9 @@ export function ChataRadio(options){
         var input = document.createElement('input')
         var label = document.createElement('label')
         input.setAttribute('type', 'radio')
+        input.setAttribute('name', `chata-radio-${uuid}`)
+        input.setAttribute('id', `chata-radio-${uuid}-${i}`)
+        label.setAttribute('for', `chata-radio-${uuid}-${i}`)
 
         if(opt.checked)input.setAttribute('checked', 'true')
         label.innerHTML = opt.label
