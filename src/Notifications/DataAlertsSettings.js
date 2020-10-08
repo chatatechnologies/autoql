@@ -134,7 +134,10 @@ export function DataAlertsSettings(selector, options){
         cancelButton.onclick = (e) => {
             new ChataConfirmDialog(
                 'Are you sure you want to leave this page?',
-                'All unsaved changes will be lost.'
+                'All unsaved changes will be lost.',
+                (evt) => {
+                    configModal.close()
+                }
             )
             // configModal.close();
         }
