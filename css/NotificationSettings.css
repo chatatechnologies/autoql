@@ -513,3 +513,9 @@
 .autoql-vanilla-step-btn-container {
     text-align: right;
 }
+
+.autoql-vanilla-chata-btn.disabled {
+    opacity: .4;
+    cursor: not-allowed;
+    pointer-events: none;
+}

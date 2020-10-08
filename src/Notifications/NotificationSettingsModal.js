@@ -749,9 +749,17 @@ function showFrequencyView(frequencyElement, type){
 }
 
 function checkStep1(ruleContainer){
-    var groups = document.getElementsByClassName(
+    var groups = ruleContainer.step.getElementsByClassName(
         'notification-group-wrapper'
     );
+    var input = ruleContainer.step.querySelector(
+        '.autoql-vanilla-notification-title-input'
+    );
+
+    var button = ruleContainer.step.querySelector(
+        '.autoql-vanilla-first-step-next-btn'
+    )
+
     var valid = true
     for (var i = 0; i < groups.length; i++) {
         if(!groups[i].isValid()){
@@ -760,14 +768,16 @@ function checkStep1(ruleContainer){
         }
     }
 
-    if(groups.length === 0){
+    if(groups.length === 0 || input.value === ''){
         valid = false;
     }
 
     if(valid){
         ruleContainer.step.classList.add('complete');
+        button.classList.remove('disabled')
     }else{
         ruleContainer.step.classList.remove('complete');
+        button.classList.add('disabled')
     }
 }
 
