@@ -219,34 +219,11 @@ export function NotificationSettingsModal(mode='create', rule={}){
     frequencySettingsContainer.appendChild(htmlToElement(`
         <p>Trigger Data Alert:</p>
     `))
-    var triggerRadio = new ChataRadio([
-        {
-            label: 'Once, when this happens',
-            value: 'SINGLE_EVENT',
-            checked: true
-        },
-        {
-            label: 'Every time this happens',
-            value: 'REPEAT_EVENT',
-            checked: false
-        }
-    ], (evt) => {
-        checkStep2(step2);
 
-        if(evt.target.value === 'SINGLE_EVENT'){
-            frequencyBox.setMessage(
-                `You will be notified as soon as this happens.
-                If the Alert is triggered multiple times,
-                you will only be notified on a monthly basis.`
-            );
-        }else{
-            frequencyBox.setMessage(`
-                You will be notified as soon as this happens,
-                any time this happens.
-            `);
-        }
-    })
-
+    var isChecked = mode === 'edit' ? true : false
+    var repeatText = htmlToElement(`
+        <p>Repeat</p>
+    `)
     var repeatRadio = new ChataRadio([
         {
             label: 'Daily',
@@ -264,14 +241,63 @@ export function NotificationSettingsModal(mode='create', rule={}){
             checked: true
         }
     ], (evt) => {
+        var message = `You will be notified as soon as this happens.
+        If the Alert is triggered multiple times, you will only be notified`
+        switch (evt.target.value) {
+            case 'DAY':
+                message += ' a maximum of once per day.'
+                break;
+            case 'MONTH':
+                message += ' on a monthly basis.'
+                break;
+            case 'WEEK':
+                message += ' on a weekly basis.'
+                break;
+            default:
+        }
 
+        frequencyBox.setMessage(message)
     })
-    frequencySettingsContainer.appendChild(triggerRadio)
-    frequencySettingsContainer.appendChild(htmlToElement(`
-        <p>Repeat</p>
-    `))
-    frequencySettingsContainer.appendChild(repeatRadio)
 
+    var triggerRadio = new ChataRadio([
+        {
+            label: 'Once, when this happens',
+            value: 'SINGLE_EVENT',
+            checked: isChecked
+        },
+        {
+            label: 'Every time this happens',
+            value: 'REPEAT_EVENT',
+            checked: false
+        }
+    ], (evt) => {
+        checkStep2(step2);
+
+        if(evt.target.value === 'SINGLE_EVENT'){
+            frequencyBox.setMessage(
+                `You will be notified as soon as this happens.
+                If the Alert is triggered multiple times,
+                you will only be notified on a monthly basis.`
+            );
+            repeatRadio.style.display = 'block'
+            repeatText.style.display = 'block'
+
+        }else{
+            frequencyBox.setMessage(`
+                You will be notified as soon as this happens,
+                any time this happens.
+            `);
+            repeatRadio.style.display = 'none'
+            repeatText.style.display = 'none'
+        }
+    })
+
+    frequencySettingsContainer.appendChild(triggerRadio)
+    frequencySettingsContainer.appendChild(repeatText)
+    frequencySettingsContainer.appendChild(repeatRadio)
+    if(!isChecked){
+        repeatRadio.style.display = 'none'
+    }
     // frequencySettingsContainer.appendChild(label);
     // frequencySettingsContainer.appendChild(selectFrequency);
     // frequencySettingsContainer.appendChild(relativeDiv);
