@@ -257,6 +257,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
         }
 
         frequencyBox.setMessage(message)
+        step2.stepContentContainer.style.height = getHeightForChildrens(
+            step2.stepContentContainer
+        ) + 'px';
     })
 
     var triggerRadio = new ChataRadio([
@@ -274,6 +277,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
         checkStep2(step2);
 
         if(evt.target.value === 'SINGLE_EVENT'){
+            frequencyBox.style.visibility = 'visible';
             frequencyBox.setMessage(
                 `You will be notified as soon as this happens.
                 If the Alert is triggered multiple times,
@@ -290,6 +294,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
             repeatRadio.style.display = 'none'
             repeatText.style.display = 'none'
         }
+        step2.stepContentContainer.style.height = getHeightForChildrens(
+            step2.stepContentContainer
+        ) + 'px';
     })
 
     frequencySettingsContainer.appendChild(triggerRadio)
@@ -297,6 +304,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
     frequencySettingsContainer.appendChild(repeatRadio)
     if(!isChecked){
         repeatRadio.style.display = 'none'
+        repeatText.style.display = 'none'
+        frequencyBox.style.visibility = 'hidden';
     }
     // frequencySettingsContainer.appendChild(label);
     // frequencySettingsContainer.appendChild(selectFrequency);
