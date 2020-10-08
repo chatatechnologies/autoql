@@ -149,58 +149,58 @@ export function NotificationSettingsModal(mode='create', rule={}){
         {text: 'Every time this happens', active:false},
     ]);
 
-    popupFrequency.classList.add('frequency-popup');
-    popupFrequency.onclick = (evt) => {
-        if(evt.target.tagName === 'LI'){
-            var val = evt.target.textContent;
-            var index = parseInt(evt.target.dataset.indexOption);
-            frequencyValue.indexValue = index;
-            frequencyValue.innerHTML = val;
-            relativeDiv.dateSelectView = null;
-            showFrequencyView(relativeDiv, index);
-            step2.classList.add('complete');
-            frequencyValue.style.color = 'inherit';
-            frequencyValue.style.fontStyle = 'inherit';
-            switch (index) {
-                case 0:
-                    var view = monthlyView();
-                    relativeDiv.appendChild(view);
-                    relativeDiv.dateSelectView = view;
-                    frequencyValue.indexValue = 1;
-                    view.style.visibility = 'hidden';
-                    frequencyBox.setMessage(
-                        `Notify me as soon as this happens,
-                        but don't notify me again until
-                        the first of the next month.`
-                    );
-                    frequencyValue.setAttribute(
-                        'data-frequency-event', 'SINGLE_EVENT'
-                    )
-                    break;
-                case 1:
-                    var view = monthlyView();
-                    relativeDiv.appendChild(view);
-                    relativeDiv.dateSelectView = view;
-                    view.style.visibility = 'hidden';
-                    frequencyBox.setMessage(`
-                        Notify me every time this happens.
-                    `);
-                    frequencyValue.setAttribute(
-                        'data-frequency-event', 'REPEAT_EVENT'
-                    )
-                    break;
-                case 2:
-                    frequencyBox.setMessage(`
-                        Notify me every (description of schedule)
-                    `);
-                    break;
-                default:
-
-            }
-        }
-    }
-
-    selectFrequency.appendChild(popupFrequency);
+    // popupFrequency.classList.add('frequency-popup');
+    // popupFrequency.onclick = (evt) => {
+    //     if(evt.target.tagName === 'LI'){
+    //         var val = evt.target.textContent;
+    //         var index = parseInt(evt.target.dataset.indexOption);
+    //         frequencyValue.indexValue = index;
+    //         frequencyValue.innerHTML = val;
+    //         relativeDiv.dateSelectView = null;
+    //         showFrequencyView(relativeDiv, index);
+    //         step2.classList.add('complete');
+    //         frequencyValue.style.color = 'inherit';
+    //         frequencyValue.style.fontStyle = 'inherit';
+    //         switch (index) {
+    //             case 0:
+    //                 var view = monthlyView();
+    //                 relativeDiv.appendChild(view);
+    //                 relativeDiv.dateSelectView = view;
+    //                 frequencyValue.indexValue = 1;
+    //                 view.style.visibility = 'hidden';
+    //                 frequencyBox.setMessage(
+    //                     `Notify me as soon as this happens,
+    //                     but don't notify me again until
+    //                     the first of the next month.`
+    //                 );
+    //                 frequencyValue.setAttribute(
+    //                     'data-frequency-event', 'SINGLE_EVENT'
+    //                 )
+    //                 break;
+    //             case 1:
+    //                 var view = monthlyView();
+    //                 relativeDiv.appendChild(view);
+    //                 relativeDiv.dateSelectView = view;
+    //                 view.style.visibility = 'hidden';
+    //                 frequencyBox.setMessage(`
+    //                     Notify me every time this happens.
+    //                 `);
+    //                 frequencyValue.setAttribute(
+    //                     'data-frequency-event', 'REPEAT_EVENT'
+    //                 )
+    //                 break;
+    //             case 2:
+    //                 frequencyBox.setMessage(`
+    //                     Notify me every (description of schedule)
+    //                 `);
+    //                 break;
+    //             default:
+    //
+    //         }
+    //     }
+    // }
+    //
+    // selectFrequency.appendChild(popupFrequency);
 
     // showFrequencyView(relativeDiv, 0);
     // var view = monthlyView();
@@ -208,10 +208,10 @@ export function NotificationSettingsModal(mode='create', rule={}){
     // relativeDiv.dateSelectView = view;
     // view.style.visibility = 'hidden';
 
-    selectFrequency.appendChild(frequencyValue);
-    selectFrequency.onclick = function(){
-        popupFrequency.toggleVisibility();
-    }
+    // selectFrequency.appendChild(frequencyValue);
+    // selectFrequency.onclick = function(){
+    //     popupFrequency.toggleVisibility();
+    // }
     var frequencySettingsContainer = document.createElement('div');
     frequencySettingsContainer.classList.add('frequency-settings-container');
 
@@ -231,6 +231,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
             checked: false
         }
     ], (evt) => {
+        checkStep2(step2);
+
         if(evt.target.value === 'SINGLE_EVENT'){
             frequencyBox.setMessage(
                 `You will be notified as soon as this happens.
@@ -745,6 +747,14 @@ function showFrequencyView(frequencyElement, type){
             break;
         default:
             break;
+    }
+}
+
+function checkStep2(step2){
+    step2.classList.add('complete')
+    var buttons = step2.querySelectorAll('.autoql-vanilla-chata-btn');
+    for (var i = 0; i < buttons.length; i++) {
+        buttons[i].classList.remove('disabled')
     }
 }
 
