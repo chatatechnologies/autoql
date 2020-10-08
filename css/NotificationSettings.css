@@ -509,3 +509,7 @@
     right: -5px;
     bottom: 0px;
 }
+
+.autoql-vanilla-step-btn-container {
+    text-align: right;
+}

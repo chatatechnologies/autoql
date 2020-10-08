@@ -273,8 +273,31 @@ export function NotificationSettingsModal(mode='create', rule={}){
     // frequencySettingsContainer.appendChild(label);
     // frequencySettingsContainer.appendChild(selectFrequency);
     // frequencySettingsContainer.appendChild(relativeDiv);
+    var step2NextButton = new StepButton(
+        'autoql-vanilla-chata-btn primary large',
+        'Next',
+        (evt) => {
+            step2.closeStep()
+            step3.expand()
+        }
+    )
+    var step2PrevButton = new StepButton(
+        'autoql-vanilla-chata-btn default large',
+        'Back',
+        (evt) => {
+            step2.closeStep()
+            step1.expand()
+        }
+    )
+    var step2ButtonContainer = document.createElement('div');
+    step2ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
+    step2ButtonContainer.appendChild(step2PrevButton);
+    step2ButtonContainer.appendChild(step2NextButton);
+
     step2.addElement(frequencySettingsContainer);
     step2.addElement(frequencyBox);
+    step2.addContent(step2ButtonContainer);
+
 
     // STEP 3
     var queryReturnContainer = new InputContainer(
@@ -308,6 +331,18 @@ export function NotificationSettingsModal(mode='create', rule={}){
         <p>Send the following message:</p>
     `))
     step3.addElement(messageContainer);
+    var step3PrevButton = new StepButton(
+        'autoql-vanilla-chata-btn default large',
+        'Back',
+        (evt) => {
+            step2.expand()
+            step3.closeStep()
+        }
+    )
+    var step3ButtonContainer = document.createElement('div');
+    step3ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
+    step3ButtonContainer.appendChild(step3PrevButton);
+    step3.addElement(step3ButtonContainer)
     // titleInput.input.onkeyup = function(evt){
     //     if(evt.target.value != ''){
     //         if(!step4.classList.contains('complete')){
