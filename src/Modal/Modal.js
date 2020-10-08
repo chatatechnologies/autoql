@@ -10,7 +10,8 @@ export function Modal(options={}, onShow=()=>{}){
     var obj = this;
     obj.options = {
         destroyOnClose: false,
-        withFooter: false
+        withFooter: false,
+        withHeader: true
     }
     for (var [key, value] of Object.entries(options)) {
         obj.options[key] = value;
@@ -31,7 +32,9 @@ export function Modal(options={}, onShow=()=>{}){
     chataBody.classList.add('chata-modal-body');
     chataFooter.classList.add('chata-modal-footer');
 
-    chataModal.appendChild(chataHeader);
+    if(obj.options.withHeader){
+        chataModal.appendChild(chataHeader);
+    }
     chataModal.appendChild(chataBody);
     if(obj.options.withFooter){
         chataModal.appendChild(chataFooter);
