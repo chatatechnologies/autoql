@@ -75,6 +75,14 @@ export function NotificationSettingsModal(mode='create', rule={}){
         'of the following conditions are met:',
         onChangeAndOr
     );
+    var step1NextButton = new StepButton(
+        'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
+        'Next',
+        (evt) => {
+            step1.closeStep()
+            step2.expand()
+        }
+    )
     parentSelect.operator = 'AND';
 
     if(mode === 'edit'){
@@ -97,6 +105,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
     `))
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
+    ruleContainer.appendChild(step1NextButton);
+
     ruleContainer.step = step1;
     btnAddGroup.onclick = function(evt){
         var groups = document.getElementsByClassName(
@@ -404,10 +414,26 @@ export function NotificationSettingsModal(mode='create', rule={}){
     return wrapper;
 }
 
+function StepButton(classValue, text, onClick){
+    // autoql-vanilla-chata-btn primary large
+    var nButton = htmlToElement(`
+        <button
+            class="${classValue}">
+            ${text}
+        </button>
+    `)
+    nButton.onclick = (evt) => {
+        onClick(evt)
+    }
+
+    return nButton
+}
+
 function FrequencyBox(message){
     var parent = htmlToElement(`
         <div class="frequency-description-box-container">
-    </div>`);
+        </div>`
+    );
     var box = document.createElement('div');
     var messageContent = document.createElement('span');
     messageContent.innerHTML = message;

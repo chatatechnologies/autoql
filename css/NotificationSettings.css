@@ -503,3 +503,9 @@
     margin-top: .5em;
     padding-left: 8px;
 }
+
+.autoql-vanilla-first-step-next-btn {
+    position: absolute;
+    right: -5px;
+    bottom: 0px;
+}
