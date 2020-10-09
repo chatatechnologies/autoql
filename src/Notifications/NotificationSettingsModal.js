@@ -1488,9 +1488,7 @@ function ChataModalStep(title, nStep, subtitle=''){
 
 function getNotificationValues(){
     return {
-        expression: [
-            ...this.step1.getValues()
-        ],
+        ...this.step1.getValues(),
         ...this.step2.getValues(),
         ...this.step3.getValues(),
         // ...this.step4.getValues()
@@ -1514,21 +1512,26 @@ function getStep3Values(){
 }
 
 function getStep2Values(){
-    var fEvent = this.querySelector('[data-frequency-event]');
-    var fValue = this.querySelector('[data-frequency-value]');
-    var values = {
-        notification_type: fEvent.dataset.frequencyEvent,
-        reset_period: null
-    }
+    // var fEvent = this.querySelector('[data-frequency-event]');
+    // var fValue = this.querySelector('[data-frequency-value]');
+    // var values = {
+    //     notification_type: fEvent.dataset.frequencyEvent,
+    //     reset_period: null
+    // }
+    //
+    // if(fValue)values.reset_period = fValue.dataset.frequencyValue
+    // return values;
 
-    if(fValue)values.reset_period = fValue.dataset.frequencyValue
-    return values;
+    
 
 }
 
 function getStep1Values(){
     var groups = this.querySelectorAll('.notification-group-wrapper');
     var operators = this.querySelectorAll('.notification-and-or-text');
+    var title = this.querySelector(
+        '.autoql-vanilla-notification-title-input'
+    ).value
     var expression = [];
 
     for (var i = 0; i < groups.length; i++) {
@@ -1566,5 +1569,10 @@ function getStep1Values(){
         expression.push(termValue)
     }
 
-    return expression;
+    return {
+        expression: [
+            ...expression
+        ],
+        title: title
+    }
 }
