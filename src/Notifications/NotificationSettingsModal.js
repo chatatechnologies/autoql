@@ -262,6 +262,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
         ) + 'px';
     })
 
+    repeatRadio.classList.add('reset_period')
+
     var triggerRadio = new ChataRadio([
         {
             label: 'Once, when this happens',
@@ -298,6 +300,9 @@ export function NotificationSettingsModal(mode='create', rule={}){
             step2.stepContentContainer
         ) + 'px';
     })
+
+    triggerRadio.classList.add('notification_type')
+
 
     frequencySettingsContainer.appendChild(triggerRadio)
     frequencySettingsContainer.appendChild(repeatText)
@@ -1495,35 +1500,30 @@ function getNotificationValues(){
     }
 }
 
-function getStep4Values(){
-    var title = this.querySelector('.autoql-vanilla-notification-title-input');
+function getStep3Values(){
+    var input = this.querySelector('.autoql-vanilla-query-return-input');
     var message = this.querySelector('.autoql-vanilla-notification-message');
     return {
-        title: title.value,
+        query: input.value,
         message: message.value
     };
 }
 
-function getStep3Values(){
-    var input = this.querySelector('.autoql-vanilla-query-return-input');
-    return {
-        query: input.value
-    };
-}
-
 function getStep2Values(){
-    // var fEvent = this.querySelector('[data-frequency-event]');
-    // var fValue = this.querySelector('[data-frequency-value]');
-    // var values = {
-    //     notification_type: fEvent.dataset.frequencyEvent,
-    //     reset_period: null
-    // }
-    //
-    // if(fValue)values.reset_period = fValue.dataset.frequencyValue
-    // return values;
 
-    
+    var type = this.querySelector('.notification_type');
+    var reset = this.querySelector('.reset_period');
+    var values = {
+        notification_type: type.selectedValue,
+        reset_period: null
+    }
+    if(type === 'SINGLE_EVENT'){
+        values.reset_period = reset.selectedValue
+    }
 
+    console.log(values);
+
+    return values;
 }
 
 function getStep1Values(){

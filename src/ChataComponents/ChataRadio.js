@@ -25,7 +25,6 @@ export function ChataRadio(options, onChange){
 
         input.onchange = (evt) => {
             wrapper.selectedValue = evt.target.value
-            console.log(wrapper.selectedValue);
             onChange(evt)
         }
 
