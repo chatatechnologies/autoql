@@ -139,7 +139,6 @@ export function DataAlertsSettings(selector, options){
                     configModal.close()
                 }
             )
-            // configModal.close();
         }
         saveButton.onclick = (e) => {
             spinner.classList.remove('hidden')

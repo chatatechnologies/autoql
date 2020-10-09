@@ -6,6 +6,7 @@ import {
 } from '../ChataTable'
 import { Modal } from '../Modal'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
+import { ChataConfirmDialog } from '../ChataComponents'
 import {
     htmlToElement,
     uuidv4,
@@ -261,7 +262,13 @@ export function Notification(options, parentOptions){
         configModal.show();
         refreshTooltips();
         cancelButton.onclick = (e) => {
-            configModal.close();
+            new ChataConfirmDialog(
+                'Are you sure you want to leave this page?',
+                'All unsaved changes will be lost.',
+                (evt) => {
+                    configModal.close()
+                }
+            )
         }
         saveButton.onclick = (e) => {
             spinner.classList.remove('hidden')
