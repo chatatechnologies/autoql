@@ -111,11 +111,14 @@ export function NotificationList(selector, options){
     wrapper.getNotifications = () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=0&limit=10`;
         var timeOut = 0;
+        var delay = 0.08;
         ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
             var items = jsonResponse['data']['notifications'];
             for (var i = 0; i < items.length; i++) {
+                var notification = new Notification(items[i], wrapper.options);
+                notification.style.animationDelay = (delay * i) + 's';
                 container.appendChild(
-                    new Notification(items[i], wrapper.options)
+                    notification
                 );
             }
         }, wrapper.options)
