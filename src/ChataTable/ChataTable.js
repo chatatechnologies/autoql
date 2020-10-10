@@ -5,6 +5,7 @@ import {
     formatColumnName,
     getDatePivotArray,
     getPivotColumnArray,
+    htmlToElement,
     cloneObject
 } from '../Utils';
 import './Tabulator.css';
