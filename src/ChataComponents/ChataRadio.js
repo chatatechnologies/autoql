@@ -19,7 +19,10 @@ export function ChataRadio(options, onChange){
         input.setAttribute('id', `chata-radio-${uuid}-${i}`)
         label.setAttribute('for', `chata-radio-${uuid}-${i}`)
 
-        if(opt.checked)input.setAttribute('checked', 'true')
+        if(opt.checked){
+            input.setAttribute('checked', 'true')
+            wrapper.selectedValue = opt.value
+        }
         label.innerHTML = opt.label
         input.setAttribute('value', opt.value)
 
@@ -32,6 +35,6 @@ export function ChataRadio(options, onChange){
         p.appendChild(label)
         wrapper.appendChild(p)
     }
-
+    
     return wrapper
 }

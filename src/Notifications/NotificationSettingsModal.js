@@ -261,7 +261,7 @@ export function NotificationSettingsModal(mode='create', rule={}){
             step2.stepContentContainer
         ) + 'px';
     })
-
+    console.log(repeatRadio.selectedValue);
     repeatRadio.classList.add('reset_period')
 
     var triggerRadio = new ChataRadio([
@@ -1517,7 +1517,7 @@ function getStep2Values(){
         notification_type: type.selectedValue,
         reset_period: null
     }
-    if(type === 'SINGLE_EVENT'){
+    if(type.selectedValue === 'SINGLE_EVENT'){
         values.reset_period = reset.selectedValue
     }
 
