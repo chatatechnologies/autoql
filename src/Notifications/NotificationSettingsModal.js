@@ -75,13 +75,16 @@ export function NotificationSettingsModal(mode='create', rule={}){
         'of the following conditions are met:',
         onChangeAndOr
     );
+    var isButtonDisable = mode === 'create'
+
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
         'Next',
         (evt) => {
             step1.closeStep()
             step2.expand()
-        }
+        },
+        isButtonDisable
     )
     parentSelect.operator = 'AND';
 
@@ -341,7 +344,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
         (evt) => {
             step2.closeStep()
             step3.expand()
-        }
+        },
+        isButtonDisable
     )
     var step2PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
@@ -349,7 +353,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
         (evt) => {
             step2.closeStep()
             step1.expand()
-        }
+        },
+        isButtonDisable
     )
     var step2ButtonContainer = document.createElement('div');
     step2ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
@@ -399,7 +404,8 @@ export function NotificationSettingsModal(mode='create', rule={}){
         (evt) => {
             step2.expand()
             step3.closeStep()
-        }
+        },
+        isButtonDisable
     )
     var step3ButtonContainer = document.createElement('div');
     step3ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
@@ -523,7 +529,7 @@ function setRadioSelection(options, selectedOption){
     return options;
 }
 
-function StepButton(classValue, text, onClick){
+function StepButton(classValue, text, onClick, isDisabled=false){
     // autoql-vanilla-chata-btn primary large
     var nButton = htmlToElement(`
         <button
@@ -531,6 +537,9 @@ function StepButton(classValue, text, onClick){
             ${text}
         </button>
     `)
+
+    if(isDisabled)nButton.classList.add('disabled')
+
     nButton.onclick = (evt) => {
         onClick(evt)
     }
