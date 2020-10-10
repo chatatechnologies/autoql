@@ -516,6 +516,14 @@ export function NotificationSettingsModal(mode='create', rule={}){
         return isValid
     }
 
+    wrapper.addEventListener('click', (evt) => {
+        wrapper.checkSteps()
+    })
+
+    wrapper.addEventListener('keyup', (evt) => {
+        wrapper.checkSteps()
+    })
+
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
     step3.getValues = getStep3Values;

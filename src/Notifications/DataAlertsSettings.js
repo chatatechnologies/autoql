@@ -109,7 +109,7 @@ export function DataAlertsSettings(selector, options){
             <div class="autoql-vanilla-spinner-loader hidden"></div>
         `)
         var saveButton = htmlToElement(
-            `<div class="autoql-vanilla-chata-btn primary "
+            `<div class="autoql-vanilla-chata-btn primary disabled"
                 style="padding: 5px 16px; margin: 2px 5px;"></div>`
         )
 
@@ -124,6 +124,14 @@ export function DataAlertsSettings(selector, options){
             modalView.step1.expand();
         })
         configModal.chataModal.style.width = '95vw';
+
+        modalView.checkSteps = () => {
+            if(modalView.isValid()){
+                saveButton.classList.remove('disabled')
+            }else{
+                saveButton.classList.add('disabled')
+            }
+        }
 
         configModal.addView(modalView);
         configModal.setTitle('Custom Notification');

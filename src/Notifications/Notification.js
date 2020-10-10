@@ -255,6 +255,14 @@ export function Notification(options, parentOptions){
         })
         configModal.chataModal.style.width = '95vw';
 
+        modalView.checkSteps = () => {
+            if(modalView.isValid()){
+                saveButton.classList.remove('disabled')
+            }else{
+                saveButton.classList.add('disabled')
+            }
+        }
+
         configModal.addView(modalView);
         configModal.setTitle('Custom Notification');
         configModal.addFooterElement(cancelButton);
