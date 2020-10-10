@@ -6,6 +6,20 @@ import {
 import { RUN_QUERY, DELETE_ICON, REMOVE_ELEMENT } from '../Svg'
 import './Safetynet.css'
 
+export function getRunQueryButton(){
+    const runQueryButtonHtml = `
+    <button class="autoql-vanilla-chata-safety-net-execute-btn">
+        <span class="chata-icon autoql-vanilla-chata-execute-query-icon">
+            ${RUN_QUERY}
+        </span>
+    Run Query</button>
+    `
+
+    const runQueryButton = htmlToElement(runQueryButtonHtml)
+
+    return runQueryButton
+}
+
 export function createSafetynetContent(suggestionArray, context){
     const message = `
     I need your help matching a term you used to the exact corresponding
@@ -20,7 +34,7 @@ export function createSafetynetContent(suggestionArray, context){
     Run Query</button>
     `;
 
-    const runQueryButton = htmlToElement(runQueryButtonHtml);
+    const runQueryButton = getRunQueryButton();
     runQueryButton.onclick = function(event){
         closeAllSafetynetSelectors();
         runQuery(event, context);

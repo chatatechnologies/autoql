@@ -9,12 +9,14 @@ import {
     getNumberOfGroupables,
     putLoadingContainer,
     getRecommendationPath,
+    getSafetynetValues
 } from '../Utils'
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import {
     createSafetynetBody,
     createSuggestionArray,
-    updateSelectWidth
+    updateSelectWidth,
+    getRunQueryButton
 } from '../Safetynet'
 import Split from 'split.js'
 import { refreshTooltips } from '../Tooltips'
@@ -744,11 +746,9 @@ function TileView(dashboard, chataDashboardItem,
 
     obj.getSafetynetBody = (json) => {
         const message = `
-        Before I can try to find your answer,
-        I need your help understanding a term you used that
-        I don't see in your data.
-        Click the dropdown to view suggestions so
-        I can ensure you get the right data
+        I need your help matching a term you used to the exact corresponding
+        term in your database.
+        Verify by selecting the correct term from the menu below:
         `
         var suggestionArray = createSuggestionArray(json);
         var responseContentContainer = document.createElement(
@@ -767,6 +767,14 @@ function TileView(dashboard, chataDashboardItem,
             responseContentContainer,
             suggestionArray
         );
+
+        var runQueryButton = getRunQueryButton()
+
+        responseContentContainer.appendChild(runQueryButton)
+
+        runQueryButton.onclick = (evt) => {
+            obj.runQuery('dashboards.user')
+        }
 
         return responseContentContainer;
     }

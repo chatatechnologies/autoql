@@ -2,5 +2,6 @@ export {
     createSafetynetContent,
     createSuggestionArray,
     createSafetynetBody,
-    updateSelectWidth
+    updateSelectWidth,
+    getRunQueryButton
 } from './Safetynet'
