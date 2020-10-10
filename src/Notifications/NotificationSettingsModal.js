@@ -502,6 +502,20 @@ export function NotificationSettingsModal(mode='create', rule={}){
 
     ruleContainer.appendChild(btnAddGroup);
 
+    wrapper.isValid = () => {
+        var steps = wrapper.querySelectorAll('.chata-step-container')
+        var isValid = true
+
+        for (var i = 0; i < steps.length; i++) {
+            if(!steps[i].classList.contains('complete')){
+                isValid = false
+                break;
+            }
+        }
+
+        return isValid
+    }
+
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
     step3.getValues = getStep3Values;
@@ -530,7 +544,6 @@ function setRadioSelection(options, selectedOption){
 }
 
 function StepButton(classValue, text, onClick, isDisabled=false){
-    // autoql-vanilla-chata-btn primary large
     var nButton = htmlToElement(`
         <button
             class="${classValue}">
@@ -837,6 +850,7 @@ function checkStep2(step2){
     for (var i = 0; i < buttons.length; i++) {
         buttons[i].classList.remove('disabled')
     }
+
 }
 
 function checkStep1(ruleContainer){
