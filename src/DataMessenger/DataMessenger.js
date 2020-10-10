@@ -22,7 +22,8 @@ import {
     mouseY,
     cloneObject,
     getNumberOfGroupables,
-    formatData
+    formatData,
+    getRecommendationPath
 } from '../Utils'
 import {
     createAreaChart,
@@ -1078,10 +1079,6 @@ export function DataMessenger(elem, options){
           ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
           : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
           return url;
-    }
-
-    obj.getRecommendationPath = (options, text) => {
-        return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
     }
 
     obj.createResizeHandler = function(){
@@ -2558,7 +2555,7 @@ export function DataMessenger(elem, options){
 
             responseLoadingContainer.appendChild(responseLoading);
             obj.drawerContent.appendChild(responseLoadingContainer);
-            const path = obj.getRecommendationPath(
+            const path = getRecommendationPath(
                 obj.options,
                 text.split(' ').join(',')
             );

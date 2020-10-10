@@ -7,7 +7,8 @@ import {
     allColsHidden,
     closeAllToolbars,
     getNumberOfGroupables,
-    putLoadingContainer
+    putLoadingContainer,
+    getRecommendationPath,
 } from '../Utils'
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import {
@@ -988,10 +989,16 @@ function TileView(dashboard, chataDashboardItem,
             return 0;
         }
 
-        if(json['data']['rows'].length == 0){
-            container.innerHTML = 'No data found.';
+        if(json['reference_id'] === '1.1.431'){
+            container.innerHTML =
+            'I want to make sure I understood your query. Did you mean:';
+            console.log(json);
             return 0;
         }
+        // if(json['data']['rows'].length == 0){
+        //     container.innerHTML = 'No data found.';
+        //     return 0;
+        // }
         switch (displayType) {
             case 'safetynet':
                 var responseContentContainer = obj.getSafetynetBody(

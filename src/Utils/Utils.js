@@ -1290,3 +1290,7 @@ export function getPlainTextList(query, fullSuggestions) {
 export function getFirstNotificationLine (step1) {
     return step1.findElement('.autoql-vanilla-chata-input-settings')
 }
+
+export function getRecommendationPath(options, text) {
+    return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
+}
