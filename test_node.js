@@ -44,13 +44,13 @@ setTimeout(() => {
     datamessenger.setOption('enableNotificationsTab', true);
 
 }, 300)
-// var alerts = DataAlertsSettings('#alert-settings', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     }
-// })
+var alerts = DataAlertsSettings('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    }
+})
 
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -66,20 +66,20 @@ setTimeout(() => {
 // })
 // queryInput.bind(queryOutput)
 //
-var notificationList = new NotificationList('#notification-list', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    showNotificationDetails: true,
-    onExpandCallback: (notification) => {
-        console.log(notification);
-    },
-    onCollapseCallback: (notification) => {
-        console.log(notification);
-    }
-})
+// var notificationList = new NotificationList('#notification-list', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     showNotificationDetails: true,
+//     onExpandCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     onCollapseCallback: (notification) => {
+//         console.log(notification);
+//     }
+// })
 
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {

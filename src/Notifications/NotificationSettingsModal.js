@@ -220,11 +220,11 @@ export function NotificationSettingsModal(mode='create', rule={}){
         <p>Trigger Data Alert:</p>
     `))
 
-    var isChecked = mode === 'edit' ? true : false
     var repeatText = htmlToElement(`
         <p>Repeat</p>
     `)
-    var repeatRadio = new ChataRadio([
+
+    var repeatOptions = [
         {
             label: 'Daily',
             value: 'DAY',
@@ -238,9 +238,15 @@ export function NotificationSettingsModal(mode='create', rule={}){
         {
             label: 'Monthly',
             value: 'MONTH',
-            checked: true
+            checked: false
         }
-    ], (evt) => {
+    ]
+    console.log(rule);
+    if(mode === 'edit'){
+        repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
+    }
+
+    var repeatRadio = new ChataRadio(repeatOptions, (evt) => {
         var message = `You will be notified as soon as this happens.
         If the Alert is triggered multiple times, you will only be notified`
         switch (evt.target.value) {
@@ -261,21 +267,29 @@ export function NotificationSettingsModal(mode='create', rule={}){
             step2.stepContentContainer
         ) + 'px';
     })
-    console.log(repeatRadio.selectedValue);
     repeatRadio.classList.add('reset_period')
 
-    var triggerRadio = new ChataRadio([
+    var triggerOptions = [
         {
             label: 'Once, when this happens',
             value: 'SINGLE_EVENT',
-            checked: isChecked
+            checked: false
         },
         {
             label: 'Every time this happens',
             value: 'REPEAT_EVENT',
             checked: false
         }
-    ], (evt) => {
+    ]
+
+    if(mode == 'edit'){
+        triggerOptions = setRadioSelection(
+            triggerOptions, rule.notification_type
+        )
+
+    }
+
+    var triggerRadio = new ChataRadio(triggerOptions, (evt) => {
         checkStep2(step2);
 
         if(evt.target.value === 'SINGLE_EVENT'){
@@ -307,10 +321,16 @@ export function NotificationSettingsModal(mode='create', rule={}){
     frequencySettingsContainer.appendChild(triggerRadio)
     frequencySettingsContainer.appendChild(repeatText)
     frequencySettingsContainer.appendChild(repeatRadio)
-    if(!isChecked){
+    if(mode === 'create'){
         repeatRadio.style.display = 'none'
         repeatText.style.display = 'none'
         frequencyBox.style.visibility = 'hidden';
+    }else{
+        if(rule.notification_type != 'SINGLE_EVENT'){
+            repeatRadio.style.display = 'none'
+            repeatText.style.display = 'none'
+            frequencyBox.style.visibility = 'hidden';
+        }
     }
     // frequencySettingsContainer.appendChild(label);
     // frequencySettingsContainer.appendChild(selectFrequency);
@@ -489,6 +509,18 @@ export function NotificationSettingsModal(mode='create', rule={}){
     wrapper.getValues = getNotificationValues;
     refreshTooltips()
     return wrapper;
+}
+
+function setRadioSelection(options, selectedOption){
+    for (var i = 0; i < options.length; i++) {
+        console.log(options[i].value + '===' + selectedOption);
+        if(options[i].value === selectedOption){
+            options[i].checked = true;
+            break;
+        }
+    }
+
+    return options;
 }
 
 function StepButton(classValue, text, onClick){
