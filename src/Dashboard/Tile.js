@@ -990,15 +990,44 @@ function TileView(dashboard, chataDashboardItem,
         }
 
         if(json['reference_id'] === '1.1.431'){
-            container.innerHTML =
-            'I want to make sure I understood your query. Did you mean:';
-            console.log(json);
+            container.innerHTML = ''
+            let query
+            if(obj.isSecond){
+                query = obj.internalQuery || chataDashboardItem.inputQuery.value;
+            }else{
+                query = chataDashboardItem.inputQuery.value;
+            }
+            const path = getRecommendationPath(
+                dashboard.options,
+                query.split(' ').join(',')
+            );
+            ChataUtils.safetynetCall(path, function(response, s){
+                var responseContentContainer = document.createElement('div');
+                responseContentContainer.classList.add(
+                    'autoql-vanilla-chata-response-content-container'
+                );
+                responseContentContainer.classList.add(
+                    'autoql-vanilla-chata-response-content-center'
+                );
+                var val = ''
+                if(obj.isSecond){
+                    val = obj.internalQuery;
+                }else{
+                    val = chataDashboardItem.inputQuery.value;
+                }
+                responseContentContainer.innerHTML =
+                'I want to make sure I understood your query. Did you mean:'
+                container.appendChild(responseContentContainer);
+                var rows = response['data']['items'];
+                ChataUtils.createSuggestions(
+                    responseContentContainer,
+                    rows,
+                    'autoql-vanilla-chata-suggestion-btn-renderer'
+                );
+            }, dashboard.options);
             return 0;
         }
-        // if(json['data']['rows'].length == 0){
-        //     container.innerHTML = 'No data found.';
-        //     return 0;
-        // }
+
         switch (displayType) {
             case 'safetynet':
                 var responseContentContainer = obj.getSafetynetBody(
@@ -1166,7 +1195,7 @@ function TileView(dashboard, chataDashboardItem,
                         <strong>"${val}"</strong>. Did you mean:
                     </div>`;
                 container.appendChild(responseContentContainer);
-                var rows = json['data']['rows'];
+                var rows = json['data']['items'];
                 ChataUtils.createSuggestions(
                     responseContentContainer,
                     rows,
