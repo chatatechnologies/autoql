@@ -991,6 +991,8 @@ function TileView(dashboard, chataDashboardItem,
 
         if(json['reference_id'] === '1.1.431'){
             container.innerHTML = ''
+            console.log(append);
+            console.log(view);
             let query
             if(obj.isSecond){
                 query = obj.internalQuery || chataDashboardItem.inputQuery.value;
@@ -1017,7 +1019,9 @@ function TileView(dashboard, chataDashboardItem,
                 }
                 responseContentContainer.innerHTML =
                 'I want to make sure I understood your query. Did you mean:'
-                container.appendChild(responseContentContainer);
+                if(append){
+                    container.appendChild(responseContentContainer);
+                }
                 var rows = response['data']['items'];
                 ChataUtils.createSuggestions(
                     responseContentContainer,
