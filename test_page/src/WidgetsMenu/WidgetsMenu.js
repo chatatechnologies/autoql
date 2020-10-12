@@ -3,7 +3,10 @@ import {
     Menu
 } from 'antd'
 import './WidgetsMenu.css'
-
+import {
+    BUBBLES_ICON,
+    DASHBOARD_ICON
+} from '../Svg'
 export class WidgetsMenu extends Component{
 
     render = () => {
@@ -14,11 +17,13 @@ export class WidgetsMenu extends Component{
                 selectedKeys={[this.props.currentPage]}
                 mode="horizontal">
                     <Menu.Item key="drawer">
+                        { BUBBLES_ICON }
                         Data Messenger
                     </Menu.Item>
                     <Menu.Item
                     key="dashboard"
                     className={this.props.isLogged ? '' : 'chata-hidden'}>
+                        { DASHBOARD_ICON }
                         Dashboard
                     </Menu.Item>
                     <Menu.Item

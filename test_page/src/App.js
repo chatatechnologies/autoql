@@ -7,6 +7,7 @@ import { DataAlertsSettingsPage } from './DataAlertsSettingsPage'
 import { DataMessenger } from 'autoql'
 import { NotificationsIcon } from 'autoql'
 import { NotificationListPage } from './NotificationListPage'
+import './App.css'
 import axios from 'axios'
 
 import { getActiveIntegrator, getIntroMessageTopics } from './Utils'

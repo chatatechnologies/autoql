@@ -264,7 +264,7 @@ export function Notification(options, parentOptions){
         }
 
         configModal.addView(modalView);
-        configModal.setTitle('Custom Notification');
+        configModal.setTitle('Edit Data Alert');
         configModal.addFooterElement(cancelButton);
         configModal.addFooterElement(saveButton);
         configModal.show();

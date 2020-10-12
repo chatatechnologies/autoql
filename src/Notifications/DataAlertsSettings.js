@@ -134,7 +134,7 @@ export function DataAlertsSettings(selector, options){
         }
 
         configModal.addView(modalView);
-        configModal.setTitle('Custom Notification');
+        configModal.setTitle('Create New Data Alert');
         configModal.addFooterElement(cancelButton);
         configModal.addFooterElement(saveButton);
         configModal.show();

@@ -12,6 +12,7 @@ import {
     RollbackOutlined,
     SaveOutlined
 } from '@ant-design/icons'
+
 const { Option } = Select
 
 export class DashboardPage extends Component {
@@ -124,7 +125,8 @@ export class DashboardPage extends Component {
                         type="default"
                         icon={
                             this.state.isEditing ?
-                            <StopOutlined /> : <EditOutlined />}>Edit
+                            <StopOutlined /> : <EditOutlined />}>
+                             {this.state.isEditing ? 'Cancel' : 'Edit'}
                     </Button>
                     <Button
                         type="default"

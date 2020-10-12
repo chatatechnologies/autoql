@@ -106,7 +106,7 @@ export function NotificationSettingsItem(options) {
             var deleteButton = htmlToElement(`
                 <button
                     class="autoql-vanilla-chata-btn danger large">
-                        Delete Notification
+                        Delete Data Alert
                 </button>
             `)
 
@@ -147,7 +147,7 @@ export function NotificationSettingsItem(options) {
             )
 
             configModal.addView(modalView);
-            configModal.setTitle('Custom Notification');
+            configModal.setTitle('Edit Data Alert');
             configModal.addFooterElement(footerWrapper);
             configModal.show();
             refreshTooltips();
