@@ -400,7 +400,7 @@ export function createBarChart(
     .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
         const colType = cols[index2].type
-        if(colType === 'DATE' || colType === 'DATE_STRING')return d
+        // if(colType === 'DATE' || colType === 'DATE_STRING')return d
         return formatLabel(formatData(d, cols[index2], options))
     }))
     let slice;
