@@ -81,8 +81,7 @@ export function formatData(val, col, allOptions={}){
             }
         break;
         case 'DATE_STRING':
-            var momentObj = moment(val, 'YYYY');
-            value = momentObj.format('YYYY');
+            value = formatStringDate(val, options)
         break;
         default:
             if(Object.prototype.toString.call(val) === '[object Object]'){
@@ -93,6 +92,43 @@ export function formatData(val, col, allOptions={}){
     }
     if(value === undefined)return '';
     else return value;
+}
+
+export const isDayJSDateValid = date => {
+  return date !== 'Invalid Date'
+}
+
+export const formatStringDate = (value, config) => {
+    if (!value) {
+        return undefined
+    }
+
+    if (value && typeof value === 'string') {
+        const dateArray = value.split('-')
+        const year = dateArray[0]
+        const month = dateArray[1]
+        const day = dateArray[2]
+
+        const { monthYearFormat, dayMonthYearFormat } = config
+        const monthYear = monthYearFormat || 'MMM YYYY'
+        const dayMonthYear = dayMonthYearFormat || 'll'
+
+        if (day) {
+            const date = moment(value).format(dayMonthYear)
+            if (isDayJSDateValid(date)) {
+                return date
+            }
+        } else if (month) {
+            const date = moment(value).format(monthYear)
+            if (isDayJSDateValid(date)) {
+                return date
+            }
+        } else if (year) {
+            return year
+        }
+    }
+
+    return value
 }
 
 export function formatColumnName(col){
