@@ -141,6 +141,7 @@ export function DataMessenger(elem, options){
     obj.finalTranscript = '';
     obj.isRecordVoiceActive = false
     obj.zIndexBubble = 1000000;
+    obj.lastQuery = '';
 
     var rootElem = document.querySelector(elem);
 
@@ -1351,6 +1352,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.onEnterHandler = (evt) => {
+
         if(evt.keyCode == 13 && obj.input.value){
             try {
                 obj.options.xhr.abort();
@@ -1433,7 +1435,14 @@ export function DataMessenger(elem, options){
         obj.rootElem.appendChild(chataBarContainer);
         obj.input.onkeyup = obj.autoCompleteHandler;
         obj.input.onkeypress = obj.onEnterHandler;
-
+        obj.input.onkeydown = (evt) => {
+            console.log(evt.keyCode);
+            if(evt.keyCode == 38){
+                if(obj.lastQuery !== ''){
+                    obj.input.value = obj.lastQuery
+                }
+            }
+        }
     }
 
     obj.speechToTextEvent = () => {
@@ -2202,6 +2211,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.putMessage = (value) => {
+        obj.lastQuery = value;
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseLoadingContainer = document.createElement('div');
