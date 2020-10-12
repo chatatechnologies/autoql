@@ -22,9 +22,10 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
-            let label = formatData(
-                data[i][group.indexCol], group.jsonCol, options
-            );
+            // let label = formatData(
+            //     data[i][group.indexCol], group.jsonCol, options
+            // );
+            let label = data[i][group.indexCol];
             if(!label || label == '')continue;
             var colName = columns[group.indexCol].display_name ||
             columns[group.indexCol].name;
