@@ -693,8 +693,9 @@ ChataUtils.makeBarChartDomain = function(data, hasNegativeValues){
 ChataUtils.getUniqueValues = function(data, getter){
     let unique = {};
     data.forEach(function(i) {
-        console.log();
-        if(!unique[getter(i)] && typeof getter(i) === 'string') {
+        // &&
+        if(typeof getter(i) !== 'string')return
+        if(!unique[getter(i)]) {
             unique[getter(i)] = true;
         }
     });

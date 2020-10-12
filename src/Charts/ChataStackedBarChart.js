@@ -100,6 +100,8 @@ export function createStackedBarChart(
         json, groups, metadataComponent.metadata3D
     );
 
+    console.log(data);
+
     var colStr1 = cols[groupableIndex1]['display_name']
     || cols[groupableIndex1]['name'];
     var colStr2 = cols[groupableIndex2]['display_name']

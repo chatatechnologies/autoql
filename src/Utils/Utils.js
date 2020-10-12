@@ -81,8 +81,8 @@ export function formatData(val, col, allOptions={}){
             }
         break;
         case 'DATE_STRING':
-            var momentObj = moment(val, 'YYYY-MM');
-            value = momentObj.format(options.monthYearFormat);
+            var momentObj = moment(val, 'YYYY');
+            value = momentObj.format('YYYY');
         break;
         default:
             if(Object.prototype.toString.call(val) === '[object Object]'){
