@@ -1530,17 +1530,21 @@ export function DataMessenger(elem, options){
         closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
-        var y = mouseY(evt) + reportProblem.clientHeight + 120;
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        var bubble = obj.drawerContent.querySelector(
+            `[data-bubble-id="${idRequest}"]`
+        )
+        bubble.scrollIntoView()
     }
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
         closeAllToolbars();
-        var y = mouseY(evt) + moreOptions.clientHeight + 120;
+        var bubble = obj.drawerContent.querySelector(
+            `[data-bubble-id="${idRequest}"]`
+        )
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        bubble.scrollIntoView()
     }
 
     obj.filterTableHandler = (evt, idRequest) => {
