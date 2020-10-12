@@ -694,7 +694,7 @@ ChataUtils.getUniqueValues = function(data, getter){
     let unique = {};
     data.forEach(function(i) {
         // &&
-        if(typeof getter(i) !== 'string')return
+        // if(typeof getter(i) !== 'string')return
         if(!unique[getter(i)]) {
             unique[getter(i)] = true;
         }
@@ -732,7 +732,8 @@ ChataUtils.format3dData = function(json, groups, metadata){
         dataGrouped.push({group: group});
         for (var x = 0; x < data.length; x++) {
             if(data[x][groupableIndex2] == group){
-                if(typeof data[x][groupableIndex1] === 'string'){
+                if(typeof data[x][groupableIndex1] === 'string' ||
+                   typeof data[x][groupableIndex1] === 'number'){
                     dataGrouped[i][data[x][groupableIndex1]]
                     = parseFloat(data[x][notGroupableIndex]);
                 }
