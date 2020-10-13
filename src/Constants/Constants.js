@@ -1,31 +1,41 @@
 export const LIGHT_THEME = {
-  '--chata-drawer-accent-color': '#28a8e0',
-  '--chata-drawer-background-color': '#fff',
-  '--chata-drawer-border-color': '#d3d3d352',
-  '--chata-drawer-hover-color': '#ececec',
-  '--chata-drawer-text-color-primary': '#5d5d5d',
-  '--chata-drawer-text-color-placeholder': '#0000009c'
+    'accent-color': '#28a8e0',
+    'background-color-primary': '#fff',
+    'background-color-secondary': '#F1F3F5',
+    'background-color-tertiary': '#cccccc',
+    'border-color': '#e6e6e6',
+    'hover-color': '#ececec',
+    'text-color-primary': '#5d5d5d',
+    'text-color-placeholder': '#00000036',
+    'font-family': 'sans-serif',
+    'highlight-color': '#000',
+    'danger-color': '#ca0b00',
+}
+
+export const DARK_THEME = {
+  'accent-color': '#193a48',
+  'background-color-primary': '#3B3F46',
+  'background-color-secondary': '#20252A',
+  'background-color-tertiary': '#292929',
+  'border-color': '#53565c',
+  'hover-color': '#4a4f56',
+  'text-color-primary': '#fff',
+  'text-color-placeholder': '#ffffff9c',
+  'font-family': 'sans-serif',
+  'highlight-color': '#FFF',
+  'danger-color': '#ff584e',
 }
 
 export const DASHBOARD_LIGHT_THEME = {
-  '--chata-dashboard-accent-color': '#28a8e0',
-  '--chata-dashboard-background-color': '#fff',
-  '--chata-dashboard-border-color': '#d3d3d352',
-  '--chata-dashboard-hover-color': '#ececec',
-  '--chata-dashboard-text-color-primary': '#5d5d5d',
-  '--chata-dashboard-text-color-placeholder': '#0000009c'
+    '--chata-dashboard-accent-color': '#28a8e0',
+    '--chata-dashboard-background-color': '#fff',
+    '--chata-dashboard-border-color': '#d3d3d352',
+    '--chata-dashboard-hover-color': '#ececec',
+    '--chata-dashboard-text-color-primary': '#5d5d5d',
+    '--chata-dashboard-text-color-placeholder': '#0000009c'
 }
 
 
-export const DARK_THEME = {
-  '--chata-drawer-accent-color': '#525252', // dark gray
-  // '--chata-drawer-accent-color': '#193a48', // dark blue
-  '--chata-drawer-background-color': '#636363',
-  '--chata-drawer-border-color': '#d3d3d329',
-  '--chata-drawer-hover-color': '#5a5a5a',
-  '--chata-drawer-text-color-primary': '#fff',
-  '--chata-drawer-text-color-placeholder': '#ffffff9c'
-}
 
 export const MONTH_NAMES = [
     "January", "February", "March",

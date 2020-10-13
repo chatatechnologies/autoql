@@ -1471,18 +1471,18 @@ export function DataMessenger(elem, options){
     obj.applyStyles = () => {
         const themeStyles = obj.options.themeConfig.theme === 'light'
         ? LIGHT_THEME : DARK_THEME
-        themeStyles['--chata-drawer-accent-color']
+        themeStyles['--autoql-vanilla-accent-color']
         = obj.options.themeConfig.accentColor;
 
         for (let property in themeStyles) {
             document.documentElement.style.setProperty(
-                property,
+                '--autoql-vanilla-' + property,
                 themeStyles[property],
             );
         }
 
         obj.rootElem.style.setProperty(
-            '--chata-drawer-font-family',
+            '--autoql-vanilla-font-family',
             obj.options.themeConfig['fontFamily']
         );
     }

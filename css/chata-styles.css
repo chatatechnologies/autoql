@@ -39,7 +39,7 @@
     background-color: #26a7df;
     color: #fff;
     /* color: #28a8e0; */
-    /* background: var(--chata-drawer-background-color); */
+    /* background: var(--autoql-vanilla-background-color); */
     /* left: -40px;
     border-radius: 4px 0 0 4px; */
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
@@ -107,7 +107,7 @@ body{
     /* transition: transform 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), box-shadow 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86); */
     /* transform: translateX(500px); */
     transition: transform 0.3s ease-in-out;
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color-secondary);
     border-radius: 4px;
 }
 
@@ -116,7 +116,7 @@ body{
     justify-content: space-between;
     width: 100%;
     height: 60px;
-    background: var(--chata-drawer-accent-color);
+    background: var(--autoql-vanilla-accent-color);
     box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
     flex-grow: 0;
     flex-shrink: 0;
@@ -149,8 +149,8 @@ body{
 }
 
 .autoql-vanilla-clear-messages-confirm-popover {
-    color: var(--chata-drawer-text-color-primary);
-    background: var(--chata-drawer-background-color);
+    color: var(--autoql-vanilla-text-color-primary);
+    background: var(--autoql-vanilla-background-color);
     text-align: right;
     padding: 18px !important;
     width: 266px;
@@ -183,8 +183,8 @@ body{
 }
 
 .autoql-vanilla-chata-confirm-btn.yes {
-    background: var(--chata-drawer-accent-color) !important;
-    border: 2px outset var(--chata-drawer-accent-color) !important;
+    background: var(--autoql-vanilla-accent-color) !important;
+    border: 2px outset var(--autoql-vanilla-accent-color) !important;
     color: white;
 }
 
@@ -205,7 +205,7 @@ body{
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 18px;
     letter-spacing: 0.05em;
 }
@@ -246,7 +246,7 @@ body{
 }
 
 .autoql-vanilla-chat-header-container .autoql-vanilla-chata-button:hover{
-    /* color: var(--chata-drawer-hover-color); */
+    /* color: var(--autoql-vanilla-hover-color); */
     opacity: .7;
 }
 
@@ -266,7 +266,7 @@ body{
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 0%;
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color);
     /* position: relative; */
 }
 
@@ -297,12 +297,12 @@ body{
     border-radius: 10px;
     max-width: calc(100% - 20px);
     word-wrap: break-word;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
-    border: 1px solid var(--chata-drawer-border-color);
-    background: var(--chata-drawer-background-color);
-    color: var(--chata-drawer-text-color-primary);
+    border: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     min-width: 317px;
 }
 
@@ -372,8 +372,8 @@ body{
 }
 
 .autoql-vanilla-chat-single-message-container.request .autoql-vanilla-chat-message-bubble {
-    background: var(--chata-drawer-accent-color);
-    border: 1px solid var(--chata-drawer-accent-color);
+    background: var(--autoql-vanilla-accent-color);
+    border: 1px solid var(--autoql-vanilla-accent-color);
     color: white;
     /* box-shadow: 2px 3px 8px 1px rgba(0, 0, 0, 0.1); */
 }
@@ -392,7 +392,7 @@ body{
 }
 
 .autoql-vanilla-watermark {
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     text-align: center;
     opacity: 0.2;
     display: block;
@@ -417,13 +417,13 @@ body{
     box-sizing: border-box !important;
     border-radius: 24px !important;
     font-size: 16px !important;
-    font-family: var(--chata-drawer-font-family) !important;
+    font-family: var(--autoql-vanilla-font-family) !important;
     letter-spacing: 0.04em !important;
     outline: none !important;
     width: calc(100% - 20px);
-    background: transparent !important;
-    border: 1px solid var(--chata-drawer-border-color) !important;
-    color: var(--chata-drawer-text-color-primary) !important;
+    background: var(--autoql-vanilla-background-color-primary);
+    border: 1px solid var(--autoql-vanilla-border-color) !important;
+    color: var(--autoql-vanilla-text-color-primary) !important;
 }
 .autoql-vanilla-chata-input-full-width{
     width: 100%;
@@ -438,7 +438,7 @@ body{
 }
 
 .autoql-vanilla-chata-input::placeholder{
-    color: var(--chata-drawer-text-color-placeholder);
+    color: var(--autoql-vanilla-text-color-placeholder);
 }
 
 .autoql-vanilla-chat-voice-record-button {
@@ -453,8 +453,8 @@ body{
     position: relative;
     cursor: pointer;
     overflow: hidden;
-    background: var(--chata-drawer-accent-color);
-    color: var(--chata-drawer-text-color-primary);
+    background: var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-text-color-primary);
     border: none;
     /* transition: box-shadow 0.2s ease; */
     flex-shrink: 0;
@@ -475,7 +475,7 @@ body{
     box-sizing: border-box !important;
     border-radius: 24px !important;
     font-size: 16px !important;
-    font-family: var(--chata-drawer-font-family) !important;
+    font-family: var(--autoql-vanilla-font-family) !important;
     letter-spacing: 0.04em !important;
     outline: none !important;
     width: calc(100% - 20px) !important;
@@ -536,7 +536,7 @@ body{
 }
 .autoql-vanilla-chat-bar-auto-complete-suggestions ul li{
     display: block;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 15px;
     font-weight: normal;
     width: 100%;
@@ -560,9 +560,9 @@ body{
     overflow: hidden;
     border-radius: 24px;
     z-index: 3;
-    border: 1px solid var(--chata-drawer-border-color);
-    background: var(--chata-drawer-background-color);
-    color: var(--chata-drawer-text-color-primary);
+    border: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     position: fixed;
     list-style: none;
     bottom: 60px;
@@ -571,7 +571,7 @@ body{
 }
 .autoql-vanilla-auto-complete-suggestions ul li{
     display: block;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 15px;
     font-weight: normal;
     width: 100%;
@@ -582,7 +582,7 @@ body{
 }
 
 .autoql-vanilla-auto-complete-suggestions ul li:hover{
-    background-color: var(--chata-drawer-hover-color);
+    background-color: var(--autoql-vanilla-hover-color);
 }
 
 .autoql-vanilla-chat-bar-auto-complete-suggestions ul li:hover{
@@ -648,7 +648,7 @@ body{
     background-color: inherit;
     font-size: 14px;
     height: 100%;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
 }
 
@@ -656,7 +656,7 @@ body{
     padding: 6px 14px;
     background: transparent;
     border-radius: 4px;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 12px;
     margin-top: 5px;
     outline: none !important;
@@ -670,7 +670,7 @@ body{
 
 .autoql-vanilla-chata-suggestion-btn:hover, .autoql-vanilla-chata-suggestion-btn-renderer:hover{
     color: white !important;
-    background: var(--chata-drawer-accent-color) !important;
+    background: var(--autoql-vanilla-accent-color) !important;
     border-color: transparent !important;
 }
 
@@ -710,17 +710,17 @@ body{
 
 .autoql-vanilla-chata-table-scrollbox::-webkit-scrollbar {
     display: unset;
-    background-color: var(--chata-drawer-background-color);
+    background-color: var(--autoql-vanilla-background-color);
     width: 7px;
     height: 7px;
 }
 
 .autoql-vanilla-chata-table-scrollbox::-webkit-scrollbar-corner{
-    background-color: var(--chata-drawer-background-color);
+    background-color: var(--autoql-vanilla-background-color);
 }
 
 input[type=text]:disabled {
-    /* background-color: var(--chata-drawer-text-color-placeholder); */
+    /* background-color: var(--autoql-vanilla-text-color-placeholder); */
 }
 
 .tabulator-filter{
@@ -766,7 +766,7 @@ input[type=text]:disabled {
 
 .autoql-vanilla-chata-response-content-container .autoql-vanilla-table-header,
 .autoql-vanilla-chata-table-scrollbox .autoql-vanilla-table-header{
-    border-bottom: 2px solid var(--chata-drawer-border-color);
+    border-bottom: 2px solid var(--autoql-vanilla-border-color);
     position: sticky !important;
     position: -webkit-sticky !important;
     top: 0 !important;
@@ -787,10 +787,10 @@ input[type=text]:disabled {
     overflow: hidden;
     text-overflow: ellipsis;
     vertical-align: bottom;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color);
     position: relative;
     text-align: center;
 }
@@ -829,8 +829,8 @@ tr td.chata-hidden{
 }
 
 .autoql-vanilla-table-response tr{
-    border-bottom: 1px solid var(--chata-drawer-border-color);
-    background: var(--chata-drawer-background-color);
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color);
     margin-top: 10px;
     margin-bottom: 10px;
     width: 100%;
@@ -840,23 +840,23 @@ tr td.chata-hidden{
 }
 
 .autoql-vanilla-chata-table-scrollbox tr th:hover{
-    background-color: var(--chata-drawer-hover-color);
+    background-color: var(--autoql-vanilla-hover-color);
     cursor: pointer;
 }
 .autoql-vanilla-chata-table-scrollbox tr th:hover .autoql-vanilla-tabulator-arrow, .autoql-vanilla-table-response-renderer tr th:hover .autoql-vanilla-tabulator-arrow{
     display: block;
 }
 .autoql-vanilla-table-response tr:hover {
-    background-color: var(--chata-drawer-hover-color);
+    background-color: var(--autoql-vanilla-hover-color);
     cursor: pointer;
 }
 
 .autoql-vanilla-table-response tr td{
     text-align: center;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     padding: 8px;
     height: 37px;
     vertical-align: middle;
@@ -878,7 +878,7 @@ tr td.chata-hidden{
 
 .autoql-vanilla-table-response-renderer tr td{
     text-align: center;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
     color: #5d5d5d;
@@ -908,7 +908,7 @@ tr td.chata-hidden{
     font-size: 16px;
     line-height: 28px;
     vertical-align: top;
-    color: var(--chata-drawer-accent-color);
+    color: var(--autoql-vanilla-accent-color);
     cursor: pointer;
     outline: none !important;
 }
@@ -924,13 +924,13 @@ tr td.chata-hidden{
 .autoql-vanilla-chat-message-toolbar {
     display: none;
     position: absolute;
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color-primary);
     top: -22px;
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
     z-index: 10;
-    border: 1px solid var(--chata-drawer-border-color);
+    border: 1px solid var(--autoql-vanilla-border-color);
 }
 
 .autoql-vanilla-chat-message-toolbar.right {
@@ -1033,7 +1033,7 @@ tr td.chata-hidden{
     fill: transparent !important;
 }
 .tick{
-    stroke: var(--chata-drawer-border-color);
+    stroke: var(--autoql-vanilla-border-color);
     fill-opacity: 0.7;
 }
 .autoql-vanilla-chata-response-content-container line{
@@ -1043,9 +1043,9 @@ tr td.chata-hidden{
     shape-rendering: crispedges;
 }
 .autoql-vanilla-chata-response-content-container text{
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
-    fill: var(--chata-drawer-text-color-primary);
+    fill: var(--autoql-vanilla-text-color-primary);
 }
 
 /* RESPONSE RENDERER */
@@ -1062,7 +1062,7 @@ tr td.chata-hidden{
     shape-rendering: crispedges;
 }
 .autoql-vanilla-renderer-container text{
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
     fill: #5d5d5d;
 }
@@ -1079,7 +1079,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     text-anchor: middle;
     font-weight: bold;
     font-size: 12px;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
     white-space: nowrap;
 }
@@ -1127,7 +1127,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     background: none;
     outline: none !important;
     border: none;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.05em;
     color: #28a8e0;
     font-size: inherit;
@@ -1143,7 +1143,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     height: 34px;
     margin: 0 3px;
     padding: 0 11px;
-    color: var(--chata-drawer-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 
     transition: all .2s ease;
     cursor: pointer;
@@ -1164,7 +1164,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     border-radius: 0;
     border: none;
     border-bottom: 1px dashed;
-    color: var(--chata-drawer-accent-color);
+    color: var(--autoql-vanilla-accent-color);
     cursor: pointer;
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -1200,7 +1200,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-top: 4px;
     margin-right: 4px;
     vertical-align: top;
-    fill: var(--chata-drawer-accent-color);
+    fill: var(--autoql-vanilla-accent-color);
 }
 
 /* .autoql-vanilla-chata-safety-net-execute-btn {
@@ -1246,7 +1246,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     padding: 6px 14px;
     background: transparent;
     border-radius: 5px;
-    font-family: var(--chata-drawer-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     font-size: 12px;
     margin-top: 5px;
     outline: none !important;
@@ -1292,7 +1292,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-interpretation-icon {
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     vertical-align: top;
     height: 26px;
     margin: -2px 4px;
@@ -1309,14 +1309,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-tabulator-header-filter input{
-    border: 1px solid var(--chata-drawer-border-color) !important;
+    border: 1px solid var(--autoql-vanilla-border-color) !important;
     border-radius: 4px !important;
     background: transparent;
     padding: 4px 9px !important;
     outline: none !important;
     width: 100%;
-    font-family: var(--chata-drawer-font-family) !important;
-    color: var(--chata-drawer-text-color-primary) !important;
+    font-family: var(--autoql-vanilla-font-family) !important;
+    color: var(--autoql-vanilla-text-color-primary) !important;
     height: 24px !important;
     box-shadow: none !important;
     margin: 0px !important;
@@ -1338,7 +1338,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .tippy-tooltip.chata-theme {
   background-color: black;
-  /* color: var(--chata-drawer-hover-color); */
+  /* color: var(--autoql-vanilla-hover-color); */
   color: white;
   font-size: 15px;
   font-family: sans-serif;
@@ -1346,7 +1346,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .tippy-box[data-theme~='chata-theme'] {
     background-color: black;
-    /* color: var(--chata-drawer-hover-color); */
+    /* color: var(--autoql-vanilla-hover-color); */
     color: white;
     font-size: 15px;
     font-family: sans-serif;
@@ -1418,7 +1418,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   position: relative;
   z-index: 1;
 
-  background: var(--chata-drawer-accent-color);
+  background: var(--autoql-vanilla-accent-color);
   color: #fff;
 
   padding-left: 0px;
@@ -1459,18 +1459,18 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   vertical-align: top;
 }
 .autoql-vanilla-page-switcher-container.bottom .tab {
-  background: var(--chata-drawer-background-color);
-  color: var(--chata-drawer-text-color-primary);
+  background: var(--autoql-vanilla-background-color);
+  color: var(--autoql-vanilla-text-color-primary);
 }
 .autoql-vanilla-page-switcher-container .tab.active {
-  background: var(--chata-drawer-background-color);
-  color: var(--chata-drawer-text-color-primary);
+  background: var(--autoql-vanilla-background-color-secondary);
+  color: var(--autoql-vanilla-text-color-primary);
   font-weight: bold;
   position: relative;
   z-index: 2;
 }
 .autoql-vanilla-page-switcher-container.bottom .tab.active {
-  background: var(--chata-drawer-accent-color);
+  background: var(--autoql-vanilla-accent-color);
   color: #fff;
   font-weight: bold;
 }
@@ -1524,7 +1524,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-query-tips-result-container {
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     padding: 0 20px;
     text-align: center;
     max-width: 550px;
@@ -1594,7 +1594,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-query-tips-result-container .query-tip-item:hover {
     font-weight: bold;
-    color: var(--chata-drawer-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .autoql-vanilla-chata-paginate {
@@ -1627,12 +1627,12 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-paginate .pagination-next a, .chata-paginate .pagination-previous a {
-    color: var(--chata-drawer-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .autoql-vanilla-chata-paginate li {
     display: inline-block;
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     cursor: pointer;
     margin-right: 3px;
     border-radius: 5px;
@@ -1646,18 +1646,18 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-paginate li a {
     display: inline-block;
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     outline: none;
     width: 28px;
     height: 28px;
     line-height: 28px;
     font-size: 14px !important;
-    font-family: var(--chata-drawer-font-family),sans-serif !important;
+    font-family: var(--autoql-vanilla-font-family),sans-serif !important;
     padding: 0px !important;
 }
 
 .autoql-vanilla-chata-paginate li.selected {
-    background: var(--chata-drawer-accent-color);
+    background: var(--autoql-vanilla-accent-color);
     border-radius: 50%;
     outline: none;
 }
@@ -1668,7 +1668,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-paginate li {
     display: inline-block;
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     cursor: pointer;
     margin-right: 3px;
     border-radius: 5px;
@@ -1728,14 +1728,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-btn.primary {
-    background: var(--chata-drawer-accent-color);
-    border: 1px solid var(--chata-drawer-accent-color);
+    background: var(--autoql-vanilla-accent-color);
+    border: 1px solid var(--autoql-vanilla-accent-color);
     color: #fff;
 }
 
 .autoql-vanilla-chata-btn.default:hover{
-    border-color: var(--chata-drawer-accent-color);
-    color: var(--chata-drawer-accent-color);
+    border-color: var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .autoql-vanilla-chata-btn.primary:hover{
@@ -1811,7 +1811,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-tiny-popover-container .chata-context-menu {
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color);
     width: 150px;
     padding: 10px 0;
 }
@@ -1905,7 +1905,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-axis-selector-container{
     z-index: 9999;
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color);
     padding: 5px 0;
     max-height: 300px;
     min-width: 150px;
@@ -1949,7 +1949,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-m-checkbox__input {
-    border-color: var(--chata-drawer-accent-color);
+    border-color: var(--autoql-vanilla-accent-color);
     box-sizing: border-box !important;
     padding: 0 !important;
     opacity: 1 !important;
