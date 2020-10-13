@@ -150,7 +150,9 @@ body{
 
 .autoql-vanilla-clear-messages-confirm-popover {
     color: var(--autoql-vanilla-text-color-primary);
-    background: var(--autoql-vanilla-background-color);
+    background: var(--autoql-vanilla-background-color-secondary);
+    font-family: var(--autoql-vanilla-font-family);
+    font-size: 13px;
     text-align: right;
     padding: 18px !important;
     width: 266px;
@@ -178,13 +180,18 @@ body{
 
 .autoql-vanilla-chata-confirm-btn.no {
     color: inherit;
-    border: 1px solid rgba(0,0,0,.15);
+    border: 1px solid var(--autoql-vanilla-border-color);
     background: inherit
+}
+
+.react-autoql-btn.default:hover {
+    border-color: var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .autoql-vanilla-chata-confirm-btn.yes {
     background: var(--autoql-vanilla-accent-color) !important;
-    border: 2px outset var(--autoql-vanilla-accent-color) !important;
+    border: 1px solid var(--autoql-vanilla-accent-color) !important;
     color: white;
 }
 

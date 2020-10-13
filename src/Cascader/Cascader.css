@@ -47,7 +47,7 @@
 
 .autoql-vanilla-chata-cascader .options-container .option.active,
 .autoql-vanilla-chata-cascader .options-container .option:hover {
-    background: var(--chata-drawer-accent-color);
+    background: var(--autoql-vanilla-accent-color);
     color: #fff;
 }
 
@@ -78,5 +78,5 @@
 
 .autoql-vanilla-intro-qi-link {
     cursor: pointer;
-    color: var(--chata-drawer-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 }
