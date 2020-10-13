@@ -11,8 +11,8 @@
 
 .autoql-vanilla-axis-selector-container {
     z-index: 100000001;
-    background: var(--chata-output-background-color);
-    background: white;
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     padding: 5px 0;
     max-height: 300px;
     min-width: 150px;
