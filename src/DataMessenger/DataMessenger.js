@@ -1471,7 +1471,7 @@ export function DataMessenger(elem, options){
     obj.applyStyles = () => {
         const themeStyles = obj.options.themeConfig.theme === 'light'
         ? LIGHT_THEME : DARK_THEME
-        themeStyles['--autoql-vanilla-accent-color']
+        themeStyles['accent-color']
         = obj.options.themeConfig.accentColor;
 
         for (let property in themeStyles) {

@@ -1,18 +1,18 @@
 .autoql-vanilla-chata-table .tabulator-tableHolder .tabulator-table{
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-chata-table .tabulator-header{
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
 
 }
 
 .autoql-vanilla-chata-table .tabulator-row {
-    border-bottom: 1px solid var(--chata-drawer-border-color);
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);
 }
 
 .autoql-vanilla-chata-table .tabulator-row .tabulator-cell{
-    border-right: 1px solid var(--chata-drawer-border-color);
+    border-right: 1px solid var(--autoql-vanilla-border-color);
 }
 
 .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=asc] .tabulator-col-content .tabulator-arrow, .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=none] .tabulator-col-content .tabulator-arrow {
@@ -70,7 +70,7 @@
     box-shadow: none !important;
 }
 .autoql-vanilla-chata-table .tabulator-header-filter input {
-    border: 1px solid var(--chata-drawer-border-color) !important;
+    border: 1px solid var(--autoql-vanilla-border-color) !important;
     border-radius: 4px !important;
     background: transparent;
     padding: 4px 9px!important;
@@ -87,11 +87,11 @@
 .autoql-vanilla-chata-table .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left,
 .autoql-vanilla-chata-table .tabulator-header .tabulator-frozen.tabulator-frozen-left {
     border-right: 2px solid #ddd;
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color-primary);
 }
 
 .tabulator .tabulator-header{
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color-primary);
 }
 
 .autoql-vanilla-filter-tag {

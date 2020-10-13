@@ -1033,19 +1033,24 @@ tr td.chata-hidden{
     fill: transparent !important;
 }
 .tick{
-    stroke: var(--autoql-vanilla-border-color);
-    fill-opacity: 0.7;
+    /* stroke: var(--autoql-vanilla-border-color);
+    fill-opacity: 0.7; */
+    transition: all .3s ease;
 }
 .autoql-vanilla-chata-response-content-container line{
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
+
 }
 .autoql-vanilla-chata-response-content-container text{
-    font-family: var(--autoql-vanilla-font-family);
+    /* font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
-    fill: var(--autoql-vanilla-text-color-primary);
+    fill: var(--autoql-vanilla-text-color-primary); */
+    fill: currentcolor;
+    fill-opacity: 0.7;
+    font-family: inherit;
 }
 
 /* RESPONSE RENDERER */

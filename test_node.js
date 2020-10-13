@@ -22,7 +22,9 @@ var datamessenger = new DataMessenger('#datamessenger', {
         domain: domain,
     },
     themeConfig: {
-        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        theme: 'dark',
+        accentColor: '#508bb8',
     },
     autoQLConfig: {
         debug: true

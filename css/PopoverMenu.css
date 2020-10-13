@@ -1,5 +1,5 @@
 .chata-popover-wrapper{
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color-primary);
     position: absolute;
     top: 40px;
     left: -205px;
@@ -52,7 +52,7 @@
 
 
 .chata-more-options-menu, .report-problem-menu {
-    background: var(--chata-drawer-background-color);
+    background: var(--autoql-vanilla-background-color-primary);
     padding: 10px 0;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .chata-more-options-menu .chata-menu-list li{
-    color: var(--chata-drawer-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     width: 100%;
     height: 35px;
     line-height: 35px;
