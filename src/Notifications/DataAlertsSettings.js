@@ -8,11 +8,12 @@ import { refreshTooltips } from '../Tooltips'
 import {
     ADD_NOTIFICATION
 } from '../Svg'
+import { LIGHT_THEME, DARK_THEME } from '../Constants'
+
 import '../../css/NotificationSettings.css'
 
 
 export function DataAlertsSettings(selector, options){
-    console.log(options);
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');
     wrapper.options = {
@@ -34,6 +35,16 @@ export function DataAlertsSettings(selector, options){
             enableColumnVisibilityManager: true,
             enableDrilldowns: true
         },
+        themeConfig: {
+            theme: 'light',
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
+            accentColor: '#26a7df',
+            fontFamily: 'sans-serif',
+        },
         onErrorCallback: (message) => {}
     }
 
@@ -46,6 +57,12 @@ export function DataAlertsSettings(selector, options){
     if('autoQLConfig' in options){
         for (var [key, value] of Object.entries(options['autoQLConfig'])) {
             wrapper.options.autoQLConfig[key] = value;
+        }
+    }
+
+    if('themeConfig' in options){
+        for (var [key, value] of Object.entries(options['themeConfig'])) {
+            wrapper.options.themeConfig[key] = value;
         }
     }
 
@@ -83,6 +100,25 @@ export function DataAlertsSettings(selector, options){
 
     wrapper.appendChild(titleContainer);
     wrapper.appendChild(notificationSettingsContainer);
+
+    wrapper.applyStyles = () => {
+        const themeStyles = wrapper.options.themeConfig.theme === 'light'
+        ? LIGHT_THEME : DARK_THEME
+        themeStyles['accent-color']
+        = wrapper.options.themeConfig.accentColor;
+
+        for (let property in themeStyles) {
+            document.documentElement.style.setProperty(
+                '--autoql-vanilla-' + property,
+                themeStyles[property],
+            );
+        }
+
+        wrapper.style.setProperty(
+            '--autoql-vanilla-font-family',
+            wrapper.options.themeConfig['fontFamily']
+        );
+    }
 
     wrapper.loadRules = () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}&type=user`;
@@ -166,6 +202,7 @@ export function DataAlertsSettings(selector, options){
         }
     }
 
+    wrapper.applyStyles();
     wrapper.loadRules();
     if(parent)parent.appendChild(wrapper);
     return wrapper

@@ -29,7 +29,7 @@
 }
 
 .chata-step-title:hover{
-    color: var(--chata-messenger-accent-color,#26a7df);
+    color: var(--autoql-vanilla-accent-color,#26a7df);
 }
 
 .chata-notification-display-name-input, .chata-notification-message-input {

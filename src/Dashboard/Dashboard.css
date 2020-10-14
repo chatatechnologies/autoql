@@ -761,7 +761,8 @@
     transition: all .3s ease;
     border: 1px solid transparent;
     outline: none!important;
-    color: #356f90;
+    color: var(--autoql-vanilla-text-color-primary) !important;
+    background: var(--autoql-vanilla-background-color-primary) !important;
     margin: 0;
     padding: 0;
     width: 0;
