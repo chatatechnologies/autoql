@@ -37,7 +37,6 @@ var datamessenger = new DataMessenger('#datamessenger', {
     width: 550,
     // queryQuickStartTopics: topics,
     enableDynamicCharting: true,
-    placement: 'right',
     enableExploreQueriesTab: true,
     enableNotificationsTab: false
 })
@@ -105,7 +104,8 @@ get(DASHBOARD_URL, {
             domain: domain,
         },
         themeConfig: {
-            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            theme: 'dark'
         },
         autoQLConfig: {
             debug: true

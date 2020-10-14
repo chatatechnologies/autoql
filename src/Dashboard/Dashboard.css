@@ -22,9 +22,9 @@
 .autoql-vanilla-chata-dashboard {
     position: relative;
     width: 100%;
-    background: #fafafa;
+    background: var(--autoql-vanilla-background-color-secondary);
     /* border: 5px solid transparent; */
-    font-family: var(--chata-dashboard-font-family);
+    font-family: var(--autoql-vanilla-font-family);
 }
 
 .autoql-vanilla-chata-dashboard-item {
@@ -48,27 +48,27 @@
     position: relative;
     width: 100%;
     height: 100%;
-    background: #fff;
+    background: var(--autoql-vanilla-background-color-primary);
+
     color: rgb(64, 64, 64);
-    font-family: var(--chata-dashboard-font-family), sans-serif;
+    font-family: var(--autoql-vanilla-font-family), sans-serif;
     overflow: hidden;
     border-radius: 4px;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
     padding: 15px 15px 20px 15px;
-    background: white;
 }
 
 .autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-item-content {
-    background-color: #f7f7f7;
+    background: var(--autoql-vanilla-border-color);
+
 }
 
 .autoql-vanilla-chata-tile-wrapper {
     position: relative;
     width: 100%;
     height: 100%;
-    background: #fff;
     color: rgb(64, 64, 64);
-    font-family: var(--chata-dashboard-font-family), sans-serif;
+    font-family: var(--autoql-vanilla-font-family), sans-serif;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -76,7 +76,8 @@
 
 .autoql-vanilla-item-content-wrapper{
     height: 100%;
-    background: white;
+    background: var(--autoql-vanilla-background-color-primary);
+
     padding: 2.5px;
 }
 
@@ -96,7 +97,8 @@
 
 .autoql-vanilla-tile-toolbar{
     z-index: 1000;
-    background: #fff;
+    background: var(--autoql-vanilla-background-color-primary);
+
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
@@ -276,7 +278,7 @@
     cursor: default;
 }
 .autoql-vanilla-dashboard-tile-title-container .autoql-vanilla-dashboard-tile-title {
-    color: var(--chata-dashboard-accent-color);
+    color: var(--autoql-vanilla-accent-color);
     font-weight: bold;
     font-size: 17px;
     text-align: left !important;
@@ -545,7 +547,7 @@
 }
 
 .autoql-vanilla-dashboard-tile-response-container svg .tick{
-    stroke: var(--chata-dashboard-border-color) !important;
+    stroke: var(--autoql-vanilla-border-color) !important;
     fill-opacity: 0.7;
 
 }
@@ -568,9 +570,9 @@
 }
 
 .autoql-vanilla-dashboard-tile-response-container text{
-    font-family: var(--chata-dashboard-font-family) !important;
+    font-family: var(--autoql-vanilla-font-family) !important;
     letter-spacing: 0.04em !important;
-    fill: var(--chata-dashboard-text-color-primary) !important;
+    fill: var(--autoql-vanilla-text-color-primary) !important;
 }
 
 .autoql-vanilla-chata-dashboard-drilldown-original svg .autoql-vanilla-chata-dashboard line {
@@ -587,7 +589,7 @@
 }
 
 .autoql-vanilla-chata-dashboard-drilldown-original svg .tick{
-    stroke: var(--chata-dashboard-border-color) !important;
+    stroke: var(--autoql-vanilla-border-color) !important;
     fill-opacity: 0.7;
 
 }
@@ -599,9 +601,9 @@
 }
 
 .autoql-vanilla-chata-dashboard-drilldown-original text{
-    font-family: var(--chata-dashboard-font-family) !important;
+    font-family: var(--autoql-vanilla-font-family) !important;
     letter-spacing: 0.04em !important;
-    fill: var(--chata-dashboard-text-color-primary) !important;
+    fill: var(--autoql-vanilla-text-color-primary) !important;
 }
 
 .autoql-vanilla-single-value-response{
@@ -782,7 +784,7 @@
 }
 
 .empty-dashboard-message-container {
-    font-family: var(--chata-dashboard-font-family);
+    font-family: var(--autoql-vanilla-font-family);
     letter-spacing: .02em;
     text-align: center;
     padding: 100px;
@@ -791,7 +793,7 @@
 }
 
 .empty-dashboard-new-tile-btn {
-    color: var(--chata-dashboard-accent-color);
+    color: var(--autoql-vanilla-accent-color);
     font-weight: 700;
     cursor: pointer;
 }

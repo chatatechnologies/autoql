@@ -1,4 +1,7 @@
-import { DASHBOARD_LIGHT_THEME } from '../Constants'
+import {
+    LIGHT_THEME,
+    DARK_THEME
+} from '../Constants'
 import { Tile } from './Tile'
 import Muuri from 'muuri'
 import { htmlToElement } from '../Utils'
@@ -103,12 +106,6 @@ export function Dashboard(selector, options={}){
         }
     }
 
-    for (let property in DASHBOARD_LIGHT_THEME) {
-        document.documentElement.style.setProperty(
-            property,
-            DASHBOARD_LIGHT_THEME[property],
-        );
-    }
     obj.onChangeCallback = obj.options.onChangeCallback;
     const emptyDashboardMessage = htmlToElement(`
         <div class="empty-dashboard-message-container">
@@ -268,13 +265,23 @@ export function Dashboard(selector, options={}){
     }
 
     obj.applyCSS = function(){
+        const themeStyles = obj.options.themeConfig.theme === 'light'
+        ? LIGHT_THEME : DARK_THEME
+
+        for (let property in themeStyles) {
+            document.documentElement.style.setProperty(
+                '--autoql-vanilla-' + property,
+                themeStyles[property],
+            );
+        }
+
         obj.grid._element.style.setProperty(
-            '--chata-dashboard-font-family',
+            '--autoql-vanilla-font-family',
             obj.options.themeConfig['fontFamily']
         );
 
         obj.grid._element.style.setProperty(
-            '--chata-dashboard-accent-color',
+            '--autoql-vanilla-accent-color',
             obj.options.themeConfig['titleColor']
         )
     }
