@@ -679,6 +679,9 @@ export function DataMessenger(elem, options){
             authentication: {
                 ...obj.options.authentication
             },
+            themeConfig: {
+                ...obj.options.themeConfig
+            },
             showNotificationDetails: true,
             showDescription: false
         })
