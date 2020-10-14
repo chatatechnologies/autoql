@@ -1,5 +1,6 @@
 import { htmlToElement } from '../Utils'
 import { DISMISS } from '../Svg'
+import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import { ChataUtils } from '../ChataUtils'
 import { Notification } from './Notification'
 import '../../css/Notifications.css'
@@ -61,6 +62,12 @@ export function NotificationList(selector, options){
         }
     }
 
+    if('themeConfig' in options){
+        for (var [key, value] of Object.entries(options['themeConfig'])) {
+            wrapper.options.themeConfig[key] = value;
+        }
+    }
+
     for (var [key, value] of Object.entries(options)) {
         if(typeof value !== 'object'){
             wrapper.options[key] = value;
@@ -84,6 +91,25 @@ export function NotificationList(selector, options){
 
     dismissContent.onclick = () => {
         wrapper.dismissAll()
+    }
+
+    wrapper.applyStyles = () => {
+        const themeStyles = wrapper.options.themeConfig.theme === 'light'
+        ? LIGHT_THEME : DARK_THEME
+        themeStyles['accent-color']
+        = wrapper.options.themeConfig.accentColor;
+
+        for (let property in themeStyles) {
+            document.documentElement.style.setProperty(
+                '--autoql-vanilla-' + property,
+                themeStyles[property],
+            );
+        }
+
+        wrapper.style.setProperty(
+            '--autoql-vanilla-font-family',
+            wrapper.options.themeConfig['fontFamily']
+        );
     }
 
     wrapper.dismissAll = () => {
@@ -126,6 +152,7 @@ export function NotificationList(selector, options){
 
     if(parent)parent.appendChild(wrapper);
 
+    wrapper.applyStyles();
     wrapper.getNotifications();
 
     return wrapper;
