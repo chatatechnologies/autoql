@@ -117,8 +117,7 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         var wrapper = document.createElement('div');
         var buttonWrapper = document.createElement('div');
 
-        buttonWrapper.style.backgroundColor = 'rgb(255, 255, 255)';
-        buttonWrapper.style.padding = '5px';
+        
         buttonWrapper.classList.add('autoql-vanilla-button-wrapper-selector')
         for(var [key, value] of Object.entries(series)){
             var header = document.createElement('div');

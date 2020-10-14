@@ -29,7 +29,8 @@
 .chata-modal {
   display: flex;
   flex-direction: column;
-  background: white;
+  background: var(--autoql-vanilla-background-color-primary);
+
   border-radius: 4px;
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
   margin: 45px auto;
@@ -40,6 +41,8 @@
   transform: scale(0);
   transition: all .2s ease-in-out;
   max-height: calc(100vh - 90px);
+  color: var(--autoql-vanilla-text-color-primary);
+
   /* animation: createBox 0.25s cubic-bezier(0.19, 1, 0.22, 1); */
 }
 

@@ -48,3 +48,9 @@
 .autoql-vanilla-axis-selector-content li:hover {
     background: rgba(0,0,0,.05);
 }
+
+.autoql-vanilla-button-wrapper-selector{
+    padding: 5px;
+    background: var(--autoql-vanilla-background-color-primary);
+    
+}
