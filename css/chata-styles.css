@@ -486,9 +486,9 @@ body{
     letter-spacing: 0.04em !important;
     outline: none !important;
     width: calc(100% - 20px) !important;
-    background: white !important;
+    background: var(--autoql-vanilla-background-color-primary);
     border: 1px solid #d3d3d352 !important;
-    color: #5d5d5d !important;
+    color: var(--autoql-vanilla-text-color-primary) !important;
 }
 
 .autoql-vanilla-chat-bar-auto-complete-suggestions{
@@ -506,7 +506,7 @@ body{
 }
 
 .autoql-vanilla-chat-bar-auto-complete-suggestions.bottom{
-    top: 45px;
+    top: 54px;
 }
 
 .autoql-vanilla-chat-bar-auto-complete-suggestions.top{
@@ -534,12 +534,15 @@ body{
     overflow: hidden;
     border-radius: 24px;
     border: 1px solid #d3d3d352;
-    background: #fff;
-    color: #5d5d5d;
     list-style: none;
     bottom: 60px;
     width: calc(100% - 5px);
     display: none;
+
+    font-family: var(--autoql-vanilla-font-family) !important;
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary) !important;
+
 }
 .autoql-vanilla-chat-bar-auto-complete-suggestions ul li{
     display: block;
@@ -593,7 +596,7 @@ body{
 }
 
 .autoql-vanilla-chat-bar-auto-complete-suggestions ul li:hover{
-    background-color: #ececec;
+    background-color: var(--autoql-vanilla-hover-color);
 }
 
 /* response loading dots */

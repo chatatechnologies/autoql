@@ -4,6 +4,10 @@ import {
     VOICE_RECORD_IMAGE
 } from '../Svg'
 import {
+    LIGHT_THEME,
+    DARK_THEME
+} from '../Constants'
+import {
     getSpeech,
     htmlToElement,
     putLoadingContainer,
@@ -51,6 +55,16 @@ export function QueryInput(selector, options){
             enableQuerySuggestions: true,
             enableDrilldowns: true
         },
+        themeConfig: {
+            theme: 'light',
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
+            accentColor: '#26a7df',
+            fontFamily: 'sans-serif',
+        },
         isDisabled: false,
         onSubmit: function(){},
         onResponseCallback: function(){},
@@ -64,6 +78,25 @@ export function QueryInput(selector, options){
         xhr: new XMLHttpRequest()
     }
     chataBarContainer.autoCompleteTimer = undefined;
+
+    chataBarContainer.applyStyles = () => {
+        const themeStyles = chataBarContainer.options.themeConfig.theme === 'light'
+        ? LIGHT_THEME : DARK_THEME
+        themeStyles['accent-color']
+        = chataBarContainer.options.themeConfig.accentColor;
+
+        for (let property in themeStyles) {
+            document.documentElement.style.setProperty(
+                '--autoql-vanilla-' + property,
+                themeStyles[property],
+            );
+        }
+
+        chataBarContainer.style.setProperty(
+            '--autoql-vanilla-font-family',
+            chataBarContainer.options.themeConfig['fontFamily']
+        );
+    }
 
     chataBarContainer.addEventListener('click', function(e){
         if(e.target.classList.contains('suggestion-renderer')){
@@ -615,6 +648,6 @@ export function QueryInput(selector, options){
     }
 
     PARENT.appendChild(chataBarContainer);
-
+    chataBarContainer.applyStyles()
     return chataBarContainer;
 }

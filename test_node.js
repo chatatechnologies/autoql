@@ -58,39 +58,39 @@ setTimeout(() => {
 //     },
 // })
 
-// var queryInput = new QueryInput('#query-input', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     autoCompletePlacement: 'bottom',
-// });
-//
-// var queryOutput = new QueryOutput('#query-output', {
-//     displayType: 'line',
-// })
-// queryInput.bind(queryOutput)
-//
-var notificationList = new NotificationList('#notification-list', {
+var queryInput = new QueryInput('#query-input', {
     authentication: {
         token: _token,
         apiKey: apiKey,
         domain: domain,
     },
-    showNotificationDetails: true,
-    onExpandCallback: (notification) => {
-        console.log(notification);
-    },
-    onCollapseCallback: (notification) => {
-        console.log(notification);
-    },
-    themeConfig: {
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'dark',
-        accentColor: '#508bb8',
-    },
+    autoCompletePlacement: 'bottom',
+});
+
+var queryOutput = new QueryOutput('#query-output', {
+    displayType: 'line',
 })
+queryInput.bind(queryOutput)
+//
+// var notificationList = new NotificationList('#notification-list', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     showNotificationDetails: true,
+//     onExpandCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     onCollapseCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     themeConfig: {
+//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+//         theme: 'dark',
+//         accentColor: '#508bb8',
+//     },
+// })
 
 // var nButton = new NotificationsIcon('#notification-icon', {
 //     authentication: {
