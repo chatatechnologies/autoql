@@ -452,7 +452,7 @@
 
 .autoql-vanilla-dashboard-tile-delete-button {
     opacity: 0;
-    color: rgba(0, 0, 0, 0.4);
+    color: var(--autoql-vanilla-text-color-primary,#356f90);
     position: absolute;
     top: 2px;
     right: 4px;

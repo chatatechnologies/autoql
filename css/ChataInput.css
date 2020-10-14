@@ -1,7 +1,7 @@
 .autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings {
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 4px;
-    background: #fff;
+    border: 1px solid var(--autoql-vanilla-border-color);
+    /* border-radius: 4px; */
+    background: inherit;
     line-height: 32px;
     min-height: 34px;
     padding: 0 10px;
@@ -33,25 +33,30 @@
     display: inline-block;
 }
 
-.autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings {
-    border: 1px solid rgba(0,0,0,.1);
-    border-radius: 4px;
-    background: #fff;
-    line-height: 32px;
-    min-height: 34px;
-    padding: 0 10px;
-    width: 100%;
-    outline: none!important;
-    -webkit-transition: all .2s ease;
-    transition: all .2s ease;
-    -webkit-transition-property: border-color,color,opacity;
-    transition-property: border-color,color,opacity;
-}
-
 .autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings.area{
     overflow: auto;
     resize: vertical;
 }
 .autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings.with-icon {
     padding-left: 38px;
+}
+
+.autoql-vanilla-dashboard-tile-input-container .dashboard-tile-left-input-container input{
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    color: var(--autoql-vanilla-text-color-primary,#356f90);
+}
+
+.autoql-vanilla-dashboard-tile-input-container .dashboard-tile-right-input-container input{
+    border-left: none;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    z-index: 2;
+    color: var(--autoql-vanilla-text-color-primary,#356f90);
+}
+
+.autoql-vanilla-icon-blue{
+    color: #28a8e0;
+    fill: #28a8e0 !important;
+
 }
