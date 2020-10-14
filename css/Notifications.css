@@ -193,7 +193,7 @@
     justify-content: space-between;
     padding-left: 20px;
     padding-right: 8px;
-    border-bottom: 1px solid rgba(0,0,0,.05);
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);    
 }
 
 .chata-notification-settings-container .chata-notification-edit-icon {

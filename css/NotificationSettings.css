@@ -102,7 +102,7 @@
 .notification-group-wrapper .chata-notification-group-container-copy {
     position: relative;
     padding: 50px 20px 20px;
-    border: 1px solid rgba(0,0,0,.1);
+    border: 1px solid var(--autoql-vanilla-border-color);
     border-radius: 4px;
 }
 
@@ -153,7 +153,7 @@
 
 .chata-select-popup-container {
     position: absolute;
-    background: var(--autoql-vanilla-background-color);
+    background: var(--autoql-vanilla-background-color-primary);
     padding: 10px 0;
     z-index: 9999;
     border: 1px solid #ababab52;
@@ -173,9 +173,9 @@
 }
 
 .chata-select {
-    border: 1px solid rgba(0,0,0,.1);
+    border: 1px solid var(--autoql-vanilla-border-color);
     border-radius: 4px;
-    background: #fff;
+    background: var(--autoql-vanilla-background-color-primary);
     display: inline-block;
     font-size: 13px;
     line-height: 33px;
@@ -211,9 +211,11 @@
     position: absolute;
     margin: 0 auto;
     padding: 0 10px;
-    background: #fff;
+    background-color: var(--autoql-vanilla-background-color-primary);
+
     top: 16px;
-    color: rgba(0,0,0,.5);
+    color: var(--autoql-vanilla-text-color-primary);
+;
 }
 
 .chata-radio-btn-container {
@@ -238,7 +240,7 @@
     position: relative;
     display: inline-block;
     padding: 3px 12px;
-    border: 1px solid #dcdcdc;
+    border: 1px solid var(--autoql-vanilla-border-color);
     margin-left: -1px;
     -webkit-transition: all .2s ease;
     transition: all .2s ease;
@@ -261,14 +263,16 @@
     height: 21px;
     width: 21px;
     border-radius: 10px;
-    border: 1px solid;
-    line-height: 20px;
+    border: 1px solid var(--autoql-vanilla-text-color-placeholder);
+    line-height: 15px;
+    padding-top: 1px;
     text-align: center;
-    background: #fff;
-    color: rgba(0,0,0,.2);
+    background: var(--autoql-vanilla-background-color-primary);
     -webkit-transition: all .3s ease;
     transition: all .3s ease;
     cursor: pointer;
+    color: var(--autoql-vanilla-text-color-primary);
+    opacity: .4;
 }
 
 .notification-group-wrapper .chata-notification-group-container-copy .chata-notification-group-add-btn svg,
@@ -287,12 +291,15 @@
     display: inline-block;
     height: 20px;
     width: 20px;
+    opacity: .4;
     border-radius: 20px;
     margin-left: 5px;
     line-height: 20px;
     text-align: center;
     font-size: 14px;
-    color: rgba(0,0,0,.2);
+    color: var(--autoql-vanilla-text-color-primary);
+    border: 1px solid var(--autoql-vanilla-text-color-placeholder);
+    background: var(--autoql-vanilla-background-color-primary);
     border: 1px solid;
     -webkit-transition: all .2s ease;
     transition: all .2s ease;
@@ -523,4 +530,9 @@
     opacity: .4;
     cursor: not-allowed;
     pointer-events: none;
+}
+
+.chata-step-content input,
+.chata-step-content textarea{
+    color: var(--autoql-vanilla-text-color-primary) !important;
 }
