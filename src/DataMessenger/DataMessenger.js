@@ -1605,6 +1605,8 @@ export function DataMessenger(elem, options){
                         reportProblemButton
                     );
                     moreOptionsArray.push('copy_sql');
+                    moreOptionsArray.push('notification');
+                    
                 }
                 toolbar.appendChild(
                     obj.getActionButton(

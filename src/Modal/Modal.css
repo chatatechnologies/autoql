@@ -121,16 +121,18 @@
     width: 100%;
     padding: 10px;
     resize: none;
+    background: var(--autoql-vanilla-background-color-secondary);
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .copy-sql-modal-content .copy-sql-btn {
-    /* color: var(--chata-options-toolbar-text-color); */
-    background-color: #fff !important;
     position: absolute;
     top: 3px;
     right: 0;
     opacity: 0;
     transition: opacity .3s ease;
+    background: var(--autoql-vanilla-background-color-primary) !important;
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .copy-sql-modal-content:hover .copy-sql-btn {
