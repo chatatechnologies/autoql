@@ -1179,6 +1179,7 @@ export function DataMessenger(elem, options){
 
             if(evt.target.classList.contains('suggestion')){
                 obj.autoCompleteList.style.display = 'none';
+                obj.lastQuery = evt.target.textContent;
                 obj.sendMessage(
                     evt.target.textContent, 'data_messenger.user'
                 );
@@ -1503,8 +1504,12 @@ export function DataMessenger(elem, options){
     }
 
     obj.getMoreOptionsMenu = (options, idRequest, type) => {
+        var bubble = obj.drawerContent.querySelector(
+            `[data-bubble-id="${idRequest}"]`
+        )
         return ChataUtils.getMoreOptionsMenu(options, idRequest, type, {
-            caller: this
+            caller: this,
+            query: bubble.relatedQuery
         });
     }
 
@@ -1606,7 +1611,7 @@ export function DataMessenger(elem, options){
                     );
                     moreOptionsArray.push('copy_sql');
                     moreOptionsArray.push('notification');
-                    
+
                 }
                 toolbar.appendChild(
                     obj.getActionButton(
@@ -2295,6 +2300,7 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add('response');
         containerMessage.classList.add('autoql-vanilla-chat-message-response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.relatedQuery = obj.lastQuery;
         // messageBubble.classList.add('full-width');
 
         ChataUtils.responses[idRequest] = jsonResponse;
@@ -2506,6 +2512,7 @@ export function DataMessenger(elem, options){
         containerMessage.setAttribute('data-bubble-id', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response')
+        messageBubble.relatedQuery = obj.lastQuery;
         var toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );

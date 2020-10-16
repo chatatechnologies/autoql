@@ -196,6 +196,7 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var o = extraParams.caller.options;
+    console.log(extraParams.query);
     var modalView = new NotificationSettingsModal();
     var configModal = new Modal({
         withFooter: true,
@@ -212,6 +213,14 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
         `<div class="autoql-vanilla-chata-btn primary "
         style="padding: 5px 16px; margin: 2px 5px;"></div>`
     )
+
+    modalView.checkSteps = () => {
+        if(modalView.isValid()){
+            saveButton.classList.remove('disabled')
+        }else{
+            saveButton.classList.add('disabled')
+        }
+    }
 
     saveButton.appendChild(spinner);
     saveButton.appendChild(document.createTextNode('Save'));
