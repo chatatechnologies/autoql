@@ -2300,15 +2300,13 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add('response');
         containerMessage.classList.add('autoql-vanilla-chat-message-response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.relatedQuery = obj.lastQuery;
-        // messageBubble.classList.add('full-width');
+        containerMessage.relatedQuery = obj.lastQuery;
 
         ChataUtils.responses[idRequest] = jsonResponse;
         var supportedDisplayTypes = obj.getDisplayTypesButtons(
             idRequest, 'table'
         );
 
-        var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
         var toolbar = undefined;
         if(supportedDisplayTypes.length > 0){
             toolbar = htmlToElement(`
@@ -2324,7 +2322,6 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbar);
         }
 
-        messageBubble.appendChild(actions);
         tableContainer.classList.add('autoql-vanilla-chata-table-container');
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
         responseContentContainer.classList.add(
@@ -2340,6 +2337,8 @@ export function DataMessenger(elem, options){
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
+        messageBubble.appendChild(actions);
         var parentContainer = obj.getParentFromComponent(tableWrapper);
         var table = new ChataTable(
             idRequest,
@@ -2452,14 +2451,14 @@ export function DataMessenger(elem, options){
             'autoql-vanilla-chata-response-content-container'
         );
 
-        messageBubble.appendChild(obj.getActionToolbar(
-            uuid, 'safety-net', ''
-        ))
 
         obj.createSuggestions(responseContentContainer, data);
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        messageBubble.appendChild(obj.getActionToolbar(
+            uuid, 'safety-net', ''
+        ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
@@ -2479,12 +2478,6 @@ export function DataMessenger(elem, options){
         messageBubble.classList.add('simple-response')
         messageBubble.classList.add('no-hover-response')
 
-        if(withDeleteBtn){
-            var toolbarButtons = obj.getActionToolbar(
-                uuid, 'safety-net', ''
-            );
-            messageBubble.appendChild(toolbarButtons);
-        }
 
         var div = document.createElement('div');
         div.classList.add('autoql-vanilla-chata-single-response');
@@ -2492,6 +2485,12 @@ export function DataMessenger(elem, options){
         messageBubble.appendChild(div);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        if(withDeleteBtn){
+            var toolbarButtons = obj.getActionToolbar(
+                uuid, 'safety-net', ''
+            );
+            messageBubble.appendChild(toolbarButtons);
+        }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
@@ -2512,21 +2511,8 @@ export function DataMessenger(elem, options){
         containerMessage.setAttribute('data-bubble-id', idRequest);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response')
-        messageBubble.relatedQuery = obj.lastQuery;
-        var toolbarButtons = obj.getActionToolbar(
-            idRequest, 'simple', 'table'
-        );
+        containerMessage.relatedQuery = obj.lastQuery;
 
-        if(jsonResponse['reference_id'] !== '1.1.420' &&
-           jsonResponse['reference_id'] !== '1.1.430'){
-            messageBubble.appendChild(toolbarButtons);
-        }
-        if(jsonResponse['reference_id'] === '1.1.430'){
-            toolbarButtons = obj.getActionToolbar(
-                idRequest, 'safety-net', ''
-            );
-            messageBubble.appendChild(toolbarButtons);
-        }
         if(jsonResponse['reference_id'] === '1.1.211'
         || jsonResponse['reference_id'] === '1.1.430'
         || jsonResponse['reference_id'] === '1.9.502'){
@@ -2557,6 +2543,21 @@ export function DataMessenger(elem, options){
         messageBubble.appendChild(div);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        var toolbarButtons = obj.getActionToolbar(
+            idRequest, 'simple', 'table'
+        );
+
+        if(jsonResponse['reference_id'] !== '1.1.420' &&
+           jsonResponse['reference_id'] !== '1.1.430'){
+            messageBubble.appendChild(toolbarButtons);
+        }
+        
+        if(jsonResponse['reference_id'] === '1.1.430'){
+            toolbarButtons = obj.getActionToolbar(
+                idRequest, 'safety-net', ''
+            );
+            messageBubble.appendChild(toolbarButtons);
+        }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         if(jsonResponse['reference_id'] === '1.1.430'){
             containerMessage.setAttribute('suggestion-message', '1');
@@ -2592,7 +2593,6 @@ export function DataMessenger(elem, options){
         var uuid = uuidv4();
         var lastBubble = obj.getLastMessageBubble();
         ChataUtils.responses[uuid] = jsonResponse
-        var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
@@ -2603,11 +2603,12 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');
-        messageBubble.appendChild(toolbar);
         messageBubble.append(createSafetynetContent(suggestionArray, obj));
 
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
+        messageBubble.appendChild(toolbar);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         refreshTooltips();
     }

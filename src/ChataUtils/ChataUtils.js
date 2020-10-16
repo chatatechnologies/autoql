@@ -12,6 +12,7 @@ import {
     svgString2Image
 } from '../Utils'
 import sqlFormatter from "sql-formatter";
+import { ChataConfirmDialog } from '../ChataComponents'
 import {
     DOWNLOAD_CSV_ICON,
     CLIPBOARD_ICON,
@@ -210,7 +211,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
         <div class="autoql-vanilla-spinner-loader hidden"></div>
         `)
     var saveButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary "
+        `<div class="autoql-vanilla-chata-btn primary disabled"
         style="padding: 5px 16px; margin: 2px 5px;"></div>`
     )
 
@@ -232,8 +233,15 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     configModal.addView(modalView);
     configModal.setTitle('Custom Notification');
     configModal.show();
+
     cancelButton.onclick = (e) => {
-        configModal.close();
+        new ChataConfirmDialog(
+            'Are you sure you want to leave this page?',
+            'All unsaved changes will be lost.',
+            (evt) => {
+                configModal.close()
+            }
+        )
     }
     saveButton.onclick = (e) => {
         spinner.classList.remove('hidden')
