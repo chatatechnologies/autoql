@@ -12,7 +12,6 @@ import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet'
 import {
     getSpeech,
-    getActiveIntegrator,
     htmlToElement,
     closeAllChartPopovers,
     uuidv4,
@@ -132,7 +131,6 @@ export function DataMessenger(elem, options){
         inputPlaceholder: 'Type your queries here',
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
-        activeIntegrator: '',
         xhr: new XMLHttpRequest()
     };
 
@@ -190,18 +188,12 @@ export function DataMessenger(elem, options){
 
     obj.rootElem = rootElem;
     rootElem.classList.add('autoql-vanilla-chata-drawer');
-    obj.options.activeIntegrator = getActiveIntegrator(
-        obj.options.authentication.domain
-    );
 
 
     obj.setOption = (option, value) => {
         switch (option) {
             case 'authentication':
                 obj.setObjectProp('authentication', value);
-                obj.options.activeIntegrator = getActiveIntegrator(
-                    obj.options.authentication.domain
-                );
                 if(obj.notificationIcon){
                     obj.notificationIcon.setOption('authentication', value)
                 }
