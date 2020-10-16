@@ -1,17 +1,19 @@
 import '../../css/ChataInput.css'
 
 
-export function ChataInput(tag, elementProps, svgIcon=undefined){
+export function ChataInput(tag, elementProps, svgIcon=undefined, withIcon=true){
     let input;
     input = document.createElement(tag);
     input.classList.add('autoql-vanilla-chata-input-settings')
     if(tag === 'input'){
-        input.classList.add('with-icon');
-        var span = document.createElement('span');
-        span.classList.add('chata-icon');
-        span.classList.add('chata-input-icon');
-        span.innerHTML = svgIcon;
-        this.spanIcon = span;
+        if(withIcon){
+            input.classList.add('with-icon');
+            var span = document.createElement('span');
+            span.classList.add('chata-icon');
+            span.classList.add('chata-input-icon');
+            span.innerHTML = svgIcon;
+            this.spanIcon = span;
+        }
     }else{
         input.classList.add('area');
     }

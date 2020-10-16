@@ -640,7 +640,7 @@ export function DataMessenger(elem, options){
             refreshTooltips();
             configModal.chataModal.style.width = '95vw';
             configModal.addView(modalView);
-            configModal.setTitle('Custom Notification');
+            configModal.setTitle('Create New Data Alert');
             configModal.show();
             cancelButton.onclick = (e) => {
                 configModal.close();
@@ -2551,7 +2551,7 @@ export function DataMessenger(elem, options){
            jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
-        
+
         if(jsonResponse['reference_id'] === '1.1.430'){
             toolbarButtons = obj.getActionToolbar(
                 idRequest, 'safety-net', ''

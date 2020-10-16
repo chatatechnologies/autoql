@@ -1092,14 +1092,14 @@ function GroupLine(params, expression=[]){
     ])
 
     var queryInput = new ChataInput('input', {
-        placeholder: 'Query',
+        placeholder: 'Type a query',
         type: "single"
-    }, QUERY);
+    }, null, false);
 
     var queryInput2 = new ChataInput('input', {
-        placeholder: 'Query',
+        placeholder: 'Type a query or number',
         type: "single"
-    }, QUERY);
+    }, null, false);
 
 
     var popup = PopupContainer([
@@ -1225,9 +1225,7 @@ function GroupLine(params, expression=[]){
     }
 
     inputContainer1.appendChild(queryInput.input);
-    inputContainer1.appendChild(queryInput.spanIcon);
     inputContainer2.appendChild(queryInput2.input);
-    inputContainer2.appendChild(queryInput2.spanIcon);
 
     ruleContainer.classList.add('chata-notification-rule-container');
     chataSelectTermType.classList.add('chata-select');
