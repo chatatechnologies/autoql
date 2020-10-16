@@ -343,8 +343,8 @@ export function QueryInput(selector, options){
     }
 
     chataBarContainer.sendMessageToResponseRenderer = function(value, source){
-        chataBarContainer.options.onSubmit();
         var responseRenderer = this.responseRenderer;
+        chataBarContainer.options.onSubmit();
         var parent = this.getElementsByClassName('autoql-vanilla-chat-bar-text')[0];
         this.chatbar.disabled = true;
         this.chatbar.value = '';
@@ -374,7 +374,7 @@ export function QueryInput(selector, options){
                 var suggestionArray = createSuggestionArray(jsonResponse);
                 var node = createSafetynetContent(suggestionArray, chataBarContainer);
                 responseRenderer.appendChild(node);
-                chataBarContainer.options.onResponseCallback();
+                chataBarContainer.options.onResponseCallback(jsonResponse);
                 ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
                 ChataUtils.ajaxCall(value, function(jsonResponse){
@@ -391,7 +391,7 @@ export function QueryInput(selector, options){
         var responseRenderer = chataBarContainer.responseRenderer;
         ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
         responseRenderer.innerHTML = '';
-
+        responseRenderer.queryResponse = cloneObject(jsonResponse);
         if(jsonResponse['reference_id'] === '1.1.430'){
             responseRenderer.innerHTML = jsonResponse['message'];
             const path = ChataUtils.getRecommendationPath(
@@ -409,13 +409,12 @@ export function QueryInput(selector, options){
                 );
                 responseRenderer.appendChild(wrapper)
             }, chataBarContainer.options);
-            chataBarContainer.options.onResponseCallback();
+            chataBarContainer.options.onResponseCallback(jsonResponse);
             return;
         }
 
         let displayType;
         var sup = getSupportedDisplayTypes(jsonResponse);
-        console.log(sup);
         if(sup.includes(responseRenderer.options.displayType)){
             displayType = responseRenderer.options.displayType;
         }else{
@@ -644,7 +643,7 @@ export function QueryInput(selector, options){
                     `;
             }
         }
-        chataBarContainer.options.onResponseCallback();
+        chataBarContainer.options.onResponseCallback(jsonResponse);
     }
 
     PARENT.appendChild(chataBarContainer);

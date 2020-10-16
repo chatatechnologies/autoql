@@ -35,6 +35,8 @@ export function QueryOutput(selector, options={}){
         },
         enableDynamicCharting: true
     }
+    responseRenderer.queryResponse = null;
+    
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
     }

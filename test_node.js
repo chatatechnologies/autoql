@@ -5,6 +5,7 @@ import { QueryInput } from './src'
 import { QueryOutput } from './src'
 import { NotificationList } from './src'
 import { DataAlertsSettings } from './src'
+import { getSupportedDisplayTypes } from './src'
 
 import { get } from 'axios';
 import { getActiveIntegrator, getIntroMessageTopics } from './src/Utils'
