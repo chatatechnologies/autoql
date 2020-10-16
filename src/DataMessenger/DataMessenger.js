@@ -721,6 +721,9 @@ export function DataMessenger(elem, options){
         pageSwitcherContainer.appendChild(tabNotifications);
 
         tabChataUtils.onclick = function(event){
+            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+            obj.scrollBox.style.overflow = 'auto';
+            obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
             tabChataUtils.classList.add('active');
             tabQueryTips.classList.remove('active');
             tabNotifications.classList.remove('active');
@@ -738,6 +741,10 @@ export function DataMessenger(elem, options){
         }
 
         tabNotifications.onclick = function(event){
+            obj.scrollBox.scrollTop = 0;
+            obj.scrollBox.style.overflow = 'hidden';
+            obj.scrollBox.style.maxHeight = '100%';
+
             tabNotifications.classList.add('active');
             tabQueryTips.classList.remove('active');
             tabChataUtils.classList.remove('active');
