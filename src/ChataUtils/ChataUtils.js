@@ -197,7 +197,6 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var o = extraParams.caller.options;
-    console.log(extraParams.query);
     var modalView = new NotificationSettingsModal();
     var configModal = new Modal({
         withFooter: true,
@@ -233,6 +232,16 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     configModal.addView(modalView);
     configModal.setTitle('Custom Notification');
     configModal.show();
+
+    var input = modalView.querySelectorAll(
+        '.autoql-vanilla-chata-input-settings'
+    )[1]
+    var returnInput = modalView.querySelector(
+        '.autoql-vanilla-query-return-input'
+    )
+
+    input.value = extraParams.query
+    returnInput.value = extraParams.query
 
     cancelButton.onclick = (e) => {
         new ChataConfirmDialog(
