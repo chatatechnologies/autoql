@@ -57,6 +57,7 @@ export function NotificationList(selector, options){
     }
 
     wrapper.notificationOffset = 0;
+    wrapper.isLoading = false;
 
     if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
@@ -93,8 +94,7 @@ export function NotificationList(selector, options){
 
     container.addEventListener('scroll', async (evt) => {
         if(container.scrollTop + container.offsetHeight + 60
-            > container.scrollHeight){
-            evt.stopPropagation();
+            > container.scrollHeight && !wrapper.isLoading){
             wrapper.notificationOffset += 10;
             await wrapper.getNotifications()
         }
@@ -149,7 +149,7 @@ export function NotificationList(selector, options){
         const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=${wrapper.notificationOffset}&limit=10`;
         var timeOut = 0;
         var delay = 0.08;
-
+        wrapper.isLoading = true;
         return new Promise(function(resolve, reject) {
             ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
                 var items = jsonResponse['data']['notifications'];
@@ -160,7 +160,7 @@ export function NotificationList(selector, options){
                         notification
                     );
                 }
-
+                wrapper.isLoading = false;
                 resolve(jsonResponse);
             }, wrapper.options)
         });

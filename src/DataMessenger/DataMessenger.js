@@ -127,7 +127,7 @@ export function DataMessenger(elem, options){
         enableVoiceRecord: true,
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
-        enableNotificationsTab: false,
+        enableNotificationsTab: true,
         inputPlaceholder: 'Type your queries here',
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
