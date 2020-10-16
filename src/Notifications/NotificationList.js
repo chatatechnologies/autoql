@@ -56,6 +56,8 @@ export function NotificationList(selector, options){
         onSuccessCallback: (message) => {}
     }
 
+    wrapper.notificationOffset = 0;
+
     if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
             wrapper.options.authentication[key] = value;
@@ -78,9 +80,9 @@ export function NotificationList(selector, options){
     var dismissAllButton = document.createElement('div');
     var dismissContent = document.createElement('span');
     var dismissIcon = htmlToElement(DISMISS);
-
-    wrapper.style.height = '100vh';
-    // wrapper.classList.add('autoql-vanilla-notification-wrapper');
+    // wrapper.style.height = '100vh';
+    // wrapper.style.background = 'rgb(250, 250, 250)';
+    wrapper.classList.add('autoql-vanilla-notification-wrapper');
     container.classList.add('chata-notification-list-container');
     dismissAllButton.classList.add('chata-notification-dismiss-all');
     dismissContent.appendChild(dismissIcon);
@@ -89,9 +91,12 @@ export function NotificationList(selector, options){
     container.appendChild(dismissAllButton);
     wrapper.appendChild(container);
 
-    wrapper.addEventListener('scroll', (evt) => {
-        if(container.scrollTop + container.offsetHeight + 100 > content.offsetHeight) {
-            content.innerHTML += more;
+    container.addEventListener('scroll', async (evt) => {
+        if(container.scrollTop + container.offsetHeight + 60
+            > container.scrollHeight){
+            evt.stopPropagation();
+            wrapper.notificationOffset += 10;
+            await wrapper.getNotifications()
         }
     })
 
@@ -141,19 +146,24 @@ export function NotificationList(selector, options){
     }
 
     wrapper.getNotifications = () => {
-        const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=0&limit=10`;
+        const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=${wrapper.notificationOffset}&limit=10`;
         var timeOut = 0;
         var delay = 0.08;
-        ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
-            var items = jsonResponse['data']['notifications'];
-            for (var i = 0; i < items.length; i++) {
-                var notification = new Notification(items[i], wrapper.options);
-                notification.style.animationDelay = (delay * i) + 's';
-                container.appendChild(
-                    notification
-                );
-            }
-        }, wrapper.options)
+
+        return new Promise(function(resolve, reject) {
+            ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
+                var items = jsonResponse['data']['notifications'];
+                for (var i = 0; i < items.length; i++) {
+                    var notification = new Notification(items[i], wrapper.options);
+                    notification.style.animationDelay = (delay * i) + 's';
+                    container.appendChild(
+                        notification
+                    );
+                }
+
+                resolve(jsonResponse);
+            }, wrapper.options)
+        });
     }
 
     if(parent)parent.appendChild(wrapper);

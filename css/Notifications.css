@@ -8,16 +8,15 @@
 
 .chata-notification-list-container {
     color: #26a7df;
-    height: 100%;
     padding: 20px !important;
     text-align: left;
     background: var(--autoql-vanilla-background-color-secondary);
-    overflow: auto;
+    overflow-y: auto;
+    height: 100%;
 }
 
 .autoql-vanilla-notification-wrapper{
-    overflow: auto;
-    height: 100%;
+    height: calc(100vh - 35px);
 }
 
 .chata-notification-dismiss-icon path{
