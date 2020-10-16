@@ -78,9 +78,9 @@ export function NotificationList(selector, options){
     var dismissAllButton = document.createElement('div');
     var dismissContent = document.createElement('span');
     var dismissIcon = htmlToElement(DISMISS);
-    wrapper.style.height = '100vh';
-    wrapper.style.background = 'rgb(250, 250, 250)';
 
+    wrapper.style.height = '100vh';
+    // wrapper.classList.add('autoql-vanilla-notification-wrapper');
     container.classList.add('chata-notification-list-container');
     dismissAllButton.classList.add('chata-notification-dismiss-all');
     dismissContent.appendChild(dismissIcon);
@@ -88,6 +88,12 @@ export function NotificationList(selector, options){
     dismissAllButton.appendChild(dismissContent);
     container.appendChild(dismissAllButton);
     wrapper.appendChild(container);
+
+    wrapper.addEventListener('scroll', (evt) => {
+        if(container.scrollTop + container.offsetHeight + 100 > content.offsetHeight) {
+            content.innerHTML += more;
+        }
+    })
 
     dismissContent.onclick = () => {
         wrapper.dismissAll()

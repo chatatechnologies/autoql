@@ -12,7 +12,12 @@
     padding: 20px !important;
     text-align: left;
     background: var(--autoql-vanilla-background-color-secondary);
-    /* overflow: hidden; */
+    overflow: auto;
+}
+
+.autoql-vanilla-notification-wrapper{
+    overflow: auto;
+    height: 100%;
 }
 
 .chata-notification-dismiss-icon path{
