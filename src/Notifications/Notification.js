@@ -240,6 +240,7 @@ export function Notification(options, parentOptions){
         `)
 
         var modalView = new NotificationSettingsModal(
+            item.parentOptions,
             'edit', item.ruleOptions
         );
 

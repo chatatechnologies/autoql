@@ -14,7 +14,7 @@ import {
 } from '../ChataComponents'
 import { refreshTooltips } from '../Tooltips'
 
-export function NotificationSettingsModal(mode='create', rule={}){
+export function NotificationSettingsModal(options, mode='create', rule={}){
     var wrapper = document.createElement('div');
     wrapper.mode = mode;
     var frequencyBox = FrequencyBox(
@@ -244,7 +244,6 @@ export function NotificationSettingsModal(mode='create', rule={}){
             checked: false
         }
     ]
-    console.log(rule);
     if(mode === 'edit'){
         repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
     }
@@ -1108,6 +1107,14 @@ function GroupLine(params, expression=[]){
         {text: '=', dataTip: 'Equals', active:false},
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
+
+    queryInput.input.onblur = (evt) => {
+        console.log('BLUR');
+    }
+
+    queryInput2.input.onblur = (evt) => {
+        console.log('BLUR');
+    }
 
     popup.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){

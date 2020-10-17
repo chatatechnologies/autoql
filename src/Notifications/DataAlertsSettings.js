@@ -130,7 +130,7 @@ export function DataAlertsSettings(selector, options){
             for (var i = 0; i < items.length; i++) {
                 items[i].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.appendChild(
-                    new NotificationSettingsItem(items[i])
+                    new NotificationSettingsItem(wrapper.options, items[i])
                 );
             }
         }, wrapper.options)
@@ -152,7 +152,7 @@ export function DataAlertsSettings(selector, options){
         saveButton.appendChild(spinner);
         saveButton.appendChild(document.createTextNode('Save'));
 
-        var modalView = new NotificationSettingsModal();
+        var modalView = new NotificationSettingsModal(wrapper.options);
         var configModal = new Modal({
             withFooter: true,
             destroyOnClose: true
@@ -195,7 +195,7 @@ export function DataAlertsSettings(selector, options){
                 }
                 json['data'].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.insertAdjacentElement(
-                    'afterbegin', new NotificationSettingsItem(json['data'])
+                    'afterbegin', new NotificationSettingsItem(wrapper.options, json['data'])
                 )
                 configModal.close();
             }, modalView.getValues(), o)

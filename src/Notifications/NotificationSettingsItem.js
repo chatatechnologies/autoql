@@ -8,9 +8,10 @@ import {
     EDIT_ALERT
 } from '../Svg'
 
-export function NotificationSettingsItem(options) {
+export function NotificationSettingsItem(parentOptions, options) {
     var wrapper = document.createElement('div');
     wrapper.options = options;
+    wrapper.parentOptions = parentOptions;
     var header = document.createElement('div');
     var settingsDisplayName = document.createElement('div');
 
@@ -88,6 +89,7 @@ export function NotificationSettingsItem(options) {
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
             var modalView = new NotificationSettingsModal(
+                wrapper.parentOptions,
                 'edit', wrapper.options
             );
             var configModal = new Modal({
