@@ -6,6 +6,7 @@ import {
     INPUT_BUBBLES,
     INPUT_DELETE
 } from '../Svg'
+import { ChataUtils } from '../ChataUtils'
 import { convert } from '../RuleParser'
 import {
     ChataInput,
@@ -17,6 +18,7 @@ import { refreshTooltips } from '../Tooltips'
 export function NotificationSettingsModal(options, mode='create', rule={}){
     var wrapper = document.createElement('div');
     wrapper.mode = mode;
+    wrapper.parentOptions = options
     var frequencyBox = FrequencyBox(
         `You will be notified as soon as this happens.
         If the Alert is triggered multiple times,
@@ -117,6 +119,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         );
         var isFirst = groups.length === 0 ? true : false;
         var newGroup = new ConditionGroup(
+            wrapper.parentOptions,
             step1, ruleContainer, parentSelect, isFirst
         );
         ruleContainer.insertBefore(newGroup, btnAddGroup);
@@ -441,6 +444,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             var isFirst = index === 0;
             ruleContainer.appendChild(
                 new ConditionGroup(
+                    wrapper.parentOptions,
                     step1, ruleContainer, parentSelect, isFirst, {
                         ...rule.expression[index],
                         parsedLines: group
@@ -491,6 +495,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         // step4.classList.add('complete');
     }else{
         var group = new ConditionGroup(
+            wrapper.parentOptions,
             step1, ruleContainer, parentSelect, true
         );
         ruleContainer.appendChild(group);
@@ -1109,11 +1114,27 @@ function GroupLine(params, expression=[]){
     ]);
 
     queryInput.input.onblur = (evt) => {
-        console.log('BLUR');
+        console.log(queryInput.input.value);
+        if(queryInput.input.value){
+            ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
+                console.log(statusCode);
+                if(statusCode !== 200){
+
+                }
+            }, params.parentOptions, undefined)
+        }
     }
 
     queryInput2.input.onblur = (evt) => {
-        console.log('BLUR');
+        console.log(queryInput2.input.value);
+        if(queryInput2.input.value){
+            ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
+                console.log(statusCode);
+                if(statusCode !== 200){
+
+                }
+            }, params.parentOptions, undefined)
+        }
     }
 
     popup.onclick = (evt) => {
@@ -1280,7 +1301,7 @@ function GroupLine(params, expression=[]){
     return ruleContainer;
 }
 
-function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
+function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false, ruleLines={}){
     var groupWrapper = document.createElement('div');
     var groupContainer = document.createElement('div');
     var ruleContainer = document.createElement('div');
@@ -1382,7 +1403,8 @@ function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
     addRuleButton.onclick = function(evt){
         var newGroupLine = new GroupLine({
             onDeleteLine: onDeleteLine,
-            onSelectRule: onSelectRule
+            onSelectRule: onSelectRule,
+            parentOptions: parentOptions
         });
         obj.groupLines.push(newGroupLine);
         groupContainer.insertBefore(newGroupLine, notificationRuleAddBtn);
@@ -1441,7 +1463,8 @@ function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
         ruleLines.parsedLines.map((line) => {
             var groupLine = new GroupLine({
                 onDeleteLine: onDeleteLine,
-                onSelectRule: onSelectRule
+                onSelectRule: onSelectRule,
+                parentOptions: parentOptions
             }, line)
 
             obj.groupLines.push(groupLine)
@@ -1450,7 +1473,8 @@ function ConditionGroup(step1, parent, parentSelect, first=false, ruleLines={}){
     }else{
         var defaultGroup = new GroupLine({
             onDeleteLine: onDeleteLine,
-            onSelectRule: onSelectRule
+            onSelectRule: onSelectRule,
+            parentOptions: parentOptions
         });
         obj.groupLines.push(defaultGroup);
         groupContainer.appendChild(defaultGroup);
