@@ -28,7 +28,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
-
+import { ChataTable, ChataPivotTable } from '../ChataTable' 
 
 export function QueryInput(selector, options){
     const PARENT = document.querySelector(selector);

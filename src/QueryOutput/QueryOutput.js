@@ -36,7 +36,7 @@ export function QueryOutput(selector, options={}){
         enableDynamicCharting: true
     }
     responseRenderer.queryResponse = null;
-    
+
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
     }
@@ -60,6 +60,22 @@ export function QueryOutput(selector, options={}){
         document.getElementsByTagName('head')[0].appendChild(style);
     }
     applyTableStyles();
+
+    responseRenderer.setObjectProp = (key, _obj) => {
+        for (var [keyValue, value] of Object.entries(_obj)) {
+            responseRenderer.options[key][keyValue] = value;
+        }
+    }
+
+    responseRenderer.setOption = (option, value) => {
+        switch (option) {
+            case 'dataFormatting':
+                responseRenderer.setObjectProp('dataFormatting', value);
+            break;
+            default:
+                responseRenderer.options[option] = value;
+        }
+    }
 
     responseRenderer.addEventListener('click', function(e){
         if(e.target.hasAttribute('data-chartrenderer')){

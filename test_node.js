@@ -72,8 +72,8 @@ var queryOutput = new QueryOutput('#query-output', {
 })
 
 setTimeout(() => {
-    // queryInput.setOption('showChataIcon', false)
-    // queryInput.setOption('placeholder', 'FOO BAR')
+    queryOutput.setOption('displayType', 'table')
+    queryOutput.setOption('renderTooltips', false)
 }, 1000)
 
 queryInput.bind(queryOutput)
