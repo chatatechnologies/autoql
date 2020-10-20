@@ -751,6 +751,7 @@ export function DataMessenger(elem, options){
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('block');
+            obj.headerTitle.innerHTML = 'Notifications';
         }
 
         var tabs = pageSwitcherShadowContainer;
