@@ -352,6 +352,17 @@
     color: white;
 }
 
+.chata-step-container.error{
+    border-color: #fc0;
+}
+
+.chata-step-container.error .chata-step-dot {
+    border-color: #fc0;
+    background: #fc0;
+    color: #fff;
+}
+
+
 .chata-step-container.complete {
     border-color: var(--autoql-vanilla-accent-color);
 }

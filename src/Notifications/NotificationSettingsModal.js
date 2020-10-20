@@ -402,8 +402,14 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         if(queryReturnInput.input.value){
             ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
                 if(statusCode !== 200){
+                    step3.classList.remove('complete')
+                    step3.classList.add('error')
+
                     termErrorReturnInput.style.display = 'block';
                 }else{
+                    step3.classList.add('complete')
+                    step3.classList.remove('error')
+
                     termErrorReturnInput.style.display = 'none';
                 }
             }, wrapper.parentOptions, undefined)
@@ -1147,8 +1153,12 @@ function GroupLine(params, expression=[]){
             ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
                 if(statusCode !== 200){
                     termError1.style.display = 'block';
+                    params.step.classList.remove('complete')
+                    params.step.classList.add('error')
                 }else{
                     termError1.style.display = 'none';
+                    params.step.classList.add('complete')
+                    params.step.classList.remove('error')
                 }
             }, params.parentOptions, undefined)
         }
@@ -1159,8 +1169,12 @@ function GroupLine(params, expression=[]){
             ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
                 if(statusCode !== 200){
                     termError2.style.display = 'block';
+                    params.step.classList.remove('complete')
+                    params.step.classList.add('error')
                 }else{
                     termError2.style.display = 'none';
+                    params.step.classList.add('complete')
+                    params.step.classList.remove('error')
                 }
             }, params.parentOptions, undefined)
         }
@@ -1437,7 +1451,8 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
         var newGroupLine = new GroupLine({
             onDeleteLine: onDeleteLine,
             onSelectRule: onSelectRule,
-            parentOptions: parentOptions
+            parentOptions: parentOptions,
+            step: step1
         });
         obj.groupLines.push(newGroupLine);
         groupContainer.insertBefore(newGroupLine, notificationRuleAddBtn);
@@ -1497,7 +1512,8 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
             var groupLine = new GroupLine({
                 onDeleteLine: onDeleteLine,
                 onSelectRule: onSelectRule,
-                parentOptions: parentOptions
+                parentOptions: parentOptions,
+                step: step1
             }, line)
 
             obj.groupLines.push(groupLine)
@@ -1507,7 +1523,8 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
         var defaultGroup = new GroupLine({
             onDeleteLine: onDeleteLine,
             onSelectRule: onSelectRule,
-            parentOptions: parentOptions
+            parentOptions: parentOptions,
+            step: step1
         });
         obj.groupLines.push(defaultGroup);
         groupContainer.appendChild(defaultGroup);
