@@ -100,6 +100,8 @@ export class AuthenticationForm extends Component {
                 token: jwt,
                 domain: this.state.domain,
                 apiKey: this.state.apiKey
+            },{
+                projectId: this.state.projectId
             })
             this.setState({
                 isAuthenticating: false

@@ -10,8 +10,6 @@ import { NotificationListPage } from './NotificationListPage'
 import './App.css'
 import axios from 'axios'
 
-import { getActiveIntegrator, getIntroMessageTopics } from './Utils'
-
 
 class App extends React.Component{
 
@@ -46,7 +44,21 @@ class App extends React.Component{
         })
     }
 
-    onLogin = (values) => {
+    fetchTopics = async (values, authentication) => {
+        console.log(authentication);
+        const url = `https://backend-staging.chata.io/api/v1/topics?key=${values.apiKey}&project_id=${authentication.projectId}`
+        const topicsResponse = await axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${values.token}`,
+                'Integrator-Domain': values.domain,
+            },
+        })
+        console.log(topicsResponse.data);
+        this.datamessenger.setOption('queryQuickStartTopics', topicsResponse.data.items)
+
+    }
+
+    onLogin = (values, authentication) => {
         var obj = this
         this.datamessenger.setOption('authentication', {
             ...values
@@ -57,10 +69,10 @@ class App extends React.Component{
                 ...values
             }
         })
-        const topics = getIntroMessageTopics(getActiveIntegrator(
-            this.datamessenger.options.authentication.domain
-        ))
-        this.datamessenger.setOption('queryQuickStartTopics', topics)
+        // const topics = getIntroMessageTopics(getActiveIntegrator(
+        //     this.datamessenger.options.authentication.domain
+        // ))
+        this.fetchTopics(values, authentication)
         this.notificationsIcon = new NotificationsIcon('#notifications-icon', {
             authentication: {
                 ...values
