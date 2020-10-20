@@ -73,12 +73,14 @@ class App extends React.Component{
         //     this.datamessenger.options.authentication.domain
         // ))
         this.fetchTopics(values, authentication)
-        this.notificationsIcon = new NotificationsIcon('#notifications-icon', {
-            authentication: {
-                ...values
-            },
-            useDot: false
-        })
+        if(!this.notificationsIcon){
+            this.notificationsIcon = new NotificationIcon('#notifications-icon', {
+                authentication: {
+                    ...values
+                },
+                useDot: false
+            })
+        }
 
         const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${values.apiKey}`
         axios.get(DASHBOARD_URL, {

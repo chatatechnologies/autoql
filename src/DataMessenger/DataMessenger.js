@@ -1816,6 +1816,7 @@ export function DataMessenger(elem, options){
 
     obj.sendDrilldownMessage = (
         json, indexData, options) =>{
+        if(!options.autoQLConfig.enableDrilldowns)return
         var queryId = json['data']['query_id'];
         var params = {};
         var groupables = getGroupableFields(json);
@@ -1895,8 +1896,9 @@ export function DataMessenger(elem, options){
         return responseLoadingContainer;
     }
 
-    obj.sendDrilldownClientSide = (json, indexValue, filterBy) => {
+    obj.sendDrilldownClientSide = (json, indexValue, filterBy, options) => {
         // console.log('FILTER BY ' + filterBy);
+        if(!options.autoQLConfig.enableDrilldowns)return
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
@@ -1941,7 +1943,9 @@ export function DataMessenger(elem, options){
         if(groupableCount == 1 || groupableCount == 2){
             obj.sendDrilldownMessage(json, indexData, obj.options);
         }else{
-            obj.sendDrilldownClientSide(json, indexValue, colValue);
+            obj.sendDrilldownClientSide(
+                json, indexValue, colValue, obj.options
+            );
         }
     }
 

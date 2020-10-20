@@ -26,7 +26,8 @@ var datamessenger = new DataMessenger('#datamessenger', {
         theme: 'dark',
     },
     autoQLConfig: {
-        debug: true
+        debug: true,
+        enableDrilldowns: true
     },
     placement: 'right',
     onMaskClick: function(datamessenger){

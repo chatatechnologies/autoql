@@ -202,13 +202,23 @@ export class DataMessengerPage extends Component {
                     'Enable Autocomplete',
                     'enableAutocomplete',
                     [true, false],
-                    this.onChangeDMProp
+                    (prop, val) => {
+                        this.setState({ [prop]: val })
+                        this.props.setDMOption('autoQLConfig', {
+                            enableAutocomplete: val
+                        })
+                    }
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Query Validation',
                     'enableQueryValidation',
                     [true, false],
-                    this.onChangeDMProp
+                    (prop, val) => {
+                        this.setState({ [prop]: val })
+                        this.props.setDMOption('autoQLConfig', {
+                            enableQueryValidation: val
+                        })
+                    }
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Query Suggestions',
