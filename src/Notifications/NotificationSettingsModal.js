@@ -400,6 +400,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     messageContainer.appendChild(messageArea.input);
     queryReturnInput.input.onblur = (evt) => {
         if(queryReturnInput.input.value){
+            console.log(wrapper.parentOptions);
             ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
                 if(statusCode !== 200){
                     step3.classList.remove('complete')
