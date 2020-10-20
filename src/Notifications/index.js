@@ -1,4 +1,4 @@
-export { NotificationsIcon } from './NotificationsIcon'
-export { NotificationList } from './NotificationList'
-export { DataAlertsSettings } from './DataAlertsSettings'
+export { NotificationIcon } from './NotificationIcon'
+export { NotificationFeed } from './NotificationFeed'
+export { DataAlerts } from './DataAlerts'
 export { NotificationSettingsModal } from './NotificationSettingsModal'

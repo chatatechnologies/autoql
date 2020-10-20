@@ -1,10 +1,10 @@
 import { DataMessenger } from './src'
 import { Dashboard } from './src'
-import { NotificationsIcon } from './src'
+import { NotificationIcon } from './src'
 import { QueryInput } from './src'
 import { QueryOutput } from './src'
-import { NotificationList } from './src'
-import { DataAlertsSettings } from './src'
+import { NotificationFeed } from './src'
+import { DataAlerts } from './src'
 import { getSupportedDisplayTypes } from './src'
 
 import { get } from 'axios';
@@ -46,7 +46,7 @@ setTimeout(() => {
 }, 300)
 
 
-var alerts = DataAlertsSettings('#alert-settings', {
+var alerts = DataAlerts('#alert-settings', {
     authentication: {
         token: _token,
         apiKey: apiKey,
@@ -78,7 +78,7 @@ setTimeout(() => {
 
 queryInput.bind(queryOutput)
 //
-// var notificationList = new NotificationList('#notification-list', {
+// var notificationList = new NotificationFeed('#notification-list', {
 //     authentication: {
 //         token: _token,
 //         apiKey: apiKey,
@@ -97,7 +97,7 @@ queryInput.bind(queryOutput)
 //     },
 // })
 
-// var nButton = new NotificationsIcon('#notification-icon', {
+// var nButton = new NotificationIcon('#notification-icon', {
 //     authentication: {
 //         token: _token,
 //         apiKey: apiKey,

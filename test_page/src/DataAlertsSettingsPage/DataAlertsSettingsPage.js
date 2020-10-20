@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react'
-import { DataAlertsSettings } from 'autoql'
+import { DataAlerts } from 'autoql'
 
 
 export class DataAlertsSettingsPage extends Component {
@@ -7,7 +7,7 @@ export class DataAlertsSettingsPage extends Component {
     dataAlertsSettings = null
 
     componentDidMount = () => {
-        this.dataAlertsSettings = new DataAlertsSettings('#alerts', {
+        this.dataAlertsSettings = new DataAlerts('#alerts', {
             authentication: {
                 ...this.props.authentication
             }

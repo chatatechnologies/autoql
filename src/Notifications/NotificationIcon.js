@@ -2,7 +2,7 @@ import { NOTIFICATION_BUTTON } from '../Svg'
 import { ChataUtils } from '../ChataUtils'
 import '../../css/ChataNotificationButton.css'
 
-export function NotificationsIcon(selector, options={}){
+export function NotificationIcon(selector, options={}){
 	const NOTIFICATION_POLLING_INTERVAL = 18000
 	var obj = this;
 	this.options = {

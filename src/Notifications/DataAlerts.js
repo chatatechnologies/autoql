@@ -13,7 +13,7 @@ import { LIGHT_THEME, DARK_THEME } from '../Constants'
 import '../../css/NotificationSettings.css'
 
 
-export function DataAlertsSettings(selector, options){
+export function DataAlerts(selector, options){
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');
     wrapper.options = {

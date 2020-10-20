@@ -5,7 +5,7 @@ import { ChataUtils } from '../ChataUtils'
 import { Notification } from './Notification'
 import '../../css/Notifications.css'
 
-export function NotificationList(selector, options){
+export function NotificationFeed(selector, options){
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');
     wrapper.options = {

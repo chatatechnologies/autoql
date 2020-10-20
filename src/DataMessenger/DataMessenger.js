@@ -4,8 +4,8 @@ import { ChataUtils } from '../ChataUtils'
 import { Modal } from '../Modal'
 import {
     NotificationSettingsModal,
-    NotificationsIcon,
-    NotificationList
+    NotificationIcon,
+    NotificationFeed
 } from '../Notifications'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -667,7 +667,7 @@ export function DataMessenger(elem, options){
         obj.notificationsContainer.style.display = display;
         obj.notificationsContainer.innerHTML = '';
         var id = obj.notificationsContainerId;
-        var notificationList = new NotificationList(`[id="${id}"]`, {
+        var notificationList = new NotificationFeed(`[id="${id}"]`, {
             authentication: {
                 ...obj.options.authentication
             },
@@ -769,7 +769,7 @@ export function DataMessenger(elem, options){
         if(obj.options.enableNotificationsTab){
             var tabId = obj.tabId;
             if(obj.notificationIcon)return
-            var notificationIcon = new NotificationsIcon(`[id="${tabId}"]`, {
+            var notificationIcon = new NotificationIcon(`[id="${tabId}"]`, {
                 authentication: {
                     ...obj.options.authentication,
                 },

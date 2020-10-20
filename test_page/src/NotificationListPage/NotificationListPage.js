@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { NotificationList } from 'autoql'
+import { NotificationFeed } from 'autoql'
 
 
 export class NotificationListPage extends Component{
@@ -7,7 +7,7 @@ export class NotificationListPage extends Component{
     notificationList = null
 
     componentDidMount = () => {
-        this.notificationList = new NotificationList('#notification-list', {
+        this.notificationList = new NotificationFeed('#notification-list', {
             authentication: {
                 ...this.props.authentication
             }
