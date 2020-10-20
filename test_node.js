@@ -58,19 +58,25 @@ var alerts = DataAlertsSettings('#alert-settings', {
     },
 })
 
-// var queryInput = new QueryInput('#query-input', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     autoCompletePlacement: 'bottom',
-// });
-//
-// var queryOutput = new QueryOutput('#query-output', {
-//     displayType: 'line',
-// })
-// queryInput.bind(queryOutput)
+var queryInput = new QueryInput('#query-input', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    autoCompletePlacement: 'bottom',
+});
+
+var queryOutput = new QueryOutput('#query-output', {
+    displayType: 'line',
+})
+
+setTimeout(() => {
+    // queryInput.setOption('showChataIcon', false)
+    // queryInput.setOption('placeholder', 'FOO BAR')
+}, 1000)
+
+queryInput.bind(queryOutput)
 //
 // var notificationList = new NotificationList('#notification-list', {
 //     authentication: {

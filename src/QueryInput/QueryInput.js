@@ -79,6 +79,56 @@ export function QueryInput(selector, options){
     }
     chataBarContainer.autoCompleteTimer = undefined;
 
+    chataBarContainer.setObjectProp = (key, _obj) => {
+        for (var [keyValue, value] of Object.entries(_obj)) {
+            chataBarContainer.options[key][keyValue] = value;
+        }
+    }
+
+    chataBarContainer.setOption = (option, value) => {
+        switch (option) {
+            case 'authentication':
+                chataBarContainer.setObjectProp('authentication', value);
+                break;
+            case 'autoQLConfig':
+                chataBarContainer.setObjectProp('autoQLConfig', value);
+                break;
+            case 'themeConfig':
+                chataBarContainer.setObjectProp('themeConfig', value);
+                chataBarContainer.applyStyles();
+                break;
+            case 'isDisabled':
+                chataBarContainer.options[option] = value
+                if(value){
+                    chataBarContainer.input.setAttribute('disabled', 'true')
+                }else{
+                    chataBarContainer.input.removeAttribute('disabled')
+                }
+                break;
+            case 'showChataIcon':
+                chataBarContainer.options[option] = value
+                if(chataBarContainer.options.showChataIcon){
+                    chataBarContainer.chataIcon.style.display = 'block'
+                    chataBarContainer.input.classList.add('left-padding')
+                }else{
+                    chataBarContainer.chataIcon.style.display = 'none'
+                    chataBarContainer.input.classList.remove('left-padding')
+                }
+                break;
+            case 'enableVoiceRecord':
+                chataBarContainer.options[option] = value
+                var display = chataBarContainer.options.enableVoiceRecord ? 'block' : 'none';
+                chataBarContainer.voiceRecordButton.style.display = display;
+                break;
+            case 'placeholder':
+                chataBarContainer.options[option] = value
+                chataBarContainer.input.setAttribute('placeholder', value)
+                break;
+            default:
+                chataBarContainer.options[option] = value;
+        }
+    }
+
     chataBarContainer.applyStyles = () => {
         const themeStyles = chataBarContainer.options.themeConfig.theme === 'light'
         ? LIGHT_THEME : DARK_THEME
@@ -113,10 +163,17 @@ export function QueryInput(selector, options){
     for (var [key, value] of Object.entries(options)) {
         chataBarContainer.options[key] = value;
     }
-    const CHATA_ICON = chataBarContainer.options.showChataIcon ? `
-    <div class="autoql-vanilla-chat-bar-input-icon">${CHATA_BUBBLES_ICON}</div>
-    ` : '';
 
+    const CHATA_ICON = `
+        <div class="autoql-vanilla-chat-bar-input-icon">
+            ${CHATA_BUBBLES_ICON}
+        </div>`;
+
+    var chataIcon = htmlToElement(
+        CHATA_ICON
+    )
+
+    chataBarContainer.chataIcon = chataIcon;
     chataBarContainer.speechToText = getSpeech();
     chataBarContainer.finalTranscript = '';
     chataBarContainer.isRecordVoiceActive = false
@@ -133,6 +190,7 @@ export function QueryInput(selector, options){
         'data-tippy-content',
         'Hold for voice-to-text'
     );
+    voiceRecordButton.style.display = display;
     voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
     chataBarContainer.voiceRecordButton = voiceRecordButton;
     var disabled = chataBarContainer.options.isDisabled ? 'disabled' : '';
@@ -156,8 +214,15 @@ export function QueryInput(selector, options){
             placeholder="${chataBarContainer.options.placeholder}"
             value="" id="" ${disabled}>
     `)
+    if(chataBarContainer.options.showChataIcon){
+        chataIcon.style.display = 'block'
+        input.classList.add('left-padding')
+    }else{
+        chataIcon.style.display = 'none'
+        input.classList.remove('left-padding')
+    }
     wrapperInput.appendChild(suggestionContainer);
-    wrapperInput.appendChild(htmlToElement(CHATA_ICON));
+    wrapperInput.appendChild(chataIcon);
     wrapperInput.appendChild(input);
 
     chataBarContainer.input = input;
