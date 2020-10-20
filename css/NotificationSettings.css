@@ -60,7 +60,7 @@
 .chata-step-subtitle {
     font-size: 13px;
     margin-top: 6px;
-    color: rgba(0,0,0,.4);
+    color: var(--autoql-vanilla-text-color-placeholder,rgba(0,0,0,.4));
 }
 
 .notification-rule-add-btn-outer {

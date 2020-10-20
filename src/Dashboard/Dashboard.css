@@ -526,7 +526,7 @@
 }
 
 .chata-input-icon svg path{
-    fill: unset;
+    fill: currentColor;
 }
 
 .autoql-vanilla-dashboard-tile-play-button svg path{

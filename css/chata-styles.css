@@ -184,11 +184,6 @@ body{
     background: inherit
 }
 
-.react-autoql-btn.default:hover {
-    border-color: var(--autoql-vanilla-accent-color);
-    color: var(--autoql-vanilla-accent-color);
-}
-
 .autoql-vanilla-chata-confirm-btn.yes {
     background: var(--autoql-vanilla-accent-color) !important;
     border: 1px solid var(--autoql-vanilla-accent-color) !important;
@@ -1721,7 +1716,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-btn.default {
     color: inherit;
-    border: 1px solid rgba(0,0,0,.15);
+    border: 1px solid var(--autoql-vanilla-border-color);
     background: inherit;
 }
 
@@ -1732,13 +1727,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-btn.danger:hover {
-    background-color: #ca0b00;
+    background-color: var(--autoql-vanilla-danger-color,#ca0b00);
     color: #fff;
 }
 
 .autoql-vanilla-chata-btn.danger {
-    color: #ca0b00;
+    color: var(--autoql-vanilla-danger-color,#ca0b00);
     border: 1px solid #ca0b00;
+    border: 1px solid var(--autoql-vanilla-danger-color,#ca0b00);
     background: inherit;
 }
 
