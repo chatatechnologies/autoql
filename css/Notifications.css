@@ -601,6 +601,12 @@
     padding:8px 4px;
 }
 
+.rule-term-validation-error {
+    padding: 0 10px !important;
+    color: #fc0;
+    display: none;
+}
+
 @keyframes slideIn{
     0% {
         opacity: 0;

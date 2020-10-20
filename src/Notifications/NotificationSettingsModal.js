@@ -4,7 +4,8 @@ import {
     QUERY,
     NOTEBOOK,
     INPUT_BUBBLES,
-    INPUT_DELETE
+    INPUT_DELETE,
+    WARNING_TRIANGLE
 } from '../Svg'
 import { ChataUtils } from '../ChataUtils'
 import { convert } from '../RuleParser'
@@ -1064,12 +1065,27 @@ function PopupContainer(options=[]){
     return container
 }
 
+function ruleTermError() {
+    var error = htmlToElement(`
+        <div class="rule-term-validation-error">
+            <span class="chata-icon warning-triangle">
+                ${WARNING_TRIANGLE}
+            </span>
+            That query is invalid. Try entering a different query.
+        </div>
+    `)
+
+    return error
+}
+
 function GroupLine(params, expression=[]){
     var secondContainer = document.createElement('div');
     var chataSelectTermType = document.createElement('div');
     var chataSelect = document.createElement('div');
     var ruleContainer = document.createElement('div');
     var conditionValueSelect = document.createElement('div');
+    var termError1 = new ruleTermError();
+    var termError2 = new ruleTermError();
     conditionValueSelect.innerHTML = '>';
     var uuid = uuidv4();
     ruleContainer.conditionValue = '>';
@@ -1114,24 +1130,24 @@ function GroupLine(params, expression=[]){
     ]);
 
     queryInput.input.onblur = (evt) => {
-        console.log(queryInput.input.value);
         if(queryInput.input.value){
             ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
-                console.log(statusCode);
                 if(statusCode !== 200){
-
+                    termError1.style.display = 'block';
+                }else{
+                    termError1.style.display = 'none';
                 }
             }, params.parentOptions, undefined)
         }
     }
 
     queryInput2.input.onblur = (evt) => {
-        console.log(queryInput2.input.value);
         if(queryInput2.input.value){
             ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
-                console.log(statusCode);
                 if(statusCode !== 200){
-
+                    termError2.style.display = 'block';
+                }else{
+                    termError2.style.display = 'none';
                 }
             }, params.parentOptions, undefined)
         }
@@ -1253,13 +1269,17 @@ function GroupLine(params, expression=[]){
     }
 
     inputContainer1.appendChild(queryInput.input);
+    inputContainer1.appendChild(termError1);
     inputContainer2.appendChild(queryInput2.input);
+    inputContainer2.appendChild(termError2);
 
     ruleContainer.classList.add('chata-notification-rule-container');
     chataSelectTermType.classList.add('chata-select');
     chataSelectTermType.classList.add('chata-rule-term-type-selector');
     secondContainer.classList.add('chata-rule-second-input-container');
     secondContainer.appendChild(inputContainer2);
+    secondContainer.appendChild(termError2);
+
     // secondContainer.appendChild(chataSelectTermType);
 
     chataSelect.classList.add('chata-select');
