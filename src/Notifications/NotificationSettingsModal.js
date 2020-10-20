@@ -378,8 +378,10 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         type: "single"
     }, QUERY);
     queryReturnInput.input.classList.add('autoql-vanilla-query-return-input');
+    var termErrorReturnInput = new ruleTermError();
     queryReturnContainer.appendChild(queryReturnInput.input);
     queryReturnContainer.appendChild(queryReturnInput.spanIcon);
+    queryReturnContainer.appendChild(termErrorReturnInput);
     step3.addElement(htmlToElement(`
         <p>Return the data from this query:</p>
     `))
@@ -396,6 +398,17 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     titleInput.input.classList.add('autoql-vanilla-notification-title-input');
     messageArea.input.classList.add('autoql-vanilla-notification-message');
     messageContainer.appendChild(messageArea.input);
+    queryReturnInput.input.onblur = (evt) => {
+        if(queryReturnInput.input.value){
+            ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
+                if(statusCode !== 200){
+                    termErrorReturnInput.style.display = 'block';
+                }else{
+                    termErrorReturnInput.style.display = 'none';
+                }
+            }, wrapper.parentOptions, undefined)
+        }
+    }
 
     step3.addElement(htmlToElement(`
         <p>Send the following message:</p>
