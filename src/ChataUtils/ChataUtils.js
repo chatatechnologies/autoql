@@ -197,7 +197,7 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var o = extraParams.caller.options;
-    var modalView = new NotificationSettingsModal();
+    var modalView = new NotificationSettingsModal(o);
     var configModal = new Modal({
         withFooter: true,
         destroyOnClose: true

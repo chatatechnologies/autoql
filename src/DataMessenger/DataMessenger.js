@@ -615,8 +615,6 @@ export function DataMessenger(elem, options){
         // container.appendChild(button);
 
         button.onclick = (evt) => {
-            console.log(obj.options);
-            console.log('TESTTTTTTTTTTTTTTTTTTTTTTTTTTT');
             var modalView = new NotificationSettingsModal(obj.options);
             var configModal = new Modal({
                 withFooter: true,
