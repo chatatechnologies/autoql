@@ -96,10 +96,10 @@ export function Cascader(topics, datamessenger){
         options.push(opt);
         optionsContainer.appendChild(opt);
         opt.onclick = (evt) => {
-            var target = evt.target;
-            if(!target.classList.contains('option')){
-                target = target.parentElement;
-            }
+            var target = evt.currentTarget;
+            // if(!target.classList.contains('option')){
+            //     target = target.parentElement;
+            // }
             optionsContainer.classList.add('hidden');
                 chataCascader.appendChild(
                 obj.createOptions(target.dataset.indexTopic)
