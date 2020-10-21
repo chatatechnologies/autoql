@@ -95,6 +95,10 @@ export function Tile(dashboard, options={}){
 
     vizToolbarSplit.appendChild(vizToolbarSplitButton);
     vizToolbarSplitButton.appendChild(vizToolbarSplitContent);
+    itemContent.appendChild(vizToolbarSplit);
+    vizToolbarSplit.onclick = function(evt){
+        chataDashboardItem.switchToSplit();
+    }
 
     const uuid = uuidv4();
     chataDashboardItem.globalUUID = uuid;
@@ -162,8 +166,8 @@ export function Tile(dashboard, options={}){
         )
     }
 
-    const notExecutedText = options.notExecutedText
-    || dashboard.options.notExecutedText;
+    const notExecutedText = dashboard.options.notExecutedText
+
     const placeHolderText = `
         <div class="autoql-vanilla-dashboard-tile-placeholder-text">
             <em>${notExecutedText}</em>
@@ -710,7 +714,6 @@ function InputToolbar(text, tileWrapper) {
 }
 
 
-
 function TileView(dashboard, chataDashboardItem,
     tileResponseContainer, isSecond=false){
     var obj = this
@@ -737,6 +740,7 @@ function TileView(dashboard, chataDashboardItem,
     obj.tileWrapper = tileWrapper;
     obj.internalDisplayType = chataDashboardItem.options.displayType;
     obj.isSecond = isSecond;
+    obj.isExecuted = false;
 
     parentChartDrilldownContainer.classList.add(
         'autoql-vanilla-chata-chart-container'
@@ -780,6 +784,7 @@ function TileView(dashboard, chataDashboardItem,
     }
 
     obj.runQuery = (source, showLoadingDots=true, refreshItem=true) => {
+        obj.isExecuted = true;
         return new Promise(resolve => {
             var val = '';
             if(obj.isSafetynet && !obj.isSecond){

@@ -272,7 +272,8 @@
 }
 
 .autoql-vanilla-dashboard-tile-placeholder-text {
-    color: rgba(0, 0, 0, 0.3);
+    color: var(--autoql-vanilla-text-color-placeholder);
+    font-size: 15px;
 }
 .autoql-vanilla-dashboard-tile-title-container{
     cursor: default;

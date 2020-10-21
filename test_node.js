@@ -139,6 +139,7 @@ get(DASHBOARD_URL, {
         autoQLConfig: {
             debug: true
         },
+        executeOnMount: false,
         tiles: response.data[0].data
     })
     dashboard.startEditing()
