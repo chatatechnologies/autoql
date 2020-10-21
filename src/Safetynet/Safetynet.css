@@ -2,8 +2,8 @@
     position: absolute;
     visibility: hidden;
     background: inherit;
-    background: var(--chata-drawer-background-color);
-    color: var(--chata-drawer-text-color-primary);
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     padding: 5px 0;
     letter-spacing: .03em;
     font-family: sans-serif;
