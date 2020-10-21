@@ -9,7 +9,8 @@ import {
     getNumberOfGroupables,
     putLoadingContainer,
     getRecommendationPath,
-    getSafetynetValues
+    getSafetynetValues,
+    formatData
 } from '../Utils'
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import {
@@ -981,6 +982,7 @@ function TileView(dashboard, chataDashboardItem,
     }
 
     obj.refreshItem = (displayType, _uuid, view, append=true) => {
+
         var json = ChataUtils.responses[_uuid];
         var supportedDisplayTypes = getSupportedDisplayTypes(json);
         var toolbarType = 'csvCopy';

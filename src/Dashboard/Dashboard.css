@@ -544,11 +544,11 @@
 }
 
 .autoql-vanilla-dashboard-tile-response-container svg .domain{
-    stroke: #d3d3d352 !important;
+    /* stroke: #d3d3d352 !important; */
 }
 
 .autoql-vanilla-dashboard-tile-response-container svg .tick{
-    stroke: var(--autoql-vanilla-border-color) !important;
+    /* stroke: var(--autoql-vanilla-border-color) !important; */
     fill-opacity: 0.7;
 
 }
@@ -559,13 +559,14 @@
 
 .autoql-vanilla-tile-toolbar .autoql-vanilla-chata-toolbar-btn svg line,
 .autoql-vanilla-tile-toolbar .autoql-vanilla-chata-toolbar-btn svg path{
-    opacity: 1;
-    fill: unset;
+    /* opacity: 1; */
+    /* fill: unset; */
 }
 
 .autoql-vanilla-dashboard-tile-response-container line{
     stroke-width: 1px !important;
-    stroke: currentColor !important;
+    /* stroke: currentColor !important; */
+    stroke: var(--autoql-vanilla-highlight-color);
     opacity: 0.15;
     shape-rendering: crispedges !important;
 }
@@ -586,11 +587,11 @@
 }
 
 .autoql-vanilla-chata-dashboard-drilldown-original svg .domain{
-    stroke: #d3d3d352 !important;
+    /* stroke: #d3d3d352 !important; */
 }
 
 .autoql-vanilla-chata-dashboard-drilldown-original svg .tick{
-    stroke: var(--autoql-vanilla-border-color) !important;
+    /* stroke: var(--autoql-vanilla-border-color) !important; */
     fill-opacity: 0.7;
 
 }
