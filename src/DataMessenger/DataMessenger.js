@@ -1873,7 +1873,7 @@ export function DataMessenger(elem, options){
             else if(response['data']['rows'].length > 0){
                 obj.putTableResponse(response, true);
             }else{
-                obj.putSimpleResponse(response, '', true);
+                obj.putSimpleResponse(response, '', status, true);
             }
             refreshTooltips();
         }, data, options);
@@ -2553,7 +2553,7 @@ export function DataMessenger(elem, options){
         return responseLoadingContainer;
     }
 
-    obj.putSimpleResponse = (jsonResponse, text, isDrilldown=false) => {
+    obj.putSimpleResponse = (jsonResponse, text, statusCode, isDrilldown=false) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -2602,7 +2602,15 @@ export function DataMessenger(elem, options){
             }
         }
         div.classList.add('autoql-vanilla-chata-single-response');
-        div.appendChild(document.createTextNode(value.toString()));
+        var content = htmlToElement(`<div>${value.toString()}</div>`)
+        div.appendChild(content);
+        if(statusCode != 200){
+            div.appendChild(document.createElement('br'));
+            var errorId = htmlToElement(
+                `<div>Error ID: ${jsonResponse.reference_id}</div>`
+            )
+            div.appendChild(errorId);
+        }
         messageBubble.appendChild(div);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
@@ -2755,7 +2763,7 @@ export function DataMessenger(elem, options){
                     switch(jsonResponse['data']['display_type']){
                         case 'table':
                             if(jsonResponse['data']['columns'].length == 1){
-                                obj.putSimpleResponse(jsonResponse, textValue);
+                                obj.putSimpleResponse(jsonResponse, textValue, status);
                             }else{
                                 obj.putTableResponse(jsonResponse);
                             }
@@ -2771,13 +2779,13 @@ export function DataMessenger(elem, options){
                                 }else if(cols[0]['name'] == 'Help Link'){
                                     obj.putHelpMessage(jsonResponse);
                                 }else{
-                                    obj.putSimpleResponse(jsonResponse, textValue);
+                                    obj.putSimpleResponse(jsonResponse, textValue, status);
                                 }
                             }else{
                                 if(rows.length > 0){
                                     obj.putTableResponse(jsonResponse);
                                 }else{
-                                    obj.putSimpleResponse(jsonResponse, textValue);
+                                    obj.putSimpleResponse(jsonResponse, textValue, status);
                                 }
                             }
                         break;
@@ -2860,7 +2868,7 @@ export function DataMessenger(elem, options){
                             obj.putHelpMessage(jsonResponse);
                         break;
                         default:
-                            obj.putSimpleResponse(jsonResponse, textValue);
+                            obj.putSimpleResponse(jsonResponse, textValue, status);
                     }
                     obj.checkMaxMessages();
                     refreshTooltips();
