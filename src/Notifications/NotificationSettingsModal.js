@@ -224,14 +224,18 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     step2.addClass('notification-frequency-step');
     frequencySettingsContainer.appendChild(htmlToElement(`
-        <p>Trigger Data Alert:</p>
+        <p>You will be notified as soon as the Alert conditions are met.</p>
+    `))
+    frequencySettingsContainer.appendChild(htmlToElement(`
+        <p>Reset Alert to run:</p>
     `))
 
-    var repeatText = htmlToElement(`
-        <p>Repeat</p>
-    `)
-
     var repeatOptions = [
+        {
+            label: 'Immediately',
+            value: '',
+            checked: false
+        },
         {
             label: 'Daily',
             value: 'DAY',
@@ -266,6 +270,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 message += ' on a weekly basis.'
                 break;
             default:
+                message = `You will be notified as soon as this happens,
+                any time this happens.`
         }
 
         frequencyBox.setMessage(message)
@@ -305,16 +311,12 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 If the Alert is triggered multiple times,
                 you will only be notified on a monthly basis.`
             );
-            repeatRadio.style.display = 'block'
-            repeatText.style.display = 'block'
 
         }else{
             frequencyBox.setMessage(`
                 You will be notified as soon as this happens,
                 any time this happens.
             `);
-            repeatRadio.style.display = 'none'
-            repeatText.style.display = 'none'
         }
         step2.stepContentContainer.style.height = getHeightForChildrens(
             step2.stepContentContainer
@@ -324,17 +326,15 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     triggerRadio.classList.add('notification_type')
 
 
-    frequencySettingsContainer.appendChild(triggerRadio)
-    frequencySettingsContainer.appendChild(repeatText)
+    // frequencySettingsContainer.appendChild(triggerRadio)
+    // frequencySettingsContainer.appendChild(repeatText)
     frequencySettingsContainer.appendChild(repeatRadio)
     if(mode === 'create'){
         repeatRadio.style.display = 'none'
-        repeatText.style.display = 'none'
         frequencyBox.style.visibility = 'hidden';
     }else{
         if(rule.notification_type != 'SINGLE_EVENT'){
             repeatRadio.style.display = 'none'
-            repeatText.style.display = 'none'
             frequencyBox.style.visibility = 'hidden';
         }
     }
@@ -1656,11 +1656,14 @@ function getStep2Values(){
 
     var type = this.querySelector('.notification_type');
     var reset = this.querySelector('.reset_period');
+    var notificationType =
+    reset.selectedValue == '' ? 'REPEAT_EVENT' : 'SINGLE_EVENT'
     var values = {
-        notification_type: type.selectedValue,
+        notification_type: notificationType,
         reset_period: null
     }
-    if(type.selectedValue === 'SINGLE_EVENT'){
+
+    if(notificationType === 'SINGLE_EVENT'){
         values.reset_period = reset.selectedValue
     }
 
