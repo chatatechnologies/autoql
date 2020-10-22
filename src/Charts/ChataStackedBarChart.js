@@ -256,7 +256,6 @@ export function createStackedBarChart(
             return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
-        .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
     }else{
@@ -266,7 +265,6 @@ export function createStackedBarChart(
             return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
-        .style("color", '#fff')
         .style("text-anchor", "center");
     }
 

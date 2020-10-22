@@ -170,7 +170,6 @@ export function createBubbleChart(
             return formatLabel(d);
         }))
         .selectAll("text")
-        .style("color", '#fff')
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
     }else{
@@ -180,7 +179,6 @@ export function createBubbleChart(
             return formatLabel(d);
         }))
         .selectAll("text")
-        .style("color", '#fff')
         .style("text-anchor", "center");
     }
 
