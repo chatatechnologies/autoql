@@ -2439,6 +2439,16 @@ export function DataMessenger(elem, options){
                 obj.inputAnimation(evt.target.textContent);
             }
         }
+
+        var noneOfTheseButton = document.createElement('button');
+        noneOfTheseButton.classList.add('autoql-vanilla-chata-suggestion-btn');
+        noneOfTheseButton.textContent = 'None of these';
+
+        noneOfTheseButton.onclick = (evt) => {
+            var loading = obj.showLoading();
+
+        }
+        responseContentContainer.appendChild(noneOfTheseButton);
     }
 
     obj.putSuggestionResponse = (jsonResponse) => {
@@ -2504,6 +2514,24 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbarButtons);
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+    }
+
+    obj.showLoading = () => {
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add(
+            'response-loading-container'
+        );
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+        obj.drawerContent.appendChild(responseLoadingContainer);
+
+        return responseLoadingContainer;
     }
 
     obj.putSimpleResponse = (jsonResponse, text, isDrilldown=false) => {
