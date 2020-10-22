@@ -651,7 +651,6 @@ export function DataMessenger(elem, options){
                 var o = obj.options
                 const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
                 ChataUtils.ajaxCallPost(URL, (json, status) => {
-                    console.log(json);
                     configModal.close();
                 }, modalView.getValues(), o)
             }
@@ -1440,7 +1439,6 @@ export function DataMessenger(elem, options){
         obj.input.onkeyup = obj.autoCompleteHandler;
         obj.input.onkeypress = obj.onEnterHandler;
         obj.input.onkeydown = (evt) => {
-            console.log(evt.keyCode);
             if(evt.keyCode == 38){
                 if(obj.lastQuery !== ''){
                     obj.input.value = obj.lastQuery
@@ -1898,7 +1896,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.sendDrilldownClientSide = (json, indexValue, filterBy, options) => {
-        // console.log('FILTER BY ' + filterBy);
         if(!options.autoQLConfig.enableDrilldowns)return
         var newJson = cloneObject(json);
         var newData = [];
@@ -1919,7 +1916,6 @@ export function DataMessenger(elem, options){
             }, 400)
         }else{
             setTimeout(() => {
-                console.log('AQUIIIIIIIIIIIIIIIIII');
                 obj.putClientResponse('No data found.', true, json);
                 obj.drawerContent.removeChild(loading);
             }, 400)
@@ -2427,7 +2423,18 @@ export function DataMessenger(elem, options){
         }, 60);
     }
 
-    obj.createSuggestions = function(responseContentContainer, data){
+    obj.createSuggestions = function(
+        responseContentContainer, relatedJson, json){
+
+        var data = json['data']['items'];
+        var {
+            domain,
+            apiKey
+        } = obj.options.authentication
+        var queryId = relatedJson['data']['query_id'];
+        const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`
+
+
         for (var i = 0; i < data.length; i++) {
             var div = document.createElement('div');
             var button = document.createElement('button');
@@ -2436,6 +2443,11 @@ export function DataMessenger(elem, options){
             div.appendChild(button);
             responseContentContainer.appendChild(div);
             button.onclick = (evt) => {
+                var body = {
+                    suggestion: evt.target.textContent
+                };
+                ChataUtils.putCall(url, body , (jsonResponse) => {
+                }, obj.options)
                 obj.inputAnimation(evt.target.textContent);
             }
         }
@@ -2446,12 +2458,19 @@ export function DataMessenger(elem, options){
 
         noneOfTheseButton.onclick = (evt) => {
             var loading = obj.showLoading();
+            var body = {
+                suggestion: evt.target.textContent
+            };
+            ChataUtils.putCall(url, body, (jsonResponse) => {
+                obj.sendResponse('Thank you for your feedback')
+                obj.drawerContent.removeChild(loading);
+            }, obj.options)
 
         }
         responseContentContainer.appendChild(noneOfTheseButton);
     }
 
-    obj.putSuggestionResponse = (jsonResponse) => {
+    obj.putSuggestionResponse = (relatedJson, jsonResponse) => {
         var uuid = uuidv4();
         ChataUtils.responses[uuid] = jsonResponse;
         var data = jsonResponse['data']['items'];
@@ -2474,7 +2493,9 @@ export function DataMessenger(elem, options){
         );
 
 
-        obj.createSuggestions(responseContentContainer, data);
+        obj.createSuggestions(
+            responseContentContainer, relatedJson, jsonResponse
+        );
         messageBubble.appendChild(responseContentContainer);
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
@@ -2620,7 +2641,7 @@ export function DataMessenger(elem, options){
             );
             ChataUtils.safetynetCall(path, function(response, s){
                 obj.drawerContent.removeChild(responseLoadingContainer);
-                obj.putSuggestionResponse(response);
+                obj.putSuggestionResponse(jsonResponse, response);
             }, obj.options);
         }
     }
@@ -2730,11 +2751,6 @@ export function DataMessenger(elem, options){
                     obj.input.removeAttribute("disabled");
                     obj.drawerContent.removeChild(responseLoadingContainer);
                     switch(jsonResponse['data']['display_type']){
-                        case 'suggestion':
-                            obj.putSuggestionResponse(
-                                jsonResponse
-                            );
-                        break;
                         case 'table':
                             if(jsonResponse['data']['columns'].length == 1){
                                 obj.putSimpleResponse(jsonResponse, textValue);
@@ -2842,9 +2858,6 @@ export function DataMessenger(elem, options){
                             obj.putHelpMessage(jsonResponse);
                         break;
                         default:
-                            // temporary
-                            jsonResponse['data'] =
-                            'Error: There was no data supplied for this table';
                             obj.putSimpleResponse(jsonResponse, textValue);
                     }
                     obj.checkMaxMessages();
