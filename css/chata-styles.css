@@ -322,7 +322,7 @@ body{
 
 .autoql-vanilla-chat-message-bubble.no-hover-response .autoql-vanilla-chata-single-response:hover{
     text-decoration: none;
-    color: rgb(93,93,93);
+    color: var(--autoql-vanilla-text-color-primary);
     cursor: default;
 }
 
@@ -339,6 +339,10 @@ body{
     animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
     /* z-index: 1000; */
     position: relative;
+}
+
+.autoql-vanilla-chat-single-message-container.text{
+    max-width: 85%;
 }
 
 .autoql-vanilla-chata-animation-message{

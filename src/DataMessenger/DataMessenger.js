@@ -2391,6 +2391,9 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.classList.add(
+            'text'
+        );
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.classList.add('response');
@@ -2474,6 +2477,9 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+        containerMessage.classList.add(
+            'text'
+        );
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.setAttribute('data-bubble-id', uuid);
@@ -2553,6 +2559,9 @@ export function DataMessenger(elem, options){
         var lastBubble = obj.getLastMessageBubble();
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
+        );
+        containerMessage.classList.add(
+            'text'
         );
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
