@@ -2434,7 +2434,6 @@ export function DataMessenger(elem, options){
         var queryId = relatedJson['data']['query_id'];
         const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`
 
-
         for (var i = 0; i < data.length; i++) {
             var div = document.createElement('div');
             var button = document.createElement('button');
@@ -2446,28 +2445,21 @@ export function DataMessenger(elem, options){
                 var body = {
                     suggestion: evt.target.textContent
                 };
+                let loading = null;
+                if(evt.target.textContent === 'None of these'){
+                    loading = obj.showLoading()
+                }else{
+                    obj.inputAnimation(evt.target.textContent);
+                }
+
                 ChataUtils.putCall(url, body , (jsonResponse) => {
+                    if(evt.target.textContent === 'None of these'){
+                        obj.drawerContent.removeChild(loading);
+                        obj.sendResponse('Thank you for your feedback')
+                    }
                 }, obj.options)
-                obj.inputAnimation(evt.target.textContent);
             }
-        }
-
-        var noneOfTheseButton = document.createElement('button');
-        noneOfTheseButton.classList.add('autoql-vanilla-chata-suggestion-btn');
-        noneOfTheseButton.textContent = 'None of these';
-
-        noneOfTheseButton.onclick = (evt) => {
-            var loading = obj.showLoading();
-            var body = {
-                suggestion: evt.target.textContent
-            };
-            ChataUtils.putCall(url, body, (jsonResponse) => {
-                obj.sendResponse('Thank you for your feedback')
-                obj.drawerContent.removeChild(loading);
-            }, obj.options)
-
-        }
-        responseContentContainer.appendChild(noneOfTheseButton);
+        }        
     }
 
     obj.putSuggestionResponse = (relatedJson, jsonResponse) => {
@@ -2638,7 +2630,7 @@ export function DataMessenger(elem, options){
             const path = getRecommendationPath(
                 obj.options,
                 text.split(' ').join(',')
-            );
+            ) + '&query_id=' + jsonResponse['data']['query_id'];
             ChataUtils.safetynetCall(path, function(response, s){
                 obj.drawerContent.removeChild(responseLoadingContainer);
                 obj.putSuggestionResponse(jsonResponse, response);
