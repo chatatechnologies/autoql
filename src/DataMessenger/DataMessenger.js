@@ -2459,7 +2459,7 @@ export function DataMessenger(elem, options){
                     }
                 }, obj.options)
             }
-        }        
+        }
     }
 
     obj.putSuggestionResponse = (relatedJson, jsonResponse) => {
@@ -2583,7 +2583,8 @@ export function DataMessenger(elem, options){
             hasDrilldown = true;
 
         }else{
-            value = jsonResponse['message'];
+            value = jsonResponse['message'].replace('<report>', '');
+            messageBubble.classList.add('no-hover-response');
         }
         var div = document.createElement('div');
         if(hasDrilldown){
