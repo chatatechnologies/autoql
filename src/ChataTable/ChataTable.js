@@ -66,8 +66,8 @@ function getPivotColumns(json, pivotColumns, options){
         }
 
         columnsData.push({
-            title: title,
-            field: col,
+            title: title.toString(),
+            field: col.toString(),
             index: index,
             headerFilter: "input",
             headerFilterFunc: (
@@ -179,8 +179,14 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
     var pivotColumns = pivotArray.shift();
     var columns = getPivotColumns(json, pivotColumns, options)
     var tableData = getPivotData(pivotArray, columns);
+    const component = document.querySelector(
+        `[data-componentid='${idRequest}']`
+    );
 
-    var table = new Tabulator(`[data-componentid='${idRequest}']`, {
+    console.log(columns);
+    console.log(tableData);
+
+    var table = new Tabulator(component, {
         layout: 'fitDataFill',
         virtualDomBuffer: 300,
         movableColumns: true,
