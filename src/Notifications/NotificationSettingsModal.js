@@ -253,10 +253,15 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         }
     ]
     if(mode === 'edit'){
-        repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
+        if(rule.reset_period){
+            repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
+        }else{
+            repeatOptions[0].checked = true
+        }
     }
 
     var repeatRadio = new ChataRadio(repeatOptions, (evt) => {
+        frequencyBox.style.visibility = 'visible';
         var message = `You will be notified as soon as this happens.
         If the Alert is triggered multiple times, you will only be notified`
         switch (evt.target.value) {
@@ -279,6 +284,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             step2.stepContentContainer
         ) + 'px';
     })
+    
     repeatRadio.classList.add('reset_period')
 
     var triggerOptions = [
@@ -304,23 +310,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var triggerRadio = new ChataRadio(triggerOptions, (evt) => {
         checkStep2(step2);
 
-        if(evt.target.value === 'SINGLE_EVENT'){
-            frequencyBox.style.visibility = 'visible';
-            frequencyBox.setMessage(
-                `You will be notified as soon as this happens.
-                If the Alert is triggered multiple times,
-                you will only be notified on a monthly basis.`
-            );
-
-        }else{
-            frequencyBox.setMessage(`
-                You will be notified as soon as this happens,
-                any time this happens.
-            `);
-        }
-        step2.stepContentContainer.style.height = getHeightForChildrens(
-            step2.stepContentContainer
-        ) + 'px';
     })
 
     triggerRadio.classList.add('notification_type')
@@ -330,11 +319,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     // frequencySettingsContainer.appendChild(repeatText)
     frequencySettingsContainer.appendChild(repeatRadio)
     if(mode === 'create'){
-        repeatRadio.style.display = 'none'
         frequencyBox.style.visibility = 'hidden';
     }else{
         if(rule.notification_type != 'SINGLE_EVENT'){
-            repeatRadio.style.display = 'none'
             frequencyBox.style.visibility = 'hidden';
         }
     }
