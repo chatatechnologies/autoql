@@ -55,9 +55,7 @@ export class DashboardPage extends Component {
                 domain: authentication.domain,
             },
             themeConfig: {
-                chartColors: [
-                    '#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'
-                ],
+                ...this.props.themeConfig
             },
             autoQLConfig: {
                 debug: true
@@ -80,6 +78,9 @@ export class DashboardPage extends Component {
     componentDidMount = () => {
         if(this.props.dashboards){
             this.instanceDashboard()
+        }else{
+            this.dashboard.options.themeConfig = this.props.themeConfig
+            this.dashboard.applyCSS()
         }
     }
 
