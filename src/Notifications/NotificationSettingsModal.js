@@ -252,8 +252,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             checked: false
         }
     ]
+    console.log(rule.reset_period);
+
     if(mode === 'edit'){
-        if(rule.reset_period){
+        console.log(rule.reset_period);
+        if(rule.notification_type != 'REPEAT_EVENT'){
             repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
         }else{
             repeatOptions[0].checked = true
@@ -284,7 +287,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             step2.stepContentContainer
         ) + 'px';
     })
-    
+
     repeatRadio.classList.add('reset_period')
 
     var triggerOptions = [
@@ -553,7 +556,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
 function setRadioSelection(options, selectedOption){
     for (var i = 0; i < options.length; i++) {
-        console.log(options[i].value + '===' + selectedOption);
         if(options[i].value === selectedOption){
             options[i].checked = true;
             break;
