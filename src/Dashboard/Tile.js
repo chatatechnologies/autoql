@@ -213,6 +213,7 @@ export function Tile(dashboard, options={}){
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
     resizeHandler.classList.add('autoql-vanilla-resize-handler');
     tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button');
+    tilePlayBuytton.classList.add('autoql-vanilla-icon-blue');
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button');
     placeHolderDrag.classList.add('autoql-vanilla-item-content');
 

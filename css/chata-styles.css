@@ -53,7 +53,7 @@
 }
 
 .autoql-vanilla-icon-blue{
-    color: #28a8e0;
+    color: var(--autoql-vanilla-accent-color, #28a8e0);
 }
 
 .autoql-vanilla-drawer-handle.right-btn{

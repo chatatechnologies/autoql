@@ -17,7 +17,6 @@
     position: absolute;
     left: 12px;
     top: 8px;
-    opacity: .4;
     -webkit-transition: all .2s ease;
     transition: all .2s ease;
 }

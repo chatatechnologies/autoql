@@ -59,7 +59,7 @@ export function Dashboard(selector, options={}){
                 '#DD6A6A', '#FFA700',
                 '#00C1B2'
             ],
-            accentColor: undefined,
+            accentColor: '#26a7df',
             fontFamily: 'sans-serif',
             titleColor: '#356f90'
         },
@@ -282,7 +282,7 @@ export function Dashboard(selector, options={}){
 
         obj.grid._element.style.setProperty(
             '--autoql-vanilla-accent-color',
-            obj.options.themeConfig['titleColor']
+            obj.options.themeConfig['accentColor']
         )
     }
 

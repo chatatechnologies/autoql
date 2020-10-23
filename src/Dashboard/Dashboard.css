@@ -134,7 +134,8 @@
     font-size: 16px;
     line-height: 28px;
     vertical-align: top;
-    color: #508bb8;
+    color: var(--autoql-vanilla-accent-color, #28a8e0);
+
     cursor: pointer;
     outline: none!important;
 }
@@ -236,7 +237,6 @@
     width: 25px;
     height: 33px;
     margin-left: 10px;
-    color: #366f90;
 }
 
 .autoql-vanilla-dashboard-tile-response-wrapper{
