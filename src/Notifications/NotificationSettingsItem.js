@@ -67,6 +67,19 @@ export function NotificationSettingsItem(parentOptions, options) {
         displayNameMessage.innerHTML = ' - ' + wrapper.options.message;
     }
 
+    wrapper.updateView = () => {
+        const {
+            title,
+            message
+        } = wrapper.options
+
+        displayName.innerHTML = title
+
+        if(message){
+            displayNameMessage.innerHTML = ' - ' + message;
+        }
+    }
+
     const onDeleteNotification = (evt, modal) => {
         var o = wrapper.options
         const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
@@ -173,6 +186,7 @@ export function NotificationSettingsItem(parentOptions, options) {
                     for(var[key, value] of Object.entries(jsonResponse.data)){
                         wrapper.options[key] = value
                     }
+                    wrapper.updateView();
                     configModal.close();
                 }, o)
             }

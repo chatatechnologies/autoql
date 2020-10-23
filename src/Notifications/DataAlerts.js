@@ -195,7 +195,9 @@ export function DataAlerts(selector, options){
                 }
                 json['data'].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.insertAdjacentElement(
-                    'afterbegin', new NotificationSettingsItem(wrapper.options, json['data'])
+                    'afterbegin', new NotificationSettingsItem(
+                        wrapper.options, json['data']
+                    )
                 )
                 configModal.close();
             }, modalView.getValues(), o)
