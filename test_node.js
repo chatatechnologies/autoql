@@ -29,7 +29,7 @@ var datamessenger = new DataMessenger('#datamessenger', {
         debug: true,
         enableDrilldowns: true
     },
-    placement: 'bottom',
+    placement: 'left',
     onMaskClick: function(datamessenger){
         datamessenger.closeDrawer();
     },

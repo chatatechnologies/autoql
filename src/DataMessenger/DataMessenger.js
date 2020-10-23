@@ -680,6 +680,13 @@ export function DataMessenger(elem, options){
             showNotificationDetails: true,
             showDescription: false
         })
+        if(['bottom', 'top'].includes(obj.options.placement)){
+            notificationList.style.height = (obj.options.height - 60) + 'px';
+        }else{
+            notificationList.style.height = (
+                obj.drawerContent.clientHeight - 60
+            ) + 'px';
+        }
     }
 
     obj.createQueryTabs = function(){
