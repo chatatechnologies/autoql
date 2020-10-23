@@ -90,6 +90,7 @@ export class DataMessengerPage extends Component {
                     this.props.setDMOption('themeConfig', {
                         chartColors: newChartColors
                     })
+                    this.props.onChangeTheme('chartColors', newChartColors)
                 }}
                 />
                 </SortableItem>
@@ -161,9 +162,12 @@ export class DataMessengerPage extends Component {
             defaultValue={this.state[propName]}
             onChange={(e) => {
                 this.setState({ [propName]: e.target.value })
-                if(propName === 'theme')this.props.setDMOption('themeConfig', {
-                    'theme': e.target.value
-                })
+                if(propName === 'theme'){
+                    this.props.setDMOption('themeConfig', {
+                        'theme': e.target.value
+                    })
+                    this.props.onChangeTheme('theme', e.target.value)
+                }
                 else this.props.setDMOption(propName, e.target.value)
             }}
             buttonStyle="solid"

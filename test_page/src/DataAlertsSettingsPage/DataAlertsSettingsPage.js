@@ -10,7 +10,10 @@ export class DataAlertsSettingsPage extends Component {
         this.dataAlertsSettings = new DataAlerts('#alerts', {
             authentication: {
                 ...this.props.authentication
-            }
+            },
+            themeConfig: {
+                ...this.props.themeConfig
+            },
         })
     }
 

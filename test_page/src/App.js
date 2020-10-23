@@ -24,6 +24,16 @@ class App extends React.Component{
             domain: '',
             apiKey: ''
         },
+        themeConfig: {
+            theme: 'light',
+            chartColors: [
+                '#26A7E9', '#A5CD39',
+                '#DD6A6A', '#FFA700',
+                '#00C1B2'
+            ],
+            accentColor: '#26a7df',
+            fontFamily: 'sans-serif',
+        },
         dashboards: [],
         dashboardNames: [],
         activeDashboard: 0,
@@ -56,6 +66,17 @@ class App extends React.Component{
         console.log(topicsResponse.data);
         this.datamessenger.setOption('queryQuickStartTopics', topicsResponse.data.items)
 
+    }
+
+    onChangeTheme = (key, value) => {
+        var themeConfig = this.state.themeConfig
+        themeConfig[key] = value
+        console.log(themeConfig);
+        this.setState({
+            themeConfig: {
+                ...themeConfig
+            }
+        })
     }
 
     onLogin = (values, authentication) => {
@@ -114,13 +135,15 @@ class App extends React.Component{
     renderActivePage = () => {
         const { currentPage } = this.state
         let widgetPage = null
+        console.log(this.state.themeConfig);
         switch (currentPage) {
             case 'drawer':
                 widgetPage =
                 <DataMessengerPage
                     onLogin={this.onLogin}
                     setDMOption={this.setDMOption}
-                    showDM={this.openDrawer}/>
+                    showDM={this.openDrawer}
+                    onChangeTheme={this.onChangeTheme}/>
                 break
             case 'dashboard':
                 widgetPage =
@@ -129,22 +152,26 @@ class App extends React.Component{
                     activeDashboard={this.state.activeDashboard}
                     dashboardNames={this.state.dashboardNames}
                     dashboards={this.state.dashboards}
-                    authentication={this.state.authentication}/>
+                    authentication={this.state.authentication}
+                    themeConfig={this.state.themeConfig}/>
                 break
             case 'chatbar':
                 widgetPage =
                     <QueryOutputInputPage
-                    authentication={this.state.authentication}/>
+                    authentication={this.state.authentication}
+                    themeConfig={this.state.themeConfig}/>
                 break
             case 'settings':
                 widgetPage =
                     <DataAlertsSettingsPage
-                    authentication={this.state.authentication}/>
+                    authentication={this.state.authentication}
+                    themeConfig={this.state.themeConfig}/>
                 break
             case 'notifications':
                 widgetPage =
                     <NotificationListPage
-                    authentication={this.state.authentication}/>
+                    authentication={this.state.authentication}
+                    themeConfig={this.state.themeConfig}/>
                 break
             default:
         }
@@ -160,9 +187,7 @@ class App extends React.Component{
                 domain: '',
             },
             themeConfig: {
-                chartColors: [
-                    '#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'
-                ],
+                ...this.props.themeConfig
             },
             autoQLConfig: {
                 debug: true
