@@ -369,11 +369,13 @@ export function DataMessenger(elem, options){
         var body = document.body;
         if(obj.options.enableExploreQueriesTab){
             obj.queryTabs.style.visibility = 'visible';
-            obj.tabQueryTips.style.display = 'block';
+            obj.tabQueryTips.style.display = 'flex';
+            obj.tabChataUtils.style.display = 'flex';
         }
         if(obj.options.enableNotificationsTab){
             obj.queryTabs.style.visibility = 'visible';
-            obj.tabNotifications.style.display = 'block';
+            obj.tabNotifications.style.display = 'flex';
+            obj.tabChataUtils.style.display = 'flex';
         }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
@@ -462,6 +464,8 @@ export function DataMessenger(elem, options){
         obj.wrapper.style.height = 0;
         obj.queryTabs.style.visibility = 'hidden';
         obj.tabNotifications.style.display = 'none';
+        obj.tabChataUtils.style.display = 'none';
+
         obj.tabQueryTips.style.display = 'none';
         var body = document.body;
 

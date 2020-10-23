@@ -1449,19 +1449,19 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   transition: all .2s ease-in-out;
   vertical-align: middle;
   align-content: center;
+  align-items: center;
   justify-content: center;
   display: flex;
 }
 .autoql-vanilla-page-switcher-container.right .tab {
   text-align: left;
-  padding-left: 13px;
   height: 65px;
   width: 45px;
   line-height: 52px;
 }
 .autoql-vanilla-page-switcher-container.left .tab {
   text-align: left;
-  padding-left: 13px;
+  padding-left: 6.5px;
   height: 65px;
   width: 45px;
   line-height: 52px;
