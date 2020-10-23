@@ -55,7 +55,6 @@ class App extends React.Component{
     }
 
     fetchTopics = async (values, authentication) => {
-        console.log(authentication);
         const url = `https://backend-staging.chata.io/api/v1/topics?key=${values.apiKey}&project_id=${authentication.projectId}`
         const topicsResponse = await axios.get(url, {
             headers: {
@@ -63,7 +62,6 @@ class App extends React.Component{
                 'Integrator-Domain': values.domain,
             },
         })
-        console.log(topicsResponse.data);
         this.datamessenger.setOption('queryQuickStartTopics', topicsResponse.data.items)
 
     }
@@ -71,7 +69,6 @@ class App extends React.Component{
     onChangeTheme = (key, value) => {
         var themeConfig = this.state.themeConfig
         themeConfig[key] = value
-        console.log(themeConfig);
         this.setState({
             themeConfig: {
                 ...themeConfig
@@ -135,7 +132,6 @@ class App extends React.Component{
     renderActivePage = () => {
         const { currentPage } = this.state
         let widgetPage = null
-        console.log(this.state.themeConfig);
         switch (currentPage) {
             case 'drawer':
                 widgetPage =

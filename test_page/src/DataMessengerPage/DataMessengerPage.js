@@ -48,7 +48,7 @@ export class DataMessengerPage extends Component {
         lightAccentColor: '#26a7df',
         // lightAccentColor: '#2466AE',
         dashboardBackground: '#fafafa',
-        darkAccentColor: '#525252',
+        darkAccentColor: '#26a7df',
         maxMessages: 12,
         isEditing: false,
         debug: true,
@@ -120,6 +120,9 @@ export class DataMessengerPage extends Component {
                         this.props.setDMOption('themeConfig', {
                             chartColors: newChartColors
                         })
+
+                        this.props.onChangeTheme('chartColors', newChartColors)
+
                     }
                 }}
             />
@@ -132,7 +135,6 @@ export class DataMessengerPage extends Component {
     }
 
     onChangeDMProp = (propName, e) => {
-        console.log(propName);
         this.setState({ [propName]: e })
         this.props.setDMOption(propName, e)
     }
@@ -161,14 +163,20 @@ export class DataMessengerPage extends Component {
             <Radio.Group
             defaultValue={this.state[propName]}
             onChange={(e) => {
-                this.setState({ [propName]: e.target.value })
-                if(propName === 'theme'){
-                    this.props.setDMOption('themeConfig', {
-                        'theme': e.target.value
-                    })
-                    this.props.onChangeTheme('theme', e.target.value)
-                }
-                else this.props.setDMOption(propName, e.target.value)
+                this.setState({
+                    [propName]: e.target.value
+                }, () => {
+                    if(propName === 'theme'){
+                        var accentColor = this.state.theme === 'light' ? this.state.lightAccentColor : this.state.darkAccentColor
+                        this.props.onChangeTheme('accentColor', accentColor)
+                        this.props.setDMOption('themeConfig', {
+                            theme: e.target.value,
+                            accentColor: accentColor
+                        })
+                        this.props.onChangeTheme('theme', e.target.value)
+                    }
+                    else this.props.setDMOption(propName, e.target.value)
+                })
             }}
             buttonStyle="solid"
             >
@@ -481,9 +489,14 @@ export class DataMessengerPage extends Component {
                 <Input
                 type="color"
                 onChange={(e) => {
-                    this.setState({ lightAccentColor: e.target.value })
-                    this.props.setDMOption('themeConfig', {
-                        accentColor: e.target.value
+                    this.setState({
+                        lightAccentColor: e.target.value
+                    }, () => {
+                        var accentColor = this.state.theme === 'light' ? this.state.lightAccentColor : this.state.darkAccentColor
+                        this.props.setDMOption('themeConfig', {
+                            accentColor: accentColor
+                        })
+                        this.props.onChangeTheme('accentColor', accentColor)
                     })
                 }}
                 value={this.state.lightAccentColor}
@@ -492,10 +505,16 @@ export class DataMessengerPage extends Component {
                 <Input
                 type="color"
                 onChange={(e) => {
-                    this.setState({ darkAccentColor: e.target.value })
-                    this.props.setDMOption('themeConfig', {
-                        accentColor: e.target.value
+                    this.setState({
+                        darkAccentColor: e.target.value
+                    }, () => {
+                        var accentColor = this.state.theme === 'light' ? this.state.lightAccentColor : this.state.darkAccentColor
+                        this.props.setDMOption('themeConfig', {
+                            accentColor: accentColor
+                        })
+                        this.props.onChangeTheme('accentColor', accentColor)
                     })
+
                 }}
                 value={this.state.darkAccentColor}
                 />
