@@ -170,6 +170,9 @@ export function NotificationSettingsItem(parentOptions, options) {
                 var values = modalView.getValues();
                 values.id = wrapper.options.id
                 ChataUtils.putCall(URL, values, (jsonResponse) => {
+                    for(var[key, value] of Object.entries(jsonResponse.data)){
+                        wrapper.options[key] = value
+                    }
                     configModal.close();
                 }, o)
             }

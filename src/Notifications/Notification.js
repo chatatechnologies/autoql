@@ -288,6 +288,9 @@ export function Notification(options, parentOptions){
             saveButton.setAttribute('disabled', 'true')
             ChataUtils.putCall(URL, values, (jsonResponse) => {
                 if(jsonResponse.message == 'ok'){
+                    for(var[key, value] of Object.entries(jsonResponse.data)){
+                        item.ruleOptions[key] = value
+                    }
                     parentOptions.onSuccessCallback(jsonResponse.message);
                 }
                 configModal.close();
