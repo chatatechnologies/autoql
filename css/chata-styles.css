@@ -1420,11 +1420,13 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   margin-right: 20px;
   margin-left: 20px;
   margin-bottom: 20px;
+  display: flex;
 }
 .autoql-vanilla-page-switcher-container.bottom {
   margin-top: 20px;
   margin-left: 20px;
   margin-right: 20px;
+  display: flex;
 }
 
 /* Individual Tabs */
@@ -1444,9 +1446,11 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   transform: translate(0, 0);
   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
-
-  transition-property: background,color,transform,line-height,height,width,margin-right,margin-top,margin-left,margin-bottom,z-index,opacity;
-  transition-duration: .2s;
+  transition: all .2s ease-in-out;
+  vertical-align: middle;
+  align-content: center;
+  justify-content: center;
+  display: flex;
 }
 .autoql-vanilla-page-switcher-container.right .tab {
   text-align: left;
@@ -1490,7 +1494,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 .autoql-vanilla-page-switcher-container.top .tab,
 .autoql-vanilla-page-switcher-container.bottom .tab {
-  display: inline-block;
+  /* display: inline-block; */
   margin-right: -4px !important;
   /* position: absolute; */
 }
