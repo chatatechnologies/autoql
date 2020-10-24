@@ -24,6 +24,7 @@ var datamessenger = new DataMessenger('#datamessenger', {
     themeConfig: {
         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
         theme: 'dark',
+        accentColor: 'tomato'
     },
     autoQLConfig: {
         debug: true,
@@ -60,17 +61,17 @@ setTimeout(() => {
 }, 300)
 
 
-// var alerts = DataAlerts('#alert-settings', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     themeConfig: {
-//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'dark',
-//     },
-// })
+var alerts = DataAlerts('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    themeConfig: {
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        theme: 'dark',
+    },
+})
 //
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -126,22 +127,22 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    dashboard = new Dashboard('#dashboard', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            theme: 'dark',
-            accentColor: 'red'
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        executeOnMount: false,
-        tiles: response.data[0].data
-    })
-    dashboard.startEditing()
+    // dashboard = new Dashboard('#dashboard', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //         theme: 'dark',
+    //         accentColor: 'red'
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     executeOnMount: false,
+    //     tiles: response.data[0].data
+    // })
+    // dashboard.startEditing()
 })

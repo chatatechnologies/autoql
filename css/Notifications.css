@@ -161,7 +161,7 @@
     height: 35px;
     width: 35px;
     border-radius: 20px;
-    background: #26a7df;
+    background: var(--autoql-vanilla-accent-color, #26a7df);
     color: #fff;
     line-height: 40px;
     text-align: center;
@@ -278,8 +278,8 @@
 }
 
 .chata-checkbox input:checked + .chata-slider {
-  border-color: #26a7df;
-  background: #26a7df;
+  border-color: var(--autoql-vanilla-accent-color, #26a7df);
+  background: var(--autoql-vanilla-accent-color, #26a7df);
 }
 
 .chata-checkbox input:checked + .chata-slider:before {
