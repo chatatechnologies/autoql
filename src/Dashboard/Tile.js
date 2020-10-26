@@ -376,24 +376,29 @@ export function Tile(dashboard, options={}){
         if(event.target.value != dashboard.lastState.inputValue){
             dashboard.oldState = setState(event, this);
         }
+        inputContainer1.classList.add('clicked')
     };
 
     chataDashboardItem.inputQuery.onblur = function(event){
         if(event.target.value != dashboard.lastState.inputValue){
             dashboard.lastState = setState(event, this);
         }
+        inputContainer1.classList.remove('clicked')
     };
 
     chataDashboardItem.inputTitle.onfocus = function(event){
         if(event.target.value != dashboard.lastState.inputValue){
             dashboard.oldState = setState(event, this);
         }
+        inputContainer2.classList.add('clicked')
+
     };
 
     chataDashboardItem.inputTitle.onblur = function(event){
         if(event.target.value != dashboard.lastState.inputValue){
             dashboard.lastState = setState(event, this);
         }
+        inputContainer2.classList.remove('clicked')
     };
 
     chataDashboardItem.inputQuery.onkeypress = function(evt){
