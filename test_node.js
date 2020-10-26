@@ -9,7 +9,7 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAzNDczNjk0LCAiZXhwIjogMTYwMzQ5NTI5NCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ.s46zS2tRCIjpN9Lfpb7JlKuMcVVOyKN4Kw45TxByxsW85uPta2FDegdS0_eV_xRdiBXPeKKz161DyoJMYofYIudQC5Nr3ZIDuVqZ5NIVALu5EUdRpZx4In0qqRkaQ6eKZtGzIcBl-SIMtPKPTy-BOH8F3Nzr8NKFGmvEETLH-XvIRIAogvKp8JQTPQzRJMJzqiM-N5mGJ0BfCPgH5pgAk_Qf4-bEZ7uBFcyljbadR4fuPzb_i22eCg9ow8lSDDpDrr161YIVM7MZR6sUJBnMHe7vHuezR7uTGvqjREykRP3JNKAHP_C5rfRW4_4adc9kgzRSVMjXww-tVBSCf_LZng`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAzNzM2MjE5LCAiZXhwIjogMTYwMzc1NzgxOSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ.k3D4G_C8ZX3fxDZbxWjU7a9dBWazRy7HGtwOkiBw0zScGQd7gyYtpZid-BSDZlxQdfzurQCozFoZm23D32WyothuVLyNYdBb8dSlzxYbs24siiOg8LSB5X-t0K9ip5J69-M2nSIP6Qo8_NVbVSRR-YuBQ1_tnIdtXCEbrZjhaJ-uuMOdG_q3VZDuFSCzWMS2OjopKHUY__tE0OBASEbMOjya9xscee7RdW6l2b72jPKY6BQidPxj7kerK9RxVfH6a0WZ0cK20G3V6Wz99PBtDcMp7o83Bbldp1UKdcu9ORJ6wR8x0ancYEvIgX5UoP0jhP8cZtoF4DKrmrkrznVvkQ`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}`;
@@ -61,17 +61,17 @@ setTimeout(() => {
 }, 300)
 
 
-var alerts = DataAlerts('#alert-settings', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    themeConfig: {
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'dark',
-    },
-})
+// var alerts = DataAlerts('#alert-settings', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     themeConfig: {
+//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+//         theme: 'dark',
+//     },
+// })
 //
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -127,22 +127,22 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    // dashboard = new Dashboard('#dashboard', {
-    //     authentication: {
-    //         token: _token,
-    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-    //         domain: domain,
-    //     },
-    //     themeConfig: {
-    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-    //         theme: 'dark',
-    //         accentColor: 'red'
-    //     },
-    //     autoQLConfig: {
-    //         debug: true
-    //     },
-    //     executeOnMount: false,
-    //     tiles: response.data[0].data
-    // })
-    // dashboard.startEditing()
+    dashboard = new Dashboard('#dashboard', {
+        authentication: {
+            token: _token,
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            domain: domain,
+        },
+        themeConfig: {
+            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            theme: 'dark',
+            accentColor: 'red'
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        executeOnMount: false,
+        tiles: response.data[0].data
+    })
+    dashboard.startEditing()
 })
