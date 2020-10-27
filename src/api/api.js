@@ -35,6 +35,24 @@ export const apiCall = (val, options, source) => {
     })
 }
 
+export const apiCallPost = (url, data, options) => {
+    const {
+        token,
+    } = options.authentication
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    axios.post(url, data, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
+}
+
 export const apiCallPut = (url, data, options) => {
     const {
         token,

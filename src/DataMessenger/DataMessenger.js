@@ -68,6 +68,7 @@ import {
     apiCall,
     apiCallGet,
     apiCallPut,
+    apiCallPost
 } from '../Api'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
@@ -1828,7 +1829,7 @@ export function DataMessenger(elem, options){
     }
 
 
-    obj.sendDrilldownMessage = (
+    obj.sendDrilldownMessage = async (
         json, indexData, options) =>{
         if(!options.autoQLConfig.enableDrilldowns)return
         var queryId = json['data']['query_id'];
@@ -1880,19 +1881,19 @@ export function DataMessenger(elem, options){
 
         responseLoadingContainer.appendChild(responseLoading);
         obj.drawerContent.appendChild(responseLoadingContainer);
-        ChataUtils.ajaxCallPost(URL, function(response, status){
-            obj.drawerContent.removeChild(responseLoadingContainer);
-            if(!response['data']['rows']){
-                obj.putClientResponse(ERROR_MESSAGE);
-            }
-            else if(response['data']['rows'].length > 0){
-                obj.putTableResponse(response, true);
-            }else{
-                obj.putSimpleResponse(response, '', status, true);
-            }
-            refreshTooltips();
-        }, data, options);
-
+        var response = await apiCallPost(URL, data, options);
+        var json = response.data
+        var status = response.status
+        obj.drawerContent.removeChild(responseLoadingContainer);
+        if(!json['data']['rows']){
+            obj.putClientResponse(ERROR_MESSAGE);
+        }
+        else if(json['data']['rows'].length > 0){
+            obj.putTableResponse(json, true);
+        }else{
+            obj.putSimpleResponse(json, '', status, true);
+        }
+        refreshTooltips();
     }
 
     obj.createLoadingDots = () => {

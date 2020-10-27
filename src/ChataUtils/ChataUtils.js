@@ -24,7 +24,8 @@ import {
 } from '../Svg'
 import { refreshTooltips } from '../Tooltips'
 import {
-    apiCallPut
+    apiCallPut,
+    apiCallPost
 } from '../Api'
 import { Modal } from '../Modal'
 import { NotificationSettingsModal } from '../Notifications'
@@ -251,13 +252,12 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
             }
         )
     }
-    saveButton.onclick = (e) => {
+    saveButton.onclick = async(e) => {
         spinner.classList.remove('hidden')
         saveButton.setAttribute('disabled', 'true')
         const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-        ChataUtils.ajaxCallPost(URL, (json, status) => {
-            configModal.close();
-        }, modalView.getValues(), o)
+        var response = await apiCallPost(URL, modalView.getValues, o)
+        configModal.close();
     }
 }
 
