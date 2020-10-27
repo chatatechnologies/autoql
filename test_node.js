@@ -93,24 +93,24 @@ setTimeout(() => {
 //
 // queryInput.bind(queryOutput)
 //
-// var notificationList = new NotificationFeed('#notification-list', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     showNotificationDetails: true,
-//     onExpandCallback: (notification) => {
-//         console.log(notification);
-//     },
-//     onCollapseCallback: (notification) => {
-//         console.log(notification);
-//     },
-//     themeConfig: {
-//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'dark',
-//     },
-// })
+var notificationList = new NotificationFeed('#notification-list', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    showNotificationDetails: true,
+    onExpandCallback: (notification) => {
+        console.log(notification);
+    },
+    onCollapseCallback: (notification) => {
+        console.log(notification);
+    },
+    themeConfig: {
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        theme: 'dark',
+    },
+})
 
 // var nButton = new NotificationIcon('#notification-icon', {
 //     authentication: {
@@ -127,22 +127,22 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    dashboard = new Dashboard('#dashboard', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            theme: 'dark',
-            accentColor: 'red'
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        executeOnMount: false,
-        tiles: response.data[0].data
-    })
-    dashboard.startEditing()
+    // dashboard = new Dashboard('#dashboard', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //         theme: 'dark',
+    //         accentColor: 'red'
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     executeOnMount: false,
+    //     tiles: response.data[0].data
+    // })
+    // dashboard.startEditing()
 })

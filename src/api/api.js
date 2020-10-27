@@ -89,7 +89,7 @@ export const deleteCall = (url, data, options) => {
     })
 }
 
-export const apiCallGet = (url, options) => {
+export const apiCallGet = (url, options, extraHeaders={}) => {
     const {
         token
     } = options.authentication
@@ -97,6 +97,7 @@ export const apiCallGet = (url, options) => {
     const config = {
         headers: {
             Authorization: `Bearer ${token}`,
+            ...extraHeaders
         },
     }
 

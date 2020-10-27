@@ -8,6 +8,9 @@ import { Modal } from '../Modal'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import {
+    apiCallGet
+} from '../Api'
+import {
     htmlToElement,
     uuidv4,
     putLoadingContainer,
@@ -629,13 +632,13 @@ export function Notification(options, parentOptions){
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
 
-        return new Promise((resolve, reject) => {
-            ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
-                item.ruleOptions = jsonResponse.data;
-                item.toggleTurnOffNotificationText();
-                item.toggleDismissIcon();
-                resolve();
-            }, item.parentOptions)
+        return new Promise(async (resolve, reject) => {
+            var response = await apiCallGet(URL, item.parentOptions)
+            var jsonResponse = response.data
+            item.ruleOptions = jsonResponse.data;
+            item.toggleTurnOffNotificationText();
+            item.toggleDismissIcon();
+            resolve();
         });
     }
 
@@ -650,37 +653,54 @@ export function Notification(options, parentOptions){
         dots.style.right = 'unset';
 
         await item.getRuleStatus();
-        ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
-            ChataUtils.responses[uuid] = jsonResponse;
-            responseContentContainer.removeChild(dots);
-            if(status === 200){
-                item.displayType =
-                jsonResponse.query_result['data']['display_type'];
-                item.refreshContent(jsonResponse);
-                parentOptions.onExpandCallback(
-                    jsonResponse.query_result['data']
+        var response = await apiCallGet(
+            URL,
+            item.parentOptions,
+            {'Integrator-Domain': pOpts.domain}
+        )
+        var jsonResponse = response.data
+        var status = response.status
+        ChataUtils.responses[uuid] = jsonResponse;
+        responseContentContainer.removeChild(dots);
+
+        if(!jsonResponse.query_result.data){
+            responseContentContainer.innerHTML = `
+                <span>
+                    Internal Service Error: Our system is
+                    experiencing an unexpected error.
+                    We're aware of this issue and are working
+                    to fix it as soon as possible.
+                </span>
+            `;
+            return;
+        }
+
+        if(status === 200){
+            item.displayType =
+            jsonResponse.query_result['data']['display_type'];
+            item.refreshContent(jsonResponse);
+            parentOptions.onExpandCallback(
+                jsonResponse.query_result['data']
+            )
+            parentOptions.activeNotificationData =
+            jsonResponse.query_result['data'];
+            item.jsonData = jsonResponse.query_result['data'];
+        }else{
+            responseContentContainer.innerHTML = `
+            <span>Oops! It looks like our system is experiencing an issue.
+            Try querying again. If the problem persists, please
+            <a target="_blank" href="mailto:support@chata.ai">
+            contact our team directly
+            </a>.
+            We'll look into this issue right away and
+            be in touch with you shortly.</span>
+            `;
+            if(jsonResponse){
+                parentOptions.onErrorCallback(
+                    jsonResponse.message
                 )
-                parentOptions.activeNotificationData =
-                jsonResponse.query_result['data'];
-                item.jsonData = jsonResponse.query_result['data'];
-            }else{
-                console.log(jsonResponse);
-                responseContentContainer.innerHTML = `
-                <span>Oops! It looks like our system is experiencing an issue.
-                Try querying again. If the problem persists, please
-                <a target="_blank" href="mailto:support@chata.ai">
-                contact our team directly
-                </a>.
-                We'll look into this issue right away and
-                be in touch with you shortly.</span>
-                `;
-                if(jsonResponse){
-                    parentOptions.onErrorCallback(
-                        jsonResponse.message
-                    )
-                }
             }
-        }, item.parentOptions, [{'Integrator-Domain': pOpts.domain}])
+        }
     }
 
     if(!parentOptions.showDescription){
