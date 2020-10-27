@@ -23,6 +23,9 @@ import {
     NOTIFICATION_BUTTON
 } from '../Svg'
 import { refreshTooltips } from '../Tooltips'
+import {
+    apiCallPut
+} from '../Api'
 import { Modal } from '../Modal'
 import { NotificationSettingsModal } from '../Notifications'
 import { AntdMessage } from '../Antd'
@@ -34,23 +37,19 @@ export var ChataUtils = {
     responses: []
 };
 
-ChataUtils.sendReport = (idRequest, options, menu, toolbar) => {
+ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
     var json = ChataUtils.responses[idRequest];
     var queryId = json['data']['query_id'];
     const URL = options.authentication.demo
-      ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-      : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
+    ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+    : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 
-    return new Promise(resolve => {
-        ChataUtils.putCall(
-            URL, {is_correct: false}, function(r, s){
-                menu.classList.remove('show');
-                toolbar.classList.remove('show');
-                new AntdMessage('Thank you for your feedback.', 3000);
-                resolve();
-            }, options
-        )
-    })
+    var response = await apiCallPut(URL, {is_correct: false}, options)
+    menu.classList.remove('show');
+    toolbar.classList.remove('show');
+    new AntdMessage('Thank you for your feedback.', 3000);
+
+    return Promise.resolve()
 }
 
 ChataUtils.getRecommendationPath = (options, text) => {
@@ -667,7 +666,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
         modal.close();
     }
 
-    saveButton.onclick = function(event){
+    saveButton.onclick = async function(event){
         var opts = options
         const url = opts.authentication.demo
         ? `https://backend-staging.chata.ai/api/v1/chata/query`
@@ -693,11 +692,10 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
             }
             table.tabulator.redraw();
         }
-        ChataUtils.putCall(url, {columns: data}, function(response){
-            modal.close();
-            allColHiddenMessage(table);
-            onHideCols();
-        }, opts)
+        var response = await apiCallPut(url, {columns: data}, opts)
+        modal.close();
+        allColHiddenMessage(table);
+        onHideCols();
     }
 
     modal.addView(container);

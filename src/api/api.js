@@ -53,6 +53,24 @@ export const apiCallPut = (url, data, options) => {
     })
 }
 
+export const deleteCall = (url, data, options) => {
+    const {
+        token,
+    } = options.authentication
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    axios.delete(url, data, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
+}
+
 export const apiCallGet = (url, options) => {
     const {
         token
