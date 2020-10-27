@@ -2442,7 +2442,7 @@ export function DataMessenger(elem, options){
         }, 60);
     }
 
-    obj.createSuggestions = function(
+    obj.createSuggestions = async function(
         responseContentContainer, relatedJson, json){
 
         var data = json['data']['items'];
@@ -2472,6 +2472,7 @@ export function DataMessenger(elem, options){
                 }
 
                 var response = await apiCallPut(url, body, obj.options)
+                console.log(response);
                 obj.drawerContent.removeChild(loading);
                 obj.sendResponse('Thank you for your feedback')
 

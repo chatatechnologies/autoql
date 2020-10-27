@@ -53,7 +53,7 @@ export const apiCallPost = (url, data, options) => {
     })
 }
 
-export const apiCallPut = (url, data, options) => {
+export const apiCallPut = async (url, data, options) => {
     const {
         token,
     } = options.authentication
@@ -64,11 +64,7 @@ export const apiCallPut = (url, data, options) => {
         },
     }
 
-    axios.put(url, data, config).then((response) => {
-        return Promise.resolve(response)
-    }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
+    return await axios.put(url, data, config)
 }
 
 export const deleteCall = (url, data, options) => {

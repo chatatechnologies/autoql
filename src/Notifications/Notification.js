@@ -8,7 +8,8 @@ import { Modal } from '../Modal'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import {
-    apiCallGet
+    apiCallGet,
+    apiCallPut
 } from '../Api'
 import {
     htmlToElement,
@@ -282,35 +283,35 @@ export function Notification(options, parentOptions){
                 }
             )
         }
-        saveButton.onclick = (e) => {
+        saveButton.onclick = async(e) => {
             spinner.classList.remove('hidden')
             var o = item.parentOptions
             const URL = `${o.authentication.domain}/autoql/api/v1/rules/${item.ruleOptions.id}?key=${o.authentication.apiKey}`;
             var values = modalView.getValues();
             values.id = item.options.id
             saveButton.setAttribute('disabled', 'true')
-            ChataUtils.putCall(URL, values, (jsonResponse) => {
-                if(jsonResponse.message == 'ok'){
-                    for(var[key, value] of Object.entries(jsonResponse.data)){
-                        item.ruleOptions[key] = value
-                    }
-                    parentOptions.onSuccessCallback(jsonResponse.message);
+            var response = await apiCallPut(URL, values, o)
+            var jsonResponse = response.data
+            if(jsonResponse.message == 'ok'){
+                for(var[key, value] of Object.entries(jsonResponse.data)){
+                    item.ruleOptions[key] = value
                 }
-                configModal.close();
-            }, o)
+                parentOptions.onSuccessCallback(jsonResponse.message);
+            }
+            configModal.close();
         }
     }
 
-    dismissIcon.onclick = (evt) => {
+    dismissIcon.onclick = async (evt) => {
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/rules/notifications/${item.options.id}?key=${pOpts.apiKey}`;
         var payload = {
             state: 'DISMISSED'
         }
         item.options.state = 'DISMISSED';
-        ChataUtils.putCall(URL, payload, (jsonResponse) => {
-            item.toggleDismissIcon();
-        }, item.parentOptions)
+        var response = await apiCallPut(URL, payload, item.parentOptions)
+        item.toggleDismissIcon();
+
     }
 
     item.refreshContent = (jsonResponse) => {
@@ -589,7 +590,7 @@ export function Notification(options, parentOptions){
         }
     }
 
-    item.toggleStatus = () => {
+    item.toggleStatus = async () => {
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
 
@@ -600,14 +601,14 @@ export function Notification(options, parentOptions){
         if(['ACTIVE', 'WAITING'].includes(item.ruleOptions.status)){
             payload.status = 'INACTIVE';
         }
-
-        ChataUtils.putCall(URL, payload, (jsonResponse) => {
-            item.ruleOptions = jsonResponse.data;
-            if(jsonResponse.message == 'ok'){
-                parentOptions.onSuccessCallback(jsonResponse.message);
-            }
-            item.toggleTurnOffNotificationText();
-        }, item.parentOptions)
+        var response = await apiCallPut(URL, payload, item.parentOptions)
+        console.log(response);
+        var jsonResponse = response.data
+        item.ruleOptions = jsonResponse.data;
+        if(jsonResponse.message == 'ok'){
+            parentOptions.onSuccessCallback(jsonResponse.message);
+        }
+        item.toggleTurnOffNotificationText();
     }
 
     item.toggleDismissIcon = () => {
