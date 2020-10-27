@@ -31,20 +31,7 @@ export const apiCall = (val, options, source) => {
     return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        if (error.message === 'Parse error') {
-            return Promise.reject({ error: 'Parse error' })
-        }
-        if (error.response === 401 || !_get(error, 'response.data')) {
-            return Promise.reject({ error: 'Unauthenticated' })
-        }
-        if (
-            _get(error, 'response.data.reference_id') === '1.1.430' ||
-            _get(error, 'response.data.reference_id') === '1.1.431'
-        ) {
-            console.log('FETCH SUGGESTIONS');
-            return Promise.resolve(_get(error, 'response'))
-        }
-        return Promise.reject(_get(error, 'response.data'))
+        return Promise.resolve(_get(error, 'response'))
     })
 }
 

@@ -832,7 +832,7 @@ export function DataMessenger(elem, options){
         container.appendChild(textBar);
         container.appendChild(queryTipsResultContainer);
 
-        input.onkeypress = function(event){
+        input.onkeypress = async function(event){
 
             if(event.keyCode == 13 && this.value){
 
@@ -850,13 +850,12 @@ export function DataMessenger(elem, options){
                     1, searchVal, obj.options
                 );
 
-                ChataUtils.safetynetCall(URL, function(response, s){
-                    textBar.removeChild(chatBarLoadingSpinner);
-                    obj.putRelatedQueries(
-                        response, queryTipsResultContainer,
-                        container, searchVal
-                    );
-                }, obj.options);
+                var response = await apiCallGet(URL, obj.options)
+                textBar.removeChild(chatBarLoadingSpinner);
+                obj.putRelatedQueries(
+                    response.data, queryTipsResultContainer,
+                    container, searchVal
+                );
             }
         }
 
@@ -893,7 +892,8 @@ export function DataMessenger(elem, options){
     }
 
     obj.putRelatedQueries = (
-        response, queryTipsResultContainer, container, searchVal) => {
+        response, queryTipsResultContainer, container, searchVal
+    ) => {
         var delay = 0.08;
         var list = response.data.items;
         var queryTipListContainer = document.createElement('div');
@@ -937,37 +937,36 @@ export function DataMessenger(elem, options){
             paginationPrevious.classList.add('disabled');
         }
 
-        paginationNext.onclick = (evt) => {
+        paginationNext.onclick = async (evt) => {
             if(!evt.target.classList.contains('disabled')){
-                ChataUtils.safetynetCall(nextUrl, function(response, s){
-                    obj.putRelatedQueries(
-                        response, queryTipsResultContainer, container, searchVal
-                    );
-                }, obj.options);
+                var response = await apiCallGet(nextUrl, obj.options)
+                obj.putRelatedQueries(
+                    response.data, queryTipsResultContainer,
+                    container, searchVal
+                );
             }
         }
 
-        paginationPrevious.onclick = (evt) => {
+        paginationPrevious.onclick = async (evt) => {
             if(!evt.target.classList.contains('disabled')){
-                ChataUtils.safetynetCall(previousUrl, function(response, s){
-                    obj.putRelatedQueries(
-                        response, queryTipsResultContainer, container, searchVal
-                    );
-                }, obj.options);
+                var response = await apiCallGet(previousUrl, obj.options)
+                obj.putRelatedQueries(
+                    response.data, queryTipsResultContainer,
+                    container, searchVal
+                );
             }
         }
 
-        const dotEvent = (evt) => {
+        const dotEvent = async(evt) => {
             var page = evt.target.dataset.page;
             var path = obj.getRelatedQueriesPath(
                 page, searchVal, obj.options
             );
-            ChataUtils.safetynetCall(path, function(response, s){
-                obj.putRelatedQueries(
-                    response, queryTipsResultContainer,
-                    container, searchVal
-                );
-            }, obj.options);
+            var response = await apiCallGet(path, obj.options)
+            obj.putRelatedQueries(
+                response.data, queryTipsResultContainer,
+                container, searchVal
+            );
         }
 
         for (var i = 0; i < list.length; i++) {
@@ -1061,17 +1060,16 @@ export function DataMessenger(elem, options){
                 a.textContent = (i+1);
                 a.setAttribute('data-page', i+1);
 
-                li.onclick = (evt) => {
+                li.onclick = async (evt) => {
                     var page = evt.target.dataset.page;
                     var path = obj.getRelatedQueriesPath(
                         page, searchVal, obj.options
                     );
-                    ChataUtils.safetynetCall(path, function(response, s){
-                        obj.putRelatedQueries(
-                            response, queryTipsResultContainer,
-                            container, searchVal
-                        );
-                    }, obj.options);
+                    var response = await apiCallGet(path, obj.options)
+                    obj.putRelatedQueries(
+                        response.data, queryTipsResultContainer,
+                        container, searchVal
+                    );
                 }
 
                 pagination.appendChild(li);
@@ -1082,7 +1080,8 @@ export function DataMessenger(elem, options){
             paginationContainer.appendChild(pagination);
         }else{
             queryTipsResultContainer.appendChild(document.createTextNode(`
-                Sorry, I couldn’t find any queries matching your input. Try entering a different topic or keyword instead.
+                Sorry, I couldn’t find any queries matching your input.
+                Try entering a different topic or keyword instead.
             `))
         }
         container.appendChild(paginationContainer)
@@ -2568,7 +2567,9 @@ export function DataMessenger(elem, options){
         return responseLoadingContainer;
     }
 
-    obj.putSimpleResponse = (jsonResponse, text, statusCode, isDrilldown=false) => {
+    obj.putSimpleResponse = async (
+        jsonResponse, text, statusCode, isDrilldown=false
+    ) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -2664,10 +2665,9 @@ export function DataMessenger(elem, options){
                 obj.options,
                 text.split(' ').join(',')
             ) + '&query_id=' + jsonResponse['data']['query_id'];
-            ChataUtils.safetynetCall(path, function(response, s){
-                obj.drawerContent.removeChild(responseLoadingContainer);
-                obj.putSuggestionResponse(jsonResponse, response);
-            }, obj.options);
+            var response = await apiCallGet(path, obj.options)
+            obj.drawerContent.removeChild(responseLoadingContainer);
+            obj.putSuggestionResponse(jsonResponse, response.data);
         }
     }
 
