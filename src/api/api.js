@@ -1,9 +1,16 @@
 import axios from 'axios'
 
-export const apiCall = (url, data, options) => {
+export const apiCall = (val, options, source) => {
     const {
-        token
+        token,
+        apiKey,
+        domain
     } = options.authentication
+
+    const {
+        debug,
+        test
+    } = options.autoQLConfig
 
     const config = {
         headers: {
@@ -11,9 +18,19 @@ export const apiCall = (url, data, options) => {
         },
     }
 
+    const url = `${domain}/autoql/api/v1/query?key=${apiKey}`
+
+    const data = {
+        text: val,
+        source: source,
+        debug: debug,
+        test: test
+    }
+
     return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
+        console.log(error);
         return Promise.reject(error)
     })
 }

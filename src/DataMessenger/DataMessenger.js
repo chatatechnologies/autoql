@@ -64,6 +64,10 @@ import {
     DELETE_MESSAGE,
     VERTICAL_DOTS
 } from '../Svg'
+import {
+    apiCall,
+    apiCallGet,
+} from '../Api'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
 
@@ -2730,162 +2734,160 @@ export function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
-    obj.sendMessage = (textValue, source) => {
+    obj.sendMessage = async (textValue, source) => {
         obj.input.disabled = true;
         obj.input.value = '';
+        const {
+            domain,
+            apiKey
+        } = obj.options.authentication
         var responseLoadingContainer = obj.putMessage(textValue);
 
-        const URL_SAFETYNET = obj.options.authentication.demo
-          ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
+        const URL_SAFETYNET = `${domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
-          )}&projectId=1`
-          : `${obj.options.authentication.domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
-            textValue
-          )}&key=${obj.options.authentication.apiKey}`
+        )}&key=${apiKey}`
 
+        var response = await apiCallGet(URL_SAFETYNET, obj.options)
+        let suggestions = {}
+        if(response.data != undefined){
+            suggestions = response.data['full_suggestion']
+            || response.data['data']['replacements']
+        }
 
-        ChataUtils.safetynetCall(
-            URL_SAFETYNET, function(jsonResponse, statusCode){
-            var suggestions = {};
-            if(jsonResponse != undefined){
-                var suggestions = jsonResponse['full_suggestion']
-                || jsonResponse['data']['replacements'];
-            }
-            if(statusCode != 200){
-                obj.drawerContent.removeChild(responseLoadingContainer);
-                obj.input.removeAttribute("disabled");
-                obj.sendResponse(`
-                    Uh oh.. It looks like you don't have access
-                    to this resource. Please double check that all the
-                    required authentication fields are provided.`
-                )
-            }else if(suggestions.length > 0
-                && obj.options.autoQLConfig.enableQueryValidation
-                && textValue != 'None of these'){
-                obj.input.removeAttribute("disabled");
-                obj.drawerContent.removeChild(responseLoadingContainer);
+        if(
+            obj.options.autoQLConfig.enableQueryValidation
+            && textValue != 'None Of these'
+            && suggestions.length > 0
+        ){
 
-                obj.putSafetynetMessage(jsonResponse);
+            obj.input.removeAttribute("disabled")
+            obj.drawerContent.removeChild(responseLoadingContainer)
 
-            }else{
-                ChataUtils.ajaxCall(textValue, function(jsonResponse, status){
-                    obj.input.removeAttribute("disabled");
-                    obj.drawerContent.removeChild(responseLoadingContainer);
-                    switch(jsonResponse['data']['display_type']){
-                        case 'table':
-                            if(jsonResponse['data']['columns'].length == 1){
-                                obj.putSimpleResponse(jsonResponse, textValue, status);
-                            }else{
-                                obj.putTableResponse(jsonResponse);
-                            }
-                        break;
-                        case 'data':
-                            var cols = jsonResponse['data']['columns'];
-                            var rows = jsonResponse['data']['rows'];
-                            if(cols.length == 1 && rows.length == 1){
-                                if(cols[0]['name'] == 'query_suggestion'){
-                                    obj.putSuggestionResponse(
-                                        jsonResponse
-                                    );
-                                }else if(cols[0]['name'] == 'Help Link'){
-                                    obj.putHelpMessage(jsonResponse);
-                                }else{
-                                    obj.putSimpleResponse(jsonResponse, textValue, status);
-                                }
-                            }else{
-                                if(rows.length > 0){
-                                    obj.putTableResponse(jsonResponse);
-                                }else{
-                                    obj.putSimpleResponse(jsonResponse, textValue, status);
-                                }
-                            }
-                        break;
-                        case 'compare_table':
-                            obj.putTableResponse(jsonResponse);
-                        break;
-                        case 'date_pivot':
-                            obj.putTableResponse(jsonResponse);
-                        break;
-                        case 'pivot_table':
-                            obj.putTableResponse(jsonResponse);
-                        break;
-                        case 'line':
-                            var component = obj.putTableResponse(jsonResponse);
-                            createLineChart(
-                                component, jsonResponse, pbj.options
-                            );
-                            pbj.refreshToolbarButtons(component, 'line');
-                        break;
-                        case 'bar':
-                            var component = obj.putTableResponse(jsonResponse);
-                            createBarChart(
-                                component, jsonResponse, pbj.options
-                            );
-                            pbj.refreshToolbarButtons(component, 'bar');
-                        break;
-                        case 'word_cloud':
-                            obj.putTableResponse(jsonResponse);
-                        break;
-                        case 'stacked_column':
-                            var component = obj.putTableResponse(jsonResponse);
-                            obj.refreshToolbarButtons(
-                                component, 'stacked_column'
-                            );
-                            createStackedColumnChart(
-                                component, cloneObject(jsonResponse),
-                                obj.options
-                            );
-                        break;
-                        case 'stacked_bar':
-                            var component = obj.putTableResponse(jsonResponse);
-                            obj.refreshToolbarButtons(
-                                component, 'stacked_bar'
-                            );
-                            createStackedBarChart(
-                                component,
-                                cloneObject(jsonResponse), obj.options
-                            );
-                        break;
-                        case 'bubble':
-                            var component = obj.putTableResponse(
-                                jsonResponse
-                            );
-                            var cols = jsonResponse['data']['columns'];
-                            createBubbleChart(
-                                component, jsonResponse, obj.options
-                            );
-                            obj.refreshToolbarButtons(component, 'bubble');
-                        break;
-                        case 'heatmap':
-                            var component = obj.putTableResponse(jsonResponse);
-                            createHeatmap(
-                                component, jsonResponse, obj.options
-                            );
-                            obj.refreshToolbarButtons(component, 'heatmap');
-                        break;
-                        case 'pie':
-                            obj.putTableResponse(jsonResponse);
-                        break;
-                        case 'column':
-                            var component = obj.putTableResponse(
-                                jsonResponse
-                            );
-                            createColumnChart(
-                                component, jsonResponse, obj.options
-                            );
-                            obj.refreshToolbarButtons(component, 'column');
-                        break;
-                        case 'help':
-                            obj.putHelpMessage(jsonResponse);
-                        break;
-                        default:
-                            obj.putSimpleResponse(jsonResponse, textValue, status);
+            obj.putSafetynetMessage(response.data)
+        }else{
+            var response = await apiCall(textValue, obj.options, source)
+            var status = response.status
+            var jsonResponse = response.data
+            const displayType = jsonResponse['data']['display_type'];
+            obj.input.removeAttribute("disabled");
+            obj.drawerContent.removeChild(responseLoadingContainer);
+            switch(jsonResponse['data']['display_type']){
+                case 'table':
+                    if(jsonResponse['data']['columns'].length == 1){
+                        obj.putSimpleResponse(jsonResponse, textValue, status);
+                    }else{
+                        obj.putTableResponse(jsonResponse);
                     }
-                    obj.checkMaxMessages();
-                    refreshTooltips();
-                }, obj.options, source);
+                break;
+                case 'data':
+                    var cols = jsonResponse['data']['columns'];
+                    var rows = jsonResponse['data']['rows'];
+                    if(cols.length == 1 && rows.length == 1){
+                        if(cols[0]['name'] == 'query_suggestion'){
+                            obj.putSuggestionResponse(
+                                jsonResponse
+                            );
+                        }else if(cols[0]['name'] == 'Help Link'){
+                            obj.putHelpMessage(jsonResponse);
+                        }else{
+                            obj.putSimpleResponse(
+                                jsonResponse, textValue, status
+                            );
+                        }
+                    }else{
+                        if(rows.length > 0){
+                            obj.putTableResponse(jsonResponse);
+                        }else{
+                            obj.putSimpleResponse(
+                                jsonResponse, textValue, status
+                            );
+                        }
+                    }
+                break;
+                case 'compare_table':
+                    obj.putTableResponse(jsonResponse);
+                break;
+                case 'date_pivot':
+                    obj.putTableResponse(jsonResponse);
+                break;
+                case 'pivot_table':
+                    obj.putTableResponse(jsonResponse);
+                break;
+                case 'line':
+                    var component = obj.putTableResponse(jsonResponse);
+                    createLineChart(
+                        component, jsonResponse, pbj.options
+                    );
+                    pbj.refreshToolbarButtons(component, 'line');
+                break;
+                case 'bar':
+                    var component = obj.putTableResponse(jsonResponse);
+                    createBarChart(
+                        component, jsonResponse, pbj.options
+                    );
+                    pbj.refreshToolbarButtons(component, 'bar');
+                break;
+                case 'word_cloud':
+                    obj.putTableResponse(jsonResponse);
+                break;
+                case 'stacked_column':
+                    var component = obj.putTableResponse(jsonResponse);
+                    obj.refreshToolbarButtons(
+                        component, 'stacked_column'
+                    );
+                    createStackedColumnChart(
+                        component, cloneObject(jsonResponse),
+                        obj.options
+                    );
+                break;
+                case 'stacked_bar':
+                    var component = obj.putTableResponse(jsonResponse);
+                    obj.refreshToolbarButtons(
+                        component, 'stacked_bar'
+                    );
+                    createStackedBarChart(
+                        component,
+                        cloneObject(jsonResponse), obj.options
+                    );
+                break;
+                case 'bubble':
+                    var component = obj.putTableResponse(
+                        jsonResponse
+                    );
+                    var cols = jsonResponse['data']['columns'];
+                    createBubbleChart(
+                        component, jsonResponse, obj.options
+                    );
+                    obj.refreshToolbarButtons(component, 'bubble');
+                break;
+                case 'heatmap':
+                    var component = obj.putTableResponse(jsonResponse);
+                    createHeatmap(
+                        component, jsonResponse, obj.options
+                    );
+                    obj.refreshToolbarButtons(component, 'heatmap');
+                break;
+                case 'pie':
+                    obj.putTableResponse(jsonResponse);
+                break;
+                case 'column':
+                    var component = obj.putTableResponse(
+                        jsonResponse
+                    );
+                    createColumnChart(
+                        component, jsonResponse, obj.options
+                    );
+                    obj.refreshToolbarButtons(component, 'column');
+                break;
+                case 'help':
+                    obj.putHelpMessage(jsonResponse);
+                break;
+                default:
+                    obj.putSimpleResponse(jsonResponse, textValue, status);
             }
-        }, obj.options);
+            obj.checkMaxMessages();
+            refreshTooltips();
+        }
     }
 
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
