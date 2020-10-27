@@ -1117,7 +1117,6 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
       : `${options.authentication.domain}/autoql/api/v1/query/autocomplete?text=${encodeURIComponent(
         suggestion
       )}&key=${options.authentication.apiKey}`
-      // &customer_id=${options.authentication.customerId}&user_id=${options.authentication.userId}
 
     ChataUtils.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
