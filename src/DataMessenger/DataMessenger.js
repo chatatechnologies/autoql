@@ -67,6 +67,7 @@ import {
 import {
     apiCall,
     apiCallGet,
+    apiCallPut,
 } from '../Api'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
@@ -2458,7 +2459,7 @@ export function DataMessenger(elem, options){
             button.textContent = data[i];
             div.appendChild(button);
             responseContentContainer.appendChild(div);
-            button.onclick = (evt) => {
+            button.onclick = async (evt) => {
                 var body = {
                     suggestion: evt.target.textContent
                 };
@@ -2469,12 +2470,16 @@ export function DataMessenger(elem, options){
                     obj.inputAnimation(evt.target.textContent);
                 }
 
-                ChataUtils.putCall(url, body , (jsonResponse) => {
-                    if(evt.target.textContent === 'None of these'){
-                        obj.drawerContent.removeChild(loading);
-                        obj.sendResponse('Thank you for your feedback')
-                    }
-                }, obj.options)
+                var response = await apiCallPut(url, body, obj.options)
+                obj.drawerContent.removeChild(loading);
+                obj.sendResponse('Thank you for your feedback')
+
+                // ChataUtils.putCall(url, body , (jsonResponse) => {
+                //     if(evt.target.textContent === 'None of these'){
+                //         obj.drawerContent.removeChild(loading);
+                //         obj.sendResponse('Thank you for your feedback')
+                //     }
+                // }, obj.options)
             }
         }
     }
