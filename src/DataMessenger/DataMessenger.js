@@ -2619,7 +2619,7 @@ export function DataMessenger(elem, options){
         div.classList.add('autoql-vanilla-chata-single-response');
         var content = htmlToElement(`<div>${value.toString()}</div>`)
         div.appendChild(content);
-        if(statusCode != 200){
+        if(statusCode != 200 && jsonResponse['reference_id'] !== '1.1.430'){
             div.appendChild(document.createElement('br'));
             var errorId = htmlToElement(
                 `<div>Error ID: ${jsonResponse.reference_id}</div>`

@@ -45,6 +45,7 @@
     "d3": "^6.1.1",
     "d3-svg-legend": "^2.25.6",
     "load-styles": "^2.0.0",
+    "lodash.get": "^4.4.2",
     "moment": "^2.27.0",
     "muuri": "^0.9.3",
     "regenerator-runtime": "^0.13.7",
