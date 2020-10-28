@@ -9,7 +9,8 @@ import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import {
     apiCallGet,
-    apiCallPut
+    apiCallPut,
+    apiCallDelete
 } from '../Api'
 import {
     htmlToElement,
@@ -618,12 +619,10 @@ export function Notification(options, parentOptions){
             dismissIconContainer.classList.remove('notification-off');
             dismissIconContainer.classList.remove('chata-notification-dismiss-icon');
             dismissIconContainer.innerHTML = SVG_X;
-            dismissIconContainer.onclick = (evt) => {
+            dismissIconContainer.onclick = async(evt) => {
                 const URL = `${pOpts.domain}/autoql/api/v1/rules/notifications/${item.options.id}?key=${pOpts.apiKey}`;
-                ChataUtils.deleteCall(URL, (jsonResponse) => {
-                    item.parentElement.removeChild(item);
-                },
-                item.parentOptions)
+                var response = await apiCallDelete(URL, item.parentOptions)
+                item.parentElement.removeChild(item);
             }
             item.classList.remove('triggered');
         }
