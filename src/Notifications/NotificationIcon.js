@@ -3,7 +3,7 @@ import { ChataUtils } from '../ChataUtils'
 import '../../css/ChataNotificationButton.css'
 
 export function NotificationIcon(selector, options={}){
-	const NOTIFICATION_POLLING_INTERVAL = 18000
+	const NOTIFICATION_POLLING_INTERVAL = 180000
 	var obj = this;
 	this.options = {
 		authentication: {
@@ -130,11 +130,12 @@ export function NotificationIcon(selector, options={}){
 	this.getNotificationCount = (unacknowledged=0) => {
 		var o = this.options.authentication
 		const url = `${o.domain}/autoql/api/v1/rules/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`
-		return new Promise(function(resolve, reject) {
-			ChataUtils.safetynetCall(url, (json) => {
-				resolve(json);
-			}, obj.options)
-		});
+
+		// return new Promise(function(resolve, reject) {
+		// 	ChataUtils.safetynetCall(url, (json) => {
+		// 		resolve(json);
+		// 	}, obj.options)
+		// });
 	}
 
 	this.poolInterval();

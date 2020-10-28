@@ -107,3 +107,23 @@ export const apiCallGet = (url, options, extraHeaders={}) => {
         return Promise.reject(error)
     })
 }
+
+export const apiCallNotificationCount = (url, options) => {
+    const axiosInstance = axios.create({
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    const config = {
+        timeout: 180000,
+    }
+
+    return axiosInstance
+    .get(url, config)
+    .then((response) => {
+        return Promise.resolve(response)
+    })
+    .catch((error) => {
+        return Promise.resolve(error)
+    })
+}
