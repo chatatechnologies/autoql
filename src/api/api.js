@@ -46,7 +46,7 @@ export const apiCallPost = (url, data, options) => {
         },
     }
 
-    axios.post(url, data, config).then((response) => {
+    return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
         return Promise.resolve(_get(error, 'response'))

@@ -5,6 +5,7 @@ import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import { htmlToElement } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
+import { apiCallGet, apiCallPost } from '../Api'
 import {
     ADD_NOTIFICATION
 } from '../Svg'
@@ -120,20 +121,21 @@ export function DataAlerts(selector, options){
         );
     }
 
-    wrapper.loadRules = () => {
+    wrapper.loadRules = async() => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}&type=user`;
-        ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
-            if(status !== 200){
-                wrapper.options.onErrorCallback(jsonResponse.message)
-            }
-            var items = jsonResponse['data']['rules'];
-            for (var i = 0; i < items.length; i++) {
-                items[i].authentication = wrapper.options.authentication;
-                notificationSettingsContainer.appendChild(
-                    new NotificationSettingsItem(wrapper.options, items[i])
-                );
-            }
-        }, wrapper.options)
+        var response = await apiCallGet(URL, wrapper.options)
+        var jsonResponse = response.data
+        var status = response.status
+        if(status !== 200){
+            wrapper.options.onErrorCallback(jsonResponse.message)
+        }
+        var items = jsonResponse['data']['rules'];
+        for (var i = 0; i < items.length; i++) {
+            items[i].authentication = wrapper.options.authentication;
+            notificationSettingsContainer.appendChild(
+                new NotificationSettingsItem(wrapper.options, items[i])
+            );
+        }
     }
 
     notificationAddContainer.onclick = (evt) => {
@@ -184,23 +186,24 @@ export function DataAlerts(selector, options){
                 }
             )
         }
-        saveButton.onclick = (e) => {
+        saveButton.onclick = async (e) => {
             spinner.classList.remove('hidden')
             saveButton.setAttribute('disabled', 'true')
             var o = wrapper.options
             const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-            ChataUtils.ajaxCallPost(URL, (json, status) => {
-                if(status !== 200){
-                    wrapper.options.onErrorCallback(json.message)
-                }
-                json['data'].authentication = wrapper.options.authentication;
-                notificationSettingsContainer.insertAdjacentElement(
-                    'afterbegin', new NotificationSettingsItem(
-                        wrapper.options, json['data']
-                    )
+            var response = apiCallPost(URL, modalView.getValues, o)
+            var status = response.status
+            var json = response.data
+            if(status !== 200){
+                wrapper.options.onErrorCallback(json.message)
+            }
+            json['data'].authentication = wrapper.options.authentication;
+            notificationSettingsContainer.insertAdjacentElement(
+                'afterbegin', new NotificationSettingsItem(
+                    wrapper.options, json['data']
                 )
-                configModal.close();
-            }, modalView.getValues(), o)
+            )
+            configModal.close();
         }
     }
 
