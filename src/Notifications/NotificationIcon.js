@@ -1,5 +1,8 @@
 import { NOTIFICATION_BUTTON } from '../Svg'
 import { ChataUtils } from '../ChataUtils'
+import {
+	apiCallNotificationCount
+} from '../Api'
 import '../../css/ChataNotificationButton.css'
 
 export function NotificationIcon(selector, options={}){
@@ -110,8 +113,9 @@ export function NotificationIcon(selector, options={}){
 
 	this.poolInterval = async () => {
 		var response = await this.getNotificationCount();
-		if(response.data.unacknowledged){
-			obj.unacknowledged = response.data.unacknowledged
+		var data = response.data.data
+		if(data.unacknowledged){
+			obj.unacknowledged = data.unacknowledged
 		}
 		this.setBadgeValue(obj.unacknowledged);
 		setInterval(
@@ -119,23 +123,20 @@ export function NotificationIcon(selector, options={}){
 				var response = await obj.getNotificationCount(
 					obj.unacknowledged
 				)
-				if(response.data.unacknowledged){
-					obj.unacknowledged = response.data.unacknowledged
+				var data = response.data.data
+				if(data.unacknowledged){
+					obj.unacknowledged = data.unacknowledged
 					this.setBadgeValue(obj.unacknowledged);
 				}
 			}, NOTIFICATION_POLLING_INTERVAL
 		);
 	}
 
-	this.getNotificationCount = (unacknowledged=0) => {
+	this.getNotificationCount = async (unacknowledged=0) => {
 		var o = this.options.authentication
 		const url = `${o.domain}/autoql/api/v1/rules/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`
 
-		// return new Promise(function(resolve, reject) {
-		// 	ChataUtils.safetynetCall(url, (json) => {
-		// 		resolve(json);
-		// 	}, obj.options)
-		// });
+		return apiCallNotificationCount(url, this.options)
 	}
 
 	this.poolInterval();

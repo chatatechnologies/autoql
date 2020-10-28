@@ -109,6 +109,10 @@ export const apiCallGet = (url, options, extraHeaders={}) => {
 }
 
 export const apiCallNotificationCount = (url, options) => {
+    const {
+        token
+    } = options.authentication
+
     const axiosInstance = axios.create({
         headers: {
             Authorization: `Bearer ${token}`,
