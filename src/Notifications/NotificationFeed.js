@@ -1,7 +1,10 @@
 import { htmlToElement } from '../Utils'
 import { DISMISS } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
-import { ChataUtils } from '../ChataUtils'
+import {
+    apiCallPut,
+    apiCallGet
+} from '../Api'
 import { Notification } from './Notification'
 import '../../css/Notifications.css'
 
@@ -92,11 +95,11 @@ export function NotificationFeed(selector, options){
     container.appendChild(dismissAllButton);
     wrapper.appendChild(container);
 
-    container.addEventListener('scroll', async (evt) => {
+    container.addEventListener('scroll', (evt) => {
         if(container.scrollTop + container.offsetHeight + 60
             > container.scrollHeight && !wrapper.isLoading){
             wrapper.notificationOffset += 10;
-            await wrapper.getNotifications()
+            wrapper.getNotifications()
         }
     })
 
@@ -123,16 +126,16 @@ export function NotificationFeed(selector, options){
         );
     }
 
-    wrapper.dismissAll = () => {
+    wrapper.dismissAll = async () => {
         var opts = wrapper.options.authentication;
         const URL = `${opts.domain}/autoql/api/v1/rules/notifications?key=${opts.apiKey}`;
         var payload = {
             state: 'DISMISSED'
         }
-        ChataUtils.putCall(URL, payload, (jsonResponse) => {
-            console.log(jsonResponse);
-            wrapper.toggleAll()
-        }, wrapper.options)
+
+        await apiCallPut(ULR, payload, wrapper.options)
+        wrapper.toggleAll()
+
     }
 
     wrapper.toggleAll = () => {
@@ -145,25 +148,22 @@ export function NotificationFeed(selector, options){
         }
     }
 
-    wrapper.getNotifications = () => {
+    wrapper.getNotifications = async () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=${wrapper.notificationOffset}&limit=10`;
         var timeOut = 0;
         var delay = 0.08;
         wrapper.isLoading = true;
-        return new Promise(function(resolve, reject) {
-            ChataUtils.safetynetCall(URL, (jsonResponse, status) => {
-                var items = jsonResponse['data']['notifications'];
-                for (var i = 0; i < items.length; i++) {
-                    var notification = new Notification(items[i], wrapper.options);
-                    notification.style.animationDelay = (delay * i) + 's';
-                    container.appendChild(
-                        notification
-                    );
-                }
-                wrapper.isLoading = false;
-                resolve(jsonResponse);
-            }, wrapper.options)
-        });
+        var response = await apiCallGet(URL, wrapper.options)
+        var jsonResponse = response.data
+        var items = jsonResponse['data']['notifications'];
+        for (var i = 0; i < items.length; i++) {
+            var notification = new Notification(items[i], wrapper.options);
+            notification.style.animationDelay = (delay * i) + 's';
+            container.appendChild(
+                notification
+            );
+        }
+        wrapper.isLoading = false;
     }
 
     if(parent)parent.appendChild(wrapper);
