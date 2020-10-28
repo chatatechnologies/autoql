@@ -2,6 +2,10 @@ import { ChataUtils } from '../ChataUtils'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
+import {
+    apiCallPut,
+    apiCallDelete
+} from '../Api'
 import { htmlToElement } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
@@ -36,7 +40,7 @@ export function NotificationSettingsItem(parentOptions, options) {
         </div>
     `);
 
-    checkbox.onchange = (evt) => {
+    checkbox.onchange = async(evt) => {
         var payload = {
             status: 'ACTIVE'
         }
@@ -45,8 +49,8 @@ export function NotificationSettingsItem(parentOptions, options) {
             payload.status = 'INACTIVE'
         }
         const URL = `${wrapper.options.authentication.domain}/autoql/api/v1/rules/${wrapper.options.id}?key=${options.authentication.apiKey}`;
-        ChataUtils.putCall(URL, payload, (jsonResponse) => {
-        }, wrapper.options)
+        await apiCallPut(URL, payload, wrapper.options)
+
     }
 
     chataCheckbox.appendChild(chataSwitch);
@@ -80,15 +84,15 @@ export function NotificationSettingsItem(parentOptions, options) {
         }
     }
 
-    const onDeleteNotification = (evt, modal) => {
+    const onDeleteNotification = async (evt, modal) => {
         var o = wrapper.options
         const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
-        ChataUtils.deleteCall(URL, (json) => {
-            if(json.message === 'ok'){
-                wrapper.parentNode.removeChild(wrapper);
-            }
-            modal.close();
-        }, o)
+        var response = await apiCallDelete(URL, o)
+        var json = response.data
+        if(json.message === 'ok'){
+            wrapper.parentNode.removeChild(wrapper);
+        }
+        modal.close();
     }
 
     settingsActions.appendChild(editIcon);
@@ -175,20 +179,20 @@ export function NotificationSettingsItem(parentOptions, options) {
                     }
                 )
             }
-            saveButton.onclick = (e) => {
+            saveButton.onclick = async (e) => {
                 spinner.classList.remove('hidden')
                 saveButton.setAttribute('disabled', 'true')
                 var o = wrapper.options
                 const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
                 var values = modalView.getValues();
                 values.id = wrapper.options.id
-                ChataUtils.putCall(URL, values, (jsonResponse) => {
-                    for(var[key, value] of Object.entries(jsonResponse.data)){
-                        wrapper.options[key] = value
-                    }
-                    wrapper.updateView();
-                    configModal.close();
-                }, o)
+                var response = await apiCallPut(URL, values, o)
+                var jsonResponse = response.data
+                for(var[key, value] of Object.entries(jsonResponse.data)){
+                    wrapper.options[key] = value
+                }
+                wrapper.updateView();
+                configModal.close();
             }
         }
     }

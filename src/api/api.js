@@ -53,7 +53,7 @@ export const apiCallPost = (url, data, options) => {
     })
 }
 
-export const apiCallPut = async (url, data, options) => {
+export const apiCallPut = (url, data, options) => {
     const {
         token,
     } = options.authentication
@@ -64,10 +64,14 @@ export const apiCallPut = async (url, data, options) => {
         },
     }
 
-    return await axios.put(url, data, config)
+    return axios.put(url, data, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
 }
 
-export const deleteCall = (url, data, options) => {
+export const apiCallDelete = (url, options) => {
     const {
         token,
     } = options.authentication
@@ -78,7 +82,7 @@ export const deleteCall = (url, data, options) => {
         },
     }
 
-    axios.delete(url, data, config).then((response) => {
+    return axios.delete(url, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
         return Promise.resolve(_get(error, 'response'))

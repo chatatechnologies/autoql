@@ -1,6 +1,5 @@
 import { NotificationSettingsItem } from './NotificationSettingsItem'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
-import { ChataUtils } from '../ChataUtils'
 import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import { htmlToElement } from '../Utils'
