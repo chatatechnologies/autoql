@@ -1,9 +1,17 @@
 import { GridStack } from 'gridstack'
 import { Tile } from './Tile'
+import {
+    uuidv4
+} from '../Utils'
 import 'gridstack/dist/gridstack.css'
 
-export function Dashboard(options={}){
+export function Dashboard(selector, options={}){
     var obj = this
+    var parent = document.querySelector(selector)
+    var gridContainer = document.createElement('div')
+    gridContainer.classList.add('grid-stack')
+
+    parent.appendChild(gridContainer)
 
     obj.options = {
         authentication: {
@@ -87,7 +95,7 @@ export function Dashboard(options={}){
         }
     }
 
-    var grid = GridStack.init()
+    var grid = GridStack.init({}, gridContainer)
 
     for (var i = 0; i < 12; i++) {
         var e = new Tile({
@@ -95,4 +103,6 @@ export function Dashboard(options={}){
         })
         grid.addWidget(e, {width: 4})
     }
+
+    return parent
 }

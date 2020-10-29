@@ -129,7 +129,8 @@ get(DASHBOARD_URL, {
     }
 }).then(function(response){
 
-    dashboard = new DashboardV2()
+    dashboard = new DashboardV2('#dashboard-wrapper')
+    new DashboardV2('#dashboard-wrapper2')
 
 
     // dashboard = new Dashboard('#dashboard', {

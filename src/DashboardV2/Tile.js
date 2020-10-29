@@ -1,7 +1,8 @@
+import './Tile.css'
+
 export function Tile(options){
     var item = document.createElement('div')
-
-    item.innerHTML = '1'
+    var content = document.createElement('div');
 
     item.options = {
         query: '',
@@ -16,7 +17,11 @@ export function Tile(options){
         item.options[key] = value;
     }
 
-    item.innerHTML = item.options.title
+    content.innerHTML = item.options.title
+
+    item.classList.add('grid-stack-item')
+    content.classList.add('grid-stack-item-content')
+    item.appendChild(content)
 
     return item
 }
