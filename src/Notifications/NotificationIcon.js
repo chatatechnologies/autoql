@@ -1,5 +1,4 @@
 import { NOTIFICATION_BUTTON } from '../Svg'
-import { ChataUtils } from '../ChataUtils'
 import {
 	apiCallNotificationCount,
 	apiCallPut

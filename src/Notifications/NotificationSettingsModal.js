@@ -7,7 +7,6 @@ import {
     INPUT_DELETE,
     WARNING_TRIANGLE
 } from '../Svg'
-import { ChataUtils } from '../ChataUtils'
 import {
     apiCall
 } from '../Api'
@@ -1164,6 +1163,12 @@ function GroupLine(params, expression=[]){
 
     queryInput2.input.onblur = async (evt) => {
         if(queryInput2.input.value){
+            if(/^[0-9]+$/.test(queryInput2.input.value)){
+                params.step.classList.remove('error')
+                termError2.style.display = 'none';
+                return
+            }
+
             var response = await apiCall(
                 evt.target.value, params.parentOptions, undefined
             )
