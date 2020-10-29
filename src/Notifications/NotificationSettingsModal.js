@@ -8,6 +8,9 @@ import {
     WARNING_TRIANGLE
 } from '../Svg'
 import { ChataUtils } from '../ChataUtils'
+import {
+    apiCall
+} from '../Api'
 import { convert } from '../RuleParser'
 import {
     ChataInput,
@@ -388,22 +391,25 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     titleInput.input.classList.add('autoql-vanilla-notification-title-input');
     messageArea.input.classList.add('autoql-vanilla-notification-message');
     messageContainer.appendChild(messageArea.input);
-    queryReturnInput.input.onblur = (evt) => {
+    queryReturnInput.input.onblur = async (evt) => {
         if(queryReturnInput.input.value){
-            console.log(wrapper.parentOptions);
-            ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
-                if(statusCode !== 200){
-                    step3.classList.remove('complete')
-                    step3.classList.add('error')
+            var response = await apiCall(
+                evt.target.value, wrapper.parentOptions, undefined
+            )
 
-                    termErrorReturnInput.style.display = 'block';
-                }else{
-                    step3.classList.add('complete')
-                    step3.classList.remove('error')
+            var json = response.data
+            var statusCode = response.status
+            if(statusCode !== 200){
+                step3.classList.remove('complete')
+                step3.classList.add('error')
 
-                    termErrorReturnInput.style.display = 'none';
-                }
-            }, wrapper.parentOptions, undefined)
+                termErrorReturnInput.style.display = 'block';
+            }else{
+                step3.classList.add('complete')
+                step3.classList.remove('error')
+
+                termErrorReturnInput.style.display = 'none';
+            }
         }
     }
 
@@ -1138,35 +1144,41 @@ function GroupLine(params, expression=[]){
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
 
-    queryInput.input.onblur = (evt) => {
+    queryInput.input.onblur = async (evt) => {
         if(queryInput.input.value){
-            ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
-                if(statusCode !== 200){
-                    termError1.style.display = 'block';
-                    params.step.classList.remove('complete')
-                    params.step.classList.add('error')
-                }else{
-                    termError1.style.display = 'none';
-                    params.step.classList.add('complete')
-                    params.step.classList.remove('error')
-                }
-            }, params.parentOptions, undefined)
+            var response = await apiCall(
+                evt.target.value, params.parentOptions, undefined
+            )
+            var statusCode = response.status
+            if(statusCode !== 200){
+                termError1.style.display = 'block';
+                params.step.classList.remove('complete')
+                params.step.classList.add('error')
+            }else{
+                termError1.style.display = 'none';
+                params.step.classList.add('complete')
+                params.step.classList.remove('error')
+            }
         }
     }
 
-    queryInput2.input.onblur = (evt) => {
+    queryInput2.input.onblur = async (evt) => {
         if(queryInput2.input.value){
-            ChataUtils.ajaxCall(evt.target.value, (json, statusCode) => {
-                if(statusCode !== 200){
-                    termError2.style.display = 'block';
-                    params.step.classList.remove('complete')
-                    params.step.classList.add('error')
-                }else{
-                    termError2.style.display = 'none';
-                    params.step.classList.add('complete')
-                    params.step.classList.remove('error')
-                }
-            }, params.parentOptions, undefined)
+            var response = await apiCall(
+                evt.target.value, params.parentOptions, undefined
+            )
+
+            var statusCode = response.status
+
+            if(statusCode !== 200){
+                termError2.style.display = 'block';
+                params.step.classList.remove('complete')
+                params.step.classList.add('error')
+            }else{
+                termError2.style.display = 'none';
+                params.step.classList.add('complete')
+                params.step.classList.remove('error')
+            }
         }
     }
 
