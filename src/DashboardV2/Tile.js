@@ -23,5 +23,21 @@ export function Tile(options){
     content.classList.add('grid-stack-item-content')
     item.appendChild(content)
 
+    var dragPositions = [
+        'left',
+        'bottom',
+        'top',
+        'right'
+    ]
+
+    for (var i = 0; i < dragPositions.length; i++) {
+        var pos = dragPositions[i]
+        var handler = document.createElement('div')
+        handler.classList.add('autoql-vanilla-dashboard-tile-drag-handle')
+        handler.classList.add(pos)
+
+        content.appendChild(handler)
+    }
+
     return item
 }

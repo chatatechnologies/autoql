@@ -3,11 +3,14 @@ import { Tile } from './Tile'
 import {
     uuidv4
 } from '../Utils'
+
+import './Dashboard.css'
 import 'gridstack/dist/gridstack.css'
 
 export function Dashboard(selector, options={}){
     var obj = this
     var parent = document.querySelector(selector)
+    parent.classList.add('autoql-vanilla-dashboard-container')
     var gridContainer = document.createElement('div')
     gridContainer.classList.add('grid-stack')
 
@@ -95,7 +98,9 @@ export function Dashboard(selector, options={}){
         }
     }
 
-    var grid = GridStack.init({}, gridContainer)
+    var grid = GridStack.init({
+        handle: '.autoql-vanilla-dashboard-tile-drag-handle'
+    }, gridContainer)
 
     for (var i = 0; i < 12; i++) {
         var e = new Tile({

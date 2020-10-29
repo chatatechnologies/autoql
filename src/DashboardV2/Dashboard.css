@@ -1,0 +1,6 @@
+.autoql-vanilla-dashboard-container{
+    background: var(--autoql-vanilla-background-color-secondary);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
