@@ -1,5 +1,6 @@
 import { DataMessenger } from './src'
 import { Dashboard } from './src'
+import { Dashboard as DashboardV2 } from './src/DashboardV2/Dashboard'
 import { NotificationIcon } from './src'
 import { QueryInput } from './src'
 import { QueryOutput } from './src'
@@ -9,7 +10,7 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAzOTEzMTY0LCAiZXhwIjogMTYwMzkzNDc2NCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyJdfQ.JzVCGS8YyzrqiRHDro3dgtelRygrf2hFJZQaF4GW5HArLWozDWMu3WLErWPPA_QqS7puZyKqMjlst3hF_2c84QY8KEcMSefokAkWpavgcuqMDLIX1Cnichvt_oaBpyRILd1vlIfoSKlNeoVmPd9DC4LVAiu6U-eFWgxBZtM5W00W9zm0s0J1RatuvOZzRMmrtFFiqc6IhAYRCsmBVbiPRVZpVfY78WGsSSfzNjcuL2ZoLLTdll7iZXtEGEMCP3a2csiPPAJCsTlCIqnZvJI2SQn7VSrehTMkH6GJQggss60j1NYwayhLWl346N1xzpQ4mXRCFg2cNy-BGBLrffcH_Q`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAzOTk4MTUwLCAiZXhwIjogMTYwNDAxOTc1MCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyJdfQ.GR7ckh1NbEU5340MXOsBzmR_y4nzpbSZKtimHifdYmJkJtY1TOCZORBgSm2GebHC3RDUiGW6pw4hIghrimrBdP_G0-dpEcIODxMKKCBrrT4FV_xJX3XOV8VnqNnOTNZEmE316YAMLgHu18pkuSw1AUWpUjJLSqIZljE9PfKTP9-35mU6vwowX2FIMbf8x0AXQPhIlPjsVjPT4jXQIC-vWbln9GjYcx8JmdvW3xCfpDZQ5KO3KoOQ8BXBnhEjDHmxa1FTJxFDj_zCnQu7jjdTbJdLxRKtF4Pzm0hlQC0xplGi01StxGM-s_ZILYh5Iepwn_ZTVjDRaifeYlhZ5lBAuw`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}`;
@@ -61,17 +62,17 @@ setTimeout(() => {
 }, 300)
 
 
-var alerts = DataAlerts('#alert-settings', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    themeConfig: {
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'dark',
-    },
-})
+// var alerts = DataAlerts('#alert-settings', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     themeConfig: {
+//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+//         theme: 'dark',
+//     },
+// })
 //
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -93,24 +94,24 @@ var alerts = DataAlerts('#alert-settings', {
 //
 // queryInput.bind(queryOutput)
 //
-var notificationList = new NotificationFeed('#notification-list', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    showNotificationDetails: true,
-    onExpandCallback: (notification) => {
-        console.log(notification);
-    },
-    onCollapseCallback: (notification) => {
-        console.log(notification);
-    },
-    themeConfig: {
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'dark',
-    },
-})
+// var notificationList = new NotificationFeed('#notification-list', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     showNotificationDetails: true,
+//     onExpandCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     onCollapseCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     themeConfig: {
+//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+//         theme: 'dark',
+//     },
+// })
 
 // var nButton = new NotificationIcon('#notification-icon', {
 //     authentication: {
@@ -127,6 +128,10 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
+
+    dashboard = new DashboardV2()
+
+
     // dashboard = new Dashboard('#dashboard', {
     //     authentication: {
     //         token: _token,
