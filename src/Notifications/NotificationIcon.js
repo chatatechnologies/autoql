@@ -1,7 +1,8 @@
 import { NOTIFICATION_BUTTON } from '../Svg'
 import { ChataUtils } from '../ChataUtils'
 import {
-	apiCallNotificationCount
+	apiCallNotificationCount,
+	apiCallPut
 } from '../Api'
 import '../../css/ChataNotificationButton.css'
 
@@ -66,21 +67,23 @@ export function NotificationIcon(selector, options={}){
 	this.badge = badge;
 	badge.style.visibility = 'hidden';
 
-	button.onclick = (evt) => {
+	button.onclick = async (evt) => {
 		if(obj.options.clearCountOnClick){
 			var o = obj.options.authentication
 			const url = `${o.domain}/autoql/api/v1/rules/notifications?key=${o.apiKey}`
-			ChataUtils.putCall(url, {
+			badge.style.visibility = 'hidden';
+			var response = await apiCallPut(url, {
 				notification_id: null,
 				state: 'ACKNOWLEDGED'
-			}, (jsonResponse) => {
-				if(jsonResponse.message == 'ok'){
-					obj.unacknowledged = 0;
-				}else{
-					obj.options.onErrorCallback(jsonResponse.message)
-				}
-	        }, obj.options)
-			badge.style.visibility = 'hidden';
+			}, obj.options)
+
+			var jsonResponse = response.data
+
+			if(jsonResponse.message == 'ok'){
+				obj.unacknowledged = 0;
+			}else{
+				obj.options.onErrorCallback(jsonResponse.message)
+			}
 		}
 	}
 

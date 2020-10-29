@@ -1,4 +1,3 @@
-import { ChataUtils } from '../ChataUtils'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
