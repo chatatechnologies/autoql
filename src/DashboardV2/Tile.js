@@ -176,6 +176,7 @@ export function Tile(dashboard, options){
         content.appendChild(handler)
     }
 
+    item.tilePlayBuytton = tilePlayBuytton
     item.inputQuery = queryInput.input
     item.inputTitle = queryInput2.input
     item.itemContent = content
@@ -183,6 +184,9 @@ export function Tile(dashboard, options){
     item.tileTitle = tileTitle
     item.tileTitle.textContent = options.title
     || item.options.query || 'Untitled'
+    item.inputQuery.value = options.query
+    item.inputTitle.value = options.title
+    || item.options.query
     item.responseWrapper = responseWrapper
     item.dashboard = dashboard
 
@@ -256,6 +260,14 @@ export function Tile(dashboard, options){
                 }
             })
             item.options.isSplit = true
+        }
+    }
+
+    item.tilePlayBuytton.onclick = () => {
+        if(item.options.isSplit){
+            item.views.map(view => view.run())
+        }else{
+            item.views[0].run()
         }
     }
 

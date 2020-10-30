@@ -44,25 +44,20 @@ export function TileView(tile, isSecond=false){
         return responseLoadingContainer;
     }
 
-    view.run = () => {
+    view.run = async () => {
         var loading = view.showLoading()
-        var data = view.executeQuery()
-        console.log(data);
+        var data = await view.executeQuery()
         view.removeChild(loading)
     }
 
     view.executeQuery = async () => {
         var val = tile.inputQuery.value
-        var response = await apiCall(
+        return apiCall(
             val, tile.dashboard.options, 'dashboards.user'
         )
-
-        return response
     }
 
     view.classList.add('autoql-vanilla-tile-view')
-
-    view.showLoading()
 
     return view
 }
