@@ -8,6 +8,7 @@
 .grid-stack-item-content{
     position: relative;
     background: white;
+    cursor: default!important;
 }
 
 .autoql-vanilla-dashboard-tile-drag-handle {
@@ -15,7 +16,7 @@
     position: absolute;
     background-color: var(--autoql-vanilla-border-color,#f7f7f7);
     cursor: move;
-    opacity: 1;
+    opacity: 0;
 }
 
 
@@ -69,4 +70,44 @@
     width: 100%;
     height: 100%;
     font-size: 15px;
+}
+
+.autoql-vanilla-dashboard-tile-delete-button {
+    opacity: 0;
+    color: var(--autoql-vanilla-text-color-primary,#356f90);
+    position: absolute;
+    top: 0;
+    right: -2px;
+    cursor: pointer;
+    -webkit-transition: opacity 0.3s ease;
+    transition: opacity 0.3s ease;
+}
+
+.autoql-vanilla-dashboard-tile-input-container {
+    display: -webkit-box;
+    display: flex;
+    width: 100%;
+}
+
+.autoql-vanilla-dashboard-tile-delete-button svg {
+    height: 1em;
+    margin: 0 0 -.1em;
+}
+
+.autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-dashboard-tile-delete-button{
+    opacity: 1;
+}
+
+.autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-dashboard-tile-drag-handle{
+    opacity: 1;
+}
+
+.autoql-vanilla-chata-input-container.clicked{
+    width: 70%;
+}
+
+.autoql-vanilla-chata-input-container input:hover,
+.autoql-vanilla-chata-input-container input:focus{
+    border: 1px solid #26a7e9!important;
+    border-color: var(--autoql-vanilla-accent-color)!
 }

@@ -159,16 +159,10 @@
 }
 
 .autoql-vanilla-chata-dashboard-item.editing:hover {
-    cursor: move !important;
+    /* cursor: move !important; */
 }
 
-.autoql-vanilla-dashboard-tile-input-container {
-    display: -webkit-box;
-    display: flex;
-    width: 100%;
-    padding: 6.5px 5px;
 
-}
 
 .dashboard-tile-right-input-container, .dashboard-tile-left-input-container {
     position: relative;
@@ -179,9 +173,9 @@
 
 }
 
-.autoql-vanilla-chata-input-container.clicked{
+/* .autoql-vanilla-chata-input-container.clicked{
     width: 70%;
-}
+} */
 
 .autoql-vanilla-chata-input-container  .autoql-vanilla-chata-input-settings{
     border: 1px solid var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
@@ -198,11 +192,11 @@
 
 }
 
-.autoql-vanilla-chata-input-container input:hover,
+/* .autoql-vanilla-chata-input-container input:hover,
 .autoql-vanilla-chata-input-container input:focus{
     border: 1px solid #26a7e9!important;
     border-color: var(--autoql-vanilla-accent-color)!
-}
+} */
 
 
 
