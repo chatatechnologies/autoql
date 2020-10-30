@@ -176,10 +176,10 @@ export function Tile(dashboard, options){
     }
 
     item.startEditing = () => {
-        tileInputContainer.style.display = 'block'
+        tileInputContainer.style.display = 'flex'
         tileTitleContainer.style.display = 'none'
         content.classList.add('editing')
-        dashboard.grid.disable()
+        dashboard.grid.enable()
 
     }
 

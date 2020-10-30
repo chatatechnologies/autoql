@@ -168,3 +168,15 @@ get(DASHBOARD_URL, {
     // })
     // dashboard.startEditing()
 })
+
+
+var b = document.getElementById('edit')
+var b2 = document.getElementById('edit-stop')
+
+b.onclick = () => {
+    dashboard.startEditing()
+}
+
+b2.onclick = () => {
+    dashboard.stopEditing()
+}

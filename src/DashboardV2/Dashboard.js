@@ -152,12 +152,17 @@ export function Dashboard(selector, options={}){
     }
 
     obj.startEditing = () => {
-        
+        obj.tiles.forEach((item, i) => {
+            item.startEditing()
+        });
+
     }
 
     obj.stopEditing = () => {
-
+        obj.tiles.forEach((item, i) => {
+            item.stopEditing()
+        });
     }
 
-    return parent
+    return obj
 }
