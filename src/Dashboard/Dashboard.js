@@ -5,7 +5,7 @@ import {
 import { Tile } from './Tile'
 import Muuri from 'muuri'
 import { htmlToElement } from '../Utils'
-import './Dashboard.css'
+// import './Dashboard.css'
 
 export function Dashboard(selector, options={}){
     var items = [];

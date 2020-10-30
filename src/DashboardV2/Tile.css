@@ -77,21 +77,30 @@
     color: var(--autoql-vanilla-text-color-primary,#356f90);
     position: absolute;
     top: 0;
-    right: -2px;
+    right: 2px;
     cursor: pointer;
     -webkit-transition: opacity 0.3s ease;
     transition: opacity 0.3s ease;
-}
-
-.autoql-vanilla-dashboard-tile-input-container {
-    display: -webkit-box;
-    display: flex;
-    width: 100%;
+    font-size: 16px;
 }
 
 .autoql-vanilla-dashboard-tile-delete-button svg {
     height: 1em;
     margin: 0 0 -.1em;
+}
+
+.autoql-vanilla-chata-input-container input{
+    background: var(--autoql-vanilla-background-color-primary) !important;
+}
+
+.autoql-vanilla-dashboard-tile-input-container input:hover{
+    border: 1px solid #26a7e9!important;
+    border-color: var(--autoql-vanilla-accent-color)!important;
+}
+
+.autoql-vanilla-chata-input-container.clicked input{
+    border: 1px solid #26a7e9!important;
+    border-color: var(--autoql-vanilla-accent-color)!important;
 }
 
 .autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-dashboard-tile-delete-button{
@@ -106,8 +115,44 @@
     width: 70%;
 }
 
-.autoql-vanilla-chata-input-container input:hover,
-.autoql-vanilla-chata-input-container input:focus{
-    border: 1px solid #26a7e9!important;
-    border-color: var(--autoql-vanilla-accent-color)!
+.autoql-vanilla-chata-input-container  .autoql-vanilla-chata-input-settings{
+    border: 1px solid var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
+    outline: none!important;;
+    outline: none !important;
+    color:  var(--autoql-vanilla-accent-color, #26a7e9);
+    -webkit-box-flex: 1 !important;
+    flex-grow: 1 !important;
+    -webkit-transition: width 0.3s ease !important;
+    transition: width 0.3s ease !important;
+    height: 10px !important;
+    box-shadow: none !important;
+}
+
+.dashboard-tile-right-input-container, .dashboard-tile-left-input-container {
+    position: relative;
+    width: 0;
+    flex-grow: 1;
+    transition: width 0.3s ease;
+    margin: 0px !important;
+}
+
+
+.autoql-vanilla-dashboard-tile-play-button {
+    cursor: default;
+    -webkit-box-flex: 0;
+    flex-grow: 0;
+    flex-shrink: 0;
+    height: 33px;
+}
+
+.autoql-vanilla-dashboard-tile-play-button svg {
+    cursor: pointer;
+    width: 25px;
+    height: 33px;
+    margin-left: 10px;
+}
+
+
+.autoql-vanilla-dashboard-tile-play-button svg path{
+    fill: unset;
 }
