@@ -122,11 +122,19 @@ export function Dashboard(selector, options={}){
         })
     }
 
-    obj.grid.on('dragstart', function(event, el) {
+    obj.grid.on('dragstart', (event, el) => {
         obj.showPlaceHolders()
     })
 
-    grid.on('dragstop', function(event, el) {
+    obj.grid.on('dragstop', (event, el) => {
+        obj.hidePlaceHolders()
+    })
+
+    obj.grid.on('resizestart', (event, el) => {
+        obj.showPlaceHolders()
+    })
+
+    obj.grid.on('resizestop', (event, el) => {
         obj.hidePlaceHolders()
     })
 

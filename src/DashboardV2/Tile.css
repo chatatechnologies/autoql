@@ -104,6 +104,11 @@
     border-color: var(--autoql-vanilla-accent-color)!important;
 }
 
+.autoql-vanilla-chata-dashboard-item{
+    display: flex;
+    flex-direction: column;
+}
+
 .autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-dashboard-tile-delete-button{
     opacity: 1;
 }

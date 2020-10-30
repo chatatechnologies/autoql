@@ -81,6 +81,7 @@ export function Tile(dashboard, options){
         <div class="autoql-vanilla-placeholder-top"></div>
         <div class="autoql-vanilla-placeholder-content"></div>
     `
+    placeHolderDrag.style.display = 'none'
     tilePlayBuytton.innerHTML = TILE_RUN_QUERY
     deleteButton.innerHTML = DASHBOARD_DELETE_ICON
 
@@ -140,8 +141,6 @@ export function Tile(dashboard, options){
         content.appendChild(handler)
     }
 
-
-    item.showPlaceHolder()
 
     return item
 }
