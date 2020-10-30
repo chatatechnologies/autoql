@@ -184,6 +184,7 @@ export function Tile(dashboard, options){
     item.tileTitle.textContent = options.title
     || item.options.query || 'Untitled'
     item.responseWrapper = responseWrapper
+    item.dashboard = dashboard
 
 
     item.inputQuery.onblur = (event) => {
@@ -259,8 +260,8 @@ export function Tile(dashboard, options){
     }
 
     item.views = [
-        new TileView(dashboard, options),
-        new TileView(dashboard, options, true)
+        new TileView(item),
+        new TileView(item, true)
     ]
 
 

@@ -1,11 +1,14 @@
 import './TileView.css'
+import {
+    apiCall
+} from '../Api'
 
-export function TileView(dashboard, options, isSecond=false){
+export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
 
     const {
         notExecutedText
-    } = dashboard.options
+    } = tile.dashboard.options
 
     const placeHolderText = `
     <div class="autoql-vanilla-dashboard-tile-placeholder-text">
@@ -39,6 +42,22 @@ export function TileView(dashboard, options, isSecond=false){
         responseLoadingContainer.appendChild(responseLoading);
         view.appendChild(responseLoadingContainer);
         return responseLoadingContainer;
+    }
+
+    view.run = () => {
+        var loading = view.showLoading()
+        var data = view.executeQuery()
+        console.log(data);
+        view.removeChild(loading)
+    }
+
+    view.executeQuery = async () => {
+        var val = tile.inputQuery.value
+        var response = await apiCall(
+            val, tile.dashboard.options, 'dashboards.user'
+        )
+
+        return response
     }
 
     view.classList.add('autoql-vanilla-tile-view')
