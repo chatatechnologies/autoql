@@ -22,10 +22,8 @@
     z-index: 10;
     border: 1px solid hsla(0,0%,82.7%,.32);
     position: absolute;
-    /* bottom: -25px;
-    left: -17px; */
-    bottom: -8px;
-    left: 35px;
+    bottom: 6px;
+    left: 54px;
     -webkit-transition: opacity .3s ease,color .3s ease;
     transition: opacity .3s ease,color .3s ease;
     visibility: hidden;

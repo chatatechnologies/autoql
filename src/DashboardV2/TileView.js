@@ -1,11 +1,36 @@
 import './TileView.css'
 import {
+    TABLE_ICON,
+    COLUMN_CHART_ICON,
+    BAR_CHART_ICON,
+    PIE_CHART_ICON,
+    LINE_CHART_ICON,
+    PIVOT_ICON,
+    HEATMAP_ICON,
+    BUBBLE_CHART_ICON,
+    STACKED_COLUMN_CHART_ICON,
+    STACKED_BAR_CHART_ICON,
+    STACKED_AREA_CHART_ICON
+} from '../Svg'
+import { ChataUtils } from '../ChataUtils'
+import {
     apiCall
 } from '../Api'
+import {
+    uuidv4,
+    getSupportedDisplayTypes
+} from '../Utils'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
+    if(isSecond){
+        view.internalDisplayType = tile.options.secondDisplayType ||
+        tile.options.displayType
+    }else{
+        view.internalDisplayType = tile.options.displayType
+    }
 
+    const UUID = uuidv4()
     const {
         notExecutedText
     } = tile.dashboard.options
@@ -28,26 +53,28 @@ export function TileView(tile, isSecond=false){
     view.showLoading = () => {
         view.innerHTML = ''
 
-        var responseLoadingContainer = document.createElement('div');
-        var responseLoading = document.createElement('div');
+        var responseLoadingContainer = document.createElement('div')
+        var responseLoading = document.createElement('div')
 
         responseLoadingContainer.classList.add(
             'autoql-vanilla-tile-response-loading-container'
-        );
-        responseLoading.classList.add('response-loading');
+        )
+        responseLoading.classList.add('response-loading')
         for (var i = 0; i <= 3; i++) {
-            responseLoading.appendChild(document.createElement('div'));
+            responseLoading.appendChild(document.createElement('div'))
         }
 
-        responseLoadingContainer.appendChild(responseLoading);
-        view.appendChild(responseLoadingContainer);
-        return responseLoadingContainer;
+        responseLoadingContainer.appendChild(responseLoading)
+        view.appendChild(responseLoadingContainer)
+        return responseLoadingContainer
     }
 
     view.run = async () => {
         var loading = view.showLoading()
         var data = await view.executeQuery()
         view.removeChild(loading)
+        ChataUtils.responses[UUID] = data.data
+        view.displayData()
     }
 
     view.executeQuery = async () => {
@@ -56,6 +83,98 @@ export function TileView(tile, isSecond=false){
             val, tile.dashboard.options, 'dashboards.user'
         )
     }
+
+    view.displayData = () => {
+        var json = ChataUtils.responses[UUID]
+        view.createVizToolbar()
+    }
+
+    view.createVizToolbar = () => {
+        var json = ChataUtils.responses[UUID]
+        var displayTypes = getSupportedDisplayTypes(json)
+
+        var ignoreDisplayType = view.internalDisplayType
+        var dummyArray = []
+        dummyArray.forEach.call(view.querySelectorAll(
+            '.autoql-vanilla-tile-toolbar'
+        ),
+        function(e, index){
+            e.parentNode.removeChild(e)
+        })
+
+        if(displayTypes.length > 1){
+            var vizToolbar = document.createElement('div')
+            vizToolbar.classList.add('autoql-vanilla-tile-toolbar')
+            for (var i = 0; i < displayTypes.length; i++) {
+                if(displayTypes[i] == ignoreDisplayType)continue
+                var button = document.createElement('button')
+                button.classList.add('autoql-vanilla-chata-toolbar-btn')
+                button.setAttribute('data-displaytype', displayTypes[i])
+                if(displayTypes[i] == 'table'){
+                    button.innerHTML = TABLE_ICON
+                    button.setAttribute('data-tippy-content', 'Table')
+                }
+                if(displayTypes[i] == 'column'){
+                    button.innerHTML = COLUMN_CHART_ICON
+                    button.setAttribute('data-tippy-content', 'Column Chart')
+                }
+                if(displayTypes[i] == 'bar'){
+                    button.innerHTML = BAR_CHART_ICON
+                    button.setAttribute('data-tippy-content', 'Bar Chart')
+                }
+                if(displayTypes[i] == 'pie'){
+                    button.innerHTML = PIE_CHART_ICON
+                    button.setAttribute('data-tippy-content', 'Pie Chart')
+                }
+                if(displayTypes[i] == 'line'){
+                    button.innerHTML = LINE_CHART_ICON
+                    button.setAttribute('data-tippy-content', 'Line Chart')
+                }
+                if(displayTypes[i] == 'pivot_table'){
+                    button.innerHTML = PIVOT_ICON
+                    button.setAttribute('data-tippy-content', 'Pivot Table')
+                }
+                if(displayTypes[i] == 'heatmap'){
+                    button.innerHTML = HEATMAP_ICON
+                    button.setAttribute('data-tippy-content', 'Heatmap')
+                }
+                if(displayTypes[i] == 'bubble'){
+                    button.innerHTML = BUBBLE_CHART_ICON
+                    button.setAttribute('data-tippy-content', 'Bubble Chart')
+                }
+                if(displayTypes[i] == 'stacked_column'){
+                    button.innerHTML = STACKED_COLUMN_CHART_ICON
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Column Chart'
+                    )
+                }
+                if(displayTypes[i] == 'stacked_bar'){
+                    button.innerHTML = STACKED_BAR_CHART_ICON
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Area Chart'
+                    )
+                }
+                if(displayTypes[i] == 'stacked_line'){
+                    button.innerHTML = STACKED_AREA_CHART_ICON
+                    button.setAttribute(
+                        'data-tippy-content',
+                        'Stacked Bar Chart'
+                    )
+                }
+                if(button.innerHTML != ''){
+                    vizToolbar.appendChild(button)
+                    button.onclick = function(event){
+                        view.internalDisplayType = this.dataset.displaytype
+                    }
+                }
+            }
+            view.appendChild(vizToolbar)
+        }
+    }
+
+
 
     view.classList.add('autoql-vanilla-tile-view')
 
