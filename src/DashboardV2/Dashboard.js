@@ -99,7 +99,8 @@ export function Dashboard(selector, options={}){
     }
 
     var grid = GridStack.init({
-        handle: '.autoql-vanilla-dashboard-tile-drag-handle'
+        handle: '.autoql-vanilla-dashboard-tile-drag-handle',
+        placeholderClass : 'autoql-vanilla-tile-placeholder'
     }, gridContainer)
 
     for (var i = 0; i < 12; i++) {

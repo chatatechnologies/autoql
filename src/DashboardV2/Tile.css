@@ -46,3 +46,11 @@
     width: 15px;
     height: 100%;
 }
+
+.autoql-vanilla-tile-placeholder{
+    border: none;
+}
+
+.autoql-vanilla-tile-placeholder {
+    background-color: var(--autoql-vanilla-border-color,#f7f7f7);
+}
