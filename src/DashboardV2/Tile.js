@@ -6,6 +6,9 @@ import {
     DASHBOARD_DELETE_ICON
 } from '../Svg'
 import { ChataInput, InputContainer } from '../ChataComponents'
+import {
+    htmlToElement
+} from '../Utils'
 
 export function Tile(dashboard, options){
     var item = document.createElement('div')
@@ -35,6 +38,8 @@ export function Tile(dashboard, options){
     var tileInputContainer = document.createElement('div')
     var deleteButton = document.createElement('span');
     var tilePlayBuytton = document.createElement('div');
+    var tileTitleContainer = document.createElement('div');
+    var tileTitle = document.createElement('span');
     var inputContainer1 = new InputContainer([
         'chata-rule-input',
         'dashboard-tile-left-input-container'
@@ -59,6 +64,21 @@ export function Tile(dashboard, options){
     queryInput2.input.setAttribute('data-tippy-content', 'Title')
 
 
+    placeHolderDrag.innerHTML = `
+    <div class="autoql-vanilla-placeholder-top"></div>
+    <div class="autoql-vanilla-placeholder-content"></div>
+    `
+    const notExecutedText = dashboard.options.notExecutedText
+
+    const placeHolderText = `
+    <div class="autoql-vanilla-dashboard-tile-placeholder-text">
+    <em>${notExecutedText}</em>
+    </div>`
+
+    const divider = `
+    <div class="autoql-vanilla-dashboard-tile-title-divider">
+    </div>`
+
     inputContainer1.appendChild(queryInput.input)
     inputContainer1.appendChild(queryInput.spanIcon)
     inputContainer2.appendChild(queryInput2.input)
@@ -73,14 +93,18 @@ export function Tile(dashboard, options){
     tilePlayBuytton.classList.add('autoql-vanilla-icon-blue')
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button')
     placeHolderDrag.classList.add('autoql-vanilla-item-content');
+    tileTitleContainer.classList.add(
+        'autoql-vanilla-dashboard-tile-title-container'
+    );
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
     tileInputContainer.appendChild(inputContainer1)
     tileInputContainer.appendChild(inputContainer2)
     tileInputContainer.appendChild(tilePlayBuytton)
+    tileTitleContainer.appendChild(tileTitle);
+    tileTitleContainer.appendChild(htmlToElement(divider));
 
-    placeHolderDrag.innerHTML = `
-        <div class="autoql-vanilla-placeholder-top"></div>
-        <div class="autoql-vanilla-placeholder-content"></div>
-    `
+
     placeHolderDrag.style.display = 'none'
     tilePlayBuytton.innerHTML = TILE_RUN_QUERY
     deleteButton.innerHTML = DASHBOARD_DELETE_ICON
@@ -88,7 +112,6 @@ export function Tile(dashboard, options){
     item.classList.add('grid-stack-item')
     content.classList.add('grid-stack-item-content')
     content.classList.add('autoql-vanilla-chata-dashboard-item')
-    content.classList.add('editing')
 
     titleWrapper.classList.add('autoql-vanilla-dashboard-title-wrapper')
     tileInputContainer.classList.add(
@@ -96,15 +119,35 @@ export function Tile(dashboard, options){
     )
 
     titleWrapper.appendChild(tileInputContainer)
+    titleWrapper.appendChild(tileTitleContainer)
     content.appendChild(titleWrapper)
     content.appendChild(deleteButton)
     content.appendChild(placeHolderDrag)
     item.appendChild(content)
 
+    tileInputContainer.style.display = 'none'
+
+
+    deleteButton.onclick = (evt) => {
+        dashboard.grid.removeWidget(item)
+    }
+    for (var i = 0; i < dragPositions.length; i++) {
+        var pos = dragPositions[i]
+        var handler = document.createElement('div')
+        handler.classList.add('autoql-vanilla-dashboard-tile-drag-handle')
+        handler.classList.add(pos)
+
+        content.appendChild(handler)
+    }
+
     item.inputQuery = queryInput.input
     item.inputTitle = queryInput2.input
     item.itemContent = content;
     item.placeHolderDrag = placeHolderDrag
+    item.tileTitle = tileTitle;
+    item.tileTitle.textContent = options.title
+    || item.options.query || 'Untitled';
+
 
     item.inputQuery.onblur = (event) => {
         inputContainer1.classList.remove('clicked')
@@ -132,15 +175,23 @@ export function Tile(dashboard, options){
         item.placeHolderDrag.style.display = 'none'
     }
 
-    for (var i = 0; i < dragPositions.length; i++) {
-        var pos = dragPositions[i]
-        var handler = document.createElement('div')
-        handler.classList.add('autoql-vanilla-dashboard-tile-drag-handle')
-        handler.classList.add(pos)
+    item.startEditing = () => {
+        tileInputContainer.style.display = 'block'
+        tileTitleContainer.style.display = 'none'
+        content.classList.add('editing')
+        dashboard.grid.disable()
 
-        content.appendChild(handler)
     }
 
+    item.stopEditing = () => {
+        tileInputContainer.style.display = 'none'
+        tileTitleContainer.style.display = 'block'
+        content.classList.remove('editing')
+        dashboard.grid.disable()
+
+    }
+
+    dashboard.grid.disable()
 
     return item
 }

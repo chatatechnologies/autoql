@@ -144,7 +144,7 @@ get(DASHBOARD_URL, {
             debug: true
         },
         executeOnMount: false,
-        tiles: response.data[0].data
+        tiles: response.data[10].data
     })
     // new DashboardV2('#dashboard-wrapper2')
 

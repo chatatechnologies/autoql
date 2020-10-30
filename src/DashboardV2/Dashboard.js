@@ -151,5 +151,13 @@ export function Dashboard(selector, options={}){
         })
     }
 
+    obj.startEditing = () => {
+        
+    }
+
+    obj.stopEditing = () => {
+
+    }
+
     return parent
 }

@@ -15,7 +15,6 @@
     transition: opacity .3s ease;
     position: absolute;
     background-color: var(--autoql-vanilla-border-color,#f7f7f7);
-    cursor: move;
     opacity: 0;
 }
 
@@ -115,6 +114,8 @@
 
 .autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-dashboard-tile-drag-handle{
     opacity: 1;
+    cursor: move;
+
 }
 
 .autoql-vanilla-chata-input-container.clicked{
@@ -195,4 +196,25 @@
     border-radius: 4px;
     box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.13);
     padding: 15px 15px 20px 15px;
+}
+
+.autoql-vanilla-dashboard-tile-title-container{
+    cursor: default;
+}
+
+.autoql-vanilla-dashboard-tile-title-container .autoql-vanilla-dashboard-tile-title {
+    color: var(--autoql-vanilla-accent-color);
+    font-family: var(--autoql-vanilla-font-family), sans-serif;
+    
+    font-weight: bold;
+    font-size: 17px;
+    text-align: left !important;
+}
+
+.autoql-vanilla-dashboard-tile-title-divider {
+    height: 2px;
+    background: currentColor;
+    width: 75px;
+    margin-top: 8px;
+    opacity: 0.07;
 }
