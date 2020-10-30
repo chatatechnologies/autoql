@@ -68,6 +68,8 @@ export function Dashboard(selector, options={}){
         dashboardId: -1
     }
 
+    obj.options.tiles = options.tiles
+
     if('authentication' in options){
         for (var [key, value] of Object.entries(options['authentication'])) {
             obj.options.authentication[key] = value
@@ -103,11 +105,42 @@ export function Dashboard(selector, options={}){
         placeholderClass : 'autoql-vanilla-tile-placeholder'
     }, gridContainer)
 
-    for (var i = 0; i < 12; i++) {
-        var e = new Tile({
-            title: 'Tile ' + (i+1)
+    obj.grid = grid
+    obj.tiles = []
+
+    for (var i = 0; i < obj.options.tiles.length; i++) {
+        var tile = obj.options.tiles[i]
+        var e = new Tile(obj, {
+            ...tile
         })
-        grid.addWidget(e, {width: 4, height: 2})
+        obj.tiles.push(e)
+        grid.addWidget(e, {
+            width: tile.w,
+            height: tile.h,
+            x: tile.x,
+            y: tile.y
+        })
+    }
+
+    obj.grid.on('dragstart', function(event, el) {
+        obj.showPlaceHolders()
+    })
+
+    grid.on('dragstop', function(event, el) {
+        obj.hidePlaceHolders()
+    })
+
+
+    obj.showPlaceHolders = function(){
+        obj.tiles.forEach(function(tile){
+            tile.showPlaceHolder();
+        })
+    }
+
+    obj.hidePlaceHolders = function(){
+        obj.tiles.forEach(function(tile){
+            tile.hidePlaceHolder();
+        })
     }
 
     return parent

@@ -7,7 +7,7 @@ import {
 } from '../Svg'
 import { ChataInput, InputContainer } from '../ChataComponents'
 
-export function Tile(options){
+export function Tile(dashboard, options){
     var item = document.createElement('div')
     item.options = {
         query: '',
@@ -30,7 +30,7 @@ export function Tile(options){
         item.options[key] = value;
     }
 
-    // INPUTS SECTION
+    var placeHolderDrag = document.createElement('div');
     var titleWrapper = document.createElement('div')
     var tileInputContainer = document.createElement('div')
     var deleteButton = document.createElement('span');
@@ -72,10 +72,15 @@ export function Tile(options){
     tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button')
     tilePlayBuytton.classList.add('autoql-vanilla-icon-blue')
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button')
+    placeHolderDrag.classList.add('autoql-vanilla-item-content');
     tileInputContainer.appendChild(inputContainer1)
     tileInputContainer.appendChild(inputContainer2)
     tileInputContainer.appendChild(tilePlayBuytton)
 
+    placeHolderDrag.innerHTML = `
+        <div class="autoql-vanilla-placeholder-top"></div>
+        <div class="autoql-vanilla-placeholder-content"></div>
+    `
     tilePlayBuytton.innerHTML = TILE_RUN_QUERY
     deleteButton.innerHTML = DASHBOARD_DELETE_ICON
 
@@ -91,10 +96,14 @@ export function Tile(options){
 
     titleWrapper.appendChild(tileInputContainer)
     content.appendChild(titleWrapper)
+    content.appendChild(deleteButton)
+    content.appendChild(placeHolderDrag)
     item.appendChild(content)
 
     item.inputQuery = queryInput.input
     item.inputTitle = queryInput2.input
+    item.itemContent = content;
+    item.placeHolderDrag = placeHolderDrag
 
     item.inputQuery.onblur = (event) => {
         inputContainer1.classList.remove('clicked')
@@ -110,10 +119,17 @@ export function Tile(options){
 
     item.inputTitle.onfocus = (event) => {
         inputContainer2.classList.add('clicked')
-
     }
 
+    item.showPlaceHolder = function(){
+        titleWrapper.style.display = 'none'
+        item.placeHolderDrag.style.display = 'block'
+    }
 
+    item.hidePlaceHolder = function(){
+        titleWrapper.style.display = 'flex'
+        item.placeHolderDrag.style.display = 'none'
+    }
 
     for (var i = 0; i < dragPositions.length; i++) {
         var pos = dragPositions[i]
@@ -124,7 +140,8 @@ export function Tile(options){
         content.appendChild(handler)
     }
 
-    content.appendChild(deleteButton)
+
+    item.showPlaceHolder()
 
     return item
 }

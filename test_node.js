@@ -129,8 +129,24 @@ get(DASHBOARD_URL, {
     }
 }).then(function(response){
 
-    dashboard = new DashboardV2('#dashboard-wrapper')
-    new DashboardV2('#dashboard-wrapper2')
+    dashboard = new DashboardV2('#dashboard-wrapper', {
+        authentication: {
+            token: _token,
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            domain: domain,
+        },
+        themeConfig: {
+            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            theme: 'light',
+            accentColor: 'red'
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        executeOnMount: false,
+        tiles: response.data[0].data
+    })
+    // new DashboardV2('#dashboard-wrapper2')
 
 
     // dashboard = new Dashboard('#dashboard', {
