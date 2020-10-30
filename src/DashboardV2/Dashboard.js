@@ -13,7 +13,6 @@ export function Dashboard(selector, options={}){
     parent.classList.add('autoql-vanilla-dashboard-container')
     var gridContainer = document.createElement('div')
     gridContainer.classList.add('grid-stack')
-
     parent.appendChild(gridContainer)
 
     obj.options = {
@@ -110,6 +109,7 @@ export function Dashboard(selector, options={}){
 
     for (var i = 0; i < obj.options.tiles.length; i++) {
         var tile = obj.options.tiles[i]
+        console.log(tile);
         var e = new Tile(obj, {
             ...tile
         })

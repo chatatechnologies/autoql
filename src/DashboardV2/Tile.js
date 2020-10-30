@@ -1,17 +1,23 @@
-import './Tile.css'
 import {
     QUERY,
     NOTEBOOK,
     TILE_RUN_QUERY,
-    DASHBOARD_DELETE_ICON
+    DASHBOARD_DELETE_ICON,
+    SPLIT_VIEW,
+    SPLIT_VIEW_ACTIVE
 } from '../Svg'
 import { ChataInput, InputContainer } from '../ChataComponents'
 import { TileView } from './TileView'
 import {
     htmlToElement
 } from '../Utils'
+import './Tile.css'
+import './TileVizToolbar.css'
+import Split from 'split.js'
+
 
 export function Tile(dashboard, options){
+    console.log(options);
     var item = document.createElement('div')
     item.options = {
         query: '',
@@ -19,6 +25,8 @@ export function Tile(dashboard, options){
         displayType: 'table',
         w: 3,
         h: 2,
+        isSplit: false,
+        splitView: false
     }
 
     var content = document.createElement('div');
@@ -42,6 +50,32 @@ export function Tile(dashboard, options){
     var tilePlayBuytton = document.createElement('div')
     var tileTitleContainer = document.createElement('div')
     var tileTitle = document.createElement('span')
+
+    var vizToolbarSplit = htmlToElement(`
+        <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
+        </div>
+    `)
+
+    var vizToolbarSplitButton = htmlToElement(`
+        <button
+        class="autoql-vanilla-chata-toolbar-btn"
+        data-tippy-content="Split View">
+        </button>
+    `)
+
+    var vizToolbarSplitContent = htmlToElement(`
+        <span class="autoql-vanilla-chata-icon" style="color: inherit;">
+            ${SPLIT_VIEW}
+        </span>
+    `)
+
+    vizToolbarSplit.appendChild(vizToolbarSplitButton)
+    vizToolbarSplitButton.appendChild(vizToolbarSplitContent)
+
+    vizToolbarSplit.onclick = () => {
+        item.toggleSplit()
+    }
+
     var inputContainer1 = new InputContainer([
         'chata-rule-input',
         'dashboard-tile-left-input-container'
@@ -122,6 +156,7 @@ export function Tile(dashboard, options){
     content.appendChild(responseWrapper)
     content.appendChild(deleteButton)
     content.appendChild(placeHolderDrag)
+    content.appendChild(vizToolbarSplit)
     item.appendChild(content)
 
     tileInputContainer.style.display = 'none'
@@ -145,8 +180,8 @@ export function Tile(dashboard, options){
     item.placeHolderDrag = placeHolderDrag
     item.tileTitle = tileTitle;
     item.tileTitle.textContent = options.title
-    item.responseWrapper = responseWrapper
     || item.options.query || 'Untitled';
+    item.responseWrapper = responseWrapper
 
 
     item.inputQuery.onblur = (event) => {
@@ -192,9 +227,28 @@ export function Tile(dashboard, options){
         dashboard.grid.disable()
     }
 
-    var tileView = new TileView(dashboard, options)
+    item.views = [
+        new TileView(dashboard, options),
+        new TileView(dashboard, options, true)
+    ]
 
-    responseWrapper.appendChild(tileView)
+
+    item.views.map(view => responseWrapper.appendChild(view))
+
+    if(!item.options.splitView){
+        item.views[1].hide()
+    }else{
+        Split(item.views, {
+            direction: 'vertical',
+            sizes: [50, 50],
+            minSize: [0, 0],
+            gutterSize: 7,
+            cursor: 'row-resize',
+            onDragEnd: () => {
+            }
+        })
+        item.options.isSplit = true
+    }
 
     dashboard.grid.disable()
 

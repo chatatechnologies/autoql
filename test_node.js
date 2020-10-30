@@ -13,7 +13,7 @@ import { get } from 'axios';
 var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA0MDQyODc5LCAiZXhwIjogMTYwNDA2NDQ3OSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiJdfQ.jHacNNPRn21wNBbVWJxBY6amuGw0Nc_ek-pgR0qtVFlq10m354JKp0umYauFw-38ZzhmKoPTRq8qp1zJ2knjsS7oLtRZPNZFZAnXpXcAZLnVJA3V9giLdRRQ7Lu9q2v9VB-v8JUCF6_tk9ZBEzWTWi9DAHYdnfmN21wzXqxwJj6Q0eHuAkCNoTlsauAjVbD55YzMaBA0Ird2H3rmGXz0nyFSfqkbjVBTxK4gX3yqsq4DNkUZHyl6Z0n8YtnnPVMg9IWVU5uNFJ-oR7isvoCSTkLoddFcmznhwySMto8GrmbAwIRcEqzubHlPWuUgqNmDIfigCeQlMw7KPCkrJ2Eslw`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
-const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}`;
+const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
 // const topics = getIntroMessageTopics(getActiveIntegrator(domain));
 let dashboard;
 var datamessenger = new DataMessenger('#datamessenger', {
@@ -144,8 +144,9 @@ get(DASHBOARD_URL, {
             debug: true
         },
         executeOnMount: false,
-        tiles: response.data[10].data
+        tiles: response.data.items[9].data
     })
+    console.log(response.data.items[9].data);
     // new DashboardV2('#dashboard-wrapper2')
 
 

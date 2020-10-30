@@ -1,6 +1,6 @@
 import './TileView.css'
 
-export function TileView(dashboard, options){
+export function TileView(dashboard, options, isSecond=false){
     var view = document.createElement('div')
     const {
         notExecutedText
