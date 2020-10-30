@@ -181,7 +181,6 @@
     border-bottom-right-radius: 4px;
     border-bottom-left-radius: 4px;
     background: #f9f9f9;
-
 }
 
 .autoql-vanilla-item-content {
@@ -198,6 +197,13 @@
     padding: 15px 15px 20px 15px;
 }
 
+.autoql-vanilla-dashboard-tile-response-wrapper {
+    height: calc(100% - 47px);
+    width: 100%;
+    padding-top: 0;
+    background: inherit;
+}
+
 .autoql-vanilla-dashboard-tile-title-container{
     cursor: default;
 }
@@ -205,7 +211,6 @@
 .autoql-vanilla-dashboard-tile-title-container .autoql-vanilla-dashboard-tile-title {
     color: var(--autoql-vanilla-accent-color);
     font-family: var(--autoql-vanilla-font-family), sans-serif;
-    
     font-weight: bold;
     font-size: 17px;
     text-align: left !important;

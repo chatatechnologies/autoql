@@ -6,6 +6,7 @@ import {
     DASHBOARD_DELETE_ICON
 } from '../Svg'
 import { ChataInput, InputContainer } from '../ChataComponents'
+import { TileView } from './TileView'
 import {
     htmlToElement
 } from '../Utils'
@@ -33,13 +34,14 @@ export function Tile(dashboard, options){
         item.options[key] = value;
     }
 
-    var placeHolderDrag = document.createElement('div');
+    var placeHolderDrag = document.createElement('div')
     var titleWrapper = document.createElement('div')
+    var responseWrapper = document.createElement('div')
     var tileInputContainer = document.createElement('div')
-    var deleteButton = document.createElement('span');
-    var tilePlayBuytton = document.createElement('div');
-    var tileTitleContainer = document.createElement('div');
-    var tileTitle = document.createElement('span');
+    var deleteButton = document.createElement('span')
+    var tilePlayBuytton = document.createElement('div')
+    var tileTitleContainer = document.createElement('div')
+    var tileTitle = document.createElement('span')
     var inputContainer1 = new InputContainer([
         'chata-rule-input',
         'dashboard-tile-left-input-container'
@@ -70,11 +72,6 @@ export function Tile(dashboard, options){
     `
     const notExecutedText = dashboard.options.notExecutedText
 
-    const placeHolderText = `
-    <div class="autoql-vanilla-dashboard-tile-placeholder-text">
-    <em>${notExecutedText}</em>
-    </div>`
-
     const divider = `
     <div class="autoql-vanilla-dashboard-tile-title-divider">
     </div>`
@@ -92,11 +89,12 @@ export function Tile(dashboard, options){
     tilePlayBuytton.classList.add('autoql-vanilla-dashboard-tile-play-button')
     tilePlayBuytton.classList.add('autoql-vanilla-icon-blue')
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button')
-    placeHolderDrag.classList.add('autoql-vanilla-item-content');
+    placeHolderDrag.classList.add('autoql-vanilla-item-content')
+    responseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper')
     tileTitleContainer.classList.add(
         'autoql-vanilla-dashboard-tile-title-container'
     );
-    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container')
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
     tileInputContainer.appendChild(inputContainer1)
     tileInputContainer.appendChild(inputContainer2)
@@ -121,6 +119,7 @@ export function Tile(dashboard, options){
     titleWrapper.appendChild(tileInputContainer)
     titleWrapper.appendChild(tileTitleContainer)
     content.appendChild(titleWrapper)
+    content.appendChild(responseWrapper)
     content.appendChild(deleteButton)
     content.appendChild(placeHolderDrag)
     item.appendChild(content)
@@ -146,6 +145,7 @@ export function Tile(dashboard, options){
     item.placeHolderDrag = placeHolderDrag
     item.tileTitle = tileTitle;
     item.tileTitle.textContent = options.title
+    item.responseWrapper = responseWrapper
     || item.options.query || 'Untitled';
 
 
@@ -167,11 +167,13 @@ export function Tile(dashboard, options){
 
     item.showPlaceHolder = function(){
         titleWrapper.style.display = 'none'
+        responseWrapper.style.display = 'none'
         item.placeHolderDrag.style.display = 'block'
     }
 
     item.hidePlaceHolder = function(){
         titleWrapper.style.display = 'flex'
+        responseWrapper.style.display = 'block'
         item.placeHolderDrag.style.display = 'none'
     }
 
@@ -188,8 +190,11 @@ export function Tile(dashboard, options){
         tileTitleContainer.style.display = 'block'
         content.classList.remove('editing')
         dashboard.grid.disable()
-
     }
+
+    var tileView = new TileView(dashboard, options)
+
+    responseWrapper.appendChild(tileView)
 
     dashboard.grid.disable()
 

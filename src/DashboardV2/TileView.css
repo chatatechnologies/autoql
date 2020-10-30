@@ -1,0 +1,15 @@
+.autoql-vanilla-dashboard-tile-placeholder-text {
+    color: var(--autoql-vanilla-text-color-placeholder);
+    font-size: 15px;
+    font-family: var(--autoql-vanilla-font-family), sans-serif;
+    
+}
+
+.autoql-vanilla-tile-view{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
