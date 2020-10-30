@@ -17,7 +17,7 @@ import Split from 'split.js'
 
 
 export function Tile(dashboard, options){
-    console.log(options);
+    console.log(options)
     var item = document.createElement('div')
     item.options = {
         query: '',
@@ -29,7 +29,9 @@ export function Tile(dashboard, options){
         splitView: false
     }
 
-    var content = document.createElement('div');
+    item.splitInstance = undefined
+
+    var content = document.createElement('div')
     const dragPositions = [
         'left',
         'bottom',
@@ -39,7 +41,7 @@ export function Tile(dashboard, options){
 
 
     for (var [key, value] of Object.entries(options)) {
-        item.options[key] = value;
+        item.options[key] = value
     }
 
     var placeHolderDrag = document.createElement('div')
@@ -89,12 +91,12 @@ export function Tile(dashboard, options){
     var queryInput = new ChataInput('input', {
         placeholder: 'Type a query in your own words',
         type: "single"
-    }, QUERY);
+    }, QUERY)
 
     var queryInput2 = new ChataInput('input', {
         placeholder: 'Add descriptive title (optional)',
         type: "single"
-    }, NOTEBOOK);
+    }, NOTEBOOK)
 
     queryInput.input.setAttribute('data-tippy-content', 'Query')
     queryInput2.input.setAttribute('data-tippy-content', 'Title')
@@ -127,14 +129,14 @@ export function Tile(dashboard, options){
     responseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper')
     tileTitleContainer.classList.add(
         'autoql-vanilla-dashboard-tile-title-container'
-    );
+    )
     tileTitle.classList.add('autoql-vanilla-dashboard-tile-title-container')
-    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title');
+    tileTitle.classList.add('autoql-vanilla-dashboard-tile-title')
     tileInputContainer.appendChild(inputContainer1)
     tileInputContainer.appendChild(inputContainer2)
     tileInputContainer.appendChild(tilePlayBuytton)
-    tileTitleContainer.appendChild(tileTitle);
-    tileTitleContainer.appendChild(htmlToElement(divider));
+    tileTitleContainer.appendChild(tileTitle)
+    tileTitleContainer.appendChild(htmlToElement(divider))
 
 
     placeHolderDrag.style.display = 'none'
@@ -176,11 +178,11 @@ export function Tile(dashboard, options){
 
     item.inputQuery = queryInput.input
     item.inputTitle = queryInput2.input
-    item.itemContent = content;
+    item.itemContent = content
     item.placeHolderDrag = placeHolderDrag
-    item.tileTitle = tileTitle;
+    item.tileTitle = tileTitle
     item.tileTitle.textContent = options.title
-    || item.options.query || 'Untitled';
+    || item.options.query || 'Untitled'
     item.responseWrapper = responseWrapper
 
 
@@ -227,6 +229,35 @@ export function Tile(dashboard, options){
         dashboard.grid.disable()
     }
 
+    item.switchSplitButton = (svg, tooltip) => {
+        vizToolbarSplitContent.innerHTML = svg
+        vizToolbarSplitButton.setAttribute(
+            'data-tippy-content', tooltip
+        )
+    }
+
+    item.toggleSplit = () => {
+        if(item.options.isSplit){
+            item.options.isSplit = false
+            item.switchSplitButton(SPLIT_VIEW, 'Split View')
+            if(item.splitInstance)item.splitInstance.destroy()
+            item.views[1].hide()
+        }else{
+            item.views.map(view => view.show())
+            item.switchSplitButton(SPLIT_VIEW_ACTIVE, 'Single View')
+            item.splitInstance = Split(item.views, {
+                direction: 'vertical',
+                sizes: [50, 50],
+                minSize: [0, 0],
+                gutterSize: 7,
+                cursor: 'row-resize',
+                onDragEnd: () => {
+                }
+            })
+            item.options.isSplit = true
+        }
+    }
+
     item.views = [
         new TileView(dashboard, options),
         new TileView(dashboard, options, true)
@@ -238,16 +269,7 @@ export function Tile(dashboard, options){
     if(!item.options.splitView){
         item.views[1].hide()
     }else{
-        Split(item.views, {
-            direction: 'vertical',
-            sizes: [50, 50],
-            minSize: [0, 0],
-            gutterSize: 7,
-            cursor: 'row-resize',
-            onDragEnd: () => {
-            }
-        })
-        item.options.isSplit = true
+        item.toggleSplit()
     }
 
     dashboard.grid.disable()

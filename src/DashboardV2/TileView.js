@@ -2,6 +2,7 @@ import './TileView.css'
 
 export function TileView(dashboard, options, isSecond=false){
     var view = document.createElement('div')
+        
     const {
         notExecutedText
     } = dashboard.options
@@ -14,7 +15,7 @@ export function TileView(dashboard, options, isSecond=false){
     view.innerHTML = placeHolderText
 
     view.show = () => {
-        view.style.display = 'block'
+        view.style.display = 'flex'
     }
 
     view.hide = () => {
