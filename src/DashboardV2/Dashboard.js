@@ -107,7 +107,7 @@ export function Dashboard(selector, options={}){
         var e = new Tile({
             title: 'Tile ' + (i+1)
         })
-        grid.addWidget(e, {width: 4})
+        grid.addWidget(e, {width: 4, height: 2})
     }
 
     return parent
