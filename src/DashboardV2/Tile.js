@@ -11,9 +11,10 @@ import { TileView } from './TileView'
 import {
     htmlToElement
 } from '../Utils'
+import Split from 'split.js'
 import './Tile.css'
 import './TileVizToolbar.css'
-import Split from 'split.js'
+
 
 
 export function Tile(dashboard, options){
