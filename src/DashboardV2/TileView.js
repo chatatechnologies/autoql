@@ -18,11 +18,28 @@ import {
 } from '../Api'
 import {
     uuidv4,
-    getSupportedDisplayTypes
+    getSupportedDisplayTypes,
+    createTableContainer,
+    formatData
 } from '../Utils'
+import { ChataTable, ChataPivotTable } from '../ChataTable'
+import {
+    createAreaChart,
+    createBarChart,
+    createBubbleChart,
+    createColumnChart,
+    createHeatmap,
+    createLineChart,
+    createPieChart,
+    createStackedBarChart,
+    createStackedColumnChart
+} from '../Charts'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
+    const {
+        dashboard
+    } = tile
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
@@ -41,6 +58,14 @@ export function TileView(tile, isSecond=false){
     </div>`
 
     view.innerHTML = placeHolderText
+
+    view.onRowClick = (e, row, json) => {
+
+    }
+
+    view.onCellClick = (e ,cell, json) => {
+
+    }
 
     view.show = () => {
         view.style.display = 'flex'
@@ -85,7 +110,189 @@ export function TileView(tile, isSecond=false){
     }
 
     view.displayData = () => {
+        view.innerHTML = ''
         var json = ChataUtils.responses[UUID]
+        var container = view
+        var displayType = view.internalDisplayType
+        var toolbarType = ''
+
+        switch (displayType) {
+            case 'safetynet':
+                var responseContentContainer = obj.getSafetynetBody(
+                    json
+                );
+                view.appendChild(
+                    responseContentContainer
+                );
+                updateSelectWidth(responseContentContainer);
+            break;
+            case 'table':
+                if(json['data']['columns'].length == 1){
+                    var data = formatData(
+                        json['data']['rows'][0][0],
+                        json['data']['columns'][0],
+                        dashboard.options
+                    );
+                    container.innerHTML =
+                    `<div>
+                        <a class="autoql-vanilla-single-value-response">
+                            ${data}
+                        <a/>
+                    </div>`;
+                }else{
+                    var div = createTableContainer();
+                    div.setAttribute('data-componentid', UUID)
+                    container.appendChild(div);
+                    var scrollbox = document.createElement('div');
+                    scrollbox.classList.add(
+                        'autoql-vanilla-chata-table-scrollbox'
+                    );
+                    scrollbox.classList.add('no-full-width');
+                    scrollbox.appendChild(div);
+                    container.appendChild(scrollbox);
+                    var table = new ChataTable(
+                        UUID, dashboard.options, view.onRowClick
+                    )
+                    div.tabulator = table;
+                    table.parentContainer = view;
+                }
+                break;
+            case 'bar':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createBarChart(
+                    chartWrapper, json, dashboard.options,
+                    () => {}, false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'column':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createColumnChart(
+                    chartWrapper, json, dashboard.options,
+                    () => {}, false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'line':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createLineChart(
+                    chartWrapper, json, dashboard.options,
+                    () => {}, false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'heatmap':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+
+                createHeatmap(
+                    chartWrapper,
+                    json,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'bubble':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createBubbleChart(
+                    chartWrapper, json, dashboard.options,
+                    false, 'data-tilechart',
+                    true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'stacked_bar':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createStackedBarChart(
+                    chartWrapper, json,
+                    dashboard.options, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'stacked_column':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createStackedColumnChart(
+                    chartWrapper, json,
+                    dashboard.options, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'stacked_line':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createAreaChart(
+                    chartWrapper, json,
+                    dashboard.options, () => {}, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+            break;
+            case 'pie':
+                var chartWrapper = document.createElement('div');
+                container.appendChild(chartWrapper);
+                createPieChart(chartWrapper, json,
+                    dashboard.options, false,
+                    'data-tilechart', true
+                );
+                toolbarType = 'chart-view';
+                break;
+            case 'pivot_table':
+                var div = createTableContainer();
+                div.setAttribute('data-componentid', UUID)
+                container.appendChild(div);
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add(
+                    'autoql-vanilla-chata-table-scrollbox'
+                );
+                scrollbox.classList.add('no-full-width');
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
+                var table = new ChataPivotTable(
+                    UUID, dashboard.options, view.onCellClick
+                )
+                div.tabulator = table;
+                break;
+            // case 'suggestion':
+            //     var responseContentContainer = document.createElement('div');
+            //     responseContentContainer.classList.add(
+            //         'autoql-vanilla-chata-response-content-container'
+            //     );
+            //     responseContentContainer.classList.add(
+            //         'autoql-vanilla-chata-response-content-center'
+            //     );
+            //     var val = ''
+            //     if(obj.isSecond){
+            //         val = obj.internalQuery;
+            //     }else{
+            //         val = chataDashboardItem.inputQuery.value;
+            //     }
+            //     responseContentContainer.innerHTML = `
+            //         <div>I'm not sure what you mean by
+            //             <strong>"${val}"</strong>. Did you mean:
+            //         </div>`;
+            //     container.appendChild(responseContentContainer);
+            //     var rows = json['data']['items'];
+            //     ChataUtils.createSuggestions(
+            //         responseContentContainer,
+            //         rows,
+            //         'autoql-vanilla-chata-suggestion-btn-renderer'
+            //     );
+            //     break;
+            default:
+            container.innerHTML = "Oops! We didn't understand that query.";
+        }
         view.createVizToolbar()
     }
 
@@ -167,6 +374,7 @@ export function TileView(tile, isSecond=false){
                     vizToolbar.appendChild(button)
                     button.onclick = function(event){
                         view.internalDisplayType = this.dataset.displaytype
+                        view.displayData()
                     }
                 }
             }

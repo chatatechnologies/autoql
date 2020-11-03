@@ -22,7 +22,7 @@
     z-index: 10;
     border: 1px solid hsla(0,0%,82.7%,.32);
     position: absolute;
-    bottom: 6px;
+    bottom: 2px;
     left: 54px;
     -webkit-transition: opacity .3s ease,color .3s ease;
     transition: opacity .3s ease,color .3s ease;

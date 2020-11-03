@@ -126,7 +126,9 @@ export function Tile(dashboard, options){
     tilePlayBuytton.classList.add('autoql-vanilla-icon-blue')
     deleteButton.classList.add('autoql-vanilla-dashboard-tile-delete-button')
     placeHolderDrag.classList.add('autoql-vanilla-item-content')
-    responseWrapper.classList.add('autoql-vanilla-dashboard-tile-response-wrapper')
+    responseWrapper.classList.add(
+        'autoql-vanilla-dashboard-tile-response-wrapper'
+    )
     tileTitleContainer.classList.add(
         'autoql-vanilla-dashboard-tile-title-container'
     )
