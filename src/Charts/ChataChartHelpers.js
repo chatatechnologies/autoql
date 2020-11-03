@@ -16,8 +16,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         seriesIndexes.push(col.index);
     })
     var seriesData = [];
-    // console.log(groupable.length);
-    // console.log(colu.length);
     if(groupables.length === 1 && columns.length === 2){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);

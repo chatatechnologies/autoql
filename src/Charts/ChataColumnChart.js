@@ -409,12 +409,10 @@ export function createColumnChart(
             if(groupNames.length > 1)group = d.group
             const type = cols[index2].type;
             var toolTipColValue1 = d.label
-            if(type !== 'DATE' && type !== 'DATE_STRING'){
-                toolTipColValue1 = formatData(
-                    d.label, cols[index2],
-                    options
-                )
-            }
+            toolTipColValue1 = formatData(
+                d.label, cols[index2],
+                options
+            )
             select(this).attr(valueClass, rectIndex++)
 
             .attr('data-col1', col1)
