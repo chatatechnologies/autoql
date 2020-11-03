@@ -18,6 +18,9 @@ import {
     cloneObject
 } from '../Utils'
 import {
+    getGroupableFields
+} from '../Charts/ChataChartHelpers'
+import {
     createAreaChart,
     createBarChart,
     createBubbleChart,
@@ -257,7 +260,7 @@ export function QueryInput(selector, options){
         'autoql-vanilla-chata-input-renderer'
     )[0];
     chataBarContainer.bind = function(responseRenderer){
-        this.responseRenderer = responseRenderer;
+        chataBarContainer.responseRenderer = responseRenderer;
         responseRenderer.chataBarContainer = chataBarContainer;
     }
 
@@ -295,7 +298,7 @@ export function QueryInput(selector, options){
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
-
+        var responseRenderer = this.responseRenderer;
         for (var i = 0; i < oldData.length; i++) {
             if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
         }
@@ -324,6 +327,8 @@ export function QueryInput(selector, options){
     }
 
     chataBarContainer.sendDrilldownMessage = (json, indexData) => {
+        var responseRenderer = chataBarContainer.responseRenderer;
+
         let opts = mergeOptions([
             chataBarContainer.options,
             responseRenderer.options
@@ -375,6 +380,8 @@ export function QueryInput(selector, options){
     }
 
     chataBarContainer.onRowClick = (e, row, json) => {
+        var responseRenderer = this.responseRenderer;
+
         var index = 0;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
 
@@ -394,6 +401,8 @@ export function QueryInput(selector, options){
         const columns = json['data']['columns'];
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
+        var responseRenderer = this.responseRenderer;
+
         if(selectedColumn.definition.index != 0){
             var entries = Object.entries(row.data)[0];
             json['data']['rows'][0][0] = entries[1];
@@ -454,9 +463,10 @@ export function QueryInput(selector, options){
     chataBarContainer.refreshView = (
         jsonResponse, text='') => {
         var responseRenderer = chataBarContainer.responseRenderer;
-        ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
+        // ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
+        console.log(jsonResponse);
         responseRenderer.innerHTML = '';
-        responseRenderer.queryResponse = cloneObject(jsonResponse);
+        responseRenderer.options.queryResponse = cloneObject(jsonResponse);
         if(jsonResponse['reference_id'] === '1.1.430'){
             responseRenderer.innerHTML = jsonResponse['message'];
             const path = ChataUtils.getRecommendationPath(

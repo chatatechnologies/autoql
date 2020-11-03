@@ -18,12 +18,13 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
-import { ChataTable, ChataPivotTable } from '../ChataTable' 
+import { ChataTable, ChataPivotTable } from '../ChataTable'
 import { ChataUtils } from '../ChataUtils'
 
 export function QueryOutput(selector, options={}){
     const PARENT = document.querySelector(selector);
     var responseRenderer = document.createElement('div');
+    const uuid = uuidv4();
     responseRenderer.options = {
         supportsSuggestions: true,
         onSuggestionClick: function() {},
@@ -93,6 +94,9 @@ export function QueryOutput(selector, options={}){
 
     responseRenderer.refreshView = () => {
         var jsonResponse = responseRenderer.options.queryResponse
+        console.log(responseRenderer.options.queryResponse);
+        ChataUtils.responses[uuid] = jsonResponse;
+        console.log(ChataUtils.responses[uuid]);
         if(!jsonResponse)return
         let displayType;
         var sup = getSupportedDisplayTypes(jsonResponse);
@@ -104,10 +108,7 @@ export function QueryOutput(selector, options={}){
 
         switch(displayType){
             case 'table':
-                var uuid = uuidv4();
-                ChataUtils.responses[uuid] = jsonResponse;
                 var div = createTableContainer();
-                div.setAttribute('data-componentid', uuid)
                 responseRenderer.appendChild(div);
                 var scrollbox = document.createElement('div');
                 scrollbox.classList.add(
@@ -134,10 +135,7 @@ export function QueryOutput(selector, options={}){
                     chataBarContainer.options,
                     responseRenderer.options
                 ]);
-                var uuid = uuidv4();
-                ChataUtils.responses[uuid] = jsonResponse;
                 var div = createTableContainer();
-                div.setAttribute('data-componentid', uuid)
                 responseRenderer.appendChild(div);
                 var scrollbox = document.createElement('div');
                 scrollbox.classList.add(
@@ -272,15 +270,11 @@ export function QueryOutput(selector, options={}){
 
     responseRenderer.addEventListener('click', function(e){
         if(e.target.hasAttribute('data-chartrenderer')){
-            var component = e.target.parentElement.parentElement.parentElement.parentElement;
-            if(component.tagName == 'svg'){
-                component = component.parentElement.parentElement;
-            }
-            if(component.tagName == 'DIV' && !component.dataset.componentid){
-                component = component.parentElement;
-            }
-            if(component.chataBarContainer.options.autoQLConfig.enableDrilldowns){
-                var json = ChataUtils.responses[component.dataset.componentid];
+            console.log(uuid);
+            console.log(ChataUtils.responses);
+
+            if(responseRenderer.chataBarContainer.options.autoQLConfig.enableDrilldowns){
+                var json = ChataUtils.responses[uuid];
                 var queryId = json['data']['query_id'];
                 var indexData = e.target.dataset.chartrenderer;
                 var colValue = e.target.dataset.colvalue1;
@@ -288,7 +282,7 @@ export function QueryOutput(selector, options={}){
                 var clickedData = getClickedData(
                     json, ...json['data']['rows'][indexData]
                 );
-                var topBar = component.chataBarContainer.getElementsByClassName(
+                var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
                     'autoql-vanilla-chat-bar-text'
                 )[0]
 
@@ -296,11 +290,11 @@ export function QueryOutput(selector, options={}){
                     json['data']['columns']
                 );
                 if(groupableCount == 1 || groupableCount == 2){
-                    component.chataBarContainer.sendDrilldownMessage(
+                    responseRenderer.chataBarContainer.sendDrilldownMessage(
                         json, indexData
                     );
                 }else{
-                    component.chataBarContainer.sendDrilldownClientSide(
+                    responseRenderer.chataBarContainer.sendDrilldownClientSide(
                         json, indexValue, colValue
                     );
                 }
@@ -310,8 +304,7 @@ export function QueryOutput(selector, options={}){
         }
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
-            var component = e.target.parentElement.parentElement.parentElement.parentElement.parentElement.parentElement;
-            var json = cloneObject(ChataUtils.responses[component.dataset.componentid]);
+            var json = cloneObject(ChataUtils.responses[uuid]);
             var groupables = getGroupables(json);
             var queryId = json['data']['query_id'];
 
@@ -324,16 +317,18 @@ export function QueryOutput(selector, options={}){
             json['data']['rows'][0][1] = val2;
             json['data']['rows'][0][2] = val3;
 
-            var topBar = component.chataBarContainer.getElementsByClassName(
+            var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
                 'autoql-vanilla-chat-bar-text'
             )[0]
-            component.chataBarContainer.sendDrilldownMessage(
+            responseRenderer.chataBarContainer.sendDrilldownMessage(
                 json, indexData
             );
             responseRenderer.options.onDataClick(clickedData, queryId);
         }
 
-        if(e.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')){
+        if(e.target.classList.contains(
+            'autoql-vanilla-chata-suggestion-btn-renderer'
+        )){
             var parent = e.target.parentElement.parentElement.parentElement;
             parent.chataBarContainer.sendMessageToResponseRenderer(
                 e.target.textContent
