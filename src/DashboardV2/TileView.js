@@ -147,8 +147,13 @@ export function TileView(tile, isSecond=false){
                 }
                 break;
             case 'bar':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createBarChart(
                     chartWrapper, json, dashboard.options,
                     () => {}, false, 'data-tilechart',
@@ -157,8 +162,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'column':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createColumnChart(
                     chartWrapper, json, dashboard.options,
                     () => {}, false, 'data-tilechart',
@@ -167,8 +177,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'line':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createLineChart(
                     chartWrapper, json, dashboard.options,
                     () => {}, false, 'data-tilechart',
@@ -177,8 +192,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'heatmap':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
 
                 createHeatmap(
                     chartWrapper,
@@ -189,8 +209,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'bubble':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createBubbleChart(
                     chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
@@ -199,8 +224,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_bar':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createStackedBarChart(
                     chartWrapper, json,
                     dashboard.options, () => {}, false,
@@ -209,8 +239,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_column':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createStackedColumnChart(
                     chartWrapper, json,
                     dashboard.options, () => {}, false,
@@ -219,8 +254,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_line':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createAreaChart(
                     chartWrapper, json,
                     dashboard.options, () => {}, false,
@@ -229,8 +269,13 @@ export function TileView(tile, isSecond=false){
                 toolbarType = 'chart-view';
             break;
             case 'pie':
-                var chartWrapper = document.createElement('div');
-                container.appendChild(chartWrapper);
+                var chartWrapper = document.createElement('div')
+                var chartWrapper2 = document.createElement('div')
+                chartWrapper2.classList.add(
+                    'autoql-vanilla-tile-chart-container'
+                )
+                chartWrapper2.appendChild(chartWrapper)
+                container.appendChild(chartWrapper2)
                 createPieChart(chartWrapper, json,
                     dashboard.options, false,
                     'data-tilechart', true
