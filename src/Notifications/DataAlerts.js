@@ -4,7 +4,7 @@ import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import { htmlToElement } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
-import { apiCallGet, apiCallPost } from '../Api'
+import { apiCallGet, apiCallPost } from '../Api/Api'
 import {
     ADD_NOTIFICATION
 } from '../Svg'

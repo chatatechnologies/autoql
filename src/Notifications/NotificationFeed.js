@@ -4,7 +4,7 @@ import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import {
     apiCallPut,
     apiCallGet
-} from '../Api'
+} from '../Api/Api'
 import { Notification } from './Notification'
 import '../../css/Notifications.css'
 

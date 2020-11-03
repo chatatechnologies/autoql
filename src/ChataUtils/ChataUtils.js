@@ -26,7 +26,7 @@ import { refreshTooltips } from '../Tooltips'
 import {
     apiCallPut,
     apiCallPost
-} from '../Api'
+} from '../Api/Api'
 import { Modal } from '../Modal'
 import { NotificationSettingsModal } from '../Notifications'
 import { AntdMessage } from '../Antd'

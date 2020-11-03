@@ -69,7 +69,7 @@ import {
     apiCallGet,
     apiCallPut,
     apiCallPost
-} from '../Api'
+} from '../Api/Api'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
 

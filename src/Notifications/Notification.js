@@ -11,7 +11,7 @@ import {
     apiCallGet,
     apiCallPut,
     apiCallDelete
-} from '../Api'
+} from '../Api/Api'
 import {
     htmlToElement,
     uuidv4,

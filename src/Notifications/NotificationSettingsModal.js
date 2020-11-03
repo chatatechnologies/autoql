@@ -9,7 +9,7 @@ import {
 } from '../Svg'
 import {
     apiCall
-} from '../Api'
+} from '../Api/Api'
 import { convert } from '../RuleParser'
 import {
     ChataInput,

@@ -4,7 +4,7 @@ import { ChataConfirmDialog } from '../ChataComponents'
 import {
     apiCallPut,
     apiCallDelete
-} from '../Api'
+} from '../Api/Api'
 import { htmlToElement } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
