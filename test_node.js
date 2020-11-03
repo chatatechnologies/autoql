@@ -10,7 +10,7 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA0MDg2NTE0LCAiZXhwIjogMTYwNDEwODExNCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiJdfQ.l600AAWn4swqxJlEkc70UBE0dilX2yhCptZK18d1rQu5N84LSD-vzu5dg8IY2_3MeZ1pWKuIKxBwGIu3OvFN0HGmHiyqKbDPj_pvM1vjVjZkKAFFjGuWLTMct-BlD2-VhIRF1Z7FTTzeOTuoqDVcnGX_QjeoxDwF4tahjPnLE0sb67uN9tml0DryMdkpwe-Q1xzMLIeQZiFO_6ThIbuyicUtmFUMh-QxE9CLEbzGVHpGE_gARS0JUfmIEdlMddqWLB19vtrRn7KhkczkT_x-2V9C01oh4F46ZbgvYClhTIW1wLvBvh6eILEi3vQEwuPGQNS5rWw8iK6hFEv_L4cgHA`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA0MzY5MjkyLCAiZXhwIjogMTYwNDM5MDg5MiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ.sfoIh_ljyDf65XuguctZHcrGPMSbg7rWT_5SKwapcUeU9oxkqg9PnHXBcIxF4tu7YZcjBLpuzgQsk8RvNE1-2lnuag41mg8SBZvoJMmbnJqXsNKIwGrf4CQ_7EKRzHg4zvFhn0j9LKMWBy_D0_CZbk_htMUGJ_aGrdHzxb0hIoGwVMzg-F43y0s7FoBBdhvQ1627QM2ZjTTKc5w_WsQuNzV_1tmzw1mqFF_6sJTtbZYPW_IqVgL6qihvX-j610RSb7kgfov99lBFUNp-3uIx_aPAjBKRZpGTvQLjV2MplU2zXJodIedkxlOCazWO4CjWuzA9mBfsfKtKAhR2yxI3gg`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
@@ -74,25 +74,55 @@ setTimeout(() => {
 //     },
 // })
 //
-// var queryInput = new QueryInput('#query-input', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     autoCompletePlacement: 'bottom',
-// });
-//
-// var queryOutput = new QueryOutput('#query-output', {
-//     displayType: 'line',
-// })
+var queryInput = new QueryInput('#query-input', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    autoCompletePlacement: 'bottom',
+});
+
+var queryOutput = new QueryOutput('#query-output', {
+    displayType: 'line',
+    queryResponse: {
+        data: {
+            columns: [
+                {
+                    type: "DATE",
+                    groupable: true,
+                    active: false,
+                    name: "sale__transaction_date__month",
+                },
+                {
+                    active: false,
+                    groupable: false,
+                    name: "sale__line_item___sum",
+                    type: "DOLLAR_AMT",
+                },
+            ],
+            display_type: "line",
+            interpretation: "total sales by line item by transaction month",
+            query_id: "q_y4sWT0IAStWnLeM7COEsSQ",
+            rows: [
+                ['1483142400', '12500'],
+                ['1488240000', '8742.68'],
+                ['1490918400', '11723.36'],
+                ['1493510400', '3243.12'],
+                ['1496188800', '14642.19'],
+            ],
+        },
+        message: "",
+        referenceId: "1.1.0",
+    },
+})
 //
 // setTimeout(() => {
 //     queryOutput.setOption('displayType', 'table')
 //     queryOutput.setOption('renderTooltips', false)
 // }, 1000)
 //
-// queryInput.bind(queryOutput)
+queryInput.bind(queryOutput)
 //
 // var notificationList = new NotificationFeed('#notification-list', {
 //     authentication: {
@@ -129,23 +159,23 @@ get(DASHBOARD_URL, {
     }
 }).then(function(response){
 
-    dashboard = new DashboardV2('#dashboard-wrapper', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            theme: 'light',
-            accentColor: 'red'
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        executeOnMount: false,
-        tiles: response.data.items[9].data
-    })
+    // dashboard = new DashboardV2('#dashboard-wrapper', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //         theme: 'light',
+    //         accentColor: 'red'
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     executeOnMount: false,
+    //     tiles: response.data.items[9].data
+    // })
     // new DashboardV2('#dashboard-wrapper2')
 
 

@@ -3,8 +3,22 @@ import {
     getNumberOfGroupables,
     getGroupables,
     uuidv4,
-    cloneObject
+    cloneObject,
+    getSupportedDisplayTypes,
+    createTableContainer
 } from '../Utils'
+import {
+    createAreaChart,
+    createBarChart,
+    createBubbleChart,
+    createColumnChart,
+    createHeatmap,
+    createLineChart,
+    createPieChart,
+    createStackedBarChart,
+    createStackedColumnChart
+} from '../Charts'
+import { ChataTable, ChataPivotTable } from '../ChataTable' 
 import { ChataUtils } from '../ChataUtils'
 
 export function QueryOutput(selector, options={}){
@@ -33,9 +47,9 @@ export function QueryOutput(selector, options={}){
             accentColor: undefined,
             fontFamily: 'sans-serif',
         },
-        enableDynamicCharting: true
+        enableDynamicCharting: true,
+        queryResponse: null
     }
-    responseRenderer.queryResponse = null;
 
     for (var [key, value] of Object.entries(options)) {
         responseRenderer.options[key] = value;
@@ -75,6 +89,185 @@ export function QueryOutput(selector, options={}){
             default:
                 responseRenderer.options[option] = value;
         }
+    }
+
+    responseRenderer.refreshView = () => {
+        var jsonResponse = responseRenderer.options.queryResponse
+        if(!jsonResponse)return
+        let displayType;
+        var sup = getSupportedDisplayTypes(jsonResponse);
+        if(sup.includes(responseRenderer.options.displayType)){
+            displayType = responseRenderer.options.displayType;
+        }else{
+            displayType = 'table';
+        }
+
+        switch(displayType){
+            case 'table':
+                var uuid = uuidv4();
+                ChataUtils.responses[uuid] = jsonResponse;
+                var div = createTableContainer();
+                div.setAttribute('data-componentid', uuid)
+                responseRenderer.appendChild(div);
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add(
+                    'autoql-vanilla-chata-table-scrollbox'
+                );
+                scrollbox.appendChild(div);
+                responseRenderer.appendChild(scrollbox);
+                if(jsonResponse['data']['columns'].length == 1){
+                    var data = formatData(
+                        jsonResponse['data'],
+                        jsonResponse['data']['columns'][0],
+                        responseRenderer.options
+                    );
+                    responseRenderer.innerHTML = `<div>${data}</div>`;
+                }else{
+                    var table = new ChataTable(
+                        uuid, opts, chataBarContainer.onRowClick
+                    )
+                    div.tabulator = table;
+                }
+            break;
+            case 'pivot_table':
+                let opts = mergeOptions([
+                    chataBarContainer.options,
+                    responseRenderer.options
+                ]);
+                var uuid = uuidv4();
+                ChataUtils.responses[uuid] = jsonResponse;
+                var div = createTableContainer();
+                div.setAttribute('data-componentid', uuid)
+                responseRenderer.appendChild(div);
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add(
+                    'autoql-vanilla-chata-table-scrollbox'
+                );
+                scrollbox.appendChild(div);
+                responseRenderer.appendChild(scrollbox);
+                var table = new ChataPivotTable(
+                    uuid, opts, chataBarContainer.onCellClick
+                )
+                div.tabulator = table;
+            break;
+            case 'line':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createLineChart(
+                    chartWrapper,
+                    jsonResponse, responseRenderer.options,
+                    () => {},
+                    false, 'data-chartrenderer',
+                );
+            break;
+            case 'bar':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createBarChart(
+                    chartWrapper,
+                    jsonResponse, responseRenderer.options,
+                    () => {},
+                    false, 'data-chartrenderer',
+                );
+            break;
+            case 'column':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createColumnChart(
+                    chartWrapper,
+                    jsonResponse, responseRenderer.options,
+                    () => {},
+                    false, 'data-chartrenderer',
+                );
+            break;
+            case 'heatmap':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createHeatmap(
+                    chartWrapper,
+                    jsonResponse, responseRenderer.options,
+                    false, 'data-chartrenderer',
+                );
+            break;
+            case 'bubble':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createBubbleChart(
+                    chartWrapper,
+                    jsonResponse, responseRenderer.options,
+                    false, 'data-chartrenderer',
+                );
+            break;
+            case 'help':
+                responseRenderer.innerHTML = ChataUtils.createHelpContent(
+                    jsonResponse['data']['rows'][0]
+                );
+            break;
+            case 'stacked_bar':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createStackedBarChart(
+                    chartWrapper, jsonResponse,
+                    responseRenderer.options,
+                    () => {}, false,
+                    'data-stackedchartindex',
+                );
+            break;
+            case 'stacked_column':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createStackedColumnChart(
+                    chartWrapper, jsonResponse,
+                    responseRenderer.options, () => {},
+                    false,
+                    'data-stackedchartindex',
+                );
+            break;
+            case 'stacked_line':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createAreaChart(
+                    chartWrapper, jsonResponse,
+                    responseRenderer.options, () => {},
+                    false,
+                    'data-stackedchartindex',
+                );
+            break;
+            case 'pie':
+                var chartWrapper = document.createElement(
+                    'div'
+                );
+                responseRenderer.appendChild(chartWrapper);
+                createPieChart(
+                    chartWrapper, jsonResponse,
+                    responseRenderer.options, false,
+                    'data-chartrenderer', true
+                );
+                break;
+            default:
+                responseRenderer.innerHTML = `
+                    <div>
+                        Error: There was no data supplied for this table
+                    </div>
+                `;
+        }
+
     }
 
     responseRenderer.addEventListener('click', function(e){
@@ -150,6 +343,7 @@ export function QueryOutput(selector, options={}){
     });
 
     PARENT.appendChild(responseRenderer);
+    responseRenderer.refreshView()
 
     return responseRenderer;
 }
