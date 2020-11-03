@@ -92,11 +92,14 @@ export function QueryOutput(selector, options={}){
         }
     }
 
+    responseRenderer.clearMetadata = () => {
+        responseRenderer.metadata = null
+    }
+
     responseRenderer.refreshView = () => {
         var jsonResponse = responseRenderer.options.queryResponse
-        console.log(responseRenderer.options.queryResponse);
+        responseRenderer.clearMetadata()
         ChataUtils.responses[uuid] = jsonResponse;
-        console.log(ChataUtils.responses[uuid]);
         if(!jsonResponse)return
         let displayType;
         var sup = getSupportedDisplayTypes(jsonResponse);
