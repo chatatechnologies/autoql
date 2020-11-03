@@ -22,7 +22,11 @@ import {
     cloneObject,
     getNumberOfGroupables,
     formatData,
-    getRecommendationPath
+    getRecommendationPath,
+    apiCall,
+    apiCallGet,
+    apiCallPut,
+    apiCallPost
 } from '../Utils'
 import {
     createAreaChart,
@@ -64,12 +68,6 @@ import {
     DELETE_MESSAGE,
     VERTICAL_DOTS
 } from '../Svg'
-import {
-    apiCall,
-    apiCallGet,
-    apiCallPut,
-    apiCallPost
-} from '../Api/Api'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
 

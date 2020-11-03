@@ -1,4 +1,4 @@
-import { htmlToElement, uuidv4 } from '../Utils'
+import { htmlToElement, uuidv4, apiCall } from '../Utils'
 import {
     ADD_GROUP,
     QUERY,
@@ -7,9 +7,6 @@ import {
     INPUT_DELETE,
     WARNING_TRIANGLE
 } from '../Svg'
-import {
-    apiCall
-} from '../Api/Api'
 import { convert } from '../RuleParser'
 import {
     ChataInput,

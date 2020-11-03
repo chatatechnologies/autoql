@@ -8,16 +8,14 @@ import { Modal } from '../Modal'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import {
-    apiCallGet,
-    apiCallPut,
-    apiCallDelete
-} from '../Api/Api'
-import {
     htmlToElement,
     uuidv4,
     putLoadingContainer,
     createTableContainer,
-    getSupportedDisplayTypes
+    getSupportedDisplayTypes,
+    apiCallGet,
+    apiCallPut,
+    apiCallDelete
 } from '../Utils'
 import {
     DISMISS,

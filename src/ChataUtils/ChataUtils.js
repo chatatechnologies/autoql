@@ -9,7 +9,9 @@ import {
     getNotGroupableField,
     getSVGString,
     copyTextToClipboard,
-    svgString2Image
+    svgString2Image,
+    apiCallPut,
+    apiCallPost
 } from '../Utils'
 import sqlFormatter from "sql-formatter";
 import { ChataConfirmDialog } from '../ChataComponents'
@@ -23,10 +25,6 @@ import {
     NOTIFICATION_BUTTON
 } from '../Svg'
 import { refreshTooltips } from '../Tooltips'
-import {
-    apiCallPut,
-    apiCallPost
-} from '../Api/Api'
 import { Modal } from '../Modal'
 import { NotificationSettingsModal } from '../Notifications'
 import { AntdMessage } from '../Antd'

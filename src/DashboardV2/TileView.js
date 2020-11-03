@@ -1,12 +1,10 @@
 import './TileView.css'
 import { ChataUtils } from '../ChataUtils'
 import {
-    apiCall
-} from '../Api'
-import {
     uuidv4,
     createTableContainer,
-    formatData
+    formatData,
+    apiCall
 } from '../Utils'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
 import {

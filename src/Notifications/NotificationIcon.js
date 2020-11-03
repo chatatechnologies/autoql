@@ -2,7 +2,7 @@ import { NOTIFICATION_BUTTON } from '../Svg'
 import {
 	apiCallNotificationCount,
 	apiCallPut
-} from '../Api/Api'
+} from '../Utils'
 import '../../css/ChataNotificationButton.css'
 
 export function NotificationIcon(selector, options={}){

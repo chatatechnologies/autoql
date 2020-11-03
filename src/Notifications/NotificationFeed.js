@@ -1,10 +1,6 @@
-import { htmlToElement } from '../Utils'
+import { htmlToElement, apiCallPut, apiCallGet } from '../Utils'
 import { DISMISS } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
-import {
-    apiCallPut,
-    apiCallGet
-} from '../Api/Api'
 import { Notification } from './Notification'
 import '../../css/Notifications.css'
 

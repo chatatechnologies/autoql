@@ -1,6 +1,8 @@
 import { ChataUtils } from '../ChataUtils'
 import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
+import axios from 'axios'
+import _get from 'lodash.get'
 import moment from 'moment'
 
 export function formatChartData(val, col, options){
@@ -1076,4 +1078,136 @@ export function getFirstNotificationLine (step1) {
 
 export function getRecommendationPath(options, text) {
     return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
+}
+
+
+export const apiCall = (val, options, source) => {
+    const {
+        token,
+        apiKey,
+        domain
+    } = options.authentication
+
+    const {
+        debug,
+        test
+    } = options.autoQLConfig
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    const url = `${domain}/autoql/api/v1/query?key=${apiKey}`
+
+    const data = {
+        text: val,
+        source: source,
+        debug: debug,
+        test: test
+    }
+
+    return axios.post(url, data, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
+}
+
+export const apiCallPost = (url, data, options) => {
+    const {
+        token,
+    } = options.authentication
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return axios.post(url, data, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
+}
+
+export const apiCallPut = (url, data, options) => {
+    const {
+        token,
+    } = options.authentication
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return axios.put(url, data, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
+}
+
+export const apiCallDelete = (url, options) => {
+    const {
+        token,
+    } = options.authentication
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }
+
+    return axios.delete(url, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.resolve(_get(error, 'response'))
+    })
+}
+
+export const apiCallGet = (url, options, extraHeaders={}) => {
+    const {
+        token
+    } = options.authentication
+
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            ...extraHeaders
+        },
+    }
+
+    return axios.get(url, config).then((response) => {
+        return Promise.resolve(response)
+    }).catch((error) => {
+        return Promise.reject(error)
+    })
+}
+
+export const apiCallNotificationCount = (url, options) => {
+    const {
+        token
+    } = options.authentication
+
+    const axiosInstance = axios.create({
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    })
+    const config = {
+        timeout: 180000,
+    }
+
+    return axiosInstance
+    .get(url, config)
+    .then((response) => {
+        return Promise.resolve(response)
+    })
+    .catch((error) => {
+        return Promise.resolve(error)
+    })
 }
