@@ -110,11 +110,13 @@ export function TileView(tile, isSecond=false){
     }
 
     view.displayData = () => {
-        view.innerHTML = ''
         var json = ChataUtils.responses[UUID]
+        console.log(typeof json);
+        if(json === undefined)return
         var container = view
         var displayType = view.internalDisplayType
         var toolbarType = ''
+        view.innerHTML = ''
 
         switch (displayType) {
             case 'safetynet':

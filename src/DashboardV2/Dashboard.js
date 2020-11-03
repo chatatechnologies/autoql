@@ -136,8 +136,11 @@ export function Dashboard(selector, options={}){
 
     obj.grid.on('resizestop', (event, el) => {
         obj.hidePlaceHolders()
-    })
+        obj.tiles.forEach((item, i) => {
+            item.refreshViews()
+        });
 
+    })
 
     obj.showPlaceHolders = function(){
         obj.tiles.forEach(function(tile){

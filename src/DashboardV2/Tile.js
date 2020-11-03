@@ -243,6 +243,12 @@ export function Tile(dashboard, options){
         )
     }
 
+    item.refreshViews = () => {
+        item.views.map(
+            view => view.displayData()
+        );
+    }
+
     item.toggleSplit = () => {
         if(item.options.isSplit){
             item.options.isSplit = false
@@ -259,6 +265,7 @@ export function Tile(dashboard, options){
                 gutterSize: 7,
                 cursor: 'row-resize',
                 onDragEnd: () => {
+                    item.refreshViews()
                 }
             })
             item.options.isSplit = true
