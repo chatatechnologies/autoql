@@ -160,7 +160,7 @@ export const formatLabel = (label) => {
     if(label.length < 20){
         return label;
     }
-    return label.slice(0, 15) + ' ...';
+    return label.toString().slice(0, 15) + ' ...';
 
 }
 
