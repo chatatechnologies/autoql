@@ -203,7 +203,7 @@
     padding-top: 0;
     background: inherit;
     padding: 10px 25px 10px 25px;
-    font-family: var(--react-autoql-font-family),sans-serif;
+    font-family: var(--autoql-vanilla-font-family),sans-serif;
 }
 
 .autoql-vanilla-dashboard-tile-title-container{
