@@ -1,6 +1,12 @@
 import {
     ChataUtils
 } from '../ChataUtils'
+import{
+    REPORT_PROBLEM,
+    FILTER_TABLE,
+    COLUMN_EDITOR,
+    VERTICAL_DOTS
+} from '../Svg'
 import {
     htmlToElement,
     getSupportedDisplayTypes
@@ -14,6 +20,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
         <div class="autoql-vanilla-tile-toolbar actions-toolbar">
         </div>
     `);
+    var displayType = tileView.internalDisplayType
     toolbar.getToolbarActionType = (json, displayType) => {
         var toolbarType = 'simple';
         var displayTypes = getSupportedDisplayTypes(json);
@@ -53,7 +60,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
         REPORT_PROBLEM,
         'Report a problem',
         idRequest,
-        obj.reportProblemHandler,
+        tileView.reportProblemHandler,
         [reportProblem, toolbar]
     )
 
@@ -90,7 +97,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                         COLUMN_EDITOR,
                         'Show/Hide Columns',
                         idRequest,
-                        obj.openColumnEditorHandler,
+                        tileView.openColumnEditorHandler,
                         [tile.dashboard.options]
                     )
                 );
@@ -123,7 +130,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
 
     let val = ''
 
-    if(obj.isSecond){
+    if(tileView.isSecond){
         // val = obj.inputToolbar.input.value;
         // obj.internalQuery = val;
         val = tile.inputQuery.value;
@@ -145,7 +152,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
         VERTICAL_DOTS,
         'More options',
         idRequest,
-        obj.moreOptionsHandler,
+        tileView.moreOptionsHandler,
         [moreOptions, toolbar]
     )
     moreOptionsBtn.classList.add('autoql-vanilla-more-options');

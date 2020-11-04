@@ -21,6 +21,9 @@ import {
 import {
     TileVizToolbar
 } from './TileVizToolbar'
+import {
+    ActionToolbar
+} from './ActionToolbar'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
@@ -46,6 +49,18 @@ export function TileView(tile, isSecond=false){
     </div>`
 
     view.innerHTML = placeHolderText
+
+    view.reportProblemHandler = () => {
+
+    }
+
+    view.moreOptionsHandler = () => {
+
+    }
+
+    view.openColumnEditorHandler = () => {
+
+    }
 
     view.onRowClick = (e, row, json) => {
 
@@ -343,6 +358,8 @@ export function TileView(tile, isSecond=false){
     view.createVizToolbar = () => {
         var json = ChataUtils.responses[UUID]
         new TileVizToolbar(json, view, tile)
+        var actionToolbar = new ActionToolbar(UUID, view, tile)
+        view.appendChild(actionToolbar)
     }
 
 
