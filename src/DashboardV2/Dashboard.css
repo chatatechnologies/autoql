@@ -18,3 +18,16 @@
     width: 100%;
     overflow: hidden;
 }
+
+.bar:focus,
+.circle:focus,
+.square:focus,
+.pie-slice:focus,
+.line-dot:focus,
+.stacked-rect:focus {
+    outline: none !important;
+    border-color: transparent !important;
+    border-width: 0px !important;
+    opacity: 1;
+    fill-opacity: 1;
+}

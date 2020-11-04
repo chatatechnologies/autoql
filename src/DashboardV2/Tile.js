@@ -274,12 +274,16 @@ export function Tile(dashboard, options){
         }
     }
 
-    item.tilePlayBuytton.onclick = () => {
+    item.runTile = () => {
         if(item.options.isSplit){
             item.views.map(view => view.run())
         }else{
             item.views[0].run()
         }
+    }
+
+    item.tilePlayBuytton.onclick = () => {
+        item.runTile()
     }
 
     item.views = [

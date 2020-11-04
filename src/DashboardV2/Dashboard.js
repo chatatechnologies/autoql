@@ -165,6 +165,18 @@ export function Dashboard(selector, options={}){
         obj.tiles.forEach((item, i) => {
             item.stopEditing()
         });
+        if(obj.options.executeOnStopEditing)obj.run()
+    }
+
+    obj.run = () => {
+        obj.tiles.forEach((item, i) => {
+            item.runTile()
+        });
+
+    }
+
+    if(obj.options.executeOnMount){
+        obj.run()
     }
 
     return obj
