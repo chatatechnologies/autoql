@@ -253,12 +253,11 @@ export function Tile(dashboard, options){
     item.toggleSplit = () => {
         if(item.options.isSplit){
             item.options.isSplit = false
-            item.switchSplitButton(SPLIT_VIEW, 'Split View')
             if(item.splitInstance)item.splitInstance.destroy()
             item.views[1].hide()
+            item.switchSplitButton(SPLIT_VIEW, 'Split View')
         }else{
             item.views.map(view => view.show())
-            item.switchSplitButton(SPLIT_VIEW_ACTIVE, 'Single View')
             item.splitInstance = Split(item.views, {
                 direction: 'vertical',
                 sizes: [50, 50],
@@ -270,6 +269,8 @@ export function Tile(dashboard, options){
                 }
             })
             item.options.isSplit = true
+            item.switchSplitButton(SPLIT_VIEW_ACTIVE, 'Single View')
+            item.refreshViews()
         }
     }
 

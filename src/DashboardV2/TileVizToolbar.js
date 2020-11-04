@@ -15,7 +15,7 @@ import {
     getSupportedDisplayTypes
 } from '../Utils'
 
-export function TileVizToolbar(json, view){
+export function TileVizToolbar(json, view, tile){
     var displayTypes = getSupportedDisplayTypes(json)
 
     var ignoreDisplayType = view.internalDisplayType
@@ -27,8 +27,15 @@ export function TileVizToolbar(json, view){
         e.parentNode.removeChild(e)
     })
 
+
     if(displayTypes.length > 1){
         var vizToolbar = document.createElement('div')
+
+        if(!view.isSecond)vizToolbar.classList.add('first')
+        if(!view.isSecond && tile.options.isSplit)vizToolbar.classList.add(
+            'is-split'
+        )
+
         vizToolbar.classList.add('autoql-vanilla-tile-toolbar')
         for (var i = 0; i < displayTypes.length; i++) {
             if(displayTypes[i] == ignoreDisplayType)continue

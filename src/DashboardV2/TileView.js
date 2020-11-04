@@ -27,6 +27,7 @@ export function TileView(tile, isSecond=false){
     const {
         dashboard
     } = tile
+    view.isSecond = isSecond
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
@@ -332,7 +333,7 @@ export function TileView(tile, isSecond=false){
 
     view.createVizToolbar = () => {
         var json = ChataUtils.responses[UUID]
-        new TileVizToolbar(json, view)
+        new TileVizToolbar(json, view, tile)
     }
 
 

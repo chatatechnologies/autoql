@@ -12,6 +12,14 @@
     outline: none!important;
 }
 
+.autoql-vanilla-tile-toolbar.first{
+    bottom: 7px;
+}
+
+.autoql-vanilla-tile-toolbar.first.is-split{
+    left: 7px;
+}
+
 .autoql-vanilla-tile-toolbar{
     z-index: 1000;
     background: var(--autoql-vanilla-background-color-primary);
