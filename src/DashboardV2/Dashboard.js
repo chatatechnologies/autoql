@@ -101,7 +101,8 @@ export function Dashboard(selector, options={}){
 
     var grid = GridStack.init({
         handle: '.autoql-vanilla-dashboard-tile-drag-handle',
-        placeholderClass : 'autoql-vanilla-tile-placeholder'
+        placeholderClass : 'autoql-vanilla-tile-placeholder',
+        cellHeight: '80px'
     }, gridContainer)
 
     obj.grid = grid
@@ -118,7 +119,9 @@ export function Dashboard(selector, options={}){
             width: tile.w,
             height: tile.h,
             x: tile.x,
-            y: tile.y
+            y: tile.y,
+            minHeight: 1,
+            minWidth: 3
         })
     }
 
