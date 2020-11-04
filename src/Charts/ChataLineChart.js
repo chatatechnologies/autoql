@@ -83,6 +83,7 @@ export function createLineChart(
             series: yIndexes
         }
     }
+    console.log(metadataComponent);
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;
@@ -428,7 +429,6 @@ export function createLineChart(
             if(allGroup.length > 1)group = d.group
             const type = cols[index2].type;
             var toolTipColValue1 = d.label
-            console.log(d.label);
             toolTipColValue1 = formatData(
                 d.label, cols[index2],
                 options

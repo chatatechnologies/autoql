@@ -18,7 +18,6 @@ import './TileVizToolbar.css'
 
 
 export function Tile(dashboard, options){
-    console.log(options)
     var item = document.createElement('div')
     item.options = {
         query: '',

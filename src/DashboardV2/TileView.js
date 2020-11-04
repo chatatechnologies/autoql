@@ -84,6 +84,7 @@ export function TileView(tile, isSecond=false){
 
     view.run = async () => {
         if(tile.inputQuery.value){
+            view.clearMetadata()
             var loading = view.showLoading()
             var data = await view.executeQuery()
             view.removeChild(loading)
@@ -99,6 +100,10 @@ export function TileView(tile, isSecond=false){
         return apiCall(
             val, tile.dashboard.options, 'dashboards.user'
         )
+    }
+
+    view.clearMetadata = () => {
+        view.metadata = null;
     }
 
     view.displayData = () => {
