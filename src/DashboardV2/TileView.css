@@ -32,6 +32,15 @@
 .autoql-vanilla-tile-chart-container{
     width: calc(100% - 25px);
     height: calc(100% - 25px);
+    color: var(--autoql-vanilla-text-color-primary);
+}
+
+.autoql-vanilla-single-value-response{
+    font-size: 32px;
+    margin-top: -6px;
+    opacity: .9;
+    color: var(--autoql-vanilla-text-color-primary);
+    
 }
 
 .gutter {

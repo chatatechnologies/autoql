@@ -267,6 +267,7 @@ export function Tile(dashboard, options){
             if(item.splitInstance)item.splitInstance.destroy()
             item.views[1].hide()
             item.switchSplitButton(SPLIT_VIEW, 'Split View')
+            item.refreshViews()
         }else{
             item.views.map(view => view.show())
             item.splitInstance = Split(item.views, {

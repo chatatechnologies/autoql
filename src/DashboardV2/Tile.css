@@ -7,7 +7,7 @@
 
 .grid-stack-item-content{
     position: relative;
-    background: white;
+    background: var(--autoql-vanilla-background-color-primary);
     cursor: default!important;
 }
 
