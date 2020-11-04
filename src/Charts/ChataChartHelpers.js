@@ -263,7 +263,7 @@ export const getIndexesByType = (cols) => {
 export const getMetadataElement = (component, isDataMessenger) => {
     // console.log(component.parentElement.parentElement);
     if(isDataMessenger)return component.parentElement.parentElement
-    else return component.parentElement
+    else return component.parentElement.parentElement
 }
 
 

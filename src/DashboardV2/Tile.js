@@ -166,7 +166,7 @@ export function Tile(dashboard, options){
 
     tileInputContainer.style.display = 'none'
     deleteButton.style.visibility = 'hidden'
-    
+
 
     deleteButton.onclick = (evt) => {
         dashboard.grid.removeWidget(item)
@@ -194,6 +194,12 @@ export function Tile(dashboard, options){
     item.responseWrapper = responseWrapper
     item.dashboard = dashboard
 
+
+    item.inputQuery.onkeypress = function(evt){
+        if(evt.keyCode == 13 && this.value){
+            item.runTile()
+        }
+    }
 
     item.inputQuery.onblur = (event) => {
         inputContainer1.classList.remove('clicked')

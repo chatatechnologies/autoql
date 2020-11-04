@@ -129,7 +129,7 @@ export function NotificationFeed(selector, options){
             state: 'DISMISSED'
         }
 
-        await apiCallPut(ULR, payload, wrapper.options)
+        await apiCallPut(URL, payload, wrapper.options)
         wrapper.toggleAll()
 
     }
