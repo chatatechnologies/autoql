@@ -110,7 +110,6 @@ export function Dashboard(selector, options={}){
 
     for (var i = 0; i < obj.options.tiles.length; i++) {
         var tile = obj.options.tiles[i]
-        console.log(tile);
         var e = new Tile(obj, {
             ...tile
         })
@@ -176,6 +175,24 @@ export function Dashboard(selector, options={}){
             item.runTile()
         });
 
+    }
+
+    obj.addTile = (options) => {
+        var e = new Tile(obj, {
+            ...options
+        })
+        obj.tiles.push(e)
+        grid.addWidget(e, {
+            width: options.w,
+            height: options.h,
+            minHeight: 1,
+            minWidth: 3
+        })
+
+        e.startEditing()
+        setTimeout(() => {
+            e.focusItem()
+        }, 150)
     }
 
     if(obj.options.executeOnMount){

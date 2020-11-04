@@ -260,6 +260,10 @@ export function Tile(dashboard, options){
         );
     }
 
+    item.focusItem = function(){
+        item.inputQuery.focus();
+    }
+
     item.toggleSplit = () => {
         if(item.options.isSplit){
             item.options.isSplit = false

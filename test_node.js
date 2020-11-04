@@ -10,7 +10,7 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA0NDUwMTY3LCAiZXhwIjogMTYwNDQ3MTc2NywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiJdfQ.MTNnYUGYO9dyqbv9XhutRd8hR3HCMPP9OBFr3rW_22fPuV1eDRI-kh4vaUT9MKbXVjzNGXvyj_V_ObtRhvBH8GpIcp4uVYLCEcUA7tbLbJOY61w94ZrIYePXqJW8HuuCV1d06hnMLPeXFOT2d_-GMo4u2wrmWZGexrYttnEF5szgTzlqD2QW41W9zEvfOIDEqBMX4IuDEX7IAglEcqLXnKr4NTTTiWysFQEy_Z0bYdZsitqXLCqPSAmlijGcBG5bxX9MoMCQuzJnnBLJ5Y63uOEtA3gJd9P_0NR36VltrWHW5Fu7T6_6e_EnlOSDakFr9p5JWo4s87HpTpSy-YSf0Q`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA0NTIwMTkyLCAiZXhwIjogMTYwNDU0MTc5MiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ.B7PqZ2MVqUfzPMO0z6A1YSAu7naZBe0KPiARcvm7_aGBlB0Qkkw6Ttuuv2R_qH1kireOE0N6H-bZ8rrCWeFO9ZLkbLDR9gBMdKIF7llBCXIlPnPV56x5thDR51uBGbdGuiJ6uMrgikl3jbb1MH4EfSXbCZduOLreYUETK5RIx4jHYt8VOjfJkx_E1FP2uog-V_kxUJzV9zRVMqh7XnXnZ6hsnO_OzrMEwOmXwcPShRSzKhaEPWy4hRox-q9y2voAa3H7C2BuDJEQ0Rnoms6LarpUocfqaO20aWu-E4TcN--Vk92PwHFvhv6oGWAUjx4bkbhvRS7aJFMCw_Z2EJyr-Q`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
@@ -24,8 +24,8 @@ var datamessenger = new DataMessenger('#datamessenger', {
     },
     themeConfig: {
         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'dark',
-        accentColor: 'tomato'
+        theme: 'light',
+        // accentColor: 'tomato'
     },
     autoQLConfig: {
         debug: true,
@@ -70,7 +70,7 @@ setTimeout(() => {
 //     },
 //     themeConfig: {
 //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'dark',
+//         theme: 'light',
 //     },
 // })
 //
@@ -139,7 +139,7 @@ setTimeout(() => {
 //     },
 //     themeConfig: {
 //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'dark',
+//         theme: 'light',
 //     },
 // })
 
@@ -167,7 +167,7 @@ get(DASHBOARD_URL, {
         },
         themeConfig: {
             // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            theme: 'dark',
+            theme: 'light',
             accentColor: 'red'
         },
         autoQLConfig: {
@@ -187,7 +187,7 @@ get(DASHBOARD_URL, {
     //     },
     //     themeConfig: {
     //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-    //         theme: 'dark',
+    //         theme: 'light',
     //         accentColor: 'red'
     //     },
     //     autoQLConfig: {
@@ -202,6 +202,8 @@ get(DASHBOARD_URL, {
 
 var b = document.getElementById('edit')
 var b2 = document.getElementById('edit-stop')
+var b3 = document.getElementById('add-widget')
+
 
 b.onclick = () => {
     dashboard.startEditing()
@@ -209,4 +211,13 @@ b.onclick = () => {
 
 b2.onclick = () => {
     dashboard.stopEditing()
+}
+
+b3.onclick = () => {
+    dashboard.addTile({
+        title: '',
+        query: '',
+        w: 6,
+        h: 5,
+    })
 }
