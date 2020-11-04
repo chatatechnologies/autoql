@@ -165,7 +165,8 @@ export function Tile(dashboard, options){
     item.appendChild(content)
 
     tileInputContainer.style.display = 'none'
-
+    deleteButton.style.visibility = 'hidden'
+    
 
     deleteButton.onclick = (evt) => {
         dashboard.grid.removeWidget(item)
@@ -225,6 +226,7 @@ export function Tile(dashboard, options){
     item.startEditing = () => {
         tileInputContainer.style.display = 'flex'
         tileTitleContainer.style.display = 'none'
+        deleteButton.style.visibility = 'visible'
         content.classList.add('editing')
         dashboard.grid.enable()
 
@@ -235,6 +237,9 @@ export function Tile(dashboard, options){
         tileTitleContainer.style.display = 'block'
         content.classList.remove('editing')
         dashboard.grid.disable()
+        item.tileTitle.textContent = item.inputTitle.value
+        || item.inputQuery.value || 'Untitled'
+        deleteButton.style.visibility = 'hidden'
     }
 
     item.switchSplitButton = (svg, tooltip) => {

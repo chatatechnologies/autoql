@@ -83,11 +83,15 @@ export function TileView(tile, isSecond=false){
     }
 
     view.run = async () => {
-        var loading = view.showLoading()
-        var data = await view.executeQuery()
-        view.removeChild(loading)
-        ChataUtils.responses[UUID] = data.data
-        view.displayData()
+        if(tile.inputQuery.value){
+            var loading = view.showLoading()
+            var data = await view.executeQuery()
+            view.removeChild(loading)
+            ChataUtils.responses[UUID] = data.data
+            view.displayData()
+        }else{
+            view.innerHTML = placeHolderText
+        }
     }
 
     view.executeQuery = async () => {
