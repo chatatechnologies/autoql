@@ -10,6 +10,9 @@ import {
     cloneObject,
     getNumberOfGroupables
 } from '../../Utils'
+import {
+    getGroupableFields
+} from '../../Charts/ChataChartHelpers'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
 import {
     Modal
@@ -164,37 +167,72 @@ export function TileView(tile, isSecond=false){
         )
     }
 
-    view.sendDrilldownMessage = async (json, indexData, options) => {
-        if(!dashboard.options.autoQLConfig.enableDrilldowns)return
-
-        var modal = new Modal({
-            destroyOnClose: true
-        });
-        modal.chataBody.classList.add('chata-modal-full-height');
-
-        if(view.isSecond){
-            modal.setTitle(tile.inputQuery.value);
-        }else{
-            modal.setTitle(tile.inputQuery.value);
+    view.executeDrilldown = (json, indexData, options) => {
+        const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
+        let data;
+        var queryId = json['data']['query_id'];
+        var params = {};
+        var groupables = getGroupableFields(json);
+        for (var i = 0; i < groupables.length; i++) {
+            var index = groupables[i].indexCol;
+            var value = json['data']['rows'][parseInt(indexData)][index];
+            var colData = json['data']['columns'][index]['name'];
+            params[colData] = value.toString();
         }
 
-        modal.show()
+        var cols = [];
+        for(var [key, value] of Object.entries(params)){
+            cols.push({
+                name: key,
+                value: value
+            })
+        }
+        data = {
+            debug: options.autoQLConfig.debug,
+            columns: cols
+        }
+
     }
 
-    view.sendDrilldownClientSide = (json, indexValue, filterBy, options) => {
+    view.displayDrilldownModal = (title, views=[]) => {
+        var modal = new Modal({
+            destroyOnClose: true
+        })
+        modal.chataBody.classList.add('chata-modal-full-height');
+        views.map(v => modal.addView(v))
+        modal.setTitle(title)
+        modal.show()
+
+    }
+
+    view.sendDrilldownMessageChart = async (json, indexData, options) => {
+        if(!dashboard.options.autoQLConfig.enableDrilldowns)return
+        let title =''
+        if(view.isSecond){
+            title = tile.inputQuery.value
+        }else{
+            title = tile.inputQuery.value
+        }
+
+        view.executeDrilldown(json, indexData, options)
+        view.displayDrilldownModal(title, [])
+    }
+
+    view.sendDrilldownClientSideChart = (
+        json, indexValue, filterBy, options) => {
 
     }
 
     view.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest])
-        var indexData = evt.target.dataset.chartindex
+        var indexData = evt.target.dataset.tilechart
         var colValue = evt.target.dataset.colvalue1
         var indexValue = evt.target.dataset.filterindex
         var groupableCount = getNumberOfGroupables(json['data']['columns'])
         if(groupableCount == 1 || groupableCount == 2){
-            view.sendDrilldownMessage(json, indexData, dashboard.options)
+            view.sendDrilldownMessageChart(json, indexData, dashboard.options)
         }else{
-            view.sendDrilldownClientSide(
+            view.sendDrilldownClientSideChart(
                 json, indexValue, colValue, dashboard.options
             )
         }
