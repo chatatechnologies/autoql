@@ -1,7 +1,8 @@
 import {
     uuidv4,
     createTableContainer,
-    apiCallPost
+    apiCallPost,
+    getNumberOfGroupables
 } from '../../Utils'
 import {
     getGroupableFields
@@ -27,9 +28,10 @@ import {
 import './DrilldownView.css'
 
 export function DrilldownView(
-    tile, displayType, isStatic=true, drilldownMetadata={}
+    tile, displayType,onClick=()=>{}, isStatic=true, drilldownMetadata={}
 ){
     var view = document.createElement('div')
+    view.onClick = onClick
     if(isStatic){
         view.classList.add('autoql-vanilla-dashboard-drilldown-original')
     }else{
@@ -47,8 +49,19 @@ export function DrilldownView(
 
     }
 
-    view.registerDrilldownChartEvent = () => {
+    view.componentClickHandler = (handler, component, selector) => {
+        var elements = component.querySelectorAll(selector)
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].onclick = (evt) => {
+                handler.apply(null, [evt, UUID])
+            }
+        }
+    }
 
+    view.registerDrilldownChartEvent = (component) => {
+        view.componentClickHandler(
+            view.onClick, component, '[data-tilechart]'
+        )
     }
 
     view.executeDrilldown = async (params) => {
@@ -57,6 +70,7 @@ export function DrilldownView(
             indexData,
             options
         } = params
+
         var loading = view.showLoadingDots()
         let data
         var queryId = json['data']['query_id']
@@ -142,7 +156,7 @@ export function DrilldownView(
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'column':
                 var chartWrapper = document.createElement('div')
@@ -157,7 +171,7 @@ export function DrilldownView(
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'line':
                 var chartWrapper = document.createElement('div')
@@ -172,7 +186,7 @@ export function DrilldownView(
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'heatmap':
                 var chartWrapper = document.createElement('div')
@@ -189,7 +203,7 @@ export function DrilldownView(
                     dashboard.options, false,
                     'data-tilechart', true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'bubble':
                 var chartWrapper = document.createElement('div')
@@ -204,7 +218,7 @@ export function DrilldownView(
                     false, 'data-tilechart',
                     true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'stacked_bar':
                 var chartWrapper = document.createElement('div')

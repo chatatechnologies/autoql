@@ -175,6 +175,17 @@ export function TileView(tile, isSecond=false){
         drilldownModal.show()
     }
 
+    view.chartElementClick = (evt, idRequest) => {
+        var json = cloneObject(ChataUtils.responses[idRequest])
+        var indexData = evt.target.dataset.tilechart
+        var colValue = evt.target.dataset.colvalue1
+        var indexValue = evt.target.dataset.filterindex
+        var groupableCount = getNumberOfGroupables(json['data']['columns'])
+        if(groupableCount == 1 || groupableCount == 2){
+            view.sendDrilldownMessageChart(json, indexData, dashboard.options)
+        }
+    }
+
     view.sendDrilldownMessageChart = async (json, indexData, options) => {
         if(!dashboard.options.autoQLConfig.enableDrilldowns)return
         let title =''
@@ -184,13 +195,11 @@ export function TileView(tile, isSecond=false){
             title = tile.inputQuery.value
         }
 
-        var chartView = new DrilldownView(
-            tile, view.internalDisplayType
-        )
 
         var tableView = new DrilldownView(
             tile,
             'table',
+            () => {},
             false,
             {
                 json: json,
@@ -198,8 +207,24 @@ export function TileView(tile, isSecond=false){
                 options: options
             }
         )
+
+        const onClickDrilldownView = (evt, idRequest) => {
+            var indexData = evt.target.dataset.tilechart
+            var colValue = evt.target.dataset.colvalue1
+            var indexValue = evt.target.dataset.filterindex
+
+            tableView.executeDrilldown({
+                json: json,
+                indexData: indexData,
+                options: options
+            })
+        }
+
+        var chartView = new DrilldownView(
+            tile, view.internalDisplayType, onClickDrilldownView
+        )
+
         view.displayDrilldownModal(title, [chartView, tableView])
-        console.log(json);
         chartView.displayData(json)
     }
 
@@ -208,20 +233,6 @@ export function TileView(tile, isSecond=false){
 
     }
 
-    view.chartElementClick = (evt, idRequest) => {
-        var json = cloneObject(ChataUtils.responses[idRequest])
-        var indexData = evt.target.dataset.tilechart
-        var colValue = evt.target.dataset.colvalue1
-        var indexValue = evt.target.dataset.filterindex
-        var groupableCount = getNumberOfGroupables(json['data']['columns'])
-        if(groupableCount == 1 || groupableCount == 2){
-            view.sendDrilldownMessageChart(json, indexData, dashboard.options)
-        }else{
-            view.sendDrilldownClientSideChart(
-                json, indexValue, colValue, dashboard.options
-            )
-        }
-    }
 
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
