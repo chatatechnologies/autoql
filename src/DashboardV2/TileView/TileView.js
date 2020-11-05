@@ -6,9 +6,14 @@ import {
     formatData,
     apiCall,
     closeAllToolbars,
-    allColsHidden
+    allColsHidden,
+    cloneObject,
+    getNumberOfGroupables
 } from '../../Utils'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
+import {
+    Modal
+} from '../../Modal'
 import {
     createAreaChart,
     createBarChart,
@@ -145,7 +150,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.componentClickHandler = (handler, component, selector) => {
-        var elements = component.querySelectorAll(selector);
+        var elements = component.querySelectorAll(selector)
         for (var i = 0; i < elements.length; i++) {
             elements[i].onclick = (evt) => {
                 handler.apply(null, [evt, UUID])
@@ -159,13 +164,44 @@ export function TileView(tile, isSecond=false){
         )
     }
 
+    view.sendDrilldownMessage = async (json, indexData, options) => {
+        if(!dashboard.options.autoQLConfig.enableDrilldowns)return
+
+        var modal = new Modal({
+            destroyOnClose: true
+        });
+        modal.chataBody.classList.add('chata-modal-full-height');
+
+        if(view.isSecond){
+            modal.setTitle(tile.inputQuery.value);
+        }else{
+            modal.setTitle(tile.inputQuery.value);
+        }
+
+        modal.show()
+    }
+
+    view.sendDrilldownClientSide = (json, indexValue, filterBy, options) => {
+
+    }
+
     view.chartElementClick = (evt, idRequest) => {
-        console.log(idRequest);
+        var json = cloneObject(ChataUtils.responses[idRequest])
+        var indexData = evt.target.dataset.chartindex
+        var colValue = evt.target.dataset.colvalue1
+        var indexValue = evt.target.dataset.filterindex
+        var groupableCount = getNumberOfGroupables(json['data']['columns'])
+        if(groupableCount == 1 || groupableCount == 2){
+            view.sendDrilldownMessage(json, indexData, dashboard.options)
+        }else{
+            view.sendDrilldownClientSide(
+                json, indexValue, colValue, dashboard.options
+            )
+        }
     }
 
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
-        console.log(typeof json);
         if(json === undefined)return
         var container = view
         var displayType = view.internalDisplayType
