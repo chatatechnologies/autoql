@@ -215,8 +215,10 @@ export function TileView(tile, isSecond=false){
             json, tile, view.internalDisplayType
         )
 
+        var tableView = new DrilldownView({}, tile, 'table', false)
+
         view.executeDrilldown(json, indexData, options)
-        view.displayDrilldownModal(title, [chartView])
+        view.displayDrilldownModal(title, [chartView, tableView])
         chartView.displayData()
     }
 
@@ -490,8 +492,6 @@ export function TileView(tile, isSecond=false){
         if(!view.isSecond)actionToolbar.classList.add('first')
         view.appendChild(actionToolbar)
     }
-
-
 
     view.classList.add('autoql-vanilla-tile-view')
 

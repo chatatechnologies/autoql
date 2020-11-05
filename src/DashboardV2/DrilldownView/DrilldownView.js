@@ -19,9 +19,13 @@ import {
 } from '../../Charts'
 import './DrilldownView.css'
 
-export function DrilldownView(json, tile, displayType, isStatic=true){
+export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
     var view = document.createElement('div')
-    view.classList.add('autoql-vanilla-dashboard-drilldown-original')
+    if(isStatic){
+        view.classList.add('autoql-vanilla-dashboard-drilldown-original')
+    }else{
+        view.classList.add('autoql-vanilla-dashboard-drilldown-table')
+    }
     const {
         dashboard
     } = tile
@@ -36,6 +40,25 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
 
     view.registerDrilldownChartEvent = () => {
 
+    }
+
+    view.showLoadingDots = () => {
+        view.innerHTML = ''
+
+        var responseLoadingContainer = document.createElement('div')
+        var responseLoading = document.createElement('div')
+
+        responseLoadingContainer.classList.add(
+            'autoql-vanilla-tile-response-loading-container'
+        )
+        responseLoading.classList.add('response-loading')
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'))
+        }
+
+        responseLoadingContainer.appendChild(responseLoading)
+        view.appendChild(responseLoadingContainer)
+        return responseLoadingContainer
     }
 
     view.displayData = () => {
@@ -69,7 +92,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createBarChart(
-                    chartWrapper, json, dashboard.options,
+                    chartWrapper, jsonResponse, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 );
@@ -84,7 +107,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createColumnChart(
-                    chartWrapper, json, dashboard.options,
+                    chartWrapper, jsonResponse, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 );
@@ -99,7 +122,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createLineChart(
-                    chartWrapper, json, dashboard.options,
+                    chartWrapper, jsonResponse, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 );
@@ -116,7 +139,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
 
                 createHeatmap(
                     chartWrapper,
-                    json,
+                    jsonResponse,
                     dashboard.options, false,
                     'data-tilechart', true
                 )
@@ -131,7 +154,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createBubbleChart(
-                    chartWrapper, json, dashboard.options,
+                    chartWrapper, jsonResponse, dashboard.options,
                     false, 'data-tilechart',
                     true
                 )
@@ -146,7 +169,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createStackedBarChart(
-                    chartWrapper, json,
+                    chartWrapper, jsonResponse,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
@@ -161,7 +184,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createStackedColumnChart(
-                    chartWrapper, json,
+                    chartWrapper, jsonResponse,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 );
@@ -176,7 +199,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createAreaChart(
-                    chartWrapper, json,
+                    chartWrapper, jsonResponse,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 );
@@ -190,7 +213,7 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 )
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
-                createPieChart(chartWrapper, json,
+                createPieChart(chartWrapper, jsonResponse,
                     dashboard.options, false,
                     'data-tilechart', true
                 );
@@ -214,6 +237,8 @@ export function DrilldownView(json, tile, displayType, isStatic=true){
                 break;
         }
     }
+
+    if(!isStatic)view.showLoadingDots()
 
     return view
 }

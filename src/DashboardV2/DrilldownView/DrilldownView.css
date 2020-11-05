@@ -3,3 +3,12 @@
     height: 47vh;
     padding-bottom: 20px;
 }
+
+.autoql-vanilla-dashboard-drilldown-table {
+    flex: 1 1;
+    height: 30vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
