@@ -1,16 +1,16 @@
 import {
     ChataUtils
-} from '../ChataUtils'
+} from '../../ChataUtils'
 import{
     REPORT_PROBLEM,
     FILTER_TABLE,
     COLUMN_EDITOR,
     VERTICAL_DOTS
-} from '../Svg'
+} from '../../Svg'
 import {
     htmlToElement,
     getSupportedDisplayTypes
-} from '../Utils'
+} from '../../Utils'
 import './ActionToolbar.css'
 
 export function ActionToolbar(idRequest, tileView, tile) {

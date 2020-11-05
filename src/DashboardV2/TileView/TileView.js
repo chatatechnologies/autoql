@@ -1,5 +1,5 @@
 import './TileView.css'
-import { ChataUtils } from '../ChataUtils'
+import { ChataUtils } from '../../ChataUtils'
 import {
     uuidv4,
     createTableContainer,
@@ -7,8 +7,8 @@ import {
     apiCall,
     closeAllToolbars,
     allColsHidden
-} from '../Utils'
-import { ChataTable, ChataPivotTable } from '../ChataTable'
+} from '../../Utils'
+import { ChataTable, ChataPivotTable } from '../../ChataTable'
 import {
     createAreaChart,
     createBarChart,
@@ -19,13 +19,13 @@ import {
     createPieChart,
     createStackedBarChart,
     createStackedColumnChart
-} from '../Charts'
+} from '../../Charts'
 import {
     TileVizToolbar
-} from './TileVizToolbar'
+} from '../TileVizToolbar'
 import {
     ActionToolbar
-} from './ActionToolbar'
+} from '../ActionToolbar'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
@@ -383,6 +383,7 @@ export function TileView(tile, isSecond=false){
         new TileVizToolbar(json, view, tile)
 
         var actionToolbar = new ActionToolbar(UUID, view, tile)
+        if(!view.isSecond)actionToolbar.classList.add('first')
         view.appendChild(actionToolbar)
     }
 

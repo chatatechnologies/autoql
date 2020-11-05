@@ -10,10 +10,11 @@ import {
     STACKED_COLUMN_CHART_ICON,
     STACKED_BAR_CHART_ICON,
     STACKED_AREA_CHART_ICON
-} from '../Svg'
+} from '../../Svg'
 import {
     getSupportedDisplayTypes
-} from '../Utils'
+} from '../../Utils'
+import './TileVizToolbar.css'
 
 export function TileVizToolbar(json, view, tile){
     var displayTypes = getSupportedDisplayTypes(json)

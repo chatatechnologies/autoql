@@ -5,16 +5,14 @@ import {
     DASHBOARD_DELETE_ICON,
     SPLIT_VIEW,
     SPLIT_VIEW_ACTIVE
-} from '../Svg'
-import { ChataInput, InputContainer } from '../ChataComponents'
-import { TileView } from './TileView'
+} from '../../Svg'
+import { ChataInput, InputContainer } from '../../ChataComponents'
+import { TileView } from '../TileView'
 import {
     htmlToElement
-} from '../Utils'
+} from '../../Utils'
 import Split from 'split.js'
 import './Tile.css'
-import './TileVizToolbar.css'
-
 
 
 export function Tile(dashboard, options){
