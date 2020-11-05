@@ -3,6 +3,9 @@ import {
     createTableContainer
 } from '../../Utils'
 import {
+    getGroupableFields
+} from '../../Charts/ChataChartHelpers'
+import {
     ChataTable,
     ChataPivotTable
 } from '../../ChataTable'
@@ -19,7 +22,9 @@ import {
 } from '../../Charts'
 import './DrilldownView.css'
 
-export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
+export function DrilldownView(
+    jsonResponse, tile, displayType, isStatic=true, drilldownMetadata={}
+){
     var view = document.createElement('div')
     if(isStatic){
         view.classList.add('autoql-vanilla-dashboard-drilldown-original')
@@ -39,6 +44,41 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
     }
 
     view.registerDrilldownChartEvent = () => {
+
+    }
+
+    view.executeDrilldown = (params) => {
+        const {
+            json,
+            indexData,
+            options
+        } = params
+        var loading = view.showLoadingDots()
+        const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`
+        let data
+        var queryId = json['data']['query_id']
+        var params = {}
+        var groupables = getGroupableFields(json)
+        for (var i = 0; i < groupables.length; i++) {
+            var index = groupables[i].indexCol
+            var value = json['data']['rows'][parseInt(indexData)][index]
+            var colData = json['data']['columns'][index]['name']
+            params[colData] = value.toString()
+        }
+
+        var cols = []
+        for(var [key, value] of Object.entries(params)){
+            cols.push({
+                name: key,
+                value: value
+            })
+        }
+        data = {
+            debug: options.autoQLConfig.debug,
+            columns: cols
+        }
+
+        console.log(data);
 
     }
 
@@ -67,22 +107,22 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
 
         switch (displayType) {
             case 'table':
-                var div = createTableContainer();
+                var div = createTableContainer()
                 div.setAttribute('data-componentid', UUID)
-                container.appendChild(div);
-                var scrollbox = document.createElement('div');
+                container.appendChild(div)
+                var scrollbox = document.createElement('div')
                 scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
-                );
-                scrollbox.classList.add('no-full-width');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
+                )
+                scrollbox.classList.add('no-full-width')
+                scrollbox.appendChild(div)
+                container.appendChild(scrollbox)
                 var table = new ChataTable(
                     UUID, dashboard.options, view.onRowClick
                 )
-                div.tabulator = table;
-                table.parentContainer = view;
-                break;
+                div.tabulator = table
+                table.parentContainer = view
+                break
             case 'bar':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -95,9 +135,9 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     chartWrapper, jsonResponse, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
-                );
+                )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'column':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -110,9 +150,9 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     chartWrapper, jsonResponse, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
-                );
+                )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'line':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -125,9 +165,9 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     chartWrapper, jsonResponse, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
-                );
+                )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'heatmap':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -144,7 +184,7 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     'data-tilechart', true
                 )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'bubble':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -159,7 +199,7 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     true
                 )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'stacked_bar':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -174,7 +214,7 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     'data-tilechart', true
                 )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'stacked_column':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -187,9 +227,9 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     chartWrapper, jsonResponse,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
-                );
+                )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'stacked_line':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -202,9 +242,9 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                     chartWrapper, jsonResponse,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
-                );
+                )
                 // view.registerDrilldownChartEvent(chartWrapper)
-            break;
+            break
             case 'pie':
                 var chartWrapper = document.createElement('div')
                 var chartWrapper2 = document.createElement('div')
@@ -216,29 +256,29 @@ export function DrilldownView(jsonResponse, tile, displayType, isStatic=true){
                 createPieChart(chartWrapper, jsonResponse,
                     dashboard.options, false,
                     'data-tilechart', true
-                );
+                )
                 // view.registerDrilldownChartEvent(chartWrapper)
-                break;
+                break
             case 'pivot_table':
-                var div = createTableContainer();
+                var div = createTableContainer()
                 div.setAttribute('data-componentid', UUID)
-                container.appendChild(div);
-                var scrollbox = document.createElement('div');
+                container.appendChild(div)
+                var scrollbox = document.createElement('div')
                 scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
-                );
-                scrollbox.classList.add('no-full-width');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
+                )
+                scrollbox.classList.add('no-full-width')
+                scrollbox.appendChild(div)
+                container.appendChild(scrollbox)
                 var table = new ChataPivotTable(
                     UUID, dashboard.options, view.onCellClick
                 )
-                div.tabulator = table;
-                break;
+                div.tabulator = table
+                break
         }
     }
 
-    if(!isStatic)view.showLoadingDots()
+    if(!isStatic)view.executeDrilldown(drilldownMetadata)
 
     return view
 }

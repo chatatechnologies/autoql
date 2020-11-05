@@ -170,33 +170,6 @@ export function TileView(tile, isSecond=false){
         )
     }
 
-    view.executeDrilldown = (json, indexData, options) => {
-        const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
-        let data;
-        var queryId = json['data']['query_id'];
-        var params = {};
-        var groupables = getGroupableFields(json);
-        for (var i = 0; i < groupables.length; i++) {
-            var index = groupables[i].indexCol;
-            var value = json['data']['rows'][parseInt(indexData)][index];
-            var colData = json['data']['columns'][index]['name'];
-            params[colData] = value.toString();
-        }
-
-        var cols = [];
-        for(var [key, value] of Object.entries(params)){
-            cols.push({
-                name: key,
-                value: value
-            })
-        }
-        data = {
-            debug: options.autoQLConfig.debug,
-            columns: cols
-        }
-
-    }
-
     view.displayDrilldownModal = (title, views=[]) => {
         var drilldownModal = new DrilldownModal(title, views)
         drilldownModal.show()
@@ -215,9 +188,17 @@ export function TileView(tile, isSecond=false){
             json, tile, view.internalDisplayType
         )
 
-        var tableView = new DrilldownView({}, tile, 'table', false)
-
-        view.executeDrilldown(json, indexData, options)
+        var tableView = new DrilldownView(
+            {},
+            tile,
+            'table',
+            false,
+            {
+                json: json,
+                indexData: indexData,
+                options: options
+            }
+        )
         view.displayDrilldownModal(title, [chartView, tableView])
         chartView.displayData()
     }
