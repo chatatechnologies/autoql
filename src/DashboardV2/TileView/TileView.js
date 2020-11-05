@@ -185,11 +185,10 @@ export function TileView(tile, isSecond=false){
         }
 
         var chartView = new DrilldownView(
-            json, tile, view.internalDisplayType
+            tile, view.internalDisplayType
         )
 
         var tableView = new DrilldownView(
-            {},
             tile,
             'table',
             false,
@@ -200,7 +199,8 @@ export function TileView(tile, isSecond=false){
             }
         )
         view.displayDrilldownModal(title, [chartView, tableView])
-        chartView.displayData()
+        console.log(json);
+        chartView.displayData(json)
     }
 
     view.sendDrilldownClientSideChart = (

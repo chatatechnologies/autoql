@@ -1,10 +1,14 @@
 import {
     uuidv4,
-    createTableContainer
+    createTableContainer,
+    apiCallPost
 } from '../../Utils'
 import {
     getGroupableFields
 } from '../../Charts/ChataChartHelpers'
+import {
+    ChataUtils
+} from '../../ChataUtils'
 import {
     ChataTable,
     ChataPivotTable
@@ -23,7 +27,7 @@ import {
 import './DrilldownView.css'
 
 export function DrilldownView(
-    jsonResponse, tile, displayType, isStatic=true, drilldownMetadata={}
+    tile, displayType, isStatic=true, drilldownMetadata={}
 ){
     var view = document.createElement('div')
     if(isStatic){
@@ -47,17 +51,17 @@ export function DrilldownView(
 
     }
 
-    view.executeDrilldown = (params) => {
+    view.executeDrilldown = async (params) => {
         const {
             json,
             indexData,
             options
         } = params
         var loading = view.showLoadingDots()
-        const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`
         let data
         var queryId = json['data']['query_id']
         var params = {}
+        const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`
         var groupables = getGroupableFields(json)
         for (var i = 0; i < groupables.length; i++) {
             var index = groupables[i].indexCol
@@ -78,8 +82,10 @@ export function DrilldownView(
             columns: cols
         }
 
-        console.log(data);
-
+        var response = await apiCallPost(URL, data, options);
+        ChataUtils.responses[UUID] = response.data
+        view.removeChild(loading)
+        view.displayData(response.data)
     }
 
     view.showLoadingDots = () => {
@@ -101,7 +107,7 @@ export function DrilldownView(
         return responseLoadingContainer
     }
 
-    view.displayData = () => {
+    view.displayData = (json) => {
         var container = view
         view.innerHTML = ''
 
@@ -132,7 +138,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createBarChart(
-                    chartWrapper, jsonResponse, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 )
@@ -147,7 +153,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createColumnChart(
-                    chartWrapper, jsonResponse, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 )
@@ -162,7 +168,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createLineChart(
-                    chartWrapper, jsonResponse, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 )
@@ -179,7 +185,7 @@ export function DrilldownView(
 
                 createHeatmap(
                     chartWrapper,
-                    jsonResponse,
+                    json,
                     dashboard.options, false,
                     'data-tilechart', true
                 )
@@ -194,7 +200,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createBubbleChart(
-                    chartWrapper, jsonResponse, dashboard.options,
+                    chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
                 )
@@ -209,7 +215,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createStackedBarChart(
-                    chartWrapper, jsonResponse,
+                    chartWrapper, json,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
@@ -224,7 +230,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createStackedColumnChart(
-                    chartWrapper, jsonResponse,
+                    chartWrapper, json,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
@@ -239,7 +245,7 @@ export function DrilldownView(
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
                 createAreaChart(
-                    chartWrapper, jsonResponse,
+                    chartWrapper, json,
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
@@ -253,7 +259,7 @@ export function DrilldownView(
                 )
                 chartWrapper2.appendChild(chartWrapper)
                 container.appendChild(chartWrapper2)
-                createPieChart(chartWrapper, jsonResponse,
+                createPieChart(chartWrapper, json,
                     dashboard.options, false,
                     'data-tilechart', true
                 )
