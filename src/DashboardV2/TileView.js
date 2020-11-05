@@ -6,7 +6,7 @@ import {
     formatData,
     apiCall,
     closeAllToolbars,
-    allColsHidden 
+    allColsHidden
 } from '../Utils'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
 import {
@@ -54,7 +54,7 @@ export function TileView(tile, isSecond=false){
 
     view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         reportProblem.classList.toggle('show');
-        reportProblem.classList.add('up-table');
+        reportProblem.classList.add('up-chart');
         toolbar.classList.toggle('show');
     }
 

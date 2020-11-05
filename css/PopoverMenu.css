@@ -30,11 +30,12 @@
 }
 
 .chata-popover-wrapper.up-table{
-    top: -145px;
+    top: -165px;
 }
 
 .chata-popover-wrapper.up-chart{
-    top: -109px;
+    top: -130px;
+    left: -122px;
 }
 
 .chata-popover-wrapper.up-table-single{
