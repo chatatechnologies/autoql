@@ -4,7 +4,9 @@ import {
     uuidv4,
     createTableContainer,
     formatData,
-    apiCall
+    apiCall,
+    closeAllToolbars,
+    allColsHidden 
 } from '../Utils'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
 import {
@@ -50,16 +52,37 @@ export function TileView(tile, isSecond=false){
 
     view.innerHTML = placeHolderText
 
-    view.reportProblemHandler = () => {
-
+    view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
+        reportProblem.classList.toggle('show');
+        reportProblem.classList.add('up-table');
+        toolbar.classList.toggle('show');
     }
 
-    view.moreOptionsHandler = () => {
-
+    view.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
+        let popoverClass;
+        var json = ChataUtils.responses[idRequest];
+        if(['table', 'pivot_table'].includes(view.internalDisplayType)){
+            var isAllHidden = allColsHidden(json);
+            if(isAllHidden){
+                popoverClass = 'up-table-single';
+                moreOptions.classList.remove('up-table');
+            }else{
+                popoverClass = 'up-table';
+                moreOptions.classList.remove('up-table-single');
+            }
+        }else if(json.data.columns.length === 1){
+            popoverClass = 'up-table-single';
+        }else{
+            popoverClass = 'up-chart';
+        }
+        closeAllToolbars();
+        moreOptions.classList.toggle('show');
+        moreOptions.classList.add(popoverClass);
+        toolbar.classList.toggle('show');
     }
 
-    view.openColumnEditorHandler = () => {
-
+    view.openColumnEditorHandler = (evt, id, options) => {
+        ChataUtils.showColumnEditor(id, options);
     }
 
     view.onRowClick = (e, row, json) => {
@@ -358,6 +381,7 @@ export function TileView(tile, isSecond=false){
     view.createVizToolbar = () => {
         var json = ChataUtils.responses[UUID]
         new TileVizToolbar(json, view, tile)
+
         var actionToolbar = new ActionToolbar(UUID, view, tile)
         view.appendChild(actionToolbar)
     }
