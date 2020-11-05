@@ -15,8 +15,11 @@ import {
 } from '../../Charts/ChataChartHelpers'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
 import {
-    Modal
-} from '../../Modal'
+    DrilldownModal
+} from '../DrilldownModal'
+import {
+    DrilldownView
+} from '../DrilldownView'
 import {
     createAreaChart,
     createBarChart,
@@ -195,14 +198,8 @@ export function TileView(tile, isSecond=false){
     }
 
     view.displayDrilldownModal = (title, views=[]) => {
-        var modal = new Modal({
-            destroyOnClose: true
-        })
-        modal.chataBody.classList.add('chata-modal-full-height');
-        views.map(v => modal.addView(v))
-        modal.setTitle(title)
-        modal.show()
-
+        var drilldownModal = new DrilldownModal(title, views)
+        drilldownModal.show()
     }
 
     view.sendDrilldownMessageChart = async (json, indexData, options) => {
@@ -214,8 +211,13 @@ export function TileView(tile, isSecond=false){
             title = tile.inputQuery.value
         }
 
+        var chartView = new DrilldownView(
+            json, tile, view.internalDisplayType
+        )
+
         view.executeDrilldown(json, indexData, options)
-        view.displayDrilldownModal(title, [])
+        view.displayDrilldownModal(title, [chartView])
+        chartView.displayData()
     }
 
     view.sendDrilldownClientSideChart = (
