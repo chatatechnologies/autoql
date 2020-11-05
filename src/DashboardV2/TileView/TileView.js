@@ -144,6 +144,25 @@ export function TileView(tile, isSecond=false){
         view.metadata = null;
     }
 
+    view.componentClickHandler = (handler, component, selector) => {
+        var elements = component.querySelectorAll(selector);
+        for (var i = 0; i < elements.length; i++) {
+            elements[i].onclick = (evt) => {
+                handler.apply(null, [evt, UUID])
+            }
+        }
+    }
+
+    view.registerDrilldownChartEvent = (component) => {
+        view.componentClickHandler(
+            view.chartElementClick, component, '[data-tilechart]'
+        )
+    }
+
+    view.chartElementClick = (evt, idRequest) => {
+        console.log(idRequest);
+    }
+
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
         console.log(typeof json);
@@ -204,9 +223,10 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createBarChart(
                     chartWrapper, json, dashboard.options,
-                    () => {}, false, 'data-tilechart',
+                    view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 );
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'column':
@@ -219,9 +239,10 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createColumnChart(
                     chartWrapper, json, dashboard.options,
-                    () => {}, false, 'data-tilechart',
+                    view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 );
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'line':
@@ -234,9 +255,10 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createLineChart(
                     chartWrapper, json, dashboard.options,
-                    () => {}, false, 'data-tilechart',
+                    view.registerDrilldownChartEvent, false, 'data-tilechart',
                     true
                 );
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'heatmap':
@@ -253,7 +275,8 @@ export function TileView(tile, isSecond=false){
                     json,
                     dashboard.options, false,
                     'data-tilechart', true
-                );
+                )
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'bubble':
@@ -268,7 +291,8 @@ export function TileView(tile, isSecond=false){
                     chartWrapper, json, dashboard.options,
                     false, 'data-tilechart',
                     true
-                );
+                )
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_bar':
@@ -281,9 +305,10 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createStackedBarChart(
                     chartWrapper, json,
-                    dashboard.options, () => {}, false,
+                    dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
-                );
+                )
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_column':
@@ -296,9 +321,10 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createStackedColumnChart(
                     chartWrapper, json,
-                    dashboard.options, () => {}, false,
+                    dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 );
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_line':
@@ -311,9 +337,10 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createAreaChart(
                     chartWrapper, json,
-                    dashboard.options, () => {}, false,
+                    dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 );
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
             break;
             case 'pie':
@@ -328,6 +355,7 @@ export function TileView(tile, isSecond=false){
                     dashboard.options, false,
                     'data-tilechart', true
                 );
+                view.registerDrilldownChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'pivot_table':
