@@ -53,8 +53,10 @@ export function TileView(tile, isSecond=false){
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
-        var inputToolbar = new InputToolbar(view)
+        var query = tile.options.secondQuery
+        var inputToolbar = new InputToolbar(view, query)
         view.appendChild(inputToolbar)
+        view.inputToolbar = inputToolbar
     }else{
         view.internalDisplayType = tile.options.displayType
     }
@@ -113,7 +115,7 @@ export function TileView(tile, isSecond=false){
             }
             let title =''
             if(view.isSecond){
-                title = tile.inputQuery.value
+                title = view.inputToolbar.input.value
             }else{
                 title = tile.inputQuery.value
             }
@@ -165,7 +167,13 @@ export function TileView(tile, isSecond=false){
     }
 
     view.run = async () => {
-        if(tile.inputQuery.value){
+        let query = ''
+        if(view.isSecond){
+            query = view.inputToolbar.input.value
+        }else{
+            query = tile.inputQuery.value
+        }
+        if(query){
             view.clearMetadata()
             var loading = view.showLoading()
             var data = await view.executeQuery()
@@ -178,7 +186,12 @@ export function TileView(tile, isSecond=false){
     }
 
     view.executeQuery = async () => {
-        var val = tile.inputQuery.value
+        let val = ''
+        if(view.isSecond){
+            val = view.inputToolbar.input.value
+        }else{
+            val = tile.inputQuery.value
+        }
         return apiCall(
             val, tile.dashboard.options, 'dashboards.user'
         )
@@ -223,7 +236,7 @@ export function TileView(tile, isSecond=false){
         if(!dashboard.options.autoQLConfig.enableDrilldowns)return
         let title =''
         if(view.isSecond){
-            title = tile.inputQuery.value
+            title = view.inputToolbar.input.value
         }else{
             title = tile.inputQuery.value
         }

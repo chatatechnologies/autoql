@@ -5,7 +5,7 @@ import {
 import './InputToolbar.css'
 
 
-export function InputToolbar(view){
+export function InputToolbar(view, value){
     var toolbar = document.createElement('div')
     toolbar.classList.add('autoql-vanilla-tile-toolbar')
     toolbar.classList.add('autoql-vanilla-input-toolbar')
@@ -32,6 +32,7 @@ export function InputToolbar(view){
     input.classList.add('query')
     input.classList.add('second')
     input.setAttribute('placeholder', 'Query')
+    input.value = value
 
     button.onclick = (evt) => {
         if(input.classList.contains('open')){
