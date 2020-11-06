@@ -1,0 +1,26 @@
+.autoql-vanilla-input-toolbar{
+    position: absolute;
+    top: 4px;
+    left: 7px;
+    bottom: unset;
+    height: 38px;
+}
+
+.autoql-vanilla-input-toolbar-btn{
+    padding-left: 3px;
+    margin-right: 10px;
+}
+
+.autoql-vanilla-dashboard-tile-input.second.query.open {
+    padding: 12px;
+    margin-left: 5px;
+    border: 1px solid rgba(0,0,0,.1);
+    pointer-events: unset;
+}
+
+.autoql-vanilla-input-toolbar-arrow{
+    position: absolute;
+    top: 5px;
+    left: 31px;
+    font-size: 10px;
+}

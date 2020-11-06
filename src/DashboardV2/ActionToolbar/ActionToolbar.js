@@ -17,7 +17,11 @@ export function ActionToolbar(idRequest, tileView, tile) {
 
 
     var toolbar = htmlToElement(`
-        <div class="autoql-vanilla-tile-toolbar actions-toolbar">
+        <div
+        class="
+            autoql-vanilla-tile-toolbar
+            actions-toolbar
+            autoql-vanilla-viz-toolbar">
         </div>
     `);
     var displayType = tileView.internalDisplayType

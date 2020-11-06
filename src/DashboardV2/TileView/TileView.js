@@ -37,9 +37,15 @@ import {
 import {
     ActionToolbar
 } from '../ActionToolbar'
+import {
+    InputToolbar
+} from '../InputToolbar'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
+    var responseWrapper = document.createElement('div')
+    responseWrapper.classList.add('autoql-vanilla-tile-response-wrapper')
+    view.appendChild(responseWrapper)
     const {
         dashboard
     } = tile
@@ -47,6 +53,9 @@ export function TileView(tile, isSecond=false){
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
+        var inputToolbar = new InputToolbar()
+        console.log(inputToolbar);
+        view.appendChild(inputToolbar)
     }else{
         view.internalDisplayType = tile.options.displayType
     }
@@ -61,7 +70,7 @@ export function TileView(tile, isSecond=false){
         <em>${notExecutedText}</em>
     </div>`
 
-    view.innerHTML = placeHolderText
+    responseWrapper.innerHTML = placeHolderText
 
     view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         reportProblem.classList.toggle('show');
@@ -138,7 +147,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.showLoading = () => {
-        view.innerHTML = ''
+        responseWrapper.innerHTML = ''
 
         var responseLoadingContainer = document.createElement('div')
         var responseLoading = document.createElement('div')
@@ -152,7 +161,7 @@ export function TileView(tile, isSecond=false){
         }
 
         responseLoadingContainer.appendChild(responseLoading)
-        view.appendChild(responseLoadingContainer)
+        responseWrapper.appendChild(responseLoadingContainer)
         return responseLoadingContainer
     }
 
@@ -161,11 +170,11 @@ export function TileView(tile, isSecond=false){
             view.clearMetadata()
             var loading = view.showLoading()
             var data = await view.executeQuery()
-            view.removeChild(loading)
+            responseWrapper.removeChild(loading)
             ChataUtils.responses[UUID] = data.data
             view.displayData()
         }else{
-            view.innerHTML = placeHolderText
+            responseWrapper.innerHTML = placeHolderText
         }
     }
 
@@ -262,17 +271,17 @@ export function TileView(tile, isSecond=false){
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
         if(json === undefined)return
-        var container = view
+        var container = responseWrapper
         var displayType = view.internalDisplayType
         var toolbarType = ''
-        view.innerHTML = ''
+        responseWrapper.innerHTML = ''
 
         switch (displayType) {
             case 'safetynet':
                 var responseContentContainer = obj.getSafetynetBody(
                     json
                 );
-                view.appendChild(
+                responseWrapper.appendChild(
                     responseContentContainer
                 );
                 updateSelectWidth(responseContentContainer);

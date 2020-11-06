@@ -22,7 +22,7 @@ export function TileVizToolbar(json, view, tile){
     var ignoreDisplayType = view.internalDisplayType
     var dummyArray = []
     dummyArray.forEach.call(view.querySelectorAll(
-        '.autoql-vanilla-tile-toolbar'
+        '.autoql-vanilla-viz-toolbar'
     ),
     function(e, index){
         e.parentNode.removeChild(e)
@@ -38,6 +38,7 @@ export function TileVizToolbar(json, view, tile){
         )
 
         vizToolbar.classList.add('autoql-vanilla-tile-toolbar')
+        vizToolbar.classList.add('autoql-vanilla-viz-toolbar')
         for (var i = 0; i < displayTypes.length; i++) {
             if(displayTypes[i] == ignoreDisplayType)continue
             var button = document.createElement('button')

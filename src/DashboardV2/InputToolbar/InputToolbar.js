@@ -1,12 +1,14 @@
 import {
-    INPUT_BUBBLES
+    INPUT_BUBBLES,
     LEFT_ARROW
 } from '../../Svg'
+import './InputToolbar.css'
+
 
 export function InputToolbar(){
     var toolbar = document.createElement('div')
     toolbar.classList.add('autoql-vanilla-tile-toolbar')
-    toolbar.classList.add('autoql-vanilla-split-view-btn')
+    toolbar.classList.add('autoql-vanilla-input-toolbar')
 
     var button = document.createElement('button')
     button.classList.add('autoql-vanilla-chata-toolbar-btn')
@@ -20,10 +22,14 @@ export function InputToolbar(){
     var arrowIcon = document.createElement('span')
     arrowIcon.classList.add('autoql-vanilla-chata-icon')
     arrowIcon.classList.add('autoql-vanilla-input-toolbar-arrow')
-    arrowIcon.innerHTML = INPUT_BUBBLES
+    arrowIcon.innerHTML = LEFT_ARROW
 
 
     button.appendChild(bubblesIcon)
     button.appendChild(arrowIcon)
+
+    toolbar.appendChild(button)
+
+
     return toolbar
 }

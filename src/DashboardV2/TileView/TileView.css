@@ -16,6 +16,16 @@
     padding: 25px;
 }
 
+.autoql-vanilla-tile-response-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
+}
+
 .autoql-vanilla-tile-view line {
     stroke-width: 1px;
     stroke: currentColor;
@@ -40,7 +50,7 @@
     margin-top: -6px;
     opacity: .9;
     color: var(--autoql-vanilla-text-color-primary);
-    
+
 }
 
 .gutter {
