@@ -53,8 +53,7 @@ export function TileView(tile, isSecond=false){
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
-        var inputToolbar = new InputToolbar()
-        console.log(inputToolbar);
+        var inputToolbar = new InputToolbar(view)
         view.appendChild(inputToolbar)
     }else{
         view.internalDisplayType = tile.options.displayType
