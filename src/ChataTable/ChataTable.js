@@ -183,9 +183,6 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
         `[data-componentid='${idRequest}']`
     );
 
-    console.log(columns);
-    console.log(tableData);
-
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
         virtualDomBuffer: 300,

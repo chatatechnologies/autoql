@@ -97,7 +97,32 @@ export function TileView(tile, isSecond=false){
     }
 
     view.onRowClick = (e, row, json) => {
+        var index = 0;
+        var groupableCount = getNumberOfGroupables(json['data']['columns']);
+        if(groupableCount > 0){
+            for(var[key, value] of Object.entries(row._row.data)){
+                json['data']['rows'][0][index++] = value;
+            }
+            let title =''
+            if(view.isSecond){
+                title = tile.inputQuery.value
+            }else{
+                title = tile.inputQuery.value
+            }
 
+            var tableView = new DrilldownView(
+                tile,
+                'table',
+                () => {},
+                false,
+                {
+                    json: json,
+                    indexData: 0,
+                    options: dashboard.options
+                }
+            )
+            view.displayDrilldownModal(title, [tableView])
+        }
     }
 
     view.onCellClick = (e ,cell, json) => {

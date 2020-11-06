@@ -1936,15 +1936,6 @@ export function DataMessenger(elem, options){
         }
     }
 
-    obj.rowClick = (evt, idRequest) => {
-        var json = ChataUtils.responses[idRequest];
-        var row = evt.target.parentElement;
-        var indexData = row.dataset.indexrow;
-        if(row.dataset.hasDrilldown === 'true'){
-            obj.sendDrilldownMessage(json, indexData, obj.options);
-        }
-    }
-
     obj.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest]);
         var indexData = evt.target.dataset.chartindex;
@@ -1993,12 +1984,6 @@ export function DataMessenger(elem, options){
     obj.registerDrilldownStackedChartEvent = (component) => {
         obj.componentClickHandler(
             obj.stackedChartElementClick, component, '[data-stackedchartindex]'
-        )
-    }
-
-    obj.registerDrilldownTableEvent = (table) => {
-        obj.componentClickHandler(
-            obj.rowClick, table, 'tr'
         )
     }
 
