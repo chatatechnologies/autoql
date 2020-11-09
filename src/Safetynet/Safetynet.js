@@ -20,7 +20,8 @@ export function getRunQueryButton(){
     return runQueryButton
 }
 
-export function createSafetynetContent(suggestionArray, onClick=()=>{}){
+export function createSafetynetContent(
+    suggestionArray, onClick=()=>{}, onChange=()=>{}){
     const message = `
     I need your help matching a term you used to the exact corresponding
     term in your database. Verify by selecting the correct
@@ -46,13 +47,13 @@ export function createSafetynetContent(suggestionArray, onClick=()=>{}){
         </div>
     `;
     safetyNetContainer.appendChild(safetynetQuery);
-    createSafetynetBody(safetynetQuery, suggestionArray);
+    createSafetynetBody(safetynetQuery, suggestionArray, onChange);
     safetyNetContainer.appendChild(runQueryButton);
     responseContentContainer.appendChild(safetyNetContainer);
     return responseContentContainer;
 }
 
-function SafetynetSelector(suggestionList, position, parent){
+function SafetynetSelector(suggestionList, position, parent, onChange){
     var wrapper = document.createElement('div');
     var ul = document.createElement('ul');
     var widthList = [];
@@ -92,6 +93,7 @@ function SafetynetSelector(suggestionList, position, parent){
 
         li.onclick = (evt) => {
             parent.innerHTML = evt.target.dataset.satefynetValue;
+            onChange()
         }
     })
 
@@ -105,6 +107,8 @@ function SafetynetSelector(suggestionList, position, parent){
     li.onclick = (evt) => {
         var topParent = parent.parentElement;
         topParent.removeChild(parent);
+        onChange()
+
     }
 
     var width = 0;
@@ -139,7 +143,8 @@ function SafetynetSelector(suggestionList, position, parent){
     return wrapper;
 }
 
-export function createSafetynetBody(responseContentContainer, suggestionArray){
+export function createSafetynetBody(
+    responseContentContainer, suggestionArray, onChange){
     const safetyDeleteButtonHtml = `
         ${DELETE_ICON}
     `;
@@ -164,7 +169,7 @@ export function createSafetynetBody(responseContentContainer, suggestionArray){
                 var selector = new SafetynetSelector(suggestion, {
                     left: evt.clientX,
                     top: evt.clientY,
-                }, select);
+                }, select, onChange);
                 selector.show();
             }
             div.appendChild(select);
@@ -211,7 +216,9 @@ export function createSuggestionArray(jsonResponse){
                 suggestionArray.push({
                     word: word,
                     type: 'suggestion',
-                    suggestionList: suggestions
+                    suggestionList: suggestions,
+                    start: start,
+                    end: end
                 })
                 hasSuggestion = true;
                 break;

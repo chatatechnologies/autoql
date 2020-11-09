@@ -204,12 +204,22 @@ export function TileView(tile, isSecond=false){
         var values = getSafetynetValues(view)
         console.log(values.join(' '));
     }
-    
+
+    view.onChangeSafetynet = () => {
+        var value = getSafetynetValues(view).join(' ')
+        console.log(value);
+        if(view.isSecond){
+            view.inputToolbar.input.value = value
+        }else{
+            tile.inputQuery.value = value
+        }
+    }
+
     view.displaySafetynet = () => {
         var json = ChataUtils.responses[UUID]
         var suggestionArray = createSuggestionArray(json)
         var safetynet = createSafetynetContent(
-            suggestionArray, view.runSafetynet
+            suggestionArray, view.runSafetynet, view.onChangeSafetynet
         )
         responseWrapper.innerHTML = ''
         responseWrapper.appendChild(safetynet)
