@@ -33,6 +33,10 @@ import {
     createStackedColumnChart
 } from '../../Charts'
 import {
+    createSuggestionArray,
+    createSafetynetContent
+} from '../../Safetynet'
+import {
     TileVizToolbar
 } from '../TileVizToolbar'
 import {
@@ -181,7 +185,8 @@ export function TileView(tile, isSecond=false){
             var validate = await view.executeValidate()
             console.log(validate.data);
             if(validate.data.data.replacements.length){
-                responseWrapper.innerHTML = 'SAFETYNET!!'
+                ChataUtils.responses[UUID] = validate.data
+                view.displaySafetynet()
             }else{
                 var data = await view.executeQuery()
                 responseWrapper.removeChild(loading)
@@ -192,6 +197,14 @@ export function TileView(tile, isSecond=false){
         }else{
             responseWrapper.innerHTML = placeHolderText
         }
+    }
+
+    view.displaySafetynet = () => {
+        var json = ChataUtils.responses[UUID]
+        var suggestionArray = createSuggestionArray(json)
+        var safetynet = createSafetynetContent(suggestionArray)
+        responseWrapper.innerHTML = ''
+        responseWrapper.appendChild(safetynet)
     }
 
     view.executeValidate = async () => {

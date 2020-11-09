@@ -20,24 +20,17 @@ export function getRunQueryButton(){
     return runQueryButton
 }
 
-export function createSafetynetContent(suggestionArray, context){
+export function createSafetynetContent(suggestionArray, onClick=()=>{}){
     const message = `
     I need your help matching a term you used to the exact corresponding
     term in your database. Verify by selecting the correct
     term from the menu below:`;
 
-    const runQueryButtonHtml = `
-    <button class="autoql-vanilla-chata-safety-net-execute-btn">
-        <span class="chata-icon autoql-vanilla-chata-execute-query-icon">
-            ${RUN_QUERY}
-        </span>
-    Run Query</button>
-    `;
-
     const runQueryButton = getRunQueryButton();
     runQueryButton.onclick = function(event){
         closeAllSafetynetSelectors();
-        runQuery(event, context);
+        onClick(event)
+        // runQuery(event, context);
     }
     var responseContentContainer = document.createElement('div');
     var safetyNetContainer = document.createElement('div');
