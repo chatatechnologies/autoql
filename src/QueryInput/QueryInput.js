@@ -15,8 +15,13 @@ import {
     uuidv4,
     mergeOptions,
     createTableContainer,
-    cloneObject
+    cloneObject,
+    getSafetynetValues
 } from '../Utils'
+import {
+    createSafetynetContent,
+    createSuggestionArray
+} from '../Safetynet'
 import {
     getGroupableFields
 } from '../Charts/ChataChartHelpers'
@@ -446,7 +451,12 @@ export function QueryInput(selector, options){
                     parent.removeChild(responseLoadingContainer);
                 }
                 var suggestionArray = createSuggestionArray(jsonResponse);
-                var node = createSafetynetContent(suggestionArray, chataBarContainer);
+                var node = createSafetynetContent(suggestionArray, () => {
+                    var words = getSafetynetValues(responseRenderer);
+                    objContext.sendMessageToResponseRenderer(
+                        words.join(' '), 'user'
+                    );
+                });
                 responseRenderer.appendChild(node);
                 chataBarContainer.options.onResponseCallback(jsonResponse);
                 ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;

@@ -26,7 +26,8 @@ import {
     apiCall,
     apiCallGet,
     apiCallPut,
-    apiCallPost
+    apiCallPost,
+    getSafetynetValues
 } from '../Utils'
 import {
     createAreaChart,
@@ -2679,7 +2680,10 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');
-        messageBubble.append(createSafetynetContent(suggestionArray, obj));
+        messageBubble.append(createSafetynetContent(suggestionArray, () => {
+            var words = getSafetynetValues(messageBubble);
+            obj.keyboardAnimation(words.join(' '));
+        }));
 
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);

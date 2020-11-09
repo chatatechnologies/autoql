@@ -9,7 +9,8 @@ import {
     closeAllToolbars,
     allColsHidden,
     cloneObject,
-    getNumberOfGroupables
+    getNumberOfGroupables,
+    getSafetynetValues
 } from '../../Utils'
 import {
     getGroupableFields
@@ -199,10 +200,17 @@ export function TileView(tile, isSecond=false){
         }
     }
 
+    view.runSafetynet = () => {
+        var values = getSafetynetValues(view)
+        console.log(values.join(' '));
+    }
+    
     view.displaySafetynet = () => {
         var json = ChataUtils.responses[UUID]
         var suggestionArray = createSuggestionArray(json)
-        var safetynet = createSafetynetContent(suggestionArray)
+        var safetynet = createSafetynetContent(
+            suggestionArray, view.runSafetynet
+        )
         responseWrapper.innerHTML = ''
         responseWrapper.appendChild(safetynet)
     }
