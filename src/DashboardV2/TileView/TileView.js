@@ -244,7 +244,6 @@ export function TileView(tile, isSecond=false){
         json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1
         json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2
         json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3
-        console.log(json['data']['rows'][0]);
         view.sendDrilldownMessageChart(json, 0, dashboard.options)
     }
 
@@ -272,11 +271,21 @@ export function TileView(tile, isSecond=false){
 
         const onClickDrilldownView = (evt, idRequest) => {
             var indexData = evt.target.dataset.tilechart
-            var colValue = evt.target.dataset.colvalue1
-            var indexValue = evt.target.dataset.filterindex
+            var curJson = json
+
+            if(evt.target.classList.contains('autoql-vanilla-stacked-rect')){
+                curJson = cloneObject(curJson)
+                curJson['data']['rows'][0][0] =
+                evt.target.dataset.unformatvalue1
+                curJson['data']['rows'][0][1] =
+                evt.target.dataset.unformatvalue2
+                curJson['data']['rows'][0][2] =
+                evt.target.dataset.unformatvalue3
+                indexData = 0
+            }
 
             tableView.executeDrilldown({
-                json: json,
+                json: curJson,
                 indexData: indexData,
                 options: options
             })

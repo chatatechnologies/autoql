@@ -2739,7 +2739,6 @@ export function DataMessenger(elem, options){
 
         var response = await apiCallGet(URL_SAFETYNET, obj.options)
         if(response.status != 200){
-            console.log(response);
             obj.sendResponse(response.data.message)
             obj.drawerContent.removeChild(responseLoadingContainer)
             return
