@@ -189,6 +189,26 @@ export function putLoadingContainer(target){
     return responseLoadingContainer;
 }
 
+export function getSafetynetUserSelection(node){
+    var nodes = node.getElementsByClassName(
+        'autoql-vanilla-chata-safetynet-select'
+    );
+    var selections = []
+    for (var i = 0; i < nodes.length; i++) {
+        var n = nodes[i]
+        console.log(n.option);
+        const { start, end } = n.suggestion
+        console.log(n.suggestion);
+        selections.push({
+            start: start,
+            end: end,
+            ...n.option
+        })
+    }
+
+    return selections
+}
+
 export function getSafetynetValues(node){
     var nodes = node.getElementsByClassName('safetynet-value');
     var words = [];

@@ -10,7 +10,8 @@ import {
     allColsHidden,
     cloneObject,
     getNumberOfGroupables,
-    getSafetynetValues
+    getSafetynetValues,
+    getSafetynetUserSelection
 } from '../../Utils'
 import {
     getGroupableFields
@@ -35,7 +36,7 @@ import {
 } from '../../Charts'
 import {
     createSuggestionArray,
-    createSafetynetContent
+    createSafetynetContent,
 } from '../../Safetynet'
 import {
     TileVizToolbar
@@ -201,13 +202,15 @@ export function TileView(tile, isSecond=false){
     }
 
     view.runSafetynet = () => {
-        var values = getSafetynetValues(view)
-        console.log(values.join(' '));
+        var values = getSafetynetUserSelection(view)
+        console.log(values);
     }
 
-    view.onChangeSafetynet = () => {
+    view.onChangeSafetynet = (suggestionList, selectedOption) => {
         var value = getSafetynetValues(view).join(' ')
         console.log(value);
+        console.log(suggestionList);
+        console.log(selectedOption);
         if(view.isSecond){
             view.inputToolbar.input.value = value
         }else{
