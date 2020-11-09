@@ -53,7 +53,8 @@ export function TileView(tile, isSecond=false){
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
-        var query = tile.options.secondQuery
+        var query = tile.options.secondQuery ||
+        tile.inputQuery.value || ''
         var inputToolbar = new InputToolbar(view, query)
         view.appendChild(inputToolbar)
         view.inputToolbar = inputToolbar
@@ -216,6 +217,12 @@ export function TileView(tile, isSecond=false){
         )
     }
 
+    view.registerDrilldownStackedChartEvent = (component) => {
+        view.componentClickHandler(
+            view.stackedChartElementClick, component, '[data-tilechart]'
+        )
+    }
+
     view.displayDrilldownModal = (title, views=[]) => {
         var drilldownModal = new DrilldownModal(title, views)
         drilldownModal.show()
@@ -230,6 +237,14 @@ export function TileView(tile, isSecond=false){
         if(groupableCount == 1 || groupableCount == 2){
             view.sendDrilldownMessageChart(json, indexData, dashboard.options)
         }
+    }
+
+    view.stackedChartElementClick = (evt, idRequest) => {
+        var json = cloneObject(ChataUtils.responses[idRequest])
+        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1
+        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2
+        json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3
+        view.sendDrilldownMessageChart(json, 0, dashboard.options)
     }
 
     view.sendDrilldownMessageChart = async (json, indexData, options) => {
@@ -424,7 +439,7 @@ export function TileView(tile, isSecond=false){
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
-                view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownStackedChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_column':
@@ -440,7 +455,7 @@ export function TileView(tile, isSecond=false){
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 );
-                view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownStackedChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
                 break;
             case 'stacked_line':
@@ -456,7 +471,7 @@ export function TileView(tile, isSecond=false){
                     dashboard.options, view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 );
-                view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownStackedChartEvent(chartWrapper)
                 toolbarType = 'chart-view';
             break;
             case 'pie':
