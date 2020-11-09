@@ -1184,7 +1184,7 @@ export const apiCallGet = (url, options, extraHeaders={}) => {
     return axios.get(url, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.reject(error)
+        return Promise.resolve(_get(error, 'response'))
     })
 }
 
@@ -1208,6 +1208,6 @@ export const apiCallNotificationCount = (url, options) => {
         return Promise.resolve(response)
     })
     .catch((error) => {
-        return Promise.resolve(error)
+        return Promise.resolve(_get(error, 'response'))
     })
 }

@@ -2738,6 +2738,12 @@ export function DataMessenger(elem, options){
         )}&key=${apiKey}`
 
         var response = await apiCallGet(URL_SAFETYNET, obj.options)
+        if(response.status != 200){
+            console.log(response);
+            obj.sendResponse(response.data.message)
+            obj.drawerContent.removeChild(responseLoadingContainer)
+            return
+        }
         let suggestions = {}
         if(response.data != undefined){
             suggestions = response.data['full_suggestion']
