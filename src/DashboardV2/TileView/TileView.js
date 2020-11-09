@@ -5,6 +5,7 @@ import {
     createTableContainer,
     formatData,
     apiCall,
+    apiCallGet,
     closeAllToolbars,
     allColsHidden,
     cloneObject,
@@ -177,13 +178,38 @@ export function TileView(tile, isSecond=false){
         if(query){
             view.clearMetadata()
             var loading = view.showLoading()
-            var data = await view.executeQuery()
-            responseWrapper.removeChild(loading)
-            ChataUtils.responses[UUID] = data.data
-            view.displayData()
+            var validate = await view.executeValidate()
+            console.log(validate.data);
+            if(validate.data.data.replacements.length){
+                responseWrapper.innerHTML = 'SAFETYNET!!'
+            }else{
+                var data = await view.executeQuery()
+                responseWrapper.removeChild(loading)
+                ChataUtils.responses[UUID] = data.data
+                view.displayData()
+            }
+
         }else{
             responseWrapper.innerHTML = placeHolderText
         }
+    }
+
+    view.executeValidate = async () => {
+        const {
+            apiKey,
+            domain
+        } = dashboard.options.authentication
+        let val = ''
+        if(view.isSecond){
+            val = view.inputToolbar.input.value
+        }else{
+            val = tile.inputQuery.value
+        }
+        const URL_SAFETYNET = `${domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
+            val
+        )}&key=${apiKey}`
+
+        return apiCallGet(URL_SAFETYNET, dashboard.options)
     }
 
     view.executeQuery = async () => {
