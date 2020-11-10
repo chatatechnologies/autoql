@@ -79,6 +79,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
     }
 
     list.map(el => {
+        console.log(el);
         var li = document.createElement('li');
         li.classList.add('autoql-vanilla-safetynet-item')
         var textContent = el['text'];
@@ -94,6 +95,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
 
         li.onclick = (evt) => {
             parent.innerHTML = evt.target.dataset.satefynetValue;
+            parent.option = el
             onChange(suggestionList, el)
         }
     })
@@ -159,6 +161,8 @@ export function createSafetynetBody(
         }else{
             var div = document.createElement('div');
             var select = document.createElement('div');
+            select.suggestion = suggestion
+            select.option = suggestion.suggestionList[0]
             select.innerHTML = suggestion['suggestionList'][0]['text'];
             select.classList.add('autoql-vanilla-chata-safetynet-select');
             select.classList.add('safetynet-value');
@@ -212,7 +216,9 @@ export function createSuggestionArray(jsonResponse){
                 || fullSuggestion[x]['suggestions'];
                 suggestions.push({
                     text: word,
-                    value_label: 'Original term'
+                    // value_label: 'Original term',
+                    canonical: "ORIGINAL_TEXT",
+                    value_label: "ORIGINAL_TEXT"
                 })
                 suggestionArray.push({
                     word: word,

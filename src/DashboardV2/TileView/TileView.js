@@ -185,7 +185,6 @@ export function TileView(tile, isSecond=false){
             view.clearMetadata()
             var loading = view.showLoading()
             var validate = await view.executeValidate()
-            console.log(validate.data);
             if(validate.data.data.replacements.length){
                 ChataUtils.responses[UUID] = validate.data
                 view.displaySafetynet()
@@ -208,9 +207,6 @@ export function TileView(tile, isSecond=false){
 
     view.onChangeSafetynet = (suggestionList, selectedOption) => {
         var value = getSafetynetValues(view).join(' ')
-        console.log(value);
-        console.log(suggestionList);
-        console.log(selectedOption);
         if(view.isSecond){
             view.inputToolbar.input.value = value
         }else{
