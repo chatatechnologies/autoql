@@ -84,7 +84,10 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
         li.classList.add('autoql-vanilla-safetynet-item')
         var textContent = el['text'];
         if(el.value_label){
-            textContent += ` (${el.value_label})`;
+            var value = el.value_label.replace(
+                'ORIGINAL_TEXT', 'Original term'
+            )
+            textContent += ` (${value})`;
         }
         li.setAttribute('data-satefynet-value', el['text']);
         li.innerHTML = textContent;
@@ -216,7 +219,6 @@ export function createSuggestionArray(jsonResponse){
                 || fullSuggestion[x]['suggestions'];
                 suggestions.push({
                     text: word,
-                    // value_label: 'Original term',
                     canonical: "ORIGINAL_TEXT",
                     value_label: "ORIGINAL_TEXT"
                 })

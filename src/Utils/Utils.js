@@ -196,12 +196,14 @@ export function getSafetynetUserSelection(node){
     var selections = []
     for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i]
-        console.log(n.options);
+        console.log(n.option);
         const { start, end } = n.suggestion
         selections.push({
             start: start,
             end: end,
-            ...n.option
+            value: n.option.text,
+            canonical: n.option.canonical,
+            value_label: n.option.value_label
         })
     }
 
