@@ -1102,7 +1102,7 @@ export function getRecommendationPath(options, text) {
 }
 
 
-export const apiCall = (val, options, source) => {
+export const apiCall = (val, options, source, userSelection=undefined) => {
     const {
         token,
         apiKey,
@@ -1125,9 +1125,10 @@ export const apiCall = (val, options, source) => {
     const data = {
         text: val,
         source: source,
-        debug: debug,
-        test: test
+        test: test,
     }
+
+    if(userSelection)data.user_selection = userSelection
 
     return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)

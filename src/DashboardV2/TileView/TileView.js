@@ -57,6 +57,8 @@ export function TileView(tile, isSecond=false){
         dashboard
     } = tile
     view.isSecond = isSecond
+    view.isSafetynet = false
+
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
         tile.options.displayType
@@ -200,9 +202,20 @@ export function TileView(tile, isSecond=false){
         }
     }
 
-    view.runSafetynet = () => {
-        var values = getSafetynetUserSelection(view)
-        console.log(values);
+    view.runSafetynet = async () => {
+        var selection = getSafetynetUserSelection(view)
+        var text = getSafetynetValues(view).join(' ')
+        var loading = view.showLoading()
+        var response = await apiCall(
+            text, tile.dashboard.options,
+            'dashboards.validation', selection
+        )
+        if(response.status === 200){
+            ChataUtils.responses[UUID] = response.data
+            view.displayData()
+        }else{
+            responseWrapper.removeChild(loading)
+        }
     }
 
     view.onChangeSafetynet = (suggestionList, selectedOption) => {
@@ -215,6 +228,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.displaySafetynet = () => {
+        view.isSafetynet = true
         var json = ChataUtils.responses[UUID]
         var suggestionArray = createSuggestionArray(json)
         var safetynet = createSafetynetContent(
