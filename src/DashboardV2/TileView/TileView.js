@@ -177,6 +177,16 @@ export function TileView(tile, isSecond=false){
         return responseLoadingContainer
     }
 
+    view.displaySuggestions = () => {
+        var div = document.createElement('div')
+        responseWrapper.innerHTML = ''
+        div.innerHTML = `
+            I want to make sure I understood your query. Did you mean:
+        `
+        responseWrapper.appendChild(div)
+
+    }
+
     view.run = async () => {
         let query = ''
         if(view.isSecond){
@@ -193,9 +203,16 @@ export function TileView(tile, isSecond=false){
                 view.displaySafetynet()
             }else{
                 var data = await view.executeQuery()
-                responseWrapper.removeChild(loading)
-                ChataUtils.responses[UUID] = data.data
-                view.displayData()
+                if(
+                    data.data.reference_id === '1.1.430' ||
+                    data.data.reference_id === '1.1.431'
+                ){
+                    view.displaySuggestions()
+                }else{
+                    responseWrapper.removeChild(loading)
+                    ChataUtils.responses[UUID] = data.data
+                    view.displayData()
+                }
             }
 
         }else{
