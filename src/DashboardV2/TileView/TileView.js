@@ -12,7 +12,8 @@ import {
     getNumberOfGroupables,
     getSafetynetValues,
     getSafetynetUserSelection,
-    getSupportedDisplayTypes
+    getSupportedDisplayTypes,
+    getRecommendationPath
 } from '../../Utils'
 import {
     getGroupableFields
@@ -177,12 +178,26 @@ export function TileView(tile, isSecond=false){
         return responseLoadingContainer
     }
 
-    view.displaySuggestions = () => {
+    view.displaySuggestions = async () => {
+        var jsonResponse = ChataUtils.responses[UUID]
         var div = document.createElement('div')
-        responseWrapper.innerHTML = ''
         div.innerHTML = `
             I want to make sure I understood your query. Did you mean:
         `
+        let query = ''
+        if(view.isSecond){
+            query = view.inputToolbar.input.value
+        }else{
+            query = tile.inputQuery.value
+        }
+        const path = getRecommendationPath(
+            dashboard.options,
+            query.split(' ').join(',')
+        ) + '&query_id=' + jsonResponse['data']['query_id'];
+        var response = await apiCallGet(path, dashboard.options)
+
+        console.log(response.data);
+
         responseWrapper.appendChild(div)
 
     }
@@ -203,6 +218,7 @@ export function TileView(tile, isSecond=false){
                 view.displaySafetynet()
             }else{
                 var data = await view.executeQuery()
+                ChataUtils.responses[UUID] = data.data
                 if(
                     data.data.reference_id === '1.1.430' ||
                     data.data.reference_id === '1.1.431'
@@ -210,7 +226,6 @@ export function TileView(tile, isSecond=false){
                     view.displaySuggestions()
                 }else{
                     responseWrapper.removeChild(loading)
-                    ChataUtils.responses[UUID] = data.data
                     view.displayData()
                 }
             }
