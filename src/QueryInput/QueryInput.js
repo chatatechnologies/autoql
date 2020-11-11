@@ -17,7 +17,8 @@ import {
     createTableContainer,
     cloneObject,
     getSafetynetValues,
-    getSafetynetUserSelection
+    getSafetynetUserSelection,
+    apiCall
 } from '../Utils'
 import {
     createSafetynetContent,
@@ -441,7 +442,7 @@ export function QueryInput(selector, options){
             value
           )}&key=${chataBarContainer.options.authentication.apiKey}&customer_id=${chataBarContainer.options.authentication.customerId}&user_id=${chataBarContainer.options.authentication.userId}`
 
-        ChataUtils.safetynetCall(URL_SAFETYNET, function(jsonResponse, statusCode){
+        ChataUtils.safetynetCall(URL_SAFETYNET, async function(jsonResponse, statusCode){
             // jsonResponse['full_suggestion'].length
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
@@ -467,11 +468,13 @@ export function QueryInput(selector, options){
                 chataBarContainer.options.onResponseCallback(jsonResponse);
                 ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
             }else{
-                ChataUtils.ajaxCall(value, function(jsonResponse){
-                    chataBarContainer.refreshView(jsonResponse, value)
-                    parent.removeChild(responseLoadingContainer);
-                    chataBarContainer.chatbar.removeAttribute("disabled");
-                }, chataBarContainer.options, source);
+                var response = await apiCall(
+                    value, chataBarContainer.options, source, selections
+                )
+                var jsonResponse = response.data
+                chataBarContainer.refreshView(jsonResponse, value)
+                parent.removeChild(responseLoadingContainer);
+                chataBarContainer.chatbar.removeAttribute("disabled");
             }
         }, chataBarContainer.options);
     }
