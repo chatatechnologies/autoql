@@ -2483,7 +2483,6 @@ export function DataMessenger(elem, options){
                 }
 
                 var response = await apiCallPut(url, body, obj.options)
-                console.log(response);
                 obj.drawerContent.removeChild(loading);
                 obj.sendResponse('Thank you for your feedback')
 

@@ -178,27 +178,49 @@ export function TileView(tile, isSecond=false){
         return responseLoadingContainer
     }
 
-    view.displaySuggestions = async () => {
-        var jsonResponse = ChataUtils.responses[UUID]
+    view.showSuggestionButtons = (response) => {
+        var items = response.data.items
+        var relatedJson = ChataUtils.responses[UUID]
+        var suggestionsContainer = document.createElement('div')
         var div = document.createElement('div')
+        
         div.innerHTML = `
-            I want to make sure I understood your query. Did you mean:
+        I want to make sure I understood your query. Did you mean:
         `
+
+        suggestionsContainer.appendChild(div)
+
+        for (var i = 0; i < items.length; i++) {
+            var button = document.createElement('button')
+            button.classList.add('autoql-vanilla-chata-suggestion-btn');
+            button.textContent = items[i]
+            suggestionsContainer.appendChild(button)
+        }
+
+        responseWrapper.appendChild(suggestionsContainer)
+    }
+
+    view.getSuggestions = () => {
+        var jsonResponse = ChataUtils.responses[UUID]
         let query = ''
         if(view.isSecond){
             query = view.inputToolbar.input.value
         }else{
             query = tile.inputQuery.value
         }
+
         const path = getRecommendationPath(
             dashboard.options,
             query.split(' ').join(',')
         ) + '&query_id=' + jsonResponse['data']['query_id'];
-        var response = await apiCallGet(path, dashboard.options)
+        return apiCallGet(path, dashboard.options)
+    }
 
-        console.log(response.data);
+    view.displaySuggestions = async () => {
+        var response = await view.getSuggestions()
 
-        responseWrapper.appendChild(div)
+        responseWrapper.innerHTML = ''
+        view.showSuggestionButtons(response.data)
 
     }
 
