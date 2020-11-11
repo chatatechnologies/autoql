@@ -27,7 +27,8 @@ import {
     apiCallGet,
     apiCallPut,
     apiCallPost,
-    getSafetynetValues
+    getSafetynetValues,
+    getSafetynetUserSelection
 } from '../Utils'
 import {
     createAreaChart,
@@ -868,6 +869,32 @@ export function DataMessenger(elem, options){
         obj.queryTips = container;
         obj.drawerContent.appendChild(container);
         obj.queryTipsInput = input;
+    }
+
+    obj.safetynetAnimation = (text, selections) => {
+        var chataInput = obj.input;
+        chataInput.focus();
+        var subQuery = '';
+        var index = 0;
+        var int = setInterval(function () {
+            subQuery += text[index];
+            if(index >= text.length){
+                clearInterval(int);
+                obj.sendMessage(
+                    chataInput.value, 'data_messenger.validation', selections
+                )
+
+                // var ev = new KeyboardEvent('keypress', {
+                //     keyCode: 13,
+                //     type: "keypress",
+                //     which: 13
+                // });
+                // chataInput.dispatchEvent(ev)
+            }else{
+                chataInput.value = subQuery;
+            }
+            index++;
+        }, 85);
     }
 
     obj.keyboardAnimation = (text) => {
@@ -2682,7 +2709,9 @@ export function DataMessenger(elem, options){
         messageBubble.classList.add('full-width');
         messageBubble.append(createSafetynetContent(suggestionArray, () => {
             var words = getSafetynetValues(messageBubble);
-            obj.keyboardAnimation(words.join(' '));
+            var selections = getSafetynetUserSelection(messageBubble);
+
+            obj.safetynetAnimation(words.join(' '), selections);
         }));
 
         containerMessage.appendChild(messageBubble);
@@ -2728,7 +2757,7 @@ export function DataMessenger(elem, options){
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
-    obj.sendMessage = async (textValue, source) => {
+    obj.sendMessage = async (textValue, source, selections=undefined) => {
         obj.input.disabled = true;
         obj.input.value = '';
         const {
@@ -2757,6 +2786,7 @@ export function DataMessenger(elem, options){
             obj.options.autoQLConfig.enableQueryValidation
             && textValue != 'None Of these'
             && suggestions.length > 0
+            && typeof selections === 'undefined'
         ){
 
             obj.input.removeAttribute("disabled")
@@ -2764,7 +2794,9 @@ export function DataMessenger(elem, options){
 
             obj.putSafetynetMessage(response.data)
         }else{
-            var response = await apiCall(textValue, obj.options, source)
+            var response = await apiCall(
+                textValue, obj.options, source, selections
+            )
             var status = response.status
             var jsonResponse = response.data
             const displayType = jsonResponse['data']['display_type'];
