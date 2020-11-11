@@ -434,6 +434,8 @@ export function QueryInput(selector, options){
             var responseLoadingContainer = putLoadingContainer(parent);
         }
 
+        responseRenderer.parentElement.metadata = undefined;
+
         const URL_SAFETYNET = chataBarContainer.options.authentication.demo
           ? `https://backend.chata.ai/api/v1/safetynet?q=${encodeURIComponent(
             value
@@ -472,8 +474,8 @@ export function QueryInput(selector, options){
                     value, chataBarContainer.options, source, selections
                 )
                 var jsonResponse = response.data
-                chataBarContainer.refreshView(jsonResponse, value)
                 parent.removeChild(responseLoadingContainer);
+                chataBarContainer.refreshView(jsonResponse, value)
                 chataBarContainer.chatbar.removeAttribute("disabled");
             }
         }, chataBarContainer.options);
