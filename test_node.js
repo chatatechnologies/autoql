@@ -74,55 +74,55 @@ setTimeout(() => {
 //     },
 // })
 //
-// var queryInput = new QueryInput('#query-input', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     autoCompletePlacement: 'bottom',
-// });
+var queryInput = new QueryInput('#query-input', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    autoCompletePlacement: 'bottom',
+});
 
-// var queryOutput = new QueryOutput('#query-output', {
-//     displayType: 'line',
-//     queryResponse: {
-//         data: {
-//             columns: [
-//                 {
-//                     type: "DATE",
-//                     groupable: true,
-//                     active: false,
-//                     name: "sale__transaction_date__month",
-//                 },
-//                 {
-//                     active: false,
-//                     groupable: false,
-//                     name: "sale__line_item___sum",
-//                     type: "DOLLAR_AMT",
-//                 },
-//             ],
-//             display_type: "line",
-//             interpretation: "total sales by line item by transaction month",
-//             query_id: "q_y4sWT0IAStWnLeM7COEsSQ",
-//             rows: [
-//                 [1483142400, 12500],
-//                 [1488240000, 8742.68],
-//                 [1490918400, 11723.36],
-//                 [1493510400, 3243.12],
-//                 [1496188800, 14642.19],
-//             ]
-//         },
-//         message: "",
-//         referenceId: "1.1.0",
-//     },
-// })
+var queryOutput = new QueryOutput('#query-output', {
+    displayType: 'line',
+    queryResponse: {
+        data: {
+            columns: [
+                {
+                    type: "DATE",
+                    groupable: true,
+                    active: false,
+                    name: "sale__transaction_date__month",
+                },
+                {
+                    active: false,
+                    groupable: false,
+                    name: "sale__line_item___sum",
+                    type: "DOLLAR_AMT",
+                },
+            ],
+            display_type: "line",
+            interpretation: "total sales by line item by transaction month",
+            query_id: "q_y4sWT0IAStWnLeM7COEsSQ",
+            rows: [
+                [1483142400, 12500],
+                [1488240000, 8742.68],
+                [1490918400, 11723.36],
+                [1493510400, 3243.12],
+                [1496188800, 14642.19],
+            ]
+        },
+        message: "",
+        referenceId: "1.1.0",
+    },
+})
+queryInput.bind(queryOutput)
 //
 // setTimeout(() => {
 //     queryOutput.setOption('displayType', 'table')
 //     queryOutput.setOption('renderTooltips', false)
 // }, 1000)
 //
-// queryInput.bind(queryOutput)
 //
 // var notificationList = new NotificationFeed('#notification-list', {
 //     authentication: {

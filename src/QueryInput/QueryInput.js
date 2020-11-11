@@ -16,7 +16,8 @@ import {
     mergeOptions,
     createTableContainer,
     cloneObject,
-    getSafetynetValues
+    getSafetynetValues,
+    getSafetynetUserSelection
 } from '../Utils'
 import {
     createSafetynetContent,
@@ -421,7 +422,8 @@ export function QueryInput(selector, options){
         }
     }
 
-    chataBarContainer.sendMessageToResponseRenderer = function(value, source){
+    chataBarContainer.sendMessageToResponseRenderer = function(value, source,
+        selections=undefined){
         var responseRenderer = this.responseRenderer;
         chataBarContainer.options.onSubmit();
         var parent = this.getElementsByClassName('autoql-vanilla-chat-bar-text')[0];
@@ -444,7 +446,8 @@ export function QueryInput(selector, options){
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
             }
-            if(suggestions.length > 0 && chataBarContainer.options.autoQLConfig.enableQueryValidation){
+            if(suggestions.length > 0 && chataBarContainer.options.autoQLConfig.enableQueryValidation
+                && typeof selections === 'undefined'){
                 responseRenderer.innerHTML = '';
                 chataBarContainer.chatbar.removeAttribute("disabled");
                 if(chataBarContainer.options.showLoadingDots){
@@ -453,8 +456,11 @@ export function QueryInput(selector, options){
                 var suggestionArray = createSuggestionArray(jsonResponse);
                 var node = createSafetynetContent(suggestionArray, () => {
                     var words = getSafetynetValues(responseRenderer);
-                    objContext.sendMessageToResponseRenderer(
-                        words.join(' '), 'user'
+                    var selections = getSafetynetUserSelection(
+                        responseRenderer
+                    );
+                    chataBarContainer.sendMessageToResponseRenderer(
+                        words.join(' '), 'validation', selections
                     );
                 });
                 responseRenderer.appendChild(node);
@@ -474,7 +480,6 @@ export function QueryInput(selector, options){
         jsonResponse, text='') => {
         var responseRenderer = chataBarContainer.responseRenderer;
         // ChataUtils.responses[responseRenderer.dataset.componentid] = jsonResponse;
-        console.log(jsonResponse);
         responseRenderer.innerHTML = '';
         responseRenderer.options.queryResponse = cloneObject(jsonResponse);
         if(jsonResponse['reference_id'] === '1.1.430'){
