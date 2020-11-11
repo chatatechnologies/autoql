@@ -11,7 +11,8 @@ import {
     cloneObject,
     getNumberOfGroupables,
     getSafetynetValues,
-    getSafetynetUserSelection
+    getSafetynetUserSelection,
+    getSupportedDisplayTypes
 } from '../../Utils'
 import {
     getGroupableFields
@@ -380,19 +381,15 @@ export function TileView(tile, isSecond=false){
         if(json === undefined)return
         var container = responseWrapper
         var displayType = view.internalDisplayType
+        var supportedDisplayTypes = getSupportedDisplayTypes(json)
+        if(!supportedDisplayTypes.includes(displayType)){
+            view.internalDisplayType = 'table'
+            displayType = 'table'
+        }
         var toolbarType = ''
         responseWrapper.innerHTML = ''
 
         switch (displayType) {
-            case 'safetynet':
-                var responseContentContainer = obj.getSafetynetBody(
-                    json
-                );
-                responseWrapper.appendChild(
-                    responseContentContainer
-                );
-                updateSelectWidth(responseContentContainer);
-            break;
             case 'table':
                 if(json['data']['columns'].length == 1){
                     var data = formatData(
