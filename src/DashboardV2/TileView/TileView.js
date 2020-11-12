@@ -126,12 +126,7 @@ export function TileView(tile, isSecond=false){
             for(var[key, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
             }
-            let title =''
-            if(view.isSecond){
-                title = view.inputToolbar.input.value
-            }else{
-                title = tile.inputQuery.value
-            }
+            let title = view.getQuery()
 
             var tableView = new DrilldownView(
                 tile,
@@ -177,6 +172,17 @@ export function TileView(tile, isSecond=false){
         responseLoadingContainer.appendChild(responseLoading)
         responseWrapper.appendChild(responseLoadingContainer)
         return responseLoadingContainer
+    }
+
+    view.getQuery = () => {
+        let query = ''
+        if(view.isSecond){
+            query = view.inputToolbar.input.value
+        }else{
+            query = tile.inputQuery.value
+        }
+
+        return query
     }
 
     view.showSuggestionButtons = (response) => {
@@ -226,12 +232,7 @@ export function TileView(tile, isSecond=false){
 
     view.getSuggestions = () => {
         var jsonResponse = ChataUtils.responses[UUID]
-        let query = ''
-        if(view.isSecond){
-            query = view.inputToolbar.input.value
-        }else{
-            query = tile.inputQuery.value
-        }
+        let query = view.getQuery()
 
         const path = getRecommendationPath(
             dashboard.options,
@@ -249,12 +250,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.run = async () => {
-        let query = ''
-        if(view.isSecond){
-            query = view.inputToolbar.input.value
-        }else{
-            query = tile.inputQuery.value
-        }
+        let query = view.getQuery()
         if(query){
             view.clearMetadata()
             var loading = view.showLoading()
@@ -322,12 +318,7 @@ export function TileView(tile, isSecond=false){
             apiKey,
             domain
         } = dashboard.options.authentication
-        let val = ''
-        if(view.isSecond){
-            val = view.inputToolbar.input.value
-        }else{
-            val = tile.inputQuery.value
-        }
+        let val = view.getQuery()
         const URL_SAFETYNET = `${domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             val
         )}&key=${apiKey}`
@@ -336,12 +327,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.executeQuery = async () => {
-        let val = ''
-        if(view.isSecond){
-            val = view.inputToolbar.input.value
-        }else{
-            val = tile.inputQuery.value
-        }
+        let val = view.getQuery()
         return apiCall(
             val, tile.dashboard.options, 'dashboards.user'
         )
@@ -398,12 +384,7 @@ export function TileView(tile, isSecond=false){
 
     view.sendDrilldownMessageChart = async (json, indexData, options) => {
         if(!dashboard.options.autoQLConfig.enableDrilldowns)return
-        let title =''
-        if(view.isSecond){
-            title = view.inputToolbar.input.value
-        }else{
-            title = tile.inputQuery.value
-        }
+        let title = view.getQuery()
 
 
         var tableView = new DrilldownView(
