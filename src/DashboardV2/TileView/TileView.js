@@ -13,7 +13,8 @@ import {
     getSafetynetValues,
     getSafetynetUserSelection,
     getSupportedDisplayTypes,
-    getRecommendationPath
+    getRecommendationPath,
+    apiCallPut
 } from '../../Utils'
 import {
     getGroupableFields
@@ -181,9 +182,14 @@ export function TileView(tile, isSecond=false){
     view.showSuggestionButtons = (response) => {
         var items = response.data.items
         var relatedJson = ChataUtils.responses[UUID]
+        var queryId = relatedJson['data']['query_id'];
         var suggestionsContainer = document.createElement('div')
         var div = document.createElement('div')
-        
+        const {
+            domain,
+            apiKey
+        } = dashboard.options.authentication
+        const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`
         div.innerHTML = `
         I want to make sure I understood your query. Did you mean:
         `
@@ -194,6 +200,24 @@ export function TileView(tile, isSecond=false){
             var button = document.createElement('button')
             button.classList.add('autoql-vanilla-chata-suggestion-btn');
             button.textContent = items[i]
+            button.onclick = (evt) => {
+                var body = {
+                    suggestion: evt.target.textContent
+                };
+                let loading = null;
+                if(evt.target.textContent === 'None of these'){
+                    responseWrapper.innerHTML = 'Thank you for your feedback'
+                }else{
+                    if(view.isSecond){
+                        view.inputToolbar.input.value = evt.target.textContent
+                    }else{
+                        tile.inputQuery.value = evt.target.textContent
+                    }
+                    view.run()
+                }
+
+                var response = apiCallPut(url, body, dashboard.options)
+            }
             suggestionsContainer.appendChild(button)
         }
 
