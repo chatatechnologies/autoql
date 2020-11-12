@@ -61,6 +61,7 @@ export function TileView(tile, isSecond=false){
     } = tile
     view.isSecond = isSecond
     view.isSafetynet = false
+    view.isSuggestions = false
 
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
@@ -196,6 +197,7 @@ export function TileView(tile, isSecond=false){
     view.showSuggestionButtons = (response) => {
         var items = response.data.items
         var relatedJson = ChataUtils.responses[UUID]
+        relatedJson.suggestions = response
         var queryId = relatedJson['data']['query_id'];
         var suggestionsContainer = document.createElement('div')
         var div = document.createElement('div')
@@ -220,6 +222,7 @@ export function TileView(tile, isSecond=false){
                 };
                 let loading = null;
                 if(evt.target.textContent === 'None of these'){
+                    view.isSuggestions = false
                     responseWrapper.innerHTML = 'Thank you for your feedback'
                 }else{
                     view.setQuery(evt.target.textContent)
@@ -246,15 +249,16 @@ export function TileView(tile, isSecond=false){
     }
 
     view.displaySuggestions = async () => {
+        view.isSuggestions = true
         var response = await view.getSuggestions()
-
         responseWrapper.innerHTML = ''
         view.showSuggestionButtons(response.data)
-
     }
 
     view.run = async () => {
         let query = view.getQuery()
+        view.isSuggestions = false
+        view.isSafetynet = false
         if(query){
             view.clearMetadata()
             var loading = view.showLoading()
@@ -441,6 +445,12 @@ export function TileView(tile, isSecond=false){
         if(json === undefined)return
         if(view.isSafetynet){
             view.displaySafetynet()
+            return
+        }
+
+        if(view.isSuggestions){
+            responseWrapper.innerHTML = ''
+            view.showSuggestionButtons(json.suggestions)
             return
         }
 
