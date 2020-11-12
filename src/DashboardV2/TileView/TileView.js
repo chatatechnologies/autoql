@@ -14,7 +14,8 @@ import {
     getSafetynetUserSelection,
     getSupportedDisplayTypes,
     getRecommendationPath,
-    apiCallPut
+    apiCallPut,
+    htmlToElement
 } from '../../Utils'
 import {
     getGroupableFields
@@ -439,6 +440,24 @@ export function TileView(tile, isSecond=false){
 
     }
 
+    view.displaySingleValueDrillDown = () => {
+        var json = ChataUtils.responses[UUID]
+
+        let title = view.getQuery()
+
+        var tableView = new DrilldownView(
+            tile,
+            'table',
+            () => {},
+            false,
+            {
+                json: json,
+                indexData: 0,
+                options: dashboard.options
+            }
+        )
+        view.displayDrilldownModal(title, [tableView])
+    }
 
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
@@ -472,12 +491,17 @@ export function TileView(tile, isSecond=false){
                         json['data']['columns'][0],
                         dashboard.options
                     );
-                    container.innerHTML =
-                    `<div>
-                        <a class="autoql-vanilla-single-value-response">
-                            ${data}
-                        <a/>
-                    </div>`;
+                    var singleValue = htmlToElement(`
+                        <div>
+                            <a class="autoql-vanilla-single-value-response">
+                                ${data}
+                            <a/>
+                        </div>
+                    `)
+                    container.appendChild(singleValue)
+                    singleValue.onclick = () => {
+                        view.displaySingleValueDrillDown()
+                    }
                 }else{
                     var div = createTableContainer();
                     div.setAttribute('data-componentid', UUID)

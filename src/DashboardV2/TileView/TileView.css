@@ -82,3 +82,10 @@
     border-top: 3px solid #C0C0C0;
     pointer-events: all;
 }
+
+.autoql-vanilla-tile-response-wrapper .autoql-vanilla-single-value-response:hover{
+    color: inherit;
+    text-decoration: underline;
+    font-weight: 600;
+    cursor: pointer;
+}

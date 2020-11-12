@@ -109,6 +109,7 @@ ChataUtils.downloadCsvHandler = (idRequest) => {
 
 ChataUtils.copySqlHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
+    console.log(json);
     console.log(JSON.stringify(json));
     var sql = json['data']['sql'][0];
     var copyButton = document.createElement('button');
