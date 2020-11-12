@@ -1126,6 +1126,7 @@ export const apiCall = (val, options, source, userSelection=undefined) => {
         text: val,
         source: source,
         test: test,
+        translation: "include"
     }
 
     if(userSelection)data.user_selection = userSelection
