@@ -282,6 +282,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.runSafetynet = async () => {
+        view.isSafetynet = false
         var selection = getSafetynetUserSelection(view)
         var text = getSafetynetValues(view).join(' ')
         var loading = view.showLoading()
@@ -438,6 +439,11 @@ export function TileView(tile, isSecond=false){
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
         if(json === undefined)return
+        if(view.isSafetynet){
+            view.displaySafetynet()
+            return
+        }
+
         var container = responseWrapper
         var displayType = view.internalDisplayType
         var supportedDisplayTypes = getSupportedDisplayTypes(json)

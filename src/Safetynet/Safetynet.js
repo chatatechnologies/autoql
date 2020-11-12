@@ -79,7 +79,6 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
     }
 
     list.map(el => {
-        console.log(el);
         var li = document.createElement('li');
         li.classList.add('autoql-vanilla-safetynet-item')
         var textContent = el['text'];
