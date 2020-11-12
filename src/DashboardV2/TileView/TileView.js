@@ -185,6 +185,14 @@ export function TileView(tile, isSecond=false){
         return query
     }
 
+    view.setQuery = (val) => {
+        if(view.isSecond){
+            view.inputToolbar.input.value = val
+        }else{
+            tile.inputQuery.value = val
+        }
+    }
+
     view.showSuggestionButtons = (response) => {
         var items = response.data.items
         var relatedJson = ChataUtils.responses[UUID]
@@ -214,11 +222,7 @@ export function TileView(tile, isSecond=false){
                 if(evt.target.textContent === 'None of these'){
                     responseWrapper.innerHTML = 'Thank you for your feedback'
                 }else{
-                    if(view.isSecond){
-                        view.inputToolbar.input.value = evt.target.textContent
-                    }else{
-                        tile.inputQuery.value = evt.target.textContent
-                    }
+                    view.setQuery(evt.target.textContent)
                     view.run()
                 }
 
@@ -285,21 +289,17 @@ export function TileView(tile, isSecond=false){
             text, tile.dashboard.options,
             'dashboards.validation', selection
         )
+        ChataUtils.responses[UUID] = response.data
         if(response.status === 200){
-            ChataUtils.responses[UUID] = response.data
             view.displayData()
         }else{
-            responseWrapper.removeChild(loading)
+            view.displaySuggestions()
         }
     }
 
     view.onChangeSafetynet = (suggestionList, selectedOption) => {
         var value = getSafetynetValues(view).join(' ')
-        if(view.isSecond){
-            view.inputToolbar.input.value = value
-        }else{
-            tile.inputQuery.value = value
-        }
+        view.setQuery(value)
     }
 
     view.displaySafetynet = () => {
