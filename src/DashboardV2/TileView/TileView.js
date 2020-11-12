@@ -306,7 +306,7 @@ export function TileView(tile, isSecond=false){
     view.displaySafetynet = () => {
         view.isSafetynet = true
         var json = ChataUtils.responses[UUID]
-        var suggestionArray = createSuggestionArray(json)
+        var suggestionArray = createSuggestionArray(cloneObject(json))
         var safetynet = createSafetynetContent(
             suggestionArray, view.runSafetynet, view.onChangeSafetynet
         )
