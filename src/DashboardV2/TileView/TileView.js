@@ -657,32 +657,6 @@ export function TileView(tile, isSecond=false){
                 )
                 div.tabulator = table;
                 break;
-            // case 'suggestion':
-            //     var responseContentContainer = document.createElement('div');
-            //     responseContentContainer.classList.add(
-            //         'autoql-vanilla-chata-response-content-container'
-            //     );
-            //     responseContentContainer.classList.add(
-            //         'autoql-vanilla-chata-response-content-center'
-            //     );
-            //     var val = ''
-            //     if(obj.isSecond){
-            //         val = obj.internalQuery;
-            //     }else{
-            //         val = chataDashboardItem.inputQuery.value;
-            //     }
-            //     responseContentContainer.innerHTML = `
-            //         <div>I'm not sure what you mean by
-            //             <strong>"${val}"</strong>. Did you mean:
-            //         </div>`;
-            //     container.appendChild(responseContentContainer);
-            //     var rows = json['data']['items'];
-            //     ChataUtils.createSuggestions(
-            //         responseContentContainer,
-            //         rows,
-            //         'autoql-vanilla-chata-suggestion-btn-renderer'
-            //     );
-            //     break;
             default:
             container.innerHTML = "Oops! We didn't understand that query.";
         }

@@ -641,8 +641,8 @@ export function formatDataToBarChart(json, options){
 export function getSupportedDisplayTypesArray(){
     return [
         'table',
-        // 'date_pivot',
         'pivot_column',
+        'stacked_line',
         'line',
         'bar',
         'column',

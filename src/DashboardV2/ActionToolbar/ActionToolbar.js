@@ -43,6 +43,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 case 'bubble':
                 case 'stacked_column':
                 case 'stacked_bar':
+                case 'stacked_line':
                 toolbarType = 'chart-view';
                 default:
             }
