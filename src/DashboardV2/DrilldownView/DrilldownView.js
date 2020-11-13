@@ -64,6 +64,19 @@ export function DrilldownView(
         )
     }
 
+    view.executeDrilldownClientSide = (params) => {
+        const {
+            json
+        } = params
+
+        var loading = view.showLoadingDots()
+
+        setTimeout(() => {
+            console.log(json);
+            view.displayData(json)
+        }, 400)
+    }
+
     view.executeDrilldown = async (params) => {
         const {
             json,
@@ -298,7 +311,17 @@ export function DrilldownView(
         }
     }
 
-    if(!isStatic)view.executeDrilldown(drilldownMetadata)
+    if(!isStatic){
+        var {
+            json
+        } = drilldownMetadata
+        var groupableCount = getNumberOfGroupables(json['data']['columns'])
+        if(groupableCount == 1 || groupableCount == 2){
+            view.executeDrilldown(drilldownMetadata)
+        }else{
+            view.executeDrilldownClientSide(drilldownMetadata)
+        }
+    }
 
     return view
 }

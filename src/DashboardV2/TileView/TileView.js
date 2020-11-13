@@ -447,21 +447,26 @@ export function TileView(tile, isSecond=false){
         chartView.displayData(json)
     }
 
-    view.sendDrilldownClientSideChart = (
-        json, indexValue, filterBy, options
-    ) => {
-
-        if(!options.autoQLConfig.enableDrilldowns)return
+    view.filterData = (json, indexValue, filterBy) => {
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
-        let title = view.getQuery()
 
         for (var i = 0; i < oldData.length; i++) {
             if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
         }
-
         newJson.data.rows = newData;
+
+
+        return newJson
+    }
+
+    view.sendDrilldownClientSideChart = (
+        json, indexValue, filterBy, options
+    ) => {
+        if(!options.autoQLConfig.enableDrilldowns)return
+        let title = view.getQuery()
+        var newJson = view.filterData(json, indexValue, filterBy)
 
         var tableView = new DrilldownView(
             tile,
@@ -470,19 +475,15 @@ export function TileView(tile, isSecond=false){
             false,
             {
                 json: newJson,
-                indexData: indexValue,
-                options: options
             }
         )
 
         const onClickDrilldownView = (evt, idRequest) => {
             var indexData = evt.target.dataset.tilechart
-            var curJson = newJson
-
-            tableView.executeDrilldown({
+            var curJson = view.filterData(json, indexValue, filterBy)
+            console.log(curJson);
+            tableView.executeDrilldownClientSide({
                 json: newJson,
-                indexData: indexValue,
-                options: options
             })
         }
 
@@ -491,7 +492,7 @@ export function TileView(tile, isSecond=false){
         )
 
         view.displayDrilldownModal(title, [chartView, tableView])
-        chartView.displayData(newData)
+        chartView.displayData(json)
     }
 
     view.displaySingleValueDrillDown = () => {
