@@ -38,6 +38,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../../Charts'
+import { select } from 'd3-selection';
 import {
     createSuggestionArray,
     createSafetynetContent,
@@ -251,6 +252,7 @@ export function TileView(tile, isSecond=false){
 
     view.displaySuggestions = async () => {
         view.isSuggestions = true
+        view.clearAutoResizeEvents()
         var response = await view.getSuggestions()
         responseWrapper.innerHTML = ''
         view.showSuggestionButtons(response.data)
@@ -315,6 +317,7 @@ export function TileView(tile, isSecond=false){
 
     view.displaySafetynet = () => {
         view.isSafetynet = true
+        view.clearAutoResizeEvents()
         var json = ChataUtils.responses[UUID]
         var suggestionArray = createSuggestionArray(cloneObject(json))
         var safetynet = createSafetynetContent(
@@ -483,33 +486,37 @@ export function TileView(tile, isSecond=false){
         `)
     }
 
+    view.clearAutoResizeEvents = () => {
+        select(window).on('chata-resize.'+UUID, null);
+    }
+
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
-        const suggestionErrorCodes = [
-            '1.1.431',
-            '1.1.430'
-        ]
+        // const suggestionErrorCodes = [
+        //     '1.1.431',
+        //     '1.1.430'
+        // ]
         if(json === undefined)return
 
-        if(
-            json.status !== 200
-            && !suggestionErrorCodes.includes(json.reference_id)
-        ){
-            responseWrapper.innerHTML = ''
-            responseWrapper.appendChild(view.getMessageError())
-            return
-        }
-
-        if(view.isSafetynet){
-            view.displaySafetynet()
-            return
-        }
-
-        if(view.isSuggestions){
-            responseWrapper.innerHTML = ''
-            view.showSuggestionButtons(json.suggestions)
-            return
-        }
+        // if(
+        //     json.status !== 200
+        //     && !suggestionErrorCodes.includes(json.reference_id)
+        // ){
+        //     responseWrapper.innerHTML = ''
+        //     responseWrapper.appendChild(view.getMessageError())
+        //     return
+        // }
+        //
+        // if(view.isSafetynet){
+        //     view.displaySafetynet()
+        //     return
+        // }
+        //
+        // if(view.isSuggestions){
+        //     responseWrapper.innerHTML = ''
+        //     view.showSuggestionButtons(json.suggestions)
+        //     return
+        // }
 
         var container = responseWrapper
         var displayType = view.internalDisplayType
@@ -520,6 +527,7 @@ export function TileView(tile, isSecond=false){
         }
         var toolbarType = ''
         responseWrapper.innerHTML = ''
+        view.clearAutoResizeEvents()
 
         switch (displayType) {
             case 'table':
@@ -560,6 +568,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'bar':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -576,6 +585,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'column':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -592,6 +602,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'line':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -608,6 +619,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'heatmap':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -626,6 +638,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'bubble':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -642,6 +655,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'stacked_bar':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -658,6 +672,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'stacked_column':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -674,6 +689,7 @@ export function TileView(tile, isSecond=false){
                 break;
             case 'stacked_line':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
@@ -690,6 +706,7 @@ export function TileView(tile, isSecond=false){
             break;
             case 'pie':
                 var chartWrapper = document.createElement('div')
+                chartWrapper.setAttribute('data-componentid', UUID)
                 var chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'

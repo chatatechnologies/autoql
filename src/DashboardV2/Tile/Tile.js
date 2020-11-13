@@ -278,7 +278,7 @@ export function Tile(dashboard, options){
                 gutterSize: 7,
                 cursor: 'row-resize',
                 onDragEnd: () => {
-                    item.refreshViews()
+                    window.dispatchEvent(new CustomEvent('chata-resize', {}));
                 }
             })
             item.options.isSplit = true

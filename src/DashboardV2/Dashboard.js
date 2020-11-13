@@ -138,9 +138,10 @@ export function Dashboard(selector, options={}){
 
     obj.grid.on('resizestop', (event, el) => {
         obj.hidePlaceHolders()
-        obj.tiles.forEach((item, i) => {
-            item.refreshViews()
-        });
+        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        // obj.tiles.forEach((item, i) => {
+        //     item.refreshViews()
+        // });
 
     })
 
