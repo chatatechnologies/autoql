@@ -260,6 +260,7 @@ export function TileView(tile, isSecond=false){
         let query = view.getQuery()
         view.isSuggestions = false
         view.isSafetynet = false
+        console.log(view.metadata);
         if(query){
             view.clearMetadata()
             var loading = view.showLoading()
@@ -344,7 +345,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.clearMetadata = () => {
-        view.metadata = null;
+        responseWrapper.metadata = null;
     }
 
     view.componentClickHandler = (handler, component, selector) => {
@@ -484,9 +485,16 @@ export function TileView(tile, isSecond=false){
 
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
+        const suggestionErrorCodes = [
+            '1.1.431',
+            '1.1.430'
+        ]
         if(json === undefined)return
 
-        if(json.status !== 200){
+        if(
+            json.status !== 200
+            && !suggestionErrorCodes.includes(json.reference_id)
+        ){
             responseWrapper.innerHTML = ''
             responseWrapper.appendChild(view.getMessageError())
             return
