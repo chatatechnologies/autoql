@@ -265,11 +265,15 @@ export function TileView(tile, isSecond=false){
             var loading = view.showLoading()
             var validate = await view.executeValidate()
             if(validate.data.data.replacements.length){
-                ChataUtils.responses[UUID] = validate.data
+                var json = validate.data
+                json.status = validate.status
+                ChataUtils.responses[UUID] = json
                 view.displaySafetynet()
             }else{
                 var data = await view.executeQuery()
-                ChataUtils.responses[UUID] = data.data
+                var json = data.data
+                json.status = data.status
+                ChataUtils.responses[UUID] = json
                 if(
                     data.data.reference_id === '1.1.430' ||
                     data.data.reference_id === '1.1.431'
@@ -462,6 +466,12 @@ export function TileView(tile, isSecond=false){
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
         if(json === undefined)return
+
+        if(json.status !== 200){
+            responseWrapper.innerHTML = json.message
+            return
+        }
+
         if(view.isSafetynet){
             view.displaySafetynet()
             return
