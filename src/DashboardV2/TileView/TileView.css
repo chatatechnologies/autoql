@@ -89,3 +89,8 @@
     font-weight: 600;
     cursor: pointer;
 }
+
+.autoql-vanilla-query-output-error-message{
+    opacity: .8;
+    font-size: 14px;
+}

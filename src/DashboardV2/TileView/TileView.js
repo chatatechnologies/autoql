@@ -463,12 +463,32 @@ export function TileView(tile, isSecond=false){
         view.displayDrilldownModal(title, [tableView])
     }
 
+    view.getMessageError = () => {
+        var json = ChataUtils.responses[UUID]
+        const {
+            message,
+            reference_id
+        } = json
+        return htmlToElement(`
+            <div class="autoql-vanilla-query-output-error-message">
+                <div>
+                    <span>
+                    ${message}
+                    </span>
+                </div>
+                <br>
+                <div>Error ID: ${reference_id}</div>
+            </div>
+        `)
+    }
+
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
         if(json === undefined)return
 
         if(json.status !== 200){
-            responseWrapper.innerHTML = json.message
+            responseWrapper.innerHTML = ''
+            responseWrapper.appendChild(view.getMessageError())
             return
         }
 
