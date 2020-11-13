@@ -262,7 +262,6 @@ export function TileView(tile, isSecond=false){
         let query = view.getQuery()
         view.isSuggestions = false
         view.isSafetynet = false
-        console.log(view.metadata);
         if(query){
             view.clearMetadata()
             var loading = view.showLoading()
@@ -479,11 +478,11 @@ export function TileView(tile, isSecond=false){
         )
 
         const onClickDrilldownView = (evt, idRequest) => {
-            var indexData = evt.target.dataset.tilechart
-            var curJson = view.filterData(json, indexValue, filterBy)
-            console.log(curJson);
+            var colValue = evt.target.dataset.colvalue1
+            var indexValue = evt.target.dataset.filterindex
+            var curJson = view.filterData(json, indexValue, colValue)
             tableView.executeDrilldownClientSide({
-                json: newJson,
+                json: curJson,
             })
         }
 

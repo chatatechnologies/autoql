@@ -72,7 +72,7 @@ export function DrilldownView(
         var loading = view.showLoadingDots()
 
         setTimeout(() => {
-            console.log(json);
+            ChataUtils.responses[UUID] = json
             view.displayData(json)
         }, 400)
     }
