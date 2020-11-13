@@ -385,6 +385,10 @@ export function TileView(tile, isSecond=false){
         var groupableCount = getNumberOfGroupables(json['data']['columns'])
         if(groupableCount == 1 || groupableCount == 2){
             view.sendDrilldownMessageChart(json, indexData, dashboard.options)
+        }else{
+            view.sendDrilldownClientSideChart(
+                json, indexValue, colValue, dashboard.options
+            )
         }
     }
 
@@ -444,8 +448,50 @@ export function TileView(tile, isSecond=false){
     }
 
     view.sendDrilldownClientSideChart = (
-        json, indexValue, filterBy, options) => {
+        json, indexValue, filterBy, options
+    ) => {
 
+        if(!options.autoQLConfig.enableDrilldowns)return
+        var newJson = cloneObject(json);
+        var newData = [];
+        var oldData = newJson['data']['rows'];
+        let title = view.getQuery()
+
+        for (var i = 0; i < oldData.length; i++) {
+            if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
+        }
+
+        newJson.data.rows = newData;
+
+        var tableView = new DrilldownView(
+            tile,
+            'table',
+            () => {},
+            false,
+            {
+                json: newJson,
+                indexData: indexValue,
+                options: options
+            }
+        )
+
+        const onClickDrilldownView = (evt, idRequest) => {
+            var indexData = evt.target.dataset.tilechart
+            var curJson = newJson
+
+            tableView.executeDrilldown({
+                json: newJson,
+                indexData: indexValue,
+                options: options
+            })
+        }
+
+        var chartView = new DrilldownView(
+            tile, view.internalDisplayType, onClickDrilldownView
+        )
+
+        view.displayDrilldownModal(title, [chartView, tableView])
+        chartView.displayData(newData)
     }
 
     view.displaySingleValueDrillDown = () => {
