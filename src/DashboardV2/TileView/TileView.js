@@ -107,7 +107,9 @@ export function TileView(tile, isSecond=false){
                 popoverClass = 'up-table';
                 moreOptions.classList.remove('up-table-single');
             }
-        }else if(json.data.columns.length === 1){
+        }
+
+        if(json.data.columns.length === 1){
             popoverClass = 'up-table-single';
         }else{
             popoverClass = 'up-chart';
