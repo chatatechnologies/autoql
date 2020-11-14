@@ -44,6 +44,12 @@ export function InputToolbar(view, value){
         }
     }
 
+    input.onkeypress = (evt) => {
+        if(evt.keyCode == 13 && input.value){
+            view.run()
+        }
+    }
+
     toolbar.appendChild(button)
     toolbar.appendChild(input)
 
