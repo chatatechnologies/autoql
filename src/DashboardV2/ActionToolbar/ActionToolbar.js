@@ -76,6 +76,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                     reportProblemButton
                 );
                 moreOptionsArray.push('copy_sql');
+                moreOptionsArray.push('notification');
                 reportProblem.classList.remove(
                     'chata-popover-single-message'
                 );
