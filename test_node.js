@@ -176,6 +176,7 @@ get(DASHBOARD_URL, {
         executeOnMount: true,
         tiles: response.data.items[11].data
     })
+    console.log(JSON.stringify(response.data.items[11].data));
     // new DashboardV2('#dashboard-wrapper2')
 
 

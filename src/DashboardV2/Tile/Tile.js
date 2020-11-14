@@ -270,10 +270,20 @@ export function Tile(dashboard, options){
             item.switchSplitButton(SPLIT_VIEW, 'Split View')
             item.refreshViews()
         }else{
-            item.views.map(view => view.show())
+            var sizes = [
+                50, 50
+            ]
+
+            if(item.options.secondDisplayPercentage){
+                var total = 100
+                sizes[0] = total - item.options.secondDisplayPercentage
+                sizes[1] = item.options.secondDisplayPercentage
+            }
+
+            console.log(sizes);
             item.splitInstance = Split(item.views, {
                 direction: 'vertical',
-                sizes: [50, 50],
+                sizes: sizes,
                 minSize: [0, 0],
                 gutterSize: 7,
                 cursor: 'row-resize',
@@ -281,6 +291,7 @@ export function Tile(dashboard, options){
                     window.dispatchEvent(new CustomEvent('chata-resize', {}));
                 }
             })
+            item.views.map(view => view.show())
             item.options.isSplit = true
             item.switchSplitButton(SPLIT_VIEW_ACTIVE, 'Single View')
             item.refreshViews()
