@@ -58,6 +58,11 @@ export function DrilldownView(
         }
     }
 
+    view.setSelectedElement = (index) => {
+        var elem = view.querySelector(`[data-tilechart="${index}"]`)
+        elem.classList.add('active')
+    }
+
     view.registerDrilldownChartEvent = (component) => {
         view.componentClickHandler(
             view.onClick, component, '[data-tilechart]'

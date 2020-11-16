@@ -485,6 +485,7 @@ export function TileView(tile, isSecond=false){
 
         view.displayDrilldownModal(title, [chartView, tableView])
         chartView.displayData(json)
+        chartView.setSelectedElement(indexData)
     }
 
     view.filterData = (json, indexValue, filterBy) => {
@@ -584,7 +585,11 @@ export function TileView(tile, isSecond=false){
         //     '1.1.430'
         // ]
         if(json === undefined)return
-
+        if(json.status !== 200){
+            responseWrapper.innerHTML = ''
+            responseWrapper.appendChild(view.getMessageError())
+            return
+        }
         // if(
         //     json.status !== 200
         //     && !suggestionErrorCodes.includes(json.reference_id)
