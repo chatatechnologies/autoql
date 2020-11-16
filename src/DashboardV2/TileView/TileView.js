@@ -410,12 +410,19 @@ export function TileView(tile, isSecond=false){
         drilldownModal.show()
     }
 
+    view.selectChartElement = (target) => {
+        var selected = view.querySelector('.active')
+        if(selected)selected.classList.remove('active')
+        target.classList.add('active')
+    }
+
     view.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest])
         var indexData = evt.target.dataset.tilechart
         var colValue = evt.target.dataset.colvalue1
         var indexValue = evt.target.dataset.filterindex
         var groupableCount = getNumberOfGroupables(json['data']['columns'])
+        view.selectChartElement(evt.target)
         if(groupableCount == 1 || groupableCount == 2){
             view.sendDrilldownMessageChart(json, indexData, dashboard.options)
         }else{

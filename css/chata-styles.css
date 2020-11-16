@@ -1102,7 +1102,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-chata-chart-container .circle.active,
 .autoql-vanilla-chata-chart-container .square.active,
 .autoql-vanilla-chata-chart-container .line-dot.active {
-    fill: #a5cd39 !important;
+    /* fill: #a5cd39 !important; */
+    fill-opacity: 1;
 }
 
 .line-dot:hover{
