@@ -1100,10 +1100,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-chart-container .bar.active,
 .autoql-vanilla-chata-chart-container .circle.active,
-.autoql-vanilla-chata-chart-container .square.active,
-.autoql-vanilla-chata-chart-container .line-dot.active {
+.autoql-vanilla-chata-chart-container .square.active {
     /* fill: #a5cd39 !important; */
     fill-opacity: 1;
+}
+
+.autoql-vanilla-chata-chart-container .line-dot.active{
+    opacity: 1 !important;
+    fill: rgb(38, 167, 233);
 }
 
 .line-dot:hover{
@@ -1281,6 +1285,9 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-stacked-rect:hover{
     opacity: 1;
+}
+.autoql-vanilla-stacked-rect:focus{
+    outline: none;
 }
 
 .legendCells .disable-group {

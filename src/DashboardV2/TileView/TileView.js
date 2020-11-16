@@ -410,8 +410,8 @@ export function TileView(tile, isSecond=false){
         drilldownModal.show()
     }
 
-    view.selectChartElement = (target) => {
-        var selected = view.querySelector('.active')
+    view.selectChartElement = (component, target) => {
+        var selected = component.querySelector('.active')
         if(selected)selected.classList.remove('active')
         target.classList.add('active')
     }
@@ -422,7 +422,7 @@ export function TileView(tile, isSecond=false){
         var colValue = evt.target.dataset.colvalue1
         var indexValue = evt.target.dataset.filterindex
         var groupableCount = getNumberOfGroupables(json['data']['columns'])
-        view.selectChartElement(evt.target)
+        view.selectChartElement(view, evt.target)
         if(groupableCount == 1 || groupableCount == 2){
             view.sendDrilldownMessageChart(json, indexData, dashboard.options)
         }else{
@@ -457,10 +457,10 @@ export function TileView(tile, isSecond=false){
             }
         )
 
-        const onClickDrilldownView = (evt, idRequest) => {
+        const onClickDrilldownView = (evt, idRequest, currentView) => {
             var indexData = evt.target.dataset.tilechart
             var curJson = json
-
+            view.selectChartElement(currentView, evt.target)
             if(evt.target.classList.contains('autoql-vanilla-stacked-rect')){
                 curJson = cloneObject(curJson)
                 curJson['data']['rows'][0][0] =

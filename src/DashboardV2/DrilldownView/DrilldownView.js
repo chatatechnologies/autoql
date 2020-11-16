@@ -53,7 +53,7 @@ export function DrilldownView(
         var elements = component.querySelectorAll(selector)
         for (var i = 0; i < elements.length; i++) {
             elements[i].onclick = (evt) => {
-                handler.apply(null, [evt, UUID])
+                handler.apply(null, [evt, UUID, view])
             }
         }
     }
