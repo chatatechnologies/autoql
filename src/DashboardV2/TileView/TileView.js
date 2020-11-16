@@ -64,6 +64,7 @@ export function TileView(tile, isSecond=false){
     view.isSecond = isSecond
     view.isSafetynet = false
     view.isSuggestions = false
+    view.isExecuted = true
 
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
@@ -260,11 +261,35 @@ export function TileView(tile, isSecond=false){
         view.showSuggestionButtons(response.data)
     }
 
+    view.startEditing = () => {
+        if(!view.isExecuted){
+            const editPlaceHolderText = `
+            To get started, enter a query and click
+            <svg stroke="currentColor" fill="currentColor"
+            stroke-width="0" viewBox="0 0 24 24"
+            height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2
+                12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0
+                18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z">
+                </path>
+            </svg>
+            `
+            responseWrapper.innerHTML = editPlaceHolderText
+        }
+    }
+
+    view.stopEditing = () => {
+        if(!view.isExecuted){
+            responseWrapper.innerHTML = placeHolderText
+        }
+    }
+
     view.run = async () => {
         let query = view.getQuery()
         view.isSuggestions = false
         view.isSafetynet = false
         if(query){
+            view.isExecuted = true
             view.clearMetadata()
             var loading = view.showLoading()
             var validate = await view.executeValidate()
@@ -290,6 +315,7 @@ export function TileView(tile, isSecond=false){
             }
 
         }else{
+            view.isExecuted = false
             responseWrapper.innerHTML = placeHolderText
         }
     }
