@@ -232,7 +232,7 @@ export function Tile(dashboard, options){
         deleteButton.style.visibility = 'visible'
         content.classList.add('editing')
         dashboard.grid.enable()
-
+        item.views.map(view => view.startEditing())
     }
 
     item.stopEditing = () => {
@@ -243,6 +243,8 @@ export function Tile(dashboard, options){
         item.tileTitle.textContent = item.inputTitle.value
         || item.inputQuery.value || 'Untitled'
         deleteButton.style.visibility = 'hidden'
+        item.views.map(view => view.stopEditing())
+
     }
 
     item.switchSplitButton = (svg, tooltip) => {

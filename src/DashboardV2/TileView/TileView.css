@@ -94,3 +94,8 @@
     opacity: .8;
     font-size: 14px;
 }
+
+.autoql-vanilla-chata-icon .play-icon{
+    vertical-align: bottom;
+    line-height: 20px;
+}
