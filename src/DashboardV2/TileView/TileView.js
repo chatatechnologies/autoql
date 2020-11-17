@@ -464,6 +464,7 @@ export function TileView(tile, isSecond=false){
         json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1
         json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2
         json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3
+        console.log(json['data']['rows'][0]);
         view.sendDrilldownMessageChart(json, 0, dashboard.options)
     }
 
@@ -787,7 +788,8 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createStackedBarChart(
                     chartWrapper, json,
-                    dashboard.options, view.registerDrilldownChartEvent, false,
+                    dashboard.options,
+                    view.registerDrilldownStackedChartEvent, false,
                     'data-tilechart', true
                 )
                 view.registerDrilldownStackedChartEvent(chartWrapper)
@@ -804,7 +806,8 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createStackedColumnChart(
                     chartWrapper, json,
-                    dashboard.options, view.registerDrilldownChartEvent, false,
+                    dashboard.options,
+                    view.registerDrilldownStackedChartEvent, false,
                     'data-tilechart', true
                 );
                 view.registerDrilldownStackedChartEvent(chartWrapper)
@@ -821,7 +824,8 @@ export function TileView(tile, isSecond=false){
                 container.appendChild(chartWrapper2)
                 createAreaChart(
                     chartWrapper, json,
-                    dashboard.options, view.registerDrilldownChartEvent, false,
+                    dashboard.options,
+                    view.registerDrilldownStackedChartEvent, false,
                     'data-tilechart', true
                 );
                 view.registerDrilldownStackedChartEvent(chartWrapper)
