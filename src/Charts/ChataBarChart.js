@@ -223,7 +223,6 @@ export function createBarChart(
         false,
         .1
     )
-    console.log(categoriesNames);
     var xAxis = getAxisBottom(x)
     .tickSize(0)
 

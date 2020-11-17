@@ -38,8 +38,6 @@ export function createHeatmap(
     var data = formatDataToHeatmap(json, options);
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX);
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY);
-    console.log(data);
-    console.log(labelsX);
     var cols = json['data']['columns'];
 
     labelsY = formatLabels(

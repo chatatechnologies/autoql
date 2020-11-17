@@ -109,8 +109,6 @@ ChataUtils.downloadCsvHandler = (idRequest) => {
 
 ChataUtils.copySqlHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
-    console.log(json);
-    console.log(JSON.stringify(json));
     var sql = json['data']['sql'][0];
     var copyButton = document.createElement('button');
     var okBtn = htmlToElement(
@@ -972,7 +970,6 @@ ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
 
     options.xhr.onreadystatechange = function() {
         if (options.xhr.readyState === 4){
-            console.log(options.xhr.responseText);
             var jsonResponse = {
                 data: {
                     matches: []
@@ -1039,8 +1036,6 @@ ChataUtils.createSuggestions = function(responseContentContainer, data, classBut
 }
 
 ChataUtils.registerWindowClicks = (evt) => {
-    console.log('WINDOW CLICKS!!!');
-    console.log(window);
     const excludeElementsForChartSelector = [
         'autoql-vanilla-x-axis-label-border',
         'autoql-vanilla-y-axis-label-border',
@@ -1065,7 +1060,6 @@ ChataUtils.registerWindowClicks = (evt) => {
     ]
 
     document.body.addEventListener('click', (evt) => {
-        console.log('FOOOO');
         var closePop = true;
         var closeChartPopovers = true;
         var closeToolbars = true;

@@ -83,7 +83,6 @@ export function createLineChart(
             series: yIndexes
         }
     }
-    console.log(metadataComponent);
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;

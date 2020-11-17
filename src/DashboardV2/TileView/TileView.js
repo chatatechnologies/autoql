@@ -384,6 +384,10 @@ export function TileView(tile, isSecond=false){
         responseWrapper.metadata = null;
     }
 
+    view.copyMetadataToDrilldown = (drilldownView) => {
+        drilldownView.metadata = responseWrapper.metadata
+    }
+
     view.componentClickHandler = (handler, component, selector) => {
         var elements = component.querySelectorAll(selector)
         for (var i = 0; i < elements.length; i++) {
@@ -413,7 +417,6 @@ export function TileView(tile, isSecond=false){
     view.selectChartElement = (component, target) => {
         var selected = component.querySelector('.active')
         if(selected)selected.classList.remove('active')
-        console.log(target);
         target.classList.add('active')
     }
 
@@ -485,6 +488,7 @@ export function TileView(tile, isSecond=false){
         )
 
         view.displayDrilldownModal(title, [chartView, tableView])
+        view.copyMetadataToDrilldown(chartView)
         chartView.displayData(json)
         chartView.setSelectedElement(indexData)
     }
@@ -535,6 +539,7 @@ export function TileView(tile, isSecond=false){
         )
 
         view.displayDrilldownModal(title, [chartView, tableView])
+        view.copyMetadataToDrilldown(chartView)
         chartView.displayData(json)
         chartView.setSelectedElement(indexData)
     }

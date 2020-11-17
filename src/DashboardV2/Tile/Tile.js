@@ -282,7 +282,6 @@ export function Tile(dashboard, options){
                 sizes[1] = item.options.secondDisplayPercentage
             }
 
-            console.log(sizes);
             item.splitInstance = Split(item.views, {
                 direction: 'vertical',
                 sizes: sizes,

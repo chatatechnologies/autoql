@@ -105,7 +105,6 @@ export function Tile(dashboard, options={}){
     chataDashboardItem.globalUUID = uuid;
 
     chataDashboardItem.getData = () => {
-        console.log(chataDashboardItem.options);
         const o = chataDashboardItem.options;
         return {
             dataConfig: {
