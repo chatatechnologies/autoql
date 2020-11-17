@@ -24,7 +24,8 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             //     data[i][group.indexCol], group.jsonCol, options
             // );
             let label = data[i][group.indexCol];
-            if(!label || label == '')continue;
+            console.log(label);
+            if(!label || label == '')label = 'null';
             var colName = columns[group.indexCol].display_name ||
             columns[group.indexCol].name;
             var serie = {
