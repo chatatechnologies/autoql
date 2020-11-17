@@ -149,8 +149,31 @@ export function TileView(tile, isSecond=false){
         }
     }
 
-    view.onCellClick = (e ,cell, json) => {
+    view.onCellClick = (e, cell, json) => {
+        const columns = json['data']['columns'];
+        const selectedColumn = cell._cell.column;
+        const row = cell._cell.row;
+        if(selectedColumn.definition.index != 0){
+            var entries = Object.entries(row.data)[0];
+            json['data']['rows'][0][0] = entries[1];
+            json['data']['rows'][0][1] = selectedColumn.definition.field;
+            json['data']['rows'][0][2] = cell.getValue();
+            let title = view.getQuery()
+            console.log(row.data);
 
+            var tableView = new DrilldownView(
+                tile,
+                'table',
+                () => {},
+                false,
+                {
+                    json: json,
+                    indexData: 0,
+                    options: dashboard.options
+                }
+            )
+            // view.displayDrilldownModal(title, [tableView])
+        }
     }
 
     view.show = () => {
