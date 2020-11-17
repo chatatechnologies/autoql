@@ -64,6 +64,8 @@ function getPivotColumns(json, pivotColumns, options){
         if(index > 0){
             title = formatData(col, columns[1], options);
         }
+        if(!title)title = 'null'
+        if(!col)col = 'null'
 
         columnsData.push({
             title: title.toString(),
