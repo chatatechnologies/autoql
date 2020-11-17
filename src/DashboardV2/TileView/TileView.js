@@ -159,7 +159,6 @@ export function TileView(tile, isSecond=false){
             json['data']['rows'][0][1] = selectedColumn.definition.field;
             json['data']['rows'][0][2] = cell.getValue();
             let title = view.getQuery()
-            console.log(row.data);
 
             var tableView = new DrilldownView(
                 tile,
@@ -409,6 +408,7 @@ export function TileView(tile, isSecond=false){
 
     view.copyMetadataToDrilldown = (drilldownView) => {
         drilldownView.metadata = responseWrapper.metadata
+        drilldownView.metadata3D = responseWrapper.metadata3D
     }
 
     view.componentClickHandler = (handler, component, selector) => {
