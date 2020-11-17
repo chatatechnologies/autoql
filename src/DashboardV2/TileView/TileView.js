@@ -413,6 +413,7 @@ export function TileView(tile, isSecond=false){
     view.selectChartElement = (component, target) => {
         var selected = component.querySelector('.active')
         if(selected)selected.classList.remove('active')
+        console.log(target);
         target.classList.add('active')
     }
 
@@ -427,7 +428,7 @@ export function TileView(tile, isSecond=false){
             view.sendDrilldownMessageChart(json, indexData, dashboard.options)
         }else{
             view.sendDrilldownClientSideChart(
-                json, indexValue, colValue, dashboard.options
+                json, indexData, indexValue, colValue, dashboard.options
             )
         }
     }
@@ -503,7 +504,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.sendDrilldownClientSideChart = (
-        json, indexValue, filterBy, options
+        json, indexData, indexValue, filterBy, options
     ) => {
         if(!options.autoQLConfig.enableDrilldowns)return
         let title = view.getQuery()
@@ -519,10 +520,11 @@ export function TileView(tile, isSecond=false){
             }
         )
 
-        const onClickDrilldownView = (evt, idRequest) => {
+        const onClickDrilldownView = (evt, idRequest, currentView) => {
             var colValue = evt.target.dataset.colvalue1
             var indexValue = evt.target.dataset.filterindex
             var curJson = view.filterData(json, indexValue, colValue)
+            view.selectChartElement(currentView, evt.target)
             tableView.executeDrilldownClientSide({
                 json: curJson,
             })
@@ -534,6 +536,7 @@ export function TileView(tile, isSecond=false){
 
         view.displayDrilldownModal(title, [chartView, tableView])
         chartView.displayData(json)
+        chartView.setSelectedElement(indexData)
     }
 
     view.displaySingleValueDrillDown = () => {
