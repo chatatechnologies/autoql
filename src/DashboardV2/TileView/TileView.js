@@ -154,8 +154,8 @@ export function TileView(tile, isSecond=false){
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
-            var entries = Object.entries(row.data)[0];
-            json['data']['rows'][0][0] = entries[1];
+            var entries = Object.entries(row.data);
+            json['data']['rows'][0][0] = entries[entries.length-1][1];
             json['data']['rows'][0][1] = selectedColumn.definition.field;
             json['data']['rows'][0][2] = cell.getValue();
             let title = view.getQuery()
@@ -172,7 +172,7 @@ export function TileView(tile, isSecond=false){
                     options: dashboard.options
                 }
             )
-            // view.displayDrilldownModal(title, [tableView])
+            view.displayDrilldownModal(title, [tableView])
         }
     }
 

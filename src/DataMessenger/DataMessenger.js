@@ -2300,7 +2300,7 @@ export function DataMessenger(elem, options){
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
             var entries = Object.entries(row.data)[0];
-            json['data']['rows'][0][0] = entries[1];
+            json['data']['rows'][0][0] = entries[entries.length-1][1];
             json['data']['rows'][0][1] = selectedColumn.definition.field;
             json['data']['rows'][0][2] = cell.getValue();
             obj.sendDrilldownMessage(json, 0, obj.options);
