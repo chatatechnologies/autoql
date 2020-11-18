@@ -284,9 +284,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.startEditing = () => {
-        console.log('START EDITING TILE VIEW: ' + view.isExecuted);
         if(!view.isExecuted){
-            console.log('CHANGE PLACE HOLDER');
             const editPlaceHolderText = `
             <div class="autoql-vanilla-dashboard-tile-placeholder-text">
                 <em>
@@ -310,7 +308,6 @@ export function TileView(tile, isSecond=false){
 
     view.stopEditing = () => {
         if(!view.isExecuted){
-            console.log('CHANGE PLACE HOLDER');
             responseWrapper.innerHTML = placeHolderText
         }
     }
@@ -347,7 +344,11 @@ export function TileView(tile, isSecond=false){
 
         }else{
             view.isExecuted = false
-            responseWrapper.innerHTML = placeHolderText
+            responseWrapper.innerHTML = `
+                <div class="autoql-vanilla-dashboard-tile-placeholder-text">
+                    <em>No query was supplied for this tile.</em>
+                </div>
+            `;
         }
     }
 
