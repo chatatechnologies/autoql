@@ -64,7 +64,7 @@ export function TileView(tile, isSecond=false){
     view.isSecond = isSecond
     view.isSafetynet = false
     view.isSuggestions = false
-    view.isExecuted = true
+    view.isExecuted = false
 
     if(isSecond){
         view.internalDisplayType = tile.options.secondDisplayType ||
@@ -284,7 +284,9 @@ export function TileView(tile, isSecond=false){
     }
 
     view.startEditing = () => {
+        console.log('START EDITING TILE VIEW: ' + view.isExecuted);
         if(!view.isExecuted){
+            console.log('CHANGE PLACE HOLDER');
             const editPlaceHolderText = `
             <div class="autoql-vanilla-dashboard-tile-placeholder-text">
                 <em>
@@ -308,6 +310,7 @@ export function TileView(tile, isSecond=false){
 
     view.stopEditing = () => {
         if(!view.isExecuted){
+            console.log('CHANGE PLACE HOLDER');
             responseWrapper.innerHTML = placeHolderText
         }
     }

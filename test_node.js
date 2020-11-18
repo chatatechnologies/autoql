@@ -172,7 +172,7 @@ get(DASHBOARD_URL, {
         autoQLConfig: {
             debug: true
         },
-        executeOnMount: true,
+        executeOnMount: false,
         tiles: response.data.items[11].data
     })
     // new DashboardV2('#dashboard-wrapper2')
