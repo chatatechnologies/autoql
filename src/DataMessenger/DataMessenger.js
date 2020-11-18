@@ -1981,8 +1981,8 @@ export function DataMessenger(elem, options){
 
     obj.stackedChartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest]);
-        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1;
-        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2;
+        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue2;
+        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue1;
         json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3;
         obj.sendDrilldownMessage(json, 0, obj.options);
     }
