@@ -118,7 +118,8 @@ export function DrilldownView(
         var response = await apiCallPost(URL, data, options);
         ChataUtils.responses[UUID] = response.data
         view.removeChild(loading)
-        if(response.data.rows){
+        console.log(response.data.data.rows.length);
+        if(response.data.data.rows.length > 0){
             view.displayData(response.data)
         }else{
             view.appendChild(new ErrorMessage(response.data.message))
