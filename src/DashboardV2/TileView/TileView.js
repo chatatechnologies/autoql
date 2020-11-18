@@ -461,8 +461,9 @@ export function TileView(tile, isSecond=false){
 
     view.stackedChartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest])
-        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue2
-        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue1
+        console.log(JSON.stringify(json));
+        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1
+        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2
         json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3
         console.log(json['data']['rows'][0]);
         view.sendDrilldownMessageChart(json, 0, dashboard.options)
@@ -492,9 +493,9 @@ export function TileView(tile, isSecond=false){
             if(evt.target.classList.contains('autoql-vanilla-stacked-rect')){
                 curJson = cloneObject(curJson)
                 curJson['data']['rows'][0][0] =
-                evt.target.dataset.unformatvalue2
-                curJson['data']['rows'][0][1] =
                 evt.target.dataset.unformatvalue1
+                curJson['data']['rows'][0][1] =
+                evt.target.dataset.unformatvalue2
                 curJson['data']['rows'][0][2] =
                 evt.target.dataset.unformatvalue3
                 indexData = 0

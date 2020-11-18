@@ -100,12 +100,12 @@ export function createStackedBarChart(
         json, groups, metadataComponent.metadata3D
     );
 
-    var colStr1 = cols[groupableIndex1]['display_name']
-    || cols[groupableIndex1]['name'];
-    var colStr2 = cols[groupableIndex2]['display_name']
-    || cols[groupableIndex2]['name'];
-    var colStr3 = cols[notGroupableIndex]['display_name']
-    || cols[notGroupableIndex]['name'];
+    var colStr1 = cols[0]['display_name']
+    || cols[0]['name'];
+    var colStr2 = cols[1]['display_name']
+    || cols[1]['name'];
+    var colStr3 = cols[2]['display_name']
+    || cols[2]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
     var col3 = formatColumnName(colStr3);
@@ -314,6 +314,7 @@ export function createStackedBarChart(
         .data(function(d) { return d; })
         .enter().append("rect")
         .each(function (d, i) {
+
             var pos = d[1];
             var sum = 0;
             for (var [key, value] of Object.entries(d.data)){
@@ -324,6 +325,13 @@ export function createStackedBarChart(
                     d.labelY = key;
                     break;
                 }
+            }
+            console.log(d.labelY);
+            var unformatvalue1 = d.labelY
+            var unformatvalue2 = d.data.group
+            if(groupableIndex1 !== 0){
+                unformatvalue1 = d.data.group
+                unformatvalue2 = d.labelY
             }
             select(this).attr(valueClass, i)
             .attr('data-col1', col1)
@@ -339,8 +347,8 @@ export function createStackedBarChart(
                 d.value, cols[notGroupableIndex],
                 options
             ))
-            .attr('data-unformatvalue1', d.labelY)
-            .attr('data-unformatvalue2', d.data.group)
+            .attr('data-unformatvalue1', unformatvalue1)
+            .attr('data-unformatvalue2', unformatvalue2)
             .attr('data-unformatvalue3', d.value)
 
         })
