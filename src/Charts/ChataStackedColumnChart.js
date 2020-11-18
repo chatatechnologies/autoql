@@ -343,6 +343,12 @@ export function createStackedColumnChart(
                     break;
                 }
             }
+            var unformatvalue1 = d.labelY
+            var unformatvalue2 = d.data.group
+            if(groupableIndex1 !== 0){
+                unformatvalue1 = d.data.group
+                unformatvalue2 = d.labelY
+            }
             if(d.labelY && d.data.group && d.value){
                 select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
@@ -358,8 +364,8 @@ export function createStackedColumnChart(
                     d.value, cols[notGroupableIndex],
                     options
                 ))
-                .attr('data-unformatvalue1', d.labelY)
-                .attr('data-unformatvalue2', d.data.group)
+                .attr('data-unformatvalue1', unformatvalue1)
+                .attr('data-unformatvalue2', unformatvalue2)
                 .attr('data-unformatvalue3', d.value)
                 .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
             }else{

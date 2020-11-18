@@ -346,6 +346,12 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr("fill", 'transparent')
         .attr("fill-opacity", '1')
         .each(function(d, i){
+            var unformatvalue1 = d.key
+            var unformatvalue2 = d.group
+            if(groupableIndex1 !== 0){
+                unformatvalue1 = d.group
+                unformatvalue2 = d.key
+            }
             if(d.y && d.group && d.key){
                 select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
@@ -361,8 +367,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                     d.y, cols[notGroupableIndex],
                     options
                 ))
-                .attr('data-unformatvalue1', d.key)
-                .attr('data-unformatvalue2', d.group)
+                .attr('data-unformatvalue1', unformatvalue1)
+                .attr('data-unformatvalue2', unformatvalue2)
                 .attr('data-unformatvalue3', d.y)
                 .attr('class', 'tooltip-3d')
             }
