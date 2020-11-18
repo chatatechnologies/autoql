@@ -14,6 +14,7 @@ import {
     ChataTable,
     ChataPivotTable
 } from '../../ChataTable'
+import { ErrorMessage } from '../../ErrorMessage'
 import {
     createAreaChart,
     createBarChart,
@@ -117,7 +118,11 @@ export function DrilldownView(
         var response = await apiCallPost(URL, data, options);
         ChataUtils.responses[UUID] = response.data
         view.removeChild(loading)
-        view.displayData(response.data)
+        if(response.data.rows){
+            view.displayData(response.data)
+        }else{
+            view.appendChild(new ErrorMessage(response.data.message))
+        }
     }
 
     view.showLoadingDots = () => {
