@@ -326,8 +326,9 @@ export function DrilldownView(
         var {
             json
         } = drilldownMetadata
+        var colCount = json['data']['columns'].length
         var groupableCount = getNumberOfGroupables(json['data']['columns'])
-        if(groupableCount == 1 || groupableCount == 2){
+        if(groupableCount == 1 || groupableCount == 2 || colCount == 1){
             view.executeDrilldown(drilldownMetadata)
         }else{
             view.executeDrilldownClientSide(drilldownMetadata)
