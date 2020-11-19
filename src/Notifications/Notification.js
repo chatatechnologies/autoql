@@ -154,7 +154,7 @@ export function Notification(options, parentOptions){
         <span class="chata-icon calendar">${CALENDAR}<span>
     `));
 
-    var parsedRules = convert(options.rule_expression);
+    var parsedRules = convert(options.expression);
     for (var i = 0; i < parsedRules.length; i++) {
         var notificationReadOnlyGroup = document.createElement('div');
         notificationReadOnlyGroup.classList.add('notification-read-only-group')
@@ -285,7 +285,7 @@ export function Notification(options, parentOptions){
         saveButton.onclick = async(e) => {
             spinner.classList.remove('hidden')
             var o = item.parentOptions
-            const URL = `${o.authentication.domain}/autoql/api/v1/rules/${item.ruleOptions.id}?key=${o.authentication.apiKey}`;
+            const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts/${item.ruleOptions.id}?key=${o.authentication.apiKey}`;
             var values = modalView.getValues();
             values.id = item.options.id
             saveButton.setAttribute('disabled', 'true')
@@ -303,7 +303,7 @@ export function Notification(options, parentOptions){
 
     dismissIcon.onclick = async (evt) => {
         var pOpts = item.parentOptions.authentication;
-        const URL = `${pOpts.domain}/autoql/api/v1/rules/notifications/${item.options.id}?key=${pOpts.apiKey}`;
+        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/notifications/${item.options.id}?key=${pOpts.apiKey}`;
         var payload = {
             state: 'DISMISSED'
         }
@@ -591,7 +591,7 @@ export function Notification(options, parentOptions){
 
     item.toggleStatus = async () => {
         var pOpts = item.parentOptions.authentication;
-        const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
+        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.rule_id}?key=${pOpts.apiKey}`;
 
         var state = btnTurnNotification.dataset.notificationState;
         var payload = {
@@ -618,7 +618,7 @@ export function Notification(options, parentOptions){
             dismissIconContainer.classList.remove('chata-notification-dismiss-icon');
             dismissIconContainer.innerHTML = SVG_X;
             dismissIconContainer.onclick = async(evt) => {
-                const URL = `${pOpts.domain}/autoql/api/v1/rules/notifications/${item.options.id}?key=${pOpts.apiKey}`;
+                const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/notifications/${item.options.id}?key=${pOpts.apiKey}`;
                 var response = await apiCallDelete(URL, item.parentOptions)
                 item.parentElement.removeChild(item);
             }
@@ -628,7 +628,7 @@ export function Notification(options, parentOptions){
 
     item.getRuleStatus = () => {
         var pOpts = item.parentOptions.authentication;
-        const URL = `${pOpts.domain}/autoql/api/v1/rules/${item.options.rule_id}?key=${pOpts.apiKey}`;
+        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.rule_id}?key=${pOpts.apiKey}`;
 
         return new Promise(async (resolve, reject) => {
             var response = await apiCallGet(URL, item.parentOptions)

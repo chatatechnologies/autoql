@@ -124,7 +124,7 @@ export function NotificationFeed(selector, options){
 
     wrapper.dismissAll = async () => {
         var opts = wrapper.options.authentication;
-        const URL = `${opts.domain}/autoql/api/v1/rules/notifications?key=${opts.apiKey}`;
+        const URL = `${opts.domain}/autoql/api/v1/data-alerts/notifications?key=${opts.apiKey}`;
         var payload = {
             state: 'DISMISSED'
         }
@@ -145,13 +145,14 @@ export function NotificationFeed(selector, options){
     }
 
     wrapper.getNotifications = async () => {
-        const URL = `${options.authentication.domain}/autoql/api/v1/rules/notifications?key=${options.authentication.apiKey}&offset=${wrapper.notificationOffset}&limit=10`;
+        const URL = `${options.authentication.domain}/autoql/api/v1/data-alerts/notifications?key=${options.authentication.apiKey}&offset=${wrapper.notificationOffset}&limit=10`;
         var timeOut = 0;
         var delay = 0.08;
         wrapper.isLoading = true;
         var response = await apiCallGet(URL, wrapper.options)
         var jsonResponse = response.data
-        var items = jsonResponse['data']['notifications'];
+        var items = jsonResponse['data']['items'];
+
         for (var i = 0; i < items.length; i++) {
             var notification = new Notification(items[i], wrapper.options);
             notification.style.animationDelay = (delay * i) + 's';
