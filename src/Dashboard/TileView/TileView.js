@@ -21,6 +21,7 @@ import {
     getGroupableFields
 } from '../../Charts/ChataChartHelpers'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
+import { ErrorMessage } from '../../ErrorMessage'
 import {
     DrilldownModal
 } from '../DrilldownModal'
@@ -598,17 +599,22 @@ export function TileView(tile, isSecond=false){
             message,
             reference_id
         } = json
-        return htmlToElement(`
-            <div class="autoql-vanilla-query-output-error-message">
-                <div>
-                    <span>
-                    ${message}
-                    </span>
-                </div>
-                <br>
-                <div>Error ID: ${reference_id}</div>
-            </div>
-        `)
+        var messageContainer = document.createElement('div')
+        messageContainer.classList.add(
+            'autoql-vanilla-query-output-error-message'
+        )
+
+        var error = new ErrorMessage(message, (evt) => {
+
+        })
+
+        messageContainer.appendChild(error)
+        messageContainer.appendChild(htmlToElement('<br/>'))
+        messageContainer.appendChild(
+            htmlToElement(`<div>Error ID: ${reference_id}</div>`)
+        )
+
+        return messageContainer
     }
 
     view.clearAutoResizeEvents = () => {
@@ -617,35 +623,16 @@ export function TileView(tile, isSecond=false){
 
     view.displayData = () => {
         var json = ChataUtils.responses[UUID]
-        // const suggestionErrorCodes = [
-        //     '1.1.431',
-        //     '1.1.430'
-        // ]
+
         if(json === undefined)return
+
+        view.clearAutoResizeEvents()
+
         if(json.status !== 200){
             responseWrapper.innerHTML = ''
             responseWrapper.appendChild(view.getMessageError())
             return
         }
-        // if(
-        //     json.status !== 200
-        //     && !suggestionErrorCodes.includes(json.reference_id)
-        // ){
-        //     responseWrapper.innerHTML = ''
-        //     responseWrapper.appendChild(view.getMessageError())
-        //     return
-        // }
-        //
-        // if(view.isSafetynet){
-        //     view.displaySafetynet()
-        //     return
-        // }
-        //
-        // if(view.isSuggestions){
-        //     responseWrapper.innerHTML = ''
-        //     view.showSuggestionButtons(json.suggestions)
-        //     return
-        // }
 
         var container = responseWrapper
         var displayType = view.internalDisplayType
@@ -656,7 +643,6 @@ export function TileView(tile, isSecond=false){
         }
         var toolbarType = ''
         responseWrapper.innerHTML = ''
-        view.clearAutoResizeEvents()
 
         switch (displayType) {
             case 'table':

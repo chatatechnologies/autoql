@@ -7,17 +7,17 @@ export function ErrorMessage(text, onClick=()=>{}){
     var values = text.split('<report>')
 
     if(values.length > 1){
-        var span = document.createElement('span')
+        var div = document.createElement('div')
         var link = document.createElement('a')
-        span.innerHTML = values[0]
+        div.innerHTML = values[0]
         link.innerHTML = 'report'
         link.classList.add('autoql-vanilla-report-link')
         link.onclick = (evt) => {
             onClick(evt)
         }
-        span.appendChild(link)
-        span.appendChild(document.createTextNode(values[1]))
-        return span
+        div.appendChild(link)
+        div.appendChild(document.createTextNode(values[1]))
+        return div
     }else{
         return htmlToElement(text)
     }
