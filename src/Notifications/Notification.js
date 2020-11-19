@@ -132,7 +132,7 @@ export function Notification(options, parentOptions){
     editNotification.classList.add('autoql-vanilla-chata-btn');
     editNotification.classList.add('default');
     editNotification.classList.add('large');
-    notificationQueryTitle.innerHTML = options.rule_title;
+    notificationQueryTitle.innerHTML = options.title;
     responseContentContainer.setAttribute('data-container-id', uuid);
     // btnTurnNotification.innerHTML = TURN_ON_NOTIFICATION;
     btnTurnNotification.appendChild(turnNotificationIcon);
@@ -145,9 +145,9 @@ export function Notification(options, parentOptions){
     extraContent.appendChild(btnTurnNotification);
     extraContent.appendChild(editNotification);
 
-    displayName.appendChild(document.createTextNode(options.rule_title));
+    displayName.appendChild(document.createTextNode(options.title));
 
-    description.innerHTML = options.rule_message
+    description.innerHTML = options.message
     notificationDetailsTitle.innerHTML = 'Conditions: ';
     notificationDetailsTitle2.innerHTML = 'Description: ';
     timestamp.appendChild(htmlToElement(`
@@ -591,7 +591,7 @@ export function Notification(options, parentOptions){
 
     item.toggleStatus = async () => {
         var pOpts = item.parentOptions.authentication;
-        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.rule_id}?key=${pOpts.apiKey}`;
+        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.data_alert_id}?key=${pOpts.apiKey}`;
 
         var state = btnTurnNotification.dataset.notificationState;
         var payload = {
@@ -628,7 +628,7 @@ export function Notification(options, parentOptions){
 
     item.getRuleStatus = () => {
         var pOpts = item.parentOptions.authentication;
-        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.rule_id}?key=${pOpts.apiKey}`;
+        const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.data_alert_id}?key=${pOpts.apiKey}`;
 
         return new Promise(async (resolve, reject) => {
             var response = await apiCallGet(URL, item.parentOptions)
