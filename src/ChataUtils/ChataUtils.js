@@ -44,8 +44,8 @@ ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 
     var response = await apiCallPut(URL, {is_correct: false}, options)
-    menu.classList.remove('show');
-    toolbar.classList.remove('show');
+    if(menu)menu.classList.remove('show');
+    if(toolbar)toolbar.classList.remove('show');
     new AntdMessage('Thank you for your feedback.', 3000);
 
     return Promise.resolve()

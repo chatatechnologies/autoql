@@ -605,7 +605,7 @@ export function TileView(tile, isSecond=false){
         )
 
         var error = new ErrorMessage(message, (evt) => {
-
+            ChataUtils.openModalReport(UUID, dashboard.options, null, null)
         })
 
         messageContainer.appendChild(error)
