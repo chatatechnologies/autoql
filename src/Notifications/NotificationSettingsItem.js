@@ -43,7 +43,7 @@ export function NotificationSettingsItem(parentOptions, options) {
         if(!evt.target.checked){
             payload.status = 'INACTIVE'
         }
-        const URL = `${wrapper.options.authentication.domain}/autoql/api/v1/rules/${wrapper.options.id}?key=${options.authentication.apiKey}`;
+        const URL = `${wrapper.options.authentication.domain}/autoql/api/v1/data-alerts/${wrapper.options.id}?key=${options.authentication.apiKey}`;
         await apiCallPut(URL, payload, wrapper.options)
 
     }
@@ -81,7 +81,7 @@ export function NotificationSettingsItem(parentOptions, options) {
 
     const onDeleteNotification = async (evt, modal) => {
         var o = wrapper.options
-        const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
+        const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts/${o.id}?key=${o.authentication.apiKey}`;
         var response = await apiCallDelete(URL, o)
         var json = response.data
         if(json.message === 'ok'){
@@ -178,7 +178,7 @@ export function NotificationSettingsItem(parentOptions, options) {
                 spinner.classList.remove('hidden')
                 saveButton.setAttribute('disabled', 'true')
                 var o = wrapper.options
-                const URL = `${o.authentication.domain}/autoql/api/v1/rules/${o.id}?key=${o.authentication.apiKey}`;
+                const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts/${o.id}?key=${o.authentication.apiKey}`;
                 var values = modalView.getValues();
                 values.id = wrapper.options.id
                 var response = await apiCallPut(URL, values, o)

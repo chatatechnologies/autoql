@@ -120,14 +120,14 @@ export function DataAlerts(selector, options){
     }
 
     wrapper.loadRules = async() => {
-        const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}&type=user`;
+        const URL = `${options.authentication.domain}/autoql/api/v1/data-alerts?key=${options.authentication.apiKey}&type=user`;
         var response = await apiCallGet(URL, wrapper.options)
         var jsonResponse = response.data
         var status = response.status
         if(status !== 200){
             wrapper.options.onErrorCallback(jsonResponse.message)
         }
-        var items = jsonResponse['data']['rules'];
+        var items = jsonResponse['data']['custom_alerts'];
         for (var i = 0; i < items.length; i++) {
             items[i].authentication = wrapper.options.authentication;
             notificationSettingsContainer.appendChild(
@@ -188,7 +188,7 @@ export function DataAlerts(selector, options){
             spinner.classList.remove('hidden')
             saveButton.setAttribute('disabled', 'true')
             var o = wrapper.options
-            const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
+            const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts?key=${o.authentication.apiKey}`;
             var response = apiCallPost(URL, modalView.getValues, o)
             var status = response.status
             var json = response.data

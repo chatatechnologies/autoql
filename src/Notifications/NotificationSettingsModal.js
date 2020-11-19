@@ -501,7 +501,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     if(mode === 'edit'){
         loadRules();
         setFrequency();
-        queryReturnInput.input.value = rule.query;
+        queryReturnInput.input.value = rule.data_return_query;
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
         step3.classList.add('complete');
@@ -1650,7 +1650,7 @@ function getStep3Values(){
     var input = this.querySelector('.autoql-vanilla-query-return-input');
     var message = this.querySelector('.autoql-vanilla-notification-message');
     return {
-        query: input.value,
+        data_return_query: input.value,
         message: message.value
     };
 }
