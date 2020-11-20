@@ -17,7 +17,8 @@ export function Dashboard(selector, options={}){
 
     obj.undoData = {
         eventType: undefined,
-        undoCallback: () => {}
+        changedItem: undefined,
+        undoCallback: () => {},
     }
 
     obj.options = {
@@ -129,6 +130,11 @@ export function Dashboard(selector, options={}){
         })
     }
 
+    obj.undoResize = (el, newWidth, newHeight) => {
+        obj.grid.update(el, null, null, newWidth, newHeight)
+        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+    }
+
     obj.grid.on('dragstart', (event, el) => {
         obj.showPlaceHolders()
     })
@@ -143,13 +149,10 @@ export function Dashboard(selector, options={}){
             height,
             width
         } = el.gridstackNode
-        obj.setUndoData({
-            eventType: 'resize',
-            undoCallback: () => {
-                obj.grid.update(el, null, null, width, height)
-                window.dispatchEvent(new CustomEvent('chata-resize', {}));
-            }
-        })
+        const undoCallback = () => {
+            obj.undoResize(el, width, height)
+        }
+        obj.setUndoData('resize', undoCallback, el)
     })
 
     obj.grid.on('resizestop', (event, el) => {
@@ -211,23 +214,32 @@ export function Dashboard(selector, options={}){
     obj.undo = () => {
         const {
             eventType,
-            undoCallback
+            undoCallback,
+            changedItem
         } = obj.undoData
-
-        console.log(obj.undoData);
 
         if(!eventType)return
 
         switch (eventType) {
             case 'resize':
+                const {
+                    height,
+                    width
+                } = changedItem.gridstackNode
+                const callback = () => {
+                    obj.undoResize(changedItem, width, height)
+                }
                 undoCallback()
+                obj.setUndoData('resize', callback, changedItem)
                 break;
             default:
         }
     }
 
-    obj.setUndoData = (data) => {
-        obj.undoData = data
+    obj.setUndoData = (eventType, undoCallback, changedItem) => {
+        obj.undoData.eventType = eventType
+        obj.undoData.undoCallback = undoCallback
+        obj.undoData.changedItem = changedItem
     }
 
     if(obj.options.executeOnMount){
