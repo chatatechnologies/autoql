@@ -133,19 +133,24 @@ export function Dashboard(selector, options={}){
     obj.undoResize = (el, newWidth, newHeight) => {
         obj.grid.update(el, null, null, newWidth, newHeight)
         setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            window.dispatchEvent(new CustomEvent('chata-resize', {}))
         }, 200)
     }
 
     obj.undoDrag = (el, x, y) => {
         obj.grid.update(el, x, y, null, null)
         setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            window.dispatchEvent(new CustomEvent('chata-resize', {}))
         }, 200)
     }
 
     obj.undoAdd = (el) => {
         obj.grid.removeWidget(el)
+        return el
+    }
+
+    obj.undoDelete = (el, options) => {
+        obj.grid.addWidget(el, options)
 
         return el
     }
@@ -180,39 +185,39 @@ export function Dashboard(selector, options={}){
 
     obj.grid.on('resizestop', (event, el) => {
         obj.hidePlaceHolders()
-        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        window.dispatchEvent(new CustomEvent('chata-resize', {}))
     })
 
     obj.showPlaceHolders = function(){
         obj.tiles.forEach(function(tile){
-            tile.showPlaceHolder();
+            tile.showPlaceHolder()
         })
     }
 
     obj.hidePlaceHolders = function(){
         obj.tiles.forEach(function(tile){
-            tile.hidePlaceHolder();
+            tile.hidePlaceHolder()
         })
     }
 
     obj.startEditing = () => {
         obj.tiles.forEach((item, i) => {
             item.startEditing()
-        });
+        })
 
     }
 
     obj.stopEditing = () => {
         obj.tiles.forEach((item, i) => {
             item.stopEditing()
-        });
+        })
         if(obj.options.executeOnStopEditing)obj.run()
     }
 
     obj.run = () => {
         obj.tiles.forEach((item, i) => {
             item.runTile()
-        });
+        })
 
     }
 
@@ -260,7 +265,7 @@ export function Dashboard(selector, options={}){
                     obj.undoResize(changedItem, width, height)
                 }, changedItem)
 
-                break;
+                break
             case 'drag':
                 const {
                     x,
@@ -274,11 +279,19 @@ export function Dashboard(selector, options={}){
                 }, changedItem)
                 break
             case 'addTile':
-                var removeItem = undoCallback()
+                var removedItem = undoCallback()
                 obj.setUndoData('removeTile', () => {
-                }, e)
-
-            default:
+                    return obj.undoDelete(
+                        removedItem, changedItem.gridstackNode
+                    )
+                }, removedItem)
+                break
+            case 'removeTile':
+                var itemAdded = undoCallback()
+                obj.setUndoData('addTile', () => {
+                    return obj.undoAdd(itemAdded)
+                }, itemAdded)
+                break
         }
     }
 
