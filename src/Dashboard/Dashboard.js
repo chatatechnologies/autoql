@@ -132,11 +132,28 @@ export function Dashboard(selector, options={}){
 
     obj.undoResize = (el, newWidth, newHeight) => {
         obj.grid.update(el, null, null, newWidth, newHeight)
-        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        }, 200)
+    }
+
+    obj.undoDrag = (el, x, y) => {
+        obj.grid.update(el, x, y, null, null)
+        setTimeout(() => {
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        }, 200)
     }
 
     obj.grid.on('dragstart', (event, el) => {
         obj.showPlaceHolders()
+        const {
+            x,
+            y
+        } = el.gridstackNode
+        const undoCallback = () => {
+            obj.undoDrag(el, x, x)
+        }
+        obj.setUndoData('drag', undoCallback, el)
     })
 
     obj.grid.on('dragstop', (event, el) => {
@@ -226,12 +243,26 @@ export function Dashboard(selector, options={}){
                     height,
                     width
                 } = changedItem.gridstackNode
-                const callback = () => {
-                    obj.undoResize(changedItem, width, height)
-                }
+
                 undoCallback()
-                obj.setUndoData('resize', callback, changedItem)
+
+                obj.setUndoData('resize', () => {
+                    obj.undoResize(changedItem, width, height)
+                }, changedItem)
+
                 break;
+            case 'drag':
+                const {
+                    x,
+                    y
+                } = changedItem.gridstackNode
+
+                undoCallback()
+
+                obj.setUndoData('drag', () => {
+                    obj.undoDrag(changedItem, x, y)
+                }, changedItem)
+                break
             default:
         }
     }
