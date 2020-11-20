@@ -61,17 +61,17 @@ setTimeout(() => {
 }, 300)
 
 
-// var alerts = DataAlerts('#alert-settings', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     themeConfig: {
-//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'light',
-//     },
-// })
+var alerts = DataAlerts('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    themeConfig: {
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        theme: 'light',
+    },
+})
 //
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -123,24 +123,24 @@ setTimeout(() => {
 // }, 1000)
 //
 //
-var notificationList = new NotificationFeed('#notification-list', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    showNotificationDetails: true,
-    onExpandCallback: (notification) => {
-        console.log(notification);
-    },
-    onCollapseCallback: (notification) => {
-        console.log(notification);
-    },
-    themeConfig: {
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'light',
-    },
-})
+// var notificationList = new NotificationFeed('#notification-list', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     showNotificationDetails: true,
+//     onExpandCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     onCollapseCallback: (notification) => {
+//         console.log(notification);
+//     },
+//     themeConfig: {
+//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+//         theme: 'light',
+//     },
+// })
 
 // var nButton = new NotificationIcon('#notification-icon', {
 //     authentication: {

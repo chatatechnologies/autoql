@@ -37,7 +37,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     `);
     wrapper.classList.add('chata-steps-container');
     var step1 = new ChataModalStep('Set up your Alert','1',);
-    var step2 = new ChataModalStep('Schedule Frequency', '2');
+    var step2 = new ChataModalStep('Select Alert Interval', '2');
     var step3 = new ChataModalStep(
         'Manage Alert Preferences',
         '3',
@@ -285,6 +285,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         step2.stepContentContainer.style.height = getHeightForChildrens(
             step2.stepContentContainer
         ) + 'px';
+        checkStep2(step2);
     })
 
     repeatRadio.classList.add('reset_period')
@@ -311,7 +312,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var triggerRadio = new ChataRadio(triggerOptions, (evt) => {
         checkStep2(step2);
-
     })
 
     triggerRadio.classList.add('notification_type')
