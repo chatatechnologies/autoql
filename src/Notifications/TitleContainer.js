@@ -5,7 +5,7 @@ import {
     htmlToElement
 } from '../Utils'
 
-export function TitleContainer(title, message, canAdd=true){
+export function TitleContainer(title, message, canAdd=true, onClick=()=>{}){
     var titleContainer = document.createElement('div')
     titleContainer.classList.add('chata-notification-title-container');
 
@@ -29,6 +29,9 @@ export function TitleContainer(title, message, canAdd=true){
     notificationAddContainer.appendChild(notificationAddBtn)
 
     titleContainer.appendChild(helpMessage)
+    notificationAddContainer.onclick = (evt) => {
+        onClick(evt)
+    }
     if(canAdd)titleContainer.appendChild(notificationAddContainer)
 
     return titleContainer
