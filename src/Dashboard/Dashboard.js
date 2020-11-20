@@ -144,6 +144,12 @@ export function Dashboard(selector, options={}){
         }, 200)
     }
 
+    obj.undoAdd = (el) => {
+        obj.grid.removeWidget(el)
+
+        return el
+    }
+
     obj.grid.on('dragstart', (event, el) => {
         obj.showPlaceHolders()
         const {
@@ -222,6 +228,10 @@ export function Dashboard(selector, options={}){
             minWidth: 3
         })
 
+        obj.setUndoData('addTile', () => {
+            return obj.undoAdd(e)
+        }, e)
+
         e.startEditing()
         setTimeout(() => {
             e.focusItem()
@@ -263,6 +273,11 @@ export function Dashboard(selector, options={}){
                     obj.undoDrag(changedItem, x, y)
                 }, changedItem)
                 break
+            case 'addTile':
+                var removeItem = undoCallback()
+                obj.setUndoData('removeTile', () => {
+                }, e)
+
             default:
         }
     }
