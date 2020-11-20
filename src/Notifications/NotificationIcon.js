@@ -69,7 +69,7 @@ export function NotificationIcon(selector, options={}){
 	button.onclick = async (evt) => {
 		if(obj.options.clearCountOnClick){
 			var o = obj.options.authentication
-			const url = `${o.domain}/autoql/api/v1/rules/notifications?key=${o.apiKey}`
+			const url = `${o.domain}/autoql/api/v1/data-alerts/notifications?key=${o.apiKey}`
 			badge.style.visibility = 'hidden';
 			var response = await apiCallPut(url, {
 				notification_id: null,
@@ -136,7 +136,7 @@ export function NotificationIcon(selector, options={}){
 
 	this.getNotificationCount = async (unacknowledged=0) => {
 		var o = this.options.authentication
-		const url = `${o.domain}/autoql/api/v1/rules/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`
+		const url = `${o.domain}/autoql/api/v1/data-alerts/notifications/summary/poll?key=${o.apiKey}&unacknowledged=${unacknowledged}`
 
 		return apiCallNotificationCount(url, this.options)
 	}
