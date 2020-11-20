@@ -15,6 +15,11 @@ export function Dashboard(selector, options={}){
     gridContainer.classList.add('grid-stack')
     parent.appendChild(gridContainer)
 
+    obj.undoData = {
+        eventType: undefined,
+        undoCallback: () => {}
+    }
+
     obj.options = {
         authentication: {
             token: undefined,
@@ -134,15 +139,22 @@ export function Dashboard(selector, options={}){
 
     obj.grid.on('resizestart', (event, el) => {
         obj.showPlaceHolders()
+        const {
+            height,
+            width
+        } = el.gridstackNode
+        obj.setUndoData({
+            eventType: 'resize',
+            undoCallback: () => {
+                obj.grid.update(el, null, null, width, height)
+                window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            }
+        })
     })
 
     obj.grid.on('resizestop', (event, el) => {
         obj.hidePlaceHolders()
         window.dispatchEvent(new CustomEvent('chata-resize', {}));
-        // obj.tiles.forEach((item, i) => {
-        //     item.refreshViews()
-        // });
-
     })
 
     obj.showPlaceHolders = function(){
@@ -196,9 +208,32 @@ export function Dashboard(selector, options={}){
         }, 150)
     }
 
+    obj.undo = () => {
+        const {
+            eventType,
+            undoCallback
+        } = obj.undoData
+
+        console.log(obj.undoData);
+
+        if(!eventType)return
+
+        switch (eventType) {
+            case 'resize':
+                undoCallback()
+                break;
+            default:
+        }
+    }
+
+    obj.setUndoData = (data) => {
+        obj.undoData = data
+    }
+
     if(obj.options.executeOnMount){
         obj.run()
     }
+
 
     return obj
 }

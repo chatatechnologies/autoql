@@ -61,17 +61,17 @@ setTimeout(() => {
 }, 300)
 
 
-var alerts = DataAlerts('#alert-settings', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    themeConfig: {
-        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'light',
-    },
-})
+// var alerts = DataAlerts('#alert-settings', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     themeConfig: {
+//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+//         theme: 'light',
+//     },
+// })
 //
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -158,23 +158,23 @@ get(DASHBOARD_URL, {
     }
 }).then(function(response){
 
-    // dashboard = new Dashboard('#dashboard-wrapper', {
-    //     authentication: {
-    //         token: _token,
-    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-    //         domain: domain,
-    //     },
-    //     themeConfig: {
-    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-    //         theme: 'light',
-    //         accentColor: 'red'
-    //     },
-    //     autoQLConfig: {
-    //         debug: true
-    //     },
-    //     executeOnMount: true,
-    //     tiles: response.data.items[11].data
-    // })
+    dashboard = new Dashboard('#dashboard-wrapper', {
+        authentication: {
+            token: _token,
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            domain: domain,
+        },
+        themeConfig: {
+            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            theme: 'light',
+            accentColor: 'red'
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        executeOnMount: true,
+        tiles: response.data.items[11].data
+    })
     // new DashboardV2('#dashboard-wrapper2')
 
 
@@ -202,7 +202,12 @@ get(DASHBOARD_URL, {
 var b = document.getElementById('edit')
 var b2 = document.getElementById('edit-stop')
 var b3 = document.getElementById('add-widget')
+var b4 = document.getElementById('undo-widget')
 
+
+b4.onclick = () => {
+    dashboard.undo()
+}
 
 b.onclick = () => {
     dashboard.startEditing()
