@@ -201,6 +201,7 @@ export function Dashboard(selector, options={}){
     }
 
     obj.startEditing = () => {
+        obj.options.isEditing = true
         obj.tiles.forEach((item, i) => {
             item.startEditing()
         })
@@ -208,6 +209,7 @@ export function Dashboard(selector, options={}){
     }
 
     obj.stopEditing = () => {
+        obj.options.isEditing = false
         obj.tiles.forEach((item, i) => {
             item.stopEditing()
         })
@@ -317,6 +319,9 @@ export function Dashboard(selector, options={}){
                     changedItem.displayData()
                     return curValue
                 }, changedItem)
+            case 'reset-tile':
+                undoCallback()
+                break
         }
     }
 
@@ -329,6 +334,8 @@ export function Dashboard(selector, options={}){
     if(obj.options.executeOnMount){
         obj.run()
     }
+
+    if(obj.options.isEditing)obj.startEditing()
 
 
     return obj
