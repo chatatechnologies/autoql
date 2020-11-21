@@ -867,6 +867,7 @@ export function TileView(tile, isSecond=false){
         var actionToolbar = new ActionToolbar(UUID, view, tile)
         if(!view.isSecond)actionToolbar.classList.add('first')
         view.appendChild(actionToolbar)
+
     }
 
     view.classList.add('autoql-vanilla-tile-view')

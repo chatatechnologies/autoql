@@ -18,7 +18,7 @@ import './TileVizToolbar.css'
 
 export function TileVizToolbar(json, view, tile){
     var displayTypes = getSupportedDisplayTypes(json)
-
+    var { dashboard } = tile
     var ignoreDisplayType = view.internalDisplayType
     var dummyArray = []
     dummyArray.forEach.call(view.querySelectorAll(
@@ -27,7 +27,6 @@ export function TileVizToolbar(json, view, tile){
     function(e, index){
         e.parentNode.removeChild(e)
     })
-
 
     if(displayTypes.length > 1){
         var vizToolbar = document.createElement('div')
@@ -100,6 +99,12 @@ export function TileVizToolbar(json, view, tile){
             if(button.innerHTML != ''){
                 vizToolbar.appendChild(button)
                 button.onclick = function(event){
+                    dashboard.setUndoData('display-type-change', () => {
+                        var curValue = view.internalDisplayType
+                        view.internalDisplayType = ignoreDisplayType
+                        view.displayData()
+                        return curValue
+                    }, view)
                     view.internalDisplayType = this.dataset.displaytype
                     view.displayData()
                 }

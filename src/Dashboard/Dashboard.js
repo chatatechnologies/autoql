@@ -306,10 +306,17 @@ export function Dashboard(selector, options={}){
                 obj.setUndoData('title-change', () => {
                     var curValue = changedItem.inputTitle.value
                     changedItem.inputTitle.value = oldValue
-
                     return curValue
                 }, changedItem)
                 break
+            case 'display-type-change':
+                var oldValue = undoCallback()
+                obj.setUndoData('display-type-change', () => {
+                    var curValue = changedItem.internalDisplayType
+                    changedItem.internalDisplayType = oldValue
+                    changedItem.displayData()
+                    return curValue
+                }, changedItem)
         }
     }
 
