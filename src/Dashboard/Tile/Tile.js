@@ -222,6 +222,13 @@ export function Tile(dashboard, options){
 
     item.inputTitle.onfocus = (event) => {
         inputContainer2.classList.add('clicked')
+        var oldText = item.inputTitle.value
+        dashboard.setUndoData('title-change', () => {
+            var curValue = item.inputTitle.value
+            item.inputTitle.value = oldText
+
+            return curValue
+        }, item)
     }
 
     item.showPlaceHolder = function(){

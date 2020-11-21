@@ -300,6 +300,16 @@ export function Dashboard(selector, options={}){
 
                     return curValue
                 }, changedItem)
+                break
+            case 'title-change':
+                var oldValue = undoCallback()
+                obj.setUndoData('title-change', () => {
+                    var curValue = changedItem.inputTitle.value
+                    changedItem.inputTitle.value = oldValue
+
+                    return curValue
+                }, changedItem)
+                break
         }
     }
 
