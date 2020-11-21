@@ -99,7 +99,6 @@ export function Tile(dashboard, options){
     queryInput.input.setAttribute('data-tippy-content', 'Query')
     queryInput2.input.setAttribute('data-tippy-content', 'Title')
 
-
     placeHolderDrag.innerHTML = `
     <div class="autoql-vanilla-placeholder-top"></div>
     <div class="autoql-vanilla-placeholder-content"></div>
@@ -167,7 +166,11 @@ export function Tile(dashboard, options){
 
     deleteButton.onclick = (evt) => {
         dashboard.grid.removeWidget(item)
+        dashboard.setUndoData('removeTile', () => {
+            return dashboard.undoDelete(item, item.gridstackNode)
+        }, item)
     }
+
     for (var i = 0; i < dragPositions.length; i++) {
         var pos = dragPositions[i]
         var handler = document.createElement('div')
@@ -204,6 +207,13 @@ export function Tile(dashboard, options){
 
     item.inputQuery.onfocus = (event) => {
         inputContainer1.classList.add('clicked')
+        var oldText = item.inputQuery.value
+        dashboard.setUndoData('query-change', () => {
+            var curValue = item.inputQuery.value
+            item.inputQuery.value = oldText
+
+            return curValue
+        }, item)
     }
 
     item.inputTitle.onblur = (event) => {

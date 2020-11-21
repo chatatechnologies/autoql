@@ -292,6 +292,14 @@ export function Dashboard(selector, options={}){
                     return obj.undoAdd(itemAdded)
                 }, itemAdded)
                 break
+            case 'query-change':
+                var oldValue = undoCallback()
+                obj.setUndoData('query-change', () => {
+                    var curValue = changedItem.inputQuery.value
+                    changedItem.inputQuery.value = oldValue
+
+                    return curValue
+                }, changedItem)
         }
     }
 
