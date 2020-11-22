@@ -320,8 +320,24 @@ export function Dashboard(selector, options={}){
                     return curValue
                 }, changedItem)
             case 'reset-tile':
-                undoCallback()
+                var jsonValues = undoCallback()
+                obj.setUndoData('restore-tile', () => {
+                    for (var i = 0; i < jsonValues.length; i++) {
+                        var json = jsonValues[i]
+                        if(json){
+                            console.log('FOOO');
+                            var view = changedItem.views[i]
+                            view.setJSON(json)
+                            view.displayData()
+                        }
+                    }
+                }, changedItem)
                 break
+            case 'restore-tile':
+                undoCallback()
+                obj.setUndoData('reset-tile', () => {
+                    return changedItem.views.map(view => view.reset())
+                }, changedItem)
         }
     }
 

@@ -303,6 +303,7 @@ export function TileView(tile, isSecond=false){
     }
 
     view.reset = () => {
+        var oldJson = cloneObject(ChataUtils.responses[UUID])
         ChataUtils.responses[UUID] = undefined
         view.isExecuted = false
 
@@ -311,6 +312,12 @@ export function TileView(tile, isSecond=false){
         }else{
             responseWrapper.innerHTML = placeHolderText
         }
+
+        return oldJson
+    }
+
+    view.setJSON = (newJson) => {
+        ChataUtils.responses[UUID] = cloneObject(newJson)
     }
 
     view.startEditing = () => {

@@ -327,7 +327,7 @@ export function Tile(dashboard, options){
     item.tilePlayBuytton.onclick = () => {
         item.runTile()
         dashboard.setUndoData('reset-tile', () => {
-            item.views.map(view => view.reset())
+            return item.views.map(view => view.reset())
         }, item)
 
     }
