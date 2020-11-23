@@ -1958,7 +1958,7 @@ export function DataMessenger(elem, options){
             }, 400)
         }else{
             setTimeout(() => {
-                obj.putClientResponse('No data found.', true, json);
+                obj.putClientResponse('No data found.', json, true);
                 obj.drawerContent.removeChild(loading);
             }, 400)
         }
@@ -2484,7 +2484,7 @@ export function DataMessenger(elem, options){
 
                 var response = await apiCallPut(url, body, obj.options)
                 obj.drawerContent.removeChild(loading);
-                obj.sendResponse('Thank you for your feedback')
+                obj.putClientResponse('Thank you for your feedback', {}, true)
 
                 // ChataUtils.putCall(url, body , (jsonResponse) => {
                 //     if(evt.target.textContent === 'None of these'){
