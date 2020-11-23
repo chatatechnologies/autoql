@@ -302,6 +302,16 @@ export function TileView(tile, isSecond=false){
         view.showSuggestionButtons(response.data)
     }
 
+    view.removeVizToolbar = () => {
+        var dummyArray = []
+        dummyArray.forEach.call(view.querySelectorAll(
+            '.autoql-vanilla-viz-toolbar'
+        ),
+        function(e, index){
+            e.parentNode.removeChild(e)
+        })
+    }
+
     view.reset = () => {
         var oldJson = cloneObject(ChataUtils.responses[UUID])
         ChataUtils.responses[UUID] = undefined
@@ -312,6 +322,8 @@ export function TileView(tile, isSecond=false){
         }else{
             responseWrapper.innerHTML = placeHolderText
         }
+
+        view.removeVizToolbar()
 
         return oldJson
     }
