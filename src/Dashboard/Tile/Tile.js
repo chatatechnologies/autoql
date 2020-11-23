@@ -74,6 +74,9 @@ export function Tile(dashboard, options){
 
     vizToolbarSplit.onclick = () => {
         item.toggleSplit()
+        dashboard.setUndoData('split-view', () => {
+            item.toggleSplit()
+        }, item)
     }
 
     var inputContainer1 = new InputContainer([

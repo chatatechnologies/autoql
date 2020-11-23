@@ -337,6 +337,12 @@ export function Dashboard(selector, options={}){
                 obj.setUndoData('reset-tile', () => {
                     return changedItem.views.map(view => view.reset())
                 }, changedItem)
+                break
+            case 'split-view':
+                undoCallback()
+                obj.setUndoData('split-view', () => {
+                    changedItem.toggleSplit()
+                }, changedItem)
         }
     }
 
