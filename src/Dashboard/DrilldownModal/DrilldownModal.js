@@ -12,7 +12,7 @@ export function DrilldownModal(title, views=[]){
             Split(views, {
                 direction: 'vertical',
                 sizes: [50, 50],
-                minSize: ['35%', '0'],
+                minSize: [35, 0],
                 gutterSize: 7,
                 cursor: 'row-resize',
                 onDragEnd: () => {
