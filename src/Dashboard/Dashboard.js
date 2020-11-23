@@ -325,7 +325,6 @@ export function Dashboard(selector, options={}){
                     for (var i = 0; i < jsonValues.length; i++) {
                         var json = jsonValues[i]
                         if(json){
-                            console.log('FOOO');
                             var view = changedItem.views[i]
                             view.setJSON(json)
                             view.displayData()

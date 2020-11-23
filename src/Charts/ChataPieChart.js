@@ -146,8 +146,9 @@ export function createPieChart(
     }
 
     var color = getColorScale(colorLabels, options.themeConfig.chartColors)
-    // creating the chart
-    var path = pieChartContainer.selectAll('path')
+    let path = undefined
+
+    path = pieChartContainer.selectAll('path')
     .data(dataReady)
     .enter()
     .append('path')
@@ -259,5 +260,4 @@ export function createPieChart(
             )
         }
     );
-
 }

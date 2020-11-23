@@ -254,10 +254,11 @@ export function DrilldownView(
                 container.appendChild(chartWrapper2)
                 createStackedBarChart(
                     chartWrapper, json,
-                    dashboard.options, view.registerDrilldownChartEvent, false,
+                    dashboard.options,
+                    view.registerDrilldownStackedChartEvent, false,
                     'data-tilechart', true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownStackedChartEvent(chartWrapper)
                 break
             case 'stacked_column':
                 var chartWrapper = document.createElement('div')
@@ -269,10 +270,11 @@ export function DrilldownView(
                 container.appendChild(chartWrapper2)
                 createStackedColumnChart(
                     chartWrapper, json,
-                    dashboard.options, view.registerDrilldownChartEvent, false,
+                    dashboard.options,
+                    view.registerDrilldownStackedChartEvent, false,
                     'data-tilechart', true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownStackedChartEvent(chartWrapper)
                 break
             case 'stacked_line':
                 var chartWrapper = document.createElement('div')
@@ -284,10 +286,11 @@ export function DrilldownView(
                 container.appendChild(chartWrapper2)
                 createAreaChart(
                     chartWrapper, json,
-                    dashboard.options, view.registerDrilldownChartEvent, false,
+                    dashboard.options,
+                    view.registerDrilldownStackedChartEvent, false,
                     'data-tilechart', true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownStackedChartEvent(chartWrapper)
             break
             case 'pie':
                 var chartWrapper = document.createElement('div')
@@ -301,7 +304,7 @@ export function DrilldownView(
                     dashboard.options, false,
                     'data-tilechart', true
                 )
-                // view.registerDrilldownChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'pivot_table':
                 var div = createTableContainer()
