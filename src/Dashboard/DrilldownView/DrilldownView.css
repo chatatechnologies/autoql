@@ -1,7 +1,7 @@
 .autoql-vanilla-dashboard-drilldown-original{
-    flex: 0 0 47vh;
+    /* flex: 0 0 47vh; */
     height: 47vh;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .autoql-vanilla-dashboard-drilldown-table {
@@ -11,4 +11,13 @@
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.chata-modal-body .gutter {
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: 50%;
+    border-top: 3px solid #C0C0C0;
+    pointer-events: all;
+    margin-bottom: 10px;
 }
