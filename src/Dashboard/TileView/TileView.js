@@ -257,7 +257,8 @@ export function TileView(tile, isSecond=false){
         `
 
         suggestionsContainer.appendChild(div)
-
+        var buttonContainer = document.createElement('div')
+        buttonContainer.classList.add('autoql-vanilla-suggestions-container')
         for (var i = 0; i < items.length; i++) {
             var button = document.createElement('button')
             button.classList.add('autoql-vanilla-chata-suggestion-btn');
@@ -277,9 +278,9 @@ export function TileView(tile, isSecond=false){
 
                 var response = apiCallPut(url, body, dashboard.options)
             }
-            suggestionsContainer.appendChild(button)
+            buttonContainer.appendChild(button)
         }
-
+        suggestionsContainer.appendChild(buttonContainer);
         responseWrapper.appendChild(suggestionsContainer)
     }
 

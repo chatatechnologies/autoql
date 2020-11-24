@@ -99,3 +99,11 @@
     vertical-align: bottom;
     line-height: 20px;
 }
+
+.autoql-vanilla-suggestions-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+}
