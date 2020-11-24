@@ -41,6 +41,9 @@ import {
 } from '../../Charts'
 import { select } from 'd3-selection';
 import {
+    refreshTooltips
+} from '../../Tooltips'
+import {
     createSuggestionArray,
     createSafetynetContent,
 } from '../../Safetynet'
@@ -892,6 +895,7 @@ export function TileView(tile, isSecond=false){
             container.innerHTML = "Oops! We didn't understand that query.";
         }
         view.createVizToolbar()
+        refreshTooltips()
     }
 
     view.createVizToolbar = () => {

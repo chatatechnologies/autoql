@@ -14,6 +14,9 @@ import {
 import {
     getSupportedDisplayTypes
 } from '../../Utils'
+import {
+    refreshTooltips
+} from '../../Tooltips'
 import './TileVizToolbar.css'
 
 export function TileVizToolbar(json, view, tile){
@@ -111,5 +114,6 @@ export function TileVizToolbar(json, view, tile){
             }
         }
         view.appendChild(vizToolbar)
+        refreshTooltips()
     }
 }

@@ -15,7 +15,6 @@ import './ActionToolbar.css'
 
 export function ActionToolbar(idRequest, tileView, tile) {
 
-
     var toolbar = htmlToElement(`
         <div
         class="

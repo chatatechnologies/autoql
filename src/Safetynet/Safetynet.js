@@ -163,9 +163,10 @@ export function createSafetynetBody(
         }else{
             var div = document.createElement('div');
             var select = document.createElement('div');
+            var l  = suggestion.suggestionList.length
             select.suggestion = suggestion
-            select.option = suggestion.suggestionList[0]
-            select.innerHTML = suggestion['suggestionList'][0]['text'];
+            select.option = suggestion.suggestionList[l-1]
+            select.innerHTML = suggestion['suggestionList'][l-1]['text'];
             select.classList.add('autoql-vanilla-chata-safetynet-select');
             select.classList.add('safetynet-value');
             div.classList.add(
