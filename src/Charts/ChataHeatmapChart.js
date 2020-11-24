@@ -31,8 +31,8 @@ export function createHeatmap(
 
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var groupableIndex1 = groupables[0].indexCol;
-    var groupableIndex2 = groupables[1].indexCol;
+    var groupableIndex1 = groupables[1].indexCol;
+    var groupableIndex2 = groupables[0].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
 
     var data = formatDataToHeatmap(json, options);
