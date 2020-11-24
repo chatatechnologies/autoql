@@ -640,10 +640,12 @@ export function TileView(tile, isSecond=false){
         })
 
         messageContainer.appendChild(error)
-        messageContainer.appendChild(htmlToElement('<br/>'))
-        messageContainer.appendChild(
-            htmlToElement(`<div>Error ID: ${reference_id}</div>`)
-        )
+        if(json.status !== 200){
+            messageContainer.appendChild(htmlToElement('<br/>'))
+            messageContainer.appendChild(
+                htmlToElement(`<div>Error ID: ${reference_id}</div>`)
+            )
+        }
 
         return messageContainer
     }
@@ -659,7 +661,7 @@ export function TileView(tile, isSecond=false){
 
         view.clearAutoResizeEvents()
 
-        if(json.status !== 200){
+        if(!json['data'].rows || json['data'].rows.length == 0){
             responseWrapper.innerHTML = ''
             responseWrapper.appendChild(view.getMessageError())
             return

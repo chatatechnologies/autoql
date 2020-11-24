@@ -2628,7 +2628,6 @@ export function DataMessenger(elem, options){
             hasDrilldown = true;
 
         }else{
-
             // value = jsonResponse['message'].replace('<report>', '');
             var error = new ErrorMessage(jsonResponse['message'], (evt) => {
                 ChataUtils.openModalReport(
