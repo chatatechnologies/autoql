@@ -577,6 +577,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
             }
             table.tabulator.redraw();
         }
+
         var response = await apiCallPut(url, {columns: data}, opts)
         modal.close();
         allColHiddenMessage(table);

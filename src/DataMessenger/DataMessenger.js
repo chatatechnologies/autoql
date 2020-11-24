@@ -1605,6 +1605,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.openColumnEditorHandler = (evt, idRequest) => {
+
         obj.showColumnEditor(idRequest);
     }
 
@@ -2410,6 +2411,7 @@ export function DataMessenger(elem, options){
                 `[data-componentid='${id}']`
             );
             obj.setScrollBubble(obj.getParentFromComponent(component));
+            component.tabulator.redraw(true);
         });
     }
 
