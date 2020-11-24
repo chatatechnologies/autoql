@@ -7,6 +7,7 @@ import {
     NotificationIcon,
     NotificationFeed
 } from '../Notifications'
+import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet'
@@ -2625,7 +2626,14 @@ export function DataMessenger(elem, options){
             hasDrilldown = true;
 
         }else{
-            value = jsonResponse['message'].replace('<report>', '');
+
+            // value = jsonResponse['message'].replace('<report>', '');
+            var error = new ErrorMessage(jsonResponse['message'], (evt) => {
+                ChataUtils.openModalReport(
+                    idRequest, obj.options, null, null
+                )
+            })
+            messageBubble.appendChild(error);
             messageBubble.classList.add('no-hover-response');
         }
         var div = document.createElement('div');
