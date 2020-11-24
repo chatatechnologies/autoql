@@ -191,7 +191,9 @@ export function createColumnChart(
     var y = SCALE_LINEAR();
 
     setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
-    setDomainRange(x1, groupNames, 0, getBandWidth(x0), false, .1)
+    var x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
+
+    setDomainRange(x1, groupNames, 0, x1Range, false, .1)
 
     y
     .range([ height - (margin.bottomChart), 0 ])

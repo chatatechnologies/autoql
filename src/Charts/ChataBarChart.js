@@ -215,11 +215,13 @@ export function createBarChart(
         .1
     );
 
+    var y1Range = minMaxValues.max === 0 ? 0 : getBandWidth(y0)
+
     setDomainRange(
         y1,
         groupNames,
         0,
-        getBandWidth(y0),
+        y1Range,
         false,
         .1
     )
