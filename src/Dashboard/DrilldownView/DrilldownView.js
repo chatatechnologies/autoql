@@ -118,11 +118,16 @@ export function DrilldownView(
         var response = await apiCallPost(URL, data, options);
         ChataUtils.responses[UUID] = response.data
         view.removeChild(loading)
-        console.log(response.data.data.rows.length);
+
         if(response.data.data.rows.length > 0){
             view.displayData(response.data)
         }else{
-            view.appendChild(new ErrorMessage(response.data.message))
+            var error = new ErrorMessage(response.data.message, (evt) => {
+                ChataUtils.openModalReport(
+                    UUID, dashboard.options, null, null
+                )
+            })
+            view.appendChild(error)
         }
     }
 

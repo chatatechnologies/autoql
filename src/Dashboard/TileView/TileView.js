@@ -132,7 +132,10 @@ export function TileView(tile, isSecond=false){
             }
         }
 
-        if(json.data.columns.length === 1){
+        if(
+            json.data.columns.length === 1 &&
+            view.internalDisplayType === 'table'
+        ){
             popoverClass = 'up-table-single';
         }else{
             popoverClass = 'up-chart';
@@ -413,6 +416,7 @@ export function TileView(tile, isSecond=false){
     view.displaySafetynet = () => {
         view.isSafetynet = true
         view.clearAutoResizeEvents()
+        view.removeVizToolbar()
         var json = ChataUtils.responses[UUID]
         var suggestionArray = createSuggestionArray(cloneObject(json))
         var safetynet = createSafetynetContent(

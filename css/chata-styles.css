@@ -1123,6 +1123,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-safety-net-container {
     width: 100%;
+    overflow-y: auto;
 }
 
 .autoql-vanilla-chata-safety-net-description{
