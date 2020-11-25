@@ -96,7 +96,8 @@ class App extends React.Component{
         this.setState({
             isLogged: true,
             authentication: {
-                ...values
+                ...values,
+                ...authentication
             }
         })
         // const topics = getIntroMessageTopics(getActiveIntegrator(
@@ -229,13 +230,31 @@ class App extends React.Component{
         }}/>)
     }
 
-    createDashboard = () => {
+    createDashboard = async() => {
         const {
-            dashboardNameInput
+            dashboardNameInput,
+            authentication
         } = this.state
         this.setState({
             isSavingDashboard: true
         })
+        console.log(authentication);
+        const URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${authentication.apiKey}`
+        var data = {
+            name: dashboardNameInput,
+            project_id: authentication.projectId
+        }
+        const response = await axios.post(URL, data, {
+            headers: {
+                Authorization: `Bearer ${authentication.token}`,
+                'Integrator-Domain': authentication.domain,
+            },
+        })
+        this.setState({
+            isSavingDashboard: false,
+            modalVisible: false
+        })
+        console.log(response.data);
     }
 
     render = () => {
