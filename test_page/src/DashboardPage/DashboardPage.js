@@ -31,6 +31,12 @@ export class DashboardPage extends Component {
             )
         })
 
+        options.push(
+            <Option value="new-dashboard" key={'new-dashboard'}>
+                <PlusOutlined /> New Dashboard
+            </Option>
+        )
+
         return (
             <Select
                 onChange={(val) => {

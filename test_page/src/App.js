@@ -7,6 +7,10 @@ import { DataAlertsSettingsPage } from './DataAlertsSettingsPage'
 import { DataMessenger } from 'autoql'
 import { NotificationIcon } from 'autoql'
 import { NotificationListPage } from './NotificationListPage'
+import {
+    Modal,
+    Input
+} from 'antd'
 import './App.css'
 import axios from 'axios'
 
@@ -19,6 +23,8 @@ class App extends React.Component{
     state = {
         currentPage: 'drawer',
         isLogged: false,
+        modalVisible: false,
+        isSavingDashboard: false,
         authentication: {
             token: '',
             domain: '',
@@ -37,6 +43,7 @@ class App extends React.Component{
         dashboards: [],
         dashboardNames: [],
         activeDashboard: 0,
+        dashboardNameInput: ''
     }
 
     componentDidMount = () => {
@@ -44,14 +51,19 @@ class App extends React.Component{
     }
 
     onChangeDashboard = (val, dashboardpage) => {
-        this.setState({
-            activeDashboard: val
-        }, () => {
-            var dashboardEl = document.getElementById('dashboard')
-            dashboardEl.innerHTML = '';
-            dashboardEl.classList.remove('muuri')
-            dashboardpage.instanceDashboard()
-        })
+        if(val !== 'new-dashboard'){
+            this.setState({
+                activeDashboard: val
+            }, () => {
+                var dashboardEl = document.getElementById('dashboard')
+                dashboardEl.innerHTML = '';
+                dashboardpage.instanceDashboard()
+            })
+        }else{
+            this.setState({
+                modalVisible: true
+            })
+        }
     }
 
     fetchTopics = async (values, authentication) => {
@@ -217,6 +229,15 @@ class App extends React.Component{
         }}/>)
     }
 
+    createDashboard = () => {
+        const {
+            dashboardNameInput
+        } = this.state
+        this.setState({
+            isSavingDashboard: true
+        })
+    }
+
     render = () => {
         return (
             <div className="App" id="test">
@@ -225,6 +246,25 @@ class App extends React.Component{
                 {this.renderActivePage()}
                 </div>
                 <div id="datamessenger"></div>
+                <Modal
+                title="New Dashboard"
+                okText="Create Dashboard"
+                okButtonProps={{ disabled: !this.state.dashboardNameInput }}
+                onCancel={() => this.setState({ modalVisible: false })}
+                confirmLoading={this.state.isSavingDashboard}
+                visible={this.state.modalVisible}
+                onOk={this.createDashboard}>
+                    <Input
+                        placeholder="Dashboard Name"
+                        value={this.state.dashboardNameInput}
+                        onChange={(e) =>
+                            this.setState(
+                                { dashboardNameInput: e.target.value }
+                            )
+                        }
+                        onPressEnter={this.createDashboard}
+                    />
+                </Modal>
             </div>
         )
     }
