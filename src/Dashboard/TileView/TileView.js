@@ -121,7 +121,10 @@ export function TileView(tile, isSecond=false){
     view.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
         let popoverClass;
         var json = ChataUtils.responses[idRequest];
-        if(['table', 'pivot_table'].includes(view.internalDisplayType)){
+        if(
+            ['table', 'pivot_table'].includes(view.internalDisplayType) &&
+            json.data.columns.length > 1
+        ){
             var isAllHidden = allColsHidden(json);
             if(isAllHidden){
                 popoverClass = 'up-table-single';
@@ -130,12 +133,7 @@ export function TileView(tile, isSecond=false){
                 popoverClass = 'up-table';
                 moreOptions.classList.remove('up-table-single');
             }
-        }
-
-        if(
-            json.data.columns.length === 1 &&
-            view.internalDisplayType === 'table'
-        ){
+        }else if(json.data.columns.length === 1){
             popoverClass = 'up-table-single';
         }else{
             popoverClass = 'up-chart';
