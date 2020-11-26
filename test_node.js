@@ -173,7 +173,7 @@ get(DASHBOARD_URL, {
             debug: true
         },
         executeOnMount: true,
-        tiles: response.data.items[11].data
+        tiles: response.data.items[1].data
     })
     // new DashboardV2('#dashboard-wrapper2')
 
@@ -203,7 +203,12 @@ var b = document.getElementById('edit')
 var b2 = document.getElementById('edit-stop')
 var b3 = document.getElementById('add-widget')
 var b4 = document.getElementById('undo-widget')
+var b5 = document.getElementById('show-values')
 
+
+b5.onclick = () => {
+    dashboard.tiles.map(tile => console.log(tile.getValues()))
+}
 
 b4.onclick = () => {
     dashboard.undo()

@@ -198,6 +198,31 @@ export function Tile(dashboard, options){
     item.dashboard = dashboard
 
 
+    item.getValues = () => {
+        const {
+            query,
+            title,
+        } = item.options
+
+        const { views } = item
+
+        return {
+            query: query,
+            title: title,
+            displayType: views[0].internalDisplayType
+        }
+    }
+
+    item.inputQuery.onkeyup = (evt) => {
+        console.log(evt.target.value);
+        item.options.query = evt.target.value
+    }
+
+    item.inputTitle.onkeyup = (evt) => {
+        console.log(evt.target.value);
+        item.options.title = evt.target.value
+    }
+
     item.inputQuery.onkeypress = function(evt){
         if(evt.keyCode == 13 && this.value){
             item.runTile()
