@@ -51,6 +51,7 @@ class App extends React.Component{
     }
 
     onChangeDashboard = (val, dashboardpage) => {
+        console.log(val);
         if(val !== 'new-dashboard'){
             this.setState({
                 activeDashboard: val
@@ -233,12 +234,13 @@ class App extends React.Component{
     createDashboard = async() => {
         const {
             dashboardNameInput,
-            authentication
+            authentication,
+            dashboards
         } = this.state
         this.setState({
             isSavingDashboard: true
         })
-        console.log(authentication);
+
         const URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${authentication.apiKey}`
         var data = {
             name: dashboardNameInput,
@@ -250,11 +252,23 @@ class App extends React.Component{
                 'Integrator-Domain': authentication.domain,
             },
         })
+        var names = []
+
+        dashboards.map(dashboard => {
+            names.push(dashboard.name)
+        })
+
+        names.push(response.data.name)
+
         this.setState({
+            dashboards: [...dashboards, response.data],
+            dashboardNames: names,
+            activeDashboard: dashboards.length,
             isSavingDashboard: false,
             modalVisible: false
         })
-        console.log(response.data);
+
+        // console.log(response.data);
     }
 
     render = () => {

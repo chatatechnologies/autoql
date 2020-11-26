@@ -23,7 +23,7 @@ export class DashboardPage extends Component {
     }
 
     renderSelector = () => {
-        const { dashboardNames } = this.props
+        const { dashboardNames, activeDashboard } = this.props
         var options = []
         dashboardNames.map((name, index) => {
             options.push(
@@ -43,7 +43,8 @@ export class DashboardPage extends Component {
                     this.props.onSelectDashboard(val, this)
                 }}
                 style={{ minWidth: '200px' }}
-                defaultValue={0}>
+                value={activeDashboard}
+                defaultValue={activeDashboard}>
                 {options}
             </Select>
         )
