@@ -51,7 +51,6 @@ class App extends React.Component{
     }
 
     onChangeDashboard = (val, dashboardpage) => {
-        console.log(val);
         if(val !== 'new-dashboard'){
             this.setState({
                 activeDashboard: val
@@ -268,7 +267,6 @@ class App extends React.Component{
             modalVisible: false
         })
 
-        // console.log(response.data);
     }
 
     render = () => {

@@ -50,7 +50,14 @@ export class DashboardPage extends Component {
         )
     }
 
-    componentDidUpdate = () => {
+    componentDidUpdate = (prevProps, prevState) => {
+        console.log('DID UPDATE');
+        if(prevProps.dashboards.length !== this.props.dashboards.length){
+            var dashboardEl = document.getElementById('dashboard')
+            dashboardEl.innerHTML = '';
+            this.instanceDashboard()
+        }
+        // console.log(prevState);
     }
 
     instanceDashboard = () => {
