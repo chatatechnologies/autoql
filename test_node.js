@@ -7,7 +7,7 @@ import { NotificationFeed } from './src'
 import { DataAlerts } from './src'
 import { getSupportedDisplayTypes } from './src'
 
-import { get } from 'axios';
+import { get, put } from 'axios';
 
 var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA2NTA0MzAzLCAiZXhwIjogMTYwNjUyNTkwMywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cyIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ.RMJxFfaOyd-hf_QExlw4kgtPvW5GKGzdOpGlTv-pH8bgSLN9Vz-9wYk1P8mNxEaawKDlT64wlDj1AK1ltvnewJKB7Rc645ejiSrOil3v-b0J8gn-ZME2dNpSEhdYfI2X4f8NnMxnM4TAm2MsNuvV8ZT5NydhKGnW3tiPB8cZXISyXg2N6Q8T9wvEJDFd_xQ1vxjxNUF5rjF1ucy-LUwgZZEMYmFUcEU4KUj7VnidQHT6RzdUIp4WXi0WvHQ4wTP2seumBd6421MIW3Bl8sSb9wfR9qo0oRH8JvAmedVVnZk1mBN-i83uK9ydInv9U_SDj2VhH8I8Lj0kP6CxSfXmwA`;
 const domain = 'https://spira-staging.chata.io';
@@ -157,7 +157,7 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    r = response.data.items[1]
+    r = response.data.items[0]
     console.log(response.data);
     dashboard = new Dashboard('#dashboard-wrapper', {
         authentication: {
@@ -208,14 +208,25 @@ var b4 = document.getElementById('undo-widget')
 var b5 = document.getElementById('show-values')
 var b6 = document.getElementById('save-dashboard')
 
-b6.onclick = () => {
+b6.onclick = async () => {
     var d = {
         name: dashboard.options.name
     }
     var tiles = []
     dashboard.tiles.map(tile => tiles.push(tile.getValues()))
-    d.tiles = tiles
+    d.data = tiles
     console.log(d);
+    const URL = `https://backend-staging.chata.io/api/v1/dashboards/${r.id}?key=${apiKey}`
+    console.log(URL);
+
+    var response = await put(URL, d, {
+        headers: {
+            Authorization: `Bearer ${_token}`,
+            'Integrator-Domain': domain,
+        },
+    })
+
+    console.log(response.status);
 }
 
 b5.onclick = () => {
