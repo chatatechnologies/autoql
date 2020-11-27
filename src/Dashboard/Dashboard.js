@@ -70,7 +70,8 @@ export function Dashboard(selector, options={}){
         secondDisplayType: 'table',
         secondDisplayPercentage: 25,
         enableDynamicCharting: true,
-        dashboardId: -1
+        dashboardId: -1,
+        name: undefined
     }
 
     obj.options.tiles = options.tiles
