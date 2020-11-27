@@ -43,7 +43,7 @@ export function Tile(dashboard, options){
         item.options[key] = value
     }
 
-    if(item.options.key){
+    if(!item.options.key){
         var uuid = uuidv4()
         item.options.key = uuid
         item.options.i = uuid
@@ -175,7 +175,12 @@ export function Tile(dashboard, options){
 
 
     deleteButton.onclick = (evt) => {
+        var tiles = []
         dashboard.grid.removeWidget(item)
+        dashboard.tiles.map((tile) => {
+            if(tile.options.key != item.options.key)tiles.push(tile)
+        })
+        dashboard.tiles = tiles
         dashboard.setUndoData('removeTile', () => {
             return dashboard.undoDelete(item, item.gridstackNode)
         }, item)
