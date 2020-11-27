@@ -204,7 +204,19 @@ var b2 = document.getElementById('edit-stop')
 var b3 = document.getElementById('add-widget')
 var b4 = document.getElementById('undo-widget')
 var b5 = document.getElementById('show-values')
+var b6 = document.getElementById('save-dashboard')
 
+b6.onclick = () => {
+    var d = {
+        name: dashboard.name
+    }
+    var tiles = []
+    dashboard.tiles.map(tile => tiles.push(tile.getValues()))
+
+    d.tiles = tiles
+
+    console.log(tiles);
+}
 
 b5.onclick = () => {
     dashboard.tiles.map(tile => console.log(tile.getValues()))

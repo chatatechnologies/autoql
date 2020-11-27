@@ -358,6 +358,11 @@ export function TileView(tile, isSecond=false){
             view.clearMetadata()
             var loading = view.showLoading()
             var validate = await view.executeValidate()
+            if(!validate || validate.status != 200){
+                ChataUtils.responses[UUID] = json
+                responseWrapper.removeChild(loading)
+                responseWrapper.appendChild(view.getMessageError())
+            }
             if(validate.data.data.replacements.length){
                 var json = validate.data
                 json.status = validate.status
