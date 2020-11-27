@@ -12,7 +12,9 @@ import {
     RollbackOutlined,
     SaveOutlined
 } from '@ant-design/icons'
-
+import {
+    put
+} from 'axios'
 const { Option } = Select
 
 export class DashboardPage extends Component {
@@ -20,6 +22,7 @@ export class DashboardPage extends Component {
 
     state = {
         isEditing: false,
+        loading: false
     }
 
     renderSelector = () => {
@@ -62,6 +65,7 @@ export class DashboardPage extends Component {
 
     instanceDashboard = () => {
         const { authentication } = this.props
+        var dashboardData = this.props.dashboards[this.props.activeDashboard]
         this.dashboard = new Dashboard('#dashboard', {
             authentication: {
                 token: authentication.token,
@@ -74,7 +78,8 @@ export class DashboardPage extends Component {
             autoQLConfig: {
                 debug: true
             },
-            tiles: this.props.dashboards[this.props.activeDashboard].data,
+            tiles: dashboardData.data,
+            name: dashboardData.name,
             executeOnStopEditing: false,
             executeOnMount: false,
         })
@@ -108,6 +113,36 @@ export class DashboardPage extends Component {
                 h: 5,
             }
         );
+    }
+
+    save = async() => {
+        this.setState({
+            loading: true
+        })
+        const { authentication } = this.props
+        var dashboardData = this.props.dashboards[this.props.activeDashboard]
+        const URL = `https://backend-staging.chata.io/api/v1/dashboards/${dashboardData.id}?key=${authentication.apiKey}`
+        var tiles = []
+        var d = {
+            name: dashboardData.name
+        }
+        this.dashboard.tiles.map(tile => tiles.push(tile.getValues()))
+
+        d.data = tiles
+        var response = await put(URL, d, {
+            headers: {
+                Authorization: `Bearer ${authentication.token}`,
+                'Integrator-Domain': authentication.domain,
+            },
+        })
+
+        console.log(response.status);
+
+        this.dashboard.stopEditing()
+        this.setState({
+            loading: false
+        })
+
     }
 
     render = () => {
@@ -160,7 +195,8 @@ export class DashboardPage extends Component {
                             icon={<RollbackOutlined />}>Undo</Button>
                         <Button
                             type="primary"
-                            onClick={() => {}}
+                            loading={this.state.loading}
+                            onClick={() => {this.save()}}
                             style={{ marginLeft: '10px' }}
                             icon={<SaveOutlined  />}>Save Dashboard</Button>
                     </div>
