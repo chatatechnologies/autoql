@@ -24,7 +24,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             //     data[i][group.indexCol], group.jsonCol, options
             // );
             let label = data[i][group.indexCol];
-            console.log(label);
             if(!label || label == '')label = 'null';
             var colName = columns[group.indexCol].display_name ||
             columns[group.indexCol].name;
@@ -262,7 +261,6 @@ export const getIndexesByType = (cols) => {
 }
 
 export const getMetadataElement = (component, isDataMessenger) => {
-    // console.log(component.parentElement.parentElement);
     if(isDataMessenger)return component.parentElement.parentElement
     else return component.parentElement.parentElement
 }

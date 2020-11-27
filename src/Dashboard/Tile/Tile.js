@@ -9,7 +9,8 @@ import {
 import { ChataInput, InputContainer } from '../../ChataComponents'
 import { TileView } from '../TileView'
 import {
-    htmlToElement
+    htmlToElement,
+    uuidv4
 } from '../../Utils'
 import Split from 'split.js'
 import './Tile.css'
@@ -202,14 +203,35 @@ export function Tile(dashboard, options){
         const {
             query,
             title,
+            key
         } = item.options
+
+        const {
+            x,
+            y,
+            width,
+            height
+        } = item.gridstackNode
 
         const { views } = item
 
+        if(!key)key = uuidv4()
+
         return {
+            displayType: views[0].internalDisplayType,
+            key: key,
+            i: key,
+            minW: 3,
+            minH: 2,
+            maxH: 12,
+            x: x,
+            y: y,
+            w: width,
+            h: height,
+            moved: false,
+            static: false,
             query: query,
             title: title,
-            displayType: views[0].internalDisplayType
         }
     }
 
