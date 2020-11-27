@@ -43,6 +43,12 @@ export function Tile(dashboard, options){
         item.options[key] = value
     }
 
+    if(item.options.key){
+        var uuid = uuidv4()
+        item.options.key = uuid
+        item.options.i = uuid
+    }
+
     var placeHolderDrag = document.createElement('div')
     var titleWrapper = document.createElement('div')
     var responseWrapper = document.createElement('div')
@@ -203,7 +209,9 @@ export function Tile(dashboard, options){
         const {
             query,
             title,
-            key
+            key,
+            i,
+            isSplit,
         } = item.options
 
         const {
@@ -215,9 +223,7 @@ export function Tile(dashboard, options){
 
         const { views } = item
 
-        if(!key)key = uuidv4()
-
-        return {
+        var data = {
             displayType: views[0].internalDisplayType,
             key: key,
             i: key,
@@ -233,6 +239,14 @@ export function Tile(dashboard, options){
             query: query,
             title: title,
         }
+
+        if(isSplit){
+            data.splitView = true
+            data.secondDisplayType = views[1].internalDisplayType || 'table'
+            data.secondQuery = views[1].getQuery()
+        }
+
+        return data
     }
 
     item.inputQuery.onkeyup = (evt) => {
