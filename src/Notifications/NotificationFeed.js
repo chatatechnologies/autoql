@@ -1,5 +1,5 @@
 import { htmlToElement, apiCallPut, apiCallGet } from '../Utils'
-import { DISMISS } from '../Svg'
+import { DISMISS, EMPTY_STATE } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import { Notification } from './Notification'
 import '../../css/Notifications.css'
@@ -80,11 +80,26 @@ export function NotificationFeed(selector, options){
     var dismissAllButton = document.createElement('div');
     var dismissContent = document.createElement('span');
     var dismissIcon = htmlToElement(DISMISS);
+    var emptyStateContainer = document.createElement('div')
+    var createDatalertButton = htmlToElement(`
+        <button class="autoql-vanilla-chata-btn primary large">
+            Create Data Alert
+        </button>
+    `)
+    emptyStateContainer.appendChild(htmlToElement(`
+        <div style="margin-bottom:25px">
+            <p class="autoql-vanilla-empty-notification">No Notifications yet.</p>
+            <p class="autoql-vanilla-empy-notification-message">Stay tuned!</p>
+        </div>
+    `))
+    emptyStateContainer.appendChild(createDatalertButton)
+    container.appendChild(emptyStateContainer)
     // wrapper.style.height = '100vh';
     // wrapper.style.background = 'rgb(250, 250, 250)';
     wrapper.classList.add('autoql-vanilla-notification-wrapper');
     container.classList.add('chata-notification-list-container');
     dismissAllButton.classList.add('chata-notification-dismiss-all');
+    emptyStateContainer.classList.add('autoql-vanilla-empty-state');
     dismissContent.appendChild(dismissIcon);
     dismissContent.appendChild(document.createTextNode('Dismiss All'));
     dismissAllButton.appendChild(dismissContent);
@@ -152,14 +167,19 @@ export function NotificationFeed(selector, options){
         var response = await apiCallGet(URL, wrapper.options)
         var jsonResponse = response.data
         var items = jsonResponse['data']['items'];
-
-        for (var i = 0; i < items.length; i++) {
-            var notification = new Notification(items[i], wrapper.options);
-            notification.style.animationDelay = (delay * i) + 's';
-            container.appendChild(
-                notification
-            );
+        items = []
+        if(items.length > 0){
+            for (var i = 0; i < items.length; i++) {
+                var notification = new Notification(items[i], wrapper.options);
+                notification.style.animationDelay = (delay * i) + 's';
+                container.appendChild(
+                    notification
+                );
+            }
+        }else{
+            dismissContent.style.display = 'none'
         }
+
         wrapper.isLoading = false;
     }
 

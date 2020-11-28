@@ -9,7 +9,7 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get, put } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA2NTA0MzAzLCAiZXhwIjogMTYwNjUyNTkwMywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cyIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ.RMJxFfaOyd-hf_QExlw4kgtPvW5GKGzdOpGlTv-pH8bgSLN9Vz-9wYk1P8mNxEaawKDlT64wlDj1AK1ltvnewJKB7Rc645ejiSrOil3v-b0J8gn-ZME2dNpSEhdYfI2X4f8NnMxnM4TAm2MsNuvV8ZT5NydhKGnW3tiPB8cZXISyXg2N6Q8T9wvEJDFd_xQ1vxjxNUF5rjF1ucy-LUwgZZEMYmFUcEU4KUj7VnidQHT6RzdUIp4WXi0WvHQ4wTP2seumBd6421MIW3Bl8sSb9wfR9qo0oRH8JvAmedVVnZk1mBN-i83uK9ydInv9U_SDj2VhH8I8Lj0kP6CxSfXmwA`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA2NTI1OTg2LCAiZXhwIjogMTYwNjU0NzU4NiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cyIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyJdfQ.FD8PPGDgOsLD7YpVQdNFM15keoJufUufWmQCxkGJmMgqH10H6DIM-MyiV0SI3y_GouyRdqWTAxEohy5mDhXyaKAWQeLVrXlYS0Lvc9nC7VOxPQdkBwpKEFFgyQESr0BVZjQnCrGwEOxrR8KPZEB1-wiUXMadC79aZ-LWabDOQPdzQSwvnAIO_o3WqDmNkSnaLgFFG57tHKuOF-HpEdmil8O12CYu2URVgXe8Lf77JHPKsMqJKJzX9lxY23J_2yFtDc4WEtB3dDERTeZq6TvWo2HjhJKtkxqwBmqhyFrLwSG4itNH1sL23Bm7f9ALuSDUwe09mV1SzaWg8CJ1QRhSuA`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
@@ -61,17 +61,17 @@ setTimeout(() => {
 }, 300)
 
 
-// var alerts = DataAlerts('#alert-settings', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     themeConfig: {
-//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'light',
-//     },
-// })
+var alerts = DataAlerts('#alert-settings', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    themeConfig: {
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        theme: 'light',
+    },
+})
 //
 // var queryInput = new QueryInput('#query-input', {
 //     authentication: {
@@ -123,24 +123,24 @@ setTimeout(() => {
 // }, 1000)
 //
 //
-// var notificationList = new NotificationFeed('#notification-list', {
-//     authentication: {
-//         token: _token,
-//         apiKey: apiKey,
-//         domain: domain,
-//     },
-//     showNotificationDetails: true,
-//     onExpandCallback: (notification) => {
-//         console.log(notification);
-//     },
-//     onCollapseCallback: (notification) => {
-//         console.log(notification);
-//     },
-//     themeConfig: {
-//         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'light',
-//     },
-// })
+var notificationList = new NotificationFeed('#notification-list', {
+    authentication: {
+        token: _token,
+        apiKey: apiKey,
+        domain: domain,
+    },
+    showNotificationDetails: true,
+    onExpandCallback: (notification) => {
+        console.log(notification);
+    },
+    onCollapseCallback: (notification) => {
+        console.log(notification);
+    },
+    themeConfig: {
+        // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        theme: 'light',
+    },
+})
 
 // var nButton = new NotificationIcon('#notification-icon', {
 //     authentication: {
@@ -157,26 +157,26 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    r = response.data.items[0]
-    console.log(response.data);
-    dashboard = new Dashboard('#dashboard-wrapper', {
-        authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-        },
-        themeConfig: {
-            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            theme: 'light',
-            accentColor: 'red'
-        },
-        autoQLConfig: {
-            debug: true
-        },
-        executeOnMount: true,
-        tiles: r.data,
-        name: r.name
-    })
+    // r = response.data.items[0]
+    // console.log(response.data);
+    // dashboard = new Dashboard('#dashboard-wrapper', {
+    //     authentication: {
+    //         token: _token,
+    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+    //         domain: domain,
+    //     },
+    //     themeConfig: {
+    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+    //         theme: 'light',
+    //         accentColor: 'red'
+    //     },
+    //     autoQLConfig: {
+    //         debug: true
+    //     },
+    //     executeOnMount: true,
+    //     tiles: r.data,
+    //     name: r.name
+    // })
     // new DashboardV2('#dashboard-wrapper2')
 
 

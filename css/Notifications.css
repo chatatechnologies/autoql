@@ -607,6 +607,29 @@
     display: none;
 }
 
+.autoql-vanilla-empty-state{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    flex-direction: column;
+    height: calc(100% - 20px);
+}
+
+.autoql-vanilla-empy-notification-message{
+    color: var(--autoql-vanilla-text-color-primary);
+    text-align: center;
+}
+
+.autoql-vanilla-empty-notification{
+    color: var(--autoql-vanilla-text-color-primary);
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 7px;
+    text-align: center;
+}
+
 @keyframes slideIn{
     0% {
         opacity: 0;
