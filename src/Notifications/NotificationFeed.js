@@ -80,18 +80,27 @@ export function NotificationFeed(selector, options){
     var dismissAllButton = document.createElement('div');
     var dismissContent = document.createElement('span');
     var dismissIcon = htmlToElement(DISMISS);
+    var imageWrapper = document.createElement('div')
     var emptyStateContainer = document.createElement('div')
+    emptyStateContainer.style.display = 'none'
+    var img = htmlToElement(`
+        <img
+            class="autoql-vanilla-empty-state-img"
+            src="./public/empty-state-blue.png"/>
+    `)
     var createDatalertButton = htmlToElement(`
         <button class="autoql-vanilla-chata-btn primary large">
             Create Data Alert
         </button>
     `)
+    imageWrapper.appendChild(img)
+    emptyStateContainer.appendChild(imageWrapper)
     emptyStateContainer.appendChild(htmlToElement(`
         <div style="margin-bottom:25px">
-            <p class="autoql-vanilla-empty-notification">No Notifications yet.</p>
-            <p class="autoql-vanilla-empy-notification-message">Stay tuned!</p>
+        <p class="autoql-vanilla-empty-notification">No Notifications yet.</p>
+        <p class="autoql-vanilla-empy-notification-message">Stay tuned!</p>
         </div>
-    `))
+        `))
     emptyStateContainer.appendChild(createDatalertButton)
     container.appendChild(emptyStateContainer)
     // wrapper.style.height = '100vh';
@@ -177,6 +186,7 @@ export function NotificationFeed(selector, options){
                 );
             }
         }else{
+            emptyStateContainer.style.display = 'flex'
             dismissContent.style.display = 'none'
         }
 

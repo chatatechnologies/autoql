@@ -630,6 +630,12 @@
     text-align: center;
 }
 
+.autoql-vanilla-empty-state-img{
+    width: 100%;
+    height: auto;
+    max-width: 320px;
+}
+
 @keyframes slideIn{
     0% {
         opacity: 0;
