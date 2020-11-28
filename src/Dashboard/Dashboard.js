@@ -151,7 +151,6 @@ export function Dashboard(selector, options={}){
             if(tile.options.key != el.options.key)tiles.push(tile)
         })
         obj.tiles = tiles
-        console.log(tiles);
         obj.grid.removeWidget(el)
         return el
     }
@@ -260,8 +259,7 @@ export function Dashboard(selector, options={}){
         } = obj.undoData
 
         if(!eventType)return
-        console.log(eventType);
-        console.log(undoCallback);
+
         switch (eventType) {
             case 'resize':
                 const {
@@ -289,7 +287,6 @@ export function Dashboard(selector, options={}){
                 }, changedItem)
                 break
             case 'addTile':
-                console.log('UNDO ADDDDDDDDDDDDDDDDD');
                 var removedItem = undoCallback()
                 obj.setUndoData('removeTile', () => {
                     return obj.undoDelete(
@@ -356,7 +353,6 @@ export function Dashboard(selector, options={}){
     }
 
     obj.setUndoData = (eventType, undoCallback, changedItem) => {
-        console.log(eventType);
         obj.undoData.eventType = eventType
         obj.undoData.undoCallback = undoCallback
         obj.undoData.changedItem = changedItem

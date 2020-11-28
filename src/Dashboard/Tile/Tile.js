@@ -347,7 +347,8 @@ export function Tile(dashboard, options){
     }
 
     item.focusItem = function(){
-        item.inputQuery.focus();
+        item.scrollIntoView()
+        // item.inputQuery.focus();
     }
 
     item.toggleSplit = () => {
