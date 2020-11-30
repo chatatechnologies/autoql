@@ -58,7 +58,7 @@ setTimeout(() => {
     ]);
     // datamessenger.setOption('enableNotificationsTab', true);
 
-}, 300)
+}, 3000)
 
 
 // var alerts = DataAlerts('#alert-settings', {

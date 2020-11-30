@@ -138,6 +138,7 @@ export function DataMessenger(elem, options){
         inputPlaceholder: 'Type your queries here',
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
+        landingPage: 'data-messenger',
         xhr: new XMLHttpRequest()
     };
 
@@ -747,11 +748,13 @@ export function DataMessenger(elem, options){
             obj.tabsAnimation('flex', 'block');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('none');
+            obj.options.landingPage = 'data-messenger'
         }
         tabQueryTips.onclick = function(event){
             tabQueryTips.classList.add('active');
             tabChataUtils.classList.remove('active');
             tabNotifications.classList.remove('active');
+            obj.options.landingPage = 'explore-queries'
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('block');
             obj.notificationsAnimation('none');
@@ -765,6 +768,7 @@ export function DataMessenger(elem, options){
             tabNotifications.classList.add('active');
             tabQueryTips.classList.remove('active');
             tabChataUtils.classList.remove('active');
+            obj.options.landingPage = 'notifications'
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('block');
@@ -1270,11 +1274,13 @@ export function DataMessenger(elem, options){
         }
         if(topics){
             const topicsWidget = new Cascader(topics, obj);
-            // obj.drawerContent.appendChild(topicsWidget._elem);
             obj.drawerContent.insertBefore(
                 topicsWidget._elem, obj.introMessageBubble.nextSibling
             )
             obj.topicsWidget = topicsWidget;
+            if(obj.options.landingPage !== 'data-messenger'){
+                obj.topicsWidget._elem.style.display = 'none'
+            }
         }
     }
 
