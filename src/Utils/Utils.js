@@ -1015,9 +1015,11 @@ export function closeAllChartPopovers(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-popover-selector'
     )
+
     for (var i = 0; i < list.length; i++) {
         if(list[i].isOpen)list[i].close();
     }
+
 }
 
 export function closeAllSafetynetSelectors(){
@@ -1038,12 +1040,19 @@ export function closeAllToolbars(){
         '.chata-popover-wrapper.show'
     )
 
+    var popovers = document.querySelectorAll(
+        '.autoql-vanilla-popover'
+    )
+
     for (var i = 0; i < list.length; i++) {
         list[i].classList.remove('show');
     }
 
     for (var i = 0; i < submenus.length; i++) {
         submenus[i].classList.remove('show');
+    }
+    for (var i = 0; i < popovers.length; i++) {
+        if(popovers[i].isOpen)popovers[i].close();
     }
 }
 

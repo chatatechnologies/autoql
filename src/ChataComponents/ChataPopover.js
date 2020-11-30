@@ -2,6 +2,7 @@ import './ChataPopover.css'
 
 export function ChataPopover(baseParent){
     var obj = document.createElement('div')
+    obj.isOpen = false
     obj.classList.add('autoql-vanilla-popover')
 
     obj.setPos = () => {
@@ -31,9 +32,15 @@ export function ChataPopover(baseParent){
     }
 
     obj.show = () => {
+        obj.isOpen = true
         document.body.appendChild(obj)
         obj.setPos()
         return obj
+    }
+
+    obj.close = () => {
+        obj.isOpen = false
+        document.body.removeChild(obj)
     }
 
     return obj

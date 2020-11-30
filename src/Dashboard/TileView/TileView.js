@@ -126,8 +126,7 @@ export function TileView(tile, isSecond=false){
     view.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar
     ) => {
-        console.log(toolbar.moreOptionsBtn);
-        console.log(moreOptions);
+        closeAllToolbars();
         var popover = new ChataPopover(toolbar)
         var opts = ChataUtils.makeMoreOptionsMenu(
             idRequest, popover, moreOptions, { caller: dashboard }
@@ -153,7 +152,6 @@ export function TileView(tile, isSecond=false){
         // }else{
         //     popoverClass = 'up-chart';
         // }
-        // closeAllToolbars();
         // moreOptions.classList.toggle('show');
         // moreOptions.classList.add(popoverClass);
         // toolbar.classList.toggle('show');
