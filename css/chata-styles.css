@@ -1438,6 +1438,22 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   display: flex;
 }
 
+.autoql-vanilla-page-switcher-container.right .tab{
+    box-shadow: inset -18px 0 8px -10px rgba(0,0,0,.2);
+}
+
+.autoql-vanilla-page-switcher-container.left .tab{
+    box-shadow: inset 18px 0 8px -10px rgba(0,0,0,.2);
+}
+
+.autoql-vanilla-page-switcher-container.bottom .tab {
+    box-shadow: inset 0 -17px 8px -10px rgba(0,0,0,.2);
+}
+
+.autoql-vanilla-page-switcher-container.top .tab {
+    box-shadow: inset 0 12px 8px -10px rgba(0,0,0,.2);
+}
+
 /* Individual Tabs */
 .autoql-vanilla-page-switcher-container .tab {
   position: relative;
@@ -1453,7 +1469,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   font-size: 18px;
   text-align: center;
   transform: translate(0, 0);
-  box-shadow: -2px 0 8px rgba(0, 0, 0, 0.2);
   cursor: pointer;
   transition: all .2s ease-in-out;
   vertical-align: middle;
@@ -1485,10 +1500,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-page-switcher-container.top .tab {
   vertical-align: top;
 }
-.autoql-vanilla-page-switcher-container.bottom .tab {
-  background: var(--autoql-vanilla-background-color);
-  color: var(--autoql-vanilla-text-color-primary);
-}
+
 .autoql-vanilla-page-switcher-container .tab.active {
   background: var(--autoql-vanilla-background-color-secondary);
   color: var(--autoql-vanilla-text-color-primary);
@@ -1496,11 +1508,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   position: relative;
   z-index: 2;
 }
-.autoql-vanilla-page-switcher-container.bottom .tab.active {
-  background: var(--autoql-vanilla-accent-color);
-  color: #fff;
-  font-weight: bold;
-}
+
+
 .autoql-vanilla-page-switcher-container.top .tab,
 .autoql-vanilla-page-switcher-container.bottom .tab {
   /* display: inline-block; */
@@ -1508,25 +1517,25 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   /* position: absolute; */
 }
 .autoql-vanilla-page-switcher-container .tab:not(.active):hover {
-    opacity: .8;
+    /* opacity: .8; */
 }
 
 /* Curve appropriate corners depending on placement */
 .autoql-vanilla-page-switcher-container.right .tab:first-child,
 .autoql-vanilla-page-switcher-container.bottom .tab:first-child {
-  border-top-left-radius: 10px;
+  border-top-left-radius: 5px;
 }
 .autoql-vanilla-page-switcher-container.right .tab:last-child,
 .autoql-vanilla-page-switcher-container.top .tab:first-child {
-  border-bottom-left-radius: 10px;
+  border-bottom-left-radius: 5px;
 }
 .autoql-vanilla-page-switcher-container.bottom .tab:last-child,
 .autoql-vanilla-page-switcher-container.left .tab:first-child {
-  border-top-right-radius: 10px;
+  border-top-right-radius: 5px;
 }
 .autoql-vanilla-page-switcher-container.left .tab:last-child,
 .autoql-vanilla-page-switcher-container.top .tab:last-child {
-  border-bottom-right-radius: 10px;
+  border-bottom-right-radius: 5px;
 }
 
 .autoql-vanilla-chata-input:disabled {

@@ -251,7 +251,7 @@ export function NotificationFeed(selector, options){
         var response = await apiCallGet(URL, wrapper.options)
         var jsonResponse = response.data
         var items = jsonResponse['data']['items'];
-        items = []
+
         if(items.length > 0){
             for (var i = 0; i < items.length; i++) {
                 var notification = new Notification(items[i], wrapper.options);
