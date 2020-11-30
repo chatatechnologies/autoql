@@ -18,5 +18,9 @@
     cursor: pointer;
     font-size: 13px !important;
     font-family: var(--autoql-vanilla-font-family);
-    
+
+}
+
+.chata-menu-list li:hover {
+    background: rgba(0,0,0,.05);
 }
