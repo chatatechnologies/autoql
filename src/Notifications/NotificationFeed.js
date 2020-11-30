@@ -1,7 +1,12 @@
-import { htmlToElement, apiCallPut, apiCallGet } from '../Utils'
+import { htmlToElement, apiCallPut, apiCallGet, apiCallPost } from '../Utils'
 import { DISMISS, EMPTY_STATE } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import { Notification } from './Notification'
+import { NotificationSettingsModal } from './NotificationSettingsModal'
+import { Modal } from '../Modal'
+import { refreshTooltips } from '../Tooltips'
+import { ChataConfirmDialog } from '../ChataComponents'
+
 import '../../css/Notifications.css'
 
 export function NotificationFeed(selector, options){
@@ -115,6 +120,10 @@ export function NotificationFeed(selector, options){
     container.appendChild(dismissAllButton);
     wrapper.appendChild(container);
 
+    createDatalertButton.onclick = (evt) => {
+        wrapper.onAddClick(evt)
+    }
+
     container.addEventListener('scroll', (evt) => {
         if(container.scrollTop + container.offsetHeight + 60
             > container.scrollHeight && !wrapper.isLoading){
@@ -165,6 +174,71 @@ export function NotificationFeed(selector, options){
         for (var i = 0; i < elItems.length; i++) {
             elItems[i].options.state = 'DISMISSED';
             elItems[i].toggleDismissIcon();
+        }
+    }
+
+    wrapper.onAddClick = (evt) => {
+        var cancelButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn default"
+                style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        )
+        var spinner = htmlToElement(`
+            <div class="autoql-vanilla-spinner-loader hidden"></div>
+        `)
+        var saveButton = htmlToElement(
+            `<div class="autoql-vanilla-chata-btn primary disabled"
+                style="padding: 5px 16px; margin: 2px 5px;"></div>`
+        )
+
+        saveButton.appendChild(spinner);
+        saveButton.appendChild(document.createTextNode('Save'));
+
+        var modalView = new NotificationSettingsModal(wrapper.options);
+        var configModal = new Modal({
+            withFooter: true,
+            destroyOnClose: true
+        }, () => {
+            modalView.step1.expand();
+        })
+        configModal.chataModal.style.width = '95vw';
+
+        modalView.checkSteps = () => {
+            if(modalView.isValid()){
+                saveButton.classList.remove('disabled')
+            }else{
+                saveButton.classList.add('disabled')
+            }
+        }
+
+        configModal.addView(modalView);
+        configModal.setTitle('Create New Data Alert');
+        configModal.addFooterElement(cancelButton);
+        configModal.addFooterElement(saveButton);
+        configModal.show();
+        refreshTooltips();
+        cancelButton.onclick = (e) => {
+            new ChataConfirmDialog(
+                'Are you sure you want to leave this page?',
+                'All unsaved changes will be lost.',
+                (evt) => {
+                    configModal.close()
+                }
+            )
+        }
+        saveButton.onclick = async (e) => {
+            spinner.classList.remove('hidden')
+            saveButton.setAttribute('disabled', 'true')
+            var o = wrapper.options
+            const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts?key=${o.authentication.apiKey}`;
+            var response = apiCallPost(URL, modalView.getValues, o)
+            var status = response.status
+            var json = response.data
+            if(status !== 200){
+                wrapper.options.onErrorCallback(json.message)
+            }
+            json['data'].authentication = wrapper.options.authentication;
+
+            configModal.close();
         }
     }
 
