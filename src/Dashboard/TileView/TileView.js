@@ -119,12 +119,21 @@ export function TileView(tile, isSecond=false){
         toolbar.classList.toggle('show');
     }
 
+    view.makeMoreOptions = () => {
+
+    }
+
     view.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar
     ) => {
         console.log(toolbar.moreOptionsBtn);
         console.log(moreOptions);
-        var popover = new ChataPopover(toolbar.moreOptionsBtn).show()
+        var popover = new ChataPopover(toolbar.moreOptionsBtn)
+        var opts = ChataUtils.makeMoreOptionsMenu(
+            idRequest, popover, moreOptions, { caller: dashboard }
+        )
+        popover.appendChild(opts)
+        popover.show()
         // let popoverClass;
         // var json = ChataUtils.responses[idRequest];
         // if(

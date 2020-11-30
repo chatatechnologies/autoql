@@ -258,6 +258,63 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     }
 }
 
+ChataUtils.makeMoreOptionsMenu = (
+    idRequest, chataPopover, options, extraParams={}
+) => {
+    var ul = document.createElement('ul')
+    ul.classList.add('chata-menu-list')
+    for (var i = 0; i < options.length; i++) {
+        let opt = options[i]
+        switch (opt) {
+            case 'csv':
+                var action = ChataUtils.getActionOption(
+                    DOWNLOAD_CSV_ICON, 'Download as CSV',
+                    ChataUtils.downloadCsvHandler,
+                    [idRequest]
+                );
+                action.setAttribute('data-name-option', 'csv-handler');
+                ul.appendChild(action);
+                break;
+            case 'copy':
+                var action = ChataUtils.getActionOption(
+                    CLIPBOARD_ICON, 'Copy table to clipboard',
+                    ChataUtils.copyHandler,
+                    [idRequest]
+                );
+                action.setAttribute('data-name-option', 'copy-csv-handler');
+                ul.appendChild(action);
+                break;
+            case 'copy_sql':
+                var action = ChataUtils.getActionOption(
+                    COPY_SQL, 'View generated SQL',
+                    ChataUtils.copySqlHandler,
+                    [idRequest]
+                );
+                ul.appendChild(action);
+                break;
+            case 'png':
+                var action = ChataUtils.getActionOption(
+                    EXPORT_PNG_ICON, 'Download as PNG',
+                    ChataUtils.exportPNGHandler,
+                    [idRequest]
+                );
+                ul.appendChild(action);
+                break;
+            case 'notification':
+                var action = ChataUtils.getActionOption(
+                    NOTIFICATION_BUTTON,
+                    'Create a Data Alert...',
+                    ChataUtils.createNotificationHandler,
+                    [idRequest, extraParams]
+                );
+                ul.appendChild(action);
+                break;
+            default:
+        }
+    }
+    return ul
+}
+
 ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
     var menu = ChataUtils.getPopover();
     if(type === 'simple'){
