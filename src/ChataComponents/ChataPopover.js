@@ -14,13 +14,9 @@ export function ChataPopover(baseParent){
         || document.documentElement.clientWidth
         || document.body.clientWidth;
 
-        console.log(obj.offsetWidth);
-        console.log(parentRect.left + obj.offsetWidth);
-        console.log(width);
         if((parentRect.left + obj.offsetWidth) >= width){
-            console.log('ENTRO AQUI');
-            var diff = obj.offsetWidth - parentRect.offsetWidth
-            obj.style.left = (
+            var diff = obj.offsetWidth - baseParent.offsetWidth
+            left = (
                 parentRect.left + window.scrollX - diff
             ) + 'px'
 
