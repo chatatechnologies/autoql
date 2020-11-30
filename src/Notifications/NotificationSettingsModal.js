@@ -180,7 +180,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     //                     the first of the next month.`
     //                 );
     //                 frequencyValue.setAttribute(
-    //                     'data-frequency-event', 'SINGLE_EVENT'
+    //                     'data-frequency-event', 'PERIODIC'
     //                 )
     //                 break;
     //             case 1:
@@ -192,7 +192,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     //                     Notify me every time this happens.
     //                 `);
     //                 frequencyValue.setAttribute(
-    //                     'data-frequency-event', 'REPEAT_EVENT'
+    //                     'data-frequency-event', 'CONTINUOUS'
     //                 )
     //                 break;
     //             case 2:
@@ -255,7 +255,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     if(mode === 'edit'){
         console.log(rule.reset_period);
-        if(rule.notification_type != 'REPEAT_EVENT'){
+        if(rule.notification_type != 'CONTINUOUS'){
             repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
         }else{
             repeatOptions[0].checked = true
@@ -293,12 +293,12 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var triggerOptions = [
         {
             label: 'Once, when this happens',
-            value: 'SINGLE_EVENT',
+            value: 'PERIODIC',
             checked: false
         },
         {
             label: 'Every time this happens',
-            value: 'REPEAT_EVENT',
+            value: 'CONTINUOUS',
             checked: false
         }
     ]
@@ -323,7 +323,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     if(mode === 'create'){
         frequencyBox.style.visibility = 'hidden';
     }else{
-        if(rule.notification_type != 'SINGLE_EVENT'){
+        if(rule.notification_type != 'PERIODIC'){
             frequencyBox.style.visibility = 'hidden';
         }
     }
@@ -483,7 +483,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     }
 
     const setFrequency = () => {
-        if(rule.notification_type === 'REPEAT_EVENT'){
+        if(rule.notification_type === 'CONTINUOUS'){
             frequencyValue.innerHTML = 'Every time this happens';
         }else {
             frequencyValue.innerHTML = 'Once, when this happens';
@@ -1660,13 +1660,13 @@ function getStep2Values(){
     var type = this.querySelector('.notification_type');
     var reset = this.querySelector('.reset_period');
     var notificationType =
-    reset.selectedValue == '' ? 'REPEAT_EVENT' : 'SINGLE_EVENT'
+    reset.selectedValue == '' ? 'CONTINUOUS' : 'PERIODIC'
     var values = {
         notification_type: notificationType,
         reset_period: null
     }
 
-    if(notificationType === 'SINGLE_EVENT'){
+    if(notificationType === 'PERIODIC'){
         values.reset_period = reset.selectedValue
     }
 

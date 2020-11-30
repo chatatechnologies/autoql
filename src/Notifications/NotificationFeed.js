@@ -230,7 +230,7 @@ export function NotificationFeed(selector, options){
             saveButton.setAttribute('disabled', 'true')
             var o = wrapper.options
             const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts?key=${o.authentication.apiKey}`;
-            var response = apiCallPost(URL, modalView.getValues, o)
+            var response = await apiCallPost(URL, modalView.getValues(), o)
             var status = response.status
             var json = response.data
             if(status !== 200){
@@ -239,6 +239,7 @@ export function NotificationFeed(selector, options){
             json['data'].authentication = wrapper.options.authentication;
 
             configModal.close();
+
         }
     }
 
