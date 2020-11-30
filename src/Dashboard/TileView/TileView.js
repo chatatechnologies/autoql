@@ -128,7 +128,7 @@ export function TileView(tile, isSecond=false){
     ) => {
         console.log(toolbar.moreOptionsBtn);
         console.log(moreOptions);
-        var popover = new ChataPopover(toolbar.moreOptionsBtn)
+        var popover = new ChataPopover(toolbar)
         var opts = ChataUtils.makeMoreOptionsMenu(
             idRequest, popover, moreOptions, { caller: dashboard }
         )
