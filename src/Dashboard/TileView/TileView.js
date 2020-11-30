@@ -21,6 +21,7 @@ import {
     getGroupableFields
 } from '../../Charts/ChataChartHelpers'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
+import { ChataPopover } from '../../ChataComponents'
 import { ErrorMessage } from '../../ErrorMessage'
 import {
     DrilldownModal
@@ -118,30 +119,35 @@ export function TileView(tile, isSecond=false){
         toolbar.classList.toggle('show');
     }
 
-    view.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
-        let popoverClass;
-        var json = ChataUtils.responses[idRequest];
-        if(
-            ['table', 'pivot_table'].includes(view.internalDisplayType) &&
-            json.data.columns.length > 1
-        ){
-            var isAllHidden = allColsHidden(json);
-            if(isAllHidden){
-                popoverClass = 'up-table-single';
-                moreOptions.classList.remove('up-table');
-            }else{
-                popoverClass = 'up-table';
-                moreOptions.classList.remove('up-table-single');
-            }
-        }else if(json.data.columns.length === 1){
-            popoverClass = 'up-table-single';
-        }else{
-            popoverClass = 'up-chart';
-        }
-        closeAllToolbars();
-        moreOptions.classList.toggle('show');
-        moreOptions.classList.add(popoverClass);
-        toolbar.classList.toggle('show');
+    view.moreOptionsHandler = (
+        evt, idRequest, moreOptions, toolbar
+    ) => {
+        console.log(toolbar.moreOptionsBtn);
+        console.log(moreOptions);
+        var popover = new ChataPopover(toolbar.moreOptionsBtn).show()
+        // let popoverClass;
+        // var json = ChataUtils.responses[idRequest];
+        // if(
+        //     ['table', 'pivot_table'].includes(view.internalDisplayType) &&
+        //     json.data.columns.length > 1
+        // ){
+        //     var isAllHidden = allColsHidden(json);
+        //     if(isAllHidden){
+        //         popoverClass = 'up-table-single';
+        //         moreOptions.classList.remove('up-table');
+        //     }else{
+        //         popoverClass = 'up-table';
+        //         moreOptions.classList.remove('up-table-single');
+        //     }
+        // }else if(json.data.columns.length === 1){
+        //     popoverClass = 'up-table-single';
+        // }else{
+        //     popoverClass = 'up-chart';
+        // }
+        // closeAllToolbars();
+        // moreOptions.classList.toggle('show');
+        // moreOptions.classList.add(popoverClass);
+        // toolbar.classList.toggle('show');
     }
 
     view.openColumnEditorHandler = (evt, id, options) => {

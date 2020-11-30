@@ -153,12 +153,14 @@ export function ActionToolbar(idRequest, tileView, tile) {
         }
     );
 
-    var moreOptionsBtn = ChataUtils.getActionButton(
+    let moreOptionsBtn
+
+    moreOptionsBtn = ChataUtils.getActionButton(
         VERTICAL_DOTS,
         'More options',
         idRequest,
         tileView.moreOptionsHandler,
-        [moreOptions, toolbar]
+        [moreOptionsArray, toolbar]
     )
     moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
@@ -173,6 +175,8 @@ export function ActionToolbar(idRequest, tileView, tile) {
         toolbar.appendChild(moreOptions);
         toolbar.appendChild(reportProblem);
     }
+
+    toolbar.moreOptionsBtn = moreOptionsBtn
 
     return toolbar;
 

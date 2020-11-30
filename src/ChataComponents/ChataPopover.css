@@ -1,0 +1,9 @@
+.autoql-vanilla-popover{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 255px;
+    background: black;
+    height: 100px;
+    z-index: 1000000;
+}
