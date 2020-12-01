@@ -135,13 +135,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
 
     let val = ''
 
-    if(tileView.isSecond){
-        // val = obj.inputToolbar.input.value;
-        // obj.internalQuery = val;
-        val = tile.inputQuery.value;
-    }else{
-        val = tile.inputQuery.value;
-    }
+    val = tileView.getQuery()
 
     var moreOptions = ChataUtils.getMoreOptionsMenu(
         moreOptionsArray,
@@ -177,6 +171,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
     }
 
     toolbar.moreOptionsBtn = moreOptionsBtn
+    toolbar.reportProblemButton = reportProblemButton
 
     return toolbar;
 

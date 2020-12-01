@@ -114,9 +114,11 @@ export function TileView(tile, isSecond=false){
     responseWrapper.innerHTML = placeHolderText
 
     view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
-        reportProblem.classList.toggle('show');
-        reportProblem.classList.add('up-chart');
-        toolbar.classList.toggle('show');
+        closeAllToolbars();
+        console.log(reportProblem);
+        var popover = new ChataPopover(toolbar, toolbar.reportProblemButton)
+        popover.appendChild(reportProblem)
+        popover.show()
     }
 
     view.makeMoreOptions = () => {
@@ -127,7 +129,7 @@ export function TileView(tile, isSecond=false){
         evt, idRequest, moreOptions, toolbar
     ) => {
         closeAllToolbars();
-        var popover = new ChataPopover(toolbar)
+        var popover = new ChataPopover(toolbar, toolbar.moreOptionsBtn)
         var opts = ChataUtils.makeMoreOptionsMenu(
             idRequest, popover, moreOptions, { caller: dashboard }
         )
