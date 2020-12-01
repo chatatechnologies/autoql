@@ -55,6 +55,34 @@ ChataUtils.getRecommendationPath = (options, text) => {
     return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
 }
 
+ChataUtils.makeReportProblemMenu = (toolbar, idRequest, type, options) => {
+    var ul = document.createElement('ul')
+    ul.classList.add('chata-menu-list')
+    
+    ul.appendChild(
+        ChataUtils.getActionOption(
+            '', 'The data is incorrect',
+            ChataUtils.sendReport,
+            [idRequest, options, undefined, toolbar]
+        )
+    );
+    ul.appendChild(
+        ChataUtils.getActionOption(
+            '', 'The data is incomplete',
+            ChataUtils.sendReport,
+            [idRequest, options, undefined, toolbar]
+        )
+    );
+    ul.appendChild(
+        ChataUtils.getActionOption(
+            '', 'Other...',
+            ChataUtils.openModalReport,
+            [idRequest, options, undefined, toolbar]
+        )
+    );
+
+    return ul;
+}
 
 ChataUtils.getReportProblemMenu = (
     toolbar, idRequest, type, options, singleMessage=false) => {

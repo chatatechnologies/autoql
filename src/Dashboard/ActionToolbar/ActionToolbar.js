@@ -53,7 +53,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
     var request = ChataUtils.responses[idRequest];
     let moreOptionsArray = [];
     var type = toolbar.getToolbarActionType(request, displayType);
-    var reportProblem = ChataUtils.getReportProblemMenu(
+    var reportProblem = ChataUtils.makeReportProblemMenu(
         toolbar,
         idRequest,
         type,
@@ -167,7 +167,6 @@ export function ActionToolbar(idRequest, tileView, tile) {
             moreOptionsBtn
         );
         toolbar.appendChild(moreOptions);
-        toolbar.appendChild(reportProblem);
     }
 
     toolbar.moreOptionsBtn = moreOptionsBtn

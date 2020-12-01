@@ -115,7 +115,6 @@ export function TileView(tile, isSecond=false){
 
     view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         closeAllToolbars();
-        console.log(reportProblem);
         var popover = new ChataPopover(toolbar, toolbar.reportProblemButton)
         popover.appendChild(reportProblem)
         popover.show()
