@@ -373,6 +373,7 @@ export function DataMessenger(elem, options){
         obj.rootElem.style.zIndex = 2000;
         obj.options.isVisible = true;
         obj.initialScroll = window.scrollY;
+        obj.input.focus()
         var body = document.body;
         if(obj.options.enableExploreQueriesTab){
             obj.queryTabs.style.visibility = 'visible';

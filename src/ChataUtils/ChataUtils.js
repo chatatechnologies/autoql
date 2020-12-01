@@ -1076,8 +1076,7 @@ ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
     // ChataUtils.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
     // ChataUtils.xhr.send();
     options.xhr.open('GET', url);
-    options.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    options.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
+    options.xhr.setRequestHeader("authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
     options.xhr.send();
 }
 

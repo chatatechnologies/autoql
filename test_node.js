@@ -42,6 +42,7 @@ var datamessenger = new DataMessenger('#datamessenger', {
     enableExploreQueriesTab: true,
     enableNotificationsTab: true
 })
+// datamessenger.setOption('isVisible', true)
 // datamessenger.openDrawer()
 setTimeout(() => {
     datamessenger.setOption('queryQuickStartTopics', [{
