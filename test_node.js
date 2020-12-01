@@ -36,11 +36,15 @@ var datamessenger = new DataMessenger('#datamessenger', {
     },
     resizable: true,
     width: 550,
+    // isVisible: true,
     // queryQuickStartTopics: topics,
     enableDynamicCharting: true,
     enableExploreQueriesTab: true,
     enableNotificationsTab: true
 })
+datamessenger.setOption('placement', 'left')
+datamessenger.setOption('isVisible', true)
+// datamessenger.openDrawer()
 setTimeout(() => {
     datamessenger.setOption('queryQuickStartTopics', [{
             topic: 'Test',

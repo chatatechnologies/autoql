@@ -372,7 +372,6 @@ export function DataMessenger(elem, options){
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
         obj.rootElem.style.zIndex = 2000;
         obj.options.isVisible = true;
-        obj.input.focus();
         obj.initialScroll = window.scrollY;
         var body = document.body;
         if(obj.options.enableExploreQueriesTab){
@@ -556,32 +555,33 @@ export function DataMessenger(elem, options){
     }
 
     obj.onLoadHandler = (evt) => {
+        console.log(document.readyState);
         if (document.readyState === "interactive" ||
             document.readyState === "complete" ) {
             obj.initialScroll = window.scrollY;
-            obj.createDrawerButton();
-            obj.createWrapper();
-            obj.applyStyles();
-            obj.createHeader();
-            obj.createDrawerContent();
-            obj.createIntroMessageTopics();
-            obj.createBar();
-            obj.createResizeHandler();
-            obj.createQueryTabs();
-            obj.createQueryTips();
-            obj.createNotifications();
-            obj.speechToTextEvent();
-            obj.registerWindowClicks();
-            obj.openDrawer();
-            obj.closeDrawer();
-            refreshTooltips();
-            var isVisible = obj.options.isVisible;
-
-            if(isVisible){
-                obj.openDrawer();
-            }else{
-                obj.closeDrawer();
-            }
+            // obj.createDrawerButton();
+            // obj.createWrapper();
+            // obj.applyStyles();
+            // obj.createHeader();
+            // obj.createDrawerContent();
+            // obj.createIntroMessageTopics();
+            // obj.createBar();
+            // obj.createResizeHandler();
+            // obj.createQueryTabs();
+            // obj.createQueryTips();
+            // obj.createNotifications();
+            // obj.speechToTextEvent();
+            // obj.registerWindowClicks();
+            // obj.openDrawer();
+            // obj.closeDrawer();
+            // refreshTooltips();
+            // var isVisible = obj.options.isVisible;
+            //
+            // if(isVisible){
+            //     obj.openDrawer();
+            // }else{
+            //     obj.closeDrawer();
+            // }
 
             // obj.rootElem.addEventListener('click', (evt) => {
             //     // REPLACE WITH onclick event
@@ -2933,6 +2933,31 @@ export function DataMessenger(elem, options){
             obj.checkMaxMessages();
             refreshTooltips();
         }
+    }
+
+
+    obj.createDrawerButton();
+    obj.createWrapper();
+    obj.applyStyles();
+    obj.createHeader();
+    obj.createDrawerContent();
+    obj.createIntroMessageTopics();
+    obj.createBar();
+    obj.createResizeHandler();
+    obj.createQueryTabs();
+    obj.createQueryTips();
+    obj.createNotifications();
+    obj.speechToTextEvent();
+    obj.registerWindowClicks();
+    // obj.openDrawer();
+    // obj.closeDrawer();
+    refreshTooltips();
+    var isVisible = obj.options.isVisible;
+
+    if(isVisible){
+        obj.openDrawer();
+    }else{
+        obj.closeDrawer();
     }
 
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
