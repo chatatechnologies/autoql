@@ -29,9 +29,6 @@ export function ChataPopover(baseParent, button){
             left = parentRect.left + window.scrollX + 'px'
         }
 
-        console.log(parentRect.top + obj.offsetHeight + pageYOffset);
-        console.log(height);
-
         if((parentRect.top + obj.offsetHeight + pageYOffset) >= height){
             bottomOffset = obj.offsetHeight + 44
         }

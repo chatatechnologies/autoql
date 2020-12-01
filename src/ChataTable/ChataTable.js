@@ -143,21 +143,37 @@ function getColumnsData(json, options, onHeaderClick){
     return columnsData;
 }
 
+function getFirstDateColumn (json) {
+    const columns = json['data']['columns']
+    var firstDateFinded = ''
+    for (var i = 0; i < columns.length; i++) {
+        const {
+            type
+        } = columns[i]
+        if(['DATE_STRING', 'DATE'].includes(type)){
+            firstDateFinded = 'col' + i
+            break
+        }
+    }
+    return firstDateFinded
+}
+
 function getTableData(json, options) {
     const data = json['data']['rows'];
     const columns = json['data']['columns'];
     var tableData = [];
+    let firstDateFinded = ''
     for (var i = 0; i < data.length; i++) {
         var row = data[i];
         var rowData = {}
         for (var x = 0; x < row.length; x++) {
             var col = columns[x];
             var colName = col['display_name'] || col['name'];
+            var type = col['type']
             rowData['col' + x] = row[x];
         }
         tableData.push(rowData);
     }
-
 
     return tableData;
 }
@@ -245,6 +261,8 @@ export function ChataTable(
     var json = ChataUtils.responses[idRequest];
     var tableData = getTableData(json, options);
     var columns = getColumnsData(json, options, onHeaderClick);
+    var firstDateFinded = getFirstDateColumn(json)
+
     const component = document.querySelector(
         `[data-componentid='${idRequest}']`
     );
@@ -264,7 +282,12 @@ export function ChataTable(
             onRowClick(e, row, cloneObject(json));
         },
     })
+
     table.setHeight('100%');
+
+    if(firstDateFinded != ''){
+        table.setSort(firstDateFinded, "desc");
+    }
 
     table.addFilterTag = (col) => {
         const colTitle = col.querySelector('.tabulator-col-title');
