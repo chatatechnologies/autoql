@@ -130,32 +130,11 @@ export function TileView(tile, isSecond=false){
         closeAllToolbars();
         var popover = new ChataPopover(toolbar, toolbar.moreOptionsBtn)
         var opts = ChataUtils.makeMoreOptionsMenu(
-            idRequest, popover, moreOptions, { caller: dashboard }
+            idRequest, popover, moreOptions,
+            { caller: dashboard, query: view.getQuery() }
         )
         popover.appendChild(opts)
         popover.show()
-        // let popoverClass;
-        // var json = ChataUtils.responses[idRequest];
-        // if(
-        //     ['table', 'pivot_table'].includes(view.internalDisplayType) &&
-        //     json.data.columns.length > 1
-        // ){
-        //     var isAllHidden = allColsHidden(json);
-        //     if(isAllHidden){
-        //         popoverClass = 'up-table-single';
-        //         moreOptions.classList.remove('up-table');
-        //     }else{
-        //         popoverClass = 'up-table';
-        //         moreOptions.classList.remove('up-table-single');
-        //     }
-        // }else if(json.data.columns.length === 1){
-        //     popoverClass = 'up-table-single';
-        // }else{
-        //     popoverClass = 'up-chart';
-        // }
-        // moreOptions.classList.toggle('show');
-        // moreOptions.classList.add(popoverClass);
-        // toolbar.classList.toggle('show');
     }
 
     view.openColumnEditorHandler = (evt, id, options) => {

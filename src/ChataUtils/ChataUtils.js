@@ -58,7 +58,7 @@ ChataUtils.getRecommendationPath = (options, text) => {
 ChataUtils.makeReportProblemMenu = (toolbar, idRequest, type, options) => {
     var ul = document.createElement('ul')
     ul.classList.add('chata-menu-list')
-    
+
     ul.appendChild(
         ChataUtils.getActionOption(
             '', 'The data is incorrect',
@@ -125,14 +125,18 @@ ChataUtils.reportProblemHandler = (
 
 ChataUtils.downloadCsvHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
-    var csvData = ChataUtils.createCsvData(json);
-    var link = document.createElement("a");
-    link.setAttribute(
-        'href', 'data:text/csv;charset=utf-8,'
-        + encodeURIComponent(csvData)
+    var component = document.querySelector(
+        `[data-componentid='${idRequest}']`
     );
-    link.setAttribute('download', 'table.csv');
-    link.click();
+    component.tabulator.download("csv", "table.csv", {delimiter:","});
+    // var csvData = ChataUtils.createCsvData(json);
+    // var link = document.createElement("a");
+    // link.setAttribute(
+    //     'href', 'data:text/csv;charset=utf-8,'
+    //     + encodeURIComponent(csvData)
+    // );
+    // link.setAttribute('download', 'table.csv');
+    // link.click();
 }
 
 ChataUtils.copySqlHandler = (idRequest) => {
