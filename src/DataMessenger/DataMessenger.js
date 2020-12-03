@@ -2043,6 +2043,19 @@ export function DataMessenger(elem, options){
         return ChataUtils.responses[id];
     }
 
+    obj.setDefaultFilters = (component, table) => {
+        const {
+            filterMetadata
+        } = component
+
+        table.toggleFilters()
+        for (var i = 0; i < filterMetadata.length; i++) {
+            var filter = filterMetadata[i]
+            table.setHeaderFilterValue(filter.field, filter.value)
+        }
+        table.toggleFilters()
+    }
+
     obj.displayTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
         var parentContainer = obj.getParentFromComponent(component);
@@ -2056,6 +2069,7 @@ export function DataMessenger(elem, options){
             }
         );
         component.tabulator = table;
+        obj.setDefaultFilters(component, table)
         table.parentContainer = parentContainer;
         allColHiddenMessage(component);
         obj.setHeightBubble(component);

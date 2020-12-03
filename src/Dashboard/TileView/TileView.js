@@ -110,6 +110,7 @@ export function TileView(tile, isSecond=false){
         </span>
     </div>
     `
+    view.filterMetadata = []
 
     responseWrapper.innerHTML = placeHolderText
 
@@ -342,6 +343,21 @@ export function TileView(tile, isSecond=false){
         }
     }
 
+    view.setDefaultFilters = (table) => {
+        const {
+            filterMetadata,
+        } = responseWrapper
+
+        if(!filterMetadata)return
+
+        table.toggleFilters()
+        for (var i = 0; i < filterMetadata.length; i++) {
+            var filter = filterMetadata[i]
+            table.setHeaderFilterValue(filter.field, filter.value)
+        }
+        table.toggleFilters()
+    }
+
     view.run = async () => {
         let query = view.getQuery()
         view.isSuggestions = false
@@ -444,6 +460,11 @@ export function TileView(tile, isSecond=false){
 
     view.clearMetadata = () => {
         responseWrapper.metadata = null;
+    }
+
+    view.copyFilterMetadata = () => {
+        responseWrapper.filterMetadata =
+        responseWrapper.tabulator.getHeaderFilters()
     }
 
     view.copyMetadataToDrilldown = (drilldownView) => {
@@ -678,6 +699,9 @@ export function TileView(tile, isSecond=false){
             view.internalDisplayType = 'table'
             displayType = 'table'
         }
+        if(responseWrapper.tabulator){
+            view.copyFilterMetadata()
+        }
         var toolbarType = ''
         responseWrapper.innerHTML = ''
 
@@ -714,8 +738,10 @@ export function TileView(tile, isSecond=false){
                     var table = new ChataTable(
                         UUID, dashboard.options, view.onRowClick
                     )
-                    div.tabulator = table;
-                    table.parentContainer = view;
+                    div.tabulator = table
+                    responseWrapper.tabulator = table
+                    table.parentContainer = view
+                    view.setDefaultFilters(table)
                 }
                 break;
             case 'bar':

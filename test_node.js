@@ -160,7 +160,7 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    r = response.data.items[4]
+    r = response.data.items[1]
     console.log(response.data);
     dashboard = new Dashboard('#dashboard-wrapper', {
         authentication: {
