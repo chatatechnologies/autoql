@@ -425,8 +425,11 @@ export function getDatePivotArray(json, options, _data){
         var data = lines[i];
         var row = [];
         for (var x = 0; x < data.length; x++) {
+            var {
+                type
+            } = json['data']['columns'][x]
 
-            switch (json['data']['columns'][x]['type']) {
+            switch (type) {
                 case 'DATE':
                     var value = data[x];
                     var date = new Date( parseInt(value) * 1000);
@@ -434,12 +437,11 @@ export function getDatePivotArray(json, options, _data){
                         MONTH_NAMES[date.getMonth()], date.getFullYear()
                     );
                     break;
+                case 'DATE_STRING':
+                    var vals = data[x].split('-')
+                    row.unshift(vals[0], vals[1])
+                    break
                 default:
-                    // row.push(formatData(
-                    //     data[x], json['data']['columns'][x],
-                    //     options
-                    // )
-                    // );
                     row.push(data[x])
             }
         }
@@ -838,8 +840,8 @@ export const getSupportedDisplayTypes = response => {
 
                 if(dateColumn){
                     if (
-                        dateColumn.name &&
-                        dateColumn.name.toLowerCase().includes('month') &&
+                        dateColumn.display_name &&
+                        dateColumn.display_name.toLowerCase().includes('month') &&
                         columns.length === 2
                     ) {
                         supportedDisplayTypes.push('pivot_table')
@@ -849,7 +851,6 @@ export const getSupportedDisplayTypes = response => {
             }
             return ['table']
         } catch (error) {
-            console.error(error)
             return ['table']
         }
 }

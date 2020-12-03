@@ -343,6 +343,10 @@ export function TileView(tile, isSecond=false){
         }
     }
 
+    view.clearFilterMetadata = () => {
+        responseWrapper.filterMetadata = []
+    }
+
     view.setDefaultFilters = (table) => {
         const {
             filterMetadata,
@@ -365,6 +369,7 @@ export function TileView(tile, isSecond=false){
         if(query){
             view.isExecuted = true
             view.clearMetadata()
+            view.clearFilterMetadata()
             var loading = view.showLoading()
             var validate = await view.executeValidate()
             if(!validate || validate.status != 200){

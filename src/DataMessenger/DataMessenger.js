@@ -2126,7 +2126,6 @@ export function DataMessenger(elem, options){
         );
         obj.setHeightBubble(component);
         select(window).on('chata-resize.'+idRequest, null);
-
         component.tabulator = table;
     }
 

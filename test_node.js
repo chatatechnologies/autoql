@@ -45,20 +45,20 @@ var datamessenger = new DataMessenger('#datamessenger', {
 // datamessenger.setOption('isVisible', true)
 // datamessenger.openDrawer()
 setTimeout(() => {
-    datamessenger.setOption('queryQuickStartTopics', [{
-            topic: 'Test',
-            queries: ['test1', 'test2']
-        },
-        {
-            topic: 'Test2',
-            queries: ['test3', 'test4']
-        },
-        {
-            topic: 'Test3',
-            queries: ['test5', 'test6']
-        },
-
-    ]);
+    // datamessenger.setOption('queryQuickStartTopics', [{
+    //         topic: 'Test',
+    //         queries: ['test1', 'test2']
+    //     },
+    //     {
+    //         topic: 'Test2',
+    //         queries: ['test3', 'test4']
+    //     },
+    //     {
+    //         topic: 'Test3',
+    //         queries: ['test5', 'test6']
+    //     },
+    //
+    // ]);
     // datamessenger.setOption('enableNotificationsTab', true);
 
 }, 3000)

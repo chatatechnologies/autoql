@@ -57,7 +57,10 @@ function getPivotColumns(json, pivotColumns, options){
     pivotColumns.map((col, index) => {
         var colIndex = index;
         var title = col;
-        if(colIndex > 0)colIndex = 2;
+        if(colIndex > 0){
+            if(columns.length === 2)colIndex = 1;
+            else colIndex = 2;
+        }
 
         if(index > 0){
             title = formatData(col, columns[1], options);
@@ -182,7 +185,11 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
     var json = ChataUtils.responses[idRequest];
     var cols = json['data']['columns'];
     let pivotArray;
-    if(cols[0].type === 'DATE' && cols[0].name.includes('month')){
+
+    if(
+        (cols[0].type === 'DATE' || cols[0].type === 'DATE_STRING') &&
+        cols[0].display_name.toLowerCase().includes('month')
+    ){
         pivotArray = getDatePivotArray(
             json, options, json['data']['rows']
         );
@@ -194,6 +201,7 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
 
     var pivotColumns = pivotArray.shift();
     var columns = getPivotColumns(json, pivotColumns, options)
+    console.log(columns);
     var tableData = getPivotData(pivotArray, columns);
     const component = document.querySelector(
         `[data-componentid='${idRequest}']`
