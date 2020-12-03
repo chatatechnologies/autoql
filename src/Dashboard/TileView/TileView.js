@@ -172,9 +172,17 @@ export function TileView(tile, isSecond=false){
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
             var entries = Object.entries(row.data);
-            json['data']['rows'][0][0] = entries[entries.length-1][1];
-            json['data']['rows'][0][1] = selectedColumn.definition.field;
-            json['data']['rows'][0][2] = cell.getValue();
+            if(row.data.Month){
+                var year = selectedColumn.definition.field
+                var month = row.data.Month
+                json['data']['rows'][0][0] = year + '-' + month
+                json['data']['rows'][0][1] = cell.getValue() || 0
+
+            }else{
+                json['data']['rows'][0][0] = entries[entries.length-1][1];
+                json['data']['rows'][0][1] = selectedColumn.definition.field;
+                json['data']['rows'][0][2] = cell.getValue();
+            }
             let title = view.getQuery()
 
             var tableView = new DrilldownView(

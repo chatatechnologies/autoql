@@ -255,12 +255,10 @@ export function Tile(dashboard, options){
     }
 
     item.inputQuery.onkeyup = (evt) => {
-        console.log(evt.target.value);
         item.options.query = evt.target.value
     }
 
     item.inputTitle.onkeyup = (evt) => {
-        console.log(evt.target.value);
         item.options.title = evt.target.value
     }
 

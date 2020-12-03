@@ -1815,10 +1815,18 @@ export function DataMessenger(elem, options){
         component.filterMetadata = component.tabulator.getHeaderFilters()
     }
 
+    obj.copyPivotFilterMetadata = (component) => {
+        component.pivotFilterMetadata =
+        component.pivotTabulator.getHeaderFilters()
+    }
+
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
         closeAllChartPopovers();
         if(oldComponent.tabulator){
             obj.copyFilterMetadata(oldComponent)
+        }
+        if(oldComponent.pivotTabulator){
+            obj.copyPivotFilterMetadata(oldComponent)
         }
         var messageBubble = obj.getParentFromComponent(oldComponent);
         if(['table', 'pivot_table'].includes(ignore)){
@@ -2043,14 +2051,16 @@ export function DataMessenger(elem, options){
         return ChataUtils.responses[id];
     }
 
-    obj.setDefaultFilters = (component, table) => {
-        const {
-            filterMetadata
-        } = component
+    obj.setDefaultFilters = (component, table, type) => {
+        var filters = []
+        if(type === 'table')filters = component.filterMetadata
+        else if(type === 'pivot')filters = component.pivotFilterMetadata
 
+        if(!filters)return
+        
         table.toggleFilters()
-        for (var i = 0; i < filterMetadata.length; i++) {
-            var filter = filterMetadata[i]
+        for (var i = 0; i < filters.length; i++) {
+            var filter = filters[i]
             table.setHeaderFilterValue(filter.field, filter.value)
         }
         table.toggleFilters()
@@ -2069,7 +2079,7 @@ export function DataMessenger(elem, options){
             }
         );
         component.tabulator = table;
-        obj.setDefaultFilters(component, table)
+        obj.setDefaultFilters(component, table, 'table')
         table.parentContainer = parentContainer;
         allColHiddenMessage(component);
         obj.setHeightBubble(component);
@@ -2124,9 +2134,11 @@ export function DataMessenger(elem, options){
         var table = new ChataPivotTable(
             idRequest, obj.options, obj.onCellClick
         );
+        obj.setDefaultFilters(component, table, 'pivot')
         obj.setHeightBubble(component);
         select(window).on('chata-resize.'+idRequest, null);
-        component.tabulator = table;
+        component.tabulator = table
+        component.pivotTabulator = table
     }
 
     obj.displayHeatmapHandler = (evt, idRequest) => {
@@ -2336,13 +2348,12 @@ export function DataMessenger(elem, options){
                 var year = selectedColumn.definition.field
                 var month = row.data.Month
                 json['data']['rows'][0][0] = year + '-' + month
-                json['data']['rows'][0][1] = year + '-' + cell.getValue() || 0
+                json['data']['rows'][0][1] = cell.getValue() || 0
 
             }else{
                 json['data']['rows'][0][0] = entries[entries.length-1][1];
                 json['data']['rows'][0][1] = selectedColumn.definition.field;
                 json['data']['rows'][0][2] = cell.getValue();
-                console.log(json['data']['rows'][0]);
             }
             obj.sendDrilldownMessage(json, 0, obj.options);
         }
