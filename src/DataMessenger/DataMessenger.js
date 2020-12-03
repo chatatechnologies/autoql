@@ -1811,8 +1811,15 @@ export function DataMessenger(elem, options){
         }
     }
 
+    obj.copyFilterMetadata = (component) => {
+        component.filterMetadata = component.tabulator.getHeaderFilters()
+    }
+
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
         closeAllChartPopovers();
+        if(oldComponent.tabulator){
+            obj.copyFilterMetadata(oldComponent)
+        }
         var messageBubble = obj.getParentFromComponent(oldComponent);
         if(['table', 'pivot_table'].includes(ignore)){
             messageBubble.classList.remove('full-width');

@@ -74,6 +74,8 @@ export function createLineChart(
         yIndexes = indexList['QUANTITY'];
     }
     var metadataComponent = getMetadataElement(component, fromChataUtils);
+    console.log(component.filterMetadata);
+    console.log(metadataComponent);
     if(!metadataComponent.metadata){
         metadataComponent.metadata = {
             groupBy: {

@@ -123,7 +123,7 @@ function getColumnsData(json, options, onHeaderClick){
         }
         columnsData.push({
             title: formatColumnName(colName),
-            field: 'col' + index,
+            field: 'col_' + index,
             headerFilter: "input",
             visible: isVisible,
             formatter: (cell, formatterParams, onRendered) => {
@@ -151,7 +151,7 @@ function getFirstDateColumn (json) {
             type
         } = columns[i]
         if(['DATE_STRING', 'DATE'].includes(type)){
-            firstDateFinded = 'col' + i
+            firstDateFinded = 'col_' + i
             break
         }
     }
@@ -170,7 +170,7 @@ function getTableData(json, options) {
             var col = columns[x];
             var colName = col['display_name'] || col['name'];
             var type = col['type']
-            rowData['col' + x] = row[x];
+            rowData['col_' + x] = row[x];
         }
         tableData.push(rowData);
     }
