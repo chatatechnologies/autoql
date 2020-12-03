@@ -653,24 +653,27 @@ export function getSupportedDisplayTypesArray(){
     ];
 }
 
-export function cloneObject(source) {
-    if (Object.prototype.toString.call(source) === '[object Array]') {
-        var clone = [];
-        for (var i=0; i<source.length; i++) {
-            clone[i] = cloneObject(source[i]);
-        }
-        return clone;
-    } else if (typeof(source)=="object") {
-        var clone = {};
-        for (var prop in source) {
-            if (source.hasOwnProperty(prop)) {
-                clone[prop] = cloneObject(source[prop]);
-            }
-        }
-        return clone;
-    } else {
-        return source;
+export function cloneObject(from, to) {
+    if (from == null || typeof from != "object") return from;
+    if (from.constructor != Object && from.constructor != Array) return from;
+    if (
+        from.constructor == Date || from.constructor == RegExp
+        || from.constructor == Function ||
+        from.constructor == String || from.constructor == Number
+        || from.constructor == Boolean
+    ){
+        return new from.constructor(from);
     }
+
+    to = to || new from.constructor();
+
+    for (var name in from)
+    {
+        to[name] = typeof to[name] == "undefined" ?
+        cloneObject(from[name], null) : to[name];
+    }
+
+    return to;
 }
 
 export function applyFilter(idRequest, array){

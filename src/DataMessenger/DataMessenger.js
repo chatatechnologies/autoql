@@ -1953,7 +1953,9 @@ export function DataMessenger(elem, options){
         var oldData = newJson['data']['rows'];
 
         for (var i = 0; i < oldData.length; i++) {
-            if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
+            var compareValue = oldData[i][indexValue]
+            if(!compareValue)compareValue = 'null'
+            if(compareValue === filterBy)newData.push(oldData[i]);
         }
         var loading = obj.createLoadingDots();
         obj.drawerContent.appendChild(loading);
