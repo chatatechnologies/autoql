@@ -11,6 +11,7 @@ import {
 import './Tabulator.css';
 import './TabulatorBootstrap.css';
 import './ChataTable.css';
+import moment from 'moment'
 
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
@@ -63,7 +64,11 @@ function getPivotColumns(json, pivotColumns, options){
         }
 
         if(index > 0){
-            title = formatData(col, columns[1], options);
+            if(columns.length === 2){
+                title = col
+            }else{
+                title = formatData(col, columns[1], options);
+            }
         }
         if(!title)title = 'null'
         if(!col)col = 'null'
@@ -89,6 +94,9 @@ function getPivotColumns(json, pivotColumns, options){
                     value = 0;
                 }else{
                     value = cell.getValue();
+                }
+                if(columns[colIndex].type === 'DATE_STRING'){
+                    return moment().month(parseInt(value)-1).format('MMM')
                 }
                 return formatData(value, columns[colIndex], options);
             },
@@ -184,6 +192,7 @@ function getTableData(json, options) {
 export function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}){
     var json = ChataUtils.responses[idRequest];
     var cols = json['data']['columns'];
+    var isDatePivot = false
     let pivotArray;
 
     if(
@@ -193,6 +202,7 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
         pivotArray = getDatePivotArray(
             json, options, json['data']['rows']
         );
+        isDatePivot = true
     }else{
         pivotArray = getPivotColumnArray(
             json, options, json['data']['rows']
@@ -201,7 +211,6 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
 
     var pivotColumns = pivotArray.shift();
     var columns = getPivotColumns(json, pivotColumns, options)
-    console.log(columns);
     var tableData = getPivotData(pivotArray, columns);
     const component = document.querySelector(
         `[data-componentid='${idRequest}']`
@@ -224,6 +233,8 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
         }
     })
     table.setHeight('100%');
+
+    if(isDatePivot)table.setSort('Month', 'asc')
 
     table.addFilterTag = (col) => {
         const colTitle = col.querySelector('.tabulator-col-title');

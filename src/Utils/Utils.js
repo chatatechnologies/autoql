@@ -425,9 +425,10 @@ export function getDatePivotArray(json, options, _data){
         var data = lines[i];
         var row = [];
         for (var x = 0; x < data.length; x++) {
+            var col = json['data']['columns'][x]
             var {
                 type
-            } = json['data']['columns'][x]
+            } = col
 
             switch (type) {
                 case 'DATE':
@@ -438,6 +439,7 @@ export function getDatePivotArray(json, options, _data){
                     );
                     break;
                 case 'DATE_STRING':
+                    console.log();
                     var vals = data[x].split('-')
                     row.unshift(vals[0], vals[1])
                     break
@@ -448,7 +450,7 @@ export function getDatePivotArray(json, options, _data){
         values.push(row);
     }
 
-    var pivotArray = getPivotArray(values, 0, 1, 2, 'Month');
+    var pivotArray = getPivotArray(values, 1, 0, 2, 'Month');
     return pivotArray;
 }
 
