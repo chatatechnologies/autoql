@@ -2330,10 +2330,20 @@ export function DataMessenger(elem, options){
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
-            var entries = Object.entries(row.data)[0];
-            json['data']['rows'][0][0] = entries[entries.length-1][1];
-            json['data']['rows'][0][1] = selectedColumn.definition.field;
-            json['data']['rows'][0][2] = cell.getValue();
+
+            var entries = Object.entries(row.data);
+            if(row.data.Month){
+                var year = selectedColumn.definition.field
+                var month = row.data.Month
+                json['data']['rows'][0][0] = year + '-' + month
+                json['data']['rows'][0][1] = year + '-' + cell.getValue() || 0
+
+            }else{
+                json['data']['rows'][0][0] = entries[entries.length-1][1];
+                json['data']['rows'][0][1] = selectedColumn.definition.field;
+                json['data']['rows'][0][2] = cell.getValue();
+                console.log(json['data']['rows'][0]);
+            }
             obj.sendDrilldownMessage(json, 0, obj.options);
         }
 
