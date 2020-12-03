@@ -2727,8 +2727,10 @@ export function DataMessenger(elem, options){
         messageBubble.append(createSafetynetContent(suggestionArray, () => {
             var words = getSafetynetValues(messageBubble);
             var selections = getSafetynetUserSelection(messageBubble);
-
-            obj.safetynetAnimation(words.join(' '), selections);
+            var query = words.join(' ')
+            if(query !== ''){
+                obj.safetynetAnimation(query, selections);
+            }
         }));
 
         containerMessage.appendChild(messageBubble);
@@ -2789,6 +2791,7 @@ export function DataMessenger(elem, options){
 
         var response = await apiCallGet(URL_SAFETYNET, obj.options)
         if(response.status != 200){
+            obj.input.removeAttribute("disabled")
             obj.sendResponse(response.data.message)
             obj.drawerContent.removeChild(responseLoadingContainer)
             return
