@@ -11,7 +11,8 @@ import {
     copyTextToClipboard,
     svgString2Image,
     apiCallPut,
-    apiCallPost
+    apiCallPost,
+    svgToPng
 } from '../Utils'
 import sqlFormatter from "sql-formatter";
 import { ChataConfirmDialog } from '../ChataComponents'
@@ -29,7 +30,7 @@ import { Modal } from '../Modal'
 import { NotificationSettingsModal } from '../Notifications'
 import { AntdMessage } from '../Antd'
 import '../../css/PopoverMenu.css'
-
+import { saveSvgAsPng } from 'save-svg-as-png'
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -207,13 +208,36 @@ ChataUtils.exportPNGHandler = (idRequest) => {
         `[data-componentid='${idRequest}']`
     );
     var svg = component.getElementsByTagName('svg')[0];
-    var svgString = getSVGString(svg);
+    saveSvgAsPng(svg, 'Chart.png', { scale: 2 })
+    // svgToPng(svg, 20)
+    // .then((data) => {
+    //     let dt = data // << this fails in IE/Edge...
+    //     dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream')
+    //     dt = dt.replace(
+    //         /^data:application\/octet-stream/,
+    //         'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png'
+    //     )
+    //
+    //     const link = document.createElement('a')
+    //     link.setAttribute('href', dt)
+    //     link.setAttribute('download', 'Chart.png')
+    //     link.setAttribute('target', '_blank')
+    //     link.style.display = 'none'
+    //     document.body.appendChild(link)
+    //     link.click()
+    //     document.body.removeChild(link)
+    // })
+    // .catch((error) => {
+    //     console.error(error)
+    // })
 
-    svgString2Image(
-        svgString,
-        2*component.clientWidth,
-        2*component.clientHeight
-    );
+    // var svgString = getSVGString(svg);
+    //
+    // svgString2Image(
+    //     svgString,
+    //     2*component.clientWidth,
+    //     2*component.clientHeight
+    // );
 }
 
 ChataUtils.filterTableHandler = (evt, idRequest) => {

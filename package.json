@@ -50,6 +50,7 @@
     "moment": "^2.27.0",
     "muuri": "^0.9.3",
     "regenerator-runtime": "^0.13.7",
+    "save-svg-as-png": "^1.4.17",
     "split.js": "^1.6.2",
     "sql-formatter": "^2.3.3",
     "style-loader": "^1.2.1",

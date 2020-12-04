@@ -487,102 +487,6 @@ export function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstCol
     return ret;
 }
 
-export function getSVGString(svgNode) {
-    svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
-    var cssStyleText = getCSSStyles( svgNode );
-    appendCSS( cssStyleText, svgNode );
-
-    var serializer = new XMLSerializer();
-    var svgString = serializer.serializeToString(svgNode);
-    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
-    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
-
-    return svgString;
-
-    function getCSSStyles( parentElement ) {
-        var selectorTextArr = [];
-
-        // Add Parent element Id and Classes to the list
-        selectorTextArr.push( '#'+parentElement.id );
-        for (var c = 0; c < parentElement.classList.length; c++)
-        if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
-        selectorTextArr.push( '.'+parentElement.classList[c] );
-
-        // Add Children element Ids and Classes to the list
-        var nodes = parentElement.getElementsByTagName("*");
-        for (var i = 0; i < nodes.length; i++) {
-            var id = nodes[i].id;
-            if ( !contains('#'+id, selectorTextArr) )
-            selectorTextArr.push( '#'+id );
-
-            var classes = nodes[i].classList;
-            for (var c = 0; c < classes.length; c++)
-            if ( !contains('.'+classes[c], selectorTextArr) )
-            selectorTextArr.push( '.'+classes[c] );
-        }
-
-        // Extract CSS Rules
-        var extractedCSSText = "";
-        for (var i = 0; i < document.styleSheets.length; i++) {
-            var s = document.styleSheets[i];
-
-            try {
-                if(!s.cssRules) continue;
-            } catch( e ) {
-                if(e.name !== 'SecurityError') throw e; // for Firefox
-                continue;
-            }
-
-            var cssRules = s.cssRules;
-            for (var r = 0; r < cssRules.length; r++) {
-                if ( contains( cssRules[r].selectorText, selectorTextArr ) )
-                extractedCSSText += cssRules[r].cssText;
-            }
-        }
-
-
-        return extractedCSSText;
-
-        function contains(str,arr) {
-            return arr.indexOf( str ) === -1 ? false : true;
-        }
-
-    }
-
-    function appendCSS( cssText, element ) {
-        var styleElement = document.createElement("style");
-        styleElement.setAttribute("type","text/css");
-        styleElement.innerHTML = cssText;
-        var refNode = element.hasChildNodes() ? element.children[0] : null;
-        element.insertBefore( styleElement, refNode );
-    }
-}
-
-export function svgString2Image(svgString, width, height) {
-    var imgsrc = 'data:image/svg+xml;base64,'+ btoa(
-        unescape(encodeURIComponent(svgString))
-    );
-
-    var canvas = document.createElement("canvas");
-    var context = canvas.getContext("2d");
-
-    canvas.width = width;
-    canvas.height = height;
-
-    var image = new Image();
-    image.onload = function() {
-        context.clearRect ( 0, 0, width, height );
-        context.drawImage(image, 0, 0, width, height);
-        var link = document.createElement("a");
-        link.setAttribute('href', canvas.toDataURL("image/png;base64"));
-        link.setAttribute('download', 'Chart.png');
-        link.click();
-    };
-
-
-    image.src = imgsrc;
-}
-
 export function mergeOptions(objList){
     var output = [];
     for (var i = 0; i < objList.length; i++) {
@@ -1247,5 +1151,184 @@ export const apiCallNotificationCount = (url, options) => {
     })
     .catch((error) => {
         return Promise.resolve(_get(error, 'response'))
+    })
+}
+
+export function getSVGString(svgNode) {
+    svgNode.setAttribute('xlink', 'http://www.w3.org/1999/xlink');
+    var cssStyleText = getCSSStyles( svgNode );
+    appendCSS( cssStyleText, svgNode );
+
+    var serializer = new XMLSerializer();
+    var svgString = serializer.serializeToString(svgNode);
+    svgString = svgString.replace(/(\w+)?:?xlink=/g, 'xmlns:xlink='); // Fix root xlink without namespace
+    svgString = svgString.replace(/NS\d+:href/g, 'xlink:href'); // Safari NS namespace fix
+
+    return svgString;
+
+    function getCSSStyles( parentElement ) {
+        var selectorTextArr = [];
+
+        // Add Parent element Id and Classes to the list
+        selectorTextArr.push( '#'+parentElement.id );
+        for (var c = 0; c < parentElement.classList.length; c++)
+        if ( !contains('.'+parentElement.classList[c], selectorTextArr) )
+        selectorTextArr.push( '.'+parentElement.classList[c] );
+
+        // Add Children element Ids and Classes to the list
+        var nodes = parentElement.getElementsByTagName("*");
+        for (var i = 0; i < nodes.length; i++) {
+            var id = nodes[i].id;
+            if ( !contains('#'+id, selectorTextArr) )
+            selectorTextArr.push( '#'+id );
+
+            var classes = nodes[i].classList;
+            for (var c = 0; c < classes.length; c++)
+            if ( !contains('.'+classes[c], selectorTextArr) )
+            selectorTextArr.push( '.'+classes[c] );
+        }
+
+        // Extract CSS Rules
+        var extractedCSSText = "";
+        for (var i = 0; i < document.styleSheets.length; i++) {
+            var s = document.styleSheets[i];
+
+            try {
+                if(!s.cssRules) continue;
+            } catch( e ) {
+                if(e.name !== 'SecurityError') throw e; // for Firefox
+                continue;
+            }
+
+            var cssRules = s.cssRules;
+            for (var r = 0; r < cssRules.length; r++) {
+                if ( contains( cssRules[r].selectorText, selectorTextArr ) )
+                extractedCSSText += cssRules[r].cssText;
+            }
+        }
+
+
+        return extractedCSSText;
+
+        function contains(str,arr) {
+            return arr.indexOf( str ) === -1 ? false : true;
+        }
+
+    }
+
+    function appendCSS( cssText, element ) {
+        var styleElement = document.createElement("style");
+        styleElement.setAttribute("type","text/css");
+        styleElement.innerHTML = cssText;
+        var refNode = element.hasChildNodes() ? element.children[0] : null;
+        element.insertBefore( styleElement, refNode );
+    }
+}
+
+export function svgString2Image(svgString, width, height) {
+    var imgsrc = 'data:image/svg+xml;base64,'+ btoa(
+        unescape(encodeURIComponent(svgString))
+    );
+
+    var canvas = document.createElement("canvas");
+    var context = canvas.getContext("2d");
+
+    canvas.width = width;
+    canvas.height = height;
+
+    var image = new Image();
+    image.onload = function() {
+        context.clearRect ( 0, 0, width, height );
+        context.drawImage(image, 0, 0, width, height);
+        var link = document.createElement("a");
+        link.setAttribute('href', canvas.toDataURL("image/png;base64"));
+        link.setAttribute('download', 'Chart.png');
+        link.click();
+    };
+
+
+    image.src = imgsrc;
+}
+
+export const getPNGBase64 = (svgElement) => {
+    try {
+        const domUrl = window.URL || window.webkitURL || window
+        if (!domUrl) {
+            throw new Error('(browser doesnt support this)')
+        } else if (!svgElement) {
+            throw new Error('(svg element does not exist)')
+        }
+
+        // get svg data
+        var xml = new XMLSerializer().serializeToString(svgElement)
+        // make it base64
+        var svg64 = btoa(unescape(encodeURIComponent(xml))) // we added non-Latin1 chars for the axis selector
+        var b64Start = 'data:image/svg+xml;base64,'
+        // prepend a "header"
+        var image64 = b64Start + svg64
+        return image64
+    } catch (error) {
+        return undefined
+    }
+}
+
+/**
+* converts an svg string to base64 png using the domUrl
+* @param {string} svgElement the svgElement
+* @param {number} [margin=0] the width of the border - the image size will be height+margin by width+margin
+* @param {string} [fill] optionally backgrund canvas fill
+* @return {Promise} a promise to the bas64 png image
+*/
+export const svgToPng = (svgElement, margin = 0, fill) => {
+    return new Promise(function(resolve, reject) {
+        try {
+            const image64 = getPNGBase64(svgElement)
+
+            const bbox = svgElement.getBoundingClientRect()
+            const width = bbox.width * 2
+            const height = bbox.height * 2
+
+            // create a canvas element to pass through
+            var canvas = document.createElement('canvas')
+            canvas.width = width + margin
+            canvas.height = height + margin
+
+            var ctx = canvas.getContext('2d')
+            // ctx.imageSmoothingEnabled = true
+
+            // create a new image to hold it the converted type
+            var img = new Image()
+
+            // when the image is loaded we can get it as base64 url
+            img.onload = function() {
+                // draw it to the canvas
+                ctx.drawImage(this, margin, margin, width, height)
+
+                // if it needs some styling, we need a new canvas
+                if (fill) {
+                    var styled = document.createElement('canvas')
+                    styled.width = canvas.width
+                    styled.height = canvas.height
+                    var styledCtx = styled.getContext('2d')
+                    styledCtx.save()
+                    styledCtx.fillStyle = fill
+                    styledCtx.fillRect(0, 0, canvas.width, canvas.height)
+                    styledCtx.strokeRect(0, 0, canvas.width, canvas.height)
+                    styledCtx.restore()
+                    styledCtx.drawImage(canvas, 0, 0)
+                    canvas = styled
+                }
+                resolve(canvas.toDataURL('image/png', 1))
+            }
+            img.onerror = function(error) {
+                reject('failed to load image with that url' + url)
+            }
+
+            // load image
+            img.src = image64
+        } catch (error) {
+            console.error(error)
+            reject('failed to convert svg to png ' + error)
+        }
     })
 }
