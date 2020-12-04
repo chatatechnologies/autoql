@@ -1796,6 +1796,13 @@ export function DataMessenger(elem, options){
         return messageBubble;
     }
 
+    obj.hideBubbles = () => {
+        var nodes = obj.drawerContent.childNodes;
+        for (var i = 0; i < nodes.length; i++) {
+            nodes[i].style.display = 'none';
+        }
+    }
+
     obj.setHeightBubble = (oldComponent, displayType='chart') => {
         var messageBubble = obj.getParentFromComponent(oldComponent);
         var chartContainer = oldComponent.getElementsByTagName('svg');
@@ -2977,6 +2984,9 @@ export function DataMessenger(elem, options){
             }
             obj.checkMaxMessages();
             refreshTooltips();
+        }
+        if(obj.options.landingPage != 'data-messenger'){
+            obj.hideBubbles()
         }
     }
 
