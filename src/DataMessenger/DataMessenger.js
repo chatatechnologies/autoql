@@ -1017,6 +1017,7 @@ export function DataMessenger(elem, options){
                 obj.notificationsAnimation('none');
                 var selectedQuery = event.target.textContent;
                 obj.keyboardAnimation(selectedQuery);
+                obj.options.landingPage = 'data-messenger'
 
             }
             queryTipListContainer.appendChild(item);
@@ -1797,7 +1798,10 @@ export function DataMessenger(elem, options){
     }
 
     obj.hideBubbles = () => {
-        var nodes = obj.drawerContent.childNodes;
+        //
+        var nodes = obj.drawerContent.querySelectorAll(
+            '.autoql-vanilla-chat-single-message-container'
+        );
         for (var i = 0; i < nodes.length; i++) {
             nodes[i].style.display = 'none';
         }
@@ -2325,9 +2329,13 @@ export function DataMessenger(elem, options){
         messageBubble.textContent = value;
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
-        obj.drawerContent.appendChild(responseLoadingContainer);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         obj.checkMaxMessages();
+        if(obj.options.landingPage !== 'data-messenger'){
+            obj.hideBubbles()
+            return null
+        }
+        obj.drawerContent.appendChild(responseLoadingContainer);
         return responseLoadingContainer;
     }
 
@@ -2839,7 +2847,9 @@ export function DataMessenger(elem, options){
         if(response.status != 200){
             obj.input.removeAttribute("disabled")
             obj.sendResponse(response.data.message)
-            obj.drawerContent.removeChild(responseLoadingContainer)
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer)
+            }
             return
         }
         let suggestions = {}
@@ -2856,7 +2866,9 @@ export function DataMessenger(elem, options){
         ){
 
             obj.input.removeAttribute("disabled")
-            obj.drawerContent.removeChild(responseLoadingContainer)
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer)
+            }
 
             obj.putSafetynetMessage(response.data)
         }else{
@@ -2867,7 +2879,9 @@ export function DataMessenger(elem, options){
             var jsonResponse = response.data
             const displayType = jsonResponse['data']['display_type'];
             obj.input.removeAttribute("disabled");
-            obj.drawerContent.removeChild(responseLoadingContainer);
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer);
+            }
             switch(jsonResponse['data']['display_type']){
                 case 'table':
                     if(jsonResponse['data']['columns'].length == 1){
