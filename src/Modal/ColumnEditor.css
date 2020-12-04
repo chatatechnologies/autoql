@@ -57,6 +57,7 @@
     line-height: 36px !important;
     overflow: auto !important;
     pointer-events: all !important;
+    margin: 0px !important;
 }
 
 .chata-drawer .autoql-vanilla-m-checkbox__input:before, .chata-modal-container .autoql-vanilla-m-checkbox__input:before {
