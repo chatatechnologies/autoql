@@ -109,6 +109,8 @@ body{
     transition: transform 0.3s ease-in-out;
     background: var(--autoql-vanilla-background-color-secondary);
     border-radius: 4px;
+    max-width: calc(100vw - 45px) !important;
+    min-width: 400px!important;
 }
 
 .autoql-vanilla-chat-header-container {

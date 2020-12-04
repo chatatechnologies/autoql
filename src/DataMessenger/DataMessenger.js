@@ -2057,7 +2057,7 @@ export function DataMessenger(elem, options){
         else if(type === 'pivot')filters = component.pivotFilterMetadata
 
         if(!filters)return
-        
+
         table.toggleFilters()
         for (var i = 0; i < filters.length; i++) {
             var filter = filters[i]
@@ -3008,5 +3008,8 @@ export function DataMessenger(elem, options){
     }
 
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
+    window.addEventListener('resize', () => {
+        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+    })
     return obj;
 }
