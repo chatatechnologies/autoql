@@ -1796,16 +1796,14 @@ export function DataMessenger(elem, options){
         return messageBubble;
     }
 
-    obj.setHeightBubble = (oldComponent) => {
+    obj.setHeightBubble = (oldComponent, displayType='chart') => {
         var messageBubble = obj.getParentFromComponent(oldComponent);
         var chartContainer = oldComponent.getElementsByTagName('svg');
-        if(chartContainer.length){
-            if(messageBubble.parentElement.style.maxHeight == '85%'){
-                messageBubble.parentElement.style.maxHeight =
-                (
-                    parseInt(chartContainer[0].getAttribute('height')) + 55
-                ) + 'px';
-            }
+        if(displayType === 'chart'){
+            messageBubble.parentElement.style.maxHeight =
+            (
+                parseInt(chartContainer[0].getAttribute('height')) + 55
+            ) + 'px';
         }else{
             messageBubble.parentElement.style.maxHeight = '85%';
         }
@@ -2082,7 +2080,7 @@ export function DataMessenger(elem, options){
         obj.setDefaultFilters(component, table, 'table')
         table.parentContainer = parentContainer;
         allColHiddenMessage(component);
-        obj.setHeightBubble(component);
+        obj.setHeightBubble(component, 'table');
         select(window).on('chata-resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
@@ -2135,7 +2133,7 @@ export function DataMessenger(elem, options){
             idRequest, obj.options, obj.onCellClick
         );
         obj.setDefaultFilters(component, table, 'pivot')
-        obj.setHeightBubble(component);
+        obj.setHeightBubble(component, 'table');
         select(window).on('chata-resize.'+idRequest, null);
         component.tabulator = table
         component.pivotTabulator = table
