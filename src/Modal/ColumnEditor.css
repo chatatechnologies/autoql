@@ -57,6 +57,9 @@
     line-height: 36px !important;
     overflow: auto !important;
     pointer-events: all !important;
+}
+
+.autoql-vanilla-m-checkbox__input.force-margin{
     margin: 0px !important;
 }
 

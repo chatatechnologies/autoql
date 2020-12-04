@@ -552,6 +552,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
         var checkboxInput = document.createElement('input');
         checkboxInput.setAttribute('type', 'checkbox');
         checkboxInput.classList.add('autoql-vanilla-m-checkbox__input');
+        checkboxInput.classList.add('force-margin');
         if(name){
             checkboxInput.setAttribute('data-col-name', name);
         }
