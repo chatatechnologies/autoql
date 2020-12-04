@@ -129,7 +129,7 @@ ChataUtils.downloadCsvHandler = (idRequest) => {
     var component = document.querySelector(
         `[data-componentid='${idRequest}']`
     );
-    component.tabulator.download("csv", "table.csv", {delimiter:","});
+    component.tabulator.download("csv", "table.csv", {delimiter:"\t"});
     // var csvData = ChataUtils.createCsvData(json);
     // var link = document.createElement("a");
     // link.setAttribute(

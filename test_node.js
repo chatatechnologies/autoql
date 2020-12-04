@@ -23,7 +23,7 @@ var datamessenger = new DataMessenger('#datamessenger', {
     },
     themeConfig: {
         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-        theme: 'dark',
+        theme: 'light',
         // accentColor: 'tomato'
     },
     autoQLConfig: {
@@ -72,7 +72,7 @@ setTimeout(() => {
 //     },
 //     themeConfig: {
 //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'dark',
+//         theme: 'light',
 //     },
 // })
 //
@@ -141,7 +141,7 @@ setTimeout(() => {
 //     },
 //     themeConfig: {
 //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-//         theme: 'dark',
+//         theme: 'light',
 //     },
 // })
 
@@ -170,7 +170,7 @@ get(DASHBOARD_URL, {
         },
         themeConfig: {
             // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-            theme: 'dark',
+            theme: 'light',
             accentColor: 'red'
         },
         autoQLConfig: {
@@ -191,7 +191,7 @@ get(DASHBOARD_URL, {
     //     },
     //     themeConfig: {
     //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-    //         theme: 'dark',
+    //         theme: 'light',
     //         accentColor: 'red'
     //     },
     //     autoQLConfig: {

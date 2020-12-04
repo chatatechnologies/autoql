@@ -556,7 +556,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.onLoadHandler = (evt) => {
-        console.log(document.readyState);
         if (document.readyState === "interactive" ||
             document.readyState === "complete" ) {
             obj.initialScroll = window.scrollY;
@@ -603,6 +602,21 @@ export function DataMessenger(elem, options){
         }else{
             obj.headerTitle.innerHTML = obj.options.title;
             obj.headerRight.style.visibility = 'visible';
+        }
+        obj.updateBubbleTables()
+    }
+
+    obj.updateBubbleTables = () => {
+        if(obj.options.landingPage === 'data-messenger'){
+            var nodes = obj.drawerContent.querySelectorAll(
+                '.autoql-vanilla-chat-single-message-container'
+            );
+            for (var i = 0; i < nodes.length; i++) {
+                var component = nodes[i].querySelector('[data-componentid]')
+                if(
+                    component && component.tabulator
+                )component.tabulator.redraw(true)
+            }
         }
     }
 
@@ -746,10 +760,10 @@ export function DataMessenger(elem, options){
             tabChataUtils.classList.add('active');
             tabQueryTips.classList.remove('active');
             tabNotifications.classList.remove('active');
+            obj.options.landingPage = 'data-messenger'
             obj.tabsAnimation('flex', 'block');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('none');
-            obj.options.landingPage = 'data-messenger'
         }
         tabQueryTips.onclick = function(event){
             tabQueryTips.classList.add('active');
