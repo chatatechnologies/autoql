@@ -845,7 +845,7 @@ export function DataMessenger(elem, options){
             if(event.keyCode == 13 && this.value){
 
                 var chatBarLoadingSpinner = document.createElement('div');
-                var searchVal = this.value;
+                var searchVal = this.value.split(' ').join(',');
                 var spinnerLoader = document.createElement('div');
                 spinnerLoader.classList.add('autoql-vanilla-spinner-loader');
                 chatBarLoadingSpinner.classList.add(
@@ -2744,7 +2744,7 @@ export function DataMessenger(elem, options){
             obj.drawerContent.appendChild(responseLoadingContainer);
             const path = getRecommendationPath(
                 obj.options,
-                text.split(' ').join(',')
+                text
             ) + '&query_id=' + jsonResponse['data']['query_id'];
             var response = await apiCallGet(path, obj.options)
             obj.drawerContent.removeChild(responseLoadingContainer);
