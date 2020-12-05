@@ -724,18 +724,15 @@ export const getSupportedDisplayTypes = response => {
         }
 
         if (supportsRegularPivotTable(columns)) {
-            let supportedDisplayTypes = ['table']
-            if (rows.length < 1000) {
-                supportedDisplayTypes = [
-                    'pivot_table',
-                    'stacked_bar',
-                    'stacked_column',
-                    'stacked_line',
-                    'bubble',
-                    'heatmap',
-                    'table'
-                ]
-            }
+            let supportedDisplayTypes = [
+                'pivot_table',
+                'stacked_bar',
+                'stacked_column',
+                'stacked_line',
+                'bubble',
+                'heatmap',
+                'table'
+            ]
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
             const supportedDisplayTypes = ['table', 'bar', 'column', 'line']

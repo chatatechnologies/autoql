@@ -100,7 +100,8 @@ function getPivotColumns(json, pivotColumns, options){
                 }
                 return formatData(value, columns[colIndex], options);
             },
-            frozen: colIndex == 0 ? true : false
+            frozen: colIndex == 0 ? true : false,
+            sorter: setSorterFunction(columns[colIndex])
         })
     });
 
@@ -120,6 +121,38 @@ function getPivotData(pivotArray, pivotColumns){
     }
 
     return tableData;
+}
+
+const dateSortFn = (a, b) => {
+    // First try to convert to number. It will sort properly if its a plain year or a unix timestamp
+    let aDate = Number(a)
+    let bDate = Number(b)
+
+    // If one is not a number, use dayjs to format
+    if (Number.isNaN(aDate) || Number.isNaN(bDate)) {
+        aDate = moment(a).unix()
+        bDate = moment(b).unix()
+    }
+
+    // Finally if all else fails, just compare the 2 values directly
+    if (!aDate || !bDate) {
+        return b - a
+    }
+
+    return bDate - aDate
+}
+
+const setSorterFunction = (col) => {
+    if (col.type === 'DATE' || col.type === 'DATE_STRING') {
+        return (a, b) => dateSortFn(a, b)
+    } else if (col.type === 'STRING') {
+        // There is some bug in tabulator where its not sorting
+        // certain columns. This explicitly sets the sorter so
+        // it works every time
+        return 'string'
+    }
+
+    return undefined
 }
 
 function getColumnsData(json, options, onHeaderClick){
@@ -147,7 +180,8 @@ function getColumnsData(json, options, onHeaderClick){
             },
             headerClick: (e, column) => {
                 onHeaderClick()
-            }
+            },
+            sorter: setSorterFunction(col)
         })
     })
 
