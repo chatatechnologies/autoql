@@ -280,7 +280,6 @@ export function QueryInput(selector, options){
             clearTimeout(chataBarContainer.autoCompleteTimer);
             if(event.target.value){
                 chataBarContainer.autoCompleteTimer = setTimeout(() => {
-                    console.log(chataBarContainer.options.authentication);
                     ChataUtils.autocomplete(
                         event.target.value,
                         suggestionList,
@@ -496,7 +495,6 @@ export function QueryInput(selector, options){
             ChataUtils.safetynetCall(path, function(response, s){
                 var wrapper = document.createElement('div');
                 var rows = response['data']['items'];
-                console.log(rows);
                 ChataUtils.createSuggestions(
                     wrapper,
                     rows,

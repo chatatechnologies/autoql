@@ -544,7 +544,6 @@ export function Notification(options, parentOptions){
                     }
                 }
             }
-            console.log(vizToolbar);
             dataContainer.appendChild(vizToolbar);
         }
     }
@@ -601,7 +600,6 @@ export function Notification(options, parentOptions){
             payload.status = 'INACTIVE';
         }
         var response = await apiCallPut(URL, payload, item.parentOptions)
-        console.log(response);
         var jsonResponse = response.data
         item.ruleOptions = jsonResponse.data;
         if(jsonResponse.message == 'ok'){

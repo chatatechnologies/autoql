@@ -251,10 +251,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             checked: false
         }
     ]
-    console.log(rule.reset_period);
 
     if(mode === 'edit'){
-        console.log(rule.reset_period);
         if(rule.notification_type != 'CONTINUOUS'){
             repeatOptions = setRadioSelection(repeatOptions, rule.reset_period)
         }else{
@@ -912,7 +910,6 @@ function checkStep1(ruleContainer){
 
 function showLeftAndOr(parentSelect, step){
     var groups = document.getElementsByClassName('notification-group-wrapper');
-    console.log(groups);
     if(groups.length <= 1){
         parentSelect.style.visibility = 'hidden';
         parentSelect.style.display = 'none';
@@ -1669,8 +1666,6 @@ function getStep2Values(){
     if(notificationType === 'PERIODIC'){
         values.reset_period = reset.selectedValue
     }
-
-    console.log(values);
 
     return values;
 }

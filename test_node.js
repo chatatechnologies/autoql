@@ -9,7 +9,7 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get, put } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA3MTExNDM0LCAiZXhwIjogMTYwNzEzMzAzNCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvZGF0YS1hbGVydHMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvZGF0YS1hbGVydHMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiJdfQ.Me3OPEGMyi9P8ttwNO73ZrQuTF2jTyYsCCP-s3IXkAECSk5ja5XCrlABzrJ_U9NSb_x2rMBWdh-yRQxcOCo6ciY4S2DYDflJT1cvljXDSeaWVxQZNbtagZkVwjW9UYWr7HKaRyVcPHdnKgVS9ftcQOnQ2CBQxv8j3Mq7iwRpli7TAedblmDXwoueV0dSbBUVVKqQlcI0tUjSuvjQb5goPE4vDMA1V5Jspsiw0FGDcU5uwcGdctub6qiYAyvqWQKIrfDO1sFGOBrYrYgzEIGLCYgf8pP4slnH0o8u_avIdRlhqHeONJ7oNRpY6dl_C81qNEEyK3LIjpc7tYoBI5YZwA`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA3MzcwMjM5LCAiZXhwIjogMTYwNzM5MTgzOSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvZGF0YS1hbGVydHMvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cyJdfQ.rDWnwNvbCc7_Bko2144R-Bmvk5woKOVEby7ofujyNJ8EA_45SnKtUHciAXsvbMmSgldXfIoCn7TgyegRNoq1-d4GVHrgnn1igz8kpG6tY8Wrfk1KrRFaFRzId9eiCP2OfNDWHT4DsO9ooz3IJMG2MJargaTY7JkVUUa4NlokAcW-cYRMVXj68_Og-SrlThB71OwHhxZbMel0Z9tsEAlv0L-waUddtkNmFGD4OkmFrNYyaxthks42zTYyISvZ9WMkhU0c3Wb3ysv_X6fFEe3Rg3u8JQH9nOaGiK_12mO0GfkIO4iuRNRB3-4IT-zt7KB4r53JXy6I5thR4r10YcTrLw`;
 const domain = 'https://spira-staging.chata.io';
 const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
@@ -161,7 +161,6 @@ get(DASHBOARD_URL, {
     }
 }).then(function(response){
     r = response.data.items[1]
-    console.log(response.data);
     dashboard = new Dashboard('#dashboard-wrapper', {
         authentication: {
             token: _token,
@@ -218,9 +217,7 @@ b6.onclick = async () => {
     var tiles = []
     dashboard.tiles.map(tile => tiles.push(tile.getValues()))
     d.data = tiles
-    console.log(d);
     const URL = `https://backend-staging.chata.io/api/v1/dashboards/${r.id}?key=${apiKey}`
-    console.log(URL);
 
     var response = await put(URL, d, {
         headers: {
@@ -229,11 +226,10 @@ b6.onclick = async () => {
         },
     })
 
-    console.log(response.status);
 }
 
 b5.onclick = () => {
-    dashboard.tiles.map(tile => console.log(tile.getValues()))
+    // dashboard.tiles.map(tile => console.log(tile.getValues()))
 }
 
 b4.onclick = () => {

@@ -133,7 +133,6 @@ export function Cascader(topics, datamessenger){
         childrenOptionsContainer.classList.add('options-container');
         childrenOptionsContainer.appendChild(arrow);
         childrenOptionsContainer.appendChild(title);
-        console.log(topic.queries);
         const queries = Object.values(topic.queries);
         for (var i = 0; i < queries.length; i++) {
 

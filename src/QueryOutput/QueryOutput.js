@@ -273,8 +273,6 @@ export function QueryOutput(selector, options={}){
 
     responseRenderer.addEventListener('click', function(e){
         if(e.target.hasAttribute('data-chartrenderer')){
-            console.log(uuid);
-            console.log(ChataUtils.responses);
 
             if(responseRenderer.chataBarContainer.options.autoQLConfig.enableDrilldowns){
                 var json = ChataUtils.responses[uuid];

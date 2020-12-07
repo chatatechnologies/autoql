@@ -196,7 +196,6 @@ export function getSafetynetUserSelection(node){
     var selections = []
     for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i]
-        console.log(n.option);
         const { start, end } = n.suggestion
         selections.push({
             start: start,
@@ -439,7 +438,6 @@ export function getDatePivotArray(json, options, _data){
                     );
                     break;
                 case 'DATE_STRING':
-                    console.log();
                     var vals = data[x].split('-')
                     row.unshift(vals[0], vals[1])
                     break
