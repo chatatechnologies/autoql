@@ -303,7 +303,6 @@ export function createStackedBarChart(
     function createBars(){
         var visibleGroups = getVisibleGroups(allSubgroups);
         var stackedData = getStackedData(visibleGroups, data);
-        console.log(stackedData);
         if(stackedG)stackedG.remove();
 
         stackedG = svg.append("g")
