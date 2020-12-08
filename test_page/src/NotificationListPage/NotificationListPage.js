@@ -7,7 +7,6 @@ export class NotificationListPage extends Component{
     notificationList = null
 
     componentDidMount = () => {
-        console.log(this.props.themeConfig);
         this.notificationList = new NotificationFeed('#notification-list', {
             authentication: {
                 ...this.props.authentication
@@ -17,7 +16,6 @@ export class NotificationListPage extends Component{
             },
         })
 
-        console.log(this.notificationList.options.themeConfig);
     }
 
     render = () => {

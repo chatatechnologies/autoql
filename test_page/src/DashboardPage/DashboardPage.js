@@ -54,13 +54,11 @@ export class DashboardPage extends Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        console.log('DID UPDATE');
         if(prevProps.dashboards.length !== this.props.dashboards.length){
             var dashboardEl = document.getElementById('dashboard')
             dashboardEl.innerHTML = '';
             this.instanceDashboard()
         }
-        // console.log(prevState);
     }
 
     instanceDashboard = () => {
@@ -136,7 +134,6 @@ export class DashboardPage extends Component {
             },
         })
 
-        console.log(response.status);
 
         this.dashboard.stopEditing()
         this.setState({
