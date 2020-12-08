@@ -325,8 +325,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                         points.push({
                             group: seriesValues.group,
                             key: key,
+                            valueY: value,
                             y: layer[groupableIndex2],
-                            y0: layer[groupableIndex1]
                         })
                     }
                 }
@@ -348,10 +348,10 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr('class', 'line-dot')
         .attr('stroke-width', '3')
         .attr('stroke-opacity', '0.7')
-        // .attr("fill", 'transparent')
-        // .attr('stroke', function(d) {'transparent' })
-        .attr("stroke", (d) => color(d.group))
-        .attr('fill', 'white')
+        .attr("fill", 'transparent')
+        .attr('stroke', function(d) {'transparent' })
+        // .attr("stroke", (d) => color(d.group))
+        // .attr('fill', 'white')
         .attr("fill-opacity", '1')
         .each(function(d, i){
             var unformatvalue1 = d.key
@@ -360,7 +360,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                 unformatvalue1 = d.group
                 unformatvalue2 = d.key
             }
-            if(d.y && d.group && d.key){
+            if(d.valueY && d.group && d.key){
                 select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
@@ -372,12 +372,12 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                     d.group, cols[groupableIndex2], options
                 ))
                 .attr('data-colvalue3', formatData(
-                    d.y, cols[notGroupableIndex],
+                    d.valueY, cols[notGroupableIndex],
                     options
                 ))
                 .attr('data-unformatvalue1', unformatvalue1)
                 .attr('data-unformatvalue2', unformatvalue2)
-                .attr('data-unformatvalue3', d.y)
+                .attr('data-unformatvalue3', d.valueY)
                 .attr('class', 'tooltip-3d')
             }
         })
