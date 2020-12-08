@@ -299,6 +299,10 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         var visibleGroups = getVisibleGroups(allSubgroups);
         var stackedData = getStackedAreaData(visibleGroups, data);
 
+        var points = []
+        if(layers)layers.remove();
+        if(layerPoints)layers.remove();
+
         layers = svg
         .selectAll("mylayers")
         .data(stackedData)
@@ -307,6 +311,27 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .style("fill", function(d) {
             if(d.key) return color(d.key); else return 'transparent'
         })
+        .each((d, i) => {
+
+            d.map((layer) => {
+                var pos = layer[1];
+                var sum = 0;
+                var seriesValues = layer.data
+                for (var [key, value] of Object.entries(seriesValues)) {
+                    if(key === 'group')continue;
+                    if(!layer[0] && !layer[1] && !value) continue
+                    sum += parseFloat(value);
+                    if(sum == pos){
+                        points.push({
+                            group: seriesValues.group,
+                            key: key,
+                            y: layer[groupableIndex2],
+                            y0: layer[groupableIndex1]
+                        })
+                    }
+                }
+            })
+        })
         .attr("d", area()
             .x(function(d, i) { return x(d.data.group); })
             .y0(function(d) { return y(d[0]) || 0; })
@@ -314,100 +339,63 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         )
         .attr('fill-opacity', '0.7')
 
-
-        // var stackedData = getStackedAreaData(visibleGroups, data);
-        //
-        // if(layers)layers.remove();
-        // if(layerPoints)layers.remove();
-        // var points = [];
-        // for (var i = 0; i < stackedData.length; i++) {
-        //     for (var _x = 0; _x < stackedData[i].length; _x++) {
-        //         var seriesValues = stackedData[i][_x].data;
-        //         for (var [key, value] of Object.entries(seriesValues)) {
-        //             if(key === 'group')continue;
-        //             points.push({
-        //                 group: seriesValues.group,
-        //                 key: key,
-        //                 y: value,
-        //                 y0: stackedData[i][_x][groupableIndex1]
-        //             })
-        //         }
-        //     }
-        // }
-        //
-        //
-        //
-        // const area = getArea(
-        //     (d, i) => { return x(d.data.group) },
-        //     (d) => { return Math.abs(y(d[0])) },
-        //     (d) => { return Math.abs(y(d[1])) }
-        // )
-        //
-        // layers = svg.selectAll("mylayers")
-        // .data(stackedData)
-        // .enter()
-        // .append("path")
-        // .style("fill", function(d, i) {
-        //     if(d[i]) return color(d.key); else return 'transparent'
-        // })
-        // .attr('opacity', '0.7')
-        // .attr("d", area)
-        //
-        // layerPoints = svg.selectAll("circle")
-        // .data(points)
-        // .enter()
-        // .append("circle")
-        // .attr("class", "dot")
-        // .attr("r", 4)
-        // .attr('class', 'line-dot')
-        // .attr('stroke', function(d) {'transparent' })
-        // .attr('stroke-width', '3')
-        // .attr('stroke-opacity', '0.7')
+        layerPoints = svg.selectAll("circle")
+        .data(points)
+        .enter()
+        .append("circle")
+        .attr("class", "dot")
+        .attr("r", 4)
+        .attr('class', 'line-dot')
+        .attr('stroke-width', '3')
+        .attr('stroke-opacity', '0.7')
         // .attr("fill", 'transparent')
-        // .attr("fill-opacity", '1')
-        // .each(function(d, i){
-        //     var unformatvalue1 = d.key
-        //     var unformatvalue2 = d.group
-        //     if(groupableIndex1 !== 0){
-        //         unformatvalue1 = d.group
-        //         unformatvalue2 = d.key
-        //     }
-        //     if(d.y && d.group && d.key){
-        //         select(this).attr(valueClass, i)
-        //         .attr('data-col1', col1)
-        //         .attr('data-col2', col2)
-        //         .attr('data-col3', col3)
-        //         .attr('data-colvalue1', formatData(
-        //             d.key, cols[groupableIndex1], options
-        //         ))
-        //         .attr('data-colvalue2', formatData(
-        //             d.group, cols[groupableIndex2], options
-        //         ))
-        //         .attr('data-colvalue3', formatData(
-        //             d.y, cols[notGroupableIndex],
-        //             options
-        //         ))
-        //         .attr('data-unformatvalue1', unformatvalue1)
-        //         .attr('data-unformatvalue2', unformatvalue2)
-        //         .attr('data-unformatvalue3', d.y)
-        //         .attr('class', 'tooltip-3d')
-        //     }
-        // })
-        // .on("mouseover", function(d, i){
-        //     select(this).
-        //     attr("stroke", color(d.group))
-        //     .attr('fill', 'white')
-        // })
-        // .on("mouseout", function(d, i){
-        //     select(this)
-        //     .attr("stroke", 'transparent')
-        //     .attr('fill', 'transparent')
-        // })
-        // .attr("cx", function(d) {
-        //     return x(d.group);
-        // })
-        // .attr("cy", function(d) { return y(d.y + d.y0); });
-        //
+        // .attr('stroke', function(d) {'transparent' })
+        .attr("stroke", (d) => color(d.group))
+        .attr('fill', 'white')
+        .attr("fill-opacity", '1')
+        .each(function(d, i){
+            var unformatvalue1 = d.key
+            var unformatvalue2 = d.group
+            if(groupableIndex1 !== 0){
+                unformatvalue1 = d.group
+                unformatvalue2 = d.key
+            }
+            if(d.y && d.group && d.key){
+                select(this).attr(valueClass, i)
+                .attr('data-col1', col1)
+                .attr('data-col2', col2)
+                .attr('data-col3', col3)
+                .attr('data-colvalue1', formatData(
+                    d.key, cols[groupableIndex1], options
+                ))
+                .attr('data-colvalue2', formatData(
+                    d.group, cols[groupableIndex2], options
+                ))
+                .attr('data-colvalue3', formatData(
+                    d.y, cols[notGroupableIndex],
+                    options
+                ))
+                .attr('data-unformatvalue1', unformatvalue1)
+                .attr('data-unformatvalue2', unformatvalue2)
+                .attr('data-unformatvalue3', d.y)
+                .attr('class', 'tooltip-3d')
+            }
+        })
+        .on("mouseover", function(d, i){
+            select(this).
+            attr("stroke", color(d.group))
+            .attr('fill', 'white')
+        })
+        .on("mouseout", function(d, i){
+            select(this)
+            .attr("stroke", 'transparent')
+            .attr('fill', 'transparent')
+        })
+        .attr("cx", function(d) {
+            return x(d.group);
+        })
+        .attr("cy", function(d) { return y(d.y); });
+
         tooltipCharts();
         onUpdate(component);
     }
