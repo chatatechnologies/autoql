@@ -29,6 +29,7 @@ import {
     formatData
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
+import { stack, area } from 'd3-shape'
 
 export function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 15, right: 10, bottom: 50, left: 80},
@@ -62,7 +63,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
     );
-    groups = groups.sort().reverse();
+    groups = groups.sort();
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
@@ -298,96 +299,115 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         var visibleGroups = getVisibleGroups(allSubgroups);
         var stackedData = getStackedAreaData(visibleGroups, data);
 
-        if(layers)layers.remove();
-        if(layerPoints)layers.remove();
-
-        var points = [];
-        for (var i = 0; i < stackedData.length; i++) {
-            for (var _x = 0; _x < stackedData[i].length; _x++) {
-                var seriesValues = stackedData[i][_x].data;
-                for (var [key, value] of Object.entries(seriesValues)) {
-                    if(key === 'group')continue;
-                    points.push({
-                        group: seriesValues.group,
-                        key: key,
-                        y: value,
-                        y0: stackedData[i][_x][groupableIndex1]
-                    })
-                }
-            }
-        }
-
-        const area = getArea(
-            (d, i) => { return x(d.data.group) },
-            (d) => { return Math.abs(y(d[0])) },
-            (d) => { return Math.abs(y(d[1])) }
-        )
-
-        layers = svg.selectAll("mylayers")
+        layers = svg
+        .selectAll("mylayers")
         .data(stackedData)
         .enter()
         .append("path")
-        .style("fill", function(d, i) {
-            if(d[i]) return color(d.key); else return 'transparent'
+        .style("fill", function(d) {
+            if(d.key) return color(d.key); else return 'transparent'
         })
-        .attr('opacity', '0.7')
-        .attr("d", area)
+        .attr("d", area()
+            .x(function(d, i) { return x(d.data.group); })
+            .y0(function(d) { return y(d[0]) || 0; })
+            .y1(function(d) { return y(d[1]) || 0; })
+        )
+        .attr('fill-opacity', '0.7')
 
-        layerPoints = svg.selectAll("circle")
-        .data(points)
-        .enter()
-        .append("circle")
-        .attr("class", "dot")
-        .attr("r", 4)
-        .attr('class', 'line-dot')
-        .attr('stroke', function(d) {'transparent' })
-        .attr('stroke-width', '3')
-        .attr('stroke-opacity', '0.7')
-        .attr("fill", 'transparent')
-        .attr("fill-opacity", '1')
-        .each(function(d, i){
-            var unformatvalue1 = d.key
-            var unformatvalue2 = d.group
-            if(groupableIndex1 !== 0){
-                unformatvalue1 = d.group
-                unformatvalue2 = d.key
-            }
-            if(d.y && d.group && d.key){
-                select(this).attr(valueClass, i)
-                .attr('data-col1', col1)
-                .attr('data-col2', col2)
-                .attr('data-col3', col3)
-                .attr('data-colvalue1', formatData(
-                    d.key, cols[groupableIndex1], options
-                ))
-                .attr('data-colvalue2', formatData(
-                    d.group, cols[groupableIndex2], options
-                ))
-                .attr('data-colvalue3', formatData(
-                    d.y, cols[notGroupableIndex],
-                    options
-                ))
-                .attr('data-unformatvalue1', unformatvalue1)
-                .attr('data-unformatvalue2', unformatvalue2)
-                .attr('data-unformatvalue3', d.y)
-                .attr('class', 'tooltip-3d')
-            }
-        })
-        .on("mouseover", function(d, i){
-            select(this).
-            attr("stroke", color(d.group))
-            .attr('fill', 'white')
-        })
-        .on("mouseout", function(d, i){
-            select(this)
-            .attr("stroke", 'transparent')
-            .attr('fill', 'transparent')
-        })
-        .attr("cx", function(d) {
-            return x(d.group);
-        })
-        .attr("cy", function(d) { return y(d.y + d.y0); });
 
+        // var stackedData = getStackedAreaData(visibleGroups, data);
+        //
+        // if(layers)layers.remove();
+        // if(layerPoints)layers.remove();
+        // var points = [];
+        // for (var i = 0; i < stackedData.length; i++) {
+        //     for (var _x = 0; _x < stackedData[i].length; _x++) {
+        //         var seriesValues = stackedData[i][_x].data;
+        //         for (var [key, value] of Object.entries(seriesValues)) {
+        //             if(key === 'group')continue;
+        //             points.push({
+        //                 group: seriesValues.group,
+        //                 key: key,
+        //                 y: value,
+        //                 y0: stackedData[i][_x][groupableIndex1]
+        //             })
+        //         }
+        //     }
+        // }
+        //
+        //
+        //
+        // const area = getArea(
+        //     (d, i) => { return x(d.data.group) },
+        //     (d) => { return Math.abs(y(d[0])) },
+        //     (d) => { return Math.abs(y(d[1])) }
+        // )
+        //
+        // layers = svg.selectAll("mylayers")
+        // .data(stackedData)
+        // .enter()
+        // .append("path")
+        // .style("fill", function(d, i) {
+        //     if(d[i]) return color(d.key); else return 'transparent'
+        // })
+        // .attr('opacity', '0.7')
+        // .attr("d", area)
+        //
+        // layerPoints = svg.selectAll("circle")
+        // .data(points)
+        // .enter()
+        // .append("circle")
+        // .attr("class", "dot")
+        // .attr("r", 4)
+        // .attr('class', 'line-dot')
+        // .attr('stroke', function(d) {'transparent' })
+        // .attr('stroke-width', '3')
+        // .attr('stroke-opacity', '0.7')
+        // .attr("fill", 'transparent')
+        // .attr("fill-opacity", '1')
+        // .each(function(d, i){
+        //     var unformatvalue1 = d.key
+        //     var unformatvalue2 = d.group
+        //     if(groupableIndex1 !== 0){
+        //         unformatvalue1 = d.group
+        //         unformatvalue2 = d.key
+        //     }
+        //     if(d.y && d.group && d.key){
+        //         select(this).attr(valueClass, i)
+        //         .attr('data-col1', col1)
+        //         .attr('data-col2', col2)
+        //         .attr('data-col3', col3)
+        //         .attr('data-colvalue1', formatData(
+        //             d.key, cols[groupableIndex1], options
+        //         ))
+        //         .attr('data-colvalue2', formatData(
+        //             d.group, cols[groupableIndex2], options
+        //         ))
+        //         .attr('data-colvalue3', formatData(
+        //             d.y, cols[notGroupableIndex],
+        //             options
+        //         ))
+        //         .attr('data-unformatvalue1', unformatvalue1)
+        //         .attr('data-unformatvalue2', unformatvalue2)
+        //         .attr('data-unformatvalue3', d.y)
+        //         .attr('class', 'tooltip-3d')
+        //     }
+        // })
+        // .on("mouseover", function(d, i){
+        //     select(this).
+        //     attr("stroke", color(d.group))
+        //     .attr('fill', 'white')
+        // })
+        // .on("mouseout", function(d, i){
+        //     select(this)
+        //     .attr("stroke", 'transparent')
+        //     .attr('fill', 'transparent')
+        // })
+        // .attr("cx", function(d) {
+        //     return x(d.group);
+        // })
+        // .attr("cy", function(d) { return y(d.y + d.y0); });
+        //
         tooltipCharts();
         onUpdate(component);
     }

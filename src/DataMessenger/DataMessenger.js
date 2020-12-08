@@ -134,7 +134,7 @@ export function DataMessenger(elem, options){
         enableVoiceRecord: true,
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
-        enableNotificationsTab: true,
+        enableNotificationsTab: false,
         inputPlaceholder: 'Type your queries here',
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
@@ -798,7 +798,11 @@ export function DataMessenger(elem, options){
         obj.tabQueryTips = tabQueryTips;
         obj.tabNotifications = tabNotifications;
         obj.tabId = tabId;
-        obj.instanceNotificationIcon();
+        if(obj.options.enableNotificationsTab){
+            obj.instanceNotificationIcon();
+        }else{
+            obj.tabNotifications.style.display = 'none'
+        }
         refreshTooltips();
     }
 

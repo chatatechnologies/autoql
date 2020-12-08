@@ -40,7 +40,7 @@ var datamessenger = new DataMessenger('#datamessenger', {
     // queryQuickStartTopics: topics,
     enableDynamicCharting: true,
     enableExploreQueriesTab: true,
-    enableNotificationsTab: true
+    // enableNotificationsTab: true
 })
 // datamessenger.setOption('isVisible', true)
 // datamessenger.openDrawer()

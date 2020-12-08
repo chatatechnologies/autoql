@@ -64,7 +64,7 @@ export function createStackedColumnChart(
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
     );
-    groups = groups.sort().reverse();
+    groups = groups.sort();
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );

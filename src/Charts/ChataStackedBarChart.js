@@ -65,7 +65,7 @@ export function createStackedBarChart(
         data, row => row[groupableIndex2]
     );
 
-    groups = groups.sort().reverse();
+    groups = groups.sort();
     var subgroups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex1]
     );
