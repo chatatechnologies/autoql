@@ -734,7 +734,9 @@ export const getSupportedDisplayTypes = response => {
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
             const supportedDisplayTypes = ['table', 'bar', 'column', 'line']
-            supportedDisplayTypes.push('pie')
+            if(response.data.rows.length < 7){
+                supportedDisplayTypes.push('pie')
+            }
                 const dateColumn = columns.find(
                     col => col.type === 'DATE' || col.type === 'DATE_STRING'
                 )

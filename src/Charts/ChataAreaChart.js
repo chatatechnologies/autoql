@@ -301,7 +301,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
         var points = []
         if(layers)layers.remove();
-        if(layerPoints)layers.remove();
+        if(layerPoints)layerPoints.remove();
 
         layers = svg
         .selectAll("mylayers")

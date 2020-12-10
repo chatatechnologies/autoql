@@ -42,7 +42,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
-import { LIGHT_THEME, DARK_THEME } from '../Constants'
+import { LIGHT_THEME, DARK_THEME, DATA_LIMIT_MESSAGE } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -69,7 +69,8 @@ import {
     FILTER_TABLE,
     COLUMN_EDITOR,
     DELETE_MESSAGE,
-    VERTICAL_DOTS
+    VERTICAL_DOTS,
+    DATA_LIMIT_WARNING
 } from '../Svg'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
@@ -587,6 +588,21 @@ export function DataMessenger(elem, options){
             //     // REPLACE WITH onclick event
             //
             // });
+        }
+    }
+
+
+    obj.showWarningIcon = (messageBubble, json) => {
+        if(json.data.rows.length >= 500){
+            const warningIcon = htmlToElement(`
+                <span
+                class="chata-icon data-limit-warning-icon warning"
+                data-tippy-content="${DATA_LIMIT_MESSAGE}">
+                    ${DATA_LIMIT_WARNING}
+                </span>
+            `)
+            messageBubble.appendChild(warningIcon)
+            refreshTooltips()
         }
     }
 
@@ -2476,6 +2492,7 @@ export function DataMessenger(elem, options){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
         allColHiddenMessage(tableWrapper);
+        obj.showWarningIcon(messageBubble, jsonResponse)
         return tableWrapper;
     }
 

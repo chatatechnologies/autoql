@@ -10,6 +10,7 @@ export const LIGHT_THEME = {
     'font-family': 'sans-serif',
     'highlight-color': '#000',
     'danger-color': '#ca0b00',
+    'warning-color': '#FFCC00'
 }
 
 export const DARK_THEME = {
@@ -24,6 +25,7 @@ export const DARK_THEME = {
   'font-family': 'sans-serif',
   'highlight-color': '#FFF',
   'danger-color': '#ff584e',
+  'warning-color': '#FFCC00'
 }
 
 export const DASHBOARD_LIGHT_THEME = {
@@ -68,4 +70,8 @@ Oops! It looks like our system is experiencing an issue.
 Try querying again. If the problem persists,
 please send an email to our team at support@chata.ai.
 We'll look into this issue right away and be in touch with you shortly.
+`
+
+export const DATA_LIMIT_MESSAGE = `
+The display limit for your data has been reached. Try querying a smaller time-frame to ensure all your data is displayed.
 `

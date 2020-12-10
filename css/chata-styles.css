@@ -1212,6 +1212,18 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     fill: #28a8e0;
 } */
 
+.chata-icon.warning{
+    color: var(--autoql-vanilla-warning-color)!important;
+}
+
+.data-limit-warning-icon {
+    color: var(--autoql-vanilla-warning-color)!important;
+    position: absolute!important;
+    bottom: 2px;
+    right: 4px;
+    font-size: 20px;
+}
+
 .autoql-vanilla-chata-execute-query-icon {
     font-size: 18px;
 }
