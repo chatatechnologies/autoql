@@ -260,10 +260,10 @@ export function DrilldownView(
                 createStackedBarChart(
                     chartWrapper, json,
                     dashboard.options,
-                    view.registerDrilldownStackedChartEvent, false,
+                    view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
-                view.registerDrilldownStackedChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'stacked_column':
                 var chartWrapper = document.createElement('div')
@@ -276,10 +276,10 @@ export function DrilldownView(
                 createStackedColumnChart(
                     chartWrapper, json,
                     dashboard.options,
-                    view.registerDrilldownStackedChartEvent, false,
+                    view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
-                view.registerDrilldownStackedChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'stacked_line':
                 var chartWrapper = document.createElement('div')
@@ -292,10 +292,10 @@ export function DrilldownView(
                 createAreaChart(
                     chartWrapper, json,
                     dashboard.options,
-                    view.registerDrilldownStackedChartEvent, false,
+                    view.registerDrilldownChartEvent, false,
                     'data-tilechart', true
                 )
-                view.registerDrilldownStackedChartEvent(chartWrapper)
+                view.registerDrilldownChartEvent(chartWrapper)
             break
             case 'pie':
                 var chartWrapper = document.createElement('div')
