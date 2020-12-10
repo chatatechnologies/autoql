@@ -392,7 +392,7 @@ export function createStackedBarChart(
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
     legendOrdinal.on('cellclick', function(d, x) {
         var words = []
-        var nodes = d.target.parentElement.childNodes
+        var nodes = d.currentTarget.getElementsByTagName('tspan')
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }

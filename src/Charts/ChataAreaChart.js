@@ -416,7 +416,13 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
 
     legendOrdinal.on('cellclick', function(d) {
-        var unformatGroup = legendGroups[d.target.textContent].value;
+        var words = []
+        var nodes = d.currentTarget.getElementsByTagName('tspan')
+        for (var i = 0; i < nodes.length; i++) {
+            words.push(nodes[i].textContent)
+        }
+
+        var unformatGroup = legendGroups[words.join(' ')].value;
         allSubgroups[unformatGroup].isVisible =
         !allSubgroups[unformatGroup].isVisible;
 
