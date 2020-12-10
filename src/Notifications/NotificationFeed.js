@@ -57,7 +57,8 @@ export function NotificationFeed(selector, options){
         showNotificationDetails: true,
         showDescription: true,
         onErrorCallback: (error) => {},
-        onSuccessCallback: (message) => {}
+        onSuccessCallback: (message) => {},
+        autoChartAggregations: true,
     }
 
     wrapper.notificationOffset = 0;

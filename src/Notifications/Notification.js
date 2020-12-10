@@ -57,6 +57,7 @@ export function Notification(options, parentOptions){
     item.parentOptions = parentOptions;
     item.displayType = '';
     item.jsonData = {}
+    item.isExecuted = false
     var header = document.createElement('div');
     var displayNameContainer = document.createElement('div');
     var displayName = document.createElement('div');

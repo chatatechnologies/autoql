@@ -49,7 +49,8 @@ export function QueryOutput(selector, options={}){
             fontFamily: 'sans-serif',
         },
         enableDynamicCharting: true,
-        queryResponse: null
+        queryResponse: null,
+        autoChartAggregations: true
     }
 
     for (var [key, value] of Object.entries(options)) {
@@ -98,6 +99,10 @@ export function QueryOutput(selector, options={}){
 
     responseRenderer.refreshView = () => {
         var jsonResponse = responseRenderer.options.queryResponse
+        const {
+            autoChartAggregations
+        } = responseRenderer.options
+        var groupables = getGroupables(jsonResponse)
         responseRenderer.clearMetadata()
         ChataUtils.responses[uuid] = jsonResponse;
         if(!jsonResponse)return
@@ -105,9 +110,18 @@ export function QueryOutput(selector, options={}){
         var sup = getSupportedDisplayTypes(jsonResponse);
         if(sup.includes(responseRenderer.options.displayType)){
             displayType = responseRenderer.options.displayType;
+            if(groupables.length === 1 && autoChartAggregations){
+                displayType = 'column'
+            }
+
+            if(groupables.length === 2 && autoChartAggregations){
+                displayType = 'stacked_column'
+            }
         }else{
             displayType = 'table';
         }
+
+
 
         switch(displayType){
             case 'table':
