@@ -390,8 +390,14 @@ export function createStackedBarChart(
     )
 
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
-    legendOrdinal.on('cellclick', function(d) {
-        var unformatGroup = legendGroups[d.target.textContent].value;
+    legendOrdinal.on('cellclick', function(d, x) {
+        var words = []
+        var nodes = d.target.parentElement.childNodes
+        for (var i = 0; i < nodes.length; i++) {
+            words.push(nodes[i].textContent)
+        }
+
+        var unformatGroup = legendGroups[words.join(' ')].value;
         allSubgroups[unformatGroup].isVisible =
         !allSubgroups[unformatGroup].isVisible;
 
@@ -401,6 +407,7 @@ export function createStackedBarChart(
             'disable-group', !legendCell.classed('disable-group')
         );
     });
+
     svgLegend.call(legendOrdinal)
 
     const newX = chartWidth + legendBoxMargin

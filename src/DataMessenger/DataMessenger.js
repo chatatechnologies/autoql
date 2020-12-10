@@ -1292,7 +1292,8 @@ export function DataMessenger(elem, options){
                 obj.topicsWidget._elem
             )
         }
-        if(topics){
+
+        if(topics && topics.length){
             const topicsWidget = new Cascader(topics, obj);
             obj.drawerContent.insertBefore(
                 topicsWidget._elem, obj.introMessageBubble.nextSibling
