@@ -723,17 +723,17 @@ export const getSupportedDisplayTypes = response => {
 
         if (supportsRegularPivotTable(columns)) {
             let supportedDisplayTypes = [
+                'table',
                 'pivot_table',
+                'heatmap',
+                'bubble',
                 'stacked_bar',
                 'stacked_column',
                 'stacked_line',
-                'bubble',
-                'heatmap',
-                'table'
             ]
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
-            const supportedDisplayTypes = ['table', 'bar', 'column', 'line']
+            const supportedDisplayTypes = ['table', 'column', 'bar', 'line']
             if(response.data.rows.length < 7){
                 supportedDisplayTypes.push('pie')
             }

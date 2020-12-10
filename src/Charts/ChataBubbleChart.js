@@ -37,12 +37,12 @@ export function createBubbleChart(
 
     var data = formatDataToHeatmap(json, options);
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX);
-    var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY);
+    var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
     var cols = json['data']['columns'];
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options
-    );
+    ).reverse()
     labelsX = formatLabels(
         labelsX, cols[groupableIndex2], options
     );

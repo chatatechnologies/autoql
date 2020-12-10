@@ -339,7 +339,7 @@ export function ChataTable(
     table.setHeight('100%');
 
     if(firstDateFinded != ''){
-        table.setSort(firstDateFinded, "desc");
+        table.setSort(firstDateFinded, "asc");
     }
 
     table.addFilterTag = (col) => {
