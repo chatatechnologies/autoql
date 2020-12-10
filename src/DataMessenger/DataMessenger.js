@@ -29,7 +29,8 @@ import {
     apiCallPut,
     apiCallPost,
     getSafetynetValues,
-    getSafetynetUserSelection
+    getSafetynetUserSelection,
+    getGroupables
 } from '../Utils'
 import {
     createAreaChart,
@@ -140,6 +141,7 @@ export function DataMessenger(elem, options){
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
         landingPage: 'data-messenger',
+        autoChartAggregations: true,
         xhr: new XMLHttpRequest()
     };
 
@@ -2493,7 +2495,7 @@ export function DataMessenger(elem, options){
         }, 350);
         allColHiddenMessage(tableWrapper);
         obj.showWarningIcon(messageBubble, jsonResponse)
-        return tableWrapper;
+        return idRequest;
     }
 
     obj.sendReport = function(idRequest, options, menu, toolbar){
@@ -2913,12 +2915,21 @@ export function DataMessenger(elem, options){
             )
             var status = response.status
             var jsonResponse = response.data
-            const displayType = jsonResponse['data']['display_type'];
+            var groupables = getGroupables(jsonResponse)
+            var displayType = jsonResponse['data']['display_type'];
+            if(groupables.length === 1 && obj.options.autoChartAggregations){
+                displayType = 'column'
+            }
+
+            if(groupables.length === 2 && obj.options.autoChartAggregations){
+                displayType = 'stacked_column'
+            }
+
             obj.input.removeAttribute("disabled");
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer);
             }
-            switch(jsonResponse['data']['display_type']){
+            switch(displayType){
                 case 'table':
                     if(jsonResponse['data']['columns'].length == 1){
                         obj.putSimpleResponse(jsonResponse, textValue, status);
@@ -3018,13 +3029,15 @@ export function DataMessenger(elem, options){
                     obj.putTableResponse(jsonResponse);
                 break;
                 case 'column':
-                    var component = obj.putTableResponse(
+                    console.log('DISPLAY COLUMN');
+                    var idRequest = obj.putTableResponse(
                         jsonResponse
                     );
-                    createColumnChart(
-                        component, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(component, 'column');
+                    obj.displayColumChartHandler(null, idRequest)
+                    // createColumnChart(
+                    //     component, jsonResponse, obj.options
+                    // );
+                    // obj.refreshToolbarButtons(component, 'column');
                 break;
                 case 'help':
                     obj.putHelpMessage(jsonResponse);
