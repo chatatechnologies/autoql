@@ -15,7 +15,8 @@ import {
     getSupportedDisplayTypes,
     getRecommendationPath,
     apiCallPut,
-    htmlToElement
+    htmlToElement,
+    getGroupables
 } from '../../Utils'
 import {
     getGroupableFields
@@ -370,12 +371,33 @@ export function TileView(tile, isSecond=false){
         table.toggleFilters()
     }
 
+    view.checkAutoChartAggregations = (json) => {
+        var groupables = getGroupables(json)
+        const {
+            autoChartAggregations
+        } = dashboard.options
+
+        if(
+            groupables.length === 1
+            && autoChartAggregations
+        ){
+            view.internalDisplayType = 'column'
+        }
+
+        if(
+            groupables.length === 2
+            && autoChartAggregations
+        ){
+            view.internalDisplayType = 'stacked_column'
+        }
+
+    }
+
     view.run = async () => {
         let query = view.getQuery()
         view.isSuggestions = false
         view.isSafetynet = false
         if(query){
-            view.isExecuted = true
             view.clearMetadata()
             view.clearFilterMetadata()
             var loading = view.showLoading()
@@ -401,11 +423,14 @@ export function TileView(tile, isSecond=false){
                 ){
                     view.displaySuggestions()
                 }else{
+                    if(!view.isExecuted){
+                        view.checkAutoChartAggregations(json)
+                    }
                     responseWrapper.removeChild(loading)
                     view.displayData()
                 }
             }
-
+            view.isExecuted = true
         }else{
             view.isExecuted = false
             responseWrapper.innerHTML = `

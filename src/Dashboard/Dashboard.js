@@ -71,6 +71,7 @@ export function Dashboard(selector, options={}){
         secondDisplayPercentage: 25,
         enableDynamicCharting: true,
         dashboardId: -1,
+        autoChartAggregations: true,
         name: undefined
     }
 

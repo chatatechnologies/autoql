@@ -2989,14 +2989,8 @@ export function DataMessenger(elem, options){
                     obj.putTableResponse(jsonResponse);
                 break;
                 case 'stacked_column':
-                    var component = obj.putTableResponse(jsonResponse);
-                    obj.refreshToolbarButtons(
-                        component, 'stacked_column'
-                    );
-                    createStackedColumnChart(
-                        component, cloneObject(jsonResponse),
-                        obj.options
-                    );
+                    var idRequest = obj.putTableResponse(jsonResponse);
+                    obj.displayStackedColumnHandler(null, idRequest)
                 break;
                 case 'stacked_bar':
                     var component = obj.putTableResponse(jsonResponse);
@@ -3029,7 +3023,6 @@ export function DataMessenger(elem, options){
                     obj.putTableResponse(jsonResponse);
                 break;
                 case 'column':
-                    console.log('DISPLAY COLUMN');
                     var idRequest = obj.putTableResponse(
                         jsonResponse
                     );
