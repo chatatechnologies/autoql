@@ -206,40 +206,34 @@
                     <div class="prop prop-column">
                         <h6>Project ID</h6>
                         <input type="text" name="customerId" value="" placeholder="" class="validate">
-                        <!-- <input type="text" name="customerId" value="spira-demo3" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your project ID" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>User Email</h6>
                         <input type="text" name="userId" value="" placeholder="" class="validate">
-                        <!-- <input type="text" name="userId" value="vidhya@chata.ai" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your user ID" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>API key</h6>
                         <input type="text" name="apiKey" value="" placeholder="" class="validate">
-                        <!-- <input type="text" name="apiKey" value="AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your API key" data-success=""></span>
                     </div>
                     <div class="prop prop-column">
                         <h6>Domain URL</h6>
                         <input type="text" name="domain" value="" placeholder="" class="validate">
-                        <!-- <input type="text" name="domain" value="https://spira-staging.chata.io" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your domain URL" data-success=""></span>
                     </div>
                     <div class="prop prop-column">
                         <h6>Username</h6>
                         <input type="text" id="username" value="" placeholder="" class="validate">
-                        <!-- <input type="text" id="username" value="admin" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your username" data-success=""></span>
                     </div>
 
                     <div class="prop prop-column">
                         <h6>Password</h6>
                         <input type="password" id="password" value="" placeholder="" class="validate">
-                        <!-- <input type="password" id="password" value="admin123" placeholder="" class="validate"> -->
                         <span class="helper-text" data-error="Please enter your password" data-success=""></span>
                     </div>
                     <div class="">
@@ -949,6 +943,7 @@
 
     </script>
     <script>
+    console.log(jQuery);
     document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
 
     var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAwNjU5MDAxLCAiZXhwIjogMTYwMDY4MDYwMSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyJdfQ==.TQaZ0fV-VadwDn96DzXSwUECiS3Mao3WXWb7VrLW3TSP9XlbDD5E1q6jd-GTM0o1KZiyyNBE-6fGwTuJwjLu5SraoE3egp4FIzlxx4ePCozuA4ft7gzXslrAAGr5mUXJA0MqBnxicayMj2cCoEi_3NO-xEQzJdmepSGlLyBditORr4SyGmF2ILe5eV6dtQVbzSBKthORM8CHtpToVUzxHdoQWiRLkjMa1bATWg8xLBXh0X6pxMg74xH8Onwb_cSi75w7sSnZJqgQcVpqiRy3TVB1sKaxuzh7ajGYQJI0bp7Kyx1in0d8f9z17V8W0fVAJ6VgiEy-PnuhOXWg6VopEQ==`;
@@ -959,16 +954,7 @@
 
     var datamessenger = new DataMessenger('#DataMessengerV2', {
         authentication: {
-            // demo: true
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            // apiKey: 'AIzaSyBxoR51Cw8UryZWmMdAkktBUO83ukMFFO0',
-            domain: domain,
-            // apiKey: 'AIzaSyDX28JVW248PmBwN8_xRROWvO0a2BWH67o',
-            // domain: 'https://accounting-demo-staging.chata.io',
-            demo: false
-            // customerId: 'spira-demo3',
-            // userId: 'vidhya@chata.ai',
+
         },
         themeConfig: {
             chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
@@ -989,19 +975,14 @@
 
     let queryInput = new QueryInput('#chat-bar', {
         authentication: {
-            token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-            domain: domain,
-            demo: false
+
         },
         autoCompletePlacement: 'bottom',
     });
     var responseRenderer = new QueryOutput('#response-renderer', {
         displayType: 'table',
         onDataClick: (groupByObject, queryId) => {
-            console.log(groupByObject);
-            console.log(queryId);
-            console.log('ON DATA CLICK');
+
         }
     });
 

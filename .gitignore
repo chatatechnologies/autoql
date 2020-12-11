@@ -8,3 +8,4 @@ lib/
 test/
 test_page/public
 test_page/node_modules
+test_node.js

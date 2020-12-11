@@ -6,6 +6,7 @@ import {
 
 import './Dashboard.css'
 import 'gridstack/dist/gridstack.css'
+import 'gridstack/dist/h5/gridstack-dd-native';
 
 export function Dashboard(selector, options={}){
     var obj = this
@@ -123,12 +124,12 @@ export function Dashboard(selector, options={}){
         })
         obj.tiles.push(e)
         grid.addWidget(e, {
-            width: tile.w,
-            height: tile.h,
+            w: tile.w,
+            h: tile.h,
             x: tile.x,
             y: tile.y,
-            minHeight: 1,
-            minWidth: 3
+            minH: 1,
+            minW: 3
         })
     }
 
@@ -236,10 +237,10 @@ export function Dashboard(selector, options={}){
         })
         obj.tiles.push(e)
         grid.addWidget(e, {
-            width: options.w,
-            height: options.h,
-            minHeight: 1,
-            minWidth: 3
+            w: options.w,
+            h: options.h,
+            minH: 1,
+            minW: 3
         })
 
         obj.setUndoData('addTile', () => {

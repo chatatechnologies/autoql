@@ -9,9 +9,9 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get, put } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA3NjIzNzc1LCAiZXhwIjogMTYwNzY0NTM3NSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvZGF0YS1hbGVydHMvKioiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cyIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSJdfQ.LLtn-BV7p9BIOyWftXjZbHfc7BDxWvvbaDSQ1rF-gBrjApSA5Y2NoGJCpnSP7f3GSumDu6nGIE3ayWkxl_E-8wfQ8W0sW36fu4RDmRGM0Zx3EvejXOArwUQfzW2kyHJ9la8Ul3YsMcRcovkcWRuZF_xNUHj8pf3DNlF5uVAD9hv-2lOwRiWvSCu_y08DX_ncqeHQAzjBaPGFKOlTO9aNdwC0iQswEn7oF6cngMUK6NS20DKdMYUcEykCkgAW5oM9g4HU4XDqDF98lhBhb0vQicEdBzk47gXBEFBuZFIgjvyEuZQOU3ChC5qaMRiJT2TIAt0qKJ2dG0Ix5-34SbiutA`;
+var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA3NzE5NzczLCAiZXhwIjogMTYwNzc0MTM3MywgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeS8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cyJdfQ.kTJ_dRuxHzBJCY0NTRJfoJFteulEGuKTo7t1E3ngqFljyQmcV9KuPa01TYEZr2ggrmrQrrIPY44r2NRszKYVS3_Lbw8p7wpPRSTQZDXhdQJjgZsH4QGbhelEn-01vT2-0037VhFlp_LJe53zR37vwzUbABYmdfXVPIy302LRAarCOVsXTniuQuu0GLdT30O-59f78ZOzeG7J7FvTPXIboW8xSDpfkykEmDuLZEuO7XKds2R0KNNpCOuY7Um30lopLIeEap_9EWa5yBeAiiohq-zeQ1nJsr7XZE64Ef_8ItUvTKJiclSYzIVIgGmjvPiCowTFgKLjvC5NLhIggaUYPQ`;
 const domain = 'https://spira-staging.chata.io';
-const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
+const apiKey = 'AIzaSyBxmGxl9J9siXz--dS-oY3-5XRSFKt_eVo'
 const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
 // const topics = getIntroMessageTopics(getActiveIntegrator(domain));
 let dashboard;
@@ -77,49 +77,49 @@ setTimeout(() => {
 //     },
 // })
 //
-var queryInput = new QueryInput('#query-input', {
-    authentication: {
-        token: _token,
-        apiKey: apiKey,
-        domain: domain,
-    },
-    autoCompletePlacement: 'bottom',
-});
+// var queryInput = new QueryInput('#query-input', {
+//     authentication: {
+//         token: _token,
+//         apiKey: apiKey,
+//         domain: domain,
+//     },
+//     autoCompletePlacement: 'bottom',
+// });
 //
-var queryOutput = new QueryOutput('#query-output', {
-    displayType: 'line',
-    queryResponse: {
-        data: {
-            columns: [
-                {
-                    type: "DATE",
-                    groupable: true,
-                    active: false,
-                    name: "sale__transaction_date__month",
-                },
-                {
-                    active: false,
-                    groupable: false,
-                    name: "sale__line_item___sum",
-                    type: "DOLLAR_AMT",
-                },
-            ],
-            display_type: "line",
-            interpretation: "total sales by line item by transaction month",
-            query_id: "q_y4sWT0IAStWnLeM7COEsSQ",
-            rows: [
-                [1483142400, 12500],
-                [1488240000, 8742.68],
-                [1490918400, 11723.36],
-                [1493510400, 3243.12],
-                [1496188800, 14642.19],
-            ]
-        },
-        message: "",
-        referenceId: "1.1.0",
-    },
-})
-queryInput.bind(queryOutput)
+// var queryOutput = new QueryOutput('#query-output', {
+//     displayType: 'line',
+//     queryResponse: {
+//         data: {
+//             columns: [
+//                 {
+//                     type: "DATE",
+//                     groupable: true,
+//                     active: false,
+//                     name: "sale__transaction_date__month",
+//                 },
+//                 {
+//                     active: false,
+//                     groupable: false,
+//                     name: "sale__line_item___sum",
+//                     type: "DOLLAR_AMT",
+//                 },
+//             ],
+//             display_type: "line",
+//             interpretation: "total sales by line item by transaction month",
+//             query_id: "q_y4sWT0IAStWnLeM7COEsSQ",
+//             rows: [
+//                 [1483142400, 12500],
+//                 [1488240000, 8742.68],
+//                 [1490918400, 11723.36],
+//                 [1493510400, 3243.12],
+//                 [1496188800, 14642.19],
+//             ]
+//         },
+//         message: "",
+//         referenceId: "1.1.0",
+//     },
+// })
+// queryInput.bind(queryOutput)
 //
 // setTimeout(() => {
 //     queryOutput.setOption('displayType', 'table')
@@ -161,25 +161,26 @@ get(DASHBOARD_URL, {
         'Integrator-Domain': domain
     }
 }).then(function(response){
-    // r = response.data.items[1]
-    // dashboard = new Dashboard('#dashboard-wrapper', {
-    //     authentication: {
-    //         token: _token,
-    //         apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
-    //         domain: domain,
-    //     },
-    //     themeConfig: {
-    //         // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
-    //         theme: 'light',
-    //         accentColor: 'red'
-    //     },
-    //     autoQLConfig: {
-    //         debug: true
-    //     },
-    //     executeOnMount: true,
-    //     tiles: r.data,
-    //     name: r.name
-    // })
+    r = response.data.items[1]
+    console.log(r.data);
+    dashboard = new Dashboard('#dashboard-wrapper', {
+        authentication: {
+            token: _token,
+            apiKey: apiKey,
+            domain: domain,
+        },
+        themeConfig: {
+            // chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+            theme: 'light',
+            accentColor: 'red'
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        executeOnMount: true,
+        tiles: r.data,
+        name: r.name
+    })
     // new DashboardV2('#dashboard-wrapper2')
 
 
@@ -230,7 +231,7 @@ b6.onclick = async () => {
 }
 
 b5.onclick = () => {
-    // dashboard.tiles.map(tile => console.log(tile.getValues()))
+    dashboard.tiles.map(tile => console.log(tile.getValues()))
 }
 
 b4.onclick = () => {
