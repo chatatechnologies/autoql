@@ -1,0 +1,1 @@
+export { DataAlertsSettingsPage } from './DataAlertsSettingsPage'

@@ -1,0 +1,8 @@
+.circleci*
+.git
+.gcloudignore
+.gitignore
+.vscode
+.idea
+cloudbuild.yaml
+kaniko.yaml

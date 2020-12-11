@@ -1,0 +1,153 @@
+.chata-modal-body * {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+.chata-modal-close-btn path{
+    fill: unset;
+}
+
+.chata-modal-container {
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 5000;
+  visibility: hidden;
+  /* transition: opacity 0.2s ease 0s !important; */
+  /* backface-visibility: hidden; */
+  transition: none !important;
+  font-family: sans-serif;
+  font-size: 14px;
+  /* overflow: hidden; */
+}
+.chata-modal {
+  display: flex;
+  flex-direction: column;
+  background: var(--autoql-vanilla-background-color-primary);
+
+  border-radius: 4px;
+  box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
+  margin: 45px auto;
+  width: 80vw;
+  max-width: 90vw;
+  max-height: 95vh;
+  margin-top: 25px;
+  transform: scale(0);
+  transition: all .2s ease-in-out;
+  max-height: calc(100vh - 90px);
+  color: var(--autoql-vanilla-text-color-primary);
+
+  /* animation: createBox 0.25s cubic-bezier(0.19, 1, 0.22, 1); */
+}
+
+.chata-modal.open{
+    transform: scale(1);
+}
+
+.chata-modal-header {
+  position: relative;
+  text-align: center;
+  flex: 0 0 52px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  padding: 14px 60px;
+  font-size: 16px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.chata-modal-footer {
+  position: relative;
+  flex: 0 0 52px;
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
+  text-align: right;
+  padding: 8px 10px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+.chata-modal-body {
+  display: flex;
+  flex-direction: column;
+
+  padding: 25px;
+  flex: 1;
+  overflow: auto;
+}
+
+.chata-modal-body-editor{
+    overflow: auto !important;
+}
+
+.chata-modal-footer {
+    position: relative;
+    flex: 0 0 52px;
+    border-top: 1px solid rgba(0,0,0,.05);
+    text-align: right;
+    padding: 8px 10px;
+}
+
+.chata-modal-close-btn {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  font-size: 22px;
+  opacity: 0.6;
+  cursor: pointer;
+}
+.chata-modal-close-btn:hover {
+  opacity: 1;
+}
+
+.chata-modal-column-editor{
+    width: 600px;
+}
+
+.chata-modal-full-height{
+    height: calc(100vh - 90px);
+}
+
+.copy-sql-modal-content {
+    position: relative;
+    height: 60vh;
+}
+
+.copy-sql-modal-content .copy-sql-formatted-text {
+    height: 100%;
+    width: 100%;
+    padding: 10px;
+    resize: none;
+    background: var(--autoql-vanilla-background-color-secondary);
+    color: var(--autoql-vanilla-text-color-primary);
+}
+
+.copy-sql-modal-content .copy-sql-btn {
+    position: absolute;
+    top: 3px;
+    right: 0;
+    opacity: 0;
+    transition: opacity .3s ease;
+    background: var(--autoql-vanilla-background-color-primary) !important;
+    color: var(--autoql-vanilla-text-color-primary);
+}
+
+.copy-sql-modal-content:hover .copy-sql-btn {
+    opacity: 1;
+}
+
+.copy-sql-modal-content .sql-copied {
+    color: #2aca4d!important;
+}
+
+@keyframes createBox {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}

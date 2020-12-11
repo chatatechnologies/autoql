@@ -1,0 +1,1 @@
+export { WidgetsMenu } from './WidgetsMenu'

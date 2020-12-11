@@ -1,0 +1,21 @@
+span.react-autoql-icon, span.react-autoql-icon svg {
+    vertical-align: unset;
+    text-align: left;
+    padding: 0;
+    float: none!important;
+    color: inherit;
+    opacity: 1;
+}
+span.react-autoql-icon {
+    margin: 0;
+}
+
+span.react-autoql-icon svg {
+    height: 1em;
+    margin: 0 0 -.1em;
+}
+
+
+.ant-menu-item.ant-menu-item-selected span svg{
+    fill: #1890ff;
+}
