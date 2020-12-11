@@ -114,6 +114,14 @@ export function NotificationIcon(selector, options={}){
 	}
 
 	this.poolInterval = async () => {
+		const {
+			token,
+			apiKey,
+			domain,
+		} = this.options.authentication
+		
+		if(!token || !apiKey || !domain)return
+
 		var response = await this.getNotificationCount();
 		var data = response.data.data
 		if(data.unacknowledged){

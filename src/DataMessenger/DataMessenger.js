@@ -2915,7 +2915,10 @@ export function DataMessenger(elem, options){
             )
             var status = response.status
             var jsonResponse = response.data
-            var groupables = getGroupables(jsonResponse)
+            var groupables = []
+            if(jsonResponse.data.columns){
+                groupables = getGroupables(jsonResponse)
+            }
             var displayType = jsonResponse['data']['display_type'];
             if(groupables.length === 1 && obj.options.autoChartAggregations){
                 displayType = 'column'
