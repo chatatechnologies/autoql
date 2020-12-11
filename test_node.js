@@ -9,10 +9,10 @@ import { getSupportedDisplayTypes } from './src'
 
 import { get, put } from 'axios';
 
-var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjA3NDU0NTYwLCAiZXhwIjogMTYwNzQ3NjE2MCwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcnVsZXMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvcnVsZXMvKioiLCAiL2F1dG9xbC9hcGkvdjEvZGF0YS1hbGVydHMiLCAiL2F1dG9xbC9hcGkvdjEvcXVlcnkiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9kYXRhLWFsZXJ0cy8qKiJdfQ.oLOWypN1X8kNqohTcIf9v7kM1vaognig61uMYGPlrUSHGA4KYoz2qLvzRxV7AQwBWtNZPXBh7cJm3ZcwxbsPEVu9cgYLMxHmEaGK37BHXZrl3t-V7xUOEcYFYWYAwQTKAV7FxTATUYttwRNcazDAfHzEnQU3rFdZPcZ-6FNdY2dUB80cFrI5W0DseDYmadWXCLdYxA2Q1pjqApYlvRw2mTsE27md5XvQwF6t4nN0QCgX9v3mwBjiyL79z6rIdb_-IffZmjVUKzEchMkRLR3m42wmKAv185zCfSsry2wSVlvzusXXZ3EAB05bYzOhEcK3_aw4jJ7FP1-o8t8hgnYxIA`;
-const domain = 'https://spira-staging.chata.io';
-const apiKey = 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU'
-const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey}&project_id=spira-demo3`;
+var _token =  ``;
+const domain = '';
+const apiKey = ''
+const DASHBOARD_URL = ``;
 // const topics = getIntroMessageTopics(getActiveIntegrator(domain));
 let dashboard;
 var datamessenger = new DataMessenger('#datamessenger', {
@@ -164,7 +164,7 @@ get(DASHBOARD_URL, {
     dashboard = new Dashboard('#dashboard-wrapper', {
         authentication: {
             token: _token,
-            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            apiKey: '',
             domain: domain,
         },
         themeConfig: {
@@ -217,7 +217,7 @@ b6.onclick = async () => {
     var tiles = []
     dashboard.tiles.map(tile => tiles.push(tile.getValues()))
     d.data = tiles
-    const URL = `https://backend-staging.chata.io/api/v1/dashboards/${r.id}?key=${apiKey}`
+    const URL = ``
 
     var response = await put(URL, d, {
         headers: {
