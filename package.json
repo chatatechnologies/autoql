@@ -1,0 +1,60 @@
+{
+  "name": "autoql",
+  "version": "2.0.0",
+  "description": "Javascript widget library",
+  "scripts": {
+    "test": "echo \"no test specified\" ",
+    "build-npm": "babel src -d lib --plugins transform-import-styles",
+    "packexample": "cd test_page/ && npm pack ../",
+    "build-cdn": "webpack --mode=production --config webpack.config.js",
+    "build-cdn-rollup": "rollup -c",
+    "watch": "webpack --w --mode development --config webpack-test.config.js",
+    "prepublish": "babel src -d lib --plugins transform-import-styles"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chatatechnologies/autoql"
+  },
+  "author": "Oscar Ramirez",
+  "license": "ISC",
+  "homepage": "https://github.com/chatatechnologies/autoql/blob/master/README.md",
+  "devDependencies": {
+    "@babel/cli": "^7.11.6",
+    "@babel/core": "^7.11.6",
+    "@babel/generator": "^7.11.6",
+    "@babel/preset-env": "^7.11.5",
+    "@rollup/plugin-node-resolve": "^9.0.0",
+    "babel-loader": "^8.1.0",
+    "babel-plugin-transform-import-styles": "0.0.11",
+    "css-loader": "^4.3.0",
+    "rollup": "^2.28.2",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-globals": "^1.4.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "rollup-plugin-postcss": "^3.1.8",
+    "unminified-webpack-plugin": "^2.0.0",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "axios": "^0.21.0",
+    "babel-core": "^6.26.3",
+    "babel-plugin-import-css-to-jss": "^3.1.1",
+    "babel-template": "^6.26.0",
+    "d3": "^6.1.1",
+    "d3-svg-legend": "^2.25.6",
+    "gridstack": "^2.1.0",
+    "load-styles": "^2.0.0",
+    "lodash.get": "^4.4.2",
+    "moment": "^2.27.0",
+    "muuri": "^0.9.3",
+    "regenerator-runtime": "^0.13.7",
+    "save-svg-as-png": "^1.4.17",
+    "split.js": "^1.6.2",
+    "sql-formatter": "^2.3.3",
+    "style-loader": "^1.2.1",
+    "tabulator-tables": "^4.8.0",
+    "tippy.js": "^6.2.6"
+  }
+}

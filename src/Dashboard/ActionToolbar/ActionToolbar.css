@@ -1,0 +1,9 @@
+.autoql-vanilla-tile-toolbar.actions-toolbar{
+    right: 5px !important;
+    left: unset !important;
+}
+
+.autoql-vanilla-chata-dashboard-item:hover .actions-toolbar{
+    opacity: 1;
+    visibility: visible;
+}

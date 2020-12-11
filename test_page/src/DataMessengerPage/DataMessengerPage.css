@@ -1,0 +1,17 @@
+.props-page{
+    padding: 20px 500px 20px 20px;
+    text-align: center;
+    height: auto;
+}
+
+.props-page input {
+    max-width: 200px;
+}
+
+.ant-form-item input {
+    max-width: unset;
+}
+
+.ant-form-item {
+    margin-bottom: 10px !important;
+}

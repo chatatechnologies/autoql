@@ -1,0 +1,649 @@
+.chata-notification-list-container *, .chata-notification-list-container *:before, .chata-notification-list-container *:after{
+    box-sizing: border-box !important;
+    padding: 0px;
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+
+.chata-notification-list-container {
+    color: #26a7df;
+    padding: 20px !important;
+    text-align: left;
+    background: var(--autoql-vanilla-background-color-secondary);
+    overflow-y: auto;
+    height: 100%;
+}
+
+.autoql-vanilla-notification-wrapper{
+    height: calc(100vh - 35px);
+}
+
+.chata-notification-dismiss-icon path{
+    fill: unset !important;
+}
+
+.chata-notification-list-container .chata-notification-dismiss-all {
+    text-align: right;
+    margin-bottom: 12px;
+    padding-right: 10px;
+    color: rgba(0,0,0,.4);
+    -webkit-transition: color .1s ease;
+    transition: color .1s ease;
+}
+.chata-notification-list-container .chata-notification-dismiss-all span {
+    cursor: pointer;
+}
+.chata-notification-list-container .chata-notification-dismiss-all span:hover{
+    color: rgba(0,0,0,.2);
+}
+
+.chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {
+    color: #26a7df;
+}
+
+.chata-notification-list-item:nth-of-type(2) {
+    -webkit-animation-delay: .2s;
+    animation-delay: .2s;
+}
+
+.chata-notification-list-container .chata-notification-list-item {
+    position: relative;
+    overflow: hidden;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.13);
+    margin-bottom: 12px;
+    color: var(--autoql-vanilla-text-color-primary);
+    font-weight: 500;
+    font-family: var(--autoql-vanilla-font-family),sans-serif;
+    line-height: 50px;
+    -webkit-transition: all 1s ease;
+    transition: all 1s ease;
+    -webkit-transition: height .3s cubic-bezier(.26,.26,0,1);
+    transition: height .3s cubic-bezier(.26,.26,0,1);
+    -webkit-animation: slideIn .5s cubic-bezier(.26,.26,0,1);
+    animation: slideIn .5s cubic-bezier(.26,.26,0,1);
+    -webkit-animation-fill-mode: both;
+    animation-fill-mode: both;
+    -webkit-animation-delay: 0s;
+    animation-delay: 0s;
+    cursor: pointer;
+    background: var(--autoql-vanilla-background-color-primary);
+}
+
+.chata-notification-list-container .chata-notification-list-item-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 25px;
+    cursor: pointer;
+    color: var(--autoql-vanilla-text-color-primary);
+
+}
+
+.chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-display-name {
+    font-weight: 500;
+    -webkit-transition: color .2s ease;
+    transition: color .2s ease;
+    color: var(--autoql-vanilla-accent-color), #26a7df)
+}
+
+.chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {
+    color: #26a7df;
+}
+
+.chata-notification-list-container .chata-notification-dismiss-icon {
+    font-size: 18px;
+    height: 50px;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 20px;
+    margin-top: 7px;
+    margin-right: 3px;
+    background-color: transparent;
+    -webkit-transition: background-color .2s ease;
+    transition: background-color .2s ease;
+    cursor: pointer;
+}
+
+
+.chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-alert-strip {
+    opacity: 1;
+}
+
+.chata-notification-list-container .chata-notification-alert-strip {
+    opacity: 0;
+    position: absolute;
+    height: 100%;
+    left: 0;
+    top: 0;
+    width: 4px;
+    background: #26a7df;
+    -webkit-transition-property: opacity,height;
+    transition-property: opacity,height;
+    -webkit-transition-duration: .2s,.3s;
+    transition-duration: .2s,.3s;
+    -webkit-transition-timing-function: ease,cubic-bezier(.26,.26,0,1);
+    transition-timing-function: ease,cubic-bezier(.26,.26,0,1);
+}
+
+.chata-notification-list-container .chata-notification-list-item.expanded, .chata-notification-list-container .chata-notification-list-item.expanded .chata-notification-alert-strip {
+    height: 300px;
+}
+
+.chata-notification-list-container .chata-notification-data-title {
+    line-height: 22px;
+    font-size: 12px;
+    text-align: right;
+    color: rgba(0,0,0,.3);
+    padding: 8px 20px;
+}
+
+.chata-notification-list-container .chata-notification-expanded-content {
+    width: 100%;
+    /* height: 205px; */
+    /* padding: 5px 20px 0; */
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    transition: height .2s ease;
+    height: 0;
+    /* opacity: 0; */
+}
+
+.chata-notification-expanded-content.visible{
+    height: 400px;
+}
+
+.chata-notification-add-btn-container .chata-notification-add-btn {
+    display: inline-block;
+    height: 35px;
+    width: 35px;
+    border-radius: 20px;
+    background: var(--autoql-vanilla-accent-color, #26a7df);
+    color: #fff;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.13);
+    -webkit-transition: all .2s ease;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-add-btn-container {
+    text-align: right;
+    padding-right: 20px;
+    padding-top: 15px;
+}
+
+.chata-notification-settings-container {
+    margin: 15px 20px 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.13);
+    background-color: #fff;
+    overflow: hidden;
+}
+
+.chata-notification-settings-container .chata-notification-setting-item {
+    height: 55px;
+    line-height: 55px;
+    -webkit-transition: height .3s cubic-bezier(.26,.26,0,1);
+    transition: height .3s cubic-bezier(.26,.26,0,1);
+    cursor: pointer;
+}
+
+.chata-notification-settings-container .chata-notification-setting-item-header {
+    display: flex;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 8px;
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);
+}
+
+.chata-notification-settings-container .chata-notification-edit-icon {
+    font-size: 18px;
+    height: 50px;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 20px;
+    margin-top: 9px;
+    margin-right: 3px;
+    background-color: transparent;
+    -webkit-transition: background-color .2s ease;
+    transition: background-color .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-settings-container .chata-notification-setting-item.expanded {
+    height: 300px;
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);
+}
+
+.chata-checkbox {
+  text-align: center;
+  margin-top: 18px !important;
+  display: flex;
+  align-items: center;
+  margin: .5rem;
+  cursor: pointer
+}
+
+.chata-checkbox .chata-switch {
+  position: relative;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+}
+
+.chata-checkbox .chata-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.chata-checkbox .chata-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--autoql-vanilla-background-color-secondary);
+  -webkit-transition: .4s;
+  transition: .4s;
+  display: inline-block;
+}
+
+.chata-checkbox .chata-slider.round {
+  border-radius: 34px;
+}
+
+.chata-checkbox .chata-slider.round:before {
+  border-radius: 50%;
+}
+
+.chata-checkbox .chata-slider:before {
+  position: absolute;
+  content: "";
+  height: 15px;
+  width: 15px;
+  left: 2px;
+  bottom: 3px;
+  background-color: #fff;
+  -webkit-transition: .2s;
+  transition: .2s;
+}
+
+.chata-checkbox input:checked + .chata-slider {
+  border-color: var(--autoql-vanilla-accent-color, #26a7df);
+  background: var(--autoql-vanilla-accent-color, #26a7df);
+}
+
+.chata-checkbox input:checked + .chata-slider:before {
+  -webkit-transform: translateX(16px);
+  -ms-transform: translateX(16px);
+  transform: translateX(16px);
+}
+
+.chata-settings-container{
+    /* min-height: calc(100vh - 48px); */
+    background: var(--autoql-vanilla-background-color-secondary);
+
+    /* overflow: auto; */
+}
+
+.chata-checkbox__input:before {
+    content: " ";
+    position: absolute;
+    top: 50%;
+    right: 50%;
+    bottom: 50%;
+    left: 50%;
+    -webkit-transition: all .2s;
+    transition: all .2s;
+    background: var(--autoql-vanilla-accent-color);
+}
+
+.chata-checkbox-label {
+    padding-left: 6px;
+    line-height: 100%;
+}
+
+.chata-checkbox__input {
+    position: relative !important;
+    opacity: 1 !important;
+    pointer-events: all !important;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    outline: none;
+    background: transparent;
+    border: 1px solid;
+    border-radius: 3px;
+    cursor: pointer;
+    padding-right: 10px;
+}
+
+.chata-checkbox__input:checked:before, .chata-checkbox__input:indeterminate:before {
+    top: 2px;
+    right: 2px;
+    bottom: 2px;
+    left: 2px;
+}
+
+.notification-frequency-select {
+    position: absolute;
+    left: 115px;
+    top: 9px;
+}
+
+
+.chata-notification-setting-display-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+    color: var(--autoql-vanilla-text-color-primary) !important;
+    font-family: var(--autoql-vanilla-font-family);
+}
+
+.chata-notification-setting-display-name .chata-notification-setting-display-name-message {
+    opacity: .5;
+}
+
+.chata-notification-setting-display-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-right: 10px;
+    color: rgba(0,0,0,.65);
+    font-size: 14px;
+}
+
+.notification-group-wrapper .notification-and-or-break {
+    position: absolute;
+    color: rgba(0,0,0,.4);
+    left: -35px;
+    border-left: 1px dashed rgba(0,0,0,.15);
+}
+
+.notification-group-wrapper .notification-and-or-text {
+    width: 41px;
+    z-index: 999999;
+    position: absolute;
+    left: -21px;
+    top: -5px;
+    padding: 4px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.chata-notification-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px 0;
+    font-family: var(--autoql-vanilla-font-family);
+    color: var(--autoql-vanilla-text-color-primary);
+}
+
+.chata-notification-list-item .chata-notification-display-name-container {
+    flex: 1 1;
+    line-height: 23px;
+    padding: 13px 0;
+    transition: color .2s ease;
+}
+
+.chata-notification-list-item .chata-notification-description {
+    color: rgba(0,0,0,.6);
+    font-size: 14px;
+    color: var(--autoql-vanilla-text-color-primary);
+
+}
+
+.chata-notification-list-item .chata-notification-display-name-container .chata-notification-timestamp {
+    font-size: 12px;
+    opacity: .5;
+    color: var(--autoql-vanilla-text-color-primary);
+
+}
+
+.chata-notification-list-item .chata-notification-details-container {
+    flex: 1 1;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    overflow: hidden;
+}
+
+.chata-notification-list-item .chata-notification-data-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: stretch;
+    flex: 3 3;
+    overflow: hidden;
+    cursor: default;
+}
+
+.chata-notification-list-item .chata-notification-data-container .chata-notification-chart-container {
+    flex: 1 1;
+    height: 100%;
+    width: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 20px 10px;
+}
+
+.chata-notification-list-item .chata-notification-query-title {
+    flex: 0 0 auto;
+    font-size: 14px;
+    font-family: inherit;
+    color: currentcolor;
+    opacity: .9;
+    font-weight: 600;
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);
+    text-align: center;
+    margin: 0 10px;
+    /* padding-top: 20px;
+    padding-bottom: 7px; */
+}
+
+.chata-response-content-container{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: inherit;
+    font-size: 14px;
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.chata-response-content-container.table {
+    max-height: 100vh!important;
+}
+
+.chata-notification-list-item .chata-notification-list-item-header {
+    border-bottom: 1px solid var(--autoql-vanilla-border-color);
+}
+
+.chata-notification-list-item .chata-notification-details-container .chata-notification-details {
+    flex: 1 1;
+    padding: 0 20px 20px;
+    opacity: .9;
+    border-left: 1px solid var(--autoql-vanilla-border-color);
+}
+
+.chata-notification-list-item .chata-notification-details-title {
+    font-weight: 600;
+    padding-top: 20px;
+    padding-bottom: 5px;
+}
+
+.notification-read-only-group {
+    border: 1px solid var(--autoql-vanilla-border-color);
+    border-radius: 4px;
+    padding: 10px;
+}
+
+.read-only-rule-term {
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,.06);
+    background: rgba(0,0,0,.02);
+    padding: 3px 7px;
+    line-height: 1.5em;
+    margin-right: 5px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    border-radius: 4px;
+}
+
+
+.chata-notification-list-item .chata-notification-extra-content {
+    flex: 0 1;
+    flex-basis: 55px;
+    text-align: center;
+    padding: 8px;
+    border-top: 1px solid var(--autoql-vanilla-border-color);
+    display: flex;
+    justify-content: space-between;
+}
+
+.autoql-vanilla-chata-notification-viz-switcher {
+    flex: 0 0 50px;
+    flex-grow: 0;
+    flex-shrink: 0;
+    flex-basis: 50px;
+    padding: 10px;
+    border-left: 1px solid rgba(0,0,0,.05);
+    text-align: center;
+}
+
+.autoql-vanilla-chata-notification-viz-switcher .autoql-vanilla-chata-toolbar-btn{
+    vertical-align: bottom;
+}
+
+.chata-notification-list-item .chata-notification-data-container line {
+    stroke-width: 1px !important;
+    stroke: currentColor !important;
+    opacity: 0.15;
+    shape-rendering: crispedges !important;
+}
+
+
+.chata-notification-list-item .chata-notification-delete-icon {
+    font-size: 18px;
+    margin-top: 3px;
+    margin-right: 3px;
+    opacity: 0;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 20px;
+    display: inline-block;
+    line-height: 20px;
+    background-color: transparent;
+    transition: all .2s ease;
+    cursor: pointer;
+}
+
+.chata-notification-list-item .chata-notification-dismiss-icon {
+    font-size: 21px;
+    width: 40px;
+    height: 40px;
+    border-radius: 26px;
+    line-height: 20px;
+    background-color: transparent;
+    transition: background-color .2s ease;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.chata-notification-list-item .chata-notification-dismiss-icon svg:hover {
+    background-color: #ececec;
+}
+
+.chata-notification-list-item:hover .chata-notification-delete-icon{
+    opacity: 1;
+}
+
+.chata-notification-list-item .chata-notification-delete-icon:hover {
+    background-color: #ececec;
+}
+
+.read-only-rule-term {
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,.06);
+    background: rgba(0,0,0,.02);
+    padding: 3px 7px;
+    line-height: 1.5em;
+    margin-right: 5px;
+    margin-bottom: 2px;
+    margin-top: 2px;
+    border-radius: 4px;
+}
+
+.single-value-response{
+    font-size: 32px;
+}
+
+.tabulator-row .tabulator-cell{
+    padding:8px 4px;
+}
+
+.rule-term-validation-error {
+    padding: 0 10px !important;
+    color: #fc0;
+    display: none;
+}
+
+.autoql-vanilla-empty-state{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    align-self: center;
+    flex-direction: column;
+    height: calc(100% - 20px);
+}
+
+.autoql-vanilla-empy-notification-message{
+    color: var(--autoql-vanilla-text-color-primary);
+    text-align: center;
+}
+
+.autoql-vanilla-empty-notification{
+    color: var(--autoql-vanilla-text-color-primary);
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 7px;
+    text-align: center;
+}
+
+.autoql-vanilla-empty-state-img{
+    width: 100%;
+    height: auto;
+    max-width: 320px;
+}
+
+@keyframes slideIn{
+    0% {
+        opacity: 0;
+        top: 500px;
+    }
+
+    100% {
+        opacity: 1;
+        top: 0;
+    }
+}

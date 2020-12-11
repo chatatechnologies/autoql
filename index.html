@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="utf-8">
+    <title></title>
+    <style media="screen">
+
+    </style>
+    <!-- <link rel="stylesheet" type="text/css" href="css/Tabulator.css">
+    <link rel="stylesheet" type="text/css" href="css/TabulatorBootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/ChataTable.css">
+    <link rel="stylesheet" type="text/css" href="css/chata-styles.css">
+    <link rel="stylesheet" type="text/css" href="css/Dashboard.css">
+    <link rel="stylesheet" type="text/css" href="css/Modal.css">
+    <link rel="stylesheet" type="text/css" href="css/ColumnEditor.css">
+    <link rel="stylesheet" type="text/css" href="css/Notifications.css">
+    <link rel="stylesheet" type="text/css" href="css/NotificationSettings.css">
+    <link rel="stylesheet" type="text/css" href="css/Spinner.css">
+    <link rel="stylesheet" type="text/css" href="css/PopoverMenu.css">
+    <link rel="stylesheet" type="text/css" href="css/PopoverChartSelector.css">
+    <link rel="stylesheet" type="text/css" href="css/Cascader.css">
+    <link rel="stylesheet" type="text/css" href="css/Safetynet.css">
+    <link rel="stylesheet" type="text/css" href="css/Antd.css">
+    <link rel="stylesheet" type="text/css" href="css/ChataNotificationButton.css"> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <!-- <link rel="stylesheet" href="build/autoql-styles.css"> -->
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!-- <script src="src/popper.min.js"></script>
+    <script src="src/tippy.min.js"></script>
+    <script src="src/muuri.min.js"></script>
+    <script src="src/moment.js"></script>
+    <script src="src/Tabulator.min.js"></script> -->
+
+    <!-- <link rel="stylesheet" href="https://unpkg.com/tippy.js@5/dist/backdrop.css" /> -->
+    <!-- <script src="https://unpkg.com/web-animations-js@2.3.2/web-animations.min.js"></script> -->
+    <!-- <script src="https://unpkg.com/muuri@0.8.0/dist/muuri.min.js"></script> -->
+    <!-- <script src="src/d3.v4.js"></script>
+    <script src="src/d3-compatibility.js"></script>
+    <script src="src/d3-legend-v4.js"></script>
+    <script src="src/RuleParser.js"></script>
+    <script src="src/svgIcons.js"></script>
+    <script src="src/constants.js"></script>
+    <script src="src/utils.js"></script>
+    <script src="src/Cascader.js"></script>
+    <script src="src/ChataChartHelpers.js"></script>
+    <script src="src/Safetynet.js"></script>
+    <script src="src/ChataTable.js"></script>
+    <script src="src/ChataHeatmapChart.js"></script>
+    <script src="src/ChataBubbleChart.js"></script>
+    <script src="src/ChataBarChart.js"></script>
+    <script src="src/ChataColumnChart.js"></script>
+    <script src="src/ChataLineChart.js"></script>
+    <script src="src/ChataStackedColumnChart.js"></script>
+    <script src="src/ChataStackedBarChart.js"></script>
+    <script src="src/ChataAreaChart.js"></script>
+    <script src="src/ChataGroupedColumnChart.js"></script>
+    <script src="src/ChataGroupedLineChart.js"></script>
+    <script src="src/ChataGroupedBarChart.js"></script>
+    <script src="src/ChataPieChart.js"></script>
+    <script src="src/QueryOutput.js"></script>
+    <script src="src/QueryInput.js"></script>
+    <script src="src/ChataUtils.js"></script>
+    <script src="src/DataMessenger.js"></script>
+    <script src="src/Modal.js"></script>
+    <script src="src/Tile.js"></script>
+    <script src="src/Dashboard.js"></script>
+    <script src="src/NotificationList.js"></script>
+    <script src="src/Notification.js"></script>
+    <script src="src/NotificationSettingsModal.js"></script>
+    <script src="src/NotificationSettings.js"></script>
+    <script src="src/NotificationSettingsItem.js"></script>
+    <script src="src/NotificationGroup.js"></script>
+    <script src="src/split.min.js"></script>
+    <script src="src/PopoverChartSelector.js"></script>
+    <script src="src/AntdMessage.js"></script>
+    <script src="src/ChataNotificationButton.js"></script> -->
+
+
+    <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/fd4b2bdf-fbc1-4ab2-af8b-5a1efc0f7285/chatastyles.css">
+    <script src="https://ucarecdn.com/9912723e-ab89-46c9-ba6c-2825821f7111/ChatDrawermin.js"></script> -->
+    <!-- <script src="build/ChatDrawer-min.js"></script> -->
+
+    <!-- <link rel="stylesheet" type="text/css" href="https://ucarecdn.com/19dda2d3-4f7a-4e2c-b642-34de287bca09/chatastyles.css">
+    <script src="https://ucarecdn.com/2721c373-e848-4f33-8ff7-25a8c75a241e/ChatDrawermin.js"></script> -->
+    <style media="screen">
+        .my-container{
+            display: flex;
+            justify-content: center;
+            width: 70%;
+            /* margin: auto; */
+            align-items: center;
+            align-content: center;
+            flex-direction: column;
+            /* margin: 35px 0px; */
+        }
+        .prop{
+            display: flex;
+            align-items: center;
+            align-content: center;
+            justify-content: center;
+        }
+        .prop-column{
+            flex-direction: column;
+        }
+        .prop.direction-row{
+            flex-direction: row;
+        }
+        .info-text{
+            font-size: 10px;
+        }
+        .info-text-bold{
+            font-weight: bold;
+            font-size: 10px;
+        }
+    </style>
+    <style media="screen">
+        .tab a{
+            position: relative;
+        }
+        #bubbles-icon, #dashboard-icon {
+            position: absolute;
+            left: 35px;
+            top: 1px;
+            opacity: .4;
+            -webkit-transition: all .2s ease;
+            transition: all .2s ease;
+        }
+        #dashboard-icon{
+            top: 4px;
+            left: 40px;
+        }
+        #bubbles-icon svg, #dashboard-icon svg{
+            width: 18px;
+            height: 18px;
+        }
+    </style>
+</head>
+<!-- style="background: #efefef" -->
+
+<body>
+    <div id="ui-overlay" style="display:none">
+        <img src="qbo_demo.png" alt="qbo_demo" class="responsive-img">
+    </div>
+    <div class="row">
+        <div class="col s12">
+            <ul class="tabs">
+                <li class="tab col s2 test-tab chatdrawer-tab">
+                    <a class="active" href="#test1">
+                        <span id="bubbles-icon" class="chata-icon">
+                            <svg x="0px" y="0px" width="12.7px" height="12.7px" viewBox="0 0 12.7 12.7">
+                                <path class="chata-icon-svg-0" d="M8.7,3.6l0.1,0l0,0l0,0l0.1,0c2.2,0,4.3,1.3,5.2,3.3c0.2,0.4,0.3,0.7,0.4,1.1l0,0c0.1,0.4,0.1,0.8,0.1,1.2 c0,1.3-0.5,2.5-1.3,3.4c-0.4,0.4-0.8,0.7-1.2,1c-0.3,0.2-0.7,0.4-1,0.5c-0.4,0.1-0.7,0.2-1.1,0.3c-0.4,0.1-0.8,0.1-1.2,0.1 c-0.2,0-0.4,0-0.6,0c-0.2,0-0.4,0-0.6-0.1l-0.2,0c-0.3-0.1-0.6-0.2-1-0.3c-0.4-0.2-0.7-0.4-1-0.6l-1-0.9l-1,1 c-0.1,0.1-0.2,0.2-0.3,0.2c0-0.3,0-0.6,0-1l0-3.6c0-0.1,0-0.1,0-0.2C3.2,6,5.7,3.6,8.7,3.6L8.7,3.6 M8.7,2.1c-3.8,0-6.9,3-7,6.9 c0,0.1,0,0.2,0,0.2v3.6c0,2.6-1,3.2-1,3.2c0.1,0,0.2,0,0.3,0c1.3,0,2.5-0.5,3.5-1.4c0.4,0.4,0.9,0.7,1.5,0.9c0.5,0.2,1,0.3,1.5,0.4 l0,0C7.7,16,7.9,16,8.1,16c0.2,0,0.5,0,0.7,0c0,0,0,0,0,0c0.5,0,1,0,1.5-0.1c0.5-0.1,0.9-0.2,1.4-0.4c0.4-0.2,0.9-0.4,1.3-0.6 c0.6-0.4,1.1-0.8,1.6-1.3c1.1-1.2,1.7-2.8,1.7-4.5c0-0.5-0.1-1-0.2-1.5l0,0c0,0,0,0,0,0c0,0,0,0,0,0l0,0c-0.1-0.5-0.3-1-0.5-1.5 c-1.2-2.5-3.8-4.1-6.6-4.1c0,0-0.1,0-0.1,0C8.8,2.1,8.7,2.1,8.7,2.1L8.7,2.1z">
+                                </path>
+                                <path class="chata-icon-svg-0" d="M15,9.1c3,0,5.4,2.4,5.5,5.4c0,0.1,0,0.1,0,0.2v3.6c0,0.4,0,0.7,0,1c-0.1-0.1-0.2-0.2-0.3-0.2l-1-1l-1,0.9 c-0.3,0.3-0.7,0.5-1,0.6c-0.3,0.1-0.6,0.2-0.9,0.3L16,20c-0.2,0-0.4,0.1-0.6,0.1c-0.2,0-0.4,0-0.6,0c-0.4,0-0.8,0-1.2-0.1 c-0.4-0.1-0.8-0.2-1.1-0.3c-0.3-0.1-0.7-0.3-1-0.5c-0.5-0.3-0.9-0.6-1.2-1C9.5,17.2,9,16,9,14.7c0-0.4,0-0.8,0.1-1.1l0,0l0,0 c0.1-0.4,0.2-0.8,0.4-1.1c1-2,3-3.3,5.2-3.3l0.1,0l0,0l0,0L15,9.1 M15,7.6c0,0-0.1,0-0.1,0c0,0-0.1,0-0.1,0c-2.8,0-5.4,1.6-6.6,4.1 c-0.2,0.5-0.4,1-0.5,1.5l0,0c0,0,0,0,0,0c0,0,0,0,0,0l0,0c-0.1,0.5-0.2,1-0.2,1.5c0,1.6,0.6,3.2,1.7,4.5c0.5,0.5,1,1,1.6,1.3 c0.4,0.2,0.8,0.5,1.3,0.6c0.4,0.2,0.9,0.3,1.4,0.4c0.5,0.1,1,0.1,1.5,0.1c0,0,0,0,0,0c0.2,0,0.5,0,0.7,0c0.2,0,0.5,0,0.7-0.1l0,0 c0.5-0.1,1-0.2,1.5-0.4c0.6-0.2,1.1-0.5,1.5-0.9c0.9,0.9,2.2,1.4,3.5,1.4c0.1,0,0.2,0,0.3,0c0,0-1-0.6-1-3.2v-3.6 c0-0.1,0-0.2,0-0.2C21.9,10.7,18.8,7.6,15,7.6L15,7.6z">
+                                </path>
+                            </svg>
+                        </span>
+                    Chat Drawer</a>
+                </li>
+                <li class="tab col s2 test-tab" id="dashboard-tab">
+                    <a class="" href="#test2">
+                        <span id="dashboard-icon" class="chata-icon">
+                            <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M924.8 385.6a446.7 446.7 0 0 0-96-142.4 446.7 446.7 0 0 0-142.4-96C631.1 123.8 572.5 112 512 112s-119.1 11.8-174.4 35.2a446.7 446.7 0 0 0-142.4 96 446.7 446.7 0 0 0-96 142.4C75.8 440.9 64 499.5 64 560c0 132.7 58.3 257.7 159.9 343.1l1.7 1.4c5.8 4.8 13.1 7.5 20.6 7.5h531.7c7.5 0 14.8-2.7 20.6-7.5l1.7-1.4C901.7 817.7 960 692.7 960 560c0-60.5-11.9-119.1-35.2-174.4zM761.4 836H262.6A371.12 371.12 0 0 1 140 560c0-99.4 38.7-192.8 109-263 70.3-70.3 163.7-109 263-109 99.4 0 192.8 38.7 263 109 70.3 70.3 109 163.7 109 263 0 105.6-44.5 205.5-122.6 276zM623.5 421.5a8.03 8.03 0 0 0-11.3 0L527.7 506c-18.7-5-39.4-.2-54.1 14.5a55.95 55.95 0 0 0 0 79.2 55.95 55.95 0 0 0 79.2 0 55.87 55.87 0 0 0 14.5-54.1l84.5-84.5c3.1-3.1 3.1-8.2 0-11.3l-28.3-28.3zM490 320h44c4.4 0 8-3.6 8-8v-80c0-4.4-3.6-8-8-8h-44c-4.4 0-8 3.6-8 8v80c0 4.4 3.6 8 8 8zm260 218v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8h-80c-4.4 0-8 3.6-8 8zm12.7-197.2l-31.1-31.1a8.03 8.03 0 0 0-11.3 0l-56.6 56.6a8.03 8.03 0 0 0 0 11.3l31.1 31.1c3.1 3.1 8.2 3.1 11.3 0l56.6-56.6c3.1-3.1 3.1-8.2 0-11.3zm-458.6-31.1a8.03 8.03 0 0 0-11.3 0l-31.1 31.1a8.03 8.03 0 0 0 0 11.3l56.6 56.6c3.1 3.1 8.2 3.1 11.3 0l31.1-31.1c3.1-3.1 3.1-8.2 0-11.3l-56.6-56.6zM262 530h-80c-4.4 0-8 3.6-8 8v44c0 4.4 3.6 8 8 8h80c4.4 0 8-3.6 8-8v-44c0-4.4-3.6-8-8-8z">
+                                </path>
+                            </svg>
+                        </span>
+                        Dashboard
+                    </a>
+                </li>
+                <li class="tab col s2 test-tab query-input-tab"><a class="" href="#test3">Query Input/Query Output</a></li>
+                <li class="tab col s2 test-tab notification-settings"><a class="" href="#test4">Notification Settings</a></li>
+                <li class="tab col s1 test-tab notification-list"><a id="test_5" href="#test5">
+                    <!-- <svg id="notification-icon" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" class="chata-notifications-button" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M257 120.471c7.083 0 23.911 4.479 23.911 4.479 45.589 10.447 77.678 52.439 77.678 99.85V352.412l9.321 9.364 7.788 7.823H136.302l7.788-7.823 9.321-9.364V224.8c0-47.41 32.089-89.403 77.678-99.85 0 0 18.043-4.479 23.911-4.479M256 48c-17.602 0-31.059 13.518-31.059 31.2v14.559c-59.015 13.523-103.53 67.601-103.53 131.041v114.4L80 380.8v20.8h352v-20.8l-41.411-41.6V224.8c0-63.44-44.516-117.518-103.53-131.041V79.2c0-17.682-13.457-31.2-31.059-31.2zm41.411 374.4h-82.823c0 22.881 18.633 41.6 41.412 41.6s41.411-18.719 41.411-41.6z"></path></svg> -->
+                </a></li>
+            </ul>
+        </div>
+        <div id="DataMessengerV2">
+
+        </div>
+        <div id="test1" class="col s12">
+
+            <div id="chata">
+            </div>
+
+
+            <div class="my-container">
+                <div class="prop prop-column" style="display: none">
+                    <h6 class="">Demo data</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="demo">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="login-section" style="display: block;">
+                    <div class="">
+                        <h5>Authentication</h5>
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>Project ID</h6>
+                        <input type="text" name="customerId" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="customerId" value="spira-demo3" placeholder="" class="validate"> -->
+                        <span class="helper-text" data-error="Please enter your project ID" data-success=""></span>
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>User Email</h6>
+                        <input type="text" name="userId" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="userId" value="vidhya@chata.ai" placeholder="" class="validate"> -->
+                        <span class="helper-text" data-error="Please enter your user ID" data-success=""></span>
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>API key</h6>
+                        <input type="text" name="apiKey" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="apiKey" value="AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU" placeholder="" class="validate"> -->
+                        <span class="helper-text" data-error="Please enter your API key" data-success=""></span>
+                    </div>
+                    <div class="prop prop-column">
+                        <h6>Domain URL</h6>
+                        <input type="text" name="domain" value="" placeholder="" class="validate">
+                        <!-- <input type="text" name="domain" value="https://spira-staging.chata.io" placeholder="" class="validate"> -->
+                        <span class="helper-text" data-error="Please enter your domain URL" data-success=""></span>
+                    </div>
+                    <div class="prop prop-column">
+                        <h6>Username</h6>
+                        <input type="text" id="username" value="" placeholder="" class="validate">
+                        <!-- <input type="text" id="username" value="admin" placeholder="" class="validate"> -->
+                        <span class="helper-text" data-error="Please enter your username" data-success=""></span>
+                    </div>
+
+                    <div class="prop prop-column">
+                        <h6>Password</h6>
+                        <input type="password" id="password" value="" placeholder="" class="validate">
+                        <!-- <input type="password" id="password" value="admin123" placeholder="" class="validate"> -->
+                        <span class="helper-text" data-error="Please enter your password" data-success=""></span>
+                    </div>
+                    <div class="">
+                        <button type="button" name="button" class="waves-effect waves-light btn blue" id="login" style="width: 80%; display: block; margin: auto;">Authenticate</button>
+                    </div>
+                    <div class="">
+                        <button type="button" name="button" class="waves-effect waves-light btn" id="log-out" style="width: 80%; display: block; margin: 10px auto;">Log Out</button>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Show UI Overlay</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="show-ui">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="">
+                    <h4 style="text-align: center;">Customize Widgets</h4>
+                    <button type="button" name="button" class="waves-effect waves-light btn white black-text" id="reload"><i class="small material-icons left">replay</i> <span>Reload Drawer</span></button>
+                    <button type="button" name="button" class="waves-effect waves-light btn blue" id="open-drawer"><i class="small material-icons left">format_indent_decrease</i>Open Data Messenger</button>
+                </div>
+                <h5 style="text-align: center;">AutoQL API Configuration Options</h5>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Autocomplete</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableAutocomplete">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Query Validation</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableQueryValidation">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Drilldowns</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="enableDrilldowns" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Column Visibility Editor</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableColumnVisibilityManager">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Notifications</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableNotifications">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Debug Mode (Show copy to SQL button in message toolbar)</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="debug">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <h5 style="text-align: center;">UI Configuration Options</h5>
+
+
+                <div class="prop prop-column">
+                    <h6 class="">Show Data Messenger Button</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="showHandle" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Shift Screen on Open/Close</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="shiftScreen">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Darken Background Behind Data Messenger</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="showMask" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+
+                <div class="">
+                    <h6 style="text-align: center;">Theme</h6>
+                    <div>
+                        <label>
+                            <input name="theme" id="light" type="radio" checked />
+                            <span>Light</span>
+                        </label>
+                        <label>
+                            <input name="theme" id="dark" type="radio" />
+                            <span>Dark</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="">
+                    <h6 style="text-align: center;">Data Messenger Placement</h6>
+                    <div>
+                        <label>
+                            <input name="placement" type="radio" value="top" />
+                            <span>Top</span>
+                        </label>
+                        <label>
+                            <input name="placement" value="bottom" type="radio" />
+                            <span>Bottom</span>
+                        </label>
+                        <label>
+                            <input name="placement" value="left" type="radio" />
+                            <span>Left</span>
+                        </label>
+                        <label>
+                            <input name="placement" value="right" type="radio" checked />
+                            <span>Right</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="">
+                    <h6 style="text-align: center;">Default Tab</h6>
+                    <div>
+                        <label>
+                            <input name="" type="radio" value="top" checked/>
+                            <span>data-messenger</span>
+                        </label>
+                        <label>
+                            <input name="" value="bottom" type="radio" />
+                            <span>explore-queries</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Currency Code</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="currencyCode" value="USD" placeholder="Currency Code" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Language Code</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="languageCode" value="en-US" placeholder="Language Code" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Format for Month, Year</h6>
+                    <span class="info-text">
+                        Don't know the syntax for formats?
+                        <a href="https://devhints.io/moment" target="_blank">View the cheat sheet</a>
+                    </span>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+
+                    <input type="text" name="monthYearFormat" value="MMM YYYY" placeholder="Format for Month, Year" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Format for Day, Month, Year</h6>
+                    <span class="info-text">
+                        Don't know the syntax for formats?
+                        <a href="https://devhints.io/moment" target="_blank">View the cheat sheet</a>
+                    </span>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+
+                    <input type="text" name="dayMonthYearFormat" value="MMM DD, YYYY" placeholder="Format for Day, Month, Year" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Number of Decimals for Currency Values</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="currencyDecimals" value="2" placeholder="Number of Decimals for Currency Values" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Number of Decimals for Quantity Values</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="quantityDecimals" value="1" placeholder="Number of Decimals for Quantity Values" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>User Display Name</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="userDisplayName" value="Oscar" placeholder="User Display Name" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Intro message</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="introMessage" value="" placeholder="Intro message" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Query Input Placeholder</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="inputPlaceholder" value="" placeholder="Intro message" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Clear All Messages on Close</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="clearOnClose">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Height</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="number" name="height" value="550" placeholder="Height" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Width</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="number" name="width" value="500" placeholder="Width" class="reload-prop">
+                </div>
+
+
+                <div class="prop prop-column">
+                    <h6>Title</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="title" value="Data Messenger" placeholder="Title" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Font Family</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="fontFamily" value="sans-serif" placeholder="Font Family" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Chart Colors</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <span class="info-text-bold" style="max-width:650px;">
+                        This is an array of colors used for the charts. If the data scale is larger than the color array, it will repeat the colors. Any solid color formats are accepted. Hit "enter" to add a color.
+                    </span>
+                    <div class="chips" name="chartColors" style="width:550px;">
+
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Dynamic Charting</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" name="enableDynamicCharting" checked>
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Dashboard Title Color</h6>
+                    <input type="text" name="titleColor" value="#28a8e0" placeholder="Font Family" class="reload-dashboard-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Light Theme Accent Color</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="color" name="accentColor-light" value="#28a8e0" placeholder="Accent Color" style="width:150px;" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Dark Theme Accent Color</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="color" name="accentColor-dark" value="#525252" placeholder="Accent Color" style="width:150px;" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6>Maximum Number of Messages</h6>
+                    <span class="info-text">
+                        (Must click 'Reload Drawer' to apply this)
+                    </span>
+                    <input type="text" name="maxMessages" value="6" placeholder="Maximum Number of Messages" class="reload-prop">
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Display comparisons as Percent</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="comparisonDisplay">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Explore Queries Tab</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableExploreQueriesTab">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="prop prop-column">
+                    <h6 class="">Enable Speech to Text</h6>
+                    <div class="switch">
+                        <label>
+                            <input type="checkbox" checked name="enableVoiceRecord">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <div id="test2" class="col s12 dashboard-container">
+
+            <div class="dashboard-toolbar-container" style="display: flex; justify-content: center; background: rgb(250, 250, 250); padding: 10px;">
+                <button type="button" class="ant-btn" id="stop-editing" style="display:none;">
+                    <i class="anticon anticon-stop">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="stop" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372
+                            0-89 31.3-170.8 83.5-234.8l523.3 523.3C682.8 852.7 601 884 512 884zm288.5-137.2L277.2 223.5C341.2 171.3 423 140 512 140c205.4 0
+                            372 166.6 372 372 0 89-31.3 170.8-83.5 234.8z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span>Stop Editing</span>
+                </button>
+                <button type="button" class="ant-btn" id="start-editing">
+                    <i class="anticon anticon-edit">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="edit" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M257.7 752c2 0 4-.2 6-.5L431.9 722c2-.4 3.9-1.3 5.3-2.8l423.9-423.9a9.96 9.96 0 0 0 0-14.1L694.9
+                            114.9c-1.9-1.9-4.4-2.9-7.1-2.9s-5.2 1-7.1 2.9L256.8 538.8c-1.5 1.5-2.4 3.3-2.8 5.3l-29.5 168.2a33.5 33.5 0 0 0 9.4
+                            29.8c6.6 6.4 14.9 9.9 23.8 9.9zm67.4-174.4L687.8 215l73.3 73.3-362.7 362.6-88.9 15.7 15.6-89zM880 836H144c-17.7
+                            0-32 14.3-32 32v36c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-36c0-17.7-14.3-32-32-32z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span>Edit</span>
+                </button>
+                <button type="button" class="ant-btn" style="margin-left: 10px;" id="execute">
+                    <i aria-label="icon: play-circle" class="anticon anticon-play-circle">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="play-circle" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm0 820c-205.4 0-372-166.6-372-372s166.6-372 372-372 372 166.6 372 372-166.6 372-372 372z">
+                            </path>
+                            <path d="M719.4 499.1l-296.1-215A15.9 15.9 0 0 0 398 297v430c0 13.1 14.8 20.5 25.3 12.9l296.1-215a15.9 15.9 0 0 0 0-25.8zm-257.6 134V390.9L628.5 512 461.8 633.1z"></path>
+                        </svg>
+                    </i>
+                    <span>Execute</span>
+                </button>
+                <button type="button" class="ant-btn" style="margin-left: 10px;" id="log">
+                    <span>Log Current Tile State</span>
+                </button>
+                <div style="padding-top: 5px; margin-left: 10px;">
+                    <div class="switch">
+                        Run Dashboard Automatically
+                        <label>
+                            <input type="checkbox" name="runDashboard" id="runDashboard">
+                            <span class="lever"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dashboard-toolbar-container" style="display: flex; justify-content: center; background: rgb(250, 250, 250); padding: 10px;">
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display: none;" id="add-tile">
+                    <i aria-label="icon: plus" class="anticon anticon-plus">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="plus" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M482 152h60q8 0 8 8v704q0 8-8 8h-60q-8 0-8-8V160q0-8 8-8z"></path>
+                            <path d="M176 474h672q8 0 8 8v60q0 8-8 8H176q-8 0-8-8v-60q0-8 8-8z"></path>
+                        </svg>
+                    </i>
+                    <span>Add Tile</span>
+                </button>
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display: none;" id="undo">
+                    <i aria-label="icon: rollback" class="anticon anticon-rollback">
+                        <svg viewBox="64 64 896 896" focusable="false" class="" data-icon="rollback" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                            <path d="M793 242H366v-74c0-6.7-7.7-10.4-12.9-6.3l-142 112a8 8 0 0 0 0
+                                12.6l142 112c5.2 4.1 12.9.4 12.9-6.3v-74h415v470H175c-4.4 0-8 3.6-8
+                                8v60c0 4.4 3.6 8 8 8h618c35.3 0 64-28.7 64-64V306c0-35.3-28.7-64-64-64z">
+                            </path>
+                        </svg>
+                    </i>
+                    <span>Undo</span>
+                </button>
+
+                <button type="button" class="ant-btn ant-btn-primary" style="margin-left: 10px; display:none" id="saveDashboard">
+                    <span role="img" aria-label="save" class="anticon anticon-save"><svg viewBox="64 64 896 896" focusable="false" class="" data-icon="save" width="1em" height="1em" fill="currentColor" aria-hidden="true">
+                        <path d="M893.3 293.3L730.7 130.7c-7.5-7.5-16.7-13-26.7-16V112H144c-17.7 0-32 14.3-32 32v736c0 17.7 14.3 32 32 32h736c17.7 0 32-14.3 32-32V338.5c0-17-6.7-33.2-18.7-45.2zM384 184h256v104H384V184zm456 656H184V184h136v136c0 17.7 14.3 32 32 32h320c17.7 0 32-14.3 32-32V205.8l136 136V840zM512 442c-79.5 0-144 64.5-144 144s64.5 144 144 144 144-64.5 144-144-64.5-144-144-144zm0 224c-44.2 0-80-35.8-80-80s35.8-80 80-80 80 35.8 80 80-35.8 80-80 80z">
+                        </path>
+                    </svg>
+                    </span>
+                    <span>Save Dashboard</span>
+                </button>
+            </div>
+
+            <div class="grid-1">
+                <!-- <div class="chata-dashboard-item">
+                    <div class="item-content">
+                        <div class="dashboard-tile-input-container">
+                            <input class="dashboard-tile-input query" placeholder="Query" value="profit by month last year">
+                            <input class="dashboard-tile-input title" placeholder="Title (optional)" value="2018 Monthly Profit">
+                            <div class="dashboard-tile-play-button">
+                                <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="dashboard-tile-response-wrapper">
+                            <div class="dashboard-tile-response-container">
+                                <div class="dashboard-tile-placeholder-text">
+                                    <em>Hit "Execute" to run this dashboard</em>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="resize-handler">
+                        </span>
+                    </div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">
+                        <div class="dashboard-tile-title-container">
+                            <span class="dashboard-tile-title">2018 Monthly Profits</span>
+                            <div class="dashboard-tile-title-divider">
+                            </div>
+                        </div>
+                        <div class="dashboard-tile-response-wrapper editing small">
+                            <div class="dashboard-tile-response-container">
+                                <div class="dashboard-tile-loading-container">
+                                    <div class="dashboard-tile-placeholder-text">
+                                        <em>Hit "Execute" to run this dashboard</em>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">3</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">4</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">5</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">6</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">7</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">8</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">9</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">10</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">11</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">12</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">13</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">14</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">15</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">16</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">17</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">18</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">19</div>
+                </div>
+                <div class="chata-dashboard-item">
+                    <div class="item-content">20</div>
+                </div> -->
+            </div>
+
+        </div>
+        <div id="test3">
+            <div style="padding-top: 55px">
+                <div class="" id="chat-bar">
+                </div>
+                <div class="" id="response-renderer" style="padding:15px; width:100%; height: 650px;">
+                </div>
+            </div>
+        </div>
+        <div id="test4" class="col s12">
+
+            <!-- <div class="" style="height: calc(100vh - 48px); background: rgb(250, 250, 250); overflow: auto;">
+                <div class="chata-notification-add-btn-container">
+                    <div class="chata-notification-add-btn">
+
+                    </div>
+                </div>
+                <div class="chata-notification-settings-container">
+                    <div class="chata-notification-setting-item">
+                        <div class="chata-notification-setting-item-header">
+                            <div class="chata-notification-setting-display-name">Transactions exceeded $1000</div>
+                            <div class="chata-notification-setting-actions">
+                                <div class="chata-checkbox">
+                                    <label class="chata-switch">
+                                        <input type="checkbox">
+                                        <div class="chata-slider round"></div>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+        <div id="test5" class="col s12">
+            <!-- <div style="height: 100vh; background: rgb(250, 250, 250);">
+                <div class="chata-notification-list-container">
+                    <div class="chata-notification-dismiss-all">
+                        <span>
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" style="vertical-align: middle;"><path d="M13.73 21a2 2 0 0 1-3.46 0"></path><path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path><path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path><path d="M18 8a6 6 0 0 0-9.33-5"></path><line x1="1" y1="1" x2="23" y2="23"></line></svg> Dismiss All
+                        </span>
+                    </div>
+                    <div class="chata-notification-list-item triggered" onclick="toggle(this)">
+                        <div class="chata-notification-list-item-header">
+                            <div class="chata-notification-display-name">Transactions exceeded $1000</div>
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="chata-notification-dismiss-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
+                                <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
+                                <path d="M18 8a6 6 0 0 0-9.33-5"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div class="chata-notification-data-title">
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2">
+                                </rect>
+                                <line x1="16" y1="2" x2="16" y2="6">
+                                </line>
+                                <line x1="8" y1="2" x2="8" y2="6">
+                                </line>
+                                <line x1="3" y1="10" x2="21" y2="10">
+                                </line>
+                            </svg>
+                            <em>Triggered on 2020-01-02T13:26:42-06:00</em>
+                        </div>
+                        <div class="chata-notification-data-container">
+
+                        </div>
+                        <div class="chata-notification-alert-strip"></div>
+                    </div>
+                    <div class="chata-notification-list-item triggered" onclick="toggle(this)">
+                        <div class="chata-notification-list-item-header">
+                            <div class="chata-notification-display-name">Over budget this month</div>
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="chata-notification-dismiss-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
+                                <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
+                                <path d="M18 8a6 6 0 0 0-9.33-5"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div class="chata-notification-data-title">
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2">
+                                </rect>
+                                <line x1="16" y1="2" x2="16" y2="6">
+                                </line>
+                                <line x1="8" y1="2" x2="8" y2="6">
+                                </line>
+                                <line x1="3" y1="10" x2="21" y2="10">
+                                </line>
+                            </svg>
+                            <em>Triggered on 2020-01-02T13:26:42-06:00</em>
+                        </div>
+                        <div class="chata-notification-data-container">
+
+                        </div>
+                        <div class="chata-notification-alert-strip"></div>
+                    </div>
+                    <div class="chata-notification-list-item triggered" onclick="toggle(this)">
+                        <div class="chata-notification-list-item-header">
+                            <div class="chata-notification-display-name">Balance fell below $500</div>
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" class="chata-notification-dismiss-icon" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                                <path d="M18.63 13A17.89 17.89 0 0 1 18 8"></path>
+                                <path d="M6.26 6.26A5.86 5.86 0 0 0 6 8c0 7-3 9-3 9h14"></path>
+                                <path d="M18 8a6 6 0 0 0-9.33-5"></path>
+                                <line x1="1" y1="1" x2="23" y2="23"></line>
+                            </svg>
+                        </div>
+                        <div class="chata-notification-data-title">
+                            <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2">
+                                </rect>
+                                <line x1="16" y1="2" x2="16" y2="6">
+                                </line>
+                                <line x1="8" y1="2" x2="8" y2="6">
+                                </line>
+                                <line x1="3" y1="10" x2="21" y2="10">
+                                </line>
+                            </svg>
+                            <em>Triggered on 2020-01-02T13:26:42-06:00</em>
+                        </div>
+                        <div class="chata-notification-data-container">
+
+                        </div>
+                        <div class="chata-notification-alert-strip"></div>
+                    </div>
+                </div>
+            </div> -->
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="script.js"></script>
+    <!-- <script src="build/autoql-min.js">
+    </script> -->
+    <!-- <script src="https://cdn.chata.io/autoql/v1.4.0-alpha.4" charset="utf-8"></script> -->
+    <script src="build/autoql-min.js">
+
+    </script>
+    <script>
+    document.getElementById('bubbles-icon').innerHTML = INPUT_BUBBLES;
+
+    var _token =  `eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjAwNjU5MDAxLCAiZXhwIjogMTYwMDY4MDYwMSwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJkZW1vMy1zdGFnaW5nLmNoYXRhLmlvIiwgInN1YiI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImVtYWlsIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAicHJvamVjdF9pZCI6ICJzcGlyYS1kZW1vMyIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvcXVlcnkvKioiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9ydWxlcy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS9ydWxlcyJdfQ==.TQaZ0fV-VadwDn96DzXSwUECiS3Mao3WXWb7VrLW3TSP9XlbDD5E1q6jd-GTM0o1KZiyyNBE-6fGwTuJwjLu5SraoE3egp4FIzlxx4ePCozuA4ft7gzXslrAAGr5mUXJA0MqBnxicayMj2cCoEi_3NO-xEQzJdmepSGlLyBditORr4SyGmF2ILe5eV6dtQVbzSBKthORM8CHtpToVUzxHdoQWiRLkjMa1bATWg8xLBXh0X6pxMg74xH8Onwb_cSi75w7sSnZJqgQcVpqiRy3TVB1sKaxuzh7ajGYQJI0bp7Kyx1in0d8f9z17V8W0fVAJ6VgiEy-PnuhOXWg6VopEQ==`;
+    const domain = 'https://spira-staging.chata.io';
+    // const domain = 'https://purefacts-staging.chata.io';
+    const topics = getIntroMessageTopics(getActiveIntegrator(domain));
+    console.log(topics);
+
+    var datamessenger = new DataMessenger('#DataMessengerV2', {
+        authentication: {
+            // demo: true
+            token: _token,
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            // apiKey: 'AIzaSyBxoR51Cw8UryZWmMdAkktBUO83ukMFFO0',
+            domain: domain,
+            // apiKey: 'AIzaSyDX28JVW248PmBwN8_xRROWvO0a2BWH67o',
+            // domain: 'https://accounting-demo-staging.chata.io',
+            demo: false
+            // customerId: 'spira-demo3',
+            // userId: 'vidhya@chata.ai',
+        },
+        themeConfig: {
+            chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        },
+        autoQLConfig: {
+            debug: true
+        },
+        placement: 'right',
+        onMaskClick: function(datamessenger){
+            datamessenger.closeDrawer();
+        },
+        resizable: true,
+        width: 550,
+        queryQuickStartTopics: topics,
+        enableDynamicCharting: true,
+        placement: 'right'
+    })
+
+    let queryInput = new QueryInput('#chat-bar', {
+        authentication: {
+            token: _token,
+            apiKey: 'AIzaSyD4ewBvQdgdYfXl3yIzXbVaSyWGOcRFVeU',
+            domain: domain,
+            demo: false
+        },
+        autoCompletePlacement: 'bottom',
+    });
+    var responseRenderer = new QueryOutput('#response-renderer', {
+        displayType: 'table',
+        onDataClick: (groupByObject, queryId) => {
+            console.log(groupByObject);
+            console.log(queryId);
+            console.log('ON DATA CLICK');
+        }
+    });
+
+    //Bind the chatBar to responseRenderer
+    queryInput.bind(responseRenderer);
+
+        let dashboard;
+
+        var instances;
+        var oldPos = '';
+        document.addEventListener('DOMContentLoaded', function() {
+            var elems = document.querySelector('.chips');
+            var tabs = document.querySelector('.tabs');
+            var tabsLi = document.querySelectorAll('.test-tab');
+            for (var i = 0; i < tabsLi.length; i++) {
+                tabsLi[i].onclick = function(evt){
+                    window.dispatchEvent(new Event('resize'));
+                    if(evt.target.parentElement.classList.contains('query-input-tab')
+                    || evt.target.parentElement.classList.contains('notification-settings')
+                    || evt.target.parentElement.classList.contains('notification-list')){
+                        if(datamessenger){
+                            console.log(document.querySelector('[name="placement"]:checked').value);
+                            oldPos = document.querySelector('[name="placement"]:checked').value //datamessenger.options.placement;
+                            datamessenger.setOption('placement', 'bottom')
+                        }
+                    }else{
+                        if(datamessenger){
+                            if(oldPos === '')oldPos = 'right';
+                            datamessenger.setOption('placement', oldPos)
+                        }
+                    }
+                    // if(evt.target.parentElement.classList.contains('chatdrawer-tab')){
+                    //     if(ChataUtils.options.showHandle){
+                    //         ChataUtils.drawerButton.style.display = 'flex';
+                    //     }else{
+                    //         ChataUtils.drawerButton.style.display = 'none';
+                    //     }
+                    // }else{
+                    //     ChataUtils.drawerButton.style.display = 'none';
+                    // }
+                }
+            }
+            var instance = M.Tabs.init(tabs, {});
+            instances = M.Chips.init(elems, {
+                data: [
+                    {tag: '#355C7D'},
+                    {tag: '#6C5B7B'},
+                    {tag: '#C06C84'},
+                    {tag: '#F67280'},
+                    {tag: '#F8B195'},
+                ],
+                onChipAdd: function(obj){
+                    console.log(instances.chipsData);
+                },
+                onChipDelete: function() {
+                    console.log(instances.chipsData);
+                }
+            });
+        });
+
+        var dashboardTab = document.getElementById('dashboard-tab')
+        var showHandle = document.querySelector('[name="showHandle"]')
+        var uiOverlay = document.querySelector('[name="show-ui"]')
+        var showMask = document.querySelector('[name="showMask"]')
+        var shiftScreen = document.querySelector('[name="shiftScreen"]')
+        var theme = document.querySelectorAll('[name="theme"]')
+        var placement = document.querySelectorAll('[name="placement"]')
+        var enableAutocomplete = document.querySelector('[name="enableAutocomplete"]')
+        var enableVoiceRecord = document.querySelector('[name="enableVoiceRecord"]')
+        var enableQueryValidation = document.querySelector('[name="enableQueryValidation"]')
+        var enableDrilldowns = document.querySelector('[name="enableDrilldowns"]')
+        var debug = document.querySelector('[name="debug"]')
+        var clearOnClose = document.querySelector('[name="clearOnClose"]')
+        var demo = document.querySelector('[name="demo"]')
+        var login = document.getElementById('login')
+        var logout = document.getElementById('log-out')
+        var enableExploreQueriesTab = document.querySelector('[name="enableExploreQueriesTab"]')
+        var enableColumnVisibilityManager = document.querySelector('[name="enableColumnVisibilityManager"]')
+        var titleColor = document.querySelector('[name="titleColor"]')
+        var comparisonDisplay = document.querySelector('[name="comparisonDisplay"]')
+        var enableDynamicCharting = document.querySelector('[name="enableDynamicCharting"]')
+
+        // var test = document.querySelector('[name="test"]')
+
+        // test.onchange = (evt) => {
+        //     datamessenger.setOption('autoQLConfig', {
+        //         test: event.target.checked
+        //     });
+        // }
+
+        comparisonDisplay.onchange = (evt) => {
+            datamessenger.setOption('comparisonDisplay', evt.target.checked);
+        }
+
+        enableDynamicCharting.onchange = (evt) => {
+            datamessenger.setOption('enableDynamicCharting', evt.target.checked);
+        }
+
+
+        dashboardTab.style.display = 'none';
+
+        uiOverlay.onchange = function(event){
+            if(event.target.checked){
+                document.getElementById('ui-overlay').style.display = 'block';
+            }else{
+                document.getElementById('ui-overlay').style.display = 'none';
+            }
+        }
+
+        titleColor.onchange = function(event){
+            dashboard.options.titleColor = event.target.value;
+            dashboard.applyCSS();
+        }
+
+        enableExploreQueriesTab.onchange = function(event){
+            // ChataUtils.options.enableExploreQueriesTab = event.target.checked
+            datamessenger.setOption('enableExploreQueriesTab', event.target.checked);
+        }
+
+        enableColumnVisibilityManager.onchange = function(event){
+            // ChataUtils.options.autoQLConfig.enableColumnVisibilityManager = event.target.checked;
+            datamessenger.setOption('autoQLConfig', {
+                enableColumnVisibilityManager: event.target.checked
+            });
+        }
+
+        logout.onclick = (evt) => {
+            // ChataUtils.options.authentication.apiKey = '';
+            // ChataUtils.options.authentication.customerId = '';
+            // ChataUtils.options.authentication.userId = '';
+            // ChataUtils.options.authentication.domain = '';
+            // ChataUtils.options.authentication.token = '';
+            datamessenger.setOption('authentication', {
+                apiKey: '',
+                customerId: '',
+                userId: '',
+                domain: '',
+                token: '',
+            })
+            alert('Successfully logged out');
+        }
+
+        login.onclick = function(event){
+            var user = document.getElementById('username');
+            var password = document.getElementById('password');
+            var apiKey = document.querySelector('[name="apiKey"]');
+            var customerId = document.querySelector('[name="customerId"]');
+            var userId = document.querySelector('[name="userId"]');
+            var domain = document.querySelector('[name="domain"]');
+            // ChataUtils.options.authentication.apiKey = apiKey.value;
+            // ChataUtils.options.authentication.customerId = customerId.value;
+            // ChataUtils.options.authentication.userId = userId.value;
+            // ChataUtils.options.authentication.domain = domain.value;
+            queryInput.options.authentication.apiKey = apiKey.value;
+            queryInput.options.authentication.customerId = customerId.value;
+            queryInput.options.authentication.userId = userId.value;
+            queryInput.options.authentication.domain = domain.value;
+            datamessenger.setOption('authentication', {
+                apiKey: apiKey.value,
+                customerId: customerId.value,
+                userId: userId.value,
+                domain: domain.value,
+                demo: false
+            })
+            datamessenger.options.queryQuickStartTopics = undefined;
+            datamessenger.clearMessages();
+            var _topics = getIntroMessageTopics(getActiveIntegrator(domain.value));
+            console.log(_topics);
+            // datamessenger.options.queryQuickStartTopics = _topics;
+            // datamessenger.createIntroMessageTopics();
+
+            login.style.display = 'none';
+            var xhr = new XMLHttpRequest();
+            const URL = 'https://backend-staging.chata.io/api/v1/login';
+            var formData = new FormData();
+            var sendData = true;
+
+            formData.append("username", user.value);
+            formData.append("password", password.value);
+            if(!user.value){
+                user.classList.remove('valid');
+                user.classList.add('invalid');
+                sendData = false;
+            }
+            if(!password.value){
+                password.classList.remove('valid');
+                password.classList.add('invalid');
+                sendData = false;
+            }
+            if(!apiKey.value){
+                apiKey.classList.remove('valid');
+                apiKey.classList.add('invalid');
+                sendData = false;
+            }
+            if(!customerId.value){
+                customerId.classList.remove('valid');
+                customerId.classList.add('invalid');
+                sendData = false;
+            }
+            if(!userId.value){
+                userId.classList.remove('valid');
+                userId.classList.add('invalid');
+                sendData = false;
+            }
+            if(!domain.value){
+                domain.classList.remove('valid');
+                domain.classList.add('invalid');
+                sendData = false;
+            }
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4){
+                    var xhr2 = new XMLHttpRequest();
+                    var loginToken = xhr.responseText;
+
+                    xhr2.onreadystatechange = function(){
+                        if(xhr2.readyState === 4){
+                            console.log(xhr2.responseText);
+                            login.style.display = 'block';
+                            if(xhr2.status != 200){
+                                alert(xhr2.responseText);
+                            }else{
+                                var token = xhr2.responseText;
+                                // ChataUtils.options.authentication.token = token;
+                                queryInput.options.authentication.token = token;
+                                datamessenger.setOption('authentication', {
+                                    token: token
+                                })
+                                const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${apiKey.value}`;
+                                var xhrDasboard = new XMLHttpRequest();
+                                xhrDasboard.open('GET', DASHBOARD_URL);
+                                xhrDasboard.setRequestHeader("Authorization", `Bearer ${token}`);
+                                xhrDasboard.setRequestHeader("Integrator-Domain", domain.value);
+                                xhrDasboard.send();
+                                xhrDasboard.onreadystatechange = function(){
+                                    dashboardTab.style.display = 'inline-block';
+                                    if(xhrDasboard.readyState === 4){
+                                        var settingsList = new DataAlertsSettings('#test4', {
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            }
+                                        })
+
+                                        var notificationList = new NotificationList('#test5', {
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            }
+                                        })
+
+                                        var json = JSON.parse(xhrDasboard.responseText);
+                                        var x = new NotificationsIcon('#test_5', {
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            }
+                                        });
+                                        dashboard = new Dashboard('.grid-1', {
+                                            themeConfig: {
+                                                chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+                                            },
+                                            authentication: {
+                                                demo: false,
+                                                token: token,
+                                                apiKey: apiKey.value,
+                                                customerId: customerId.value,
+                                                userId: userId.value,
+                                                domain: domain.value,
+                                            },
+                                            autoQLConfig: {
+                                                debug: true
+                                            },
+                                            tiles: json[4]['data'],
+                                            onChangeCallback: function() {
+                                                console.log('Dashboard onChangeCallback');
+                                            },
+                                            executeOnMount: true,
+                                            executeOnStopEditing: false,
+                                            splitView: true,
+                                            dashboardId: json[4]['id']
+                                            // fontFamily: 'monospace'
+                                        });
+                                    }
+                                }
+                                new AntdMessage('Login Sucessful!', 3000);
+                            }
+                        }
+                    }
+                    const url = `
+                        https://backend-staging.chata.io/api/v1/jwt?display_name=${userId.value}&project_id=${customerId.value}
+                    `
+                    xhr2.open('GET', url);
+                    xhr2.setRequestHeader("Authorization", `Bearer ${loginToken}`);
+
+                    xhr2.send();
+                }
+            };
+            if(sendData){
+                xhr.open('POST', URL);
+                xhr.send(formData);
+            }else{
+                login.style.display = 'block';
+            }
+        }
+
+        showHandle.onchange = function(event){
+            // ChataUtils.options.showHandle = event.target.checked;
+            datamessenger.setOption('showHandle', event.target.checked);
+            // if(event.target.checked){
+            //     if(ChataUtils.options.isVisible){
+            //         ChataUtils.drawerButton.style.display = 'none';
+            //     }else{
+            //         ChataUtils.drawerButton.style.display = 'flex';
+            //     }
+            // }else{
+            //     ChataUtils.drawerButton.style.display = 'none';
+            // }
+        }
+
+        shiftScreen.onchange = function(event){
+            // ChataUtils.options.shiftScreen = event.target.checked;
+            datamessenger.setOption('shiftScreen', event.target.checked);
+        }
+
+        showMask.onchange = function(event){
+            // ChataUtils.options.showMask = event.target.checked;
+            datamessenger.setOption('showMask', event.target.checked);
+            // if(event.target.checked){
+            //     if(ChataUtils.options.isVisible){
+            //         ChataUtils.wrapper.style.opacity = .3;
+            //         ChataUtils.wrapper.style.height = '100%';
+            //     }else{
+            //         ChataUtils.wrapper.style.opacity = 0;
+            //         ChataUtils.wrapper.style.height = 0;
+            //     }
+            // }else{
+            //     ChataUtils.wrapper.style.opacity = 0;
+            //     ChataUtils.wrapper.style.height = 0;
+            // }
+        }
+
+        for (var i = 0; i < theme.length; i++) {
+            theme[i].onchange = function(event){
+                // const themeStyles = event.target.id === 'light' ? LIGHT_THEME : DARK_THEME;
+                // for (let property in themeStyles) {
+                //     document.documentElement.style.setProperty(
+                //         property,
+                //         themeStyles[property],
+                //     );
+                // }
+                datamessenger.setOption('themeConfig', {
+                    theme: event.target.id
+                })
+                // ChataUtils.options.theme = event.target.id;
+            }
+        }
+
+        enableAutocomplete.onchange = function(event){
+            datamessenger.setOption('autoQLConfig', {
+                enableAutocomplete: event.target.checked
+            });
+        }
+
+        enableQueryValidation.onchange = function(event){
+            datamessenger.setOption('autoQLConfig', {
+                enableQueryValidation: event.target.checked
+            });
+        }
+
+        enableDrilldowns.onchange = function(event){
+            datamessenger.setOption('autoQLConfig', {
+                enableDrilldowns: event.target.checked
+            });
+        }
+
+        enableVoiceRecord.onchange = function(event){
+            // ChataUtils.options.enableVoiceRecord = event.target.checked;
+            // var display = ChataUtils.options.enableVoiceRecord ? 'block' : 'none';
+            // var voiceButton = document.getElementById('chata-voice-record-button');
+            // voiceButton.style.display = display;
+            datamessenger.setOption('enableVoiceRecord', event.target.checked);
+        }
+
+        debug.onchange = function(event){
+            // ChataUtils.options.autoQLConfig.debug = event.target.checked;
+            datamessenger.setOption('autoQLConfig', {
+                debug: event.target.checked
+            });
+
+        }
+
+        clearOnClose.onchange = function(event){
+            // ChataUtils.options.clearOnClose = event.target.checked;
+            datamessenger.setOption('clearOnClose', event.target.checked);
+
+        }
+        for (var i = 0; i < placement.length; i++) {
+            placement[i].onchange = function(event){
+                // ChataUtils.rootElem.removeAttribute('style');
+                //
+                // ChataUtils.drawerButton.classList.remove(ChataUtils.options.placement + '-btn');
+                // ChataUtils.queryTabs.classList.remove(ChataUtils.options.placement);
+                // ChataUtils.queryTabsContainer.classList.remove(ChataUtils.options.placement);
+                // ChataUtils.options.placement = event.target.value;
+                // ChataUtils.drawerButton.classList.add(ChataUtils.options.placement + '-btn');
+                // ChataUtils.queryTabs.classList.add(ChataUtils.options.placement);
+                // ChataUtils.queryTabsContainer.classList.add(ChataUtils.options.placement);
+                datamessenger.setOption('placement', event.target.value);
+            }
+        }
+
+        var reload = document.getElementById('reload');
+        var openDrawer = document.getElementById('open-drawer');
+        var themeKeys = ['fontFamily'];
+        var formattingKeys = [
+            'currencyCode',
+            'languageCode',
+            'currencyDecimals',
+            'quantityDecimals',
+            'comparisonDisplay',
+            'monthYearFormat',
+            'dayMonthYearFormat',
+        ]
+        var autoQLKeys = [
+            'debug',
+            'test',
+            'enableAutocomplete',
+            'enableQueryValidation',
+            'enableQuerySuggestions',
+            'enableColumnVisibilityManager',
+            'enableDrilldowns',
+        ]
+
+        openDrawer.onclick = (evt) => {
+            datamessenger.openDrawer();
+        }
+
+        reload.onclick = function(event){
+            var propsEls = document.getElementsByClassName('reload-prop');
+            for (var i = 0; i < propsEls.length; i++) {
+                if(propsEls[i].value != ''){
+                    subKey = '';
+                    if(themeKeys.includes(propsEls[i].name))subKey = 'themeConfig';
+                    if(formattingKeys.includes(propsEls[i].name))subKey = 'dataFormatting';
+                    if(autoQLKeys.includes(propsEls[i].name))subKey = 'autoQLConfig';
+                    if(subKey){
+                        console.log(subKey);
+                        // ChataUtils.options[subKey][propsEls[i].name] = propsEls[i].value;
+                        var _obj = {}
+                        _obj[propsEls[i].name] = propsEls[i].value
+                        datamessenger.setOption(subKey, _obj);
+                    }else{
+                        // ChataUtils.options[propsEls[i].name] = propsEls[i].value;
+                        datamessenger.setOption(propsEls[i].name, propsEls[i].value)
+                    }
+                }
+            }
+            var chartColors = [];
+            for (var i = 0; i < instances.chipsData.length; i++) {
+                chartColors.push(instances.chipsData[i]['tag']);
+            }
+            // ChataUtils.drawerButton.remove();
+            // ChataUtils.rootElem.remove();
+            // ChataUtils.options.themeConfig.chartColors = chartColors;
+            var div = document.createElement('div');
+            div.setAttribute('id', 'chata');
+            document.getElementsByTagName('body')[0].appendChild(div);
+            // document.removeEventListener('click', ChataUtils.clickHandler);
+            // document.removeEventListener('dblclick', ChataUtils.drilldownHandler);
+            // var newDrawer = ChataUtils.init('chata', ChataUtils.options);
+        }
+
+        // var dashboard = new Dashboard('.grid-1', {
+        //     themeConfig: {
+        //         chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
+        //     },
+        //     authentication: {
+        //         demo: true,
+        //         // token: undefined,
+        //         // apiKey: 'AIzaSyD_CVuP8l980M1dzUFjaoeLo8_EcL9aDa4',
+        //         // customerId: 'locate-demo1',
+        //         // userId: 'nmoore@chata.ai',
+        //         // domain: 'https://locate-staging.chata.io',
+        //     },
+        //     tiles: [
+        //         {
+        //             key: '0',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'total profit this month',
+        //             title: 'Profit - Current Month'
+        //         },
+        //         {
+        //             key: '1',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'total profit last month',
+        //             title: 'Profit - Previous Month'
+        //         },
+        //         {
+        //             key: '2',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'total profit ytd',
+        //             title: 'Profit - YTD'
+        //         },
+        //         {
+        //             key: '3',
+        //             w: 3,
+        //             h: 2,
+        //             query: 'last years profit',
+        //             title: 'Profit - Previous Year'
+        //         },
+        //         {
+        //             key: '4',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by month last 6 months',
+        //             displayType: 'line',
+        //             title: 'Monthly Profit'
+        //         },
+        //         {
+        //             key: '5',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by month last year',
+        //             displayType: 'line',
+        //             title: '2019 Monthly Profit'
+        //         },
+        //         {
+        //             key: '6',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by class last year',
+        //             displayType: 'column',
+        //             title: 'Total Profit by Class (2019)'
+        //         },
+        //         {
+        //             key: '7',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'profit by customer last year',
+        //             displayType: 'column',
+        //             title: 'Total Profit by Customer (2019)'
+        //         },
+        //         {
+        //             key: '8',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'total profit by class by month last 6 months',
+        //             displayType: 'heatmap',
+        //             title: 'Product Profitability'
+        //         },
+        //         {
+        //             key: '9',
+        //             w: 6,
+        //             h: 5,
+        //             query: 'total profit by customer by month last 6 months',
+        //             displayType: 'heatmap',
+        //             title: 'Customer Profitability'
+        //         }
+        //     ],
+        //     onChangeCallback: function() {
+        //         console.log('Dashboard onChangeCallback');
+        //     },
+        //     executeOnMount: true,
+        //     executeOnStopEditing: false,
+        //     splitView: true
+        //     // fontFamily: 'monospace'
+        // });
+
+        demo.onchange = function(event){
+            // ChataUtils.options.authentication.demo = event.target.checked;
+            queryInput.options.authentication.demo = event.target.checked;
+            datamessenger.setOption('authentication', {
+                demo: event.target.checked
+            })
+            // dashboard.options.authentication.demo = event.target.checked;
+            var loginSection = document.getElementById('login-section');
+            if(!datamessenger.options.authentication.demo){
+                loginSection.style.display = 'block';
+                dashboardTab.style.display = 'none';
+            }else{
+                loginSection.style.display = 'none';
+                // dashboardTab.style.display = 'inline-block';
+            }
+        }
+
+        var startEditing = document.getElementById('start-editing')
+        var stopEditing = document.getElementById('stop-editing')
+        var addTile = document.getElementById('add-tile')
+        var saveDashboard = document.getElementById('saveDashboard')
+        var undo = document.getElementById('undo')
+        var runDashboard = document.getElementById('runDashboard')
+        var execute = document.getElementById('execute')
+        var log = document.getElementById('log')
+
+
+        startEditing.onclick = function(){
+            dashboard.startEditing();
+            this.style.display = 'none';
+            stopEditing.style.display = 'block';
+            addTile.style.display = 'block';
+            undo.style.display = 'block';
+            saveDashboard.style.display = 'block';
+        }
+
+        stopEditing.onclick = function(){
+            dashboard.stopEditing();
+            this.style.display = 'none';
+            addTile.style.display = 'none';
+            undo.style.display = 'none';
+            startEditing.style.display = 'block';
+            saveDashboard.style.display = 'none';
+        }
+
+        saveDashboard.onclick = (evt) => {
+            var filteredTiles = [];
+            dashboard.tiles.map(function(tile) {
+                filteredTiles.push(
+                    {
+                        ...tile.getData()
+                    }
+                )
+                // return
+            })
+            var name = getActiveIntegrator(domain);
+            var newData = {
+                name: name,
+                data: filteredTiles
+            }
+            xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === 4){
+                    console.log(xhr.responseText);
+                }
+            }
+            const url = `https://backend-staging.chata.io/api/v1/dashboards/${dashboard.options.dashboardId}?key=${dashboard.options.authentication.apiKey}`
+            xhr.open('PUT', url);
+            xhr.setRequestHeader("Content-Type", "application/json");
+            xhr.setRequestHeader("Integrator-Domain", domain);
+            xhr.setRequestHeader(
+                "Authorization", `Bearer ${dashboard.options.authentication.token}`
+            );
+            console.log(newData);
+            // xhr.send(JSON.stringify(newData));
+
+        }
+
+        addTile.onclick = function(){
+            dashboard.addTile({title: '', query: '', w: 6, h: 5, notExecutedText: `
+            1. Type your query in the search bar<br>2. Click <span data-test="chata-icon" class="chata-icon undefined" style="display: inline-block; margin-right: 3px; margin-bottom: -2px;"><svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M10 16.5l6-4.5-6-4.5v9zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"></path></svg></span>to fill this tile`});
+        }
+
+        runDashboard.onchange = function(event){
+            dashboard.options.executeOnStopEditing = event.target.checked
+            if(event.target.checked){
+                dashboard.run();
+            }
+        }
+
+        execute.onclick = function(event){
+            dashboard.run();
+        }
+
+        undo.onclick = function(){
+            dashboard.undo();
+        }
+
+        log.onclick = function(){
+            console.log(dashboard.tiles);
+        }
+
+    </script>
+
+</body>
+</html>
