@@ -8,7 +8,7 @@ Full documentation can be found [here](https://chata.readme.io/docs/vanilla-comp
 
 # Demo
 
-A live demo can be found [here](https://vicente_rincon.gitlab.io/widget/)
+A live demo can be found [here](https://vanilla-autoql.herokuapp.com/)
 
 # Components
 

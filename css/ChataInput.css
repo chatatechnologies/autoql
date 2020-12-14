@@ -1,6 +1,5 @@
 .autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings {
     border: 1px solid var(--autoql-vanilla-border-color);
-    /* border-radius: 4px; */
     background: inherit;
     line-height: 32px;
     min-height: 34px;

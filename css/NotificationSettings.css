@@ -445,7 +445,6 @@
 .month-select .chata-radio-btn:first-child, .year-select .chata-radio-btn:first-child {
     border-top-left-radius: 4px !important;
     border-bottom-left-radius: 0px !important;
-    /* margin-left: -1px !important; */
 }
 
 .month-select .chata-radio-btn, .year-select .chata-radio-btn {
@@ -478,7 +477,6 @@
 }
 
 .chata-step-container.active .chata-step-content-container{
-    /* height: auto; */
     opacity: 1;
 }
 
