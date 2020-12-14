@@ -1,4 +1,4 @@
-import { selectAll, select } from 'd3-selection'
+import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
 
@@ -158,7 +158,7 @@ export function createBarChart(
             allLengths.push(formatLabel(yTickValues[i]).length);
         }
     }else{
-        data.forEach((item, i) => {
+        data.forEach((item) => {
             allLengths.push(formatLabel(item.label).length);
         });
     }
@@ -176,7 +176,7 @@ export function createBarChart(
 
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){
-            var m = longestStringHeight * increment + extraMargin;
+            let m = longestStringHeight * increment + extraMargin;
             if(hasLegend && m <= 50) m = 55;
             margin.bottomChart = m;
         }else{
@@ -185,7 +185,7 @@ export function createBarChart(
 
     }else{
         if(rotateLabels){
-            var m = longestStringHeight * 3;
+            let m = longestStringHeight * 3;
             margin.bottomChart = m;
         }else{
             margin.bottomChart = 13;
@@ -198,13 +198,6 @@ export function createBarChart(
 
     var x = SCALE_LINEAR()
     .range([0, chartWidth]);
-
-
-    // y0
-    // .range([height - margin.bottomChart, 0])
-    // .domain(categoriesNames)
-    // .padding(.1);
-    // y1.domain(groupNames).range([0, y0.bandwidth()]).padding(.1);
 
     setDomainRange(
         y0,
@@ -344,8 +337,8 @@ export function createBarChart(
 
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-            var popoverSelector = new ChataChartSeriesPopover({
+
+            new ChataChartSeriesPopover({
                 left: evt.clientX,
                 top: evt.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
@@ -398,8 +391,6 @@ export function createBarChart(
     .attr("class", "y axis")
     .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
-        const colType = cols[index2].type
-        // if(colType === 'DATE' || colType === 'DATE_STRING')return d
         return formatLabel(formatData(d, cols[index2], options))
     }))
     let slice;
@@ -439,10 +430,9 @@ export function createBarChart(
             return d.values;
         })
         .enter().append("rect")
-        .each(function (d, i) {
+        .each(function (d) {
             var group = col2;
             if(groupNames.length > 1)group = d.group
-            const type = cols[index2].type;
             var toolTipColValue1 = d.label
             toolTipColValue1 = formatData(
                 d.label, cols[index2],
@@ -462,7 +452,7 @@ export function createBarChart(
         .attr("width", function(d) { return calculateWidth(d) })
         .attr("x", function(d) { return getXRect(d) })
         .attr("y", function(d) { return y1(d.group); })
-        .attr("height", function(d) { return getBandWidth(y1) })
+        .attr("height", function() { return getBandWidth(y1) })
         .attr('fill-opacity', '0.7')
         .attr('class', 'tooltip-2d bar')
         .style("fill", function(d) { return colorScale(d.group) })
@@ -506,7 +496,6 @@ export function createBarChart(
                 legendBBox = legendElement.getBBox()
             }
 
-            const legendHeight = legendBBox.height
             const legendWidth = legendBBox.width
             const legendXPosition = width / 2 - (legendWidth/2)
             const legendYPosition = height + 25

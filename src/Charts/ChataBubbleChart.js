@@ -141,7 +141,6 @@ export function createBubbleChart(
 
 
     var x = SCALE_BAND();
-    // chataD3.scaleBand()
     setDomainRange(
         x,
         labelsX.map(function(d) {
@@ -152,10 +151,6 @@ export function createBubbleChart(
         false,
         0.01
     )
-
-    // .range([ 0, width ])
-    // .domain()
-    // .padding(0.01);
 
     var xAxis = getAxisBottom(x);
 
@@ -194,10 +189,6 @@ export function createBubbleChart(
         false,
         0.01
     )
-
-    // .range([ height - margin.bottom, 0])
-    // .domain()
-    // .padding(0.01);
 
     var yAxis = getAxisLeft(y);
 

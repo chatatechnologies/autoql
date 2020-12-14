@@ -38,10 +38,6 @@
     vertical-align:middle;
     background-color: #26a7df;
     color: #fff;
-    /* color: #28a8e0; */
-    /* background: var(--autoql-vanilla-background-color); */
-    /* left: -40px;
-    border-radius: 4px 0 0 4px; */
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
 
     -webkit-transition: opacity 0.5s ease;
@@ -99,13 +95,9 @@ body{
     z-index: 10;
     background: white;
     position: fixed;
-    /* right: 0; */
     height: 100%;
-    /* top: 0px; */
     width: 0px;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
-    /* transition: transform 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), opacity 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86), box-shadow 0.3 cubic-bezier(0.78, 0.14, 0.15, 0.86); */
-    /* transform: translateX(500px); */
     transition: transform 0.3s ease-in-out;
     background: var(--autoql-vanilla-background-color-secondary);
     border-radius: 4px;
@@ -142,7 +134,6 @@ body{
     display: block;
     visibility: hidden;
     transition: all 0.35s ease 0s;
-    /* background: white; */
 }
 
 .autoql-vanilla-chata-confirm-text {
@@ -250,7 +241,6 @@ body{
 }
 
 .autoql-vanilla-chat-header-container .autoql-vanilla-chata-button:hover{
-    /* color: var(--autoql-vanilla-hover-color); */
     opacity: .7;
 }
 
@@ -261,23 +251,14 @@ body{
 .autoql-vanilla-drawer-content{
     width: calc(100%);
     height: 100%;
-    /* max-height: calc(100% - 150px); */
-    /* overflow: hidden; */
-    /* overflow-y: auto;
-    overflow-x: visible; */
-    /* padding: 20px; */
     flex: 1;
     flex-grow: 1;
     flex-shrink: 1;
     flex-basis: 0%;
     background: var(--autoql-vanilla-background-color);
-    /* position: relative; */
 }
 
 .autoql-vanilla-drawer-content:hover{
-    /* overflow: auto; */
-    /* overflow-y: auto; */
-    /* width: 100%; */
 }
 
 .autoql-vanilla-chata-scrollbox {
@@ -295,7 +276,6 @@ body{
 
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble {
     position: relative;
-    /* margin: 10px 0px 10px 10px; */
     margin: 10px -10px 10px 10px;
     padding: 13px;
     border-radius: 10px;
@@ -339,7 +319,6 @@ body{
     max-height: 85%;
     -webkit-animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
     animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-    /* z-index: 1000; */
     position: relative;
 }
 
@@ -383,7 +362,6 @@ body{
     background: var(--autoql-vanilla-accent-color);
     border: 1px solid var(--autoql-vanilla-accent-color);
     color: white;
-    /* box-shadow: 2px 3px 8px 1px rgba(0, 0, 0, 0.1); */
 }
 
 .autoql-vanilla-chata-bar-container {
@@ -464,7 +442,6 @@ body{
     background: var(--autoql-vanilla-accent-color);
     color: var(--autoql-vanilla-text-color-primary);
     border: none;
-    /* transition: box-shadow 0.2s ease; */
     flex-shrink: 0;
     flex-grow: 0;
 }
@@ -560,7 +537,6 @@ body{
 
 .autoql-vanilla-auto-complete-suggestions{
     position: relative;
- /* padding-left: 20px; */
     margin-left: 10px;
     z-index: 100000000;
 }
@@ -600,7 +576,7 @@ body{
     background-color: var(--autoql-vanilla-hover-color);
 }
 
-/* response loading dots */
+
 .input-response-loading-container {
     position: absolute;
     right: 23px;
@@ -651,7 +627,6 @@ body{
 }
 
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.full-width {
-    /* max-width: calc(100% - 30px); */
     width: 100%;
 }
 
@@ -674,7 +649,6 @@ body{
     cursor: pointer;
     letter-spacing: 0.05em;
     transition: all 0.1s ease;
-    /* border: 1px solid rgba(0, 0, 0, 0.15); */
     border-color: #e2e2e26e;
     color: inherit;
 }
@@ -731,22 +705,12 @@ body{
 }
 
 input[type=text]:disabled {
-    /* background-color: var(--autoql-vanilla-text-color-placeholder); */
 }
 
 .tabulator-filter{
     bottom: 42px !important;
     right: 13px !important;
 }
-
-/* .chata-table-vertical-scrollbox{
-    width: 100%;
-    height: 100vh;
-    display: block;
-    overflow-y: auto;
-    overflow-x: hidden;
-    visibility: hidden;
-} */
 
 [data-indexrow]{
     visibility: visible;
@@ -762,13 +726,7 @@ input[type=text]:disabled {
     height: 100%;
     background-color: inherit;
     visibility: visible;
-    /* overflow: scroll; */
-    /* overflow: hidden; */
 }
-
-/* .chata-table-container:hover{
-    overflow: scroll;
-} */
 
 .autoql-vanilla-table-response, .autoql-vanilla-table-response-renderer{
     border-collapse: collapse;
@@ -978,9 +936,6 @@ tr td.chata-hidden{
   background: inherit;
 }
 
-/* .autoql-vanilla-table-response-renderer .column, .column-pivot{
-    padding: 5px 18px !important;
-} */
 .autoql-vanilla-table-response-renderer .column::-moz-selection { /* Code for Firefox */
   color: inherit;
   background: inherit;
@@ -1004,10 +959,6 @@ tr td.chata-hidden{
 .autoql-vanilla-sticky-col {
     border-right: 2px solid #ddd;
     text-align: left !important;
-    /* left: 0;
-    position: absolute;
-    top: auto;
-    width: auto; */
 }
 .hm0{
     opacity: 0.5 !important;
@@ -1044,8 +995,6 @@ tr td.chata-hidden{
     fill: transparent !important;
 }
 .tick{
-    /* stroke: var(--autoql-vanilla-border-color);
-    fill-opacity: 0.7; */
     transition: all .3s ease;
 }
 .autoql-vanilla-chata-response-content-container line{
@@ -1056,9 +1005,6 @@ tr td.chata-hidden{
 
 }
 .autoql-vanilla-chata-response-content-container text{
-    /* font-family: var(--autoql-vanilla-font-family);
-    letter-spacing: 0.04em;
-    fill: var(--autoql-vanilla-text-color-primary); */
     fill: currentcolor;
     fill-opacity: 0.7;
     font-family: inherit;
@@ -1083,12 +1029,6 @@ tr td.chata-hidden{
     fill: #5d5d5d;
 }
 
-.autoql-vanilla-chata-chart-container{
-    /* width: 100%;
-    height: 100%; */
-    /* display: block; */
-}
-
 text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     fill: currentColor;
     fill-opacity: 0.7;
@@ -1103,7 +1043,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-chata-chart-container .bar.active,
 .autoql-vanilla-chata-chart-container .circle.active,
 .autoql-vanilla-chata-chart-container .square.active {
-    /* fill: #a5cd39 !important; */
     fill-opacity: 1;
 }
 
@@ -1141,19 +1080,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     position: relative;
     margin-left: -5px;
 }
-
-/* .autoql-vanilla-chata-safetynet-select {
-    position: relative;
-    display: inline-block;
-    height: 30px;
-    background: none;
-    outline: none !important;
-    border: none;
-    font-family: var(--autoql-vanilla-font-family);
-    letter-spacing: 0.05em;
-    color: #28a8e0;
-    font-size: inherit;
-} */
 
 .autoql-vanilla-chata-select {
     border: 1px solid rgba(0,0,0,.1);
@@ -1205,13 +1131,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-bottom: -2px;
 }
 
-/* .autoql-vanilla-chata-execute-query-icon {
-    height: 15px;
-    width: 24px;
-    vertical-align: top;
-    fill: #28a8e0;
-} */
-
 .chata-icon.warning{
     color: var(--autoql-vanilla-warning-color)!important;
 }
@@ -1236,19 +1155,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     vertical-align: top;
     fill: var(--autoql-vanilla-accent-color);
 }
-
-/* .autoql-vanilla-chata-safety-net-execute-btn {
-    height: 30px;
-    background: none;
-    border-radius: 4px;
-    margin-top: 24px;
-    width: 100%;
-    color: inherit;
-    cursor: pointer;
-    outline: none !important;
-    border-color: #e2e2e26e;
-    transition: all 0.2s ease;
-} */
 
 .autoql-vanilla-chata-safety-net-execute-btn {
     height: 38px;
@@ -1375,7 +1281,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .tippy-tooltip.chata-theme {
   background-color: black;
-  /* color: var(--autoql-vanilla-hover-color); */
   color: white;
   font-size: 15px;
   font-family: sans-serif;
@@ -1383,7 +1288,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .tippy-box[data-theme~='chata-theme'] {
     background-color: black;
-    /* color: var(--autoql-vanilla-hover-color); */
     color: white;
     font-size: 15px;
     font-family: sans-serif;
@@ -1426,7 +1330,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   height: 60px;
 }
 
-/* Container holding the tabs */
 .autoql-vanilla-page-switcher-container.right {
   margin-top: 20px;
   margin-left: 20px;
@@ -1526,12 +1429,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-page-switcher-container.top .tab,
 .autoql-vanilla-page-switcher-container.bottom .tab {
-  /* display: inline-block; */
   margin-right: -4px !important;
-  /* position: absolute; */
-}
-.autoql-vanilla-page-switcher-container .tab:not(.active):hover {
-    /* opacity: .8; */
 }
 
 /* Curve appropriate corners depending on placement */
@@ -1839,7 +1737,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     position: absolute;
     background: transparent;
     z-index: 100;
-    /* background: red; */
 }
 
 .autoql-vanilla-comparison-value-positive {
@@ -1898,7 +1795,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-no-columns-error-message {
-    /* position: absolute; */
     height: 100%;
     width: 100%;
     display: flex;
@@ -2041,44 +1937,33 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 @-webkit-keyframes bounceIn {
     0% {
         opacity: .25;
-        /* -webkit-transform: scale(.3); */
     }
     50% {
         opacity: 50;
-        /* -webkit-transform: scale(1.05); */
     }
     70% {
         opacity: .75;
-        /* -webkit-transform: scale(.9); */
     }
     100% {
         opacity: 1;
-        /* -webkit-transform: scale(1); */
     }
 }
 @keyframes bounceIn {
     0% {
         opacity: .25;
-        /* opacity: 0;
-        transform: scale(.3); */
     }
     50% {
         opacity: 50;
-        /* opacity: 1;
-        transform: scale(1.05); */
     }
     70% {
         opacity: .75;
-        /* transform: scale(.9); */
     }
     100% {
         opacity: 1;
-        /* transform: scale(1); */
     }
 }
 
 
-/* animations */
 @keyframes scale-up-br {
     0% {
         transform: scale(0.5);
@@ -2101,7 +1986,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     }
 }
 
-/* animations */
 @keyframes response-loading1 {
     0% {
         transform: scale(0);

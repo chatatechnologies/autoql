@@ -142,14 +142,11 @@
 
 .chata-notification-list-container .chata-notification-expanded-content {
     width: 100%;
-    /* height: 205px; */
-    /* padding: 5px 20px 0; */
     display: flex;
     flex-direction: column;
     justify-content: stretch;
     transition: height .2s ease;
     height: 0;
-    /* opacity: 0; */
 }
 
 .chata-notification-expanded-content.visible{
@@ -289,10 +286,7 @@
 }
 
 .chata-settings-container{
-    /* min-height: calc(100vh - 48px); */
     background: var(--autoql-vanilla-background-color-secondary);
-
-    /* overflow: auto; */
 }
 
 .chata-checkbox__input:before {
@@ -452,8 +446,6 @@
     border-bottom: 1px solid var(--autoql-vanilla-border-color);
     text-align: center;
     margin: 0 10px;
-    /* padding-top: 20px;
-    padding-bottom: 7px; */
 }
 
 .chata-response-content-container{

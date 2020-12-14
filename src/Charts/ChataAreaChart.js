@@ -1,4 +1,4 @@
-import { selectAll, select } from 'd3-selection'
+import { select } from 'd3-selection'
 import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { tooltipCharts } from '../Tooltips'
@@ -17,7 +17,6 @@ import {
     getAxisLeft,
     setDomainRange,
     getStackedAreaData,
-    getArea
 } from './d3-compatibility'
 import {
     getStringWidth,
@@ -29,7 +28,7 @@ import {
     formatData
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
-import { stack, area } from 'd3-shape'
+import { area } from 'd3-shape'
 
 export function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 15, right: 10, bottom: 50, left: 80},
@@ -58,7 +57,6 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         return {col: groupable.jsonCol, index: i}
     });
 
-    var columns = json['data']['columns'];
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2]
@@ -84,7 +82,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     })
 
 
-    var data = ChataUtils.format3dData(
+    data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
@@ -195,7 +193,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
-            var popoverSelector = new ChataChartListPopover({
+            new ChataChartListPopover({
                 left: evt.clientX,
                 top: evt.clientY
             }, groupCols, (evt, popover) => {
@@ -311,7 +309,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .style("fill", function(d) {
             if(d.key) return color(d.key); else return 'transparent'
         })
-        .each((d, i) => {
+        .each((d) => {
 
             d.map((layer) => {
                 var pos = layer[1];
@@ -333,7 +331,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
             })
         })
         .attr("d", area()
-            .x(function(d, i) { return x(d.data.group); })
+            .x(function(d) { return x(d.data.group); })
             .y0(function(d) { return y(d[0]) || 0; })
             .y1(function(d) { return y(d[1]) || 0; })
         )
@@ -349,7 +347,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr('stroke-width', '3')
         .attr('stroke-opacity', '0.7')
         .attr("fill", 'transparent')
-        .attr('stroke', function(d) {'transparent' })
+        .attr('stroke', function() {'transparent' })
         // .attr("stroke", (d) => color(d.group))
         // .attr('fill', 'white')
         .attr("fill-opacity", '1')
@@ -381,12 +379,12 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                 .attr('class', 'tooltip-3d')
             }
         })
-        .on("mouseover", function(d, i){
+        .on("mouseover", function(d){
             select(this).
             attr("stroke", color(d.group))
             .attr('fill', 'white')
         })
-        .on("mouseout", function(d, i){
+        .on("mouseout", function(){
             select(this)
             .attr("stroke", 'transparent')
             .attr('fill', 'transparent')

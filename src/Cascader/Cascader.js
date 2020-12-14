@@ -76,16 +76,16 @@ export function Cascader(topics, datamessenger){
     }
 
     obj.makeOpt = (opt, svg, active='', extraClass='') => {
-        var opt = htmlToElement(`
+        var htmlOption = htmlToElement(`
             <div class="option ${active}">
                 <span>${opt} </span>
                 <span class="chata-icon ${extraClass}">
                     ${svg}
                 </span>
             </div>
-        `);
+        `)
 
-        return opt;
+        return htmlOption
     }
 
     for(var i = 0; i<topics.length; i++){
@@ -146,17 +146,17 @@ export function Cascader(topics, datamessenger){
         }
 
         optionList.map(opt => {
-            opt.onclick = (evt) => {
+            opt.onclick = () => {
                 obj.keyAnimation(opt.textContent.trim());
             }
         })
 
-        arrow.onclick = (evt) => {
+        arrow.onclick = () => {
             optionsContainer.classList.remove('hidden');
             chataCascader.removeChild(childrenOptionsContainer);
         }
 
-        seeMore.onclick = (evt) => {
+        seeMore.onclick = () => {
             obj.showQueryTips();
             obj.queryTipsInputAnimation(topic.topic);
         }
@@ -183,7 +183,7 @@ export function Cascader(topics, datamessenger){
         link
     )
 
-    link.onclick = (evt) => {
+    link.onclick = () => {
         obj.showQueryTips();
     }
 
