@@ -1,5 +1,4 @@
 import {
-    htmlToElement,
     uuidv4
 } from '../Utils'
 import './ChataRadio.css'
@@ -35,6 +34,6 @@ export function ChataRadio(options, onChange){
         p.appendChild(label)
         wrapper.appendChild(p)
     }
-    
+
     return wrapper
 }

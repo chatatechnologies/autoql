@@ -1,6 +1,5 @@
 import '../../css/ChataInput.css'
 
-
 export function ChataInput(tag, elementProps, svgIcon=undefined, withIcon=true){
     let input;
     input = document.createElement(tag);

@@ -7,12 +7,9 @@ import {
     formatColumnName,
     allColHiddenMessage,
     getNotGroupableField,
-    getSVGString,
     copyTextToClipboard,
-    svgString2Image,
     apiCallPut,
     apiCallPost,
-    svgToPng
 } from '../Utils'
 import sqlFormatter from "sql-formatter";
 import { ChataConfirmDialog } from '../ChataComponents'
@@ -44,7 +41,7 @@ ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
     ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 
-    var response = await apiCallPut(URL, {is_correct: false}, options)
+    await apiCallPut(URL, {is_correct: false}, options)
     if(menu)menu.classList.remove('show');
     if(toolbar)toolbar.classList.remove('show');
     new AntdMessage('Thank you for your feedback.', 3000);
@@ -86,7 +83,7 @@ ChataUtils.makeReportProblemMenu = (toolbar, idRequest, type, options) => {
 }
 
 ChataUtils.getReportProblemMenu = (
-    toolbar, idRequest, type, options, singleMessage=false) => {
+    toolbar, idRequest, type, options) => {
     var menu = ChataUtils.getPopover();
     if(type === 'simple'){
         menu.classList.add('chata-popover-single-message');
@@ -118,26 +115,16 @@ ChataUtils.getReportProblemMenu = (
 
 ChataUtils.reportProblemHandler = (
     evt, idRequest, reportProblem, toolbar) => {
-    // closeAllToolbars();
     reportProblem.classList.toggle('show');
     toolbar.classList.toggle('show');
 }
 
 
 ChataUtils.downloadCsvHandler = (idRequest) => {
-    var json = ChataUtils.responses[idRequest];
     var component = document.querySelector(
         `[data-componentid='${idRequest}']`
     );
     component.tabulator.download("csv", "table.csv", {delimiter:"\t"});
-    // var csvData = ChataUtils.createCsvData(json);
-    // var link = document.createElement("a");
-    // link.setAttribute(
-    //     'href', 'data:text/csv;charset=utf-8,'
-    //     + encodeURIComponent(csvData)
-    // );
-    // link.setAttribute('download', 'table.csv');
-    // link.click();
 }
 
 ChataUtils.copySqlHandler = (idRequest) => {
@@ -176,11 +163,11 @@ ChataUtils.copySqlHandler = (idRequest) => {
     modal.addFooterElement(okBtn);
     modal.show(okBtn);
     refreshTooltips()
-    okBtn.onclick = (evt) => {
+    okBtn.onclick = () => {
         modal.close()
     }
 
-    copyButton.onclick = (evt) => {
+    copyButton.onclick = () => {
         if(!copyButton.classList.contains('sql-copied')){
             copyButton.classList.add('sql-copied');
             copyButton.appendChild(htmlToElement(`
@@ -296,20 +283,20 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     input.value = extraParams.query
     returnInput.value = extraParams.query
 
-    cancelButton.onclick = (e) => {
+    cancelButton.onclick = () => {
         new ChataConfirmDialog(
             'Are you sure you want to leave this page?',
             'All unsaved changes will be lost.',
-            (evt) => {
+            () => {
                 configModal.close()
             }
         )
     }
-    saveButton.onclick = async(e) => {
+    saveButton.onclick = async() => {
         spinner.classList.remove('hidden')
         saveButton.setAttribute('disabled', 'true')
         const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-        var response = await apiCallPost(URL, modalView.getValues, o)
+        await apiCallPost(URL, modalView.getValues, o)
         configModal.close();
     }
 }
@@ -321,9 +308,10 @@ ChataUtils.makeMoreOptionsMenu = (
     ul.classList.add('chata-menu-list')
     for (var i = 0; i < options.length; i++) {
         let opt = options[i]
+        let action
         switch (opt) {
             case 'csv':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     DOWNLOAD_CSV_ICON, 'Download as CSV',
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
@@ -332,7 +320,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 ul.appendChild(action);
                 break;
             case 'copy':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     CLIPBOARD_ICON, 'Copy table to clipboard',
                     ChataUtils.copyHandler,
                     [idRequest]
@@ -341,7 +329,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 ul.appendChild(action);
                 break;
             case 'copy_sql':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     COPY_SQL, 'View generated SQL',
                     ChataUtils.copySqlHandler,
                     [idRequest]
@@ -349,7 +337,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 ul.appendChild(action);
                 break;
             case 'png':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     EXPORT_PNG_ICON, 'Download as PNG',
                     ChataUtils.exportPNGHandler,
                     [idRequest]
@@ -357,7 +345,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 ul.appendChild(action);
                 break;
             case 'notification':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
                     'Create a Data Alert...',
                     ChataUtils.createNotificationHandler,
@@ -379,9 +367,10 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
 
     for (var i = 0; i < options.length; i++) {
         let opt = options[i]
+        let action
         switch (opt) {
             case 'csv':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     DOWNLOAD_CSV_ICON, 'Download as CSV',
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
@@ -390,7 +379,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 menu.ul.appendChild(action);
                 break;
             case 'copy':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     CLIPBOARD_ICON, 'Copy table to clipboard',
                     ChataUtils.copyHandler,
                     [idRequest]
@@ -399,7 +388,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 menu.ul.appendChild(action);
                 break;
             case 'copy_sql':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     COPY_SQL, 'View generated SQL',
                     ChataUtils.copySqlHandler,
                     [idRequest]
@@ -407,7 +396,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 menu.ul.appendChild(action);
                 break;
             case 'png':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     EXPORT_PNG_ICON, 'Download as PNG',
                     ChataUtils.exportPNGHandler,
                     [idRequest]
@@ -415,7 +404,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 menu.ul.appendChild(action);
                 break;
             case 'notification':
-                var action = ChataUtils.getActionOption(
+                action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
                     'Create a Data Alert...',
                     ChataUtils.createNotificationHandler,
@@ -457,7 +446,7 @@ ChataUtils.getActionOption = (svg, text, onClick, params) => {
             ${text}
         </li>
     `);
-    element.onclick = (evt) => {
+    element.onclick = () => {
         onClick.apply(null, params);
     }
     return element;
@@ -517,12 +506,11 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     modal.addFooterElement(cancelButton);
     modal.addFooterElement(reportButton);
 
-    cancelButton.onclick = (evt) => {
+    cancelButton.onclick = () => {
         modal.close()
     }
 
-    reportButton.onclick = async (evt) => {
-        var reportMessage = textArea.value;
+    reportButton.onclick = async () => {
         spinner.classList.remove('hidden');
         await ChataUtils.sendReport(idRequest, options, menu, toolbar);
         modal.close();
@@ -611,7 +599,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
             columns[i]['name'], isVisible, i, true
         );
 
-        checkboxContainer.input.onchange = (evt) => {
+        checkboxContainer.input.onchange = () => {
             var headerChecked = true;
             var inputs = container.querySelectorAll('[data-line]');
 
@@ -661,11 +649,11 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     saveButton.appendChild(document.createTextNode('Apply'));
 
 
-    cancelButton.onclick = function(event){
+    cancelButton.onclick = function(){
         modal.close();
     }
 
-    saveButton.onclick = async function(event){
+    saveButton.onclick = async function(){
         var opts = options
         const url = opts.authentication.demo
         ? `https://backend-staging.chata.ai/api/v1/chata/query`
@@ -692,7 +680,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
             table.tabulator.redraw();
         }
 
-        var response = await apiCallPut(url, {columns: data}, opts)
+        await apiCallPut(url, {columns: data}, opts)
         modal.close();
         allColHiddenMessage(table);
         onHideCols();
@@ -702,16 +690,6 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     modal.addFooterElement(cancelButton);
     modal.addFooterElement(saveButton);
     modal.show();
-}
-
-ChataUtils.makeBarChartDomain = function(data, hasNegativeValues){
-    if(hasNegativeValues){
-        return chataD3.extent(data, function(d) { return d.value; });
-    }else{
-        return [0, chataD3.max(data, function(d) {
-            return d.value;
-        })];
-    }
 }
 
 ChataUtils.getUniqueValues = function(data, getter){
@@ -772,7 +750,7 @@ ChataUtils.groupBy = function(list, keyGetter, indexData) {
     var obj = {};
     list.forEach((item) => {
         const key = keyGetter(item);
-        if (!obj.hasOwnProperty(key)) {
+        if (!Object.prototype.hasOwnProperty.call(obj, key)) {
             obj[key] = item[indexData];
         }else{
             obj[key] += item[indexData];
@@ -782,176 +760,18 @@ ChataUtils.groupBy = function(list, keyGetter, indexData) {
     return obj;
 }
 
-ChataUtils.sort = function(data, operator, colIndex, colType){
-    var lines = data;
-    var values = []
-    for (var i = 0; i < lines.length; i++) {
-        var data = lines[i];
-        var row = [];
-        for (var x = 0; x < data.length; x++) {
-            row.push(data[x]);
-        }
-        values.push(row);
-    }
-    if(operator == 'asc'){
-        var comparator = function(a, b) {
-            if (colType == 'DOLLAR_AMT' || colType == 'DATE'){
-                return parseFloat(a[colIndex]) > parseFloat(b[colIndex]) ? 1 : -1;
-            }else{
-                return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
-            }
-        }
-    }else{
-        var comparator = function(a, b) {
-            if (colType == 'DOLLAR_AMT' || colType == 'DATE'){
-                return parseFloat(a[colIndex]) < parseFloat(b[colIndex]) ? 1 : -1;
-            }else{
-                return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
-            }
-        }
-    }
-    var sortedArray = values.sort(comparator);
-
-    return sortedArray;
-}
-
-ChataUtils.refreshPivotTable = function(table, pivotArray){
-    var rows = table.childNodes;
-    var cols = ChataUtils.responses[table.dataset.componentid]['columns'];
-    for (var i = 0; i < rows.length; i++) {
-        rows[i].style.display = 'table-row';
-    }
-
-    for (var i = 0; i < pivotArray.length; i++) {
-        var tdList = rows[i].childNodes;
-        for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = pivotArray[i][x];
-        }
-    }
-
-    for (var i = pivotArray.length; i < rows.length; i++) {
-        rows[i].style.display = 'none';
-    }
-}
-
-ChataUtils.refreshTableData = function(table, newData, options){
-    var rows = newData;//table.childNodes;
-    var nodes = table.childNodes;
-    var cols = ChataUtils.responses[table.dataset.componentid]['data']['columns'];
-    for (var i = 0; i < nodes.length; i++) {
-        nodes[i].style.display = 'table-row';
-    }
-    for (var i = 0; i < newData.length; i++) {
-        var tdList = nodes[i].childNodes;
-        for (var x = 0; x < tdList.length; x++) {
-            tdList[x].textContent = formatData(newData[i][x], cols[x], options);
-        }
-    }
-    for (var i = newData.length; i < nodes.length; i++) {
-        nodes[i].style.display = 'none';
-    }
-}
-
-ChataUtils.onClickColumn = function(evt, tableElement, options){
-    let sortBy;
-    let newClassArrow;
-    let parent = evt.target;
-    evt.preventDefault();
-
-    if(parent.tagName === 'INPUT'){
-        return;
-    }
-
-    if(parent.tagName === 'TH'){
-        parent = parent.childNodes[0];
-    }
-    if(tableElement.sort === 'asc'){
-        sortBy = 'desc';
-        newClassArrow = 'down';
-    }else{
-        sortBy = 'asc';
-        newClassArrow = 'up';
-    }
-
-    tableElement.sort = sortBy;
-    parent.nextSibling.classList.remove('up');
-    parent.nextSibling.classList.remove('down');
-    parent.nextSibling.classList.add(newClassArrow);
-
-    var data = applyFilter(tableElement.dataset.componentid);
-    var sortData = ChataUtils.sort(
-        data, sortBy, parent.dataset.index, parent.dataset.type
-    );
-
-    ChataUtils.refreshTableData(
-        tableElement, sortData, options
-    );
-}
-
-ChataUtils.onClickPivotColumn = function(evt, tableElement, options){
-    var pivotArray = [];
-    var json = cloneObject(ChataUtils.responses[
-        tableElement.dataset.componentid
-    ]);
-    var columns = json['data']['columns'];
-    let sortBy;
-    let newClassArrow;
-    let parent = evt.target;
-    evt.preventDefault();
-
-    if(parent.tagName === 'INPUT'){
-        return;
-    }
-
-    if(parent.tagName === 'TH'){
-        parent = parent.childNodes[0];
-    }
-
-    if(columns[0].type === 'DATE' &&
-        columns[0].name.includes('month')){
-        pivotArray = getDatePivotArray(
-            json, options, cloneObject(json['data']['rows'])
-        );
-    }else{
-        pivotArray = getPivotColumnArray(
-            json, options, cloneObject(json['data']['rows'])
-        );
-    }
-
-    if(tableElement.sort === 'asc'){
-        sortBy = 'desc';
-        newClassArrow = 'down';
-    }else{
-        sortBy = 'asc';
-        newClassArrow = 'up';
-    }
-
-    tableElement.sort = sortBy;
-    parent.nextSibling.classList.remove('up');
-    parent.nextSibling.classList.remove('down');
-    parent.nextSibling.classList.add(newClassArrow);
-
-    var rows = applyFilter(tableElement.dataset.componentid, pivotArray);
-    rows.unshift([]); //Simulate header
-    var sortData = sortPivot(rows, parent.dataset.index, sortBy);
-    // sortData.unshift([]); //Simulate header
-    ChataUtils.refreshPivotTable(tableElement, sortData);
-
-}
-
-
 ChataUtils.createCsvData = function(json, separator=','){
     var output = '';
     var lines = json['data']['rows'];
     var cols = json['data']['columns'];
-    for(var i = 0; i<cols.length; i++){
+    for(let i = 0; i<cols.length; i++){
         if(!cols[i]['is_visible'])continue;
         var colStr = cols[i]['display_name'] || cols[i]['name'];
         var colName = formatColumnName(colStr);
         output += colName + separator;
     }
     output += '\n';
-    for (var i = 0; i < lines.length; i++) {
+    for (let i = 0; i < lines.length; i++) {
         var data = lines[i];
         for (var x = 0; x < data.length; x++) {
             if(!cols[x]['is_visible'])continue;
@@ -978,7 +798,6 @@ ChataUtils.safetynetCall = function(url, callback, options, extraHeaders=[]){
         var key = Object.entries(obj)[0];
         xhr.setRequestHeader(key[0], key[1]);
     }
-    // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
     xhr.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     xhr.send();
 }
@@ -1134,10 +953,6 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
     }, options);
 }
 
-ChataUtils.getSupportedDisplayTypesArray = function(){
-    return getSupportedDisplayTypesArray();
-}
-
 ChataUtils.createSuggestions = function(responseContentContainer, data, classButton='autoql-vanilla-chata-suggestion-btn'){
     for (var i = 0; i < data.length; i++) {
         var div = document.createElement('div');
@@ -1149,7 +964,7 @@ ChataUtils.createSuggestions = function(responseContentContainer, data, classBut
     }
 }
 
-ChataUtils.registerWindowClicks = (evt) => {
+ChataUtils.registerWindowClicks = () => {
     const excludeElementsForChartSelector = [
         'autoql-vanilla-x-axis-label-border',
         'autoql-vanilla-y-axis-label-border',
@@ -1174,21 +989,20 @@ ChataUtils.registerWindowClicks = (evt) => {
     ]
 
     document.body.addEventListener('click', (evt) => {
-        var closePop = true;
         var closeChartPopovers = true;
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
 
-        for (var i = 0; i < excludeElementsForSafetynet.length; i++) {
-            var c = excludeElementsForSafetynet[i];
+        for (let i = 0; i < excludeElementsForSafetynet.length; i++) {
+            let c = excludeElementsForSafetynet[i];
             if(evt.target.classList.contains(c)){
                 closeSafetynetSelectors = false;
             }
         }
 
 
-        for (var i = 0; i < excludeElementsForChartSelector.length; i++) {
-            var c = excludeElementsForChartSelector[i]
+        for (let i = 0; i < excludeElementsForChartSelector.length; i++) {
+            let c = excludeElementsForChartSelector[i]
             if(evt.target.classList.contains(c)){
                 closeChartPopovers = false;
                 break;
@@ -1196,8 +1010,8 @@ ChataUtils.registerWindowClicks = (evt) => {
         }
 
 
-        for (var i = 0; i < excludeElementsForToolbars.length; i++) {
-            var c = excludeElementsForToolbars[i]
+        for (let i = 0; i < excludeElementsForToolbars.length; i++) {
+            let c = excludeElementsForToolbars[i]
             if(evt.target.classList.contains(c)){
                 closeToolbars = false;
                 break;
@@ -1225,7 +1039,7 @@ ChataUtils.registerWindowClicks = (evt) => {
             ChataUtils.registerWindowClicks();
         }, 3000)
     }
-    document.addEventListener("DOMContentLoaded", function(event) {
+    document.addEventListener("DOMContentLoaded", function() {
         try {
             window.addEventListener("load", initEvents, false);
         } catch(e) {

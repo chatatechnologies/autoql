@@ -28,7 +28,7 @@ export function ChataConfirmDialog(title, message, onDiscard){
             style="padding: 5px 16px; margin: 2px 5px;">Back</div>`
     )
 
-    cancelButton.onclick = (evt) => {
+    cancelButton.onclick = () => {
         configModal.close()
     }
 

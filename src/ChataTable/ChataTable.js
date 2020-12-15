@@ -79,13 +79,13 @@ function getPivotColumns(json, pivotColumns, options){
             index: index,
             headerFilter: "input",
             headerFilterFunc: (
-                headerValue, rowValue, rowData, filterParams) => {
+                headerValue, rowValue) => {
                 return callTableFilter(
                     columns[colIndex],
                     headerValue.toLowerCase(), rowValue, options
                 );
             },
-            formatter: (cell, formatterParams, onRendered) => {
+            formatter: (cell) => {
                 let value;
                 if(
                     cell.getValue() === '' &&
@@ -170,15 +170,15 @@ function getColumnsData(json, options, onHeaderClick){
             field: 'col_' + index,
             headerFilter: "input",
             visible: isVisible,
-            formatter: (cell, formatterParams, onRendered) => {
+            formatter: (cell) => {
                 return formatData(cell.getValue(), col, options);
             },
             headerFilterFunc: (
-                headerValue, rowValue, rowData, filterParams) => {
+                headerValue, rowValue) => {
                 return callTableFilter(col,
                     headerValue.toLowerCase(), rowValue, options);
             },
-            headerClick: (e, column) => {
+            headerClick: () => {
                 onHeaderClick()
             },
             sorter: setSorterFunction(col)
@@ -203,18 +203,14 @@ function getFirstDateColumn (json) {
     return firstDateFinded
 }
 
-function getTableData(json, options) {
+function getTableData(json) {
     const data = json['data']['rows'];
-    const columns = json['data']['columns'];
     var tableData = [];
-    let firstDateFinded = ''
+
     for (var i = 0; i < data.length; i++) {
         var row = data[i];
         var rowData = {}
         for (var x = 0; x < row.length; x++) {
-            var col = columns[x];
-            var colName = col['display_name'] || col['name'];
-            var type = col['type']
             rowData['col_' + x] = row[x];
         }
         tableData.push(rowData);

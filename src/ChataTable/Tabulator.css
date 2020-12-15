@@ -1,7 +1,6 @@
 /* Tabulator v4.6.3 (c) Oliver Folkerd */
 .tabulator {
   position: relative;
-  /* border: 1px solid #999; */
   background-color: #888;
   font-size: 14px;
   text-align: left;
@@ -44,8 +43,6 @@
   display: inline-block;
   position: relative;
   box-sizing: border-box;
-  /* border-right: 1px solid #aaa; */
-  /* background: #e6e6e6; */
   text-align: left;
   vertical-align: bottom;
   overflow: hidden;
