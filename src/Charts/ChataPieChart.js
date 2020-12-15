@@ -13,8 +13,6 @@ import {
 import {
     formatColumnName,
     formatData,
-    getGroupableField,
-    getNotGroupableField
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
@@ -30,8 +28,6 @@ export function createPieChart(
     var cols = json['data']['columns'];
     var colsEnum = enumerateCols(json);
     var indexList = getIndexesByType(colsEnum);
-    var groupableField = getGroupableField(json);
-    var notGroupableField = getNotGroupableField(json);
     var xIndexes = [];
     var yIndexes = [];
 
@@ -111,10 +107,6 @@ export function createPieChart(
         'chata-hidden-scrollbox'
     );
 
-    var legendRectSize = 15;
-    var legendSpacing = 1;
-
-
     var svg = select(component)
     .append('svg')
     .attr('width', width)
@@ -146,9 +138,8 @@ export function createPieChart(
     }
 
     var color = getColorScale(colorLabels, options.themeConfig.chartColors)
-    let path = undefined
 
-    path = pieChartContainer.selectAll('path')
+    pieChartContainer.selectAll('path')
     .data(dataReady)
     .enter()
     .append('path')
@@ -165,13 +156,13 @@ export function createPieChart(
     })
     .attr('d', arc)
     .style('fill-opacity', 0.85)
-    .on('mouseover', function(d) {
+    .on('mouseover', function() {
         select(this).style('fill-opacity', 1)
     })
-    .on('mouseout', function(d) {
+    .on('mouseout', function() {
         select(this).style('fill-opacity', 0.85)
     })
-    .on('click', function(d) {
+    .on('click', function() {
         svg
         .selectAll('path.slice')
         .each(function(data) {
@@ -179,7 +170,7 @@ export function createPieChart(
         })
         .transition()
         .duration(500)
-        .attr('transform', function(d){
+        .attr('transform', function(){
             return 'translate(0,0)';
         });
 
@@ -213,8 +204,8 @@ export function createPieChart(
 
     var labels = []
 
-    for (var i = 0; i < dataReady.length; i++) {
-        var d = dataReady[i]
+    for (let i = 0; i < dataReady.length; i++) {
+        let d = dataReady[i]
         labels.push(
             formatData(
                     d.data.key, cols[index1],

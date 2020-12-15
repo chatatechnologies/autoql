@@ -83,7 +83,7 @@ export function createStackedColumnChart(
     })
 
 
-    var data = ChataUtils.format3dData(
+    data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
 
@@ -206,7 +206,7 @@ export function createStackedColumnChart(
 
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
-            var popoverSelector = new ChataChartListPopover({
+            new ChataChartListPopover({
                 left: evt.clientX,
                 top: evt.clientY
             }, groupCols, (evt, popover) => {

@@ -32,7 +32,7 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         }
     }
 
-    var enableApplyButton = (evt) => {
+    var enableApplyButton = () => {
         const count = selectedCount();
         if(count == 0){
             applyButton.setAttribute('disabled', 'true');
@@ -117,9 +117,9 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         var wrapper = document.createElement('div');
         var buttonWrapper = document.createElement('div');
 
-        
+
         buttonWrapper.classList.add('autoql-vanilla-button-wrapper-selector')
-        for(var [key, value] of Object.entries(series)){
+        for(var [key] of Object.entries(series)){
             var header = document.createElement('div');
             var selectableList = document.createElement('div');
             selectableList.classList.add(

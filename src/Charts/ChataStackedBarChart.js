@@ -96,7 +96,7 @@ export function createStackedBarChart(
         }
     })
 
-    var data = ChataUtils.format3dData(
+    data = ChataUtils.format3dData(
         json, groups, metadataComponent.metadata3D
     );
 
@@ -198,7 +198,7 @@ export function createStackedBarChart(
 
         labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
-            var popoverSelector = new ChataChartListPopover({
+            new ChataChartListPopover({
                 left: evt.clientX,
                 top: evt.clientY
             }, groupCols, (evt, popover) => {
@@ -357,7 +357,7 @@ export function createStackedBarChart(
             return x(d[0]);
         })
         .attr("y", function(d) { return y(d.data.group) })
-        .attr("height", function(d) {
+        .attr("height", function() {
             return y.bandwidth();
         })
         .attr("width",function(d){
@@ -390,7 +390,7 @@ export function createStackedBarChart(
     )
 
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
-    legendOrdinal.on('cellclick', function(d, x) {
+    legendOrdinal.on('cellclick', function(d) {
         var words = []
         var nodes = d.currentTarget.getElementsByTagName('tspan')
         for (var i = 0; i < nodes.length; i++) {

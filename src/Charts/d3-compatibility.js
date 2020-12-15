@@ -87,12 +87,10 @@ export const getStackedAreaData = (visibleGroups, data) => {
             return 0;
         }
         return val;
-    })
-    (data)
+    })(data)
 }
 
 export const getStackedData = (visibleGroups, data) => {
     return stack()
-    .keys(visibleGroups)
-    (data)
+    .keys(visibleGroups)(data)
 }

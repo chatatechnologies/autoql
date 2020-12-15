@@ -126,7 +126,7 @@ export function createColumnChart(
         shapePadding = 5;
     }
 
-    data.forEach((item, i) => {
+    data.forEach((item) => {
         allLengths.push(formatLabel(item.label).length);
     });
 
@@ -139,7 +139,7 @@ export function createColumnChart(
 
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){
-            var m = longestString * increment + extraMargin;
+            let m = longestString * increment + extraMargin;
             if(hasLegend && m <= 50) m = 55;
             margin.bottomChart = m;
         }else{
@@ -148,7 +148,7 @@ export function createColumnChart(
 
     }else{
         if(rotateLabels){
-            var m = longestString * 3;
+            let m = longestString * 3;
             margin.bottomChart = m;
         }else{
             margin.bottomChart = 13;
@@ -251,9 +251,9 @@ export function createColumnChart(
         .attr('transform', 'rotate(-180)')
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-        labelYContainer.on('mouseup', (evt) => {
+        labelYContainer.on('mouseup', () => {
             closeAllChartPopovers();
-            var popoverSelector = new ChataChartSeriesPopover({
+            new ChataChartSeriesPopover({
                 left: event.clientX,
                 top: event.clientY
             }, cols, activeSeries, (evt, popover, _activeSeries) => {
@@ -310,7 +310,7 @@ export function createColumnChart(
         .attr('rx', '4')
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', (evt) => {
+        labelXContainer.on('mouseup', () => {
             closeAllChartPopovers();
             const selectedItem = metadataComponent.metadata.groupBy.currentLi;
             var popoverSelector = new ChataChartListPopover({
@@ -345,8 +345,6 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            const colType = cols[index2].type
-            // if(colType === 'DATE' || colType === 'DATE_STRING')return d
             return formatLabel(formatChartData(d, cols[index2], options))
         }))
         .selectAll("text")
@@ -356,8 +354,6 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            const colType = cols[index2].type
-            // if(colType === 'DATE' || colType === 'DATE_STRING')return d
             return formatLabel(formatChartData(d, cols[index2], options))
         }))
         .selectAll("text")
@@ -404,12 +400,9 @@ export function createColumnChart(
             return d.values;
         })
         .enter().append("rect")
-        .each(function (d, i) {
-            var _col = cols[d.index];
-            var serieName = _col['display_name'] || _col['name'];
+        .each(function (d) {
             var group = col2;
             if(groupNames.length > 1)group = d.group
-            const type = cols[index2].type;
             var toolTipColValue1 = d.label
             toolTipColValue1 = formatData(
                 d.label, cols[index2],
@@ -478,7 +471,6 @@ export function createColumnChart(
                 legendBBox = legendElement.getBBox()
             }
 
-            const legendHeight = legendBBox.height
             const legendWidth = legendBBox.width
             const legendXPosition = width / 2 - (legendWidth/2)
             const legendYPosition = height + 35

@@ -77,7 +77,7 @@ export const getVisibleSeries = (_data) => {
 
 export const getVisibleGroups = (groups) => {
     var visibleGroups = [];
-    for(var [key, value] of Object.entries(groups)){
+    for(var [key] of Object.entries(groups)){
         if(groups[key].isVisible)visibleGroups.push(key)
     }
 
@@ -134,7 +134,7 @@ export const sumEquals = (items, labelIndex, key, serieIndex) => {
 
 export const convertoTo2DChartData = (groupedData) => {
     var output = []
-    for(var [key, value] of Object.entries(groupedData)){
+    for(var [key] of Object.entries(groupedData)){
         output.push({
             label: key,
             values: groupedData[key]
@@ -185,11 +185,8 @@ export const responseToArrayObjects = (json, groups) => {
     var dataGrouped = [];
     var data = json['data']['rows'];
     var groupables = getGroupableFields(json);
-    var notGroupableField = getNotGroupableField(json);
 
-    var groupableIndex1 = groupables[0].indexCol;
     var groupableIndex2 = groupables[1].indexCol;
-    var notGroupableIndex = notGroupableField.indexCol;
 
     for (var i = 0; i < groups.length; i++) {
         var group = groups[i];
