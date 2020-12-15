@@ -19,7 +19,6 @@ import {
     getSupportedDisplayTypes,
     allColHiddenMessage,
     closeAllToolbars,
-    mouseY,
     cloneObject,
     getNumberOfGroupables,
     formatData,
@@ -43,7 +42,12 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
-import { LIGHT_THEME, DARK_THEME, DATA_LIMIT_MESSAGE } from '../Constants'
+import {
+    LIGHT_THEME,
+    DARK_THEME,
+    DATA_LIMIT_MESSAGE,
+    ERROR_MESSAGE
+} from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -53,7 +57,6 @@ import {
     VOICE_RECORD_IMAGE,
     DATA_MESSENGER,
     QUERY_TIPS,
-    NOTIFICATIONS_ICON,
     SEARCH_ICON,
     TABLE_ICON,
     COLUMN_CHART_ICON,
@@ -71,7 +74,8 @@ import {
     COLUMN_EDITOR,
     DELETE_MESSAGE,
     VERTICAL_DOTS,
-    DATA_LIMIT_WARNING
+    DATA_LIMIT_WARNING,
+    HELP_ICON
 } from '../Svg'
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
@@ -124,11 +128,11 @@ export function DataMessenger(elem, options){
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
-        onVisibleChange: function(datamessenger) {},
-        onHandleClick: function(datamessenger){},
+        onVisibleChange: function() {},
+        onHandleClick: function(){},
         showMask: true,
         shiftScreen: false,
-        onMaskClick: function(datamessenger){},
+        onMaskClick: function(){},
         maskClosable: true,
         userDisplayName: 'there',
         maxMessages: -1,
@@ -155,30 +159,30 @@ export function DataMessenger(elem, options){
     var rootElem = document.querySelector(elem);
 
     if('authentication' in options){
-        for (var [key, value] of Object.entries(options['authentication'])) {
+        for (let [key, value] of Object.entries(options['authentication'])) {
             obj.options.authentication[key] = value;
         }
     }
 
     if('dataFormatting' in options){
-        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+        for (let [key, value] of Object.entries(options['dataFormatting'])) {
             obj.options.dataFormatting[key] = value;
         }
     }
 
     if('autoQLConfig' in options){
-        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
+        for (let [key, value] of Object.entries(options['autoQLConfig'])) {
             obj.options.autoQLConfig[key] = value;
         }
     }
 
     if('themeConfig' in options){
-        for (var [key, value] of Object.entries(options['themeConfig'])) {
+        for (let [key, value] of Object.entries(options['themeConfig'])) {
             obj.options.themeConfig[key] = value;
         }
     }
 
-    for (var [key, value] of Object.entries(options)) {
+    for (let [key, value] of Object.entries(options)) {
         if(typeof value !== 'object'){
             obj.options[key] = value;
         }
@@ -315,6 +319,7 @@ export function DataMessenger(elem, options){
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
                 obj.input.setAttribute('placeholder', value);
+                break
             case 'userDisplayName':
                 obj.options.userDisplayName = value;
                 obj.options.introMessage = "Hi " +
@@ -330,6 +335,7 @@ export function DataMessenger(elem, options){
             case 'queryQuickStartTopics':
                 obj.options.queryQuickStartTopics = value;
                 obj.createIntroMessageTopics();
+                break
             default:
                 obj.options[option] = value;
         }
@@ -359,7 +365,7 @@ export function DataMessenger(elem, options){
         drawerButton.classList.add('open-action');
         drawerButton.classList.add(obj.options.placement + '-btn');
         drawerButton.appendChild(drawerIcon);
-        drawerButton.addEventListener('click', function(e){
+        drawerButton.addEventListener('click', function(){
             obj.options.onHandleClick(obj);
             obj.openDrawer();
         })
@@ -551,45 +557,17 @@ export function DataMessenger(elem, options){
             obj.wrapper.style.opacity = 0;
             obj.wrapper.style.height = 0;
         }
-        wrapper.onclick = (evt) => {
+        wrapper.onclick = () => {
             if(obj.options.showMask && obj.options.maskClosable){
                 obj.options.onMaskClick(this);
             }
         }
     }
 
-    obj.onLoadHandler = (evt) => {
+    obj.onLoadHandler = () => {
         if (document.readyState === "interactive" ||
             document.readyState === "complete" ) {
             obj.initialScroll = window.scrollY;
-            // obj.createDrawerButton();
-            // obj.createWrapper();
-            // obj.applyStyles();
-            // obj.createHeader();
-            // obj.createDrawerContent();
-            // obj.createIntroMessageTopics();
-            // obj.createBar();
-            // obj.createResizeHandler();
-            // obj.createQueryTabs();
-            // obj.createQueryTips();
-            // obj.createNotifications();
-            // obj.speechToTextEvent();
-            // obj.registerWindowClicks();
-            // obj.openDrawer();
-            // obj.closeDrawer();
-            // refreshTooltips();
-            // var isVisible = obj.options.isVisible;
-            //
-            // if(isVisible){
-            //     obj.openDrawer();
-            // }else{
-            //     obj.closeDrawer();
-            // }
-
-            // obj.rootElem.addEventListener('click', (evt) => {
-            //     // REPLACE WITH onclick event
-            //
-            // });
         }
     }
 
@@ -657,9 +635,8 @@ export function DataMessenger(elem, options){
             </button>
         `)
 
-        // container.appendChild(button);
 
-        button.onclick = (evt) => {
+        button.onclick = () => {
             var modalView = new NotificationSettingsModal(obj.options);
             var configModal = new Modal({
                 withFooter: true,
@@ -687,15 +664,15 @@ export function DataMessenger(elem, options){
             configModal.addView(modalView);
             configModal.setTitle('Create New Data Alert');
             configModal.show();
-            cancelButton.onclick = (e) => {
+            cancelButton.onclick = () => {
                 configModal.close();
             }
-            saveButton.onclick = (e) => {
+            saveButton.onclick = () => {
                 spinner.classList.remove('hidden')
                 saveButton.setAttribute('disabled', 'true')
                 var o = obj.options
                 const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-                ChataUtils.ajaxCallPost(URL, (json, status) => {
+                ChataUtils.ajaxCallPost(URL, () => {
                     configModal.close();
                 }, modalView.getValues(), o)
             }
@@ -743,7 +720,6 @@ export function DataMessenger(elem, options){
 
         var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
         var queryTabsIcon = htmlToElement(QUERY_TIPS);
-        var notificationTabIcon = htmlToElement(NOTIFICATIONS_ICON);
         pageSwitcherShadowContainer.classList.add(
             'autoql-vanilla-page-switcher-shadow-container'
         );
@@ -771,7 +747,7 @@ export function DataMessenger(elem, options){
         pageSwitcherContainer.appendChild(tabQueryTips)
         pageSwitcherContainer.appendChild(tabNotifications);
 
-        tabChataUtils.onclick = function(event){
+        tabChataUtils.onclick = function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
@@ -783,7 +759,7 @@ export function DataMessenger(elem, options){
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('none');
         }
-        tabQueryTips.onclick = function(event){
+        tabQueryTips.onclick = function(){
             tabQueryTips.classList.add('active');
             tabChataUtils.classList.remove('active');
             tabNotifications.classList.remove('active');
@@ -793,7 +769,7 @@ export function DataMessenger(elem, options){
             obj.notificationsAnimation('none');
         }
 
-        tabNotifications.onclick = function(event){
+        tabNotifications.onclick = function(){
             obj.scrollBox.scrollTop = 0;
             obj.scrollBox.style.overflow = 'hidden';
             obj.scrollBox.style.maxHeight = '100%';
@@ -891,10 +867,10 @@ export function DataMessenger(elem, options){
                 textBar.appendChild(chatBarLoadingSpinner);
                 var options = obj.options;
                 const URL = obj.getRelatedQueriesPath(
-                    1, searchVal, obj.options
+                    1, searchVal, options
                 );
 
-                var response = await apiCallGet(URL, obj.options)
+                var response = await apiCallGet(URL, options)
                 textBar.removeChild(chatBarLoadingSpinner);
                 obj.putRelatedQueries(
                     response.data, queryTipsResultContainer,
@@ -925,13 +901,6 @@ export function DataMessenger(elem, options){
                 obj.sendMessage(
                     chataInput.value, 'data_messenger.validation', selections
                 )
-
-                // var ev = new KeyboardEvent('keypress', {
-                //     keyCode: 13,
-                //     type: "keypress",
-                //     which: 13
-                // });
-                // chataInput.dispatchEvent(ev)
             }else{
                 chataInput.value = subQuery;
             }
@@ -979,8 +948,6 @@ export function DataMessenger(elem, options){
         var nextUrl = `${options.authentication.domain}${nextPath}`;
         var previousUrl = `${options.authentication.domain}${previousPath}`;
 
-
-        const pageSize = response.data.pagination.page_size;
         const totalItems = response.data.pagination.total_items;
         const pages = response.data.pagination.total_pages;
         const currentPage = response.data.pagination.current_page;
@@ -1061,7 +1028,7 @@ export function DataMessenger(elem, options){
         queryTipsResultContainer.innerHTML = '';
         queryTipsResultContainer.appendChild(queryTipListContainer);
         // var totalPages = pages > 5 ? 5 : pages;
-        for (var i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             if(i >= pages)break;
             var li = document.createElement('li')
             var a = document.createElement('a')
@@ -1075,8 +1042,8 @@ export function DataMessenger(elem, options){
             if(i == 2){
                 if(currentPage == 3){
                     a.textContent = currentPage;
-                    var rightDots = document.createElement('li');
-                    var aDots = document.createElement('a');
+                    let rightDots = document.createElement('li');
+                    let aDots = document.createElement('a');
                     aDots.textContent = '...';
                     rightDots.appendChild(aDots);
                     pagination.appendChild(rightDots);
@@ -1085,8 +1052,8 @@ export function DataMessenger(elem, options){
                 }else if(currentPage > 3 && currentPage <= pages-2){
                     a.textContent = currentPage;
                     li.classList.add('selected');
-                    var rightDots = document.createElement('li');
-                    var aDots = document.createElement('a');
+                    let rightDots = document.createElement('li');
+                    let aDots = document.createElement('a');
                     aDots.textContent = '...';
                     rightDots.appendChild(aDots);
                     aDots.setAttribute('data-page', currentPage+1);
@@ -1120,10 +1087,10 @@ export function DataMessenger(elem, options){
         }
 
         if(pages > 3){
-            for (var i = pages-2; i < pages; i++) {
+            for (let i = pages-2; i < pages; i++) {
                 if(i >= pages)break;
-                var li = document.createElement('li')
-                var a = document.createElement('a')
+                let li = document.createElement('li')
+                let a = document.createElement('a')
                 if(i == currentPage-1){
                     li.classList.add('selected')
                 }
@@ -1210,7 +1177,7 @@ export function DataMessenger(elem, options){
             }, 100);
         }
 
-        function stopResize(e) {
+        function stopResize() {
             window.removeEventListener('mousemove', resizeItem, false);
             window.removeEventListener('mouseup', stopResize, false);
         }
@@ -1372,11 +1339,11 @@ export function DataMessenger(elem, options){
             'autoql-vanilla-chat-header-container'
         );
 
-        closeButton.onclick = (evt) => {
+        closeButton.onclick = () => {
             obj.closeDrawer();
         }
 
-        clearAllButton.onclick = (evt) => {
+        clearAllButton.onclick = () => {
             closeAllChartPopovers();
             popover.style.visibility = 'visible';
             popover.style.opacity = 1;
@@ -1448,6 +1415,7 @@ export function DataMessenger(elem, options){
             try {
                 obj.options.xhr.abort();
             } catch (e) {
+                console.log(e);
             }
             clearTimeout(obj.autoCompleteTimer);
             obj.autoCompleteList.style.display = 'none';
@@ -1463,7 +1431,6 @@ export function DataMessenger(elem, options){
         var textBar = document.createElement('div');
         var chataInput = document.createElement('input');
         var voiceRecordButton = document.createElement('button');
-        var display = obj.options.enableVoiceRecord ? 'block' : 'none';
         var watermark = htmlToElement(`
             <div class="autoql-vanilla-watermark">
                 ${WATERMARK}
@@ -1505,7 +1472,7 @@ export function DataMessenger(elem, options){
             obj.autoCompleteHandler(evt);
         }
 
-        voiceRecordButton.onmouseup = (evt) => {
+        voiceRecordButton.onmouseup = () => {
             obj.speechToText.stop();
             voiceRecordButton.style.backgroundColor =
             obj.options.themeConfig.accentColor;
@@ -1513,7 +1480,7 @@ export function DataMessenger(elem, options){
             obj.isRecordVoiceActive = false;
         }
 
-        voiceRecordButton.onmousedown = (evt) => {
+        voiceRecordButton.onmousedown = () => {
             obj.speechToText.start();
             voiceRecordButton.style.backgroundColor = '#FF471A';
             obj.isRecordVoiceActive = true;
@@ -1538,14 +1505,12 @@ export function DataMessenger(elem, options){
     obj.speechToTextEvent = () => {
         if(obj.speechToText){
             obj.speechToText.onresult = (e) => {
-                let interimTranscript = '';
+
                 for (let i = e.resultIndex,
                     len = e.results.length; i < len; i++) {
                     let transcript = e.results[i][0].transcript;
                     if (e.results[i].isFinal) {
                         obj.finalTranscript += transcript;
-                    } else {
-                        interimTranscript += transcript;
                     }
                 }
                 if(obj.finalTranscript !== ''){
@@ -1954,7 +1919,7 @@ export function DataMessenger(elem, options){
             }
         }else{
             var cols = [];
-            for(var [key, value] of Object.entries(params)){
+            for(let [key, value] of Object.entries(params)){
                 cols.push({
                     name: key,
                     value: value
@@ -1971,23 +1936,23 @@ export function DataMessenger(elem, options){
 
         responseLoadingContainer.classList.add('response-loading-container');
         responseLoading.classList.add('response-loading');
-        for (var i = 0; i <= 3; i++) {
+        for (let i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }
 
         responseLoadingContainer.appendChild(responseLoading);
         obj.drawerContent.appendChild(responseLoadingContainer);
         var response = await apiCallPost(URL, data, options);
-        var json = response.data
+        var responseJson = response.data
         var status = response.status
         obj.drawerContent.removeChild(responseLoadingContainer);
-        if(!json['data']['rows']){
+        if(!responseJson['data']['rows']){
             obj.putClientResponse(ERROR_MESSAGE);
         }
-        else if(json['data']['rows'].length > 0){
-            obj.putTableResponse(json, true);
+        else if(responseJson['data']['rows'].length > 0){
+            obj.putTableResponse(responseJson, true);
         }else{
-            obj.putSimpleResponse(json, '', status, true);
+            obj.putSimpleResponse(responseJson, '', status, true);
         }
         refreshTooltips();
     }
@@ -2174,7 +2139,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pivot_table');
         var table = new ChataPivotTable(
@@ -2380,15 +2344,14 @@ export function DataMessenger(elem, options){
         var index = 0;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
         if(groupableCount > 0){
-            for(var[key, value] of Object.entries(row._row.data)){
-                json['data']['rows'][0][index++] = value;
+            for(var entries of Object.entries(row._row.data)){
+                json['data']['rows'][0][index++] = entries[1];
             }
             obj.sendDrilldownMessage(json, 0, obj.options);
         }
     }
 
     obj.onCellClick = (e, cell, json) => {
-        const columns = json['data']['columns'];
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
@@ -2411,7 +2374,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.putTableResponse = (jsonResponse, isDrilldown=false) => {
-        var data = jsonResponse['data']['rows'];
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
@@ -2586,16 +2548,10 @@ export function DataMessenger(elem, options){
                     obj.inputAnimation(evt.target.textContent);
                 }
 
-                var response = await apiCallPut(url, body, obj.options)
+                await apiCallPut(url, body, obj.options)
                 obj.drawerContent.removeChild(loading);
                 obj.putClientResponse('Thank you for your feedback', {}, true)
 
-                // ChataUtils.putCall(url, body , (jsonResponse) => {
-                //     if(evt.target.textContent === 'None of these'){
-                //         obj.drawerContent.removeChild(loading);
-                //         obj.sendResponse('Thank you for your feedback')
-                //     }
-                // }, obj.options)
             }
         }
     }
@@ -2603,11 +2559,9 @@ export function DataMessenger(elem, options){
     obj.putSuggestionResponse = (relatedJson, jsonResponse) => {
         var uuid = uuidv4();
         ChataUtils.responses[uuid] = jsonResponse;
-        var data = jsonResponse['data']['items'];
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
-        var lastBubble = obj.getLastMessageBubble();
 
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
@@ -2730,7 +2684,7 @@ export function DataMessenger(elem, options){
 
         }else{
             // value = jsonResponse['message'].replace('<report>', '');
-            var error = new ErrorMessage(jsonResponse['message'], (evt) => {
+            var error = new ErrorMessage(jsonResponse['message'], () => {
                 ChataUtils.openModalReport(
                     idRequest, obj.options, null, null
                 )
@@ -2740,7 +2694,7 @@ export function DataMessenger(elem, options){
         }
         var div = document.createElement('div');
         if(hasDrilldown){
-            div.onclick = (evt) => {
+            div.onclick = () => {
                 obj.sendDrilldownMessage(jsonResponse, 0, obj.options);
             }
         }
@@ -2800,7 +2754,6 @@ export function DataMessenger(elem, options){
 
     obj.putSafetynetMessage = function(jsonResponse){
         var suggestionArray = createSuggestionArray(jsonResponse);
-        var div = document.createElement('div');
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var uuid = uuidv4();
@@ -2847,7 +2800,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.putHelpMessage = function(jsonResponse){
-        var div = document.createElement('div');
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
 
@@ -2910,7 +2862,7 @@ export function DataMessenger(elem, options){
 
             obj.putSafetynetMessage(response.data)
         }else{
-            var response = await apiCall(
+            let response = await apiCall(
                 textValue, obj.options, source, selections
             )
             var status = response.status
@@ -2975,18 +2927,18 @@ export function DataMessenger(elem, options){
                     obj.putTableResponse(jsonResponse);
                 break;
                 case 'line':
-                    var component = obj.putTableResponse(jsonResponse);
+                    var lineContainer = obj.putTableResponse(jsonResponse);
                     createLineChart(
-                        component, jsonResponse, pbj.options
+                        lineContainer, jsonResponse, obj.options
                     );
-                    pbj.refreshToolbarButtons(component, 'line');
+                    obj.refreshToolbarButtons(lineContainer, 'line');
                 break;
                 case 'bar':
-                    var component = obj.putTableResponse(jsonResponse);
+                    var barContainer = obj.putTableResponse(jsonResponse);
                     createBarChart(
-                        component, jsonResponse, pbj.options
+                        barContainer, jsonResponse, obj.options
                     );
-                    pbj.refreshToolbarButtons(component, 'bar');
+                    obj.refreshToolbarButtons(barContainer, 'bar');
                 break;
                 case 'word_cloud':
                     obj.putTableResponse(jsonResponse);
@@ -3006,34 +2958,30 @@ export function DataMessenger(elem, options){
                     );
                 break;
                 case 'bubble':
-                    var component = obj.putTableResponse(
+                    var bubbleContainer = obj.putTableResponse(
                         jsonResponse
                     );
-                    var cols = jsonResponse['data']['columns'];
                     createBubbleChart(
-                        component, jsonResponse, obj.options
+                        bubbleContainer, jsonResponse, obj.options
                     );
-                    obj.refreshToolbarButtons(component, 'bubble');
+                    obj.refreshToolbarButtons(bubbleContainer, 'bubble');
                 break;
                 case 'heatmap':
-                    var component = obj.putTableResponse(jsonResponse);
+                    var mapContainer = obj.putTableResponse(jsonResponse);
                     createHeatmap(
-                        component, jsonResponse, obj.options
+                        mapContainer, jsonResponse, obj.options
                     );
-                    obj.refreshToolbarButtons(component, 'heatmap');
+                    obj.refreshToolbarButtons(mapContainer, 'heatmap');
                 break;
                 case 'pie':
                     obj.putTableResponse(jsonResponse);
                 break;
                 case 'column':
-                    var idRequest = obj.putTableResponse(
+                    var _idRequest = obj.putTableResponse(
                         jsonResponse
                     );
-                    obj.displayColumChartHandler(null, idRequest)
-                    // createColumnChart(
-                    //     component, jsonResponse, obj.options
-                    // );
-                    // obj.refreshToolbarButtons(component, 'column');
+                    obj.displayColumChartHandler(null, _idRequest)
+
                 break;
                 case 'help':
                     obj.putHelpMessage(jsonResponse);
@@ -3063,8 +3011,7 @@ export function DataMessenger(elem, options){
     obj.createNotifications();
     obj.speechToTextEvent();
     obj.registerWindowClicks();
-    // obj.openDrawer();
-    // obj.closeDrawer();
+
     refreshTooltips();
     var isVisible = obj.options.isVisible;
 

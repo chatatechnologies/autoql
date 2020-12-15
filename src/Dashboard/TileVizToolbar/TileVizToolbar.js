@@ -27,7 +27,7 @@ export function TileVizToolbar(json, view, tile){
     dummyArray.forEach.call(view.querySelectorAll(
         '.autoql-vanilla-viz-toolbar'
     ),
-    function(e, index){
+    function(e){
         e.parentNode.removeChild(e)
     })
 
@@ -101,7 +101,7 @@ export function TileVizToolbar(json, view, tile){
             }
             if(button.innerHTML != ''){
                 vizToolbar.appendChild(button)
-                button.onclick = function(event){
+                button.onclick = function(){
                     dashboard.setUndoData('display-type-change', () => {
                         var curValue = view.internalDisplayType
                         view.internalDisplayType = ignoreDisplayType

@@ -143,8 +143,8 @@ export function TileView(tile, isSecond=false){
         var index = 0;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
         if(groupableCount > 0){
-            for(var[key, value] of Object.entries(row._row.data)){
-                json['data']['rows'][0][index++] = value;
+            for(var entries of Object.entries(row._row.data)){
+                json['data']['rows'][0][index++] = entries[1];
             }
             let title = view.getQuery()
 
