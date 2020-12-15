@@ -113,8 +113,6 @@ export function Tile(dashboard, options){
     <div class="autoql-vanilla-placeholder-top"></div>
     <div class="autoql-vanilla-placeholder-content"></div>
     `
-    const notExecutedText = dashboard.options.notExecutedText
-
     const divider = `
     <div class="autoql-vanilla-dashboard-tile-title-divider">
     </div>`
@@ -174,7 +172,7 @@ export function Tile(dashboard, options){
     deleteButton.style.visibility = 'hidden'
 
 
-    deleteButton.onclick = (evt) => {
+    deleteButton.onclick = () => {
         var tiles = []
         dashboard.grid.removeWidget(item)
         dashboard.tiles.map((tile) => {
@@ -215,7 +213,6 @@ export function Tile(dashboard, options){
             query,
             title,
             key,
-            i,
             isSplit,
         } = item.options
 
@@ -268,11 +265,11 @@ export function Tile(dashboard, options){
         }
     }
 
-    item.inputQuery.onblur = (event) => {
+    item.inputQuery.onblur = () => {
         inputContainer1.classList.remove('clicked')
     }
 
-    item.inputQuery.onfocus = (event) => {
+    item.inputQuery.onfocus = () => {
         inputContainer1.classList.add('clicked')
         var oldText = item.inputQuery.value
         dashboard.setUndoData('query-change', () => {
@@ -283,11 +280,11 @@ export function Tile(dashboard, options){
         }, item)
     }
 
-    item.inputTitle.onblur = (event) => {
+    item.inputTitle.onblur = () => {
         inputContainer2.classList.remove('clicked')
     }
 
-    item.inputTitle.onfocus = (event) => {
+    item.inputTitle.onfocus = () => {
         inputContainer2.classList.add('clicked')
         var oldText = item.inputTitle.value
         dashboard.setUndoData('title-change', () => {

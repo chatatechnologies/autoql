@@ -37,13 +37,13 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 case 'bar':
                 case 'pie':
                 case 'line':
-                case 'pivot_table':
                 case 'heatmap':
                 case 'bubble':
                 case 'stacked_column':
                 case 'stacked_bar':
                 case 'stacked_line':
                 toolbarType = 'chart-view';
+                break
                 default:
             }
         }

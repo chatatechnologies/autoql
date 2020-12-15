@@ -75,7 +75,7 @@ export function DrilldownView(
             json
         } = params
 
-        var loading = view.showLoadingDots()
+        view.showLoadingDots()
 
         setTimeout(() => {
             ChataUtils.responses[UUID] = json
@@ -83,12 +83,12 @@ export function DrilldownView(
         }, 400)
     }
 
-    view.executeDrilldown = async (params) => {
+    view.executeDrilldown = async (args) => {
         const {
             json,
             indexData,
             options
-        } = params
+        } = args
 
         var loading = view.showLoadingDots()
         let data
@@ -104,7 +104,7 @@ export function DrilldownView(
         }
 
         var cols = []
-        for(var [key, value] of Object.entries(params)){
+        for(var [key] of Object.entries(params)){
             cols.push({
                 name: key,
                 value: value
@@ -122,7 +122,7 @@ export function DrilldownView(
         if(response.data.data.rows.length > 0){
             view.displayData(response.data)
         }else{
-            var error = new ErrorMessage(response.data.message, (evt) => {
+            var error = new ErrorMessage(response.data.message, () => {
                 ChataUtils.openModalReport(
                     UUID, dashboard.options, null, null
                 )
@@ -153,18 +153,20 @@ export function DrilldownView(
     view.displayData = (json) => {
         var container = view
         view.innerHTML = ''
+        let chartWrapper
+        let chartWrapper2
 
         switch (displayType) {
             case 'table':
-                var div = createTableContainer()
+                var tableContainer = createTableContainer()
                 div.setAttribute('data-componentid', UUID)
-                container.appendChild(div)
+                container.appendChild(tableContainer)
                 var scrollbox = document.createElement('div')
                 scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
                 )
                 scrollbox.classList.add('no-full-width')
-                scrollbox.appendChild(div)
+                scrollbox.appendChild(tableContainer)
                 container.appendChild(scrollbox)
                 var table = new ChataTable(
                     UUID, dashboard.options, view.onRowClick
@@ -173,8 +175,8 @@ export function DrilldownView(
                 table.parentContainer = view
                 break
             case 'bar':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -188,8 +190,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'column':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -203,8 +205,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'line':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -218,8 +220,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'heatmap':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -235,8 +237,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'bubble':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -250,8 +252,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'stacked_bar':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -266,8 +268,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'stacked_column':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -282,8 +284,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
                 break
             case 'stacked_line':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -298,8 +300,8 @@ export function DrilldownView(
                 view.registerDrilldownChartEvent(chartWrapper)
             break
             case 'pie':
-                var chartWrapper = document.createElement('div')
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -315,17 +317,17 @@ export function DrilldownView(
                 var div = createTableContainer()
                 div.setAttribute('data-componentid', UUID)
                 container.appendChild(div)
-                var scrollbox = document.createElement('div')
-                scrollbox.classList.add(
+                var _scrollbox = document.createElement('div')
+                _scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
                 )
-                scrollbox.classList.add('no-full-width')
-                scrollbox.appendChild(div)
+                _scrollbox.classList.add('no-full-width')
+                _scrollbox.appendChild(div)
                 container.appendChild(scrollbox)
-                var table = new ChataPivotTable(
+                var _table = new ChataPivotTable(
                     UUID, dashboard.options, view.onCellClick
                 )
-                div.tabulator = table
+                div.tabulator = _table
                 break
         }
     }

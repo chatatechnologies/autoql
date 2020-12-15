@@ -37,34 +37,6 @@ export const DASHBOARD_LIGHT_THEME = {
     '--chata-dashboard-text-color-placeholder': '#0000009c'
 }
 
-
-
-export const MONTH_NAMES = [
-    "January", "February", "March",
-    "April", "May", "June", "July",
-    "August", "September", "October",
-    "November", "December"
-];
-
-export const DISPLAY_TYPES_2D = [
-    'table',
-    'column',
-    'bar',
-    'line',
-    'compare_table',
-    'pie'
-];
-
-export const DISPLAY_TYPES_3D  = [
-    'table',
-    // 'date_pivot',
-    'pivot_column',
-    'heatmap',
-    'bubble',
-    'stacked_bar',
-    'stacked_column'
-];
-
 export const ERROR_MESSAGE = `
 Oops! It looks like our system is experiencing an issue.
 Try querying again. If the problem persists,

@@ -34,7 +34,7 @@ export function InputToolbar(view, value){
     input.setAttribute('placeholder', 'Query')
     input.value = value
 
-    button.onclick = (evt) => {
+    button.onclick = () => {
         if(input.classList.contains('open')){
             input.classList.remove('open')
             input.style.width = 0

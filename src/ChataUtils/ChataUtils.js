@@ -196,35 +196,6 @@ ChataUtils.exportPNGHandler = (idRequest) => {
     );
     var svg = component.getElementsByTagName('svg')[0];
     saveSvgAsPng(svg, 'Chart.png', { scale: 2 })
-    // svgToPng(svg, 20)
-    // .then((data) => {
-    //     let dt = data // << this fails in IE/Edge...
-    //     dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream')
-    //     dt = dt.replace(
-    //         /^data:application\/octet-stream/,
-    //         'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=Canvas.png'
-    //     )
-    //
-    //     const link = document.createElement('a')
-    //     link.setAttribute('href', dt)
-    //     link.setAttribute('download', 'Chart.png')
-    //     link.setAttribute('target', '_blank')
-    //     link.style.display = 'none'
-    //     document.body.appendChild(link)
-    //     link.click()
-    //     document.body.removeChild(link)
-    // })
-    // .catch((error) => {
-    //     console.error(error)
-    // })
-
-    // var svgString = getSVGString(svg);
-    //
-    // svgString2Image(
-    //     svgString,
-    //     2*component.clientWidth,
-    //     2*component.clientHeight
-    // );
 }
 
 ChataUtils.filterTableHandler = (evt, idRequest) => {
@@ -695,8 +666,6 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
 ChataUtils.getUniqueValues = function(data, getter){
     let unique = {};
     data.forEach(function(i) {
-        // &&
-        // if(typeof getter(i) !== 'string')return
         if(!unique[getter(i)]) {
             unique[getter(i)] = true;
         }
@@ -810,9 +779,6 @@ ChataUtils.ajaxCall = function(val, callback, options, source){
     const data = {
         text: val,
         source: source,
-        // username: options.authentication.demo ? 'widget-demo' : options.authentication.userId || 'widget-user',
-        // customer_id: options.authentication.customerId || "",
-        // user_id: options.authentication.userId || "",
         debug: options.autoQLConfig.debug,
         test: options.autoQLConfig.test
     }
@@ -830,7 +796,6 @@ ChataUtils.ajaxCall = function(val, callback, options, source){
     xhr.open('POST', url);
     xhr.setRequestHeader("Content-Type", "application/json");
     if(!options.authentication.demo){
-        // xhr.setRequestHeader("Access-Control-Allow-Origin","*");
         xhr.setRequestHeader("Authorization", `Bearer ${options.authentication.token}`);
     }
     xhr.send(JSON.stringify(data));
@@ -915,10 +880,6 @@ ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
             callback(jsonResponse);
         }
     };
-    // ChataUtils.xhr.open('GET', url);
-    // ChataUtils.xhr.setRequestHeader("Access-Control-Allow-Origin","*");
-    // ChataUtils.xhr.setRequestHeader("Authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
-    // ChataUtils.xhr.send();
     options.xhr.open('GET', url);
     options.xhr.setRequestHeader("authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
     options.xhr.send();

@@ -7,7 +7,6 @@ import {
     apiCall,
     apiCallGet,
     closeAllToolbars,
-    allColsHidden,
     cloneObject,
     getNumberOfGroupables,
     getSafetynetValues,
@@ -18,9 +17,6 @@ import {
     htmlToElement,
     getGroupables
 } from '../../Utils'
-import {
-    getGroupableFields
-} from '../../Charts/ChataChartHelpers'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
 import { ChataPopover } from '../../ChataComponents'
 import { ErrorMessage } from '../../ErrorMessage'
