@@ -1,9 +1,5 @@
 import { GridStack } from 'gridstack'
 import { Tile } from './Tile'
-import {
-    uuidv4
-} from '../Utils'
-
 import './Dashboard.css'
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/h5/gridstack-dd-native';
@@ -79,30 +75,30 @@ export function Dashboard(selector, options={}){
     obj.options.tiles = options.tiles
 
     if('authentication' in options){
-        for (var [key, value] of Object.entries(options['authentication'])) {
+        for (let [key, value] of Object.entries(options['authentication'])) {
             obj.options.authentication[key] = value
         }
     }
 
     if('dataFormatting' in options){
-        for (var [key, value] of Object.entries(options['dataFormatting'])) {
+        for (let [key, value] of Object.entries(options['dataFormatting'])) {
             obj.options.dataFormatting[key] = value
         }
     }
 
     if('autoQLConfig' in options){
-        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
+        for (let [key, value] of Object.entries(options['autoQLConfig'])) {
             obj.options.autoQLConfig[key] = value
         }
     }
 
     if('themeConfig' in options){
-        for (var [key, value] of Object.entries(options['themeConfig'])) {
+        for (let [key, value] of Object.entries(options['themeConfig'])) {
             obj.options.themeConfig[key] = value
         }
     }
 
-    for (var [key, value] of Object.entries(options)) {
+    for (let [key, value] of Object.entries(options)) {
         if(typeof value !== 'object'){
             obj.options[key] = value
         }
@@ -167,7 +163,6 @@ export function Dashboard(selector, options={}){
         obj.showPlaceHolders()
         const {
             x,
-            y
         } = el.gridstackNode
         const undoCallback = () => {
             obj.undoDrag(el, x, x)
@@ -175,7 +170,7 @@ export function Dashboard(selector, options={}){
         obj.setUndoData('drag', undoCallback, el)
     })
 
-    obj.grid.on('dragstop', (event, el) => {
+    obj.grid.on('dragstop', () => {
         obj.hidePlaceHolders()
     })
 
@@ -191,7 +186,7 @@ export function Dashboard(selector, options={}){
         obj.setUndoData('resize', undoCallback, el)
     })
 
-    obj.grid.on('resizestop', (event, el) => {
+    obj.grid.on('resizestop', () => {
         obj.hidePlaceHolders()
         window.dispatchEvent(new CustomEvent('chata-resize', {}))
     })
@@ -210,7 +205,7 @@ export function Dashboard(selector, options={}){
 
     obj.startEditing = () => {
         obj.options.isEditing = true
-        obj.tiles.forEach((item, i) => {
+        obj.tiles.forEach((item) => {
             item.startEditing()
         })
 
@@ -218,14 +213,14 @@ export function Dashboard(selector, options={}){
 
     obj.stopEditing = () => {
         obj.options.isEditing = false
-        obj.tiles.forEach((item, i) => {
+        obj.tiles.forEach((item) => {
             item.stopEditing()
         })
         if(obj.options.executeOnStopEditing)obj.run()
     }
 
     obj.run = () => {
-        obj.tiles.forEach((item, i) => {
+        obj.tiles.forEach((item) => {
             item.runTile()
         })
 
@@ -259,15 +254,17 @@ export function Dashboard(selector, options={}){
             undoCallback,
             changedItem
         } = obj.undoData
+        const {
+            height,
+            width,
+            x,
+            y
+        } = changedItem.gridstackNode
 
         if(!eventType)return
 
         switch (eventType) {
             case 'resize':
-                const {
-                    height,
-                    width
-                } = changedItem.gridstackNode
 
                 undoCallback()
 
@@ -277,13 +274,7 @@ export function Dashboard(selector, options={}){
 
                 break
             case 'drag':
-                const {
-                    x,
-                    y
-                } = changedItem.gridstackNode
-
                 undoCallback()
-
                 obj.setUndoData('drag', () => {
                     obj.undoDrag(changedItem, x, y)
                 }, changedItem)
@@ -312,21 +303,22 @@ export function Dashboard(selector, options={}){
                 }, changedItem)
                 break
             case 'title-change':
-                var oldValue = undoCallback()
+                var oldInput = undoCallback()
                 obj.setUndoData('title-change', () => {
                     var curValue = changedItem.inputTitle.value
-                    changedItem.inputTitle.value = oldValue
+                    changedItem.inputTitle.value = oldInput
                     return curValue
                 }, changedItem)
                 break
             case 'display-type-change':
-                var oldValue = undoCallback()
+                var oldDisplay = undoCallback()
                 obj.setUndoData('display-type-change', () => {
                     var curValue = changedItem.internalDisplayType
-                    changedItem.internalDisplayType = oldValue
+                    changedItem.internalDisplayType = oldDisplay
                     changedItem.displayData()
                     return curValue
                 }, changedItem)
+                break
             case 'reset-tile':
                 var jsonValues = undoCallback()
                 obj.setUndoData('restore-tile', () => {
