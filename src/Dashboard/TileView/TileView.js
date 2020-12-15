@@ -164,7 +164,6 @@ export function TileView(tile, isSecond=false){
     }
 
     view.onCellClick = (e, cell, json) => {
-        const columns = json['data']['columns'];
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
         if(selectedColumn.definition.index != 0){
@@ -270,7 +269,6 @@ export function TileView(tile, isSecond=false){
                 var body = {
                     suggestion: evt.target.textContent
                 };
-                let loading = null;
                 if(evt.target.textContent === 'None of these'){
                     view.isSuggestions = false
                     responseWrapper.innerHTML = 'Thank you for your feedback'
@@ -279,7 +277,7 @@ export function TileView(tile, isSecond=false){
                     view.run()
                 }
 
-                var response = apiCallPut(url, body, dashboard.options)
+                apiCallPut(url, body, dashboard.options)
             }
             buttonContainer.appendChild(button)
         }
@@ -311,7 +309,7 @@ export function TileView(tile, isSecond=false){
         dummyArray.forEach.call(view.querySelectorAll(
             '.autoql-vanilla-viz-toolbar'
         ),
-        function(e, index){
+        function(e){
             e.parentNode.removeChild(e)
         })
     }
@@ -398,19 +396,20 @@ export function TileView(tile, isSecond=false){
             view.clearFilterMetadata()
             var loading = view.showLoading()
             var validate = await view.executeValidate()
+            let json
             if(!validate || validate.status != 200){
                 ChataUtils.responses[UUID] = json
                 responseWrapper.removeChild(loading)
                 responseWrapper.appendChild(view.getMessageError())
             }
             if(validate.data.data.replacements.length){
-                var json = validate.data
+                let json = validate.data
                 json.status = validate.status
                 ChataUtils.responses[UUID] = json
                 view.displaySafetynet()
             }else{
                 var data = await view.executeQuery()
-                var json = data.data
+                let json = data.data
                 json.status = data.status
                 ChataUtils.responses[UUID] = json
                 if(
@@ -441,7 +440,7 @@ export function TileView(tile, isSecond=false){
         view.isSafetynet = false
         var selection = getSafetynetUserSelection(view)
         var text = getSafetynetValues(view).join(' ')
-        var loading = view.showLoading()
+        view.showLoading()
         var response = await apiCall(
             text, tile.dashboard.options,
             'dashboards.validation', selection
@@ -454,7 +453,7 @@ export function TileView(tile, isSecond=false){
         }
     }
 
-    view.onChangeSafetynet = (suggestionList, selectedOption) => {
+    view.onChangeSafetynet = () => {
         var value = getSafetynetValues(view).join(' ')
         view.setQuery(value)
     }
@@ -692,7 +691,7 @@ export function TileView(tile, isSecond=false){
             'autoql-vanilla-query-output-error-message'
         )
 
-        var error = new ErrorMessage(message, (evt) => {
+        var error = new ErrorMessage(message, () => {
             ChataUtils.openModalReport(UUID, dashboard.options, null, null)
         })
 
@@ -734,7 +733,9 @@ export function TileView(tile, isSecond=false){
         if(responseWrapper.tabulator){
             view.copyFilterMetadata()
         }
-        var toolbarType = ''
+        var chartWrapper
+        var chartWrapper2
+
         responseWrapper.innerHTML = ''
 
         switch (displayType) {
@@ -777,9 +778,9 @@ export function TileView(tile, isSecond=false){
                 }
                 break;
             case 'bar':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -791,12 +792,11 @@ export function TileView(tile, isSecond=false){
                     true
                 );
                 view.registerDrilldownChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'column':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -808,12 +808,11 @@ export function TileView(tile, isSecond=false){
                     true
                 );
                 view.registerDrilldownChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'line':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -825,12 +824,11 @@ export function TileView(tile, isSecond=false){
                     true
                 );
                 view.registerDrilldownChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'heatmap':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -844,12 +842,11 @@ export function TileView(tile, isSecond=false){
                     'data-tilechart', true
                 )
                 view.registerDrilldownChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'bubble':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -861,12 +858,11 @@ export function TileView(tile, isSecond=false){
                     true
                 )
                 view.registerDrilldownChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'stacked_bar':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -879,12 +875,11 @@ export function TileView(tile, isSecond=false){
                     'data-tilechart', true
                 )
                 view.registerDrilldownStackedChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'stacked_column':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -897,12 +892,11 @@ export function TileView(tile, isSecond=false){
                     'data-tilechart', true
                 );
                 view.registerDrilldownStackedChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'stacked_line':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -915,12 +909,11 @@ export function TileView(tile, isSecond=false){
                     'data-tilechart', true
                 );
                 view.registerDrilldownStackedChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
             break;
             case 'pie':
-                var chartWrapper = document.createElement('div')
+                chartWrapper = document.createElement('div')
                 chartWrapper.setAttribute('data-componentid', UUID)
-                var chartWrapper2 = document.createElement('div')
+                chartWrapper2 = document.createElement('div')
                 chartWrapper2.classList.add(
                     'autoql-vanilla-tile-chart-container'
                 )
@@ -931,23 +924,22 @@ export function TileView(tile, isSecond=false){
                     'data-tilechart', true
                 );
                 view.registerDrilldownChartEvent(chartWrapper)
-                toolbarType = 'chart-view';
                 break;
             case 'pivot_table':
-                var div = createTableContainer();
-                div.setAttribute('data-componentid', UUID)
-                container.appendChild(div);
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add(
+                var tableContainer = createTableContainer();
+                tableContainer.setAttribute('data-componentid', UUID)
+                container.appendChild(tableContainer);
+                var _scrollbox = document.createElement('div');
+                _scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
                 );
-                scrollbox.classList.add('no-full-width');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                var table = new ChataPivotTable(
+                _scrollbox.classList.add('no-full-width');
+                _scrollbox.appendChild(tableContainer);
+                container.appendChild(_scrollbox);
+                var _table = new ChataPivotTable(
                     UUID, dashboard.options, view.onCellClick
                 )
-                div.tabulator = table;
+                tableContainer.tabulator = _table;
                 break;
             default:
             container.innerHTML = "Oops! We didn't understand that query.";
