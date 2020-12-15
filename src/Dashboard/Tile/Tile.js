@@ -219,8 +219,8 @@ export function Tile(dashboard, options){
         const {
             x,
             y,
-            width,
-            height
+            w,
+            h
         } = item.gridstackNode
 
         const { views } = item
@@ -234,8 +234,8 @@ export function Tile(dashboard, options){
             maxH: 12,
             x: x,
             y: y,
-            w: width,
-            h: height,
+            w: w,
+            h: h,
             moved: false,
             static: false,
             query: query,

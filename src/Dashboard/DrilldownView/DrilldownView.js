@@ -159,7 +159,7 @@ export function DrilldownView(
         switch (displayType) {
             case 'table':
                 var tableContainer = createTableContainer()
-                div.setAttribute('data-componentid', UUID)
+                tableContainer.setAttribute('data-componentid', UUID)
                 container.appendChild(tableContainer)
                 var scrollbox = document.createElement('div')
                 scrollbox.classList.add(
@@ -171,7 +171,7 @@ export function DrilldownView(
                 var table = new ChataTable(
                     UUID, dashboard.options, view.onRowClick
                 )
-                div.tabulator = table
+                tableContainer.tabulator = table
                 table.parentContainer = view
                 break
             case 'bar':
