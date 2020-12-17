@@ -1,13 +1,11 @@
 export function getOperator(condition){
 	switch (condition) {
 		case 'GREATER_THAN':
-		return '>';
-		break;
+			return '>';
 		case 'LESS_THAN':
-		return '<';
-		break;
+			return '<';
 		case 'EXISTS':
-		return 'Exists';
+			return 'Exists';
 		default:
 		return ''
 	}
@@ -15,6 +13,7 @@ export function getOperator(condition){
 
 export function convert(rules, addTopOperator=true){
 	var parsedRules = [];
+	console.log(rules);
 	for (var i = 0; i < rules.length; i++) {
 		var termValue = rules[i]['term_value'];
 		var group = [];

@@ -1,9 +1,8 @@
 import {
     closeAllSafetynetSelectors,
     htmlToElement,
-    runQuery
 } from '../Utils'
-import { RUN_QUERY, DELETE_ICON, REMOVE_ELEMENT } from '../Svg'
+import { RUN_QUERY, REMOVE_ELEMENT } from '../Svg'
 import './Safetynet.css'
 
 export function getRunQueryButton(){
@@ -109,7 +108,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
     li.appendChild(document.createTextNode('Remove term'))
     ul.appendChild(li);
 
-    li.onclick = (evt) => {
+    li.onclick = () => {
         var topParent = parent.parentElement;
         topParent.removeChild(parent);
         onChange()
@@ -123,12 +122,11 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
     }else{
         width = parentWidth + 95;
     }
-    var offsetX = parseFloat(width + position.left);
     var top = (position.top + window.pageYOffset) + 'px';
     var left = (position.left - width/2);
 
     if((height + position.top + 95) > window.screen.height){
-        var top = ((position.top + window.pageYOffset) - height - 45) + 'px';
+        top = ((position.top + window.pageYOffset) - height - 45) + 'px';
     }
 
     if(left <= 0){
@@ -150,9 +148,6 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
 
 export function createSafetynetBody(
     responseContentContainer, suggestionArray, onChange){
-    const safetyDeleteButtonHtml = `
-        ${DELETE_ICON}
-    `;
 
     suggestionArray.map((suggestion) => {
         if(suggestion['type'] == 'word'){
@@ -268,7 +263,7 @@ function getTextHeight(text){
     return height;
 }
 
-export function updateSelectWidth(container){
+export function updateSelectWidth(){
     var selects = document.querySelectorAll('.chata-safetynet-select');
     for (var i = 0; i < selects.length; i++) {
         updateSelect(selects[i]);

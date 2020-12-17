@@ -624,18 +624,14 @@ export function Notification(options, parentOptions){
         }
     };
 
-    item.getRuleStatus = () => {
+    item.getRuleStatus = async () => {
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.data_alert_id}?key=${pOpts.apiKey}`;
-
-        return new Promise(async (resolve) => {
-            var response = await apiCallGet(URL, item.parentOptions)
-            var jsonResponse = response.data
-            item.ruleOptions = jsonResponse.data;
-            item.toggleTurnOffNotificationText();
-            item.toggleDismissIcon();
-            resolve();
-        });
+        var response = await apiCallGet(URL, item.parentOptions)
+        var jsonResponse = response.data
+        item.ruleOptions = jsonResponse.data;
+        item.toggleTurnOffNotificationText();
+        item.toggleDismissIcon();
     }
 
     item.execute = async () => {
@@ -648,7 +644,7 @@ export function Notification(options, parentOptions){
         dots.style.top = 'unset';
         dots.style.right = 'unset';
 
-        await item.getRuleStatus();
+        item.getRuleStatus();
         var response = await apiCallGet(
             URL,
             item.parentOptions,

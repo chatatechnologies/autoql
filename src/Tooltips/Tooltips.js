@@ -2,21 +2,6 @@ import tippy from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
 export function refreshTooltips(){
-    tippy('.chata-interpretation', {
-        theme: 'chata-theme',
-        allowHTML: true,
-        onShow: function(instance){
-            var data = ChataUtils.responses[instance.reference.dataset.id]['data'];
-            var content  = `
-                <span class='title-tip'>Interpretation:</span>
-                <span class="text-tip">${data['interpretation']}</span>
-            `;
-
-            instance.setContent(
-                content
-            );
-        }
-    });
     tippy('[data-tippy-content]', {
         theme: 'chata-theme',
         allowHTML: true,
