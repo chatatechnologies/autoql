@@ -19,7 +19,6 @@ export function formatData(val, col, allOptions={}){
         case 'DOLLAR_AMT':
             val = parseFloat(val);
             if(isNaN(val))val = 0;
-            const sigDigs = String(parseInt(val.toFixed(2))).length
             value = new Intl.NumberFormat(options.languageCode, {
                 style: 'currency',
                 currency: options.currencyCode,
@@ -145,20 +144,6 @@ export function uuidv4() {
     });
 }
 
-export function formatDate(date) {
-    var day = date.getDate();
-    var monthIndex = date.getMonth();
-    var year = date.getFullYear();
-    // NOTE: this case only occurs in tests
-    if(Number.isNaN(monthIndex)){
-        year = '1969';
-        day = '31';
-        monthIndex = 11;
-    }
-    // return MONTH_NAMES[monthIndex] + ' ' + day + ', ' + year;
-    return MONTH_NAMES[monthIndex] + ' ' + year;
-}
-
 export function copyTextToClipboard(text) {
     var textArea = document.createElement("textarea");
     textArea.value = text;
@@ -166,9 +151,9 @@ export function copyTextToClipboard(text) {
     textArea.select();
 
     try {
-        var successful = document.execCommand('copy');
-        var msg = successful ? 'successful' : 'unsuccessful';
+        document.execCommand('copy');
     } catch (err) {
+        console.log(err);
     }
 
     document.body.removeChild(textArea);
@@ -219,13 +204,13 @@ export function getSafetynetValues(node){
 }
 
 export function runQuery(event, objContext){
-
+    let node
     if(event.target.tagName == 'svg'){
-        var node = event.target.parentElement.parentElement;
+        node = event.target.parentElement.parentElement;
     }else if(event.target.tagName == 'path'){
-        var node = event.target.parentElement.parentElement.parentElement;
+        node = event.target.parentElement.parentElement.parentElement;
     }else{
-        var node = event.target.parentElement;
+        node = event.target.parentElement;
     }
     if(node.classList.contains('autoql-vanilla-chata-safety-net-execute-btn')){
         node = node.parentElement;
@@ -235,24 +220,22 @@ export function runQuery(event, objContext){
     switch (objContext.constructor) {
         case DataMessenger:
             objContext.keyboardAnimation(words.join(' '));
-            // objContext.sendMessage(
-            //     words.join(' '),
-            //     'data_messenger.validation'
-            // );
             break;
         default:
             objContext.sendMessageToResponseRenderer(
                 words.join(' ')
             );
-        ;
+        break
     }
 }
 
 export function deleteSuggestion(event){
+    let node
+
     if(event.target.tagName == 'svg'){
-        var node = event.target.parentElement;
+        node = event.target.parentElement;
     }else{
-        var node = event.target.parentElement.parentElement;
+        node = event.target.parentElement.parentElement;
     }
     node.parentElement.removeChild(node);
 }
@@ -322,7 +305,6 @@ export function getNotGroupableField(json){
 
 export function getGroupables(json){
     var clone = cloneObject(json);
-    var cont = 0;
     var groups = []
     for (var i = 0; i < clone['data']['columns'].length; i++) {
         if(clone['data']['columns'][i]['groupable']){
@@ -387,36 +369,6 @@ export function getPivotColumnArray(json, options, _data){
     return pivotArray;
 }
 
-export function sortPivot(pivotArray, colIndex, operator){
-    pivotArray.shift();
-    pivotArray.shift();
-
-
-    if(operator == 'asc'){
-        var comparator = function(a, b) {
-
-            if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
-                return parseFloat(
-                    a[colIndex].toString().slice(1)
-                ) > parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
-            }else{
-                return (a[colIndex]) > (b[colIndex]) ? 1 : -1;
-            }
-        }
-    }else{
-        var comparator = function(a, b) {
-            if(a[colIndex].charAt(0) === '$' || a['colIndex'] === '0'){
-                return parseFloat(
-                    a[colIndex].toString().slice(1)
-                ) < parseFloat(b[colIndex].toString().slice(1)) ? 1 : -1;
-            }else{
-                return (a[colIndex]) < (b[colIndex]) ? 1 : -1;
-            }
-        }
-    }
-    return cloneObject(pivotArray.sort(comparator));
-}
-
 export function getDatePivotArray(json, options, _data){
     var lines = _data;
     var values = [];
@@ -430,13 +382,6 @@ export function getDatePivotArray(json, options, _data){
             } = col
 
             switch (type) {
-                case 'DATE':
-                    var value = data[x];
-                    var date = new Date( parseInt(value) * 1000);
-                    row.unshift(
-                        MONTH_NAMES[date.getMonth()], date.getFullYear()
-                    );
-                    break;
                 case 'DATE_STRING':
                     var vals = data[x].split('-')
                     row.unshift(vals[0], vals[1])
@@ -477,7 +422,7 @@ export function getPivotArray(dataArray, rowIndex, colIndex, dataIndex, firstCol
     for (var key in result) {
         item = [];
         item.push(key);
-        for (var i = 0; i < newCols.length; i++) {
+        for (let i = 0; i < newCols.length; i++) {
             item.push(result[key][newCols[i]] || "");
         }
         ret.push(item);
@@ -496,7 +441,7 @@ export function mergeOptions(objList){
     return output;
 }
 
-export function getSpeech(button){
+export function getSpeech(){
     window.SpeechRecognition =
     window.webkitSpeechRecognition || window.SpeechRecognition;
     if(window.SpeechRecognition){
@@ -521,7 +466,6 @@ export function formatLabels(labels, col, options){
 export function formatDataToBarChart(json, options){
     var lines = json['data']['rows'];
     var values = [];
-    var col1 = json['data']['columns'][0];
     var hasNegativeValues = false;
     var groupableField = getGroupableField(json);
     var notGroupableField = getNotGroupableField(json);
@@ -580,55 +524,6 @@ export function cloneObject(from, to) {
     }
 
     return to;
-}
-
-export function applyFilter(idRequest, array){
-    var _table = document.querySelector(`[data-componentid='${idRequest}']`);
-    var inputs = _table.headerElement.getElementsByTagName('input');
-    var json = ChataUtils.responses[_table.dataset.componentid];
-    var rows = array || cloneObject(json['data']['rows']);
-    for (var i = 0; i < inputs.length; i++) {
-        if(inputs[i].value == '')continue;
-        var colType = inputs[i].colType;
-        var compareValue = inputs[i].value.toLowerCase();
-        rows = rows.filter(function(elem){
-            var v = elem[i];
-            if(colType == 'DATE'){
-                var formatDate = formatData(
-                    v,
-                    json['data']['columns'][i],
-                    ChataUtils.options
-            );
-                return formatDate.toLowerCase().includes(compareValue);
-            }else if(
-                colType == 'DOLLAR_AMT' ||
-                colType == 'QUANTITY' ||
-                colType == 'PERCENT'
-            ) {
-                var trimmedValue = compareValue.trim();
-                if (trimmedValue.length >= 2) {
-                    const number = parseFloat(trimmedValue.substr(1));
-                    if (trimmedValue[0] === '>' && trimmedValue[1] === '=') {
-                        return v >= number;
-                    } else if (trimmedValue[0] === '>') {
-                        return v > number;
-                    } else if (trimmedValue[0] === '<' && trimmedValue[1] === '=') {
-                        return v <= number;
-                    } else if (trimmedValue[0] === '<') {
-                        return v < number;
-                    } else if (trimmedValue[0] === '!' && trimmedValue[1] === '=') {
-                        return v !== number;
-                    } else if (trimmedValue[0] === '=') {
-                        return v === number;
-                    }
-                }
-                return v.toString().includes(compareValue);
-            }else{
-                return v.toString().toLowerCase().includes(compareValue);
-            }
-        });
-    }
-    return rows;
 }
 
 export function htmlToElement(html) {
@@ -758,45 +653,12 @@ export const getSupportedDisplayTypes = response => {
         }
 }
 
-export async function adjustTableWidth(table, thArray, cols, selector='[data-indexrow]', offset=0){
-
-    var headerWidth = 0;
-    var rowsElements = table.querySelectorAll(selector);
-    var tdEl = rowsElements[0].getElementsByTagName('td');
-    var sizes = [];
-    for (var x = 0; x < tdEl.length; x++) {
-
-        if(cols[x] && 'is_visible' in cols[x] && !cols[x]['is_visible'])continue;
-
-        const div = document.createElement('div')
-        div.innerHTML = thArray[x].textContent;
-        div.style.display = 'inline-block';
-        div.style.position = 'absolute';
-        div.style.visibility = 'hidden';
-        document.body.appendChild(div);
-
-        w = tdEl[x].offsetWidth;
-
-        if(div.offsetWidth > tdEl[x].offsetWidth){
-            w = div.offsetWidth + 70;
-        }
-        w += offset;
-        thArray[x].style.width = (w) + 'px';
-        tdEl[x].style.width = (w) + 'px';
-
-        headerWidth += w;
-        document.body.removeChild(div);
-    }
-
-    return headerWidth;
-}
-
 export function hideShowTableCols(table){
     var json = ChataUtils.responses[table.dataset.componentid];
     var cols = json['data']['columns'];
     const thList = table.headerElement.childNodes;
     const trList = table.childNodes;
-    for (var i = 0; i < thList.length; i++) {
+    for (let i = 0; i < thList.length; i++) {
         if(!cols[i]['is_visible']){
             thList[i].classList.add('chata-hidden');
         }else{
@@ -804,7 +666,7 @@ export function hideShowTableCols(table){
         }
     }
 
-    for (var i = 0; i < trList.length; i++) {
+    for (let i = 0; i < trList.length; i++) {
         var tdList = trList[i].childNodes;
         for (var x = 0; x < tdList.length; x++) {
             if(!cols[x]['is_visible']){
@@ -951,62 +813,16 @@ export function closeAllToolbars(){
         '.autoql-vanilla-popover'
     )
 
-    for (var i = 0; i < list.length; i++) {
+    for (let i = 0; i < list.length; i++) {
         list[i].classList.remove('show');
     }
 
-    for (var i = 0; i < submenus.length; i++) {
+    for (let i = 0; i < submenus.length; i++) {
         submenus[i].classList.remove('show');
     }
-    for (var i = 0; i < popovers.length; i++) {
+    for (let i = 0; i < popovers.length; i++) {
         if(popovers[i].isOpen)popovers[i].close();
     }
-}
-
-export function getSuggestionLists (query, fullSuggestions) {
-    const suggestionLists = []
-    if (fullSuggestions.length) {
-        fullSuggestions.forEach((suggestionInfo, index) => {
-            const originalWord = query.slice(
-                suggestionInfo.start,
-                suggestionInfo.end
-            )
-
-            // Add ID to each original suggestion
-            const originalSuggestionList = suggestionInfo.suggestions.map(
-                suggestion => {
-                    return {
-                        index: i,
-                        ...suggestion,
-                    }
-                }
-            )
-
-            // Add original query value to suggestion list
-            const list = [
-                ...originalSuggestionList,
-                { text: originalWord, value_label: 'Original term' },
-            ]
-
-            suggestionLists.push(list)
-        })
-    }
-    return suggestionLists
-}
-
-export function getPlainTextList(query, fullSuggestions) {
-    const textList = []
-    let lastEndIndex = 0
-
-    fullSuggestions.forEach((fullSuggestion, index) => {
-        textList.push(query.slice(lastEndIndex, fullSuggestion.start))
-        if (index === fullSuggestions.length - 1) {
-            textList.push(query.slice(fullSuggestion.end, query.length))
-        }
-        lastEndIndex = fullSuggestion.end
-    })
-
-    return textList
 }
 
 export function getFirstNotificationLine (step1) {
@@ -1026,7 +842,6 @@ export const apiCall = (val, options, source, userSelection=undefined) => {
     } = options.authentication
 
     const {
-        debug,
         test
     } = options.autoQLConfig
 
@@ -1174,13 +989,13 @@ export function getSVGString(svgNode) {
 
         // Add Children element Ids and Classes to the list
         var nodes = parentElement.getElementsByTagName("*");
-        for (var i = 0; i < nodes.length; i++) {
+        for (let i = 0; i < nodes.length; i++) {
             var id = nodes[i].id;
             if ( !contains('#'+id, selectorTextArr) )
             selectorTextArr.push( '#'+id );
 
             var classes = nodes[i].classList;
-            for (var c = 0; c < classes.length; c++)
+            for (let c = 0; c < classes.length; c++)
             if ( !contains('.'+classes[c], selectorTextArr) )
             selectorTextArr.push( '.'+classes[c] );
         }
@@ -1318,7 +1133,7 @@ export const svgToPng = (svgElement, margin = 0, fill) => {
                 resolve(canvas.toDataURL('image/png', 1))
             }
             img.onerror = function(error) {
-                reject('failed to load image with that url' + url)
+                console.log(error);
             }
 
             // load image
