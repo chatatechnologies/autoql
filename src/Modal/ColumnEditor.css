@@ -15,11 +15,8 @@
 .col-visibility-line-item {
     display: flex;
     justify-content: space-between;
-    /* line-height: 36px; */
     margin-top: 5px;
     color: var(--autoql-vanilla-text-color-primary);
-
-
 }
 
 
@@ -29,8 +26,6 @@
     padding: .2rem !important;
     font-weight: normal !important;
     box-sizing: content-box !important;
-    /*width: 36px;
-    height: 36px; */
 }
 
 .chata-modal-container .autoql-vanilla-m-checkbox__input {

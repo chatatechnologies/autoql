@@ -77,7 +77,6 @@ export function Notification(options, parentOptions){
     var detailsContainer = document.createElement('div');
     var dismissIcon = htmlToElement(DISMISS);
     var dismissBtn = document.createElement('div');
-    var calendarIcon = htmlToElement(CALENDAR);
     var extraContent = document.createElement('div');
     var btnTurnNotification = document.createElement('button');
     var editNotification = document.createElement('button');
@@ -210,7 +209,7 @@ export function Notification(options, parentOptions){
     expandedContent.appendChild(detailsContainer);
     expandedContent.appendChild(extraContent);
 
-    displayNameContainer.onclick = function(evt){
+    displayNameContainer.onclick = function(){
         if(!parentOptions.showNotificationDetails){
             return
         }
@@ -230,7 +229,7 @@ export function Notification(options, parentOptions){
         refreshTooltips()
     }
 
-    editNotification.onclick = function(evt){
+    editNotification.onclick = function(){
         var cancelButton = htmlToElement(
             `<div class="autoql-vanilla-chata-btn default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
@@ -274,16 +273,16 @@ export function Notification(options, parentOptions){
         configModal.addFooterElement(saveButton);
         configModal.show();
         refreshTooltips();
-        cancelButton.onclick = (e) => {
+        cancelButton.onclick = () => {
             new ChataConfirmDialog(
                 'Are you sure you want to leave this page?',
                 'All unsaved changes will be lost.',
-                (evt) => {
+                () => {
                     configModal.close()
                 }
             )
         }
-        saveButton.onclick = async(e) => {
+        saveButton.onclick = async() => {
             spinner.classList.remove('hidden')
             var o = item.parentOptions
             const URL = `${o.authentication.domain}/autoql/api/v1/data-alerts/${item.ruleOptions.id}?key=${o.authentication.apiKey}`;
@@ -302,14 +301,14 @@ export function Notification(options, parentOptions){
         }
     }
 
-    dismissIcon.onclick = async (evt) => {
+    dismissIcon.onclick = async () => {
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/notifications/${item.options.id}?key=${pOpts.apiKey}`;
         var payload = {
             state: 'DISMISSED'
         }
         item.options.state = 'DISMISSED';
-        var response = await apiCallPut(URL, payload, item.parentOptions)
+        await apiCallPut(URL, payload, item.parentOptions)
         item.toggleDismissIcon();
 
     }
@@ -329,6 +328,7 @@ export function Notification(options, parentOptions){
         )
 
         if(vizToolbar)dataContainer.removeChild(vizToolbar);
+        let chartWrapper
 
         switch (item.displayType) {
             case 'data':
@@ -350,13 +350,13 @@ export function Notification(options, parentOptions){
                     var table = new ChataTable(
                         uuid,
                         item.parentOptions,
-                        (e, row, json) => {},
+                        () => {},
                     );
                     div.tabulator = table;
                 }
                 break;
             case 'bar':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createBarChart(
@@ -366,7 +366,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'column':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createColumnChart(
@@ -376,7 +376,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'line':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createLineChart(
@@ -386,7 +386,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'heatmap':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
 
@@ -398,7 +398,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'bubble':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createBubbleChart(
@@ -408,7 +408,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'stacked_bar':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createStackedBarChart(
@@ -418,7 +418,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'stacked_column':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createStackedColumnChart(
@@ -428,7 +428,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'stacked_line':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createAreaChart(
@@ -438,7 +438,7 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'pie':
-                var chartWrapper = document.createElement('div');
+                chartWrapper = document.createElement('div');
                 chartWrapper.style.paddingTop = '15px';
                 responseContentContainer.appendChild(chartWrapper);
                 createPieChart(chartWrapper, jsonResponse,
@@ -447,20 +447,20 @@ export function Notification(options, parentOptions){
                 );
                 break;
             case 'pivot_table':
-                var div = createTableContainer();
-                div.setAttribute('data-componentid', _uuid)
-                responseContentContainer.appendChild(div);
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add(
+                var tableContainer = createTableContainer();
+                tableContainer.setAttribute('data-componentid', uuid)
+                responseContentContainer.appendChild(tableContainer);
+                var _scrollbox = document.createElement('div');
+                _scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
                 );
-                scrollbox.classList.add('no-full-width');
-                scrollbox.appendChild(div);
-                responseContentContainer.appendChild(scrollbox);
-                var table = new ChataPivotTable(
-                    _uuid, item.parentOptions, () => {}
+                _scrollbox.classList.add('no-full-width');
+                _scrollbox.appendChild(tableContainer);
+                responseContentContainer.appendChild(_scrollbox);
+                var _table = new ChataPivotTable(
+                    uuid, item.parentOptions, () => {}
                 )
-                div.tabulator = table;
+                tableContainer.tabulator = _table;
                 break;
             default:
 
@@ -539,7 +539,7 @@ export function Notification(options, parentOptions){
                 }
                 if(button.innerHTML != ''){
                     vizToolbar.appendChild(button);
-                    button.onclick = function(event){
+                    button.onclick = function(){
                         item.displayType = this.dataset.displaytype;
                         item.refreshContent(json);
                     }
@@ -549,7 +549,7 @@ export function Notification(options, parentOptions){
         }
     }
 
-    btnTurnNotification.onclick = (evt) => {
+    btnTurnNotification.onclick = () => {
         item.toggleStatus();
     }
 
@@ -593,7 +593,6 @@ export function Notification(options, parentOptions){
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.data_alert_id}?key=${pOpts.apiKey}`;
 
-        var state = btnTurnNotification.dataset.notificationState;
         var payload = {
             status: 'ACTIVE'
         }
@@ -616,9 +615,9 @@ export function Notification(options, parentOptions){
             dismissIconContainer.classList.remove('notification-off');
             dismissIconContainer.classList.remove('chata-notification-dismiss-icon');
             dismissIconContainer.innerHTML = SVG_X;
-            dismissIconContainer.onclick = async(evt) => {
+            dismissIconContainer.onclick = async() => {
                 const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/notifications/${item.options.id}?key=${pOpts.apiKey}`;
-                var response = await apiCallDelete(URL, item.parentOptions)
+                await apiCallDelete(URL, item.parentOptions)
                 item.parentElement.removeChild(item);
             }
             item.classList.remove('triggered');
@@ -629,7 +628,7 @@ export function Notification(options, parentOptions){
         var pOpts = item.parentOptions.authentication;
         const URL = `${pOpts.domain}/autoql/api/v1/data-alerts/${item.options.data_alert_id}?key=${pOpts.apiKey}`;
 
-        return new Promise(async (resolve, reject) => {
+        return new Promise(async (resolve) => {
             var response = await apiCallGet(URL, item.parentOptions)
             var jsonResponse = response.data
             item.ruleOptions = jsonResponse.data;

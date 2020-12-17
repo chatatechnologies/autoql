@@ -77,7 +77,7 @@ export function Modal(options={}, onShow=()=>{}){
         chataHeader.appendChild(closeIcon);
     }
 
-    closeIcon.onclick = function(event){
+    closeIcon.onclick = function(){
         obj.close();
     }
 

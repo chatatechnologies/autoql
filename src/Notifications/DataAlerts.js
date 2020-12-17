@@ -4,9 +4,6 @@ import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
 import { htmlToElement, apiCallGet, apiCallPost } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
-import {
-    ADD_NOTIFICATION
-} from '../Svg'
 import { LIGHT_THEME, DARK_THEME } from '../Constants'
 import {
     TitleContainer
@@ -46,23 +43,23 @@ export function DataAlerts(selector, options){
             accentColor: '#26a7df',
             fontFamily: 'sans-serif',
         },
-        onErrorCallback: (message) => {}
+        onErrorCallback: () => {}
     }
 
     if('authentication' in options){
-        for (var [key, value] of Object.entries(options['authentication'])) {
+        for (let [key, value] of Object.entries(options['authentication'])) {
             wrapper.options.authentication[key] = value;
         }
     }
 
     if('autoQLConfig' in options){
-        for (var [key, value] of Object.entries(options['autoQLConfig'])) {
+        for (let [key, value] of Object.entries(options['autoQLConfig'])) {
             wrapper.options.autoQLConfig[key] = value;
         }
     }
 
     if('themeConfig' in options){
-        for (var [key, value] of Object.entries(options['themeConfig'])) {
+        for (let [key, value] of Object.entries(options['themeConfig'])) {
             wrapper.options.themeConfig[key] = value;
         }
     }
@@ -105,7 +102,7 @@ export function DataAlerts(selector, options){
                 )
             )
 
-            var notificationSettingsContainer = document.createElement('div');
+            let notificationSettingsContainer = document.createElement('div');
             notificationSettingsContainer.classList.add(
                 'chata-notification-settings-container'
             );
@@ -123,7 +120,7 @@ export function DataAlerts(selector, options){
 
         var customItems = jsonResponse['data']['custom_alerts'];
         if(customItems.length > 0){
-            const onAddClick = (evt) => {
+            const onAddClick = () => {
                 var cancelButton = htmlToElement(
                     `<div class="autoql-vanilla-chata-btn default"
                         style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
@@ -162,16 +159,16 @@ export function DataAlerts(selector, options){
                 configModal.addFooterElement(saveButton);
                 configModal.show();
                 refreshTooltips();
-                cancelButton.onclick = (e) => {
+                cancelButton.onclick = () => {
                     new ChataConfirmDialog(
                         'Are you sure you want to leave this page?',
                         'All unsaved changes will be lost.',
-                        (evt) => {
+                        () => {
                             configModal.close()
                         }
                     )
                 }
-                saveButton.onclick = async (e) => {
+                saveButton.onclick = async () => {
                     spinner.classList.remove('hidden')
                     saveButton.setAttribute('disabled', 'true')
                     var o = wrapper.options
@@ -201,14 +198,14 @@ export function DataAlerts(selector, options){
                     onAddClick
                 )
             )
-            var notificationSettingsContainer = document.createElement('div');
+            let notificationSettingsContainer = document.createElement('div');
             notificationSettingsContainer.classList.add(
                 'chata-notification-settings-container'
             );
             wrapper.classList.add('chata-settings-container');
             wrapper.appendChild(notificationSettingsContainer);
 
-            for (var i = 0; i < customItems.length; i++) {
+            for (let i = 0; i < customItems.length; i++) {
                 customItems[i].authentication = wrapper.options.authentication;
                 notificationSettingsContainer.appendChild(
                     new NotificationSettingsItem(
