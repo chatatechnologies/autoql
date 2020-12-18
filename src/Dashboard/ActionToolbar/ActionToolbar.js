@@ -9,11 +9,18 @@ import{
 } from '../../Svg'
 import {
     htmlToElement,
-    getSupportedDisplayTypes
+    getSupportedDisplayTypes,
+    showBadge
 } from '../../Utils'
 import './ActionToolbar.css'
 
 export function ActionToolbar(idRequest, tileView, tile) {
+
+    const getBadge = () => {
+        return htmlToElement(
+            `<div class="autoql-vanilla-badge"></div>`
+        )
+    }
 
     var toolbar = htmlToElement(`
         <div
@@ -97,15 +104,25 @@ export function ActionToolbar(idRequest, tileView, tile) {
             var columnVisibility = tile.dashboard.options.
             autoQLConfig.enableColumnVisibilityManager
             if(columnVisibility && displayType !== 'pivot_table'){
+                let badge = getBadge()
+                let editorBtn = ChataUtils.getActionButton(
+                    COLUMN_EDITOR,
+                    'Show/Hide Columns',
+                    idRequest,
+                    tileView.openColumnEditorHandler,
+                    [tile.dashboard.options, badge]
+                )
+
+                editorBtn.appendChild(badge)
                 toolbar.appendChild(
-                    ChataUtils.getActionButton(
-                        COLUMN_EDITOR,
-                        'Show/Hide Columns',
-                        idRequest,
-                        tileView.openColumnEditorHandler,
-                        [tile.dashboard.options]
-                    )
+                    editorBtn
                 );
+
+                if(showBadge(request)){
+                    badge.style.visibility = 'visible'
+                }else{
+                    badge.style.visibility = 'hidden'
+                }
             }
             if(request['reference_id'] !== '1.1.420'){
                 toolbar.appendChild(

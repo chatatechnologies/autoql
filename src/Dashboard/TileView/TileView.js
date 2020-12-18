@@ -15,7 +15,8 @@ import {
     getRecommendationPath,
     apiCallPut,
     htmlToElement,
-    getGroupables
+    getGroupables,
+    showBadge
 } from '../../Utils'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
 import { ChataPopover } from '../../ChataComponents'
@@ -135,8 +136,15 @@ export function TileView(tile, isSecond=false){
         popover.show()
     }
 
-    view.openColumnEditorHandler = (evt, id, options) => {
-        ChataUtils.showColumnEditor(id, options);
+    view.openColumnEditorHandler = (evt, id, options, badge) => {
+        ChataUtils.showColumnEditor(id, options, () => {
+            var json = ChataUtils.responses[id]
+            if(showBadge(json)){
+                badge.style.visibility = 'visible'
+            }else{
+                badge.style.visibility = 'hidden'
+            }
+        });
     }
 
     view.onRowClick = (e, row, json) => {
