@@ -1615,8 +1615,8 @@ export function DataMessenger(elem, options){
         tabulator.toggleFilters();
     }
 
-    obj.openColumnEditorHandler = (evt, idRequest) => {
-        obj.showColumnEditor(idRequest);
+    obj.openColumnEditorHandler = (evt, idRequest, badge) => {
+        obj.showColumnEditor(idRequest, badge);
     }
 
     obj.getLastMessageBubble = () => {
@@ -1704,19 +1704,25 @@ export function DataMessenger(elem, options){
                 var columnVisibility = obj.options.
                 autoQLConfig.enableColumnVisibilityManager
                 if(columnVisibility && displayType !== 'pivot_table'){
+                    let badge = obj.getBadge()
                     let editorBtn = obj.getActionButton(
                         COLUMN_EDITOR,
                         'Show/Hide Columns',
                         idRequest,
                         obj.openColumnEditorHandler,
-                        []
+                        [badge]
                     )
                     editorBtn.setAttribute('data-name-option', 'column-editor')
                     toolbar.appendChild(
                         editorBtn
                     );
+
+                    editorBtn.appendChild(badge)
+                    editorBtn.badge = badge
                     if(showBadge(request)){
-                        editorBtn.appendChild(obj.getBadge())
+                        badge.style.visibility = 'visible'
+                    }else{
+                        badge.style.visibility = 'hidden'
                     }
                 }
                 if(request['reference_id'] !== '1.1.420'){
@@ -2479,13 +2485,19 @@ export function DataMessenger(elem, options){
         ChataUtils.openModalReport(idRequest, options, menu, toolbar);
     }
 
-    obj.showColumnEditor = function(id){
+    obj.showColumnEditor = function(id, badge){
         ChataUtils.showColumnEditor(id, obj.options, () => {
+            var json = ChataUtils.responses[id]
             var component = obj.rootElem.querySelector(
                 `[data-componentid='${id}']`
             );
             obj.setScrollBubble(obj.getParentFromComponent(component));
             component.tabulator.redraw(true);
+            if(showBadge(json)){
+                badge.style.visibility = 'visible'
+            }else{
+                badge.style.visibility = 'hidden'
+            }
         });
     }
 
