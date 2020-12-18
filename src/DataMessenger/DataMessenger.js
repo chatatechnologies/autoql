@@ -1615,7 +1615,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.openColumnEditorHandler = (evt, idRequest) => {
-
         obj.showColumnEditor(idRequest);
     }
 
@@ -1636,6 +1635,12 @@ export function DataMessenger(elem, options){
         if(bubble.relatedMessage){
             obj.drawerContent.removeChild(bubble.relatedMessage)
         }
+    }
+
+    obj.getBadge = () => {
+        return htmlToElement(
+            `<div class="autoql-vanilla-badge"></div>`
+        )
     }
 
     obj.getActionToolbar = (idRequest, type, displayType) => {
@@ -1698,14 +1703,16 @@ export function DataMessenger(elem, options){
                 var columnVisibility = obj.options.
                 autoQLConfig.enableColumnVisibilityManager
                 if(columnVisibility && displayType !== 'pivot_table'){
+                    let editorBtn = obj.getActionButton(
+                        COLUMN_EDITOR,
+                        'Show/Hide Columns',
+                        idRequest,
+                        obj.openColumnEditorHandler,
+                        []
+                    )
+                    editorBtn.setAttribute('data-name-option', 'column-editor')
                     toolbar.appendChild(
-                        obj.getActionButton(
-                            COLUMN_EDITOR,
-                            'Show/Hide Columns',
-                            idRequest,
-                            obj.openColumnEditorHandler,
-                            []
-                        )
+                        editorBtn
                     );
                 }
                 if(request['reference_id'] !== '1.1.420'){

@@ -240,35 +240,6 @@ export function deleteSuggestion(event){
     node.parentElement.removeChild(node);
 }
 
-export function csvTo2dArray(parseMe) {
-    const splitFinder = /,|\r?\n|"(\\"|[^"])*?"/g;
-    let currentRow = [];
-    const rowsOut = [currentRow];
-    let lastIndex = splitFinder.lastIndex = 0;
-
-    const pushCell = (endIndex) => {
-        endIndex = endIndex || parseMe.length;
-        const addMe = parseMe.substring(lastIndex, endIndex);
-        currentRow.push(addMe.replace(/^"|"$/g, ""));
-        lastIndex = splitFinder.lastIndex;
-    }
-
-    let regexResp;
-    while (regexResp = splitFinder.exec(parseMe)) {
-        const split = regexResp[0];
-
-        if (split.startsWith(`"`) === false) {
-            const splitStartIndex = splitFinder.lastIndex - split.length;
-            pushCell(splitStartIndex);
-
-            const isNewLine = /^\r?\n$/.test(split);
-            if (isNewLine) { rowsOut.push(currentRow = []); }
-        }
-    }
-    pushCell();
-    return rowsOut;
-}
-
 export function getGroupableField(json){
     var r = {
         indexCol: -1,

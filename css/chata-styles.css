@@ -880,6 +880,19 @@ tr td.chata-hidden{
     color: var(--autoql-vanilla-accent-color);
     cursor: pointer;
     outline: none !important;
+    position: relative;
+}
+
+.autoql-vanilla-badge {
+    position: absolute;
+    background: var(--autoql-vanilla-warning-color);
+    border: 1px solid var(--autoql-vanilla-background-color-primary);
+    width: .5em;
+    height: .5em;
+    top: -.1em;
+    right: -.25em;
+    border-radius: 50%;
+    box-sizing: content-box;
 }
 
 .autoql-vanilla-chata-toolbar-btn:focus{
