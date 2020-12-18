@@ -29,7 +29,8 @@ import {
     apiCallPost,
     getSafetynetValues,
     getSafetynetUserSelection,
-    getGroupables
+    getGroupables,
+    showBadge
 } from '../Utils'
 import {
     createAreaChart,
@@ -1714,6 +1715,9 @@ export function DataMessenger(elem, options){
                     toolbar.appendChild(
                         editorBtn
                     );
+                    if(showBadge(request)){
+                        editorBtn.appendChild(obj.getBadge())
+                    }
                 }
                 if(request['reference_id'] !== '1.1.420'){
                     toolbar.appendChild(

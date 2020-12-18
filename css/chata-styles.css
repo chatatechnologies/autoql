@@ -887,10 +887,10 @@ tr td.chata-hidden{
     position: absolute;
     background: var(--autoql-vanilla-warning-color);
     border: 1px solid var(--autoql-vanilla-background-color-primary);
-    width: .5em;
-    height: .5em;
-    top: -.1em;
-    right: -.25em;
+    width: 10px;
+    height: 10px;
+    top: 0;
+    right: 2px;
     border-radius: 50%;
     box-sizing: content-box;
 }

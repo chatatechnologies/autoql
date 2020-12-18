@@ -661,6 +661,15 @@ export function getStringWidth(string){
     return width;
 }
 
+export function showBadge(json){
+    const cols = json.data.columns
+    for (let i = 0; i < cols.length; i++) {
+        if(!cols[i].is_visible)return true
+    }
+
+    return false
+}
+
 export function allColsHidden(json){
     var cols = json['data']['columns'];
     var isAllHidden = true;
