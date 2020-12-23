@@ -85,7 +85,6 @@ export function createBarChart(
     var yAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;
     var data = makeGroups(json, options, activeSeries, cols[yAxisIndex].index);
-    console.log(data);
     const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
     var index2 = cols[yAxisIndex].index;
