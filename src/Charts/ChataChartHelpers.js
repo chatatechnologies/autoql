@@ -20,9 +20,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
-            // let label = formatData(
-            //     data[i][group.indexCol], group.jsonCol, options
-            // );
             let label = data[i][group.indexCol];
             if(!label || label == '')label = 'null';
             var colName = columns[group.indexCol].display_name ||
@@ -280,6 +277,16 @@ export const getChartDimensions = (chatContainer, displayType) => {
         width: chartWidth,
         heigth: chartHeight
     }
+}
+
+export const isMultiSeries = (cols) => {
+    for (var i = 0; i < cols.length; i++) {
+        if(cols[i].multi_series){
+            return cols[i]
+        }
+    }
+
+    return false
 }
 
 export function formatDataToHeatmap(json, options){
