@@ -6,11 +6,15 @@ import {
     getNotGroupableField,
     formatData
 } from '../Utils'
+import {
+    ChataUtils
+} from '../ChataUtils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
     var columns = json['data']['columns'];
+    var multiSeriesCol = isMultiSeries(enumerateCols(json))
     var seriesIndexes = []
     seriesCols.map((col) => {
         seriesIndexes.push(col.index);
@@ -37,10 +41,14 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             }
             seriesData.push(serie);
         }
+    }else if(multiSeriesCol){
+        seriesData = groupByValue(
+            data, columns, labelIndex, seriesIndexes, multiSeriesCol
+        )
     }else{
-        seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
+        seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes)
     }
-    return seriesData;
+    return seriesData
 }
 
 export const toggleSerie = (data, serie) => {
@@ -81,6 +89,26 @@ export const getVisibleGroups = (groups) => {
     return visibleGroups
 }
 
+export const getSeriesValues = (
+    item, series, seriesIndexes, labelIndex, items, key
+) => {
+    var values = []
+
+    for (var i = 0; i < series.length; i++) {
+        var obj = {}
+        var serieName = series[i]
+        console.log(series);
+        obj['value'] = sumEquals(items, labelIndex, key, seriesIndexes[i]);
+        obj['index'] = i;
+        obj['group'] = formatColumnName(serieName);
+        obj['isVisible'] = true;
+
+        values.push(obj);
+    }
+
+    return values
+}
+
 export const getObjectValues = (
     item, columns, seriesIndexes, labelIndex, items, key) => {
     var values = []
@@ -98,6 +126,32 @@ export const getObjectValues = (
 
     }
     return values;
+}
+
+export const groupByValue = (
+    items, columns, labelIndex, seriesIndexes, multiSeriesCol
+) => {
+    var obj = {}
+    var series = ChataUtils.getUniqueValues(
+        items, row => row[multiSeriesCol.index]
+    )
+    items.forEach((item) => {
+        const key = item[labelIndex];
+
+        if (!obj[key]) {
+            obj[key] = getSeriesValues(
+                item,
+                series,
+                seriesIndexes,
+                labelIndex,
+                items,
+                key
+            );
+        }
+
+    });
+
+    return convertoTo2DChartData(obj);
 }
 
 export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
@@ -121,6 +175,9 @@ export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
 export const sumEquals = (items, labelIndex, key, serieIndex) => {
     var sum = 0;
     items.forEach((item) => {
+        console.log(item);
+        console.log(labelIndex);
+        console.log(item[labelIndex]);
         const label = item[labelIndex];
         if(label === key){
             sum += item[serieIndex];
