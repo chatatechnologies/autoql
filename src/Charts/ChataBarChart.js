@@ -477,7 +477,12 @@ export function createBarChart(
         legendOrdinal.shapePadding(shapePadding);
 
         legendOrdinal.on('cellclick', function(d) {
-            data = toggleSerie(data, d.target.textContent.trim());
+            var words = []
+            var nodes = d.currentTarget.getElementsByTagName('tspan')
+            for (var i = 0; i < nodes.length; i++) {
+                words.push(nodes[i].textContent)
+            }
+            data = toggleSerie(data, words.join(' '));
             createBars();
             const legendCell = select(this);
             legendCell.classed('disable-group', !legendCell.classed('disable-group'));

@@ -473,7 +473,12 @@ export function createLineChart(
 
 
         legendOrdinal.on('cellclick', function(d) {
-            data = toggleSerie(data, d.target.textContent.trim());
+            var words = []
+            var nodes = d.currentTarget.getElementsByTagName('tspan')
+            for (var i = 0; i < nodes.length; i++) {
+                words.push(nodes[i].textContent)
+            }
+            data = toggleSerie(data, words.join(' '));
             createLines();
             const legendCell = select(this);
             legendCell.classed(
