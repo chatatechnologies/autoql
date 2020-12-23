@@ -90,17 +90,18 @@ export const getVisibleGroups = (groups) => {
 }
 
 export const getSeriesValues = (
-    item, series, seriesIndexes, labelIndex, items, key
+    item, series, seriesIndexes, labelIndex, items, key, multiSeriesCol
 ) => {
     var values = []
-
     for (var i = 0; i < series.length; i++) {
         var obj = {}
         var serieName = series[i]
-        console.log(series);
-        obj['value'] = sumEquals(items, labelIndex, key, seriesIndexes[i]);
+        obj['value'] = sumMultiSeries(
+            items, labelIndex, key, seriesIndexes[0], multiSeriesCol.index,
+            serieName
+        );
         obj['index'] = i;
-        obj['group'] = formatColumnName(serieName);
+        obj['group'] = serieName;
         obj['isVisible'] = true;
 
         values.push(obj);
@@ -145,7 +146,8 @@ export const groupByValue = (
                 seriesIndexes,
                 labelIndex,
                 items,
-                key
+                key,
+                multiSeriesCol
             );
         }
 
@@ -172,12 +174,23 @@ export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
     return convertoTo2DChartData(obj);
 }
 
+export const sumMultiSeries = (
+    items, labelIndex, key, serieIndex, multiSerieIndex, multiSerieValue
+) => {
+    var sum = 0;
+    items.forEach((item) => {
+        const label = item[labelIndex]
+        const serie = item[multiSerieIndex]
+        if(label === key && serie === multiSerieValue){
+            sum += item[serieIndex];
+        }
+    })
+    return sum;
+}
+
 export const sumEquals = (items, labelIndex, key, serieIndex) => {
     var sum = 0;
     items.forEach((item) => {
-        console.log(item);
-        console.log(labelIndex);
-        console.log(item[labelIndex]);
         const label = item[labelIndex];
         if(label === key){
             sum += item[serieIndex];
