@@ -1445,21 +1445,29 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   margin-right: -4px !important;
 }
 
+.tab.hide{
+    display: none;
+}
+
+.tab.show{
+    display: flex;
+}
+
 /* Curve appropriate corners depending on placement */
-.autoql-vanilla-page-switcher-container.right .tab:first-child,
-.autoql-vanilla-page-switcher-container.bottom .tab:first-child {
+.autoql-vanilla-page-switcher-container.right .tab.show:first-child,
+.autoql-vanilla-page-switcher-container.bottom .tab.show:first-child {
   border-top-left-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.right .tab:last-child,
-.autoql-vanilla-page-switcher-container.top .tab:first-child {
+.autoql-vanilla-page-switcher-container.right .tab.show:last-child,
+.autoql-vanilla-page-switcher-container.top .tab.show:first-child {
   border-bottom-left-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.bottom .tab:last-child,
-.autoql-vanilla-page-switcher-container.left .tab:first-child {
+.autoql-vanilla-page-switcher-container.bottom .tab.show:last-child,
+.autoql-vanilla-page-switcher-container.left .tab.show:first-child {
   border-top-right-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.left .tab:last-child,
-.autoql-vanilla-page-switcher-container.top .tab:last-child {
+.autoql-vanilla-page-switcher-container.left .tab.show:last-child,
+.autoql-vanilla-page-switcher-container.top .tab.show:last-child {
   border-bottom-right-radius: 5px;
 }
 

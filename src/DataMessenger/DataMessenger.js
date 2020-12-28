@@ -385,16 +385,17 @@ export function DataMessenger(elem, options){
         obj.initialScroll = window.scrollY;
         obj.input.focus()
         var body = document.body;
-        if(obj.options.enableExploreQueriesTab){
-            obj.queryTabs.style.visibility = 'visible';
-            obj.tabQueryTips.style.display = 'flex';
-            obj.tabChataUtils.style.display = 'flex';
-        }
-        if(obj.options.enableNotificationsTab){
-            obj.queryTabs.style.visibility = 'visible';
-            obj.tabNotifications.style.display = 'flex';
-            obj.tabChataUtils.style.display = 'flex';
-        }
+        obj.showTabs()
+        // if(obj.options.enableExploreQueriesTab){
+        //     obj.queryTabs.style.visibility = 'visible';
+        //     obj.tabQueryTips.style.display = 'flex';
+        //     obj.tabChataUtils.style.display = 'flex';
+        // }
+        // if(obj.options.enableNotificationsTab){
+        //     obj.queryTabs.style.visibility = 'visible';
+        //     obj.tabNotifications.style.display = 'flex';
+        //     obj.tabChataUtils.style.display = 'flex';
+        // }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
             obj.wrapper.style.height = '100%';
@@ -480,11 +481,7 @@ export function DataMessenger(elem, options){
         obj.options.isVisible = false;
         obj.wrapper.style.opacity = 0;
         obj.wrapper.style.height = 0;
-        obj.queryTabs.style.visibility = 'hidden';
-        obj.tabNotifications.style.display = 'none';
-        obj.tabChataUtils.style.display = 'none';
-
-        obj.tabQueryTips.style.display = 'none';
+        obj.hideTabs()
         var body = document.body;
 
         if(obj.options.placement == 'right'){
@@ -799,6 +796,32 @@ export function DataMessenger(elem, options){
             obj.tabNotifications.style.display = 'none'
         }
         refreshTooltips();
+    }
+
+    obj.showTabs = () => {
+        if(obj.options.enableExploreQueriesTab){
+            obj.queryTabs.style.visibility = 'visible'
+            obj.tabChataUtils.classList.add('show')
+            obj.tabQueryTips.classList.add('show')
+        }
+
+        if(obj.options.enableNotificationsTab){
+            obj.queryTabs.style.visibility = 'visible'
+            obj.tabChataUtils.classList.add('show')
+            obj.tabNotifications.classList.add('show')
+        }
+    }
+
+    obj.hideTabs = () => {
+        obj.queryTabs.style.visibility = 'hidden'
+
+        obj.tabChataUtils.classList.remove('show')
+        obj.tabQueryTips.classList.remove('show')
+        obj.tabNotifications.classList.remove('show')
+
+        obj.tabChataUtils.classList.add('hide')
+        obj.tabQueryTips.classList.add('hide')
+        obj.tabNotifications.classList.add('hide')
     }
 
     obj.instanceNotificationIcon = () => {
