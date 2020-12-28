@@ -2914,6 +2914,15 @@ export function DataMessenger(elem, options){
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer);
             }
+            if(
+                jsonResponse.data.rows &&
+                jsonResponse.data.rows.length === 0
+
+            ){
+                obj.putSimpleResponse(jsonResponse, textValue, status);
+                return
+            }
+
             switch(displayType){
                 case 'table':
                     if(jsonResponse['data']['columns'].length == 1){
