@@ -2568,12 +2568,19 @@ export function DataMessenger(elem, options){
                 if(evt.target.textContent === 'None of these'){
                     loading = obj.showLoading()
                 }else{
-                    obj.inputAnimation(evt.target.textContent);
+                    obj.inputAnimation(evt.target.textContent)
                 }
 
                 await apiCallPut(url, body, obj.options)
-                obj.drawerContent.removeChild(loading);
-                obj.putClientResponse('Thank you for your feedback', {}, true)
+
+                if(loading){
+                    setTimeout(() => {
+                        obj.drawerContent.removeChild(loading)
+                        obj.putClientResponse(
+                            'Thank you for your feedback', {}, true
+                        )
+                    }, 500)
+                }
 
             }
         }
