@@ -1803,6 +1803,21 @@ export function DataMessenger(elem, options){
                     )
                 );
             break;
+            case 'suggestions':
+                toolbar.appendChild(
+                    reportProblemButton
+                );
+
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete Message',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+            break
             default:
 
         }
@@ -1822,12 +1837,20 @@ export function DataMessenger(elem, options){
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
-        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'
-        && request['reference_id'] !== '1.9.502'){
+        if(
+            request['reference_id'] !== '1.1.420'
+            && type !== 'safety-net'
+            && type !== 'suggestions'
+            && request['reference_id'] !== '1.9.502'
+        ){
             toolbar.appendChild(
                 moreOptionsBtn
             );
             toolbar.appendChild(moreOptions);
+            toolbar.appendChild(reportProblem);
+        }
+
+        if(type === 'suggestions'){
             toolbar.appendChild(reportProblem);
         }
 
@@ -2646,7 +2669,7 @@ export function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         messageBubble.appendChild(obj.getActionToolbar(
-            uuid, 'safety-net', ''
+            uuid, 'suggestions', ''
         ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
