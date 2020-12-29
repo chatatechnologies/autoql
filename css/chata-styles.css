@@ -1663,7 +1663,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     right: 20px;
 }
 
-.autoql-vanilla-chata-paginate .pagination-next.disabled, .chata-paginate .pagination-previous.disabled {
+.autoql-vanilla-chata-paginate .pagination-next.disabled, .autoql-vanilla-chata-paginate .pagination-previous.disabled {
     opacity: .5;
     pointer-events: none;
 }

@@ -1871,7 +1871,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.hideBubbles = () => {
-        //
+        console.log('HIDE BUBBLES');
         var nodes = obj.drawerContent.querySelectorAll(
             '.autoql-vanilla-chat-single-message-container'
         );
