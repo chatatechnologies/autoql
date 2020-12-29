@@ -1458,16 +1458,16 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-page-switcher-container.bottom .tab.show:first-child {
   border-top-left-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.right .tab.show:last-child,
+.autoql-vanilla-page-switcher-container.right .autoql-vanilla-last-tab,
 .autoql-vanilla-page-switcher-container.top .tab.show:first-child {
   border-bottom-left-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.bottom .tab.show:last-child,
+.autoql-vanilla-page-switcher-container.bottom .autoql-vanilla-last-tab,
 .autoql-vanilla-page-switcher-container.left .tab.show:first-child {
   border-top-right-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.left .tab.show:last-child,
-.autoql-vanilla-page-switcher-container.top .tab.show:last-child {
+.autoql-vanilla-page-switcher-container.left .autoql-vanilla-last-tab,
+.autoql-vanilla-page-switcher-container.top .autoql-vanilla-last-tab {
   border-bottom-right-radius: 5px;
 }
 

@@ -803,12 +803,16 @@ export function DataMessenger(elem, options){
             obj.queryTabs.style.visibility = 'visible'
             obj.tabChataUtils.classList.add('show')
             obj.tabQueryTips.classList.add('show')
+            obj.tabQueryTips.classList.add('autoql-vanilla-last-tab')
         }
 
         if(obj.options.enableNotificationsTab){
             obj.queryTabs.style.visibility = 'visible'
             obj.tabChataUtils.classList.add('show')
             obj.tabNotifications.classList.add('show')
+            obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab')
+            obj.tabNotifications.classList.add('autoql-vanilla-last-tab')
+
         }
     }
 
@@ -818,6 +822,8 @@ export function DataMessenger(elem, options){
         obj.tabChataUtils.classList.remove('show')
         obj.tabQueryTips.classList.remove('show')
         obj.tabNotifications.classList.remove('show')
+        obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab')
+        obj.tabNotifications.classList.remove('autoql-vanilla-last-tab')
 
         obj.tabChataUtils.classList.add('hide')
         obj.tabQueryTips.classList.add('hide')
