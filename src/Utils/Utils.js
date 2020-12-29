@@ -728,7 +728,7 @@ export function allColHiddenMessage(table){
 
     }else{
         message.style.display = 'none';
-        table.style.display = 'block';
+        table.style.display = 'inline-block';
         csvHandlerOption.style.display = 'block';
         csvCopyOption.style.display = 'block';
         filterOption.style.display = 'inline-block';

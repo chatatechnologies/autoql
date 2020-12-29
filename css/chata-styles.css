@@ -726,6 +726,9 @@ input[type=text]:disabled {
     height: 100%;
     background-color: inherit;
     visibility: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .autoql-vanilla-table-response, .autoql-vanilla-table-response-renderer{
@@ -745,6 +748,10 @@ input[type=text]:disabled {
 
 .autoql-vanilla-table-response-renderer tr:first-of-type{
     border-bottom: 2px solid #d3d3d352;
+}
+
+.autoql-vanilla-chata-table{
+    width: auto;
 }
 
 .autoql-vanilla-chata-table-scrollbox .autoql-vanilla-table-header th, .autoql-vanilla-table-response-renderer tr th{
