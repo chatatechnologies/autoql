@@ -270,6 +270,10 @@ body{
   scroll-behavior: smooth;
 }
 
+.autoql-vanilla-chata-scrollbox.max-height{
+    max-height: 100% !important;
+}
+
 .autoql-vanilla-drawer-content, .autoql-vanilla-chata-scrollbox:hover, .autoql-vanilla-chata-scrollbox:focus {
   visibility: visible;
 }

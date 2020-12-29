@@ -593,9 +593,11 @@ export function DataMessenger(elem, options){
         if(displayNodes == 'none'){
             obj.headerTitle.innerHTML = 'Explore Queries';
             obj.headerRight.style.visibility = 'hidden';
+            obj.scrollBox.classList.add('max-height')
         }else{
             obj.headerTitle.innerHTML = obj.options.title;
             obj.headerRight.style.visibility = 'visible';
+            obj.scrollBox.classList.remove('max-height')
         }
         obj.updateBubbleTables()
     }
