@@ -1322,8 +1322,9 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-single-response:hover{
-    color: rgba(0,0,0,1);
+    color: inherit;
     text-decoration: underline;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -1818,12 +1819,15 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-report-problem-text-area {
     border-radius: 4px;
-    border: 1px solid rgba(0,0,0,.15);
     margin-top: 10px;
     padding: 5px 10px;
     outline: none!important;
     overflow: auto;
     resize: vertical;
+
+    border-color: var(--autoql-vanilla-border-color);
+    color: var(--autoql-vanilla-text-color-primary);
+    background: var(--autoql-vanilla-background-color-primary,#fff);
 }
 
 .autoql-vanilla-no-columns-error-message {
@@ -1844,8 +1848,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg line{
-    opacity: 1 !important;
-    color: black;
+    stroke-width: unset !important;
+    opacity: 1;
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg * {
