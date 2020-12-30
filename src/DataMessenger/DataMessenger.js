@@ -1871,7 +1871,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.hideBubbles = () => {
-        console.log('HIDE BUBBLES');
         var nodes = obj.drawerContent.querySelectorAll(
             '.autoql-vanilla-chat-single-message-container'
         );
@@ -2812,27 +2811,21 @@ export function DataMessenger(elem, options){
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         if(jsonResponse['reference_id'] === '1.1.430'){
-            containerMessage.setAttribute('suggestion-message', '1');
-            var responseLoadingContainer = document.createElement('div');
-            var responseLoading = document.createElement('div');
-
-            responseLoadingContainer.classList.add(
-                'response-loading-container'
-            );
-            responseLoading.classList.add('response-loading');
-            for (var i = 0; i <= 3; i++) {
-                responseLoading.appendChild(document.createElement('div'));
+            let loading = null
+            if(obj.options.landingPage === 'data-messenger'){
+                loading = obj.showLoading()
+                obj.drawerContent.appendChild(loading)
             }
-
-            responseLoadingContainer.appendChild(responseLoading);
-            obj.drawerContent.appendChild(responseLoadingContainer);
             const path = getRecommendationPath(
                 obj.options,
                 text
-            ) + '&query_id=' + jsonResponse['data']['query_id'];
+            ) + '&query_id=' + jsonResponse['data']['query_id']
             var response = await apiCallGet(path, obj.options)
-            obj.drawerContent.removeChild(responseLoadingContainer);
-            obj.putSuggestionResponse(jsonResponse, response.data);
+            if(loading)obj.drawerContent.removeChild(loading)
+            obj.putSuggestionResponse(jsonResponse, response.data)
+            if(obj.options.landingPage !== 'data-messenger'){
+                obj.hideBubbles()
+            }
         }
     }
 
