@@ -39,9 +39,7 @@
     background-color: #26a7df;
     color: #fff;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
-
-    -webkit-transition: opacity 0.5s ease;
-    transition: opacity 0.5s ease;
+    transition: all 0.5s ease;
     overflow: hidden;
     width: 50px;
     height: 50px;

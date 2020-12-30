@@ -244,7 +244,7 @@ export function DataMessenger(elem, options){
                 obj.queryTabs.classList.add(obj.options.placement);
                 obj.queryTabsContainer.classList.add(obj.options.placement);
                 obj.resizeHandler.classList.add(obj.options.placement);
-                obj.openDrawer();
+                obj.openDrawer(true);
                 obj.closeDrawer();
                 break;
             case 'width':
@@ -378,7 +378,7 @@ export function DataMessenger(elem, options){
         obj.applyHandleStyles();
     }
 
-    obj.openDrawer = () => {
+    obj.openDrawer = (disableAnimation=false) => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
         obj.rootElem.style.zIndex = 2000;
         obj.options.isVisible = true;
@@ -386,6 +386,12 @@ export function DataMessenger(elem, options){
         obj.input.focus()
         var body = document.body;
         obj.showTabs()
+
+        if(disableAnimation){
+            obj.rootElem.style.transition = 'none'
+        }else{
+            obj.rootElem.style.transition = 'transform 0.3s ease-in-out'
+        }
         // if(obj.options.enableExploreQueriesTab){
         //     obj.queryTabs.style.visibility = 'visible';
         //     obj.tabQueryTips.style.display = 'flex';
@@ -3106,10 +3112,9 @@ export function DataMessenger(elem, options){
 
     refreshTooltips();
     var isVisible = obj.options.isVisible;
+    obj.openDrawer(true)
 
-    if(isVisible){
-        obj.openDrawer();
-    }else{
+    if(!isVisible){
         obj.closeDrawer();
     }
 
