@@ -1510,6 +1510,12 @@ export function DataMessenger(elem, options){
             obj.options.themeConfig.accentColor;
             obj.input.value = obj.finalTranscript;
             obj.isRecordVoiceActive = false;
+            ChataUtils.autocomplete(
+                obj.input.value,
+                obj.autoCompleteList,
+                'suggestion',
+                obj.options,
+            );
         }
 
         voiceRecordButton.onmousedown = () => {
