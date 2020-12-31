@@ -137,7 +137,8 @@ export class DashboardPage extends Component {
 
         this.dashboard.stopEditing()
         this.setState({
-            loading: false
+            loading: false,
+            isEditing: false
         })
 
     }

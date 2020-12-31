@@ -84,10 +84,10 @@
 }
 
 .autoql-vanilla-tile-response-wrapper .autoql-vanilla-single-value-response:hover{
-    color: inherit;
     text-decoration: underline;
     font-weight: 600;
     cursor: pointer;
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-query-output-error-message{
