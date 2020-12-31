@@ -1884,13 +1884,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     stroke: #508bb8;
 }
 
-.autoql-vanilla-axis-selector-container{
-    z-index: 9999;
-    background: var(--autoql-vanilla-background-color-primary);
-    padding: 5px 0;
-    max-height: 300px;
-    min-width: 150px;
-}
 
 .autoql-vanilla-axis-selector-container .number-selector-header {
     margin-top: 10px;
