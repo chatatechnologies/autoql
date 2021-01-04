@@ -713,6 +713,11 @@ export function DataMessenger(elem, options){
         }
     }
 
+    obj.getQueryTipsPageSize = () => {
+        const height = obj.drawerContent.clientHeight
+        return parseInt(((height - 62 - 72 - 60 - 50) / 47))
+    }
+
     obj.createQueryTabs = function(){
         var tabId = uuidv4();
 
@@ -1168,9 +1173,11 @@ export function DataMessenger(elem, options){
     }
 
     obj.getRelatedQueriesPath = (page, searchVal, options) => {
+        const pageSize = obj.getQueryTipsPageSize()
+        console.log(pageSize);
         const url = options.authentication.demo
           ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
-          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
+          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=${pageSize}&page=${page}`;
           return url;
     }
 
