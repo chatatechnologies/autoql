@@ -36,7 +36,7 @@ export function createHeatmap(
     var notGroupableIndex = notGroupableField.indexCol;
 
     var data = formatDataToHeatmap(json, options);
-    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
+    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX).sort()
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
 
     var cols = json['data']['columns'];
@@ -46,7 +46,7 @@ export function createHeatmap(
     ).reverse()
     labelsX = formatLabels(
         labelsX, cols[groupableIndex2], options
-    );
+    ).reverse();
 
     var height;
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
