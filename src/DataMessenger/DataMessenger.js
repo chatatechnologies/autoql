@@ -47,7 +47,8 @@ import {
     LIGHT_THEME,
     DARK_THEME,
     DATA_LIMIT_MESSAGE,
-    ERROR_MESSAGE
+    ERROR_MESSAGE,
+    ACCESS_DENIED
 } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
@@ -2930,6 +2931,15 @@ export function DataMessenger(elem, options){
 
         if(obj.options.autoQLConfig.enableQueryValidation){
             let response = await apiCallGet(URL_SAFETYNET, obj.options)
+            if(!response){
+                obj.input.removeAttribute("disabled")
+                if(responseLoadingContainer){
+                    obj.drawerContent.removeChild(responseLoadingContainer)
+                }
+                obj.sendResponse(ACCESS_DENIED)
+                return
+            }
+
             obj.input.removeAttribute("disabled")
             if(response.status != 200){
                 obj.sendResponse(response.data.message)
@@ -2963,6 +2973,14 @@ export function DataMessenger(elem, options){
         let response = await apiCall(
             textValue, obj.options, source, selections
         )
+        if(!response){
+            obj.input.removeAttribute("disabled")
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer)
+            }
+            obj.sendResponse(ACCESS_DENIED)
+            return
+        }
         var status = response.status
         var jsonResponse = response.data
         var groupables = []

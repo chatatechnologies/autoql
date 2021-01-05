@@ -44,6 +44,11 @@ please send an email to our team at support@chata.ai.
 We'll look into this issue right away and be in touch with you shortly.
 `
 
+export const ACCESS_DENIED = `
+    Uh oh.. It looks like you don't have access to this resource.
+    Please double check that all required authentication fields are correct.
+`
+
 export const DATA_LIMIT_MESSAGE = `
 The display limit for your data has been reached. Try querying a smaller time-frame to ensure all your data is displayed.
 `

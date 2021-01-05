@@ -10,7 +10,6 @@ import {
 import { sortable } from 'react-sortable'
 import { Item } from './Item'
 import {
-    ReloadOutlined,
     MenuFoldOutlined,
     CloseOutlined
 } from '@ant-design/icons'
