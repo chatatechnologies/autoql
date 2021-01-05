@@ -238,11 +238,17 @@ export class DataMessengerPage extends Component {
                     [true, false],
                     this.onChangeDMProp
                 )}
-                {this.createBooleanRadioGroup('Enable Drilldowns', 'enableDrilldowns', [
-                    true,
-                    false,
-                    this.onChangeDMProp
-                ])}
+                {this.createBooleanRadioGroup(
+                    'Enable Drilldowns',
+                    'enableDrilldowns',
+                    [true, false],
+                    (prop, val) => {
+                        this.setState({ [prop]: val })
+                        this.props.setDMOption('autoQLConfig', {
+                            enableDrilldowns: val
+                        })
+                    }
+                )}
                 {this.createBooleanRadioGroup(
                     'Enable Column Visibility Editor',
                     'enableColumnVisibilityManager',
