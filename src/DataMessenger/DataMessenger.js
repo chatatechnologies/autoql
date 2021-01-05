@@ -1070,7 +1070,6 @@ export function DataMessenger(elem, options){
         }
         queryTipsResultContainer.innerHTML = '';
         queryTipsResultContainer.appendChild(queryTipListContainer);
-        // var totalPages = pages > 5 ? 5 : pages;
         for (let i = 0; i < 3; i++) {
             if(i >= pages)break;
             var li = document.createElement('li')
@@ -2929,174 +2928,177 @@ export function DataMessenger(elem, options){
             textValue
         )}&key=${apiKey}`
 
-        var response = await apiCallGet(URL_SAFETYNET, obj.options)
-        if(response.status != 200){
+        if(obj.options.autoQLConfig.enableQueryValidation){
+            let response = await apiCallGet(URL_SAFETYNET, obj.options)
             obj.input.removeAttribute("disabled")
-            obj.sendResponse(response.data.message)
-            if(responseLoadingContainer){
-                obj.drawerContent.removeChild(responseLoadingContainer)
+            if(response.status != 200){
+                obj.sendResponse(response.data.message)
+                if(responseLoadingContainer){
+                    obj.drawerContent.removeChild(responseLoadingContainer)
+                }
+                return
+            }else{
+                let suggestions = {}
+                if(response.data != undefined){
+                    suggestions = response.data['full_suggestion']
+                    || response.data['data']['replacements']
+                }
+
+                if(
+                    textValue != 'None Of these'
+                    && suggestions.length > 0
+                    && typeof selections === 'undefined'
+                ){
+
+                    obj.input.removeAttribute("disabled")
+                    if(responseLoadingContainer){
+                        obj.drawerContent.removeChild(responseLoadingContainer)
+                    }
+                    obj.putSafetynetMessage(response.data)
+                    return
+                }
             }
+        }
+
+        let response = await apiCall(
+            textValue, obj.options, source, selections
+        )
+        var status = response.status
+        var jsonResponse = response.data
+        var groupables = []
+        if(jsonResponse.data.columns){
+            groupables = getGroupables(jsonResponse)
+        }
+        var displayType = jsonResponse['data']['display_type'];
+        if(groupables.length === 1 && obj.options.autoChartAggregations){
+            displayType = 'column'
+        }
+
+        if(groupables.length === 2 && obj.options.autoChartAggregations){
+            displayType = 'stacked_column'
+        }
+
+        obj.input.removeAttribute("disabled");
+        if(responseLoadingContainer){
+            obj.drawerContent.removeChild(responseLoadingContainer);
+        }
+        if(
+            jsonResponse.data.rows &&
+            jsonResponse.data.rows.length === 0
+
+        ){
+            obj.putSimpleResponse(jsonResponse, textValue, status);
             return
         }
-        let suggestions = {}
-        if(response.data != undefined){
-            suggestions = response.data['full_suggestion']
-            || response.data['data']['replacements']
-        }
 
-        if(
-            obj.options.autoQLConfig.enableQueryValidation
-            && textValue != 'None Of these'
-            && suggestions.length > 0
-            && typeof selections === 'undefined'
-        ){
-
-            obj.input.removeAttribute("disabled")
-            if(responseLoadingContainer){
-                obj.drawerContent.removeChild(responseLoadingContainer)
-            }
-
-            obj.putSafetynetMessage(response.data)
-        }else{
-            let response = await apiCall(
-                textValue, obj.options, source, selections
-            )
-            var status = response.status
-            var jsonResponse = response.data
-            var groupables = []
-            if(jsonResponse.data.columns){
-                groupables = getGroupables(jsonResponse)
-            }
-            var displayType = jsonResponse['data']['display_type'];
-            if(groupables.length === 1 && obj.options.autoChartAggregations){
-                displayType = 'column'
-            }
-
-            if(groupables.length === 2 && obj.options.autoChartAggregations){
-                displayType = 'stacked_column'
-            }
-
-            obj.input.removeAttribute("disabled");
-            if(responseLoadingContainer){
-                obj.drawerContent.removeChild(responseLoadingContainer);
-            }
-            if(
-                jsonResponse.data.rows &&
-                jsonResponse.data.rows.length === 0
-
-            ){
-                obj.putSimpleResponse(jsonResponse, textValue, status);
-                return
-            }
-
-            switch(displayType){
-                case 'table':
-                    if(jsonResponse['data']['columns'].length == 1){
-                        obj.putSimpleResponse(jsonResponse, textValue, status);
-                    }else{
-                        obj.putTableResponse(jsonResponse);
-                    }
-                break;
-                case 'data':
-                    var cols = jsonResponse['data']['columns'];
-                    var rows = jsonResponse['data']['rows'];
-                    if(cols.length == 1 && rows.length == 1){
-                        if(cols[0]['name'] == 'query_suggestion'){
-                            obj.putSuggestionResponse(
-                                jsonResponse
-                            );
-                        }else if(cols[0]['name'] == 'Help Link'){
-                            obj.putHelpMessage(jsonResponse);
-                        }else{
-                            obj.putSimpleResponse(
-                                jsonResponse, textValue, status
-                            );
-                        }
-                    }else{
-                        if(rows.length > 0){
-                            obj.putTableResponse(jsonResponse);
-                        }else{
-                            obj.putSimpleResponse(
-                                jsonResponse, textValue, status
-                            );
-                        }
-                    }
-                break;
-                case 'compare_table':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'date_pivot':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'pivot_table':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'line':
-                    var lineContainer = obj.putTableResponse(jsonResponse);
-                    createLineChart(
-                        lineContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(lineContainer, 'line');
-                break;
-                case 'bar':
-                    var barContainer = obj.putTableResponse(jsonResponse);
-                    createBarChart(
-                        barContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(barContainer, 'bar');
-                break;
-                case 'word_cloud':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'stacked_column':
-                    var idRequest = obj.putTableResponse(jsonResponse);
-                    obj.displayStackedColumnHandler(null, idRequest)
-                break;
-                case 'stacked_bar':
-                    var component = obj.putTableResponse(jsonResponse);
-                    obj.refreshToolbarButtons(
-                        component, 'stacked_bar'
-                    );
-                    createStackedBarChart(
-                        component,
-                        cloneObject(jsonResponse), obj.options
-                    );
-                break;
-                case 'bubble':
-                    var bubbleContainer = obj.putTableResponse(
-                        jsonResponse
-                    );
-                    createBubbleChart(
-                        bubbleContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(bubbleContainer, 'bubble');
-                break;
-                case 'heatmap':
-                    var mapContainer = obj.putTableResponse(jsonResponse);
-                    createHeatmap(
-                        mapContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(mapContainer, 'heatmap');
-                break;
-                case 'pie':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'column':
-                    var _idRequest = obj.putTableResponse(
-                        jsonResponse
-                    );
-                    obj.displayColumChartHandler(null, _idRequest)
-
-                break;
-                case 'help':
-                    obj.putHelpMessage(jsonResponse);
-                break;
-                default:
+        switch(displayType){
+            case 'table':
+                if(jsonResponse['data']['columns'].length == 1){
                     obj.putSimpleResponse(jsonResponse, textValue, status);
-            }
-            obj.checkMaxMessages();
-            refreshTooltips();
+                }else{
+                    obj.putTableResponse(jsonResponse);
+                }
+            break;
+            case 'data':
+                var cols = jsonResponse['data']['columns'];
+                var rows = jsonResponse['data']['rows'];
+                if(cols.length == 1 && rows.length == 1){
+                    if(cols[0]['name'] == 'query_suggestion'){
+                        obj.putSuggestionResponse(
+                            jsonResponse
+                        );
+                    }else if(cols[0]['name'] == 'Help Link'){
+                        obj.putHelpMessage(jsonResponse);
+                    }else{
+                        obj.putSimpleResponse(
+                            jsonResponse, textValue, status
+                        );
+                    }
+                }else{
+                    if(rows.length > 0){
+                        obj.putTableResponse(jsonResponse);
+                    }else{
+                        obj.putSimpleResponse(
+                            jsonResponse, textValue, status
+                        );
+                    }
+                }
+            break;
+            case 'compare_table':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'date_pivot':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'pivot_table':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'line':
+                var lineContainer = obj.putTableResponse(jsonResponse);
+                createLineChart(
+                    lineContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(lineContainer, 'line');
+            break;
+            case 'bar':
+                var barContainer = obj.putTableResponse(jsonResponse);
+                createBarChart(
+                    barContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(barContainer, 'bar');
+            break;
+            case 'word_cloud':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'stacked_column':
+                var idRequest = obj.putTableResponse(jsonResponse);
+                obj.displayStackedColumnHandler(null, idRequest)
+            break;
+            case 'stacked_bar':
+                var component = obj.putTableResponse(jsonResponse);
+                obj.refreshToolbarButtons(
+                    component, 'stacked_bar'
+                );
+                createStackedBarChart(
+                    component,
+                    cloneObject(jsonResponse), obj.options
+                );
+            break;
+            case 'bubble':
+                var bubbleContainer = obj.putTableResponse(
+                    jsonResponse
+                );
+                createBubbleChart(
+                    bubbleContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(bubbleContainer, 'bubble');
+            break;
+            case 'heatmap':
+                var mapContainer = obj.putTableResponse(jsonResponse);
+                createHeatmap(
+                    mapContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(mapContainer, 'heatmap');
+            break;
+            case 'pie':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'column':
+                var _idRequest = obj.putTableResponse(
+                    jsonResponse
+                );
+                obj.displayColumChartHandler(null, _idRequest)
+
+            break;
+            case 'help':
+                obj.putHelpMessage(jsonResponse);
+            break;
+            default:
+                obj.putSimpleResponse(jsonResponse, textValue, status);
         }
+        obj.checkMaxMessages();
+        refreshTooltips();
+
         if(obj.options.landingPage != 'data-messenger'){
             obj.hideBubbles()
         }
