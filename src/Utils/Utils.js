@@ -1124,3 +1124,13 @@ export const svgToPng = (svgElement, margin = 0, fill) => {
         }
     })
 }
+
+export const getFirstDateCol = (cols) => {
+    for (var i = 0; i < cols.length; i++) {
+        if(['DATE_STRING', 'DATE'].includes(cols[i].type)){
+            return cols[i].index
+        }
+    }
+
+    return -1
+}

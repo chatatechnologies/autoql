@@ -28,6 +28,7 @@ import {
     formatData,
     formatChartData,
     closeAllChartPopovers,
+    getFirstDateCol
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
@@ -74,9 +75,11 @@ export function createBarChart(
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
+        var dateCol = getFirstDateCol(cols)
+        let i = dateCol !== -1 ? dateCol : yIndexes[0].index
         metadataComponent.metadata = {
             groupBy: {
-                index: yIndexes[0].index,
+                index: i,
                 currentLi: 0,
             },
             series: xIndexes
