@@ -30,6 +30,7 @@ import {
     formatData,
     formatChartData,
     closeAllChartPopovers,
+    getFirstDateCol
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
@@ -75,9 +76,11 @@ export function createLineChart(
     }
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
+        var dateCol = getFirstDateCol(cols)
+        let i = dateCol !== -1 ? dateCol : xIndexes[0].index
         metadataComponent.metadata = {
             groupBy: {
-                index: xIndexes[0].index,
+                index: i,
                 currentLi: 0,
             },
             series: yIndexes
