@@ -447,6 +447,7 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
         destroyOnClose: true,
         withFooter: true
     });
+    modal.chataModal.style.width = '600px'
     modal.setTitle('Report a Problem');
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');
