@@ -1913,7 +1913,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.copyFilterMetadata = (component) => {
-        component.filterMetadata = component.tabulator.getHeaderFilters()
+        component.filterMetadata = component.internalTable.getHeaderFilters()
     }
 
     obj.copyPivotFilterMetadata = (component) => {
@@ -1923,7 +1923,7 @@ export function DataMessenger(elem, options){
 
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
         closeAllChartPopovers();
-        if(oldComponent.tabulator){
+        if(oldComponent.internalTable){
             obj.copyFilterMetadata(oldComponent)
         }
         if(oldComponent.pivotTabulator){
@@ -2179,6 +2179,7 @@ export function DataMessenger(elem, options){
                 parentContainer.parentElement.scrollIntoView()
             }
         );
+        component.internalTable = table
         component.tabulator = table;
         obj.setDefaultFilters(component, table, 'table')
         table.parentContainer = parentContainer;
@@ -2540,6 +2541,7 @@ export function DataMessenger(elem, options){
             }
         );
 
+        tableWrapper.internalTable = table;
         tableWrapper.tabulator = table;
         table.parentContainer = parentContainer;
         setTimeout(function(){
