@@ -15,6 +15,7 @@ import {
     getSpeech,
     htmlToElement,
     closeAllChartPopovers,
+    closeAllSafetynetSelectors,
     uuidv4,
     getSupportedDisplayTypes,
     allColHiddenMessage,
@@ -2692,6 +2693,7 @@ export function DataMessenger(elem, options){
             uuid, 'suggestions', ''
         ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        refreshTooltips()
     }
 
     obj.putClientResponse = (msg, json={}, withDeleteBtn=false) => {
@@ -3136,7 +3138,10 @@ export function DataMessenger(elem, options){
     obj.createNotifications();
     obj.speechToTextEvent();
     obj.registerWindowClicks();
-
+    obj.scrollBox.onscroll = () => {
+        closeAllChartPopovers()
+        closeAllSafetynetSelectors()
+    }
     refreshTooltips();
     var isVisible = obj.options.isVisible;
     obj.openDrawer(true)

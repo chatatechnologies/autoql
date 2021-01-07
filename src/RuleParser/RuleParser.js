@@ -13,7 +13,6 @@ export function getOperator(condition){
 
 export function convert(rules, addTopOperator=true){
 	var parsedRules = [];
-	console.log(rules);
 	for (var i = 0; i < rules.length; i++) {
 		var termValue = rules[i]['term_value'];
 		var group = [];
