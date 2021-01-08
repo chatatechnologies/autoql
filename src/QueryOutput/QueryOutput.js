@@ -28,7 +28,7 @@ export function QueryOutput(selector, options={}){
     responseRenderer.options = {
         supportsSuggestions: true,
         onSuggestionClick: function() {},
-        onDataClick: (groupByObject, queryID) => {},
+        onDataClick: () => {},
         tableBorderColor: undefined,
         tableHoverColor: undefined,
         displayType: undefined,
@@ -102,6 +102,7 @@ export function QueryOutput(selector, options={}){
         const {
             autoChartAggregations
         } = responseRenderer.options
+        if(!jsonResponse)return
         var groupables = getGroupables(jsonResponse)
         responseRenderer.clearMetadata()
         ChataUtils.responses[uuid] = jsonResponse;
