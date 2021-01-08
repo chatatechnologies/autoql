@@ -1524,12 +1524,6 @@ export function DataMessenger(elem, options){
             obj.options.themeConfig.accentColor;
             obj.input.value = obj.finalTranscript;
             obj.isRecordVoiceActive = false;
-            ChataUtils.autocomplete(
-                obj.input.value,
-                obj.autoCompleteList,
-                'suggestion',
-                obj.options,
-            );
         }
 
         voiceRecordButton.onmousedown = () => {
@@ -1570,6 +1564,12 @@ export function DataMessenger(elem, options){
                     obj.speechToText.stop();
                     obj.voiceRecordButton.style.backgroundColor =
                     obj.options.themeConfig.accentColor;
+                    ChataUtils.autocomplete(
+                        obj.input.value,
+                        obj.autoCompleteList,
+                        'suggestion',
+                        obj.options,
+                    );
                 }
             }
         }
