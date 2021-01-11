@@ -375,13 +375,15 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 menu.ul.appendChild(action);
                 break;
             case 'notification':
-                action = ChataUtils.getActionOption(
-                    NOTIFICATION_BUTTON,
-                    'Create a Data Alert...',
-                    ChataUtils.createNotificationHandler,
-                    [idRequest, extraParams]
-                );
-                menu.ul.appendChild(action);
+                if(extraParams.caller.options.enableNotificationsTab){
+                    action = ChataUtils.getActionOption(
+                        NOTIFICATION_BUTTON,
+                        'Create a Data Alert...',
+                        ChataUtils.createNotificationHandler,
+                        [idRequest, extraParams]
+                    );
+                    menu.ul.appendChild(action);
+                }
 
                 break;
             default:
