@@ -1175,10 +1175,10 @@ export function DataMessenger(elem, options){
 
     obj.getRelatedQueriesPath = (page, searchVal, options) => {
         const pageSize = obj.getQueryTipsPageSize()
-        console.log(pageSize);
+        const s = encodeURIComponent(searchVal)
         const url = options.authentication.demo
           ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
-          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=${pageSize}&page=${page}`;
+          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${s}&page_size=${pageSize}&page=${page}`;
           return url;
     }
 
