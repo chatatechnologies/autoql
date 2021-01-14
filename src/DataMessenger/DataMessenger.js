@@ -315,9 +315,10 @@ export function DataMessenger(elem, options){
             case 'enableNotificationsTab':
                 obj.options.enableNotificationsTab = value;
                 if(value && obj.options.isVisible){
-                    obj.tabNotifications.style.display = 'block';
-                }else obj.tabNotifications.style.display = 'none';
-                obj.instanceNotificationIcon();
+                    obj.tabNotifications.style.display = 'block'
+                }else obj.tabNotifications.style.display = 'none'
+                obj.instanceNotificationIcon()
+                obj.toggleNotificationOption()
                 break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
@@ -1545,6 +1546,21 @@ export function DataMessenger(elem, options){
                     obj.input.value = obj.lastQuery
                 }
             }
+        }
+    }
+
+    obj.toggleNotificationOption = () => {
+        var opts = obj.drawerContent.querySelectorAll(
+            '.autoql-vanilla-notification-option'
+        )
+        var display = 'none';
+
+        if(obj.options.enableNotificationsTab){
+            display = 'block';
+        }
+
+        for (var i = 0; i < opts.length; i++) {
+            opts[i].style.display = display
         }
     }
 
