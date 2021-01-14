@@ -951,7 +951,7 @@ export function DataMessenger(elem, options){
                 chataInput.value = subQuery;
             }
             index++;
-        }, 85);
+        }, 45);
     }
 
     obj.keyboardAnimation = (text) => {
@@ -973,7 +973,7 @@ export function DataMessenger(elem, options){
                 chataInput.value = subQuery;
             }
             index++;
-        }, 85);
+        }, 45);
     }
 
     obj.putRelatedQueries = (
@@ -2083,10 +2083,12 @@ export function DataMessenger(elem, options){
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
+        var col = newJson['data']['columns'][indexValue];
 
         for (var i = 0; i < oldData.length; i++) {
             var compareValue = oldData[i][indexValue]
             if(!compareValue)compareValue = 'null'
+            compareValue = formatData(compareValue, col, options)
             if(compareValue === filterBy)newData.push(oldData[i]);
         }
         var loading = obj.createLoadingDots();
