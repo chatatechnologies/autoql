@@ -1418,7 +1418,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   display: flex;
 }
 .autoql-vanilla-page-switcher-container.right .tab {
-  text-align: left;
   height: 65px;
   width: 45px;
   line-height: 52px;

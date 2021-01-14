@@ -1749,7 +1749,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1800,7 +1800,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1820,7 +1820,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1834,7 +1834,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1849,7 +1849,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -2630,7 +2630,7 @@ export function DataMessenger(elem, options){
                 input.value = subQuery;
             }
             index++;
-        }, 60);
+        }, 45);
     }
 
     obj.createSuggestions = async function(
@@ -2866,6 +2866,7 @@ export function DataMessenger(elem, options){
                 obj.hideBubbles()
             }
         }
+        refreshTooltips()
     }
 
     obj.putSafetynetMessage = function(jsonResponse){
