@@ -31,21 +31,21 @@ export function createBubbleChart(
 
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var groupableIndex1 = groupables[1].indexCol;
-    var groupableIndex2 = groupables[0].indexCol;
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
 
     var data = formatDataToHeatmap(json, options);
-    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX).sort()
+    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
     var cols = json['data']['columns'];
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options
-    ).reverse()
+    )
     labelsX = formatLabels(
         labelsX, cols[groupableIndex2], options
-    ).reverse();
+    )
 
 
     var height;
@@ -235,9 +235,9 @@ export function createBubbleChart(
         return x(d.labelX) + getBandWidth(x) / 2;
     })
     .attr("cy", function (d) {
-        return y(d.labelY) + getBandWidth(y) / 2;
+        return y(d.labelY) + getBandWidth(y) / 3;
     })
-    .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value); })
+    .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value) * .7; })
     .attr("fill", options.themeConfig.chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'tooltip-3d circle')

@@ -31,22 +31,22 @@ export function createHeatmap(
 
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var groupableIndex1 = groupables[1].indexCol;
-    var groupableIndex2 = groupables[0].indexCol;
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
 
     var data = formatDataToHeatmap(json, options);
-    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX).sort()
+    var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
 
     var cols = json['data']['columns'];
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options
-    ).reverse()
+    )
     labelsX = formatLabels(
         labelsX, cols[groupableIndex2], options
-    ).reverse();
+    );
 
     var height;
     var colStr1 = cols[groupableIndex1]['display_name'] || cols[groupableIndex1]['name'];
