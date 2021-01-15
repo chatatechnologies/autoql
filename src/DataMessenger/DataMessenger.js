@@ -2473,7 +2473,7 @@ export function DataMessenger(elem, options){
                 json['data']['rows'][0][1] = cell.getValue() || 0
 
             }else{
-                json['data']['rows'][0][0] = entries[entries.length-1][1];
+                json['data']['rows'][0][0] = entries[0][1];
                 json['data']['rows'][0][1] = selectedColumn.definition.field;
                 json['data']['rows'][0][2] = cell.getValue();
             }
