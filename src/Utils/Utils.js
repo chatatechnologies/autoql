@@ -603,17 +603,40 @@ export const getSupportedDisplayTypes = response => {
             if(response.data.rows.length < 7){
                 supportedDisplayTypes.push('pie')
             }
-                const dateColumn = columns.find(
-                    col => col.type === 'DATE' || col.type === 'DATE_STRING'
+                const dateColumnIndex = columns.findIndex(
+                    (col) => col.type === 'DATE' || col.type === 'DATE_STRING'
                 )
+                const dateColumn = columns[dateColumnIndex]
+                let rows = response.data.rows
 
                 if(dateColumn){
                     if (
                         dateColumn.display_name &&
-                        dateColumn.display_name.toLowerCase().includes('month') &&
+                        dateColumn.display_name.toLowerCase().includes('month')
+                        &&
                         columns.length === 2
                     ) {
-                        supportedDisplayTypes.push('pivot_table')
+                        const uniqueYears = []
+                        rows.forEach((row) => {
+                            const year = formatData(
+                                row[dateColumnIndex],
+                                dateColumn,
+                                {
+                                    dataFormatting: {
+                                        monthYearFormat: 'YYYY',
+                                        dayMonthYearFormat: 'YYYY'
+                                    }
+                                }
+                            )
+
+                            if (!uniqueYears.includes(year)) {
+                                uniqueYears.push(year)
+                            }
+                        })
+
+                        if (uniqueYears.length > 1) {
+                            supportedDisplayTypes.push('pivot_table')
+                        }
                     }
                 }
                 return supportedDisplayTypes
