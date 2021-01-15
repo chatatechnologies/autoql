@@ -1657,21 +1657,13 @@ export function DataMessenger(elem, options){
         closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
-        var bubble = obj.drawerContent.querySelector(
-            `[data-bubble-id="${idRequest}"]`
-        )
-        bubble.scrollIntoView()
     }
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
         closeAllToolbars();
-        var bubble = obj.drawerContent.querySelector(
-            `[data-bubble-id="${idRequest}"]`
-        )
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
-        bubble.scrollIntoView()
     }
 
     obj.filterTableHandler = (evt, idRequest) => {
