@@ -319,6 +319,7 @@ export function DataMessenger(elem, options){
                 }else obj.tabNotifications.style.display = 'none'
                 obj.instanceNotificationIcon()
                 obj.toggleNotificationOption()
+                obj.showTabs()
                 break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
@@ -395,16 +396,6 @@ export function DataMessenger(elem, options){
         }else{
             obj.rootElem.style.transition = 'transform 0.3s ease-in-out'
         }
-        // if(obj.options.enableExploreQueriesTab){
-        //     obj.queryTabs.style.visibility = 'visible';
-        //     obj.tabQueryTips.style.display = 'flex';
-        //     obj.tabChataUtils.style.display = 'flex';
-        // }
-        // if(obj.options.enableNotificationsTab){
-        //     obj.queryTabs.style.visibility = 'visible';
-        //     obj.tabNotifications.style.display = 'flex';
-        //     obj.tabChataUtils.style.display = 'flex';
-        // }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
             obj.wrapper.style.height = '100%';
@@ -815,20 +806,30 @@ export function DataMessenger(elem, options){
     }
 
     obj.showTabs = () => {
-        if(obj.options.enableExploreQueriesTab){
-            obj.queryTabs.style.visibility = 'visible'
-            obj.tabChataUtils.classList.add('show')
-            obj.tabQueryTips.classList.add('show')
+        const {
+            enableExploreQueriesTab,
+            enableNotificationsTab,
+            isVisible
+        } = obj.options
+
+
+        if(enableExploreQueriesTab){
+            if(isVisible){
+                obj.queryTabs.style.visibility = 'visible'
+                obj.tabChataUtils.classList.add('show')
+                obj.tabQueryTips.classList.add('show')
+            }
             obj.tabQueryTips.classList.add('autoql-vanilla-last-tab')
         }
 
-        if(obj.options.enableNotificationsTab){
-            obj.queryTabs.style.visibility = 'visible'
-            obj.tabChataUtils.classList.add('show')
-            obj.tabNotifications.classList.add('show')
+        if(enableNotificationsTab){
+            if(isVisible){
+                obj.queryTabs.style.visibility = 'visible'
+                obj.tabChataUtils.classList.add('show')
+                obj.tabNotifications.classList.add('show')
+            }
             obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab')
             obj.tabNotifications.classList.add('autoql-vanilla-last-tab')
-
         }
     }
 

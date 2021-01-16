@@ -1459,7 +1459,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .tab.show{
-    display: flex;
+    display: flex !important;
 }
 
 /* Curve appropriate corners depending on placement */
