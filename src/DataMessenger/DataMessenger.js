@@ -1568,7 +1568,6 @@ export function DataMessenger(elem, options){
     obj.speechToTextEvent = () => {
         if(obj.speechToText){
             obj.speechToText.onresult = (e) => {
-
                 for (let i = e.resultIndex,
                     len = e.results.length; i < len; i++) {
                     let transcript = e.results[i][0].transcript;
@@ -1588,6 +1587,7 @@ export function DataMessenger(elem, options){
                         obj.options,
                     );
                 }
+                obj.finalTranscript = '';
             }
         }
     }
