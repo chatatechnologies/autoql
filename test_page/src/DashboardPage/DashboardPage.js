@@ -133,8 +133,7 @@ export class DashboardPage extends Component {
                 'Integrator-Domain': authentication.domain,
             },
         })
-
-
+        this.props.updateDashboard(d, this.props.activeDashboard)
         this.dashboard.stopEditing()
         this.setState({
             loading: false,

@@ -566,6 +566,7 @@ export function DataMessenger(elem, options){
         if (document.readyState === "interactive" ||
             document.readyState === "complete" ) {
             obj.initialScroll = window.scrollY;
+            obj.applyStyles();
         }
     }
 
@@ -3141,7 +3142,6 @@ export function DataMessenger(elem, options){
 
     obj.createDrawerButton();
     obj.createWrapper();
-    obj.applyStyles();
     obj.createHeader();
     obj.createDrawerContent();
     obj.createIntroMessageTopics();
