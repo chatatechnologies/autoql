@@ -28,13 +28,13 @@ export function formatData(val, col, allOptions={}){
         case 'DATE':
             var colName = col.name;
             if(colName.includes('year')){
-                value = moment(parseInt(val)*1000).format('YYYY');
+                value = moment.utc(parseInt(val)*1000).format('YYYY');
             }else if(colName.includes('month')){
-                value = moment(parseInt(val)*1000).format(
+                value = moment.utc(parseInt(val)*1000).format(
                     options.monthYearFormat
                 );
             }else{
-                value = moment(parseInt(val)*1000).format(
+                value = moment.utc(parseInt(val)*1000).format(
                     options.dayMonthYearFormat
                 );
             }
@@ -115,12 +115,12 @@ export const formatStringDate = (value, config) => {
         const dayMonthYear = dayMonthYearFormat || 'll'
 
         if (day) {
-            const date = moment(value).format(dayMonthYear)
+            const date = moment.utc(value).format(dayMonthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
         } else if (month) {
-            const date = moment(value).format(monthYear)
+            const date = moment.utc(value).format(monthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
