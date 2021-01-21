@@ -56,7 +56,6 @@
     color: var(--autoql-vanilla-text-color-primary);
     font-weight: 500;
     font-family: var(--autoql-vanilla-font-family),sans-serif;
-    line-height: 50px;
     -webkit-transition: all 1s ease;
     transition: all 1s ease;
     -webkit-transition: height .3s cubic-bezier(.26,.26,0,1);
@@ -446,6 +445,7 @@
     border-bottom: 1px solid var(--autoql-vanilla-border-color);
     text-align: center;
     margin: 0 10px;
+    line-height: 50px;
 }
 
 .chata-response-content-container{
@@ -516,13 +516,14 @@
     flex-grow: 0;
     flex-shrink: 0;
     flex-basis: 50px;
-    padding: 10px;
+    padding: 10px !important;
     border-left: 1px solid rgba(0,0,0,.05);
     text-align: center;
 }
 
 .autoql-vanilla-chata-notification-viz-switcher .autoql-vanilla-chata-toolbar-btn{
     vertical-align: bottom;
+    height: 38px;
 }
 
 .chata-notification-list-item .chata-notification-data-container line {

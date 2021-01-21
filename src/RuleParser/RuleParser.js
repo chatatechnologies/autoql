@@ -18,7 +18,7 @@ export function convert(rules, addTopOperator=true){
 	for (var i = 0; i < rules.length; i++) {
 		var term = rules[i];
 		var operator = getOperator(term.condition)
-		rule.push(term.value)
+		rule.push(term.term_value)
 		if(operator)rule.push(operator)
 		if(term.condition === 'TERMINATOR'){
 			parsedRules.push([rule])
@@ -48,6 +48,6 @@ export function convert(rules, addTopOperator=true){
 	// 		group.push([rules[i].condition])
 	// 	}
 	// }
-
+	console.log(parsedRules);
 	return parsedRules;
 }
