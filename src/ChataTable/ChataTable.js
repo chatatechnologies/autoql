@@ -32,8 +32,12 @@ function callTableFilter(col, headerValue, rowValue, options){
     ) {
         var trimmedValue = headerValue.trim();
         if (trimmedValue.length >= 2) {
-            const number = parseFloat(trimmedValue.substr(1));
-            console.log(trimmedValue.substr(1));
+            let number
+            if(trimmedValue[1] === '='){
+                number = trimmedValue.substr(2)
+            }else{
+                number = parseFloat(trimmedValue.substr(1));
+            }
             if (trimmedValue[0] === '>' && trimmedValue[1] === '=') {
                 return rowValue >= number;
             } else if (trimmedValue[0] === '>') {
