@@ -89,7 +89,10 @@ function getPivotColumns(json, pivotColumns, options){
                 let value;
                 if(
                     cell.getValue() === '' &&
-                    columns[colIndex].type == 'DOLLAR_AMT'
+                    (
+                        columns[colIndex].type == 'DOLLAR_AMT' ||
+                        columns[colIndex].type === 'QUANTITY'
+                    )
                 ){
                     value = 0;
                 }else{
@@ -119,7 +122,6 @@ function getPivotData(pivotArray, pivotColumns){
         }
         tableData.push(row);
     }
-
     return tableData;
 }
 
