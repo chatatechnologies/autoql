@@ -308,6 +308,7 @@ body{
     text-decoration: none;
     color: var(--autoql-vanilla-text-color-primary);
     cursor: default;
+    font-weight: normal;
 }
 
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {

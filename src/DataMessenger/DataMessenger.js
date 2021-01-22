@@ -2740,6 +2740,7 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbarButtons);
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        refreshTooltips()
     }
 
     obj.showLoading = () => {
