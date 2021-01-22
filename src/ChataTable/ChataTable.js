@@ -15,8 +15,9 @@ import moment from 'moment'
 
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
-
-    if(!rowValue)rowValue = '';
+    if(
+        !rowValue && (!['DOLLAR_AMT', 'QUANTITY', 'PERCENT'].includes(colType))
+    )rowValue = '';
     if(colType == 'DATE' || colType == 'DATE_STRING'){
         var formatDate = formatData(
             rowValue,
@@ -32,6 +33,7 @@ function callTableFilter(col, headerValue, rowValue, options){
         var trimmedValue = headerValue.trim();
         if (trimmedValue.length >= 2) {
             const number = parseFloat(trimmedValue.substr(1));
+            console.log(trimmedValue.substr(1));
             if (trimmedValue[0] === '>' && trimmedValue[1] === '=') {
                 return rowValue >= number;
             } else if (trimmedValue[0] === '>') {
