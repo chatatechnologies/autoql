@@ -2991,6 +2991,7 @@ export function DataMessenger(elem, options){
         let response = await apiCall(
             textValue, obj.options, source, selections
         )
+        console.log(response);
         if(!response){
             obj.input.removeAttribute("disabled")
             if(responseLoadingContainer){

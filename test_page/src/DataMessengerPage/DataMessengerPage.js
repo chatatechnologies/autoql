@@ -256,7 +256,7 @@ export class DataMessengerPage extends Component {
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Notifications',
-                    'enableNotifications',
+                    'enableNotificationsTab',
                     [true, false],
                     this.onChangeDMProp
                 )}

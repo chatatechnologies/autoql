@@ -11,6 +11,10 @@ import { Modal, Input } from "antd";
 import "./App.css";
 import axios from "axios";
 
+const getStoredProp = (name) => {
+    return localStorage.getItem(name)
+}
+
 class App extends React.Component {
     datamessenger = null;
     notificationsIcon = null;
@@ -22,8 +26,8 @@ class App extends React.Component {
         isSavingDashboard: false,
         authentication: {
             token: "",
-            domain: "",
-            apiKey: "",
+            domain: getStoredProp('domain-url') || '',
+            apiKey: getStoredProp('api-key') || '',
         },
         themeConfig: {
             theme: "light",
@@ -205,8 +209,8 @@ class App extends React.Component {
         this.datamessenger = new DataMessenger("#datamessenger", {
             authentication: {
                 token: "",
-                apiKey: "",
-                domain: "",
+                domain: getStoredProp('domain-url') || '',
+                apiKey: getStoredProp('api-key') || '',
             },
             themeConfig: {
                 ...this.props.themeConfig,
