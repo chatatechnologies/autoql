@@ -122,7 +122,7 @@ export class DashboardPage extends Component {
         const URL = `https://backend-staging.chata.io/api/v1/dashboards/${dashboardData.id}?key=${authentication.apiKey}`
         var tiles = []
         var d = {
-            name: dashboardData.name
+            name: dashboardData.name,
         }
         this.dashboard.tiles.map(tile => tiles.push(tile.getValues()))
 
@@ -133,6 +133,7 @@ export class DashboardPage extends Component {
                 'Integrator-Domain': authentication.domain,
             },
         })
+        d.id = dashboardData.id
         this.props.updateDashboard(d, this.props.activeDashboard)
         this.dashboard.stopEditing()
         this.setState({
