@@ -123,6 +123,15 @@ export class AuthenticationForm extends Component {
     }
 
     logoutUser = () => {
+        setStoredProp('loginToken', null)
+        setStoredProp('jwtToken', null)
+        this.setState({
+            isAuthenticated: false,
+            isAuthenticating: false,
+            activeIntegrator: null,
+            componentKey: uuid.v4(),
+        })
+        message.success('Succesfully logged out')
     }
 
     render = () => {
