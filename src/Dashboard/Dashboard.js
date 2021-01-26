@@ -256,6 +256,7 @@ export function Dashboard(selector, options={}){
         setTimeout(() => {
             e.focusItem()
         }, 150)
+        obj.hideMessage()
     }
 
     obj.undo = () => {
@@ -370,6 +371,24 @@ export function Dashboard(selector, options={}){
         return obj.tiles.length === 0
     }
 
+    obj.newTileMessage = () => {
+        obj.messageContainer.style.display = 'block'
+        obj.messageContainer.innerHTML = ''
+        var btn = htmlToElement(`
+            <span class="empty-dashboard-new-tile-btn">New Tile</span>
+        `)
+
+        obj.messageContainer.appendChild(
+            document.createTextNode('Add a ')
+        )
+
+        obj.messageContainer.appendChild(btn)
+
+        obj.messageContainer.appendChild(
+            document.createTextNode(' to get started')
+        )
+    }
+
     obj.startBuildingMessage = () => {
         obj.messageContainer.style.display = 'block'
         obj.messageContainer.innerHTML = ''
@@ -384,11 +403,19 @@ export function Dashboard(selector, options={}){
         obj.messageContainer.appendChild(btn)
     }
 
+    obj.hideMessage = () => {
+        obj.messageContainer.style.display = 'none'
+    }
+
 
     if(obj.options.isEditing)obj.startEditing()
 
     if(obj.isEmpty()){
-        obj.startBuildingMessage()
+        if(options.isEditing){
+            obj.newTileMessage()
+        }else{
+            obj.startBuildingMessage()
+        }
     }
 
     return obj
