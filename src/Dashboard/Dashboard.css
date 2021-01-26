@@ -31,3 +31,19 @@
     opacity: 1;
     fill-opacity: 1;
 }
+
+.empty-dashboard-message-container {
+    font-family: var(--autoql-vanilla-font-family);
+    color: var(--autoql-vanilla-text-color-primary);
+    letter-spacing: .02em;
+    text-align: center;
+    padding: 100px;
+    height: 100%;
+    width: 100%;
+}
+
+.empty-dashboard-new-tile-btn {
+    color: var(--autoql-vanilla-accent-color);
+    font-weight: 700;
+    cursor: pointer;
+}

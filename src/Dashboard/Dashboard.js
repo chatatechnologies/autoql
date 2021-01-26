@@ -1,16 +1,26 @@
 import { GridStack } from 'gridstack'
 import { Tile } from './Tile'
 import './Dashboard.css'
+import {
+    htmlToElement
+} from '../Utils'
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/h5/gridstack-dd-native';
 
 export function Dashboard(selector, options={}){
     var obj = this
     var parent = document.querySelector(selector)
+    var messageContainer = htmlToElement(`
+        <div class="empty-dashboard-message-container">
+        </div>
+    `)
     parent.classList.add('autoql-vanilla-dashboard-container')
     var gridContainer = document.createElement('div')
     gridContainer.classList.add('grid-stack')
     parent.appendChild(gridContainer)
+    parent.appendChild(messageContainer)
+    obj.messageContainer = messageContainer
+    obj.messageContainer.style.display = 'none'
 
     obj.undoData = {
         eventType: undefined,
@@ -356,8 +366,30 @@ export function Dashboard(selector, options={}){
         obj.run()
     }
 
+    obj.isEmpty = () => {
+        return obj.tiles.length === 0
+    }
+
+    obj.startBuildingMessage = () => {
+        obj.messageContainer.style.display = 'block'
+        obj.messageContainer.innerHTML = ''
+        var btn = htmlToElement(`
+            <span class="empty-dashboard-new-tile-btn">New Dashboard</span>
+        `)
+
+        obj.messageContainer.appendChild(
+            document.createTextNode('Start building a ')
+        )
+
+        obj.messageContainer.appendChild(btn)
+    }
+
+
     if(obj.options.isEditing)obj.startEditing()
 
+    if(obj.isEmpty()){
+        obj.startBuildingMessage()
+    }
 
     return obj
 }
