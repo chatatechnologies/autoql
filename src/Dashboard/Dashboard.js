@@ -218,7 +218,9 @@ export function Dashboard(selector, options={}){
         obj.tiles.forEach((item) => {
             item.startEditing()
         })
-
+        if(obj.isEmpty()){
+            obj.newTileMessage()
+        }
     }
 
     obj.stopEditing = () => {
@@ -227,6 +229,13 @@ export function Dashboard(selector, options={}){
             item.stopEditing()
         })
         if(obj.options.executeOnStopEditing)obj.run()
+        if(obj.isEmpty()){
+            if(obj.options.isEditing){
+                obj.newTileMessage()
+            }else{
+                obj.startBuildingMessage()
+            }
+        }
     }
 
     obj.run = () => {
@@ -387,6 +396,15 @@ export function Dashboard(selector, options={}){
         obj.messageContainer.appendChild(
             document.createTextNode(' to get started')
         )
+
+        btn.onclick = () => {
+            obj.addTile({
+                title: '',
+                query: '',
+                w: 6,
+                h: 5,
+            })
+        }
     }
 
     obj.startBuildingMessage = () => {
@@ -401,9 +419,14 @@ export function Dashboard(selector, options={}){
         )
 
         obj.messageContainer.appendChild(btn)
+
+        btn.onclick = () => {
+            obj.startEditing()
+        }
     }
 
     obj.hideMessage = () => {
+        obj.messageContainer.innerHTML = ''
         obj.messageContainer.style.display = 'none'
     }
 

@@ -182,6 +182,14 @@ export function Tile(dashboard, options){
         dashboard.setUndoData('removeTile', () => {
             return dashboard.undoDelete(item, item.gridstackNode)
         }, item)
+
+        if(dashboard.isEmpty()){
+            if(dashboard.options.isEditing){
+                dashboard.newTileMessage()
+            }else{
+                dashboard.startBuildingMessage()
+            }
+        }
     }
 
     for (var i = 0; i < dragPositions.length; i++) {
