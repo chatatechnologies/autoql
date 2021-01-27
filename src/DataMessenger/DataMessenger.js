@@ -1971,13 +1971,15 @@ export function DataMessenger(elem, options){
             ignore
         ) ? 'csvCopy' : 'chart-view';
 
-        toolbarLeft.innerHTML = ''
-        var displayTypes = obj.getDisplayTypesButtons(
-            oldComponent.dataset.componentid, ignore
-        );
+        if(toolbarLeft){
+            toolbarLeft.innerHTML = ''
+            var displayTypes = obj.getDisplayTypesButtons(
+                oldComponent.dataset.componentid, ignore
+            );
 
-        for (var i = 0; i < displayTypes.length; i++) {
-            toolbarLeft.appendChild(displayTypes[i]);
+            for (var i = 0; i < displayTypes.length; i++) {
+                toolbarLeft.appendChild(displayTypes[i]);
+            }
         }
 
         var newToolbarRight = obj.getActionToolbar(
@@ -3011,11 +3013,19 @@ export function DataMessenger(elem, options){
             groupables = getGroupables(jsonResponse)
         }
         var displayType = jsonResponse['data']['display_type'];
-        if(groupables.length === 1 && obj.options.autoChartAggregations){
+        if(
+            groupables.length === 1
+            && obj.options.autoChartAggregations
+            && jsonResponse.data.rows.length > 1
+        ){
             displayType = 'column'
         }
 
-        if(groupables.length === 2 && obj.options.autoChartAggregations){
+        if(
+            groupables.length === 2
+            && obj.options.autoChartAggregations
+            && jsonResponse.data.rows.length > 1
+        ){
             displayType = 'stacked_column'
         }
 
