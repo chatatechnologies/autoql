@@ -1874,6 +1874,7 @@ export function DataMessenger(elem, options){
             && type !== 'safety-net'
             && type !== 'suggestions'
             && request['reference_id'] !== '1.9.502'
+            && request['reference_id'] !== '1.1.550'
         ){
             toolbar.appendChild(
                 moreOptionsBtn
@@ -1883,6 +1884,10 @@ export function DataMessenger(elem, options){
         }
 
         if(type === 'suggestions'){
+            toolbar.appendChild(reportProblem);
+        }
+
+        if(request['reference_id'] === '1.1.550'){
             toolbar.appendChild(reportProblem);
         }
 
@@ -2991,7 +2996,6 @@ export function DataMessenger(elem, options){
         let response = await apiCall(
             textValue, obj.options, source, selections
         )
-        console.log(response);
         if(!response){
             obj.input.removeAttribute("disabled")
             if(responseLoadingContainer){
