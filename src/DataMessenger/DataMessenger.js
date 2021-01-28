@@ -2100,12 +2100,13 @@ export function DataMessenger(elem, options){
             setTimeout(() => {
                 obj.putTableResponse(newJson, true);
                 obj.drawerContent.removeChild(loading);
-
+                refreshTooltips()
             }, 400)
         }else{
             setTimeout(() => {
                 obj.putClientResponse('No data found.', json, true);
                 obj.drawerContent.removeChild(loading);
+                refreshTooltips()
             }, 400)
         }
     }
