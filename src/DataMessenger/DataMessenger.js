@@ -1192,6 +1192,7 @@ export function DataMessenger(elem, options){
         resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
         resize.classList.add(obj.options.placement);
 
+
         function resizeItem(e) {
             let newWidth;
             let newHeight;
@@ -1211,6 +1212,8 @@ export function DataMessenger(elem, options){
                 default:
 
             }
+            if(newWidth <= 400)return
+
             if(['left', 'right'].includes(obj.options.placement)){
                 obj.rootElem.style.width = newWidth + 'px';
                 obj.options.width = newWidth;
