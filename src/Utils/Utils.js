@@ -27,6 +27,7 @@ export function formatData(val, col, allOptions={}){
         break;
         case 'DATE':
             var colName = col.name;
+            if(!val)return ''
             if(colName.includes('year')){
                 value = moment.utc(parseInt(val)*1000).format('YYYY');
             }else if(colName.includes('month')){
