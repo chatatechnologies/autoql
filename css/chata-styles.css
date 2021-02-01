@@ -1317,12 +1317,12 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .tooltip-hide{
-    display: none;
+    /* display: none; */
     visibility: hidden;
 }
 
 .tooltip-show{
-    display: block;
+    /* display: block; */
     visibility: visible;
 }
 

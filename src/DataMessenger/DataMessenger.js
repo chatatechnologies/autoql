@@ -80,6 +80,7 @@ import {
     DATA_LIMIT_WARNING,
     HELP_ICON
 } from '../Svg'
+import { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
 
@@ -1692,11 +1693,14 @@ export function DataMessenger(elem, options){
     }
 
     obj.deleteMessageHandler = (evt, idRequest) => {
+        hideAll({duration: 0})
         var bubble = obj.drawerContent.querySelector(
             `[data-bubble-id="${idRequest}"]`
         );
 
-        obj.drawerContent.removeChild(bubble);
+        setTimeout(() => {
+            obj.drawerContent.removeChild(bubble);
+        }, 10)
         if(bubble.relatedMessage){
             obj.drawerContent.removeChild(bubble.relatedMessage)
         }
