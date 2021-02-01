@@ -6,7 +6,21 @@ export function refreshTooltips(){
         theme: 'chata-theme',
         allowHTML: true,
         delay: [500],
-        dynamicTitle: true
+        dynamicTitle: true,
+
+        onTrigger: (instance) => {
+            console.log('SHOWN');
+            if(instance.popper){
+                instance.popper.classList.remove('tooltip-hide')
+            }
+        },
+        onUntrigger: (instance) => {
+            console.log('UNTRIGER');
+            console.log((document.body.contains(instance.reference)));
+            if(instance.popper){
+                instance.popper.classList.add('tooltip-hide')
+            }
+        },
     })
 }
 

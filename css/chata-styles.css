@@ -1316,6 +1316,16 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     font-family: sans-serif;
 }
 
+.tooltip-hide{
+    display: none;
+    visibility: hidden;
+}
+
+.tooltip-show{
+    display: block;
+    visibility: visible;
+}
+
 .autoql-vanilla-chata-response-content-container *:focus {
     outline: none !important;
 }
