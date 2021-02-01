@@ -569,6 +569,40 @@ export const supports2DCharts = columns => {
     && amounts.amountOfStringColumns > 0
 }
 
+export const isAggregation = (columns) => {
+    try {
+        let isAgg = false
+        if (columns) {
+            isAgg = !!columns.find((col) => col.groupable)
+        }
+        return isAgg
+    } catch (error) {
+        console.error(error)
+        return false
+    }
+}
+
+export const shouldPlotMultiSeries = (columns) => {
+    if (isAggregation(columns)) {
+        return false
+    }
+
+    const multiSeriesIndex = columns.findIndex((col) => col.multi_series === true)
+    return multiSeriesIndex >= 0
+}
+
+export const supportsPieChart = (columns, chartData) => {
+    if (shouldPlotMultiSeries(columns)) {
+        return false
+    }
+
+    if (chartData) {
+        return chartData.length < 7
+    }
+
+    return true
+}
+
 export const getSupportedDisplayTypes = response => {
     try {
         if (!response.data.display_type) {
@@ -583,7 +617,6 @@ export const getSupportedDisplayTypes = response => {
 
         const columns = response.data.columns || [];
         const rows = response.data.rows || [];
-
         if (!columns || rows.length <= 1) {
             return []
         }
@@ -601,14 +634,13 @@ export const getSupportedDisplayTypes = response => {
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
             const supportedDisplayTypes = ['table', 'column', 'bar', 'line']
-            if(response.data.rows.length < 7){
+            if(supportsPieChart(columns, rows)){
                 supportedDisplayTypes.push('pie')
             }
                 const dateColumnIndex = columns.findIndex(
                     (col) => col.type === 'DATE' || col.type === 'DATE_STRING'
                 )
                 const dateColumn = columns[dateColumnIndex]
-                let rows = response.data.rows
 
                 if(dateColumn){
                     if (
