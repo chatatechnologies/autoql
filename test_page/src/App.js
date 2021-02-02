@@ -8,6 +8,7 @@ import { DataMessenger } from "autoql";
 import { NotificationIcon } from "autoql";
 import { NotificationListPage } from "./NotificationListPage";
 import { Modal, Input } from "antd";
+import _ from 'lodash'
 import "./App.css";
 import axios from "axios";
 
@@ -120,12 +121,21 @@ class App extends React.Component {
         })
         .then(function (response) {
             var names = [];
-            response.data.map((dashboard) => {
+            var items = response.data
+            console.log(items);
+            items = _.sortBy(
+                response.data,
+                (dashboard) => {
+                    return new Date(dashboard.created_at)
+                }
+            )
+
+            items.map((dashboard) => {
                 names.push(dashboard.name);
             });
 
             obj.setState({
-                dashboards: response.data,
+                dashboards: items,
                 dashboardNames: names,
                 activeDashboard: 0,
             });
