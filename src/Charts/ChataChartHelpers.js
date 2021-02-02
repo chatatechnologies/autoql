@@ -222,8 +222,8 @@ export const enumerateCols = (json) => {
 export const formatLabel = (label) => {
     if(!label)label = '';
     if(label === 'null')label = 'Untitled Category';
-    if(label.length < 20){
-        return label;
+    if(label.toString().length < 20){
+        return label.toString();
     }
     return label.toString().slice(0, 15) + ' ...';
 
