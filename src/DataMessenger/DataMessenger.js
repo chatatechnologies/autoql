@@ -1666,6 +1666,10 @@ export function DataMessenger(elem, options){
         closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
+        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
+        if(bubble === obj.getLastMessageBubble()) {
+            bubble.scrollIntoView()
+        }
     }
 
     obj.moreOptionsHandler = (
@@ -1673,6 +1677,16 @@ export function DataMessenger(elem, options){
         closeAllToolbars();
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
+        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
+        if(bubble === obj.getLastMessageBubble()) {
+            if(
+                !bubble.classList.contains(
+                    'autoql-vanilla-chat-message-response'
+                )
+            ){
+                bubble.scrollIntoView()
+            }
+        }
     }
 
     obj.filterTableHandler = (evt, idRequest) => {

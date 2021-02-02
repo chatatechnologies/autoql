@@ -48,6 +48,5 @@ export function convert(rules, addTopOperator=true){
 	// 		group.push([rules[i].condition])
 	// 	}
 	// }
-	console.log(parsedRules);
 	return parsedRules;
 }
