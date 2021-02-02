@@ -222,6 +222,9 @@ export function DataMessenger(elem, options){
                 break;
             case 'autoQLConfig':
                 obj.setObjectProp('autoQLConfig', value);
+                if(!obj.options.autoQLConfig.enableAutocomplete){
+                    obj.autoCompleteList.style.display = 'none';
+                }
                 break;
             case 'themeConfig':
                 obj.setObjectProp('themeConfig', value);
