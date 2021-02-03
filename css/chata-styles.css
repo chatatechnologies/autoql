@@ -39,9 +39,7 @@
     background-color: #26a7df;
     color: #fff;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
-
-    -webkit-transition: opacity 0.5s ease;
-    transition: opacity 0.5s ease;
+    transition: all 0.5s ease;
     overflow: hidden;
     width: 50px;
     height: 50px;
@@ -270,6 +268,10 @@ body{
   scroll-behavior: smooth;
 }
 
+.autoql-vanilla-chata-scrollbox.max-height{
+    max-height: 100% !important;
+}
+
 .autoql-vanilla-drawer-content, .autoql-vanilla-chata-scrollbox:hover, .autoql-vanilla-chata-scrollbox:focus {
   visibility: visible;
 }
@@ -306,6 +308,7 @@ body{
     text-decoration: none;
     color: var(--autoql-vanilla-text-color-primary);
     cursor: default;
+    font-weight: normal;
 }
 
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {
@@ -726,6 +729,9 @@ input[type=text]:disabled {
     height: 100%;
     background-color: inherit;
     visibility: visible;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .autoql-vanilla-table-response, .autoql-vanilla-table-response-renderer{
@@ -745,6 +751,10 @@ input[type=text]:disabled {
 
 .autoql-vanilla-table-response-renderer tr:first-of-type{
     border-bottom: 2px solid #d3d3d352;
+}
+
+.autoql-vanilla-chata-table{
+    width: auto;
 }
 
 .autoql-vanilla-chata-table-scrollbox .autoql-vanilla-table-header th, .autoql-vanilla-table-response-renderer tr th{
@@ -1306,13 +1316,22 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     font-family: sans-serif;
 }
 
+.tooltip-hide{
+    visibility: hidden;
+}
+
+.tooltip-show{
+    visibility: visible;
+}
+
 .autoql-vanilla-chata-response-content-container *:focus {
     outline: none !important;
 }
 
 .autoql-vanilla-chata-single-response:hover{
-    color: rgba(0,0,0,1);
+    color: inherit;
     text-decoration: underline;
+    font-weight: 600;
     cursor: pointer;
 }
 
@@ -1408,7 +1427,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   display: flex;
 }
 .autoql-vanilla-page-switcher-container.right .tab {
-  text-align: left;
   height: 65px;
   width: 45px;
   line-height: 52px;
@@ -1445,21 +1463,29 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   margin-right: -4px !important;
 }
 
+.tab.hide{
+    display: none;
+}
+
+.tab.show{
+    display: flex !important;
+}
+
 /* Curve appropriate corners depending on placement */
-.autoql-vanilla-page-switcher-container.right .tab:first-child,
-.autoql-vanilla-page-switcher-container.bottom .tab:first-child {
+.autoql-vanilla-page-switcher-container.right .tab.show:first-child,
+.autoql-vanilla-page-switcher-container.bottom .tab.show:first-child {
   border-top-left-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.right .tab:last-child,
-.autoql-vanilla-page-switcher-container.top .tab:first-child {
+.autoql-vanilla-page-switcher-container.right .autoql-vanilla-last-tab,
+.autoql-vanilla-page-switcher-container.top .tab.show:first-child {
   border-bottom-left-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.bottom .tab:last-child,
-.autoql-vanilla-page-switcher-container.left .tab:first-child {
+.autoql-vanilla-page-switcher-container.bottom .autoql-vanilla-last-tab,
+.autoql-vanilla-page-switcher-container.left .tab.show:first-child {
   border-top-right-radius: 5px;
 }
-.autoql-vanilla-page-switcher-container.left .tab:last-child,
-.autoql-vanilla-page-switcher-container.top .tab:last-child {
+.autoql-vanilla-page-switcher-container.left .autoql-vanilla-last-tab,
+.autoql-vanilla-page-switcher-container.top .autoql-vanilla-last-tab {
   border-bottom-right-radius: 5px;
 }
 
@@ -1644,7 +1670,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     right: 20px;
 }
 
-.autoql-vanilla-chata-paginate .pagination-next.disabled, .chata-paginate .pagination-previous.disabled {
+.autoql-vanilla-chata-paginate .pagination-next.disabled, .autoql-vanilla-chata-paginate .pagination-previous.disabled {
     opacity: .5;
     pointer-events: none;
 }
@@ -1798,13 +1824,17 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-report-problem-text-area {
+    height: 58px;
     border-radius: 4px;
-    border: 1px solid rgba(0,0,0,.15);
     margin-top: 10px;
     padding: 5px 10px;
     outline: none!important;
     overflow: auto;
     resize: vertical;
+
+    border-color: var(--autoql-vanilla-border-color);
+    color: var(--autoql-vanilla-text-color-primary);
+    background: var(--autoql-vanilla-background-color-primary,#fff);
 }
 
 .autoql-vanilla-no-columns-error-message {
@@ -1825,8 +1855,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg line{
-    opacity: 1 !important;
-    color: black;
+    stroke-width: unset !important;
+    opacity: 1;
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg * {
@@ -1863,13 +1893,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     stroke: #508bb8;
 }
 
-.autoql-vanilla-axis-selector-container{
-    z-index: 9999;
-    background: var(--autoql-vanilla-background-color-primary);
-    padding: 5px 0;
-    max-height: 300px;
-    min-width: 150px;
-}
 
 .autoql-vanilla-axis-selector-container .number-selector-header {
     margin-top: 10px;

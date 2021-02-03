@@ -27,14 +27,15 @@ export function formatData(val, col, allOptions={}){
         break;
         case 'DATE':
             var colName = col.name;
+            if(!val)return ''
             if(colName.includes('year')){
-                value = moment(parseInt(val)*1000).format('YYYY');
+                value = moment.utc(parseInt(val)*1000).format('YYYY');
             }else if(colName.includes('month')){
-                value = moment(parseInt(val)*1000).format(
+                value = moment.utc(parseInt(val)*1000).format(
                     options.monthYearFormat
                 );
             }else{
-                value = moment(parseInt(val)*1000).format(
+                value = moment.utc(parseInt(val)*1000).format(
                     options.dayMonthYearFormat
                 );
             }
@@ -115,12 +116,12 @@ export const formatStringDate = (value, config) => {
         const dayMonthYear = dayMonthYearFormat || 'll'
 
         if (day) {
-            const date = moment(value).format(dayMonthYear)
+            const date = moment.utc(value).format(dayMonthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
         } else if (month) {
-            const date = moment(value).format(monthYear)
+            const date = moment.utc(value).format(monthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
@@ -568,6 +569,40 @@ export const supports2DCharts = columns => {
     && amounts.amountOfStringColumns > 0
 }
 
+export const isAggregation = (columns) => {
+    try {
+        let isAgg = false
+        if (columns) {
+            isAgg = !!columns.find((col) => col.groupable)
+        }
+        return isAgg
+    } catch (error) {
+        console.error(error)
+        return false
+    }
+}
+
+export const shouldPlotMultiSeries = (columns) => {
+    if (isAggregation(columns)) {
+        return false
+    }
+
+    const multiSeriesIndex = columns.findIndex((col) => col.multi_series === true)
+    return multiSeriesIndex >= 0
+}
+
+export const supportsPieChart = (columns, chartData) => {
+    if (shouldPlotMultiSeries(columns)) {
+        return false
+    }
+
+    if (chartData) {
+        return chartData.length < 7
+    }
+
+    return true
+}
+
 export const getSupportedDisplayTypes = response => {
     try {
         if (!response.data.display_type) {
@@ -582,7 +617,6 @@ export const getSupportedDisplayTypes = response => {
 
         const columns = response.data.columns || [];
         const rows = response.data.rows || [];
-
         if (!columns || rows.length <= 1) {
             return []
         }
@@ -600,20 +634,42 @@ export const getSupportedDisplayTypes = response => {
             return supportedDisplayTypes
         } else if (supports2DCharts(columns)) {
             const supportedDisplayTypes = ['table', 'column', 'bar', 'line']
-            if(response.data.rows.length < 7){
+            if(supportsPieChart(columns, rows)){
                 supportedDisplayTypes.push('pie')
             }
-                const dateColumn = columns.find(
-                    col => col.type === 'DATE' || col.type === 'DATE_STRING'
+                const dateColumnIndex = columns.findIndex(
+                    (col) => col.type === 'DATE' || col.type === 'DATE_STRING'
                 )
+                const dateColumn = columns[dateColumnIndex]
 
                 if(dateColumn){
                     if (
                         dateColumn.display_name &&
-                        dateColumn.display_name.toLowerCase().includes('month') &&
+                        dateColumn.display_name.toLowerCase().includes('month')
+                        &&
                         columns.length === 2
                     ) {
-                        supportedDisplayTypes.push('pivot_table')
+                        const uniqueYears = []
+                        rows.forEach((row) => {
+                            const year = formatData(
+                                row[dateColumnIndex],
+                                dateColumn,
+                                {
+                                    dataFormatting: {
+                                        monthYearFormat: 'YYYY',
+                                        dayMonthYearFormat: 'YYYY'
+                                    }
+                                }
+                            )
+
+                            if (!uniqueYears.includes(year)) {
+                                uniqueYears.push(year)
+                            }
+                        })
+
+                        if (uniqueYears.length > 1) {
+                            supportedDisplayTypes.push('pivot_table')
+                        }
                     }
                 }
                 return supportedDisplayTypes
@@ -728,7 +784,7 @@ export function allColHiddenMessage(table){
 
     }else{
         message.style.display = 'none';
-        table.style.display = 'block';
+        table.style.display = 'inline-block';
         csvHandlerOption.style.display = 'block';
         csvCopyOption.style.display = 'block';
         filterOption.style.display = 'inline-block';
@@ -1123,4 +1179,14 @@ export const svgToPng = (svgElement, margin = 0, fill) => {
             reject('failed to convert svg to png ' + error)
         }
     })
+}
+
+export const getFirstDateCol = (cols) => {
+    for (var i = 0; i < cols.length; i++) {
+        if(['DATE_STRING', 'DATE'].includes(cols[i].type)){
+            return cols[i].index
+        }
+    }
+
+    return -1
 }

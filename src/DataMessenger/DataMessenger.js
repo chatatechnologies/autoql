@@ -15,6 +15,7 @@ import {
     getSpeech,
     htmlToElement,
     closeAllChartPopovers,
+    closeAllSafetynetSelectors,
     uuidv4,
     getSupportedDisplayTypes,
     allColHiddenMessage,
@@ -47,7 +48,8 @@ import {
     LIGHT_THEME,
     DARK_THEME,
     DATA_LIMIT_MESSAGE,
-    ERROR_MESSAGE
+    ERROR_MESSAGE,
+    ACCESS_DENIED
 } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
@@ -78,6 +80,7 @@ import {
     DATA_LIMIT_WARNING,
     HELP_ICON
 } from '../Svg'
+import { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
 
@@ -219,6 +222,9 @@ export function DataMessenger(elem, options){
                 break;
             case 'autoQLConfig':
                 obj.setObjectProp('autoQLConfig', value);
+                if(!obj.options.autoQLConfig.enableAutocomplete){
+                    obj.autoCompleteList.style.display = 'none';
+                }
                 break;
             case 'themeConfig':
                 obj.setObjectProp('themeConfig', value);
@@ -244,7 +250,7 @@ export function DataMessenger(elem, options){
                 obj.queryTabs.classList.add(obj.options.placement);
                 obj.queryTabsContainer.classList.add(obj.options.placement);
                 obj.resizeHandler.classList.add(obj.options.placement);
-                obj.openDrawer();
+                obj.openDrawer(true);
                 obj.closeDrawer();
                 break;
             case 'width':
@@ -313,9 +319,11 @@ export function DataMessenger(elem, options){
             case 'enableNotificationsTab':
                 obj.options.enableNotificationsTab = value;
                 if(value && obj.options.isVisible){
-                    obj.tabNotifications.style.display = 'block';
-                }else obj.tabNotifications.style.display = 'none';
-                obj.instanceNotificationIcon();
+                    obj.tabNotifications.style.display = 'block'
+                }else obj.tabNotifications.style.display = 'none'
+                obj.instanceNotificationIcon()
+                obj.toggleNotificationOption()
+                obj.showTabs()
                 break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
@@ -378,22 +386,19 @@ export function DataMessenger(elem, options){
         obj.applyHandleStyles();
     }
 
-    obj.openDrawer = () => {
+    obj.openDrawer = (disableAnimation=false) => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
         obj.rootElem.style.zIndex = 2000;
         obj.options.isVisible = true;
         obj.initialScroll = window.scrollY;
         obj.input.focus()
         var body = document.body;
-        if(obj.options.enableExploreQueriesTab){
-            obj.queryTabs.style.visibility = 'visible';
-            obj.tabQueryTips.style.display = 'flex';
-            obj.tabChataUtils.style.display = 'flex';
-        }
-        if(obj.options.enableNotificationsTab){
-            obj.queryTabs.style.visibility = 'visible';
-            obj.tabNotifications.style.display = 'flex';
-            obj.tabChataUtils.style.display = 'flex';
+        obj.showTabs()
+
+        if(disableAnimation){
+            obj.rootElem.style.transition = 'none'
+        }else{
+            obj.rootElem.style.transition = 'transform 0.3s ease-in-out'
         }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
@@ -480,11 +485,7 @@ export function DataMessenger(elem, options){
         obj.options.isVisible = false;
         obj.wrapper.style.opacity = 0;
         obj.wrapper.style.height = 0;
-        obj.queryTabs.style.visibility = 'hidden';
-        obj.tabNotifications.style.display = 'none';
-        obj.tabChataUtils.style.display = 'none';
-
-        obj.tabQueryTips.style.display = 'none';
+        obj.hideTabs()
         var body = document.body;
 
         if(obj.options.placement == 'right'){
@@ -569,6 +570,7 @@ export function DataMessenger(elem, options){
         if (document.readyState === "interactive" ||
             document.readyState === "complete" ) {
             obj.initialScroll = window.scrollY;
+            obj.applyStyles();
         }
     }
 
@@ -596,9 +598,11 @@ export function DataMessenger(elem, options){
         if(displayNodes == 'none'){
             obj.headerTitle.innerHTML = 'Explore Queries';
             obj.headerRight.style.visibility = 'hidden';
+            obj.scrollBox.classList.add('max-height')
         }else{
             obj.headerTitle.innerHTML = obj.options.title;
             obj.headerRight.style.visibility = 'visible';
+            obj.scrollBox.classList.remove('max-height')
         }
         obj.updateBubbleTables()
     }
@@ -708,6 +712,11 @@ export function DataMessenger(elem, options){
         }
     }
 
+    obj.getQueryTipsPageSize = () => {
+        const height = obj.drawerContent.clientHeight
+        return parseInt(((height - 62 - 72 - 60 - 50) / 47))
+    }
+
     obj.createQueryTabs = function(){
         var tabId = uuidv4();
 
@@ -799,6 +808,48 @@ export function DataMessenger(elem, options){
             obj.tabNotifications.style.display = 'none'
         }
         refreshTooltips();
+    }
+
+    obj.showTabs = () => {
+        const {
+            enableExploreQueriesTab,
+            enableNotificationsTab,
+            isVisible
+        } = obj.options
+
+
+        if(enableExploreQueriesTab){
+            if(isVisible){
+                obj.queryTabs.style.visibility = 'visible'
+                obj.tabChataUtils.classList.add('show')
+                obj.tabQueryTips.classList.add('show')
+            }
+            obj.tabQueryTips.classList.add('autoql-vanilla-last-tab')
+        }
+
+        if(enableNotificationsTab){
+            if(isVisible){
+                obj.queryTabs.style.visibility = 'visible'
+                obj.tabChataUtils.classList.add('show')
+                obj.tabNotifications.classList.add('show')
+            }
+            obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab')
+            obj.tabNotifications.classList.add('autoql-vanilla-last-tab')
+        }
+    }
+
+    obj.hideTabs = () => {
+        obj.queryTabs.style.visibility = 'hidden'
+
+        obj.tabChataUtils.classList.remove('show')
+        obj.tabQueryTips.classList.remove('show')
+        obj.tabNotifications.classList.remove('show')
+        obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab')
+        obj.tabNotifications.classList.remove('autoql-vanilla-last-tab')
+
+        obj.tabChataUtils.classList.add('hide')
+        obj.tabQueryTips.classList.add('hide')
+        obj.tabNotifications.classList.add('hide')
     }
 
     obj.instanceNotificationIcon = () => {
@@ -906,7 +957,7 @@ export function DataMessenger(elem, options){
                 chataInput.value = subQuery;
             }
             index++;
-        }, 85);
+        }, 45);
     }
 
     obj.keyboardAnimation = (text) => {
@@ -928,7 +979,7 @@ export function DataMessenger(elem, options){
                 chataInput.value = subQuery;
             }
             index++;
-        }, 85);
+        }, 45);
     }
 
     obj.putRelatedQueries = (
@@ -1028,7 +1079,6 @@ export function DataMessenger(elem, options){
         }
         queryTipsResultContainer.innerHTML = '';
         queryTipsResultContainer.appendChild(queryTipListContainer);
-        // var totalPages = pages > 5 ? 5 : pages;
         for (let i = 0; i < 3; i++) {
             if(i >= pages)break;
             var li = document.createElement('li')
@@ -1131,9 +1181,11 @@ export function DataMessenger(elem, options){
     }
 
     obj.getRelatedQueriesPath = (page, searchVal, options) => {
+        const pageSize = obj.getQueryTipsPageSize()
+        const s = encodeURIComponent(searchVal)
         const url = options.authentication.demo
           ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
-          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${searchVal}&page_size=15&page=${page}`;
+          : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${s}&page_size=${pageSize}&page=${page}`;
           return url;
     }
 
@@ -1143,6 +1195,7 @@ export function DataMessenger(elem, options){
         var timer;
         resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
         resize.classList.add(obj.options.placement);
+
 
         function resizeItem(e) {
             let newWidth;
@@ -1163,6 +1216,8 @@ export function DataMessenger(elem, options){
                 default:
 
             }
+            if(newWidth <= 400)return
+
             if(['left', 'right'].includes(obj.options.placement)){
                 obj.rootElem.style.width = newWidth + 'px';
                 obj.options.width = newWidth;
@@ -1503,10 +1558,24 @@ export function DataMessenger(elem, options){
         }
     }
 
+    obj.toggleNotificationOption = () => {
+        var opts = obj.drawerContent.querySelectorAll(
+            '.autoql-vanilla-notification-option'
+        )
+        var display = 'none';
+
+        if(obj.options.enableNotificationsTab){
+            display = 'block';
+        }
+
+        for (var i = 0; i < opts.length; i++) {
+            opts[i].style.display = display
+        }
+    }
+
     obj.speechToTextEvent = () => {
         if(obj.speechToText){
             obj.speechToText.onresult = (e) => {
-
                 for (let i = e.resultIndex,
                     len = e.results.length; i < len; i++) {
                     let transcript = e.results[i][0].transcript;
@@ -1519,7 +1588,14 @@ export function DataMessenger(elem, options){
                     obj.speechToText.stop();
                     obj.voiceRecordButton.style.backgroundColor =
                     obj.options.themeConfig.accentColor;
+                    ChataUtils.autocomplete(
+                        obj.input.value,
+                        obj.autoCompleteList,
+                        'suggestion',
+                        obj.options,
+                    );
                 }
+                obj.finalTranscript = '';
             }
         }
     }
@@ -1590,21 +1666,27 @@ export function DataMessenger(elem, options){
         closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
-        var bubble = obj.drawerContent.querySelector(
-            `[data-bubble-id="${idRequest}"]`
-        )
-        bubble.scrollIntoView()
+        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
+        if(bubble === obj.getLastMessageBubble()) {
+            bubble.scrollIntoView()
+        }
     }
 
     obj.moreOptionsHandler = (
         evt, idRequest, moreOptions, toolbar) => {
         closeAllToolbars();
-        var bubble = obj.drawerContent.querySelector(
-            `[data-bubble-id="${idRequest}"]`
-        )
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
-        bubble.scrollIntoView()
+        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
+        if(bubble === obj.getLastMessageBubble()) {
+            if(
+                !bubble.classList.contains(
+                    'autoql-vanilla-chat-message-response'
+                )
+            ){
+                bubble.scrollIntoView()
+            }
+        }
     }
 
     obj.filterTableHandler = (evt, idRequest) => {
@@ -1628,11 +1710,14 @@ export function DataMessenger(elem, options){
     }
 
     obj.deleteMessageHandler = (evt, idRequest) => {
+        hideAll({duration: 0})
         var bubble = obj.drawerContent.querySelector(
             `[data-bubble-id="${idRequest}"]`
         );
 
-        obj.drawerContent.removeChild(bubble);
+        setTimeout(() => {
+            obj.drawerContent.removeChild(bubble);
+        }, 10)
         if(bubble.relatedMessage){
             obj.drawerContent.removeChild(bubble.relatedMessage)
         }
@@ -1682,7 +1767,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1733,7 +1818,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1753,7 +1838,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1767,13 +1852,28 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete Message',
+                        'Delete data response',
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
                     )
                 );
             break;
+            case 'suggestions':
+                toolbar.appendChild(
+                    reportProblemButton
+                );
+
+                toolbar.appendChild(
+                    obj.getActionButton(
+                        DELETE_MESSAGE,
+                        'Delete data response',
+                        idRequest,
+                        obj.deleteMessageHandler,
+                        [reportProblem, toolbar]
+                    )
+                );
+            break
             default:
 
         }
@@ -1793,12 +1893,25 @@ export function DataMessenger(elem, options){
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
 
-        if(request['reference_id'] !== '1.1.420' && type !== 'safety-net'
-        && request['reference_id'] !== '1.9.502'){
+        if(
+            request['reference_id'] !== '1.1.420'
+            && type !== 'safety-net'
+            && type !== 'suggestions'
+            && request['reference_id'] !== '1.9.502'
+            && request['reference_id'] !== '1.1.550'
+        ){
             toolbar.appendChild(
                 moreOptionsBtn
             );
             toolbar.appendChild(moreOptions);
+            toolbar.appendChild(reportProblem);
+        }
+
+        if(type === 'suggestions'){
+            toolbar.appendChild(reportProblem);
+        }
+
+        if(request['reference_id'] === '1.1.550'){
             toolbar.appendChild(reportProblem);
         }
 
@@ -1817,7 +1930,6 @@ export function DataMessenger(elem, options){
     }
 
     obj.hideBubbles = () => {
-        //
         var nodes = obj.drawerContent.querySelectorAll(
             '.autoql-vanilla-chat-single-message-container'
         );
@@ -1840,7 +1952,7 @@ export function DataMessenger(elem, options){
     }
 
     obj.copyFilterMetadata = (component) => {
-        component.filterMetadata = component.tabulator.getHeaderFilters()
+        component.filterMetadata = component.internalTable.getHeaderFilters()
     }
 
     obj.copyPivotFilterMetadata = (component) => {
@@ -1850,7 +1962,7 @@ export function DataMessenger(elem, options){
 
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
         closeAllChartPopovers();
-        if(oldComponent.tabulator){
+        if(oldComponent.internalTable){
             obj.copyFilterMetadata(oldComponent)
         }
         if(oldComponent.pivotTabulator){
@@ -1883,13 +1995,15 @@ export function DataMessenger(elem, options){
             ignore
         ) ? 'csvCopy' : 'chart-view';
 
-        toolbarLeft.innerHTML = ''
-        var displayTypes = obj.getDisplayTypesButtons(
-            oldComponent.dataset.componentid, ignore
-        );
+        if(toolbarLeft){
+            toolbarLeft.innerHTML = ''
+            var displayTypes = obj.getDisplayTypesButtons(
+                oldComponent.dataset.componentid, ignore
+            );
 
-        for (var i = 0; i < displayTypes.length; i++) {
-            toolbarLeft.appendChild(displayTypes[i]);
+            for (var i = 0; i < displayTypes.length; i++) {
+                toolbarLeft.appendChild(displayTypes[i]);
+            }
         }
 
         var newToolbarRight = obj.getActionToolbar(
@@ -1994,10 +2108,12 @@ export function DataMessenger(elem, options){
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
+        var col = newJson['data']['columns'][indexValue];
 
         for (var i = 0; i < oldData.length; i++) {
             var compareValue = oldData[i][indexValue]
             if(!compareValue)compareValue = 'null'
+            compareValue = formatData(compareValue, col, options)
             if(compareValue === filterBy)newData.push(oldData[i]);
         }
         var loading = obj.createLoadingDots();
@@ -2008,12 +2124,13 @@ export function DataMessenger(elem, options){
             setTimeout(() => {
                 obj.putTableResponse(newJson, true);
                 obj.drawerContent.removeChild(loading);
-
+                refreshTooltips()
             }, 400)
         }else{
             setTimeout(() => {
                 obj.putClientResponse('No data found.', json, true);
                 obj.drawerContent.removeChild(loading);
+                refreshTooltips()
             }, 400)
         }
     }
@@ -2106,6 +2223,7 @@ export function DataMessenger(elem, options){
                 parentContainer.parentElement.scrollIntoView()
             }
         );
+        component.internalTable = table
         component.tabulator = table;
         obj.setDefaultFilters(component, table, 'table')
         table.parentContainer = parentContainer;
@@ -2381,7 +2499,7 @@ export function DataMessenger(elem, options){
                 json['data']['rows'][0][1] = cell.getValue() || 0
 
             }else{
-                json['data']['rows'][0][0] = entries[entries.length-1][1];
+                json['data']['rows'][0][0] = entries[0][1];
                 json['data']['rows'][0][1] = selectedColumn.definition.field;
                 json['data']['rows'][0][2] = cell.getValue();
             }
@@ -2467,6 +2585,7 @@ export function DataMessenger(elem, options){
             }
         );
 
+        tableWrapper.internalTable = table;
         tableWrapper.tabulator = table;
         table.parentContainer = parentContainer;
         setTimeout(function(){
@@ -2539,7 +2658,7 @@ export function DataMessenger(elem, options){
                 input.value = subQuery;
             }
             index++;
-        }, 60);
+        }, 45);
     }
 
     obj.createSuggestions = async function(
@@ -2568,12 +2687,19 @@ export function DataMessenger(elem, options){
                 if(evt.target.textContent === 'None of these'){
                     loading = obj.showLoading()
                 }else{
-                    obj.inputAnimation(evt.target.textContent);
+                    obj.inputAnimation(evt.target.textContent)
                 }
 
                 await apiCallPut(url, body, obj.options)
-                obj.drawerContent.removeChild(loading);
-                obj.putClientResponse('Thank you for your feedback', {}, true)
+
+                if(loading){
+                    setTimeout(() => {
+                        obj.drawerContent.removeChild(loading)
+                        obj.putClientResponse(
+                            'Thank you for your feedback', {}, true
+                        )
+                    }, 500)
+                }
 
             }
         }
@@ -2610,9 +2736,10 @@ export function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         messageBubble.appendChild(obj.getActionToolbar(
-            uuid, 'safety-net', ''
+            uuid, 'suggestions', ''
         ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        refreshTooltips()
     }
 
     obj.putClientResponse = (msg, json={}, withDeleteBtn=false) => {
@@ -2645,6 +2772,7 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbarButtons);
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        refreshTooltips()
     }
 
     obj.showLoading = () => {
@@ -2751,28 +2879,23 @@ export function DataMessenger(elem, options){
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         if(jsonResponse['reference_id'] === '1.1.430'){
-            containerMessage.setAttribute('suggestion-message', '1');
-            var responseLoadingContainer = document.createElement('div');
-            var responseLoading = document.createElement('div');
-
-            responseLoadingContainer.classList.add(
-                'response-loading-container'
-            );
-            responseLoading.classList.add('response-loading');
-            for (var i = 0; i <= 3; i++) {
-                responseLoading.appendChild(document.createElement('div'));
+            let loading = null
+            if(obj.options.landingPage === 'data-messenger'){
+                loading = obj.showLoading()
+                obj.drawerContent.appendChild(loading)
             }
-
-            responseLoadingContainer.appendChild(responseLoading);
-            obj.drawerContent.appendChild(responseLoadingContainer);
             const path = getRecommendationPath(
                 obj.options,
                 text
-            ) + '&query_id=' + jsonResponse['data']['query_id'];
+            ) + '&query_id=' + jsonResponse['data']['query_id']
             var response = await apiCallGet(path, obj.options)
-            obj.drawerContent.removeChild(responseLoadingContainer);
-            obj.putSuggestionResponse(jsonResponse, response.data);
+            if(loading)obj.drawerContent.removeChild(loading)
+            obj.putSuggestionResponse(jsonResponse, response.data)
+            if(obj.options.landingPage !== 'data-messenger'){
+                obj.hideBubbles()
+            }
         }
+        refreshTooltips()
     }
 
     obj.putSafetynetMessage = function(jsonResponse){
@@ -2856,165 +2979,202 @@ export function DataMessenger(elem, options){
             textValue
         )}&key=${apiKey}`
 
-        var response = await apiCallGet(URL_SAFETYNET, obj.options)
-        if(response.status != 200){
+        if(obj.options.autoQLConfig.enableQueryValidation){
+            let response = await apiCallGet(URL_SAFETYNET, obj.options)
+            if(!response){
+                obj.input.removeAttribute("disabled")
+                if(responseLoadingContainer){
+                    obj.drawerContent.removeChild(responseLoadingContainer)
+                }
+                obj.sendResponse(ACCESS_DENIED)
+                return
+            }
+
             obj.input.removeAttribute("disabled")
-            obj.sendResponse(response.data.message)
+            if(response.status != 200){
+                obj.sendResponse(response.data.message)
+                if(responseLoadingContainer){
+                    obj.drawerContent.removeChild(responseLoadingContainer)
+                }
+                return
+            }else{
+                let suggestions = {}
+                if(response.data != undefined){
+                    suggestions = response.data['full_suggestion']
+                    || response.data['data']['replacements']
+                }
+
+                if(
+                    textValue != 'None Of these'
+                    && suggestions.length > 0
+                    && typeof selections === 'undefined'
+                ){
+
+                    obj.input.removeAttribute("disabled")
+                    if(responseLoadingContainer){
+                        obj.drawerContent.removeChild(responseLoadingContainer)
+                    }
+                    obj.putSafetynetMessage(response.data)
+                    return
+                }
+            }
+        }
+
+        let response = await apiCall(
+            textValue, obj.options, source, selections
+        )
+        if(!response){
+            obj.input.removeAttribute("disabled")
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer)
             }
+            obj.sendResponse(ACCESS_DENIED)
             return
         }
-        let suggestions = {}
-        if(response.data != undefined){
-            suggestions = response.data['full_suggestion']
-            || response.data['data']['replacements']
+        var status = response.status
+        var jsonResponse = response.data
+        var groupables = []
+        if(jsonResponse.data.columns){
+            groupables = getGroupables(jsonResponse)
+        }
+        var displayType = jsonResponse['data']['display_type'];
+        if(
+            groupables.length === 1
+            && obj.options.autoChartAggregations
+            && jsonResponse.data.rows.length > 1
+        ){
+            displayType = 'column'
         }
 
         if(
-            obj.options.autoQLConfig.enableQueryValidation
-            && textValue != 'None Of these'
-            && suggestions.length > 0
-            && typeof selections === 'undefined'
+            groupables.length === 2
+            && obj.options.autoChartAggregations
+            && jsonResponse.data.rows.length > 1
         ){
-
-            obj.input.removeAttribute("disabled")
-            if(responseLoadingContainer){
-                obj.drawerContent.removeChild(responseLoadingContainer)
-            }
-
-            obj.putSafetynetMessage(response.data)
-        }else{
-            let response = await apiCall(
-                textValue, obj.options, source, selections
-            )
-            var status = response.status
-            var jsonResponse = response.data
-            var groupables = []
-            if(jsonResponse.data.columns){
-                groupables = getGroupables(jsonResponse)
-            }
-            var displayType = jsonResponse['data']['display_type'];
-            if(groupables.length === 1 && obj.options.autoChartAggregations){
-                displayType = 'column'
-            }
-
-            if(groupables.length === 2 && obj.options.autoChartAggregations){
-                displayType = 'stacked_column'
-            }
-
-            obj.input.removeAttribute("disabled");
-            if(responseLoadingContainer){
-                obj.drawerContent.removeChild(responseLoadingContainer);
-            }
-            switch(displayType){
-                case 'table':
-                    if(jsonResponse['data']['columns'].length == 1){
-                        obj.putSimpleResponse(jsonResponse, textValue, status);
-                    }else{
-                        obj.putTableResponse(jsonResponse);
-                    }
-                break;
-                case 'data':
-                    var cols = jsonResponse['data']['columns'];
-                    var rows = jsonResponse['data']['rows'];
-                    if(cols.length == 1 && rows.length == 1){
-                        if(cols[0]['name'] == 'query_suggestion'){
-                            obj.putSuggestionResponse(
-                                jsonResponse
-                            );
-                        }else if(cols[0]['name'] == 'Help Link'){
-                            obj.putHelpMessage(jsonResponse);
-                        }else{
-                            obj.putSimpleResponse(
-                                jsonResponse, textValue, status
-                            );
-                        }
-                    }else{
-                        if(rows.length > 0){
-                            obj.putTableResponse(jsonResponse);
-                        }else{
-                            obj.putSimpleResponse(
-                                jsonResponse, textValue, status
-                            );
-                        }
-                    }
-                break;
-                case 'compare_table':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'date_pivot':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'pivot_table':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'line':
-                    var lineContainer = obj.putTableResponse(jsonResponse);
-                    createLineChart(
-                        lineContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(lineContainer, 'line');
-                break;
-                case 'bar':
-                    var barContainer = obj.putTableResponse(jsonResponse);
-                    createBarChart(
-                        barContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(barContainer, 'bar');
-                break;
-                case 'word_cloud':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'stacked_column':
-                    var idRequest = obj.putTableResponse(jsonResponse);
-                    obj.displayStackedColumnHandler(null, idRequest)
-                break;
-                case 'stacked_bar':
-                    var component = obj.putTableResponse(jsonResponse);
-                    obj.refreshToolbarButtons(
-                        component, 'stacked_bar'
-                    );
-                    createStackedBarChart(
-                        component,
-                        cloneObject(jsonResponse), obj.options
-                    );
-                break;
-                case 'bubble':
-                    var bubbleContainer = obj.putTableResponse(
-                        jsonResponse
-                    );
-                    createBubbleChart(
-                        bubbleContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(bubbleContainer, 'bubble');
-                break;
-                case 'heatmap':
-                    var mapContainer = obj.putTableResponse(jsonResponse);
-                    createHeatmap(
-                        mapContainer, jsonResponse, obj.options
-                    );
-                    obj.refreshToolbarButtons(mapContainer, 'heatmap');
-                break;
-                case 'pie':
-                    obj.putTableResponse(jsonResponse);
-                break;
-                case 'column':
-                    var _idRequest = obj.putTableResponse(
-                        jsonResponse
-                    );
-                    obj.displayColumChartHandler(null, _idRequest)
-
-                break;
-                case 'help':
-                    obj.putHelpMessage(jsonResponse);
-                break;
-                default:
-                    obj.putSimpleResponse(jsonResponse, textValue, status);
-            }
-            obj.checkMaxMessages();
-            refreshTooltips();
+            displayType = 'stacked_column'
         }
+
+        obj.input.removeAttribute("disabled");
+        if(responseLoadingContainer){
+            obj.drawerContent.removeChild(responseLoadingContainer);
+        }
+        if(
+            jsonResponse.data.rows &&
+            jsonResponse.data.rows.length === 0
+
+        ){
+            obj.putSimpleResponse(jsonResponse, textValue, status);
+            return
+        }
+
+        switch(displayType){
+            case 'table':
+                if(jsonResponse['data']['columns'].length == 1){
+                    obj.putSimpleResponse(jsonResponse, textValue, status);
+                }else{
+                    obj.putTableResponse(jsonResponse);
+                }
+            break;
+            case 'data':
+                var cols = jsonResponse['data']['columns'];
+                var rows = jsonResponse['data']['rows'];
+                if(cols.length == 1 && rows.length == 1){
+                    if(cols[0]['name'] == 'query_suggestion'){
+                        obj.putSuggestionResponse(
+                            jsonResponse
+                        );
+                    }else if(cols[0]['name'] == 'Help Link'){
+                        obj.putHelpMessage(jsonResponse);
+                    }else{
+                        obj.putSimpleResponse(
+                            jsonResponse, textValue, status
+                        );
+                    }
+                }else{
+                    if(rows.length > 0){
+                        obj.putTableResponse(jsonResponse);
+                    }else{
+                        obj.putSimpleResponse(
+                            jsonResponse, textValue, status
+                        );
+                    }
+                }
+            break;
+            case 'compare_table':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'date_pivot':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'pivot_table':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'line':
+                var lineContainer = obj.putTableResponse(jsonResponse);
+                createLineChart(
+                    lineContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(lineContainer, 'line');
+            break;
+            case 'bar':
+                var barContainer = obj.putTableResponse(jsonResponse);
+                createBarChart(
+                    barContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(barContainer, 'bar');
+            break;
+            case 'word_cloud':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'stacked_column':
+                var idRequest = obj.putTableResponse(jsonResponse);
+                obj.displayStackedColumnHandler(null, idRequest)
+            break;
+            case 'stacked_bar':
+                var component = obj.putTableResponse(jsonResponse);
+                obj.refreshToolbarButtons(
+                    component, 'stacked_bar'
+                );
+                createStackedBarChart(
+                    component,
+                    cloneObject(jsonResponse), obj.options
+                );
+            break;
+            case 'bubble':
+                var bubbleContainer = obj.putTableResponse(
+                    jsonResponse
+                );
+                createBubbleChart(
+                    bubbleContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(bubbleContainer, 'bubble');
+            break;
+            case 'heatmap':
+                var mapContainer = obj.putTableResponse(jsonResponse);
+                createHeatmap(
+                    mapContainer, jsonResponse, obj.options
+                );
+                obj.refreshToolbarButtons(mapContainer, 'heatmap');
+            break;
+            case 'pie':
+                obj.putTableResponse(jsonResponse);
+            break;
+            case 'column':
+                var _idRequest = obj.putTableResponse(
+                    jsonResponse
+                );
+                obj.displayColumChartHandler(null, _idRequest)
+
+            break;
+            case 'help':
+                obj.putHelpMessage(jsonResponse);
+            break;
+            default:
+                obj.putSimpleResponse(jsonResponse, textValue, status);
+        }
+        obj.checkMaxMessages();
+        refreshTooltips();
+
         if(obj.options.landingPage != 'data-messenger'){
             obj.hideBubbles()
         }
@@ -3023,7 +3183,6 @@ export function DataMessenger(elem, options){
 
     obj.createDrawerButton();
     obj.createWrapper();
-    obj.applyStyles();
     obj.createHeader();
     obj.createDrawerContent();
     obj.createIntroMessageTopics();
@@ -3034,13 +3193,15 @@ export function DataMessenger(elem, options){
     obj.createNotifications();
     obj.speechToTextEvent();
     obj.registerWindowClicks();
-
+    obj.scrollBox.onscroll = () => {
+        closeAllChartPopovers()
+        closeAllSafetynetSelectors()
+    }
     refreshTooltips();
     var isVisible = obj.options.isVisible;
+    obj.openDrawer(true)
 
-    if(isVisible){
-        obj.openDrawer();
-    }else{
+    if(!isVisible){
         obj.closeDrawer();
     }
 

@@ -78,6 +78,7 @@
     height: 30px !important;
     font-size: 14px !important;
     font-weight: normal;
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-chata-table .tabulator-col {

@@ -18,7 +18,9 @@ import {
     cloneObject,
     getSafetynetValues,
     getSafetynetUserSelection,
-    apiCall
+    apiCall,
+    getNumberOfGroupables,
+    getClickedData
 } from '../Utils'
 import {
     createSafetynetContent,
@@ -27,18 +29,8 @@ import {
 import {
     getGroupableFields
 } from '../Charts/ChataChartHelpers'
-import {
-    createAreaChart,
-    createBarChart,
-    createBubbleChart,
-    createColumnChart,
-    createHeatmap,
-    createLineChart,
-    createPieChart,
-    createStackedBarChart,
-    createStackedColumnChart
-} from '../Charts'
-import { ChataTable, ChataPivotTable } from '../ChataTable'
+import { refreshTooltips } from '../Tooltips'
+import { ChataTable } from '../ChataTable'
 
 export function QueryInput(selector, options){
     const PARENT = document.querySelector(selector);
@@ -304,7 +296,8 @@ export function QueryInput(selector, options){
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
-        var responseRenderer = this.responseRenderer;
+        var responseRenderer = chataBarContainer.responseRenderer;
+        let responseLoadingContainer
         for (var i = 0; i < oldData.length; i++) {
             if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
         }
@@ -312,7 +305,7 @@ export function QueryInput(selector, options){
             'autoql-vanilla-chat-bar-text'
         )[0];
         if(chataBarContainer.options.showLoadingDots){
-            var responseLoadingContainer = putLoadingContainer(parent);
+            responseLoadingContainer = putLoadingContainer(parent);
         }
 
         if(newData.length > 0){
@@ -327,7 +320,9 @@ export function QueryInput(selector, options){
         }else{
             setTimeout(() => {
                 responseRenderer.innerHTML = 'No data found.';
-                parent.removeChild(loading);
+                if(responseLoadingContainer){
+                    parent.removeChild(responseLoadingContainer);
+                }
             }, 400)
         }
     }

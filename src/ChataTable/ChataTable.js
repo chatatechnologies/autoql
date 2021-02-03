@@ -15,8 +15,9 @@ import moment from 'moment'
 
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
-
-    if(!rowValue)rowValue = '';
+    if(
+        !rowValue && (!['DOLLAR_AMT', 'QUANTITY', 'PERCENT'].includes(colType))
+    )rowValue = '';
     if(colType == 'DATE' || colType == 'DATE_STRING'){
         var formatDate = formatData(
             rowValue,
@@ -31,7 +32,12 @@ function callTableFilter(col, headerValue, rowValue, options){
     ) {
         var trimmedValue = headerValue.trim();
         if (trimmedValue.length >= 2) {
-            const number = parseFloat(trimmedValue.substr(1));
+            let number
+            if(trimmedValue[1] === '='){
+                number = trimmedValue.substr(2)
+            }else{
+                number = parseFloat(trimmedValue.substr(1));
+            }
             if (trimmedValue[0] === '>' && trimmedValue[1] === '=') {
                 return rowValue >= number;
             } else if (trimmedValue[0] === '>') {
@@ -89,7 +95,10 @@ function getPivotColumns(json, pivotColumns, options){
                 let value;
                 if(
                     cell.getValue() === '' &&
-                    columns[colIndex].type == 'DOLLAR_AMT'
+                    (
+                        columns[colIndex].type == 'DOLLAR_AMT' ||
+                        columns[colIndex].type === 'QUANTITY'
+                    )
                 ){
                     value = 0;
                 }else{
@@ -119,7 +128,6 @@ function getPivotData(pivotArray, pivotColumns){
         }
         tableData.push(row);
     }
-
     return tableData;
 }
 

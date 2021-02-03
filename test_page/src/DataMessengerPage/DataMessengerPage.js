@@ -10,7 +10,6 @@ import {
 import { sortable } from 'react-sortable'
 import { Item } from './Item'
 import {
-    ReloadOutlined,
     MenuFoldOutlined,
     CloseOutlined
 } from '@ant-design/icons'
@@ -238,11 +237,17 @@ export class DataMessengerPage extends Component {
                     [true, false],
                     this.onChangeDMProp
                 )}
-                {this.createBooleanRadioGroup('Enable Drilldowns', 'enableDrilldowns', [
-                    true,
-                    false,
-                    this.onChangeDMProp
-                ])}
+                {this.createBooleanRadioGroup(
+                    'Enable Drilldowns',
+                    'enableDrilldowns',
+                    [true, false],
+                    (prop, val) => {
+                        this.setState({ [prop]: val })
+                        this.props.setDMOption('autoQLConfig', {
+                            enableDrilldowns: val
+                        })
+                    }
+                )}
                 {this.createBooleanRadioGroup(
                     'Enable Column Visibility Editor',
                     'enableColumnVisibilityManager',
@@ -251,7 +256,7 @@ export class DataMessengerPage extends Component {
                 )}
                 {this.createBooleanRadioGroup(
                     'Enable Notifications',
-                    'enableNotifications',
+                    'enableNotificationsTab',
                     [true, false],
                     this.onChangeDMProp
                 )}

@@ -30,6 +30,7 @@ import {
     formatData,
     formatChartData,
     closeAllChartPopovers,
+    getFirstDateCol
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
@@ -75,9 +76,11 @@ export function createLineChart(
     }
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
+        var dateCol = getFirstDateCol(cols)
+        let i = dateCol !== -1 ? dateCol : xIndexes[0].index
         metadataComponent.metadata = {
             groupBy: {
-                index: xIndexes[0].index,
+                index: i,
                 currentLi: 0,
             },
             series: yIndexes
@@ -473,7 +476,12 @@ export function createLineChart(
 
 
         legendOrdinal.on('cellclick', function(d) {
-            data = toggleSerie(data, d.target.textContent.trim());
+            var words = []
+            var nodes = d.currentTarget.getElementsByTagName('tspan')
+            for (var i = 0; i < nodes.length; i++) {
+                words.push(nodes[i].textContent)
+            }
+            data = toggleSerie(data, words.join(' '));
             createLines();
             const legendCell = select(this);
             legendCell.classed(

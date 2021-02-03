@@ -6,11 +6,15 @@ import {
     getNotGroupableField,
     formatData
 } from '../Utils'
+import {
+    ChataUtils
+} from '../ChataUtils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
     var columns = json['data']['columns'];
+    var multiSeriesCol = isMultiSeries(enumerateCols(json))
     var seriesIndexes = []
     seriesCols.map((col) => {
         seriesIndexes.push(col.index);
@@ -20,9 +24,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
-            // let label = formatData(
-            //     data[i][group.indexCol], group.jsonCol, options
-            // );
             let label = data[i][group.indexCol];
             if(!label || label == '')label = 'null';
             var colName = columns[group.indexCol].display_name ||
@@ -40,10 +41,14 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             }
             seriesData.push(serie);
         }
+    }else if(multiSeriesCol){
+        seriesData = groupByValue(
+            data, columns, labelIndex, seriesIndexes, multiSeriesCol
+        )
     }else{
-        seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes);
+        seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes)
     }
-    return seriesData;
+    return seriesData
 }
 
 export const toggleSerie = (data, serie) => {
@@ -84,6 +89,27 @@ export const getVisibleGroups = (groups) => {
     return visibleGroups
 }
 
+export const getSeriesValues = (
+    item, series, seriesIndexes, labelIndex, items, key, multiSeriesCol
+) => {
+    var values = []
+    for (var i = 0; i < series.length; i++) {
+        var obj = {}
+        var serieName = series[i]
+        obj['value'] = sumMultiSeries(
+            items, labelIndex, key, seriesIndexes[0], multiSeriesCol.index,
+            serieName
+        );
+        obj['index'] = i;
+        obj['group'] = serieName;
+        obj['isVisible'] = true;
+
+        values.push(obj);
+    }
+
+    return values
+}
+
 export const getObjectValues = (
     item, columns, seriesIndexes, labelIndex, items, key) => {
     var values = []
@@ -103,6 +129,33 @@ export const getObjectValues = (
     return values;
 }
 
+export const groupByValue = (
+    items, columns, labelIndex, seriesIndexes, multiSeriesCol
+) => {
+    var obj = {}
+    var series = ChataUtils.getUniqueValues(
+        items, row => row[multiSeriesCol.index]
+    )
+    items.forEach((item) => {
+        const key = item[labelIndex];
+
+        if (!obj[key]) {
+            obj[key] = getSeriesValues(
+                item,
+                series,
+                seriesIndexes,
+                labelIndex,
+                items,
+                key,
+                multiSeriesCol
+            );
+        }
+
+    });
+
+    return convertoTo2DChartData(obj);
+}
+
 export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
     var obj = {};
     items.forEach((item) => {
@@ -119,6 +172,20 @@ export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
         }
     });
     return convertoTo2DChartData(obj);
+}
+
+export const sumMultiSeries = (
+    items, labelIndex, key, serieIndex, multiSerieIndex, multiSerieValue
+) => {
+    var sum = 0;
+    items.forEach((item) => {
+        const label = item[labelIndex]
+        const serie = item[multiSerieIndex]
+        if(label === key && serie === multiSerieValue){
+            sum += item[serieIndex];
+        }
+    })
+    return sum;
 }
 
 export const sumEquals = (items, labelIndex, key, serieIndex) => {
@@ -155,8 +222,8 @@ export const enumerateCols = (json) => {
 export const formatLabel = (label) => {
     if(!label)label = '';
     if(label === 'null')label = 'Untitled Category';
-    if(label.length < 20){
-        return label;
+    if(label.toString().length < 20){
+        return label.toString();
     }
     return label.toString().slice(0, 15) + ' ...';
 
@@ -282,13 +349,23 @@ export const getChartDimensions = (chatContainer, displayType) => {
     }
 }
 
+export const isMultiSeries = (cols) => {
+    for (var i = 0; i < cols.length; i++) {
+        if(cols[i].multi_series){
+            return cols[i]
+        }
+    }
+
+    return false
+}
+
 export function formatDataToHeatmap(json, options){
     var lines = json['data']['rows'];
     var values = [];
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var groupableIndex1 = groupables[1].indexCol;
-    var groupableIndex2 = groupables[0].indexCol;
+    var groupableIndex1 = groupables[0].indexCol;
+    var groupableIndex2 = groupables[1].indexCol;
     var notGroupableIndex = notGroupableField.indexCol;
 
     var col1 = json['data']['columns'][groupableIndex1];

@@ -381,8 +381,13 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                     ChataUtils.createNotificationHandler,
                     [idRequest, extraParams]
                 );
+                action.classList.add(
+                    'autoql-vanilla-notification-option'
+                )
                 menu.ul.appendChild(action);
-
+                if(!extraParams.caller.options.enableNotificationsTab){
+                    action.style.display = 'none'
+                }
                 break;
             default:
 
@@ -447,6 +452,7 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
         destroyOnClose: true,
         withFooter: true
     });
+    modal.chataModal.style.width = '600px'
     modal.setTitle('Report a Problem');
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');

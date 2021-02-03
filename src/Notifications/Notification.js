@@ -655,7 +655,7 @@ export function Notification(options, parentOptions){
         ChataUtils.responses[uuid] = jsonResponse;
         responseContentContainer.removeChild(dots);
 
-        if(!jsonResponse.query_result.data){
+        if(!jsonResponse.query_result || !jsonResponse.query_result.data){
             responseContentContainer.innerHTML = `
                 <span>
                     Internal Service Error: Our system is

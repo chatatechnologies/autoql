@@ -6,7 +6,8 @@ export function refreshTooltips(){
         theme: 'chata-theme',
         allowHTML: true,
         delay: [500],
-        dynamicTitle: true
+        dynamicTitle: true,
+
     })
 }
 
