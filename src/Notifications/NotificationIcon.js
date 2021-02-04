@@ -22,18 +22,18 @@ export function NotificationIcon(selector, options={}){
 		useDot: false,
 		clearCountOnClick: true,
 		onNewNotification: () => {},
-		onErrorCallback: (error) => {}
+		onErrorCallback: () => {}
 	}
 
 	obj.unacknowledged = 0;
 
 	if('authentication' in options){
-        for (var [key, value] of Object.entries(options['authentication'])) {
+        for (let [key, value] of Object.entries(options['authentication'])) {
             obj.options.authentication[key] = value;
         }
     }
 
-	for (var [key, value] of Object.entries(options)) {
+	for (let [key, value] of Object.entries(options)) {
         if(typeof value !== 'object'){
             obj.options[key] = value;
         }
@@ -66,7 +66,7 @@ export function NotificationIcon(selector, options={}){
 	this.badge = badge;
 	badge.style.visibility = 'hidden';
 
-	button.onclick = async (evt) => {
+	button.onclick = async () => {
 		if(obj.options.clearCountOnClick){
 			var o = obj.options.authentication
 			const url = `${o.domain}/autoql/api/v1/data-alerts/notifications?key=${o.apiKey}`
@@ -119,7 +119,7 @@ export function NotificationIcon(selector, options={}){
 			apiKey,
 			domain,
 		} = this.options.authentication
-		
+
 		if(!token || !apiKey || !domain)return
 
 		var response = await this.getNotificationCount();

@@ -165,16 +165,16 @@ export function NotificationSettingsItem(parentOptions, options) {
             configModal.addFooterElement(footerWrapper);
             configModal.show();
             refreshTooltips();
-            cancelButton.onclick = (e) => {
+            cancelButton.onclick = () => {
                 new ChataConfirmDialog(
                     'Are you sure you want to leave this page?',
                     'All unsaved changes will be lost.',
-                    (evt) => {
+                    () => {
                         configModal.close()
                     }
                 )
             }
-            saveButton.onclick = async (e) => {
+            saveButton.onclick = async () => {
                 spinner.classList.remove('hidden')
                 saveButton.setAttribute('disabled', 'true')
                 var o = wrapper.options

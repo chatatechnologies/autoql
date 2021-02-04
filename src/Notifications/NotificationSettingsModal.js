@@ -70,7 +70,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     titleContainer.appendChild(titleInput.spanIcon);
 
     var ruleContainer = document.createElement('div');
-    var onChangeAndOr = (evt) => {
+    var onChangeAndOr = () => {
         parentSelect.operator = updateAndOr(parentSelect);
     }
     var parentSelect = notificationRuleAndOrSelect(
@@ -82,7 +82,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
         'Next',
-        (evt) => {
+        () => {
             step1.closeStep()
             step2.expand()
         },
@@ -113,7 +113,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     ruleContainer.appendChild(step1NextButton);
 
     ruleContainer.step = step1;
-    btnAddGroup.onclick = function(evt){
+    btnAddGroup.onclick = function(){
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
         );
@@ -135,12 +135,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             step1.stepContentContainer
         ) + 'px';
     }
-    step1.onkeyup = function(evt){
+    step1.onkeyup = function(){
         checkStep1(ruleContainer);
     }
 
     // STEP 2
-    var label = document.createTextNode('Notify me')
     var selectFrequency = document.createElement('div');
     var relativeDiv = document.createElement('div');
 
@@ -150,74 +149,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     frequencyValue.classList.add('autoql-vanilla-frequency-value');
     frequencyValue.indexValue = 1;
-    var popupFrequency = PopupContainer([
-        {text: 'Once, when this happens', active:true},
-        {text: 'Every time this happens', active:false},
-    ]);
 
-    // popupFrequency.classList.add('frequency-popup');
-    // popupFrequency.onclick = (evt) => {
-    //     if(evt.target.tagName === 'LI'){
-    //         var val = evt.target.textContent;
-    //         var index = parseInt(evt.target.dataset.indexOption);
-    //         frequencyValue.indexValue = index;
-    //         frequencyValue.innerHTML = val;
-    //         relativeDiv.dateSelectView = null;
-    //         showFrequencyView(relativeDiv, index);
-    //         step2.classList.add('complete');
-    //         frequencyValue.style.color = 'inherit';
-    //         frequencyValue.style.fontStyle = 'inherit';
-    //         switch (index) {
-    //             case 0:
-    //                 var view = monthlyView();
-    //                 relativeDiv.appendChild(view);
-    //                 relativeDiv.dateSelectView = view;
-    //                 frequencyValue.indexValue = 1;
-    //                 view.style.visibility = 'hidden';
-    //                 frequencyBox.setMessage(
-    //                     `Notify me as soon as this happens,
-    //                     but don't notify me again until
-    //                     the first of the next month.`
-    //                 );
-    //                 frequencyValue.setAttribute(
-    //                     'data-frequency-event', 'PERIODIC'
-    //                 )
-    //                 break;
-    //             case 1:
-    //                 var view = monthlyView();
-    //                 relativeDiv.appendChild(view);
-    //                 relativeDiv.dateSelectView = view;
-    //                 view.style.visibility = 'hidden';
-    //                 frequencyBox.setMessage(`
-    //                     Notify me every time this happens.
-    //                 `);
-    //                 frequencyValue.setAttribute(
-    //                     'data-frequency-event', 'CONTINUOUS'
-    //                 )
-    //                 break;
-    //             case 2:
-    //                 frequencyBox.setMessage(`
-    //                     Notify me every (description of schedule)
-    //                 `);
-    //                 break;
-    //             default:
-    //
-    //         }
-    //     }
-    // }
-    //
-    // selectFrequency.appendChild(popupFrequency);
-
-    // showFrequencyView(relativeDiv, 0);
-    // var view = monthlyView();
-    // relativeDiv.appendChild(view);
-    // relativeDiv.dateSelectView = view;
-    // view.style.visibility = 'hidden';
-
-    // selectFrequency.appendChild(frequencyValue);
-    // selectFrequency.onclick = function(){
-    //     popupFrequency.toggleVisibility();
-    // }
     var frequencySettingsContainer = document.createElement('div');
     frequencySettingsContainer.classList.add('frequency-settings-container');
 
@@ -308,7 +240,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     }
 
-    var triggerRadio = new ChataRadio(triggerOptions, (evt) => {
+    var triggerRadio = new ChataRadio(triggerOptions, () => {
         checkStep2(step2);
     })
 
@@ -331,7 +263,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var step2NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large',
         'Next',
-        (evt) => {
+        () => {
             step2.closeStep()
             step3.expand()
         },
@@ -340,7 +272,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var step2PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
         'Back',
-        (evt) => {
+        () => {
             step2.closeStep()
             step1.expand()
         },
@@ -391,7 +323,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 evt.target.value, wrapper.parentOptions, undefined
             )
 
-            var json = response.data
             var statusCode = response.status
             if(statusCode !== 200){
                 step3.classList.remove('complete')
@@ -414,7 +345,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var step3PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
         'Back',
-        (evt) => {
+        () => {
             step2.expand()
             step3.closeStep()
         },
@@ -450,8 +381,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     // wrapper.appendChild(step4);
 
     const loadRules = async () => {
-        var groups = convert(rule.expression, false);
-        await groups.map((group, index) => {
+        var ruleGroups = convert(rule.expression, false);
+        await ruleGroups.map((group, index) => {
             var isFirst = index === 0;
             ruleContainer.appendChild(
                 new ConditionGroup(
@@ -531,11 +462,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         return isValid
     }
 
-    wrapper.addEventListener('click', (evt) => {
+    wrapper.addEventListener('click', () => {
         wrapper.checkSteps()
     })
 
-    wrapper.addEventListener('keyup', (evt) => {
+    wrapper.addEventListener('keyup', () => {
         wrapper.checkSteps()
     })
 
@@ -609,9 +540,6 @@ function frequencyView(parentElement, popupValues, label, followText){
     var repeatFollowText = htmlToElement(`
         <span class="frequency-repeat-follow-text"> on:</span>
     `);
-    var checkboxInput = htmlToElement(`
-        <input type="checkbox" class="chata-checkbox__input">
-    `)
     var checkboxContainer = htmlToElement(`
         <div class="chata-checkbox">
             <div class="chata-checkbox-label">Repeat</div>
@@ -622,7 +550,6 @@ function frequencyView(parentElement, popupValues, label, followText){
             style="display: inline-block; vertical-align: middle;">
         </div>
     `);
-    // checkboxContainer.insertAdjacentElement('afterbegin', checkboxInput)
     checkboxFrequency.appendChild(checkboxContainer);
     parentElement.appendChild(checkboxFrequency);
     parentElement.style.visibility = 'visible';
@@ -656,7 +583,7 @@ function frequencyView(parentElement, popupValues, label, followText){
     //         }
     //     }
     // }
-    frequencyButton.onclick = (evt) => {
+    frequencyButton.onclick = () => {
         popupFrequencySelect.toggleVisibility();
     }
 
@@ -669,13 +596,10 @@ function frequencyView(parentElement, popupValues, label, followText){
         switch (text) {
             case 'Monthly':
                 return 'MONTH';
-                break;
             case 'Daily':
                 return 'DAY';
-                break;
             case 'Weekly':
                 return 'WEEK';
-                break;
             default:
 
         }
@@ -703,83 +627,6 @@ function frequencyView(parentElement, popupValues, label, followText){
     )
 
     return popupFrequencySelect;
-}
-
-function weeklyView(frequencyElement){
-    const DAYS = [
-        'S','M','T','W','T','F','S'
-    ];
-    var container = document.createElement('div');
-    var radioContainer = document.createElement('div');
-
-    container.classList.add('frequency-date-select-container');
-    radioContainer.classList.add('chata-radio-btn-container');
-    for (var i = 0; i < DAYS.length; i++) {
-        var element = document.createElement('div');
-        element.classList.add('chata-radio-btn');
-        element.innerHTML = DAYS[i];
-        radioContainer.appendChild(element);
-    }
-    container.appendChild(radioContainer);
-    return container;
-}
-
-function monthlyView(frequencyElement){
-    var container = document.createElement('div');
-    var radioContainer = document.createElement('div');
-    container.classList.add('frequency-date-select-container');
-    radioContainer.classList.add('chata-radio-btn-container');
-    radioContainer.classList.add('month-select');
-    var nDay = 1;
-    for (var x = 0; x < 5; x++) {
-        var row = document.createElement('div');
-        row.classList.add('row-month');
-        for (var i = 0; i < 7; i++) {
-            var btn = document.createElement('div');
-            btn.classList.add('chata-radio-btn');
-            if(nDay > 31){
-                btn.classList.add('last-day');
-                btn.innerHTML = 'Last Day';
-                row.appendChild(btn);
-                break;
-            }
-            btn.innerHTML = (nDay++);
-            if(nDay == 6)btn.classList.add('top-right');
-            row.appendChild(btn);
-        }
-        radioContainer.appendChild(row);
-    }
-    container.appendChild(radioContainer);
-    return container;
-}
-
-function yearlyView(){
-    var container = document.createElement('div');
-    var radioContainer = document.createElement('div');
-    container.classList.add('frequency-date-select-container');
-    radioContainer.classList.add('chata-radio-btn-container');
-    radioContainer.classList.add('year-select');
-    const MONTH_LIST = [
-        'Jan', 'Feb', 'Mar',
-        'Apr', 'May', 'Jun',
-        'Jul', 'Aug', 'Sep',
-        'Oct', 'Nov', 'Dec'
-    ];
-    var nMonth = 0;
-    for (var i = 0; i < 3; i++) {
-        var row = document.createElement('div');
-        row.classList.add('row-year');
-        for (var x = 0; x < 3; x++) {
-            var btn = document.createElement('div');
-            btn.classList.add('chata-radio-btn');
-            btn.innerHTML = MONTH_LIST[nMonth++];
-            if(nMonth == 3)btn.classList.add('top-right');
-            row.appendChild(btn);
-        }
-        radioContainer.appendChild(row);
-    }
-    container.appendChild(radioContainer);
-    return container;
 }
 
 function onFrequencyPopupClick(evt, frequencyElement, indexZero=false){
@@ -838,7 +685,6 @@ function showFrequencyView(frequencyElement, type){
                 {text: 'Daily', active:false},
                 {text: 'Weekly', active:false},
                 {text: 'Monthly', active:true},
-                // {text: 'Yearly', active:false},
             ], 'Monthly', true);
             frequencyElement.popup = popup;
             popup.onclick = (evt) => {
@@ -847,17 +693,7 @@ function showFrequencyView(frequencyElement, type){
             break;
         case 1:
             frequencyElement.innerHTML = '';
-            // var popup = frequencyView(frequencyElement, [
-            //     {text: 'Certains days of week', active:false},
-            //     {text: 'Certains days of the month', active:true},
-            //     {text: 'Certains months of the year', active:false},
-            // ], 'Certains days of the month', false);
-            // frequencyElement.popup = popup;
-            // popup.classList.add('large-popup');
-            // popup.onclick = (evt) => {
-            //     onFrequencyPopupClick(evt, frequencyElement, true);
-            // }
-            // break;
+            break;
         case 2:
             frequencyElement.innerHTML = '';
             break;
@@ -908,7 +744,7 @@ function checkStep1(ruleContainer){
     }
 }
 
-function showLeftAndOr(parentSelect, step){
+function showLeftAndOr(parentSelect){
     var groups = document.getElementsByClassName('notification-group-wrapper');
     if(groups.length <= 1){
         parentSelect.style.visibility = 'hidden';
@@ -1248,7 +1084,6 @@ function GroupLine(params, expression=[]){
         switch (ruleContainer.conditionValue) {
             case '>':
                 return 'GREATER_THAN'
-                break;
             case '<':
                 return 'LESS_THAN'
             case '=':
@@ -1369,11 +1204,6 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
     }
     this.groupLines = [];
     var obj = this;
-    var spanBubbleIcon = htmlToElement(`
-        <span class="chata-icon rule-input-select-bubbles-icon">
-            ${INPUT_BUBBLES}
-        </span>
-    `);
     var onChangeAndOr = (evt) => {
         if(evt.target.textContent === 'ALL')groupValues.condition = 'AND';
         else groupValues.condition = 'OR';
@@ -1430,7 +1260,7 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
     groupWrapper.classList.add('notification-group-wrapper');
     let andOrBreak = notificationAndOrBreak(first, parentSelect.operator);
 
-    notificationGroupDeleteBtn.onclick = function(evt){
+    notificationGroupDeleteBtn.onclick = function(){
         parent.removeChild(groupWrapper);
         var groups = document.getElementsByClassName(
             'notification-group-wrapper'
@@ -1448,7 +1278,7 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
         ) + 'px';
     }
 
-    addRuleButton.onclick = function(evt){
+    addRuleButton.onclick = function(){
         var newGroupLine = new GroupLine({
             onDeleteLine: onDeleteLine,
             onSelectRule: onSelectRule,
@@ -1464,9 +1294,6 @@ function ConditionGroup(parentOptions, step1, parent, parentSelect, first=false,
     }
 
     groupWrapper.setAsFirtsAndOrBreak = function(){
-        var groups = document.getElementsByClassName(
-            'notification-group-wrapper'
-        );
         var newAndOrBreak = notificationAndOrBreak(
             true, parentSelect.operator
         );
@@ -1585,7 +1412,7 @@ function ChataModalStep(title, nStep, subtitle=''){
         ) + 'px';
     }
 
-    titleEl.onclick = (evt) => {
+    titleEl.onclick = () => {
         var steps = document.querySelectorAll('.chata-step-container');
         for (var i = 0; i < steps.length; i++) {
             if(step == steps[i])continue;
@@ -1654,7 +1481,6 @@ function getStep3Values(){
 
 function getStep2Values(){
 
-    var type = this.querySelector('.notification_type');
     var reset = this.querySelector('.reset_period');
     var notificationType =
     reset.selectedValue == '' ? 'CONTINUOUS' : 'PERIODIC'

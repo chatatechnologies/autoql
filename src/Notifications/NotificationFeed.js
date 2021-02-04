@@ -1,5 +1,5 @@
 import { htmlToElement, apiCallPut, apiCallGet, apiCallPost } from '../Utils'
-import { DISMISS, EMPTY_STATE } from '../Svg'
+import { DISMISS } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import { Notification } from './Notification'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
@@ -51,13 +51,13 @@ export function NotificationFeed(selector, options){
             fontFamily: 'sans-serif',
         },
         enableDynamicCharting: true,
-        onExpandCallback: (notification) => {},
-        onCollapseCallback: (notification) => {},
+        onExpandCallback: () => {},
+        onCollapseCallback: () => {},
         activeNotificationData: undefined,
         showNotificationDetails: true,
         showDescription: true,
-        onErrorCallback: (error) => {},
-        onSuccessCallback: (message) => {},
+        onErrorCallback: () => {},
+        onSuccessCallback: () => {},
         autoChartAggregations: true,
     }
 
@@ -65,18 +65,18 @@ export function NotificationFeed(selector, options){
     wrapper.isLoading = false;
 
     if('authentication' in options){
-        for (var [key, value] of Object.entries(options['authentication'])) {
+        for (let [key, value] of Object.entries(options['authentication'])) {
             wrapper.options.authentication[key] = value;
         }
     }
 
     if('themeConfig' in options){
-        for (var [key, value] of Object.entries(options['themeConfig'])) {
+        for (let [key, value] of Object.entries(options['themeConfig'])) {
             wrapper.options.themeConfig[key] = value;
         }
     }
 
-    for (var [key, value] of Object.entries(options)) {
+    for (let [key, value] of Object.entries(options)) {
         if(typeof value !== 'object'){
             wrapper.options[key] = value;
         }
@@ -125,7 +125,7 @@ export function NotificationFeed(selector, options){
         wrapper.onAddClick(evt)
     }
 
-    container.addEventListener('scroll', (evt) => {
+    container.addEventListener('scroll', () => {
         if(container.scrollTop + container.offsetHeight + 60
             > container.scrollHeight && !wrapper.isLoading){
             wrapper.notificationOffset += 10;
@@ -178,7 +178,7 @@ export function NotificationFeed(selector, options){
         }
     }
 
-    wrapper.onAddClick = (evt) => {
+    wrapper.onAddClick = () => {
         var cancelButton = htmlToElement(
             `<div class="autoql-vanilla-chata-btn default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
@@ -217,16 +217,16 @@ export function NotificationFeed(selector, options){
         configModal.addFooterElement(saveButton);
         configModal.show();
         refreshTooltips();
-        cancelButton.onclick = (e) => {
+        cancelButton.onclick = () => {
             new ChataConfirmDialog(
                 'Are you sure you want to leave this page?',
                 'All unsaved changes will be lost.',
-                (evt) => {
+                () => {
                     configModal.close()
                 }
             )
         }
-        saveButton.onclick = async (e) => {
+        saveButton.onclick = async () => {
             spinner.classList.remove('hidden')
             saveButton.setAttribute('disabled', 'true')
             var o = wrapper.options
@@ -246,7 +246,6 @@ export function NotificationFeed(selector, options){
 
     wrapper.getNotifications = async () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/data-alerts/notifications?key=${options.authentication.apiKey}&offset=${wrapper.notificationOffset}&limit=10`;
-        var timeOut = 0;
         var delay = 0.08;
         wrapper.isLoading = true;
         var response = await apiCallGet(URL, wrapper.options)
