@@ -20,15 +20,13 @@ import {
     getSafetynetUserSelection,
     apiCall,
     getNumberOfGroupables,
-    getClickedData
+    getClickedData,
+    formatData
 } from '../Utils'
 import {
     createSafetynetContent,
     createSuggestionArray
 } from '../Safetynet'
-import {
-    getGroupableFields
-} from '../Charts/ChataChartHelpers'
 import { refreshTooltips } from '../Tooltips'
 import { ChataTable } from '../ChataTable'
 
@@ -237,14 +235,14 @@ export function QueryInput(selector, options){
     chataBarContainer.appendChild(wrapperInput);
     chataBarContainer.appendChild(voiceRecordButton);
 
-    voiceRecordButton.onmouseup = (evt) => {
+    voiceRecordButton.onmouseup = () => {
         chataBarContainer.speechToText.stop();
         voiceRecordButton.style.backgroundColor = '#26a7df';
         chataBarContainer.input.value = chataBarContainer.finalTranscript;
         chataBarContainer.isRecordVoiceActive = false;
     }
 
-    voiceRecordButton.onmousedown = (evt) => {
+    voiceRecordButton.onmousedown = () => {
         chataBarContainer.speechToText.start();
         voiceRecordButton.style.backgroundColor = '#FF471A';
         chataBarContainer.isRecordVoiceActive = true;
@@ -327,7 +325,7 @@ export function QueryInput(selector, options){
         }
     }
 
-    chataBarContainer.sendDrilldownMessage = (json, indexData) => {
+    chataBarContainer.sendDrilldownMessage = (json) => {
         var responseRenderer = chataBarContainer.responseRenderer;
 
         let opts = mergeOptions([
@@ -344,7 +342,6 @@ export function QueryInput(selector, options){
 
         var queryId = json['data']['query_id'];
         var params = {};
-        var groupables = getGroupableFields(json);
         const URL = opts.authentication.demo
           ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
           : `${opts.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${opts.authentication.apiKey}`;
@@ -371,7 +368,7 @@ export function QueryInput(selector, options){
             }
         }
 
-        ChataUtils.ajaxCallPost(URL, function(response, status){
+        ChataUtils.ajaxCallPost(URL, function(response){
             if(chataBarContainer.options.showLoadingDots){
                 parent.removeChild(responseLoadingContainer);
             }
@@ -387,7 +384,7 @@ export function QueryInput(selector, options){
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
 
         if(groupableCount > 0){
-            for(var[key, value] of Object.entries(row._row.data)){
+            for(var[, value] of Object.entries(row._row.data)){
                 json['data']['rows'][0][index++] = value;
             }
             var clickedData = getClickedData(json, ...json['data']['rows'][0])
@@ -399,7 +396,6 @@ export function QueryInput(selector, options){
     }
 
     chataBarContainer.onCellClick = (e, cell, json) => {
-        const columns = json['data']['columns'];
         const selectedColumn = cell._cell.column;
         const row = cell._cell.row;
         var responseRenderer = this.responseRenderer;
@@ -438,7 +434,7 @@ export function QueryInput(selector, options){
             value
           )}&key=${chataBarContainer.options.authentication.apiKey}&customer_id=${chataBarContainer.options.authentication.customerId}&user_id=${chataBarContainer.options.authentication.userId}`
 
-        ChataUtils.safetynetCall(URL_SAFETYNET, async function(jsonResponse, statusCode){
+        ChataUtils.safetynetCall(URL_SAFETYNET, async function(jsonResponse){
             // jsonResponse['full_suggestion'].length
             if(jsonResponse != undefined){
                 var suggestions = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
@@ -467,7 +463,7 @@ export function QueryInput(selector, options){
                 var response = await apiCall(
                     value, chataBarContainer.options, source, selections
                 )
-                var jsonResponse = response.data
+                let jsonResponse = response.data
                 parent.removeChild(responseLoadingContainer);
                 chataBarContainer.refreshView(jsonResponse, value)
                 chataBarContainer.chatbar.removeAttribute("disabled");
@@ -487,7 +483,7 @@ export function QueryInput(selector, options){
                 chataBarContainer.options,
                 text.split(' ').join(',')
             );
-            ChataUtils.safetynetCall(path, function(response, s){
+            ChataUtils.safetynetCall(path, function(response){
                 var wrapper = document.createElement('div');
                 var rows = response['data']['items'];
                 ChataUtils.createSuggestions(
