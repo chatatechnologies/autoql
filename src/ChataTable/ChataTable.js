@@ -6,7 +6,8 @@ import {
     getDatePivotArray,
     getPivotColumnArray,
     htmlToElement,
-    cloneObject
+    cloneObject,
+    getNumberOfGroupables
 } from '../Utils';
 import './Tabulator.css';
 import './TabulatorBootstrap.css';
@@ -344,6 +345,10 @@ export function ChataTable(
             onRowClick(e, row, cloneObject(json));
         },
     })
+
+    if(getNumberOfGroupables(columns)){
+        component.classList.add('no-drilldown')
+    }
 
     table.setHeight('100%');
 
