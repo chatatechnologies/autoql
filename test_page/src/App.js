@@ -91,6 +91,7 @@ class App extends React.Component {
 
     onLogin = (values, authentication) => {
         var obj = this;
+        this.datamessenger.clearMessages()
         this.datamessenger.setOption("authentication", {
             ...values,
         });
