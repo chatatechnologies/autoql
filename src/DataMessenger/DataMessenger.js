@@ -2633,7 +2633,7 @@ export function DataMessenger(elem, options){
 
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.textContent = text;
+        messageBubble.innerHTML = text;
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
@@ -2986,13 +2986,18 @@ export function DataMessenger(elem, options){
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
-                obj.sendResponse(ACCESS_DENIED)
                 return
             }
 
             obj.input.removeAttribute("disabled")
             if(response.status != 200){
-                obj.sendResponse(response.data.message)
+                let msg = response.data.message;
+                let ref = response.data['reference_id']
+                obj.sendResponse(`
+                    <div>${msg}</div>
+                    <br/>
+                    <div>Error ID: ${ref}</div>
+                `)
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
