@@ -31,7 +31,8 @@ import {
     getSafetynetValues,
     getSafetynetUserSelection,
     getGroupables,
-    showBadge
+    showBadge,
+    supportsVoiceRecord
 } from '../Utils'
 import {
     createAreaChart,
@@ -306,7 +307,8 @@ export function DataMessenger(elem, options){
                 obj.checkMaxMessages();
                 break;
             case 'enableVoiceRecord':
-                obj.options.autoQLConfig.enableVoiceRecord = value;
+                obj.options.enableVoiceRecord = value;
+                if(!supportsVoiceRecord())return
                 var display = value ? 'block' : 'none';
                 obj.voiceRecordButton.style.display = display;
                 break;
@@ -3206,6 +3208,13 @@ export function DataMessenger(elem, options){
     }
     refreshTooltips();
     var isVisible = obj.options.isVisible;
+    if(supportsVoiceRecord()){
+        var display = obj.options.enableVoiceRecord
+        ? 'block' : 'none';
+        obj.voiceRecordButton.style.display = display;
+    }else {
+        obj.voiceRecordButton.style.display = 'none';
+    }
     obj.openDrawer(true)
 
     if(!isVisible){
