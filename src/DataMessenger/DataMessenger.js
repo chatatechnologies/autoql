@@ -7,7 +7,6 @@ import {
     NotificationIcon,
     NotificationFeed
 } from '../Notifications'
-import PerfectScrollbar from 'perfect-scrollbar';
 import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -84,10 +83,6 @@ import {
 import { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
-import 'perfect-scrollbar/css/perfect-scrollbar.css';
-
-import SimpleBar from 'simplebar'
-import 'simplebar/dist/simplebar.css'
 
 export function DataMessenger(elem, options){
     var obj = this;
@@ -764,7 +759,6 @@ export function DataMessenger(elem, options){
 
         tabChataUtils.onclick = function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-            obj.ps.recalculate()
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
             tabChataUtils.classList.add('active');
@@ -787,7 +781,6 @@ export function DataMessenger(elem, options){
 
         tabNotifications.onclick = function(){
             obj.scrollBox.scrollTop = 0;
-            obj.ps.recalculate()
             obj.scrollBox.style.overflow = 'hidden';
             obj.scrollBox.style.maxHeight = '100%';
 
@@ -1328,15 +1321,8 @@ export function DataMessenger(elem, options){
         drawerContent.appendChild(firstMessage);
         scrollBox.appendChild(drawerContent);
         obj.rootElem.appendChild(scrollBox);
-        // const ps = new PerfectScrollbar(scrollBox, {
-        //     wheelSpeed: 2,
-        //     wheelPropagation: true,
-        //     swipeEasing: true
-        // });
-        const ps = new SimpleBar(scrollBox)
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
-        obj.ps = ps;
         obj.introMessageBubble = chatMessageBubble;
     }
 
@@ -2480,7 +2466,6 @@ export function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        obj.ps.recalculate()
         obj.checkMaxMessages();
         if(obj.options.landingPage !== 'data-messenger'){
             obj.hideBubbles()
@@ -2605,7 +2590,6 @@ export function DataMessenger(elem, options){
         table.parentContainer = parentContainer;
         setTimeout(function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-            obj.ps.recalculate()
 
         }, 350);
         allColHiddenMessage(tableWrapper);
@@ -2654,7 +2638,6 @@ export function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        obj.ps.recalculate()
     }
 
     obj.inputAnimation = (text) => {
@@ -2757,7 +2740,6 @@ export function DataMessenger(elem, options){
             uuid, 'suggestions', ''
         ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;3
-        obj.ps.recalculate()
         refreshTooltips()
     }
 
@@ -2791,7 +2773,6 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbarButtons);
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        obj.ps.recalculate()
         refreshTooltips()
     }
 
@@ -2898,7 +2879,6 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbarButtons);
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        obj.ps.recalculate()
         if(jsonResponse['reference_id'] === '1.1.430'){
             let loading = null
             if(obj.options.landingPage === 'data-messenger'){
@@ -2950,7 +2930,6 @@ export function DataMessenger(elem, options){
         var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         messageBubble.appendChild(toolbar);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        obj.ps.recalculate()
         refreshTooltips();
     }
 
@@ -2986,7 +2965,6 @@ export function DataMessenger(elem, options){
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        obj.ps.recalculate()
     }
 
     obj.sendMessage = async (textValue, source, selections=undefined) => {
