@@ -8,8 +8,14 @@ export function PopoverChartSelector(position) {
         popover.style.visibility = 'visible';
         popover.style.opacity = 1;
         popover.style.left = position.left + 'px'
-        if((position.top + popover.clientHeight + 200) > window.screen.height){
-            popover.style.top = ((position.top + window.pageYOffset) - popover.clientHeight + 110) + 'px';
+        var pageYOffset  = window.scrollY
+        if(
+            (position.top + popover.offsetHeight + pageYOffset)
+            > window.screen.height
+        ){
+            popover.style.top = (
+                (position.top + window.pageYOffset)
+                - popover.clientHeight + pageYOffset) + 'px';
         }else{
             popover.style.top = (position.top + window.pageYOffset) + 'px';
         }
