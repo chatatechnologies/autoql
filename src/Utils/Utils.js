@@ -1190,3 +1190,12 @@ export const getFirstDateCol = (cols) => {
 
     return -1
 }
+
+export const supportsVoiceRecord = () => {
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    var isEdge = !isIE && !!window.StyleMedia;
+    var isChrome = !!window.chrome &&
+    (!!window.chrome.webstore || !!window.chrome.runtime);
+
+    return isEdge || isChrome
+}
