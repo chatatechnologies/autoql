@@ -578,7 +578,10 @@ export function DataMessenger(elem, options){
 
 
     obj.showWarningIcon = (messageBubble, json) => {
-        if(json.data.rows.length >= 500){
+        const {
+            limit_row_num
+        } = json.data
+        if(json.data.rows.length >= limit_row_num){
             const warningIcon = htmlToElement(`
                 <span
                 class="chata-icon data-limit-warning-icon warning"

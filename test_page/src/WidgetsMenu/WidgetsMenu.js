@@ -34,7 +34,7 @@ export class WidgetsMenu extends Component{
                     <Menu.Item
                         key="settings"
                         className={this.props.isLogged ? '' : 'chata-hidden'}>
-                        Notification Settings
+                        Data Alerts Manager
                     </Menu.Item>
                     <Menu.Item key="notifications"
                     id="notifications-icon"
