@@ -16,7 +16,6 @@ import moment from 'moment'
 
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
-    console.log(colType);
     if(
         !rowValue && (!['DOLLAR_AMT', 'QUANTITY', 'PERCENT'].includes(colType))
     ){
