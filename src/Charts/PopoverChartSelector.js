@@ -15,7 +15,7 @@ export function PopoverChartSelector(position) {
         ){
             popover.style.top = (
                 (position.top + pageYOffset)
-                - popover.clientHeight) + 'px';
+                - popover.clientHeight + 60) + 'px';
         }else{
             popover.style.top = (position.top + pageYOffset) + 'px';
         }
