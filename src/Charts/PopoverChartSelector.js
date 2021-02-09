@@ -10,14 +10,14 @@ export function PopoverChartSelector(position) {
         popover.style.left = position.left + 'px'
         var pageYOffset  = window.scrollY
         if(
-            (position.top + popover.offsetHeight + pageYOffset)
+            (position.top + popover.offsetHeight)
             > window.screen.height
         ){
             popover.style.top = (
-                (position.top + window.pageYOffset)
-                - popover.clientHeight + pageYOffset) + 'px';
+                (position.top + pageYOffset)
+                - popover.clientHeight) + 'px';
         }else{
-            popover.style.top = (position.top + window.pageYOffset) + 'px';
+            popover.style.top = (position.top + pageYOffset) + 'px';
         }
         popover.isOpen = true;
         return popover;
