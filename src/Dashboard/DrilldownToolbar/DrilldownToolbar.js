@@ -8,7 +8,7 @@ import {
     htmlToElement
 } from '../../Utils'
 
-export function DrilldownToolbar(){
+export function DrilldownToolbar(view){
     var container = document.createElement('div')
     container.classList.add('autoql-vanilla-drilldown-hide-chart-btn')
     container.classList.add('bottom')
@@ -20,6 +20,11 @@ export function DrilldownToolbar(){
 
     button.appendChild(htmlToElement(CHART_ICON))
     button.appendChild(htmlToElement(HIDE_DRILLDOWN))
+
+    button.onclick = () => {
+        if(view.isVisible)view.hide()
+        else view.show()
+    }
 
     return container
 }

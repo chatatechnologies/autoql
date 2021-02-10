@@ -45,6 +45,8 @@ export function DrilldownView(
         dashboard
     } = tile
     const UUID = uuidv4()
+    view.isVisible = true
+
     view.onRowClick = () => {
 
     }
@@ -153,12 +155,20 @@ export function DrilldownView(
         return responseLoadingContainer
     }
 
+    view.hide = () => {
+        view.isVisible = false
+        view.style.display = 'none'
+    }
+
+    view.show = () => {
+        view.isVisible = true
+        view.style.display = 'block'
+    }
+
     view.displayToolbar = () => {
         if(isStatic){
-            var drilldownButton = new DrilldownToolbar()
+            var drilldownButton = new DrilldownToolbar(view)
             view.appendChild(drilldownButton)
-            console.log(drilldownButton);
-            console.log('displayToolbar');
         }
     }
 
