@@ -1,0 +1,9 @@
+.autoql-vanilla-drilldown-hide-chart-btn.bottom {
+    position: absolute;
+    bottom: 5px;
+}
+
+.autoql-vanilla-drilldown-hide-chart-btn {
+    text-align: right;
+    width: 100%;
+}

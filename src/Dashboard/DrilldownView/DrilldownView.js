@@ -26,6 +26,9 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../../Charts'
+import {
+    DrilldownToolbar
+} from '../DrilldownToolbar'
 import './DrilldownView.css'
 
 export function DrilldownView(
@@ -148,6 +151,15 @@ export function DrilldownView(
         responseLoadingContainer.appendChild(responseLoading)
         view.appendChild(responseLoadingContainer)
         return responseLoadingContainer
+    }
+
+    view.displayToolbar = () => {
+        if(isStatic){
+            var drilldownButton = new DrilldownToolbar()
+            view.appendChild(drilldownButton)
+            console.log(drilldownButton);
+            console.log('displayToolbar');
+        }
     }
 
     view.displayData = (json) => {
@@ -330,6 +342,7 @@ export function DrilldownView(
                 div.tabulator = _table
                 break
         }
+        view.displayToolbar()
     }
 
     if(!isStatic){

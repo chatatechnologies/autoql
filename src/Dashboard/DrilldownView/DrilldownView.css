@@ -2,6 +2,7 @@
     height: 47vh;
     min-height: 35%;
     padding-bottom: 10px;
+    position: relative;
 }
 
 .autoql-vanilla-dashboard-drilldown-table {
