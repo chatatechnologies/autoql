@@ -35,6 +35,10 @@ export function DrilldownView(
     tile, displayType,onClick=()=>{}, isStatic=true, drilldownMetadata={}
 ){
     var view = document.createElement('div')
+    var wrapperView = document.createElement('div')
+    wrapperView.classList.add('autoql-vanilla-drilldown-wrapper-view')
+    view.appendChild(wrapperView)
+    view.wrapper = wrapperView
     view.onClick = onClick
     if(isStatic){
         view.classList.add('autoql-vanilla-dashboard-drilldown-original')
@@ -122,7 +126,7 @@ export function DrilldownView(
 
         var response = await apiCallPost(URL, data, options);
         ChataUtils.responses[UUID] = response.data
-        view.removeChild(loading)
+        view.wrapper.removeChild(loading)
 
         if(response.data.data.rows.length > 0){
             view.displayData(response.data)
@@ -132,12 +136,12 @@ export function DrilldownView(
                     UUID, dashboard.options, null, null
                 )
             })
-            view.appendChild(error)
+            view.wrapper.appendChild(error)
         }
     }
 
     view.showLoadingDots = () => {
-        view.innerHTML = ''
+        wrapperView.innerHTML = ''
 
         var responseLoadingContainer = document.createElement('div')
         var responseLoading = document.createElement('div')
@@ -151,18 +155,20 @@ export function DrilldownView(
         }
 
         responseLoadingContainer.appendChild(responseLoading)
-        view.appendChild(responseLoadingContainer)
+        view.wrapper.appendChild(responseLoadingContainer)
         return responseLoadingContainer
     }
 
     view.hide = () => {
         view.isVisible = false
-        view.style.display = 'none'
+        view.wrapper.style.display = 'none'
+        view.classList.add('no-height')
     }
 
     view.show = () => {
         view.isVisible = true
-        view.style.display = 'block'
+        view.wrapper.style.display = 'block'
+        view.classList.remove('no-height')
     }
 
     view.displayToolbar = () => {
@@ -173,8 +179,8 @@ export function DrilldownView(
     }
 
     view.displayData = (json) => {
-        var container = view
-        view.innerHTML = ''
+        var container = view.wrapper
+        view.wrapper.innerHTML = ''
         let chartWrapper
         let chartWrapper2
 
