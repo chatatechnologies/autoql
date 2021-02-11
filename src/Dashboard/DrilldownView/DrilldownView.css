@@ -30,7 +30,7 @@
 }
 
 .autoql-vanilla-dashboard-drilldown-original.no-height{
-    height: 0px;
+    height: 15px !important;
     min-height: 0;
 }
 

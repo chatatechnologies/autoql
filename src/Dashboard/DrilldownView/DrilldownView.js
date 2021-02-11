@@ -159,16 +159,25 @@ export function DrilldownView(
         return responseLoadingContainer
     }
 
+    view.getGutter = () => {
+        var gutter = view.parentElement.querySelector('.gutter')
+        return gutter
+    }
+
     view.hide = () => {
         view.isVisible = false
         view.wrapper.style.display = 'none'
         view.classList.add('no-height')
+        let gutter = view.getGutter()
+        gutter.style.display = 'none'
     }
 
     view.show = () => {
         view.isVisible = true
         view.wrapper.style.display = 'block'
         view.classList.remove('no-height')
+        let gutter = view.getGutter()
+        gutter.style.display = 'block'
     }
 
     view.displayToolbar = () => {
