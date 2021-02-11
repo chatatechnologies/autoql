@@ -7,6 +7,9 @@ import {
 import {
     htmlToElement
 } from '../../Utils'
+import {
+    refreshTooltips
+} from '../../Tooltips'
 
 export function DrilldownToolbar(view){
     var container = document.createElement('div')
@@ -20,10 +23,26 @@ export function DrilldownToolbar(view){
 
     button.appendChild(htmlToElement(CHART_ICON))
     button.appendChild(htmlToElement(HIDE_DRILLDOWN))
-
+    button.setAttribute(
+        'data-tippy-content', 'Hide Chart'
+    )
     button.onclick = () => {
-        if(view.isVisible)view.hide()
-        else view.show()
+        button.innerHTML = ''
+        button.appendChild(htmlToElement(CHART_ICON))
+        if(view.isVisible){
+            view.hide()
+            button.appendChild(htmlToElement(EXPAND_DRILLDOWN))
+            button.setAttribute(
+                'data-tippy-content', 'Show Chart'
+            )
+        }else{
+            view.show()
+            button.appendChild(htmlToElement(HIDE_DRILLDOWN))
+            button.setAttribute(
+                'data-tippy-content', 'Hide Chart'
+            )
+        }
+        refreshTooltips()
     }
 
     return container
