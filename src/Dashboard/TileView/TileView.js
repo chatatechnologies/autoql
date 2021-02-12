@@ -619,13 +619,17 @@ export function TileView(tile, isSecond=false){
         chartView.setSelectedElement(indexData)
     }
 
-    view.filterData = (json, indexValue, filterBy) => {
+    view.filterData = (json, indexValue, filterBy, options) => {
         var newJson = cloneObject(json);
         var newData = [];
         var oldData = newJson['data']['rows'];
-
+        var col = newJson['data']['columns'][indexValue];
+        
         for (var i = 0; i < oldData.length; i++) {
-            if(oldData[i][indexValue] === filterBy)newData.push(oldData[i]);
+            var compareValue = oldData[i][indexValue]
+            if(!compareValue)compareValue = 'null'
+            compareValue = formatData(compareValue, col, options)
+            if(compareValue === filterBy)newData.push(oldData[i]);
         }
         newJson.data.rows = newData;
 
@@ -638,7 +642,7 @@ export function TileView(tile, isSecond=false){
     ) => {
         if(!options.autoQLConfig.enableDrilldowns)return
         let title = view.getQuery()
-        var newJson = view.filterData(json, indexValue, filterBy)
+        var newJson = view.filterData(json, indexValue, filterBy, options)
 
         var tableView = new DrilldownView(
             tile,
@@ -653,7 +657,7 @@ export function TileView(tile, isSecond=false){
         const onClickDrilldownView = (evt, idRequest, currentView) => {
             var colValue = evt.target.dataset.colvalue1
             var indexValue = evt.target.dataset.filterindex
-            var curJson = view.filterData(json, indexValue, colValue)
+            var curJson = view.filterData(json, indexValue, colValue, options)
             view.selectChartElement(currentView, evt.target)
             tableView.executeDrilldownClientSide({
                 json: curJson,
