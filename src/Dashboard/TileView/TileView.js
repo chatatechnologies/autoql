@@ -590,6 +590,7 @@ export function TileView(tile, isSecond=false){
             var indexData = evt.target.dataset.tilechart
             var curJson = json
             view.selectChartElement(currentView, evt.target)
+            console.log(evt.target);
             if(evt.target.classList.contains('autoql-vanilla-stacked-rect')){
                 curJson = cloneObject(curJson)
                 curJson['data']['rows'][0][0] =

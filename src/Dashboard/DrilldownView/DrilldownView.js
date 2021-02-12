@@ -113,7 +113,7 @@ export function DrilldownView(
         }
 
         var cols = []
-        for(var [key] of Object.entries(params)){
+        for(let [key, value] of Object.entries(params)){
             cols.push({
                 name: key,
                 value: value
