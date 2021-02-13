@@ -383,7 +383,12 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     const loadRules = async () => {
         var ruleGroups = convert(rule.expression, false);
-        await ruleGroups.map((group, index) => {
+        await ruleGroups.map(() => {
+            var newGroupLine = new GroupLine({
+                parentOptions: wrapper.parentOptions,
+                step: step1
+            });
+            ruleContainer.appendChild(newGroupLine);
             // var isFirst = index === 0;
             // ruleContainer.appendChild(
             //     new ConditionGroup(
@@ -441,7 +446,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         //     wrapper.parentOptions,
         //     step1, ruleContainer, parentSelect, true
         // );
-        // ruleContainer.appendChild(group);
+        var newGroupLine = new GroupLine({
+            parentOptions: wrapper.parentOptions,
+            step: step1
+        });
+        ruleContainer.appendChild(newGroupLine);
         frequencyValue.innerHTML = 'Select a frequency';
         frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
         frequencyValue.style.fontStyle = 'italic';
@@ -1122,7 +1131,8 @@ function GroupLine(params, expression=[]){
     }
 
     chataRuleDeleteBtn.onclick = function(evt){
-        params.onDeleteLine(evt, ruleContainer);
+        console.log('ON DELETE CLICK');
+        // params.onDeleteLine(evt, ruleContainer);
     }
 
     chataSelect.onclick = function(){
