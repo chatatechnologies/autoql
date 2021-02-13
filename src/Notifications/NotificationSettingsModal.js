@@ -47,6 +47,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     // step4.classList.add('complete');
 
     // STEP 1
+    var step1ButtonContainer = document.createElement('div');
+    step1ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
     var titleContainer = new InputContainer(
         ['chata-notification-display-name-input']
     )
@@ -88,6 +90,16 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         },
         isButtonDisable
     )
+    var validateButton = new StepButton(
+        'autoql-vanilla-chata-btn default large',
+        'Validate',
+        () => {
+            console.log('validate');
+        },
+        false
+    )
+    step1ButtonContainer.appendChild(validateButton);
+    step1ButtonContainer.appendChild(step1NextButton);
     parentSelect.operator = 'AND';
 
     if(mode === 'edit'){
@@ -110,7 +122,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     `))
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
-    ruleContainer.appendChild(step1NextButton);
 
     ruleContainer.step = step1;
     // btnAddGroup.onclick = function(){
@@ -481,6 +492,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         wrapper.checkSteps()
     })
 
+    ruleContainer.appendChild(step1ButtonContainer);
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
     step3.getValues = getStep3Values;

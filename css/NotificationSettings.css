@@ -525,12 +525,6 @@
     padding-left: 8px;
 }
 
-.autoql-vanilla-first-step-next-btn {
-    position: absolute;
-    right: -5px;
-    bottom: 0px;
-}
-
 .autoql-vanilla-step-btn-container {
     text-align: right;
 }
