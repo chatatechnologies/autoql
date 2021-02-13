@@ -113,28 +113,29 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     ruleContainer.appendChild(step1NextButton);
 
     ruleContainer.step = step1;
-    btnAddGroup.onclick = function(){
-        var groups = document.getElementsByClassName(
-            'notification-group-wrapper'
-        );
-        var isFirst = groups.length === 0 ? true : false;
-        var newGroup = new ConditionGroup(
-            wrapper.parentOptions,
-            step1, ruleContainer, parentSelect, isFirst
-        );
-        ruleContainer.insertBefore(newGroup, btnAddGroup);
-        if(groups.length >= 1){
-            groups[0].setAsFirtsAndOrBreak();
-        }
-        if(groups.length > 1){
-            groups[0].showNotificationAndOrBreak();
-        }
-        showLeftAndOr(parentSelect, ruleContainer);
-        checkStep1(ruleContainer);
-        step1.stepContentContainer.style.height = getHeightForChildrens(
-            step1.stepContentContainer
-        ) + 'px';
-    }
+    // btnAddGroup.onclick = function(){
+    //     var groups = document.getElementsByClassName(
+    //         'notification-group-wrapper'
+    //     );
+    //     var isFirst = groups.length === 0 ? true : false;
+    //     var newGroup = new ConditionGroup(
+    //         wrapper.parentOptions,
+    //         step1, ruleContainer, parentSelect, isFirst
+    //     );
+    //     ruleContainer.insertBefore(newGroup, btnAddGroup);
+    //     if(groups.length >= 1){
+    //         groups[0].setAsFirtsAndOrBreak();
+    //     }
+    //     if(groups.length > 1){
+    //         groups[0].showNotificationAndOrBreak();
+    //     }
+    //     showLeftAndOr(parentSelect, ruleContainer);
+    //     checkStep1(ruleContainer);
+    //     step1.stepContentContainer.style.height = getHeightForChildrens(
+    //         step1.stepContentContainer
+    //     ) + 'px';
+    // }
+
     step1.onkeyup = function(){
         checkStep1(ruleContainer);
     }
@@ -383,16 +384,16 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     const loadRules = async () => {
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map((group, index) => {
-            var isFirst = index === 0;
-            ruleContainer.appendChild(
-                new ConditionGroup(
-                    wrapper.parentOptions,
-                    step1, ruleContainer, parentSelect, isFirst, {
-                        ...rule.expression[index],
-                        parsedLines: group
-                    }
-                )
-            );
+            // var isFirst = index === 0;
+            // ruleContainer.appendChild(
+            //     new ConditionGroup(
+            //         wrapper.parentOptions,
+            //         step1, ruleContainer, parentSelect, isFirst, {
+            //             ...rule.expression[index],
+            //             parsedLines: group
+            //         }
+            //     )
+            // );
         })
 
         var groups = document.getElementsByClassName(
@@ -436,17 +437,18 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         step3.classList.add('complete');
         // step4.classList.add('complete');
     }else{
-        var group = new ConditionGroup(
-            wrapper.parentOptions,
-            step1, ruleContainer, parentSelect, true
-        );
-        ruleContainer.appendChild(group);
+        // var group = new ConditionGroup(
+        //     wrapper.parentOptions,
+        //     step1, ruleContainer, parentSelect, true
+        // );
+        // ruleContainer.appendChild(group);
         frequencyValue.innerHTML = 'Select a frequency';
         frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
         frequencyValue.style.fontStyle = 'italic';
     }
 
-    ruleContainer.appendChild(btnAddGroup);
+    // NOTE: Hide Add group button
+    // ruleContainer.appendChild(btnAddGroup);
 
     wrapper.isValid = () => {
         var steps = wrapper.querySelectorAll('.chata-step-container')
