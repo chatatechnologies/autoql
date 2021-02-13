@@ -14,6 +14,9 @@ import {
     ChataRadio
 } from '../ChataComponents'
 import { refreshTooltips } from '../Tooltips'
+import {
+    apiCallPost
+} from '../Utils'
 
 export function NotificationSettingsModal(options, mode='create', rule={}){
     var wrapper = document.createElement('div');
@@ -72,6 +75,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     titleContainer.appendChild(titleInput.spanIcon);
 
     var ruleContainer = document.createElement('div');
+    var newGroupLine = new GroupLine({
+        parentOptions: wrapper.parentOptions,
+        step: step1
+    });
+    ruleContainer.appendChild(newGroupLine);
     var onChangeAndOr = () => {
         parentSelect.operator = updateAndOr(parentSelect);
     }
@@ -93,8 +101,21 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var validateButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
         'Validate',
-        () => {
-            console.log('validate');
+        async () => {
+            console.log(newGroupLine.getValues());
+            console.log(wrapper.parentOptions);
+            const {
+                domain,
+                apiKey
+            } = wrapper.parentOptions.authentication
+            const url = `${domain}/autoql/api/v1/data-alerts/validate?key=${apiKey}`
+            var response = await apiCallPost(
+                url,
+                {expression: newGroupLine.getValues()},
+                wrapper.parentOptions
+            )
+
+            console.log(response);
         },
         false
     )
@@ -395,11 +416,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     const loadRules = async () => {
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
-            var newGroupLine = new GroupLine({
-                parentOptions: wrapper.parentOptions,
-                step: step1
-            });
-            ruleContainer.appendChild(newGroupLine);
+            // var newGroupLine = new GroupLine({
+            //     parentOptions: wrapper.parentOptions,
+            //     step: step1
+            // });
+            // ruleContainer.appendChild(newGroupLine);
             // var isFirst = index === 0;
             // ruleContainer.appendChild(
             //     new ConditionGroup(
@@ -457,11 +478,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         //     wrapper.parentOptions,
         //     step1, ruleContainer, parentSelect, true
         // );
-        var newGroupLine = new GroupLine({
-            parentOptions: wrapper.parentOptions,
-            step: step1
-        });
-        ruleContainer.appendChild(newGroupLine);
+        // var newGroupLine = new GroupLine({
+        //     parentOptions: wrapper.parentOptions,
+        //     step: step1
+        // });
+        // ruleContainer.appendChild(newGroupLine);
         frequencyValue.innerHTML = 'Select a frequency';
         frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
         frequencyValue.style.fontStyle = 'italic';
@@ -996,49 +1017,49 @@ function GroupLine(params, expression=[]){
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
 
-    queryInput.input.onblur = async (evt) => {
-        if(queryInput.input.value){
-            var response = await apiCall(
-                evt.target.value, params.parentOptions, undefined
-            )
-            var statusCode = response.status
-            if(statusCode !== 200){
-                termError1.style.display = 'block';
-                params.step.classList.remove('complete')
-                params.step.classList.add('error')
-            }else{
-                termError1.style.display = 'none';
-                params.step.classList.add('complete')
-                params.step.classList.remove('error')
-            }
-        }
-    }
-
-    queryInput2.input.onblur = async (evt) => {
-        if(queryInput2.input.value){
-            if(/^[0-9]+$/.test(queryInput2.input.value)){
-                params.step.classList.remove('error')
-                termError2.style.display = 'none';
-                return
-            }
-
-            var response = await apiCall(
-                evt.target.value, params.parentOptions, undefined
-            )
-
-            var statusCode = response.status
-
-            if(statusCode !== 200){
-                termError2.style.display = 'block';
-                params.step.classList.remove('complete')
-                params.step.classList.add('error')
-            }else{
-                termError2.style.display = 'none';
-                params.step.classList.add('complete')
-                params.step.classList.remove('error')
-            }
-        }
-    }
+    // queryInput.input.onblur = async (evt) => {
+    //     if(queryInput.input.value){
+    //         var response = await apiCall(
+    //             evt.target.value, params.parentOptions, undefined
+    //         )
+    //         var statusCode = response.status
+    //         if(statusCode !== 200){
+    //             termError1.style.display = 'block';
+    //             params.step.classList.remove('complete')
+    //             params.step.classList.add('error')
+    //         }else{
+    //             termError1.style.display = 'none';
+    //             params.step.classList.add('complete')
+    //             params.step.classList.remove('error')
+    //         }
+    //     }
+    // }
+    //
+    // queryInput2.input.onblur = async (evt) => {
+    //     if(queryInput2.input.value){
+    //         if(/^[0-9]+$/.test(queryInput2.input.value)){
+    //             params.step.classList.remove('error')
+    //             termError2.style.display = 'none';
+    //             return
+    //         }
+    //
+    //         var response = await apiCall(
+    //             evt.target.value, params.parentOptions, undefined
+    //         )
+    //
+    //         var statusCode = response.status
+    //
+    //         if(statusCode !== 200){
+    //             termError2.style.display = 'block';
+    //             params.step.classList.remove('complete')
+    //             params.step.classList.add('error')
+    //         }else{
+    //             termError2.style.display = 'none';
+    //             params.step.classList.add('complete')
+    //             params.step.classList.remove('error')
+    //         }
+    //     }
+    // }
 
     popup.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){
@@ -1052,7 +1073,6 @@ function GroupLine(params, expression=[]){
                 secondContainer.style.visibility = 'visible';
                 secondContainer.style.display = 'block';
             }
-            params.onSelectRule();
         }
     }
 
