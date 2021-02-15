@@ -5,7 +5,8 @@ import {
     NOTEBOOK,
     INPUT_BUBBLES,
     INPUT_DELETE,
-    WARNING_TRIANGLE
+    WARNING_TRIANGLE,
+    CHECK
 } from '../Svg'
 import { convert } from '../RuleParser'
 import {
@@ -91,7 +92,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         onChangeAndOr
     );
     var isButtonDisable = mode === 'create'
-
+    var checkContainer = htmlToElement(`
+        <span class="autoql-vanilla-icon"></span>
+    `)
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
         'Next',
@@ -109,6 +112,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 domain,
                 apiKey
             } = wrapper.parentOptions.authentication
+            checkContainer.innerHTML = ''
             const url = `${domain}/autoql/api/v1/data-alerts/validate?key=${apiKey}`
             loader.classList.remove('hidden')
             var response = await apiCallPost(
@@ -117,12 +121,33 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 wrapper.parentOptions
             )
             loader.classList.add('hidden')
+            if(response.status != 200){
+                checkContainer.classList.remove(
+                    'autoql-vanilla-expression-valid-checkmark'
+                )
+                checkContainer.classList.add(
+                    'autoql-vanilla-expression-invalid-message'
+                )
+                checkContainer.innerHTML = WARNING_TRIANGLE;
+                checkContainer.appendChild(
+                    document.createTextNode(response.data.message)
+                )
+            }else{
+                checkContainer.innerHTML = CHECK;
+                checkContainer.classList.add(
+                    'autoql-vanilla-expression-valid-checkmark'
+                )
+                checkContainer.classList.remove(
+                    'autoql-vanilla-expression-invalid-message'
+                )
+            }
         },
         false
     )
     validateButton.innerHTML = ''
     validateButton.appendChild(loader)
     validateButton.appendChild(document.createTextNode('Validate'))
+    step1ButtonContainer.appendChild(checkContainer)
     step1ButtonContainer.appendChild(validateButton)
     step1ButtonContainer.appendChild(step1NextButton)
     parentSelect.operator = 'AND';

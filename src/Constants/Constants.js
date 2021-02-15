@@ -10,7 +10,8 @@ export const LIGHT_THEME = {
     'font-family': 'sans-serif',
     'highlight-color': '#000',
     'danger-color': '#ca0b00',
-    'warning-color': '#FFCC00'
+    'warning-color': '#FFCC00',
+    'success-color': '#2aca4d'
 }
 
 export const DARK_THEME = {
@@ -25,7 +26,8 @@ export const DARK_THEME = {
   'font-family': 'sans-serif',
   'highlight-color': '#FFF',
   'danger-color': '#ff584e',
-  'warning-color': '#FFCC00'
+  'warning-color': '#FFCC00',
+  'success-color': '#2aca4d'
 }
 
 export const DASHBOARD_LIGHT_THEME = {

@@ -539,3 +539,11 @@
 .chata-step-content textarea{
     color: var(--autoql-vanilla-text-color-primary) !important;
 }
+
+.autoql-vanilla-expression-invalid-message {
+    color: var(--autoql-vanilla-danger-color);
+}
+
+.autoql-vanilla-expression-valid-checkmark {
+    color: var(--autoql-vanilla-success-color);
+}
