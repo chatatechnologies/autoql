@@ -79,19 +79,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     titleContainer.appendChild(titleInput.spanIcon);
 
     var ruleContainer = document.createElement('div');
-    var newGroupLine = new GroupLine({
-        parentOptions: wrapper.parentOptions,
-        step: step1
-    });
-    ruleContainer.appendChild(newGroupLine);
-    var onChangeAndOr = () => {
-        parentSelect.operator = updateAndOr(parentSelect);
-    }
-    var parentSelect = notificationRuleAndOrSelect(
-        'of the following conditions are met:',
-        onChangeAndOr
-    );
-    var isButtonDisable = mode === 'create'
     var checkContainer = htmlToElement(`
         <span class="autoql-vanilla-icon"></span>
     `)
@@ -104,6 +91,21 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         },
         isButtonDisable
     )
+    var newGroupLine = new GroupLine({
+        parentOptions: wrapper.parentOptions,
+        step: step1,
+        stepButton: step1NextButton,
+        checkContainer: checkContainer
+    });
+    ruleContainer.appendChild(newGroupLine);
+    var onChangeAndOr = () => {
+        parentSelect.operator = updateAndOr(parentSelect);
+    }
+    var parentSelect = notificationRuleAndOrSelect(
+        'of the following conditions are met:',
+        onChangeAndOr
+    );
+    var isButtonDisable = mode === 'create'
     var validateButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
         'Validate',
@@ -132,6 +134,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 checkContainer.appendChild(
                     document.createTextNode(response.data.message)
                 )
+                step1.classList.remove('complete')
+                step1.classList.add('error')
+                step1NextButton.classList.add('disabled')
             }else{
                 checkContainer.innerHTML = CHECK;
                 checkContainer.classList.add(
@@ -140,6 +145,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
                 checkContainer.classList.remove(
                     'autoql-vanilla-expression-invalid-message'
                 )
+                step1.classList.add('complete')
+                step1.classList.remove('error')
+                step1NextButton.classList.remove('disabled')
             }
         },
         false
@@ -1045,6 +1053,22 @@ function GroupLine(params, expression=[]){
         {text: '=', dataTip: 'Equals', active:false},
         {text: '∃', dataTip: 'Greater Than', active:false}
     ]);
+
+    queryInput.input.onkeydown = () => {
+        params.step.classList.remove('complete')
+        params.step.classList.remove('error')
+        params.stepButton.classList.add('disabled')
+        params.checkContainer.innerHTML = ''
+        console.log(params.checkContainer);
+    }
+
+    queryInput2.input.onkeydown = () => {
+        params.step.classList.remove('complete')
+        params.step.classList.remove('error')
+        params.stepButton.classList.add('disabled')
+        params.checkContainer.innerHTML = ''
+        console.log(params.checkContainer);
+    }
 
     // queryInput.input.onblur = async (evt) => {
     //     if(queryInput.input.value){
