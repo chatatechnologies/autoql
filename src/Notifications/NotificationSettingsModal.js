@@ -27,6 +27,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         If the Alert is triggered multiple times,
         you will only be notified on a monthly basis.`
     );
+    var loader = htmlToElement(`
+        <div class="autoql-vanilla-spinner-loader hidden"></div>
+    `)
     var btnAddGroup = htmlToElement(`
         <span>
             <div class="autoql-vanilla-chata-btn default
@@ -102,25 +105,26 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         'autoql-vanilla-chata-btn default large',
         'Validate',
         async () => {
-            console.log(newGroupLine.getValues());
-            console.log(wrapper.parentOptions);
             const {
                 domain,
                 apiKey
             } = wrapper.parentOptions.authentication
             const url = `${domain}/autoql/api/v1/data-alerts/validate?key=${apiKey}`
+            loader.classList.remove('hidden')
             var response = await apiCallPost(
                 url,
                 {expression: newGroupLine.getValues()},
                 wrapper.parentOptions
             )
-
-            console.log(response);
+            loader.classList.add('hidden')
         },
         false
     )
-    step1ButtonContainer.appendChild(validateButton);
-    step1ButtonContainer.appendChild(step1NextButton);
+    validateButton.innerHTML = ''
+    validateButton.appendChild(loader)
+    validateButton.appendChild(document.createTextNode('Validate'))
+    step1ButtonContainer.appendChild(validateButton)
+    step1ButtonContainer.appendChild(step1NextButton)
     parentSelect.operator = 'AND';
 
     if(mode === 'edit'){
