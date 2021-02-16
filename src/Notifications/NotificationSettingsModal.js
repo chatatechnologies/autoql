@@ -1191,6 +1191,15 @@ function GroupLine(params, expression=[]){
         }
     }
 
+    ruleContainer.getInputType = () => {
+        var val = queryInput2.input.value;
+        if(Number.isInteger(parseInt(val))){
+            return 'constant'
+        }else{
+            return 'query'
+        }
+    }
+
     ruleContainer.getValues = () => {
         var terms = [];
 
@@ -1205,7 +1214,7 @@ function GroupLine(params, expression=[]){
         if(queryValues.condition != 'EXISTS'){
             var constantValues = {
                 id: uuidv4(),
-                term_type: 'constant',
+                term_type: ruleContainer.getInputType(),
                 condition: 'TERMINATOR',
                 term_value: queryInput2.input.value
             }
