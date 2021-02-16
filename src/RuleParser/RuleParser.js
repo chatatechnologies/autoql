@@ -11,19 +11,17 @@ export function getOperator(condition){
 	}
 }
 
-export function convert(rules, addTopOperator=true){
-	var parsedRules = []
-	var group = []
+export function convert(rules){
 	var rule = []
 	for (var i = 0; i < rules.length; i++) {
 		var term = rules[i];
 		var operator = getOperator(term.condition)
 		rule.push(term.term_value)
 		if(operator)rule.push(operator)
-		if(term.condition === 'TERMINATOR'){
-			parsedRules.push([rule])
-			rule = []
-		}
+		// if(term.condition === 'TERMINATOR'){
+		// 	parsedRules.push([rule])
+		// 	rule = []
+		// }
 	}
-	return parsedRules;
+	return rule;
 }

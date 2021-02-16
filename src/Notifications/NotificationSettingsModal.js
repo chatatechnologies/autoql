@@ -453,6 +453,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     const loadRules = async () => {
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
+            console.log(ruleGroups);
+            newGroupLine.setExpression(ruleGroups)
             // var newGroupLine = new GroupLine({
             //     parentOptions: wrapper.parentOptions,
             //     step: step1
@@ -1174,6 +1176,13 @@ function GroupLine(params, expression=[]){
         }else{
             return !val1 || !val2;
         }
+    }
+
+    ruleContainer.setExpression = (expression) => {
+        queryInput.input.value = expression[0]
+        conditionValueSelect.innerHTML = expression[1]
+        ruleContainer.conditionValue = expression[1]
+        queryInput2.input.value = expression[2]
     }
 
     ruleContainer.getOperator = () => {
