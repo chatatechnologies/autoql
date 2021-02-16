@@ -105,51 +105,53 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         'of the following conditions are met:',
         onChangeAndOr
     );
+    const validateFn = async () => {
+        const {
+            domain,
+            apiKey
+        } = wrapper.parentOptions.authentication
+        checkContainer.innerHTML = ''
+        const url = `${domain}/autoql/api/v1/data-alerts/validate?key=${apiKey}`
+        loader.classList.remove('hidden')
+        var response = await apiCallPost(
+            url,
+            {expression: newGroupLine.getValues()},
+            wrapper.parentOptions
+        )
+        loader.classList.add('hidden')
+        if(response.status != 200){
+            checkContainer.classList.remove(
+                'autoql-vanilla-expression-valid-checkmark'
+            )
+            checkContainer.classList.add(
+                'autoql-vanilla-expression-invalid-message'
+            )
+            checkContainer.innerHTML = WARNING_TRIANGLE;
+            checkContainer.appendChild(
+                document.createTextNode(response.data.message)
+            )
+            step1.classList.remove('complete')
+            step1.classList.add('error')
+            step1NextButton.classList.add('disabled')
+        }else{
+            checkContainer.innerHTML = CHECK;
+            checkContainer.classList.add(
+                'autoql-vanilla-expression-valid-checkmark'
+            )
+            checkContainer.classList.remove(
+                'autoql-vanilla-expression-invalid-message'
+            )
+            step1.classList.add('complete')
+            step1.classList.remove('error')
+            step1NextButton.classList.remove('disabled')
+        }
+    }
+
     var isButtonDisable = mode === 'create'
     var validateButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
         'Validate',
-        async () => {
-            const {
-                domain,
-                apiKey
-            } = wrapper.parentOptions.authentication
-            checkContainer.innerHTML = ''
-            const url = `${domain}/autoql/api/v1/data-alerts/validate?key=${apiKey}`
-            loader.classList.remove('hidden')
-            var response = await apiCallPost(
-                url,
-                {expression: newGroupLine.getValues()},
-                wrapper.parentOptions
-            )
-            loader.classList.add('hidden')
-            if(response.status != 200){
-                checkContainer.classList.remove(
-                    'autoql-vanilla-expression-valid-checkmark'
-                )
-                checkContainer.classList.add(
-                    'autoql-vanilla-expression-invalid-message'
-                )
-                checkContainer.innerHTML = WARNING_TRIANGLE;
-                checkContainer.appendChild(
-                    document.createTextNode(response.data.message)
-                )
-                step1.classList.remove('complete')
-                step1.classList.add('error')
-                step1NextButton.classList.add('disabled')
-            }else{
-                checkContainer.innerHTML = CHECK;
-                checkContainer.classList.add(
-                    'autoql-vanilla-expression-valid-checkmark'
-                )
-                checkContainer.classList.remove(
-                    'autoql-vanilla-expression-invalid-message'
-                )
-                step1.classList.add('complete')
-                step1.classList.remove('error')
-                step1NextButton.classList.remove('disabled')
-            }
-        },
+        validateFn,
         false
     )
     validateButton.innerHTML = ''
@@ -455,21 +457,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         await ruleGroups.map(() => {
             console.log(ruleGroups);
             newGroupLine.setExpression(ruleGroups)
-            // var newGroupLine = new GroupLine({
-            //     parentOptions: wrapper.parentOptions,
-            //     step: step1
-            // });
-            // ruleContainer.appendChild(newGroupLine);
-            // var isFirst = index === 0;
-            // ruleContainer.appendChild(
-            //     new ConditionGroup(
-            //         wrapper.parentOptions,
-            //         step1, ruleContainer, parentSelect, isFirst, {
-            //             ...rule.expression[index],
-            //             parsedLines: group
-            //         }
-            //     )
-            // );
+            validateFn()
         })
 
         var groups = document.getElementsByClassName(
