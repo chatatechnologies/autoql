@@ -118,6 +118,10 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             {expression: newGroupLine.getValues()},
             wrapper.parentOptions
         )
+        if(checkContainer._tippy){
+            console.log(checkContainer._tippy);
+            checkContainer._tippy.destroy()
+        }
         loader.classList.add('hidden')
         if(response.status != 200){
             checkContainer.classList.remove(
@@ -134,6 +138,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             step1.classList.add('error')
             step1NextButton.classList.add('disabled')
         }else{
+            checkContainer.setAttribute(
+                'data-tippy-content', 'Expression is valid'
+            )
             checkContainer.innerHTML = CHECK;
             checkContainer.classList.add(
                 'autoql-vanilla-expression-valid-checkmark'
@@ -144,6 +151,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             step1.classList.add('complete')
             step1.classList.remove('error')
             step1NextButton.classList.remove('disabled')
+            refreshTooltips()
         }
     }
 
