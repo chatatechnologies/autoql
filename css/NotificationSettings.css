@@ -507,7 +507,7 @@
     padding-right: 10px;
     padding-top: 6px;
     font-size: 16px;
-    color: var(--react-autoql-text-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
     transition: opacity .2s ease;
 }
 
@@ -546,4 +546,8 @@
 
 .autoql-vanilla-expression-valid-checkmark {
     color: var(--autoql-vanilla-success-color);
+}
+
+.autoql-vanilla-edit-data-alert{
+    cursor: pointer;
 }

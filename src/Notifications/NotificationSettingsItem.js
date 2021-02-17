@@ -49,11 +49,13 @@ export function NotificationSettingsItem(parentOptions, options) {
     }
 
     chataCheckbox.appendChild(chataSwitch);
+    var editSvg = htmlToElement(EDIT_ALERT)
+    editSvg.classList.add('autoql-vanilla-edit-data-alert')
     var editIcon = htmlToElement(`
         <span class="chata-icon chata-notification-action-btn edit">
-            ${EDIT_ALERT}
         </span>
     `)
+    editIcon.appendChild(editSvg)
 
     wrapper.classList.add('chata-notification-setting-item');
     header.classList.add('chata-notification-setting-item-header');
@@ -96,7 +98,7 @@ export function NotificationSettingsItem(parentOptions, options) {
     settingsDisplayName.appendChild(displayNameMessage);
     header.appendChild(settingsDisplayName);
     header.appendChild(settingsActions);
-    header.onclick = function(evt){
+    editSvg.onclick = function(evt){
         var target = evt.target;
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
