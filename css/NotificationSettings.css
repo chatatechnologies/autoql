@@ -504,11 +504,23 @@
 
 .chata-notification-settings-container .chata-notification-setting-item .chata-notification-action-btn {
     opacity: 0;
-    padding-right: 10px;
-    padding-top: 6px;
+    margin-right: 20px;
+    margin-top: 8px;
     font-size: 16px;
     color: var(--autoql-vanilla-text-color-primary);
     transition: opacity .2s ease;
+}
+
+.autoq-vanilla-reset-period-info-icon {
+    padding-right: 20px;
+    font-size: 17px;
+    opacity: 1;
+    color: var(--autoql-vanilla-accent-color);
+    margin-top: 8px;
+}
+
+.autoql-vanilla-hour-glass{
+    cursor: pointer;
 }
 
 .chata-notification-settings-container .chata-notification-setting-item:hover .chata-notification-action-btn {

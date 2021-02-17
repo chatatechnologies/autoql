@@ -4,7 +4,8 @@ import { ChataConfirmDialog } from '../ChataComponents'
 import { htmlToElement, apiCallPut, apiCallDelete } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
-    EDIT_ALERT
+    EDIT_ALERT,
+    HOUR_GLASS
 } from '../Svg'
 
 export function NotificationSettingsItem(parentOptions, options) {
@@ -49,14 +50,20 @@ export function NotificationSettingsItem(parentOptions, options) {
     }
 
     chataCheckbox.appendChild(chataSwitch);
+    var hourGlas = htmlToElement(HOUR_GLASS)
     var editSvg = htmlToElement(EDIT_ALERT)
     editSvg.classList.add('autoql-vanilla-edit-data-alert')
+    hourGlas.classList.add('autoql-vanilla-hour-glass')
+    var resetDate = htmlToElement(`
+        <span class="chata-icon autoq-vanilla-reset-period-info-icon">
+        </span>
+    `)
     var editIcon = htmlToElement(`
         <span class="chata-icon chata-notification-action-btn edit">
         </span>
     `)
     editIcon.appendChild(editSvg)
-
+    resetDate.appendChild(hourGlas)
     wrapper.classList.add('chata-notification-setting-item');
     header.classList.add('chata-notification-setting-item-header');
     settingsDisplayName.classList.add('chata-notification-setting-display-name');
@@ -93,6 +100,9 @@ export function NotificationSettingsItem(parentOptions, options) {
     }
 
     settingsActions.appendChild(editIcon);
+    if(options.reset_date){
+        settingsActions.appendChild(resetDate)
+    }
     settingsActions.appendChild(chataCheckbox)
     settingsDisplayName.appendChild(displayName);
     settingsDisplayName.appendChild(displayNameMessage);
