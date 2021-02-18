@@ -53,10 +53,10 @@ export function NotificationSettingsItem(parentOptions, options) {
     }
 
     chataCheckbox.appendChild(chataSwitch);
-    var hourGlas = htmlToElement(HOUR_GLASS)
+    var hourGlass = htmlToElement(HOUR_GLASS)
     var editSvg = htmlToElement(EDIT_ALERT)
     editSvg.classList.add('autoql-vanilla-edit-data-alert')
-    hourGlas.classList.add('autoql-vanilla-hour-glass')
+    hourGlass.classList.add('autoql-vanilla-hour-glass')
     var resetDate = htmlToElement(`
         <span class="chata-icon autoq-vanilla-reset-period-info-icon">
         </span>
@@ -65,23 +65,22 @@ export function NotificationSettingsItem(parentOptions, options) {
         <span class="chata-icon chata-notification-action-btn edit">
         </span>
     `)
-    console.log(options);
     editIcon.appendChild(editSvg)
-    resetDate.appendChild(hourGlas)
+    resetDate.appendChild(hourGlass)
     wrapper.classList.add('chata-notification-setting-item');
     header.classList.add('chata-notification-setting-item-header');
     settingsDisplayName.classList.add('chata-notification-setting-display-name');
     displayName.classList.add('chata-notification-setting-display-name-title');
     displayNameMessage.classList.add('chata-notification-setting-display-name-message');
     settingsActions.classList.add('chata-notification-setting-actions')
+    const warningIcon = htmlToElement(`
+        <span
+        class="chata-icon autoql-vanilla-notification-error-status-icon"
+        data-tippy-content="There was a problem with this Data Alert. Click for more information.">
+            ${WARNING}
+        </span>
+    `)
     if(options.status === 'EVALUATION_ERROR'){
-        console.log(options.status);
-        const warningIcon = htmlToElement(`
-            <span
-                class="chata-icon autoql-vanilla-notification-error-status-icon">
-                ${WARNING}
-            </span>
-        `)
         displayName.appendChild(warningIcon)
     }
     displayName.appendChild(document.createTextNode(wrapper.options.title))
@@ -135,7 +134,7 @@ export function NotificationSettingsItem(parentOptions, options) {
     settingsDisplayName.appendChild(displayNameMessage);
     header.appendChild(settingsDisplayName);
     header.appendChild(settingsActions);
-    editSvg.onclick = function(evt){
+    const onClick = function(evt){
         var target = evt.target;
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
@@ -230,6 +229,9 @@ export function NotificationSettingsItem(parentOptions, options) {
             }
         }
     }
+    editSvg.onclick = onClick
+    hourGlass.onclick = onClick
+    warningIcon.onclick = onClick
     wrapper.appendChild(header);
     return wrapper;
 }
