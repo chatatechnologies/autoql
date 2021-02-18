@@ -5,7 +5,8 @@ import { htmlToElement, apiCallPut, apiCallDelete } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
     EDIT_ALERT,
-    HOUR_GLASS
+    HOUR_GLASS,
+    WARNING
 } from '../Svg'
 import moment from 'moment'
 import 'moment-timezone';
@@ -64,6 +65,7 @@ export function NotificationSettingsItem(parentOptions, options) {
         <span class="chata-icon chata-notification-action-btn edit">
         </span>
     `)
+    console.log(options);
     editIcon.appendChild(editSvg)
     resetDate.appendChild(hourGlas)
     wrapper.classList.add('chata-notification-setting-item');
@@ -72,7 +74,17 @@ export function NotificationSettingsItem(parentOptions, options) {
     displayName.classList.add('chata-notification-setting-display-name-title');
     displayNameMessage.classList.add('chata-notification-setting-display-name-message');
     settingsActions.classList.add('chata-notification-setting-actions')
-    displayName.innerHTML = wrapper.options.title;
+    if(options.status === 'EVALUATION_ERROR'){
+        console.log(options.status);
+        const warningIcon = htmlToElement(`
+            <span
+                class="chata-icon autoql-vanilla-notification-error-status-icon">
+                ${WARNING}
+            </span>
+        `)
+        displayName.appendChild(warningIcon)
+    }
+    displayName.appendChild(document.createTextNode(wrapper.options.title))
     if(wrapper.options.message){
         displayNameMessage.innerHTML = ' - ' + wrapper.options.message;
     }
