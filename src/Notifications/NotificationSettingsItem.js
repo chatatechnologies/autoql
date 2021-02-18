@@ -116,7 +116,6 @@ export function NotificationSettingsItem(parentOptions, options) {
     settingsActions.appendChild(editIcon);
     if(options.reset_date){
         resetDate.setAttribute('data-tippy-content', wrapper.getTooltip())
-        refreshTooltips()
         settingsActions.appendChild(resetDate)
     }
     settingsActions.appendChild(chataCheckbox)

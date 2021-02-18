@@ -220,5 +220,7 @@ export function DataAlerts(selector, options){
     wrapper.applyStyles();
     wrapper.loadRules();
     if(parent)parent.appendChild(wrapper);
+    refreshTooltips()
+    
     return wrapper
 }
