@@ -7,6 +7,8 @@ import {
     EDIT_ALERT,
     HOUR_GLASS
 } from '../Svg'
+import moment from 'moment'
+import 'moment-timezone';
 
 export function NotificationSettingsItem(parentOptions, options) {
     var wrapper = document.createElement('div');
@@ -75,6 +77,18 @@ export function NotificationSettingsItem(parentOptions, options) {
         displayNameMessage.innerHTML = ' - ' + wrapper.options.message;
     }
 
+    wrapper.getTooltip = () => {
+        const {
+            reset_date,
+            time_zone
+        } = options
+
+        const formatDate = moment(reset_date).format(
+            'MMMM DD, YYYY [at] hh:mmA'
+        ).toString();
+        return `This Alert has been triggered. Scanning will resume on ${formatDate} (${time_zone})`;
+    }
+
     wrapper.updateView = () => {
         const {
             title,
@@ -101,6 +115,8 @@ export function NotificationSettingsItem(parentOptions, options) {
 
     settingsActions.appendChild(editIcon);
     if(options.reset_date){
+        resetDate.setAttribute('data-tippy-content', wrapper.getTooltip())
+        refreshTooltips()
         settingsActions.appendChild(resetDate)
     }
     settingsActions.appendChild(chataCheckbox)

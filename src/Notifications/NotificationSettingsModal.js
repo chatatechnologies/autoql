@@ -119,7 +119,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
             wrapper.parentOptions
         )
         if(checkContainer._tippy){
-            console.log(checkContainer._tippy);
             checkContainer._tippy.destroy()
         }
         loader.classList.add('hidden')
@@ -463,7 +462,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     const loadRules = async () => {
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
-            console.log(ruleGroups);
             newGroupLine.setExpression(ruleGroups)
             validateFn()
         })
@@ -1057,7 +1055,6 @@ function GroupLine(params, expression=[]){
         params.step.classList.remove('error')
         params.stepButton.classList.add('disabled')
         params.checkContainer.innerHTML = ''
-        console.log(params.checkContainer);
     }
 
     queryInput2.input.onkeydown = () => {
@@ -1065,7 +1062,6 @@ function GroupLine(params, expression=[]){
         params.step.classList.remove('error')
         params.stepButton.classList.add('disabled')
         params.checkContainer.innerHTML = ''
-        console.log(params.checkContainer);
     }
 
     // queryInput.input.onblur = async (evt) => {
