@@ -189,7 +189,7 @@
 
 .chata-notification-settings-container .chata-notification-setting-item {
     height: 55px;
-    line-height: 55px;
+    line-height: 40px;
     -webkit-transition: height .3s cubic-bezier(.26,.26,0,1);
     transition: height .3s cubic-bezier(.26,.26,0,1);
 }
@@ -224,7 +224,6 @@
 
 .chata-checkbox {
   text-align: center;
-  margin-top: 18px !important;
   display: flex;
   align-items: center;
   margin: .5rem;
