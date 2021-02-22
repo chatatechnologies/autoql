@@ -24,9 +24,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     wrapper.mode = mode;
     wrapper.parentOptions = options
     var frequencyBox = FrequencyBox(
-        `You will be notified as soon as this happens.
-        If the Alert is triggered multiple times,
-        you will only be notified on a monthly basis.`
+        `You will be notified as soon as this happens,
+        any time this happens. Scanning will happen continuously.`
     );
     var loader = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
@@ -234,10 +233,13 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     step2.addClass('notification-frequency-step');
     frequencySettingsContainer.appendChild(htmlToElement(`
-        <p>You will be notified as soon as the Alert conditions are met.</p>
+        <p>
+            We’ll scan your database and notify you as soon
+            as the Alert conditions are are met.
+        </p>
     `))
     frequencySettingsContainer.appendChild(htmlToElement(`
-        <p>Reset Alert to run:</p>
+        <p>Once the Alert has been triggered, resume scanning:</p>
     `))
 
     var repeatOptions = [
@@ -325,20 +327,15 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     triggerRadio.classList.add('notification_type')
 
-
-    // frequencySettingsContainer.appendChild(triggerRadio)
-    // frequencySettingsContainer.appendChild(repeatText)
     frequencySettingsContainer.appendChild(repeatRadio)
-    if(mode === 'create'){
-        frequencyBox.style.visibility = 'hidden';
-    }else{
-        if(rule.notification_type != 'PERIODIC'){
-            frequencyBox.style.visibility = 'hidden';
-        }
-    }
-    // frequencySettingsContainer.appendChild(label);
-    // frequencySettingsContainer.appendChild(selectFrequency);
-    // frequencySettingsContainer.appendChild(relativeDiv);
+    // if(mode === 'create'){
+    //     frequencyBox.style.visibility = 'hidden';
+    // }else{
+    //     if(rule.notification_type != 'PERIODIC'){
+    //         frequencyBox.style.visibility = 'hidden';
+    //     }
+    // }
+
     var step2NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large',
         'Next',
