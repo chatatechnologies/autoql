@@ -275,21 +275,20 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var repeatRadio = new ChataRadio(repeatOptions, (evt) => {
         frequencyBox.style.visibility = 'visible';
-        var message = `You will be notified as soon as this happens.
-        If the Alert is triggered multiple times, you will only be notified`
+        var message = `This Alert may be triggered multiple times, but you will only be notified`
         switch (evt.target.value) {
             case 'DAY':
-                message += ' a maximum of once per day.'
+                message += ' once per day. Scanning will resume daily at'
                 break;
             case 'MONTH':
-                message += ' on a monthly basis.'
+                message += ' once per week. Scanning will resume next Monday at '
                 break;
             case 'WEEK':
-                message += ' on a weekly basis.'
+                message += ' oonce per month. Scanning will resume on the first day of next month at'
                 break;
             default:
                 message = `You will be notified as soon as this happens,
-                any time this happens.`
+                any time this happens. Scanning will happen continuously.`
         }
 
         frequencyBox.setMessage(message)
