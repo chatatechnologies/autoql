@@ -1897,27 +1897,28 @@ export function DataMessenger(elem, options){
             [moreOptions, toolbar]
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
+        if(request){
+            if(
+                request['reference_id'] !== '1.1.420'
+                && type !== 'safety-net'
+                && type !== 'suggestions'
+                && request['reference_id'] !== '1.9.502'
+                && request['reference_id'] !== '1.1.550'
+            ){
+                toolbar.appendChild(
+                    moreOptionsBtn
+                );
+                toolbar.appendChild(moreOptions);
+                toolbar.appendChild(reportProblem);
+            }
 
-        if(
-            request['reference_id'] !== '1.1.420'
-            && type !== 'safety-net'
-            && type !== 'suggestions'
-            && request['reference_id'] !== '1.9.502'
-            && request['reference_id'] !== '1.1.550'
-        ){
-            toolbar.appendChild(
-                moreOptionsBtn
-            );
-            toolbar.appendChild(moreOptions);
-            toolbar.appendChild(reportProblem);
-        }
+            if(type === 'suggestions'){
+                toolbar.appendChild(reportProblem);
+            }
 
-        if(type === 'suggestions'){
-            toolbar.appendChild(reportProblem);
-        }
-
-        if(request['reference_id'] === '1.1.550'){
-            toolbar.appendChild(reportProblem);
+            if(request['reference_id'] === '1.1.550'){
+                toolbar.appendChild(reportProblem);
+            }
         }
 
         return toolbar;
@@ -2626,22 +2627,30 @@ export function DataMessenger(elem, options){
         });
     }
 
-    obj.sendResponse = (text) => {
+    obj.sendResponse = (text, withDeleteBtn=false) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
+        var uuid = uuidv4();
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
         containerMessage.classList.add(
             'text'
         );
+        containerMessage.setAttribute('data-bubble-id', uuid);
         containerMessage.style.zIndex = --obj.zIndexBubble;
-
+        containerMessage.relatedQuery = obj.lastQuery
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.innerHTML = text;
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        if(withDeleteBtn){
+            let toolbarButtons = obj.getActionToolbar(
+                uuid, 'safety-net', ''
+            );
+            messageBubble.appendChild(toolbarButtons);
+        }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
@@ -2840,7 +2849,6 @@ export function DataMessenger(elem, options){
             hasDrilldown = true;
 
         }else{
-            // value = jsonResponse['message'].replace('<report>', '');
             var error = new ErrorMessage(jsonResponse['message'], () => {
                 ChataUtils.openModalReport(
                     idRequest, obj.options, null, null
@@ -3004,7 +3012,7 @@ export function DataMessenger(elem, options){
                     <div>${msg}</div>
                     <br/>
                     <div>Error ID: ${ref}</div>
-                `)
+                `, true)
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
