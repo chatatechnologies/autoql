@@ -273,18 +273,19 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         }
     }
 
+    var timezone = rule.time_zone
     var repeatRadio = new ChataRadio(repeatOptions, (evt) => {
         frequencyBox.style.visibility = 'visible';
         var message = `This Alert may be triggered multiple times, but you will only be notified`
         switch (evt.target.value) {
             case 'DAY':
-                message += ' once per day. Scanning will resume daily at'
+                message += ` once per day. Scanning will resume daily at 12am ${timezone}`
                 break;
             case 'MONTH':
-                message += ' once per week. Scanning will resume next Monday at '
+                message += ` once per week. Scanning will resume on the first day of next month at 12am ${timezone}`
                 break;
             case 'WEEK':
-                message += ' oonce per month. Scanning will resume on the first day of next month at'
+                message += ` oonce per month. Scanning will resume next Monday at 12am ${timezone}`
                 break;
             default:
                 message = `You will be notified as soon as this happens,
