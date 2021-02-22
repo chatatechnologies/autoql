@@ -2630,6 +2630,7 @@ export function DataMessenger(elem, options){
     obj.sendResponse = (text, withDeleteBtn=false) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
+        var lastBubble = obj.getLastMessageBubble();
         var uuid = uuidv4();
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
@@ -2640,6 +2641,7 @@ export function DataMessenger(elem, options){
         containerMessage.setAttribute('data-bubble-id', uuid);
         containerMessage.style.zIndex = --obj.zIndexBubble;
         containerMessage.relatedQuery = obj.lastQuery
+        containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.innerHTML = text;
