@@ -2987,13 +2987,23 @@ export function DataMessenger(elem, options){
         obj.input.value = '';
         const {
             domain,
-            apiKey
+            apiKey,
+            token
         } = obj.options.authentication
         var responseLoadingContainer = obj.putMessage(textValue);
+
+        if(!token){
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer)
+            }
+            obj.sendResponse(ACCESS_DENIED)
+            return
+        }
 
         const URL_SAFETYNET = `${domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
         )}&key=${apiKey}`
+
 
         if(obj.options.autoQLConfig.enableQueryValidation){
             let response = await apiCallGet(URL_SAFETYNET, obj.options)
