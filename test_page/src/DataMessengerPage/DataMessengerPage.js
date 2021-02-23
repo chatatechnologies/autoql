@@ -197,7 +197,9 @@ export class DataMessengerPage extends Component {
             <div className="props-page">
                 <div>
                 <h1>Authentication</h1>
-                <AuthenticationForm onLogin={this.props.onLogin}/>
+                <AuthenticationForm
+                    onLogin={this.props.onLogin}
+                    onLogOut={this.props.onLogOut}/>
                 {this.createBooleanRadioGroup('Show UI Overlay', 'uiOverlay', [
                     true,
                     false,

@@ -132,6 +132,7 @@ export class AuthenticationForm extends Component {
             componentKey: uuid.v4(),
         })
         message.success('Succesfully logged out')
+        this.props.onLogOut()
     }
 
     render = () => {
