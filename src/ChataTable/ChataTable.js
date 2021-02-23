@@ -344,8 +344,9 @@ export function ChataTable(
             onRowClick(e, row, cloneObject(json));
         },
     })
+    var groupableCount = getNumberOfGroupables(json['data']['columns']);
 
-    if(getNumberOfGroupables(columns)){
+    if(groupableCount === 0){
         component.classList.add('no-drilldown')
     }
 
