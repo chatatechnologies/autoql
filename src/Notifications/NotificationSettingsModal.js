@@ -1222,9 +1222,10 @@ function GroupLine(params, expression=[]){
         return terms
     }
 
-    chataRuleDeleteBtn.onclick = function(evt){
-        console.log('ON DELETE CLICK');
-        // params.onDeleteLine(evt, ruleContainer);
+    chataRuleDeleteBtn.onclick = function(){
+        queryInput2.input.style.display = 'none'
+        chataRuleDeleteBtn.style.display = 'none'
+        conditionValueSelect.style.display = 'none'
     }
 
     chataSelect.onclick = function(){
