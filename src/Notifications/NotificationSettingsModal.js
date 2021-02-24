@@ -1223,9 +1223,9 @@ function GroupLine(params, expression=[]){
     }
 
     chataRuleDeleteBtn.onclick = function(){
-        queryInput2.input.style.display = 'none'
         chataRuleDeleteBtn.style.display = 'none'
-        conditionValueSelect.style.display = 'none'
+        secondContainer.style.display = 'none';
+        chataSelect.style.display = 'none'
     }
 
     chataSelect.onclick = function(){
