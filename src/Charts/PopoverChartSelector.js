@@ -17,7 +17,7 @@ export function PopoverChartSelector(position) {
                 (position.top + pageYOffset)
                 - popover.clientHeight + 60) + 'px';
         }else{
-            popover.style.top = (position.top + pageYOffset) + 'px';
+            popover.style.top = (position.top + pageYOffset - 120) + 'px';
         }
         popover.isOpen = true;
         return popover;
