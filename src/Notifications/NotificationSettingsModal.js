@@ -1004,11 +1004,17 @@ function GroupLine(params, expression=[]){
     var conditionValueSelect = document.createElement('div');
     var termError1 = new ruleTermError();
     var termError2 = new ruleTermError();
+    var compareButton = document.createElement('button')
     conditionValueSelect.innerHTML = '>';
     var uuid = uuidv4();
     ruleContainer.conditionValue = '>';
     ruleContainer.termType = 'query';
 
+    compareButton.classList.add('autoql-vanilla-chata-btn')
+    compareButton.classList.add('default')
+    compareButton.classList.add('large')
+    compareButton.style.display = 'none'
+    compareButton.textContent = 'Compare result...'
     var chataRuleDeleteBtn = htmlToElement(`
         <span
             class="chata-icon chata-rule-delete-btn">
@@ -1268,6 +1274,7 @@ function GroupLine(params, expression=[]){
     ruleContainer.appendChild(inputContainer1);
     ruleContainer.appendChild(chataSelect);
     ruleContainer.appendChild(secondContainer);
+    ruleContainer.appendChild(compareButton);
     ruleContainer.appendChild(chataRuleDeleteBtn);
     ruleContainer.setAttribute('data-uuid', uuid);
 
