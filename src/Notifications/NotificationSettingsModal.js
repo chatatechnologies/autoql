@@ -1232,6 +1232,14 @@ function GroupLine(params, expression=[]){
         chataRuleDeleteBtn.style.display = 'none'
         secondContainer.style.display = 'none';
         chataSelect.style.display = 'none'
+        compareButton.style.display = 'block'
+    }
+
+    compareButton.onclick = function(){
+        compareButton.style.display = 'none'
+        chataRuleDeleteBtn.style.display = 'block'
+        secondContainer.style.display = 'block';
+        chataSelect.style.display = 'block'
     }
 
     chataSelect.onclick = function(){
