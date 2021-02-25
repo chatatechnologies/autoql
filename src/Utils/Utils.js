@@ -1199,3 +1199,13 @@ export const supportsVoiceRecord = () => {
 
     return isEdge || isChrome
 }
+
+export const getHeightForChildrens = (parent) => {
+    var child = parent.childNodes;
+    var totalH = 0
+    for (var i = 0; i < child.length; i++) {
+        totalH += child[i].offsetHeight;
+    }
+
+    return totalH;
+}

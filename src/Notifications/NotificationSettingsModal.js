@@ -13,9 +13,14 @@ import {
     InputContainer,
     ChataRadio
 } from '../ChataComponents'
+import {
+    ChataModalStep,
+    FrequencyBox
+} from './NotificationComponents'
 import { refreshTooltips } from '../Tooltips'
 import {
-    apiCallPost
+    apiCallPost,
+    getHeightForChildrens
 } from '../Utils'
 
 export function NotificationSettingsModal(options, mode='create', rule={}){
@@ -476,24 +481,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
         step3.classList.add('complete');
-        // step4.classList.add('complete');
     }else{
-        // var group = new ConditionGroup(
-        //     wrapper.parentOptions,
-        //     step1, ruleContainer, parentSelect, true
-        // );
-        // var newGroupLine = new GroupLine({
-        //     parentOptions: wrapper.parentOptions,
-        //     step: step1
-        // });
-        // ruleContainer.appendChild(newGroupLine);
         frequencyValue.innerHTML = 'Select a frequency';
         frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';
         frequencyValue.style.fontStyle = 'italic';
     }
-
-    // NOTE: Hide Add group button
-    // ruleContainer.appendChild(btnAddGroup);
 
     wrapper.isValid = () => {
         var steps = wrapper.querySelectorAll('.chata-step-container')
@@ -559,28 +551,6 @@ function StepButton(classValue, text, onClick, isDisabled=false){
     }
 
     return nButton
-}
-
-function FrequencyBox(message){
-    var parent = htmlToElement(`
-        <div class="frequency-description-box-container">
-        </div>`
-    );
-    var box = document.createElement('div');
-    var messageContent = document.createElement('span');
-    messageContent.innerHTML = message;
-    box.classList.add('frequency-description-box');
-    // box.appendChild(htmlToElement(`
-    //     <div class="frequency-description-title">Description:</div>
-    // `));
-    box.appendChild(messageContent);
-
-    parent.setMessage = (newMessage) => {
-        messageContent.innerHTML = newMessage;
-    }
-    parent.appendChild(box);
-
-    return parent;
 }
 
 function checkStep2(step2){
@@ -1059,93 +1029,6 @@ function GroupLine(params, expression=[]){
     }
 
     return ruleContainer;
-}
-
-function getHeightForChildrens(parent){
-    var child = parent.childNodes;
-    var totalH = 0
-    for (var i = 0; i < child.length; i++) {
-        totalH += child[i].offsetHeight;
-    }
-
-    return totalH;
-}
-
-function ChataModalStep(title, nStep, subtitle=''){
-    var step = document.createElement('div');
-    var titleEl = document.createElement('div');
-    var stepContent = document.createElement('div');
-    var contentWrapper = document.createElement('div');
-    var stepDot = document.createElement('div');
-    var stepContentContainer = document.createElement('div');
-    step.classList.add('chata-step-container');
-    titleEl.classList.add('chata-step-title');
-    stepContent.classList.add('chata-step-content');
-    stepDot.classList.add('chata-step-dot');
-    stepDot.innerHTML = nStep;
-    stepContentContainer.classList.add('chata-step-content-container')
-    stepContentContainer.style.height = '10px';
-    titleEl.innerHTML = title;
-
-    step.closeStep = () => {
-        step.classList.remove('active');
-        stepContentContainer.style.height = '10px';
-    }
-
-    step.expand = () => {
-        step.classList.add('active');
-        stepContentContainer.style.height = getHeightForChildrens(
-            stepContentContainer
-        ) + 'px';
-    }
-
-    titleEl.onclick = () => {
-        var steps = document.querySelectorAll('.chata-step-container');
-        for (var i = 0; i < steps.length; i++) {
-            if(step == steps[i])continue;
-            steps[i].closeStep();
-        }
-        if(!step.classList.contains('active')){
-            step.expand();
-        }else{
-            step.closeStep();
-        }
-    }
-
-    step.appendChild(titleEl);
-    if(subtitle !== ''){
-        var subtitleEl = document.createElement('div');
-        subtitleEl.classList.add('chata-step-subtitle');
-        subtitleEl.innerHTML = subtitle;
-        stepContentContainer.appendChild(subtitleEl);
-    }
-
-    stepContent.appendChild(contentWrapper);
-    stepContentContainer.appendChild(stepContent);
-    step.appendChild(stepContentContainer);
-    step.appendChild(stepDot);
-    step.addElement = (elem) => {
-        contentWrapper.appendChild(elem);
-    }
-    step.removeElement = (elem) => {
-        contentWrapper.removeChild(elem);
-    }
-    step.addClass = (className) => {
-        contentWrapper.classList.add(className);
-    }
-
-    step.addContent = (elem) => {
-        stepContent.appendChild(elem);
-    }
-
-    step.findElement = (selector) => {
-        return contentWrapper.querySelector(selector);
-    }
-
-    step.titleEl = titleEl;
-    step.stepContentContainer = stepContentContainer;
-
-    return step;
 }
 
 function getNotificationValues(){
