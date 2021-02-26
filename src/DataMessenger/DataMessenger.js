@@ -3028,6 +3028,7 @@ export function DataMessenger(elem, options){
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
+                refreshTooltips()
                 return
             }else{
                 let suggestions = {}
