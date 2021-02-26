@@ -2996,6 +2996,7 @@ export function DataMessenger(elem, options){
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer)
             }
+            obj.input.removeAttribute("disabled")
             obj.sendResponse(ACCESS_DENIED)
             return
         }

@@ -1,6 +1,6 @@
 import '../../css/PopoverChartSelector.css'
 
-export function PopoverChartSelector(position) {
+export function PopoverChartSelector(position, showOnBaseline=true) {
     var popover = document.createElement('div');
     popover.classList.add('autoql-vanilla-popover-selector');
 
@@ -8,14 +8,16 @@ export function PopoverChartSelector(position) {
         popover.style.visibility = 'visible';
         popover.style.opacity = 1;
         popover.style.left = position.left + 'px'
+        var margin = showOnBaseline ? 0 : 60
         var pageYOffset  = window.scrollY
+
         if(
             (position.top + popover.offsetHeight)
             > window.screen.height
         ){
             popover.style.top = (
                 (position.top + pageYOffset)
-                - popover.clientHeight + 60) + 'px';
+                - popover.clientHeight + margin) + 'px';
         }else{
             popover.style.top = (position.top + pageYOffset - 120) + 'px';
         }
