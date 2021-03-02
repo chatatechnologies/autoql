@@ -1,12 +1,11 @@
 import { htmlToElement, apiCallPut, apiCallGet, apiCallPost } from '../Utils'
-import { DISMISS } from '../Svg'
+import { DISMISS, EMPTY_STATE_BLUE } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import { Notification } from './Notification'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
 import { refreshTooltips } from '../Tooltips'
 import { ChataConfirmDialog } from '../ChataComponents'
-
 import '../../css/Notifications.css'
 
 export function NotificationFeed(selector, options){
@@ -92,7 +91,7 @@ export function NotificationFeed(selector, options){
     var img = htmlToElement(`
         <img
             class="autoql-vanilla-empty-state-img"
-            src="https://github.com/chatatechnologies/autoql/blob/master/public/empty-state-blue.png"/>
+            src="${EMPTY_STATE_BLUE}"/>
     `)
     var createDatalertButton = htmlToElement(`
         <button class="autoql-vanilla-chata-btn primary large">
@@ -251,7 +250,6 @@ export function NotificationFeed(selector, options){
         var response = await apiCallGet(URL, wrapper.options)
         var jsonResponse = response.data
         var items = jsonResponse['data']['items'];
-
         if(items.length > 0){
             for (var i = 0; i < items.length; i++) {
                 var notification = new Notification(items[i], wrapper.options);
