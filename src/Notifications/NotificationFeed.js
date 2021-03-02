@@ -92,7 +92,7 @@ export function NotificationFeed(selector, options){
     var img = htmlToElement(`
         <img
             class="autoql-vanilla-empty-state-img"
-            src="https://unpkg.com/browse/autoql@latest/public/empty-state-blue.png"/>
+            src="https://github.com/chatatechnologies/autoql/blob/master/public/empty-state-blue.png"/>
     `)
     var createDatalertButton = htmlToElement(`
         <button class="autoql-vanilla-chata-btn primary large">
