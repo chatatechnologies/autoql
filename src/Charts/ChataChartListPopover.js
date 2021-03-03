@@ -1,9 +1,9 @@
 import { PopoverChartSelector } from './PopoverChartSelector'
 import { formatColumnName } from '../Utils'
 
-export function ChataChartListPopover(position, indexes, onClick){
+export function ChataChartListPopover(position, indexes, onClick, showOnBaseline=false){
     var obj = this;
-    var popover = new PopoverChartSelector(position);
+    var popover = new PopoverChartSelector(position, showOnBaseline);
     var elements = [];
     obj.createContent = () => {
         var selectorContainer = document.createElement('div');
