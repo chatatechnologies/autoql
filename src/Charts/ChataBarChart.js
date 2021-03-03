@@ -356,7 +356,7 @@ export function createBarChart(
                     renderTooltips
                 )
                 popover.close();
-            });
+            }, true);
         })
     }
 
