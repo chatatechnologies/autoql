@@ -1889,6 +1889,10 @@ export function DataMessenger(elem, options){
             type
         );
 
+        if(type === 'chart-view'){
+            moreOptions.classList.add('chart')
+        }
+
         var moreOptionsBtn = obj.getActionButton(
             VERTICAL_DOTS,
             'More options',

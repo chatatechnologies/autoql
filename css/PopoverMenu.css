@@ -14,6 +14,10 @@
     display: none;
 }
 
+.chata-popover-wrapper.chart{
+    left: -100px;
+}
+
 .chata-popover-single-message{
     left: 0 !important;
     right: -120px;
