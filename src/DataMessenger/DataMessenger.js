@@ -2998,6 +2998,7 @@ export function DataMessenger(elem, options){
             }
             obj.sendResponse(ACCESS_DENIED, true)
             obj.input.removeAttribute("disabled")
+            refreshTooltips()
             return
         }
 
