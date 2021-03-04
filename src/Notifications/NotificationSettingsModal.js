@@ -264,26 +264,10 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         }
     }
 
-    var timezone = rule.time_zone
     var repeatRadio = new ChataRadio(repeatOptions, (evt) => {
+        var timezone = rule.time_zone
         frequencyBox.style.visibility = 'visible';
-        var message = `This Alert may be triggered multiple times, but you will only be notified`
-        switch (evt.target.value) {
-            case 'DAY':
-                message += ` once per day. Scanning will resume daily at 12am (${timezone}).`
-                break;
-            case 'MONTH':
-                message += ` once per week. Scanning will resume on the first day of next month at 12am (${timezone}).`
-                break;
-            case 'WEEK':
-                message += ` oonce per month. Scanning will resume next Monday at 12am (${timezone}).`
-                break;
-            default:
-                message = `You will be notified as soon as this happens,
-                any time this happens. Scanning will happen continuously.`
-        }
-
-        frequencyBox.setMessage(message)
+        frequencyBox.setMessage(evt.target.value, timezone)
         step2.stepContentContainer.style.height = getHeightForChildrens(
             step2.stepContentContainer
         ) + 'px';
@@ -319,13 +303,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     triggerRadio.classList.add('notification_type')
 
     frequencySettingsContainer.appendChild(repeatRadio)
-    // if(mode === 'create'){
-    //     frequencyBox.style.visibility = 'hidden';
-    // }else{
-    //     if(rule.notification_type != 'PERIODIC'){
-    //         frequencyBox.style.visibility = 'hidden';
-    //     }
-    // }
 
     var step2NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large',
@@ -422,15 +399,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step3ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
     step3ButtonContainer.appendChild(step3PrevButton);
     step3.addElement(step3ButtonContainer)
-    // titleInput.input.onkeyup = function(evt){
-    //     if(evt.target.value != ''){
-    //         if(!step4.classList.contains('complete')){
-    //             step4.classList.add('complete');
-    //         }
-    //     }else{
-    //         step4.classList.remove('complete');
-    //     }
-    // }
 
     queryReturnInput.input.onkeyup = function(evt){
         if(evt.target.value != '' && titleInput){
@@ -445,7 +413,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     wrapper.appendChild(step1);
     wrapper.appendChild(step2);
     wrapper.appendChild(step3);
-    // wrapper.appendChild(step4);
 
     const loadRules = async () => {
         var ruleGroups = convert(rule.expression, false);
@@ -477,6 +444,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     if(mode === 'edit'){
         loadRules();
         setFrequency();
+        frequencyBox.setMessage(rule.reset_period, rule.time_zone)
         queryReturnInput.input.value = rule.data_return_query;
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
@@ -613,37 +581,6 @@ function marginLeft(groups, marginValue){
         groups[i].style.marginLeft = marginValue;
     }
 }
-
-// function ChataInput(tag, elementProps, svgIcon=undefined){
-//     let input;
-//     input = document.createElement(tag);
-//     input.classList.add('chata-input-settings')
-//     if(tag === 'input'){
-//         input.classList.add('with-icon');
-//         var span = document.createElement('span');
-//         span.classList.add('chata-icon');
-//         span.classList.add('chata-input-icon');
-//         span.innerHTML = svgIcon;
-//         this.spanIcon = span;
-//     }else{
-//         input.classList.add('area');
-//     }
-//     for (var [key, value] of Object.entries(elementProps)) {
-//         input.setAttribute(key, value);
-//     }
-//
-//     this.input = input;
-//     return this
-// }
-//
-// function InputContainer(classList=[]){
-//     var container = document.createElement('div');
-//     container.classList.add('chata-input-container');
-//     for (var i = 0; i < classList.length; i++) {
-//         container.classList.add(classList[i]);
-//     }
-//     return container;
-// }
 
 function createRadio(onChange){
     var radio = document.createElement('div');
