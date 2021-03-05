@@ -299,7 +299,7 @@ export function TileView(tile, isSecond=false){
 
         const path = getRecommendationPath(
             dashboard.options,
-            query.split(' ').join(',')
+            encodeURIComponent(query)
         ) + '&query_id=' + jsonResponse['data']['query_id'];
         return apiCallGet(path, dashboard.options)
     }
@@ -624,7 +624,7 @@ export function TileView(tile, isSecond=false){
         var newData = [];
         var oldData = newJson['data']['rows'];
         var col = newJson['data']['columns'][indexValue];
-        
+
         for (var i = 0; i < oldData.length; i++) {
             var compareValue = oldData[i][indexValue]
             if(!compareValue)compareValue = 'null'
