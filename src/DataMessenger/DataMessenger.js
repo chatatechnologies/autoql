@@ -1082,8 +1082,7 @@ export function DataMessenger(elem, options){
             }
             queryTipListContainer.appendChild(item);
         }
-        console.log('CUR PAGE: ' + currentPage);
-        console.log('CUR PAGE RESPONSE: ' + response.data.pagination.current_page);
+
         queryTipsResultContainer.innerHTML = '';
         queryTipsResultContainer.appendChild(queryTipListContainer);
         for (let i = 0; i < 3; i++) {
@@ -1137,15 +1136,8 @@ export function DataMessenger(elem, options){
             }else{
                 a.textContent = (i+1);
             }
-            if(currentPage > pages-2){
-                a.setAttribute('data-page', currentPage-1);
-            }else{
-                if(pages === 3){
-                    a.setAttribute('data-page', 3);
-                }else{
-                    a.setAttribute('data-page', i+1);
-                }
-            }
+
+            a.setAttribute('data-page', i+1);
             li.onclick = dotEvent;
 
         }
