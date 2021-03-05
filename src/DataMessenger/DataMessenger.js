@@ -1007,7 +1007,7 @@ export function DataMessenger(elem, options){
 
         const totalItems = response.data.pagination.total_items;
         const pages = response.data.pagination.total_pages;
-        const currentPage = response.data.pagination.current_page;
+        var currentPage = response.data.pagination.current_page;
         aPrevious.textContent = '←';
         aNext.textContent = '→';
 
@@ -1082,6 +1082,8 @@ export function DataMessenger(elem, options){
             }
             queryTipListContainer.appendChild(item);
         }
+        console.log('CUR PAGE: ' + currentPage);
+        console.log('CUR PAGE RESPONSE: ' + response.data.pagination.current_page);
         queryTipsResultContainer.innerHTML = '';
         queryTipsResultContainer.appendChild(queryTipListContainer);
         for (let i = 0; i < 3; i++) {
@@ -1100,7 +1102,9 @@ export function DataMessenger(elem, options){
                     a.textContent = currentPage;
                     let rightDots = document.createElement('li');
                     let aDots = document.createElement('a');
-                    aDots.textContent = '...';
+                    if(pages != 3){
+                        aDots.textContent = '...';
+                    }
                     rightDots.appendChild(aDots);
                     pagination.appendChild(rightDots);
                     aDots.setAttribute('data-page', currentPage+1);
@@ -1136,7 +1140,11 @@ export function DataMessenger(elem, options){
             if(currentPage > pages-2){
                 a.setAttribute('data-page', currentPage-1);
             }else{
-                a.setAttribute('data-page', i+1);
+                if(pages === 3){
+                    a.setAttribute('data-page', 3);
+                }else{
+                    a.setAttribute('data-page', i+1);
+                }
             }
             li.onclick = dotEvent;
 
