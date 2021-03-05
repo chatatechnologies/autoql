@@ -2908,7 +2908,6 @@ export function DataMessenger(elem, options){
                 obj.options,
                 encodeURIComponent(text)
             ) + '&query_id=' + jsonResponse['data']['query_id']
-            console.log(path);
             var response = await apiCallGet(path, obj.options)
             if(loading)obj.drawerContent.removeChild(loading)
             obj.putSuggestionResponse(jsonResponse, response.data)
