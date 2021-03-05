@@ -40,7 +40,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var step3 = new ChataModalStep(
         'Manage Alert Preferences',
         '3',
-        'When this Alert is triggered:'
+        ''
     );
 
     // STEP 1
@@ -335,22 +335,22 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
 
     // STEP 3
-    var queryReturnContainer = new InputContainer(
-        ['chata-notification-display-name-input']
-    )
-    var queryReturnInput = new ChataInput('input', {
-        placeholder: 'Type query here',
-        type: "single"
-    }, QUERY);
-    queryReturnInput.input.classList.add('autoql-vanilla-query-return-input');
-    var termErrorReturnInput = new ruleTermError();
-    queryReturnContainer.appendChild(queryReturnInput.input);
-    queryReturnContainer.appendChild(queryReturnInput.spanIcon);
-    queryReturnContainer.appendChild(termErrorReturnInput);
-    step3.addElement(htmlToElement(`
-        <p>Return the data from this query:</p>
-    `))
-    step3.addElement(queryReturnContainer);
+    // var queryReturnContainer = new InputContainer(
+    //     ['chata-notification-display-name-input']
+    // )
+    // var queryReturnInput = new ChataInput('input', {
+    //     placeholder: 'Type query here',
+    //     type: "single"
+    // }, QUERY);
+    // queryReturnInput.input.classList.add('autoql-vanilla-query-return-input');
+    // var termErrorReturnInput = new ruleTermError();
+    // queryReturnContainer.appendChild(queryReturnInput.input);
+    // queryReturnContainer.appendChild(queryReturnInput.spanIcon);
+    // queryReturnContainer.appendChild(termErrorReturnInput);
+    // step3.addElement(htmlToElement(`
+    //     <p>Return the data from this query:</p>
+    // `))
+    // step3.addElement(queryReturnContainer);
     var messageContainer = new InputContainer(
         ['chata-notification-message-input']
     )
@@ -363,29 +363,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     titleInput.input.classList.add('autoql-vanilla-notification-title-input');
     messageArea.input.classList.add('autoql-vanilla-notification-message');
     messageContainer.appendChild(messageArea.input);
-    queryReturnInput.input.onblur = async (evt) => {
-        if(queryReturnInput.input.value){
-            var response = await apiCall(
-                evt.target.value, wrapper.parentOptions, undefined
-            )
-
-            var statusCode = response.status
-            if(statusCode !== 200){
-                step3.classList.remove('complete')
-                step3.classList.add('error')
-
-                termErrorReturnInput.style.display = 'block';
-            }else{
-                step3.classList.add('complete')
-                step3.classList.remove('error')
-
-                termErrorReturnInput.style.display = 'none';
-            }
-        }
-    }
 
     step3.addElement(htmlToElement(`
-        <p>Send the following message:</p>
+        <p>When this Alert is triggered, send the following message:</p>
     `))
     step3.addElement(messageContainer);
     var step3PrevButton = new StepButton(
@@ -401,16 +381,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step3ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
     step3ButtonContainer.appendChild(step3PrevButton);
     step3.addElement(step3ButtonContainer)
-
-    queryReturnInput.input.onkeyup = function(evt){
-        if(evt.target.value != '' && titleInput){
-            if(!step3.classList.contains('complete')){
-                step3.classList.add('complete');
-            }
-        }else{
-            step3.classList.remove('complete');
-        }
-    }
 
     wrapper.appendChild(step1);
     wrapper.appendChild(step2);
@@ -449,7 +419,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         frequencyBox.setMessage(
             rule.reset_period, rule.time_zone, rule.reset_date
         )
-        queryReturnInput.input.value = rule.data_return_query;
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
         step3.classList.add('complete');
