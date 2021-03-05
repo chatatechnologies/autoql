@@ -266,8 +266,10 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var repeatRadio = new ChataRadio(repeatOptions, (evt) => {
         var timezone = rule.time_zone
+        var resetDate = rule.reset_date
+
         frequencyBox.style.visibility = 'visible';
-        frequencyBox.setMessage(evt.target.value, timezone)
+        frequencyBox.setMessage(evt.target.value, timezone, resetDate)
         step2.stepContentContainer.style.height = getHeightForChildrens(
             step2.stepContentContainer
         ) + 'px';
@@ -444,7 +446,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     if(mode === 'edit'){
         loadRules();
         setFrequency();
-        frequencyBox.setMessage(rule.reset_period, rule.time_zone)
+        frequencyBox.setMessage(
+            rule.reset_period, rule.time_zone, rule.reset_date
+        )
         queryReturnInput.input.value = rule.data_return_query;
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;

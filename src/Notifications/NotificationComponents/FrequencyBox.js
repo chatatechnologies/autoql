@@ -4,6 +4,7 @@ import {
 import {
     HOUR_GLASS
 } from '../../Svg'
+import moment from 'moment'
 
 export function FrequencyBox(message){
     var parent = htmlToElement(`
@@ -17,7 +18,8 @@ export function FrequencyBox(message){
 
     box.appendChild(messageContent);
 
-    parent.setMessage = (val, timezone) => {
+    parent.setMessage = (val, timezone, resetDate) => {
+        const date = moment(resetDate)
         var message = `This Alert may be triggered multiple times, but you will only be notified`
         switch (val) {
             case 'DAY':
@@ -32,7 +34,7 @@ export function FrequencyBox(message){
                         <br/><br/>
                         <span class="chata-icon">
                             ${HOUR_GLASS}
-                            This Alert has been triggered. Scanning will resume on Marzo 07, 2021 at 01:00pm (${timezone})
+                            This Alert has been triggered. Scanning will resume on ${date.format('MMMM DD, YYYY')} at ${date.format('hh:mma')} (${timezone})
                         </span>
                     </span>
                 `
