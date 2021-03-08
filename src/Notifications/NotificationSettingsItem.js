@@ -80,7 +80,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             ${WARNING}
         </span>
     `)
-    if(options.status === 'EVALUATION_ERROR'){
+    if(['GENERAL_ERROR', 'EVALUATION_ERROR'].includes(options.status)){
         displayName.appendChild(warningIcon)
     }
     displayName.appendChild(document.createTextNode(wrapper.options.title))
