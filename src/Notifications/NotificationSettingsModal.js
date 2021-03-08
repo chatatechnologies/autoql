@@ -951,10 +951,9 @@ function getNotificationValues(){
 }
 
 function getStep3Values(){
-    var input = this.querySelector('.autoql-vanilla-query-return-input');
     var message = this.querySelector('.autoql-vanilla-notification-message');
     return {
-        data_return_query: input.value,
+        data_return_query: '',
         message: message.value
     };
 }
@@ -977,52 +976,13 @@ function getStep2Values(){
 }
 
 function getStep1Values(){
-    var groups = this.querySelectorAll('.notification-group-wrapper');
-    var operators = this.querySelectorAll('.notification-and-or-text');
+    var ruleContainer = this.querySelector('.chata-notification-rule-container')
     var title = this.querySelector(
         '.autoql-vanilla-notification-title-input'
     ).value
-    var expression = [];
-
-    for (var i = 0; i < groups.length; i++) {
-        var condition = 'AND';
-        var group = groups[i];
-        var lines = group.getLines();
-        if(operators[i]){
-            condition = operators[i].textContent
-        }else{
-            condition = 'TERMINATOR';
-        }
-
-        var termValue = {
-            id: uuidv4(),
-            term_type: 'group',
-            condition: condition,
-            term_value: []
-        }
-
-        lines.map((l, index) => {
-            var termGroup = {
-                ...group.getValues(),
-                term_value: []
-            }
-            if(index == lines.length-1){
-                termGroup.condition = 'TERMINATOR';
-            }
-
-            termGroup.term_value.push(
-                ...l.getValues()
-            )
-            termValue.term_value.push(termGroup)
-        })
-
-        expression.push(termValue)
-    }
 
     return {
-        expression: [
-            ...expression
-        ],
+        expression: ruleContainer.getValues(),
         title: title
     }
 }
