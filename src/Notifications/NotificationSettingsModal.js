@@ -368,7 +368,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
             newGroupLine.setExpression(ruleGroups)
-            validateFn()
+            if(ruleGroups[1] !== 'Exists'){
+                validateFn()
+            }
         })
 
         var groups = document.getElementsByClassName(
@@ -770,7 +772,16 @@ function GroupLine(params, expression=[]){
         queryInput.input.value = expression[0]
         conditionValueSelect.innerHTML = expression[1]
         ruleContainer.conditionValue = expression[1]
-        queryInput2.input.value = expression[2]
+        if(expression[1] === 'Exists'){
+            chataRuleDeleteBtn.style.display = 'none'
+            secondContainer.style.display = 'none';
+            chataSelect.style.display = 'none'
+            compareButton.style.display = 'block'
+            ruleContainer.conditionValue = '∃'
+            chataSelect.conditionElement.innerHTML = '∃';
+        }else{
+            queryInput2.input.value = expression[2]
+        }
     }
 
     ruleContainer.getOperator = () => {
