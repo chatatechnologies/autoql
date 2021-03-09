@@ -368,9 +368,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
             newGroupLine.setExpression(ruleGroups)
-            if(ruleGroups[1] !== 'Exists'){
-                validateFn()
-            }
+            validateFn()
         })
 
         var groups = document.getElementsByClassName(
@@ -909,7 +907,6 @@ function getNotificationValues(){
         ...this.step1.getValues(),
         ...this.step2.getValues(),
         ...this.step3.getValues(),
-        // ...this.step4.getValues()
     }
 }
 
