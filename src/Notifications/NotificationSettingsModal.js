@@ -953,7 +953,6 @@ function getNotificationValues(){
 function getStep3Values(){
     var message = this.querySelector('.autoql-vanilla-notification-message');
     return {
-        data_return_query: '',
         message: message.value
     };
 }
@@ -981,8 +980,11 @@ function getStep1Values(){
         '.autoql-vanilla-notification-title-input'
     ).value
 
+    var ruleContainerValues = ruleContainer.getValues()
+
     return {
         expression: ruleContainer.getValues(),
-        title: title
+        title: title,
+        data_return_query: ruleContainerValues[0].term_value,
     }
 }
