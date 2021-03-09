@@ -1,4 +1,4 @@
-function PopupContainer(options=[]){
+export function PopupContainer(options=[]){
     var container = document.createElement('div');
     var ul = document.createElement('ul');
 

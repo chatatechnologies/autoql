@@ -1,6 +1,5 @@
-import { htmlToElement, uuidv4, apiCall } from '../Utils'
+import { htmlToElement, uuidv4 } from '../Utils'
 import {
-    QUERY,
     NOTEBOOK,
     INPUT_BUBBLES,
     INPUT_DELETE,
@@ -828,6 +827,7 @@ function GroupLine(params, expression=[]){
         chataSelect.style.display = 'none'
         compareButton.style.display = 'block'
         ruleContainer.conditionValue = '∃'
+        chataSelect.conditionElement.innerHTML = '∃';
     }
 
     compareButton.onclick = function(){
@@ -835,6 +835,8 @@ function GroupLine(params, expression=[]){
         chataRuleDeleteBtn.style.display = 'block'
         secondContainer.style.display = 'block';
         chataSelect.style.display = 'block'
+        ruleContainer.conditionValue = '>'
+        chataSelect.conditionElement.innerHTML = '>';
     }
 
     chataSelect.onclick = function(){
