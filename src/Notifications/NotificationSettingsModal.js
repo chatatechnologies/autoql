@@ -15,7 +15,8 @@ import {
 } from '../ChataComponents'
 import {
     ChataModalStep,
-    FrequencyBox
+    FrequencyBox,
+    PopupContainer
 } from './NotificationComponents'
 import { refreshTooltips } from '../Tooltips'
 import {
@@ -181,28 +182,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step1.addElement(ruleContainer);
 
     ruleContainer.step = step1;
-    // btnAddGroup.onclick = function(){
-    //     var groups = document.getElementsByClassName(
-    //         'notification-group-wrapper'
-    //     );
-    //     var isFirst = groups.length === 0 ? true : false;
-    //     var newGroup = new ConditionGroup(
-    //         wrapper.parentOptions,
-    //         step1, ruleContainer, parentSelect, isFirst
-    //     );
-    //     ruleContainer.insertBefore(newGroup, btnAddGroup);
-    //     if(groups.length >= 1){
-    //         groups[0].setAsFirtsAndOrBreak();
-    //     }
-    //     if(groups.length > 1){
-    //         groups[0].showNotificationAndOrBreak();
-    //     }
-    //     showLeftAndOr(parentSelect, ruleContainer);
-    //     checkStep1(ruleContainer);
-    //     step1.stepContentContainer.style.height = getHeightForChildrens(
-    //         step1.stepContentContainer
-    //     ) + 'px';
-    // }
 
     step1.onkeyup = function(){
         checkStep1(ruleContainer);
@@ -603,36 +582,6 @@ function notificationRuleAndOrSelect(text, onChange){
     return div;
 }
 
-function PopupContainer(options=[]){
-    var container = document.createElement('div');
-    var ul = document.createElement('ul');
-
-    container.classList.add('chata-select-popup-container');
-    ul.classList.add('chata-select-popup');
-
-    for (var i = 0; i < options.length; i++) {
-        var option = document.createElement('li');
-        option.innerHTML = options[i].text;
-        option.classList.add('chata-select-option');
-        option.setAttribute('data-index-option', i);
-        if(options[i].dataTip){
-            option.setAttribute('data-tippy-content', options[i].dataTip);
-        }
-        if(options[i].active){
-            option.classList.add('active');
-        }
-        ul.appendChild(option);
-    }
-
-    container.appendChild(ul);
-
-    container.toggleVisibility = function(){
-        this.classList.toggle('active-popup');
-    }
-
-    return container
-}
-
 function ruleTermError() {
     var error = htmlToElement(`
         <div class="rule-term-validation-error">
@@ -878,6 +827,7 @@ function GroupLine(params, expression=[]){
         secondContainer.style.display = 'none';
         chataSelect.style.display = 'none'
         compareButton.style.display = 'block'
+        ruleContainer.conditionValue = '∃'
     }
 
     compareButton.onclick = function(){
