@@ -1103,11 +1103,11 @@ export function DataMessenger(elem, options){
                     let aDots = document.createElement('a');
                     if(pages != 3){
                         aDots.textContent = '...';
+                        rightDots.appendChild(aDots);
+                        pagination.appendChild(rightDots);
+                        aDots.setAttribute('data-page', currentPage+1);
+                        rightDots.onclick = dotEvent;
                     }
-                    rightDots.appendChild(aDots);
-                    pagination.appendChild(rightDots);
-                    aDots.setAttribute('data-page', currentPage+1);
-                    rightDots.onclick = dotEvent;
                 }else if(currentPage > 3 && currentPage <= pages-2){
                     a.textContent = currentPage;
                     li.classList.add('selected');
