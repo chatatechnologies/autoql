@@ -66,6 +66,14 @@ export function createPieChart(
         json['data']['rows'], row => row[index1], index2
     );
 
+    var groups = {}
+
+    for(let [key, value] of Object.entries(data)){
+        groups[key] = {
+            isVisible: true
+        }
+    }
+
     var colStr1 = cols[index1]['display_name'] || cols[index1]['name'];
     var colStr2 = cols[index2]['display_name'] || cols[index2]['name'];
     var col1 = formatColumnName(colStr1);
@@ -112,9 +120,6 @@ export function createPieChart(
     .attr('width', width)
     .attr('height', height)
 
-
-
-
     var arc = getArc(
         innerRadius,
         outerRadius
@@ -124,15 +129,18 @@ export function createPieChart(
         (d) => { return d.value }
     )
 
+
     let pieChartContainer
     const entries = (map) => {
         var entries = [];
         for (var key in map) entries.push({key: key, value: map[key]});
         return entries;
     }
-    var dataReady = pie(entries(data))
 
     const createSlices = () => {
+        var dataReady = pie(entries(data))
+        if(pieChartContainer)pieChartContainer.remove()
+
         pieChartContainer = svg.append('g')
         .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
         var colorLabels = []
@@ -210,14 +218,13 @@ export function createPieChart(
 
     var labels = []
 
-    for (let i = 0; i < dataReady.length; i++) {
-        let d = dataReady[i]
+    for(let [key, value] of Object.entries(data)){
         labels.push(
             formatData(
-                    d.data.key, cols[index1],
+                    key, cols[index1],
                     options) + ": " +
             formatData(
-                    d.value, cols[index2],
+                    value, cols[index2],
                     options
             )
         );
