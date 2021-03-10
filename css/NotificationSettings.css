@@ -401,15 +401,15 @@
     color: rgba(0, 0, 0, 0.4);
 }
 
-.notification-frequency-step {
+.autoql-vanilla-frequency-step {
     display: flex;
 }
 
-.notification-frequency-step .frequency-settings-container {
+.notification-frequency-step .autoql-vanilla-frequency-step .frequency-settings-container {
     flex: 0 1 400px;
 }
 
-.notification-frequency-step .frequency-description-box-container .frequency-description-title {
+.notification-frequency-step .autoql-vanilla-frequency-step .frequency-description-box-container .frequency-description-title {
     color: rgba(0, 0, 0, 0.6);
     font-weight: 600;
 }

@@ -187,20 +187,21 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     }
 
     // STEP 2
-    var selectFrequency = document.createElement('div');
-    var relativeDiv = document.createElement('div');
+    var selectFrequency = document.createElement('div')
+    var relativeDiv = document.createElement('div')
+    var step2Wrapper = document.createElement('div')
+    relativeDiv.style.position = 'relative'
+    selectFrequency.classList.add('chata-select')
+    var frequencyValue = document.createElement('div')
 
-    relativeDiv.style.position = 'relative';
-    selectFrequency.classList.add('chata-select');
-    var frequencyValue = document.createElement('div');
+    frequencyValue.classList.add('autoql-vanilla-frequency-value')
+    frequencyValue.indexValue = 1
 
-    frequencyValue.classList.add('autoql-vanilla-frequency-value');
-    frequencyValue.indexValue = 1;
+    var frequencySettingsContainer = document.createElement('div')
+    frequencySettingsContainer.classList.add('frequency-settings-container')
 
-    var frequencySettingsContainer = document.createElement('div');
-    frequencySettingsContainer.classList.add('frequency-settings-container');
-
-    step2.addClass('notification-frequency-step');
+    step2.addClass('notification-frequency-step')
+    step2Wrapper.classList.add('autoql-vanilla-frequency-step')
     frequencySettingsContainer.appendChild(htmlToElement(`
         <p>
             We’ll scan your database and notify you as soon
@@ -307,8 +308,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2ButtonContainer.appendChild(step2PrevButton);
     step2ButtonContainer.appendChild(step2NextButton);
 
-    step2.addElement(frequencySettingsContainer);
-    step2.addElement(frequencyBox);
+    step2Wrapper.appendChild(frequencySettingsContainer);
+    step2Wrapper.appendChild(frequencyBox);
+    step2.addElement(step2Wrapper)
     step2.addContent(step2ButtonContainer);
 
 
