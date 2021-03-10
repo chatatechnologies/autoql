@@ -93,7 +93,6 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
         widthList.push(parseFloat(getTextWidth(textContent))+45);
         height += getTextHeight(textContent);
         ul.appendChild(li);
-
         li.onclick = (evt) => {
             parent.innerHTML = evt.target.dataset.satefynetValue;
             parent.option = el

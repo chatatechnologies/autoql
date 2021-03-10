@@ -187,8 +187,8 @@ export function getSafetynetUserSelection(node){
             start: start,
             end: end,
             value: n.option.text,
-            canonical: n.option.canonical,
-            value_label: n.option.value_label
+            canonical: n.option.canonical || 'ORIGINAL_TEXT',
+            value_label: n.option.value_label || 'ORIGINAL_TEXT'
         })
     }
 
