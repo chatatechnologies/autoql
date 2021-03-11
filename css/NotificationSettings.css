@@ -572,4 +572,53 @@
 .autoql-vanilla-schedule-builder-timezone-section .autoql-vanilla-timezone-select {
     display: inline-block;
     width: 300px;
+    position: relative;
+    box-sizing: border-box;
+}
+
+.autoql-vanilla-select-with-arrow>div {
+    border-color: var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
+    background: var(--autoql-vanilla-background-color-primary,#fff);
+    transition: all .2s ease;
+    cursor: pointer!important;
+    background-color: rgb(255, 255, 255);
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    display: flex;
+    flex-wrap: wrap;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    min-height: 38px;
+    position: relative;
+    transition: all 100ms ease 0s;
+    box-sizing: border-box;
+    outline: 0px !important;
+    -webkit-box-align: center;
+    align-items: center;
+    display: flex;
+    flex: 1 1 0%;
+    flex-wrap: wrap;
+    padding: 2px 8px;
+    position: relative;
+    overflow: hidden;
+    box-sizing: border-box;
+}
+
+.autoql-vanilla-select-with-arrow div {
+    color: inherit;
+}
+
+.autoql-vanilla-select-value{
+    color: rgb(51, 51, 51);
+    margin-left: 2px;
+    margin-right: 2px;
+    max-width: calc(100% - 8px);
+    overflow: hidden;
+    position: absolute;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    top: 50%;
+    transform: translateY(-50%);
+    box-sizing: border-box;
 }
