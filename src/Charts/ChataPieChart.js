@@ -252,8 +252,28 @@ export function createPieChart(
     const legendYPosition =
       legendHeight < height - 20 ? (height - legendHeight) / 2 : 15
 
-    svgLegend
-      .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    svgLegend.attr(
+        'transform', `translate(${legendXPosition}, ${legendYPosition})`
+    )
+
+    legendOrdinal.on('cellclick', function(d) {
+        var words = []
+        var nodes = d.currentTarget.getElementsByTagName('tspan')
+        for (var i = 0; i < nodes.length; i++) {
+            words.push(nodes[i].textContent)
+        }
+
+        var key = words.join(' ').split(':')[0]
+
+        groups[key].isVisible =
+        !groups[key].isVisible;
+        createSlices();
+        const legendCell = select(this);
+        legendCell.classed(
+            'disable-group', !legendCell.classed('disable-group')
+        );
+    });
+
 
 
     select(window).on(
