@@ -3,6 +3,7 @@ import {
     enumerateCols,
     getIndexesByType,
     getMetadataElement,
+    getVisibleGroups,
 } from './ChataChartHelpers'
 import {
     getColorScale,
@@ -68,7 +69,7 @@ export function createPieChart(
 
     var groups = {}
 
-    for(let [key, value] of Object.entries(data)){
+    for(let [key] of Object.entries(data)){
         groups[key] = {
             isVisible: true
         }
@@ -131,14 +132,17 @@ export function createPieChart(
 
 
     let pieChartContainer
-    const entries = (map) => {
+    const entries = (map, visibleGroups) => {
         var entries = [];
-        for (var key in map) entries.push({key: key, value: map[key]});
+        visibleGroups.map(group => {
+            entries.push({key: group, value: map[group]});
+        })
         return entries;
     }
 
     const createSlices = () => {
-        var dataReady = pie(entries(data))
+        var visibleGroups = getVisibleGroups(groups);
+        var dataReady = pie(entries(data, visibleGroups))
         if(pieChartContainer)pieChartContainer.remove()
 
         pieChartContainer = svg.append('g')
