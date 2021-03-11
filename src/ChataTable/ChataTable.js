@@ -261,6 +261,7 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
 
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
+        invalidOptionWarnings: false,
         virtualDomBuffer: 300,
         movableColumns: true,
         downloadConfig: {
