@@ -148,12 +148,9 @@ export function createPieChart(
         pieChartContainer = svg.append('g')
         .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
         var colorLabels = []
-
-        for (var i = 0; i < dataReady.length; i++) {
-            var d = dataReady[i]
-            colorLabels.push(d.data.key);
+        for(let [key] of Object.entries(data)){
+            colorLabels.push(key);
         }
-
         var color = getColorScale(colorLabels, options.themeConfig.chartColors)
 
         pieChartContainer.selectAll('path')
