@@ -326,7 +326,7 @@ export function createLineChart(
                     renderTooltips
                 )
                 popover.close();
-            });
+            }, true);
 
             popoverSelector.setSelectedItem(selectedItem)
         })

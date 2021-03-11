@@ -5,6 +5,7 @@ export function ChataChartListPopover(position, indexes, onClick, showOnBaseline
     var obj = this;
     var popover = new PopoverChartSelector(position, showOnBaseline);
     var elements = [];
+
     obj.createContent = () => {
         var selectorContainer = document.createElement('div');
         var selectorContent = document.createElement('ul');
