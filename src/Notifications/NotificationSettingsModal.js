@@ -10,12 +10,13 @@ import { convert } from '../RuleParser'
 import {
     ChataInput,
     InputContainer,
-    ChataRadio
+    ChataRadio,
 } from '../ChataComponents'
 import {
     ChataModalStep,
     FrequencyBox,
-    PopupContainer
+    PopupContainer,
+    TimezoneSelector
 } from './NotificationComponents'
 import { refreshTooltips } from '../Tooltips'
 import {
@@ -303,6 +304,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         },
         isButtonDisable
     )
+    var timezoneSelector = new TimezoneSelector()
     var step2ButtonContainer = document.createElement('div');
     step2ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
     step2ButtonContainer.appendChild(step2PrevButton);
@@ -311,6 +313,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2Wrapper.appendChild(frequencySettingsContainer);
     step2Wrapper.appendChild(frequencyBox);
     step2.addElement(step2Wrapper)
+    step2.addElement(timezoneSelector)
     step2.addContent(step2ButtonContainer);
 
 

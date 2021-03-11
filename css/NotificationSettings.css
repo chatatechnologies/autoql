@@ -564,3 +564,12 @@
 .autoql-vanilla-edit-data-alert{
     cursor: pointer;
 }
+
+.autoql-vanilla-schedule-builder-timezone-section {
+    margin: 10px 5px;
+}
+
+.autoql-vanilla-schedule-builder-timezone-section .autoql-vanilla-timezone-select {
+    display: inline-block;
+    width: 300px;
+}
