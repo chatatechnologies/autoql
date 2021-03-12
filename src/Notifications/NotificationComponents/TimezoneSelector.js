@@ -1,3 +1,7 @@
+import {
+    SELECT_ARROW
+} from '../../Svg'
+
 export function TimezoneSelector(){
     var obj = document.createElement('div')
     var wrapper = document.createElement('div')
@@ -8,6 +12,8 @@ export function TimezoneSelector(){
     var valueElement = document.createElement('div')
     var indicators = document.createElement('div')
     var indicatorSeparator = document.createElement('div')
+    var indicatorContainer = document.createElement('div')
+
     text.textContent = 'Time zone: '
 
     obj.classList.add('autoql-vanilla-schedule-builder-timezone-section')
@@ -16,10 +22,13 @@ export function TimezoneSelector(){
     valueContainer.classList.add('autoql-vanilla-select-value-container')
     indicators.classList.add('autoql-vanilla-select-indicators')
     indicatorSeparator.classList.add('autoql-vanilla-indicator-separator')
+    indicatorContainer.classList.add('autoql-vanilla-indicator-container')
+    indicatorContainer.innerHTML = SELECT_ARROW
 
     valueElement.textContent = 'TEST'
 
     indicators.appendChild(indicatorSeparator)
+    indicators.appendChild(indicatorContainer)
     valueContainer.appendChild(valueElement)
     selectWithArrow.appendChild(valueContainer)
     selectWithArrow.appendChild(indicators)
