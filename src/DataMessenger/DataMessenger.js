@@ -1131,7 +1131,11 @@ export function DataMessenger(elem, options){
                     leftDots.onclick = dotEvent;
 
                 }else{
-                    a.textContent = '...';
+                    if(pages != 3){
+                        a.textContent = '...';
+                    }else{
+                        a.textContent = (i+1);
+                    }
                 }
             }else{
                 a.textContent = (i+1);
