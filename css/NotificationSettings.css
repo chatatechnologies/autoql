@@ -579,7 +579,6 @@
 .autoql-vanilla-select-with-arrow{
     border-color: var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
     background: var(--autoql-vanilla-background-color-primary,#fff);
-    transition: all .2s ease;
     cursor: pointer!important;
     background-color: rgb(255, 255, 255);
     border-radius: 4px;
@@ -591,7 +590,7 @@
     justify-content: space-between;
     min-height: 38px;
     position: relative;
-    transition: all 100ms ease 0s;
+    transition: all .2s ease;
     box-sizing: border-box;
     outline: 0px !important;
     -webkit-box-align: center;
@@ -599,7 +598,6 @@
     display: flex;
     flex: 1 1 0%;
     flex-wrap: wrap;
-    padding: 2px 8px;
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
@@ -666,4 +664,8 @@
     line-height: 1;
     stroke: currentcolor;
     stroke-width: 0;
+}
+
+.autoql-vanilla-select-with-arrow:hover {
+    border-color: var(--autoql-vanilla-accent-color,#26a7df);
 }
