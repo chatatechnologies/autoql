@@ -1,6 +1,7 @@
 import {
     SELECT_ARROW
 } from '../../Svg'
+import momentTZ from 'moment-timezone'
 
 export function TimezoneSelector(){
     var obj = document.createElement('div')
@@ -13,6 +14,16 @@ export function TimezoneSelector(){
     var indicators = document.createElement('div')
     var indicatorSeparator = document.createElement('div')
     var indicatorContainer = document.createElement('div')
+    const defaultTimeZone = momentTZ.tz.guess()
+    const options = momentTZ.tz.names().map((tz) => {
+        return {
+            value: tz,
+            label: tz,
+        }
+    })
+
+    console.log(options);
+    console.log(defaultTimeZone);
 
     text.textContent = 'Time zone: '
 
