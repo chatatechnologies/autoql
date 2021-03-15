@@ -14,6 +14,8 @@ export function TimezoneSelector(){
     var indicators = document.createElement('div')
     var indicatorSeparator = document.createElement('div')
     var indicatorContainer = document.createElement('div')
+    var popupContainer = document.createElement('div')
+
     const defaultTimeZone = momentTZ.tz.guess()
     const options = momentTZ.tz.names().map((tz) => {
         return {
@@ -34,6 +36,8 @@ export function TimezoneSelector(){
     indicators.classList.add('autoql-vanilla-select-indicators')
     indicatorSeparator.classList.add('autoql-vanilla-indicator-separator')
     indicatorContainer.classList.add('autoql-vanilla-indicator-container')
+    popupContainer.classList.add('autoql-vanilla-select-popup-container')
+    popupContainer.innerHTML = 'TEST'
     indicatorContainer.innerHTML = SELECT_ARROW
 
     valueElement.textContent = 'TEST'
@@ -43,6 +47,7 @@ export function TimezoneSelector(){
     valueContainer.appendChild(valueElement)
     selectWithArrow.appendChild(valueContainer)
     selectWithArrow.appendChild(indicators)
+    selectWithArrow.appendChild(popupContainer)
     selectControl.appendChild(selectWithArrow)
     wrapper.appendChild(text)
     wrapper.appendChild(selectControl)

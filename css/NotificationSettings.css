@@ -598,7 +598,6 @@
     display: flex;
     flex: 1 1 0%;
     flex-wrap: wrap;
-    overflow: hidden;
 }
 
 .autoql-vanilla-select-value-container{
@@ -666,4 +665,17 @@
 
 .autoql-vanilla-select-with-arrow:hover {
     border-color: var(--autoql-vanilla-accent-color,#26a7df);
+}
+
+.autoql-vanilla-select-popup-container{
+    position: absolute;
+    left: 0;
+    right: 0px;
+    bottom: 45px;
+    background: white;
+    height: 160px;
+    border-color: var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
 }
