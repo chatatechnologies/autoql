@@ -159,6 +159,7 @@ export function createPieChart(
         .append('path')
         .each(function(d, i){
             select(this).attr(valueClass, i)
+            .attr('data-filterindex', index1)
             .attr('data-col1', col1)
             .attr('data-col2', col2)
             .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
