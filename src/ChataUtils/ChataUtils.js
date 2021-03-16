@@ -872,7 +872,6 @@ ChataUtils.ajaxCallPost = function(url, callback, data, options){
 }
 
 ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
-
     options.xhr.onreadystatechange = function() {
         if (options.xhr.readyState === 4){
             var jsonResponse = {
@@ -888,7 +887,11 @@ ChataUtils.ajaxCallAutoComplete = function(url, callback, options){
     };
     options.xhr.open('GET', url);
     options.xhr.setRequestHeader("authorization", options.authentication.token ? `Bearer ${options.authentication.token}` : undefined);
-    options.xhr.send();
+    try{
+        options.xhr.send();
+    }catch(e){
+        return;
+    }
 }
 
 ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggestion', options){
@@ -903,6 +906,10 @@ ChataUtils.autocomplete = function(suggestion, suggestionList, liClass='suggesti
     ChataUtils.ajaxCallAutoComplete(URL, function(jsonResponse){
         suggestionList.innerHTML = '';
         var matches = jsonResponse['matches'] || jsonResponse['data']['matches'];
+        if(!matches){
+            suggestionList.style.display = 'none';
+            return
+        }
         if(matches.length > 0){
             for(var [key, value] of Object.entries(options.autocompleteStyles)){
                 suggestionList.style.setProperty(key, value, '');
