@@ -687,5 +687,14 @@
 }
 
 .autoql-vanilla-select-list{
+    list-style: none;
+}
 
+.autoql-vanilla-select-list li{
+    font-size: 14px;
+    padding: 12px;
+}
+
+.autoql-vanilla-select-list li:hover{
+    background: #e8e8e8;
 }
