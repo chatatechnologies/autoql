@@ -3,7 +3,7 @@ import {
 } from '../../Svg'
 import momentTZ from 'moment-timezone'
 
-export function TimezoneSelector(){
+export function TimezoneSelector(defaultValue=undefined){
     var obj = document.createElement('div')
     var wrapper = document.createElement('div')
     var text = document.createElement('span')
@@ -17,7 +17,7 @@ export function TimezoneSelector(){
     var popupContainer = document.createElement('div')
     var timezoneList = document.createElement('ul')
 
-    const defaultTimeZone = momentTZ.tz.guess()
+    const defaultTimeZone = defaultValue || momentTZ.tz.guess()
     const options = momentTZ.tz.names().map((tz) => {
         return {
             value: tz,
@@ -72,6 +72,7 @@ export function TimezoneSelector(){
 
     selectControl.onclick = () => {
         popupContainer.classList.toggle('visible')
+        valueElement.selectedOption.scrollIntoView()
     }
 
     obj.getValue = () => {

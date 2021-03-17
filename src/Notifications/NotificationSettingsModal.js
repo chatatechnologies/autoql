@@ -304,7 +304,9 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         },
         isButtonDisable
     )
-    var timezoneSelector = new TimezoneSelector()
+    let timez = undefined
+    if(rule.time_zone)timez = rule.time_zone
+    var timezoneSelector = new TimezoneSelector(timez)
     var step2ButtonContainer = document.createElement('div');
     step2ButtonContainer.classList.add('autoql-vanilla-step-btn-container')
     step2ButtonContainer.appendChild(step2PrevButton);
@@ -388,7 +390,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
         step3.classList.add('complete');
-        step2.timezoneSelector.setValue(rule.time_zone)
     }else{
         frequencyValue.innerHTML = 'Select a frequency';
         frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';

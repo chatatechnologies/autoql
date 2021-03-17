@@ -679,7 +679,6 @@
     border-style: solid;
     border-width: 1px;
     visibility: hidden;
-    overflow-y: auto;
 }
 
 .autoql-vanilla-select-popup-container.visible{
@@ -688,6 +687,8 @@
 
 .autoql-vanilla-select-list{
     list-style: none;
+    overflow-y: auto;
+    height: 160px;
 }
 
 .autoql-vanilla-select-list li{
