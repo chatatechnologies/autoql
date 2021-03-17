@@ -317,24 +317,6 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2.addContent(step2ButtonContainer);
     step2.timezoneSelector = timezoneSelector
 
-
-    // STEP 3
-    // var queryReturnContainer = new InputContainer(
-    //     ['chata-notification-display-name-input']
-    // )
-    // var queryReturnInput = new ChataInput('input', {
-    //     placeholder: 'Type query here',
-    //     type: "single"
-    // }, QUERY);
-    // queryReturnInput.input.classList.add('autoql-vanilla-query-return-input');
-    // var termErrorReturnInput = new ruleTermError();
-    // queryReturnContainer.appendChild(queryReturnInput.input);
-    // queryReturnContainer.appendChild(queryReturnInput.spanIcon);
-    // queryReturnContainer.appendChild(termErrorReturnInput);
-    // step3.addElement(htmlToElement(`
-    //     <p>Return the data from this query:</p>
-    // `))
-    // step3.addElement(queryReturnContainer);
     var messageContainer = new InputContainer(
         ['chata-notification-message-input']
     )
@@ -406,6 +388,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         titleInput.input.value = rule.title;
         messageArea.input.value = rule.message;
         step3.classList.add('complete');
+        step2.timezoneSelector.setValue(rule.time_zone)
     }else{
         frequencyValue.innerHTML = 'Select a frequency';
         frequencyValue.style.color = 'rgba(0, 0, 0, 0.4)';

@@ -71,5 +71,10 @@ export function TimezoneSelector(){
         return valueElement.val || ''
     }
 
+    obj.setValue = (val) => {
+        valueElement.val = val
+        valueElement.textContent = val
+    }
+
     return obj
 }
