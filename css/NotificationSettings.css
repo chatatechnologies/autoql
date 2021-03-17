@@ -698,3 +698,7 @@
 .autoql-vanilla-select-list li:hover{
     background: #e8e8e8;
 }
+
+.autoql-vanilla-select-list .selected{
+    background: #e8e8e8;
+}

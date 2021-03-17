@@ -31,10 +31,17 @@ export function TimezoneSelector(){
         var li = document.createElement('li')
         li.textContent = option.label
         timezoneList.appendChild(li)
+        if(option.label === defaultTimeZone){
+            li.classList.add('selected')
+            valueElement.selectedOption = li
+        }
 
         li.onclick = () => {
             valueElement.textContent = li.textContent
             valueElement.val = li.label
+            valueElement.selectedOption.classList.remove('selected')
+            li.classList.add('selected')
+            valueElement.selectedOption = li
         }
     })
 
