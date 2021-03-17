@@ -315,6 +315,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2.addElement(step2Wrapper)
     step2.addElement(timezoneSelector)
     step2.addContent(step2ButtonContainer);
+    step2.timezoneSelector = timezoneSelector
 
 
     // STEP 3
@@ -929,7 +930,8 @@ function getStep2Values(){
     reset.selectedValue == '' ? 'CONTINUOUS' : 'PERIODIC'
     var values = {
         notification_type: notificationType,
-        reset_period: null
+        reset_period: null,
+        time_zone: this.timezoneSelector.getValue()
     }
 
     if(notificationType === 'PERIODIC'){

@@ -34,6 +34,7 @@ export function TimezoneSelector(){
 
         li.onclick = () => {
             valueElement.textContent = li.textContent
+            valueElement.val = li.label
         }
     })
 
@@ -64,6 +65,10 @@ export function TimezoneSelector(){
 
     selectControl.onclick = () => {
         popupContainer.classList.toggle('visible')
+    }
+
+    obj.getValue = () => {
+        return valueElement.val || ''
     }
 
     return obj
