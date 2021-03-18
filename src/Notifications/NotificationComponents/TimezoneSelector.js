@@ -41,11 +41,14 @@ export function TimezoneSelector(defaultValue=undefined){
             }
 
             li.onclick = () => {
+                input.value = ''
+                input.setAttribute('placeholder', li.textContent)
                 valueElement.textContent = li.textContent
                 valueElement.val = li.label
                 valueElement.selectedOption.classList.remove('selected')
                 li.classList.add('selected')
                 valueElement.selectedOption = li
+                obj.createContent(options)
             }
         })
     }
@@ -96,8 +99,9 @@ export function TimezoneSelector(defaultValue=undefined){
         }else{
             valueElement.style.display = 'block'
             input.style.display = 'none'
+            input.style.value = ''
+            obj.createContent(options)
         }
-
     }
 
     obj.getValue = () => {
