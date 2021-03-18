@@ -703,3 +703,12 @@
 .autoql-vanilla-select-list .selected{
     background: #e8e8e8;
 }
+
+.autoql-vanilla-timezone-input{
+    width: 100%;
+    line-height: 1.5;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    display: none;
+}

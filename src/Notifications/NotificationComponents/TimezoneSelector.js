@@ -16,6 +16,8 @@ export function TimezoneSelector(defaultValue=undefined){
     var indicatorContainer = document.createElement('div')
     var popupContainer = document.createElement('div')
     var timezoneList = document.createElement('ul')
+    var input = document.createElement('input')
+    obj.isOpen = false
 
     const defaultTimeZone = defaultValue || momentTZ.tz.guess()
     const options = momentTZ.tz.names().map((tz) => {
@@ -54,6 +56,9 @@ export function TimezoneSelector(defaultValue=undefined){
     indicatorContainer.classList.add('autoql-vanilla-indicator-container')
     popupContainer.classList.add('autoql-vanilla-select-popup-container')
     timezoneList.classList.add('autoql-vanilla-select-list')
+    input.setAttribute('type', 'text')
+    input.setAttribute('placeholder', defaultTimeZone)
+    input.classList.add('autoql-vanilla-timezone-input')
     indicatorContainer.innerHTML = SELECT_ARROW
 
     valueElement.textContent = defaultTimeZone
@@ -62,6 +67,7 @@ export function TimezoneSelector(defaultValue=undefined){
     indicators.appendChild(indicatorContainer)
     popupContainer.appendChild(timezoneList)
     valueContainer.appendChild(valueElement)
+    valueContainer.appendChild(input)
     selectWithArrow.appendChild(valueContainer)
     selectWithArrow.appendChild(indicators)
     selectWithArrow.appendChild(popupContainer)
@@ -71,8 +77,18 @@ export function TimezoneSelector(defaultValue=undefined){
     obj.appendChild(wrapper)
 
     selectControl.onclick = () => {
+        obj.isOpen = !obj.isOpen
         popupContainer.classList.toggle('visible')
-        valueElement.selectedOption.scrollIntoView()
+        if(obj.isOpen){
+            valueElement.selectedOption.scrollIntoView()
+            valueElement.style.display = 'none'
+            input.style.display = 'block'
+            input.focus()
+        }else{
+            valueElement.style.display = 'block'
+            input.style.display = 'none'
+        }
+
     }
 
     obj.getValue = () => {
