@@ -29,23 +29,27 @@ export function TimezoneSelector(defaultValue=undefined){
 
     text.textContent = 'Time zone: '
 
-    options.map(option => {
-        var li = document.createElement('li')
-        li.textContent = option.label
-        timezoneList.appendChild(li)
-        if(option.label === defaultTimeZone){
-            li.classList.add('selected')
-            valueElement.selectedOption = li
-        }
+    obj.createContent = (opts) => {
+        timezoneList.innerHTML = ''
+        opts.map(option => {
+            var li = document.createElement('li')
+            li.textContent = option.label
+            timezoneList.appendChild(li)
+            if(option.label === defaultTimeZone){
+                li.classList.add('selected')
+                valueElement.selectedOption = li
+            }
 
-        li.onclick = () => {
-            valueElement.textContent = li.textContent
-            valueElement.val = li.label
-            valueElement.selectedOption.classList.remove('selected')
-            li.classList.add('selected')
-            valueElement.selectedOption = li
-        }
-    })
+            li.onclick = () => {
+                valueElement.textContent = li.textContent
+                valueElement.val = li.label
+                valueElement.selectedOption.classList.remove('selected')
+                li.classList.add('selected')
+                valueElement.selectedOption = li
+            }
+        })
+    }
+
 
     obj.applyFilter = () => {
         var term = input.value.toLowerCase() || ''
@@ -107,8 +111,10 @@ export function TimezoneSelector(defaultValue=undefined){
 
     input.onkeydown = () => {
         var filterData = obj.applyFilter()
-        console.log(filterData);
+        obj.createContent(filterData)
     }
+
+    obj.createContent(options)
 
     return obj
 }
