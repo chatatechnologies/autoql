@@ -47,6 +47,11 @@ export function TimezoneSelector(defaultValue=undefined){
         }
     })
 
+    obj.applyFilter = () => {
+        var term = input.value.toLowerCase() || ''
+        return options.filter(opt => opt.label.toLowerCase().includes(term))
+    }
+
     obj.classList.add('autoql-vanilla-schedule-builder-timezone-section')
     selectControl.classList.add('autoql-vanilla-timezone-select')
     selectWithArrow.classList.add('autoql-vanilla-select-with-arrow')
@@ -98,6 +103,11 @@ export function TimezoneSelector(defaultValue=undefined){
     obj.setValue = (val) => {
         valueElement.val = val
         valueElement.textContent = val
+    }
+
+    input.onkeydown = () => {
+        var filterData = obj.applyFilter()
+        console.log(filterData);
     }
 
     return obj
