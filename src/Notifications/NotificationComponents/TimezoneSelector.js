@@ -118,6 +118,15 @@ export function TimezoneSelector(defaultValue=undefined){
         obj.createContent(filterData)
     }
 
+    input.onblur = () => {
+        popupContainer.classList.remove('visible')
+        obj.isOpen = false
+        valueElement.style.display = 'block'
+        input.style.display = 'none'
+        input.style.value = ''
+        obj.createContent(options)
+    }
+
     obj.createContent(options)
 
     return obj
