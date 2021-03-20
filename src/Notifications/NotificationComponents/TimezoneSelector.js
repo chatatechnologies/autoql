@@ -2,16 +2,27 @@ import {
     SELECT_ARROW
 } from '../../Svg'
 import momentTZ from 'moment-timezone'
+import { $dom } from '../../Dom'
 
 export function TimezoneSelector(defaultValue=undefined){
-    var obj = document.createElement('div')
-    var wrapper = document.createElement('div')
-    var text = document.createElement('span')
-    var selectControl = document.createElement('div')
-    var selectWithArrow = document.createElement('div')
-    var valueContainer = document.createElement('div')
-    var valueElement = document.createElement('div')
-    var indicators = document.createElement('div')
+    var obj = $dom('div', {
+        classes: ['autoql-vanilla-schedule-builder-timezone-section']
+    })
+    var wrapper = $dom('div')
+    var text = $dom('span')
+    var selectControl = $dom('div', {
+        classes: ['autoql-vanilla-timezone-select'],
+    })
+    var selectWithArrow = $dom('div', {
+        classes: ['autoql-vanilla-select-with-arrow']
+    })
+    var valueContainer = $dom('div', {
+        classes: ['autoql-vanilla-select-value-container']
+    })
+    var valueElement = $dom('div')
+    var indicators = $dom('div', {
+        classes: ['autoql-vanilla-select-indicators']
+    })
     var indicatorSeparator = document.createElement('div')
     var indicatorContainer = document.createElement('div')
     var popupContainer = document.createElement('div')
@@ -59,11 +70,6 @@ export function TimezoneSelector(defaultValue=undefined){
         return options.filter(opt => opt.label.toLowerCase().includes(term))
     }
 
-    obj.classList.add('autoql-vanilla-schedule-builder-timezone-section')
-    selectControl.classList.add('autoql-vanilla-timezone-select')
-    selectWithArrow.classList.add('autoql-vanilla-select-with-arrow')
-    valueContainer.classList.add('autoql-vanilla-select-value-container')
-    indicators.classList.add('autoql-vanilla-select-indicators')
     indicatorSeparator.classList.add('autoql-vanilla-indicator-separator')
     indicatorContainer.classList.add('autoql-vanilla-indicator-container')
     popupContainer.classList.add('autoql-vanilla-select-popup-container')
@@ -118,14 +124,14 @@ export function TimezoneSelector(defaultValue=undefined){
         obj.createContent(filterData)
     }
 
-    input.onblur = () => {
-        popupContainer.classList.remove('visible')
-        obj.isOpen = false
-        valueElement.style.display = 'block'
-        input.style.display = 'none'
-        input.style.value = ''
-        obj.createContent(options)
-    }
+    // input.onblur = () => {
+    //     popupContainer.classList.remove('visible')
+    //     obj.isOpen = false
+    //     valueElement.style.display = 'block'
+    //     input.style.display = 'none'
+    //     input.style.value = ''
+    //     obj.createContent(options)
+    // }
 
     obj.createContent(options)
 
