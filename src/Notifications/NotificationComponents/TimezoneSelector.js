@@ -23,11 +23,18 @@ export function TimezoneSelector(defaultValue=undefined){
     var indicators = $dom('div', {
         classes: ['autoql-vanilla-select-indicators']
     })
-    var indicatorSeparator = document.createElement('div')
-    var indicatorContainer = document.createElement('div')
-    var popupContainer = document.createElement('div')
-    var timezoneList = document.createElement('ul')
-    var input = document.createElement('input')
+    var indicatorSeparator = $dom('div', {
+        classes: ['autoql-vanilla-indicator-separator']
+    })
+    var indicatorContainer = $dom('div', {
+        classes: ['autoql-vanilla-indicator-container']
+    })
+    var popupContainer = $dom('div', {
+        classes: ['autoql-vanilla-select-popup-container']
+    })
+    var timezoneList = $dom('ul', {
+        classes: ['autoql-vanilla-select-list']
+    })
     obj.isOpen = false
 
     const defaultTimeZone = defaultValue || momentTZ.tz.guess()
@@ -36,6 +43,10 @@ export function TimezoneSelector(defaultValue=undefined){
             value: tz,
             label: tz,
         }
+    })
+    var input = $dom('input', {
+        classes: ['autoql-vanilla-timezone-input'],
+        attributes: {type: 'text', placeholder: defaultTimeZone}
     })
 
     text.textContent = 'Time zone: '
@@ -70,13 +81,6 @@ export function TimezoneSelector(defaultValue=undefined){
         return options.filter(opt => opt.label.toLowerCase().includes(term))
     }
 
-    indicatorSeparator.classList.add('autoql-vanilla-indicator-separator')
-    indicatorContainer.classList.add('autoql-vanilla-indicator-container')
-    popupContainer.classList.add('autoql-vanilla-select-popup-container')
-    timezoneList.classList.add('autoql-vanilla-select-list')
-    input.setAttribute('type', 'text')
-    input.setAttribute('placeholder', defaultTimeZone)
-    input.classList.add('autoql-vanilla-timezone-input')
     indicatorContainer.innerHTML = SELECT_ARROW
 
     valueElement.textContent = defaultTimeZone

@@ -8,13 +8,9 @@ export function $dom(elem, options={}){
     } = options
 
     const setAttributes = (_attributes, prefix='') => {
-        _attributes.map(attr => {
-            let {
-                attrName,
-                attrValue
-            } = attr
-            el.setAttribute(`${prefix}${attrName}`, attrValue)
-        })
+        for(let [key, value] of Object.entries(_attributes)){
+            el.setAttribute(`${prefix}${key}`, value)
+        }
     }
 
     if(classes)classes.map(cl => el.classList.add(cl))
