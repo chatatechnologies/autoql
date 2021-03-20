@@ -124,14 +124,16 @@ export function TimezoneSelector(defaultValue=undefined){
         obj.createContent(filterData)
     }
 
-    // input.onblur = () => {
-    //     popupContainer.classList.remove('visible')
-    //     obj.isOpen = false
-    //     valueElement.style.display = 'block'
-    //     input.style.display = 'none'
-    //     input.style.value = ''
-    //     obj.createContent(options)
-    // }
+    input.onblur = () => {
+        setTimeout(() => {
+            popupContainer.classList.remove('visible')
+            obj.isOpen = false
+            valueElement.style.display = 'block'
+            input.style.display = 'none'
+            input.style.value = ''
+            obj.createContent(options)
+        }, 100)
+    }
 
     obj.createContent(options)
 
