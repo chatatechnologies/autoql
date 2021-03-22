@@ -2,7 +2,7 @@
     background: var(--autoql-vanilla-background-color-primary);
     position: absolute;
     top: 40px;
-    left: -205px;
+    left: -70px;
     right: 0;
     z-index: 9999;
     border: 1px solid hsla(0,0%,67.1%,.32);
@@ -14,9 +14,13 @@
     display: none;
 }
 
+.chata-popover-wrapper.chart{
+    left: -100px;
+}
+
 .chata-popover-single-message{
     left: 0 !important;
-    right: -205px;
+    right: -120px;
 }
 
 .chata-popover-wrapper.report-problem{

@@ -221,7 +221,7 @@ export function createStackedBarChart(
                     )
                 }
                 popover.close();
-            });
+            }, true);
 
         })
 

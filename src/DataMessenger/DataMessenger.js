@@ -31,7 +31,8 @@ import {
     getSafetynetValues,
     getSafetynetUserSelection,
     getGroupables,
-    showBadge
+    showBadge,
+    supportsVoiceRecord
 } from '../Utils'
 import {
     createAreaChart,
@@ -306,7 +307,8 @@ export function DataMessenger(elem, options){
                 obj.checkMaxMessages();
                 break;
             case 'enableVoiceRecord':
-                obj.options.autoQLConfig.enableVoiceRecord = value;
+                obj.options.enableVoiceRecord = value;
+                if(!supportsVoiceRecord())return
                 var display = value ? 'block' : 'none';
                 obj.voiceRecordButton.style.display = display;
                 break;
@@ -576,7 +578,10 @@ export function DataMessenger(elem, options){
 
 
     obj.showWarningIcon = (messageBubble, json) => {
-        if(json.data.rows.length >= 500){
+        const {
+            limit_row_num
+        } = json.data
+        if(json.data.rows.length >= limit_row_num){
             const warningIcon = htmlToElement(`
                 <span
                 class="chata-icon data-limit-warning-icon warning"
@@ -1002,7 +1007,7 @@ export function DataMessenger(elem, options){
 
         const totalItems = response.data.pagination.total_items;
         const pages = response.data.pagination.total_pages;
-        const currentPage = response.data.pagination.current_page;
+        var currentPage = response.data.pagination.current_page;
         aPrevious.textContent = '←';
         aNext.textContent = '→';
 
@@ -1077,6 +1082,7 @@ export function DataMessenger(elem, options){
             }
             queryTipListContainer.appendChild(item);
         }
+
         queryTipsResultContainer.innerHTML = '';
         queryTipsResultContainer.appendChild(queryTipListContainer);
         for (let i = 0; i < 3; i++) {
@@ -1095,11 +1101,13 @@ export function DataMessenger(elem, options){
                     a.textContent = currentPage;
                     let rightDots = document.createElement('li');
                     let aDots = document.createElement('a');
-                    aDots.textContent = '...';
-                    rightDots.appendChild(aDots);
-                    pagination.appendChild(rightDots);
-                    aDots.setAttribute('data-page', currentPage+1);
-                    rightDots.onclick = dotEvent;
+                    if(pages != 3){
+                        aDots.textContent = '...';
+                        rightDots.appendChild(aDots);
+                        pagination.appendChild(rightDots);
+                        aDots.setAttribute('data-page', currentPage+1);
+                        rightDots.onclick = dotEvent;
+                    }
                 }else if(currentPage > 3 && currentPage <= pages-2){
                     a.textContent = currentPage;
                     li.classList.add('selected');
@@ -1123,16 +1131,17 @@ export function DataMessenger(elem, options){
                     leftDots.onclick = dotEvent;
 
                 }else{
-                    a.textContent = '...';
+                    if(pages != 3){
+                        a.textContent = '...';
+                    }else{
+                        a.textContent = (i+1);
+                    }
                 }
             }else{
                 a.textContent = (i+1);
             }
-            if(currentPage > pages-2){
-                a.setAttribute('data-page', currentPage-1);
-            }else{
-                a.setAttribute('data-page', i+1);
-            }
+
+            a.setAttribute('data-page', i+1);
             li.onclick = dotEvent;
 
         }
@@ -1884,6 +1893,10 @@ export function DataMessenger(elem, options){
             type
         );
 
+        if(type === 'chart-view'){
+            moreOptions.classList.add('chart')
+        }
+
         var moreOptionsBtn = obj.getActionButton(
             VERTICAL_DOTS,
             'More options',
@@ -1892,27 +1905,28 @@ export function DataMessenger(elem, options){
             [moreOptions, toolbar]
         )
         moreOptionsBtn.classList.add('autoql-vanilla-more-options');
+        if(request){
+            if(
+                request['reference_id'] !== '1.1.420'
+                && type !== 'safety-net'
+                && type !== 'suggestions'
+                && request['reference_id'] !== '1.9.502'
+                && request['reference_id'] !== '1.1.550'
+            ){
+                toolbar.appendChild(
+                    moreOptionsBtn
+                );
+                toolbar.appendChild(moreOptions);
+                toolbar.appendChild(reportProblem);
+            }
 
-        if(
-            request['reference_id'] !== '1.1.420'
-            && type !== 'safety-net'
-            && type !== 'suggestions'
-            && request['reference_id'] !== '1.9.502'
-            && request['reference_id'] !== '1.1.550'
-        ){
-            toolbar.appendChild(
-                moreOptionsBtn
-            );
-            toolbar.appendChild(moreOptions);
-            toolbar.appendChild(reportProblem);
-        }
+            if(type === 'suggestions'){
+                toolbar.appendChild(reportProblem);
+            }
 
-        if(type === 'suggestions'){
-            toolbar.appendChild(reportProblem);
-        }
-
-        if(request['reference_id'] === '1.1.550'){
-            toolbar.appendChild(reportProblem);
+            if(request['reference_id'] === '1.1.550'){
+                toolbar.appendChild(reportProblem);
+            }
         }
 
         return toolbar;
@@ -2590,6 +2604,7 @@ export function DataMessenger(elem, options){
         table.parentContainer = parentContainer;
         setTimeout(function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+
         }, 350);
         allColHiddenMessage(tableWrapper);
         obj.showWarningIcon(messageBubble, jsonResponse)
@@ -2620,22 +2635,32 @@ export function DataMessenger(elem, options){
         });
     }
 
-    obj.sendResponse = (text) => {
+    obj.sendResponse = (text, withDeleteBtn=false) => {
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
+        var lastBubble = obj.getLastMessageBubble();
+        var uuid = uuidv4();
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
         containerMessage.classList.add(
             'text'
         );
+        containerMessage.setAttribute('data-bubble-id', uuid);
         containerMessage.style.zIndex = --obj.zIndexBubble;
-
+        containerMessage.relatedQuery = obj.lastQuery
+        containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.textContent = text;
+        messageBubble.innerHTML = text;
         containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
+        if(withDeleteBtn){
+            let toolbarButtons = obj.getActionToolbar(
+                uuid, 'safety-net', ''
+            );
+            messageBubble.appendChild(toolbarButtons);
+        }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     }
 
@@ -2738,7 +2763,7 @@ export function DataMessenger(elem, options){
         messageBubble.appendChild(obj.getActionToolbar(
             uuid, 'suggestions', ''
         ))
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;3
         refreshTooltips()
     }
 
@@ -2834,7 +2859,6 @@ export function DataMessenger(elem, options){
             hasDrilldown = true;
 
         }else{
-            // value = jsonResponse['message'].replace('<report>', '');
             var error = new ErrorMessage(jsonResponse['message'], () => {
                 ChataUtils.openModalReport(
                     idRequest, obj.options, null, null
@@ -2886,7 +2910,7 @@ export function DataMessenger(elem, options){
             }
             const path = getRecommendationPath(
                 obj.options,
-                text
+                encodeURIComponent(text)
             ) + '&query_id=' + jsonResponse['data']['query_id']
             var response = await apiCallGet(path, obj.options)
             if(loading)obj.drawerContent.removeChild(loading)
@@ -2971,13 +2995,25 @@ export function DataMessenger(elem, options){
         obj.input.value = '';
         const {
             domain,
-            apiKey
+            apiKey,
+            token
         } = obj.options.authentication
         var responseLoadingContainer = obj.putMessage(textValue);
+
+        if(!token){
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer)
+            }
+            obj.sendResponse(ACCESS_DENIED, true)
+            obj.input.removeAttribute("disabled")
+            refreshTooltips()
+            return
+        }
 
         const URL_SAFETYNET = `${domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
             textValue
         )}&key=${apiKey}`
+
 
         if(obj.options.autoQLConfig.enableQueryValidation){
             let response = await apiCallGet(URL_SAFETYNET, obj.options)
@@ -2992,10 +3028,17 @@ export function DataMessenger(elem, options){
 
             obj.input.removeAttribute("disabled")
             if(response.status != 200){
-                obj.sendResponse(response.data.message)
+                let msg = response.data.message;
+                let ref = response.data['reference_id']
+                obj.sendResponse(`
+                    <div>${msg}</div>
+                    <br/>
+                    <div>Error ID: ${ref}</div>
+                `, true)
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
+                refreshTooltips()
                 return
             }else{
                 let suggestions = {}
@@ -3199,6 +3242,13 @@ export function DataMessenger(elem, options){
     }
     refreshTooltips();
     var isVisible = obj.options.isVisible;
+    if(supportsVoiceRecord()){
+        var display = obj.options.enableVoiceRecord
+        ? 'block' : 'none';
+        obj.voiceRecordButton.style.display = display;
+    }else {
+        obj.voiceRecordButton.style.display = 'none';
+    }
     obj.openDrawer(true)
 
     if(!isVisible){

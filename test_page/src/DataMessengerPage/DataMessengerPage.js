@@ -65,6 +65,7 @@ export class DataMessengerPage extends Component {
         dashboardTiles: [],
         activeDashboardId: undefined,
         enableDynamicCharting: true,
+        autoChartAggregations: true,
         defaultTab: 'data-messenger',
     }
 
@@ -196,7 +197,9 @@ export class DataMessengerPage extends Component {
             <div className="props-page">
                 <div>
                 <h1>Authentication</h1>
-                <AuthenticationForm onLogin={this.props.onLogin}/>
+                <AuthenticationForm
+                    onLogin={this.props.onLogin}
+                    onLogOut={this.props.onLogOut}/>
                 {this.createBooleanRadioGroup('Show UI Overlay', 'uiOverlay', [
                     true,
                     false,
@@ -266,6 +269,17 @@ export class DataMessengerPage extends Component {
                     [true, false],
                     this.onChangeDMProp
                 )}
+                {this.createBooleanRadioGroup(
+                    'Test Mode (Provides extra logging on the server side)',
+                    'test',
+                    [true, false],
+                    (prop, val) => {
+                        this.setState({ [prop]: val })
+                        this.props.setDMOption('autoQLConfig', {
+                            test: val
+                        })
+                    }
+                )}
                 <h2>UI Configuration Options</h2>
                 {this.createBooleanRadioGroup(
                     'Show Data Messenger Button',
@@ -297,6 +311,12 @@ export class DataMessengerPage extends Component {
                     'defaultTab',
                     ['data-messenger', 'explore-queries'],
                     true,
+                )}
+                {this.createBooleanRadioGroup(
+                    'Auto-Chart Aggregation queries',
+                    'autoChartAggregations',
+                    [true, false],
+                    this.onChangeDMProp
                 )}
                 <h4>Currency Code</h4>
                 <Input

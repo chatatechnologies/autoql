@@ -214,7 +214,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                     )
                 }
                 popover.close();
-            });
+            }, true);
 
         })
     }

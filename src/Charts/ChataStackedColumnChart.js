@@ -230,7 +230,7 @@ export function createStackedColumnChart(
                     )
                 }
                 popover.close();
-            });
+            }, true);
 
         })
     }

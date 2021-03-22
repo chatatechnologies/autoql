@@ -6,7 +6,8 @@ import {
     getDatePivotArray,
     getPivotColumnArray,
     htmlToElement,
-    cloneObject
+    cloneObject,
+    getNumberOfGroupables
 } from '../Utils';
 import './Tabulator.css';
 import './TabulatorBootstrap.css';
@@ -17,7 +18,10 @@ function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
     if(
         !rowValue && (!['DOLLAR_AMT', 'QUANTITY', 'PERCENT'].includes(colType))
-    )rowValue = '';
+    ){
+        rowValue = ''
+    }
+
     if(colType == 'DATE' || colType == 'DATE_STRING'){
         var formatDate = formatData(
             rowValue,
@@ -30,7 +34,8 @@ function callTableFilter(col, headerValue, rowValue, options){
         colType == 'QUANTITY' ||
         colType == 'PERCENT'
     ) {
-        var trimmedValue = headerValue.trim();
+        var trimmedValue = headerValue.trim()
+        if(!rowValue)rowValue = 0
         if (trimmedValue.length >= 2) {
             let number
             if(trimmedValue[1] === '='){
@@ -256,6 +261,7 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
 
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
+        invalidOptionWarnings: false,
         virtualDomBuffer: 300,
         movableColumns: true,
         downloadConfig: {
@@ -339,6 +345,11 @@ export function ChataTable(
             onRowClick(e, row, cloneObject(json));
         },
     })
+    var groupableCount = getNumberOfGroupables(json['data']['columns']);
+
+    if(groupableCount === 0){
+        component.classList.add('no-drilldown')
+    }
 
     table.setHeight('100%');
 

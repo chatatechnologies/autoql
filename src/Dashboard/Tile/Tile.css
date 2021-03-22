@@ -120,7 +120,7 @@
     width: 70%;
 }
 
-.autoql-vanilla-chata-input-container  .autoql-vanilla-chata-input-settings{
+.autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings{
     border: 1px solid var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
     outline: none!important;;
     outline: none !important;
@@ -129,7 +129,7 @@
     flex-grow: 1 !important;
     -webkit-transition: width 0.3s ease !important;
     transition: width 0.3s ease !important;
-    height: 10px !important;
+    height: 10px;
     box-shadow: none !important;
 }
 

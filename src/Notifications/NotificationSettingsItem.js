@@ -4,8 +4,12 @@ import { ChataConfirmDialog } from '../ChataComponents'
 import { htmlToElement, apiCallPut, apiCallDelete } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import {
-    EDIT_ALERT
+    EDIT_ALERT,
+    HOUR_GLASS,
+    WARNING
 } from '../Svg'
+import moment from 'moment'
+import 'moment-timezone';
 
 export function NotificationSettingsItem(parentOptions, options) {
     var wrapper = document.createElement('div');
@@ -49,21 +53,51 @@ export function NotificationSettingsItem(parentOptions, options) {
     }
 
     chataCheckbox.appendChild(chataSwitch);
-    var editIcon = htmlToElement(`
-        <span class="chata-icon chata-notification-action-btn edit">
-            ${EDIT_ALERT}
+    var hourGlass = htmlToElement(HOUR_GLASS)
+    var editSvg = htmlToElement(EDIT_ALERT)
+    editSvg.classList.add('autoql-vanilla-edit-data-alert')
+    hourGlass.classList.add('autoql-vanilla-hour-glass')
+    var resetDate = htmlToElement(`
+        <span class="chata-icon autoq-vanilla-reset-period-info-icon">
         </span>
     `)
-
+    var editIcon = htmlToElement(`
+        <span class="chata-icon chata-notification-action-btn edit">
+        </span>
+    `)
+    editIcon.appendChild(editSvg)
+    resetDate.appendChild(hourGlass)
     wrapper.classList.add('chata-notification-setting-item');
     header.classList.add('chata-notification-setting-item-header');
     settingsDisplayName.classList.add('chata-notification-setting-display-name');
     displayName.classList.add('chata-notification-setting-display-name-title');
     displayNameMessage.classList.add('chata-notification-setting-display-name-message');
     settingsActions.classList.add('chata-notification-setting-actions')
-    displayName.innerHTML = wrapper.options.title;
+    const warningIcon = htmlToElement(`
+        <span
+        class="chata-icon autoql-vanilla-notification-error-status-icon"
+        data-tippy-content="There was a problem with this Data Alert. Click for more information.">
+            ${WARNING}
+        </span>
+    `)
+    if(['GENERAL_ERROR', 'EVALUATION_ERROR'].includes(options.status)){
+        displayName.appendChild(warningIcon)
+    }
+    displayName.appendChild(document.createTextNode(wrapper.options.title))
     if(wrapper.options.message){
         displayNameMessage.innerHTML = ' - ' + wrapper.options.message;
+    }
+
+    wrapper.getTooltip = () => {
+        const {
+            reset_date,
+            time_zone
+        } = options
+
+        const formatDate = moment(reset_date).format(
+            'MMMM DD, YYYY [at] hh:mmA'
+        ).toString();
+        return `This Alert has been triggered. Scanning will resume on ${formatDate} (${time_zone})`;
     }
 
     wrapper.updateView = () => {
@@ -91,12 +125,16 @@ export function NotificationSettingsItem(parentOptions, options) {
     }
 
     settingsActions.appendChild(editIcon);
+    if(options.reset_date){
+        resetDate.setAttribute('data-tippy-content', wrapper.getTooltip())
+        settingsActions.appendChild(resetDate)
+    }
     settingsActions.appendChild(chataCheckbox)
     settingsDisplayName.appendChild(displayName);
     settingsDisplayName.appendChild(displayNameMessage);
     header.appendChild(settingsDisplayName);
     header.appendChild(settingsActions);
-    header.onclick = function(evt){
+    const onClick = function(evt){
         var target = evt.target;
         if(!target.classList.contains('chata-slider')
             && target.tagName !== 'INPUT'){
@@ -165,16 +203,16 @@ export function NotificationSettingsItem(parentOptions, options) {
             configModal.addFooterElement(footerWrapper);
             configModal.show();
             refreshTooltips();
-            cancelButton.onclick = (e) => {
+            cancelButton.onclick = () => {
                 new ChataConfirmDialog(
                     'Are you sure you want to leave this page?',
                     'All unsaved changes will be lost.',
-                    (evt) => {
+                    () => {
                         configModal.close()
                     }
                 )
             }
-            saveButton.onclick = async (e) => {
+            saveButton.onclick = async () => {
                 spinner.classList.remove('hidden')
                 saveButton.setAttribute('disabled', 'true')
                 var o = wrapper.options
@@ -191,6 +229,9 @@ export function NotificationSettingsItem(parentOptions, options) {
             }
         }
     }
+    editSvg.onclick = onClick
+    hourGlass.onclick = onClick
+    warningIcon.onclick = onClick
     wrapper.appendChild(header);
     return wrapper;
 }

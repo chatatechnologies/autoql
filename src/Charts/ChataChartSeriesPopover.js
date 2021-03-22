@@ -3,7 +3,7 @@ import { getIndexesByType } from './ChataChartHelpers'
 import { htmlToElement, formatColumnName } from '../Utils'
 import { TICK } from '../Svg'
 
-export function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
+export function ChataChartSeriesPopover(position, cols, activeSeries, onClick, showOnBaseline=false){
     var obj = this;
     var indexList = getIndexesByType(cols);
     var seriesIndexes = [];
@@ -11,7 +11,7 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick){
         seriesIndexes.push(col.index);
     })
     var content = document.createElement('div');
-    var popover = new PopoverChartSelector(position);
+    var popover = new PopoverChartSelector(position, showOnBaseline);
     var series = {};
     const applyButton = htmlToElement(`
         <button

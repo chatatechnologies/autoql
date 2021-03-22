@@ -48,6 +48,13 @@
     transition: all .3s ease;
 }
 
+.autoql-vanilla-chata-table.no-drilldown .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-cell{
+    cursor: auto;
+}
+
+.autoql-vanilla-chata-table.no-drilldown .tabulator-tableHolder .tabulator-table .tabulator-row{
+    cursor: default !important;
+}
 
 .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
     background-color: transparent;

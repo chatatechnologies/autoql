@@ -5,7 +5,9 @@ import {
     uuidv4,
     cloneObject,
     getSupportedDisplayTypes,
-    createTableContainer
+    createTableContainer,
+    formatData,
+    mergeOptions
 } from '../Utils'
 import {
     createAreaChart,
@@ -103,12 +105,16 @@ export function QueryOutput(selector, options={}){
             autoChartAggregations
         } = responseRenderer.options
         if(!jsonResponse)return
+        var chataBarContainer = responseRenderer.chataBarContainer
         var groupables = getGroupables(jsonResponse)
         responseRenderer.clearMetadata()
         ChataUtils.responses[uuid] = jsonResponse;
         if(!jsonResponse)return
         let displayType;
         var sup = getSupportedDisplayTypes(jsonResponse);
+        var chartWrapper = document.createElement(
+            'div'
+        );
         if(sup.includes(responseRenderer.options.displayType)){
             displayType = responseRenderer.options.displayType;
             if(groupables.length === 1 && autoChartAggregations){
@@ -121,8 +127,6 @@ export function QueryOutput(selector, options={}){
         }else{
             displayType = 'table';
         }
-
-
 
         switch(displayType){
             case 'table':
@@ -149,27 +153,24 @@ export function QueryOutput(selector, options={}){
                 }
             break;
             case 'pivot_table':
-                let opts = mergeOptions([
+                var opts = mergeOptions([
                     chataBarContainer.options,
                     responseRenderer.options
                 ]);
-                var div = createTableContainer();
-                responseRenderer.appendChild(div);
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add(
+                var d = createTableContainer();
+                responseRenderer.appendChild(d);
+                var s = document.createElement('div');
+                s.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
                 );
-                scrollbox.appendChild(div);
+                scrollbox.appendChild(d);
                 responseRenderer.appendChild(scrollbox);
-                var table = new ChataPivotTable(
+                var t = new ChataPivotTable(
                     uuid, opts, chataBarContainer.onCellClick
                 )
-                div.tabulator = table;
+                div.tabulator = t;
             break;
             case 'line':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createLineChart(
                     chartWrapper,
@@ -179,9 +180,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'bar':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createBarChart(
                     chartWrapper,
@@ -191,9 +189,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'column':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createColumnChart(
                     chartWrapper,
@@ -203,9 +198,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'heatmap':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createHeatmap(
                     chartWrapper,
@@ -214,9 +206,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'bubble':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createBubbleChart(
                     chartWrapper,
@@ -230,9 +219,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'stacked_bar':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createStackedBarChart(
                     chartWrapper, jsonResponse,
@@ -242,9 +228,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'stacked_column':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createStackedColumnChart(
                     chartWrapper, jsonResponse,
@@ -254,9 +237,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'stacked_line':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createAreaChart(
                     chartWrapper, jsonResponse,
@@ -266,9 +246,6 @@ export function QueryOutput(selector, options={}){
                 );
             break;
             case 'pie':
-                var chartWrapper = document.createElement(
-                    'div'
-                );
                 responseRenderer.appendChild(chartWrapper);
                 createPieChart(
                     chartWrapper, jsonResponse,
@@ -298,9 +275,6 @@ export function QueryOutput(selector, options={}){
                 var clickedData = getClickedData(
                     json, ...json['data']['rows'][indexData]
                 );
-                var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
-                    'autoql-vanilla-chat-bar-text'
-                )[0]
 
                 var groupableCount = getNumberOfGroupables(
                     json['data']['columns']
@@ -320,22 +294,18 @@ export function QueryOutput(selector, options={}){
         }
 
         if (e.target.hasAttribute('data-stackedchartindex')) {
-            var json = cloneObject(ChataUtils.responses[uuid]);
-            var groupables = getGroupables(json);
-            var queryId = json['data']['query_id'];
+            let json = cloneObject(ChataUtils.responses[uuid]);
+            let queryId = json['data']['query_id'];
 
             var val1 = e.target.dataset.unformatvalue1;
             var val2 = e.target.dataset.unformatvalue2;
             var val3 = e.target.dataset.unformatvalue3;
 
-            var clickedData = getClickedData(json, val1, val2, val3);
+            let clickedData = getClickedData(json, val1, val2, val3);
             json['data']['rows'][0][0] = val1;
             json['data']['rows'][0][1] = val2;
             json['data']['rows'][0][2] = val3;
 
-            var topBar = responseRenderer.chataBarContainer.getElementsByClassName(
-                'autoql-vanilla-chat-bar-text'
-            )[0]
             responseRenderer.chataBarContainer.sendDrilldownMessage(
                 json, indexData
             );

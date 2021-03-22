@@ -3,6 +3,7 @@ import {
     enumerateCols,
     getIndexesByType,
     getMetadataElement,
+    getVisibleGroups,
 } from './ChataChartHelpers'
 import {
     getColorScale,
@@ -66,6 +67,14 @@ export function createPieChart(
         json['data']['rows'], row => row[index1], index2
     );
 
+    var groups = {}
+
+    for(let [key] of Object.entries(data)){
+        groups[key] = {
+            isVisible: true
+        }
+    }
+
     var colStr1 = cols[index1]['display_name'] || cols[index1]['name'];
     var colStr2 = cols[index2]['display_name'] || cols[index2]['name'];
     var col1 = formatColumnName(colStr1);
@@ -112,10 +121,6 @@ export function createPieChart(
     .attr('width', width)
     .attr('height', height)
 
-
-    var pieChartContainer = svg.append('g')
-    .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
-
     var arc = getArc(
         innerRadius,
         outerRadius
@@ -124,75 +129,86 @@ export function createPieChart(
     var pie = getPie(
         (d) => { return d.value }
     )
-    var colorLabels = []
 
-    const entries = (map) => {
+
+    let pieChartContainer
+    const entries = (map, visibleGroups) => {
         var entries = [];
-        for (var key in map) entries.push({key: key, value: map[key]});
+        visibleGroups.map(group => {
+            entries.push({key: group, value: map[group]});
+        })
         return entries;
     }
-    var dataReady = pie(entries(data))
-    for (var i = 0; i < dataReady.length; i++) {
-        var d = dataReady[i]
-        colorLabels.push(d.data.key);
+
+    const createSlices = () => {
+        var visibleGroups = getVisibleGroups(groups);
+        var dataReady = pie(entries(data, visibleGroups))
+        if(pieChartContainer)pieChartContainer.remove()
+
+        pieChartContainer = svg.append('g')
+        .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
+        var colorLabels = []
+        for(let [key] of Object.entries(data)){
+            colorLabels.push(key);
+        }
+        var color = getColorScale(colorLabels, options.themeConfig.chartColors)
+
+        pieChartContainer.selectAll('path')
+        .data(dataReady)
+        .enter()
+        .append('path')
+        .each(function(d, i){
+            select(this).attr(valueClass, i)
+            .attr('data-filterindex', index1)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
+            .attr('data-colvalue2', formatData(
+                d.value, cols[index2],
+                options
+            ))
+            select(this)._groups[0][0].style.fill = color(d.data.key)
+        })
+        .attr('d', arc)
+        .style('fill-opacity', 0.85)
+        .on('mouseover', function() {
+            select(this).style('fill-opacity', 1)
+        })
+        .on('mouseout', function() {
+            select(this).style('fill-opacity', 0.85)
+        })
+        .on('click', function() {
+            svg
+            .selectAll('path.slice')
+            .each(function(data) {
+                data._expanded = false
+            })
+            .transition()
+            .duration(500)
+            .attr('transform', function(){
+                return 'translate(0,0)';
+            });
+
+            select(this)
+            .transition()
+            .duration(500)
+            .attr('transform', function(d) {
+                if (!d._expanded) {
+                    d._expanded = true
+                    const a =
+                    d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2
+                    const x = Math.cos(a) * 10
+                    const y = Math.sin(a) * 10
+                    return 'translate(' + x + ',' + y + ')'
+                } else {
+                    d._expanded = false
+                    return 'translate(0,0)'
+                }
+            })
+        })
+        .attr('class', 'tooltip-2d pie-slice slice')
+        tooltipCharts();
     }
-
-    var color = getColorScale(colorLabels, options.themeConfig.chartColors)
-
-    pieChartContainer.selectAll('path')
-    .data(dataReady)
-    .enter()
-    .append('path')
-    .each(function(d, i){
-        select(this).attr(valueClass, i)
-        .attr('data-col1', col1)
-        .attr('data-col2', col2)
-        .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
-        .attr('data-colvalue2', formatData(
-            d.value, cols[index2],
-            options
-        ))
-        select(this)._groups[0][0].style.fill = color(d.data.key)
-    })
-    .attr('d', arc)
-    .style('fill-opacity', 0.85)
-    .on('mouseover', function() {
-        select(this).style('fill-opacity', 1)
-    })
-    .on('mouseout', function() {
-        select(this).style('fill-opacity', 0.85)
-    })
-    .on('click', function() {
-        svg
-        .selectAll('path.slice')
-        .each(function(data) {
-            data._expanded = false
-        })
-        .transition()
-        .duration(500)
-        .attr('transform', function(){
-            return 'translate(0,0)';
-        });
-
-        select(this)
-        .transition()
-        .duration(500)
-        .attr('transform', function(d) {
-            if (!d._expanded) {
-                d._expanded = true
-                const a =
-                d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2
-                const x = Math.cos(a) * 10
-                const y = Math.sin(a) * 10
-                return 'translate(' + x + ',' + y + ')'
-            } else {
-                d._expanded = false
-                return 'translate(0,0)'
-            }
-        })
-    })
-    .attr('class', 'tooltip-2d pie-slice slice')
-    tooltipCharts();
 
 
     // define legend
@@ -204,14 +220,13 @@ export function createPieChart(
 
     var labels = []
 
-    for (let i = 0; i < dataReady.length; i++) {
-        let d = dataReady[i]
+    for(let [key, value] of Object.entries(data)){
         labels.push(
             formatData(
-                    d.data.key, cols[index1],
+                    key, cols[index1],
                     options) + ": " +
             formatData(
-                    d.value, cols[index2],
+                    value, cols[index2],
                     options
             )
         );
@@ -235,8 +250,28 @@ export function createPieChart(
     const legendYPosition =
       legendHeight < height - 20 ? (height - legendHeight) / 2 : 15
 
-    svgLegend
-      .attr('transform', `translate(${legendXPosition}, ${legendYPosition})`)
+    svgLegend.attr(
+        'transform', `translate(${legendXPosition}, ${legendYPosition})`
+    )
+
+    legendOrdinal.on('cellclick', function(d) {
+        var words = []
+        var nodes = d.currentTarget.getElementsByTagName('tspan')
+        for (var i = 0; i < nodes.length; i++) {
+            words.push(nodes[i].textContent)
+        }
+
+        var key = words.join(' ').split(':')[0]
+
+        groups[key].isVisible =
+        !groups[key].isVisible;
+        createSlices();
+        const legendCell = select(this);
+        legendCell.classed(
+            'disable-group', !legendCell.classed('disable-group')
+        );
+    });
+
 
 
     select(window).on(
@@ -251,4 +286,6 @@ export function createPieChart(
             )
         }
     );
+
+    createSlices()
 }

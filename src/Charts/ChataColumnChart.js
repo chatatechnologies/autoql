@@ -334,7 +334,7 @@ export function createColumnChart(
                     renderTooltips
                 )
                 popover.close();
-            });
+            }, true);
 
             popoverSelector.setSelectedItem(selectedItem)
         })

@@ -26,12 +26,19 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../../Charts'
+import {
+    DrilldownToolbar
+} from '../DrilldownToolbar'
 import './DrilldownView.css'
 
 export function DrilldownView(
     tile, displayType,onClick=()=>{}, isStatic=true, drilldownMetadata={}
 ){
     var view = document.createElement('div')
+    var wrapperView = document.createElement('div')
+    wrapperView.classList.add('autoql-vanilla-drilldown-wrapper-view')
+    view.appendChild(wrapperView)
+    view.wrapper = wrapperView
     view.onClick = onClick
     if(isStatic){
         view.classList.add('autoql-vanilla-dashboard-drilldown-original')
@@ -42,6 +49,8 @@ export function DrilldownView(
         dashboard
     } = tile
     const UUID = uuidv4()
+    view.isVisible = true
+
     view.onRowClick = () => {
 
     }
@@ -104,7 +113,7 @@ export function DrilldownView(
         }
 
         var cols = []
-        for(var [key] of Object.entries(params)){
+        for(let [key, value] of Object.entries(params)){
             cols.push({
                 name: key,
                 value: value
@@ -117,7 +126,7 @@ export function DrilldownView(
 
         var response = await apiCallPost(URL, data, options);
         ChataUtils.responses[UUID] = response.data
-        view.removeChild(loading)
+        view.wrapper.removeChild(loading)
 
         if(response.data.data.rows.length > 0){
             view.displayData(response.data)
@@ -127,12 +136,12 @@ export function DrilldownView(
                     UUID, dashboard.options, null, null
                 )
             })
-            view.appendChild(error)
+            view.wrapper.appendChild(error)
         }
     }
 
     view.showLoadingDots = () => {
-        view.innerHTML = ''
+        wrapperView.innerHTML = ''
 
         var responseLoadingContainer = document.createElement('div')
         var responseLoading = document.createElement('div')
@@ -146,13 +155,41 @@ export function DrilldownView(
         }
 
         responseLoadingContainer.appendChild(responseLoading)
-        view.appendChild(responseLoadingContainer)
+        view.wrapper.appendChild(responseLoadingContainer)
         return responseLoadingContainer
     }
 
+    view.getGutter = () => {
+        var gutter = view.parentElement.querySelector('.gutter')
+        return gutter
+    }
+
+    view.hide = () => {
+        view.isVisible = false
+        view.wrapper.style.display = 'none'
+        view.classList.add('no-height')
+        let gutter = view.getGutter()
+        gutter.style.display = 'none'
+    }
+
+    view.show = () => {
+        view.isVisible = true
+        view.wrapper.style.display = 'block'
+        view.classList.remove('no-height')
+        let gutter = view.getGutter()
+        gutter.style.display = 'block'
+    }
+
+    view.displayToolbar = () => {
+        if(isStatic){
+            var drilldownButton = new DrilldownToolbar(view)
+            view.appendChild(drilldownButton)
+        }
+    }
+
     view.displayData = (json) => {
-        var container = view
-        view.innerHTML = ''
+        var container = view.wrapper
+        view.wrapper.innerHTML = ''
         let chartWrapper
         let chartWrapper2
 
@@ -330,6 +367,7 @@ export function DrilldownView(
                 div.tabulator = _table
                 break
         }
+        view.displayToolbar()
     }
 
     if(!isStatic){

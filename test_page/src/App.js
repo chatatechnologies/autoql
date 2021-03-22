@@ -91,6 +91,7 @@ class App extends React.Component {
 
     onLogin = (values, authentication) => {
         var obj = this;
+        this.datamessenger.clearMessages()
         this.datamessenger.setOption("authentication", {
             ...values,
         });
@@ -158,6 +159,14 @@ class App extends React.Component {
         })
     }
 
+    onLogOut = () => {
+        this.datamessenger.setOption('authentication', {
+            domain: null,
+            apiKey: null,
+            token: null
+        })
+    }
+
     renderActivePage = () => {
         const { currentPage } = this.state;
         let widgetPage = null;
@@ -166,6 +175,7 @@ class App extends React.Component {
             widgetPage = (
                 <DataMessengerPage
                 onLogin={this.onLogin}
+                onLogOut={this.onLogOut}
                 setDMOption={this.setDMOption}
                 showDM={this.openDrawer}
                 onChangeTheme={this.onChangeTheme}

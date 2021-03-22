@@ -187,8 +187,8 @@ export function getSafetynetUserSelection(node){
             start: start,
             end: end,
             value: n.option.text,
-            canonical: n.option.canonical,
-            value_label: n.option.value_label
+            canonical: n.option.canonical || 'ORIGINAL_TEXT',
+            value_label: n.option.value_label || 'ORIGINAL_TEXT'
         })
     }
 
@@ -1189,4 +1189,23 @@ export const getFirstDateCol = (cols) => {
     }
 
     return -1
+}
+
+export const supportsVoiceRecord = () => {
+    var isIE = /*@cc_on!@*/false || !!document.documentMode;
+    var isEdge = !isIE && !!window.StyleMedia;
+    var isChrome = !!window.chrome &&
+    (!!window.chrome.webstore || !!window.chrome.runtime);
+
+    return isEdge || isChrome
+}
+
+export const getHeightForChildrens = (parent) => {
+    var child = parent.childNodes;
+    var totalH = 0
+    for (var i = 0; i < child.length; i++) {
+        totalH += child[i].offsetHeight;
+    }
+
+    return totalH;
 }
