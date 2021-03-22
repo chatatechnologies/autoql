@@ -1,20 +1,29 @@
 import {
     getHeightForChildrens
 } from '../../Utils'
+import {
+    $dom
+} from '../../Dom'
 
 export function ChataModalStep(title, nStep, subtitle=''){
-    var step = document.createElement('div');
-    var titleEl = document.createElement('div');
-    var stepContent = document.createElement('div');
-    var contentWrapper = document.createElement('div');
-    var stepDot = document.createElement('div');
-    var stepContentContainer = document.createElement('div');
-    step.classList.add('chata-step-container');
-    titleEl.classList.add('chata-step-title');
-    stepContent.classList.add('chata-step-content');
-    stepDot.classList.add('chata-step-dot');
+    var step = $dom('div', {
+        classes: ['chata-step-container']
+    });
+    var titleEl = $dom('div', {
+        classes: ['chata-step-title']
+    });
+    var stepContent = $dom('div', {
+        classes: ['chata-step-content']
+    });
+    var contentWrapper = $dom('div');
+    var stepDot = $dom('div', {
+        classes: ['chata-step-dot']
+    });
+    var stepContentContainer = $dom('div', {
+        classes: ['chata-step-content-container']
+    });
+
     stepDot.innerHTML = nStep;
-    stepContentContainer.classList.add('chata-step-content-container')
     stepContentContainer.style.height = '10px';
     titleEl.innerHTML = title;
 
@@ -45,8 +54,9 @@ export function ChataModalStep(title, nStep, subtitle=''){
 
     step.appendChild(titleEl);
     if(subtitle !== ''){
-        var subtitleEl = document.createElement('div');
-        subtitleEl.classList.add('chata-step-subtitle');
+        var subtitleEl = $dom('div', {
+            classes: ['chata-step-subtitle']
+        });
         subtitleEl.innerHTML = subtitle;
         stepContentContainer.appendChild(subtitleEl);
     }
