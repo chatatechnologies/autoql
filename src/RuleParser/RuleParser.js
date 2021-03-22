@@ -18,10 +18,6 @@ export function convert(rules){
 		var operator = getOperator(term.condition)
 		rule.push(term.term_value)
 		if(operator)rule.push(operator)
-		// if(term.condition === 'TERMINATOR'){
-		// 	parsedRules.push([rule])
-		// 	rule = []
-		// }
 	}
 	return rule;
 }
