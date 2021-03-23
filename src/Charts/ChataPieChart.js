@@ -19,7 +19,7 @@ import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 
 export function createPieChart(
-    component, json, options, fromChataUtils=true,
+    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
 
     var margin = 20;
@@ -144,10 +144,8 @@ export function createPieChart(
 
     const createSlices = () => {
         var visibleGroups = getPieGroups(groups);
-        console.log(visibleGroups);
         var dataReady = pie(entries(data, visibleGroups))
         if(pieChartContainer)pieChartContainer.remove()
-        console.log(dataReady);
         pieChartContainer = svg.append('g')
         .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
         var colorLabels = []
@@ -160,7 +158,7 @@ export function createPieChart(
         .data(dataReady)
         .enter()
         .append('path')
-        .each(function(d, i){
+        .each(function(d){
             select(this).attr(valueClass, d.data.index)
             .attr('data-filterindex', index1)
             .attr('data-col1', col1)
@@ -211,6 +209,7 @@ export function createPieChart(
         })
         .attr('class', 'tooltip-2d pie-slice slice')
         tooltipCharts();
+        onUpdate(component)
     }
 
 
@@ -283,6 +282,7 @@ export function createPieChart(
                 component,
                 json,
                 options,
+                onUpdate,
                 fromChataUtils,
                 valueClass,
                 renderTooltips

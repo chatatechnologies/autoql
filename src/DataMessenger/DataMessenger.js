@@ -2271,7 +2271,9 @@ export function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pie');
-        createPieChart(component, json, obj.options);
+        createPieChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
