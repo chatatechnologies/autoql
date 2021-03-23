@@ -499,7 +499,6 @@ export function createBarChart(
         });
         svgLegend.call(legendOrdinal)
 
-
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin
             svgLegend

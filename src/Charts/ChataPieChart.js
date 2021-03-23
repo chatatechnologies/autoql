@@ -14,6 +14,7 @@ import {
 import {
     formatColumnName,
     formatData,
+    formatChartData
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
@@ -68,10 +69,16 @@ export function createPieChart(
     );
 
     var groups = {}
-
+    var legendGroups = {}
     for(let [key] of Object.entries(data)){
         groups[key] = {
             isVisible: true
+        }
+
+        legendGroups[
+            formatChartData(key, cols[index1], options)
+        ] = {
+            value: key
         }
     }
 
@@ -246,6 +253,7 @@ export function createPieChart(
         legendBBox = legendElement.getBBox()
     }
 
+    console.log(groups);
     const legendHeight = legendBBox.height
     const legendWidth = legendBBox.width
     const legendXPosition = width / 2 - legendWidth
@@ -262,18 +270,15 @@ export function createPieChart(
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }
-
-        var key = words.join(' ').split(':')[0]
-
-        groups[key].isVisible =
-        !groups[key].isVisible;
+        var unformatGroup = legendGroups[words.join(' ').split(':')[0]].value;
+        groups[unformatGroup].isVisible =
+        !groups[unformatGroup].isVisible;
         createSlices();
         const legendCell = select(this);
         legendCell.classed(
             'disable-group', !legendCell.classed('disable-group')
         );
     });
-
 
 
     select(window).on(
