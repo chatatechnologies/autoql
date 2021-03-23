@@ -436,6 +436,13 @@ export function createColumnChart(
     }
 
     if(hasLegend){
+        let legendText = svg.append('text')
+        .attr('x', chartWidth + 40)
+        .attr('y', 10)
+        .attr('text-anchor', 'middle')
+        .attr("class", "autoql-vanilla-x-axis-label")
+        legendText.append('tspan')
+        .text('Category');
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -471,7 +478,7 @@ export function createColumnChart(
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin
             svgLegend
-              .attr('transform', `translate(${newX}, ${0})`)
+              .attr('transform', `translate(${newX}, ${25})`)
         }else{
 
             let legendBBox
