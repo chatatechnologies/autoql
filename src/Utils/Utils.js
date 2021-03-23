@@ -182,10 +182,10 @@ export function getSafetynetUserSelection(node){
     var selections = []
     for (var i = 0; i < nodes.length; i++) {
         var n = nodes[i]
-        const { start, end } = n.suggestion
+        const { start } = n.suggestion
         selections.push({
             start: start,
-            end: end,
+            end: (start + n.option.text.length),
             value: n.option.text,
             canonical: n.option.canonical || 'ORIGINAL_TEXT',
             value_label: n.option.value_label || 'ORIGINAL_TEXT'
