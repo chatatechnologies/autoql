@@ -89,6 +89,22 @@ export const getVisibleGroups = (groups) => {
     return visibleGroups
 }
 
+export const getPieGroups = (groups) => {
+    var visibleGroups = []
+    var index = 0
+    for(var [key] of Object.entries(groups)){
+        if(groups[key].isVisible){
+            visibleGroups.push({
+                key: key,
+                index: index
+            })
+        }
+        index++;
+    }
+
+    return visibleGroups
+}
+
 export const getSeriesValues = (
     item, series, seriesIndexes, labelIndex, items, key, multiSeriesCol
 ) => {
