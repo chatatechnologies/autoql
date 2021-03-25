@@ -1677,7 +1677,13 @@ export function DataMessenger(elem, options){
         toolbar.classList.toggle('show');
         var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
         if(bubble === obj.getLastMessageBubble()) {
-            bubble.scrollIntoView()
+            if(
+                !bubble.classList.contains(
+                    'autoql-vanilla-chat-message-response'
+                )
+            ){
+                bubble.scrollIntoView()
+            }
         }
     }
 
