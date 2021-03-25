@@ -154,7 +154,6 @@ export const groupByValue = (
     )
     items.forEach((item) => {
         const key = item[labelIndex];
-
         if (!obj[key]) {
             obj[key] = getSeriesValues(
                 item,

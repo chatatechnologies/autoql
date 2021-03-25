@@ -335,10 +335,6 @@ export function createLineChart(
 
     var x = SCALE_BAND();
     setDomainRange(x, labelsNames, 0, chartWidth);
-    // .domain(data.map(function(d) {
-    //     return d.label
-    // }))
-    // .range([ 0, chartWidth]);
 
     var xAxis = getAxisBottom(x);
     const xShift = getBandWidth(x) / 2;
@@ -350,7 +346,9 @@ export function createLineChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatLabel(formatChartData(d, cols[index2], options));
+            let fLabel = formatChartData(d, cols[index2], options);
+            if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+            return formatLabel(fLabel);
         }))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -359,7 +357,9 @@ export function createLineChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatLabel(formatChartData(d, cols[index2], options));
+            let fLabel = formatChartData(d, cols[index2], options);
+            if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+            return formatLabel(fLabel);
         }))
         .selectAll("text")
         .style("text-anchor", "center")
