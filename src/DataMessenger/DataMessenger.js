@@ -628,6 +628,7 @@ export function DataMessenger(elem, options){
 
     obj.queryTipsAnimation = function(display){
         obj.queryTips.style.display = display;
+        if(display !== 'none')obj.queryTipsInput.focus()
     }
 
     obj.createNotifications = function() {

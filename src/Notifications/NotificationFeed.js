@@ -91,7 +91,6 @@ export function NotificationFeed(selector, options){
         classes: ['chata-notification-dismiss-all']
     })
     var dismissContent = $dom('span', {
-        classes: ['']
     })
     var dismissIcon = htmlToElement(DISMISS);
     var imageWrapper = $dom('div')
