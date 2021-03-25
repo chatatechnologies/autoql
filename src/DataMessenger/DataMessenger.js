@@ -1709,8 +1709,10 @@ export function DataMessenger(elem, options){
         var table = document.querySelector(
             `[data-componentid="${idRequest}"]`
         );
+        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
         var tabulator = table.tabulator;
         tabulator.toggleFilters();
+        bubble.scrollIntoView()
     }
 
     obj.openColumnEditorHandler = (evt, idRequest, badge) => {
