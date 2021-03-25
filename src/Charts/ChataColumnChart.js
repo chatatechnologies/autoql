@@ -348,7 +348,9 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatLabel(formatChartData(d, cols[index2], options))
+            let fLabel = formatChartData(d, cols[index2], options);
+            if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+            return formatLabel(fLabel);
         }))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -357,7 +359,9 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatLabel(formatChartData(d, cols[index2], options))
+            let fLabel = formatChartData(d, cols[index2], options);
+            if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+            return formatLabel(fLabel);
         }))
         .selectAll("text")
         .style("text-anchor", "center")

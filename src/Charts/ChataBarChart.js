@@ -394,7 +394,9 @@ export function createBarChart(
     .attr("class", "y axis")
     .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
-        return formatLabel(formatData(d, cols[index2], options))
+        let fLabel = formatChartData(d, cols[index2], options);
+        if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+        return formatLabel(fLabel);
     }))
     let slice;
     function createBars(){
