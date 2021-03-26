@@ -315,14 +315,14 @@ export function DataMessenger(elem, options){
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
                 if(value && obj.options.isVisible){
-                    obj.queryTabs.style.display = 'block';
-                }else obj.queryTabs.style.display = 'none';
+                    obj.queryTabs.style.visibility = 'visible';
+                }else obj.queryTabs.style.visibility = 'hidden';
                 break;
             case 'enableNotificationsTab':
                 obj.options.enableNotificationsTab = value;
                 if(value && obj.options.isVisible){
-                    obj.tabNotifications.style.display = 'block'
-                }else obj.tabNotifications.style.display = 'none'
+                    obj.tabNotifications.style.visibility = 'visible'
+                }else obj.tabNotifications.style.visibility = 'hidden'
                 obj.instanceNotificationIcon()
                 obj.toggleNotificationOption()
                 obj.showTabs()
