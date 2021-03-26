@@ -215,6 +215,7 @@ export function Dashboard(selector, options={}){
 
     obj.startEditing = () => {
         obj.options.isEditing = true
+        parent.classList.add('editing')
         obj.tiles.forEach((item) => {
             item.startEditing()
         })
@@ -225,6 +226,7 @@ export function Dashboard(selector, options={}){
 
     obj.stopEditing = () => {
         obj.options.isEditing = false
+        parent.classList.remove('editing')
         obj.tiles.forEach((item) => {
             item.stopEditing()
         })
