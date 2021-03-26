@@ -225,6 +225,7 @@
 
 .grid-stack > .grid-stack-item > .ui-resizable-handle{
     background-image: none !important;
+    transform: none !important;
 }
 
 .grid-stack > .grid-stack-item > .ui-resizable-handle::after{
@@ -232,7 +233,7 @@
     height: 11px!important;
     bottom: 4px;
     right: 4px;
-    opacity: 0;
+    opacity: 1;
     border-right: 1px solid rgba(0,0,0,.4)!important;
     border-right: 1px solid var(--atuoql-vanilla-text-color-primary,rgba(0,0,0,.4))!important;
     border-bottom: 1px solid rgba(0,0,0,.4)!important;
