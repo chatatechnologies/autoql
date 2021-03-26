@@ -252,6 +252,12 @@ export function NotificationFeed(selector, options){
         var delay = 0.08;
         wrapper.isLoading = true;
         var response = await apiCallGet(URL, wrapper.options)
+        if(!response){
+            emptyStateContainer.style.display = 'flex'
+            dismissContent.style.display = 'none'
+            wrapper.isLoading = false
+            return
+        }
         var jsonResponse = response.data
         var items = jsonResponse['data']['items'];
         if(items.length > 0){
