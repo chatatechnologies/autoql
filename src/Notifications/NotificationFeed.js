@@ -253,7 +253,7 @@ export function NotificationFeed(selector, options){
         wrapper.isLoading = true;
         var response = await apiCallGet(URL, wrapper.options)
         if(!response){
-            emptyStateContainer.style.display = 'flex'
+            emptyStateContainer.style.display = 'block'
             dismissContent.style.display = 'none'
             wrapper.isLoading = false
             return
@@ -269,7 +269,7 @@ export function NotificationFeed(selector, options){
                 );
             }
         }else{
-            emptyStateContainer.style.display = 'flex'
+            emptyStateContainer.style.display = 'block'
             dismissContent.style.display = 'none'
         }
 
