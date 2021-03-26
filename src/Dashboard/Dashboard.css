@@ -17,6 +17,7 @@
     height: 100%;
     width: 100%;
     overflow: hidden;
+    padding-bottom: 200px;
 }
 
 .bar:focus,
