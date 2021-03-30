@@ -15,7 +15,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var data = json['data']['rows'];
     var columns = enumerateCols(json);
     var multiSeriesCol = isMultiSeries(columns)
-    console.log(multiSeriesCol);
     var seriesIndexes = []
     seriesCols.map((col) => {
         seriesIndexes.push(col.index);
@@ -50,8 +49,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         seriesData = groupByValue(
             data, columns, labelIndex, seriesIndexes, multiSeriesCol
         )
-        console.log(seriesIndexes);
-        console.log(seriesData);
     }else{
         seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes)
     }
@@ -203,10 +200,7 @@ export const sumMultiSeries = (
     items.forEach((item) => {
         const label = item[labelIndex]
         const serie = item[multiSerieIndex]
-
-        console.log(label + '===' + key);
-        console.log(serie + '===' + multiSerieValue);
-        if(label === key && serie === multiSerieValue){
+        if(label == key && serie == multiSerieValue){
             sum += item[serieIndex];
         }
     })
