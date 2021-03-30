@@ -625,6 +625,9 @@ export const getSupportedDisplayTypes = response => {
             let supportedDisplayTypes = [
                 'table',
                 'pivot_table',
+                'column',
+                'bar',
+                'line',
                 'heatmap',
                 'bubble',
                 'stacked_bar',
