@@ -52,5 +52,5 @@ export const ACCESS_DENIED = `
 `
 
 export const DATA_LIMIT_MESSAGE = `
-The display limit for your data has been reached. Try querying a smaller time-frame to ensure all your data is displayed.
+The display limit of 500 rows has been reached. Try querying a smaller time-frame to ensure all your data is displayed.
 `
