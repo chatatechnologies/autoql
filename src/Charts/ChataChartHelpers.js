@@ -20,7 +20,7 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         seriesIndexes.push(col.index);
     })
     var seriesData = [];
-    if(groupables.length === 1 && columns.length === 2){
+    if(groupables.length === 1){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
@@ -47,6 +47,7 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         )
     }else{
         seriesData = groupByIndex(data, columns, labelIndex, seriesIndexes)
+        console.log(seriesData);
     }
     return seriesData
 }
