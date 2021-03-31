@@ -28,7 +28,8 @@ import {
     formatData,
     formatChartData,
     closeAllChartPopovers,
-    getFirstDateCol
+    getFirstDateCol,
+    getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
@@ -53,6 +54,8 @@ export function createColumnChart(
     let chartWidth;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
+    let groupableCount = getGroupableCount(json)
+    let tooltipClass = groupableCount === 1 ? 'tooltip-2d' : 'tooltip-3d'
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -408,30 +411,55 @@ export function createColumnChart(
         })
         .enter().append("rect")
         .each(function (d) {
-            var group = col2;
-            if(groupNames.length > 1)group = d.group
-            var toolTipColValue1 = d.label
-            toolTipColValue1 = formatData(
-                d.label, cols[index2],
-                options
-            )
-            select(this).attr(valueClass, rectIndex++)
 
-            .attr('data-col1', col1)
-            .attr('data-col2', group)
-            .attr('data-colvalue1', toolTipColValue1)
-            .attr('data-colvalue2', formatData(
-                d.value, cols[index1],
-                options
-            ))
-            .attr('data-filterindex', index2)
+            if(groupableCount === 1){
+                var group = col2;
+                if(groupNames.length > 1)group = d.group
+                var toolTipColValue1 = d.label
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                select(this).attr(valueClass, rectIndex)
 
+                .attr('data-col1', col1)
+                .attr('data-col2', group)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2', formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+                .attr('data-filterindex', index2)
+            }else{
+                let index3 = index2 === 0 ? 1 : 0
+                let colStr3 = cols[index3]['display_name']
+                || cols[index1]['name']
+                let col3 = formatColumnName(colStr3);
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                select(this).attr(valueClass, rectIndex)
+                .attr('data-col1', col1)
+                .attr('data-col2', col2)
+                .attr('data-col3', col3)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2',formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+                .attr('data-colvalue3', formatData(
+                    d.group, cols[index3],
+                    options
+                ))
+            }
+            rectIndex++
         })
         .attr("width", getBandWidth(x1))
         .attr("x", function(d) { return x1(d.group); })
         .style("fill", function(d) { return colorScale(d.group) })
         .attr('fill-opacity', '0.7')
-        .attr('class', 'tooltip-2d bar')
+        .attr('class', `${tooltipClass} bar`)
         .attr("y", function(d) { return y(Math.max(0, d.value)); })
         .attr("height", function(d) { return calculateHeight(d) })
 
