@@ -57,6 +57,7 @@ export function createLineChart(
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
+    let tooltipClass = groupableCount === 1 ? 'tooltip-2d' : 'tooltip-3d'
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -427,7 +428,6 @@ export function createLineChart(
         .enter()
         .append("circle")
         .each(function (d, i) {
-            console.log(d);
             if(groupableCount === 1){
                 var group = col2;
                 if(allGroup.length > 1)group = d.group
@@ -446,7 +446,10 @@ export function createLineChart(
                 ))
                 .attr('data-filterindex', index2)
             }else{
-                console.log('INDEX 2: ' + index2);
+                let index3 = index2 === 0 ? 1 : 0
+                let colStr3 = cols[index3]['display_name']
+                || cols[index1]['name']
+                let col3 = formatColumnName(colStr3);
                 toolTipColValue1 = formatData(
                     d.label, cols[index2],
                     options
@@ -454,9 +457,14 @@ export function createLineChart(
                 select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
+                .attr('data-col3', col3)
                 .attr('data-colvalue1', toolTipColValue1)
                 .attr('data-colvalue2',formatData(
                     d.value, cols[index1],
+                    options
+                ))
+                .attr('data-colvalue3', formatData(
+                    d.group, cols[index3],
                     options
                 ))
 
@@ -472,7 +480,7 @@ export function createLineChart(
         .attr('stroke-width', '2')
         .attr('stroke-opacity', '0.7')
         .attr("fill", 'white')
-        .attr('class', 'tooltip-2d line-dot')
+        .attr('class', `${tooltipClass} line-dot`)
         .style('opacity', '0')
         tooltipCharts();
         onUpdate(component)
