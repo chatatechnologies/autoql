@@ -30,7 +30,8 @@ import {
     formatData,
     formatChartData,
     closeAllChartPopovers,
-    getFirstDateCol
+    getFirstDateCol,
+    getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
@@ -55,6 +56,7 @@ export function createLineChart(
     let chartWidth;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
+    let groupableCount = getGroupableCount(json)
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -425,22 +427,40 @@ export function createLineChart(
         .enter()
         .append("circle")
         .each(function (d, i) {
-            var group = col2;
-            if(allGroup.length > 1)group = d.group
-            var toolTipColValue1 = d.label
-            toolTipColValue1 = formatData(
-                d.label, cols[index2],
-                options
-            )
-            select(this).attr(valueClass, i)
-            .attr('data-col1', col1)
-            .attr('data-col2', group)
-            .attr('data-colvalue1', toolTipColValue1)
-            .attr('data-colvalue2',formatData(
-                d.value, cols[index1],
-                options
-            ))
-            .attr('data-filterindex', index2)
+            console.log(d);
+            if(groupableCount === 1){
+                var group = col2;
+                if(allGroup.length > 1)group = d.group
+                var toolTipColValue1 = d.label
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                select(this).attr(valueClass, i)
+                .attr('data-col1', col1)
+                .attr('data-col2', group)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2',formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+                .attr('data-filterindex', index2)
+            }else{
+                console.log('INDEX 2: ' + index2);
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                select(this).attr(valueClass, i)
+                .attr('data-col1', col1)
+                .attr('data-col2', col2)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2',formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+
+            }
 
         })
         .attr("cx", function(d) {
