@@ -2162,12 +2162,17 @@ export function DataMessenger(elem, options){
 
     obj.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest]);
-        var indexData = evt.target.dataset.chartindex;
-        var colValue = evt.target.dataset.colvalue1;
-        var indexValue = evt.target.dataset.filterindex;
+        var target = evt.target
+        var indexData = target.dataset.chartindex;
+        var colValue = target.dataset.colvalue1;
+        var indexValue = target.dataset.filterindex;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
         if(groupableCount == 1 || groupableCount == 2){
-            obj.sendDrilldownMessage(json, indexData, obj.options);
+            if(!target.dataset.isStackedDrill){
+                obj.sendDrilldownMessage(json, indexData, obj.options);
+            }else{
+                console.log('DRILLDOWN');
+            }
         }else{
             obj.sendDrilldownClientSide(
                 json, indexValue, colValue, obj.options

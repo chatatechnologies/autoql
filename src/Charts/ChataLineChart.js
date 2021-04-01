@@ -467,7 +467,11 @@ export function createLineChart(
                     d.group, cols[index3],
                     options
                 ))
-
+                .attr('data-unformatvalue1', d.label)
+                .attr('data-unformatvalue2', d.value)
+                .attr('data-unformatvalue3', d.group)
+                .attr('data-is-stacked-drill', '1')
+                .attr('data-label-index', index2)
             }
 
         })
