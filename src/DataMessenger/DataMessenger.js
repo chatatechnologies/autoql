@@ -2171,7 +2171,14 @@ export function DataMessenger(elem, options){
             if(!target.dataset.isStackedDrill){
                 obj.sendDrilldownMessage(json, indexData, obj.options);
             }else{
-                console.log('DRILLDOWN');
+                let newJson = cloneObject(ChataUtils.responses[idRequest]);
+                newJson['data']['rows'][0][0]
+                = evt.target.dataset.unformatvalue1;
+                newJson['data']['rows'][0][1]
+                = evt.target.dataset.unformatvalue2;
+                newJson['data']['rows'][0][2]
+                = evt.target.dataset.unformatvalue3;
+                obj.sendDrilldownMessage(newJson, 0, obj.options);
             }
         }else{
             obj.sendDrilldownClientSide(

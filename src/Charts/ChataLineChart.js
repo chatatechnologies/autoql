@@ -454,6 +454,18 @@ export function createLineChart(
                     d.label, cols[index2],
                     options
                 )
+                let unformatvalue1 = undefined
+                let unformatvalue2 = undefined
+                let unformatvalue3 = undefined
+
+                if(index3 === 0){
+                    unformatvalue1 = d.group
+                    unformatvalue2 = d.label
+                }else{
+                    unformatvalue1 = d.label
+                    unformatvalue2 = d.group
+                }
+                unformatvalue3 = d.value
                 select(this).attr(valueClass, i)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
@@ -467,11 +479,10 @@ export function createLineChart(
                     d.group, cols[index3],
                     options
                 ))
-                .attr('data-unformatvalue1', d.label)
-                .attr('data-unformatvalue2', d.value)
-                .attr('data-unformatvalue3', d.group)
+                .attr('data-unformatvalue1', unformatvalue1)
+                .attr('data-unformatvalue2', unformatvalue2)
+                .attr('data-unformatvalue3', unformatvalue3)
                 .attr('data-is-stacked-drill', '1')
-                .attr('data-label-index', index2)
             }
 
         })
