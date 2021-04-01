@@ -467,7 +467,19 @@ export function createBarChart(
                     d.label, cols[index2],
                     options
                 )
-                select(this).attr(valueClass, rectIndex++)
+                let unformatvalue1 = undefined
+                let unformatvalue2 = undefined
+                let unformatvalue3 = undefined
+
+                if(index3 === 0){
+                    unformatvalue1 = d.group
+                    unformatvalue2 = d.label
+                }else{
+                    unformatvalue1 = d.label
+                    unformatvalue2 = d.group
+                }
+                unformatvalue3 = d.value
+                select(this).attr(valueClass, rectIndex)
                 .attr('data-col1', col1)
                 .attr('data-col2', col2)
                 .attr('data-col3', col3)
@@ -480,6 +492,10 @@ export function createBarChart(
                     d.group, cols[index3],
                     options
                 ))
+                .attr('data-unformatvalue1', unformatvalue1)
+                .attr('data-unformatvalue2', unformatvalue2)
+                .attr('data-unformatvalue3', unformatvalue3)
+                .attr('data-is-stacked-drill', '1')
             }
             rectIndex++
         })
