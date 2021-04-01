@@ -55,7 +55,7 @@ export function createColumnChart(
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
-    let tooltipClass = groupableCount === 1 ? 'tooltip-2d' : 'tooltip-3d'
+    let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -412,7 +412,7 @@ export function createColumnChart(
         .enter().append("rect")
         .each(function (d) {
 
-            if(groupableCount === 1){
+            if(groupableCount === 1 || groupableCount === 0){
                 var group = col2;
                 if(groupNames.length > 1)group = d.group
                 var toolTipColValue1 = d.label
