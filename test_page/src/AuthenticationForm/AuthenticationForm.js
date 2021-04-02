@@ -6,7 +6,7 @@ import {
     message,
 } from 'antd'
 import axios from 'axios'
-import uuid from 'uuid'
+import { v4 as uuidv4 } from 'uuid';
 
 const setStoredProp = (name, value) => {
     localStorage.setItem(name, value)
@@ -116,7 +116,7 @@ export class AuthenticationForm extends Component {
                 isAuthenticated: false,
                 isAuthenticating: false,
                 activeIntegrator: null,
-                componentKey: uuid.v4(),
+                componentKey: uuidv4(),
             })
             message.error('Invalid Credentials')
         }
@@ -129,7 +129,7 @@ export class AuthenticationForm extends Component {
             isAuthenticated: false,
             isAuthenticating: false,
             activeIntegrator: null,
-            componentKey: uuid.v4(),
+            componentKey: uuidv4(),
         })
         message.success('Succesfully logged out')
         this.props.onLogOut()
