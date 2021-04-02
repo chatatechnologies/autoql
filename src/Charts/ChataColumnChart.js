@@ -412,25 +412,7 @@ export function createColumnChart(
         .enter().append("rect")
         .each(function (d) {
 
-            if(groupableCount === 1 || groupableCount === 0){
-                var group = col2;
-                if(groupNames.length > 1)group = d.group
-                var toolTipColValue1 = d.label
-                toolTipColValue1 = formatData(
-                    d.label, cols[index2],
-                    options
-                )
-                select(this).attr(valueClass, rectIndex)
-
-                .attr('data-col1', col1)
-                .attr('data-col2', group)
-                .attr('data-colvalue1', toolTipColValue1)
-                .attr('data-colvalue2', formatData(
-                    d.value, cols[index1],
-                    options
-                ))
-                .attr('data-filterindex', index2)
-            }else{
+            if(groupableCount === 2){
                 let index3 = index2 === 0 ? 1 : 0
                 let colStr3 = cols[index3]['display_name']
                 || cols[index1]['name']
@@ -468,6 +450,24 @@ export function createColumnChart(
                 .attr('data-unformatvalue2', unformatvalue2)
                 .attr('data-unformatvalue3', unformatvalue3)
                 .attr('data-is-stacked-drill', '1')
+            }else{
+                var group = col2;
+                if(groupNames.length > 1)group = d.group
+                var toolTipColValue1 = d.label
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                select(this).attr(valueClass, rectIndex)
+
+                .attr('data-col1', col1)
+                .attr('data-col2', group)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2', formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+                .attr('data-filterindex', index2)
             }
             rectIndex++
         })
