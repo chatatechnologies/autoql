@@ -1995,7 +1995,14 @@ export function DataMessenger(elem, options){
         }
         var messageBubble = obj.getParentFromComponent(oldComponent);
         if(['table', 'pivot_table'].includes(ignore)){
-            messageBubble.classList.remove('full-width');
+            var uuid = messageBubble.parentNode.dataset.bubbleId
+            var json = ChataUtils.responses[uuid]
+            var displayTypes = getSupportedDisplayTypes(json)
+            if(displayTypes.length <= 5){
+                messageBubble.classList.remove('full-width');
+            }else{
+                messageBubble.classList.add('full-width');
+            }
         }else{
             messageBubble.classList.add('full-width');
         }
