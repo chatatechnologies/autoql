@@ -13,14 +13,14 @@ import {
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
     var data = json['data']['rows'];
-    var columns = json['data']['columns'];
-    var multiSeriesCol = isMultiSeries(enumerateCols(json))
+    var columns = enumerateCols(json);
+    var multiSeriesCol = isMultiSeries(columns)
     var seriesIndexes = []
     seriesCols.map((col) => {
         seriesIndexes.push(col.index);
     })
     var seriesData = [];
-    if(groupables.length === 1 && columns.length === 2){
+    if(groupables.length === 1){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
@@ -41,7 +41,11 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             }
             seriesData.push(serie);
         }
-    }else if(multiSeriesCol){
+    }else if(multiSeriesCol || groupables.length === 2){
+        if(groupables.length === 2){
+            let colIndex = labelIndex === 0 ? 1 : 0
+            multiSeriesCol = columns[colIndex]
+        }
         seriesData = groupByValue(
             data, columns, labelIndex, seriesIndexes, multiSeriesCol
         )
@@ -84,6 +88,22 @@ export const getVisibleGroups = (groups) => {
     var visibleGroups = [];
     for(var [key] of Object.entries(groups)){
         if(groups[key].isVisible)visibleGroups.push(key)
+    }
+
+    return visibleGroups
+}
+
+export const getPieGroups = (groups) => {
+    var visibleGroups = []
+    var index = 0
+    for(var [key] of Object.entries(groups)){
+        if(groups[key].isVisible){
+            visibleGroups.push({
+                key: key,
+                index: index
+            })
+        }
+        index++;
     }
 
     return visibleGroups
@@ -138,7 +158,6 @@ export const groupByValue = (
     )
     items.forEach((item) => {
         const key = item[labelIndex];
-
         if (!obj[key]) {
             obj[key] = getSeriesValues(
                 item,
@@ -181,7 +200,7 @@ export const sumMultiSeries = (
     items.forEach((item) => {
         const label = item[labelIndex]
         const serie = item[multiSerieIndex]
-        if(label === key && serie === multiSerieValue){
+        if(label == key && serie == multiSerieValue){
             sum += item[serieIndex];
         }
     })

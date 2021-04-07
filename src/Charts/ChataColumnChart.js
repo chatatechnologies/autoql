@@ -28,7 +28,8 @@ import {
     formatData,
     formatChartData,
     closeAllChartPopovers,
-    getFirstDateCol
+    getFirstDateCol,
+    getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 
@@ -53,6 +54,8 @@ export function createColumnChart(
     let chartWidth;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
+    let groupableCount = getGroupableCount(json)
+    let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -348,7 +351,9 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatLabel(formatChartData(d, cols[index2], options))
+            let fLabel = formatChartData(d, cols[index2], options);
+            if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+            return formatLabel(fLabel);
         }))
         .selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
@@ -357,7 +362,9 @@ export function createColumnChart(
         svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatLabel(formatChartData(d, cols[index2], options))
+            let fLabel = formatChartData(d, cols[index2], options);
+            if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
+            return formatLabel(fLabel);
         }))
         .selectAll("text")
         .style("text-anchor", "center")
@@ -404,30 +411,71 @@ export function createColumnChart(
         })
         .enter().append("rect")
         .each(function (d) {
-            var group = col2;
-            if(groupNames.length > 1)group = d.group
-            var toolTipColValue1 = d.label
-            toolTipColValue1 = formatData(
-                d.label, cols[index2],
-                options
-            )
-            select(this).attr(valueClass, rectIndex++)
 
-            .attr('data-col1', col1)
-            .attr('data-col2', group)
-            .attr('data-colvalue1', toolTipColValue1)
-            .attr('data-colvalue2', formatData(
-                d.value, cols[index1],
-                options
-            ))
-            .attr('data-filterindex', index2)
+            if(groupableCount === 2){
+                let index3 = index2 === 0 ? 1 : 0
+                let colStr3 = cols[index3]['display_name']
+                || cols[index1]['name']
+                let col3 = formatColumnName(colStr3);
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                let unformatvalue1 = undefined
+                let unformatvalue2 = undefined
+                let unformatvalue3 = undefined
 
+                if(index3 === 0){
+                    unformatvalue1 = d.group
+                    unformatvalue2 = d.label
+                }else{
+                    unformatvalue1 = d.label
+                    unformatvalue2 = d.group
+                }
+                unformatvalue3 = d.value
+                select(this).attr(valueClass, rectIndex)
+                .attr('data-col1', col1)
+                .attr('data-col2', col2)
+                .attr('data-col3', col3)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2',formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+                .attr('data-colvalue3', formatData(
+                    d.group, cols[index3],
+                    options
+                ))
+                .attr('data-unformatvalue1', unformatvalue1)
+                .attr('data-unformatvalue2', unformatvalue2)
+                .attr('data-unformatvalue3', unformatvalue3)
+                .attr('data-is-stacked-drill', '1')
+            }else{
+                var group = col2;
+                if(groupNames.length > 1)group = d.group
+                var toolTipColValue1 = d.label
+                toolTipColValue1 = formatData(
+                    d.label, cols[index2],
+                    options
+                )
+                select(this).attr(valueClass, rectIndex)
+
+                .attr('data-col1', col1)
+                .attr('data-col2', group)
+                .attr('data-colvalue1', toolTipColValue1)
+                .attr('data-colvalue2', formatData(
+                    d.value, cols[index1],
+                    options
+                ))
+                .attr('data-filterindex', index2)
+            }
+            rectIndex++
         })
         .attr("width", getBandWidth(x1))
         .attr("x", function(d) { return x1(d.group); })
         .style("fill", function(d) { return colorScale(d.group) })
         .attr('fill-opacity', '0.7')
-        .attr('class', 'tooltip-2d bar')
+        .attr('class', `${tooltipClass} bar`)
         .attr("y", function(d) { return y(Math.max(0, d.value)); })
         .attr("height", function(d) { return calculateHeight(d) })
 
@@ -436,6 +484,13 @@ export function createColumnChart(
     }
 
     if(hasLegend){
+        let legendText = svg.append('text')
+        .attr('x', chartWidth + 40)
+        .attr('y', 10)
+        .attr('text-anchor', 'middle')
+        .attr("class", "autoql-vanilla-x-axis-label")
+        legendText.append('tspan')
+        .text('Category');
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -471,7 +526,7 @@ export function createColumnChart(
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin
             svgLegend
-              .attr('transform', `translate(${newX}, ${0})`)
+              .attr('transform', `translate(${newX}, ${25})`)
         }else{
 
             let legendBBox

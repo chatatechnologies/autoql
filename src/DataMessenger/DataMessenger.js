@@ -314,15 +314,17 @@ export function DataMessenger(elem, options){
                 break;
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
-                if(value && obj.options.isVisible){
-                    obj.queryTabs.style.display = 'block';
-                }else obj.queryTabs.style.display = 'none';
+                if(obj.options.isVisible){
+                    console.log('OPEN DRAWER');
+                    obj.hideTabs()
+                    obj.showTabs()
+                }else obj.queryTabs.style.visibility = 'hidden';
                 break;
             case 'enableNotificationsTab':
                 obj.options.enableNotificationsTab = value;
                 if(value && obj.options.isVisible){
-                    obj.tabNotifications.style.display = 'block'
-                }else obj.tabNotifications.style.display = 'none'
+                    obj.tabNotifications.style.visibility = 'visible'
+                }else obj.tabNotifications.style.visibility = 'hidden'
                 obj.instanceNotificationIcon()
                 obj.toggleNotificationOption()
                 obj.showTabs()
@@ -628,6 +630,7 @@ export function DataMessenger(elem, options){
 
     obj.queryTipsAnimation = function(display){
         obj.queryTips.style.display = display;
+        if(display !== 'none')obj.queryTipsInput.focus()
     }
 
     obj.createNotifications = function() {
@@ -1677,7 +1680,13 @@ export function DataMessenger(elem, options){
         toolbar.classList.toggle('show');
         var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
         if(bubble === obj.getLastMessageBubble()) {
-            bubble.scrollIntoView()
+            if(
+                !bubble.classList.contains(
+                    'autoql-vanilla-chat-message-response'
+                )
+            ){
+                bubble.scrollIntoView()
+            }
         }
     }
 
@@ -1702,8 +1711,10 @@ export function DataMessenger(elem, options){
         var table = document.querySelector(
             `[data-componentid="${idRequest}"]`
         );
+        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
         var tabulator = table.tabulator;
         tabulator.toggleFilters();
+        bubble.scrollIntoView()
     }
 
     obj.openColumnEditorHandler = (evt, idRequest, badge) => {
@@ -1984,7 +1995,14 @@ export function DataMessenger(elem, options){
         }
         var messageBubble = obj.getParentFromComponent(oldComponent);
         if(['table', 'pivot_table'].includes(ignore)){
-            messageBubble.classList.remove('full-width');
+            var uuid = messageBubble.parentNode.dataset.bubbleId
+            var json = ChataUtils.responses[uuid]
+            var displayTypes = getSupportedDisplayTypes(json)
+            if(displayTypes.length <= 5){
+                messageBubble.classList.remove('full-width');
+            }else{
+                messageBubble.classList.add('full-width');
+            }
         }else{
             messageBubble.classList.add('full-width');
         }
@@ -2151,12 +2169,24 @@ export function DataMessenger(elem, options){
 
     obj.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest]);
-        var indexData = evt.target.dataset.chartindex;
-        var colValue = evt.target.dataset.colvalue1;
-        var indexValue = evt.target.dataset.filterindex;
+        var target = evt.target
+        var indexData = target.dataset.chartindex;
+        var colValue = target.dataset.colvalue1;
+        var indexValue = target.dataset.filterindex;
         var groupableCount = getNumberOfGroupables(json['data']['columns']);
         if(groupableCount == 1 || groupableCount == 2){
-            obj.sendDrilldownMessage(json, indexData, obj.options);
+            if(!target.dataset.isStackedDrill){
+                obj.sendDrilldownMessage(json, indexData, obj.options);
+            }else{
+                let newJson = cloneObject(ChataUtils.responses[idRequest]);
+                newJson['data']['rows'][0][0]
+                = evt.target.dataset.unformatvalue1;
+                newJson['data']['rows'][0][1]
+                = evt.target.dataset.unformatvalue2;
+                newJson['data']['rows'][0][2]
+                = evt.target.dataset.unformatvalue3;
+                obj.sendDrilldownMessage(newJson, 0, obj.options);
+            }
         }else{
             obj.sendDrilldownClientSide(
                 json, indexValue, colValue, obj.options
@@ -2271,7 +2301,9 @@ export function DataMessenger(elem, options){
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pie');
-        createPieChart(component, json, obj.options);
+        createPieChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }

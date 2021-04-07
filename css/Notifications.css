@@ -604,32 +604,32 @@
 }
 
 .autoql-vanilla-empty-state{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-content: center;
-    align-self: center;
-    flex-direction: column;
+    display: block;
+    text-align: center;
+    margin-top: 75px !important;
     height: calc(100% - 20px);
 }
 
 .autoql-vanilla-empy-notification-message{
     color: var(--autoql-vanilla-text-color-primary);
     text-align: center;
+    opacity: .6;
+    font-size: 14px;
 }
 
 .autoql-vanilla-empty-notification{
     color: var(--autoql-vanilla-text-color-primary);
     font-weight: bold;
-    font-size: 18px;
+    font-size: 16px;
     margin-bottom: 7px;
+    opacity: .6;
     text-align: center;
 }
 
 .autoql-vanilla-empty-state-img{
     width: 100%;
     height: auto;
-    max-width: 320px;
+    max-width: 250px;
 }
 
 @keyframes slideIn{

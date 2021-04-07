@@ -91,7 +91,6 @@ export function NotificationFeed(selector, options){
         classes: ['chata-notification-dismiss-all']
     })
     var dismissContent = $dom('span', {
-        classes: ['']
     })
     var dismissIcon = htmlToElement(DISMISS);
     var imageWrapper = $dom('div')
@@ -253,6 +252,12 @@ export function NotificationFeed(selector, options){
         var delay = 0.08;
         wrapper.isLoading = true;
         var response = await apiCallGet(URL, wrapper.options)
+        if(!response){
+            emptyStateContainer.style.display = 'block'
+            dismissContent.style.display = 'none'
+            wrapper.isLoading = false
+            return
+        }
         var jsonResponse = response.data
         var items = jsonResponse['data']['items'];
         if(items.length > 0){
@@ -264,7 +269,7 @@ export function NotificationFeed(selector, options){
                 );
             }
         }else{
-            emptyStateContainer.style.display = 'flex'
+            emptyStateContainer.style.display = 'block'
             dismissContent.style.display = 'none'
         }
 
