@@ -191,9 +191,8 @@ export function DataAlerts(selector, options){
 
             wrapper.appendChild(
                 new TitleContainer(
-                    'Custom Notifications',
-                    `Create your own customized
-                    notifications tailored to your needs`,
+                    'Custom Data Alerts',
+                    `View and manage your custom Data Alerts`,
                     true,
                     onAddClick
                 )
@@ -221,6 +220,6 @@ export function DataAlerts(selector, options){
     wrapper.loadRules();
     if(parent)parent.appendChild(wrapper);
     refreshTooltips()
-    
+
     return wrapper
 }

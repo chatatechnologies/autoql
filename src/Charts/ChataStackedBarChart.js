@@ -83,7 +83,7 @@ export function createStackedBarChart(
 
 
     var allSubgroups = {}
-    var legendGroups = {};
+    var legendGroups = {}
     var cols = json['data']['columns'];
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {

@@ -136,7 +136,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
     if(rotateLabels){
         var m = longestString * 3;
-        margin.bottomChart = m;
+        margin.bottomChart = m + 15;
     }else{
         margin.bottomChart = 13;
     }

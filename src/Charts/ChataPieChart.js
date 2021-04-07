@@ -3,7 +3,7 @@ import {
     enumerateCols,
     getIndexesByType,
     getMetadataElement,
-    getVisibleGroups,
+    getPieGroups,
 } from './ChataChartHelpers'
 import {
     getColorScale,
@@ -14,12 +14,13 @@ import {
 import {
     formatColumnName,
     formatData,
+    formatChartData
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 
 export function createPieChart(
-    component, json, options, fromChataUtils=true,
+    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
 
     var margin = 20;
@@ -68,10 +69,16 @@ export function createPieChart(
     );
 
     var groups = {}
-
+    var legendGroups = {}
     for(let [key] of Object.entries(data)){
         groups[key] = {
             isVisible: true
+        }
+
+        legendGroups[
+            formatChartData(key, cols[index1], options)
+        ] = {
+            value: key
         }
     }
 
@@ -134,17 +141,18 @@ export function createPieChart(
     let pieChartContainer
     const entries = (map, visibleGroups) => {
         var entries = [];
-        visibleGroups.map(group => {
-            entries.push({key: group, value: map[group]});
+        visibleGroups.map((group) => {
+            entries.push(
+                {key: group.key, value: map[group.key], index: group.index}
+            )
         })
         return entries;
     }
 
     const createSlices = () => {
-        var visibleGroups = getVisibleGroups(groups);
+        var visibleGroups = getPieGroups(groups);
         var dataReady = pie(entries(data, visibleGroups))
         if(pieChartContainer)pieChartContainer.remove()
-
         pieChartContainer = svg.append('g')
         .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
         var colorLabels = []
@@ -157,8 +165,8 @@ export function createPieChart(
         .data(dataReady)
         .enter()
         .append('path')
-        .each(function(d, i){
-            select(this).attr(valueClass, i)
+        .each(function(d){
+            select(this).attr(valueClass, d.data.index)
             .attr('data-filterindex', index1)
             .attr('data-col1', col1)
             .attr('data-col2', col2)
@@ -208,6 +216,7 @@ export function createPieChart(
         })
         .attr('class', 'tooltip-2d pie-slice slice')
         tooltipCharts();
+        onUpdate(component)
     }
 
 
@@ -244,6 +253,7 @@ export function createPieChart(
         legendBBox = legendElement.getBBox()
     }
 
+    console.log(groups);
     const legendHeight = legendBBox.height
     const legendWidth = legendBBox.width
     const legendXPosition = width / 2 - legendWidth
@@ -260,11 +270,9 @@ export function createPieChart(
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }
-
-        var key = words.join(' ').split(':')[0]
-
-        groups[key].isVisible =
-        !groups[key].isVisible;
+        var unformatGroup = legendGroups[words.join(' ').split(':')[0]].value;
+        groups[unformatGroup].isVisible =
+        !groups[unformatGroup].isVisible;
         createSlices();
         const legendCell = select(this);
         legendCell.classed(
@@ -273,13 +281,13 @@ export function createPieChart(
     });
 
 
-
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createPieChart(
                 component,
                 json,
                 options,
+                onUpdate,
                 fromChataUtils,
                 valueClass,
                 renderTooltips
