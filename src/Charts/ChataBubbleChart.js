@@ -26,7 +26,7 @@ export function createBubbleChart(
     component, json, options, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
 
-    var margin = {top: 15, right: 10, bottom: 50, left: 130},
+    var margin = {top: 18, right: 10, bottom: 50, left: 130},
     width = component.parentElement.clientWidth - margin.left;
 
     var groupables = getGroupableFields(json);
