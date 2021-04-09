@@ -486,6 +486,9 @@ export function createBarChart(
                     d.label, cols[index2],
                     options
                 )
+                if(toolTipColValue1 === 'Invalid date')
+                toolTipColValue1 = 'undefined'
+
                 select(this).attr(valueClass, rectIndex)
                 .attr('data-col1', col1)
                 .attr('data-col2', group)

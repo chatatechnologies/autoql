@@ -458,8 +458,10 @@ export function createColumnChart(
                     d.label, cols[index2],
                     options
                 )
-                select(this).attr(valueClass, rectIndex)
+                if(toolTipColValue1 === 'Invalid date')
+                toolTipColValue1 = 'undefined'
 
+                select(this).attr(valueClass, rectIndex)
                 .attr('data-col1', col1)
                 .attr('data-col2', group)
                 .attr('data-colvalue1', toolTipColValue1)
