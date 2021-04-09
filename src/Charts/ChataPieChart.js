@@ -14,7 +14,8 @@ import {
 import {
     formatColumnName,
     formatData,
-    formatChartData
+    formatChartData,
+    getFirstDateCol
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
@@ -53,9 +54,11 @@ export function createPieChart(
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
+        var dateCol = getFirstDateCol(colsEnum)
+        let i = dateCol !== -1 ? dateCol : yIndexes[0].index
         metadataComponent.metadata = {
             groupBy: {
-                index: xIndexes[0].index,
+                index: i,
                 currentLi: 0,
             },
             series: yIndexes
@@ -253,7 +256,6 @@ export function createPieChart(
         legendBBox = legendElement.getBBox()
     }
 
-    console.log(groups);
     const legendHeight = legendBBox.height
     const legendWidth = legendBBox.width
     const legendXPosition = width / 2 - legendWidth
