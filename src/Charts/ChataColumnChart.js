@@ -155,7 +155,7 @@ export function createColumnChart(
     }else{
         if(rotateLabels){
             let m = longestString * 3;
-            margin.bottomChart = m;
+            margin.bottomChart = m + 9;
         }else{
             margin.bottomChart = 13;
         }
