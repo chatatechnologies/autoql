@@ -396,13 +396,15 @@ export function DataMessenger(elem, options){
         obj.options.isVisible = true;
         obj.initialScroll = window.scrollY;
         obj.input.focus()
+        obj.rootElem.style.opacity = 1
         var body = document.body;
         obj.showTabs()
 
         if(disableAnimation){
             obj.rootElem.style.transition = 'none'
         }else{
-            obj.rootElem.style.transition = 'transform 0.3s ease-in-out'
+            obj.rootElem.style.transition = 'all 0.3s ease-in-out'
+            obj.rootElem.style.transitionProperty = 'transform, opacity'
         }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
@@ -483,6 +485,7 @@ export function DataMessenger(elem, options){
     obj.closeDrawer = () => {
         obj.closePopOver(obj.clearMessagePop);
         closeAllChartPopovers();
+        obj.rootElem.style.opacity = .8
         document.body.classList.remove(
             'autoql-vanilla-chata-body-drawer-open'
         );
