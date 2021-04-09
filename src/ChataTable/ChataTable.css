@@ -96,9 +96,11 @@
 .autoql-vanilla-chata-table .tabulator-header .tabulator-frozen.tabulator-frozen-left {
     border-right: 2px solid #ddd;
     background: var(--autoql-vanilla-background-color-primary);
+    cursor: default;
 }
 
-.autoql-vanilla-chata-table .tabulator-header .tabulator-col.tabulator-sortable:hover, .react-autoql-table.tabulator .tabulator-row.tabulator-selectable:hover {
+.autoql-vanilla-chata-table .tabulator-header .tabulator-col.tabulator-sortable:hover, .react-autoql-table.tabulator .tabulator-row.tabulator-selectable:hover,
+.autoql-vanilla-chata-table .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left:hover {
     background-color: var(--autoql-vanilla-hover-color)!important;
 }
 
