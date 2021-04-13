@@ -241,7 +241,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     refreshTooltips();
     configModal.chataModal.style.width = '95vw';
     configModal.addView(modalView);
-    configModal.setTitle('Custom Notification');
+    configModal.setTitle('Create New Data Alert');
     configModal.show();
 
     var input = modalView.querySelectorAll(
