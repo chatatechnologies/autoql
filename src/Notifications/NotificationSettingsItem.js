@@ -147,6 +147,14 @@ export function NotificationSettingsItem(parentOptions, options) {
                 destroyOnClose: true
             }, () => {
                 modalView.step1.expand();
+            }, () => {
+                new ChataConfirmDialog(
+                    'Are you sure you want to leave this page?',
+                    'All unsaved changes will be lost.',
+                    () => {
+                        this.close()
+                    }
+                )
             })
             configModal.chataModal.style.width = '95vw';
             var footerWrapper = document.createElement('div');

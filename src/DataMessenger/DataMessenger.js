@@ -2032,7 +2032,7 @@ export function DataMessenger(elem, options){
 
         if(toolbarLeft){
             toolbarLeft.innerHTML = ''
-            var displayTypes = obj.getDisplayTypesButtons(
+            let displayTypes = obj.getDisplayTypesButtons(
                 oldComponent.dataset.componentid, ignore
             );
 
