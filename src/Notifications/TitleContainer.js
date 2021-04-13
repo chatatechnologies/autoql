@@ -32,6 +32,7 @@ export function TitleContainer(title, message, canAdd=true, onClick=()=>{}){
     notificationAddContainer.onclick = (evt) => {
         onClick(evt)
     }
+    notificationAddBtn.style.visibility = 'hidden'
     if(canAdd)titleContainer.appendChild(notificationAddContainer)
 
     return titleContainer

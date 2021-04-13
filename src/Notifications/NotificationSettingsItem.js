@@ -152,7 +152,8 @@ export function NotificationSettingsItem(parentOptions, options) {
                     'Are you sure you want to leave this page?',
                     'All unsaved changes will be lost.',
                     () => {
-                        this.close()
+                        configModal.closeAnimation()
+                        setTimeout(() => { configModal.hideContainer() }, 250)
                     }
                 )
             })

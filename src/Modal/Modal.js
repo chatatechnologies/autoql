@@ -82,7 +82,8 @@ export function Modal(options={}, onShow=()=>{}, onClose=undefined){
     }
 
     closeIcon.onclick = function(){
-        obj.close();
+        if(onClose)onClose()
+        else obj.close();
     }
 
     obj.addView = function(view){

@@ -142,6 +142,15 @@ export function DataAlerts(selector, options){
                     destroyOnClose: true
                 }, () => {
                     modalView.step1.expand();
+                }, () => {
+                    new ChataConfirmDialog(
+                        'Are you sure you want to leave this page?',
+                        'All unsaved changes will be lost.',
+                        () => {
+                            configModal.closeAnimation()
+                            setTimeout(() => { configModal.hideContainer() }, 250)
+                        }
+                    )
                 })
                 configModal.chataModal.style.width = '95vw';
 
