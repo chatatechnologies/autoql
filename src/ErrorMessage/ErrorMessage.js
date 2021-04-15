@@ -14,7 +14,7 @@ export function ErrorMessage(text, onClick=()=>{}){
             text.substr(endTag, text.length).replace('<', '').replace('>', '')
         )
     }
-    console.log(values);
+
     if(values.length > 1){
         var div = document.createElement('div')
         var link = document.createElement('a')

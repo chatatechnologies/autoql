@@ -732,6 +732,7 @@ export function TileView(tile, isSecond=false){
         if(!json['data'].rows || json['data'].rows.length == 0){
             responseWrapper.innerHTML = ''
             responseWrapper.appendChild(view.getMessageError())
+            view.createVizToolbar()
             return
         }
 
