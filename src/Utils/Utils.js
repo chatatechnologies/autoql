@@ -1212,3 +1212,10 @@ export const getHeightForChildrens = (parent) => {
 
     return totalH;
 }
+
+export const hasErrorTag = (text) => {
+    var values = text.split('<report>')
+    if(values.length > 1)return true
+
+    return false
+}
