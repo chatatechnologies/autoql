@@ -4,8 +4,19 @@ import {
 import './ErrorMessage.css'
 
 export function ErrorMessage(text, onClick=()=>{}){
-    var values = text.split('<report>')
+    var startTag = text.indexOf('<')
+    var endTag = text.indexOf('>')
+    var values = []
+    console.log(startTag);
+    console.log(endTag);
 
+    if(startTag != -1 && endTag != -1){
+        values.push(text.substr(0, startTag))
+        values.push(
+            text.substr(endTag, text.length).replace('<', '').replace('>', '')
+        )
+    }
+    console.log(values);
     if(values.length > 1){
         var div = document.createElement('div')
         var link = document.createElement('a')
