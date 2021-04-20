@@ -505,13 +505,15 @@ export function createLineChart(
     }
 
     if(hasLegend){
-        let legendText = svg.append('text')
-        .attr('x', chartWidth + 40)
-        .attr('y', 10)
-        .attr('text-anchor', 'middle')
-        .attr("class", "autoql-vanilla-x-axis-label")
-        legendText.append('tspan')
-        .text('Category');
+        if(groupableCount !== 2){
+            let legendText = svg.append('text')
+            .attr('x', chartWidth + 40)
+            .attr('y', 10)
+            .attr('text-anchor', 'middle')
+            .attr("class", "autoql-vanilla-x-axis-label")
+            legendText.append('tspan')
+            .text('Category');
+        }
 
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
