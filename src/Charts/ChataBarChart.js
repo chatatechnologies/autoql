@@ -524,7 +524,7 @@ export function createBarChart(
             .text('Category');
         }else{
             new MultiSeriesSelector(svg, {
-                x: (chartWidth),
+                x: (chartWidth + 15),
                 y: 10,
                 colName: col1
             })

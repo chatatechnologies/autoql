@@ -29,14 +29,13 @@ export function MultiSeriesSelector(svg, params){
     labelContainer.attr('class', 'autoql-vanilla-chart-selector')
 
     labelContainer.append('rect')
-    .attr('x', xWidthRect)
-    .attr('y', 10)
+    .attr('x', x - (paddingRect/2))
+    .attr('y', -(y/2))
     .attr('height', 24)
     .attr('width', xWidthRect + paddingRect)
     .attr('fill', 'transparent')
     .attr('stroke', '#508bb8')
     .attr('stroke-width', '1px')
     .attr('rx', '4')
-    .attr('transform', 'rotate(-180)')
     .attr('class', 'autoql-vanilla-x-axis-label-border')
 }
