@@ -1,20 +1,21 @@
+import {
+    getStringWidth
+} from '../Utils'
+
 export function MultiSeriesSelector(svg, params){
     var labelContainer = svg.append('g');
     const {
         x,
         y,
-        xRect,
-        yRect,
-        rotate,
-        hRect,
-        wRect,
         colName
     } = params
 
+    const paddingRect = 15;
+    const xWidthRect = getStringWidth(colName) + paddingRect;
+
     var textContainer = labelContainer.append('text')
-    .attr('x', x)
+    .attr('x', x + (xWidthRect / 2))
     .attr('y', y)
-    .attr('transform', rotate)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
 
@@ -28,10 +29,10 @@ export function MultiSeriesSelector(svg, params){
     labelContainer.attr('class', 'autoql-vanilla-chart-selector')
 
     labelContainer.append('rect')
-    .attr('x', xRect)
-    .attr('y', yRect)
-    .attr('height', hRect)
-    .attr('width', wRect)
+    .attr('x', xWidthRect)
+    .attr('y', 10)
+    .attr('height', 24)
+    .attr('width', xWidthRect + paddingRect)
     .attr('fill', 'transparent')
     .attr('stroke', '#508bb8')
     .attr('stroke-width', '1px')
