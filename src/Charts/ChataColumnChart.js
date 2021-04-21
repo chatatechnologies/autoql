@@ -1,7 +1,7 @@
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
-
+import { MultiSeriesSelector } from './MultiSeriesSelector'
 import {
     enumerateCols,
     getIndexesByType,
@@ -493,7 +493,13 @@ export function createColumnChart(
             .attr('text-anchor', 'middle')
             .attr("class", "autoql-vanilla-x-axis-label")
             legendText.append('tspan')
-            .text('Category');            
+            .text('Category');
+        }else{
+            new MultiSeriesSelector(svg, {
+                x: (chartWidth + 15),
+                y: 10,
+                colName: col1
+            })
         }
 
         var svgLegend = svg.append('g')
