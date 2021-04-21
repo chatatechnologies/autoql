@@ -2,7 +2,7 @@ import {
     getStringWidth
 } from '../Utils'
 
-export function MultiSeriesSelector(svg, params){
+export function MultiSeriesSelector(svg, params, onClick){
     var labelContainer = svg.append('g');
     const {
         x,
@@ -38,4 +38,7 @@ export function MultiSeriesSelector(svg, params){
     .attr('stroke-width', '1px')
     .attr('rx', '4')
     .attr('class', 'autoql-vanilla-x-axis-label-border')
+
+    labelContainer.on('mouseup', onClick)
+
 }

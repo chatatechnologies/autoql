@@ -258,6 +258,32 @@ export function createBarChart(
     textContainerY.append('tspan')
     .text(col1)
 
+    const onSelectorClick = (evt) => {
+        closeAllChartPopovers();
+        const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+        var popoverSelector = new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, yIndexes, (evt, popover) => {
+            var yAxisIndex = evt.target.dataset.popoverIndex;
+            var currentLi = evt.target.dataset.popoverPosition;
+            metadataComponent.metadata.groupBy.index = yAxisIndex;
+            metadataComponent.metadata.groupBy.currentLi = currentLi;
+            createBarChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+            popover.close();
+        });
+
+        popoverSelector.setSelectedItem(selectedItem)
+    }
+
     if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -279,31 +305,7 @@ export function createBarChart(
         .attr('transform', 'rotate(-180)')
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-        labelYContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-            var popoverSelector = new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, yIndexes, (evt, popover) => {
-                var yAxisIndex = evt.target.dataset.popoverIndex;
-                var currentLi = evt.target.dataset.popoverPosition;
-                metadataComponent.metadata.groupBy.index = yAxisIndex;
-                metadataComponent.metadata.groupBy.currentLi = currentLi;
-                createBarChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
-                popover.close();
-            });
-
-            popoverSelector.setSelectedItem(selectedItem)
-        })
+        labelYContainer.on('mouseup', onSelectorClick)
     }
 
     // X AXIS
@@ -527,7 +529,7 @@ export function createBarChart(
                 x: (chartWidth + 15),
                 y: 10,
                 colName: col1
-            })
+            }, onSelectorClick)
         }
 
         var svgLegend = svg.append('g')

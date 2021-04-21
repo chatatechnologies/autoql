@@ -281,6 +281,32 @@ export function createLineChart(
     textContainerX.append('tspan')
     .text(col1);
 
+    const onSelectorClick = () => {
+        closeAllChartPopovers();
+        const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+        var popoverSelector = new ChataChartListPopover({
+            left: event.clientX,
+            top: event.clientY
+        }, xIndexes, (evt, popover) => {
+            var xAxisIndex = evt.target.dataset.popoverIndex;
+            var currentLi = evt.target.dataset.popoverPosition;
+            metadataComponent.metadata.groupBy.index = xAxisIndex;
+            metadataComponent.metadata.groupBy.currentLi = currentLi;
+            createLineChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+            popover.close();
+        }, true);
+
+        popoverSelector.setSelectedItem(selectedItem)
+    }
+
     if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -308,31 +334,7 @@ export function createLineChart(
         .attr('rx', '4')
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', () => {
-            closeAllChartPopovers();
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-            var popoverSelector = new ChataChartListPopover({
-                left: event.clientX,
-                top: event.clientY
-            }, xIndexes, (evt, popover) => {
-                var xAxisIndex = evt.target.dataset.popoverIndex;
-                var currentLi = evt.target.dataset.popoverPosition;
-                metadataComponent.metadata.groupBy.index = xAxisIndex;
-                metadataComponent.metadata.groupBy.currentLi = currentLi;
-                createLineChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
-                popover.close();
-            }, true);
-
-            popoverSelector.setSelectedItem(selectedItem)
-        })
+        labelXContainer.on('mouseup', onSelectorClick)
     }
 
 
@@ -518,7 +520,7 @@ export function createLineChart(
                 x: (chartWidth + 15),
                 y: 10,
                 colName: col1
-            })
+            }, onSelectorClick)
         }
 
         var svgLegend = svg.append('g')
