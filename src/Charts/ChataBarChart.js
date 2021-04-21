@@ -258,7 +258,7 @@ export function createBarChart(
     textContainerY.append('tspan')
     .text(col1)
 
-    const onSelectorClick = (evt) => {
+    const onSelectorClick = (evt, showOnBaseline) => {
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
         var popoverSelector = new ChataChartListPopover({
@@ -279,7 +279,7 @@ export function createBarChart(
                 renderTooltips
             )
             popover.close();
-        });
+        }, showOnBaseline);
 
         popoverSelector.setSelectedItem(selectedItem)
     }
@@ -305,7 +305,7 @@ export function createBarChart(
         .attr('transform', 'rotate(-180)')
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-        labelYContainer.on('mouseup', onSelectorClick)
+        labelYContainer.on('mouseup', (evt) => { onSelectorClick(evt, false) })
     }
 
     // X AXIS
@@ -528,7 +528,8 @@ export function createBarChart(
             new MultiSeriesSelector(svg, {
                 x: (chartWidth + 15),
                 y: 10,
-                colName: col1
+                colName: col1,
+                showOnBaseline: true,
             }, onSelectorClick)
         }
 
