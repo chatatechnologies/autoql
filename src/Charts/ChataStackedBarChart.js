@@ -1,6 +1,7 @@
 import { select } from 'd3-selection'
 import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
+import { MultiSeriesSelector } from './MultiSeriesSelector'
 import { tooltipCharts } from '../Tooltips'
 import {
     getGroupableFields,
@@ -373,6 +374,14 @@ export function createStackedBarChart(
 
     }
 
+    new MultiSeriesSelector(svg, {
+        x: (chartWidth + 15),
+        y: 10,
+        colName: col2,
+        showOnBaseline: true,
+    }, () => {
+
+    })
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
@@ -412,7 +421,7 @@ export function createStackedBarChart(
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
-      .attr('transform', `translate(${newX}, ${0})`)
+      .attr('transform', `translate(${newX}, ${25})`)
 
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
