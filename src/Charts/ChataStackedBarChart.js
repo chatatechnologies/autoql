@@ -176,6 +176,35 @@ export function createStackedBarChart(
     textContainerY.append('tspan')
     .text(col2);
 
+    const onSelectorClick = (evt) => {
+        closeAllChartPopovers();
+        new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, groupCols, (evt, popover) => {
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable
+            = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2
+                = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1
+                = oldGroupable;
+                createStackedBarChart(
+                    component,
+                    json,
+                    options,
+                    onUpdate,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        }, true);
+
+    }
+
     if(options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -197,34 +226,7 @@ export function createStackedBarChart(
         .attr('transform', 'rotate(-180)')
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-        labelYContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, groupCols, (evt, popover) => {
-                var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable
-                = metadataComponent.metadata3D.groupBy.groupable2;
-                if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2
-                    = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1
-                    = oldGroupable;
-                    createStackedBarChart(
-                        component,
-                        json,
-                        options,
-                        onUpdate,
-                        fromChataUtils,
-                        valueClass,
-                        renderTooltips
-                    )
-                }
-                popover.close();
-            }, true);
-
-        })
+        labelYContainer.on('mouseup', onSelectorClick)
 
     }
 
@@ -379,9 +381,7 @@ export function createStackedBarChart(
         y: 10,
         colName: col2,
         showOnBaseline: true,
-    }, () => {
-
-    })
+    }, onSelectorClick)
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')

@@ -1,6 +1,7 @@
 import { select } from 'd3-selection'
 import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
+import { MultiSeriesSelector } from './MultiSeriesSelector'
 import { tooltipCharts } from '../Tooltips'
 import {
     getGroupableFields,
@@ -180,6 +181,37 @@ export function createStackedColumnChart(
 
     textContainerX.append('tspan')
     .text(col2);
+
+    const onSelectorClick = (evt) => {
+        closeAllChartPopovers();
+        new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, groupCols, (evt, popover) => {
+
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable
+            = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2
+                = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1
+                = oldGroupable;
+                createStackedColumnChart(
+                    component,
+                    json,
+                    options,
+                    onUpdate,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        }, true);
+
+    }
+
     if(options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -204,44 +236,8 @@ export function createStackedColumnChart(
         .attr('rx', '4')
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, groupCols, (evt, popover) => {
-
-                var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable
-                = metadataComponent.metadata3D.groupBy.groupable2;
-                if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2
-                    = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1
-                    = oldGroupable;
-                    createStackedColumnChart(
-                        component,
-                        json,
-                        options,
-                        onUpdate,
-                        fromChataUtils,
-                        valueClass,
-                        renderTooltips
-                    )
-                }
-                popover.close();
-            }, true);
-
-        })
+        labelXContainer.on('mouseup', onSelectorClick)
     }
-
-
-    // var x = chataD3.scaleBand()
-    // .domain(groups.map(function(element){
-    //     return element;
-    // }))
-    // .range([0, chartWidth])
-    // .padding([0.2]);
 
     var x = SCALE_BAND()
     setDomainRange(
@@ -413,6 +409,13 @@ export function createStackedColumnChart(
         options.themeConfig.chartColors
     )
 
+    new MultiSeriesSelector(svg, {
+        x: (chartWidth + 15),
+        y: 10,
+        colName: col2,
+        showOnBaseline: true,
+    }, onSelectorClick)
+
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
     .on('cellclick', function(d) {
         var words = []
@@ -435,7 +438,7 @@ export function createStackedColumnChart(
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
-      .attr('transform', `translate(${newX}, ${0})`)
+      .attr('transform', `translate(${newX}, ${25})`)
 
 
     select(window).on(
