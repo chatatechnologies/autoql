@@ -1,6 +1,7 @@
 import { select } from 'd3-selection'
 import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
+import { MultiSeriesSelector } from './MultiSeriesSelector'
 import { tooltipCharts } from '../Tooltips'
 import {
     getGroupableFields,
@@ -167,6 +168,32 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     textContainerX.append('tspan')
     .text(col2);
 
+    const onSelectorClick = (evt) => {
+        closeAllChartPopovers();
+        new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, groupCols, (evt, popover) => {
+
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
+                createAreaChart(
+                    component,
+                    json,
+                    options,
+                    onUpdate,
+                    fromChataUtils,
+                    valueClass,
+                    renderTooltips
+                )
+            }
+            popover.close();
+        }, true);
+
+    }
 
     if(options.enableDynamicCharting){
         textContainerX.append('tspan')
@@ -191,35 +218,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr('rx', '4')
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, groupCols, (evt, popover) => {
-
-                var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
-                if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
-                    createAreaChart(
-                        component,
-                        json,
-                        options,
-                        onUpdate,
-                        fromChataUtils,
-                        valueClass,
-                        renderTooltips
-                    )
-                }
-                popover.close();
-            }, true);
-
-        })
+        labelXContainer.on('mouseup', onSelectorClick)
     }
-
-
 
 
     var x = SCALE_BAND()
@@ -398,6 +398,13 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         onUpdate(component);
     }
 
+    new MultiSeriesSelector(svg, {
+        x: (chartWidth + 15),
+        y: 10,
+        colName: col2,
+        showOnBaseline: true,
+    }, onSelectorClick)
+
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
     .style('fill-opacity', '0.7')
@@ -432,7 +439,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
-      .attr('transform', `translate(${newX}, ${0})`)
+      .attr('transform', `translate(${newX}, ${25})`)
 
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
