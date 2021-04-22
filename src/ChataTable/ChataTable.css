@@ -127,3 +127,9 @@
     vertical-align: top;
     line-height: 21px;
 }
+
+.autoql-vanilla-chat-message-bubble .autoql-vanilla-chata-response-content-container .autoql-vanilla-chata-table-scrollbox .autoql-vanilla-chata-table-container .autoql-vanilla-chata-table .tabulator-tableHolder{
+    height: calc(100% - 40px) !important;
+    min-height: calc(100% - 40px) !important;
+    max-height: calc(100% - 40px) !important;
+}

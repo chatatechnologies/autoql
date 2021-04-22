@@ -281,7 +281,7 @@ body{
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble {
     position: relative;
     margin: 10px -10px 10px 10px;
-    padding: 13px;
+    padding: 13px 13px 13px 13px;
     border-radius: 10px;
     max-width: calc(100% - 20px);
     word-wrap: break-word;
