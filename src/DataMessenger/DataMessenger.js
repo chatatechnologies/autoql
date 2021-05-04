@@ -1339,6 +1339,7 @@ export function DataMessenger(elem, options){
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
         obj.introMessageBubble = chatMessageBubble;
+        obj.introMessage = firstMessage
     }
 
     obj.createIntroMessageTopics = () => {
@@ -1456,7 +1457,13 @@ export function DataMessenger(elem, options){
             ),
             (e) => {
                 e.parentNode.removeChild(e);
-        });
+        })
+
+        obj.drawerContent.appendChild(obj.introMessage)
+
+        if(obj.topicsWidget){
+            obj.drawerContent.appendChild(obj.topicsWidget._elem)
+        }
     }
 
     obj.autoCompleteHandler = (evt) => {
