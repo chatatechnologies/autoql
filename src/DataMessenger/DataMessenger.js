@@ -1450,16 +1450,12 @@ export function DataMessenger(elem, options){
     }
 
     obj.clearMessages = () => {
-        var size = 0;
-        if(obj.options.queryQuickStartTopics)size = 1;
         [].forEach.call(
             obj.drawerContent.querySelectorAll(
                 '.autoql-vanilla-chat-single-message-container'
             ),
-            (e, index) => {
-            if(index > size){
+            (e) => {
                 e.parentNode.removeChild(e);
-            }
         });
     }
 
