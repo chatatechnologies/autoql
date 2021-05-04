@@ -1644,7 +1644,7 @@ export function DataMessenger(elem, options){
             );
 
             if(messages.length > obj.options.maxMessages){
-                messages[1].parentNode.removeChild(messages[1]);
+                messages[0].parentNode.removeChild(messages[0]);
             }
         }
     }
@@ -2803,6 +2803,7 @@ export function DataMessenger(elem, options){
         ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;3
         refreshTooltips()
+        obj.checkMaxMessages()
     }
 
     obj.putClientResponse = (msg, json={}, withDeleteBtn=false) => {
