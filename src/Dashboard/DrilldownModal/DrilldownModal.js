@@ -21,7 +21,7 @@ export function DrilldownModal(title, views=[]){
             })
         }
     })
-    modal.chataBody.classList.add('chata-modal-full-height')
+    modal.chataModal.classList.add('chata-modal-full-height')
     modal.chataModal.style.width = '90vw'
     views.map(v => modal.addView(v))
     modal.setTitle(title)
