@@ -38,16 +38,18 @@ export function ChataChartListPopover(position, indexes, onClick, showOnBaseline
         return li;
     }
 
-    if((position.left + popover.clientWidth) >= screen.width) {
-        position.left = screen.width - popover.clientWidth - 25
-    }
 
     var popover = new PopoverChartSelector(position, showOnBaseline);
+    obj.createContent();
+    if((position.left + popover.clientWidth) >= window.innerWidth) {
+        position.left = window.innerWidth - popover.clientWidth - 30
+    }
+    console.log(position);
+    popover.position = position
     popover.setSelectedItem = (index) => {
         elements.map(elem => elem.classList.remove('active'));
         elements[parseInt(index)].classList.add('active');
     }
-    obj.createContent();
     popover.show();
     return popover;
 }
