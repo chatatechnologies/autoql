@@ -3,7 +3,6 @@ import { formatColumnName } from '../Utils'
 
 export function ChataChartListPopover(position, indexes, onClick, showOnBaseline=false){
     var obj = this;
-    var popover = new PopoverChartSelector(position, showOnBaseline);
     var elements = [];
 
     obj.createContent = () => {
@@ -39,13 +38,16 @@ export function ChataChartListPopover(position, indexes, onClick, showOnBaseline
         return li;
     }
 
+    if((position.left + popover.clientWidth) >= screen.width) {
+        position.left = screen.width - popover.clientWidth - 25
+    }
+
+    var popover = new PopoverChartSelector(position, showOnBaseline);
     popover.setSelectedItem = (index) => {
         elements.map(elem => elem.classList.remove('active'));
         elements[parseInt(index)].classList.add('active');
     }
-
     obj.createContent();
     popover.show();
-
     return popover;
 }
