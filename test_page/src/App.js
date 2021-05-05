@@ -264,6 +264,7 @@ class App extends React.Component {
                 } else {
                     this.datamessenger.setOption("placement", "right");
                 }
+                window.dispatchEvent(new CustomEvent('chata-resize', {}));
             }}
             />
         );
