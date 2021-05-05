@@ -379,7 +379,7 @@ export function createStackedBarChart(
     new MultiSeriesSelector(svg, {
         x: (chartWidth + 15),
         y: 10,
-        colName: col2,
+        colName: col1,
         showOnBaseline: true,
     }, onSelectorClick)
 
