@@ -44,7 +44,6 @@ export function ChataChartListPopover(position, indexes, onClick, showOnBaseline
     if((position.left + popover.clientWidth) >= window.innerWidth) {
         position.left = window.innerWidth - popover.clientWidth - 30
     }
-    console.log(position);
     popover.position = position
     popover.setSelectedItem = (index) => {
         elements.map(elem => elem.classList.remove('active'));

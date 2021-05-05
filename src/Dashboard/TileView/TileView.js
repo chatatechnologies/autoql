@@ -547,11 +547,12 @@ export function TileView(tile, isSecond=false){
 
     view.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest])
-        var indexData = evt.target.dataset.tilechart
-        var colValue = evt.target.dataset.colvalue1
-        var indexValue = evt.target.dataset.filterindex
+        var target = evt.target
+        var indexData = target.dataset.tilechart
+        var colValue = target.dataset.colvalue1
+        var indexValue = target.dataset.filterindex
         var groupableCount = getNumberOfGroupables(json['data']['columns'])
-        view.selectChartElement(view, evt.target)
+        view.selectChartElement(view, target)
         if(groupableCount == 1 || groupableCount == 2){
             view.sendDrilldownMessageChart(json, indexData, dashboard.options)
         }else{
@@ -589,8 +590,12 @@ export function TileView(tile, isSecond=false){
         const onClickDrilldownView = (evt, idRequest, currentView) => {
             var indexData = evt.target.dataset.tilechart
             var curJson = json
+            var target = evt.target
             view.selectChartElement(currentView, evt.target)
-            if(evt.target.classList.contains('autoql-vanilla-stacked-rect')){
+            if(
+                target.classList.contains('autoql-vanilla-stacked-rect') ||
+                target.dataset.isStackedDrill
+            ){
                 curJson = cloneObject(curJson)
                 curJson['data']['rows'][0][0] =
                 evt.target.dataset.unformatvalue1
