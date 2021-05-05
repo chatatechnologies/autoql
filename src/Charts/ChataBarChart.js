@@ -525,10 +525,15 @@ export function createBarChart(
             legendText.append('tspan')
             .text('Category');
         }else{
+            var groupable2Index = index2 === 0 ? 1 : 0
+            var colStr3 = cols[groupable2Index]['display_name']
+            || cols[groupable2Index]['name'];
+            var col3 = formatColumnName(colStr3)
+
             new MultiSeriesSelector(svg, {
                 x: (chartWidth + 15),
                 y: 10,
-                colName: col1,
+                colName: col3,
                 showOnBaseline: true,
             }, onSelectorClick)
         }
