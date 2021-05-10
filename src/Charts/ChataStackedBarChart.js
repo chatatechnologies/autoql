@@ -176,7 +176,7 @@ export function createStackedBarChart(
     textContainerY.append('tspan')
     .text(col2);
 
-    const onSelectorClick = (evt) => {
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
         closeAllChartPopovers();
         new ChataChartListPopover({
             left: evt.clientX,
@@ -185,21 +185,32 @@ export function createStackedBarChart(
             var selectedIndex = evt.target.dataset.popoverIndex;
             var oldGroupable
             = metadataComponent.metadata3D.groupBy.groupable2;
-            if(selectedIndex != oldGroupable){
-                metadataComponent.metadata3D.groupBy.groupable2
-                = selectedIndex;
-                metadataComponent.metadata3D.groupBy.groupable1
-                = oldGroupable;
-                createStackedBarChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
+            if(selectedIndex != oldGroupable && !legendEvent){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
             }
+
+            if(legendEvent){
+                let ind = selectedIndex == 1 ? 0 : 1
+                console.log('selectedIndex' + selectedIndex);
+                console.log('oldGroupable' + oldGroupable);
+                if(ind === 1)oldGroupable = 0
+                if(selectedIndex == oldGroupable){
+                    metadataComponent.metadata3D.groupBy.groupable2 = ind
+                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
+                }
+            }
+
+            createStackedBarChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+
             popover.close();
         }, true);
 
@@ -381,6 +392,7 @@ export function createStackedBarChart(
         y: 10,
         colName: col1,
         showOnBaseline: true,
+        legendEvent: true
     }, onSelectorClick)
 
     var svgLegend = svg.append('g')
