@@ -769,7 +769,6 @@ export function DataMessenger(elem, options){
         pageSwitcherContainer.appendChild(tabNotifications);
 
         tabChataUtils.onclick = function(){
-            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
             tabChataUtils.classList.add('active');
@@ -779,6 +778,7 @@ export function DataMessenger(elem, options){
             obj.tabsAnimation('flex', 'block');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('none');
+            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }
         tabQueryTips.onclick = function(){
             tabQueryTips.classList.add('active');
