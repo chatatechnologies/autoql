@@ -281,7 +281,7 @@ export function createLineChart(
     textContainerX.append('tspan')
     .text(col1);
 
-    const onSelectorClick = () => {
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
         var popoverSelector = new ChataChartListPopover({
@@ -292,6 +292,10 @@ export function createLineChart(
             var currentLi = evt.target.dataset.popoverPosition;
             metadataComponent.metadata.groupBy.index = xAxisIndex;
             metadataComponent.metadata.groupBy.currentLi = currentLi;
+            if(legendEvent){
+                let ind = xAxisIndex == 1 ? 0 : 1
+                metadataComponent.metadata.groupBy.index = ind;
+            }
             createLineChart(
                 component,
                 json,
@@ -526,6 +530,7 @@ export function createLineChart(
                 y: 10,
                 colName: col3,
                 showOnBaseline: true,
+                legendEvent: true
             }, onSelectorClick)
         }
 
