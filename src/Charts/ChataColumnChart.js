@@ -41,6 +41,7 @@ export function createColumnChart(
         right: 10,
         bottom: 60,
         left: 90,
+        chartLeft: 120,
         marginLabel: 50,
         bottomChart: 50
     },
@@ -127,7 +128,7 @@ export function createColumnChart(
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - 135;
+        chartWidth = width - margin.chartLeft;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -195,7 +196,6 @@ export function createColumnChart(
     var x0 = SCALE_BAND()
     var x1 = SCALE_BAND();
     var y = SCALE_LINEAR();
-
     setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
     var x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
 
