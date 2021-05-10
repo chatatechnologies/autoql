@@ -8,7 +8,8 @@ export function MultiSeriesSelector(svg, params, onClick){
         x,
         y,
         colName,
-        showOnBaseline
+        showOnBaseline,
+        legendEvent
     } = params
 
     const paddingRect = 15;
@@ -40,6 +41,6 @@ export function MultiSeriesSelector(svg, params, onClick){
     .attr('rx', '4')
     .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-    labelContainer.on('mouseup', (evt) => { onClick(evt, showOnBaseline) } )
+    labelContainer.on('mouseup', (evt) => { onClick(evt, showOnBaseline, legendEvent) } )
 
 }

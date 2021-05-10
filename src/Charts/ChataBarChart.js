@@ -258,7 +258,7 @@ export function createBarChart(
     textContainerY.append('tspan')
     .text(col1)
 
-    const onSelectorClick = (evt, showOnBaseline) => {
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
         var popoverSelector = new ChataChartListPopover({
@@ -269,6 +269,10 @@ export function createBarChart(
             var currentLi = evt.target.dataset.popoverPosition;
             metadataComponent.metadata.groupBy.index = yAxisIndex;
             metadataComponent.metadata.groupBy.currentLi = currentLi;
+            if(legendEvent){
+                let ind = yAxisIndex == 1 ? 0 : 1
+                metadataComponent.metadata.groupBy.index = ind;
+            }
             createBarChart(
                 component,
                 json,
@@ -535,6 +539,7 @@ export function createBarChart(
                 y: 10,
                 colName: col3,
                 showOnBaseline: true,
+                legendEvent: true
             }, onSelectorClick)
         }
 
