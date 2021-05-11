@@ -192,8 +192,6 @@ export function createStackedBarChart(
 
             if(legendEvent){
                 let ind = selectedIndex == 1 ? 0 : 1
-                console.log('selectedIndex' + selectedIndex);
-                console.log('oldGroupable' + oldGroupable);
                 if(ind === 1)oldGroupable = 0
                 if(selectedIndex == oldGroupable){
                     metadataComponent.metadata3D.groupBy.groupable2 = ind

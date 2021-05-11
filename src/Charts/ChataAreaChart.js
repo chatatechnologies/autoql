@@ -168,28 +168,36 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     textContainerX.append('tspan')
     .text(col2);
 
-    const onSelectorClick = (evt) => {
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
         closeAllChartPopovers();
         new ChataChartListPopover({
             left: evt.clientX,
             top: evt.clientY
         }, groupCols, (evt, popover) => {
-
             var selectedIndex = evt.target.dataset.popoverIndex;
-            var oldGroupable = metadataComponent.metadata3D.groupBy.groupable2;
-            if(selectedIndex != oldGroupable){
-                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex;
-                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable;
-                createAreaChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
+            var oldGroupable
+            = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable && !legendEvent){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
             }
+            if(legendEvent){
+                let ind = selectedIndex == 1 ? 0 : 1
+                if(ind === 1)oldGroupable = 0
+                if(selectedIndex == oldGroupable){
+                    metadataComponent.metadata3D.groupBy.groupable2 = ind
+                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
+                }
+            }
+            createAreaChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
             popover.close();
         }, true);
 
@@ -403,6 +411,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         y: 10,
         colName: col1,
         showOnBaseline: true,
+        legendEvent: true
     }, onSelectorClick)
 
     var svgLegend = svg.append('g')
