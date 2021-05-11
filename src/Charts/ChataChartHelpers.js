@@ -1,4 +1,5 @@
 import { min, max } from 'd3-array'
+import { select } from 'd3-selection'
 import {
     cloneObject,
     formatColumnName,
@@ -402,4 +403,21 @@ export function formatDataToHeatmap(json, options){
         values.push(row);
     }
     return values;
+}
+
+export const styleLegendTitleWithBorder = (svg) => {
+  svg
+    .select('.legendTitle')
+    .style('font-weight', 'bold')
+    .style('transform', 'translate(0, -5px)')
+    .append('tspan')
+    .text('  ▼')
+    .style('font-size', '8px')
+}
+
+export const styleLegendTitleNoBorder = (svg) => {
+  svg
+    .select('.legendTitle')
+    .style('font-weight', 'bold')
+    .style('transform', 'translate(0, -5px)')
 }
