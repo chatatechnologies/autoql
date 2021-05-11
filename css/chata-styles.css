@@ -1882,9 +1882,12 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     opacity: .5;
     transition: stroke .3s ease;
     z-index: 3;
+    cursor: pointer;
 }
 
-.autoql-vanilla-x-axis-label-border:hover, .autoql-vanilla-y-axis-label-border:hover{
+.autoql-vanilla-y-axis-label-border:hover, .autoql-vanilla-x-axis-label-border:hover{
+    stroke: #508bb8;
+
 }
 
 .autoql-vanilla-chart-selector{

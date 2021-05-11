@@ -413,6 +413,25 @@ export const styleLegendTitleWithBorder = (svg) => {
     .append('tspan')
     .text('  ▼')
     .style('font-size', '8px')
+
+    let titleBBox = {}
+    try {
+        titleBBox = svg
+        .select('.legendTitle')
+        .node()
+        .getBBox()
+    } catch (error) {}
+
+    svg.append('rect')
+    .attr('x', titleBBox.x - 10)
+    .attr('y', titleBBox.y - 10)
+    .attr('height', titleBBox.height + 10)
+    .attr('width', titleBBox.width + 20)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('class', 'autoql-vanilla-x-axis-label-border')
 }
 
 export const styleLegendTitleNoBorder = (svg) => {
