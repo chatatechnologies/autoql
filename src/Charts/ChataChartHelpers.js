@@ -1,5 +1,4 @@
 import { min, max } from 'd3-array'
-import { select } from 'd3-selection'
 import {
     cloneObject,
     formatColumnName,
@@ -420,7 +419,7 @@ export const styleLegendTitleWithBorder = (svg) => {
         .select('.legendTitle')
         .node()
         .getBBox()
-    } catch (error) {}
+    } catch (error) { console.log(error) }
 
     svg.append('rect')
     .attr('x', titleBBox.x - 10)

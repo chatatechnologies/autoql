@@ -10,7 +10,9 @@ import {
     getMinAndMaxValues,
     formatLabel,
     getVisibleSeries,
-    toggleSerie
+    toggleSerie,
+    styleLegendTitleWithBorder,
+    styleLegendTitleNoBorder,
 } from './ChataChartHelpers'
 import {
     SCALE_BAND,
@@ -492,28 +494,28 @@ export function createColumnChart(
     }
 
     if(hasLegend){
-        if(groupableCount !== 2){
-            let legendText = svg.append('text')
-            .attr('x', chartWidth + 40)
-            .attr('y', 10)
-            .attr('text-anchor', 'middle')
-            .attr("class", "autoql-vanilla-x-axis-label")
-            legendText.append('tspan')
-            .text('Category');
-        }else{
-            var groupable2Index = index2 === 0 ? 1 : 0
-            var colStr3 = cols[groupable2Index]['display_name']
-            || cols[groupable2Index]['name'];
-            var col3 = formatColumnName(colStr3)
-
-            new MultiSeriesSelector(svg, {
-                x: (chartWidth + 15),
-                y: 10,
-                colName: col3,
-                showOnBaseline: true,
-                legendEvent: true
-            }, onSelectorClick)
-        }
+        // if(groupableCount !== 2){
+        //     let legendText = svg.append('text')
+        //     .attr('x', chartWidth + 40)
+        //     .attr('y', 10)
+        //     .attr('text-anchor', 'middle')
+        //     .attr("class", "autoql-vanilla-x-axis-label")
+        //     legendText.append('tspan')
+        //     .text('Category');
+        // }else{
+        //     var groupable2Index = index2 === 0 ? 1 : 0
+        //     var colStr3 = cols[groupable2Index]['display_name']
+        //     || cols[groupable2Index]['name'];
+        //     var col3 = formatColumnName(colStr3)
+        //
+        //     new MultiSeriesSelector(svg, {
+        //         x: (chartWidth + 15),
+        //         y: 10,
+        //         colName: col3,
+        //         showOnBaseline: true,
+        //         legendEvent: true
+        //     }, onSelectorClick)
+        // }
 
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
@@ -544,8 +546,25 @@ export function createColumnChart(
             legendCell.classed(
                 'disable-group', !legendCell.classed('disable-group')
             );
-        });
+        })
+
+        if(groupableCount !== 2){
+            legendOrdinal.title('Category').titleWidth(100)
+        }else{
+            var groupable2Index = index2 === 0 ? 1 : 0
+            var colStr3 = cols[groupable2Index]['display_name']
+            || cols[groupable2Index]['name'];
+            var col3 = formatColumnName(colStr3)
+            legendOrdinal.title(col3).titleWidth(100)
+        }
+
         svgLegend.call(legendOrdinal)
+
+        if(groupableCount !== 2){
+            styleLegendTitleNoBorder(svgLegend)
+        }else{
+            styleLegendTitleWithBorder(svgLegend)
+        }
 
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin
