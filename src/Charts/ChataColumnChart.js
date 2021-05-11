@@ -1,7 +1,6 @@
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
-import { MultiSeriesSelector } from './MultiSeriesSelector'
 import {
     enumerateCols,
     getIndexesByType,
