@@ -446,7 +446,10 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     });
     legendOrdinal.title(col1).titleWidth(100)
     svgLegend.call(legendOrdinal)
-    styleLegendTitleWithBorder(svgLegend)
+    styleLegendTitleWithBorder(svgLegend, {
+        showOnBaseline: true,
+        legendEvent: true
+    }, onSelectorClick)
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
