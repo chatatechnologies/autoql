@@ -572,11 +572,13 @@ export function createBarChart(
         if(groupableCount !== 2){
             legendOrdinal.title('Category').titleWidth(100)
         }else{
-            var groupable2Index = index2 === 0 ? 1 : 0
-            var colStr3 = cols[groupable2Index]['display_name']
-            || cols[groupable2Index]['name'];
-            var col3 = formatColumnName(colStr3)
-            legendOrdinal.title(col3).titleWidth(100)
+            if(legendOrientation === 'vertical'){
+                var groupable2Index = index2 === 0 ? 1 : 0
+                var colStr3 = cols[groupable2Index]['display_name']
+                || cols[groupable2Index]['name'];
+                var col3 = formatColumnName(colStr3)
+                legendOrdinal.title(col3).titleWidth(100)
+            }
         }
         svgLegend.call(legendOrdinal)
 
