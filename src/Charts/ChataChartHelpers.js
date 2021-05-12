@@ -404,9 +404,14 @@ export function formatDataToHeatmap(json, options){
     return values;
 }
 
-export const styleLegendTitleWithBorder = (svg) => {
-  svg
-    .select('.legendTitle')
+export const styleLegendTitleWithBorder = (svg, params, onClick) => {
+
+    const {
+        showOnBaseline,
+        legendEvent
+    } = params
+
+    svg.select('.legendTitle')
     .style('font-weight', 'bold')
     .style('transform', 'translate(0, -5px)')
     .append('tspan')
@@ -431,6 +436,7 @@ export const styleLegendTitleWithBorder = (svg) => {
     .attr('stroke-width', '1px')
     .attr('rx', '4')
     .attr('class', 'autoql-vanilla-x-axis-label-border')
+    .on('click', (evt) => { onClick(evt, showOnBaseline, legendEvent) })
 }
 
 export const styleLegendTitleNoBorder = (svg) => {
