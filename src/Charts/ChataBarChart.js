@@ -583,7 +583,10 @@ export function createBarChart(
         if(groupableCount !== 2){
             styleLegendTitleNoBorder(svgLegend)
         }else{
-            styleLegendTitleWithBorder(svgLegend)
+            styleLegendTitleWithBorder(svgLegend, {
+                showOnBaseline: true,
+                legendEvent: true
+            }, onSelectorClick)
         }
 
         if(legendOrientation === 'vertical'){
