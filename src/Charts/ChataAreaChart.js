@@ -1,13 +1,13 @@
 import { select } from 'd3-selection'
 import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
-import { MultiSeriesSelector } from './MultiSeriesSelector'
 import { tooltipCharts } from '../Tooltips'
 import {
     getGroupableFields,
     getMetadataElement,
     formatLabel,
     getVisibleGroups,
+    styleLegendTitleWithBorder
 } from './ChataChartHelpers'
 import {
     getColorScale,
@@ -406,13 +406,13 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         onUpdate(component);
     }
 
-    new MultiSeriesSelector(svg, {
-        x: (chartWidth + 15),
-        y: 10,
-        colName: col1,
-        showOnBaseline: true,
-        legendEvent: true
-    }, onSelectorClick)
+    // new MultiSeriesSelector(svg, {
+    //     x: (chartWidth + 15),
+    //     y: 10,
+    //     colName: col1,
+    //     showOnBaseline: true,
+    //     legendEvent: true
+    // }, onSelectorClick)
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
@@ -444,7 +444,9 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         const legendCell = select(this);
         legendCell.classed('disable-group', !legendCell.classed('disable-group'));
     });
+    legendOrdinal.title(col1).titleWidth(100)
     svgLegend.call(legendOrdinal)
+    styleLegendTitleWithBorder(svgLegend)
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
