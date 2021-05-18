@@ -1781,8 +1781,7 @@ export function DataMessenger(elem, options){
 
         switch (type) {
             case 'simple':
-                if(request['reference_id'] !== '1.1.420'
-                    && request['reference_id'] !== '1.9.502'){
+                if(request['reference_id'] !== '1.9.502'){
                     toolbar.appendChild(
                         reportProblemButton
                     );
@@ -1941,7 +1940,10 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(reportProblem);
             }
 
-            if(request['reference_id'] === '1.1.550'){
+            if(
+                request['reference_id'] === '1.1.550' ||
+                request['reference_id'] === '1.1.420'
+            ){
                 toolbar.appendChild(reportProblem);
             }
         }
@@ -2929,12 +2931,13 @@ export function DataMessenger(elem, options){
             idRequest, 'simple', 'table'
         );
 
-        if(jsonResponse['reference_id'] !== '1.1.420' &&
-           jsonResponse['reference_id'] !== '1.1.430'){
+        if(jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
 
-        if(jsonResponse['reference_id'] === '1.1.430'){
+        if(
+            jsonResponse['reference_id'] === '1.1.430'
+        ){
             toolbarButtons = obj.getActionToolbar(
                 idRequest, 'safety-net', ''
             );
