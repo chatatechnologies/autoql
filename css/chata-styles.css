@@ -1246,6 +1246,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .legendCells .cell .label{
     letter-spacing: 0.04em !important;
+    color: unset !important;
 }
 
 .autoql-vanilla-stacked-rect.hidden{
