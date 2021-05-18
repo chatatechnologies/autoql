@@ -1945,6 +1945,7 @@ export function DataMessenger(elem, options){
                 request['reference_id'] === '1.1.420'
             ){
                 toolbar.appendChild(reportProblem);
+                reportProblem.classList.remove('chata-popover-single-message')
             }
         }
 
