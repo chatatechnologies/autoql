@@ -512,29 +512,6 @@ export function createLineChart(
     }
 
     if(hasLegend){
-        // if(groupableCount !== 2){
-        //     let legendText = svg.append('text')
-        //     .attr('x', chartWidth + 40)
-        //     .attr('y', 10)
-        //     .attr('text-anchor', 'middle')
-        //     .attr("class", "autoql-vanilla-x-axis-label")
-        //     legendText.append('tspan')
-        //     .text('Category');
-        // }else{
-        //     var groupable2Index = index2 === 0 ? 1 : 0
-        //     var colStr3 = cols[groupable2Index]['display_name']
-        //     || cols[groupable2Index]['name'];
-        //     var col3 = formatColumnName(colStr3)
-        //
-        //     new MultiSeriesSelector(svg, {
-        //         x: (chartWidth + 15),
-        //         y: 10,
-        //         colName: col3,
-        //         showOnBaseline: true,
-        //         legendEvent: true
-        //     }, onSelectorClick)
-        // }
-
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -566,7 +543,9 @@ export function createLineChart(
         })
 
         if(groupableCount !== 2){
-            legendOrdinal.title('Category').titleWidth(100)
+            if(allGroup.length > 2){
+                legendOrdinal.title('Category').titleWidth(100)
+            }
         }else{
             if(legendOrientation === 'vertical'){
                 var groupable2Index = index2 === 0 ? 1 : 0
