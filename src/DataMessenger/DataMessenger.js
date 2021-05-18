@@ -2155,7 +2155,11 @@ export function DataMessenger(elem, options){
             var compareValue = oldData[i][indexValue]
             if(!compareValue)compareValue = 'null'
             compareValue = formatData(compareValue, col, options)
-            if(compareValue === filterBy)newData.push(oldData[i]);
+            if(compareValue === 'Invalid date' && filterBy == 'undefined'){
+                newData.push(oldData[i])
+            }
+
+            if(compareValue === filterBy)newData.push(oldData[i])
         }
         var loading = obj.createLoadingDots();
         obj.drawerContent.appendChild(loading);
