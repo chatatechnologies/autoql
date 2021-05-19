@@ -315,7 +315,6 @@ export function DataMessenger(elem, options){
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
                 if(obj.options.isVisible){
-                    console.log('OPEN DRAWER');
                     obj.hideTabs()
                     obj.showTabs()
                 }else obj.queryTabs.style.visibility = 'hidden';

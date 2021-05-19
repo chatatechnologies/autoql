@@ -206,7 +206,6 @@ export function createBarChart(
 
     var x = SCALE_LINEAR()
     .range([0, chartWidth]);
-    console.log(chartWidth);
     setDomainRange(
         y0,
         categoriesNames,
