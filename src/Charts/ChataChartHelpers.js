@@ -42,6 +42,7 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             seriesData.push(serie);
         }
     }else if(multiSeriesCol || groupables.length === 2){
+        console.log('by value');
         if(groupables.length === 2){
             let colIndex = labelIndex === 0 ? 1 : 0
             multiSeriesCol = columns[colIndex]
@@ -71,6 +72,7 @@ export const getVisibleSeries = (_data) => {
     const data = cloneObject(_data);
     for (var i = 0; i < data.length; i++) {
         var line = data[i];
+        if(line.label == 'null')continue
         var newLine = {
             label: line.label
         };
@@ -116,6 +118,7 @@ export const getSeriesValues = (
     for (var i = 0; i < series.length; i++) {
         var obj = {}
         var serieName = series[i]
+        if(serieName == 'null')continue
         obj['value'] = sumMultiSeries(
             items, labelIndex, key, seriesIndexes[0], multiSeriesCol.index,
             serieName

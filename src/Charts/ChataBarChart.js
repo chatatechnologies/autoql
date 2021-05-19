@@ -135,6 +135,7 @@ export function createBarChart(
     );
     var categoriesNames = data.map(function(d) { return d.label; });
     var groupNames = data[0].values.map(function(d) { return d.group; });
+    console.log(groupNames);
     var hasLegend = groupNames.length > 1;
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 80;
@@ -153,7 +154,7 @@ export function createBarChart(
     const interval = Math.ceil((data.length * 16) / height);
     var yTickValues = [];
     var allLengths = [];
-
+    console.log(data);
     if (barHeight < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
