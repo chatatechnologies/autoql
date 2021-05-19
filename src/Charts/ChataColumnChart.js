@@ -38,7 +38,7 @@ export function createColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
     var margin = {
-        top: 15,
+        top: 20,
         right: 10,
         bottom: 60,
         left: 90,

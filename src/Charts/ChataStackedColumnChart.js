@@ -34,7 +34,7 @@ export function createStackedColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-stackedchartindex', renderTooltips=true){
 
-    var margin = {top: 5, right: 10, bottom: 60, left: 80, bottomChart: 0},
+    var margin = {top: 20, right: 10, bottom: 60, left: 80, bottomChart: 0},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
