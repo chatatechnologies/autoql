@@ -544,10 +544,12 @@ export function createColumnChart(
         if(groupableCount !== 2){
             styleLegendTitleNoBorder(svgLegend)
         }else{
-            styleLegendTitleWithBorder(svgLegend, {
-                showOnBaseline: true,
-                legendEvent: true
-            }, onSelectorClick)
+            if(groupNames.length > 2){
+                styleLegendTitleWithBorder(svgLegend, {
+                    showOnBaseline: true,
+                    legendEvent: true
+                }, onSelectorClick)
+            }
         }
 
         if(legendOrientation === 'vertical'){

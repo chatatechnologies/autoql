@@ -561,10 +561,13 @@ export function createLineChart(
         if(groupableCount !== 2){
             styleLegendTitleNoBorder(svgLegend)
         }else{
-            styleLegendTitleWithBorder(svgLegend, {
-                showOnBaseline: true,
-                legendEvent: true
-            }, onSelectorClick)
+            if(allGroup.length > 2){
+                legendOrdinal.title('Category').titleWidth(100)
+                styleLegendTitleWithBorder(svgLegend, {
+                    showOnBaseline: true,
+                    legendEvent: true
+                }, onSelectorClick)
+            }
         }
 
         if(legendOrientation === 'vertical'){
