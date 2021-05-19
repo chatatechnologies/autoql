@@ -919,7 +919,7 @@ tr td.chata-hidden{
     display: none;
     position: absolute;
     background: var(--autoql-vanilla-background-color-primary);
-    top: -31px;
+    top: -20px;
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
