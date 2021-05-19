@@ -1,4 +1,4 @@
-import '../../css/ChataInput.css'
+import css from '../../css/ChataInput.css'
 
 export function ChataInput(tag, elementProps, svgIcon=undefined, withIcon=true){
     let input;
