@@ -124,6 +124,15 @@ export class AuthenticationForm extends Component {
             }
             var test = await this.testLogin(values)
             if(!test){
+                setStoredProp('loginToken', null)
+                setStoredProp('jwtToken', null)
+                this.setState({
+                    isAuthenticated: false,
+                    isAuthenticating: false,
+                    activeIntegrator: null,
+                    componentKey: uuidv4(),
+                })
+                this.props.onLogOut()
                 message.error('Invalid Credentials')
                 return
             }
@@ -143,6 +152,7 @@ export class AuthenticationForm extends Component {
                 activeIntegrator: null,
                 componentKey: uuidv4(),
             })
+            this.props.onLogOut()
             message.error('Invalid Credentials')
         }
     }
