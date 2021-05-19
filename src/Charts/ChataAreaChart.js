@@ -60,11 +60,11 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
-        data, row => row[groupableIndex2]
+        data, row => row[groupableIndex2], true
     );
     groups = groups.sort();
     var subgroups = ChataUtils.getUniqueValues(
-        data, row => row[groupableIndex1]
+        data, row => row[groupableIndex1], true
     );
     subgroups.sort();
     var allSubgroups = {}

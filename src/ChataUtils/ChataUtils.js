@@ -669,11 +669,19 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     modal.show();
 }
 
-ChataUtils.getUniqueValues = function(data, getter){
+ChataUtils.getUniqueValues = function(data, getter, ignoreNull=false){
     let unique = {};
     data.forEach(function(i) {
-        if(!unique[getter(i)]) {
-            unique[getter(i)] = true;
+        if(ignoreNull){
+            if(getter(i) != null){
+                if(!unique[getter(i)]) {
+                    unique[getter(i)] = true;
+                }
+            }
+        }else{
+            if(!unique[getter(i)]) {
+                unique[getter(i)] = true;
+            }
         }
     });
     return Object.keys(unique);
