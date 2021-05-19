@@ -178,7 +178,7 @@ export function createBarChart(
     if(!hasLegend)increment = 2;
 
     margin.chartLeft = longestStringWidth * factor;
-    if(margin.chartLeft <= 75) margin.chartLeft = 85;
+    if(margin.chartLeft <= 80) margin.chartLeft = 90;
     if(margin.chartLeft > 150) margin.chartLeft = 150;
 
     if(legendOrientation == 'horizontal'){
