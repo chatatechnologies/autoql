@@ -2,6 +2,7 @@ import {
     htmlToElement
 } from '../Utils'
 import './ErrorMessage.css'
+import { strings } from '../Strings'
 
 export function ErrorMessage(text, onClick=()=>{}){
     var startTag = text.indexOf('<')
@@ -19,7 +20,7 @@ export function ErrorMessage(text, onClick=()=>{}){
         var div = document.createElement('div')
         var link = document.createElement('a')
         div.innerHTML = values[0]
-        link.innerHTML = 'report'
+        link.innerHTML = strings.report
         link.classList.add('autoql-vanilla-report-link')
         link.onclick = (evt) => {
             onClick(evt)
