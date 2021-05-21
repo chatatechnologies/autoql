@@ -3077,11 +3077,12 @@ export function DataMessenger(elem, options){
 
             obj.input.removeAttribute("disabled")
             if(response.status != 200){
-                // 1.1.432
                 let msg = response.data.message;
                 let ref = response.data['reference_id']
                 if(ref === '1.1.432'){
-                    console.log('ERROR MESSAGE');
+                    obj.putSimpleResponse(
+                        response.data, textValue, response.status
+                    )
                 }else{
                     obj.sendResponse(`
                         <div>${msg}</div>
