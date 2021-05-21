@@ -42,7 +42,6 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
             seriesData.push(serie);
         }
     }else if(multiSeriesCol || groupables.length === 2){
-        console.log('by value');
         if(groupables.length === 2){
             let colIndex = labelIndex === 0 ? 1 : 0
             multiSeriesCol = columns[colIndex]

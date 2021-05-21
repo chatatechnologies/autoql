@@ -71,8 +71,6 @@ export function createStackedBarChart(
         data, row => row[groupableIndex1], true
     );
 
-    console.log(groups);
-
     groups.map(element => allLengths.push(formatLabel(element).length));
     let longestString = Math.max.apply(null, allLengths);
 
