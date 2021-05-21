@@ -350,32 +350,26 @@ export function createStackedColumnChart(
                 unformatvalue1 = d.data.group
                 unformatvalue2 = d.labelY
             }
-            if(d.labelY && d.data.group && d.value){
-                select(this).attr(valueClass, i)
-                .attr('data-col1', col1)
-                .attr('data-col2', col2)
-                .attr('data-col3', col3)
-                .attr('data-colvalue1', formatData(
-                    d.labelY, cols[groupableIndex1], options
-                ))
-                .attr('data-colvalue2', formatData(
-                    d.data.group, cols[groupableIndex2], options
-                ))
-                .attr('data-colvalue3', formatData(
-                    d.value, cols[notGroupableIndex],
-                    options
-                ))
-                .attr('data-unformatvalue1', unformatvalue1)
-                .attr('data-unformatvalue2', unformatvalue2)
-                .attr('data-unformatvalue3', d.value)
-                .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-            }else{
-                select(this).attr(
-                    'class','autoql-vanilla-stacked-rect'
-                )
-            }
+            select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-col3', col3)
+            .attr('data-colvalue1', formatData(
+                d.labelY, cols[groupableIndex1], options
+            ))
+            .attr('data-colvalue2', formatData(
+                d.data.group, cols[groupableIndex2], options
+            ))
+            .attr('data-colvalue3', formatData(
+                d.value, cols[notGroupableIndex],
+                options
+            ))
+            .attr('data-unformatvalue1', unformatvalue1)
+            .attr('data-unformatvalue2', unformatvalue2)
+            .attr('data-unformatvalue3', d.value)
         })
         .attr('opacity', '0.7')
+        .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
         .attr("x", function(d) {
             return x(d.data.group);
         })
