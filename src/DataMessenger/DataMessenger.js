@@ -3077,13 +3077,18 @@ export function DataMessenger(elem, options){
 
             obj.input.removeAttribute("disabled")
             if(response.status != 200){
+                // 1.1.432
                 let msg = response.data.message;
                 let ref = response.data['reference_id']
-                obj.sendResponse(`
-                    <div>${msg}</div>
-                    <br/>
-                    <div>Error ID: ${ref}</div>
-                `, true)
+                if(ref === '1.1.432'){
+                    console.log('ERROR MESSAGE');
+                }else{
+                    obj.sendResponse(`
+                        <div>${msg}</div>
+                        <br/>
+                        <div>Error ID: ${ref}</div>
+                        `, true)
+                }
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
