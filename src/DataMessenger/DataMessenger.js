@@ -1461,6 +1461,7 @@ export function DataMessenger(elem, options){
         obj.drawerContent.appendChild(obj.introMessage)
 
         if(obj.topicsWidget){
+            obj.topicsWidget.reset()
             obj.drawerContent.appendChild(obj.topicsWidget._elem)
         }
     }

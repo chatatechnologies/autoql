@@ -110,6 +110,7 @@ export function Cascader(topics, datamessenger){
     obj.createOptions = (parentIndex) => {
         var topic = topics[parseInt(parentIndex)];
         var childrenOptionsContainer = document.createElement('div');
+        obj.childrenOptionsContainer = childrenOptionsContainer
         var optionList = [];
         const arrow = htmlToElement(`
             <span class="chata-icon cascader-back-arrow">
@@ -152,8 +153,7 @@ export function Cascader(topics, datamessenger){
         })
 
         arrow.onclick = () => {
-            optionsContainer.classList.remove('hidden');
-            chataCascader.removeChild(childrenOptionsContainer);
+            obj.reset()
         }
 
         seeMore.onclick = () => {
@@ -191,6 +191,11 @@ export function Cascader(topics, datamessenger){
     content.appendChild(
         document.createTextNode(' to further explore the possibilities.')
     );
+
+    obj.reset = () => {
+        optionsContainer.classList.remove('hidden');
+        chataCascader.removeChild(obj.childrenOptionsContainer);
+    }
 
     return obj;
 }
