@@ -512,6 +512,14 @@ export function createLineChart(
     }
 
     if(hasLegend){
+        var groupable2Index = index2 === 0 ? 1 : 0
+        const legendValues = allGroup.map(elem => {
+            return formatChartData(elem, cols[groupable2Index], options);
+        })
+        var legendScale = getColorScale(
+            legendValues,
+            options.themeConfig.chartColors
+        )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -520,7 +528,7 @@ export function createLineChart(
 
         const legendWrapLength = width / 2 - 50
         var legendOrdinal = getLegend(
-            colorScale,
+            legendScale,
             legendWrapLength,
             legendOrientation
         );
@@ -548,7 +556,6 @@ export function createLineChart(
             }
         }else{
             if(legendOrientation === 'vertical'){
-                var groupable2Index = index2 === 0 ? 1 : 0
                 var colStr3 = cols[groupable2Index]['display_name']
                 || cols[groupable2Index]['name'];
                 var col3 = formatColumnName(colStr3)

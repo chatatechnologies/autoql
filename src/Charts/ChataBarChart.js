@@ -519,7 +519,14 @@ export function createBarChart(
         onUpdate(component);
     }
     if(hasLegend){
-
+        var groupable2Index = index2 === 0 ? 1 : 0
+        const legendValues = groupNames.map(elem => {
+            return formatChartData(elem, cols[groupable2Index], options);
+        })
+        var legendScale = getColorScale(
+            legendValues,
+            options.themeConfig.chartColors
+        )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -527,7 +534,7 @@ export function createBarChart(
         .style('font-size', '10px')
         const legendWrapLength = width / 2 - 50
         var legendOrdinal = getLegend(
-            colorScale,
+            legendScale,
             legendWrapLength,
             legendOrientation
         );
@@ -551,7 +558,6 @@ export function createBarChart(
             }
         }else{
             if(legendOrientation === 'vertical'){
-                var groupable2Index = index2 === 0 ? 1 : 0
                 var colStr3 = cols[groupable2Index]['display_name']
                 || cols[groupable2Index]['name'];
                 var col3 = formatColumnName(colStr3)
