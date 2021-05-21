@@ -41,7 +41,7 @@
 .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar {
     display: unset;
     opacity: 0;
-    background-color: transparent;
+    background-color: var(--autoql-vanilla-background-color);
     width: 7px;
     height: 7px;
     -webkit-transition: all .3s ease;
@@ -56,20 +56,14 @@
     cursor: default !important;
 }
 
-.autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
-    background-color: transparent;
+.autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-track-piece{
+    background-color: var(--autoql-vanilla-background-color);
 }
 
 .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-thumb {
     background-color: rgba(0,0,0,.2);
     border-radius: 7px;
     border: 0;
-}
-.autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
-    background-color: transparent;
-}
-.autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
-    background-color: transparent;
 }
 
 .autoql-vanilla-chata-table .tabulator-header-filter input:focus {
