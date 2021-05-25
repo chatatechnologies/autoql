@@ -187,14 +187,15 @@ export function Cascader(topics, datamessenger){
         obj.showQueryTips();
     }
 
-
     content.appendChild(
         document.createTextNode(' to further explore the possibilities.')
     );
 
     obj.reset = () => {
         optionsContainer.classList.remove('hidden');
-        chataCascader.removeChild(obj.childrenOptionsContainer);
+        if(chataCascader.contains(obj.childrenOptionsContainer)){
+            chataCascader.removeChild(obj.childrenOptionsContainer)
+        }
     }
 
     return obj;
