@@ -2075,7 +2075,8 @@ export function DataMessenger(elem, options){
                 var index = groupables[i].indexCol;
                 var value = json['data']['rows'][parseInt(indexData)][index];
                 var colData = json['data']['columns'][index]['name'];
-                params[colData] = value.toString();
+                if(!value)value = ''
+                params[colData] = value.toString() || '';
             }
         }
 
