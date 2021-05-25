@@ -166,6 +166,7 @@ class App extends React.Component {
             apiKey: null,
             token: null
         })
+        this.datamessenger.clearMessages()
     }
 
     renderActivePage = () => {
