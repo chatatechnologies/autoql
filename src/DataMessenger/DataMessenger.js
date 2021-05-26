@@ -315,7 +315,6 @@ export function DataMessenger(elem, options){
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
                 if(obj.options.isVisible){
-                    console.log('OPEN DRAWER');
                     obj.hideTabs()
                     obj.showTabs()
                 }else obj.queryTabs.style.visibility = 'hidden';
@@ -396,13 +395,15 @@ export function DataMessenger(elem, options){
         obj.options.isVisible = true;
         obj.initialScroll = window.scrollY;
         obj.input.focus()
+        obj.rootElem.style.opacity = 1
         var body = document.body;
         obj.showTabs()
 
         if(disableAnimation){
             obj.rootElem.style.transition = 'none'
         }else{
-            obj.rootElem.style.transition = 'transform 0.3s ease-in-out'
+            obj.rootElem.style.transition = 'all 0.3s ease-in-out'
+            obj.rootElem.style.transitionProperty = 'transform, opacity'
         }
         if(obj.options.showMask){
             obj.wrapper.style.opacity = .3;
@@ -483,6 +484,7 @@ export function DataMessenger(elem, options){
     obj.closeDrawer = () => {
         obj.closePopOver(obj.clearMessagePop);
         closeAllChartPopovers();
+        obj.rootElem.style.opacity = .8
         document.body.classList.remove(
             'autoql-vanilla-chata-body-drawer-open'
         );
@@ -766,7 +768,6 @@ export function DataMessenger(elem, options){
         pageSwitcherContainer.appendChild(tabNotifications);
 
         tabChataUtils.onclick = function(){
-            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
             tabChataUtils.classList.add('active');
@@ -776,6 +777,7 @@ export function DataMessenger(elem, options){
             obj.tabsAnimation('flex', 'block');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('none');
+            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }
         tabQueryTips.onclick = function(){
             tabQueryTips.classList.add('active');
@@ -1336,6 +1338,7 @@ export function DataMessenger(elem, options){
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
         obj.introMessageBubble = chatMessageBubble;
+        obj.introMessage = firstMessage
     }
 
     obj.createIntroMessageTopics = () => {
@@ -1447,17 +1450,20 @@ export function DataMessenger(elem, options){
     }
 
     obj.clearMessages = () => {
-        var size = 0;
-        if(obj.options.queryQuickStartTopics)size = 1;
         [].forEach.call(
             obj.drawerContent.querySelectorAll(
                 '.autoql-vanilla-chat-single-message-container'
             ),
-            (e, index) => {
-            if(index > size){
+            (e) => {
                 e.parentNode.removeChild(e);
-            }
-        });
+        })
+
+        obj.drawerContent.appendChild(obj.introMessage)
+
+        if(obj.topicsWidget){
+            obj.topicsWidget.reset()
+            obj.drawerContent.appendChild(obj.topicsWidget._elem)
+        }
     }
 
     obj.autoCompleteHandler = (evt) => {
@@ -1638,7 +1644,7 @@ export function DataMessenger(elem, options){
             );
 
             if(messages.length > obj.options.maxMessages){
-                messages[1].parentNode.removeChild(messages[1]);
+                messages[0].parentNode.removeChild(messages[0]);
             }
         }
     }
@@ -1714,7 +1720,9 @@ export function DataMessenger(elem, options){
         var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`)
         var tabulator = table.tabulator;
         tabulator.toggleFilters();
-        bubble.scrollIntoView()
+        setTimeout(() => {
+            bubble.scrollIntoView()
+        }, 50)
     }
 
     obj.openColumnEditorHandler = (evt, idRequest, badge) => {
@@ -1775,8 +1783,7 @@ export function DataMessenger(elem, options){
 
         switch (type) {
             case 'simple':
-                if(request['reference_id'] !== '1.1.420'
-                    && request['reference_id'] !== '1.9.502'){
+                if(request['reference_id'] !== '1.9.502'){
                     toolbar.appendChild(
                         reportProblemButton
                     );
@@ -1935,8 +1942,12 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(reportProblem);
             }
 
-            if(request['reference_id'] === '1.1.550'){
+            if(
+                request['reference_id'] === '1.1.550' ||
+                request['reference_id'] === '1.1.420'
+            ){
                 toolbar.appendChild(reportProblem);
+                reportProblem.classList.remove('chata-popover-single-message')
             }
         }
 
@@ -2029,7 +2040,7 @@ export function DataMessenger(elem, options){
 
         if(toolbarLeft){
             toolbarLeft.innerHTML = ''
-            var displayTypes = obj.getDisplayTypesButtons(
+            let displayTypes = obj.getDisplayTypesButtons(
                 oldComponent.dataset.componentid, ignore
             );
 
@@ -2064,7 +2075,8 @@ export function DataMessenger(elem, options){
                 var index = groupables[i].indexCol;
                 var value = json['data']['rows'][parseInt(indexData)][index];
                 var colData = json['data']['columns'][index]['name'];
-                params[colData] = value.toString();
+                if(!value)value = ''
+                params[colData] = value.toString() || '';
             }
         }
 
@@ -2146,7 +2158,11 @@ export function DataMessenger(elem, options){
             var compareValue = oldData[i][indexValue]
             if(!compareValue)compareValue = 'null'
             compareValue = formatData(compareValue, col, options)
-            if(compareValue === filterBy)newData.push(oldData[i]);
+            if(compareValue === 'Invalid date' && filterBy == 'undefined'){
+                newData.push(oldData[i])
+            }
+
+            if(compareValue === filterBy)newData.push(oldData[i])
         }
         var loading = obj.createLoadingDots();
         obj.drawerContent.appendChild(loading);
@@ -2797,6 +2813,7 @@ export function DataMessenger(elem, options){
         ))
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;3
         refreshTooltips()
+        obj.checkMaxMessages()
     }
 
     obj.putClientResponse = (msg, json={}, withDeleteBtn=false) => {
@@ -2922,12 +2939,13 @@ export function DataMessenger(elem, options){
             idRequest, 'simple', 'table'
         );
 
-        if(jsonResponse['reference_id'] !== '1.1.420' &&
-           jsonResponse['reference_id'] !== '1.1.430'){
+        if(jsonResponse['reference_id'] !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
 
-        if(jsonResponse['reference_id'] === '1.1.430'){
+        if(
+            jsonResponse['reference_id'] === '1.1.430'
+        ){
             toolbarButtons = obj.getActionToolbar(
                 idRequest, 'safety-net', ''
             );
@@ -3062,11 +3080,17 @@ export function DataMessenger(elem, options){
             if(response.status != 200){
                 let msg = response.data.message;
                 let ref = response.data['reference_id']
-                obj.sendResponse(`
-                    <div>${msg}</div>
-                    <br/>
-                    <div>Error ID: ${ref}</div>
-                `, true)
+                if(ref === '1.1.482'){
+                    obj.putSimpleResponse(
+                        response.data, textValue, response.status
+                    )
+                }else{
+                    obj.sendResponse(`
+                        <div>${msg}</div>
+                        <br/>
+                        <div>Error ID: ${ref}</div>
+                        `, true)
+                }
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }

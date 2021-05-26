@@ -1,7 +1,6 @@
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
-
 import {
     enumerateCols,
     getIndexesByType,
@@ -10,7 +9,9 @@ import {
     getMinAndMaxValues,
     formatLabel,
     getVisibleSeries,
-    toggleSerie
+    toggleSerie,
+    styleLegendTitleWithBorder,
+    styleLegendTitleNoBorder,
 } from './ChataChartHelpers'
 import {
     SCALE_BAND,
@@ -37,10 +38,11 @@ export function createColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
     var margin = {
-        top: 15,
+        top: 20,
         right: 10,
         bottom: 60,
         left: 90,
+        chartLeft: 120,
         marginLabel: 50,
         bottomChart: 50
     },
@@ -127,7 +129,7 @@ export function createColumnChart(
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - 135;
+        chartWidth = width - margin.chartLeft;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -155,7 +157,7 @@ export function createColumnChart(
     }else{
         if(rotateLabels){
             let m = longestString * 3;
-            margin.bottomChart = m;
+            margin.bottomChart = m + 9;
         }else{
             margin.bottomChart = 13;
         }
@@ -195,7 +197,6 @@ export function createColumnChart(
     var x0 = SCALE_BAND()
     var x1 = SCALE_BAND();
     var y = SCALE_LINEAR();
-
     setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
     var x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
 
@@ -289,6 +290,36 @@ export function createColumnChart(
     textContainerX.append('tspan')
     .text(col1);
 
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) =>{
+        closeAllChartPopovers();
+        const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+        var popoverSelector = new ChataChartListPopover({
+            left: event.clientX,
+            top: event.clientY
+        }, xIndexes, (evt, popover) => {
+            var xAxisIndex = evt.target.dataset.popoverIndex;
+            var currentLi = evt.target.dataset.popoverPosition;
+            metadataComponent.metadata.groupBy.index = xAxisIndex;
+            metadataComponent.metadata.groupBy.currentLi = currentLi;
+            if(legendEvent){
+                let ind = xAxisIndex == 1 ? 0 : 1
+                metadataComponent.metadata.groupBy.index = ind;
+            }
+            createColumnChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+            popover.close();
+        }, true);
+
+        popoverSelector.setSelectedItem(selectedItem)
+    }
+
     if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -316,31 +347,7 @@ export function createColumnChart(
         .attr('rx', '4')
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', () => {
-            closeAllChartPopovers();
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-            var popoverSelector = new ChataChartListPopover({
-                left: event.clientX,
-                top: event.clientY
-            }, xIndexes, (evt, popover) => {
-                var xAxisIndex = evt.target.dataset.popoverIndex;
-                var currentLi = evt.target.dataset.popoverPosition;
-                metadataComponent.metadata.groupBy.index = xAxisIndex;
-                metadataComponent.metadata.groupBy.currentLi = currentLi;
-                createColumnChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
-                popover.close();
-            }, true);
-
-            popoverSelector.setSelectedItem(selectedItem)
-        })
+        labelXContainer.on('mouseup', onSelectorClick)
     }
 
     if(xTickValues.length > 0){
@@ -458,8 +465,10 @@ export function createColumnChart(
                     d.label, cols[index2],
                     options
                 )
-                select(this).attr(valueClass, rectIndex)
+                if(toolTipColValue1 === 'Invalid date')
+                toolTipColValue1 = 'undefined'
 
+                select(this).attr(valueClass, rectIndex)
                 .attr('data-col1', col1)
                 .attr('data-col2', group)
                 .attr('data-colvalue1', toolTipColValue1)
@@ -484,13 +493,15 @@ export function createColumnChart(
     }
 
     if(hasLegend){
-        let legendText = svg.append('text')
-        .attr('x', chartWidth + 40)
-        .attr('y', 10)
-        .attr('text-anchor', 'middle')
-        .attr("class", "autoql-vanilla-x-axis-label")
-        legendText.append('tspan')
-        .text('Category');
+        var groupable2Index = index2 === 0 ? 1 : 0
+        const legendValues = groupNames.map(elem => {
+            return formatChartData(elem, cols[groupable2Index], options);
+        })
+        var legendScale = getColorScale(
+            legendValues,
+            options.themeConfig.chartColors
+        )
+
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -499,7 +510,7 @@ export function createColumnChart(
 
         const legendWrapLength = width / 2 - 50
         var legendOrdinal = getLegend(
-            colorScale,
+            legendScale,
             legendWrapLength,
             legendOrientation
         );
@@ -520,8 +531,33 @@ export function createColumnChart(
             legendCell.classed(
                 'disable-group', !legendCell.classed('disable-group')
             );
-        });
+        })
+
+        if(groupableCount !== 2){
+            if(groupNames.length > 2){
+                legendOrdinal.title('Category').titleWidth(100)
+            }
+        }else{
+            if(legendOrientation === 'vertical'){
+                var colStr3 = cols[groupable2Index]['display_name']
+                || cols[groupable2Index]['name'];
+                var col3 = formatColumnName(colStr3)
+                legendOrdinal.title(col3).titleWidth(100)
+            }
+        }
+
         svgLegend.call(legendOrdinal)
+
+        if(groupableCount !== 2){
+            styleLegendTitleNoBorder(svgLegend)
+        }else{
+            if(groupNames.length > 2){
+                styleLegendTitleWithBorder(svgLegend, {
+                    showOnBaseline: true,
+                    legendEvent: true
+                }, onSelectorClick)
+            }
+        }
 
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin

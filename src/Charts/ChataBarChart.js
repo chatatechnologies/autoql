@@ -1,7 +1,6 @@
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
-
 import {
     enumerateCols,
     getIndexesByType,
@@ -11,6 +10,8 @@ import {
     formatLabel,
     getVisibleSeries,
     toggleSerie,
+    styleLegendTitleWithBorder,
+    styleLegendTitleNoBorder,
 } from './ChataChartHelpers'
 import {
     SCALE_BAND,
@@ -152,7 +153,6 @@ export function createBarChart(
     const interval = Math.ceil((data.length * 16) / height);
     var yTickValues = [];
     var allLengths = [];
-
     if (barHeight < 16) {
         data.forEach((element, index) => {
             if (index % interval === 0) {
@@ -178,7 +178,7 @@ export function createBarChart(
     if(!hasLegend)increment = 2;
 
     margin.chartLeft = longestStringWidth * factor;
-    if(margin.chartLeft <= 75) margin.chartLeft = 85;
+    if(margin.chartLeft <= 80) margin.chartLeft = 90;
     if(margin.chartLeft > 150) margin.chartLeft = 150;
 
     if(legendOrientation == 'horizontal'){
@@ -205,7 +205,6 @@ export function createBarChart(
 
     var x = SCALE_LINEAR()
     .range([0, chartWidth]);
-
     setDomainRange(
         y0,
         categoriesNames,
@@ -258,6 +257,36 @@ export function createBarChart(
     textContainerY.append('tspan')
     .text(col1)
 
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+        closeAllChartPopovers();
+        const selectedItem = metadataComponent.metadata.groupBy.currentLi;
+        var popoverSelector = new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, yIndexes, (evt, popover) => {
+            var yAxisIndex = evt.target.dataset.popoverIndex;
+            var currentLi = evt.target.dataset.popoverPosition;
+            metadataComponent.metadata.groupBy.index = yAxisIndex;
+            metadataComponent.metadata.groupBy.currentLi = currentLi;
+            if(legendEvent){
+                let ind = yAxisIndex == 1 ? 0 : 1
+                metadataComponent.metadata.groupBy.index = ind;
+            }
+            createBarChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+            popover.close();
+        }, showOnBaseline);
+
+        popoverSelector.setSelectedItem(selectedItem)
+    }
+
     if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -279,31 +308,7 @@ export function createBarChart(
         .attr('transform', 'rotate(-180)')
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-        labelYContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-            var popoverSelector = new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, yIndexes, (evt, popover) => {
-                var yAxisIndex = evt.target.dataset.popoverIndex;
-                var currentLi = evt.target.dataset.popoverPosition;
-                metadataComponent.metadata.groupBy.index = yAxisIndex;
-                metadataComponent.metadata.groupBy.currentLi = currentLi;
-                createBarChart(
-                    component,
-                    json,
-                    options,
-                    onUpdate,
-                    fromChataUtils,
-                    valueClass,
-                    renderTooltips
-                )
-                popover.close();
-            });
-
-            popoverSelector.setSelectedItem(selectedItem)
-        })
+        labelYContainer.on('mouseup', (evt) => { onSelectorClick(evt, false) })
     }
 
     // X AXIS
@@ -486,6 +491,9 @@ export function createBarChart(
                     d.label, cols[index2],
                     options
                 )
+                if(toolTipColValue1 === 'Invalid date')
+                toolTipColValue1 = 'undefined'
+
                 select(this).attr(valueClass, rectIndex)
                 .attr('data-col1', col1)
                 .attr('data-col2', group)
@@ -511,14 +519,14 @@ export function createBarChart(
         onUpdate(component);
     }
     if(hasLegend){
-        let legendText = svg.append('text')
-        .attr('x', chartWidth + 38)
-        .attr('y', 10)
-        .attr('text-anchor', 'middle')
-        .attr("class", "autoql-vanilla-x-axis-label")
-        legendText.append('tspan')
-        .text('Category');
-
+        var groupable2Index = index2 === 0 ? 1 : 0
+        const legendValues = groupNames.map(elem => {
+            return formatChartData(elem, cols[groupable2Index], options);
+        })
+        var legendScale = getColorScale(
+            legendValues,
+            options.themeConfig.chartColors
+        )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
         .style('fill-opacity', '0.7')
@@ -526,7 +534,7 @@ export function createBarChart(
         .style('font-size', '10px')
         const legendWrapLength = width / 2 - 50
         var legendOrdinal = getLegend(
-            colorScale,
+            legendScale,
             legendWrapLength,
             legendOrientation
         );
@@ -544,7 +552,30 @@ export function createBarChart(
             const legendCell = select(this);
             legendCell.classed('disable-group', !legendCell.classed('disable-group'));
         });
+        if(groupableCount !== 2){
+            if(groupNames.length > 2){
+                legendOrdinal.title('Category').titleWidth(100)
+            }
+        }else{
+            if(legendOrientation === 'vertical'){
+                var colStr3 = cols[groupable2Index]['display_name']
+                || cols[groupable2Index]['name'];
+                var col3 = formatColumnName(colStr3)
+                legendOrdinal.title(col3).titleWidth(100)
+            }
+        }
         svgLegend.call(legendOrdinal)
+
+        if(groupableCount !== 2){
+            styleLegendTitleNoBorder(svgLegend)
+        }else{
+            if(groupNames.length > 2){
+                styleLegendTitleWithBorder(svgLegend, {
+                    showOnBaseline: true,
+                    legendEvent: true
+                }, onSelectorClick)
+            }
+        }
 
         if(legendOrientation === 'vertical'){
             const newX = chartWidth + legendBoxMargin

@@ -116,6 +116,7 @@ export const getSeriesValues = (
     for (var i = 0; i < series.length; i++) {
         var obj = {}
         var serieName = series[i]
+        if(serieName == 'null')continue
         obj['value'] = sumMultiSeries(
             items, labelIndex, key, seriesIndexes[0], multiSeriesCol.index,
             serieName
@@ -154,10 +155,11 @@ export const groupByValue = (
 ) => {
     var obj = {}
     var series = ChataUtils.getUniqueValues(
-        items, row => row[multiSeriesCol.index]
+        items, row => row[multiSeriesCol.index], true
     )
     items.forEach((item) => {
         const key = item[labelIndex];
+        if(!key)return
         if (!obj[key]) {
             obj[key] = getSeriesValues(
                 item,
@@ -239,12 +241,12 @@ export const enumerateCols = (json) => {
 }
 
 export const formatLabel = (label) => {
-    if(!label)label = '';
-    if(label === 'null')label = 'Untitled Category';
+    if(!label)label = ''
+    if(label === 'null')label = 'Untitled Category'
     if(label.toString().length < 20){
-        return label.toString();
+        return label.toString()
     }
-    return label.toString().slice(0, 15) + ' ...';
+    return label.toString().slice(0, 15) + ' ...'
 
 }
 
@@ -402,4 +404,46 @@ export function formatDataToHeatmap(json, options){
         values.push(row);
     }
     return values;
+}
+
+export const styleLegendTitleWithBorder = (svg, params, onClick) => {
+
+    const {
+        showOnBaseline,
+        legendEvent
+    } = params
+
+    svg.select('.legendTitle')
+    .style('font-weight', 'bold')
+    .style('transform', 'translate(0, -5px)')
+    .append('tspan')
+    .text('  ▼')
+    .style('font-size', '8px')
+
+    let titleBBox = {}
+    try {
+        titleBBox = svg
+        .select('.legendTitle')
+        .node()
+        .getBBox()
+    } catch (error) { console.log(error) }
+
+    svg.append('rect')
+    .attr('x', titleBBox.x - 10)
+    .attr('y', titleBBox.y - 10)
+    .attr('height', titleBBox.height + 10)
+    .attr('width', titleBBox.width + 20)
+    .attr('fill', 'transparent')
+    .attr('stroke', '#508bb8')
+    .attr('stroke-width', '1px')
+    .attr('rx', '4')
+    .attr('class', 'autoql-vanilla-x-axis-label-border')
+    .on('click', (evt) => { onClick(evt, showOnBaseline, legendEvent) })
+}
+
+export const styleLegendTitleNoBorder = (svg) => {
+  svg
+    .select('.legendTitle')
+    .style('font-weight', 'bold')
+    .style('transform', 'translate(0, -5px)')
 }

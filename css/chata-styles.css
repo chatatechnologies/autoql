@@ -281,7 +281,7 @@ body{
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble {
     position: relative;
     margin: 10px -10px 10px 10px;
-    padding: 13px;
+    padding: 13px 13px 13px 13px;
     border-radius: 10px;
     max-width: calc(100% - 20px);
     word-wrap: break-word;
@@ -919,7 +919,7 @@ tr td.chata-hidden{
     display: none;
     position: absolute;
     background: var(--autoql-vanilla-background-color-primary);
-    top: -22px;
+    top: -20px;
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
@@ -1246,6 +1246,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .legendCells .cell .label{
     letter-spacing: 0.04em !important;
+    color: unset !important;
 }
 
 .autoql-vanilla-stacked-rect.hidden{
@@ -1882,9 +1883,12 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     opacity: .5;
     transition: stroke .3s ease;
     z-index: 3;
+    cursor: pointer;
 }
 
-.autoql-vanilla-x-axis-label-border:hover, .autoql-vanilla-y-axis-label-border:hover{
+.autoql-vanilla-y-axis-label-border:hover, .autoql-vanilla-x-axis-label-border:hover{
+    stroke: #508bb8;
+
 }
 
 .autoql-vanilla-chart-selector{

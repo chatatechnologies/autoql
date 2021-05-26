@@ -144,7 +144,6 @@ export class DashboardPage extends Component {
     }
 
     render = () => {
-        window.dispatchEvent(new Event('resize'));
         return (
             <div style={{
                 width: '100%'

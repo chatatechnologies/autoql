@@ -72,6 +72,27 @@ export class AuthenticationForm extends Component {
         }
     }
 
+    testLogin = (values) => {
+        const url = `${values.domain}/autoql/api/v1/query/related-queries?key=${values.apiKey}&search=test`
+
+        if(!values.token) return false
+
+        let r = axios.get(url, {
+            headers: {
+                Authorization: `Bearer ${values.token}`,
+            }
+        }).then(function(){
+            return Promise.resolve(true)
+        }).catch(function (error) {
+            if (error.response) {
+                return Promise.reject(false)
+            }
+        })
+
+        return r
+    }
+
+
     onLogin = async () => {
         try {
             this.setState({
@@ -96,20 +117,33 @@ export class AuthenticationForm extends Component {
             setStoredProp('loginToken', loginToken)
 
             const jwt = await this.getJWT(loginToken)
-            this.props.onLogin({
+            let values = {
                 token: jwt,
                 domain: this.state.domain,
                 apiKey: this.state.apiKey
-            },{
+            }
+            var test = await this.testLogin(values)
+            if(!test){
+                setStoredProp('loginToken', null)
+                setStoredProp('jwtToken', null)
+                this.setState({
+                    isAuthenticated: false,
+                    isAuthenticating: false,
+                    activeIntegrator: null,
+                    componentKey: uuidv4(),
+                })
+                this.props.onLogOut()
+                message.error('Invalid Credentials')
+                return
+            }
+            this.props.onLogin(values,{
                 projectId: this.state.projectId
             })
             this.setState({
                 isAuthenticating: false
             })
-
             message.success('Login Sucessful!', 0.8)
         } catch (error) {
-            console.error(error)
             setStoredProp('loginToken', null)
             setStoredProp('jwtToken', null)
             this.setState({
@@ -118,6 +152,7 @@ export class AuthenticationForm extends Component {
                 activeIntegrator: null,
                 componentKey: uuidv4(),
             })
+            this.props.onLogOut()
             message.error('Invalid Credentials')
         }
     }

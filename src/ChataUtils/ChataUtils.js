@@ -241,7 +241,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     refreshTooltips();
     configModal.chataModal.style.width = '95vw';
     configModal.addView(modalView);
-    configModal.setTitle('Custom Notification');
+    configModal.setTitle('Create New Data Alert');
     configModal.show();
 
     var input = modalView.querySelectorAll(
@@ -669,11 +669,19 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     modal.show();
 }
 
-ChataUtils.getUniqueValues = function(data, getter){
+ChataUtils.getUniqueValues = function(data, getter, ignoreNull=false){
     let unique = {};
     data.forEach(function(i) {
-        if(!unique[getter(i)]) {
-            unique[getter(i)] = true;
+        if(ignoreNull){
+            if(getter(i) != null){
+                if(!unique[getter(i)]) {
+                    unique[getter(i)] = true;
+                }
+            }
+        }else{
+            if(!unique[getter(i)]) {
+                unique[getter(i)] = true;
+            }
         }
     });
     return Object.keys(unique);

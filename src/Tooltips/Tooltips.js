@@ -14,15 +14,21 @@ export function refreshTooltips(){
 export function tooltipCharts(){
     var get2dContent = (instance) => {
         var dataset = instance.reference.dataset;
-        var content  = `
-            <span class='title-tip'>${dataset.col1}:</span>
-            <span class="text-tip">${dataset.colvalue1}</span>
-        `;
-        content += '<br/>';
-        content += `
-        <span class='title-tip'>${dataset.col2}:</span>
-        <span class="text-tip">${dataset.colvalue2}</span>
-        `;
+        let content = ''
+        if(dataset.col1 && dataset.colvalue1){
+            content  = `
+                <span class='title-tip'>${dataset.col1}:</span>
+                <span class="text-tip">${dataset.colvalue1}</span>
+            `;
+            content += '<br/>';
+        }
+
+        if(dataset.col2 && dataset.colvalue2){
+            content += `
+                <span class='title-tip'>${dataset.col2}:</span>
+                <span class="text-tip">${dataset.colvalue2}</span>
+            `;
+        }
         return content;
     }
 
@@ -42,11 +48,13 @@ export function tooltipCharts(){
         onShow: function(instance){
             var dataset = instance.reference.dataset;
             var content = get2dContent(instance);
-            content += '<br/>';
-            content += `
-                <span class='title-tip'>${dataset.col3}:</span>
-                <span class="text-tip">${dataset.colvalue3}</span>
-            `;
+            if(dataset.col3 && dataset.colvalue3){
+                content += '<br/>';
+                content += `
+                    <span class='title-tip'>${dataset.col3}:</span>
+                    <span class="text-tip">${dataset.colvalue3}</span>
+                `;
+            }
             instance.setContent(
                 content
             );

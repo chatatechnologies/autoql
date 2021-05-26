@@ -89,8 +89,10 @@ class App extends React.Component {
         });
     };
 
-    onLogin = (values, authentication) => {
+
+    onLogin = async (values, authentication) => {
         var obj = this;
+
         this.datamessenger.clearMessages()
         this.datamessenger.setOption("authentication", {
             ...values,
@@ -123,7 +125,6 @@ class App extends React.Component {
         .then(function (response) {
             var names = [];
             var items = response.data
-            console.log(items);
             items = _.sortBy(
                 response.data,
                 (dashboard) => {
@@ -165,6 +166,7 @@ class App extends React.Component {
             apiKey: null,
             token: null
         })
+        this.datamessenger.clearMessages()
     }
 
     renderActivePage = () => {

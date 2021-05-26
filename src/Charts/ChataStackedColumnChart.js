@@ -7,6 +7,7 @@ import {
     getMetadataElement,
     formatLabel,
     getVisibleGroups,
+    styleLegendTitleWithBorder
 } from './ChataChartHelpers'
 import {
     getColorScale,
@@ -33,7 +34,7 @@ export function createStackedColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-stackedchartindex', renderTooltips=true){
 
-    var margin = {top: 5, right: 10, bottom: 60, left: 80, bottomChart: 0},
+    var margin = {top: 20, right: 10, bottom: 60, left: 80, bottomChart: 0},
     width = component.parentElement.clientWidth - margin.left;
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
@@ -62,11 +63,11 @@ export function createStackedColumnChart(
 
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
-        data, row => row[groupableIndex2]
+        data, row => row[groupableIndex2], true
     );
     groups = groups.sort();
     var subgroups = ChataUtils.getUniqueValues(
-        data, row => row[groupableIndex1]
+        data, row => row[groupableIndex1], true
     );
     var allSubgroups = {}
     var legendGroups = {};
@@ -180,6 +181,42 @@ export function createStackedColumnChart(
 
     textContainerX.append('tspan')
     .text(col2);
+
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+        closeAllChartPopovers();
+        new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, groupCols, (evt, popover) => {
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable
+            = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable && !legendEvent){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
+            }
+            if(legendEvent){
+                let ind = selectedIndex == 1 ? 0 : 1
+                if(ind === 1)oldGroupable = 0
+                if(selectedIndex == oldGroupable){
+                    metadataComponent.metadata3D.groupBy.groupable2 = ind
+                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
+                }
+            }
+            createStackedColumnChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+            popover.close();
+        }, true);
+
+    }
+
     if(options.enableDynamicCharting){
         textContainerX.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -204,44 +241,8 @@ export function createStackedColumnChart(
         .attr('rx', '4')
         .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, groupCols, (evt, popover) => {
-
-                var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable
-                = metadataComponent.metadata3D.groupBy.groupable2;
-                if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2
-                    = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1
-                    = oldGroupable;
-                    createStackedColumnChart(
-                        component,
-                        json,
-                        options,
-                        onUpdate,
-                        fromChataUtils,
-                        valueClass,
-                        renderTooltips
-                    )
-                }
-                popover.close();
-            }, true);
-
-        })
+        labelXContainer.on('mouseup', onSelectorClick)
     }
-
-
-    // var x = chataD3.scaleBand()
-    // .domain(groups.map(function(element){
-    //     return element;
-    // }))
-    // .range([0, chartWidth])
-    // .padding([0.2]);
 
     var x = SCALE_BAND()
     setDomainRange(
@@ -349,32 +350,26 @@ export function createStackedColumnChart(
                 unformatvalue1 = d.data.group
                 unformatvalue2 = d.labelY
             }
-            if(d.labelY && d.data.group && d.value){
-                select(this).attr(valueClass, i)
-                .attr('data-col1', col1)
-                .attr('data-col2', col2)
-                .attr('data-col3', col3)
-                .attr('data-colvalue1', formatData(
-                    d.labelY, cols[groupableIndex1], options
-                ))
-                .attr('data-colvalue2', formatData(
-                    d.data.group, cols[groupableIndex2], options
-                ))
-                .attr('data-colvalue3', formatData(
-                    d.value, cols[notGroupableIndex],
-                    options
-                ))
-                .attr('data-unformatvalue1', unformatvalue1)
-                .attr('data-unformatvalue2', unformatvalue2)
-                .attr('data-unformatvalue3', d.value)
-                .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
-            }else{
-                select(this).attr(
-                    'class','autoql-vanilla-stacked-rect'
-                )
-            }
+            select(this).attr(valueClass, i)
+            .attr('data-col1', col1)
+            .attr('data-col2', col2)
+            .attr('data-col3', col3)
+            .attr('data-colvalue1', formatData(
+                d.labelY, cols[groupableIndex1], options
+            ))
+            .attr('data-colvalue2', formatData(
+                d.data.group, cols[groupableIndex2], options
+            ))
+            .attr('data-colvalue3', formatData(
+                d.value, cols[notGroupableIndex],
+                options
+            ))
+            .attr('data-unformatvalue1', unformatvalue1)
+            .attr('data-unformatvalue2', unformatvalue2)
+            .attr('data-unformatvalue3', d.value)
         })
         .attr('opacity', '0.7')
+        .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
         .attr("x", function(d) {
             return x(d.data.group);
         })
@@ -413,6 +408,14 @@ export function createStackedColumnChart(
         options.themeConfig.chartColors
     )
 
+    // new MultiSeriesSelector(svg, {
+    //     x: (chartWidth + 15),
+    //     y: 10,
+    //     colName: col1,
+    //     showOnBaseline: true,
+    //     legendEvent: true
+    // }, onSelectorClick)
+
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
     .on('cellclick', function(d) {
         var words = []
@@ -431,11 +434,16 @@ export function createStackedColumnChart(
             'disable-group'
         ));
     });
+    legendOrdinal.title(col1).titleWidth(100)
     svgLegend.call(legendOrdinal)
+    styleLegendTitleWithBorder(svgLegend, {
+        showOnBaseline: true,
+        legendEvent: true
+    }, onSelectorClick)
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
-      .attr('transform', `translate(${newX}, ${0})`)
+      .attr('transform', `translate(${newX}, ${25})`)
 
 
     select(window).on(

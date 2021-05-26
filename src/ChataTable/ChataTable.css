@@ -41,7 +41,7 @@
 .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar {
     display: unset;
     opacity: 0;
-    background-color: transparent;
+    background-color: var(--autoql-vanilla-background-color);
     width: 7px;
     height: 7px;
     -webkit-transition: all .3s ease;
@@ -56,20 +56,14 @@
     cursor: default !important;
 }
 
-.autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
-    background-color: transparent;
+.autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-track-piece{
+    background-color: var(--autoql-vanilla-background-color);
 }
 
 .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-thumb {
     background-color: rgba(0,0,0,.2);
     border-radius: 7px;
     border: 0;
-}
-.autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
-    background-color: transparent;
-}
-.autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-track-piece {
-    background-color: transparent;
 }
 
 .autoql-vanilla-chata-table .tabulator-header-filter input:focus {
@@ -96,9 +90,11 @@
 .autoql-vanilla-chata-table .tabulator-header .tabulator-frozen.tabulator-frozen-left {
     border-right: 2px solid #ddd;
     background: var(--autoql-vanilla-background-color-primary);
+    cursor: default;
 }
 
-.autoql-vanilla-chata-table .tabulator-header .tabulator-col.tabulator-sortable:hover, .react-autoql-table.tabulator .tabulator-row.tabulator-selectable:hover {
+.autoql-vanilla-chata-table .tabulator-header .tabulator-col.tabulator-sortable:hover, .react-autoql-table.tabulator .tabulator-row.tabulator-selectable:hover,
+.autoql-vanilla-chata-table .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left:hover {
     background-color: var(--autoql-vanilla-hover-color)!important;
 }
 
@@ -124,4 +120,10 @@
     margin-right: 5px !important;
     vertical-align: top;
     line-height: 21px;
+}
+
+.autoql-vanilla-chat-message-bubble .autoql-vanilla-chata-response-content-container .autoql-vanilla-chata-table-scrollbox .autoql-vanilla-chata-table-container .autoql-vanilla-chata-table .tabulator-tableHolder{
+    height: calc(100% - 40px) !important;
+    min-height: calc(100% - 40px) !important;
+    max-height: calc(100% - 40px) !important;
 }

@@ -6,7 +6,7 @@ import './Modal.css'
 import './ColumnEditor.css'
 import './Spinner.css'
 
-export function Modal(options={}, onShow=()=>{}){
+export function Modal(options={}, onShow=()=>{}, onClose=undefined){
     var obj = this;
     obj.options = {
         destroyOnClose: false,
@@ -54,18 +54,22 @@ export function Modal(options={}, onShow=()=>{}){
         obj.isOpen = true;
         onShow();
     }
-
     obj.close = function(){
+        obj.closeAnimation()
+        setTimeout(() => { obj.hideContainer() }, 250)
+    }
+
+    obj.closeAnimation = () => {
         chataModal.style.transform = 'scale(0)';
         obj.isOpen = false;
+    }
 
-        setTimeout(() => {
-            modalContainer.style.visibility = 'hidden';
-            if(obj.options.destroyOnClose){
-                obj.destroy();
-            }
-            obj.clearViews();
-        }, 250)
+    obj.hideContainer = () => {
+        modalContainer.style.visibility = 'hidden';
+        if(obj.options.destroyOnClose){
+            obj.destroy();
+        }
+        obj.clearViews();
     }
 
     obj.destroy = function(){
@@ -78,7 +82,8 @@ export function Modal(options={}, onShow=()=>{}){
     }
 
     closeIcon.onclick = function(){
-        obj.close();
+        if(onClose)onClose()
+        else obj.close();
     }
 
     obj.addView = function(view){

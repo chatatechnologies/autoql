@@ -7,6 +7,7 @@ import {
     getMetadataElement,
     formatLabel,
     getVisibleGroups,
+    styleLegendTitleWithBorder
 } from './ChataChartHelpers'
 import {
     getColorScale,
@@ -62,12 +63,12 @@ export function createStackedBarChart(
 
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
-        data, row => row[groupableIndex2]
+        data, row => row[groupableIndex2], true
     );
 
     groups = groups.sort();
     var subgroups = ChataUtils.getUniqueValues(
-        data, row => row[groupableIndex1]
+        data, row => row[groupableIndex1], true
     );
 
     groups.map(element => allLengths.push(formatLabel(element).length));
@@ -175,6 +176,44 @@ export function createStackedBarChart(
     textContainerY.append('tspan')
     .text(col2);
 
+    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+        closeAllChartPopovers();
+        new ChataChartListPopover({
+            left: evt.clientX,
+            top: evt.clientY
+        }, groupCols, (evt, popover) => {
+            var selectedIndex = evt.target.dataset.popoverIndex;
+            var oldGroupable
+            = metadataComponent.metadata3D.groupBy.groupable2;
+            if(selectedIndex != oldGroupable && !legendEvent){
+                metadataComponent.metadata3D.groupBy.groupable2 = selectedIndex
+                metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
+            }
+
+            if(legendEvent){
+                let ind = selectedIndex == 1 ? 0 : 1
+                if(ind === 1)oldGroupable = 0
+                if(selectedIndex == oldGroupable){
+                    metadataComponent.metadata3D.groupBy.groupable2 = ind
+                    metadataComponent.metadata3D.groupBy.groupable1 = oldGroupable
+                }
+            }
+
+            createStackedBarChart(
+                component,
+                json,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+
+            popover.close();
+        }, true);
+
+    }
+
     if(options.enableDynamicCharting){
         textContainerY.append('tspan')
         .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
@@ -196,34 +235,7 @@ export function createStackedBarChart(
         .attr('transform', 'rotate(-180)')
         .attr('class', 'autoql-vanilla-y-axis-label-border')
 
-        labelYContainer.on('mouseup', (evt) => {
-            closeAllChartPopovers();
-            new ChataChartListPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, groupCols, (evt, popover) => {
-                var selectedIndex = evt.target.dataset.popoverIndex;
-                var oldGroupable
-                = metadataComponent.metadata3D.groupBy.groupable2;
-                if(selectedIndex != oldGroupable){
-                    metadataComponent.metadata3D.groupBy.groupable2
-                    = selectedIndex;
-                    metadataComponent.metadata3D.groupBy.groupable1
-                    = oldGroupable;
-                    createStackedBarChart(
-                        component,
-                        json,
-                        options,
-                        onUpdate,
-                        fromChataUtils,
-                        valueClass,
-                        renderTooltips
-                    )
-                }
-                popover.close();
-            }, true);
-
-        })
+        labelYContainer.on('mouseup', onSelectorClick)
 
     }
 
@@ -373,6 +385,13 @@ export function createStackedBarChart(
 
     }
 
+    // new MultiSeriesSelector(svg, {
+    //     x: (chartWidth + 15),
+    //     y: 10,
+    //     colName: col1,
+    //     showOnBaseline: true,
+    //     legendEvent: true
+    // }, onSelectorClick)
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
@@ -407,12 +426,17 @@ export function createStackedBarChart(
             'disable-group', !legendCell.classed('disable-group')
         );
     });
-
+    legendOrdinal.title(col1).titleWidth(100)
     svgLegend.call(legendOrdinal)
+    styleLegendTitleWithBorder(svgLegend, {
+        showOnBaseline: true,
+        legendEvent: true
+    }, onSelectorClick)
+
 
     const newX = chartWidth + legendBoxMargin
     svgLegend
-      .attr('transform', `translate(${newX}, ${0})`)
+      .attr('transform', `translate(${newX}, ${25})`)
 
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
