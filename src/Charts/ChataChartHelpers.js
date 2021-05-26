@@ -155,10 +155,11 @@ export const groupByValue = (
 ) => {
     var obj = {}
     var series = ChataUtils.getUniqueValues(
-        items, row => row[multiSeriesCol.index]
+        items, row => row[multiSeriesCol.index], true
     )
     items.forEach((item) => {
         const key = item[labelIndex];
+        if(!key)return
         if (!obj[key]) {
             obj[key] = getSeriesValues(
                 item,
