@@ -6,8 +6,14 @@ export function PopoverChartSelector(_position, showOnBaseline=false) {
     popover.position = _position
     popover.setPosition = () => {
         let { position } = popover
+        if((popover.clientWidth + position.left + 25) > window.innerWidth){
+            popover.style.left = (
+                window.innerWidth - popover.clientWidth - 120
+            ) + 'px';
+        }else{
+            popover.style.left = position.left + 'px'
+        }
         popover.style.opacity = 1;
-        popover.style.left = position.left + 'px'
         var margin = 0
         var pageYOffset  = window.scrollY
 
