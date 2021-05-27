@@ -69,18 +69,9 @@ function getPivotColumns(json, pivotColumns, options){
     pivotColumns.map((col, index) => {
         var colIndex = index;
         var title = col;
-        if(colIndex > 0){
-            if(columns.length === 2)colIndex = 1;
-            else colIndex = 2;
-        }
+        if(index === 0)colIndex = 1
+        else colIndex = 2
 
-        if(index > 0){
-            if(columns.length === 2){
-                title = col
-            }else{
-                title = formatData(col, columns[1], options);
-            }
-        }
         if(!title)title = 'null'
         if(!col)col = 'null'
 
@@ -109,12 +100,10 @@ function getPivotColumns(json, pivotColumns, options){
                 }else{
                     value = cell.getValue();
                 }
-                if(columns[colIndex].type === 'DATE_STRING'){
-                    return moment().month(parseInt(value)-1).format('MMM')
-                }
+
                 return formatData(value, columns[colIndex], options);
             },
-            frozen: colIndex == 0 ? true : false,
+            frozen: colIndex == 1 ? true : false,
             sorter: setSorterFunction(columns[colIndex])
         })
     });
