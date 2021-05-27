@@ -319,6 +319,7 @@ export function getPivotColumnArray(json, options, _data){
     var lines = _data;
     var values = [];
     var firstColName = '';
+    console.log(json['data']);
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = [];
@@ -328,16 +329,17 @@ export function getPivotColumnArray(json, options, _data){
                 json['data']['columns'][x]['name'];
                 firstColName = name.charAt(0).toUpperCase() + name.slice(1);
             }
+            console.log(firstColName);
             // row.push(formatData(
             //     data[x],
             //     json['data']['columns'][x],
             //     options
-            // ));
+            // ))
             row.push(data[x]);
         }
         values.push(row);
     }
-    var pivotArray = getPivotArray(values, 0, 1, 2, firstColName);
+    var pivotArray = getPivotArray(values, 1, 0, 2, firstColName);
     return pivotArray;
 }
 
