@@ -2934,9 +2934,6 @@ export function DataMessenger(elem, options){
             div.appendChild(errorId);
         }
         messageBubble.appendChild(div);
-        if(ref != '1.1.430'){
-            containerMessage.appendChild(messageBubble);
-        }
         obj.drawerContent.appendChild(containerMessage);
         var toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
@@ -2954,7 +2951,10 @@ export function DataMessenger(elem, options){
             );
             messageBubble.appendChild(toolbarButtons);
         }
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        if(ref != '1.1.430'){
+            containerMessage.appendChild(messageBubble);
+            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        }
         if(ref === '1.1.430'){
             let loading = null
             if(obj.options.landingPage === 'data-messenger'){
@@ -2966,8 +2966,14 @@ export function DataMessenger(elem, options){
                 encodeURIComponent(text)
             ) + '&query_id=' + jsonResponse['data']['query_id']
             var response = await apiCallGet(path, obj.options)
+            var { status } = response
+            if(status == 200){
+                containerMessage.appendChild(messageBubble);
+                obj.putSuggestionResponse(jsonResponse, response.data)
+            }else{
+                obj.putSimpleResponse(response.data, '', status)
+            }
             if(loading)obj.drawerContent.removeChild(loading)
-            obj.putSuggestionResponse(jsonResponse, response.data)
             if(obj.options.landingPage !== 'data-messenger'){
                 obj.hideBubbles()
             }
