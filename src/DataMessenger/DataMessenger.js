@@ -2870,6 +2870,7 @@ export function DataMessenger(elem, options){
     obj.putSimpleResponse = async (
         jsonResponse, text, statusCode, isDrilldown=false
     ) => {
+        var ref = jsonResponse['reference_id']
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -2933,18 +2934,20 @@ export function DataMessenger(elem, options){
             div.appendChild(errorId);
         }
         messageBubble.appendChild(div);
-        containerMessage.appendChild(messageBubble);
+        if(ref != '1.1.430'){
+            containerMessage.appendChild(messageBubble);
+        }
         obj.drawerContent.appendChild(containerMessage);
         var toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );
 
-        if(jsonResponse['reference_id'] !== '1.1.430'){
+        if(ref !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
 
         if(
-            jsonResponse['reference_id'] === '1.1.430'
+            ref === '1.1.430'
         ){
             toolbarButtons = obj.getActionToolbar(
                 idRequest, 'safety-net', ''
@@ -2952,7 +2955,7 @@ export function DataMessenger(elem, options){
             messageBubble.appendChild(toolbarButtons);
         }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        if(jsonResponse['reference_id'] === '1.1.430'){
+        if(ref === '1.1.430'){
             let loading = null
             if(obj.options.landingPage === 'data-messenger'){
                 loading = obj.showLoading()
