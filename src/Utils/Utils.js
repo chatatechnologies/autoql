@@ -319,22 +319,15 @@ export function getPivotColumnArray(json, options, _data){
     var lines = _data;
     var values = [];
     var firstColName = '';
-    console.log(json['data']);
+    var name = json['data']['columns'][1]['display_name'] ||
+    json['data']['columns'][1]['name'];
+    firstColName = name.charAt(0).toUpperCase() + name.slice(1);
+
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = [];
         for (var x = 0; x < data.length; x++) {
-            if(firstColName == '' && json['data']['columns'][x]['groupable']){
-                var name = json['data']['columns'][x]['display_name'] ||
-                json['data']['columns'][x]['name'];
-                firstColName = name.charAt(0).toUpperCase() + name.slice(1);
-            }
-            console.log(firstColName);
-            // row.push(formatData(
-            //     data[x],
-            //     json['data']['columns'][x],
-            //     options
-            // ))
+
             row.push(data[x]);
         }
         values.push(row);
