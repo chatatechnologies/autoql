@@ -102,9 +102,17 @@ export function createLineChart(
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
     var col1 = formatColumnName(colStr1);
     var col2 = formatColumnName(colStr2);
-
+    var legendGroups = {}
     var labelsNames = data.map(function(d) { return d.label; });
     var allGroup = data[0].values.map(function(d) { return d.group; });
+    var groupable2Index = index2 === 0 ? 1 : 0
+    allGroup.map(group => {
+        legendGroups[
+            formatChartData(group, cols[groupable2Index], options)
+        ] = {
+            value: group
+        }
+    })
     var hasLegend = allGroup.length > 1;
     if(hasLegend && allGroup.length < 3){
         margin.bottom = 70;
@@ -512,7 +520,6 @@ export function createLineChart(
     }
 
     if(hasLegend){
-        var groupable2Index = index2 === 0 ? 1 : 0
         const legendValues = allGroup.map(elem => {
             return formatChartData(elem, cols[groupable2Index], options);
         })
@@ -542,7 +549,8 @@ export function createLineChart(
             for (var i = 0; i < nodes.length; i++) {
                 words.push(nodes[i].textContent)
             }
-            data = toggleSerie(data, words.join(' '));
+            var unformatGroup = legendGroups[words.join(' ')].value;
+            data = toggleSerie(data, unformatGroup)
             createLines();
             const legendCell = select(this);
             legendCell.classed(
