@@ -59,8 +59,6 @@ export const toggleSerie = (data, serie) => {
     for (var i = 0; i < data.length; i++) {
         for (var x = 0; x < data[i].values.length; x++) {
             var value = data[i].values[x];
-            console.log(value.group);
-            console.log(serie);
             if(value.group === serie)value.isVisible = !value.isVisible;
         }
     }

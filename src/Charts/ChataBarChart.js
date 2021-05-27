@@ -145,8 +145,6 @@ export function createBarChart(
         }
     })
 
-    console.log(legendGroups);
-
     var hasLegend = groupNames.length > 1;
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 80;
