@@ -437,7 +437,7 @@ export function TileView(tile, isSecond=false){
             view.isExecuted = false
             responseWrapper.innerHTML = `
                 <div class="autoql-vanilla-dashboard-tile-placeholder-text">
-                    <em>No query was supplied for this tile.</em>
+                    <em>${strings.noQuerySupplied}</em>
                 </div>
             `;
         }

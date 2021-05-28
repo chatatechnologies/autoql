@@ -6,6 +6,7 @@ import {
 } from '../Utils'
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/h5/gridstack-dd-native';
+import { strings } from '../Strings'
 
 export function Dashboard(selector, options={}){
     var obj = this
@@ -72,7 +73,7 @@ export function Dashboard(selector, options={}){
         isEditing: false,
         executeOnMount:	true,
         executeOnStopEditing: true,
-        notExecutedText: 'Hit "Execute" to run this dashboard',
+        notExecutedText: strings.executeDashboard,
         splitView: true,
         secondDisplayType: 'table',
         secondDisplayPercentage: 25,

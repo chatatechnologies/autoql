@@ -28,6 +28,10 @@ export const strings = new LocalizedStrings({
         initTileMessage: 'To get started, enter a query and click',
         singleView: 'Single View',
         splitView: 'Split View',
+        dashboardQueryInput: 'Type a query in your own words',
+        dashboarTitleInput: 'Add descriptive title (optional)',
+        executeDashboard: 'Hit "Execute" to run this dashboard',
+        noQuerySupplied: 'No query was supplied for this tile.'
     },
     es: {
         report: 'repórtalo',
@@ -48,5 +52,9 @@ export const strings = new LocalizedStrings({
         initTileMessage: 'Para comenzar, ingrese una consulta y haga click en ejecutar',
         singleView: 'Single View',
         splitView: 'Split View',
+        dashboardQueryInput: 'Escribe una consulta con sus propias palabras',
+        dashboarTitleInput: 'Agregar título descriptivo (opcional)',
+        executeDashboard: 'Haga clic en "Ejecutar" para ejecutar este tablero.',
+        noQuerySupplied: 'No se proporcionó ninguna consulta para este titulo.'
     }
 });

@@ -98,12 +98,12 @@ export function Tile(dashboard, options){
     ])
 
     var queryInput = new ChataInput('input', {
-        placeholder: 'Type a query in your own words',
+        placeholder: strings.dashboardQueryInput,
         type: "single"
     }, QUERY)
 
     var queryInput2 = new ChataInput('input', {
-        placeholder: 'Add descriptive title (optional)',
+        placeholder: strings.dashboarTitleInput,
         type: "single"
     }, NOTEBOOK)
 
