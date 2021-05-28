@@ -45,7 +45,7 @@ ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
     await apiCallPut(URL, {is_correct: false}, options)
     if(menu)menu.classList.remove('show');
     if(toolbar)toolbar.classList.remove('show');
-    new AntdMessage('Thank you for your feedback.', 3000);
+    new AntdMessage(strings.feedback, 3000);
 
     return Promise.resolve()
 }
@@ -302,7 +302,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 break;
             case 'copy_sql':
                 action = ChataUtils.getActionOption(
-                    COPY_SQL, 'View generated SQL',
+                    COPY_SQL, strings.viewSQL,
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
@@ -319,7 +319,7 @@ ChataUtils.makeMoreOptionsMenu = (
             case 'notification':
                 action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
-                    'Create a Data Alert...',
+                    strings.createAlert,
                     ChataUtils.createNotificationHandler,
                     [idRequest, extraParams]
                 );
@@ -361,7 +361,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 break;
             case 'copy_sql':
                 action = ChataUtils.getActionOption(
-                    COPY_SQL, 'View generated SQL',
+                    COPY_SQL, strings.viewSQL,
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
@@ -378,7 +378,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
             case 'notification':
                 action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
-                    'Create a Data Alert...',
+                    strings.createAlert,
                     ChataUtils.createNotificationHandler,
                     [idRequest, extraParams]
                 );

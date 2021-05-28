@@ -19,7 +19,10 @@ export const strings = new LocalizedStrings({
         reportProblemTitle: 'Report a Problem',
         reportProblemMessage: 'Please tell us more about the problem you are experiencing:',
         reportProblem: 'Report',
+        feedback: 'Thank you for your feedback',
         cancel: 'Cancel',
+        viewSQL: 'View generated SQL',
+        createAlert: 'Create a Data Alert...'
     },
     es: {
         report: 'repórtalo',
@@ -31,6 +34,10 @@ export const strings = new LocalizedStrings({
         reportProblemTitle: 'Reportar un problema',
         reportProblemMessage: 'Cuéntenos más sobre el problema que estás presentando:',
         reportProblem: 'Reportar',
+        feedback: 'Gracias por tu retroalimentación',
         cancel: 'Cancelar',
+        viewSQL: 'Ver SQL generado',
+        createAlert: 'Crear una alerta de datos...'
+
     }
 });

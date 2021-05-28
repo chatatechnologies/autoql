@@ -2762,7 +2762,7 @@ export function DataMessenger(elem, options){
                     setTimeout(() => {
                         obj.drawerContent.removeChild(loading)
                         obj.putClientResponse(
-                            'Thank you for your feedback', {}, true
+                            strings.feedback, {}, true
                         )
                     }, 500)
                 }
