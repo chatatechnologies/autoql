@@ -48,7 +48,6 @@ import {
 import {
     LIGHT_THEME,
     DARK_THEME,
-    DATA_LIMIT_MESSAGE,
     ERROR_MESSAGE,
     ACCESS_DENIED
 } from '../Constants'
@@ -585,7 +584,7 @@ export function DataMessenger(elem, options){
             const warningIcon = htmlToElement(`
                 <span
                 class="chata-icon data-limit-warning-icon warning"
-                data-tippy-content="${DATA_LIMIT_MESSAGE}">
+                data-tippy-content="${strings.dataRowLimit.chataFormat(limit_row_num)}">
                     ${DATA_LIMIT_WARNING}
                 </span>
             `)

@@ -22,7 +22,8 @@ export const strings = new LocalizedStrings({
         feedback: 'Thank you for your feedback',
         cancel: 'Cancel',
         viewSQL: 'View generated SQL',
-        createAlert: 'Create a Data Alert...'
+        createAlert: 'Create a Data Alert...',
+        dataRowLimit: 'The display limit of {0} rows has been reached. Try querying a smaller time-frame to ensure all your data is displayed.',
     },
     es: {
         report: 'repórtalo',
@@ -37,7 +38,7 @@ export const strings = new LocalizedStrings({
         feedback: 'Gracias por tu retroalimentación',
         cancel: 'Cancelar',
         viewSQL: 'Ver SQL generado',
-        createAlert: 'Crear una alerta de datos...'
-
+        createAlert: 'Crear una alerta de datos...',
+        dataRowLimit: 'Se alcanzó el límite de visualización de {0} filas. Intente consultar un rango de tiempo más pequeño para asegurarse de que se muestren todos sus datos.',
     }
 });
