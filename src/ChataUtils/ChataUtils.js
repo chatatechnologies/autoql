@@ -189,7 +189,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
 ChataUtils.copyHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
     copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
-    new AntdMessage('Successfully copied table to clipboard!', 3000)
+    new AntdMessage(strings.copyTextToClipboard, 3000)
 }
 ChataUtils.exportPNGHandler = (idRequest) => {
     var component = document.querySelector(

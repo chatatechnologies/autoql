@@ -55,6 +55,7 @@ import {
 import {
     InputToolbar
 } from '../InputToolbar'
+import { strings } from '../../Strings'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
@@ -94,7 +95,7 @@ export function TileView(tile, isSecond=false){
     const editPlaceHolderText = `
     <div class="autoql-vanilla-dashboard-tile-placeholder-text">
         <em>
-            To get started, enter a query and click
+            ${strings.initTileMessage}
         </em>
         <span class="autoql-vanilla-chata-icon play-icon">
             <svg stroke="currentColor" fill="currentColor"
