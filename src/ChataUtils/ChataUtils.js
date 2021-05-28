@@ -28,6 +28,7 @@ import { NotificationSettingsModal } from '../Notifications'
 import { AntdMessage } from '../Antd'
 import '../../css/PopoverMenu.css'
 import { saveSvgAsPng } from 'save-svg-as-png'
+import { strings } from '../Strings'
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -59,21 +60,21 @@ ChataUtils.makeReportProblemMenu = (toolbar, idRequest, type, options) => {
 
     ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incorrect',
+            '', strings.dataIncorrect,
             ChataUtils.sendReport,
             [idRequest, options, undefined, toolbar]
         )
     );
     ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incomplete',
+            '', strings.dataIncomplete,
             ChataUtils.sendReport,
             [idRequest, options, undefined, toolbar]
         )
     );
     ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'Other...',
+            '', strings.other,
             ChataUtils.openModalReport,
             [idRequest, options, undefined, toolbar]
         )
@@ -90,21 +91,21 @@ ChataUtils.getReportProblemMenu = (
     }
     menu.ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incorrect',
+            '', strings.dataIncorrect,
             ChataUtils.sendReport,
             [idRequest, options, menu, toolbar]
         )
     );
     menu.ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incomplete',
+            '', strings.dataIncomplete,
             ChataUtils.sendReport,
             [idRequest, options, menu, toolbar]
         )
     );
     menu.ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'Other...',
+            '', strings.other,
             ChataUtils.openModalReport,
             [idRequest, options, menu, toolbar]
         )

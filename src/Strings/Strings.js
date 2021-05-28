@@ -12,11 +12,17 @@ export const strings = new LocalizedStrings({
     en:{
         report: 'report',
         introMessage: 'Hi {0} Let’s dive into your data. What can I help you discover today?',
-        there: 'there!'
+        there: 'there!',
+        dataIncorrect: 'The data is incorrect',
+        dataIncomplete: 'The data is incomplete',
+        other: 'Other...'
     },
     es: {
         report: 'repórtalo',
         introMessage: 'Hola {0} Analicemos sus datos. ¿Qué puedo ayudarte a descubrir hoy?',
-        there: ''
+        there: '',
+        dataIncorrect: 'Los datos son incorrectos',
+        dataIncomplete: 'Los datos están incompletos',
+        other: 'Otro...'
     }
 });
