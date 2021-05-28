@@ -15,7 +15,11 @@ export const strings = new LocalizedStrings({
         there: 'there!',
         dataIncorrect: 'The data is incorrect',
         dataIncomplete: 'The data is incomplete',
-        other: 'Other...'
+        other: 'Other...',
+        reportProblemTitle: 'Report a Problem',
+        reportProblemMessage: 'Please tell us more about the problem you are experiencing:',
+        reportProblem: 'Report',
+        cancel: 'Cancel',
     },
     es: {
         report: 'repórtalo',
@@ -23,6 +27,10 @@ export const strings = new LocalizedStrings({
         there: '',
         dataIncorrect: 'Los datos son incorrectos',
         dataIncomplete: 'Los datos están incompletos',
-        other: 'Otro...'
+        other: 'Otro...',
+        reportProblemTitle: 'Reportar un problema',
+        reportProblemMessage: 'Cuéntenos más sobre el problema que estás presentando:',
+        reportProblem: 'Reportar',
+        cancel: 'Cancelar',
     }
 });

@@ -454,13 +454,13 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
         withFooter: true
     });
     modal.chataModal.style.width = '600px'
-    modal.setTitle('Report a Problem');
+    modal.setTitle(strings.reportProblemTitle);
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');
     textArea.classList.add('autoql-vanilla-report-problem-text-area');
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`
     )
 
     var spinner = htmlToElement(`
@@ -474,9 +474,9 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     )
 
     reportButton.appendChild(spinner);
-    reportButton.appendChild(document.createTextNode('Report'));
+    reportButton.appendChild(document.createTextNode(strings.reportProblem));
     container.appendChild(document.createTextNode(
-        'Please tell us more about the problem you are experiencing:'
+        strings.reportProblemMessage
     ));
 
     modal.addView(container);
