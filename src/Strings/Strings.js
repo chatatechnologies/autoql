@@ -26,6 +26,8 @@ export const strings = new LocalizedStrings({
         dataRowLimit: 'The display limit of {0} rows has been reached. Try querying a smaller time-frame to ensure all your data is displayed.',
         copyTextToClipboard: 'Successfully copied table to clipboard!',
         initTileMessage: 'To get started, enter a query and click',
+        singleView: 'Single View',
+        splitView: 'Split View',
     },
     es: {
         report: 'repórtalo',
@@ -44,5 +46,7 @@ export const strings = new LocalizedStrings({
         dataRowLimit: 'Se alcanzó el límite de visualización de {0} filas. Intente consultar un rango de tiempo más pequeño para asegurarse de que se muestren todos sus datos.',
         copyTextToClipboard: 'La consulta generada se copió correctamente en el portapapeles.',
         initTileMessage: 'Para comenzar, ingrese una consulta y haga click en ejecutar',
+        singleView: 'Single View',
+        splitView: 'Split View',
     }
 });

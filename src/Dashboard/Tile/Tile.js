@@ -12,6 +12,7 @@ import {
     htmlToElement,
     uuidv4
 } from '../../Utils'
+import { strings } from '../../Strings'
 import Split from 'split.js'
 import './Tile.css'
 
@@ -66,7 +67,7 @@ export function Tile(dashboard, options){
     var vizToolbarSplitButton = htmlToElement(`
         <button
         class="autoql-vanilla-chata-toolbar-btn"
-        data-tippy-content="Split View">
+        data-tippy-content="${strings.splitView}">
         </button>
     `)
 
@@ -359,7 +360,7 @@ export function Tile(dashboard, options){
             item.options.isSplit = false
             if(item.splitInstance)item.splitInstance.destroy()
             item.views[1].hide()
-            item.switchSplitButton(SPLIT_VIEW, 'Split View')
+            item.switchSplitButton(SPLIT_VIEW, strings.splitView)
             item.refreshViews()
         }else{
             var sizes = [
@@ -384,7 +385,7 @@ export function Tile(dashboard, options){
             })
             item.views.map(view => view.show())
             item.options.isSplit = true
-            item.switchSplitButton(SPLIT_VIEW_ACTIVE, 'Single View')
+            item.switchSplitButton(SPLIT_VIEW_ACTIVE, strings.singleView)
             item.refreshViews()
         }
     }
