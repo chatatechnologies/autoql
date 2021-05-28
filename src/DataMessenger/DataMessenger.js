@@ -81,6 +81,7 @@ import {
     DATA_LIMIT_WARNING,
     HELP_ICON
 } from '../Svg'
+import { strings } from '../Strings'
 import { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
@@ -139,7 +140,7 @@ export function DataMessenger(elem, options){
         shiftScreen: false,
         onMaskClick: function(){},
         maskClosable: true,
-        userDisplayName: 'there',
+        userDisplayName: strings.there,
         maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
@@ -198,9 +199,7 @@ export function DataMessenger(elem, options){
     }
 
     if(!('introMessage' in options)){
-        obj.options.introMessage = "Hi " +
-        obj.options.userDisplayName +
-        "! Let’s dive into your data. What can I help you discover today?";
+        obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName)
     }
     if(!('onMaskClick' in options)){
         obj.options.onMaskClick = obj.options.onHandleClick;
@@ -334,10 +333,7 @@ export function DataMessenger(elem, options){
                 break
             case 'userDisplayName':
                 obj.options.userDisplayName = value;
-                obj.options.introMessage = "Hi " +
-                obj.options.userDisplayName +
-                `! Let’s dive into your data.
-                What can I help you discover today?`;
+                obj.options.introMessage = strings.introMessage.chataFormat(value)
                 obj.introMessageBubble.textContent = obj.options.introMessage;
             break;
             case 'introMessage':
