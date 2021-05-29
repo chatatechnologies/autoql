@@ -31,7 +31,9 @@ export const strings = new LocalizedStrings({
         dashboardQueryInput: 'Type a query in your own words',
         dashboarTitleInput: 'Add descriptive title (optional)',
         executeDashboard: 'Hit "Execute" to run this dashboard',
-        noQuerySupplied: 'No query was supplied for this tile.'
+        noQuerySupplied: 'No query was supplied for this tile.',
+        queryText: 'Query',
+        titleText: 'Title'
     },
     es: {
         report: 'repórtalo',
@@ -55,6 +57,8 @@ export const strings = new LocalizedStrings({
         dashboardQueryInput: 'Escribe una consulta con sus propias palabras',
         dashboarTitleInput: 'Agregar título descriptivo (opcional)',
         executeDashboard: 'Haga clic en "Ejecutar" para ejecutar este tablero.',
-        noQuerySupplied: 'No se proporcionó ninguna consulta para este titulo.'
+        noQuerySupplied: 'No se proporcionó ninguna consulta para este titulo.',
+        queryText: 'Consulta',
+        titleText: 'Título'
     }
 });

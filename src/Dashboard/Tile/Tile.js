@@ -107,8 +107,8 @@ export function Tile(dashboard, options){
         type: "single"
     }, NOTEBOOK)
 
-    queryInput.input.setAttribute('data-tippy-content', 'Query')
-    queryInput2.input.setAttribute('data-tippy-content', 'Title')
+    queryInput.input.setAttribute('data-tippy-content', strings.queryText)
+    queryInput2.input.setAttribute('data-tippy-content', strings.titleText)
 
     placeHolderDrag.innerHTML = `
     <div class="autoql-vanilla-placeholder-top"></div>
