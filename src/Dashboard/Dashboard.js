@@ -7,6 +7,7 @@ import {
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/h5/gridstack-dd-native';
 import { strings } from '../Strings'
+import { refreshTooltips } from '../Tooltips'
 
 export function Dashboard(selector, options={}){
     var obj = this
@@ -443,6 +444,8 @@ export function Dashboard(selector, options={}){
             obj.startBuildingMessage()
         }
     }
+
+    refreshTooltips()
 
     return obj
 }
