@@ -2,6 +2,7 @@ import {
     closeAllSafetynetSelectors,
     htmlToElement,
 } from '../Utils'
+import { strings } from '../Strings'
 import { RUN_QUERY, REMOVE_ELEMENT } from '../Svg'
 import './Safetynet.css'
 
@@ -21,10 +22,7 @@ export function getRunQueryButton(){
 
 export function createSafetynetContent(
     suggestionArray, onClick=()=>{}, onChange=()=>{}){
-    const message = `
-    I need your help matching a term you used to the exact corresponding
-    term in your database. Verify by selecting the correct
-    term from the menu below:`;
+    const message = strings.safetynet;
 
     const runQueryButton = getRunQueryButton();
     runQueryButton.onclick = function(event){
