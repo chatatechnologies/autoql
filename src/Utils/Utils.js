@@ -3,8 +3,8 @@ import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import axios from 'axios'
 import _get from 'lodash.get'
-import moment from 'moment'
 import { strings } from '../Strings'
+import dayjs from 'dayjs'
 
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);
@@ -30,13 +30,13 @@ export function formatData(val, col, allOptions={}){
             var colName = col.name;
             if(!val)return ''
             if(colName.includes('year')){
-                value = moment.utc(parseInt(val)*1000).format('YYYY');
+                value = dayjs.utc(parseInt(val)*1000).format('YYYY');
             }else if(colName.includes('month')){
-                value = moment.utc(parseInt(val)*1000).format(
+                value = dayjs.utc(parseInt(val)*1000).format(
                     options.monthYearFormat
                 );
             }else{
-                value = moment.utc(parseInt(val)*1000).format(
+                value = dayjs.utc(parseInt(val)*1000).format(
                     options.dayMonthYearFormat
                 );
             }
@@ -117,12 +117,12 @@ export const formatStringDate = (value, config) => {
         const dayMonthYear = dayMonthYearFormat || 'll'
 
         if (day) {
-            const date = moment.utc(value).format(dayMonthYear)
+            const date = dayjs.utc(value).format(dayMonthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
         } else if (month) {
-            const date = moment.utc(value).format(monthYear)
+            const date = dayjs.utc(value).format(monthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
