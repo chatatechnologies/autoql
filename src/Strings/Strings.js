@@ -33,7 +33,8 @@ export const strings = new LocalizedStrings({
         executeDashboard: 'Hit "Execute" to run this dashboard',
         noQuerySupplied: 'No query was supplied for this tile.',
         queryText: 'Query',
-        titleText: 'Title'
+        titleText: 'Title',
+        allColsHidden: 'All columns in this table are currently hidden. You can adjust your column visibility preferences using the Column Visibility Manager (<span class="chata-icon eye-icon">{0}</span>) in the Options Toolbar.'
     },
     es: {
         report: 'repórtalo',
@@ -59,6 +60,7 @@ export const strings = new LocalizedStrings({
         executeDashboard: 'Haga clic en "Ejecutar" para ejecutar este tablero.',
         noQuerySupplied: 'No se proporcionó ninguna consulta para este titulo.',
         queryText: 'Consulta',
-        titleText: 'Título'
+        titleText: 'Título',
+        allColsHidden: 'Actualmente, todas las columnas de esta tabla están ocultas. Puede ajustar sus preferencias de visibilidad de columna usando el Administrador de visibilidad de columna (<span class="chata-icon eye-icon">{0}</span>) en la barra de herramientas de opciones.'
     }
 });

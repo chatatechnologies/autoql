@@ -4,6 +4,7 @@ import { WARNING, COLUMN_EDITOR } from '../Svg'
 import axios from 'axios'
 import _get from 'lodash.get'
 import moment from 'moment'
+import { strings } from '../Strings'
 
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);
@@ -762,11 +763,7 @@ export function allColHiddenMessage(table){
                 <span class="chata-icon warning-icon">
                     ${WARNING}
                 </span>
-                <br> All columns in this table are currently hidden.
-                You can adjust your column visibility preferences using
-                the Column Visibility Manager
-                (<span class="chata-icon eye-icon">${COLUMN_EDITOR}</span>)
-                in the Options Toolbar.
+                ${strings.allColsHidden.chataFormat(COLUMN_EDITOR)}
             </div>
         </div>`);
         table.parentElement.appendChild(message);
