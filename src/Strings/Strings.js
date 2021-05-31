@@ -42,6 +42,10 @@ export const strings = new LocalizedStrings({
         addedNewTile3: 'to get started',
         showChart: 'Show Chart',
         hideChart: 'Hide Chart',
+        closeDrawer: 'Close Drawer',
+        clearMessages: 'Clear Messages',
+        exploreQueries: 'Explore Queries',
+        notifications: 'Notifications',
     },
     es: {
         report: 'repórtalo',
@@ -76,5 +80,9 @@ export const strings = new LocalizedStrings({
         addedNewTile3: 'para comenzar',
         showChart: 'Mostrar gráfico',
         hideChart: 'Ocultar gráfico',
+        closeDrawer: 'Cerrar Cajón',
+        clearMessages: 'Limpiar mensajes',
+        exploreQueries: 'Explorar Consultas',
+        notifications: 'Notificaciones',
     }
 });

@@ -600,7 +600,7 @@ export function DataMessenger(elem, options){
         }
         obj.chataBarContainer.style.display = displayBar;
         if(displayNodes == 'none'){
-            obj.headerTitle.innerHTML = 'Explore Queries';
+            obj.headerTitle.innerHTML = strings.exploreQueries;
             obj.headerRight.style.visibility = 'hidden';
             obj.scrollBox.classList.add('max-height')
         }else{
@@ -751,9 +751,9 @@ export function DataMessenger(elem, options){
         tabChataUtils.classList.add('active');
         tabChataUtils.setAttribute('data-tippy-content', 'Data Messenger');
         tabQueryTips.classList.add('tab');
-        tabQueryTips.setAttribute('data-tippy-content', 'Explore Queries');
+        tabQueryTips.setAttribute('data-tippy-content', strings.exploreQueries);
         tabNotifications.classList.add('tab');
-        tabNotifications.setAttribute('data-tippy-content', 'Notifications');
+        tabNotifications.setAttribute('data-tippy-content', strings.notifications);
 
         tabChataUtils.appendChild(dataMessengerIcon);
         tabQueryTips.appendChild(queryTabsIcon);
@@ -1361,13 +1361,13 @@ export function DataMessenger(elem, options){
         var closeButton = htmlToElement(`
             <button
                 class="autoql-vanilla-chata-button close-action"
-                data-tippy-content="Close Drawer" currentitem="false">
+                data-tippy-content="${strings.closeDrawer}" currentitem="false">
                 ${CLOSE_ICON}
             </button>
         `);
         var clearAllButton = htmlToElement(`
             <button class="autoql-vanilla-chata-button clear-all"
-            data-tippy-content="Clear Messages">
+            data-tippy-content="${strings.clearMessages}">
                 ${CLEAR_ALL}
             </button>
         `);
