@@ -388,17 +388,17 @@ export function Dashboard(selector, options={}){
         obj.messageContainer.style.display = 'block'
         obj.messageContainer.innerHTML = ''
         var btn = htmlToElement(`
-            <span class="empty-dashboard-new-tile-btn">New Tile</span>
+            ${strings.addedNewTile2}
         `)
 
         obj.messageContainer.appendChild(
-            document.createTextNode('Add a ')
+            document.createTextNode(strings.addedNewTile1)
         )
 
         obj.messageContainer.appendChild(btn)
 
         obj.messageContainer.appendChild(
-            document.createTextNode(' to get started')
+            document.createTextNode(strings.addedNewTile3)
         )
 
         btn.onclick = () => {
