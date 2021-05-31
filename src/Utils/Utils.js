@@ -4,7 +4,7 @@ import { WARNING, COLUMN_EDITOR } from '../Svg'
 import axios from 'axios'
 import _get from 'lodash.get'
 import { strings } from '../Strings'
-import dayjs from 'dayjs'
+import dayjs from './dayjsPlugins'
 
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);
