@@ -146,7 +146,7 @@ export function DataMessenger(elem, options){
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         enableNotificationsTab: false,
-        inputPlaceholder: 'Type your queries here',
+        inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
         landingPage: 'data-messenger',
@@ -796,7 +796,7 @@ export function DataMessenger(elem, options){
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('block');
-            obj.headerTitle.innerHTML = 'Notifications';
+            obj.headerTitle.innerHTML = strings.notifications;
         }
 
         var tabs = pageSwitcherShadowContainer;
@@ -940,7 +940,7 @@ export function DataMessenger(elem, options){
 
         input.classList.add('autoql-vanilla-chata-input')
         input.classList.add('left-padding')
-        input.setAttribute('placeholder', 'Search relevant queries by topic');
+        input.setAttribute('placeholder', strings.exploreQueriesInput);
         obj.queryTips = container;
         obj.drawerContent.appendChild(container);
         obj.queryTipsInput = input;
@@ -1526,7 +1526,7 @@ export function DataMessenger(elem, options){
         );
         voiceRecordButton.setAttribute(
             'data-tippy-content',
-            'Hold for voice-to-text'
+            strings.voiceRecord
         );
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 

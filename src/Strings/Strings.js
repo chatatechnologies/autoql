@@ -46,6 +46,9 @@ export const strings = new LocalizedStrings({
         clearMessages: 'Clear Messages',
         exploreQueries: 'Explore Queries',
         notifications: 'Notifications',
+        dmInputPlaceholder: 'Type your queries here',
+        voiceRecord: 'Hold for voice-to-text',
+        exploreQueriesInput: 'Search relevant queries by topic'
     },
     es: {
         report: 'repórtalo',
@@ -84,5 +87,8 @@ export const strings = new LocalizedStrings({
         clearMessages: 'Limpiar mensajes',
         exploreQueries: 'Explorar Consultas',
         notifications: 'Notificaciones',
+        dmInputPlaceholder: 'escriba sus consultas aquí',
+        voiceRecord: 'Mantenga presionado para convertir voz a texto',
+        exploreQueriesInput: 'Buscar consultas relevantes por tema'
     }
 });

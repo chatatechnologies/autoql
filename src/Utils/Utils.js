@@ -1189,9 +1189,7 @@ export const getFirstDateCol = (cols) => {
 export const supportsVoiceRecord = () => {
     var isIE = /*@cc_on!@*/false || !!document.documentMode;
     var isEdge = !isIE && !!window.StyleMedia;
-    var isChrome = !!window.chrome &&
-    (!!window.chrome.webstore || !!window.chrome.runtime);
-
+    var isChrome = !!window.chrome
     return isEdge || isChrome
 }
 
