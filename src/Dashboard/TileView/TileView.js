@@ -536,6 +536,9 @@ export function TileView(tile, isSecond=false){
     view.displayDrilldownModal = (title, views=[]) => {
         var drilldownModal = new DrilldownModal(title, views)
         drilldownModal.show()
+        setTimeout(function () {
+            refreshTooltips()
+        }, 100)
     }
 
     view.selectChartElement = (component, target) => {

@@ -209,7 +209,7 @@ export function Tile(dashboard, options){
     item.placeHolderDrag = placeHolderDrag
     item.tileTitle = tileTitle
     item.tileTitle.textContent = options.title
-    || item.options.query || 'Untitled'
+    || item.options.query || strings.untitledTile
     item.inputQuery.value = options.query
     item.inputTitle.value = options.title
     || item.options.query
@@ -331,7 +331,7 @@ export function Tile(dashboard, options){
         content.classList.remove('editing')
         dashboard.grid.disable()
         item.tileTitle.textContent = item.inputTitle.value
-        || item.inputQuery.value || 'Untitled'
+        || item.inputQuery.value || strings.untitledTile
         deleteButton.style.visibility = 'hidden'
         item.views.map(view => view.stopEditing())
 
