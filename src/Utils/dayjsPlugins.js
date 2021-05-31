@@ -13,11 +13,11 @@ dayjs.extend(LocalizedFormat)
   const genericLanguageCode = specificLanguageCode.split('-')[0]
 
   try {
-    require(`dayjs/locale/${specificLanguageCode}`)
+    require(`dayjs/locale/${specificLanguageCode}.js`)
     dayjs.locale(specificLanguageCode)
   } catch (error) {
     try {
-      require(`dayjs/locale/${genericLanguageCode}`)
+      require(`dayjs/locale/${genericLanguageCode}.js`)
       dayjs.locale(genericLanguageCode)
   } catch (error) { console.log(error) }
   }
