@@ -1768,7 +1768,7 @@ export function DataMessenger(elem, options){
 
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
-            'Report a problem',
+            strings.reportProblem,
             idRequest,
             obj.reportProblemHandler,
             [reportProblem, toolbar]
@@ -1787,7 +1787,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1797,7 +1797,7 @@ export function DataMessenger(elem, options){
             case 'csvCopy':
                 var filterBtn = obj.getActionButton(
                     FILTER_TABLE,
-                    'Filter Table',
+                    strings.filterTable,
                     idRequest,
                     obj.filterTableHandler,
                     []
@@ -1812,7 +1812,7 @@ export function DataMessenger(elem, options){
                     let badge = obj.getBadge()
                     let editorBtn = obj.getActionButton(
                         COLUMN_EDITOR,
-                        'Show/Hide Columns',
+                        strings.showHideCols,
                         idRequest,
                         obj.openColumnEditorHandler,
                         [badge]
@@ -1838,7 +1838,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1858,7 +1858,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1872,7 +1872,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1887,7 +1887,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1910,7 +1910,7 @@ export function DataMessenger(elem, options){
 
         var moreOptionsBtn = obj.getActionButton(
             VERTICAL_DOTS,
-            'More options',
+            strings.moreOptions,
             idRequest,
             obj.moreOptionsHandler,
             [moreOptions, toolbar]

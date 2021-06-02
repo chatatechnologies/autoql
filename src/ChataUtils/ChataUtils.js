@@ -310,7 +310,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 break;
             case 'png':
                 action = ChataUtils.getActionOption(
-                    EXPORT_PNG_ICON, 'Download as PNG',
+                    EXPORT_PNG_ICON, strings.downloadPNG,
                     ChataUtils.exportPNGHandler,
                     [idRequest]
                 );
@@ -369,7 +369,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 break;
             case 'png':
                 action = ChataUtils.getActionOption(
-                    EXPORT_PNG_ICON, 'Download as PNG',
+                    EXPORT_PNG_ICON, strings.downloadPNG,
                     ChataUtils.exportPNGHandler,
                     [idRequest]
                 );

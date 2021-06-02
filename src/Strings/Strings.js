@@ -66,6 +66,11 @@ export const strings = new LocalizedStrings({
         bubbleChart: 'Bubble Chart',
         table: 'Table',
         pivotTable: 'Pivot Table',
+        deleteDataResponse: 'Delete data response',
+        moreOptions: 'More options',
+        downloadPNG: 'Download as PNG',
+        filterTable: 'Filter Table',
+        showHideCols: 'Show/Hide Columns'
     },
     es: {
         report: 'repórtalo',
@@ -124,5 +129,10 @@ export const strings = new LocalizedStrings({
         bubbleChart: 'Gráfico de burbujas',
         table: 'Tabla',
         pivotTable: 'Tabla Pivote',
+        deleteDataResponse: 'Borrar mensaje',
+        moreOptions: 'Mas opciones',
+        downloadPNG: 'Descargar como PNG',
+        filterTable: 'Filtrar Tabla',
+        showHideCols: 'Mostrar/Ocultar Columnas'
     }
 });
