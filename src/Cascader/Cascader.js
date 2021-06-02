@@ -127,7 +127,7 @@ export function Cascader(topics, datamessenger){
             <div class="option">
                 <span>
                     <span class="chata-icon">${EXPLORE_QUERIES}</span>
-                     See more...
+                    ${strings.seeMore}
                 </span>
             </div>
         `)

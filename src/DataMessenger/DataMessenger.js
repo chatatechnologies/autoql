@@ -893,12 +893,10 @@ export function DataMessenger(elem, options){
         );
         queryTipsResultPlaceHolder.innerHTML = `
             <p>
-                Discover what you can ask by entering
-                a topic in the search bar above.
+                ${strings.exploreQueriesMessage1}
             <p>
             <p>
-                Simply click on any of the returned options
-                to run the query in Data Messenger.
+                ${strings.exploreQueriesMessage2}
             <p>
         `;
 

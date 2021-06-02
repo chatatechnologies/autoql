@@ -49,8 +49,11 @@ export const strings = new LocalizedStrings({
         dmInputPlaceholder: 'Type your queries here',
         voiceRecord: 'Hold for voice-to-text',
         exploreQueriesInput: 'Search relevant queries by topic',
+        exploreQueriesMessage1: 'Discover what you can ask by entering a topic in the search bar above.',
+        exploreQueriesMessage2: 'Simply click on any of the returned options to run the query in Data Messenger.',
         cascaderIntro: 'Some things you can ask me:',
         cascaderFooter: 'to further explore the possibilities.',
+        seeMore: 'See more...',
         use: 'Use',
     },
     es: {
@@ -93,8 +96,11 @@ export const strings = new LocalizedStrings({
         dmInputPlaceholder: 'escriba sus consultas aquí',
         voiceRecord: 'Mantenga presionado para convertir voz a texto',
         exploreQueriesInput: 'Buscar consultas relevantes por tema',
+        exploreQueriesMessage1: 'Descubra lo que puede preguntar ingresando un tema en la barra de búsqueda de arriba.',
+        exploreQueriesMessage2: 'Simplemente haga clic en cualquiera de las opciones devueltas para ejecutar la consulta en Data Messenger.',
         cascaderIntro: 'Algunas cosas que puedes preguntarme:',
         cascaderFooter: 'para explorar más posibilidades.',
+        seeMore: 'Ver mas...',
         use: 'Utilice',
     }
 });
