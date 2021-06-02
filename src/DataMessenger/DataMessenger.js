@@ -2421,68 +2421,68 @@ export function DataMessenger(elem, options){
             if(displayTypes[i] == ignore)continue;
             if(displayTypes[i] == 'table'){
                 button = obj.getDisplayTypeButton(
-                    idRequest, TABLE_ICON, 'Table', obj.displayTableHandler
+                    idRequest, TABLE_ICON, strings.table, obj.displayTableHandler
                 )
             }
             if(displayTypes[i] == 'column'){
                 button = obj.getDisplayTypeButton(
                     idRequest, COLUMN_CHART_ICON,
-                    'Column Chart', obj.displayColumChartHandler
+                    strings.columnChart, obj.displayColumChartHandler
                 );
             }
             if(displayTypes[i] == 'bar'){
                 button = obj.getDisplayTypeButton(
                     idRequest, BAR_CHART_ICON,
-                    'Bar Chart', obj.displayBarChartHandler
+                    strings.barChart, obj.displayBarChartHandler
                 );
             }
             if(displayTypes[i] == 'pie'){
                 button = obj.getDisplayTypeButton(
                     idRequest, PIE_CHART_ICON,
-                    'Pie Chart', obj.displayPieChartHandler
+                    strings.pieChart, obj.displayPieChartHandler
                 );
             }
             if(displayTypes[i] == 'line'){
                 button = obj.getDisplayTypeButton(
                     idRequest, LINE_CHART_ICON,
-                    'Line Chart', obj.displayLineChartHandler
+                    strings.lineChart, obj.displayLineChartHandler
                 );
             }
             if(displayTypes[i] == 'pivot_table'){
                 button = obj.getDisplayTypeButton(
                     idRequest, PIVOT_ICON,
-                    'Pivot Table', obj.displayPivotTableHandler
+                    strings.pivotTable, obj.displayPivotTableHandler
                 );
             }
             if(displayTypes[i] == 'heatmap'){
                 button = obj.getDisplayTypeButton(
                     idRequest, HEATMAP_ICON,
-                    'Heatmap', obj.displayHeatmapHandler
+                    strings.heatmap, obj.displayHeatmapHandler
                 );
             }
             if(displayTypes[i] == 'bubble'){
                 button = obj.getDisplayTypeButton(
                     idRequest, BUBBLE_CHART_ICON,
-                    'Bubble Chart', obj.displayBubbleCharthandler
+                    strings.bubbleChart, obj.displayBubbleCharthandler
                 );
             }
             if(displayTypes[i] == 'stacked_column'){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_COLUMN_CHART_ICON,
-                    'Stacked Column Chart', obj.displayStackedColumnHandler
+                    strings.stackedColumn, obj.displayStackedColumnHandler
                 );
             }
             if(displayTypes[i] == 'stacked_bar'){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_BAR_CHART_ICON,
-                    'Stacked Bar Chart', obj.displayStackedBarHandler
+                    strings.stackedBar, obj.displayStackedBarHandler
                 );
             }
 
             if(displayTypes[i] == 'stacked_line'){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_AREA_CHART_ICON,
-                    'Stacked Area Chart', obj.displayAreaHandler
+                    strings.stackedLine, obj.displayAreaHandler
                 );
             }
 
