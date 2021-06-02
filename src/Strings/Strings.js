@@ -73,6 +73,9 @@ export const strings = new LocalizedStrings({
         showHideCols: 'Show/Hide Columns',
         copyTable: 'Copy table to clipboard',
         downloadCSV: 'Download as CSV',
+        columnName: 'Column Name',
+        visibility: 'Visibility',
+        apply: 'Apply'
     },
     es: {
         report: 'repórtalo',
@@ -138,5 +141,8 @@ export const strings = new LocalizedStrings({
         showHideCols: 'Mostrar/Ocultar Columnas',
         copyTable: 'Copiar tabla al portapapeles',
         downloadCSV: 'Descargar como CSV',
+        columnName: 'Nombre de la columna',
+        visibility: 'Visibilidad',
+        apply: 'Aplicar'
     }
 });

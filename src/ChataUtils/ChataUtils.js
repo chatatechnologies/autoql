@@ -548,15 +548,15 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     container.style.padding = '0px 15px';
     headerEditor.classList.add('col-visibility-header');
     headerEditor.appendChild(htmlToElement(`
-        <div>Column Name</div>
+        <div>${strings.columnName}</div>
     `))
     var divVisibility = htmlToElement(`
-        <div>Visibility</div>
+        <div>${strings.visibility}</div>
     `);
     divVisibility.style.display = 'flex';
     container.appendChild(headerEditor);
     modal.chataModal.classList.add('chata-modal-column-editor')
-    modal.setTitle('Show/Hide Columns')
+    modal.setTitle(strings.showHideCols)
     var headerCheckbox = createCheckbox(null, true, -1);
     headerEditor.appendChild(divVisibility);
     headerCheckbox.style.marginLeft = '12px';
@@ -608,7 +608,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
         `<div
             class="autoql-vanilla-chata-btn default"
             style="padding: 5px 16px; margin: 2px 5px;">
-                Cancel
+                ${strings.cancel}
             </div>`
     )
 
@@ -624,7 +624,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     )
 
     saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode('Apply'));
+    saveButton.appendChild(document.createTextNode(strings.apply));
 
 
     cancelButton.onclick = function(){
