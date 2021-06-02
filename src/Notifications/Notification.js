@@ -47,7 +47,7 @@ import {
     createStackedColumnChart
 } from '../Charts'
 import { convert } from '../RuleParser'
-import moment from 'moment'
+import dayjs from '../Utils/dayjsPlugins'
 import { refreshTooltips } from '../Tooltips'
 import { strings } from '../Strings'
 
@@ -556,10 +556,10 @@ export function Notification(options, parentOptions){
     item.formatTimestamp = () => {
         var createdAt = parseInt(item.options.created_at)*1000;
         let date = '';
-        const time = moment(createdAt).format('h:mma')
-        const day = moment(createdAt).format('MM-DD-YY')
-        const today = moment().format('MM-DD-YY')
-        const yesterday = moment()
+        const time = dayjs(createdAt).format('h:mma')
+        const day = dayjs.utc(createdAt).format('MM-DD-YY')
+        const today = dayjs.utc().format('MM-DD-YY')
+        const yesterday = dayjs.utc()
         .subtract(1, 'd')
         .format('MM-DD-YY')
 
@@ -567,10 +567,10 @@ export function Notification(options, parentOptions){
             date = `Today at ${time}`
         } else if (day === yesterday) {
             date = `Yesterday at ${time}`
-        } else if (moment().isSame(createdAt, 'year')) {
-            date = `${moment(createdAt).format('MMMM Do')} at ${time}`
+        } else if (dayjs.utc().isSame(createdAt, 'year')) {
+            date = `${dayjs.utc(createdAt).format('MMMM Do')} at ${time}`
         }else{
-            date = `${moment(createdAt).format('MMMM Do, YYYY')} at ${time}`
+            date = `${dayjs.utc(createdAt).format('MMMM Do, YYYY')} at ${time}`
         }
         timestamp.appendChild(
             document.createTextNode(date)
