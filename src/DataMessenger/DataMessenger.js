@@ -1768,7 +1768,7 @@ export function DataMessenger(elem, options){
 
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
-            strings.reportProblem,
+            strings.reportProblemTitle,
             idRequest,
             obj.reportProblemHandler,
             [reportProblem, toolbar]

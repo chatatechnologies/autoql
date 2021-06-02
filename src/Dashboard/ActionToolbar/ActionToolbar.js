@@ -12,6 +12,7 @@ import {
     getSupportedDisplayTypes,
     showBadge
 } from '../../Utils'
+import { strings } from '../../Strings'
 import './ActionToolbar.css'
 
 export function ActionToolbar(idRequest, tileView, tile) {
@@ -69,7 +70,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
 
     var reportProblemButton = ChataUtils.getActionButton(
         REPORT_PROBLEM,
-        'Report a problem',
+        strings.reportProblemTitle,
         idRequest,
         tileView.reportProblemHandler,
         [reportProblem, toolbar]
@@ -91,7 +92,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
         case 'csvCopy':
             var filterBtn = ChataUtils.getActionButton(
                 FILTER_TABLE,
-                'Filter Table',
+                strings.filterTable,
                 idRequest,
                 ChataUtils.filterTableHandler,
                 []
@@ -107,7 +108,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 let badge = getBadge()
                 let editorBtn = ChataUtils.getActionButton(
                     COLUMN_EDITOR,
-                    'Show/Hide Columns',
+                    strings.showHideCols,
                     idRequest,
                     tileView.openColumnEditorHandler,
                     [tile.dashboard.options, badge]
@@ -168,7 +169,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
 
     moreOptionsBtn = ChataUtils.getActionButton(
         VERTICAL_DOTS,
-        'More options',
+        strings.moreOptions,
         idRequest,
         tileView.moreOptionsHandler,
         [moreOptionsArray, toolbar]

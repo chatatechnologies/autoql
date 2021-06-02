@@ -284,7 +284,7 @@ ChataUtils.makeMoreOptionsMenu = (
         switch (opt) {
             case 'csv':
                 action = ChataUtils.getActionOption(
-                    DOWNLOAD_CSV_ICON, 'Download as CSV',
+                    DOWNLOAD_CSV_ICON, strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
                 );
@@ -293,7 +293,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 break;
             case 'copy':
                 action = ChataUtils.getActionOption(
-                    CLIPBOARD_ICON, 'Copy table to clipboard',
+                    CLIPBOARD_ICON, strings.copyTable,
                     ChataUtils.copyHandler,
                     [idRequest]
                 );
@@ -343,7 +343,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
         switch (opt) {
             case 'csv':
                 action = ChataUtils.getActionOption(
-                    DOWNLOAD_CSV_ICON, 'Download as CSV',
+                    DOWNLOAD_CSV_ICON, strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
                 );
@@ -352,7 +352,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 break;
             case 'copy':
                 action = ChataUtils.getActionOption(
-                    CLIPBOARD_ICON, 'Copy table to clipboard',
+                    CLIPBOARD_ICON, strings.copyTable,
                     ChataUtils.copyHandler,
                     [idRequest]
                 );

@@ -70,7 +70,9 @@ export const strings = new LocalizedStrings({
         moreOptions: 'More options',
         downloadPNG: 'Download as PNG',
         filterTable: 'Filter Table',
-        showHideCols: 'Show/Hide Columns'
+        showHideCols: 'Show/Hide Columns',
+        copyTable: 'Copy table to clipboard',
+        downloadCSV: 'Download as CSV',
     },
     es: {
         report: 'repórtalo',
@@ -133,6 +135,8 @@ export const strings = new LocalizedStrings({
         moreOptions: 'Mas opciones',
         downloadPNG: 'Descargar como PNG',
         filterTable: 'Filtrar Tabla',
-        showHideCols: 'Mostrar/Ocultar Columnas'
+        showHideCols: 'Mostrar/Ocultar Columnas',
+        copyTable: 'Copiar tabla al portapapeles',
+        downloadCSV: 'Descargar como CSV',
     }
 });
