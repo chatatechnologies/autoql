@@ -48,7 +48,10 @@ export const strings = new LocalizedStrings({
         notifications: 'Notifications',
         dmInputPlaceholder: 'Type your queries here',
         voiceRecord: 'Hold for voice-to-text',
-        exploreQueriesInput: 'Search relevant queries by topic'
+        exploreQueriesInput: 'Search relevant queries by topic',
+        cascaderIntro: 'Some things you can ask me:',
+        cascaderFooter: 'to further explore the possibilities.',
+        use: 'Use',
     },
     es: {
         report: 'repórtalo',
@@ -89,6 +92,9 @@ export const strings = new LocalizedStrings({
         notifications: 'Notificaciones',
         dmInputPlaceholder: 'escriba sus consultas aquí',
         voiceRecord: 'Mantenga presionado para convertir voz a texto',
-        exploreQueriesInput: 'Buscar consultas relevantes por tema'
+        exploreQueriesInput: 'Buscar consultas relevantes por tema',
+        cascaderIntro: 'Algunas cosas que puedes preguntarme:',
+        cascaderFooter: 'para explorar más posibilidades.',
+        use: 'Utilice',
     }
 });

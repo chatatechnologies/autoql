@@ -5,6 +5,7 @@ import {
     OPTION_ARROW_CIRCLE,
 } from '../Svg'
 import { htmlToElement  } from '../Utils'
+import { strings } from '../Strings'
 import './Cascader.css'
 
 export function Cascader(topics, datamessenger){
@@ -29,7 +30,7 @@ export function Cascader(topics, datamessenger){
     obj._elem = message;
 
     content.appendChild(
-        document.createTextNode('Some things you can ask me:')
+        document.createTextNode(strings.cascaderIntro)
     );
 
     content.appendChild(
@@ -170,13 +171,13 @@ export function Cascader(topics, datamessenger){
     chataCascader.appendChild(optionsContainer);
 
     content.appendChild(
-        document.createTextNode('Use')
+        document.createTextNode(strings.use)
     );
     var link = htmlToElement(`
         <span class="autoql-vanilla-intro-qi-link">
-            <span class="chata-icon undefined" style="margin-right: -3px;">
+            <span class="chata-icon" style="margin-right: -3px;">
                 ${EXPLORE_QUERIES}
-            </span> Explore Queries
+            </span> ${strings.exploreQueries}
         </span>
     `);
     content.appendChild(
@@ -188,7 +189,7 @@ export function Cascader(topics, datamessenger){
     }
 
     content.appendChild(
-        document.createTextNode(' to further explore the possibilities.')
+        document.createTextNode(strings.cascaderFooter)
     );
 
     obj.reset = () => {
