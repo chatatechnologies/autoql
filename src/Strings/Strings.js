@@ -94,7 +94,13 @@ export const strings = new LocalizedStrings({
         dataAlertNamePlaceholder: 'Add an Alert Name',
         notifyWhen: 'Notify me when:',
         typeQueryPlaceholder: 'Type a query',
-        typeQueryNumberPlaceholder: 'Type a query or number'
+        typeQueryNumberPlaceholder: 'Type a query or number',
+        compareResult: 'Compare',
+        save: 'Save',
+        deleteDataAlert: 'Delete Data Alert',
+        back: 'Back',
+        next: 'Next'
+
     },
     es: {
         report: 'repórtalo',
@@ -181,6 +187,12 @@ export const strings = new LocalizedStrings({
         dataAlertNamePlaceholder: 'Agregar un nombre de alerta',
         notifyWhen: 'Notifícame cuando:',
         typeQueryPlaceholder: 'Escribe una consulta',
-        typeQueryNumberPlaceholder: 'Escriba una consulta o un número'
+        typeQueryNumberPlaceholder: 'Escriba una consulta o un número',
+        compareResult: 'Comparar',
+        save: 'Guardar',
+        deleteDataAlert: 'Eliminar alerta de datos',
+        back: 'Regresar',
+        next: 'Siguiente'
+
     }
 });

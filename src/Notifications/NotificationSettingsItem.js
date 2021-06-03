@@ -167,7 +167,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             var deleteButton = htmlToElement(`
                 <button
                     class="autoql-vanilla-chata-btn danger large">
-                        Delete Data Alert
+                        ${strings.deleteDataAlert}
                 </button>
             `)
 
@@ -179,7 +179,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             `)
             var cancelButton = htmlToElement(
                 `<div class="autoql-vanilla-chata-btn default"
-                    style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+                    style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`
             )
             var saveButton = htmlToElement(
                 `<div class="autoql-vanilla-chata-btn primary "
@@ -195,7 +195,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             }
 
             saveButton.appendChild(spinner);
-            saveButton.appendChild(document.createTextNode('Save'));
+            saveButton.appendChild(document.createTextNode(strings.save));
 
             wrap.appendChild(deleteButton);
             wrap2.appendChild(cancelButton);

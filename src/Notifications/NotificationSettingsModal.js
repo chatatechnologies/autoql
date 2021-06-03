@@ -76,7 +76,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     `)
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
-        'Next',
+        strings.next,
         () => {
             step1.closeStep()
             step2.expand()
@@ -289,7 +289,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var step2NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large',
-        'Next',
+        strings.next,
         () => {
             step2.closeStep()
             step3.expand()
@@ -298,7 +298,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     )
     var step2PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
-        'Back',
+        strings.back,
         () => {
             step2.closeStep()
             step1.expand()
@@ -339,7 +339,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step3.addElement(messageContainer);
     var step3PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
-        'Back',
+        strings.back,
         () => {
             step2.expand()
             step3.closeStep()
@@ -603,7 +603,7 @@ function GroupLine(params, expression=[]){
     compareButton.classList.add('default')
     compareButton.classList.add('large')
     compareButton.style.display = 'none'
-    compareButton.textContent = 'Compare result...'
+    compareButton.textContent = strings.compare
     var chataRuleDeleteBtn = htmlToElement(`
         <span
             class="chata-icon chata-rule-delete-btn">
@@ -650,50 +650,6 @@ function GroupLine(params, expression=[]){
         params.stepButton.classList.add('disabled')
         params.checkContainer.innerHTML = ''
     }
-
-    // queryInput.input.onblur = async (evt) => {
-    //     if(queryInput.input.value){
-    //         var response = await apiCall(
-    //             evt.target.value, params.parentOptions, undefined
-    //         )
-    //         var statusCode = response.status
-    //         if(statusCode !== 200){
-    //             termError1.style.display = 'block';
-    //             params.step.classList.remove('complete')
-    //             params.step.classList.add('error')
-    //         }else{
-    //             termError1.style.display = 'none';
-    //             params.step.classList.add('complete')
-    //             params.step.classList.remove('error')
-    //         }
-    //     }
-    // }
-    //
-    // queryInput2.input.onblur = async (evt) => {
-    //     if(queryInput2.input.value){
-    //         if(/^[0-9]+$/.test(queryInput2.input.value)){
-    //             params.step.classList.remove('error')
-    //             termError2.style.display = 'none';
-    //             return
-    //         }
-    //
-    //         var response = await apiCall(
-    //             evt.target.value, params.parentOptions, undefined
-    //         )
-    //
-    //         var statusCode = response.status
-    //
-    //         if(statusCode !== 200){
-    //             termError2.style.display = 'block';
-    //             params.step.classList.remove('complete')
-    //             params.step.classList.add('error')
-    //         }else{
-    //             termError2.style.display = 'none';
-    //             params.step.classList.add('complete')
-    //             params.step.classList.remove('error')
-    //         }
-    //     }
-    // }
 
     popup.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){
