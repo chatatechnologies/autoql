@@ -228,7 +228,9 @@ export function DataAlerts(selector, options){
     wrapper.applyStyles();
     wrapper.loadRules();
     if(parent)parent.appendChild(wrapper);
-    refreshTooltips()
+    setTimeout(function () {
+        refreshTooltips()
+    }, 5000);
 
     return wrapper
 }
