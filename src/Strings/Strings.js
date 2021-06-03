@@ -75,7 +75,11 @@ export const strings = new LocalizedStrings({
         downloadCSV: 'Download as CSV',
         columnName: 'Column Name',
         visibility: 'Visibility',
-        apply: 'Apply'
+        apply: 'Apply',
+        turnDataAlertOff: 'Turn Data Alert Off',
+        turnDataAlertOn: 'Turn Data Alert On',
+        editDataAlert: 'Edit Data Alert',
+        dismissAll: 'Dismiss All'
     },
     es: {
         report: 'repórtalo',
@@ -143,6 +147,10 @@ export const strings = new LocalizedStrings({
         downloadCSV: 'Descargar como CSV',
         columnName: 'Nombre de la columna',
         visibility: 'Visibilidad',
-        apply: 'Aplicar'
+        apply: 'Aplicar',
+        turnDataAlertOff: 'Desactivar la alerta de datos',
+        turnDataAlertOn: 'Activar alerta de datos',
+        editDataAlert: 'Editar Alerta de datos',
+        dismissAll: 'Descartar todo'
     }
 });

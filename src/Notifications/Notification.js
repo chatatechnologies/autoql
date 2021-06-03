@@ -97,7 +97,7 @@ export function Notification(options, parentOptions){
     var turnNotificationText = document.createTextNode(
         'Turn off these notifications'
     );
-    var editNotificationText = document.createTextNode('Edit Data Alert');
+    var editNotificationText = document.createTextNode(strings.editDataAlert);
 
     item.classList.add('chata-notification-list-item');
     item.classList.add('triggered');
@@ -582,10 +582,10 @@ export function Notification(options, parentOptions){
     item.toggleTurnOffNotificationText = () => {
         if(item.ruleOptions.status == 'INACTIVE'){
             turnNotificationIcon.innerHTML = TURN_ON_NOTIFICATION;
-            turnNotificationText.textContent = 'Turn Data Alert On';
+            turnNotificationText.textContent = strings.turnDataAlertOn;
         }else{
             turnNotificationIcon.innerHTML = DISMISS;
-            turnNotificationText.textContent = 'Turn Data Alert Off';
+            turnNotificationText.textContent = strings.turnDataAlertOff;
         }
     }
 

@@ -7,6 +7,7 @@ import { Modal } from '../Modal'
 import { refreshTooltips } from '../Tooltips'
 import { ChataConfirmDialog } from '../ChataComponents'
 import { $dom } from '../Dom'
+import { strings } from '../Strings'
 import '../../css/Notifications.css'
 
 export function NotificationFeed(selector, options){
@@ -119,7 +120,7 @@ export function NotificationFeed(selector, options){
     emptyStateContainer.appendChild(createDatalertButton)
     container.appendChild(emptyStateContainer)
     dismissContent.appendChild(dismissIcon);
-    dismissContent.appendChild(document.createTextNode('Dismiss All'));
+    dismissContent.appendChild(document.createTextNode(strings.dismissAll));
     dismissAllButton.appendChild(dismissContent);
     container.appendChild(dismissAllButton);
     wrapper.appendChild(container);
