@@ -95,7 +95,7 @@ export function NotificationSettingsItem(parentOptions, options) {
         } = options
 
         const formatDate = dayjs.utc(reset_date).format(
-            `MMMM DD, YYYY [${strings.at}] hh:mmA`
+            strings.dataAlertFormatDate
         ).toString();
         return `${strings.dataAlertTooltip} ${formatDate} (${time_zone})`;
     }
