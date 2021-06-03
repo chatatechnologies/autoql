@@ -8,8 +8,8 @@ import {
     HOUR_GLASS,
     WARNING
 } from '../Svg'
-import moment from 'moment'
-import 'moment-timezone';
+import dayjs from '../Utils/dayjsPlugins'
+import { strings } from '../Strings'
 
 export function NotificationSettingsItem(parentOptions, options) {
     var wrapper = document.createElement('div');
@@ -94,10 +94,10 @@ export function NotificationSettingsItem(parentOptions, options) {
             time_zone
         } = options
 
-        const formatDate = moment(reset_date).format(
-            'MMMM DD, YYYY [at] hh:mmA'
+        const formatDate = dayjs.utc(reset_date).format(
+            `MMMM DD, YYYY [${strings.at}] hh:mmA`
         ).toString();
-        return `This Alert has been triggered. Scanning will resume on ${formatDate} (${time_zone})`;
+        return `${strings.dataAlertTooltip} ${formatDate} (${time_zone})`;
     }
 
     wrapper.updateView = () => {

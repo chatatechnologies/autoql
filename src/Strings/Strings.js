@@ -85,6 +85,8 @@ export const strings = new LocalizedStrings({
         dataAlertsTitle: 'Subscribe to a Data Alert',
         dataAlertsMessage1: 'Choose from a range of ready-to-use Alerts that have been set up for you',
         dataAlertsMessage2: 'View and manage your custom Data Alerts',
+        dataAlertTooltip: 'This Alert has been triggered. Scanning will resume on',
+        at: 'at'
     },
     es: {
         report: 'repórtalo',
@@ -162,6 +164,8 @@ export const strings = new LocalizedStrings({
         dataAlertsTitle: 'Suscríbase a una alerta de datos',
         dataAlertsMessage1: 'Elija entre una variedad de alertas listas para usar que se han configurado para usted',
         dataAlertsMessage2: 'Ver y administrar sus alertas de datos personalizadas',
+        dataAlertTooltip: 'Esta alerta se ha activado. El escaneo se reanudará en',
+        at: 'a las'
 
     }
 });
