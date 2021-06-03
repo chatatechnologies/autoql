@@ -23,6 +23,7 @@ import {
     apiCallPost,
     getHeightForChildrens
 } from '../Utils'
+import { strings } from '../Strings'
 
 export function NotificationSettingsModal(options, mode='create', rule={}){
     var wrapper = document.createElement('div');
@@ -36,10 +37,10 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         <div class="autoql-vanilla-spinner-loader hidden"></div>
     `)
     wrapper.classList.add('chata-steps-container');
-    var step1 = new ChataModalStep('Set up your Alert','1',);
-    var step2 = new ChataModalStep('Select Alert Interval', '2');
+    var step1 = new ChataModalStep(strings.setupDataAlert,'1',);
+    var step2 = new ChataModalStep(strings.notificationPreferences, '2');
     var step3 = new ChataModalStep(
-        'Manage Alert Preferences',
+        strings.composeAlertMessage,
         '3',
         ''
     );

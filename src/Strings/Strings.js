@@ -86,7 +86,10 @@ export const strings = new LocalizedStrings({
         dataAlertsMessage1: 'Choose from a range of ready-to-use Alerts that have been set up for you',
         dataAlertsMessage2: 'View and manage your custom Data Alerts',
         dataAlertTooltip: 'This Alert has been triggered. Scanning will resume on',
-        dataAlertFormatDate: 'MMMM DD, YYYY [at] hh:mmA'
+        dataAlertFormatDate: 'MMMM DD, YYYY [at] hh:mmA',
+        setupDataAlert: 'Set up your Alert',
+        notificationPreferences: 'Set Notification Preferences',
+        composeAlertMessage: 'Compose Notification Message'
     },
     es: {
         report: 'repórtalo',
@@ -165,7 +168,9 @@ export const strings = new LocalizedStrings({
         dataAlertsMessage1: 'Elija entre una variedad de alertas listas para usar que se han configurado para usted',
         dataAlertsMessage2: 'Ver y administrar sus alertas de datos personalizadas',
         dataAlertTooltip: 'Esta alerta se ha activado. El escaneo se reanudará el',
-        dataAlertFormatDate: 'DD [de] MMMM [del] YYYY [a las] hh:mmA'
-
+        dataAlertFormatDate: 'DD [de] MMMM [del] YYYY [a las] hh:mmA',
+        setupDataAlert: 'Configura tu alerta',
+        notificationPreferences: 'Establecer preferencias de notificación',
+        composeAlertMessage: 'Redactar mensaje de notificación'
     }
 });

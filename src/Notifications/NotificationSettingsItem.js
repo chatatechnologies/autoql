@@ -208,7 +208,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             )
 
             configModal.addView(modalView);
-            configModal.setTitle('Edit Data Alert');
+            configModal.setTitle(strings.editDataAlert);
             configModal.addFooterElement(footerWrapper);
             configModal.show();
             refreshTooltips();

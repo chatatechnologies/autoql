@@ -230,7 +230,7 @@ export function DataAlerts(selector, options){
     if(parent)parent.appendChild(wrapper);
     setTimeout(function () {
         refreshTooltips()
-    }, 1000);
+    }, 3000);
 
     return wrapper
 }
