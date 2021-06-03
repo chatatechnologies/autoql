@@ -80,7 +80,11 @@ export const strings = new LocalizedStrings({
         turnDataAlertOn: 'Turn Data Alert On',
         editDataAlert: 'Edit Data Alert',
         dismissAll: 'Dismiss All',
-        noneOfThese: 'None of these'
+        noneOfThese: 'None of these',
+        dataAlertsTitleCustom: 'Custom Data Alerts',
+        dataAlertsTitle: 'Subscribe to a Data Alert',
+        dataAlertsMessage1: 'Choose from a range of ready-to-use Alerts that have been set up for you',
+        dataAlertsMessage2: 'View and manage your custom Data Alerts',
     },
     es: {
         report: 'repórtalo',
@@ -153,6 +157,11 @@ export const strings = new LocalizedStrings({
         turnDataAlertOn: 'Activar alerta de datos',
         editDataAlert: 'Editar Alerta de datos',
         dismissAll: 'Descartar todo',
-        noneOfThese: 'Ninguna de estas'
+        noneOfThese: 'Ninguna de estas',
+        dataAlertsTitleCustom: 'Alertas de datos personalizadas',
+        dataAlertsTitle: 'Suscríbase a una alerta de datos',
+        dataAlertsMessage1: 'Elija entre una variedad de alertas listas para usar que se han configurado para usted',
+        dataAlertsMessage2: 'Ver y administrar sus alertas de datos personalizadas',
+
     }
 });
