@@ -276,9 +276,9 @@ export function TileView(tile, isSecond=false){
                 var body = {
                     suggestion: evt.target.textContent
                 };
-                if(evt.target.textContent === 'None of these'){
+                if(evt.target.textContent === strings.noneOfThese){
                     view.isSuggestions = false
-                    responseWrapper.innerHTML = 'Thank you for your feedback'
+                    responseWrapper.innerHTML = strings.feedback
                 }else{
                     view.setQuery(evt.target.textContent)
                     view.run()

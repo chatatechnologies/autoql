@@ -2747,7 +2747,7 @@ export function DataMessenger(elem, options){
                     suggestion: evt.target.textContent
                 };
                 let loading = null;
-                if(evt.target.textContent === 'None of these'){
+                if(evt.target.textContent === strings.noneOfThese){
                     loading = obj.showLoading()
                 }else{
                     obj.inputAnimation(evt.target.textContent)

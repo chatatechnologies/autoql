@@ -79,7 +79,8 @@ export const strings = new LocalizedStrings({
         turnDataAlertOff: 'Turn Data Alert Off',
         turnDataAlertOn: 'Turn Data Alert On',
         editDataAlert: 'Edit Data Alert',
-        dismissAll: 'Dismiss All'
+        dismissAll: 'Dismiss All',
+        noneOfThese: 'None of these'
     },
     es: {
         report: 'repórtalo',
@@ -151,6 +152,7 @@ export const strings = new LocalizedStrings({
         turnDataAlertOff: 'Desactivar la alerta de datos',
         turnDataAlertOn: 'Activar alerta de datos',
         editDataAlert: 'Editar Alerta de datos',
-        dismissAll: 'Descartar todo'
+        dismissAll: 'Descartar todo',
+        noneOfThese: 'Ninguna de estas'
     }
 });
