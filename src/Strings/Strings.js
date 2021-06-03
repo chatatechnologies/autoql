@@ -89,7 +89,12 @@ export const strings = new LocalizedStrings({
         dataAlertFormatDate: 'MMMM DD, YYYY [at] hh:mmA',
         setupDataAlert: 'Set up your Alert',
         notificationPreferences: 'Set Notification Preferences',
-        composeAlertMessage: 'Compose Notification Message'
+        composeAlertMessage: 'Compose Notification Message',
+        dataAlertName: 'Name your Data Alert',
+        dataAlertNamePlaceholder: 'Add an Alert Name',
+        notifyWhen: 'Notify me when:',
+        typeQueryPlaceholder: 'Type a query',
+        typeQueryNumberPlaceholder: 'Type a query or number'
     },
     es: {
         report: 'repórtalo',
@@ -171,6 +176,11 @@ export const strings = new LocalizedStrings({
         dataAlertFormatDate: 'DD [de] MMMM [del] YYYY [a las] hh:mmA',
         setupDataAlert: 'Configura tu alerta',
         notificationPreferences: 'Establecer preferencias de notificación',
-        composeAlertMessage: 'Redactar mensaje de notificación'
+        composeAlertMessage: 'Redactar mensaje de notificación',
+        dataAlertName: 'Ponle un nombre a tu alerta de datos',
+        dataAlertNamePlaceholder: 'Agregar un nombre de alerta',
+        notifyWhen: 'Notifícame cuando:',
+        typeQueryPlaceholder: 'Escribe una consulta',
+        typeQueryNumberPlaceholder: 'Escriba una consulta o un número'
     }
 });

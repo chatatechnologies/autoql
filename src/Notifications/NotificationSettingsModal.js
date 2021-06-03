@@ -52,7 +52,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         ['chata-notification-display-name-input']
     )
     var titleInput = new ChataInput('input', {
-        placeholder: 'Name',
+        placeholder: strings.dataAlertNamePlaceholder,
         maxlength: '50',
         type: "single"
     }, NOTEBOOK);
@@ -173,11 +173,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     parentSelect.style.display = 'none';
     ruleContainer.classList.add('notification-rule-outer-container');
     step1.addElement(htmlToElement(`
-        <p>Name:<p/>
+        <p>${strings.dataAlertName}<p/>
     `))
     step1.addElement(titleContainer);
     step1.addElement(htmlToElement(`
-        <p>Conditions:<p/>
+        <p>${strings.notifyWhen}<p/>
     `))
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
@@ -620,12 +620,12 @@ function GroupLine(params, expression=[]){
     ])
 
     var queryInput = new ChataInput('input', {
-        placeholder: 'Type a query',
+        placeholder: strings.typeQueryPlaceholder,
         type: "single"
     }, null, false);
 
     var queryInput2 = new ChataInput('input', {
-        placeholder: 'Type a query or number',
+        placeholder: strings.typeQueryNumberPlaceholder,
         type: "single"
     }, null, false);
 
