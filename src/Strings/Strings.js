@@ -102,7 +102,8 @@ export const strings = new LocalizedStrings({
         next: 'Next',
         confirmDialogTitle: 'Are you sure you want to leave this page?',
         confirmDialogDescription: 'All unsaved changes will be lost.',
-        discardChanges: 'Discard Changes'
+        discardChanges: 'Discard Changes',
+        createDataAlert: 'Create New Data Alert'
 
     },
     es: {
@@ -198,7 +199,8 @@ export const strings = new LocalizedStrings({
         next: 'Siguiente',
         confirmDialogTitle: '¿Estás seguro de que quieres salir de esta página?',
         confirmDialogDescription: 'Se perderán todos los cambios no guardados.',
-        discardChanges: 'Descartar cambios'
+        discardChanges: 'Descartar cambios',
+        createDataAlert: 'Crear nueva alerta de datos'
 
     }
 });

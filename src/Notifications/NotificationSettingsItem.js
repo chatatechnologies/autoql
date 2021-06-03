@@ -149,8 +149,8 @@ export function NotificationSettingsItem(parentOptions, options) {
                 modalView.step1.expand();
             }, () => {
                 new ChataConfirmDialog(
-                    'Are you sure you want to leave this page?',
-                    'All unsaved changes will be lost.',
+                    strings.confirmDialogTitle,
+                    strings.confirmDialogDescription,
                     () => {
                         configModal.closeAnimation()
                         setTimeout(() => { configModal.hideContainer() }, 250)

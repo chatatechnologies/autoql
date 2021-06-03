@@ -213,10 +213,21 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var configModal = new Modal({
         withFooter: true,
         destroyOnClose: true
-    }, () => {modalView.step1.expand();})
+    }, () => {
+        modalView.step1.expand()
+    }, () => {
+        new ChataConfirmDialog(
+            strings.confirmDialogTitle,
+            strings.confirmDialogDescription,
+            () => {
+                configModal.closeAnimation()
+                setTimeout(() => { configModal.hideContainer() }, 250)
+            }
+        )
+    })
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`
     )
     var spinner = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
@@ -235,30 +246,27 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     }
 
     saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode('Save'));
+    saveButton.appendChild(document.createTextNode(strings.save));
     configModal.addFooterElement(cancelButton);
     configModal.addFooterElement(saveButton);
     configModal.show();
     refreshTooltips();
     configModal.chataModal.style.width = '95vw';
     configModal.addView(modalView);
-    configModal.setTitle('Create New Data Alert');
+    configModal.setTitle(strings.createDataAlert);
     configModal.show();
 
     var input = modalView.querySelectorAll(
         '.autoql-vanilla-chata-input-settings'
     )[1]
-    var returnInput = modalView.querySelector(
-        '.autoql-vanilla-query-return-input'
-    )
 
     input.value = extraParams.query
-    returnInput.value = extraParams.query
 
     cancelButton.onclick = () => {
+        console.log('click');
         new ChataConfirmDialog(
-            'Are you sure you want to leave this page?',
-            'All unsaved changes will be lost.',
+            strings.confirmDialogTitle,
+            strings.confirmDialogDescription,
             () => {
                 configModal.close()
             }
