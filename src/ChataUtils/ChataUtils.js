@@ -263,7 +263,6 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     input.value = extraParams.query
 
     cancelButton.onclick = () => {
-        console.log('click');
         new ChataConfirmDialog(
             strings.confirmDialogTitle,
             strings.confirmDialogDescription,

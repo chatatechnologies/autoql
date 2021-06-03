@@ -206,32 +206,28 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2Wrapper.classList.add('autoql-vanilla-frequency-step')
     frequencySettingsContainer.appendChild(htmlToElement(`
         <p>
-            We’ll scan your database and notify you as soon
-            as the Alert conditions are are met.
+            ${strings.notificationPreferencesMessage}
         </p>
-    `))
-    frequencySettingsContainer.appendChild(htmlToElement(`
-        <p>Once the Alert has been triggered, resume scanning:</p>
     `))
 
     var repeatOptions = [
         {
-            label: 'Immediately',
+            label: strings.frequencyEvery,
             value: '',
             checked: false
         },
         {
-            label: 'Daily',
+            label: strings.frequencyDaily,
             value: 'DAY',
             checked: false
         },
         {
-            label: 'Weekly',
+            label: strings.frequencyWeek,
             value: 'WEEK',
             checked: false
         },
         {
-            label: 'Monthly',
+            label: strings.frequencyMonth,
             value: 'MONTH',
             checked: false
         }
@@ -314,7 +310,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2ButtonContainer.appendChild(step2NextButton);
 
     step2Wrapper.appendChild(frequencySettingsContainer);
-    step2Wrapper.appendChild(frequencyBox);
+    // step2Wrapper.appendChild(frequencyBox);
     step2.addElement(step2Wrapper)
     step2.addElement(timezoneSelector)
     step2.addContent(step2ButtonContainer);

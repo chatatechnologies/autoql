@@ -3,6 +3,7 @@ import {
 } from '../../Svg'
 import momentTZ from 'moment-timezone'
 import { $dom } from '../../Dom'
+import { strings } from '../../Strings'
 
 export function TimezoneSelector(defaultValue=undefined){
     var obj = $dom('div', {
@@ -49,7 +50,7 @@ export function TimezoneSelector(defaultValue=undefined){
         attributes: {type: 'text', placeholder: defaultTimeZone}
     })
 
-    text.textContent = 'Time zone: '
+    text.textContent = strings.timezone
 
     obj.createContent = (opts) => {
         timezoneList.innerHTML = ''

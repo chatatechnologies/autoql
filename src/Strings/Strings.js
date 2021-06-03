@@ -103,8 +103,13 @@ export const strings = new LocalizedStrings({
         confirmDialogTitle: 'Are you sure you want to leave this page?',
         confirmDialogDescription: 'All unsaved changes will be lost.',
         discardChanges: 'Discard Changes',
-        createDataAlert: 'Create New Data Alert'
-
+        createDataAlert: 'Create New Data Alert',
+        notificationPreferencesMessage: 'When the conditions of this Data Alert are met, how often do you want to be notified?',
+        frequencyEvery: 'Every time this happens',
+        frequencyDaily: 'Only once per day',
+        frequencyWeek: 'Only once per week',
+        frequencyMonth: 'Only once per month',
+        timezone: 'Time zone: '
     },
     es: {
         report: 'repórtalo',
@@ -200,7 +205,12 @@ export const strings = new LocalizedStrings({
         confirmDialogTitle: '¿Estás seguro de que quieres salir de esta página?',
         confirmDialogDescription: 'Se perderán todos los cambios no guardados.',
         discardChanges: 'Descartar cambios',
-        createDataAlert: 'Crear nueva alerta de datos'
-
+        createDataAlert: 'Crear nueva alerta de datos',
+        notificationPreferencesMessage: 'Cuando se cumplan las condiciones de esta Alerta de datos, ¿con qué frecuencia desea que se le notifique?',
+        frequencyEvery: 'Cada vez que esto pase',
+        frequencyDaily: 'Solo una vez al dia',
+        frequencyWeek: 'Solo una vez por semana',
+        frequencyMonth: 'Solo una vez al mes',
+        timezone: 'Zona horaria: '
     }
 });
