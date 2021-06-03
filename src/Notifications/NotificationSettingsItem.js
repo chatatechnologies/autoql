@@ -214,8 +214,8 @@ export function NotificationSettingsItem(parentOptions, options) {
             refreshTooltips();
             cancelButton.onclick = () => {
                 new ChataConfirmDialog(
-                    'Are you sure you want to leave this page?',
-                    'All unsaved changes will be lost.',
+                    strings.confirmDialogTitle,
+                    strings.confirmDialogDescription,
                     () => {
                         configModal.close()
                     }

@@ -603,7 +603,7 @@ function GroupLine(params, expression=[]){
     compareButton.classList.add('default')
     compareButton.classList.add('large')
     compareButton.style.display = 'none'
-    compareButton.textContent = strings.compare
+    compareButton.textContent = strings.compareResult
     var chataRuleDeleteBtn = htmlToElement(`
         <span
             class="chata-icon chata-rule-delete-btn">
