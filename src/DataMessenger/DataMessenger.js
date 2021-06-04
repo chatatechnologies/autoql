@@ -1921,6 +1921,7 @@ export function DataMessenger(elem, options){
                 && type !== 'suggestions'
                 && request['reference_id'] !== '1.9.502'
                 && request['reference_id'] !== '1.1.550'
+                && request['reference_id'] !== '1.1.432'
             ){
                 toolbar.appendChild(
                     moreOptionsBtn
@@ -1935,7 +1936,8 @@ export function DataMessenger(elem, options){
 
             if(
                 request['reference_id'] === '1.1.550' ||
-                request['reference_id'] === '1.1.420'
+                request['reference_id'] === '1.1.420' ||
+                request['reference_id'] === '1.1.432'
             ){
                 toolbar.appendChild(reportProblem);
                 reportProblem.classList.remove('chata-popover-single-message')
