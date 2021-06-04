@@ -116,7 +116,8 @@ export const strings = new LocalizedStrings({
         please send an email to our team at support@chata.ai.
         We'll look into this issue right away and be in touch with you shortly.`,
         clearMessagesTitle: 'Clear all queries & responses?',
-        clear: 'Clear'
+        clear: 'Clear',
+        watermark: 'We run on AutoQL by Chata'
     },
     es: {
         report: 'repórtalo',
@@ -151,8 +152,8 @@ export const strings = new LocalizedStrings({
         addedNewTile3: 'para comenzar',
         showChart: 'Mostrar gráfico',
         hideChart: 'Ocultar gráfico',
-        closeDrawer: 'Cerrar Cajón',
-        clearMessages: 'Limpiar mensajes',
+        closeDrawer: 'Cerrar Data mesenger',
+        clearMessages: 'Limpiar respuestas',
         exploreQueries: 'Explorar Consultas',
         notifications: 'Notificaciones',
         dmInputPlaceholder: 'escriba sus consultas aquí',
@@ -175,7 +176,7 @@ export const strings = new LocalizedStrings({
         bubbleChart: 'Gráfico de burbujas',
         table: 'Tabla',
         pivotTable: 'Tabla Pivote',
-        deleteDataResponse: 'Borrar mensaje',
+        deleteDataResponse: 'Eliminar respuesta de datos',
         moreOptions: 'Mas opciones',
         downloadPNG: 'Descargar como PNG',
         filterTable: 'Filtrar Tabla',
@@ -225,6 +226,7 @@ export const strings = new LocalizedStrings({
         envíe un correo electrónico a nuestro equipo a support@chata.ai.
         Analizaremos este problema de inmediato y nos comunicaremos con usted en breve.`,
         clearMessagesTitle: '¿Borrar todas las consultas y respuestas?',
-        clear: 'Limpiar'
+        clear: 'Limpiar',
+        watermark: 'Corremos en AutoQL de Chata'
     }
 });

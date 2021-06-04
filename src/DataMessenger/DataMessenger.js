@@ -1499,7 +1499,7 @@ export function DataMessenger(elem, options){
         var watermark = htmlToElement(`
             <div class="autoql-vanilla-watermark">
                 ${WATERMARK}
-                We run on AutoQL by Chata
+                ${strings.watermark}
             </div>
         `);
 
