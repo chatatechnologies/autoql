@@ -110,7 +110,11 @@ export const strings = new LocalizedStrings({
         frequencyWeek: 'Only once per week',
         frequencyMonth: 'Only once per month',
         timezone: 'Time zone: ',
-        accessDenied: "Uh oh.. It looks like you don't have access to this resource. Please double check that all required authentication fields are correct."
+        accessDenied: "Uh oh.. It looks like you don't have access to this resource. Please double check that all required authentication fields are correct.",
+        errorMessage: `Oops! It looks like our system is experiencing an issue.
+        Try querying again. If the problem persists,
+        please send an email to our team at support@chata.ai.
+        We'll look into this issue right away and be in touch with you shortly.`
     },
     es: {
         report: 'repórtalo',
@@ -213,6 +217,10 @@ export const strings = new LocalizedStrings({
         frequencyWeek: 'Solo una vez por semana',
         frequencyMonth: 'Solo una vez al mes',
         timezone: 'Zona horaria: ',
-        accessDenied: 'Uh oh... Parece que no tienes acceso a este recurso. Verifique que todos los campos de autenticación requeridos sean correctos.'
+        accessDenied: 'Uh oh... Parece que no tienes acceso a este recurso. Verifique que todos los campos de autenticación requeridos sean correctos.',
+        errorMessage: `¡UPS! Parece que nuestro sistema está experimentando un problema.
+        Intente consultar de nuevo. Si el problema persiste,
+        envíe un correo electrónico a nuestro equipo a support@chata.ai.
+        Analizaremos este problema de inmediato y nos comunicaremos con usted en breve.`
     }
 });

@@ -48,7 +48,6 @@ import {
 import {
     LIGHT_THEME,
     DARK_THEME,
-    ERROR_MESSAGE,
 } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
@@ -2114,7 +2113,7 @@ export function DataMessenger(elem, options){
         var status = response.status
         obj.drawerContent.removeChild(responseLoadingContainer);
         if(!responseJson['data']['rows']){
-            obj.putClientResponse(ERROR_MESSAGE);
+            obj.putClientResponse(strings.errorMessage);
         }
         else if(responseJson['data']['rows'].length > 0){
             obj.putTableResponse(responseJson, true);
