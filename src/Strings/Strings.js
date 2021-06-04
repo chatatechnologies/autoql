@@ -109,7 +109,8 @@ export const strings = new LocalizedStrings({
         frequencyDaily: 'Only once per day',
         frequencyWeek: 'Only once per week',
         frequencyMonth: 'Only once per month',
-        timezone: 'Time zone: '
+        timezone: 'Time zone: ',
+        accessDenied: "Uh oh.. It looks like you don't have access to this resource. Please double check that all required authentication fields are correct."
     },
     es: {
         report: 'repórtalo',
@@ -211,6 +212,7 @@ export const strings = new LocalizedStrings({
         frequencyDaily: 'Solo una vez al dia',
         frequencyWeek: 'Solo una vez por semana',
         frequencyMonth: 'Solo una vez al mes',
-        timezone: 'Zona horaria: '
+        timezone: 'Zona horaria: ',
+        accessDenied: 'Uh oh... Parece que no tienes acceso a este recurso. Verifique que todos los campos de autenticación requeridos sean correctos.'
     }
 });

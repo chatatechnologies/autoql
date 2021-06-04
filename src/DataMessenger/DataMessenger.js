@@ -49,7 +49,6 @@ import {
     LIGHT_THEME,
     DARK_THEME,
     ERROR_MESSAGE,
-    ACCESS_DENIED
 } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
@@ -3053,7 +3052,7 @@ export function DataMessenger(elem, options){
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer)
             }
-            obj.sendResponse(ACCESS_DENIED, true)
+            obj.sendResponse(strings.accessDenied, true)
             obj.input.removeAttribute("disabled")
             refreshTooltips()
             return
@@ -3071,7 +3070,7 @@ export function DataMessenger(elem, options){
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
-                obj.sendResponse(ACCESS_DENIED)
+                obj.sendResponse(strings.accessDenied)
                 return
             }
 
@@ -3126,7 +3125,7 @@ export function DataMessenger(elem, options){
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer)
             }
-            obj.sendResponse(ACCESS_DENIED)
+            obj.sendResponse(strings.accessDenied)
             return
         }
         var status = response.status
