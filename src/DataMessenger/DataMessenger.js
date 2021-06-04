@@ -1386,13 +1386,13 @@ export function DataMessenger(elem, options){
                 <div class="autoql-vanilla-clear-messages-confirm-popover">
                     <div class="autoql-vanilla-chata-confirm-text">
                         ${POPOVER_ICON}
-                        Clear all queries & responses?
+                        ${strings.clearMessagesTitle}
                     </div>
                     <button class="autoql-vanilla-chata-confirm-btn no">
-                        Cancel
+                        ${strings.cancel}
                     </button>
                     <button class="autoql-vanilla-chata-confirm-btn yes">
-                        Clear
+                        ${strings.clear}
                     </button>
                 </div>
             </div>

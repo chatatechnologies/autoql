@@ -114,7 +114,9 @@ export const strings = new LocalizedStrings({
         errorMessage: `Oops! It looks like our system is experiencing an issue.
         Try querying again. If the problem persists,
         please send an email to our team at support@chata.ai.
-        We'll look into this issue right away and be in touch with you shortly.`
+        We'll look into this issue right away and be in touch with you shortly.`,
+        clearMessagesTitle: 'Clear all queries & responses?',
+        clear: 'Clear'
     },
     es: {
         report: 'repórtalo',
@@ -221,6 +223,8 @@ export const strings = new LocalizedStrings({
         errorMessage: `¡UPS! Parece que nuestro sistema está experimentando un problema.
         Intente consultar de nuevo. Si el problema persiste,
         envíe un correo electrónico a nuestro equipo a support@chata.ai.
-        Analizaremos este problema de inmediato y nos comunicaremos con usted en breve.`
+        Analizaremos este problema de inmediato y nos comunicaremos con usted en breve.`,
+        clearMessagesTitle: '¿Borrar todas las consultas y respuestas?',
+        clear: 'Limpiar'
     }
 });
