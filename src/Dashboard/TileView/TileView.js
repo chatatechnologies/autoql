@@ -262,7 +262,9 @@ export function TileView(tile, isSecond=false){
         } = dashboard.options.authentication
         const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`
         div.innerHTML = `
-        I want to make sure I understood your query. Did you mean:
+            <div class="autoql-vanilla-suggestion-message">
+                ${relatedJson.message}
+            </div>
         `
 
         suggestionsContainer.appendChild(div)
