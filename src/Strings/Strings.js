@@ -117,7 +117,8 @@ export const strings = new LocalizedStrings({
         We'll look into this issue right away and be in touch with you shortly.`,
         clearMessagesTitle: 'Clear all queries & responses?',
         clear: 'Clear',
-        watermark: 'We run on AutoQL by Chata'
+        watermark: 'We run on AutoQL by Chata',
+        errorID: 'Error ID'
     },
     es: {
         report: 'repórtalo',
@@ -227,6 +228,7 @@ export const strings = new LocalizedStrings({
         Analizaremos este problema de inmediato y nos comunicaremos con usted en breve.`,
         clearMessagesTitle: '¿Borrar todas las consultas y respuestas?',
         clear: 'Limpiar',
-        watermark: 'Corremos en AutoQL de Chata'
+        watermark: 'Corremos en AutoQL de Chata',
+        errorID: 'ID del error'
     }
 });

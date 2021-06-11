@@ -720,7 +720,7 @@ export function TileView(tile, isSecond=false){
         if(json.status !== 200){
             messageContainer.appendChild(htmlToElement('<br/>'))
             messageContainer.appendChild(
-                htmlToElement(`<div>Error ID: ${reference_id}</div>`)
+                htmlToElement(`<div>${strings.errorID}: ${reference_id}</div>`)
             )
         }
 

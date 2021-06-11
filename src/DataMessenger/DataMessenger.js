@@ -2919,7 +2919,7 @@ export function DataMessenger(elem, options){
         if(statusCode != 200 && jsonResponse['reference_id'] !== '1.1.430'){
             div.appendChild(document.createElement('br'));
             var errorId = htmlToElement(
-                `<div>Error ID: ${jsonResponse.reference_id}</div>`
+                `<div>${strings.errorID}: ${jsonResponse.reference_id}</div>`
             )
             div.appendChild(errorId);
         }
@@ -3087,7 +3087,7 @@ export function DataMessenger(elem, options){
                     obj.sendResponse(`
                         <div>${msg}</div>
                         <br/>
-                        <div>Error ID: ${ref}</div>
+                        <div>${strings.errorID}: ${ref}</div>
                         `, true)
                 }
                 if(responseLoadingContainer){
