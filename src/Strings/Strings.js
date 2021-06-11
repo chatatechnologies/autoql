@@ -119,7 +119,8 @@ export const strings = new LocalizedStrings({
         clear: 'Clear',
         watermark: 'We run on AutoQL by Chata',
         errorID: 'Error ID',
-        headerFilterPlaceholder: 'filter column...'
+        headerFilterPlaceholder: 'filter column...',
+        category: 'Category',
     },
     es: {
         report: 'repórtalo',
@@ -231,6 +232,7 @@ export const strings = new LocalizedStrings({
         clear: 'Limpiar',
         watermark: 'Corremos en AutoQL de Chata',
         errorID: 'ID del error',
-        headerFilterPlaceholder: 'filtrar columna'
+        headerFilterPlaceholder: 'filtrar columna',
+        category: 'Categoría',
     }
 });

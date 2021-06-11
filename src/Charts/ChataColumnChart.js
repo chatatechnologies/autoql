@@ -33,6 +33,7 @@ import {
     getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
+import { strings } from '../Strings'
 
 export function createColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -545,7 +546,7 @@ export function createColumnChart(
 
         if(groupableCount !== 2){
             if(groupNames.length > 2){
-                legendOrdinal.title('Category').titleWidth(100)
+                legendOrdinal.title(strings.category).titleWidth(100)
             }
         }else{
             if(legendOrientation === 'vertical'){

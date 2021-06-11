@@ -35,6 +35,7 @@ import {
     getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
+import { strings } from '../Strings'
 
 export function createLineChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -560,7 +561,7 @@ export function createLineChart(
 
         if(groupableCount !== 2){
             if(allGroup.length > 2){
-                legendOrdinal.title('Category').titleWidth(100)
+                legendOrdinal.title(strings.category).titleWidth(100)
             }
         }else{
             if(legendOrientation === 'vertical'){
@@ -577,7 +578,7 @@ export function createLineChart(
             styleLegendTitleNoBorder(svgLegend)
         }else{
             if(allGroup.length > 2){
-                legendOrdinal.title('Category').titleWidth(100)
+                legendOrdinal.title(strings.category).titleWidth(100)
                 styleLegendTitleWithBorder(svgLegend, {
                     showOnBaseline: true,
                     legendEvent: true
