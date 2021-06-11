@@ -12,6 +12,7 @@ import {
 import './Tabulator.css';
 import './TabulatorBootstrap.css';
 import './ChataTable.css';
+import { strings } from '../Strings'
 import moment from 'moment'
 
 function callTableFilter(col, headerValue, rowValue, options){
@@ -79,6 +80,7 @@ function getPivotColumns(json, pivotColumns, options){
             title: title.toString(),
             field: col.toString(),
             index: index,
+            headerFilterPlaceholder: strings.headerFilterPlaceholder,
             headerFilter: "input",
             headerFilterFunc: (
                 headerValue, rowValue) => {
@@ -171,6 +173,7 @@ function getColumnsData(json, options, onHeaderClick){
             title: formatColumnName(colName),
             field: 'col_' + index,
             headerFilter: "input",
+            headerFilterPlaceholder: strings.headerFilterPlaceholder,
             visible: isVisible,
             formatter: (cell) => {
                 return formatData(cell.getValue(), col, options);

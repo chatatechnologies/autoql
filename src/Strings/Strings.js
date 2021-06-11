@@ -118,7 +118,8 @@ export const strings = new LocalizedStrings({
         clearMessagesTitle: 'Clear all queries & responses?',
         clear: 'Clear',
         watermark: 'We run on AutoQL by Chata',
-        errorID: 'Error ID'
+        errorID: 'Error ID',
+        headerFilterPlaceholder: 'filter column...'
     },
     es: {
         report: 'repórtalo',
@@ -229,6 +230,7 @@ export const strings = new LocalizedStrings({
         clearMessagesTitle: '¿Borrar todas las consultas y respuestas?',
         clear: 'Limpiar',
         watermark: 'Corremos en AutoQL de Chata',
-        errorID: 'ID del error'
+        errorID: 'ID del error',
+        headerFilterPlaceholder: 'filtrar columna'
     }
 });
