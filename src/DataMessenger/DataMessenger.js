@@ -575,7 +575,7 @@ export function DataMessenger(elem, options){
 
 
     obj.showWarningIcon = (messageBubble, json) => {
-        
+
         if(json.data.rows.length >= 500){
             const warningIcon = htmlToElement(`
                 <span
@@ -2167,7 +2167,7 @@ export function DataMessenger(elem, options){
             }, 400)
         }else{
             setTimeout(() => {
-                obj.putClientResponse('No data found.', json, true);
+                obj.putClientResponse(strings.noDataFound, json, true);
                 obj.drawerContent.removeChild(loading);
                 refreshTooltips()
             }, 400)

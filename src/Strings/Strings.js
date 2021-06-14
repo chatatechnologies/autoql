@@ -121,6 +121,9 @@ export const strings = new LocalizedStrings({
         errorID: 'Error ID',
         headerFilterPlaceholder: 'filter column...',
         category: 'Category',
+        noDataFound: 'No data found.',
+        relatedQueriesNotFound: 'Sorry, I couldn’t find any queries matching your input. Try entering a different topic or keyword instead.'
+
     },
     es: {
         report: 'repórtalo',
@@ -234,5 +237,7 @@ export const strings = new LocalizedStrings({
         errorID: 'ID del error',
         headerFilterPlaceholder: 'filtrar columna',
         category: 'Categoría',
+        noDataFound: 'No encontraron datos.',
+        relatedQueriesNotFound: 'Lo siento, no pude encontrar ninguna consulta que coincida con su entrada. Intente ingresar un tema o palabra clave diferente en su lugar.'
     }
 });
