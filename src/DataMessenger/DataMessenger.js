@@ -575,14 +575,12 @@ export function DataMessenger(elem, options){
 
 
     obj.showWarningIcon = (messageBubble, json) => {
-        const {
-            limit_row_num
-        } = json.data
-        if(json.data.rows.length >= limit_row_num){
+        
+        if(json.data.rows.length >= 500){
             const warningIcon = htmlToElement(`
                 <span
                 class="chata-icon data-limit-warning-icon warning"
-                data-tippy-content="${strings.dataRowLimit.chataFormat(limit_row_num)}">
+                data-tippy-content="${strings.dataRowLimit.chataFormat(500)}">
                     ${DATA_LIMIT_WARNING}
                 </span>
             `)
