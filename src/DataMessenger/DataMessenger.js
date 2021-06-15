@@ -1171,10 +1171,9 @@ export function DataMessenger(elem, options){
         if(totalItems != 0){
             paginationContainer.appendChild(pagination);
         }else{
-            queryTipsResultContainer.appendChild(document.createTextNode(`
-                Sorry, I couldn’t find any queries matching your input.
-                Try entering a different topic or keyword instead.
-            `))
+            queryTipsResultContainer.appendChild(document.createTextNode(
+                strings.relatedQueriesNotFound
+            ))
         }
         container.appendChild(paginationContainer)
         if(obj.pagination){
