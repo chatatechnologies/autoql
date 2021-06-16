@@ -126,6 +126,8 @@ export const strings = new LocalizedStrings({
         generatedSql: 'Generated SQL',
         copySqlMessage: 'Successfully copied generated query to clipboard!',
         copySqlToClipboard: 'Copy to Clipboard',
+        runQuery: 'Run Query',
+        removeTerm: 'Remove term',
 
     },
     es: {
@@ -245,5 +247,7 @@ export const strings = new LocalizedStrings({
         generatedSql: 'SQL Generado',
         copySqlMessage: 'La consulta generada se copió correctamente al portapapeles!',
         copySqlToClipboard: 'Copiar al portapapeles',
+        runQuery: 'Ejecutar consulta',
+        removeTerm: 'Remover termino',
     }
 });

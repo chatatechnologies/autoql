@@ -12,7 +12,7 @@ export function getRunQueryButton(){
         <span class="chata-icon autoql-vanilla-chata-execute-query-icon">
             ${RUN_QUERY}
         </span>
-    Run Query</button>
+    ${strings.runQuery}</button>
     `
 
     const runQueryButton = htmlToElement(runQueryButtonHtml)
@@ -102,7 +102,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
     li.classList.add('autoql-vanilla-safetynet-item');
     li.classList.add('remove-term');
     li.appendChild(removeIcon);
-    li.appendChild(document.createTextNode('Remove term'))
+    li.appendChild(document.createTextNode(strings.removeTerm))
     ul.appendChild(li);
 
     li.onclick = () => {
