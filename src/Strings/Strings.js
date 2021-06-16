@@ -122,7 +122,10 @@ export const strings = new LocalizedStrings({
         headerFilterPlaceholder: 'filter column...',
         category: 'Category',
         noDataFound: 'No data found.',
-        relatedQueriesNotFound: 'Sorry, I couldn’t find any queries matching your input. Try entering a different topic or keyword instead.'
+        relatedQueriesNotFound: 'Sorry, I couldn’t find any queries matching your input. Try entering a different topic or keyword instead.',
+        generatedSql: 'Generated SQL',
+        copySqlMessage: 'Successfully copied generated query to clipboard!',
+        copySqlToClipboard: 'Copy to Clipboard',
 
     },
     es: {
@@ -238,6 +241,9 @@ export const strings = new LocalizedStrings({
         headerFilterPlaceholder: 'filtrar columna',
         category: 'Categoría',
         noDataFound: 'No encontraron datos.',
-        relatedQueriesNotFound: 'Lo siento, no pude encontrar ninguna consulta que coincida con su entrada. Intente ingresar un tema o palabra clave diferente en su lugar.'
+        relatedQueriesNotFound: 'Lo siento, no pude encontrar ninguna consulta que coincida con su entrada. Intente ingresar un tema o palabra clave diferente en su lugar.',
+        generatedSql: 'SQL Generado',
+        copySqlMessage: 'La consulta generada se copió correctamente al portapapeles!',
+        copySqlToClipboard: 'Copiar al portapapeles',
     }
 });

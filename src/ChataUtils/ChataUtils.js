@@ -146,7 +146,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
     copyButton.classList.add('copy-sql-btn');
     copyButton.classList.add('default');
     copyButton.classList.add('large');
-    copyButton.setAttribute('data-tippy-content', 'Copy to Clipboard');
+    copyButton.setAttribute('data-tippy-content', strings.copySqlToClipboard);
     copyButton.appendChild(htmlToElement(`
         <span class="chata-icon">
             ${CLIPBOARD_ICON}
@@ -159,7 +159,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
         destroyOnClose: true,
         withFooter: true
     });
-    modal.setTitle('Generated SQL');
+    modal.setTitle(strings.generatedSql);
     modal.addView(modalContent);
     modal.addFooterElement(okBtn);
     modal.show(okBtn);
@@ -180,7 +180,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
 
         copyTextToClipboard(sql);
         new AntdMessage(
-            'Successfully copied generated query to clipboard!', 3000
+            strings.copySqlMessage, 3000
         )
 
     }
