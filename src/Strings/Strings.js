@@ -128,6 +128,7 @@ export const strings = new LocalizedStrings({
         copySqlToClipboard: 'Copy to Clipboard',
         runQuery: 'Run Query',
         removeTerm: 'Remove term',
+        originalTerm: 'Original term',
 
     },
     es: {
@@ -249,5 +250,6 @@ export const strings = new LocalizedStrings({
         copySqlToClipboard: 'Copiar al portapapeles',
         runQuery: 'Ejecutar consulta',
         removeTerm: 'Remover termino',
+        originalTerm: 'Término original',
     }
 });

@@ -81,7 +81,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
         var textContent = el['text'];
         if(el.value_label){
             var value = el.value_label.replace(
-                'ORIGINAL_TEXT', 'Original term'
+                'ORIGINAL_TEXT', strings.originalTerm
             )
             textContent += ` (${value})`;
         }
