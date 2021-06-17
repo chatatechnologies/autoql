@@ -38,19 +38,3 @@ export const DASHBOARD_LIGHT_THEME = {
     '--chata-dashboard-text-color-primary': '#5d5d5d',
     '--chata-dashboard-text-color-placeholder': '#0000009c'
 }
-
-export const ERROR_MESSAGE = `
-Oops! It looks like our system is experiencing an issue.
-Try querying again. If the problem persists,
-please send an email to our team at support@chata.ai.
-We'll look into this issue right away and be in touch with you shortly.
-`
-
-export const ACCESS_DENIED = `
-    Uh oh.. It looks like you don't have access to this resource.
-    Please double check that all required authentication fields are correct.
-`
-
-export const DATA_LIMIT_MESSAGE = `
-The display limit of 500 rows has been reached. Try querying a smaller time-frame to ensure all your data is displayed.
-`

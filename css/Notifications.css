@@ -27,15 +27,17 @@
     text-align: right;
     margin-bottom: 12px;
     padding-right: 10px;
-    color: rgba(0,0,0,.4);
+    color: var(--autoql-vanilla-text-color-primary);
     -webkit-transition: color .1s ease;
     transition: color .1s ease;
+    font-size: 14px;
 }
 .chata-notification-list-container .chata-notification-dismiss-all span {
+    opacity: .8;
     cursor: pointer;
 }
 .chata-notification-list-container .chata-notification-dismiss-all span:hover{
-    color: rgba(0,0,0,.2);
+    opacity: 1;
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {

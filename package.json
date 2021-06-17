@@ -1,6 +1,6 @@
 {
   "name": "autoql",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Javascript widget library",
   "scripts": {
     "test": "echo \"no test specified\" ",
@@ -37,6 +37,7 @@
     "css-loader": "^5.2.4",
     "d3": "^6.1.1",
     "d3-svg-legend": "^2.25.6",
+    "dayjs": "^1.10.5",
     "gridstack": "^3.1.2",
     "load-styles": "^2.0.0",
     "localized-strings": "^0.2.4",

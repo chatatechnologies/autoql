@@ -1,5 +1,6 @@
 import { Modal } from '../Modal'
 import { htmlToElement } from '../Utils'
+import { strings } from '../Strings'
 import './ChataConfirmDialog.css'
 
 export function ChataConfirmDialog(title, message, onDiscard){
@@ -19,13 +20,13 @@ export function ChataConfirmDialog(title, message, onDiscard){
     var discardButton = htmlToElement(`
         <button
             class="autoql-vanilla-chata-btn danger large">
-                Discard Changes
+                ${strings.discardChanges}
         </button>
     `)
 
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
-            style="padding: 5px 16px; margin: 2px 5px;">Back</div>`
+            style="padding: 5px 16px; margin: 2px 5px;">${strings.back}</div>`
     )
 
     cancelButton.onclick = () => {

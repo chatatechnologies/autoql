@@ -3,7 +3,8 @@ import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import axios from 'axios'
 import _get from 'lodash.get'
-import moment from 'moment'
+import { strings } from '../Strings'
+import dayjs from './dayjsPlugins'
 
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);
@@ -29,13 +30,13 @@ export function formatData(val, col, allOptions={}){
             var colName = col.name;
             if(!val)return ''
             if(colName.includes('year')){
-                value = moment.utc(parseInt(val)*1000).format('YYYY');
+                value = dayjs.utc(parseInt(val)*1000).format('YYYY');
             }else if(colName.includes('month')){
-                value = moment.utc(parseInt(val)*1000).format(
+                value = dayjs.utc(parseInt(val)*1000).format(
                     options.monthYearFormat
                 );
             }else{
-                value = moment.utc(parseInt(val)*1000).format(
+                value = dayjs.utc(parseInt(val)*1000).format(
                     options.dayMonthYearFormat
                 );
             }
@@ -116,12 +117,12 @@ export const formatStringDate = (value, config) => {
         const dayMonthYear = dayMonthYearFormat || 'll'
 
         if (day) {
-            const date = moment.utc(value).format(dayMonthYear)
+            const date = dayjs.utc(value).format(dayMonthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
         } else if (month) {
-            const date = moment.utc(value).format(monthYear)
+            const date = dayjs.utc(value).format(monthYear)
             if (isDayJSDateValid(date)) {
                 return date
             }
@@ -319,25 +320,20 @@ export function getPivotColumnArray(json, options, _data){
     var lines = _data;
     var values = [];
     var firstColName = '';
+    var name = json['data']['columns'][1]['display_name'] ||
+    json['data']['columns'][1]['name'];
+    firstColName = name.charAt(0).toUpperCase() + name.slice(1);
+
     for (var i = 0; i < lines.length; i++) {
         var data = lines[i];
         var row = [];
         for (var x = 0; x < data.length; x++) {
-            if(firstColName == '' && json['data']['columns'][x]['groupable']){
-                var name = json['data']['columns'][x]['display_name'] ||
-                json['data']['columns'][x]['name'];
-                firstColName = name.charAt(0).toUpperCase() + name.slice(1);
-            }
-            // row.push(formatData(
-            //     data[x],
-            //     json['data']['columns'][x],
-            //     options
-            // ));
+
             row.push(data[x]);
         }
         values.push(row);
     }
-    var pivotArray = getPivotArray(values, 0, 1, 2, firstColName);
+    var pivotArray = getPivotArray(values, 1, 0, 2, firstColName);
     return pivotArray;
 }
 
@@ -767,11 +763,7 @@ export function allColHiddenMessage(table){
                 <span class="chata-icon warning-icon">
                     ${WARNING}
                 </span>
-                <br> All columns in this table are currently hidden.
-                You can adjust your column visibility preferences using
-                the Column Visibility Manager
-                (<span class="chata-icon eye-icon">${COLUMN_EDITOR}</span>)
-                in the Options Toolbar.
+                ${strings.allColsHidden.chataFormat(COLUMN_EDITOR)}
             </div>
         </div>`);
         table.parentElement.appendChild(message);
@@ -1197,9 +1189,7 @@ export const getFirstDateCol = (cols) => {
 export const supportsVoiceRecord = () => {
     var isIE = /*@cc_on!@*/false || !!document.documentMode;
     var isEdge = !isIE && !!window.StyleMedia;
-    var isChrome = !!window.chrome &&
-    (!!window.chrome.webstore || !!window.chrome.runtime);
-
+    var isChrome = !!window.chrome
     return isEdge || isChrome
 }
 

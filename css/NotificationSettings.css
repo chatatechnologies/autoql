@@ -580,7 +580,6 @@
     border-color: var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
     background: var(--autoql-vanilla-background-color-primary,#fff);
     cursor: pointer!important;
-    background-color: rgb(255, 255, 255);
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
@@ -672,13 +671,19 @@
     left: 0;
     right: 0px;
     bottom: 45px;
-    background: white;
     height: 160px;
     border-color: var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
     border-radius: 4px;
     border-style: solid;
     border-width: 1px;
     visibility: hidden;
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
+}
+
+.autoql-vanilla-timezone-select{
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-select-popup-container.visible{
@@ -697,11 +702,11 @@
 }
 
 .autoql-vanilla-select-list li:hover{
-    background: #e8e8e8;
+    background: var(--autoql-vanilla-hover-color);
 }
 
 .autoql-vanilla-select-list .selected{
-    background: #e8e8e8;
+    background: var(--autoql-vanilla-hover-color);
 }
 
 .autoql-vanilla-timezone-input{
@@ -711,4 +716,6 @@
     outline: none;
     font-size: 14px;
     display: none;
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
 }

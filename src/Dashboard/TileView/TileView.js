@@ -55,6 +55,7 @@ import {
 import {
     InputToolbar
 } from '../InputToolbar'
+import { strings } from '../../Strings'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
@@ -94,7 +95,7 @@ export function TileView(tile, isSecond=false){
     const editPlaceHolderText = `
     <div class="autoql-vanilla-dashboard-tile-placeholder-text">
         <em>
-            To get started, enter a query and click
+            ${strings.initTileMessage}
         </em>
         <span class="autoql-vanilla-chata-icon play-icon">
             <svg stroke="currentColor" fill="currentColor"
@@ -177,10 +178,8 @@ export function TileView(tile, isSecond=false){
         if(selectedColumn.definition.index != 0){
             var entries = Object.entries(row.data);
             if(row.data.Month){
-                var year = selectedColumn.definition.field
-                var month = row.data.Month
-                json['data']['rows'][0][0] = year + '-' + month
-                json['data']['rows'][0][1] = cell.getValue() || 0
+                json['data']['rows'][0][0] = selectedColumn.definition.field
+                json['data']['rows'][0][1] = row.data.Month
 
             }else{
                 json['data']['rows'][0][0] = entries[0][1];
@@ -263,7 +262,9 @@ export function TileView(tile, isSecond=false){
         } = dashboard.options.authentication
         const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`
         div.innerHTML = `
-        I want to make sure I understood your query. Did you mean:
+            <div class="autoql-vanilla-suggestion-message">
+                ${relatedJson.message}
+            </div>
         `
 
         suggestionsContainer.appendChild(div)
@@ -277,9 +278,9 @@ export function TileView(tile, isSecond=false){
                 var body = {
                     suggestion: evt.target.textContent
                 };
-                if(evt.target.textContent === 'None of these'){
+                if(evt.target.textContent === strings.noneOfThese){
                     view.isSuggestions = false
-                    responseWrapper.innerHTML = 'Thank you for your feedback'
+                    responseWrapper.innerHTML = strings.feedback
                 }else{
                     view.setQuery(evt.target.textContent)
                     view.run()
@@ -438,7 +439,7 @@ export function TileView(tile, isSecond=false){
             view.isExecuted = false
             responseWrapper.innerHTML = `
                 <div class="autoql-vanilla-dashboard-tile-placeholder-text">
-                    <em>No query was supplied for this tile.</em>
+                    <em>${strings.noQuerySupplied}</em>
                 </div>
             `;
         }
@@ -537,6 +538,9 @@ export function TileView(tile, isSecond=false){
     view.displayDrilldownModal = (title, views=[]) => {
         var drilldownModal = new DrilldownModal(title, views)
         drilldownModal.show()
+        setTimeout(function () {
+            refreshTooltips()
+        }, 100)
     }
 
     view.selectChartElement = (component, target) => {
@@ -716,7 +720,7 @@ export function TileView(tile, isSecond=false){
         if(json.status !== 200){
             messageContainer.appendChild(htmlToElement('<br/>'))
             messageContainer.appendChild(
-                htmlToElement(`<div>Error ID: ${reference_id}</div>`)
+                htmlToElement(`<div>${strings.errorID}: ${reference_id}</div>`)
             )
         }
 

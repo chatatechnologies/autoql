@@ -12,6 +12,7 @@ import {
     htmlToElement,
     uuidv4
 } from '../../Utils'
+import { strings } from '../../Strings'
 import Split from 'split.js'
 import './Tile.css'
 
@@ -66,7 +67,7 @@ export function Tile(dashboard, options){
     var vizToolbarSplitButton = htmlToElement(`
         <button
         class="autoql-vanilla-chata-toolbar-btn"
-        data-tippy-content="Split View">
+        data-tippy-content="${strings.splitView}">
         </button>
     `)
 
@@ -97,17 +98,17 @@ export function Tile(dashboard, options){
     ])
 
     var queryInput = new ChataInput('input', {
-        placeholder: 'Type a query in your own words',
+        placeholder: strings.dashboardQueryInput,
         type: "single"
     }, QUERY)
 
     var queryInput2 = new ChataInput('input', {
-        placeholder: 'Add descriptive title (optional)',
+        placeholder: strings.dashboarTitleInput,
         type: "single"
     }, NOTEBOOK)
 
-    queryInput.input.setAttribute('data-tippy-content', 'Query')
-    queryInput2.input.setAttribute('data-tippy-content', 'Title')
+    queryInput.input.setAttribute('data-tippy-content', strings.queryText)
+    queryInput2.input.setAttribute('data-tippy-content', strings.titleText)
 
     placeHolderDrag.innerHTML = `
     <div class="autoql-vanilla-placeholder-top"></div>
@@ -208,7 +209,7 @@ export function Tile(dashboard, options){
     item.placeHolderDrag = placeHolderDrag
     item.tileTitle = tileTitle
     item.tileTitle.textContent = options.title
-    || item.options.query || 'Untitled'
+    || item.options.query || strings.untitledTile
     item.inputQuery.value = options.query
     item.inputTitle.value = options.title
     || item.options.query
@@ -330,7 +331,7 @@ export function Tile(dashboard, options){
         content.classList.remove('editing')
         dashboard.grid.disable()
         item.tileTitle.textContent = item.inputTitle.value
-        || item.inputQuery.value || 'Untitled'
+        || item.inputQuery.value || strings.untitledTile
         deleteButton.style.visibility = 'hidden'
         item.views.map(view => view.stopEditing())
 
@@ -359,7 +360,7 @@ export function Tile(dashboard, options){
             item.options.isSplit = false
             if(item.splitInstance)item.splitInstance.destroy()
             item.views[1].hide()
-            item.switchSplitButton(SPLIT_VIEW, 'Split View')
+            item.switchSplitButton(SPLIT_VIEW, strings.splitView)
             item.refreshViews()
         }else{
             var sizes = [
@@ -384,7 +385,7 @@ export function Tile(dashboard, options){
             })
             item.views.map(view => view.show())
             item.options.isSplit = true
-            item.switchSplitButton(SPLIT_VIEW_ACTIVE, 'Single View')
+            item.switchSplitButton(SPLIT_VIEW_ACTIVE, strings.singleView)
             item.refreshViews()
         }
     }

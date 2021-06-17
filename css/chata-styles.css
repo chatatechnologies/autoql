@@ -655,7 +655,7 @@ body{
     letter-spacing: 0.05em;
     transition: all 0.1s ease;
     border-color: #e2e2e26e;
-    color: inherit;
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-chata-suggestion-btn:hover, .autoql-vanilla-chata-suggestion-btn-renderer:hover{

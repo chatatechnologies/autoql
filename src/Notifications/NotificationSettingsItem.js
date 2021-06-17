@@ -8,8 +8,8 @@ import {
     HOUR_GLASS,
     WARNING
 } from '../Svg'
-import moment from 'moment'
-import 'moment-timezone';
+import dayjs from '../Utils/dayjsPlugins'
+import { strings } from '../Strings'
 
 export function NotificationSettingsItem(parentOptions, options) {
     var wrapper = document.createElement('div');
@@ -94,10 +94,10 @@ export function NotificationSettingsItem(parentOptions, options) {
             time_zone
         } = options
 
-        const formatDate = moment(reset_date).format(
-            'MMMM DD, YYYY [at] hh:mmA'
+        const formatDate = dayjs.utc(reset_date).format(
+            strings.dataAlertFormatDate
         ).toString();
-        return `This Alert has been triggered. Scanning will resume on ${formatDate} (${time_zone})`;
+        return `${strings.dataAlertTooltip} ${formatDate} (${time_zone})`;
     }
 
     wrapper.updateView = () => {
@@ -149,8 +149,8 @@ export function NotificationSettingsItem(parentOptions, options) {
                 modalView.step1.expand();
             }, () => {
                 new ChataConfirmDialog(
-                    'Are you sure you want to leave this page?',
-                    'All unsaved changes will be lost.',
+                    strings.confirmDialogTitle,
+                    strings.confirmDialogDescription,
                     () => {
                         configModal.closeAnimation()
                         setTimeout(() => { configModal.hideContainer() }, 250)
@@ -167,7 +167,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             var deleteButton = htmlToElement(`
                 <button
                     class="autoql-vanilla-chata-btn danger large">
-                        Delete Data Alert
+                        ${strings.deleteDataAlert}
                 </button>
             `)
 
@@ -179,7 +179,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             `)
             var cancelButton = htmlToElement(
                 `<div class="autoql-vanilla-chata-btn default"
-                    style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+                    style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`
             )
             var saveButton = htmlToElement(
                 `<div class="autoql-vanilla-chata-btn primary "
@@ -195,7 +195,7 @@ export function NotificationSettingsItem(parentOptions, options) {
             }
 
             saveButton.appendChild(spinner);
-            saveButton.appendChild(document.createTextNode('Save'));
+            saveButton.appendChild(document.createTextNode(strings.save));
 
             wrap.appendChild(deleteButton);
             wrap2.appendChild(cancelButton);
@@ -208,14 +208,14 @@ export function NotificationSettingsItem(parentOptions, options) {
             )
 
             configModal.addView(modalView);
-            configModal.setTitle('Edit Data Alert');
+            configModal.setTitle(strings.editDataAlert);
             configModal.addFooterElement(footerWrapper);
             configModal.show();
             refreshTooltips();
             cancelButton.onclick = () => {
                 new ChataConfirmDialog(
-                    'Are you sure you want to leave this page?',
-                    'All unsaved changes will be lost.',
+                    strings.confirmDialogTitle,
+                    strings.confirmDialogDescription,
                     () => {
                         configModal.close()
                     }

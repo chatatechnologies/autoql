@@ -23,6 +23,7 @@ import {
     apiCallPost,
     getHeightForChildrens
 } from '../Utils'
+import { strings } from '../Strings'
 
 export function NotificationSettingsModal(options, mode='create', rule={}){
     var wrapper = document.createElement('div');
@@ -36,10 +37,10 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         <div class="autoql-vanilla-spinner-loader hidden"></div>
     `)
     wrapper.classList.add('chata-steps-container');
-    var step1 = new ChataModalStep('Set up your Alert','1',);
-    var step2 = new ChataModalStep('Select Alert Interval', '2');
+    var step1 = new ChataModalStep(strings.setupDataAlert,'1',);
+    var step2 = new ChataModalStep(strings.notificationPreferences, '2');
     var step3 = new ChataModalStep(
-        'Manage Alert Preferences',
+        strings.composeAlertMessage,
         '3',
         ''
     );
@@ -51,7 +52,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         ['chata-notification-display-name-input']
     )
     var titleInput = new ChataInput('input', {
-        placeholder: 'Name',
+        placeholder: strings.dataAlertNamePlaceholder,
         maxlength: '50',
         type: "single"
     }, NOTEBOOK);
@@ -75,7 +76,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     `)
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
-        'Next',
+        strings.next,
         () => {
             step1.closeStep()
             step2.expand()
@@ -172,11 +173,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     parentSelect.style.display = 'none';
     ruleContainer.classList.add('notification-rule-outer-container');
     step1.addElement(htmlToElement(`
-        <p>Name:<p/>
+        <p>${strings.dataAlertName}<p/>
     `))
     step1.addElement(titleContainer);
     step1.addElement(htmlToElement(`
-        <p>Conditions:<p/>
+        <p>${strings.notifyWhen}<p/>
     `))
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
@@ -205,32 +206,28 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2Wrapper.classList.add('autoql-vanilla-frequency-step')
     frequencySettingsContainer.appendChild(htmlToElement(`
         <p>
-            We’ll scan your database and notify you as soon
-            as the Alert conditions are are met.
+            ${strings.notificationPreferencesMessage}
         </p>
-    `))
-    frequencySettingsContainer.appendChild(htmlToElement(`
-        <p>Once the Alert has been triggered, resume scanning:</p>
     `))
 
     var repeatOptions = [
         {
-            label: 'Immediately',
+            label: strings.frequencyEvery,
             value: '',
             checked: false
         },
         {
-            label: 'Daily',
+            label: strings.frequencyDaily,
             value: 'DAY',
             checked: false
         },
         {
-            label: 'Weekly',
+            label: strings.frequencyWeek,
             value: 'WEEK',
             checked: false
         },
         {
-            label: 'Monthly',
+            label: strings.frequencyMonth,
             value: 'MONTH',
             checked: false
         }
@@ -288,7 +285,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var step2NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large',
-        'Next',
+        strings.next,
         () => {
             step2.closeStep()
             step3.expand()
@@ -297,7 +294,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     )
     var step2PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
-        'Back',
+        strings.back,
         () => {
             step2.closeStep()
             step1.expand()
@@ -313,7 +310,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step2ButtonContainer.appendChild(step2NextButton);
 
     step2Wrapper.appendChild(frequencySettingsContainer);
-    step2Wrapper.appendChild(frequencyBox);
+    // step2Wrapper.appendChild(frequencyBox);
     step2.addElement(step2Wrapper)
     step2.addElement(timezoneSelector)
     step2.addContent(step2ButtonContainer);
@@ -338,7 +335,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     step3.addElement(messageContainer);
     var step3PrevButton = new StepButton(
         'autoql-vanilla-chata-btn default large',
-        'Back',
+        strings.back,
         () => {
             step2.expand()
             step3.closeStep()
@@ -602,7 +599,7 @@ function GroupLine(params, expression=[]){
     compareButton.classList.add('default')
     compareButton.classList.add('large')
     compareButton.style.display = 'none'
-    compareButton.textContent = 'Compare result...'
+    compareButton.textContent = strings.compareResult
     var chataRuleDeleteBtn = htmlToElement(`
         <span
             class="chata-icon chata-rule-delete-btn">
@@ -619,12 +616,12 @@ function GroupLine(params, expression=[]){
     ])
 
     var queryInput = new ChataInput('input', {
-        placeholder: 'Type a query',
+        placeholder: strings.typeQueryPlaceholder,
         type: "single"
     }, null, false);
 
     var queryInput2 = new ChataInput('input', {
-        placeholder: 'Type a query or number',
+        placeholder: strings.typeQueryNumberPlaceholder,
         type: "single"
     }, null, false);
 
@@ -649,50 +646,6 @@ function GroupLine(params, expression=[]){
         params.stepButton.classList.add('disabled')
         params.checkContainer.innerHTML = ''
     }
-
-    // queryInput.input.onblur = async (evt) => {
-    //     if(queryInput.input.value){
-    //         var response = await apiCall(
-    //             evt.target.value, params.parentOptions, undefined
-    //         )
-    //         var statusCode = response.status
-    //         if(statusCode !== 200){
-    //             termError1.style.display = 'block';
-    //             params.step.classList.remove('complete')
-    //             params.step.classList.add('error')
-    //         }else{
-    //             termError1.style.display = 'none';
-    //             params.step.classList.add('complete')
-    //             params.step.classList.remove('error')
-    //         }
-    //     }
-    // }
-    //
-    // queryInput2.input.onblur = async (evt) => {
-    //     if(queryInput2.input.value){
-    //         if(/^[0-9]+$/.test(queryInput2.input.value)){
-    //             params.step.classList.remove('error')
-    //             termError2.style.display = 'none';
-    //             return
-    //         }
-    //
-    //         var response = await apiCall(
-    //             evt.target.value, params.parentOptions, undefined
-    //         )
-    //
-    //         var statusCode = response.status
-    //
-    //         if(statusCode !== 200){
-    //             termError2.style.display = 'block';
-    //             params.step.classList.remove('complete')
-    //             params.step.classList.add('error')
-    //         }else{
-    //             termError2.style.display = 'none';
-    //             params.step.classList.add('complete')
-    //             params.step.classList.remove('error')
-    //         }
-    //     }
-    // }
 
     popup.onclick = (evt) => {
         if(evt.target.tagName === 'LI'){

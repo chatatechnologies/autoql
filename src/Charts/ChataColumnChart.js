@@ -33,6 +33,7 @@ import {
     getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
+import { strings } from '../Strings'
 
 export function createColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -116,8 +117,18 @@ export function createColumnChart(
         });
     }
     xTickValues.sort();
+    var legendGroups = {}
     var labelsNames = data.map(function(d) { return d.label; });
     var groupNames = data[0].values.map(function(d) { return d.group; });
+    var groupable2Index = index2 === 0 ? 1 : 0
+    groupNames.map(group => {
+        legendGroups[
+            formatChartData(group, cols[groupable2Index], options)
+        ] = {
+            value: group
+        }
+    })
+
     var hasLegend = groupNames.length > 1;
 
 
@@ -493,7 +504,6 @@ export function createColumnChart(
     }
 
     if(hasLegend){
-        var groupable2Index = index2 === 0 ? 1 : 0
         const legendValues = groupNames.map(elem => {
             return formatChartData(elem, cols[groupable2Index], options);
         })
@@ -524,7 +534,8 @@ export function createColumnChart(
             for (var i = 0; i < nodes.length; i++) {
                 words.push(nodes[i].textContent)
             }
-            data = toggleSerie(data, words.join(' '));
+            var unformatGroup = legendGroups[words.join(' ')].value;
+            data = toggleSerie(data, unformatGroup)
 
             createBars();
             const legendCell = select(this);
@@ -535,7 +546,7 @@ export function createColumnChart(
 
         if(groupableCount !== 2){
             if(groupNames.length > 2){
-                legendOrdinal.title('Category').titleWidth(100)
+                legendOrdinal.title(strings.category).titleWidth(100)
             }
         }else{
             if(legendOrientation === 'vertical'){

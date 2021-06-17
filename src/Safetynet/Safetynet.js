@@ -2,6 +2,7 @@ import {
     closeAllSafetynetSelectors,
     htmlToElement,
 } from '../Utils'
+import { strings } from '../Strings'
 import { RUN_QUERY, REMOVE_ELEMENT } from '../Svg'
 import './Safetynet.css'
 
@@ -11,7 +12,7 @@ export function getRunQueryButton(){
         <span class="chata-icon autoql-vanilla-chata-execute-query-icon">
             ${RUN_QUERY}
         </span>
-    Run Query</button>
+    ${strings.runQuery}</button>
     `
 
     const runQueryButton = htmlToElement(runQueryButtonHtml)
@@ -21,10 +22,7 @@ export function getRunQueryButton(){
 
 export function createSafetynetContent(
     suggestionArray, onClick=()=>{}, onChange=()=>{}){
-    const message = `
-    I need your help matching a term you used to the exact corresponding
-    term in your database. Verify by selecting the correct
-    term from the menu below:`;
+    const message = strings.safetynet;
 
     const runQueryButton = getRunQueryButton();
     runQueryButton.onclick = function(event){
@@ -83,7 +81,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
         var textContent = el['text'];
         if(el.value_label){
             var value = el.value_label.replace(
-                'ORIGINAL_TEXT', 'Original term'
+                'ORIGINAL_TEXT', strings.originalTerm
             )
             textContent += ` (${value})`;
         }
@@ -104,7 +102,7 @@ function SafetynetSelector(suggestionList, position, parent, onChange){
     li.classList.add('autoql-vanilla-safetynet-item');
     li.classList.add('remove-term');
     li.appendChild(removeIcon);
-    li.appendChild(document.createTextNode('Remove term'))
+    li.appendChild(document.createTextNode(strings.removeTerm))
     ul.appendChild(li);
 
     li.onclick = () => {

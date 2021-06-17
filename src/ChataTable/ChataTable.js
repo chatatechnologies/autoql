@@ -12,6 +12,7 @@ import {
 import './Tabulator.css';
 import './TabulatorBootstrap.css';
 import './ChataTable.css';
+import { strings } from '../Strings'
 import moment from 'moment'
 
 function callTableFilter(col, headerValue, rowValue, options){
@@ -69,18 +70,9 @@ function getPivotColumns(json, pivotColumns, options){
     pivotColumns.map((col, index) => {
         var colIndex = index;
         var title = col;
-        if(colIndex > 0){
-            if(columns.length === 2)colIndex = 1;
-            else colIndex = 2;
-        }
+        if(index === 0)colIndex = 1
+        else colIndex = 2
 
-        if(index > 0){
-            if(columns.length === 2){
-                title = col
-            }else{
-                title = formatData(col, columns[1], options);
-            }
-        }
         if(!title)title = 'null'
         if(!col)col = 'null'
 
@@ -88,6 +80,7 @@ function getPivotColumns(json, pivotColumns, options){
             title: title.toString(),
             field: col.toString(),
             index: index,
+            headerFilterPlaceholder: strings.headerFilterPlaceholder,
             headerFilter: "input",
             headerFilterFunc: (
                 headerValue, rowValue) => {
@@ -109,12 +102,10 @@ function getPivotColumns(json, pivotColumns, options){
                 }else{
                     value = cell.getValue();
                 }
-                if(columns[colIndex].type === 'DATE_STRING'){
-                    return moment().month(parseInt(value)-1).format('MMM')
-                }
+
                 return formatData(value, columns[colIndex], options);
             },
-            frozen: colIndex == 0 ? true : false,
+            frozen: colIndex == 1 ? true : false,
             sorter: setSorterFunction(columns[colIndex])
         })
     });
@@ -182,6 +173,7 @@ function getColumnsData(json, options, onHeaderClick){
             title: formatColumnName(colName),
             field: 'col_' + index,
             headerFilter: "input",
+            headerFilterPlaceholder: strings.headerFilterPlaceholder,
             visible: isVisible,
             formatter: (cell) => {
                 return formatData(cell.getValue(), col, options);

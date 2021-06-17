@@ -2,7 +2,7 @@
     background: var(--autoql-vanilla-background-color-primary);
     position: absolute;
     top: 40px;
-    left: -70px;
+    left: -88px;
     right: 0;
     z-index: 9999;
     border: 1px solid hsla(0,0%,67.1%,.32);
@@ -15,7 +15,7 @@
 }
 
 .chata-popover-wrapper.chart{
-    left: -100px;
+    left: -145px;
 }
 
 .chata-popover-single-message{
@@ -71,7 +71,6 @@
 .chata-more-options-menu .chata-menu-list li{
     color: var(--autoql-vanilla-text-color-primary);
     width: 100%;
-    height: 35px;
     line-height: 35px;
     padding: 0 20px;
     cursor: pointer;

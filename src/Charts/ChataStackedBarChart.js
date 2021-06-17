@@ -385,14 +385,6 @@ export function createStackedBarChart(
 
     }
 
-    // new MultiSeriesSelector(svg, {
-    //     x: (chartWidth + 15),
-    //     y: 10,
-    //     colName: col1,
-    //     showOnBaseline: true,
-    //     legendEvent: true
-    // }, onSelectorClick)
-
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
     .style('fill-opacity', '0.7')

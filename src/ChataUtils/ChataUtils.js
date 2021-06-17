@@ -28,6 +28,7 @@ import { NotificationSettingsModal } from '../Notifications'
 import { AntdMessage } from '../Antd'
 import '../../css/PopoverMenu.css'
 import { saveSvgAsPng } from 'save-svg-as-png'
+import { strings } from '../Strings'
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -44,7 +45,7 @@ ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
     await apiCallPut(URL, {is_correct: false}, options)
     if(menu)menu.classList.remove('show');
     if(toolbar)toolbar.classList.remove('show');
-    new AntdMessage('Thank you for your feedback.', 3000);
+    new AntdMessage(strings.feedback, 3000);
 
     return Promise.resolve()
 }
@@ -59,21 +60,21 @@ ChataUtils.makeReportProblemMenu = (toolbar, idRequest, type, options) => {
 
     ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incorrect',
+            '', strings.dataIncorrect,
             ChataUtils.sendReport,
             [idRequest, options, undefined, toolbar]
         )
     );
     ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incomplete',
+            '', strings.dataIncomplete,
             ChataUtils.sendReport,
             [idRequest, options, undefined, toolbar]
         )
     );
     ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'Other...',
+            '', strings.other,
             ChataUtils.openModalReport,
             [idRequest, options, undefined, toolbar]
         )
@@ -90,21 +91,21 @@ ChataUtils.getReportProblemMenu = (
     }
     menu.ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incorrect',
+            '', strings.dataIncorrect,
             ChataUtils.sendReport,
             [idRequest, options, menu, toolbar]
         )
     );
     menu.ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'The data is incomplete',
+            '', strings.dataIncomplete,
             ChataUtils.sendReport,
             [idRequest, options, menu, toolbar]
         )
     );
     menu.ul.appendChild(
         ChataUtils.getActionOption(
-            '', 'Other...',
+            '', strings.other,
             ChataUtils.openModalReport,
             [idRequest, options, menu, toolbar]
         )
@@ -145,7 +146,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
     copyButton.classList.add('copy-sql-btn');
     copyButton.classList.add('default');
     copyButton.classList.add('large');
-    copyButton.setAttribute('data-tippy-content', 'Copy to Clipboard');
+    copyButton.setAttribute('data-tippy-content', strings.copySqlToClipboard);
     copyButton.appendChild(htmlToElement(`
         <span class="chata-icon">
             ${CLIPBOARD_ICON}
@@ -158,7 +159,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
         destroyOnClose: true,
         withFooter: true
     });
-    modal.setTitle('Generated SQL');
+    modal.setTitle(strings.generatedSql);
     modal.addView(modalContent);
     modal.addFooterElement(okBtn);
     modal.show(okBtn);
@@ -179,7 +180,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
 
         copyTextToClipboard(sql);
         new AntdMessage(
-            'Successfully copied generated query to clipboard!', 3000
+            strings.copySqlMessage, 3000
         )
 
     }
@@ -188,7 +189,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
 ChataUtils.copyHandler = (idRequest) => {
     var json = ChataUtils.responses[idRequest];
     copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
-    new AntdMessage('Successfully copied table to clipboard!', 3000)
+    new AntdMessage(strings.copyTextToClipboard, 3000)
 }
 ChataUtils.exportPNGHandler = (idRequest) => {
     var component = document.querySelector(
@@ -212,10 +213,21 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var configModal = new Modal({
         withFooter: true,
         destroyOnClose: true
-    }, () => {modalView.step1.expand();})
+    }, () => {
+        modalView.step1.expand()
+    }, () => {
+        new ChataConfirmDialog(
+            strings.confirmDialogTitle,
+            strings.confirmDialogDescription,
+            () => {
+                configModal.closeAnimation()
+                setTimeout(() => { configModal.hideContainer() }, 250)
+            }
+        )
+    })
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`
     )
     var spinner = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
@@ -234,30 +246,26 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     }
 
     saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode('Save'));
+    saveButton.appendChild(document.createTextNode(strings.save));
     configModal.addFooterElement(cancelButton);
     configModal.addFooterElement(saveButton);
     configModal.show();
     refreshTooltips();
     configModal.chataModal.style.width = '95vw';
     configModal.addView(modalView);
-    configModal.setTitle('Create New Data Alert');
+    configModal.setTitle(strings.createDataAlert);
     configModal.show();
 
     var input = modalView.querySelectorAll(
         '.autoql-vanilla-chata-input-settings'
     )[1]
-    var returnInput = modalView.querySelector(
-        '.autoql-vanilla-query-return-input'
-    )
 
     input.value = extraParams.query
-    returnInput.value = extraParams.query
 
     cancelButton.onclick = () => {
         new ChataConfirmDialog(
-            'Are you sure you want to leave this page?',
-            'All unsaved changes will be lost.',
+            strings.confirmDialogTitle,
+            strings.confirmDialogDescription,
             () => {
                 configModal.close()
             }
@@ -283,7 +291,7 @@ ChataUtils.makeMoreOptionsMenu = (
         switch (opt) {
             case 'csv':
                 action = ChataUtils.getActionOption(
-                    DOWNLOAD_CSV_ICON, 'Download as CSV',
+                    DOWNLOAD_CSV_ICON, strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
                 );
@@ -292,7 +300,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 break;
             case 'copy':
                 action = ChataUtils.getActionOption(
-                    CLIPBOARD_ICON, 'Copy table to clipboard',
+                    CLIPBOARD_ICON, strings.copyTable,
                     ChataUtils.copyHandler,
                     [idRequest]
                 );
@@ -301,7 +309,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 break;
             case 'copy_sql':
                 action = ChataUtils.getActionOption(
-                    COPY_SQL, 'View generated SQL',
+                    COPY_SQL, strings.viewSQL,
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
@@ -309,7 +317,7 @@ ChataUtils.makeMoreOptionsMenu = (
                 break;
             case 'png':
                 action = ChataUtils.getActionOption(
-                    EXPORT_PNG_ICON, 'Download as PNG',
+                    EXPORT_PNG_ICON, strings.downloadPNG,
                     ChataUtils.exportPNGHandler,
                     [idRequest]
                 );
@@ -318,7 +326,7 @@ ChataUtils.makeMoreOptionsMenu = (
             case 'notification':
                 action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
-                    'Create a Data Alert...',
+                    strings.createAlert,
                     ChataUtils.createNotificationHandler,
                     [idRequest, extraParams]
                 );
@@ -342,7 +350,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
         switch (opt) {
             case 'csv':
                 action = ChataUtils.getActionOption(
-                    DOWNLOAD_CSV_ICON, 'Download as CSV',
+                    DOWNLOAD_CSV_ICON, strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
                     [idRequest]
                 );
@@ -351,7 +359,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 break;
             case 'copy':
                 action = ChataUtils.getActionOption(
-                    CLIPBOARD_ICON, 'Copy table to clipboard',
+                    CLIPBOARD_ICON, strings.copyTable,
                     ChataUtils.copyHandler,
                     [idRequest]
                 );
@@ -360,7 +368,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 break;
             case 'copy_sql':
                 action = ChataUtils.getActionOption(
-                    COPY_SQL, 'View generated SQL',
+                    COPY_SQL, strings.viewSQL,
                     ChataUtils.copySqlHandler,
                     [idRequest]
                 );
@@ -368,7 +376,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
                 break;
             case 'png':
                 action = ChataUtils.getActionOption(
-                    EXPORT_PNG_ICON, 'Download as PNG',
+                    EXPORT_PNG_ICON, strings.downloadPNG,
                     ChataUtils.exportPNGHandler,
                     [idRequest]
                 );
@@ -377,7 +385,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams={}) => {
             case 'notification':
                 action = ChataUtils.getActionOption(
                     NOTIFICATION_BUTTON,
-                    'Create a Data Alert...',
+                    strings.createAlert,
                     ChataUtils.createNotificationHandler,
                     [idRequest, extraParams]
                 );
@@ -453,13 +461,13 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
         withFooter: true
     });
     modal.chataModal.style.width = '600px'
-    modal.setTitle('Report a Problem');
+    modal.setTitle(strings.reportProblemTitle);
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');
     textArea.classList.add('autoql-vanilla-report-problem-text-area');
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`
+        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`
     )
 
     var spinner = htmlToElement(`
@@ -473,9 +481,9 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     )
 
     reportButton.appendChild(spinner);
-    reportButton.appendChild(document.createTextNode('Report'));
+    reportButton.appendChild(document.createTextNode(strings.reportProblem));
     container.appendChild(document.createTextNode(
-        'Please tell us more about the problem you are experiencing:'
+        strings.reportProblemMessage
     ));
 
     modal.addView(container);
@@ -547,15 +555,15 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     container.style.padding = '0px 15px';
     headerEditor.classList.add('col-visibility-header');
     headerEditor.appendChild(htmlToElement(`
-        <div>Column Name</div>
+        <div>${strings.columnName}</div>
     `))
     var divVisibility = htmlToElement(`
-        <div>Visibility</div>
+        <div>${strings.visibility}</div>
     `);
     divVisibility.style.display = 'flex';
     container.appendChild(headerEditor);
     modal.chataModal.classList.add('chata-modal-column-editor')
-    modal.setTitle('Show/Hide Columns')
+    modal.setTitle(strings.showHideCols)
     var headerCheckbox = createCheckbox(null, true, -1);
     headerEditor.appendChild(divVisibility);
     headerCheckbox.style.marginLeft = '12px';
@@ -607,7 +615,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
         `<div
             class="autoql-vanilla-chata-btn default"
             style="padding: 5px 16px; margin: 2px 5px;">
-                Cancel
+                ${strings.cancel}
             </div>`
     )
 
@@ -623,7 +631,7 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
     )
 
     saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode('Apply'));
+    saveButton.appendChild(document.createTextNode(strings.apply));
 
 
     cancelButton.onclick = function(){

@@ -8,7 +8,6 @@ export function ErrorMessage(text, onClick=()=>{}){
     var startTag = text.indexOf('<')
     var endTag = text.indexOf('>')
     var values = []
-
     if(startTag != -1 && endTag != -1){
         values.push(text.substr(0, startTag))
         values.push(

@@ -6,6 +6,8 @@ import {
 } from '../Utils'
 import 'gridstack/dist/gridstack.css'
 import 'gridstack/dist/h5/gridstack-dd-native';
+import { strings } from '../Strings'
+import { refreshTooltips } from '../Tooltips'
 
 export function Dashboard(selector, options={}){
     var obj = this
@@ -72,7 +74,7 @@ export function Dashboard(selector, options={}){
         isEditing: false,
         executeOnMount:	true,
         executeOnStopEditing: true,
-        notExecutedText: 'Hit "Execute" to run this dashboard',
+        notExecutedText: strings.executeDashboard,
         splitView: true,
         secondDisplayType: 'table',
         secondDisplayPercentage: 25,
@@ -386,17 +388,17 @@ export function Dashboard(selector, options={}){
         obj.messageContainer.style.display = 'block'
         obj.messageContainer.innerHTML = ''
         var btn = htmlToElement(`
-            <span class="empty-dashboard-new-tile-btn">New Tile</span>
+            ${strings.addedNewTile2}
         `)
 
         obj.messageContainer.appendChild(
-            document.createTextNode('Add a ')
+            document.createTextNode(strings.addedNewTile1)
         )
 
         obj.messageContainer.appendChild(btn)
 
         obj.messageContainer.appendChild(
-            document.createTextNode(' to get started')
+            document.createTextNode(strings.addedNewTile3)
         )
 
         btn.onclick = () => {
@@ -442,6 +444,8 @@ export function Dashboard(selector, options={}){
             obj.startBuildingMessage()
         }
     }
+
+    refreshTooltips()
 
     return obj
 }

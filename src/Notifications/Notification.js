@@ -47,9 +47,9 @@ import {
     createStackedColumnChart
 } from '../Charts'
 import { convert } from '../RuleParser'
-import moment from 'moment'
+import dayjs from '../Utils/dayjsPlugins'
 import { refreshTooltips } from '../Tooltips'
-
+import { strings } from '../Strings'
 
 export function Notification(options, parentOptions){
     var item = document.createElement('div')
@@ -97,7 +97,7 @@ export function Notification(options, parentOptions){
     var turnNotificationText = document.createTextNode(
         'Turn off these notifications'
     );
-    var editNotificationText = document.createTextNode('Edit Data Alert');
+    var editNotificationText = document.createTextNode(strings.editDataAlert);
 
     item.classList.add('chata-notification-list-item');
     item.classList.add('triggered');
@@ -486,55 +486,55 @@ export function Notification(options, parentOptions){
                 if(displayTypes[i] == 'table'){
                     button.setAttribute('data-displaytype', 'data');
                     button.innerHTML = TABLE_ICON;
-                    button.setAttribute('data-tippy-content', 'Table');
+                    button.setAttribute('data-tippy-content', strings.table);
                 }
                 if(displayTypes[i] == 'column'){
                     button.innerHTML = COLUMN_CHART_ICON;
-                    button.setAttribute('data-tippy-content', 'Column Chart');
+                    button.setAttribute('data-tippy-content', strings.columnChart);
                 }
                 if(displayTypes[i] == 'bar'){
                     button.innerHTML = BAR_CHART_ICON;
-                    button.setAttribute('data-tippy-content', 'Bar Chart');
+                    button.setAttribute('data-tippy-content', strings.barChart);
                 }
                 if(displayTypes[i] == 'pie'){
                     button.innerHTML = PIE_CHART_ICON;
-                    button.setAttribute('data-tippy-content', 'Pie Chart');
+                    button.setAttribute('data-tippy-content', strings.pieChart);
                 }
                 if(displayTypes[i] == 'line'){
                     button.innerHTML = LINE_CHART_ICON;
-                    button.setAttribute('data-tippy-content', 'Line Chart');
+                    button.setAttribute('data-tippy-content', strings.lineChart);
                 }
                 if(displayTypes[i] == 'pivot_table'){
                     button.innerHTML = PIVOT_ICON;
-                    button.setAttribute('data-tippy-content', 'Pivot Table');
+                    button.setAttribute('data-tippy-content', strings.pivotTable);
                 }
                 if(displayTypes[i] == 'heatmap'){
                     button.innerHTML = HEATMAP_ICON;
-                    button.setAttribute('data-tippy-content', 'Heatmap');
+                    button.setAttribute('data-tippy-content', strings.heatmap);
                 }
                 if(displayTypes[i] == 'bubble'){
                     button.innerHTML = BUBBLE_CHART_ICON;
-                    button.setAttribute('data-tippy-content', 'Bubble Chart');
+                    button.setAttribute('data-tippy-content', strings.bubbleChart);
                 }
                 if(displayTypes[i] == 'stacked_column'){
                     button.innerHTML = STACKED_COLUMN_CHART_ICON;
                     button.setAttribute(
                         'data-tippy-content',
-                        'Stacked Column Chart'
+                        strings.stackedColumn
                     );
                 }
                 if(displayTypes[i] == 'stacked_bar'){
                     button.innerHTML = STACKED_BAR_CHART_ICON;
                     button.setAttribute(
                         'data-tippy-content',
-                        'Stacked Area Chart'
+                        strings.stackedLine
                     );
                 }
                 if(displayTypes[i] == 'stacked_line'){
                     button.innerHTML = STACKED_AREA_CHART_ICON;
                     button.setAttribute(
                         'data-tippy-content',
-                        'Stacked Bar Chart'
+                        strings.stackedBar
                     );
                 }
                 if(button.innerHTML != ''){
@@ -556,10 +556,10 @@ export function Notification(options, parentOptions){
     item.formatTimestamp = () => {
         var createdAt = parseInt(item.options.created_at)*1000;
         let date = '';
-        const time = moment(createdAt).format('h:mma')
-        const day = moment(createdAt).format('MM-DD-YY')
-        const today = moment().format('MM-DD-YY')
-        const yesterday = moment()
+        const time = dayjs(createdAt).format('h:mma')
+        const day = dayjs.utc(createdAt).format('MM-DD-YY')
+        const today = dayjs.utc().format('MM-DD-YY')
+        const yesterday = dayjs.utc()
         .subtract(1, 'd')
         .format('MM-DD-YY')
 
@@ -567,10 +567,10 @@ export function Notification(options, parentOptions){
             date = `Today at ${time}`
         } else if (day === yesterday) {
             date = `Yesterday at ${time}`
-        } else if (moment().isSame(createdAt, 'year')) {
-            date = `${moment(createdAt).format('MMMM Do')} at ${time}`
+        } else if (dayjs.utc().isSame(createdAt, 'year')) {
+            date = `${dayjs.utc(createdAt).format('MMMM Do')} at ${time}`
         }else{
-            date = `${moment(createdAt).format('MMMM Do, YYYY')} at ${time}`
+            date = `${dayjs.utc(createdAt).format('MMMM Do, YYYY')} at ${time}`
         }
         timestamp.appendChild(
             document.createTextNode(date)
@@ -582,10 +582,10 @@ export function Notification(options, parentOptions){
     item.toggleTurnOffNotificationText = () => {
         if(item.ruleOptions.status == 'INACTIVE'){
             turnNotificationIcon.innerHTML = TURN_ON_NOTIFICATION;
-            turnNotificationText.textContent = 'Turn Data Alert On';
+            turnNotificationText.textContent = strings.turnDataAlertOn;
         }else{
             turnNotificationIcon.innerHTML = DISMISS;
-            turnNotificationText.textContent = 'Turn Data Alert Off';
+            turnNotificationText.textContent = strings.turnDataAlertOff;
         }
     }
 

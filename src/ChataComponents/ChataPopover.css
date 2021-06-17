@@ -12,13 +12,11 @@
 .chata-menu-list li {
     color: var(--autoql-vanilla-text-color-primary);
     width: 100%;
-    height: 35px;
     line-height: 35px;
     padding: 0 20px;
     cursor: pointer;
     font-size: 13px !important;
     font-family: var(--autoql-vanilla-font-family);
-
 }
 
 .chata-menu-list li:hover {

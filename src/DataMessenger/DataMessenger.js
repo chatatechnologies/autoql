@@ -48,9 +48,6 @@ import {
 import {
     LIGHT_THEME,
     DARK_THEME,
-    DATA_LIMIT_MESSAGE,
-    ERROR_MESSAGE,
-    ACCESS_DENIED
 } from '../Constants'
 import {
     CHATA_BUBBLES_ICON,
@@ -81,6 +78,7 @@ import {
     DATA_LIMIT_WARNING,
     HELP_ICON
 } from '../Svg'
+import { strings } from '../Strings'
 import { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
@@ -139,14 +137,14 @@ export function DataMessenger(elem, options){
         shiftScreen: false,
         onMaskClick: function(){},
         maskClosable: true,
-        userDisplayName: 'there',
+        userDisplayName: strings.there,
         maxMessages: -1,
         clearOnClose: false,
         enableVoiceRecord: true,
         autocompleteStyles: {},
         enableExploreQueriesTab: true,
         enableNotificationsTab: false,
-        inputPlaceholder: 'Type your queries here',
+        inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
         queryQuickStartTopics: undefined,
         landingPage: 'data-messenger',
@@ -198,9 +196,7 @@ export function DataMessenger(elem, options){
     }
 
     if(!('introMessage' in options)){
-        obj.options.introMessage = "Hi " +
-        obj.options.userDisplayName +
-        "! Let’s dive into your data. What can I help you discover today?";
+        obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName)
     }
     if(!('onMaskClick' in options)){
         obj.options.onMaskClick = obj.options.onHandleClick;
@@ -334,10 +330,7 @@ export function DataMessenger(elem, options){
                 break
             case 'userDisplayName':
                 obj.options.userDisplayName = value;
-                obj.options.introMessage = "Hi " +
-                obj.options.userDisplayName +
-                `! Let’s dive into your data.
-                What can I help you discover today?`;
+                obj.options.introMessage = strings.introMessage.chataFormat(value)
                 obj.introMessageBubble.textContent = obj.options.introMessage;
             break;
             case 'introMessage':
@@ -582,14 +575,12 @@ export function DataMessenger(elem, options){
 
 
     obj.showWarningIcon = (messageBubble, json) => {
-        const {
-            limit_row_num
-        } = json.data
-        if(json.data.rows.length >= limit_row_num){
+
+        if(json.data.rows.length >= 500){
             const warningIcon = htmlToElement(`
                 <span
                 class="chata-icon data-limit-warning-icon warning"
-                data-tippy-content="${DATA_LIMIT_MESSAGE}">
+                data-tippy-content="${strings.dataRowLimit.chataFormat(500)}">
                     ${DATA_LIMIT_WARNING}
                 </span>
             `)
@@ -605,7 +596,7 @@ export function DataMessenger(elem, options){
         }
         obj.chataBarContainer.style.display = displayBar;
         if(displayNodes == 'none'){
-            obj.headerTitle.innerHTML = 'Explore Queries';
+            obj.headerTitle.innerHTML = strings.exploreQueries;
             obj.headerRight.style.visibility = 'hidden';
             obj.scrollBox.classList.add('max-height')
         }else{
@@ -756,9 +747,9 @@ export function DataMessenger(elem, options){
         tabChataUtils.classList.add('active');
         tabChataUtils.setAttribute('data-tippy-content', 'Data Messenger');
         tabQueryTips.classList.add('tab');
-        tabQueryTips.setAttribute('data-tippy-content', 'Explore Queries');
+        tabQueryTips.setAttribute('data-tippy-content', strings.exploreQueries);
         tabNotifications.classList.add('tab');
-        tabNotifications.setAttribute('data-tippy-content', 'Notifications');
+        tabNotifications.setAttribute('data-tippy-content', strings.notifications);
 
         tabChataUtils.appendChild(dataMessengerIcon);
         tabQueryTips.appendChild(queryTabsIcon);
@@ -801,7 +792,7 @@ export function DataMessenger(elem, options){
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('block');
-            obj.headerTitle.innerHTML = 'Notifications';
+            obj.headerTitle.innerHTML = strings.notifications;
         }
 
         var tabs = pageSwitcherShadowContainer;
@@ -898,12 +889,10 @@ export function DataMessenger(elem, options){
         );
         queryTipsResultPlaceHolder.innerHTML = `
             <p>
-                Discover what you can ask by entering
-                a topic in the search bar above.
+                ${strings.exploreQueriesMessage1}
             <p>
             <p>
-                Simply click on any of the returned options
-                to run the query in Data Messenger.
+                ${strings.exploreQueriesMessage2}
             <p>
         `;
 
@@ -945,7 +934,7 @@ export function DataMessenger(elem, options){
 
         input.classList.add('autoql-vanilla-chata-input')
         input.classList.add('left-padding')
-        input.setAttribute('placeholder', 'Search relevant queries by topic');
+        input.setAttribute('placeholder', strings.exploreQueriesInput);
         obj.queryTips = container;
         obj.drawerContent.appendChild(container);
         obj.queryTipsInput = input;
@@ -1182,10 +1171,9 @@ export function DataMessenger(elem, options){
         if(totalItems != 0){
             paginationContainer.appendChild(pagination);
         }else{
-            queryTipsResultContainer.appendChild(document.createTextNode(`
-                Sorry, I couldn’t find any queries matching your input.
-                Try entering a different topic or keyword instead.
-            `))
+            queryTipsResultContainer.appendChild(document.createTextNode(
+                strings.relatedQueriesNotFound
+            ))
         }
         container.appendChild(paginationContainer)
         if(obj.pagination){
@@ -1366,13 +1354,13 @@ export function DataMessenger(elem, options){
         var closeButton = htmlToElement(`
             <button
                 class="autoql-vanilla-chata-button close-action"
-                data-tippy-content="Close Drawer" currentitem="false">
+                data-tippy-content="${strings.closeDrawer}" currentitem="false">
                 ${CLOSE_ICON}
             </button>
         `);
         var clearAllButton = htmlToElement(`
             <button class="autoql-vanilla-chata-button clear-all"
-            data-tippy-content="Clear Messages">
+            data-tippy-content="${strings.clearMessages}">
                 ${CLEAR_ALL}
             </button>
         `);
@@ -1395,13 +1383,13 @@ export function DataMessenger(elem, options){
                 <div class="autoql-vanilla-clear-messages-confirm-popover">
                     <div class="autoql-vanilla-chata-confirm-text">
                         ${POPOVER_ICON}
-                        Clear all queries & responses?
+                        ${strings.clearMessagesTitle}
                     </div>
                     <button class="autoql-vanilla-chata-confirm-btn no">
-                        Cancel
+                        ${strings.cancel}
                     </button>
                     <button class="autoql-vanilla-chata-confirm-btn yes">
-                        Clear
+                        ${strings.clear}
                     </button>
                 </div>
             </div>
@@ -1508,7 +1496,7 @@ export function DataMessenger(elem, options){
         var watermark = htmlToElement(`
             <div class="autoql-vanilla-watermark">
                 ${WATERMARK}
-                We run on AutoQL by Chata
+                ${strings.watermark}
             </div>
         `);
 
@@ -1531,7 +1519,7 @@ export function DataMessenger(elem, options){
         );
         voiceRecordButton.setAttribute(
             'data-tippy-content',
-            'Hold for voice-to-text'
+            strings.voiceRecord
         );
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
@@ -1775,7 +1763,7 @@ export function DataMessenger(elem, options){
 
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
-            'Report a problem',
+            strings.reportProblemTitle,
             idRequest,
             obj.reportProblemHandler,
             [reportProblem, toolbar]
@@ -1794,7 +1782,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1804,7 +1792,7 @@ export function DataMessenger(elem, options){
             case 'csvCopy':
                 var filterBtn = obj.getActionButton(
                     FILTER_TABLE,
-                    'Filter Table',
+                    strings.filterTable,
                     idRequest,
                     obj.filterTableHandler,
                     []
@@ -1819,7 +1807,7 @@ export function DataMessenger(elem, options){
                     let badge = obj.getBadge()
                     let editorBtn = obj.getActionButton(
                         COLUMN_EDITOR,
-                        'Show/Hide Columns',
+                        strings.showHideCols,
                         idRequest,
                         obj.openColumnEditorHandler,
                         [badge]
@@ -1845,7 +1833,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1865,7 +1853,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1879,7 +1867,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1894,7 +1882,7 @@ export function DataMessenger(elem, options){
                 toolbar.appendChild(
                     obj.getActionButton(
                         DELETE_MESSAGE,
-                        'Delete data response',
+                        strings.deleteDataResponse,
                         idRequest,
                         obj.deleteMessageHandler,
                         [reportProblem, toolbar]
@@ -1917,7 +1905,7 @@ export function DataMessenger(elem, options){
 
         var moreOptionsBtn = obj.getActionButton(
             VERTICAL_DOTS,
-            'More options',
+            strings.moreOptions,
             idRequest,
             obj.moreOptionsHandler,
             [moreOptions, toolbar]
@@ -1930,6 +1918,7 @@ export function DataMessenger(elem, options){
                 && type !== 'suggestions'
                 && request['reference_id'] !== '1.9.502'
                 && request['reference_id'] !== '1.1.550'
+                && request['reference_id'] !== '1.1.432'
             ){
                 toolbar.appendChild(
                     moreOptionsBtn
@@ -1944,7 +1933,8 @@ export function DataMessenger(elem, options){
 
             if(
                 request['reference_id'] === '1.1.550' ||
-                request['reference_id'] === '1.1.420'
+                request['reference_id'] === '1.1.420' ||
+                request['reference_id'] === '1.1.432'
             ){
                 toolbar.appendChild(reportProblem);
                 reportProblem.classList.remove('chata-popover-single-message')
@@ -2122,7 +2112,7 @@ export function DataMessenger(elem, options){
         var status = response.status
         obj.drawerContent.removeChild(responseLoadingContainer);
         if(!responseJson['data']['rows']){
-            obj.putClientResponse(ERROR_MESSAGE);
+            obj.putClientResponse(strings.errorMessage);
         }
         else if(responseJson['data']['rows'].length > 0){
             obj.putTableResponse(responseJson, true);
@@ -2176,7 +2166,7 @@ export function DataMessenger(elem, options){
             }, 400)
         }else{
             setTimeout(() => {
-                obj.putClientResponse('No data found.', json, true);
+                obj.putClientResponse(strings.noDataFound, json, true);
                 obj.drawerContent.removeChild(loading);
                 refreshTooltips()
             }, 400)
@@ -2428,68 +2418,68 @@ export function DataMessenger(elem, options){
             if(displayTypes[i] == ignore)continue;
             if(displayTypes[i] == 'table'){
                 button = obj.getDisplayTypeButton(
-                    idRequest, TABLE_ICON, 'Table', obj.displayTableHandler
+                    idRequest, TABLE_ICON, strings.table, obj.displayTableHandler
                 )
             }
             if(displayTypes[i] == 'column'){
                 button = obj.getDisplayTypeButton(
                     idRequest, COLUMN_CHART_ICON,
-                    'Column Chart', obj.displayColumChartHandler
+                    strings.columnChart, obj.displayColumChartHandler
                 );
             }
             if(displayTypes[i] == 'bar'){
                 button = obj.getDisplayTypeButton(
                     idRequest, BAR_CHART_ICON,
-                    'Bar Chart', obj.displayBarChartHandler
+                    strings.barChart, obj.displayBarChartHandler
                 );
             }
             if(displayTypes[i] == 'pie'){
                 button = obj.getDisplayTypeButton(
                     idRequest, PIE_CHART_ICON,
-                    'Pie Chart', obj.displayPieChartHandler
+                    strings.pieChart, obj.displayPieChartHandler
                 );
             }
             if(displayTypes[i] == 'line'){
                 button = obj.getDisplayTypeButton(
                     idRequest, LINE_CHART_ICON,
-                    'Line Chart', obj.displayLineChartHandler
+                    strings.lineChart, obj.displayLineChartHandler
                 );
             }
             if(displayTypes[i] == 'pivot_table'){
                 button = obj.getDisplayTypeButton(
                     idRequest, PIVOT_ICON,
-                    'Pivot Table', obj.displayPivotTableHandler
+                    strings.pivotTable, obj.displayPivotTableHandler
                 );
             }
             if(displayTypes[i] == 'heatmap'){
                 button = obj.getDisplayTypeButton(
                     idRequest, HEATMAP_ICON,
-                    'Heatmap', obj.displayHeatmapHandler
+                    strings.heatmap, obj.displayHeatmapHandler
                 );
             }
             if(displayTypes[i] == 'bubble'){
                 button = obj.getDisplayTypeButton(
                     idRequest, BUBBLE_CHART_ICON,
-                    'Bubble Chart', obj.displayBubbleCharthandler
+                    strings.bubbleChart, obj.displayBubbleCharthandler
                 );
             }
             if(displayTypes[i] == 'stacked_column'){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_COLUMN_CHART_ICON,
-                    'Stacked Column Chart', obj.displayStackedColumnHandler
+                    strings.stackedColumn, obj.displayStackedColumnHandler
                 );
             }
             if(displayTypes[i] == 'stacked_bar'){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_BAR_CHART_ICON,
-                    'Stacked Bar Chart', obj.displayStackedBarHandler
+                    strings.stackedBar, obj.displayStackedBarHandler
                 );
             }
 
             if(displayTypes[i] == 'stacked_line'){
                 button = obj.getDisplayTypeButton(
                     idRequest, STACKED_AREA_CHART_ICON,
-                    'Stacked Area Chart', obj.displayAreaHandler
+                    strings.stackedLine, obj.displayAreaHandler
                 );
             }
 
@@ -2555,11 +2545,8 @@ export function DataMessenger(elem, options){
 
             var entries = Object.entries(row.data);
             if(row.data.Month){
-                var year = selectedColumn.definition.field
-                var month = row.data.Month
-                json['data']['rows'][0][0] = year + '-' + month
-                json['data']['rows'][0][1] = cell.getValue() || 0
-
+                json['data']['rows'][0][0] = selectedColumn.definition.field
+                json['data']['rows'][0][1] = row.data.Month
             }else{
                 json['data']['rows'][0][0] = entries[0][1];
                 json['data']['rows'][0][1] = selectedColumn.definition.field;
@@ -2757,7 +2744,7 @@ export function DataMessenger(elem, options){
                     suggestion: evt.target.textContent
                 };
                 let loading = null;
-                if(evt.target.textContent === 'None of these'){
+                if(evt.target.textContent === strings.noneOfThese){
                     loading = obj.showLoading()
                 }else{
                     obj.inputAnimation(evt.target.textContent)
@@ -2769,7 +2756,7 @@ export function DataMessenger(elem, options){
                     setTimeout(() => {
                         obj.drawerContent.removeChild(loading)
                         obj.putClientResponse(
-                            'Thank you for your feedback', {}, true
+                            strings.feedback, {}, true
                         )
                     }, 500)
                 }
@@ -2870,6 +2857,7 @@ export function DataMessenger(elem, options){
     obj.putSimpleResponse = async (
         jsonResponse, text, statusCode, isDrilldown=false
     ) => {
+        var ref = jsonResponse['reference_id']
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -2928,31 +2916,33 @@ export function DataMessenger(elem, options){
         if(statusCode != 200 && jsonResponse['reference_id'] !== '1.1.430'){
             div.appendChild(document.createElement('br'));
             var errorId = htmlToElement(
-                `<div>Error ID: ${jsonResponse.reference_id}</div>`
+                `<div>${strings.errorID}: ${jsonResponse.reference_id}</div>`
             )
             div.appendChild(errorId);
         }
         messageBubble.appendChild(div);
-        containerMessage.appendChild(messageBubble);
         obj.drawerContent.appendChild(containerMessage);
         var toolbarButtons = obj.getActionToolbar(
             idRequest, 'simple', 'table'
         );
 
-        if(jsonResponse['reference_id'] !== '1.1.430'){
+        if(ref !== '1.1.430'){
             messageBubble.appendChild(toolbarButtons);
         }
 
         if(
-            jsonResponse['reference_id'] === '1.1.430'
+            ref === '1.1.430'
         ){
             toolbarButtons = obj.getActionToolbar(
                 idRequest, 'safety-net', ''
             );
             messageBubble.appendChild(toolbarButtons);
         }
-        obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-        if(jsonResponse['reference_id'] === '1.1.430'){
+        if(ref != '1.1.430'){
+            containerMessage.appendChild(messageBubble);
+            obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
+        }
+        if(ref === '1.1.430'){
             let loading = null
             if(obj.options.landingPage === 'data-messenger'){
                 loading = obj.showLoading()
@@ -2963,8 +2953,14 @@ export function DataMessenger(elem, options){
                 encodeURIComponent(text)
             ) + '&query_id=' + jsonResponse['data']['query_id']
             var response = await apiCallGet(path, obj.options)
+            var { status } = response
+            if(status == 200){
+                containerMessage.appendChild(messageBubble);
+                obj.putSuggestionResponse(jsonResponse, response.data)
+            }else{
+                obj.putSimpleResponse(response.data, '', status)
+            }
             if(loading)obj.drawerContent.removeChild(loading)
-            obj.putSuggestionResponse(jsonResponse, response.data)
             if(obj.options.landingPage !== 'data-messenger'){
                 obj.hideBubbles()
             }
@@ -3054,7 +3050,7 @@ export function DataMessenger(elem, options){
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer)
             }
-            obj.sendResponse(ACCESS_DENIED, true)
+            obj.sendResponse(strings.accessDenied, true)
             obj.input.removeAttribute("disabled")
             refreshTooltips()
             return
@@ -3072,7 +3068,7 @@ export function DataMessenger(elem, options){
                 if(responseLoadingContainer){
                     obj.drawerContent.removeChild(responseLoadingContainer)
                 }
-                obj.sendResponse(ACCESS_DENIED)
+                obj.sendResponse(strings.accessDenied)
                 return
             }
 
@@ -3088,7 +3084,7 @@ export function DataMessenger(elem, options){
                     obj.sendResponse(`
                         <div>${msg}</div>
                         <br/>
-                        <div>Error ID: ${ref}</div>
+                        <div>${strings.errorID}: ${ref}</div>
                         `, true)
                 }
                 if(responseLoadingContainer){
@@ -3127,7 +3123,7 @@ export function DataMessenger(elem, options){
             if(responseLoadingContainer){
                 obj.drawerContent.removeChild(responseLoadingContainer)
             }
-            obj.sendResponse(ACCESS_DENIED)
+            obj.sendResponse(strings.accessDenied)
             return
         }
         var status = response.status

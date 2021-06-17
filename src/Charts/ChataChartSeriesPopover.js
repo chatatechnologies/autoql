@@ -1,6 +1,7 @@
 import { PopoverChartSelector } from './PopoverChartSelector'
 import { getIndexesByType } from './ChataChartHelpers'
 import { htmlToElement, formatColumnName } from '../Utils'
+import { strings } from '../Strings'
 import { TICK } from '../Svg'
 
 export function ChataChartSeriesPopover(position, cols, activeSeries, onClick, showOnBaseline=false){
@@ -17,7 +18,7 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick, s
         <button
             class="autoql-vanilla-chata-btn primary"
             style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
-                Apply
+                ${strings.apply}
         </button>
     `);
 

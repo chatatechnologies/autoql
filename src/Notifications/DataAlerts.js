@@ -8,6 +8,7 @@ import { LIGHT_THEME, DARK_THEME } from '../Constants'
 import {
     TitleContainer
 } from './TitleContainer'
+import { strings } from '../Strings'
 import '../../css/NotificationSettings.css'
 
 
@@ -95,9 +96,8 @@ export function DataAlerts(selector, options){
         if(items.length > 0){
             wrapper.appendChild(
                 new TitleContainer(
-                    'Subscribe to a Data Alert',
-                    `Choose from a range of ready-to-use
-                    Alerts that have been set up for you`,
+                    strings.dataAlertsTitle,
+                    strings.dataAlertsMessage1,
                     false
                 )
             )
@@ -200,8 +200,8 @@ export function DataAlerts(selector, options){
 
             wrapper.appendChild(
                 new TitleContainer(
-                    'Custom Data Alerts',
-                    `View and manage your custom Data Alerts`,
+                    strings.dataAlertsTitleCustom,
+                    strings.dataAlertsMessage2,
                     true,
                     onAddClick
                 )
@@ -228,7 +228,9 @@ export function DataAlerts(selector, options){
     wrapper.applyStyles();
     wrapper.loadRules();
     if(parent)parent.appendChild(wrapper);
-    refreshTooltips()
+    setTimeout(function () {
+        refreshTooltips()
+    }, 3000);
 
     return wrapper
 }

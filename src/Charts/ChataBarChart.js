@@ -33,7 +33,7 @@ import {
     getGroupableCount
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
-
+import { strings } from '../Strings'
 
 export function createBarChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -133,8 +133,18 @@ export function createBarChart(
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
+    var legendGroups = {}
     var categoriesNames = data.map(function(d) { return d.label; });
     var groupNames = data[0].values.map(function(d) { return d.group; });
+    var groupable2Index = index2 === 0 ? 1 : 0
+    groupNames.map(group => {
+        legendGroups[
+            formatChartData(group, cols[groupable2Index], options)
+        ] = {
+            value: group
+        }
+    })
+
     var hasLegend = groupNames.length > 1;
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 80;
@@ -519,7 +529,6 @@ export function createBarChart(
         onUpdate(component);
     }
     if(hasLegend){
-        var groupable2Index = index2 === 0 ? 1 : 0
         const legendValues = groupNames.map(elem => {
             return formatChartData(elem, cols[groupable2Index], options);
         })
@@ -547,14 +556,17 @@ export function createBarChart(
             for (var i = 0; i < nodes.length; i++) {
                 words.push(nodes[i].textContent)
             }
-            data = toggleSerie(data, words.join(' '));
-            createBars();
-            const legendCell = select(this);
-            legendCell.classed('disable-group', !legendCell.classed('disable-group'));
+            var unformatGroup = legendGroups[words.join(' ')].value;
+            data = toggleSerie(data, unformatGroup)
+            createBars()
+            const legendCell = select(this)
+            legendCell.classed(
+                'disable-group', !legendCell.classed('disable-group')
+            )
         });
         if(groupableCount !== 2){
             if(groupNames.length > 2){
-                legendOrdinal.title('Category').titleWidth(100)
+                legendOrdinal.title(strings.category).titleWidth(100)
             }
         }else{
             if(legendOrientation === 'vertical'){
