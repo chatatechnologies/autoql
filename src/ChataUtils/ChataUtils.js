@@ -50,6 +50,21 @@ ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
     return Promise.resolve()
 }
 
+ChataUtils.sendReportMessage = async (idRequest, options, menu, toolbar, msg) => {
+    var json = ChataUtils.responses[idRequest];
+    var queryId = json['data']['query_id'];
+    const URL = options.authentication.demo
+    ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+    : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
+
+    await apiCallPut(URL, {is_correct: false, message: msg}, options)
+    if(menu)menu.classList.remove('show');
+    if(toolbar)toolbar.classList.remove('show');
+    new AntdMessage(strings.feedback, 3000);
+
+    return Promise.resolve()
+}
+
 ChataUtils.getRecommendationPath = (options, text) => {
     return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
 }
