@@ -512,7 +512,9 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
 
     reportButton.onclick = async () => {
         spinner.classList.remove('hidden');
-        await ChataUtils.sendReport(idRequest, options, menu, toolbar);
+        await ChataUtils.sendReportMessage(
+            idRequest, options, menu, toolbar, textArea.value
+        )
         modal.close();
     }
 
