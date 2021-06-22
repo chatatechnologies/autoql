@@ -277,6 +277,21 @@ export function NotificationFeed(selector, options){
         wrapper.isLoading = false;
     }
 
+    wrapper.createLoadingDots = () => {
+        var responseLoadingContainer = document.createElement('div');
+        var responseLoading = document.createElement('div');
+
+        responseLoadingContainer.classList.add('response-loading-container');
+        responseLoading.classList.add('response-loading');
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'));
+        }
+
+        responseLoadingContainer.appendChild(responseLoading);
+
+        return responseLoadingContainer;
+    }
+
     if(parent)parent.appendChild(wrapper);
 
     wrapper.applyStyles();

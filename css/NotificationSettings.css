@@ -6,6 +6,11 @@
 }
 
 
+.chata-settings-container{
+    background: var(--autoql-vanilla-background-color-secondary);
+    min-height: 150px;
+}
+
 .chata-steps-container {
     margin: 10px;
 }
