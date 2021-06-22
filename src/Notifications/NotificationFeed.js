@@ -66,7 +66,6 @@ export function NotificationFeed(selector, options){
 
     wrapper.notificationOffset = 0;
     wrapper.isLoading = false;
-
     if('authentication' in options){
         for (let [key, value] of Object.entries(options['authentication'])) {
             wrapper.options.authentication[key] = value;
@@ -88,6 +87,11 @@ export function NotificationFeed(selector, options){
     var container = $dom('div', {
         classes: ['chata-notification-list-container']
     })
+    var loading = $dom('div', {
+        classes: ['autoql-vanilla-loading-text']
+    })
+    loading.textContent = strings.loading
+    container.appendChild(loading)
     var dismissAllButton = $dom('div', {
         classes: ['chata-notification-dismiss-all']
     })
@@ -275,6 +279,7 @@ export function NotificationFeed(selector, options){
         }
 
         wrapper.isLoading = false;
+        container.removeChild(loading)
     }
 
     if(parent)parent.appendChild(wrapper);

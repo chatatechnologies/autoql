@@ -740,3 +740,8 @@
     background: var(--autoql-vanilla-background-color-primary);
     color: var(--autoql-vanilla-text-color-primary);
 }
+
+.autoql-vanilla-loading-text{
+    color: var(--autoql-vanilla-text-color-primary);
+    text-align: center;
+}
