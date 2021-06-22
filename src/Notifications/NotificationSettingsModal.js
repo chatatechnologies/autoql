@@ -154,6 +154,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         false
     )
     validateButton.innerHTML = ''
+    validateButton.classList.add('autoql-vanilla-validate-query')
     validateButton.appendChild(loader)
     validateButton.appendChild(document.createTextNode(strings.validateAlert))
     step1ButtonContainer.appendChild(checkContainer)
@@ -181,7 +182,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     `))
     step1.addElement(parentSelect);
     step1.addElement(ruleContainer);
-
+    step1.addElement(step1ButtonContainer)
     ruleContainer.step = step1;
 
     step1.onkeyup = function(){
@@ -415,7 +416,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         wrapper.checkSteps()
     })
 
-    ruleContainer.appendChild(step1ButtonContainer);
+    // ruleContainer.appendChild(step1ButtonContainer);
     step1.getValues = getStep1Values;
     step2.getValues = getStep2Values;
     step3.getValues = getStep3Values;
