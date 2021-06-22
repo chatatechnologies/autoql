@@ -5,6 +5,15 @@
     font-family: sans-serif;
 }
 
+.autoql-vanilla-data-alerts-settings{
+    min-height: 600px;
+    position: relative;
+}
+
+.autoql-vanilla-data-alerts-settings .response-loading-container{
+    left: 50%;
+    top: 60px;
+}
 
 .chata-settings-container{
     background: var(--autoql-vanilla-background-color-secondary);
