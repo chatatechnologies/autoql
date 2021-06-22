@@ -320,7 +320,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         ['chata-notification-message-input']
     )
     var messageArea = new ChataInput('textarea', {
-        placeholder: 'Compose a short message to accompany your triggered Alert',
+        placeholder: strings.notificationMessagePlaceholder,
         maxlength: '200',
         type: 'multi',
         style: "margin-top: 0px; margin-bottom: 0px; height: 120px;"
@@ -330,7 +330,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     messageContainer.appendChild(messageArea.input);
 
     step3.addElement(htmlToElement(`
-        <p>When this Alert is triggered, send the following message:</p>
+        <p>${strings.optional}</p>
     `))
     step3.addElement(messageContainer);
     var step3PrevButton = new StepButton(
