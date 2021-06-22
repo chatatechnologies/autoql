@@ -148,17 +148,17 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var isButtonDisable = mode === 'create'
     var validateButton = new StepButton(
-        'autoql-vanilla-chata-btn default large',
-        'Validate',
+        'autoql-vanilla-chata-btn primary large',
+        strings.validateAlert,
         validateFn,
         false
     )
     validateButton.innerHTML = ''
     validateButton.appendChild(loader)
-    validateButton.appendChild(document.createTextNode('Validate'))
+    validateButton.appendChild(document.createTextNode(strings.validateAlert))
     step1ButtonContainer.appendChild(checkContainer)
     step1ButtonContainer.appendChild(validateButton)
-    step1ButtonContainer.appendChild(step1NextButton)
+    // step1ButtonContainer.appendChild(step1NextButton)
     parentSelect.operator = 'AND';
 
     if(mode === 'edit'){
