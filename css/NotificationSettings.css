@@ -5,6 +5,20 @@
     font-family: sans-serif;
 }
 
+.autoql-vanilla-data-alerts-settings{
+    min-height: 600px;
+    position: relative;
+}
+
+.autoql-vanilla-data-alerts-settings .response-loading-container{
+    left: 50%;
+    top: 60px;
+}
+
+.chata-settings-container{
+    background: var(--autoql-vanilla-background-color-secondary);
+    min-height: 150px;
+}
 
 .chata-steps-container {
     margin: 10px;
@@ -84,6 +98,7 @@
     position: relative;
     border: 1px solid transparent;
     border-radius: 4px;
+    width: 80%;
 }
 
 .notification-group-wrapper:last-of-type {
@@ -540,6 +555,7 @@
 
 .autoql-vanilla-step-btn-container {
     text-align: right;
+    display: flex;
 }
 
 .autoql-vanilla-chata-btn.disabled {
@@ -553,8 +569,13 @@
     color: var(--autoql-vanilla-text-color-primary) !important;
 }
 
+.autoql-vanilla-chata-btn.autoql-vanilla-validate-query{
+    margin-left: 45px !important;
+}
+
 .autoql-vanilla-expression-invalid-message {
     color: var(--autoql-vanilla-danger-color);
+    max-width: 75%;
 }
 
 .autoql-vanilla-expression-valid-checkmark {
@@ -718,4 +739,9 @@
     display: none;
     background: var(--autoql-vanilla-background-color-primary);
     color: var(--autoql-vanilla-text-color-primary);
+}
+
+.autoql-vanilla-loading-text{
+    color: var(--autoql-vanilla-text-color-primary);
+    text-align: center;
 }

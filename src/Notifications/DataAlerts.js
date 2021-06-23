@@ -84,6 +84,25 @@ export function DataAlerts(selector, options){
         );
     }
 
+    wrapper.showLoadingDots = () => {
+        var responseLoadingContainer = document.createElement('div')
+        var responseLoading = document.createElement('div')
+
+        responseLoadingContainer.classList.add('response-loading-container')
+        responseLoading.classList.add('response-loading')
+        for (var i = 0; i <= 3; i++) {
+            responseLoading.appendChild(document.createElement('div'))
+        }
+
+        responseLoadingContainer.appendChild(responseLoading)
+        wrapper.appendChild(responseLoadingContainer)
+        wrapper.loading = responseLoadingContainer
+    }
+
+    wrapper.hideLoadingDots = () => {
+        wrapper.removeChild(wrapper.loading)
+    }
+
     wrapper.loadRules = async() => {
         const URL = `${options.authentication.domain}/autoql/api/v1/data-alerts?key=${options.authentication.apiKey}&type=user`;
         var response = await apiCallGet(URL, wrapper.options)
@@ -222,11 +241,13 @@ export function DataAlerts(selector, options){
                 );
             }
         }
-
+        wrapper.hideLoadingDots()
     }
 
-    wrapper.applyStyles();
-    wrapper.loadRules();
+    wrapper.classList.add('autoql-vanilla-data-alerts-settings')
+    wrapper.applyStyles()
+    wrapper.showLoadingDots()
+    wrapper.loadRules()
     if(parent)parent.appendChild(wrapper);
     setTimeout(function () {
         refreshTooltips()

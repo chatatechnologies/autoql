@@ -35,14 +35,29 @@ export var ChataUtils = {
     responses: []
 };
 
-ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
+// ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
+//     var json = ChataUtils.responses[idRequest];
+//     var queryId = json['data']['query_id'];
+//     const URL = options.authentication.demo
+//     ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+//     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
+//
+//     await apiCallPut(URL, {is_correct: false}, options)
+//     if(menu)menu.classList.remove('show');
+//     if(toolbar)toolbar.classList.remove('show');
+//     new AntdMessage(strings.feedback, 3000);
+//
+//     return Promise.resolve()
+// }
+
+ChataUtils.sendReportMessage = async (idRequest, options, menu, toolbar, msg) => {
     var json = ChataUtils.responses[idRequest];
     var queryId = json['data']['query_id'];
     const URL = options.authentication.demo
     ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 
-    await apiCallPut(URL, {is_correct: false}, options)
+    await apiCallPut(URL, {is_correct: false, message: msg}, options)
     if(menu)menu.classList.remove('show');
     if(toolbar)toolbar.classList.remove('show');
     new AntdMessage(strings.feedback, 3000);
@@ -61,15 +76,15 @@ ChataUtils.makeReportProblemMenu = (toolbar, idRequest, type, options) => {
     ul.appendChild(
         ChataUtils.getActionOption(
             '', strings.dataIncorrect,
-            ChataUtils.sendReport,
-            [idRequest, options, undefined, toolbar]
+            ChataUtils.sendReportMessage,
+            [idRequest, options, undefined, toolbar, 'The data is incorrect']
         )
     );
     ul.appendChild(
         ChataUtils.getActionOption(
             '', strings.dataIncomplete,
-            ChataUtils.sendReport,
-            [idRequest, options, undefined, toolbar]
+            ChataUtils.sendReportMessage,
+            [idRequest, options, undefined, toolbar, 'The data is incomplete']
         )
     );
     ul.appendChild(
@@ -92,15 +107,15 @@ ChataUtils.getReportProblemMenu = (
     menu.ul.appendChild(
         ChataUtils.getActionOption(
             '', strings.dataIncorrect,
-            ChataUtils.sendReport,
-            [idRequest, options, menu, toolbar]
+            ChataUtils.sendReportMessage,
+            [idRequest, options, menu, toolbar, 'The data is incorrect']
         )
     );
     menu.ul.appendChild(
         ChataUtils.getActionOption(
             '', strings.dataIncomplete,
-            ChataUtils.sendReport,
-            [idRequest, options, menu, toolbar]
+            ChataUtils.sendReportMessage,
+            [idRequest, options, menu, toolbar, 'The data is incomplete']
         )
     );
     menu.ul.appendChild(
@@ -497,7 +512,9 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
 
     reportButton.onclick = async () => {
         spinner.classList.remove('hidden');
-        await ChataUtils.sendReport(idRequest, options, menu, toolbar);
+        await ChataUtils.sendReportMessage(
+            idRequest, options, menu, toolbar, textArea.value
+        )
         modal.close();
     }
 
