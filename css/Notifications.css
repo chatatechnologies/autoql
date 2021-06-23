@@ -289,10 +289,6 @@
   transform: translateX(16px);
 }
 
-.chata-settings-container{
-    background: var(--autoql-vanilla-background-color-secondary);
-}
-
 .chata-checkbox__input:before {
     content: " ";
     position: absolute;

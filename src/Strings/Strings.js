@@ -129,6 +129,10 @@ export const strings = new LocalizedStrings({
         runQuery: 'Run Query',
         removeTerm: 'Remove term',
         originalTerm: 'Original term',
+        optional: 'Optional:',
+        notificationMessagePlaceholder: 'This message will be visible when a notification is sent.',
+        validateAlert: 'Check Alert & continue',
+        loading: 'Loading...',
 
     },
     es: {
@@ -251,5 +255,9 @@ export const strings = new LocalizedStrings({
         runQuery: 'Ejecutar consulta',
         removeTerm: 'Remover termino',
         originalTerm: 'Término original',
+        optional: 'Opcional:',
+        notificationMessagePlaceholder: 'Este mensaje será visible cuando se envíe una notificación.',
+        validateAlert: 'Checar Alerta y continuar',
+        loading: 'Cargando...',
     }
 });
