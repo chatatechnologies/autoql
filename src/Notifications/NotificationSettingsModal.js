@@ -16,7 +16,8 @@ import {
     ChataModalStep,
     FrequencyBox,
     PopupContainer,
-    TimezoneSelector
+    TimezoneSelector,
+    InfoIcon
 } from './NotificationComponents'
 import { refreshTooltips } from '../Tooltips'
 import {
@@ -51,6 +52,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var titleContainer = new InputContainer(
         ['chata-notification-display-name-input']
     )
+    var infoIconTitle = new InfoIcon('This will be visible to anyone who gets notified when this Alert is triggered.')
+
     var titleInput = new ChataInput('input', {
         placeholder: strings.dataAlertNamePlaceholder,
         maxlength: '50',
@@ -69,6 +72,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     }
     titleContainer.appendChild(titleInput.input);
     titleContainer.appendChild(titleInput.spanIcon);
+    titleContainer.appendChild(infoIconTitle);
 
     var ruleContainer = document.createElement('div');
     var checkContainer = htmlToElement(`

@@ -52,6 +52,13 @@
 
 .chata-notification-display-name-input{
     width: 80%;
+    display: flex;
+}
+
+.autoql-vanilla-chata-icon-info svg{
+    font-size: 24px !important;
+    color: rgb(38, 167, 223) !important;
+    margin-top: 5px;
 }
 
 .chata-icon svg {
