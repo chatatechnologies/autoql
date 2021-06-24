@@ -46,8 +46,12 @@
     color: var(--autoql-vanilla-accent-color,#26a7df);
 }
 
-.chata-notification-display-name-input, .chata-notification-message-input {
+.chata-notification-message-input {
     width: 100%;
+}
+
+.chata-notification-display-name-input{
+    width: 80%;
 }
 
 .chata-icon svg {

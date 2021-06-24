@@ -4,7 +4,7 @@ import {
     INPUT_BUBBLES,
     INPUT_DELETE,
     WARNING_TRIANGLE,
-    CHECK
+    CHECK,
 } from '../Svg'
 import { convert } from '../RuleParser'
 import {
