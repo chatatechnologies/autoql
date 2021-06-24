@@ -61,6 +61,10 @@
     margin-top: 5px;
 }
 
+.autoql-vanilla-info-icon-query svg{
+    margin-top: -5px;
+}
+
 .chata-icon svg {
     margin-bottom: -.1em;
 }

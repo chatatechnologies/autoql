@@ -360,7 +360,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
             newGroupLine.setExpression(ruleGroups)
-            validateFn()
+            // validateFn()
         })
 
         var groups = document.getElementsByClassName(
@@ -596,6 +596,8 @@ function GroupLine(params, expression=[]){
     var termError2 = new ruleTermError();
     var compareButton = document.createElement('button')
     conditionValueSelect.innerHTML = '>';
+    var infoIcon = new InfoIcon('Your query should describe the result you wish to be alerted about.')
+    infoIcon.classList.add('autoql-vanilla-info-icon-query')
     var uuid = uuidv4();
     ruleContainer.conditionValue = '>';
     ruleContainer.termType = 'query';
@@ -829,6 +831,8 @@ function GroupLine(params, expression=[]){
     ruleContainer.appendChild(chataSelect);
     ruleContainer.appendChild(secondContainer);
     ruleContainer.appendChild(compareButton);
+    ruleContainer.appendChild(infoIcon);
+
     ruleContainer.appendChild(chataRuleDeleteBtn);
     ruleContainer.setAttribute('data-uuid', uuid);
 
