@@ -52,7 +52,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var titleContainer = new InputContainer(
         ['chata-notification-display-name-input']
     )
-    var infoIconTitle = new InfoIcon('This will be visible to anyone who gets notified when this Alert is triggered.')
+    var infoIconTitle = new InfoIcon(strings.infoIconDataAlertName)
 
     var titleInput = new ChataInput('input', {
         placeholder: strings.dataAlertNamePlaceholder,
@@ -76,7 +76,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
 
     var ruleContainer = document.createElement('div');
     var checkContainer = htmlToElement(`
-        <span class="autoql-vanilla-icon"></span>
+        <div class="autoql-vanilla-icon check-container"></div>
     `)
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
@@ -596,7 +596,7 @@ function GroupLine(params, expression=[]){
     var termError2 = new ruleTermError();
     var compareButton = document.createElement('button')
     conditionValueSelect.innerHTML = '>';
-    var infoIcon = new InfoIcon('Your query should describe the result you wish to be alerted about.')
+    var infoIcon = new InfoIcon(strings.infoIconRuleContainer)
     infoIcon.classList.add('autoql-vanilla-info-icon-query')
     var uuid = uuidv4();
     ruleContainer.conditionValue = '>';

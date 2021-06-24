@@ -133,6 +133,8 @@ export const strings = new LocalizedStrings({
         notificationMessagePlaceholder: 'This message will be visible when a notification is sent.',
         validateAlert: 'Check Alert & continue',
         loading: 'Loading...',
+        infoIconDataAlertName: 'This will be visible to anyone who gets notified when this Alert is triggered',
+        infoIconRuleContainer: 'Your query should describe the result you wish to be alerted about.',
 
     },
     es: {
@@ -259,5 +261,7 @@ export const strings = new LocalizedStrings({
         notificationMessagePlaceholder: 'Este mensaje será visible cuando se envíe una notificación.',
         validateAlert: 'Checar Alerta y continuar',
         loading: 'Cargando...',
+        infoIconDataAlertName: 'Esto será visible para cualquier persona que reciba una notificación cuando se active esta alerta.',
+        infoIconRuleContainer: 'Su consulta debe describir el resultado sobre el que desea recibir una alerta.',
     }
 });
