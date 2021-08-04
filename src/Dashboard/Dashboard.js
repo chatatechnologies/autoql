@@ -268,6 +268,7 @@ export function Dashboard(selector, options={}){
         e.startEditing()
         setTimeout(() => {
             e.focusItem()
+            refreshTooltips()
         }, 150)
         obj.hideMessage()
     }
