@@ -1,5 +1,14 @@
-import tippy from 'tippy.js';
+import tippy, { delegate } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
+
+export function refreshDelegate(parent, target){
+    delegate(parent, {
+        target: target,
+        theme: 'chata-theme',
+        allowHTML: true,
+        delay: [500],
+    });
+}
 
 export function refreshTooltips(){
     tippy('[data-tippy-content]', {
