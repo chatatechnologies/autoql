@@ -77,9 +77,9 @@ export function createPieChart(
         groups[key] = {
             isVisible: true
         }
-        console.log(value);
         legendGroups[
-            formatChartData(key, cols[index1], options) + ": " + (value)
+            formatChartData(key, cols[index1], options) + ": " +
+            formatChartData(value, cols[index2], options)
         ] = {
             value: key
         }
@@ -272,8 +272,6 @@ export function createPieChart(
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }
-        console.log(words.join(' '));
-        console.log(legendGroups);
         var unformatGroup = legendGroups[words.join(' ')].value;
         groups[unformatGroup].isVisible =
         !groups[unformatGroup].isVisible;
