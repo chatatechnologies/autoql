@@ -135,6 +135,7 @@ export const strings = new LocalizedStrings({
         loading: 'Loading...',
         infoIconDataAlertName: 'This will be visible to anyone who gets notified when this Alert is triggered',
         infoIconRuleContainer: 'Your query should describe the result you wish to be alerted about.',
+        filterButton: 'Open filter locking menu',
 
     },
     es: {
@@ -263,5 +264,6 @@ export const strings = new LocalizedStrings({
         loading: 'Cargando...',
         infoIconDataAlertName: 'Esto será visible para cualquier persona que reciba una notificación cuando se active esta alerta.',
         infoIconRuleContainer: 'Su consulta debe describir el resultado sobre el que desea recibir una alerta.',
+        filterButton: 'Abrir menú de bloqueo de filtro',
     }
 });

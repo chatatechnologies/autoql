@@ -76,7 +76,8 @@ import {
     DELETE_MESSAGE,
     VERTICAL_DOTS,
     DATA_LIMIT_WARNING,
-    HELP_ICON
+    HELP_ICON,
+    FILTER_LOCKING
 } from '../Svg'
 import { strings } from '../Strings'
 import { hideAll } from 'tippy.js';
@@ -1358,6 +1359,13 @@ export function DataMessenger(elem, options){
                 ${CLOSE_ICON}
             </button>
         `);
+        var filterButton = htmlToElement(`
+            <button class="autoql-vanilla-chata-button filter-locking-menu"
+            data-tippy-content="${strings.filterButton}">
+                ${FILTER_LOCKING}
+            </button>
+        `);
+
         var clearAllButton = htmlToElement(`
             <button class="autoql-vanilla-chata-button clear-all"
             data-tippy-content="${strings.clearMessages}">
@@ -1420,6 +1428,7 @@ export function DataMessenger(elem, options){
         })
 
         headerLeft.appendChild(closeButton);
+        headerRight.appendChild(filterButton);
         headerRight.appendChild(clearAllButton);
         headerRight.appendChild(popover);
 
