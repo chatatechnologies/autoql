@@ -1,0 +1,9 @@
+.autoql-vanilla-reverse-translation-container{
+    color: var(--autoql-vanilla-text-color-primary);
+    background-color: var(--autoql-vanilla-background-color-secondary);
+    border-radius: 5px;
+    padding: 4px 6px !important;
+    margin: 2px !important;
+    min-height: 26px;
+    min-width: 300px;
+}

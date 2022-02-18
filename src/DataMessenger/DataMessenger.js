@@ -7,6 +7,7 @@ import {
     NotificationIcon,
     NotificationFeed
 } from '../Notifications'
+import { ReverseTranslation } from '../ReverseTranslation'
 import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -2866,6 +2867,9 @@ export function DataMessenger(elem, options){
     obj.putSimpleResponse = async (
         jsonResponse, text, statusCode, isDrilldown=false
     ) => {
+        const {
+            interpretation
+        } = jsonResponse.data
         var ref = jsonResponse['reference_id']
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
@@ -2973,6 +2977,10 @@ export function DataMessenger(elem, options){
             if(obj.options.landingPage !== 'data-messenger'){
                 obj.hideBubbles()
             }
+        }
+        if(interpretation){
+            var interpretationView = new ReverseTranslation(interpretation)
+            messageBubble.appendChild(interpretationView)
         }
         refreshTooltips()
     }

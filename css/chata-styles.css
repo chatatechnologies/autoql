@@ -313,6 +313,10 @@ body{
     font-weight: normal;
 }
 
+.autoql-vanilla-chata-single-response{
+    font-size: 20px;
+}
+
 .autoql-vanilla-chat-single-message-container .autoql-vanilla-chat-message-bubble.text {
     max-width: 85%;
 }
