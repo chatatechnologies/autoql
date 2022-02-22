@@ -21,3 +21,13 @@
     padding: 0px !important;
     height: unset !important;
 }
+
+.autoql-vanilla-condition-link {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--autoql-vanilla-accent-color)!important;
+}
