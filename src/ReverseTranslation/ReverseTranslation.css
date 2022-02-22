@@ -6,4 +6,18 @@
     margin: 2px !important;
     min-height: 26px;
     min-width: 300px;
+    margin-top: 6px !important;
+}
+
+.autoql-vanilla-reverse-translation-container span{
+    line-height: 22px;
+    letter-spacing: .04em;
+}
+
+.autoql-vanilla-reverse-translation-icon svg{
+    vertical-align: middle;
+    font-size: 16px;
+    margin: 0px !important;
+    padding: 0px !important;
+    height: unset !important;
 }
