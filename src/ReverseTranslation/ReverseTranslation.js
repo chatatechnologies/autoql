@@ -1,5 +1,6 @@
-import './ReverseTranslation.css'
+import moment from 'moment'
 import { INFO_ICON } from '../Svg'
+import './ReverseTranslation.css'
 
 export function ReverseTranslation(interpretation){
     console.log(interpretation);
@@ -9,6 +10,12 @@ export function ReverseTranslation(interpretation){
         const text = output.replace(/'/g, '')
         console.log(text);
         return `<a class="autoql-vanilla-condition-link">${text}</a>`
+    })
+    .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/gi, (output) => {
+        return moment
+        .utc(output)
+        .format('ll')
+        .toString()
     })
     var container = document.createElement('div')
     var label = document.createElement('strong')
