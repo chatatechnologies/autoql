@@ -2576,6 +2576,9 @@ export function DataMessenger(elem, options){
         var tableWrapper = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
         var idRequest = uuidv4();
+        var {
+            interpretation
+        } = jsonResponse.data
 
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
@@ -2647,6 +2650,10 @@ export function DataMessenger(elem, options){
         tableWrapper.internalTable = table;
         tableWrapper.tabulator = table;
         table.parentContainer = parentContainer;
+        if(interpretation){
+            var interpretationView = new ReverseTranslation(interpretation)
+            messageBubble.appendChild(interpretationView)
+        }
         setTimeout(function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
 
@@ -2867,7 +2874,7 @@ export function DataMessenger(elem, options){
     obj.putSimpleResponse = async (
         jsonResponse, text, statusCode, isDrilldown=false
     ) => {
-        const {
+        var {
             interpretation
         } = jsonResponse.data
         var ref = jsonResponse['reference_id']
