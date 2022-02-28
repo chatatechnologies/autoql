@@ -347,7 +347,7 @@ body{
 .autoql-vanilla-chata-response-content-container {
     background-color: inherit;
     font-size: 14px;
-    height: 100%;
+    height: calc(100% - 60px);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -642,7 +642,7 @@ body{
 .autoql-vanilla-chata-response-content-container {
     background-color: inherit;
     font-size: 14px;
-    height: 100%;
+    height: calc(100% - 60px);
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
 }
