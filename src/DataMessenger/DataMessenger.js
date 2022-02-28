@@ -2650,7 +2650,7 @@ export function DataMessenger(elem, options){
         tableWrapper.internalTable = table;
         tableWrapper.tabulator = table;
         table.parentContainer = parentContainer;
-        if(interpretation){
+        if(interpretation && !isDrilldown){
             var interpretationView = new ReverseTranslation(interpretation)
             messageBubble.appendChild(interpretationView)
         }
