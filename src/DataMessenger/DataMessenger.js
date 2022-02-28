@@ -1980,7 +1980,7 @@ export function DataMessenger(elem, options){
         if(displayType === 'chart'){
             messageBubble.parentElement.style.maxHeight =
             (
-                parseInt(chartContainer[0].getAttribute('height')) + 55
+                parseInt(chartContainer[0].getAttribute('height')) + 115
             ) + 'px';
         }else{
             messageBubble.parentElement.style.maxHeight = '85%';
