@@ -1,11 +1,9 @@
 import moment from 'moment'
+import { strings } from '../Strings'
 import { INFO_ICON } from '../Svg'
 import './ReverseTranslation.css'
 
 export function ReverseTranslation(interpretation){
-    console.log(interpretation);
-    console.log();
-
     const reverseTranslation = interpretation.replace(/(["'])(?:(?=(\\?))\2.)*?\1/gi, (output) => {
         const text = output.replace(/'/g, '')
         console.log(text);
@@ -22,7 +20,7 @@ export function ReverseTranslation(interpretation){
     var textContainer = document.createElement('span')
     var iconContainer = document.createElement('span')
 
-    label.textContent = 'Interpreted as: '
+    label.textContent = strings.reverseTranslationLabel
     textContainer.innerHTML = reverseTranslation
     iconContainer.innerHTML = INFO_ICON
 
