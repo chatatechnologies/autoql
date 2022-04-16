@@ -11,6 +11,7 @@ import { ReverseTranslation } from '../ReverseTranslation'
 import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
+import { FilterLocking } from '../FilterLocking'
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet'
 import {
     getSpeech,
