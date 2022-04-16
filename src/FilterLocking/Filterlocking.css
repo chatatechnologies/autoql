@@ -1,0 +1,6 @@
+.autoql-vanilla-filter-locking-view{
+    left: 0;
+    right: 0 !important;
+    height: 200px;
+    background: var(--autoql-vanilla-background-color-primary);
+}

@@ -1354,6 +1354,7 @@ export function DataMessenger(elem, options){
 
     obj.createHeader = () => {
         var chatHeaderContainer = document.createElement('div');
+        var filterLocking = new FilterLocking();
         var closeButton = htmlToElement(`
             <button
                 class="autoql-vanilla-chata-button close-action"
@@ -1418,6 +1419,15 @@ export function DataMessenger(elem, options){
             popover.style.opacity = 1;
         }
 
+        filterButton.onclick = () => {
+            closeAllChartPopovers();
+            if(filterLocking.isOpen){
+                filterLocking.hide();
+            }else{
+                filterLocking.show();
+            }
+        }
+
         popover.addEventListener('click', (evt) => {
             if(evt.target.classList.contains(
                 'autoql-vanilla-chata-confirm-btn')
@@ -1433,6 +1443,7 @@ export function DataMessenger(elem, options){
         headerRight.appendChild(filterButton);
         headerRight.appendChild(clearAllButton);
         headerRight.appendChild(popover);
+        headerRight.appendChild(filterLocking);
 
         chatHeaderContainer.appendChild(headerLeft);
         chatHeaderContainer.appendChild(headerTitle);
