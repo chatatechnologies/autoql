@@ -4,3 +4,27 @@
     height: 200px;
     background: var(--autoql-vanilla-background-color-primary);
 }
+
+.autoql-vanilla-filter-locking-title-container{
+    display: inline-block;
+    width: 100%;
+    padding-top: 4px !important;
+    padding-left: 6px !important;
+}
+
+.autoql-vanilla-filter-locking-title-container h3 {
+    width: 95%;
+    float: left;
+    color: var(--autoql-vanilla-text-color-primary);
+    font-family: var(--autoql-vanilla-font-family);
+    margin-bottom: 0;
+    margin-top: 0;
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.autoql-vanilla-filter-locking-title-container h3 span svg {
+    color: var(--autoql-vanilla-accent-color) !important;
+    margin: -3px 0px !important;
+}
