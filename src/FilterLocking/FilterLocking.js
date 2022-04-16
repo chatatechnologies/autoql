@@ -1,24 +1,28 @@
 import './FilterLocking.css'
-import { INFO_ICON } from '../Svg'
+import { INFO_ICON, CLOSE_ICON } from '../Svg'
 export function FilterLocking(){
     var view = document.createElement('div')
     var header = document.createElement('div')
     var titleContainer = document.createElement('div')
     var title = document.createElement('h3')
     var infoIcon = document.createElement('span')
+    var closeButton = document.createElement('span')
 
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')
     header.classList.add('autoql-vanilla-condition-lock-header')
     titleContainer.classList.add('autoql-vanilla-filter-locking-title-container')
     title.classList.add('autoql-vanilla-filter-locking-title')
+    closeButton.classList.add('autoql-vanilla-close-filter-locking')
     // infoIcon.classList.add('autoql-vanilla-chata-icon')
 
     title.textContent = 'Filter Locking'
     infoIcon.innerHTML = INFO_ICON
+    closeButton.innerHTML = CLOSE_ICON
 
     title.appendChild(infoIcon)
     titleContainer.appendChild(title)
+    titleContainer.appendChild(closeButton)
     header.appendChild(titleContainer)
 
     view.appendChild(header)
@@ -35,6 +39,10 @@ export function FilterLocking(){
         view.style.visibility = 'hidden';
         view.style.opacity = 0;
         view.isOpen = false
+    }
+
+    closeButton.onclick = () => {
+        view.hide()
     }
     return view
 }

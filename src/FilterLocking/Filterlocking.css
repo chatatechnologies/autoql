@@ -28,3 +28,9 @@
     color: var(--autoql-vanilla-accent-color) !important;
     margin: -3px 0px !important;
 }
+
+.autoql-vanilla-close-filter-locking{
+    cursor: pointer;
+    text-align: left;
+    font-size: 20px;
+}
