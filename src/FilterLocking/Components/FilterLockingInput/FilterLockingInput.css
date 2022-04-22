@@ -1,0 +1,16 @@
+.autoql-vanilla-condition-locking-input {
+    padding: 5px 5px 5px 20px !important;
+    margin: 8px !important;
+    height: 32px;
+    box-sizing: border-box !important;
+    border-radius: 24px !important;
+    font-size: 12px;
+    letter-spacing: .04em;
+    outline: none!important;
+    width: calc(100% - 20px);
+    font-family: inherit;
+    border: 1px solid rgba(0,0,0,.1);
+    border: 1px solid var(--autoql-vanilla-border-color,rgba(0,0,0,.1));
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-text-color-primary);
+}
