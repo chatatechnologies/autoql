@@ -1,5 +1,8 @@
-import './FilterLocking.css'
+import { FilterLockingInput } from './Components/FilterLockingInput'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
+import './FilterLocking.css'
+
+
 export function FilterLocking(){
     var view = document.createElement('div')
     var header = document.createElement('div')
@@ -7,7 +10,7 @@ export function FilterLocking(){
     var title = document.createElement('h3')
     var infoIcon = document.createElement('span')
     var closeButton = document.createElement('span')
-
+    var input = new FilterLockingInput()
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')
     header.classList.add('autoql-vanilla-condition-lock-header')
@@ -24,6 +27,7 @@ export function FilterLocking(){
     titleContainer.appendChild(title)
     titleContainer.appendChild(closeButton)
     header.appendChild(titleContainer)
+    header.appendChild(input)
 
     view.appendChild(header)
 
