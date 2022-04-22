@@ -14,3 +14,10 @@
     background: var(--autoql-vanilla-background-color-primary);
     color: var(--autoql-vanilla-text-color-primary);
 }
+
+.autoql-vanilla-auto-complete-filter-locking{
+    position: absolute !important;
+    width: calc(100% - 12px) !important;
+    bottom: unset !important;
+    top: 47px;
+}
