@@ -1,6 +1,9 @@
 import './FilterLockingInput.css'
+import {
+    apiCallGet
+} from '../../../Utils'
 
-export function FilterLockingInput(){
+export function FilterLockingInput(datamessenger){
     var view = document.createElement('div')
     var inputContainer = document.createElement('div')
     var input = document.createElement('input')
@@ -24,24 +27,32 @@ export function FilterLockingInput(){
 
     view.autoCompleteTimer = undefined
 
-    view.createSuggestions = (suggestions) => {
+    view.createSuggestions = (response) => {
         autoCompleteList.style.display = 'block'
         autoCompleteList.innerHTML = ''
-        suggestions.map((s) => {
-            let li = document.createElement('li')
-            li.classList.add('suggestion')
-            li.textContent = s
-            autoCompleteList.appendChild(li)
-        })
+        console.log(response);
+        // suggestions.map((textContent) => {
+        //     let li = document.createElement('li')
+        //     li.classList.add('suggestion')
+        //     li.textContent = textContent
+        //     autoCompleteList.appendChild(li)
+        // })
+    }
+
+    view.autoCompleteCall = async (search) => {
+        const {
+            authentication
+        } = datamessenger.options
+        const s = encodeURIComponent(search)
+        const url = `${authentication.domain}/autoql/api/v1/query/vlautocomplete?text=${s}&key=${authentication.apiKey}`
+        const response = await apiCallGet(url, datamessenger.options)
+        view.createSuggestions(response.data.data)
     }
 
     input.onkeyup = (evt) => {
         autoCompleteList.style.display = 'none'
-        clearTimeout(view.autoCompleteTimer);
         if(evt.target.value){
-            view.autoCompleteTimer = setTimeout(() => {
-                view.createSuggestions(['test1', 'test2', 'test4'])
-            }, 150);
+            view.autoCompleteCall(evt.target.value)
         }
     }
 

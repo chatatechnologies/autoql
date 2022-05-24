@@ -3,7 +3,7 @@ import { ConditionList } from './Components/ConditionList'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
 import './FilterLocking.css'
 
-export function FilterLocking(){
+export function FilterLocking(datamessenger){
     var view = document.createElement('div')
     var header = document.createElement('div')
     var footer = document.createElement('div')
@@ -12,7 +12,7 @@ export function FilterLocking(){
     var infoIcon = document.createElement('span')
     var closeButton = document.createElement('span')
     var continueButton = document.createElement('button')
-    var input = new FilterLockingInput()
+    var input = new FilterLockingInput(datamessenger)
     var conditionList = new ConditionList()
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')

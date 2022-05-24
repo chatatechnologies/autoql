@@ -1354,7 +1354,7 @@ export function DataMessenger(elem, options){
 
     obj.createHeader = () => {
         var chatHeaderContainer = document.createElement('div');
-        var filterLocking = new FilterLocking();
+        var filterLocking = new FilterLocking(obj);
         var closeButton = htmlToElement(`
             <button
                 class="autoql-vanilla-chata-button close-action"
