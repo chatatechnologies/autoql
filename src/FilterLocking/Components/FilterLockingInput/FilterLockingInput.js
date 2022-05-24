@@ -30,13 +30,15 @@ export function FilterLockingInput(datamessenger){
     view.createSuggestions = (response) => {
         autoCompleteList.style.display = 'block'
         autoCompleteList.innerHTML = ''
-        console.log(response);
-        // suggestions.map((textContent) => {
-        //     let li = document.createElement('li')
-        //     li.classList.add('suggestion')
-        //     li.textContent = textContent
-        //     autoCompleteList.appendChild(li)
-        // })
+        const {
+            matches
+        } = response
+        matches.sort((match) => match.keyword).map((match) => {
+            let li = document.createElement('li')
+            li.classList.add('suggestion')
+            li.textContent = match.keyword
+            autoCompleteList.appendChild(li)
+        })
     }
 
     view.autoCompleteCall = async (search) => {
