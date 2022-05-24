@@ -6,7 +6,6 @@ import './ReverseTranslation.css'
 export function ReverseTranslation(interpretation){
     const reverseTranslation = interpretation.replace(/(["'])(?:(?=(\\?))\2.)*?\1/gi, (output) => {
         const text = output.replace(/'/g, '')
-        console.log(text);
         return `<a class="autoql-vanilla-condition-link">${text}</a>`
     })
     .replace(/\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z/gi, (output) => {
