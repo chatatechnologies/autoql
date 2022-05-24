@@ -59,5 +59,10 @@ export function FilterLocking(){
     closeButton.onclick = () => {
         view.hide()
     }
+
+    continueButton.onclick = () => {
+        view.hide()
+    }
+
     return view
 }

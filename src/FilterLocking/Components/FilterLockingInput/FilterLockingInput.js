@@ -22,6 +22,7 @@ export function FilterLockingInput(){
     view.appendChild(autocompleteContainer)
     view.appendChild(inputContainer)
 
+    view.autoCompleteTimer = undefined
 
     view.createSuggestions = (suggestions) => {
         autoCompleteList.style.display = 'block'
@@ -34,7 +35,16 @@ export function FilterLockingInput(){
         })
     }
 
-    // view.createSuggestions(['test1', 'test2', 'test4'])
+    input.onkeyup = (evt) => {
+        autoCompleteList.style.display = 'none'
+        clearTimeout(view.autoCompleteTimer);
+        if(evt.target.value){
+            view.autoCompleteTimer = setTimeout(() => {
+                view.createSuggestions(['test1', 'test2', 'test4'])
+            }, 150);
+        }
+    }
+
 
     return view
 }
