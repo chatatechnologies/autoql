@@ -34,7 +34,7 @@ export function FilterLockingInput(){
         })
     }
 
-    view.createSuggestions(['test1', 'test2', 'test4'])
+    // view.createSuggestions(['test1', 'test2', 'test4'])
 
     return view
 }
