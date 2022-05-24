@@ -6,10 +6,12 @@ import './FilterLocking.css'
 export function FilterLocking(){
     var view = document.createElement('div')
     var header = document.createElement('div')
+    var footer = document.createElement('div')
     var titleContainer = document.createElement('div')
     var title = document.createElement('h3')
     var infoIcon = document.createElement('span')
     var closeButton = document.createElement('span')
+    var continueButton = document.createElement('button')
     var input = new FilterLockingInput()
     var conditionList = new ConditionList()
     view.classList.add('autoql-vanilla-filter-locking-view')
@@ -18,20 +20,27 @@ export function FilterLocking(){
     titleContainer.classList.add('autoql-vanilla-filter-locking-title-container')
     title.classList.add('autoql-vanilla-filter-locking-title')
     closeButton.classList.add('autoql-vanilla-close-filter-locking')
+    footer.classList.add('autoql-vanilla-condition-lock-menu-footer')
+    continueButton.classList.add('autoql-vanilla-chata-btn')
+    continueButton.classList.add('default')
+    continueButton.classList.add('large')
     // infoIcon.classList.add('autoql-vanilla-chata-icon')
 
     title.textContent = 'Filter Locking'
     infoIcon.innerHTML = INFO_ICON
     closeButton.innerHTML = CLOSE_ICON
+    continueButton.textContent = 'Continue'
 
     title.appendChild(infoIcon)
     titleContainer.appendChild(title)
     titleContainer.appendChild(closeButton)
     header.appendChild(titleContainer)
     header.appendChild(input)
+    footer.appendChild(continueButton)
 
     view.appendChild(header)
     view.appendChild(conditionList)
+    view.appendChild(footer)
 
     view.isOpen = false
 

@@ -33,3 +33,13 @@
     text-align: left;
     font-size: 20px;
 }
+
+.autoql-vanilla-condition-lock-menu-footer {
+    bottom: 0;
+    right: 0;
+}
+
+.autoql-vanilla-condition-lock-menu-footer button {
+    float: right;
+    margin: 6px!important;
+}
