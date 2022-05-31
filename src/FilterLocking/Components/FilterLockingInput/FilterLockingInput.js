@@ -35,8 +35,17 @@ export function FilterLockingInput(datamessenger){
         } = response
         matches.sort((match) => match.keyword).map((match) => {
             let li = document.createElement('li')
-            li.classList.add('suggestion')
-            li.textContent = match.keyword
+            let content = document.createElement('div')
+            let keyContent = document.createElement('div')
+            let messageContent = document.createElement('div')
+
+            li.classList.add('autoql-vanilla-filter-suggestion')
+            content.classList.add('autoql-vanilla-suggestion-content')
+            keyContent.textContent = match.keyword
+            messageContent.textContent = match.show_message
+            content.appendChild(keyContent)
+            content.appendChild(messageContent)
+            li.appendChild(content)
             autoCompleteList.appendChild(li)
         })
     }

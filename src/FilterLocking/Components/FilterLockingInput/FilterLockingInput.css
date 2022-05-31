@@ -28,3 +28,12 @@
 .autoql-vanilla-auto-complete-filter-locking li{
     padding: 5px 0px 5px 15px !important;
 }
+
+.autoql-vanilla-suggestion-content{
+    display: flex;
+}
+
+.autoql-vanilla-suggestion-content div{
+    width: 50%;
+    text-align: left;
+}
