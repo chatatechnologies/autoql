@@ -4,7 +4,7 @@ import {
     apiCallPut
 } from '../../../Utils'
 
-export function FilterLockingInput(datamessenger){
+export function FilterLockingInput(datamessenger, filterLocking){
     var view = document.createElement('div')
     var inputContainer = document.createElement('div')
     var input = document.createElement('input')
@@ -58,7 +58,9 @@ export function FilterLockingInput(datamessenger){
 
             content.onclick = async () => {
                 view.close()
-                console.log(await view.onSuggestionClick(match));
+                view.clear()
+                var response = await view.onSuggestionClick(match)
+                filterLocking.appendFilterLine(response.data)
             }
         })
     }
@@ -92,12 +94,16 @@ export function FilterLockingInput(datamessenger){
         const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
         const response = await apiCallPut(url, body, datamessenger.options)
 
-        return response.data
+        return response.data.data
     }
 
     view.close = () => {
         autoCompleteList.innerHTML = ''
         autoCompleteList.style.display = 'none'
+    }
+
+    view.clear = () => {
+        input.value = ''
     }
 
     input.onkeyup = (evt) => {

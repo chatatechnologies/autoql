@@ -12,7 +12,7 @@ export function FilterLocking(datamessenger){
     var infoIcon = document.createElement('span')
     var closeButton = document.createElement('span')
     var continueButton = document.createElement('button')
-    var input = new FilterLockingInput(datamessenger)
+    var input = new FilterLockingInput(datamessenger, view)
     var conditionList = new ConditionList()
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')
@@ -43,6 +43,10 @@ export function FilterLocking(datamessenger){
     view.appendChild(footer)
 
     view.isOpen = false
+
+    view.appendFilterLine = (data) => {
+        conditionList.addLine(data)
+    }
 
     view.show = () => {
         view.style.visibility = 'visible';
