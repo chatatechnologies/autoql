@@ -2,6 +2,7 @@
     left: 0;
     right: 0 !important;
     background: var(--autoql-vanilla-background-color-primary);
+    padding: 15px 20px !important;
 }
 
 .autoql-vanilla-filter-locking-title-container{

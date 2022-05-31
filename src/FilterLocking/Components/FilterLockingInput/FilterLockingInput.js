@@ -28,11 +28,18 @@ export function FilterLockingInput(datamessenger){
     view.autoCompleteTimer = undefined
 
     view.createSuggestions = (response) => {
-        autoCompleteList.style.display = 'block'
-        autoCompleteList.innerHTML = ''
         const {
             matches
         } = response
+
+        if(matches.length === 0){
+            view.close()
+            return
+        }
+
+        autoCompleteList.style.display = 'block'
+        autoCompleteList.innerHTML = ''
+
         matches.sort((match) => match.keyword).map((match) => {
             let li = document.createElement('li')
             let content = document.createElement('div')
@@ -47,6 +54,11 @@ export function FilterLockingInput(datamessenger){
             content.appendChild(messageContent)
             li.appendChild(content)
             autoCompleteList.appendChild(li)
+
+            content.onclick = () => {
+                console.log(match);
+                view.close()
+            }
         })
     }
 
@@ -58,6 +70,10 @@ export function FilterLockingInput(datamessenger){
         const url = `${authentication.domain}/autoql/api/v1/query/vlautocomplete?text=${s}&key=${authentication.apiKey}`
         const response = await apiCallGet(url, datamessenger.options)
         view.createSuggestions(response.data.data)
+    }
+    view.close = () => {
+        autoCompleteList.innerHTML = ''
+        autoCompleteList.style.display = 'none'
     }
 
     input.onkeyup = (evt) => {
