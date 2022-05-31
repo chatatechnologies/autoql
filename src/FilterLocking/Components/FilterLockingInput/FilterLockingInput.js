@@ -1,6 +1,7 @@
 import './FilterLockingInput.css'
 import {
-    apiCallGet
+    apiCallGet,
+    apiCallPut
 } from '../../../Utils'
 
 export function FilterLockingInput(datamessenger){
@@ -55,9 +56,9 @@ export function FilterLockingInput(datamessenger){
             li.appendChild(content)
             autoCompleteList.appendChild(li)
 
-            content.onclick = () => {
-                console.log(match);
+            content.onclick = async () => {
                 view.close()
+                console.log(await view.onSuggestionClick(match));
             }
         })
     }
@@ -71,6 +72,29 @@ export function FilterLockingInput(datamessenger){
         const response = await apiCallGet(url, datamessenger.options)
         view.createSuggestions(response.data.data)
     }
+
+    view.onSuggestionClick = async (data) => {
+        const {
+            authentication
+        } = datamessenger.options
+
+        const body = {
+            columns: [
+                {
+                    filter_type: 'include', // TODO:
+                    key: data.canonical,
+                    show_message: data.show_message,
+                    value: data.keyword
+                }
+            ]
+        }
+
+        const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
+        const response = await apiCallPut(url, body, datamessenger.options)
+
+        return response.data
+    }
+
     view.close = () => {
         autoCompleteList.innerHTML = ''
         autoCompleteList.style.display = 'none'
