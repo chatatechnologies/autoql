@@ -1700,7 +1700,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-btn.default {
-    color: inherit;
+    color: var(--autoql-vanilla-text-color-primary);
     border: 1px solid var(--autoql-vanilla-border-color);
     background: inherit;
 }

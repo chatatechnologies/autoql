@@ -5,6 +5,10 @@
     padding: 15px 20px !important;
 }
 
+.autoql-vanilla-close-filter-locking{
+    color: var(--autoql-vanilla-text-color-primary) !important;
+}
+
 .autoql-vanilla-filter-locking-title-container{
     display: inline-block;
     width: 100%;
