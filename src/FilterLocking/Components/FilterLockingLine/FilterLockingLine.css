@@ -5,15 +5,15 @@
     justify-content: space-between;
     flex-wrap: nowrap;
     margin-bottom: 4px;
+    color: var(--autoql-vanilla-text-color-primary);
+    font-family: var(--autoql-vanilla-font-family);
 }
 
 .autoql-vanilla-filter-lock-category-title{
-    padding-right: 10px;
-    padding-top: 1px;
+    padding-right: 10px !important;
+    padding-top: 1px !important;
     max-width: 195px;
     overflow: hidden;
-    color: var(--autoql-vanilla-text-color-primary);
-    font-family: var(--autoql-vanilla-font-family);
     font-size: 14px !important;
 }
 

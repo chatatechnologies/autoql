@@ -1,3 +1,5 @@
+import './ButtonContainer.css'
+
 export function ButtonContainer(){
     var view = document.createElement('div')
     var buttonInclude = document.createElement('div')
