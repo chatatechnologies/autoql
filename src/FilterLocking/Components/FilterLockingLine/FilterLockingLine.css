@@ -20,4 +20,5 @@
 .autoql-vanilla-filter-list-title h4 {
     margin-top: 3px;
     color: var(--autoql-vanilla-text-color-primary);
+    display: flex;
 }

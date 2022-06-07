@@ -1,4 +1,5 @@
 import './FilterLockingLine.css'
+import { ButtonContainer } from '../ButtonContainer'
 
 export function FilterLockingLine(data){
     const {
@@ -22,6 +23,7 @@ export function FilterLockingLine(data){
     var titleWrapper = document.createElement('div')
     var title = document.createElement('h4')
     var categoryContainer = document.createElement('span')
+    var btnContainer = new ButtonContainer()
 
     categoryContainer.textContent = show_message
 
@@ -29,6 +31,7 @@ export function FilterLockingLine(data){
     titleContainer.classList.add('autoql-vanilla-filter-list-title')
 
     title.appendChild(categoryContainer)
+    title.appendChild(btnContainer)
     titleWrapper.appendChild(title)
     titleContainer.appendChild(titleWrapper)
     view.appendChild(titleContainer)
