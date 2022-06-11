@@ -32,3 +32,12 @@
     transition: all .2s ease;
     cursor: pointer;
 }
+
+.autoql-vanilla-radio-btn.active {
+    background-color: var(--autoql-vanilla-border-color);
+}
+
+.autoql-vanilla-radio-btn-container :first-child.autoql-vanilla-radio-btn.active, .autoql-vanilla-radio-btn-container:first-child.autoql-vanilla-radio-btn:hover {
+    color: var(--autoql-vanilla-accent-color);
+    border-color: var(--autoql-vanilla-accent-color);
+}
