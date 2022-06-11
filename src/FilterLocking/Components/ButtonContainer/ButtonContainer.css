@@ -37,7 +37,19 @@
     background-color: var(--autoql-vanilla-border-color);
 }
 
-.autoql-vanilla-radio-btn-container :first-child.autoql-vanilla-radio-btn.active, .autoql-vanilla-radio-btn-container:first-child.autoql-vanilla-radio-btn:hover {
+.autoql-vanilla-radio-btn-container:first-child.autoql-vanilla-radio-btn.active,
+.autoql-vanilla-radio-btn-container:first-child.autoql-vanilla-radio-btn:hover {
     color: var(--autoql-vanilla-accent-color);
     border-color: var(--autoql-vanilla-accent-color);
+}
+
+
+.autoql-vanilla-radio-btn-container :nth-child(2).autoql-vanilla-radio-btn.active,
+.autoql-vanilla-radio-btn-container:nth-child(2).autoql-vanilla-radio-btn:hover {
+    color: var(--autoql-vanilla-danger-color);
+    border-color: var(--autoql-vanilla-danger-color);
+}
+
+.autoql-vanilla-radio-btn-container .autoql-vanilla-radio-btn.active {
+    background-color: var(--autoql-vanilla-border-color);
 }
