@@ -14,9 +14,9 @@ export function ButtonContainer(){
     buttonInclude.classList.add('autoql-vanilla-radio-btn')
     buttonExclude.classList.add('active')
     buttonExclude.classList.add('autoql-vanilla-radio-btn')
-
     buttonInclude.appendChild(textInclude)
     buttonExclude.appendChild(textExclude)
+
     view.appendChild(buttonInclude)
     view.appendChild(buttonExclude)
 

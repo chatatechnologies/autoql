@@ -1,5 +1,6 @@
 import './FilterLockingLine.css'
 import { ButtonContainer } from '../ButtonContainer'
+import { INFO_ICON } from '../../../Svg'
 
 export function FilterLockingLine(data){
     const {
@@ -24,16 +25,26 @@ export function FilterLockingLine(data){
     var title = document.createElement('h4')
     var categoryContainer = document.createElement('span')
     var btnContainer = new ButtonContainer()
+    var toggleColumn = document.createElement('div')
+    var toggleColumnContent = document.createElement('h4')
+    var infoIcon = document.createElement('div')
 
     categoryContainer.textContent = show_message
+    toggleColumnContent.textContent = 'Persist'
+    infoIcon.innerHTML = INFO_ICON
 
     categoryContainer.classList.add('autoql-vanilla-filter-lock-category-title')
     titleContainer.classList.add('autoql-vanilla-filter-list-title')
+    toggleColumnContent.classList.add('autoql-vaniall-persist-toggle-column')
+    toggleColumnContent.appendChild(infoIcon)
+    toggleColumn.appendChild(toggleColumnContent)
 
     title.appendChild(categoryContainer)
     title.appendChild(btnContainer)
+
     titleWrapper.appendChild(title)
     titleContainer.appendChild(titleWrapper)
+    titleContainer.appendChild(toggleColumn)
     view.appendChild(titleContainer)
 
     view.data = data

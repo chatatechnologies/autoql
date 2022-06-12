@@ -21,4 +21,15 @@
     margin-top: 3px;
     color: var(--autoql-vanilla-text-color-primary);
     display: flex;
+    font-size: 14PX;
+}
+
+.autoql-vaniall-persist-toggle-column{
+    margin-right: 25px;
+    max-width: 350px;
+}
+
+.autoql-vaniall-persist-toggle-column .autoql-vanilla-interpretation-icon{
+    height: 20px;
+    font-size: 15px;
 }
