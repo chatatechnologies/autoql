@@ -1,10 +1,10 @@
 import './ConditionList.css'
-import { FilterLockingLine } from '../FilterLockingLine'
+import { FilterLockingList } from '../FilterLockingList'
 
 export function ConditionList(){
     var container = document.createElement('div')
     var emptyConditionListContainer = document.createElement('div')
-    var conditionLines = []
+    var conditionList = []
     emptyConditionListContainer.innerHTML = `
         <p><i>No Filters are locked yet</i></p>
     `
@@ -16,13 +16,13 @@ export function ConditionList(){
         emptyConditionListContainer.style.display = 'none'
     }
 
-    container.addLine = (data) => {
-        if(conditionLines.length === 0){
+    container.addList = (data) => {
+        if(conditionList.length === 0){
             container.hideConditionEmptyMessage()
         }
-        var line = new FilterLockingLine(data)
-        container.appendChild(line)
-        conditionLines.push(line)
+        var list = new FilterLockingList(data)
+        container.appendChild(list)
+        conditionList.push(list)
     }
 
     return container

@@ -1,8 +1,8 @@
-import './FilterLockingLine.css'
+import './FilterLockingList.css'
 import { ButtonContainer } from '../ButtonContainer'
 import { INFO_ICON } from '../../../Svg'
 
-export function FilterLockingLine(data){
+export function FilterLockingList(data){
     const {
         show_message
     } = data[0]

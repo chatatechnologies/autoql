@@ -44,8 +44,8 @@ export function FilterLocking(datamessenger){
 
     view.isOpen = false
 
-    view.appendFilterLine = (data) => {
-        conditionList.addLine(data)
+    view.appendList = (data) => {
+        conditionList.addList(data)
     }
 
     view.show = () => {
