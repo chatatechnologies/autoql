@@ -20,5 +20,15 @@ export function ButtonContainer(){
     view.appendChild(buttonInclude)
     view.appendChild(buttonExclude)
 
+    buttonInclude.onclick = () => {
+        buttonInclude.classList.add('active')
+        buttonExclude.classList.remove('active')
+    }
+
+    buttonExclude.onclick = () => {
+        buttonExclude.classList.add('active')
+        buttonInclude.classList.remove('active')
+    }
+
     return view
 }
