@@ -46,6 +46,21 @@ export function FilterLocking(datamessenger){
 
     view.appendList = (data) => {
         conditionList.addList(data)
+        view.refreshConditions(data)
+    }
+
+    view.refreshConditions = (data) => {
+        var groups = {}
+        data.map(condition => {
+            if(groups[condition.show_message] === undefined){
+                groups[condition.show_message] = [condition]
+            }else{
+                groups[condition.show_message].push(condition)
+            }
+        })
+        for (let group of Object.entries(groups)) {
+            console.log(group);
+        }
     }
 
     view.show = () => {

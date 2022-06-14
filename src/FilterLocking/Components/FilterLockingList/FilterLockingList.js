@@ -1,5 +1,6 @@
 import './FilterLockingList.css'
 import { ButtonContainer } from '../ButtonContainer'
+import { FilterLockingLine } from '../FilterLockingLine'
 import { INFO_ICON } from '../../../Svg'
 
 export function FilterLockingList(data){
