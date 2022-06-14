@@ -4,9 +4,7 @@ import { FilterLockingLine } from '../FilterLockingLine'
 import { INFO_ICON } from '../../../Svg'
 
 export function FilterLockingList(data){
-    const {
-        show_message
-    } = data[0]
+    const category = data[0]
     console.log(data);
     // app_id: 1500
     // customer_id: "accounting-demo"
@@ -30,7 +28,7 @@ export function FilterLockingList(data){
     var toggleColumnContent = document.createElement('h4')
     var infoIcon = document.createElement('div')
 
-    categoryContainer.textContent = show_message
+    categoryContainer.textContent = category
     toggleColumnContent.textContent = 'Persist'
     infoIcon.innerHTML = INFO_ICON
 
@@ -47,6 +45,10 @@ export function FilterLockingList(data){
     titleContainer.appendChild(titleWrapper)
     titleContainer.appendChild(toggleColumn)
     view.appendChild(titleContainer)
+
+    view.refreshLines = () => {
+        
+    }
 
     view.data = data
     return view

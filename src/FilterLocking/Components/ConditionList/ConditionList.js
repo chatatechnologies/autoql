@@ -4,6 +4,7 @@ import { FilterLockingList } from '../FilterLockingList'
 export function ConditionList(){
     var container = document.createElement('div')
     var emptyConditionListContainer = document.createElement('div')
+    var conditionListWrapper = document.createElement('div')
     var conditionList = []
     emptyConditionListContainer.innerHTML = `
         <p><i>No Filters are locked yet</i></p>
@@ -11,6 +12,7 @@ export function ConditionList(){
     container.classList.add('autoql-vanilla-condition-list')
     emptyConditionListContainer.classList.add('autoql-vanilla-empty-condition-list')
     container.appendChild(emptyConditionListContainer)
+    container.appendChild(conditionListWrapper)
 
     container.hideConditionEmptyMessage = () => {
         emptyConditionListContainer.style.display = 'none'
@@ -21,8 +23,12 @@ export function ConditionList(){
             container.hideConditionEmptyMessage()
         }
         var list = new FilterLockingList(data)
-        container.appendChild(list)
+        conditionListWrapper.appendChild(list)
         conditionList.push(list)
+    }
+
+    container.clearList = () => {
+        conditionListWrapper.innerHTML = ''
     }
 
     return container

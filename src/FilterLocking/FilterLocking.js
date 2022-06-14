@@ -46,11 +46,11 @@ export function FilterLocking(datamessenger){
 
     view.appendList = (data) => {
         conditionList.addList(data)
-        view.refreshConditions(data)
     }
 
     view.refreshConditions = (data) => {
         var groups = {}
+        conditionList.clearList()
         data.map(condition => {
             if(groups[condition.show_message] === undefined){
                 groups[condition.show_message] = [condition]
@@ -59,7 +59,7 @@ export function FilterLocking(datamessenger){
             }
         })
         for (let group of Object.entries(groups)) {
-            console.log(group);
+            view.appendList(group)
         }
     }
 

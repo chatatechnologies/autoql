@@ -60,7 +60,7 @@ export function FilterLockingInput(datamessenger, filterLocking){
                 view.close()
                 view.clear()
                 var response = await view.onSuggestionClick(match)
-                filterLocking.appendList(response.data)
+                filterLocking.refreshConditions(response.data)
             }
         })
     }
