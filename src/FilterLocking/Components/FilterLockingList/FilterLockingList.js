@@ -5,6 +5,7 @@ import { INFO_ICON } from '../../../Svg'
 
 export function FilterLockingList(data){
     const category = data[0]
+    const lines = data[1]
     console.log(data);
     // app_id: 1500
     // customer_id: "accounting-demo"
@@ -46,10 +47,13 @@ export function FilterLockingList(data){
     titleContainer.appendChild(toggleColumn)
     view.appendChild(titleContainer)
 
-    view.refreshLines = () => {
-        
+    view.refreshLines = (lines) => {
+        lines.map(condition => {
+            console.log(condition);
+            view.appendChild(new FilterLockingLine(condition))
+        })
     }
 
-    view.data = data
+    view.refreshLines(lines)
     return view
 }
