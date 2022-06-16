@@ -29,6 +29,7 @@ export function ConditionList(){
 
     container.clearList = () => {
         conditionListWrapper.innerHTML = ''
+        FilterLockingList.index = 0
     }
 
     return container

@@ -25,26 +25,29 @@ export function FilterLockingList(data){
     var title = document.createElement('h4')
     var categoryContainer = document.createElement('span')
     var btnContainer = new ButtonContainer()
-    var toggleColumn = document.createElement('div')
-    var toggleColumnContent = document.createElement('h4')
-    var infoIcon = document.createElement('div')
 
     categoryContainer.textContent = category
-    toggleColumnContent.textContent = 'Persist'
-    infoIcon.innerHTML = INFO_ICON
 
     categoryContainer.classList.add('autoql-vanilla-filter-lock-category-title')
     titleContainer.classList.add('autoql-vanilla-filter-list-title')
-    toggleColumnContent.classList.add('autoql-vaniall-persist-toggle-column')
-    toggleColumnContent.appendChild(infoIcon)
-    toggleColumn.appendChild(toggleColumnContent)
 
     title.appendChild(categoryContainer)
     title.appendChild(btnContainer)
 
     titleWrapper.appendChild(title)
     titleContainer.appendChild(titleWrapper)
-    titleContainer.appendChild(toggleColumn)
+    if(FilterLockingList.index === 0){
+        var toggleColumn = document.createElement('div')
+        var toggleColumnContent = document.createElement('h4')
+        var infoIcon = document.createElement('div')
+        infoIcon.innerHTML = INFO_ICON
+
+        toggleColumnContent.textContent = 'Persist'
+        toggleColumnContent.classList.add('autoql-vaniall-persist-toggle-column')
+        toggleColumnContent.appendChild(infoIcon)
+        toggleColumn.appendChild(toggleColumnContent)
+        titleContainer.appendChild(toggleColumn)
+    }
     view.appendChild(titleContainer)
 
     view.refreshLines = (lines) => {
@@ -55,5 +58,8 @@ export function FilterLockingList(data){
     }
 
     view.refreshLines(lines)
+    FilterLockingList.index++
     return view
 }
+
+FilterLockingList.index = 0
