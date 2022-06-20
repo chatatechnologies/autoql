@@ -24,7 +24,7 @@ export function FilterLockingList(data){
     var titleWrapper = document.createElement('div')
     var title = document.createElement('h4')
     var categoryContainer = document.createElement('span')
-    var btnContainer = new ButtonContainer()
+    var btnContainer = new ButtonContainer(lines)
 
     categoryContainer.textContent = category
 
