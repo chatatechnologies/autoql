@@ -1,3 +1,5 @@
+import './ChataSlider.css'
+
 export function ChataSlider(){
     //     <label class="switch">
     //   <input type="checkbox" checked>
@@ -11,9 +13,10 @@ export function ChataSlider(){
 
     view.classList.add('autoql-vanilla-switch')
     slider.classList.add('autoql-vanilla-slider')
+    slider.classList.add('autoql-vanilla-round')
 
     view.appendChild(input)
     view.appendChild(slider)
-    
+
     return view
 }
