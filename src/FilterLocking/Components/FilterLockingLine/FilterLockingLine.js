@@ -27,5 +27,9 @@ export function FilterLockingLine(conditionData){
     view.appendChild(label)
     view.appendChild(settings)
 
+    slider.setOnChange(() => {
+        console.log(slider.isChecked());
+    })
+
     return view
 }
