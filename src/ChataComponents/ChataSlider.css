@@ -1,8 +1,8 @@
 .autoql-vanilla-switch {
   position: relative;
   display: inline-block;
-  width: 60px;
-  height: 34px;
+  width: 36px;
+  height: 20px;
 }
 
 .autoql-vanilla-switch input {
@@ -24,15 +24,15 @@
 }
 
 .autoql-vanilla-slider:before {
-  position: absolute;
-  content: "";
-  height: 26px;
-  width: 26px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+    content: " ";
+    position: absolute;
+    top: 2px;
+    right: 18px;
+    bottom: 2px;
+    left: 2px;
+    border-radius: 50%;
+    background: #fff;
+    transition: all .2s;
 }
 
 .autoql-vanilla-switch input:checked + .autoql-vanilla-slider {
@@ -44,9 +44,10 @@
 }
 
 .autoql-vanilla-switch input:checked + .autoql-vanilla-slider:before {
-  -webkit-transform: translateX(26px);
-  -ms-transform: translateX(26px);
-  transform: translateX(26px);
+    right: 2px;
+    left: 18px;
+    top: 2px;
+    bottom: 2px;
 }
 
 .autoql-vanilla-slider.autoql-vanilla-round {

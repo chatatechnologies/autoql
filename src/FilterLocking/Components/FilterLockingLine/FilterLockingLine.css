@@ -4,7 +4,7 @@
     flex-direction: row;
     justify-content: space-between;
     flex-wrap: nowrap;
-    margin-bottom: 7px !important;
+    margin: 7px 0px !important;
     color: var(--autoql-vanilla-text-color-primary);
 }
 
@@ -18,4 +18,8 @@
 .autoql-vanilla-remove-condition-button{
     font-size: 13px;
     cursor: pointer;
+}
+
+.autoql-vanilla-slider-wrapper{
+    margin-right: 25px !important;
 }
