@@ -13,7 +13,7 @@ export function FilterLocking(datamessenger){
     var closeButton = document.createElement('span')
     var continueButton = document.createElement('button')
     var input = new FilterLockingInput(datamessenger, view)
-    var conditionList = new ConditionList()
+    var conditionList = new ConditionList(datamessenger)
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')
     header.classList.add('autoql-vanilla-condition-lock-header')

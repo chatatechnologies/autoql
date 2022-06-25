@@ -3,7 +3,7 @@ import { ButtonContainer } from '../ButtonContainer'
 import { FilterLockingLine } from '../FilterLockingLine'
 import { INFO_ICON } from '../../../Svg'
 
-export function FilterLockingList(data){
+export function FilterLockingList(datamessenger, data){
     const category = data[0]
     const lines = data[1]
     console.log(data);
@@ -53,7 +53,7 @@ export function FilterLockingList(data){
     view.refreshLines = (lines) => {
         lines.map(condition => {
             console.log(condition);
-            view.appendChild(new FilterLockingLine(condition))
+            view.appendChild(new FilterLockingLine(datamessenger, condition))
         })
     }
 

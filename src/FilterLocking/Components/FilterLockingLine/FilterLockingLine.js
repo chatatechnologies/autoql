@@ -1,8 +1,12 @@
 import { CLEAR_ALL } from '../../../Svg'
 import { ChataSlider } from '../../../ChataComponents'
+import {
+    apiCallDelete,
+    apiCallPut
+} from '../../../Utils'
 import './FilterLockingLine.css'
 
-export function FilterLockingLine(conditionData){
+export function FilterLockingLine(datamessenger, conditionData){
     const {
         value
     } = conditionData
@@ -28,7 +32,14 @@ export function FilterLockingLine(conditionData){
     view.appendChild(settings)
 
     slider.setOnChange(() => {
-        console.log(slider.isChecked());
+        console.log(datamessenger);
+        if(slider.isChecked()){
+            console.log('CHEKED');
+        }else{
+            console.log('DELETE');
+
+
+        }
     })
 
     return view
