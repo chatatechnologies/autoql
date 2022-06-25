@@ -2,7 +2,6 @@ import { CLEAR_ALL } from '../../../Svg'
 import { ChataSlider } from '../../../ChataComponents'
 import {
     apiCallDelete,
-    apiCallPut
 } from '../../../Utils'
 import './FilterLockingLine.css'
 
@@ -32,13 +31,16 @@ export function FilterLockingLine(datamessenger, conditionData){
     view.appendChild(settings)
 
     slider.setOnChange(() => {
-        console.log(datamessenger);
+        const {
+            authentication
+        } = datamessenger.options
+        const { id } = conditionData
+
         if(slider.isChecked()){
             console.log('CHEKED');
         }else{
-            console.log('DELETE');
-
-
+            const url = `${authentication.domain}/autoql/api/v1/query/filter-locking/${id}?key=${authentication.apiKey}`
+            apiCallDelete(url, datamessenger.options)
         }
     })
 
