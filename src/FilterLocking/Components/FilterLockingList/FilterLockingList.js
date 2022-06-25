@@ -7,18 +7,6 @@ export function FilterLockingList(datamessenger, data){
     const category = data[0]
     const lines = data[1]
     console.log(data);
-    // app_id: 1500
-    // customer_id: "accounting-demo"
-    // filter_type: "include"
-    // id: 10298
-    // key: "ITEM_0_NAME_VALUE_LABEL"
-    // lock_flag: null
-    // model_id: 10010
-    // project_id: 159
-    // show_message: "Item Name"
-    // user_id: "vidhya@chata.ai"
-    // user_type: "user"
-    // value: "Seals"
     var view = document.createElement('div')
     var titleContainer = document.createElement('div')
     var titleWrapper = document.createElement('div')

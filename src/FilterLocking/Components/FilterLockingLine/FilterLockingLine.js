@@ -2,6 +2,7 @@ import { CLEAR_ALL } from '../../../Svg'
 import { ChataSlider } from '../../../ChataComponents'
 import {
     apiCallDelete,
+    apiCallPut
 } from '../../../Utils'
 import './FilterLockingLine.css'
 
@@ -9,6 +10,7 @@ export function FilterLockingLine(datamessenger, conditionData){
     const {
         value
     } = conditionData
+
     var view = document.createElement('div')
     var label = document.createElement('div')
     var settings = document.createElement('div')
@@ -29,20 +31,51 @@ export function FilterLockingLine(datamessenger, conditionData){
     settings.appendChild(removeButton)
     view.appendChild(label)
     view.appendChild(settings)
+    slider.setChecked('checked')
+    view.values = conditionData
 
-    slider.setOnChange(() => {
+    slider.setOnChange(async () => {
         const {
             authentication
         } = datamessenger.options
-        const { id } = conditionData
+        const { id } = view.values
 
         if(slider.isChecked()){
-            console.log('CHEKED');
+            const {
+                filter_type,
+                key,
+                lock_flag,
+                show_message
+            } = conditionData
+            const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
+
+            const response = await apiCallPut(url, {
+                columns: [{
+                    isSession: false,
+                    filter_type,
+                    key,
+                    lock_flag,
+                    show_message,
+                    value,
+                }]
+            }, datamessenger.options)
+            
+            view.updateValues(response)
         }else{
             const url = `${authentication.domain}/autoql/api/v1/query/filter-locking/${id}?key=${authentication.apiKey}`
             apiCallDelete(url, datamessenger.options)
         }
     })
+
+    view.updateValues = async (values) => {
+        const data = values.data.data
+        console.log(data);
+        var finded = data.find((lockingLineValues) => {
+            return value === lockingLineValues.value
+        })
+
+        view.values = finded
+    }
 
     return view
 }
