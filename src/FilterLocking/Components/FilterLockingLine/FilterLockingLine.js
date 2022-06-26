@@ -59,8 +59,8 @@ export function FilterLockingLine(datamessenger, conditionData){
                     value,
                 }]
             }, datamessenger.options)
-            
-            view.updateValues(response)
+
+            view.updateValues(response.data.data)
         }else{
             const url = `${authentication.domain}/autoql/api/v1/query/filter-locking/${id}?key=${authentication.apiKey}`
             apiCallDelete(url, datamessenger.options)
@@ -68,8 +68,7 @@ export function FilterLockingLine(datamessenger, conditionData){
     })
 
     view.updateValues = async (values) => {
-        const data = values.data.data
-        console.log(data);
+        const { data } = values
         var finded = data.find((lockingLineValues) => {
             return value === lockingLineValues.value
         })
