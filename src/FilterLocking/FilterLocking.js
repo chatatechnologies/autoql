@@ -1,6 +1,7 @@
 import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
+import { apiCallGet } from '../Utils'
 import './FilterLocking.css'
 
 export function FilterLocking(datamessenger){
@@ -73,6 +74,20 @@ export function FilterLocking(datamessenger){
         view.style.visibility = 'hidden';
         view.style.opacity = 0;
         view.isOpen = false
+    }
+
+    view.getConditions = async () => {
+        const {
+            authentication
+        } = datamessenger.options
+        const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
+        const response = await apiCallGet(url, datamessenger.options)
+        return response.data.data
+    }
+
+    view.loadConditions = async () => {
+        const { data } = await view.getConditions()
+        view.refreshConditions(data)
     }
 
     closeButton.onclick = () => {

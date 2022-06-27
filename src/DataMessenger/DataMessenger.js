@@ -1452,6 +1452,7 @@ export function DataMessenger(elem, options){
         obj.headerRight = headerRight;
         obj.headerTitle = headerTitle;
         obj.clearMessagePop = popover;
+        filterLocking.loadConditions()
     }
 
     obj.closePopOver = (popover) => {
