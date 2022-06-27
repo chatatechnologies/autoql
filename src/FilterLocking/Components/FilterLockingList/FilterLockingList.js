@@ -6,7 +6,6 @@ import { INFO_ICON } from '../../../Svg'
 export function FilterLockingList(datamessenger, data){
     const category = data[0]
     const lines = data[1]
-    console.log(data);
     var view = document.createElement('div')
     var titleContainer = document.createElement('div')
     var titleWrapper = document.createElement('div')

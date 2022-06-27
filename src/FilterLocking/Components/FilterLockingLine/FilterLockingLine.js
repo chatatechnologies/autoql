@@ -76,5 +76,19 @@ export function FilterLockingLine(datamessenger, conditionData){
         view.values = finded
     }
 
+    view.remove = () => {
+        const {
+            authentication
+        } = datamessenger.options
+        const { id } = view.values
+        const url = `${authentication.domain}/autoql/api/v1/query/filter-locking/${id}?key=${authentication.apiKey}`
+        apiCallDelete(url, datamessenger.options)
+        view.parentElement.removeChild(view)
+    }
+
+    removeButton.onclick = () => {
+        view.remove()
+    }
+
     return view
 }
