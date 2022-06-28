@@ -22,7 +22,7 @@ export function FilterLockingLine(datamessenger, conditionData){
     settings.classList.add('autoql-vanilla-condition-table-settings')
     removeButton.classList.add('autoql-vanilla-remove-condition-button')
     sliderWrapper.classList.add('autoql-vanilla-slider-wrapper')
-
+    view.data = conditionData
     label.textContent = value
     removeButton.innerHTML = CLEAR_ALL
 
@@ -84,6 +84,14 @@ export function FilterLockingLine(datamessenger, conditionData){
         const url = `${authentication.domain}/autoql/api/v1/query/filter-locking/${id}?key=${authentication.apiKey}`
         apiCallDelete(url, datamessenger.options)
         view.parentElement.removeChild(view)
+    }
+
+    view.exclude = () => {
+        view.data = 'exclude'
+    }
+
+    view.include = () => {
+        view.data = 'include'
     }
 
     removeButton.onclick = () => {

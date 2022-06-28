@@ -39,10 +39,22 @@ export function FilterLockingList(datamessenger, data){
 
     view.refreshLines = (lines) => {
         lines.map(condition => {
-            console.log(condition);
             view.appendChild(new FilterLockingLine(datamessenger, condition))
         })
     }
+
+    view.getLines = () => {
+        const lines = view.getElementsByClassName('autoql-vanilla-filter-locking-line')
+        return lines
+    }
+
+    btnContainer.setExcludeClick(() => {
+        console.log(view.getLines());
+    })
+
+    btnContainer.setIncludeClick(() => {
+        console.log(view.getLines());
+    })
 
     view.refreshLines(lines)
     FilterLockingList.index++
