@@ -25,6 +25,8 @@ export function FilterLockingLine(datamessenger, conditionData){
     label.textContent = value
     removeButton.innerHTML = CLEAR_ALL
 
+    removeButton.setAttribute('data-tippy-content', 'Remove Filter')
+
     sliderWrapper.appendChild(slider)
     settings.appendChild(sliderWrapper)
     settings.appendChild(removeButton)

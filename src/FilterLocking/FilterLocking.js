@@ -2,6 +2,7 @@ import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
 import { apiCallGet } from '../Utils'
+import { refreshTooltips } from '../Tooltips'
 import './FilterLocking.css'
 
 export function FilterLocking(datamessenger){
@@ -31,6 +32,11 @@ export function FilterLocking(datamessenger){
     infoIcon.innerHTML = INFO_ICON
     closeButton.innerHTML = CLOSE_ICON
     continueButton.textContent = 'Continue'
+
+    infoIcon.setAttribute(
+        'data-tippy-content',
+        'Filters can be applied to narrow down<br /> your query results. Locking a filter<br /> ensures that only the specific data<br /> you wish to see is returned.'
+    )
 
     title.appendChild(infoIcon)
     titleContainer.appendChild(title)
@@ -62,6 +68,7 @@ export function FilterLocking(datamessenger){
         for (let group of Object.entries(groups)) {
             view.appendList(group)
         }
+        refreshTooltips()
     }
 
     view.show = () => {

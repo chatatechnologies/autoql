@@ -22,7 +22,7 @@
     left: 10px;
     border-radius: unset !important;
     max-height: 200px;
-    overflow-y: auto;
+    overflow-y: auto !important;
 }
 
 .autoql-vanilla-auto-complete-filter-locking li{

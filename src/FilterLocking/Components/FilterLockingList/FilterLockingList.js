@@ -31,7 +31,10 @@ export function FilterLockingList(datamessenger, data){
         var toggleColumnContent = document.createElement('h4')
         var infoIcon = document.createElement('div')
         infoIcon.innerHTML = INFO_ICON
-
+        infoIcon.setAttribute(
+            'data-tippy-content',
+            'Persistent filters remain locked at all<br /> times, unless the filter is removed. If<br /> unchecked, the filter will be locked<br /> until you end your browser session.'
+        )
         toggleColumnContent.textContent = 'Persist'
         toggleColumnContent.classList.add('autoql-vaniall-persist-toggle-column')
         toggleColumnContent.appendChild(infoIcon)

@@ -23,3 +23,7 @@
 .autoql-vanilla-slider-wrapper{
     margin-right: 25px !important;
 }
+
+.autoql-vanilla-remove-condition-button:hover{
+    color: var(--autoql-vanilla-danger-color);
+}
