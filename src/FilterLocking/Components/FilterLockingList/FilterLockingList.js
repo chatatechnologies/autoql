@@ -1,6 +1,9 @@
 import './FilterLockingList.css'
 import { ButtonContainer } from '../ButtonContainer'
 import { FilterLockingLine } from '../FilterLockingLine'
+import {
+    apiCallPut
+} from '../../../Utils'
 import { INFO_ICON } from '../../../Svg'
 
 export function FilterLockingList(datamessenger, data){
@@ -48,7 +51,12 @@ export function FilterLockingList(datamessenger, data){
         return lines
     }
 
-    const onButtonGroupClick = (action) => {
+    const onButtonGroupClick = async (action) => {
+        const {
+            authentication
+        } = datamessenger.options
+        const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
+
         const lines = view.getLines()
         var cols = []
         for (var line of lines) {
@@ -62,7 +70,10 @@ export function FilterLockingList(datamessenger, data){
             })
         }
 
-        console.log(cols);
+        await apiCallPut(url, {
+            columns: cols
+        }, datamessenger.options)
+
     }
 
     btnContainer.setExcludeClick(() => {
