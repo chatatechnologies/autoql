@@ -48,12 +48,30 @@ export function FilterLockingList(datamessenger, data){
         return lines
     }
 
+    const onButtonGroupClick = (action) => {
+        const lines = view.getLines()
+        var cols = []
+        for (var line of lines) {
+            if(action === 'exclude'){
+                line.exclude()
+            }else{
+                line.include()
+            }
+            cols.push({
+                ...line.getData()
+            })
+        }
+
+        console.log(cols);
+    }
+
     btnContainer.setExcludeClick(() => {
-        console.log(view.getLines());
+        onButtonGroupClick('exclude')
+
     })
 
     btnContainer.setIncludeClick(() => {
-        console.log(view.getLines());
+        onButtonGroupClick('include')
     })
 
     view.refreshLines(lines)

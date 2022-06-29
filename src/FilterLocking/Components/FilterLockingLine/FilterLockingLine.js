@@ -22,7 +22,6 @@ export function FilterLockingLine(datamessenger, conditionData){
     settings.classList.add('autoql-vanilla-condition-table-settings')
     removeButton.classList.add('autoql-vanilla-remove-condition-button')
     sliderWrapper.classList.add('autoql-vanilla-slider-wrapper')
-    view.data = conditionData
     label.textContent = value
     removeButton.innerHTML = CLEAR_ALL
 
@@ -87,11 +86,15 @@ export function FilterLockingLine(datamessenger, conditionData){
     }
 
     view.exclude = () => {
-        view.data = 'exclude'
+        view.values.filter_type = 'exclude'
     }
 
     view.include = () => {
-        view.data = 'include'
+        view.values.filter_type = 'include'
+    }
+
+    view.getData = () => {
+        return view.values
     }
 
     removeButton.onclick = () => {

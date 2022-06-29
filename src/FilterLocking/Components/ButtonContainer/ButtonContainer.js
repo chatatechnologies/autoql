@@ -34,11 +34,11 @@ export function ButtonContainer(lines){
     }
 
     view.setExcludeClick = (fn) => {
-        view.onIncludeClick = fn
+        view.onExcludeClick = fn
     }
 
     view.setIncludeClick = (fn) => {
-        view.onExcludeClick = fn
+        view.onIncludeClick = fn
     }
     if(filterType === 'include'){
         buttonInclude.classList.add('active')
