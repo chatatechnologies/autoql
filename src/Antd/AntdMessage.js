@@ -6,11 +6,13 @@ export function AntdMessage(text, duration, options={}){
     var obj = this;
 
     const {
-        parent
+        parent,
+        icon
     } = options
 
     const wrapper = document.createElement('div');
     const wrapperNotice = document.createElement('span');
+    const antdIcon = icon ? icon : ANTD_INFO_ICON
 
     const message = htmlToElement(`
         <div class="ant-message">
@@ -27,7 +29,7 @@ export function AntdMessage(text, duration, options={}){
                             role="img"
                             aria-label="check-circle"
                             class="anticon anticon-check-circle">
-                            ${ANTD_INFO_ICON}
+                            ${antdIcon}
                         </span>
                         <span>${text}</span>
                     </div>

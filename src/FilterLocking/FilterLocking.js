@@ -1,7 +1,7 @@
 import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
 import { AntdMessage } from '../Antd'
-import { INFO_ICON, CLOSE_ICON } from '../Svg'
+import { INFO_ICON, CLOSE_ICON, IFON_ICON_BLUE } from '../Svg'
 import { apiCallGet } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import './FilterLocking.css'
@@ -77,7 +77,8 @@ export function FilterLocking(datamessenger){
         view.style.opacity = 1;
         view.isOpen = true
         new AntdMessage('TEST', 300000, {
-            parent: view
+            parent: view,
+            icon: IFON_ICON_BLUE
         })
     }
 

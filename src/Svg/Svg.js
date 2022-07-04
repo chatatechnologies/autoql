@@ -181,6 +181,10 @@ export const INFO_ICON = `
 </svg>
 `;
 
+export const IFON_ICON_BLUE = `
+<svg viewBox="0 0 24 24" height="1em" width="1em" style="color: #3498db"><path d="M12 0a12 12 0 1012 12A12.013 12.013 0 0012 0zm.25 5a1.5 1.5 0 11-1.5 1.5 1.5 1.5 0 011.5-1.5zm2.25 13.5h-4a1 1 0 010-2h.75a.25.25 0 00.25-.25v-4.5a.25.25 0 00-.25-.25h-.75a1 1 0 010-2h1a2 2 0 012 2v4.75a.25.25 0 00.25.25h.75a1 1 0 110 2z"></path></svg>
+`
+
 export const FILTER_TABLE = `
 <svg class="filter-table" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <polygon class="filter-table" points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
