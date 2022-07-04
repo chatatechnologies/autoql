@@ -1,5 +1,6 @@
 import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
+import { AntdMessage } from '../Antd'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
 import { apiCallGet } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
@@ -75,6 +76,9 @@ export function FilterLocking(datamessenger){
         view.style.visibility = 'visible';
         view.style.opacity = 1;
         view.isOpen = true
+        new AntdMessage('TEST', 300000, {
+            parent: view
+        })
     }
 
     view.hide = () => {

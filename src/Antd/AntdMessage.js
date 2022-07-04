@@ -2,8 +2,12 @@ import { htmlToElement } from '../Utils'
 import { ANTD_INFO_ICON } from '../Svg'
 import './Antd.css'
 
-export function AntdMessage(text, duration){
+export function AntdMessage(text, duration, options={}){
     var obj = this;
+
+    const {
+        parent
+    } = options
 
     const wrapper = document.createElement('div');
     const wrapperNotice = document.createElement('span');
@@ -50,7 +54,11 @@ export function AntdMessage(text, duration){
 
     message.appendChild(wrapperNotice);
     wrapper.appendChild(message);
-    document.body.appendChild(wrapper);
+    if(!parent){
+        document.body.appendChild(wrapper);
+    }else{
+        parent.appendChild(wrapper)
+    }
 
     setTimeout(() => {
         obj.remove();
