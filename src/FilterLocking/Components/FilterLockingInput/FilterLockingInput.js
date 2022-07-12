@@ -83,7 +83,7 @@ export function FilterLockingInput(datamessenger, filterLocking){
         const body = {
             columns: [
                 {
-                    filter_type: 'include', // TODO:
+                    filter_type: 'include',
                     key: data.canonical,
                     show_message: data.show_message,
                     value: data.keyword

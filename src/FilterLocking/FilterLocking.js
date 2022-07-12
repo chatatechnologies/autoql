@@ -82,6 +82,10 @@ export function FilterLocking(datamessenger){
         })
     }
 
+    view.existsFilter = (filter) => {
+
+    }
+
     view.hide = () => {
         view.style.visibility = 'hidden';
         view.style.opacity = 0;

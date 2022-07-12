@@ -30,6 +30,11 @@ export function ConditionList(datamessenger){
     container.clearList = () => {
         conditionListWrapper.innerHTML = ''
         FilterLockingList.index = 0
+        conditionList = []
+    }
+
+    container.getData = () => {
+        return conditionList.map(list => Array.from(list.getLines())).flat()
     }
 
     return container
