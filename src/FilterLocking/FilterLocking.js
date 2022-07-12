@@ -1,6 +1,5 @@
 import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
-import { AntdMessage } from '../Antd'
 import { INFO_ICON, CLOSE_ICON, IFON_ICON_BLUE } from '../Svg'
 import { apiCallGet } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
@@ -76,14 +75,17 @@ export function FilterLocking(datamessenger){
         view.style.visibility = 'visible';
         view.style.opacity = 1;
         view.isOpen = true
-        new AntdMessage('TEST', 300000, {
-            parent: view,
-            icon: IFON_ICON_BLUE
-        })
     }
 
     view.existsFilter = (filter) => {
+        const data = conditionList.getData()
+        const finded = data.find((line) => {
+            const lineData = line.getData()
+            return lineData.key === filter.canonical
+            && lineData.value === filter.keyword
+        })
 
+        return finded
     }
 
     view.hide = () => {

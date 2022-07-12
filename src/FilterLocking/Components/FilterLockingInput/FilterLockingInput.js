@@ -3,6 +3,9 @@ import {
     apiCallGet,
     apiCallPut
 } from '../../../Utils'
+import { AntdMessage } from '../../../Antd'
+import { IFON_ICON_BLUE } from '../../../Svg'
+
 
 export function FilterLockingInput(datamessenger, filterLocking){
     var view = document.createElement('div')
@@ -60,7 +63,9 @@ export function FilterLockingInput(datamessenger, filterLocking){
                 view.close()
                 view.clear()
                 var response = await view.onSuggestionClick(match)
-                filterLocking.refreshConditions(response.data)
+                if(response){
+                    filterLocking.refreshConditions(response.data)
+                }
             }
         })
     }
@@ -91,10 +96,19 @@ export function FilterLockingInput(datamessenger, filterLocking){
             ]
         }
 
-        const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
-        const response = await apiCallPut(url, body, datamessenger.options)
+        if(filterLocking.existsFilter(data)){
+            new AntdMessage('This filter has already been applied', 3000, {
+                parent: filterLocking,
+                icon: IFON_ICON_BLUE
+            })
+            return Promise.resolve(0)
+        }else{
+            const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
+            const response = await apiCallPut(url, body, datamessenger.options)
 
-        return response.data.data
+            return response.data.data
+        }
+
     }
 
     view.close = () => {
