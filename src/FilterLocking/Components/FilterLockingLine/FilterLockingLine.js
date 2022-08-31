@@ -8,7 +8,7 @@ import './FilterLockingLine.css'
 import { strings } from '../../../Strings'
 
 
-export function FilterLockingLine(datamessenger, conditionData){
+export function FilterLockingLine(datamessenger, conditionList, conditionData){
     const {
         value
     } = conditionData
@@ -103,6 +103,11 @@ export function FilterLockingLine(datamessenger, conditionData){
 
     removeButton.onclick = () => {
         view.remove()
+        console.log(conditionList.getData());
+        if(!conditionList.getData().length){
+            conditionList.clearList()
+            conditionList.showConditionEmptyMessage()
+        }
     }
 
     return view

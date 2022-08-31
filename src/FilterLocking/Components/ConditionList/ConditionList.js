@@ -19,14 +19,14 @@ export function ConditionList(datamessenger){
     }
 
     container.showConditionEmptyMessage = () => {
-        emptyConditionListContainer.style.display = 'none'
+        emptyConditionListContainer.style.display = 'block'
     }
 
     container.addList = (data) => {
         if(conditionList.length === 0){
             container.hideConditionEmptyMessage()
         }
-        var list = new FilterLockingList(datamessenger, data)
+        var list = new FilterLockingList(datamessenger, container, data)
         conditionListWrapper.appendChild(list)
         conditionList.push(list)
     }

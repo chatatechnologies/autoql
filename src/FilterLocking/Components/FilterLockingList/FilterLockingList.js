@@ -8,7 +8,7 @@ import { INFO_ICON } from '../../../Svg'
 import { strings } from '../../../Strings'
 
 
-export function FilterLockingList(datamessenger, data){
+export function FilterLockingList(datamessenger, conditionList,  data){
     const category = data[0]
     const lines = data[1]
     var view = document.createElement('div')
@@ -47,7 +47,7 @@ export function FilterLockingList(datamessenger, data){
 
     view.refreshLines = (lines) => {
         lines.map(condition => {
-            view.appendChild(new FilterLockingLine(datamessenger, condition))
+            view.appendChild(new FilterLockingLine(datamessenger, conditionList, condition))
         })
     }
 
@@ -83,7 +83,6 @@ export function FilterLockingList(datamessenger, data){
 
     btnContainer.setExcludeClick(() => {
         onButtonGroupClick('exclude')
-
     })
 
     btnContainer.setIncludeClick(() => {
