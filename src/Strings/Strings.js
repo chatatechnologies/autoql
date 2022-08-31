@@ -140,6 +140,9 @@ export const strings = new LocalizedStrings({
         filterLocking: 'Filter Locking',
         continue: 'Continue',
         filterLockingTooltip: 'Filters can be applied to narrow down<br /> your query results. Locking a filter<br /> ensures that only the specific data<br /> you wish to see is returned.',
+        filterLockingInputPlaceholder: 'Search & select a filter',
+        filterLockingAddFilterWarning: 'This filter has already been applied.',
+        filterLockingRemove: 'Remove Filter',
     },
     es: {
         report: 'repórtalo',
@@ -272,5 +275,8 @@ export const strings = new LocalizedStrings({
         filterLocking: 'Bloqueo de filtros',
         continue: 'Continuar',
         filterLockingTooltip: 'Se pueden aplicar filtros para restringir<br /> los resultados de su consulta. Bloquear un filtro<br /> garantiza que solo se devuelvan los datos específicos<br /> que desea ver.',
+        filterLockingInputPlaceholder: 'Buscar y seleccionar un filtro',
+        filterLockingAddFilterWarning: 'Este filtro ya se ha aplicado.',
+        filterLockingRemove: 'Remover Filtro',
     }
 });

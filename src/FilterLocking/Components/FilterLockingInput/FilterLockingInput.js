@@ -5,7 +5,7 @@ import {
 } from '../../../Utils'
 import { AntdMessage } from '../../../Antd'
 import { IFON_ICON_BLUE } from '../../../Svg'
-
+import { strings } from '../../../Strings'
 
 export function FilterLockingInput(datamessenger, filterLocking){
     var view = document.createElement('div')
@@ -20,7 +20,7 @@ export function FilterLockingInput(datamessenger, filterLocking){
 
     inputContainer.classList.add('autoql-vanilla-text-bar')
     input.classList.add('autoql-vanilla-condition-locking-input')
-    input.setAttribute('placeholder', 'Search & select a filter')
+    input.setAttribute('placeholder', strings.filterLockingInputPlaceholder)
     autocompleteContainer.classList.add('autoql-vanilla-auto-complete-suggestions')
     autoCompleteList.classList.add('autoql-vanilla-auto-complete-filter-locking')
 
@@ -97,7 +97,7 @@ export function FilterLockingInput(datamessenger, filterLocking){
         }
 
         if(filterLocking.existsFilter(data)){
-            new AntdMessage('This filter has already been applied', 3000, {
+            new AntdMessage(strings.filterLockingAddFilterWarning, 3000, {
                 parent: filterLocking,
                 icon: IFON_ICON_BLUE
             })

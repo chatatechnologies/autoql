@@ -5,6 +5,8 @@ import {
     apiCallPut
 } from '../../../Utils'
 import './FilterLockingLine.css'
+import { strings } from '../../../Strings'
+
 
 export function FilterLockingLine(datamessenger, conditionData){
     const {
@@ -25,7 +27,7 @@ export function FilterLockingLine(datamessenger, conditionData){
     label.textContent = value
     removeButton.innerHTML = CLEAR_ALL
 
-    removeButton.setAttribute('data-tippy-content', 'Remove Filter')
+    removeButton.setAttribute('data-tippy-content', strings.filterLockingRemove)
 
     sliderWrapper.appendChild(slider)
     settings.appendChild(sliderWrapper)
