@@ -143,7 +143,12 @@ export const strings = new LocalizedStrings({
         filterLockingInputPlaceholder: 'Search & select a filter',
         filterLockingAddFilterWarning: 'This filter has already been applied.',
         filterLockingRemove: 'Remove Filter',
-    },
+        emptyFilterConditionList: 'No Filters are locked yet',
+        include: 'INCLUDE',
+        exclude: 'EXCLUDE',
+        filterLockingListTooltip: 'Persistent filters remain locked at all<br /> times, unless the filter is removed. If<br /> unchecked, the filter will be locked<br /> until you end your browser session.',
+        persist: 'Persist',}
+    ,
     es: {
         report: 'repórtalo',
         introMessage: 'Hola {0} Analicemos sus datos. ¿Qué puedo ayudarte a descubrir hoy?',
@@ -278,5 +283,10 @@ export const strings = new LocalizedStrings({
         filterLockingInputPlaceholder: 'Buscar y seleccionar un filtro',
         filterLockingAddFilterWarning: 'Este filtro ya se ha aplicado.',
         filterLockingRemove: 'Remover Filtro',
+        emptyFilterConditionList: 'Ningún filtro está bloqueado todavía',
+        include: 'INCLUIR',
+        exclude: 'EXCLUIR',
+        filterLockingListTooltip: 'Los filtros persistentes permanecen bloqueados en todo <br /> momento, a menos que se elimine el filtro. Si<br /> no está marcado, el filtro se bloqueará<br /> hasta que finalice la sesión del navegador.',
+        persist: 'Persistir',
     }
 });

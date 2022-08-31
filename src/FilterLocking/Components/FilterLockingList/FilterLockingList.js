@@ -5,6 +5,8 @@ import {
     apiCallPut
 } from '../../../Utils'
 import { INFO_ICON } from '../../../Svg'
+import { strings } from '../../../Strings'
+
 
 export function FilterLockingList(datamessenger, data){
     const category = data[0]
@@ -33,9 +35,9 @@ export function FilterLockingList(datamessenger, data){
         infoIcon.innerHTML = INFO_ICON
         infoIcon.setAttribute(
             'data-tippy-content',
-            'Persistent filters remain locked at all<br /> times, unless the filter is removed. If<br /> unchecked, the filter will be locked<br /> until you end your browser session.'
+            strings.filterLockingListTooltip,
         )
-        toggleColumnContent.textContent = 'Persist'
+        toggleColumnContent.textContent = strings.persist
         toggleColumnContent.classList.add('autoql-vaniall-persist-toggle-column')
         toggleColumnContent.appendChild(infoIcon)
         toggleColumn.appendChild(toggleColumnContent)

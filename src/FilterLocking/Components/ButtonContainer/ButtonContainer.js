@@ -1,4 +1,5 @@
 import './ButtonContainer.css'
+import { strings } from '../../../Strings'
 
 export function ButtonContainer(lines){
     var view = document.createElement('div')
@@ -9,8 +10,8 @@ export function ButtonContainer(lines){
     view.onIncludeClick = () => {}
     view.onExcludeClick = () => {}
     const filterType = lines[0].filter_type
-    textInclude.textContent = 'INCLUDE'
-    textExclude.textContent = 'EXCLUDE'
+    textInclude.textContent = strings.include
+    textExclude.textContent =  strings.exclude
 
     view.classList.add('autoql-vanilla-radio-btn-container')
     buttonInclude.classList.add('autoql-vanilla-radio-btn')
