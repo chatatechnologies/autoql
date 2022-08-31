@@ -1,6 +1,7 @@
 import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
-import { INFO_ICON, CLOSE_ICON, IFON_ICON_BLUE } from '../Svg'
+import { INFO_ICON, CLOSE_ICON } from '../Svg'
+import { strings } from '../Strings'
 import { apiCallGet } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import './FilterLocking.css'
@@ -28,14 +29,14 @@ export function FilterLocking(datamessenger){
     continueButton.classList.add('large')
     // infoIcon.classList.add('autoql-vanilla-chata-icon')
 
-    title.textContent = 'Filter Locking'
+    title.textContent = strings.filterLocking
     infoIcon.innerHTML = INFO_ICON
     closeButton.innerHTML = CLOSE_ICON
-    continueButton.textContent = 'Continue'
+    continueButton.textContent = strings.continue
 
     infoIcon.setAttribute(
         'data-tippy-content',
-        'Filters can be applied to narrow down<br /> your query results. Locking a filter<br /> ensures that only the specific data<br /> you wish to see is returned.'
+        strings.filterLockingTooltip
     )
 
     title.appendChild(infoIcon)

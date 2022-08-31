@@ -137,7 +137,9 @@ export const strings = new LocalizedStrings({
         infoIconRuleContainer: 'Your query should describe the result you wish to be alerted about.',
         filterButton: 'Open filter locking menu',
         reverseTranslationLabel: 'Interpreted as: ',
-
+        filterLocking: 'Filter Locking',
+        continue: 'Continue',
+        filterLockingTooltip: 'Filters can be applied to narrow down<br /> your query results. Locking a filter<br /> ensures that only the specific data<br /> you wish to see is returned.',
     },
     es: {
         report: 'repórtalo',
@@ -267,5 +269,8 @@ export const strings = new LocalizedStrings({
         infoIconRuleContainer: 'Su consulta debe describir el resultado sobre el que desea recibir una alerta.',
         filterButton: 'Abrir menú de bloqueo de filtro',
         reverseTranslationLabel: 'Interpretado como: ',
+        filterLocking: 'Bloqueo de filtros',
+        continue: 'Continuar',
+        filterLockingTooltip: 'Se pueden aplicar filtros para restringir<br /> los resultados de su consulta. Bloquear un filtro<br /> garantiza que solo se devuelvan los datos específicos<br /> que desea ver.',
     }
 });
