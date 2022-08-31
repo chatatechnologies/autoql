@@ -1,6 +1,5 @@
 import './ConditionList.css'
 import { FilterLockingList } from '../FilterLockingList'
-import { strings } from '../../../Strings'
 
 export function ConditionList(datamessenger){
     var container = document.createElement('div')
@@ -8,7 +7,7 @@ export function ConditionList(datamessenger){
     var conditionListWrapper = document.createElement('div')
     var conditionList = []
     emptyConditionListContainer.innerHTML = `
-        <p><i>${strings.emptyFilterConditionList}</i></p>
+        <p><i>No Filters are locked yet</i></p>
     `
     container.classList.add('autoql-vanilla-condition-list')
     emptyConditionListContainer.classList.add('autoql-vanilla-empty-condition-list')
@@ -16,6 +15,10 @@ export function ConditionList(datamessenger){
     container.appendChild(conditionListWrapper)
 
     container.hideConditionEmptyMessage = () => {
+        emptyConditionListContainer.style.display = 'none'
+    }
+
+    container.showConditionEmptyMessage = () => {
         emptyConditionListContainer.style.display = 'none'
     }
 

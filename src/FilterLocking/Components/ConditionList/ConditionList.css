@@ -15,4 +15,5 @@
 .autoql-vanilla-empty-condition-list p {
     margin-top: 20px!important;
     vertical-align: middle;
+    color: var(--autoql-vanilla-text-color-primary);
 }
