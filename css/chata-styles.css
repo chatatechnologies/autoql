@@ -1958,6 +1958,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     top: 3px;
 }
 
+.autoql-vanilla-screen-menu svg{
+    margin-bottom: 3px;
+}
+
 @-webkit-keyframes fadeIn {
   0% {
     opacity: 0;

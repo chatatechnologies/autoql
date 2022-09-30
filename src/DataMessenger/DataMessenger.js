@@ -1365,7 +1365,7 @@ export function DataMessenger(elem, options){
         `);
 
         var screenButton = htmlToElement(`
-            <button class="autoql-vanilla-chata-button screen-menu autoql-btn-maximize"
+            <button class="autoql-vanilla-chata-button autoql-vanilla-screen-menu autoql-btn-maximize"
             data-tippy-content="${strings.maximizeButton}">
                 ${MAXIMIZE_BUTTON}
             </button>
@@ -1455,10 +1455,12 @@ export function DataMessenger(elem, options){
                 screenButton.classList.remove('autoql-btn-maximize')
                 screenButton.classList.add('autoql-btn-minimize')
                 obj.setOption('width', window.screen.width - 45)
+                screenButton.innerHTML = MINIMIZE_BUTTON
             }else{
                 screenButton.classList.add('autoql-btn-maximize')
                 screenButton.classList.remove('autoql-btn-minimize')
                 obj.setOption('width', 500)
+                screenButton.innerHTML = MAXIMIZE_BUTTON
             }
         }
 
