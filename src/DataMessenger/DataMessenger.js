@@ -259,14 +259,15 @@ export function DataMessenger(elem, options){
                 obj.options.width = parseInt(value);
                 if(obj.options.isVisible &&
                     ['left', 'right'].includes(obj.options.placement)){
-                    obj.rootElem.style.width = value;
+                        console.log('AAAAA');
+                    obj.rootElem.style.width = value + 'px';
                 }
                 break;
             case 'height':
                 obj.options.height = parseInt(value);
                 if(obj.options.isVisible &&
                     ['top', 'bottom'].includes(obj.options.placement)){
-                    obj.rootElem.style.height = value;
+                    obj.rootElem.style.height = value + 'px';
                 }
                 break;
             case 'resizable':
@@ -1234,9 +1235,7 @@ export function DataMessenger(elem, options){
             }
             clearTimeout(timer);
             timer = setTimeout(() => {
-
                 window.dispatchEvent(new CustomEvent('chata-resize', {}));
-
             }, 100);
         }
 
@@ -1366,7 +1365,7 @@ export function DataMessenger(elem, options){
         `);
 
         var screenButton = htmlToElement(`
-            <button class="autoql-vanilla-chata-button screen-menu"
+            <button class="autoql-vanilla-chata-button screen-menu autoql-btn-maximize"
             data-tippy-content="${strings.maximizeButton}">
                 ${MAXIMIZE_BUTTON}
             </button>
@@ -1448,6 +1447,20 @@ export function DataMessenger(elem, options){
                 }
             }
         })
+
+        screenButton.onclick = () => {
+            console.log('TEST');
+            console.log(screenButton.classList.contains('autoql-btn-maximize'));
+            if(screenButton.classList.contains('autoql-btn-maximize')){
+                screenButton.classList.remove('autoql-btn-maximize')
+                screenButton.classList.add('autoql-btn-minimize')
+                obj.setOption('width', window.screen.width - 45)
+            }else{
+                screenButton.classList.add('autoql-btn-maximize')
+                screenButton.classList.remove('autoql-btn-minimize')
+                obj.setOption('width', 500)
+            }
+        }
 
         headerLeft.appendChild(closeButton);
         headerLeft.appendChild(screenButton);
