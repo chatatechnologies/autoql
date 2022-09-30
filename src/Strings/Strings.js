@@ -147,7 +147,9 @@ export const strings = new LocalizedStrings({
         include: 'INCLUDE',
         exclude: 'EXCLUDE',
         filterLockingListTooltip: 'Persistent filters remain locked at all<br /> times, unless the filter is removed. If<br /> unchecked, the filter will be locked<br /> until you end your browser session.',
-        persist: 'Persist',}
+        persist: 'Persist',
+        maximizeButton: 'Full Screen',
+    }
     ,
     es: {
         report: 'repórtalo',
@@ -288,5 +290,6 @@ export const strings = new LocalizedStrings({
         exclude: 'EXCLUIR',
         filterLockingListTooltip: 'Los filtros persistentes permanecen bloqueados en todo <br /> momento, a menos que se elimine el filtro. Si<br /> no está marcado, el filtro se bloqueará<br /> hasta que finalice la sesión del navegador.',
         persist: 'Persistir',
+        maximizeButton: 'Pantalla completa',
     }
 });

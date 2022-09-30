@@ -79,7 +79,9 @@ import {
     VERTICAL_DOTS,
     DATA_LIMIT_WARNING,
     HELP_ICON,
-    FILTER_LOCKING
+    FILTER_LOCKING,
+    MAXIMIZE_BUTTON,
+    MINIMIZE_BUTTON,
 } from '../Svg'
 import { strings } from '../Strings'
 import { hideAll } from 'tippy.js';
@@ -1362,6 +1364,14 @@ export function DataMessenger(elem, options){
                 ${CLOSE_ICON}
             </button>
         `);
+
+        var screenButton = htmlToElement(`
+            <button class="autoql-vanilla-chata-button screen-menu"
+            data-tippy-content="${strings.maximizeButton}">
+                ${MAXIMIZE_BUTTON}
+            </button>
+        `);
+
         var filterButton = htmlToElement(`
             <button class="autoql-vanilla-chata-button filter-locking-menu"
             data-tippy-content="${strings.filterButton}">
@@ -1440,6 +1450,7 @@ export function DataMessenger(elem, options){
         })
 
         headerLeft.appendChild(closeButton);
+        headerLeft.appendChild(screenButton);
         headerRight.appendChild(filterButton);
         headerRight.appendChild(clearAllButton);
         headerRight.appendChild(popover);
