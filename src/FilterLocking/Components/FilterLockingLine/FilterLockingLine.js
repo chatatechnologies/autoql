@@ -103,7 +103,6 @@ export function FilterLockingLine(datamessenger, conditionList, conditionData){
 
     removeButton.onclick = () => {
         view.remove()
-        console.log(conditionList.getData());
         if(!conditionList.getData().length){
             conditionList.clearList()
             conditionList.showConditionEmptyMessage()
