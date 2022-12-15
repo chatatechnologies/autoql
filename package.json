@@ -4,12 +4,12 @@
   "description": "Javascript widget library",
   "scripts": {
     "test": "echo \"no test specified\" ",
-    "build-npm": "babel src -d lib --plugins transform-import-styles",
+    "build-npm": "babel src -d lib",
     "packexample": "cd test_page/ && npm pack ../",
     "build-cdn": "webpack --mode=production --config webpack.config.js",
     "build-cdn-rollup": "rollup -c",
     "watch": "webpack --mode development --config webpack-test.config.js",
-    "prepublish": "babel src -d lib --plugins transform-import-styles"
+    "prepublish": "babel src -d lib"
   },
   "repository": {
     "type": "git",
