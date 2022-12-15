@@ -5,7 +5,7 @@ import {
     htmlToElement
 } from '../Utils'
 import 'gridstack/dist/gridstack.css'
-import 'gridstack/dist/h5/gridstack-dd-native';
+// import 'gridstack/dist/h5/gridstack-dd-native';
 import { strings } from '../Strings'
 import { refreshTooltips, refreshDelegate } from '../Tooltips'
 
