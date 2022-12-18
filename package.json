@@ -4,7 +4,7 @@
   "description": "Javascript widget library",
   "scripts": {
     "test": "echo \"no test specified\" ",
-    "build-npm": "babel src -d lib && webpack --mode=production --config extract-css.config.js",
+    "build-npm": "webpack --mode=production --config extract-css.config.js && babel src -d lib",
     "packexample": "cd test_page/ && npm pack ../",
     "build-cdn": "webpack --mode=production --config webpack.config.js",
     "build-cdn-rollup": "rollup -c",
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "axios": "^1.2.1",
+    "babel-plugin-transform-remove-imports": "^1.7.0",
     "d3": "^7.7.0",
     "dayjs": "^1.11.7",
     "gridstack": "^7.1.1",
