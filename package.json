@@ -26,6 +26,8 @@
     "babel-loader": "^9.1.0",
     "babel-plugin-import-css-to-jss": "^3.1.1",
     "babel-template": "^6.26.0",
+    "browserify": "^17.0.0",
+    "css-extract": "^2.0.0",
     "css-loader": "^6.7.3",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
