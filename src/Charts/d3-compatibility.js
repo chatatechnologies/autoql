@@ -1,7 +1,7 @@
 import { scaleOrdinal, scaleBand, scaleLinear } from 'd3-scale'
 import { axisBottom, axisLeft } from 'd3-axis'
 import { pie, area, line, symbolCircle, symbol, arc, stack } from 'd3-shape'
-import { legendColor } from 'd3-svg-legend'
+// import { legendColor } from 'd3-svg-legend'
 import 'd3-transition'
 
 export const SCALE_LINEAR = scaleLinear;
@@ -65,17 +65,17 @@ export const getArea = (xFn, y0Fn, y1Fn) => {
 }
 
 export const getLegend = (scale, legendWrapLength, orient) => {
-    return legendColor()
-    .shape(
-        'path',
-        symbol()
-        .type(symbolCircle)
-        .size(75)()
-    )
-    .orient(orient)
-    .shapePadding(5)
-    .labelWrap(legendWrapLength)
-    .scale(scale)
+    // return legendColor()
+    // .shape(
+    //     'path',
+    //     symbol()
+    //     .type(symbolCircle)
+    //     .size(75)()
+    // )
+    // .orient(orient)
+    // .shapePadding(5)
+    // .labelWrap(legendWrapLength)
+    // .scale(scale)
 }
 
 export const getStackedAreaData = (visibleGroups, data) => {
