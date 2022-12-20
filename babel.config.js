@@ -2,7 +2,7 @@ console.log(process.env.NODE_ENV);
 
 const plugins = []
 
-if(process.env.NODE_ENV){
+if(process.env.NODE_ENV === 'production'){
     plugins.push(
         ['babel-plugin-transform-remove-imports', {"test": "\\.(less|css)$"}]
     )
