@@ -1,11 +1,12 @@
 src/
 src_node/
 test_page/
-cdn/
-css_test/
+build/
 js_test/
 lefort_test/
 test/
+dist/main.js
+dist/main.js.LICENSE.txt
 gulpfile.js
 index.html
 index_node.html
