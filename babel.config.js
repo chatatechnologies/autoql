@@ -1,5 +1,3 @@
-console.log(process.env.NODE_ENV);
-
 const plugins = []
 
 if(process.env.NODE_ENV === 'production'){
