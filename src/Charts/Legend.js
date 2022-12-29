@@ -252,6 +252,7 @@ export default function color() {
   }
 
   legend.textWrap = function (_) {
+    let textWrap = ''
     if (!arguments.length) {return textWrap}
     textWrap = _
     return legend
