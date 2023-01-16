@@ -1,12 +1,12 @@
 import React from "react";
 import { WidgetsMenu } from "./WidgetsMenu";
-// import { DashboardPage } from "./DashboardPage";
-// import { DataMessengerPage } from "./DataMessengerPage";
-// import { QueryOutputInputPage } from "./QueryOutputInputPage";
-// import { DataAlertsSettingsPage } from "./DataAlertsSettingsPage";
-// import { DataMessenger } from "autoql";
-// import { NotificationIcon } from "autoql";
-// import { NotificationListPage } from "./NotificationListPage";
+import { DashboardPage } from "./DashboardPage";
+import { DataMessengerPage } from "./DataMessengerPage";
+import { QueryOutputInputPage } from "./QueryOutputInputPage";
+import { DataAlertsSettingsPage } from "./DataAlertsSettingsPage";
+import { DataMessenger } from "autoql";
+import { NotificationIcon } from "autoql";
+import { NotificationListPage } from "./NotificationListPage";
 import { Modal, Input } from "antd";
 import _ from 'lodash'
 import "./App.css";
@@ -105,14 +105,14 @@ class App extends React.Component {
             },
         });
         this.fetchTopics(values, authentication);
-        // if (!this.notificationsIcon) {
-        //     this.notificationsIcon = new NotificationIcon("#notifications-icon", {
-        //         authentication: {
-        //             ...values,
-        //         },
-        //         useDot: false,
-        //     });
-        // }
+        if (!this.notificationsIcon) {
+            this.notificationsIcon = new NotificationIcon("#notifications-icon", {
+                authentication: {
+                    ...values,
+                },
+                useDot: false,
+            });
+        }
 
         const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${values.apiKey}`;
         axios
@@ -170,85 +170,85 @@ class App extends React.Component {
     }
 
     renderActivePage = () => {
-        // const { currentPage } = this.state;
-        // let widgetPage = null;
-        // switch (currentPage) {
-        //     case "drawer":
-        //     widgetPage = (
-        //         <DataMessengerPage
-        //         onLogin={this.onLogin}
-        //         onLogOut={this.onLogOut}
-        //         setDMOption={this.setDMOption}
-        //         showDM={this.openDrawer}
-        //         onChangeTheme={this.onChangeTheme}
-        //         />
-        //     );
-        //     break;
-        //     case "dashboard":
-        //     widgetPage = (
-        //         <DashboardPage
-        //         onSelectDashboard={this.onChangeDashboard}
-        //         activeDashboard={this.state.activeDashboard}
-        //         dashboardNames={this.state.dashboardNames}
-        //         dashboards={this.state.dashboards}
-        //         updateDashboard={this.updateDashboard}
-        //         authentication={this.state.authentication}
-        //         themeConfig={this.state.themeConfig}
-        //         />
-        //     );
-        //     break;
-        //     case "chatbar":
-        //     widgetPage = (
-        //         <QueryOutputInputPage
-        //         authentication={this.state.authentication}
-        //         themeConfig={this.state.themeConfig}
-        //         />
-        //     );
-        //     break;
-        //     case "settings":
-        //     widgetPage = (
-        //         <DataAlertsSettingsPage
-        //         authentication={this.state.authentication}
-        //         themeConfig={this.state.themeConfig}
-        //         />
-        //     );
-        //     break;
-        //     case "notifications":
-        //     widgetPage = (
-        //         <NotificationListPage
-        //         authentication={this.state.authentication}
-        //         themeConfig={this.state.themeConfig}
-        //         />
-        //     );
-        //     break;
-        //     default:
-        // }
-        //
-        // return widgetPage;
+        const { currentPage } = this.state;
+        let widgetPage = null;
+        switch (currentPage) {
+            case "drawer":
+            widgetPage = (
+                <DataMessengerPage
+                onLogin={this.onLogin}
+                onLogOut={this.onLogOut}
+                setDMOption={this.setDMOption}
+                showDM={this.openDrawer}
+                onChangeTheme={this.onChangeTheme}
+                />
+            );
+            break;
+            case "dashboard":
+            widgetPage = (
+                <DashboardPage
+                onSelectDashboard={this.onChangeDashboard}
+                activeDashboard={this.state.activeDashboard}
+                dashboardNames={this.state.dashboardNames}
+                dashboards={this.state.dashboards}
+                updateDashboard={this.updateDashboard}
+                authentication={this.state.authentication}
+                themeConfig={this.state.themeConfig}
+                />
+            );
+            break;
+            case "chatbar":
+            widgetPage = (
+                <QueryOutputInputPage
+                authentication={this.state.authentication}
+                themeConfig={this.state.themeConfig}
+                />
+            );
+            break;
+            case "settings":
+            widgetPage = (
+                <DataAlertsSettingsPage
+                authentication={this.state.authentication}
+                themeConfig={this.state.themeConfig}
+                />
+            );
+            break;
+            case "notifications":
+            widgetPage = (
+                <NotificationListPage
+                authentication={this.state.authentication}
+                themeConfig={this.state.themeConfig}
+                />
+            );
+            break;
+            default:
+        }
+
+        return widgetPage;
     };
 
     renderDataMessenger = () => {
-        // this.datamessenger = new DataMessenger("#datamessenger", {
-        //     authentication: {
-        //         token: "",
-        //         domain: getStoredProp('domain-url') || '',
-        //         apiKey: getStoredProp('api-key') || '',
-        //     },
-        //     themeConfig: {
-        //         ...this.props.themeConfig,
-        //     },
-        //     autoQLConfig: {
-        //         debug: true,
-        //     },
-        //     onMaskClick: function (datamessenger) {
-        //         datamessenger.closeDrawer();
-        //     },
-        //     resizable: true,
-        //     width: 550,
-        //     enableDynamicCharting: true,
-        //     enableNotificationsTab: true,
-        //     placement: "right",
-        // });
+        this.datamessenger = new DataMessenger("#datamessenger", {
+            authentication: {
+                token: "",
+                domain: getStoredProp('domain-url') || '',
+                apiKey: getStoredProp('api-key') || '',
+            },
+            themeConfig: {
+                ...this.props.themeConfig,
+            },
+            autoQLConfig: {
+                debug: true,
+            },
+            onMaskClick: function (datamessenger) {
+                datamessenger.closeDrawer();
+            },
+            resizable: true,
+            width: 550,
+            enableDynamicCharting: true,
+            enableNotificationsTab: true,
+            placement: "right",
+        });
     };
 
     renderMenu = () => {
@@ -326,7 +326,7 @@ class App extends React.Component {
                             this.setState({ dashboardNameInput: e.target.value })
                         }
                         onPressEnter={this.createDashboard}/>
-                </Modal>            
+                </Modal>
             </div>
         );
     };

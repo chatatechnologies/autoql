@@ -12,9 +12,7 @@ import {
     RollbackOutlined,
     SaveOutlined
 } from '@ant-design/icons'
-import {
-    put
-} from 'axios'
+import axios from 'axios'
 const { Option } = Select
 
 export class DashboardPage extends Component {
@@ -127,7 +125,7 @@ export class DashboardPage extends Component {
         this.dashboard.tiles.map(tile => tiles.push(tile.getValues()))
 
         d.data = tiles
-        var response = await put(URL, d, {
+        var response = await axios.put(URL, d, {
             headers: {
                 Authorization: `Bearer ${authentication.token}`,
                 'Integrator-Domain': authentication.domain,

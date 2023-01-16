@@ -29,6 +29,7 @@
   },
   "dependencies": {
     "antd": "^4.0.1",
+    "autoql": "file:autoql-2.5.1.tgz",
     "axios": "^1.2.2",
     "lodash": "^4.17.21",
     "react": "^16.14.0",
