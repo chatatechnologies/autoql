@@ -1,5 +1,5 @@
 import React from "react";
-// import { WidgetsMenu } from "./WidgetsMenu";
+import { WidgetsMenu } from "./WidgetsMenu";
 // import { DashboardPage } from "./DashboardPage";
 // import { DataMessengerPage } from "./DataMessengerPage";
 // import { QueryOutputInputPage } from "./QueryOutputInputPage";
@@ -105,14 +105,14 @@ class App extends React.Component {
             },
         });
         this.fetchTopics(values, authentication);
-        if (!this.notificationsIcon) {
-            this.notificationsIcon = new NotificationIcon("#notifications-icon", {
-                authentication: {
-                    ...values,
-                },
-                useDot: false,
-            });
-        }
+        // if (!this.notificationsIcon) {
+        //     this.notificationsIcon = new NotificationIcon("#notifications-icon", {
+        //         authentication: {
+        //             ...values,
+        //         },
+        //         useDot: false,
+        //     });
+        // }
 
         const DASHBOARD_URL = `https://backend-staging.chata.io/api/v1/dashboards?key=${values.apiKey}`;
         axios
@@ -309,26 +309,24 @@ class App extends React.Component {
         return (
             <div className="App" id="test">
             {this.renderMenu()}
-            <div>{this.renderActivePage()}</div>
-            <div id="datamessenger"></div>
-            <Modal
-            title="New Dashboard"
-            okText="Create Dashboard"
-            okButtonProps={{ disabled: !this.state.dashboardNameInput }}
-            onCancel={() => this.setState({ modalVisible: false })}
-            confirmLoading={this.state.isSavingDashboard}
-            visible={this.state.modalVisible}
-            onOk={this.createDashboard}
-            >
-            <Input
-            placeholder="Dashboard Name"
-            value={this.state.dashboardNameInput}
-            onChange={(e) =>
-                this.setState({ dashboardNameInput: e.target.value })
-            }
-            onPressEnter={this.createDashboard}
-            />
-            </Modal>
+                <div>{this.renderActivePage()}</div>
+                <div id="datamessenger"></div>
+                <Modal
+                    title="New Dashboard"
+                    okText="Create Dashboard"
+                    okButtonProps={{ disabled: !this.state.dashboardNameInput }}
+                    onCancel={() => this.setState({ modalVisible: false })}
+                    confirmLoading={this.state.isSavingDashboard}
+                    visible={this.state.modalVisible}
+                    onOk={this.createDashboard}>
+                    <Input
+                        placeholder="Dashboard Name"
+                        value={this.state.dashboardNameInput}
+                        onChange={(e) =>
+                            this.setState({ dashboardNameInput: e.target.value })
+                        }
+                        onPressEnter={this.createDashboard}/>
+                </Modal>            
             </div>
         );
     };
