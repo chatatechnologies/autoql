@@ -7,9 +7,9 @@
     "npm": ">=7.18.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
     "eject": "react-scripts eject",
     "preinstall": "npx npm-force-resolutions"
   },
@@ -36,5 +36,8 @@
     "react-dom": "^16.14.0",
     "react-scripts": "^3.4.1",
     "react-sortable": "^2.0.0"
+  },
+  "devDependencies": {
+    "react-app-rewired": "^2.2.1"
   }
 }
