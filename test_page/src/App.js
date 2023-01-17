@@ -132,7 +132,7 @@ class App extends React.Component {
                 }
             )
 
-            items.map((dashboard) => {
+            items.forEach((dashboard) => {
                 names.push(dashboard.name);
             });
 
@@ -290,7 +290,7 @@ class App extends React.Component {
         });
         var names = [];
 
-        dashboards.map((dashboard) => {
+        dashboards.forEach((dashboard) => {
             names.push(dashboard.name);
         });
 

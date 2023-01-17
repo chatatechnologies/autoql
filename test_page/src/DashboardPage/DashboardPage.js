@@ -26,7 +26,7 @@ export class DashboardPage extends Component {
     renderSelector = () => {
         const { dashboardNames, activeDashboard } = this.props
         var options = []
-        dashboardNames.map((name, index) => {
+        dashboardNames.forEach((name, index) => {
             options.push(
                 <Option value={index} key={index}>{name}</Option>
             )
@@ -125,7 +125,7 @@ export class DashboardPage extends Component {
         this.dashboard.tiles.map(tile => tiles.push(tile.getValues()))
 
         d.data = tiles
-        var response = await axios.put(URL, d, {
+        await axios.put(URL, d, {
             headers: {
                 Authorization: `Bearer ${authentication.token}`,
                 'Integrator-Domain': authentication.domain,
