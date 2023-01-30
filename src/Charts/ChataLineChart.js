@@ -55,7 +55,7 @@ export function createLineChart(
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
-    let chartWidth;
+    let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
@@ -114,11 +114,13 @@ export function createLineChart(
             value: group
         }
     })
-    var hasLegend = allGroup.length > 1;
-    if(hasLegend && allGroup.length < 3){
-        margin.bottom = 70;
-        margin.marginLabel = 10;
-    }
+    const hasLegend = false;
+
+    // var hasLegend = allGroup.length > 1;
+    // if(hasLegend && allGroup.length < 3){
+    //     margin.bottom = 70;
+    //     margin.marginLabel = 10;
+    // }
     var allData = [];
 
     var colorScale = getColorScale(
@@ -159,13 +161,13 @@ export function createLineChart(
     if(longestString <= 4)longestString = 5;
     if(!hasLegend)increment = 3;
 
-    if(allGroup.length < 3){
-        chartWidth = width;
-    }else{
-        chartWidth = width - 135;
-        legendOrientation = 'vertical';
-        shapePadding = 5;
-    }
+    // if(allGroup.length < 3){
+    //     chartWidth = width;
+    // }else{
+    //     chartWidth = width - 135;
+    //     legendOrientation = 'vertical';
+    //     shapePadding = 5;
+    // }
 
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){

@@ -195,6 +195,18 @@ export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
     return convertoTo2DChartData(obj);
 }
 
+export const convertToNumber = (value) => {
+  try {
+    const number = Number(value)
+    if (isNaN(number)) {
+      return 0
+    }
+    return number
+  } catch (error) {
+    return 0
+  }
+}
+
 export const sumMultiSeries = (
     items, labelIndex, key, serieIndex, multiSerieIndex, multiSerieValue
 ) => {
@@ -203,7 +215,7 @@ export const sumMultiSeries = (
         const label = item[labelIndex]
         const serie = item[multiSerieIndex]
         if(label == key && serie == multiSerieValue){
-            sum += item[serieIndex];
+            sum += convertToNumber(item[serieIndex]);
         }
     })
     return sum;
@@ -214,7 +226,7 @@ export const sumEquals = (items, labelIndex, key, serieIndex) => {
     items.forEach((item) => {
         const label = item[labelIndex];
         if(label === key){
-            sum += item[serieIndex];
+            sum += convertToNumber(item[serieIndex]);
         }
     })
     return sum;

@@ -53,7 +53,7 @@ export function createBarChart(
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
-    let chartWidth;
+    let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
@@ -144,20 +144,20 @@ export function createBarChart(
             value: group
         }
     })
+    const hasLegend = false
+    // var hasLegend = groupNames.length > 1;
+    // if(hasLegend && groupNames.length < 3){
+    //     margin.bottom = 80;
+    //     margin.marginLabel = 0;
+    // }
 
-    var hasLegend = groupNames.length > 1;
-    if(hasLegend && groupNames.length < 3){
-        margin.bottom = 80;
-        margin.marginLabel = 0;
-    }
-
-    if(groupNames.length < 3){
-        chartWidth = width;
-    }else{
-        chartWidth = width - margin.chartLeft;
-        legendOrientation = 'vertical';
-        shapePadding = 5;
-    }
+    // if(groupNames.length < 3){
+    //     chartWidth = width;
+    // }else{
+    //     chartWidth = width - margin.chartLeft;
+    //     legendOrientation = 'vertical';
+    //     shapePadding = 5;
+    // }
 
     const barHeight = height / data.length;
     const interval = Math.ceil((data.length * 16) / height);
