@@ -2829,6 +2829,10 @@ export function DataMessenger(elem, options){
         containerMessage.classList.add(
             'autoql-vanilla-chat-single-message-container'
         );
+
+        containerMessage.classList.add(
+            'autoql-vanilla-suggestions-container'
+        );
         containerMessage.classList.add(
             'text'
         );

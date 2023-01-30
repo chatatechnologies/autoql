@@ -335,6 +335,10 @@ body{
     max-width: 85%;
 }
 
+.autoql-vanilla-chat-single-message-container.autoql-vanilla-suggestions-container{
+    display: block !important;
+ }
+
 .autoql-vanilla-chata-animation-message{
     display: flex;
     justify-content: flex-start;
