@@ -36,7 +36,7 @@
   "dependencies": {
     "axios": "^1.2.1",
     "babel-plugin-transform-remove-imports": "^1.7.0",
-    "d3": "^7.7.0",
+    "d3": "^7.8.2",
     "dayjs": "^1.11.7",
     "gridstack": "^7.1.1",
     "localized-strings": "^0.2.4",

@@ -2,7 +2,6 @@ import { scaleOrdinal, scaleBand, scaleLinear } from 'd3-scale'
 import { axisBottom, axisLeft } from 'd3-axis'
 import { pie, area, line, arc, stack } from 'd3-shape'
 import legendColor from './Legend'
-import { symbol, symbolCircle } from 'd3-shape'
 import 'd3-transition'
 
 export const SCALE_LINEAR = scaleLinear;
@@ -67,12 +66,6 @@ export const getArea = (xFn, y0Fn, y1Fn) => {
 
 export const getLegend = (scale, legendWrapLength, orient) => {
     return legendColor()
-    .shape(
-        'path',
-        symbol()
-        .type(symbolCircle)
-        .size(75)()
-    )
     .orient(orient)
     .shapePadding(5)
     .labelWrap(legendWrapLength)
