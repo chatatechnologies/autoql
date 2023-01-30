@@ -48,7 +48,7 @@
     "save-svg-as-png": "^1.4.17",
     "split.js": "^1.6.5",
     "sql-formatter": "^2.3.3",
-    "tabulator-tables": "^5.4.3",
+    "tabulator-tables": "^4.7.2",
     "tippy.js": "^6.3.7"
   }
 }

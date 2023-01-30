@@ -322,6 +322,8 @@ body{
 }
 
 .autoql-vanilla-chat-single-message-container.response {
+    display: flex;
+    justify-content: flex-start;
     margin-left: 10px;
     max-height: 85%;
     -webkit-animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;

@@ -1449,8 +1449,6 @@ export function DataMessenger(elem, options){
         })
 
         screenButton.onclick = () => {
-            console.log('TEST');
-            console.log(screenButton.classList.contains('autoql-btn-maximize'));
             if(screenButton.classList.contains('autoql-btn-maximize')){
                 screenButton.classList.remove('autoql-btn-maximize')
                 screenButton.classList.add('autoql-btn-minimize')

@@ -1,5 +1,5 @@
 import { ChataUtils } from '../ChataUtils';
-import { Tabulator } from 'tabulator-tables';
+import Tabulator from 'tabulator-tables';
 import {
     formatData,
     formatColumnName,
