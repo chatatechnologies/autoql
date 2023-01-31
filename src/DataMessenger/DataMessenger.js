@@ -7,7 +7,8 @@ import {
     NotificationIcon,
     NotificationFeed
 } from '../Notifications'
-import { ReverseTranslation } from '../ReverseTranslation'
+// TODO: NEXT DEPLOY
+// import { ReverseTranslation } from '../ReverseTranslation'
 import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -2687,10 +2688,11 @@ export function DataMessenger(elem, options){
         tableWrapper.internalTable = table;
         tableWrapper.tabulator = table;
         table.parentContainer = parentContainer;
-        if(interpretation && !isDrilldown){
-            var interpretationView = new ReverseTranslation(interpretation)
-            messageBubble.appendChild(interpretationView)
-        }
+        // TODO: next deploy
+        // if(interpretation && !isDrilldown){
+        //     var interpretationView = new ReverseTranslation(interpretation)
+        //     messageBubble.appendChild(interpretationView)
+        // }
         setTimeout(function(){
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
 
@@ -3026,10 +3028,11 @@ export function DataMessenger(elem, options){
                 obj.hideBubbles()
             }
         }
-        if(interpretation){
-            var interpretationView = new ReverseTranslation(interpretation)
-            messageBubble.appendChild(interpretationView)
-        }
+        // TODO: Next deploy
+        // if(interpretation){
+        //     var interpretationView = new ReverseTranslation(interpretation)
+        //     messageBubble.appendChild(interpretationView)
+        // }
         refreshTooltips()
     }
 
