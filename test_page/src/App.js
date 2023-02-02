@@ -186,6 +186,9 @@ class App extends React.Component {
             break;
             case "dashboard":
             widgetPage = (
+                <div>Test</div>
+            )
+            widgetPage = (
                 <DashboardPage
                 onSelectDashboard={this.onChangeDashboard}
                 activeDashboard={this.state.activeDashboard}

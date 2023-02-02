@@ -38,7 +38,7 @@
     "babel-plugin-transform-remove-imports": "^1.7.0",
     "d3": "^7.8.2",
     "dayjs": "^1.11.7",
-    "gridstack": "^7.1.1",
+    "gridstack": "^3.1.2",
     "localized-strings": "^0.2.4",
     "lodash.get": "^4.4.2",
     "moment": "^2.29.4",
