@@ -50,6 +50,8 @@ export function createPieChart(
         yIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
+    }else if(indexList['PERCENT']){
+        yIndexes = indexList['PERCENT'];
     }
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);

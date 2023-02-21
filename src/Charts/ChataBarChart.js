@@ -76,7 +76,10 @@ export function createBarChart(
         xIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         xIndexes = indexList['QUANTITY'];
+    }else if(indexList['PERCENT']){
+        xIndexes = indexList['PERCENT'];
     }
+
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
