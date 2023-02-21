@@ -20,7 +20,7 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         seriesIndexes.push(col.index);
     })
     var seriesData = [];
-    if(groupables.length === 1){
+    if(groupables.length === 1 && seriesCols.length === 1){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
