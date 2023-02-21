@@ -43,7 +43,7 @@ export function formatData(val, col, allOptions={}){
         break;
         case 'PERCENT':
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
-                val = parseFloat(val) * 100;
+                val = parseFloat(val);
                 if(!isNaN(val)){
                     value =  val.toFixed(2) + '%';
                 }else{
