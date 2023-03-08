@@ -32,7 +32,8 @@ import {
     formatChartData,
     closeAllChartPopovers,
     getFirstDateCol,
-    getGroupableCount
+    getGroupableCount,
+    getChartLeftMargin
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -221,6 +222,9 @@ export function createLineChart(
         'chata-hidden-scrollbox'
     );
 
+    const stringWidth = getChartLeftMargin(minMaxValues.max.toString())
+    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
+    : (margin.left - 15)
 
     var svg = select(component)
     .append("svg")
@@ -228,7 +232,7 @@ export function createLineChart(
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + (margin.left+ stringWidth) + "," + margin.top + ")");
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -236,7 +240,7 @@ export function createLineChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right + 5)
+    .attr('y', -(labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')

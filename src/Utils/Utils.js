@@ -716,6 +716,13 @@ export function getStringWidth(string){
     return width;
 }
 
+export function getChartLeftMargin(yValue){
+    const { length } = yValue
+    if(length < 16)return 0
+
+    return yValue.length * 2
+}
+
 export function showBadge(json){
     const cols = json.data.columns
     for (let i = 0; i < cols.length; i++) {
