@@ -227,11 +227,7 @@ export function createLineChart(
     : (margin.left - 15)
     const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
     chartWidth -= stringWidth
-    console.log(labelSelectorPadding);
-    console.log(labelContainerPos);
-    console.log(stringWidth);
     var svg = select(component)
-
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)

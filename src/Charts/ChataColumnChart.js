@@ -30,7 +30,8 @@ import {
     formatChartData,
     closeAllChartPopovers,
     getFirstDateCol,
-    getGroupableCount
+    getGroupableCount,
+    getChartLeftMargin,
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -208,6 +209,12 @@ export function createColumnChart(
         'chata-hidden-scrollbox'
     );
 
+    const stringWidth = getChartLeftMargin(minMaxValues.max.toString())
+    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
+    : (margin.left - 15)
+    const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
+    chartWidth -= stringWidth
+
     var x0 = SCALE_BAND()
     var x1 = SCALE_BAND();
     var y = SCALE_LINEAR();
@@ -223,7 +230,6 @@ export function createColumnChart(
     var xAxis = getAxisBottom(x0)
     var yAxis = getAxisLeft(y)
 
-
     var colorScale = getColorScale(
         groupNames,
         options.themeConfig.chartColors
@@ -235,7 +241,7 @@ export function createColumnChart(
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")")
+    "translate(" +( margin.left + stringWidth) + "," + margin.top + ")")
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -243,7 +249,7 @@ export function createColumnChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right + 5)
+    .attr('y', -(labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -261,7 +267,7 @@ export function createColumnChart(
         const xWidthRect = getStringWidth(col2) + paddingRect;
 
         labelYContainer.append('rect')
-        .attr('x', 66)
+        .attr('x', labelContainerPos)
         .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
         .attr('height', xWidthRect + paddingRect)
         .attr('width', 24)
