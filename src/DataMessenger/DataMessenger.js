@@ -260,7 +260,6 @@ export function DataMessenger(elem, options){
                 obj.options.width = parseInt(value);
                 if(obj.options.isVisible &&
                     ['left', 'right'].includes(obj.options.placement)){
-                        console.log('AAAAA');
                     obj.rootElem.style.width = value + 'px';
                 }
                 break;
@@ -1461,6 +1460,7 @@ export function DataMessenger(elem, options){
                 obj.setOption('width', 500)
                 screenButton.innerHTML = MAXIMIZE_BUTTON
             }
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
         }
 
         headerLeft.appendChild(closeButton);
