@@ -1454,12 +1454,15 @@ export function DataMessenger(elem, options){
                 screenButton.classList.add('autoql-btn-minimize')
                 obj.setOption('width', window.screen.width - 45)
                 screenButton.innerHTML = MINIMIZE_BUTTON
+                screenButton.setAttribute('data-tippy-content', strings.maximizeButtonExit)
             }else{
                 screenButton.classList.add('autoql-btn-maximize')
                 screenButton.classList.remove('autoql-btn-minimize')
                 obj.setOption('width', 500)
                 screenButton.innerHTML = MAXIMIZE_BUTTON
+                screenButton.setAttribute('data-tippy-content', strings.maximizeButton)
             }
+            refreshTooltips()
             window.dispatchEvent(new CustomEvent('chata-resize', {}));
         }
 

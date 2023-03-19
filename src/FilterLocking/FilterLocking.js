@@ -44,7 +44,6 @@ export function FilterLocking(datamessenger){
     titleContainer.appendChild(closeButton)
     header.appendChild(titleContainer)
     header.appendChild(input)
-    footer.appendChild(continueButton)
 
     view.appendChild(header)
     view.appendChild(conditionList)
