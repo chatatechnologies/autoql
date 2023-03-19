@@ -2844,10 +2844,13 @@ export function DataMessenger(elem, options){
         // containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+        messageBubble.classList.add('suggestions')
         responseContentContainer.classList.add(
             'autoql-vanilla-chata-response-content-container'
         );
 
+
+        responseContentContainer.classList.add('suggestions')
 
         obj.createSuggestions(
             responseContentContainer, relatedJson, jsonResponse

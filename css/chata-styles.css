@@ -298,6 +298,11 @@ body{
     min-width: auto;
 }
 
+.autoql-vanilla-chat-message-bubble.suggestions{
+    min-width: auto;
+    max-width: fit-content;
+}
+
 .autoql-vanilla-chat-message-bubble.simple-response{
     min-width: 125px;
     display: flex;
@@ -362,6 +367,10 @@ body{
     height: 100%;
     width: 100%;
     overflow: hidden;
+}
+
+.autoql-vanilla-chata-response-content-container.suggestions{
+    display: block !important;
 }
 
 .autoql-vanilla-chat-single-message-container.request {
