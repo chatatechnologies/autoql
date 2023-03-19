@@ -16,7 +16,6 @@ export function refreshTooltips(){
         allowHTML: true,
         delay: [500],
         dynamicTitle: true,
-
     })
 }
 

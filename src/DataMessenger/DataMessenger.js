@@ -85,7 +85,7 @@ import {
     MINIMIZE_BUTTON,
 } from '../Svg'
 import { strings } from '../Strings'
-import { hideAll } from 'tippy.js';
+import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips'
 import '../../css/chata-styles.css'
 
@@ -1365,8 +1365,7 @@ export function DataMessenger(elem, options){
         `);
 
         var screenButton = htmlToElement(`
-            <button class="autoql-vanilla-chata-button autoql-vanilla-screen-menu autoql-btn-maximize"
-            data-tippy-content="${strings.maximizeButton}">
+            <button class="autoql-vanilla-chata-button autoql-vanilla-screen-menu autoql-btn-maximize">
                 ${MAXIMIZE_BUTTON}
             </button>
         `);
@@ -1448,21 +1447,26 @@ export function DataMessenger(elem, options){
             }
         })
 
+        const screenButtonTooltip = tippy(screenButton)
+        screenButtonTooltip.setContent(strings.maximizeButton)
+        screenButtonTooltip.setProps({
+            theme: 'chata-theme',
+            delay: [500],
+        });
         screenButton.onclick = () => {
             if(screenButton.classList.contains('autoql-btn-maximize')){
                 screenButton.classList.remove('autoql-btn-maximize')
                 screenButton.classList.add('autoql-btn-minimize')
                 obj.setOption('width', window.screen.width - 45)
                 screenButton.innerHTML = MINIMIZE_BUTTON
-                screenButton.setAttribute('data-tippy-content', strings.maximizeButtonExit)
+                screenButtonTooltip.setContent(strings.maximizeButtonExit)
             }else{
                 screenButton.classList.add('autoql-btn-maximize')
                 screenButton.classList.remove('autoql-btn-minimize')
                 obj.setOption('width', 500)
                 screenButton.innerHTML = MAXIMIZE_BUTTON
-                screenButton.setAttribute('data-tippy-content', strings.maximizeButton)
+                screenButtonTooltip.setContent(strings.maximizeButton)
             }
-            refreshTooltips()
             window.dispatchEvent(new CustomEvent('chata-resize', {}));
         }
 
