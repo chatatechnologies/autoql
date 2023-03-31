@@ -26,7 +26,8 @@ import {
     formatChartData,
     formatColumnName,
     closeAllChartPopovers,
-    formatData
+    formatData,
+    getChartLeftMargin
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 
@@ -154,17 +155,31 @@ export function createStackedColumnChart(
     component.parentElement.parentElement.classList.add(
         'chata-hidden-scrollbox'
     );
+    var maxValue = max(data, function(d) {
+        var sum = 0;
+        for (var [key, value] of Object.entries(d)){
+            if(key == 'group')continue;
+            sum += parseFloat(value);
+        }
+        return sum;
+    });
+
+    const stringWidth = getChartLeftMargin(maxValue.toString())
+    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
+    : (margin.left - 15)
+    chartWidth -= stringWidth
+
     var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + ( margin.left + stringWidth) + "," + margin.top + ")");
 
     svg.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -(labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -285,15 +300,6 @@ export function createStackedColumnChart(
         .selectAll("text")
         .style("text-anchor", "center");
     }
-
-    var maxValue = max(data, function(d) {
-        var sum = 0;
-        for (var [key, value] of Object.entries(d)){
-            if(key == 'group')continue;
-            sum += parseFloat(value);
-        }
-        return sum;
-    });
 
     var y = SCALE_LINEAR()
     .domain([0, maxValue])

@@ -718,7 +718,7 @@ export function getStringWidth(string){
 
 export function getChartLeftMargin(yValue){
     const { length } = yValue
-    if(length < 16)return 0
+    if(length < 9)return 0
 
     return yValue.length * 2
 }
