@@ -65,13 +65,13 @@ function callTableFilter(col, headerValue, rowValue, options){
 }
 
 function getPivotColumns(json, pivotColumns, options){
+    console.log(pivotColumns);
     const columns = json['data']['columns'];
     var columnsData = [];
     pivotColumns.map((col, index) => {
         var colIndex = index;
         var title = col;
-        if(index === 0)colIndex = 1
-        else colIndex = 2
+        if(index > 1)colIndex = 1
 
         if(!title)title = 'null'
         if(!col)col = 'null'
@@ -105,7 +105,7 @@ function getPivotColumns(json, pivotColumns, options){
 
                 return formatData(value, columns[colIndex], options);
             },
-            frozen: colIndex == 1 ? true : false,
+            frozen: colIndex === 0 ? true : false,
             sorter: setSorterFunction(columns[colIndex])
         })
     });
@@ -147,6 +147,7 @@ const dateSortFn = (a, b) => {
 }
 
 const setSorterFunction = (col) => {
+    if(!col) return undefined
     if (col.type === 'DATE' || col.type === 'DATE_STRING') {
         return (a, b) => dateSortFn(a, b)
     } else if (col.type === 'STRING') {
