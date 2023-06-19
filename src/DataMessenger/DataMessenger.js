@@ -9,6 +9,12 @@ import {
 } from '../Notifications'
 // TODO: NEXT DEPLOY
 // import { ReverseTranslation } from '../ReverseTranslation'
+import { 
+    apiCallV2,
+    apiCallGet,
+    apiCallPut,
+    apiCallPost,
+} from '../Api'
 import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers'
@@ -27,10 +33,6 @@ import {
     getNumberOfGroupables,
     formatData,
     getRecommendationPath,
-    apiCall,
-    apiCallGet,
-    apiCallPut,
-    apiCallPost,
     getSafetynetValues,
     getSafetynetUserSelection,
     getGroupables,
@@ -2856,7 +2858,6 @@ export function DataMessenger(elem, options){
             'autoql-vanilla-chata-response-content-container'
         );
 
-
         responseContentContainer.classList.add('suggestions')
 
         obj.createSuggestions(
@@ -3193,8 +3194,18 @@ export function DataMessenger(elem, options){
             }
         }
 
-        let response = await apiCall(
-            textValue, obj.options, source, selections
+        let response = await apiCallV2(
+            obj.options, 
+            {
+                "date_format": "ISO8601",
+                "page_size": 500,
+                "scope": "data_messenger",
+                "session_filter_locks": [],
+                "source": "data_messenger.user",
+                "test":  obj.options.autoQLConfig.test,
+                "text": textValue,
+                "translation": "include"
+            }
         )
         if(!response){
             obj.input.removeAttribute("disabled")
