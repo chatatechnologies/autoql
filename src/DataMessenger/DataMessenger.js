@@ -1406,7 +1406,7 @@ export function DataMessenger(elem, options) {
             try {
                 obj.options.xhr.abort();
             } catch (e) {
-                console.log(e);
+                console.error(e);
             }
             clearTimeout(obj.autoCompleteTimer);
             obj.autoCompleteList.style.display = 'none';

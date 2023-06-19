@@ -155,7 +155,7 @@ export function copyTextToClipboard(text) {
     try {
         document.execCommand('copy');
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 
     document.body.removeChild(textArea);
@@ -1171,7 +1171,7 @@ export const svgToPng = (svgElement, margin = 0, fill) => {
                 resolve(canvas.toDataURL('image/png', 1))
             }
             img.onerror = function(error) {
-                console.log(error);
+                console.error(error);
             }
 
             // load image

@@ -283,6 +283,5 @@ function updateSelect(elem){
     // var width = getTextWidth(
     //     elem.value, `${weight} ${size} ${family}`
     // );
-    // console.log(width);
     elem.style.width = (suggestionDiv.clientWidth + 36) + 'px';
 }

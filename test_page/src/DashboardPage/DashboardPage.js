@@ -165,11 +165,6 @@ export class DashboardPage extends Component {
                         onClick={() => {this.dashboard.run()}}
                         style={{ marginLeft: '10px' }}
                         icon={<PlayCircleOutlined/>}>Execute</Button>
-                    <Button
-                        onClick={() => {console.log(this.dashboard.tiles);}}
-                        style={{ marginLeft: '10px' }}>
-                        Log Current Tile State
-                    </Button>
                     <div
                         style={{
                             marginTop: '10px',

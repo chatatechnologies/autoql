@@ -19,7 +19,7 @@ dayjs.extend(LocalizedFormat)
     try {
       require(`dayjs/locale/${genericLanguageCode}.js`)
       dayjs.locale(genericLanguageCode)
-  } catch (error) { console.log(error) }
+  } catch (error) { console.error(error) }
   }
 })()
 
