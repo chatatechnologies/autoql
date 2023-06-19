@@ -34,12 +34,6 @@ export function DataAlerts(selector, options) {
             enableColumnVisibilityManager: true,
             enableDrilldowns: true,
         },
-        themeConfig: {
-            theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
-            accentColor: '#26a7df',
-            fontFamily: 'sans-serif',
-        },
         onErrorCallback: () => {},
     };
 
@@ -54,23 +48,6 @@ export function DataAlerts(selector, options) {
             wrapper.options.autoQLConfig[key] = value;
         }
     }
-
-    if ('themeConfig' in options) {
-        for (let [key, value] of Object.entries(options['themeConfig'])) {
-            wrapper.options.themeConfig[key] = value;
-        }
-    }
-
-    wrapper.applyStyles = () => {
-        const themeStyles = wrapper.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME;
-        themeStyles['accent-color'] = wrapper.options.themeConfig.accentColor;
-
-        for (let property in themeStyles) {
-            document.documentElement.style.setProperty('--autoql-vanilla-' + property, themeStyles[property]);
-        }
-
-        wrapper.style.setProperty('--autoql-vanilla-font-family', wrapper.options.themeConfig['fontFamily']);
-    };
 
     wrapper.showLoadingDots = () => {
         var responseLoadingContainer = document.createElement('div');
@@ -218,7 +195,6 @@ export function DataAlerts(selector, options) {
     };
 
     wrapper.classList.add('autoql-vanilla-data-alerts-settings');
-    wrapper.applyStyles();
     wrapper.showLoadingDots();
     wrapper.loadRules();
     if (parent) parent.appendChild(wrapper);

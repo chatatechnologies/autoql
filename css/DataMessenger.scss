@@ -1,0 +1,128 @@
+// .autoql-vanilla-drawer-handle {
+//   position: fixed;
+//   z-index: 10;
+//   text-align: center;
+//   line-height: 40px;
+//   font-size: 16px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   vertical-align: middle;
+//   background-color: #26a7df;
+//   color: #fff;
+//   box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
+//   transition: all 0.5s ease;
+//   overflow: hidden;
+//   width: 50px;
+//   height: 50px;
+//   border-radius: 50%;
+//   z-index: 9999;
+//   cursor: pointer;
+
+//   // top: 55px !important;
+//   // right: 10px !important;
+//   // opacity: 1 !important;
+//   // visibility: visible !important;
+
+//   .autoql-vanilla-chata-bubbles-icon {
+//     margin-top: 12px;
+//     display: block;
+//   }
+// }
+
+// .autoql-vanilla-chata-body-drawer-right {
+//   .autoql-vanilla-chata-drawer {
+//     height: 100vh;
+//     right: 0;
+//     top: 0;
+//   }
+
+//   .autoql-vanilla-drawer-handle {
+//     top: 55px;
+//     right: 10px;
+//   }
+// }
+
+// .autoql-vanilla-chata-body-drawer-left {
+//   .autoql-vanilla-chata-drawer {
+//     height: 100vh;
+//     left: 0;
+//     top: 0;
+//   }
+
+//   .autoql-vanilla-drawer-handle {
+//     top: 55px;
+//     left: 10px;
+//   }
+// }
+
+// .autoql-vanilla-chata-body-drawer-bottom {
+//   .autoql-vanilla-chata-drawer {
+//     width: 100vw;
+//     left: 0;
+//     bottom: 0;
+//   }
+
+//   .autoql-vanilla-drawer-handle {
+//     bottom: 10px;
+//     left: calc(50% - 20px);
+//   }
+
+//   bottom: 55px;
+//   right: 10px;
+// }
+
+// .autoql-vanilla-chata-body-drawer-top {
+//   .autoql-vanilla-chata-drawer {
+//     width: 100vw;
+//     right: 0;
+//     bottom: 0;
+//   }
+
+//   .autoql-vanilla-drawer-handle {
+//     top: 10px;
+//     left: calc(50% - 20px);
+//   }
+
+//   .autoql-vanilla-page-switcher-container {
+//     bottom: 55px;
+//     left: 10px;
+//   }
+// }
+
+// /* Curve appropriate corners depending on placement */
+// // &.autoql-vanilla-chata-body-drawer-right
+// //   .autoql-vanilla-page-switcher-container
+// //   .tab.show:first-child,
+// // &.autoql-vanilla-chata-body-drawer-bottom
+// //   .autoql-vanilla-page-switcher-container
+// //   .tab.show:first-child {
+// //   border-top-left-radius: 5px;
+// // }
+
+// // &.autoql-vanilla-chata-body-drawer-right
+// //   .autoql-vanilla-page-switcher-container
+// //   .autoql-vanilla-last-tab,
+// // &.autoql-vanilla-chata-body-drawer-top
+// //   .autoql-vanilla-page-switcher-container
+// //   .tab.show:first-child {
+// //   border-bottom-left-radius: 5px;
+// // }
+
+// // &.autoql-vanilla-chata-body-drawer-bottom
+// //   .autoql-vanilla-page-switcher-container
+// //   .autoql-vanilla-last-tab,
+// // &.autoql-vanilla-chata-body-drawer-left
+// //   .autoql-vanilla-page-switcher-container
+// //   .tab.show:first-child {
+// //   border-top-right-radius: 5px;
+// // }
+
+// // &.autoql-vanilla-chata-body-drawer-left
+// //   .autoql-vanilla-page-switcher-container
+// //   .autoql-vanilla-last-tab,
+// // &.autoql-vanilla-chata-body-drawer-top
+// //   .autoql-vanilla-page-switcher-container
+// //   .autoql-vanilla-last-tab {
+// //   border-bottom-right-radius: 5px;
+// // }

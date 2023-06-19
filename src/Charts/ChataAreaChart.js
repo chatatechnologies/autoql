@@ -27,7 +27,8 @@ import {
     formatColumnName,
     closeAllChartPopovers,
     formatData,
-    getChartLeftMargin
+    getChartLeftMargin,
+    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 import { area } from 'd3-shape'
@@ -41,6 +42,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
+    var chartColors = getChartColorVars();
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -293,7 +295,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     .range([ height - margin.bottomChart, 0]).nice();
     var yAxis = getAxisLeft(y);
 
-    var color = getColorScale(subgroups, options.themeConfig.chartColors)
+    var color = getColorScale(subgroups, chartColors)
 
     svg.append("g")
     .attr("class", "grid")
@@ -431,7 +433,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         subgroups.map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);
         }),
-        options.themeConfig.chartColors
+        chartColors
     )
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
 

@@ -33,7 +33,8 @@ import {
     closeAllChartPopovers,
     getFirstDateCol,
     getGroupableCount,
-    getChartLeftMargin
+    getChartLeftMargin,
+    getChartColorVars
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -61,6 +62,7 @@ export function createLineChart(
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
+    var chartColors = getChartColorVars();
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -128,7 +130,7 @@ export function createLineChart(
 
     var colorScale = getColorScale(
         allGroup,
-        options.themeConfig.chartColors
+        chartColors
     );
 
     data.map(function(d) {
@@ -535,7 +537,7 @@ export function createLineChart(
         })
         var legendScale = getColorScale(
             legendValues,
-            options.themeConfig.chartColors
+            chartColors
         )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')

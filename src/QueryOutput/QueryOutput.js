@@ -47,12 +47,6 @@ export function QueryOutput(selector, options = {}) {
             monthYearFormat: 'MMM YYYY',
             dayMonthYearFormat: 'MMM D, YYYY',
         },
-        themeConfig: {
-            theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
-            accentColor: undefined,
-            fontFamily: 'sans-serif',
-        },
         enableDynamicCharting: true,
         queryResponse: null,
         autoChartAggregations: true,
@@ -63,7 +57,6 @@ export function QueryOutput(selector, options = {}) {
     }
     responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
     responseRenderer.classList.add('autoql-vanilla-renderer-container');
-    responseRenderer.style.setProperty('--chata-drawer-font-family', responseRenderer.options.themeConfig.fontFamily);
     responseRenderer.setAttribute('data-componentid', uuidv4());
     var applyTableStyles = function () {
         var css = '';

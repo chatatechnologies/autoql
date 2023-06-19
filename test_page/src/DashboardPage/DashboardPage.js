@@ -68,9 +68,6 @@ export class DashboardPage extends Component {
                 apiKey: authentication.apiKey,
                 domain: authentication.domain,
             },
-            themeConfig: {
-                ...this.props.themeConfig
-            },
             autoQLConfig: {
                 debug: true
             },
@@ -85,7 +82,6 @@ export class DashboardPage extends Component {
         if(this.props.dashboards){
             this.instanceDashboard()
         }else{
-            this.dashboard.options.themeConfig = this.props.themeConfig
             this.dashboard.applyCSS()
         }
     }

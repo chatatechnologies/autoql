@@ -17,6 +17,7 @@ import {
     formatColumnName,
     formatData,
     formatLabels,
+    getChartColorVars,
     getNotGroupableField,
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
@@ -38,6 +39,7 @@ export function createHeatmap(
     var data = formatDataToHeatmap(json, options);
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
+    var chartColors = getChartColorVars();
 
     var cols = json['data']['columns'];
 
@@ -228,7 +230,7 @@ export function createHeatmap(
     })
     .attr("width", getBandWidth(x))
     .attr("height", getBandWidth(y))
-    .attr("fill", options.themeConfig.chartColors[0])
+    .attr("fill", chartColors[0])
     .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
     .attr('class', 'tooltip-3d square')
 

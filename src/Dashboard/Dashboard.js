@@ -60,13 +60,6 @@ export function Dashboard(selector, options = {}) {
             enableColumnVisibilityManager: true,
             enableDrilldowns: true,
         },
-        themeConfig: {
-            theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
-            accentColor: '#26a7df',
-            fontFamily: 'sans-serif',
-            titleColor: '#356f90',
-        },
         tiles: [],
         onChangeCallback: function () {},
         isEditing: false,
@@ -99,12 +92,6 @@ export function Dashboard(selector, options = {}) {
     if ('autoQLConfig' in options) {
         for (let [key, value] of Object.entries(options['autoQLConfig'])) {
             obj.options.autoQLConfig[key] = value;
-        }
-    }
-
-    if ('themeConfig' in options) {
-        for (let [key, value] of Object.entries(options['themeConfig'])) {
-            obj.options.themeConfig[key] = value;
         }
     }
 
