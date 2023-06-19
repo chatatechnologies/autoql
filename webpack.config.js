@@ -35,6 +35,6 @@ module.exports = {
     "/.*/": "umd $0",
   },
   optimization: {
-    minimize: true,
+    minimize: process.env.NODE_ENV === 'production',
   },
 };
