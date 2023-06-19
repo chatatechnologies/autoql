@@ -1,12 +1,6 @@
-import { ChataUtils } from '../ChataUtils'
-import {
-    CHATA_BUBBLES_ICON,
-    VOICE_RECORD_IMAGE
-} from '../Svg'
-import {
-    LIGHT_THEME,
-    DARK_THEME
-} from '../Constants'
+import { ChataUtils } from '../ChataUtils';
+import { CHATA_BUBBLES_ICON, VOICE_RECORD_IMAGE } from '../Svg';
+import { LIGHT_THEME, DARK_THEME } from '../Constants';
 import {
     getSpeech,
     htmlToElement,
@@ -21,16 +15,16 @@ import {
     apiCall,
     getNumberOfGroupables,
     getClickedData,
-    formatData
-} from '../Utils'
-import {
-    createSafetynetContent,
-    createSuggestionArray
-} from '../Safetynet'
-import { refreshTooltips } from '../Tooltips'
-import { ChataTable } from '../ChataTable'
+    formatData,
+    checkAndApplyTheme,
+} from '../Utils';
+import { createSafetynetContent, createSuggestionArray } from '../Safetynet';
+import { refreshTooltips } from '../Tooltips';
+import { ChataTable } from '../ChataTable';
 
-export function QueryInput(selector, options){
+export function QueryInput(selector, options) {
+    checkAndApplyTheme();
+
     const PARENT = document.querySelector(selector);
     var chataBarContainer = document.createElement('div');
     chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');

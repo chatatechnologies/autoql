@@ -1,18 +1,18 @@
-import { NotificationSettingsItem } from './NotificationSettingsItem'
-import { NotificationSettingsModal } from './NotificationSettingsModal'
-import { Modal } from '../Modal'
-import { ChataConfirmDialog } from '../ChataComponents'
-import { htmlToElement, apiCallGet, apiCallPost } from '../Utils'
-import { refreshTooltips } from '../Tooltips'
-import { LIGHT_THEME, DARK_THEME } from '../Constants'
-import {
-    TitleContainer
-} from './TitleContainer'
-import { strings } from '../Strings'
-import '../../css/NotificationSettings.css'
+import { NotificationSettingsItem } from './NotificationSettingsItem';
+import { NotificationSettingsModal } from './NotificationSettingsModal';
+import { Modal } from '../Modal';
+import { ChataConfirmDialog } from '../ChataComponents';
+import { htmlToElement, apiCallGet, apiCallPost, checkAndApplyTheme } from '../Utils';
+import { refreshTooltips } from '../Tooltips';
+import { LIGHT_THEME, DARK_THEME } from '../Constants';
+import { TitleContainer } from './TitleContainer';
+import { strings } from '../Strings';
 
+import '../../css/NotificationSettings.css';
 
-export function DataAlerts(selector, options){
+export function DataAlerts(selector, options) {
+    checkAndApplyTheme();
+
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');
     wrapper.options = {

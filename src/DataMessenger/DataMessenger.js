@@ -32,6 +32,7 @@ import {
     getGroupables,
     showBadge,
     supportsVoiceRecord,
+    checkAndApplyTheme,
 } from '../Utils';
 import {
     createAreaChart,
@@ -44,7 +45,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart,
 } from '../Charts';
-import { LIGHT_THEME, DARK_THEME } from '../Constants';
+
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -80,9 +81,13 @@ import {
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
+
 import '../../css/chata-styles.css';
+import '../../css/DataMessenger.scss';
 
 export function DataMessenger(elem, options) {
+    checkAndApplyTheme();
+
     var obj = this;
     obj.options = {
         authentication: {
@@ -111,12 +116,6 @@ export function DataMessenger(elem, options) {
             enableQuerySuggestions: true,
             enableColumnVisibilityManager: true,
             enableDrilldowns: true,
-        },
-        themeConfig: {
-            theme: 'light',
-            chartColors: ['#26A7E9', '#A5CD39', '#DD6A6A', '#FFA700', '#00C1B2'],
-            accentColor: '#26a7df',
-            fontFamily: 'sans-serif',
         },
         isVisible: false,
         placement: 'right',
@@ -174,12 +173,6 @@ export function DataMessenger(elem, options) {
         }
     }
 
-    if ('themeConfig' in options) {
-        for (let [key, value] of Object.entries(options['themeConfig'])) {
-            obj.options.themeConfig[key] = value;
-        }
-    }
-
     for (let [key, value] of Object.entries(options)) {
         if (typeof value !== 'object') {
             obj.options[key] = value;
@@ -193,6 +186,7 @@ export function DataMessenger(elem, options) {
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
     }
+
     if (!('onMaskClick' in options)) {
         obj.options.onMaskClick = obj.options.onHandleClick;
     }
@@ -216,10 +210,6 @@ export function DataMessenger(elem, options) {
                 if (!obj.options.autoQLConfig.enableAutocomplete) {
                     obj.autoCompleteList.style.display = 'none';
                 }
-                break;
-            case 'themeConfig':
-                obj.setObjectProp('themeConfig', value);
-                obj.applyStyles();
                 break;
             case 'isVisible':
                 if (!value) obj.closeDrawer();
@@ -371,7 +361,7 @@ export function DataMessenger(elem, options) {
 
     obj.openDrawer = (disableAnimation = false) => {
         document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
-        obj.rootElem.style.zIndex = 2000;
+        obj.rootElem.style.zIndex = 9999;
         obj.options.isVisible = true;
         obj.initialScroll = window.scrollY;
         obj.input.focus();
@@ -540,7 +530,6 @@ export function DataMessenger(elem, options) {
     obj.onLoadHandler = () => {
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
             obj.initialScroll = window.scrollY;
-            obj.applyStyles();
         }
     };
 
@@ -671,9 +660,6 @@ export function DataMessenger(elem, options) {
         var notificationList = new NotificationFeed(`[id="${id}"]`, {
             authentication: {
                 ...obj.options.authentication,
-            },
-            themeConfig: {
-                ...obj.options.themeConfig,
             },
             showNotificationDetails: true,
             showDescription: false,
@@ -1470,7 +1456,7 @@ export function DataMessenger(elem, options) {
 
         voiceRecordButton.onmouseup = () => {
             obj.speechToText.stop();
-            voiceRecordButton.style.backgroundColor = obj.options.themeConfig.accentColor;
+            // voiceRecordButton.style.backgroundColor = obj.options.themeConfig.accentColor;
             obj.input.value = obj.finalTranscript;
             obj.isRecordVoiceActive = false;
         };
@@ -1522,23 +1508,12 @@ export function DataMessenger(elem, options) {
                 if (obj.finalTranscript !== '') {
                     obj.input.value = obj.finalTranscript;
                     obj.speechToText.stop();
-                    obj.voiceRecordButton.style.backgroundColor = obj.options.themeConfig.accentColor;
+                    // obj.voiceRecordButton.style.backgroundColor = obj.options.themeConfig.accentColor;
                     ChataUtils.autocomplete(obj.input.value, obj.autoCompleteList, 'suggestion', obj.options);
                 }
                 obj.finalTranscript = '';
             };
         }
-    };
-
-    obj.applyStyles = () => {
-        const themeStyles = obj.options.themeConfig.theme === 'light' ? LIGHT_THEME : DARK_THEME;
-        themeStyles['accent-color'] = obj.options.themeConfig.accentColor;
-
-        for (let property in themeStyles) {
-            document.documentElement.style.setProperty('--autoql-vanilla-' + property, themeStyles[property]);
-        }
-
-        obj.rootElem.style.setProperty('--autoql-vanilla-font-family', obj.options.themeConfig['fontFamily']);
     };
 
     obj.checkMaxMessages = function () {

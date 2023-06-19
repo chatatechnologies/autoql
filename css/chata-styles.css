@@ -28,7 +28,7 @@
 .autoql-vanilla-drawer-handle{
     position: fixed;
     cursor: pointer;
-    z-index: 10;
+    z-index: 9999;
     text-align: center;
     line-height: 40px;
     font-size: 16px;

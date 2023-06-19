@@ -7,8 +7,9 @@ import {
     getSupportedDisplayTypes,
     createTableContainer,
     formatData,
-    mergeOptions
-} from '../Utils'
+    mergeOptions,
+    checkAndApplyTheme,
+} from '../Utils';
 import {
     createAreaChart,
     createBarChart,
@@ -18,12 +19,14 @@ import {
     createLineChart,
     createPieChart,
     createStackedBarChart,
-    createStackedColumnChart
-} from '../Charts'
-import { ChataTable, ChataPivotTable } from '../ChataTable'
-import { ChataUtils } from '../ChataUtils'
+    createStackedColumnChart,
+} from '../Charts';
+import { ChataTable, ChataPivotTable } from '../ChataTable';
+import { ChataUtils } from '../ChataUtils';
 
-export function QueryOutput(selector, options={}){
+export function QueryOutput(selector, options = {}) {
+    checkAndApplyTheme();
+
     const PARENT = document.querySelector(selector);
     var responseRenderer = document.createElement('div');
     const uuid = uuidv4();
