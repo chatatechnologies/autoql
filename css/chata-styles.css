@@ -36,7 +36,7 @@
     justify-content: center;
     align-items: center;
     vertical-align:middle;
-    background-color: #26a7df;
+    background-color: var(--autoql-vanilla-accent-color);
     color: #fff;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.15);
     transition: all 0.5s ease;

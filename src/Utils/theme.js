@@ -153,13 +153,15 @@ export const configureTheme = (themeConfig = {}) => {
 
         const themeStyles = theme === 'dark' ? DARK_THEME : LIGHT_THEME; // Default to light theme
 
+        if (accentColor) themeStyles['accent-color'] = accentColor;
+        if (accentColorSecondary) themeStyles['accent-color-secondary'] = accentColorSecondary;
+
         if (accentTextColor) {
             themeStyles['text-color-accent'] = accentTextColor;
         } else {
             setAccentColorVars(accentColor, themeStyles);
         }
 
-        if (accentColorSecondary) themeStyles['accent-color-secondary'] = accentColor;
         if (backgroundColorPrimary) themeStyles['background-color'] = backgroundColorPrimary;
         if (backgroundColorSecondary) themeStyles['background-color-secondary'] = backgroundColorSecondary;
         if (fontFamily) themeStyles['font-family'] = fontFamily;

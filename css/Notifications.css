@@ -7,7 +7,7 @@
 
 
 .chata-notification-list-container {
-    color: #26a7df;
+    color: var(--autoql-vanilla-accent-color);
     padding: 20px !important;
     text-align: left;
     background: var(--autoql-vanilla-background-color-secondary);
@@ -41,7 +41,7 @@
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {
-    color: #26a7df;
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .chata-notification-list-item:nth-of-type(2) {
@@ -90,7 +90,7 @@
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {
-    color: #26a7df;
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .chata-notification-list-container .chata-notification-dismiss-icon {
@@ -125,7 +125,7 @@
     left: 0;
     top: 0;
     width: 4px;
-    background: #26a7df;
+    background: var(--autoql-vanilla-accent-color);
     -webkit-transition-property: opacity,height;
     transition-property: opacity,height;
     -webkit-transition-duration: .2s,.3s;

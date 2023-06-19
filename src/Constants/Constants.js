@@ -1,8 +1,8 @@
 export const LIGHT_THEME = {
     'accent-color': '#28A8E0',
     'accent-color-secondary': '#1EA0D8',
-    'background-color': '#F8F8F8',
-    'background-color-secondary': '#FFFFFF',
+    'background-color': '#FFFFFF',
+    'background-color-secondary': '#F8F8F8',
     'background-color-tertiary': '#E8E8E8',
     'background-color-switch-input': '#BABABA',
     'background-color-switch-thumb': '#FFFFFF',
@@ -36,8 +36,8 @@ export const LIGHT_THEME = {
 export const DARK_THEME = {
     'accent-color': '#193a48',
     'accent-color-secondary': '#1ea0d8',
-    'background-color': '#3B3F46',
-    'background-color-secondary': '#20252A',
+    'background-color': '#20252A',
+    'background-color-secondary': '#3B3F46',
     'background-color-tertiary': '#292929',
     'background-color-switch-input': '#252525',
     'background-color-switch-thumb': '#ececec',
