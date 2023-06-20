@@ -18,7 +18,6 @@ import {
     apiCallPut,
     apiCallPost,
 } from '../Api'
-import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
