@@ -1,11 +1,24 @@
-import { Cascader } from '../Cascader';
-import { ChataTable, ChataPivotTable } from '../ChataTable';
-import { ChataUtils } from '../ChataUtils';
-import { Modal } from '../Modal';
-import { NotificationSettingsModal, NotificationIcon, NotificationFeed } from '../Notifications';
 // TODO: NEXT DEPLOY
 // import { ReverseTranslation } from '../ReverseTranslation'
 import { ErrorMessage } from '../ErrorMessage';
+import { TIMESTAMP_FORMATS } from '../Constants'
+import { ChataTable, ChataPivotTable } from '../ChataTable'
+import { ChataUtils } from '../ChataUtils'
+import { Modal } from '../Modal'
+import {
+    NotificationSettingsModal,
+    NotificationIcon,
+    NotificationFeed
+} from '../Notifications'
+// TODO: NEXT DEPLOY
+// import { ReverseTranslation } from '../ReverseTranslation'
+import { 
+    apiCallV2,
+    apiCallGet,
+    apiCallPut,
+    apiCallPost,
+} from '../Api'
+import { ErrorMessage } from '../ErrorMessage'
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
@@ -23,10 +36,6 @@ import {
     getNumberOfGroupables,
     formatData,
     getRecommendationPath,
-    apiCall,
-    apiCallGet,
-    apiCallPut,
-    apiCallPost,
     getSafetynetValues,
     getSafetynetUserSelection,
     getGroupables,
@@ -120,25 +129,31 @@ export function DataMessenger(elem, options = {}) {
             demo: false,
             ...(options.authentication ?? {}),
         },
-        dataFormatting: {
+        dataFormatting:{
+            timestampFormat: TIMESTAMP_FORMATS.iso8601,
             currencyCode: 'USD',
             languageCode: 'en-US',
             currencyDecimals: 2,
-            quantityDecimals: 1,
+            quantityDecimals: 2,
+            ratioDecimals: 4,
             comparisonDisplay: 'PERCENT',
             monthYearFormat: 'MMM YYYY',
-            dayMonthYearFormat: 'MMM D, YYYY',
+            dayMonthYearFormat: 'll',
             ...(options.dataFormatting ?? {}),
         },
         autoQLConfig: {
             debug: false,
             test: false,
             enableAutocomplete: true,
+            enableQueryInterpretation: true,
             enableQueryValidation: true,
             enableQuerySuggestions: true,
             enableColumnVisibilityManager: true,
             enableDrilldowns: true,
-            ...(options.autoQLConfig ?? {}),
+            enableNotifications: false,
+            enableCSVDownload: true,
+            enableReportProblem: true,    
+            ...(options.autoQLConfig ?? {}),      
         },
     };
 
@@ -1650,17 +1665,6 @@ export function DataMessenger(elem, options = {}) {
         }
     };
 
-    obj.setHeightBubble = (oldComponent, displayType = 'chart') => {
-        var messageBubble = obj.getParentFromComponent(oldComponent);
-        var chartContainer = oldComponent.getElementsByTagName('svg');
-        if (displayType === 'chart') {
-            messageBubble.parentElement.style.maxHeight =
-                parseInt(chartContainer[0].getAttribute('height')) + 115 + 'px';
-        } else {
-            messageBubble.parentElement.style.maxHeight = '85%';
-        }
-    };
-
     obj.copyFilterMetadata = (component) => {
         component.filterMetadata = component.internalTable.getHeaderFilters();
     };
@@ -1932,15 +1936,15 @@ export function DataMessenger(elem, options = {}) {
         obj.setDefaultFilters(component, table, 'table');
         table.parentContainer = parentContainer;
         allColHiddenMessage(component);
-        obj.setHeightBubble(component, 'table');
         select(window).on('chata-resize.' + idRequest, null);
-    };
+    }
     obj.displayColumChartHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
-        createColumnChart(component, json, obj.options, obj.registerDrilldownChartEvent);
-        obj.setHeightBubble(component);
+        createColumnChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -1948,8 +1952,9 @@ export function DataMessenger(elem, options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bar');
-        createBarChart(component, json, obj.options, obj.registerDrilldownChartEvent);
-        obj.setHeightBubble(component);
+        createBarChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -1957,8 +1962,9 @@ export function DataMessenger(elem, options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pie');
-        createPieChart(component, json, obj.options, obj.registerDrilldownChartEvent);
-        obj.setHeightBubble(component);
+        createPieChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -1966,28 +1972,29 @@ export function DataMessenger(elem, options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'line');
-        createLineChart(component, json, obj.options, obj.registerDrilldownChartEvent);
-        obj.setHeightBubble(component);
+        createLineChart(
+            component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     };
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pivot_table');
-        var table = new ChataPivotTable(idRequest, obj.options, obj.onCellClick);
-        obj.setDefaultFilters(component, table, 'pivot');
-        obj.setHeightBubble(component, 'table');
-        select(window).on('chata-resize.' + idRequest, null);
-        component.tabulator = table;
-        component.pivotTabulator = table;
-    };
+        var table = new ChataPivotTable(
+            idRequest, obj.options, obj.onCellClick
+        );
+        obj.setDefaultFilters(component, table, 'pivot')
+        select(window).on('chata-resize.'+idRequest, null);
+        component.tabulator = table
+        component.pivotTabulator = table
+    }
 
     obj.displayHeatmapHandler = (evt, idRequest) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'heatmap');
         createHeatmap(component, json, obj.options);
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -1996,7 +2003,6 @@ export function DataMessenger(elem, options = {}) {
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bubble');
         createBubbleChart(component, json, obj.options);
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2004,8 +2010,10 @@ export function DataMessenger(elem, options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_column');
-        createStackedColumnChart(component, cloneObject(json), obj.options, obj.registerDrilldownStackedChartEvent);
-        obj.setHeightBubble(component);
+        createStackedColumnChart(
+            component, cloneObject(json), obj.options,
+            obj.registerDrilldownStackedChartEvent
+        );
         obj.registerDrilldownStackedChartEvent(component);
     };
 
@@ -2013,8 +2021,10 @@ export function DataMessenger(elem, options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_bar');
-        createStackedBarChart(component, cloneObject(json), obj.options, obj.registerDrilldownStackedChartEvent);
-        obj.setHeightBubble(component);
+        createStackedBarChart(
+            component, cloneObject(json), obj.options,
+            obj.registerDrilldownStackedChartEvent
+        );
         obj.registerDrilldownStackedChartEvent(component);
     };
 
@@ -2022,9 +2032,11 @@ export function DataMessenger(elem, options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_line');
-        createAreaChart(component, cloneObject(json), obj.options, obj.registerDrilldownStackedChartEvent);
-        obj.setHeightBubble(component);
-    };
+        createAreaChart(
+            component, cloneObject(json), obj.options,
+            obj.registerDrilldownStackedChartEvent
+        );
+    }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
         var button = htmlToElement(`
@@ -2043,16 +2055,18 @@ export function DataMessenger(elem, options = {}) {
         return button;
     };
 
-    obj.getDisplayTypesButtons = (idRequest, ignore) => {
+    obj.getDisplayTypesButtons = (idRequest, active) => {
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
         for (var i = 0; i < displayTypes.length; i++) {
             let button;
-            if (displayTypes[i] == ignore) continue;
-            if (displayTypes[i] == 'table') {
-                button = obj.getDisplayTypeButton(idRequest, TABLE_ICON, strings.table, obj.displayTableHandler);
+            //if(displayTypes[i] == ignore)continue;
+            if(displayTypes[i] == 'table'){
+                button = obj.getDisplayTypeButton(
+                    idRequest, TABLE_ICON, strings.table, obj.displayTableHandler
+                )
             }
             if (displayTypes[i] == 'column') {
                 button = obj.getDisplayTypeButton(
@@ -2131,9 +2145,10 @@ export function DataMessenger(elem, options = {}) {
                 );
             }
 
-            if (button) {
-                buttons.push(button);
+            if(displayTypes[i] == active){
+                button.classList.add('autoql-vanilla-viz-toolbar-btn-active')
             }
+            buttons.push(button);
         }
 
         return buttons;
@@ -2403,10 +2418,12 @@ export function DataMessenger(elem, options = {}) {
         // containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('suggestions');
-        responseContentContainer.classList.add('autoql-vanilla-chata-response-content-container');
+        messageBubble.classList.add('suggestions')
+        responseContentContainer.classList.add(
+            'autoql-vanilla-chata-response-content-container'
+        );
 
-        responseContentContainer.classList.add('suggestions');
+        responseContentContainer.classList.add('suggestions')
 
         obj.createSuggestions(responseContentContainer, relatedJson, jsonResponse);
         messageBubble.appendChild(responseContentContainer);
@@ -2697,11 +2714,23 @@ export function DataMessenger(elem, options = {}) {
             }
         }
 
-        let response = await apiCall(textValue, obj.options, source, selections);
-        if (!response) {
-            obj.input.removeAttribute('disabled');
-            if (responseLoadingContainer) {
-                obj.drawerContent.removeChild(responseLoadingContainer);
+        let response = await apiCallV2(
+            obj.options, 
+            {
+                "date_format": TIMESTAMP_FORMATS.iso8601,
+                "page_size": 500,
+                "scope": "data_messenger",
+                "session_filter_locks": [],
+                "source": "data_messenger.user",
+                "test":  obj.options.autoQLConfig.test,
+                "text": textValue,
+                "translation": "include"
+            }
+        )
+        if(!response){
+            obj.input.removeAttribute("disabled")
+            if(responseLoadingContainer){
+                obj.drawerContent.removeChild(responseLoadingContainer)
             }
             obj.sendResponse(strings.accessDenied);
             return;

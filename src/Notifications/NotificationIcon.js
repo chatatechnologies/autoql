@@ -1,14 +1,19 @@
-import { NOTIFICATION_BUTTON } from '../Svg';
-import { apiCallNotificationCount, apiCallPut, checkAndApplyTheme } from '../Utils';
+import { NOTIFICATION_BUTTON } from '../Svg'
+import {
+	apiCallNotificationCount,
+	apiCallPut
+} from '../Api'
+import { checkAndApplyTheme } from '../Utils'
 
-import '../../css/ChataNotificationButton.css';
+import '../../css/ChataNotificationButton.css'
 
-export function NotificationIcon(selector, options = {}) {
-    checkAndApplyTheme();
-    const NOTIFICATION_POLLING_INTERVAL = 180000;
-    var obj = this;
-    this.options = {
-        authentication: {
+export function NotificationIcon(selector, options={}){
+    checkAndApplyTheme()
+
+	const NOTIFICATION_POLLING_INTERVAL = 180000
+	var obj = this;
+	this.options = {
+		authentication: {
             token: undefined,
             apiKey: undefined,
             customerId: undefined,

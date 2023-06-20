@@ -2,7 +2,7 @@ import './FilterLockingInput.css'
 import {
     apiCallGet,
     apiCallPut
-} from '../../../Utils'
+} from '../../../Api'
 import { AntdMessage } from '../../../Antd'
 import { IFON_ICON_BLUE } from '../../../Svg'
 import { strings } from '../../../Strings'

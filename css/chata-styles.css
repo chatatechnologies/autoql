@@ -118,14 +118,6 @@
     outline: none !important;
 }
 
-.autoql-vanilla-chat-message-toolbar.right .autoql-vanilla-chata-toolbar-btn path{
-    fill: unset;
-}
-
-.autoql-vanilla-chat-message-toolbar.right .autoql-vanilla-chata-toolbar-btn svg{
-    font: unset;
-}
-
 .autoql-vanilla-chata-button{
     background: none !important;
 }
@@ -781,6 +773,13 @@ tr td.chata-hidden{
     cursor: pointer;
     outline: none !important;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.autoql-vanilla-viz-toolbar-btn-active {
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .autoql-vanilla-badge {
@@ -823,7 +822,7 @@ tr td.chata-hidden{
     left: -9px;
 }
 .autoql-vanilla-chat-message-bubble:hover .autoql-vanilla-chat-message-toolbar{
-    display: block;
+    display: flex;
 }
 
 .autoql-vanilla-chat-message-bubble button:focus{
@@ -874,28 +873,34 @@ tr td.chata-hidden{
     border-right: 2px solid #ddd;
     text-align: left !important;
 }
+
 .hm0{
     opacity: 0.5 !important;
     fill: currentColor !important;
 }
+
 .hm1 {
     fill: currentColor !important;
 }
+
 .hm2 {
     opacity: 0.15 !important;
     fill: currentColor !important;
     enable-background: new;
 }
+
 .hm3 {
     opacity: 0.6 !important;
     fill: currentColor !important;
     enable-background: new;
 }
+
 .hm4 {
     opacity: 0.65 !important;
     fill: currentColor !important;
     enable-background: new;
 }
+
 .hm5 {
     fill: currentColor !important;
 }
@@ -908,9 +913,11 @@ tr td.chata-hidden{
     stroke: transparent;
     fill: transparent !important;
 }
+
 .tick{
     transition: all .3s ease;
 }
+
 .autoql-vanilla-chata-response-content-container line{
     stroke-width: 1px;
     stroke: currentColor;
@@ -918,6 +925,7 @@ tr td.chata-hidden{
     shape-rendering: crispedges;
 
 }
+
 .autoql-vanilla-chata-response-content-container text{
     fill: currentcolor;
     fill-opacity: 0.7;
@@ -931,12 +939,14 @@ tr td.chata-hidden{
     justify-content: center;
     align-self: center;
 }
+
 .autoql-vanilla-renderer-container line{
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
 }
+
 .autoql-vanilla-renderer-container text{
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
@@ -1006,7 +1016,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin: 0 3px;
     padding: 0 11px;
     color: var(--autoql-vanilla-accent-color);
-
     transition: all .2s ease;
     cursor: pointer;
 }
@@ -1630,10 +1639,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     opacity: .6;
 }
 
-.autoql-vanilla-chata-selectable-list{
-
-}
-
 .autoql-vanilla-chata-list-item:not(:last-child) {
     border-bottom: 1px solid hsla(0,0%,82.7%,.29);
 }
@@ -1679,7 +1684,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-bottom: 3px;
 }
 
-@-webkit-keyframes fadeIn {
+@keyframes fadeIn {
   0% {
     opacity: 0;
     top: 100px;
@@ -1702,20 +1707,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   }
 }
 
-@-webkit-keyframes bounceIn {
-    0% {
-        opacity: .25;
-    }
-    50% {
-        opacity: 50;
-    }
-    70% {
-        opacity: .75;
-    }
-    100% {
-        opacity: 1;
-    }
-}
 @keyframes bounceIn {
     0% {
         opacity: .25;
@@ -1731,6 +1722,20 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     }
 }
 
+@keyframes bounceIn {
+    0% {
+        opacity: .25;
+    }
+    50% {
+        opacity: 50;
+    }
+    70% {
+        opacity: .75;
+    }
+    100% {
+        opacity: 1;
+    }
+}
 
 @keyframes scale-up-br {
     0% {
@@ -1762,6 +1767,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
         transform: scale(1);
     }
 }
+
 @keyframes response-loading3 {
     0% {
         transform: scale(1);
@@ -1770,6 +1776,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
         transform: scale(0);
     }
 }
+
 @keyframes response-loading2 {
     0% {
         transform: translate(0, 0);

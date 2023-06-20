@@ -1,7 +1,9 @@
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
 import { ChataConfirmDialog } from '../ChataComponents'
-import { htmlToElement, apiCallPut, apiCallDelete } from '../Utils'
+import { htmlToElement } from '../Utils'
+import { apiCallPut, apiCallDelete } from '../Api'
+
 import { refreshTooltips } from '../Tooltips'
 import {
     EDIT_ALERT,

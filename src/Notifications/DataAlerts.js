@@ -1,14 +1,16 @@
-import { NotificationSettingsItem } from './NotificationSettingsItem';
-import { NotificationSettingsModal } from './NotificationSettingsModal';
-import { Modal } from '../Modal';
-import { ChataConfirmDialog } from '../ChataComponents';
-import { htmlToElement, apiCallGet, apiCallPost, checkAndApplyTheme } from '../Utils';
-import { refreshTooltips } from '../Tooltips';
-import { LIGHT_THEME, DARK_THEME } from '../Constants';
-import { TitleContainer } from './TitleContainer';
-import { strings } from '../Strings';
+import { NotificationSettingsItem } from './NotificationSettingsItem'
+import { NotificationSettingsModal } from './NotificationSettingsModal'
+import { Modal } from '../Modal'
+import { ChataConfirmDialog } from '../ChataComponents'
+import { htmlToElement } from '../Utils'
+import { apiCallGet, apiCallPost } from '../Api'
+import { refreshTooltips } from '../Tooltips'
+import {
+    TitleContainer
+} from './TitleContainer'
+import { strings } from '../Strings'
 
-import '../../css/NotificationSettings.css';
+import '../../css/NotificationSettings.css'
 
 export function DataAlerts(selector, options) {
     checkAndApplyTheme();

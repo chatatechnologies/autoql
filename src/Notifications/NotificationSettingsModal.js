@@ -21,9 +21,9 @@ import {
 } from './NotificationComponents'
 import { refreshTooltips } from '../Tooltips'
 import {
-    apiCallPost,
     getHeightForChildrens
 } from '../Utils'
+import { apiCallPost } from '../Api'
 import { strings } from '../Strings'
 
 export function NotificationSettingsModal(options, mode='create', rule={}){

@@ -3,10 +3,9 @@ import { ButtonContainer } from '../ButtonContainer'
 import { FilterLockingLine } from '../FilterLockingLine'
 import {
     apiCallPut
-} from '../../../Utils'
+} from '../../../Api'
 import { INFO_ICON } from '../../../Svg'
 import { strings } from '../../../Strings'
-
 
 export function FilterLockingList(datamessenger, conditionList,  data){
     const category = data[0]

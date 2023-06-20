@@ -1,19 +1,22 @@
-import { htmlToElement, apiCallPut, apiCallGet, apiCallPost, checkAndApplyTheme } from '../Utils';
-import { DISMISS, EMPTY_STATE_BLUE } from '../Svg';
-import { DARK_THEME, LIGHT_THEME } from '../Constants';
-import { Notification } from './Notification';
-import { NotificationSettingsModal } from './NotificationSettingsModal';
-import { Modal } from '../Modal';
-import { refreshTooltips } from '../Tooltips';
-import { ChataConfirmDialog } from '../ChataComponents';
-import { $dom } from '../Dom';
-import { strings } from '../Strings';
-
-import '../../css/Notifications.css';
+import { checkAndApplyTheme, htmlToElement } from '../Utils'
+import {
+    apiCallPut,
+    apiCallGet,
+    apiCallPost
+} from '../Api'
+import { DISMISS, EMPTY_STATE_BLUE } from '../Svg'
+import { Notification } from './Notification'
+import { NotificationSettingsModal } from './NotificationSettingsModal'
+import { Modal } from '../Modal'
+import { refreshTooltips } from '../Tooltips'
+import { ChataConfirmDialog } from '../ChataComponents'
+import { $dom } from '../Dom'
+import { strings } from '../Strings'
+import '../../css/Notifications.css'
 
 export function NotificationFeed(selector, options) {
     checkAndApplyTheme();
-
+    
     var parent = document.querySelector(selector);
     var wrapper = $dom('div', {
         classes: ['autoql-vanilla-notification-wrapper'],
