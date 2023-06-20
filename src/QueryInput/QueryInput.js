@@ -18,11 +18,11 @@ import {
     cloneObject,
     getSafetynetValues,
     getSafetynetUserSelection,
-    apiCall,
     getNumberOfGroupables,
     getClickedData,
     formatData
 } from '../Utils'
+import { apiCall } from '../Api'
 import {
     createSafetynetContent,
     createSuggestionArray

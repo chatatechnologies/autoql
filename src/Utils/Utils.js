@@ -789,7 +789,7 @@ export function allColHiddenMessage(table){
         table.style.display = 'inline-block';
         csvHandlerOption.style.display = 'block';
         csvCopyOption.style.display = 'block';
-        filterOption.style.display = 'inline-block';
+        filterOption.style.display = 'flex';
         table.tabulator.redraw();
     }
 }

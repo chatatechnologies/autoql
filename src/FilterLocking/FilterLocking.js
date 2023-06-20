@@ -2,7 +2,7 @@ import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
 import { strings } from '../Strings'
-import { apiCallGet } from '../Utils'
+import { apiCallGet } from '../Api'
 import { refreshTooltips } from '../Tooltips'
 import './FilterLocking.css'
 

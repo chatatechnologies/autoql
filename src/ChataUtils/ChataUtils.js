@@ -8,9 +8,11 @@ import {
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
+} from '../Utils'
+import {
     apiCallPut,
     apiCallPost,
-} from '../Utils'
+} from '../Api'
 import { format } from "sql-formatter";
 import { ChataConfirmDialog } from '../ChataComponents'
 import {

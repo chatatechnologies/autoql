@@ -256,9 +256,6 @@ body{
     background: var(--autoql-vanilla-background-color);
 }
 
-.autoql-vanilla-drawer-content:hover{
-}
-
 .autoql-vanilla-chata-scrollbox {
   width: 100%;
   height: 100%;
@@ -726,9 +723,6 @@ body{
     background-color: var(--autoql-vanilla-background-color);
 }
 
-input[type=text]:disabled {
-}
-
 .tabulator-filter{
     bottom: 42px !important;
     right: 13px !important;
@@ -906,10 +900,12 @@ tr td.chata-hidden{
     font-size: 16px;
     line-height: 28px;
     vertical-align: top;
-    color: var(--autoql-vanilla-accent-color);
     cursor: pointer;
     outline: none !important;
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .autoql-vanilla-badge {
@@ -951,7 +947,7 @@ tr td.chata-hidden{
     left: -9px;
 }
 .autoql-vanilla-chat-message-bubble:hover .autoql-vanilla-chat-message-toolbar{
-    display: block;
+    display: flex;
 }
 
 .autoql-vanilla-chat-message-bubble button:focus{
@@ -1134,7 +1130,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin: 0 3px;
     padding: 0 11px;
     color: var(--autoql-vanilla-accent-color);
-
     transition: all .2s ease;
     cursor: pointer;
 }
@@ -1926,10 +1921,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     opacity: .6;
 }
 
-.autoql-vanilla-chata-selectable-list{
-
-}
-
 .autoql-vanilla-chata-list-item:not(:last-child) {
     border-bottom: 1px solid hsla(0,0%,82.7%,.29);
 }
@@ -1975,7 +1966,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-bottom: 3px;
 }
 
-@-webkit-keyframes fadeIn {
+@keyframes fadeIn {
   0% {
     opacity: 0;
     top: 100px;
@@ -1998,20 +1989,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
   }
 }
 
-@-webkit-keyframes bounceIn {
-    0% {
-        opacity: .25;
-    }
-    50% {
-        opacity: 50;
-    }
-    70% {
-        opacity: .75;
-    }
-    100% {
-        opacity: 1;
-    }
-}
 @keyframes bounceIn {
     0% {
         opacity: .25;
@@ -2027,6 +2004,20 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     }
 }
 
+@keyframes bounceIn {
+    0% {
+        opacity: .25;
+    }
+    50% {
+        opacity: 50;
+    }
+    70% {
+        opacity: .75;
+    }
+    100% {
+        opacity: 1;
+    }
+}
 
 @keyframes scale-up-br {
     0% {
@@ -2058,6 +2049,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
         transform: scale(1);
     }
 }
+
 @keyframes response-loading3 {
     0% {
         transform: scale(1);
@@ -2066,6 +2058,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
         transform: scale(0);
     }
 }
+
 @keyframes response-loading2 {
     0% {
         transform: translate(0, 0);

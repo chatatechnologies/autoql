@@ -13,6 +13,8 @@
 
 .autoql-vanilla-chata-table .tabulator-row .tabulator-cell{
     border-right: 1px solid var(--autoql-vanilla-border-color);
+    font-size: 11px;
+    font-weight: bold;
 }
 
 .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=asc] .tabulator-col-content .tabulator-arrow, .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=none] .tabulator-col-content .tabulator-arrow {
@@ -22,6 +24,12 @@
 .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col:hover .tabulator-col-content .tabulator-arrow {
     opacity: 1!important;
 }
+
+.autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-col-title {
+    text-align: center;
+    font-size: 12px;
+}
+
 .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
     opacity: 0;
     border-left: 4px solid transparent!important;
@@ -33,10 +41,10 @@
 .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col.tabulator-sortable[aria-sort=desc] .tabulator-col-content .tabulator-arrow {
     border-top: 4px solid rgba(0,0,0,.2)!important;
 }
+
 .autoql-vanilla-chata-table.tabulator .tabulator-header .tabulator-col:hover .tabulator-col-content .tabulator-arrow {
     opacity: 1!important;
 }
-
 
 .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar {
     display: unset;
@@ -70,6 +78,7 @@
     border: 1px solid #28a8e0 !important;
     box-shadow: none !important;
 }
+
 .autoql-vanilla-chata-table .tabulator-header-filter input {
     border: 1px solid var(--autoql-vanilla-border-color) !important;
     border-radius: 4px !important;

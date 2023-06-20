@@ -3,10 +3,9 @@ import { ChataSlider } from '../../../ChataComponents'
 import {
     apiCallDelete,
     apiCallPut
-} from '../../../Utils'
+} from '../../../Api'
 import './FilterLockingLine.css'
 import { strings } from '../../../Strings'
-
 
 export function FilterLockingLine(datamessenger, conditionList, conditionData){
     const {

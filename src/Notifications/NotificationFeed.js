@@ -1,4 +1,9 @@
-import { htmlToElement, apiCallPut, apiCallGet, apiCallPost } from '../Utils'
+import { htmlToElement } from '../Utils'
+import {
+    apiCallPut,
+    apiCallGet,
+    apiCallPost
+} from '../Api'
 import { DISMISS, EMPTY_STATE_BLUE } from '../Svg'
 import { DARK_THEME, LIGHT_THEME } from '../Constants'
 import { Notification } from './Notification'

@@ -13,10 +13,12 @@ import {
     putLoadingContainer,
     createTableContainer,
     getSupportedDisplayTypes,
+} from '../Utils'
+import {
     apiCallGet,
     apiCallPut,
     apiCallDelete
-} from '../Utils'
+} from '../Api'
 import {
     DISMISS,
     CALENDAR,
