@@ -1817,7 +1817,6 @@ export function DataMessenger(elem, options){
         );
         reportProblem.classList.add('report-problem');
 
-
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
             strings.reportProblemTitle,

@@ -166,11 +166,10 @@ export const CLEAR_ALL = `
 `
 
 export const DELETE_MESSAGE = `
-<svg class="delete-message" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <polyline class="delete-message" points="3 6 5 6 21 6"></polyline>
-    <path class="delete-message" d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-    <line class="delete-message" x1="10" y1="11" x2="10" y2="17"></line>
-    <line class="delete-message" x1="14" y1="11" x2="14" y2="17"></line>
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <polyline points="3 6 5 6 21 6"></polyline>
+    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+    <line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
 </svg>
 `;
 
@@ -186,8 +185,10 @@ export const IFON_ICON_BLUE = `
 `
 
 export const FILTER_TABLE = `
-<svg class="filter-table" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <polygon class="filter-table" points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"></polygon>
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <g>
+        <path fill="none" d="M0 0H24V24H0z"></path><path d="M21 4v2h-1l-5 7.5V22H9v-8.5L4 6H3V4h18zM6.404 6L11 12.894V20h2v-7.106L17.596 6H6.404z"></path>
+    </g>
 </svg>
 `
 
@@ -239,10 +240,9 @@ export const SEARCH_ICON = `
 `;
 
 export const COLUMN_EDITOR = `
-<svg class="show-hide-columns" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path class="show-hide-columns" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z">
-    </path>
-    <circle class="show-hide-columns" cx="12" cy="12" r="3"></circle>
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+    <circle cx="12" cy="12" r="3"></circle>
 </svg>
 `;
 
@@ -364,15 +364,17 @@ export const TICK = `
 `;
 
 export const VERTICAL_DOTS = `
-<svg class="autoql-vanilla-more-options" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path class="autoql-vanilla-more-options" d="M296 136c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40zm0 240c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40zm0-120c0-22.002-17.998-40-40-40s-40 17.998-40 40 17.998 40 40 40 40-17.998 40-40z"></path>
+<svg class="autoql-vanilla-more-options" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <circle cx="12" cy="12" r="1"></circle>
+    <circle cx="12" cy="5" r="1">
+    </circle><circle cx="12" cy="19" r="1"></circle>
 </svg>
 `;
 
 export const REPORT_PROBLEM = `
 <svg class="report_problem" stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path class="report_problem" d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
-    <line class="report_problem" x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12" y2="17"></line>
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line>
 </svg>
 `;
 
