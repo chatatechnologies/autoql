@@ -119,10 +119,14 @@ export function NotificationIcon(selector, options = {}) {
         if (!token || !apiKey || !domain) return;
 
         var response = await this.getNotificationCount();
-        var data = response.data.data;
-        if (data.unacknowledged) {
+        var data = response?.data?.data;
+
+        if (!isNaN(data?.unacknowledged)) {
             obj.unacknowledged = data.unacknowledged;
+        } else {
+            return
         }
+
         this.setBadgeValue(obj.unacknowledged);
         setInterval(async () => {
             var response = await obj.getNotificationCount(obj.unacknowledged);

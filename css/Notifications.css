@@ -10,7 +10,6 @@
     color: var(--autoql-vanilla-accent-color);
     padding: 20px !important;
     text-align: left;
-    background: var(--autoql-vanilla-background-color-secondary);
     overflow-y: auto;
     height: 100%;
 }
@@ -79,14 +78,14 @@
     padding-left: 25px;
     cursor: pointer;
     color: var(--autoql-vanilla-text-color-primary);
-
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-display-name {
     font-weight: 500;
     -webkit-transition: color .2s ease;
     transition: color .2s ease;
-    color: var(--autoql-vanilla-accent-color), #26a7df)
+    color: var(--autoql-vanilla-accent-color, #26a7df);
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {

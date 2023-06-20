@@ -162,7 +162,7 @@ export const configureTheme = (themeConfig = {}) => {
             setAccentColorVars(accentColor, themeStyles);
         }
 
-        if (backgroundColorPrimary) themeStyles['background-color'] = backgroundColorPrimary;
+        if (backgroundColorPrimary) themeStyles['background-color-primary'] = backgroundColorPrimary;
         if (backgroundColorSecondary) themeStyles['background-color-secondary'] = backgroundColorSecondary;
         if (fontFamily) themeStyles['font-family'] = fontFamily;
         if (textColor) themeStyles['text-color-primary'] = textColor;

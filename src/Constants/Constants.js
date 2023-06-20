@@ -1,8 +1,8 @@
 export const LIGHT_THEME = {
     'accent-color': '#28A8E0',
     'accent-color-secondary': '#1EA0D8',
-    'background-color': '#FFFFFF',
-    'background-color-secondary': '#F8F8F8',
+    'background-color-primary': '#F8F8F8',
+    'background-color-secondary': '#FFFFFF',
     'background-color-tertiary': '#E8E8E8',
     'background-color-switch-input': '#BABABA',
     'background-color-switch-thumb': '#FFFFFF',
@@ -29,14 +29,14 @@ export const LIGHT_THEME = {
     'mask-color': '#0000000F',
     'mobile-mask-color': '#00000059',
     'scrollbar-color': '#aeaeae',
-    'box-shadow-1': '0px 1px 2px 1px var(--react-autoql-box-shadow-color)',
-    'box-shadow-2': '0px 1px 2px 0px var(--react-autoql-box-shadow-color)',
+    'box-shadow-1': '0px 1px 2px 1px var(--autoql-vanilla-box-shadow-color)',
+    'box-shadow-2': '0px 1px 2px 0px var(--autoql-vanilla-box-shadow-color)',
 };
 
 export const DARK_THEME = {
     'accent-color': '#193a48',
     'accent-color-secondary': '#1ea0d8',
-    'background-color': '#20252A',
+    'background-color-primary': '#20252A',
     'background-color-secondary': '#3B3F46',
     'background-color-tertiary': '#292929',
     'background-color-switch-input': '#252525',
@@ -64,8 +64,8 @@ export const DARK_THEME = {
     'mask-color': '#00000021',
     'mobile-mask-color': '#00000059',
     'scrollbar-color': '#727477',
-    'box-shadow-1': '0px 1px 1px 0px var(--react-autoql-box-shadow-color)',
-    'box-shadow-2': '0px 1px 2px 0px var(--react-autoql-box-shadow-color)',
+    'box-shadow-1': '0px 1px 1px 0px var(--autoql-vanilla-box-shadow-color)',
+    'box-shadow-2': '0px 1px 2px 0px var(--autoql-vanilla-box-shadow-color)',
 };
 
 export const CSS_PREFIX = 'autoql-vanilla-';

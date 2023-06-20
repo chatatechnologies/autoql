@@ -85,52 +85,20 @@ import { refreshTooltips } from '../Tooltips';
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
 
-export function DataMessenger(elem, options) {
+export function DataMessenger(elem, options = {}) {
     checkAndApplyTheme();
 
     var obj = this;
     obj.options = {
-        authentication: {
-            token: undefined,
-            apiKey: undefined,
-            customerId: undefined,
-            userId: undefined,
-            username: undefined,
-            domain: undefined,
-            demo: false,
-        },
-        dataFormatting: {
-            currencyCode: 'USD',
-            languageCode: 'en-US',
-            currencyDecimals: 2,
-            quantityDecimals: 1,
-            comparisonDisplay: 'PERCENT',
-            monthYearFormat: 'MMM YYYY',
-            dayMonthYearFormat: 'MMM D, YYYY',
-        },
-        autoQLConfig: {
-            debug: false,
-            test: false,
-            enableAutocomplete: true,
-            enableQueryValidation: true,
-            enableQuerySuggestions: true,
-            enableColumnVisibilityManager: true,
-            enableDrilldowns: true,
-        },
-        isVisible: false,
+        defaultOpen: true,
         placement: 'right',
-        width: 500,
-        height: 500,
+        width: 550,
+        height: 550,
         resizable: true,
         title: 'Data Messenger',
         showHandle: true,
         handleStyles: {},
-        onVisibleChange: function () {},
-        onHandleClick: function () {},
         showMask: true,
-        shiftScreen: false,
-        onMaskClick: function () {},
-        maskClosable: true,
         userDisplayName: strings.there,
         maxMessages: -1,
         clearOnClose: false,
@@ -144,6 +112,34 @@ export function DataMessenger(elem, options) {
         landingPage: 'data-messenger',
         autoChartAggregations: true,
         xhr: new XMLHttpRequest(),
+        ...options, // Spread all provided options to overwrite defaults
+        authentication: {
+            token: undefined,
+            apiKey: undefined,
+            domain: undefined,
+            demo: false,
+            ...(options.authentication ?? {}),
+        },
+        dataFormatting: {
+            currencyCode: 'USD',
+            languageCode: 'en-US',
+            currencyDecimals: 2,
+            quantityDecimals: 1,
+            comparisonDisplay: 'PERCENT',
+            monthYearFormat: 'MMM YYYY',
+            dayMonthYearFormat: 'MMM D, YYYY',
+            ...(options.dataFormatting ?? {}),
+        },
+        autoQLConfig: {
+            debug: false,
+            test: false,
+            enableAutocomplete: true,
+            enableQueryValidation: true,
+            enableQuerySuggestions: true,
+            enableColumnVisibilityManager: true,
+            enableDrilldowns: true,
+            ...(options.autoQLConfig ?? {}),
+        },
     };
 
     obj.autoCompleteTimer = undefined;
@@ -152,49 +148,23 @@ export function DataMessenger(elem, options) {
     obj.isRecordVoiceActive = false;
     obj.zIndexBubble = 1000000;
     obj.lastQuery = '';
-
-    var rootElem = document.querySelector(elem);
-
-    if ('authentication' in options) {
-        for (let [key, value] of Object.entries(options['authentication'])) {
-            obj.options.authentication[key] = value;
-        }
-    }
-
-    if ('dataFormatting' in options) {
-        for (let [key, value] of Object.entries(options['dataFormatting'])) {
-            obj.options.dataFormatting[key] = value;
-        }
-    }
-
-    if ('autoQLConfig' in options) {
-        for (let [key, value] of Object.entries(options['autoQLConfig'])) {
-            obj.options.autoQLConfig[key] = value;
-        }
-    }
-
-    for (let [key, value] of Object.entries(options)) {
-        if (typeof value !== 'object') {
-            obj.options[key] = value;
-        }
-    }
-
-    if ('queryQuickStartTopics' in options) {
-        obj.options['queryQuickStartTopics'] = options.queryQuickStartTopics;
-    }
+    obj.id = options?.id ?? `autoql-vanilla-data-messenger-${uuidv4()}`;
+    obj.isVisible = !!obj.options.defaultOpen
+    obj.notificationTabId = uuidv4();
 
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
     }
 
-    if (!('onMaskClick' in options)) {
-        obj.options.onMaskClick = obj.options.onHandleClick;
-    }
-
-    obj.rootElem = rootElem;
-    rootElem.classList.add('autoql-vanilla-chata-drawer');
+    obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement)
+    obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement)
 
     obj.setOption = (option, value) => {
+        try {
+          if (obj.options[option] === value) {
+            return
+          }
+
         switch (option) {
             case 'authentication':
                 obj.setObjectProp('authentication', value);
@@ -211,35 +181,21 @@ export function DataMessenger(elem, options) {
                     obj.autoCompleteList.style.display = 'none';
                 }
                 break;
-            case 'isVisible':
-                if (!value) obj.closeDrawer();
-                else obj.openDrawer();
-                break;
             case 'placement':
-                obj.rootElem.removeAttribute('style');
-                obj.drawerButton.classList.remove(obj.options.placement + '-btn');
-                obj.queryTabs.classList.remove(obj.options.placement);
-                obj.queryTabsContainer.classList.remove(obj.options.placement);
-                obj.resizeHandler.classList.remove(obj.options.placement);
+                obj.rootElem.classList.remove(`autoql-vanilla-drawer-${value}`);
+                obj.rootElem.classList.remove(`autoql-vanilla-drawer-${obj.options.placement}`);
                 obj.options.placement = value;
-
-                obj.drawerButton.classList.add(obj.options.placement + '-btn');
-                obj.queryTabs.classList.add(obj.options.placement);
-                obj.queryTabsContainer.classList.add(obj.options.placement);
-                obj.resizeHandler.classList.add(obj.options.placement);
-                obj.openDrawer(true);
-                obj.closeDrawer();
                 break;
             case 'width':
                 obj.options.width = parseInt(value);
-                if (obj.options.isVisible && ['left', 'right'].includes(obj.options.placement)) {
-                    obj.rootElem.style.width = value + 'px';
+                if (obj.isVisible && obj.isPortrait()) {
+                    obj.drawerContentWrapper.style.width = value + 'px';
                 }
                 break;
             case 'height':
                 obj.options.height = parseInt(value);
-                if (obj.options.isVisible && ['top', 'bottom'].includes(obj.options.placement)) {
-                    obj.rootElem.style.height = value + 'px';
+                if (obj.isVisible && obj.isLandscape()) {
+                    obj.drawerContentWrapper.style.height = value + 'px';
                 }
                 break;
             case 'resizable':
@@ -253,26 +209,21 @@ export function DataMessenger(elem, options) {
                 break;
             case 'showHandle':
                 obj.options.showHandle = value;
-                if (value && !obj.options.isVisible) {
-                    obj.drawerButton.style.display = 'flex';
-                } else obj.drawerButton.style.display = 'none';
+                
+                value
+                  ? obj.drawerButton.classList.remove('autoql-vanilla-drawer-handle-hidden')
+                  : obj.drawerButton.classList.add('autoql-vanilla-drawer-handle-hidden')
+
                 break;
             case 'handleStyles':
                 obj.applyHandleStyles();
                 break;
             case 'showMask':
                 obj.options.showMask = value;
-                if (value) {
-                    if (obj.options.isVisible) {
-                        obj.wrapper.style.opacity = 0.3;
-                        obj.wrapper.style.height = '100%';
-                    } else {
-                        obj.wrapper.style.opacity = 0;
-                        obj.wrapper.style.height = 0;
-                    }
+                if (value === false) {
+                  obj.drawerMask.classList.add('autoql-vanilla-drawer-mask-hidden')
                 } else {
-                    obj.wrapper.style.opacity = 0;
-                    obj.wrapper.style.height = 0;
+                  obj.drawerMask.classList.remove('autoql-vanilla-drawer-mask-hidden')
                 }
                 break;
             case 'maxMessages':
@@ -282,24 +233,33 @@ export function DataMessenger(elem, options) {
             case 'enableVoiceRecord':
                 obj.options.enableVoiceRecord = value;
                 if (!supportsVoiceRecord()) return;
-                var display = value ? 'block' : 'none';
+                var display = value ? 'flex' : 'none';
                 obj.voiceRecordButton.style.display = display;
                 break;
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
-                if (obj.options.isVisible) {
-                    obj.hideTabs();
-                    obj.showTabs();
-                } else obj.queryTabs.style.visibility = 'hidden';
+                value
+                  ? obj.tabQueryTips.classList.remove('autoql-vanilla-data-messenger-tab-hidden') 
+                  : obj.tabQueryTips.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+
+                if (!value && obj.landingPage === 'explore-queries') {
+                  obj.setActiveTab(obj.tabChataUtils)
+                }
                 break;
+
             case 'enableNotificationsTab':
                 obj.options.enableNotificationsTab = value;
-                if (value && obj.options.isVisible) {
-                    obj.tabNotifications.style.visibility = 'visible';
-                } else obj.tabNotifications.style.visibility = 'hidden';
+                value
+                  ? obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden') 
+                  : obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+
+                if (!value && obj.landingPage === 'notifications') {
+                  obj.setActiveTab(obj.tabChataUtils)
+                }
+
                 obj.instanceNotificationIcon();
                 obj.toggleNotificationOption();
-                obj.showTabs();
+
                 break;
             case 'inputPlaceholder':
                 obj.options.inputPlaceholder = value;
@@ -321,7 +281,18 @@ export function DataMessenger(elem, options) {
             default:
                 obj.options[option] = value;
         }
+      } catch (error) {
+        console.error(error)
+      }
     };
+
+    obj.setOptions = (options = {}) => {
+        for (let [key, value] of Object.entries(options)) {
+            if (typeof value !== 'object') {
+                obj.setOption(key, value)
+            }
+        }
+    }
 
     obj.setObjectProp = (key, _obj) => {
         for (var [keyValue, value] of Object.entries(_obj)) {
@@ -337,195 +308,102 @@ export function DataMessenger(elem, options) {
 
     obj.createDrawerButton = () => {
         var drawerButton = document.createElement('div');
-        var drawerIcon = document.createElement('div');
-        drawerIcon.setAttribute('height', '22px');
-        drawerIcon.setAttribute('width', '22px');
-        drawerIcon.classList.add('autoql-vanilla-chata-bubbles-icon');
-        drawerIcon.classList.add('open-action');
-        drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
         drawerButton.classList.add('autoql-vanilla-drawer-handle');
-        drawerButton.classList.add('open-action');
-        drawerButton.classList.add(obj.options.placement + '-btn');
-        drawerButton.appendChild(drawerIcon);
         drawerButton.addEventListener('click', function () {
-            obj.options.onHandleClick(obj);
             obj.openDrawer();
         });
-        document.body.appendChild(drawerButton);
+
+        var drawerIcon = document.createElement('div');
+        drawerIcon.classList.add('autoql-vanilla-chata-bubbles-icon');
+        drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
+        drawerButton.appendChild(drawerIcon);
+        
         obj.drawerButton = drawerButton;
+
         if (!obj.options.showHandle) {
-            obj.drawerButton.style.display = 'none';
+            obj.drawerButton.classList.add('autoql-vanilla-drawer-handle-hidden')
+        } else {
+            obj.applyHandleStyles();
         }
-        obj.applyHandleStyles();
+
+        obj.drawerContentWrapper.appendChild(drawerButton);
     };
 
-    obj.openDrawer = (disableAnimation = false) => {
-        document.body.classList.add('autoql-vanilla-chata-body-drawer-open');
-        obj.rootElem.style.zIndex = 9999;
-        obj.options.isVisible = true;
+    obj.openDrawer = () => {
+        if (!obj.rootElem) return
+
+        obj.isVisible = true;
+        obj.rootElem.classList.add('autoql-vanilla-drawer-open');
         obj.initialScroll = window.scrollY;
         obj.input.focus();
-        obj.rootElem.style.opacity = 1;
-        var body = document.body;
-        obj.showTabs();
-
-        if (disableAnimation) {
-            obj.rootElem.style.transition = 'none';
-        } else {
-            obj.rootElem.style.transition = 'all 0.3s ease-in-out';
-            obj.rootElem.style.transitionProperty = 'transform, opacity';
-        }
-        if (obj.options.showMask) {
-            obj.wrapper.style.opacity = 0.3;
-            obj.wrapper.style.height = '100%';
-        }
-        if (obj.options.placement == 'right') {
-            obj.rootElem.style.width = obj.options.width + 'px';
-            obj.rootElem.style.height = 'calc(100vh)';
-
-            obj.drawerButton.style.display = 'none';
-            obj.rootElem.style.right = 0;
-            obj.rootElem.style.top = 0;
-            if (obj.options.shiftScreen) {
-                window.scrollTo(0, 0);
-                body.style.position = 'relative';
-                body.style.overflow = 'hidden';
-                body.style.transform = 'translateX(-' + obj.options.width + 'px)';
-                obj.rootElem.style.transform = 'translateX(' + obj.options.width + 'px)';
-            } else {
-                obj.rootElem.style.transform = 'translateX(0px)';
-            }
-        } else if (obj.options.placement == 'left') {
-            obj.rootElem.style.width = obj.options.width + 'px';
-            obj.rootElem.style.height = 'calc(100vh)';
-            obj.rootElem.style.left = 0;
-            obj.rootElem.style.top = 0;
-            obj.drawerButton.style.display = 'none';
-            if (obj.options.shiftScreen) {
-                window.scrollTo(0, 0);
-                body.style.position = 'relative';
-                body.style.overflow = 'hidden';
-                body.style.transform = 'translateX(' + obj.options.width + 'px)';
-                obj.rootElem.style.transform = 'translateX(-' + obj.options.width + 'px)';
-            } else {
-                obj.rootElem.style.transform = 'translateX(0px)';
-            }
-        } else if (obj.options.placement == 'bottom') {
-            obj.rootElem.style.width = '100%';
-            obj.rootElem.style.height = obj.options.height + 'px';
-            obj.rootElem.style.bottom = 0;
-            obj.rootElem.style.left = 0;
-            obj.drawerButton.style.display = 'none';
-            if (obj.options.shiftScreen) {
-                window.scrollTo(0, document.body.scrollHeight);
-                body.style.position = 'relative';
-                body.style.overflow = 'hidden';
-                body.style.transform = 'translateY(-' + obj.options.height + 'px)';
-                obj.rootElem.style.transform = 'translateY(' + obj.options.height + 'px)';
-            } else {
-                obj.rootElem.style.transform = 'translateY(0)';
-            }
-        } else if (obj.options.placement == 'top') {
-            obj.rootElem.style.width = '100%';
-            obj.rootElem.style.height = obj.options.height + 'px';
-            obj.rootElem.style.top = 0;
-            obj.rootElem.style.left = 0;
-            obj.drawerButton.style.display = 'none';
-            if (obj.options.shiftScreen) {
-                window.scrollTo(0, 0);
-                body.style.position = 'relative';
-                body.style.overflow = 'hidden';
-                body.style.transform = 'translateY(' + obj.options.height + 'px)';
-            } else {
-                obj.rootElem.style.transform = 'translateY(0)';
-            }
-        }
-        obj.options.onVisibleChange(obj);
     };
 
     obj.closeDrawer = () => {
         obj.closePopOver(obj.clearMessagePop);
         closeAllChartPopovers();
-        obj.rootElem.style.opacity = 0.8;
-        document.body.classList.remove('autoql-vanilla-chata-body-drawer-open');
+
+        obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
         obj.options.isVisible = false;
-        obj.wrapper.style.opacity = 0;
-        obj.wrapper.style.height = 0;
-        obj.hideTabs();
-        var body = document.body;
-
-        if (obj.options.placement == 'right') {
-            obj.rootElem.style.right = 0;
-            obj.rootElem.style.top = 0;
-            if (obj.options.showHandle) {
-                obj.drawerButton.style.display = 'flex';
-            }
-            if (obj.options.shiftScreen) {
-                body.style.transform = 'translateX(0px)';
-                window.scrollTo(0, obj.initialScroll);
-            } else {
-                obj.rootElem.style.transform = 'translateX(' + obj.options.width + 'px)';
-            }
-        } else if (obj.options.placement == 'left') {
-            obj.rootElem.style.left = 0;
-            obj.rootElem.style.top = 0;
-            if (obj.options.showHandle) {
-                obj.drawerButton.style.display = 'flex';
-            }
-            if (obj.options.shiftScreen) {
-                body.style.transform = 'translateX(0px)';
-                window.scrollTo(0, obj.initialScroll);
-            } else {
-                obj.rootElem.style.transform = 'translateX(-' + obj.options.width + 'px)';
-            }
-        } else if (obj.options.placement == 'bottom') {
-            obj.rootElem.style.bottom = '0';
-            obj.rootElem.style.transform = 'translateY(' + obj.options.height + 'px)';
-
-            if (obj.options.showHandle) {
-                obj.drawerButton.style.display = 'flex';
-            }
-
-            if (obj.options.shiftScreen) {
-                window.scrollTo(0, obj.initialScroll);
-            }
-        } else if (obj.options.placement == 'top') {
-            obj.rootElem.style.top = '0';
-            obj.rootElem.style.transform = 'translateY(-' + obj.options.height + 'px)';
-
-            if (obj.options.showHandle) {
-                obj.drawerButton.style.display = 'flex';
-            }
-
-            if (obj.options.shiftScreen) {
-                window.scrollTo(0, obj.initialScroll);
-            }
-        }
 
         if (obj.options.clearOnClose) {
             obj.clearMessages();
         }
-        body.removeAttribute('style');
-
-        obj.options.onVisibleChange(obj);
     };
 
-    obj.createWrapper = () => {
-        var wrapper = document.createElement('div');
-        var body = document.body;
-        body.appendChild(wrapper, obj.rootElem);
-        wrapper.classList.add('autoql-vanilla-drawer-wrapper');
-        obj.wrapper = wrapper;
-        if (!obj.options.showMask) {
-            obj.wrapper.style.opacity = 0;
-            obj.wrapper.style.height = 0;
-        }
-        wrapper.onclick = () => {
-            if (obj.options.showMask && obj.options.maskClosable) {
-                obj.options.onMaskClick(this);
+    obj.createDrawer = () => {
+        var rootElem = document.querySelector(elem);
+        
+        if (!rootElem) {
+            rootElem = document.createElement('div');
+            rootElem.id = obj.id;
+            rootElem.classList.add('autoql-vanilla-drawer');
+            rootElem.classList.add(`autoql-vanilla-drawer-${obj.options.placement}`);
+            
+            if (obj.isVisible) {
+                rootElem.classList.add('autoql-vanilla-drawer-open');
             }
-        };
-    };
+            
+            obj.rootElem = rootElem
+
+            document.body.appendChild(obj.rootElem);
+        }
+    }
+
+    obj.createContentWrapper = () => {
+        obj.drawerContentWrapper = document.createElement('div');
+        obj.drawerContentWrapper.classList.add('autoql-vanilla-drawer-content-wrapper')
+
+        if (obj.options.placement == 'right') {
+            obj.drawerContentWrapper.style.width = obj.options.width + 'px';
+        } else if (obj.options.placement == 'left') {
+            obj.drawerContentWrapper.style.width = obj.options.width + 'px';
+        } else if (obj.options.placement == 'bottom') {
+            obj.drawerContentWrapper.style.height = obj.options.height + 'px';
+        } else if (obj.options.placement == 'top') {
+            obj.drawerContentWrapper.style.height = obj.options.height + 'px';
+        }
+
+        obj.drawerBody = document.createElement('div')
+        obj.drawerBody.classList.add('autoql-vanilla-drawer-body')
+        obj.drawerContentWrapper.appendChild(obj.drawerBody)
+
+        obj.rootElem.appendChild(obj.drawerContentWrapper)
+    }
+
+    obj.createMask = () => {
+      obj.drawerMask = document.createElement('div');
+      obj.drawerMask.classList.add('autoql-vanilla-drawer-mask')
+
+      if (obj.options.showMask) {
+        obj.drawerMask.onclick = () => {
+          obj.closeDrawer()
+        } 
+      } else {
+        obj.drawerMask.classList.add('autoql-vanilla-drawer-mask-hidden')
+      }
+
+      obj.rootElem.appendChild(obj.drawerMask) 
+    }
 
     obj.onLoadHandler = () => {
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
@@ -664,10 +542,11 @@ export function DataMessenger(elem, options) {
             showNotificationDetails: true,
             showDescription: false,
         });
-        if (['bottom', 'top'].includes(obj.options.placement)) {
-            notificationList.style.height = obj.options.height - 60 + 'px';
+
+        if (obj.isPortrait()) {
+            notificationList.style.height = obj.drawerContent.clientHeight - 60 + 'px'; 
         } else {
-            notificationList.style.height = obj.drawerContent.clientHeight - 60 + 'px';
+            notificationList.style.height = obj.options.height - 60 + 'px';
         }
     };
 
@@ -676,135 +555,97 @@ export function DataMessenger(elem, options) {
         return parseInt((height - 62 - 72 - 60 - 50) / 47);
     };
 
+    obj.setActiveTab = function (tab) {
+      if (!tab) return
+
+      [obj.tabChataUtils, obj.tabQueryTips, obj.tabNotifications].forEach(tab => {
+        tab?.classList.remove('autoql-vanilla-data-messenger-tab-active')
+      })
+
+      tab.classList.add('autoql-vanilla-data-messenger-tab-active')
+      obj.landingPage = tab.getAttribute('data-tab')
+    }
+
+    obj.createQueryTab = function ({name, content, tooltip, isEnabled}) {
+      var tab = document.createElement('div');
+      tab.classList.add('autoql-vanilla-data-messenger-tab');
+      tab.setAttribute('data-tippy-content', tooltip);
+      tab.setAttribute('data-tab', name)
+  
+      if (content) tab.appendChild(content);
+      if (!isEnabled) tab.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+      if (obj.options.landingPage === name) tab.classList.add('autoql-vanilla-data-messenger-tab-active');
+
+      return tab
+    }
+
     obj.createQueryTabs = function () {
-        var tabId = uuidv4();
+        const { enableExploreQueriesTab, enableNotificationsTab } = obj.options;
 
-        var orientation = obj.options.placement;
-        var pageSwitcherShadowContainer = document.createElement('div');
         var pageSwitcherContainer = document.createElement('div');
-        var tabChataUtils = document.createElement('div');
-        var tabQueryTips = document.createElement('div');
-        var tabNotifications = document.createElement('div');
-        tabNotifications.setAttribute('id', tabId);
-
-        var dataMessengerIcon = htmlToElement(DATA_MESSENGER);
-        var queryTabsIcon = htmlToElement(QUERY_TIPS);
-        pageSwitcherShadowContainer.classList.add('autoql-vanilla-page-switcher-shadow-container');
-        pageSwitcherShadowContainer.classList.add(orientation);
-
         pageSwitcherContainer.classList.add('autoql-vanilla-page-switcher-container');
-        pageSwitcherContainer.classList.add(orientation);
 
-        pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
-
-        tabChataUtils.classList.add('tab');
-        tabChataUtils.classList.add('active');
-        tabChataUtils.setAttribute('data-tippy-content', 'Data Messenger');
-        tabQueryTips.classList.add('tab');
-        tabQueryTips.setAttribute('data-tippy-content', strings.exploreQueries);
-        tabNotifications.classList.add('tab');
-        tabNotifications.setAttribute('data-tippy-content', strings.notifications);
-
-        tabChataUtils.appendChild(dataMessengerIcon);
-        tabQueryTips.appendChild(queryTabsIcon);
-
-        pageSwitcherContainer.appendChild(tabChataUtils);
-        pageSwitcherContainer.appendChild(tabQueryTips);
-        pageSwitcherContainer.appendChild(tabNotifications);
-
+        var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Data Messenger', isEnabled: true})
+        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(QUERY_TIPS), tooltip: strings.exploreQueries, isEnabled: enableExploreQueriesTab })
+        var tabNotifications = obj.createQueryTab({name: 'notifications', tooltip: strings.notifications, isEnabled: enableNotificationsTab })
+      
         tabChataUtils.onclick = function () {
+            obj.setActiveTab(this)
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
-            tabChataUtils.classList.add('active');
-            tabQueryTips.classList.remove('active');
-            tabNotifications.classList.remove('active');
-            obj.options.landingPage = 'data-messenger';
             obj.tabsAnimation('flex', 'block');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('none');
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         };
+
         tabQueryTips.onclick = function () {
-            tabQueryTips.classList.add('active');
-            tabChataUtils.classList.remove('active');
-            tabNotifications.classList.remove('active');
-            obj.options.landingPage = 'explore-queries';
+            obj.setActiveTab(this)
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('block');
             obj.notificationsAnimation('none');
         };
 
+        tabNotifications.setAttribute('id', obj.notificationTabId);
         tabNotifications.onclick = function () {
+            obj.setActiveTab(this)
             obj.scrollBox.scrollTop = 0;
             obj.scrollBox.style.overflow = 'hidden';
             obj.scrollBox.style.maxHeight = '100%';
-
-            tabNotifications.classList.add('active');
-            tabQueryTips.classList.remove('active');
-            tabChataUtils.classList.remove('active');
-            obj.options.landingPage = 'notifications';
             obj.tabsAnimation('none', 'none');
             obj.queryTipsAnimation('none');
             obj.notificationsAnimation('block');
             obj.headerTitle.innerHTML = strings.notifications;
         };
 
-        var tabs = pageSwitcherShadowContainer;
-        obj.rootElem.appendChild(tabs);
-        obj.queryTabs = tabs;
-        obj.queryTabsContainer = pageSwitcherContainer;
-        obj.tabChataUtils = tabChataUtils;
-        obj.tabQueryTips = tabQueryTips;
-        obj.tabNotifications = tabNotifications;
-        obj.tabId = tabId;
-        if (obj.options.enableNotificationsTab) {
-            obj.instanceNotificationIcon();
-        } else {
-            obj.tabNotifications.style.display = 'none';
-        }
-        refreshTooltips();
-    };
+        pageSwitcherContainer.appendChild(tabChataUtils)
+        pageSwitcherContainer.appendChild(tabQueryTips)
+        pageSwitcherContainer.appendChild(tabNotifications)
 
-    obj.showTabs = () => {
-        const { enableExploreQueriesTab, enableNotificationsTab, isVisible } = obj.options;
+        var pageSwitcherShadowContainer = document.createElement('div');
+        pageSwitcherShadowContainer.classList.add('autoql-vanilla-page-switcher-shadow-container');
+        pageSwitcherShadowContainer.appendChild(pageSwitcherContainer);
 
-        if (enableExploreQueriesTab) {
-            if (isVisible) {
-                obj.queryTabs.style.visibility = 'visible';
-                obj.tabChataUtils.classList.add('show');
-                obj.tabQueryTips.classList.add('show');
-            }
-            obj.tabQueryTips.classList.add('autoql-vanilla-last-tab');
-        }
+        var tabContainer = document.createElement('div');
+        tabContainer.classList.add('autoql-vanilla-data-messenger-tab-container');
+        tabContainer.appendChild(pageSwitcherShadowContainer);
+        
+        obj.tabChataUtils = tabChataUtils
+        obj.tabQueryTips = tabQueryTips
+        obj.tabNotifications = tabNotifications
+
+        obj.drawerBody.appendChild(tabContainer);
 
         if (enableNotificationsTab) {
-            if (isVisible) {
-                obj.queryTabs.style.visibility = 'visible';
-                obj.tabChataUtils.classList.add('show');
-                obj.tabNotifications.classList.add('show');
-            }
-            obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab');
-            obj.tabNotifications.classList.add('autoql-vanilla-last-tab');
+            obj.instanceNotificationIcon();
         }
-    };
 
-    obj.hideTabs = () => {
-        obj.queryTabs.style.visibility = 'hidden';
-
-        obj.tabChataUtils.classList.remove('show');
-        obj.tabQueryTips.classList.remove('show');
-        obj.tabNotifications.classList.remove('show');
-        obj.tabQueryTips.classList.remove('autoql-vanilla-last-tab');
-        obj.tabNotifications.classList.remove('autoql-vanilla-last-tab');
-
-        obj.tabChataUtils.classList.add('hide');
-        obj.tabQueryTips.classList.add('hide');
-        obj.tabNotifications.classList.add('hide');
+        refreshTooltips();
     };
 
     obj.instanceNotificationIcon = () => {
         if (obj.options.enableNotificationsTab) {
-            var tabId = obj.tabId;
+            var tabId = obj.notificationTabId;
             if (obj.notificationIcon) return;
             var notificationIcon = new NotificationIcon(`[id="${tabId}"]`, {
                 authentication: {
@@ -828,6 +669,7 @@ export function DataMessenger(elem, options) {
 
         textBar.classList.add('autoql-vanilla-text-bar');
         textBar.classList.add('autoql-vanilla-text-bar-animation');
+        textBar.classList.add('autoql-vanilla-text-bar-with-icon')
         chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
         container.classList.add('autoql-vanilla-querytips-container');
         queryTipsResultContainer.classList.add('autoql-vanilla-query-tips-result-container');
@@ -1105,8 +947,8 @@ export function DataMessenger(elem, options) {
         var resize = document.createElement('div');
         var startX, startY, startWidth, startHeight;
         var timer;
+
         resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
-        resize.classList.add(obj.options.placement);
 
         function resizeItem(e) {
             let newWidth;
@@ -1128,13 +970,14 @@ export function DataMessenger(elem, options) {
             }
             if (newWidth <= 400) return;
 
-            if (['left', 'right'].includes(obj.options.placement)) {
-                obj.rootElem.style.width = newWidth + 'px';
+            if (obj.isPortrait()) {
+                obj.drawerContentWrapper.style.width = newWidth + 'px';
                 obj.options.width = newWidth;
             } else {
-                obj.rootElem.style.height = newHeight + 'px';
+                obj.drawerContentWrapper.style.height = newHeight + 'px';
                 obj.options.height = newHeight;
             }
+            
             clearTimeout(timer);
             timer = setTimeout(() => {
                 window.dispatchEvent(new CustomEvent('chata-resize', {}));
@@ -1142,22 +985,24 @@ export function DataMessenger(elem, options) {
         }
 
         function stopResize() {
+            obj.rootElem.classList.remove('autoql-vanilla-drawer-resizing')
             window.removeEventListener('mousemove', resizeItem, false);
             window.removeEventListener('mouseup', stopResize, false);
         }
 
         function initResize(e) {
+            obj.rootElem.classList.add('autoql-vanilla-drawer-resizing')
             startX = e.clientX;
             startY = e.clientY;
-            startWidth = parseInt(document.defaultView.getComputedStyle(obj.rootElem).width, 10);
-            startHeight = parseInt(document.defaultView.getComputedStyle(obj.rootElem).height, 10);
+            startWidth = parseInt(document.defaultView.getComputedStyle(obj.drawerContentWrapper).width, 10);
+            startHeight = parseInt(document.defaultView.getComputedStyle(obj.drawerContentWrapper).height, 10);
             window.addEventListener('mousemove', resizeItem, false);
             window.addEventListener('mouseup', stopResize, false);
         }
 
         resize.addEventListener('mousedown', initResize, false);
 
-        obj.rootElem.appendChild(resize);
+        obj.drawerBody.appendChild(resize);
         obj.resizeHandler = resize;
         if (!obj.options.resizable) {
             obj.resizeHandler.style.visibility = 'hidden';
@@ -1218,7 +1063,7 @@ export function DataMessenger(elem, options) {
         firstMessage.appendChild(chatMessageBubble);
         drawerContent.appendChild(firstMessage);
         scrollBox.appendChild(drawerContent);
-        obj.rootElem.appendChild(scrollBox);
+        obj.drawerBody.appendChild(scrollBox);
         obj.drawerContent = drawerContent;
         obj.scrollBox = scrollBox;
         obj.introMessageBubble = chatMessageBubble;
@@ -1341,16 +1186,19 @@ export function DataMessenger(elem, options) {
             if (screenButton.classList.contains('autoql-btn-maximize')) {
                 screenButton.classList.remove('autoql-btn-maximize');
                 screenButton.classList.add('autoql-btn-minimize');
-                obj.setOption('width', window.screen.width - 45);
                 screenButton.innerHTML = MINIMIZE_BUTTON;
                 screenButtonTooltip.setContent(strings.maximizeButtonExit);
+
+                obj.isPortrait() ? obj.drawerContentWrapper.style.width = '100%' : obj.drawerContentWrapper.style.height = '100%'
             } else {
                 screenButton.classList.add('autoql-btn-maximize');
                 screenButton.classList.remove('autoql-btn-minimize');
-                obj.setOption('width', 500);
                 screenButton.innerHTML = MAXIMIZE_BUTTON;
                 screenButtonTooltip.setContent(strings.maximizeButton);
+
+                obj.isPortrait() ? obj.setOption('width', obj.options.width) : obj.setOption('height', obj.options.height);
             }
+
             window.dispatchEvent(new CustomEvent('chata-resize', {}));
         };
 
@@ -1364,7 +1212,7 @@ export function DataMessenger(elem, options) {
         chatHeaderContainer.appendChild(headerLeft);
         chatHeaderContainer.appendChild(headerTitle);
         chatHeaderContainer.appendChild(headerRight);
-        obj.rootElem.appendChild(chatHeaderContainer);
+        obj.drawerBody.appendChild(chatHeaderContainer);
         obj.headerRight = headerRight;
         obj.headerTitle = headerTitle;
         obj.clearMessagePop = popover;
@@ -1443,6 +1291,10 @@ export function DataMessenger(elem, options) {
         voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
+        if (!supportsVoiceRecord() || !obj.options.enableVoiceRecord) {
+          voiceRecordButton.style.display = 'none';
+        }
+
         autoComplete.appendChild(autoCompleteList);
         textBar.appendChild(chataInput);
         textBar.appendChild(voiceRecordButton);
@@ -1456,7 +1308,6 @@ export function DataMessenger(elem, options) {
 
         voiceRecordButton.onmouseup = () => {
             obj.speechToText.stop();
-            // voiceRecordButton.style.backgroundColor = obj.options.themeConfig.accentColor;
             obj.input.value = obj.finalTranscript;
             obj.isRecordVoiceActive = false;
         };
@@ -1471,7 +1322,6 @@ export function DataMessenger(elem, options) {
         obj.input = chataInput;
         obj.voiceRecordButton = voiceRecordButton;
         obj.autoCompleteList = autoCompleteList;
-        obj.rootElem.appendChild(chataBarContainer);
         obj.input.onkeyup = obj.autoCompleteHandler;
         obj.input.onkeypress = obj.onEnterHandler;
         obj.input.onkeydown = (evt) => {
@@ -1481,6 +1331,8 @@ export function DataMessenger(elem, options) {
                 }
             }
         };
+
+        obj.drawerBody.appendChild(chataBarContainer);
     };
 
     obj.toggleNotificationOption = () => {
@@ -1508,7 +1360,6 @@ export function DataMessenger(elem, options) {
                 if (obj.finalTranscript !== '') {
                     obj.input.value = obj.finalTranscript;
                     obj.speechToText.stop();
-                    // obj.voiceRecordButton.style.backgroundColor = obj.options.themeConfig.accentColor;
                     ChataUtils.autocomplete(obj.input.value, obj.autoCompleteList, 'suggestion', obj.options);
                 }
                 obj.finalTranscript = '';
@@ -2969,8 +2820,10 @@ export function DataMessenger(elem, options) {
         }
     };
 
+    obj.createDrawer();
+    obj.createMask();
+    obj.createContentWrapper();
     obj.createDrawerButton();
-    obj.createWrapper();
     obj.createHeader();
     obj.createDrawerContent();
     obj.createIntroMessageTopics();
@@ -2985,19 +2838,8 @@ export function DataMessenger(elem, options) {
         closeAllChartPopovers();
         closeAllSafetynetSelectors();
     };
-    refreshTooltips();
-    var isVisible = obj.options.isVisible;
-    if (supportsVoiceRecord()) {
-        var display = obj.options.enableVoiceRecord ? 'block' : 'none';
-        obj.voiceRecordButton.style.display = display;
-    } else {
-        obj.voiceRecordButton.style.display = 'none';
-    }
-    obj.openDrawer(true);
 
-    if (!isVisible) {
-        obj.closeDrawer();
-    }
+    refreshTooltips();
 
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
     window.addEventListener('resize', () => {

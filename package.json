@@ -1,76 +1,73 @@
 {
-  "name": "autoql",
-  "version": "2.5.1",
-  "description": "Javascript widget library",
-  "main": "build/autoql-min.js",
-  "module": "build/autoql-min.js",
-  "files": [
-    "build"
-  ],
-  "style": "build/autoql.min.css",
-  "sideEffects": [
-    "*.css"
-  ],
-  "watch": {
-    "devscript": {
-      "patterns": [
-        "src",
-        "css"
-      ],
-      "extensions": "js,css",
-      "quiet": false
+    "name": "autoql",
+    "version": "2.5.1",
+    "description": "Javascript widget library",
+    "main": "build/autoql-min.js",
+    "style": "build/autoql.min.css",
+    "sideEffects": [
+        "*.css",
+        "*.scss"
+    ],
+    "watch": {
+        "devscript": {
+            "patterns": [
+                "src",
+                "css"
+            ],
+            "extensions": "js,css,scss",
+            "quiet": false
+        }
+    },
+    "scripts": {
+        "dev": "npx npm-watch devscript",
+        "devscript": "npm run build",
+        "test": "echo \"no test specified\" ",
+        "build": "npx webpack --config webpack.config.js",
+        "build-cdn": "cross-env NODE_ENV=production webpack --config webpack.config.js",
+        "watch": "cross-env NODE_ENV=development webpack --mode development",
+        "prepublish": "npx rimraf build && npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/chatatechnologies/autoql"
+    },
+    "author": "Oscar Ramirez",
+    "license": "ISC",
+    "homepage": "https://github.com/chatatechnologies/autoql/blob/master/README.md",
+    "devDependencies": {
+        "@babel/cli": "^7.19.3",
+        "@babel/core": "^7.20.5",
+        "@babel/generator": "^7.20.5",
+        "@babel/preset-env": "^7.20.2",
+        "babel-loader": "^9.1.0",
+        "babel-plugin-import-css-to-jss": "^3.1.1",
+        "babel-template": "^6.26.0",
+        "cross-env": "^7.0.3",
+        "css-loader": "^6.7.3",
+        "mini-css-extract-plugin": "^2.7.2",
+        "npm-watch": "^0.11.0",
+        "sass": "^1.63.4",
+        "sass-loader": "^13.3.2",
+        "style-loader": "^3.3.1",
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.1.4",
+        "babel-plugin-transform-remove-imports": "^1.7.0"
+    },
+    "dependencies": {
+        "axios": "^1.2.1",
+        "d3": "^7.8.2",
+        "dayjs": "^1.11.7",
+        "gridstack": "^3.1.2",
+        "localized-strings": "^0.2.4",
+        "lodash.get": "^4.4.2",
+        "moment": "^2.29.4",
+        "moment-timezone": "^0.5.40",
+        "muuri": "^0.9.5",
+        "regenerator-runtime": "^0.13.11",
+        "save-svg-as-png": "^1.4.17",
+        "split.js": "^1.6.5",
+        "sql-formatter": "^2.3.3",
+        "tabulator-tables": "^4.8.0",
+        "tippy.js": "^6.3.7"
     }
-  },
-  "scripts": {
-    "dev": "npx npm-watch devscript",
-    "devscript": "npm run build",
-    "test": "echo \"no test specified\" ",
-    "build": "npx webpack",
-    "build-cdn": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "watch": "cross-env NODE_ENV=development webpack --mode development",
-    "prepublish": "npx rimraf build && npm run build"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/chatatechnologies/autoql"
-  },
-  "author": "Oscar Ramirez",
-  "license": "ISC",
-  "homepage": "https://github.com/chatatechnologies/autoql/blob/master/README.md",
-  "devDependencies": {
-    "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.20.5",
-    "@babel/generator": "^7.20.5",
-    "@babel/preset-env": "^7.20.2",
-    "babel-loader": "^9.1.0",
-    "babel-plugin-import-css-to-jss": "^3.1.1",
-    "babel-template": "^6.26.0",
-    "cross-env": "^7.0.3",
-    "css-loader": "^6.7.3",
-    "mini-css-extract-plugin": "^2.7.2",
-    "npm-watch": "^0.11.0",
-    "sass": "^1.63.4",
-    "sass-loader": "^13.3.2",
-    "style-loader": "^3.3.1",
-    "webpack": "^5.75.0",
-    "webpack-cli": "^5.1.4"
-  },
-  "dependencies": {
-    "axios": "^1.2.1",
-    "babel-plugin-transform-remove-imports": "^1.7.0",
-    "d3": "^7.8.2",
-    "dayjs": "^1.11.7",
-    "gridstack": "^3.1.2",
-    "localized-strings": "^0.2.4",
-    "lodash.get": "^4.4.2",
-    "moment": "^2.29.4",
-    "moment-timezone": "^0.5.40",
-    "muuri": "^0.9.5",
-    "regenerator-runtime": "^0.13.11",
-    "save-svg-as-png": "^1.4.17",
-    "split.js": "^1.6.5",
-    "sql-formatter": "^2.3.3",
-    "tabulator-tables": "^4.8.0",
-    "tippy.js": "^6.3.7"
-  }
 }
