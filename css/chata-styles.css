@@ -893,6 +893,10 @@ tr td.chata-hidden{
     justify-content: center;
 }
 
+.autoql-vanilla-viz-toolbar-btn-active {
+    color: var(--autoql-vanilla-accent-color);
+}
+
 .autoql-vanilla-badge {
     position: absolute;
     background: var(--autoql-vanilla-warning-color);

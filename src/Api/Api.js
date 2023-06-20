@@ -1,4 +1,5 @@
 import axios from 'axios'
+import _get from 'lodash.get'
 
 export const apiCallV2 = (widgetOptions, data) => {
     const {

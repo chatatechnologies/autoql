@@ -2444,14 +2444,14 @@ export function DataMessenger(elem, options){
         return button;
     }
 
-    obj.getDisplayTypesButtons = (idRequest, ignore) => {
+    obj.getDisplayTypesButtons = (idRequest, active) => {
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
         for (var i = 0; i < displayTypes.length; i++) {
             let button;
-            if(displayTypes[i] == ignore)continue;
+            //if(displayTypes[i] == ignore)continue;
             if(displayTypes[i] == 'table'){
                 button = obj.getDisplayTypeButton(
                     idRequest, TABLE_ICON, strings.table, obj.displayTableHandler
@@ -2519,9 +2519,10 @@ export function DataMessenger(elem, options){
                 );
             }
 
-            if(button){
-                buttons.push(button);
+            if(displayTypes[i] == active){
+                button.classList.add('autoql-vanilla-viz-toolbar-btn-active')
             }
+            buttons.push(button);
         }
 
         return buttons;
