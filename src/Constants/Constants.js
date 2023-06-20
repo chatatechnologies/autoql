@@ -38,3 +38,28 @@ export const DASHBOARD_LIGHT_THEME = {
     '--chata-dashboard-text-color-primary': '#5d5d5d',
     '--chata-dashboard-text-color-placeholder': '#0000009c'
 }
+
+export const TIMESTAMP_FORMATS = {
+  epoch: 'EPOCH',
+  iso8601: 'ISO8601',
+}
+
+export const PRECISION_TYPES = {
+  DAY: 'DAY',
+  MONTH: 'MONTH',
+  YEAR: 'YEAR',
+  WEEK: 'WEEK',
+  QUARTER: 'QUARTER',
+  DATE_HOUR: 'DATE_HOUR',
+  DATE_MINUTE: 'DATE_MINUTE',
+  HOUR: 'HOUR',
+  MINUTE: 'MINUTE',
+}
+
+export const DAYJS_PRECISION_FORMATS = {
+  DAY: 'll',
+  MONTH: 'MMMM YYYY',
+  YEAR: 'YYYY',
+  DATE_HOUR: 'll h:00A',
+  DATE_MINUTE: 'll h:mmA',
+}

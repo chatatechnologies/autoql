@@ -1,7 +1,6 @@
 import { ChataUtils } from '../ChataUtils'
 import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
-import axios from 'axios'
 import _get from 'lodash.get'
 import { strings } from '../Strings'
 import dayjs from './dayjsPlugins'
@@ -103,36 +102,47 @@ export const isDayJSDateValid = date => {
 
 export const formatStringDate = (value, config) => {
     if (!value) {
-        return undefined
+      return undefined
     }
-
+  
     if (value && typeof value === 'string') {
-        const dateArray = value.split('-')
-        const year = dateArray[0]
-        const month = dateArray[1]
-        const day = dateArray[2]
-
-        const { monthYearFormat, dayMonthYearFormat } = config
-        const monthYear = monthYearFormat || 'MMM YYYY'
-        const dayMonthYear = dayMonthYearFormat || 'll'
-
-        if (day) {
-            const date = dayjs.utc(value).format(dayMonthYear)
-            if (isDayJSDateValid(date)) {
-                return date
-            }
-        } else if (month) {
-            const date = dayjs.utc(value).format(monthYear)
-            if (isDayJSDateValid(date)) {
-                return date
-            }
-        } else if (year) {
-            return year
-        }
+      const dateArray = value.split('-')
+      const year = _get(dateArray, '[0]')
+      const day = _get(dateArray, '[2]')
+  
+      let month
+      let week
+      if (_get(dateArray, '[1]', '').includes('W')) {
+        week = _get(dateArray, '[1]')
+      } else {
+        month = _get(dateArray, '[1]')
+      }
+  
+      const { monthYearFormat, dayMonthYearFormat } = config
+      const monthYear = monthYearFormat || dataFormattingDefault.monthYearFormat
+      const dayMonthYear = dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
+      const dayJSObj = dayjs.utc(value).utc()
+  
+      if (!dayJSObj.isValid()) {
+        return value
+      }
+  
+      let date = value
+      if (day) {
+        date = dayJSObj.format(dayMonthYear)
+      } else if (month) {
+        date = dayJSObj.format(monthYear)
+      } else if (week) {
+        // dayjs doesn't format this correctly
+      } else if (year) {
+        date = year
+      }
+      return date
     }
-
+  
+    // Unable to parse...
     return value
-}
+  }
 
 export function formatColumnName(col){
     return col.replace(/__/g, ' ').replace(/_/g, ' ').

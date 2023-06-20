@@ -1,3 +1,4 @@
+import { TIMESTAMP_FORMATS } from '../Constants'
 import { Cascader } from '../Cascader'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
 import { ChataUtils } from '../ChataUtils'
@@ -97,29 +98,32 @@ export function DataMessenger(elem, options){
         authentication: {
             token: undefined,
             apiKey: undefined,
-            customerId: undefined,
-            userId: undefined,
-            username: undefined,
             domain: undefined,
             demo: false
         },
         dataFormatting:{
+            timestampFormat: TIMESTAMP_FORMATS.iso8601,
             currencyCode: 'USD',
             languageCode: 'en-US',
             currencyDecimals: 2,
-            quantityDecimals: 1,
+            quantityDecimals: 2,
+            ratioDecimals: 4,
             comparisonDisplay: 'PERCENT',
-            monthYearFormat: 'MMM YYYY',
-            dayMonthYearFormat: 'MMM D, YYYY'
+            monthYearFormat: 'MMMM YYYY',
+            dayMonthYearFormat: 'll',
         },
         autoQLConfig: {
             debug: false,
             test: false,
             enableAutocomplete: true,
+            enableQueryInterpretation: true,
             enableQueryValidation: true,
             enableQuerySuggestions: true,
             enableColumnVisibilityManager: true,
-            enableDrilldowns: true
+            enableDrilldowns: true,
+            enableNotifications: false,
+            enableCSVDownload: true,
+            enableReportProblem: true,          
         },
         themeConfig: {
             theme: 'light',
@@ -2020,19 +2024,6 @@ export function DataMessenger(elem, options){
         }
     }
 
-    obj.setHeightBubble = (oldComponent, displayType='chart') => {
-        var messageBubble = obj.getParentFromComponent(oldComponent);
-        var chartContainer = oldComponent.getElementsByTagName('svg');
-        if(displayType === 'chart'){
-            messageBubble.parentElement.style.maxHeight =
-            (
-                parseInt(chartContainer[0].getAttribute('height')) + 115
-            ) + 'px';
-        }else{
-            messageBubble.parentElement.style.maxHeight = '85%';
-        }
-    }
-
     obj.copyFilterMetadata = (component) => {
         component.filterMetadata = component.internalTable.getHeaderFilters()
     }
@@ -2334,7 +2325,6 @@ export function DataMessenger(elem, options){
         obj.setDefaultFilters(component, table, 'table')
         table.parentContainer = parentContainer;
         allColHiddenMessage(component);
-        obj.setHeightBubble(component, 'table');
         select(window).on('chata-resize.'+idRequest, null);
     }
     obj.displayColumChartHandler = (evt, idRequest) => {
@@ -2344,7 +2334,6 @@ export function DataMessenger(elem, options){
         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -2355,7 +2344,6 @@ export function DataMessenger(elem, options){
         createBarChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -2366,7 +2354,6 @@ export function DataMessenger(elem, options){
         createPieChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -2377,7 +2364,6 @@ export function DataMessenger(elem, options){
         createLineChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -2388,7 +2374,6 @@ export function DataMessenger(elem, options){
             idRequest, obj.options, obj.onCellClick
         );
         obj.setDefaultFilters(component, table, 'pivot')
-        obj.setHeightBubble(component, 'table');
         select(window).on('chata-resize.'+idRequest, null);
         component.tabulator = table
         component.pivotTabulator = table
@@ -2399,7 +2384,6 @@ export function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'heatmap');
         createHeatmap(component, json, obj.options);
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -2408,7 +2392,6 @@ export function DataMessenger(elem, options){
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bubble');
         createBubbleChart(component, json, obj.options);
-        obj.setHeightBubble(component);
         obj.registerDrilldownChartEvent(component);
     }
 
@@ -2420,7 +2403,6 @@ export function DataMessenger(elem, options){
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
-        obj.setHeightBubble(component);
         obj.registerDrilldownStackedChartEvent(component);
     }
 
@@ -2432,7 +2414,6 @@ export function DataMessenger(elem, options){
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
-        obj.setHeightBubble(component);
         obj.registerDrilldownStackedChartEvent(component);
     }
 
@@ -2444,7 +2425,6 @@ export function DataMessenger(elem, options){
             component, cloneObject(json), obj.options,
             obj.registerDrilldownStackedChartEvent
         );
-        obj.setHeightBubble(component);
     }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
@@ -3196,7 +3176,7 @@ export function DataMessenger(elem, options){
         let response = await apiCallV2(
             obj.options, 
             {
-                "date_format": "ISO8601",
+                "date_format": TIMESTAMP_FORMATS.iso8601,
                 "page_size": 500,
                 "scope": "data_messenger",
                 "session_filter_locks": [],
