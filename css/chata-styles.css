@@ -4,14 +4,6 @@
     margin: 0px;
 }
 
-.autoql-vanilla-chata-drawer path{
-    fill: currentColor;
-}
-
-.autoql-vanilla-chata-drawer line{
-    fill: currentColor;
-}
-
 .autoql-vanilla-chata-body-drawer-open{
     overflow: hidden;
     touch-action: none;
@@ -214,14 +206,6 @@ body{
     outline: none !important;
 }
 
-.autoql-vanilla-chat-message-toolbar.right .autoql-vanilla-chata-toolbar-btn path{
-    fill: unset;
-}
-
-.autoql-vanilla-chat-message-toolbar.right .autoql-vanilla-chata-toolbar-btn svg{
-    font: unset;
-}
-
 .autoql-vanilla-chata-button{
     background: none !important;
 }
@@ -289,6 +273,7 @@ body{
     background: var(--autoql-vanilla-background-color-primary);
     color: var(--autoql-vanilla-text-color-primary);
     min-width: 317px;
+    max-height: 400px;
 }
 
 .autoql-vanilla-chat-message-bubble.single{
@@ -998,28 +983,34 @@ tr td.chata-hidden{
     border-right: 2px solid #ddd;
     text-align: left !important;
 }
+
 .hm0{
     opacity: 0.5 !important;
     fill: currentColor !important;
 }
+
 .hm1 {
     fill: currentColor !important;
 }
+
 .hm2 {
     opacity: 0.15 !important;
     fill: currentColor !important;
     enable-background: new;
 }
+
 .hm3 {
     opacity: 0.6 !important;
     fill: currentColor !important;
     enable-background: new;
 }
+
 .hm4 {
     opacity: 0.65 !important;
     fill: currentColor !important;
     enable-background: new;
 }
+
 .hm5 {
     fill: currentColor !important;
 }
@@ -1032,9 +1023,11 @@ tr td.chata-hidden{
     stroke: transparent;
     fill: transparent !important;
 }
+
 .tick{
     transition: all .3s ease;
 }
+
 .autoql-vanilla-chata-response-content-container line{
     stroke-width: 1px;
     stroke: currentColor;
@@ -1042,6 +1035,7 @@ tr td.chata-hidden{
     shape-rendering: crispedges;
 
 }
+
 .autoql-vanilla-chata-response-content-container text{
     fill: currentcolor;
     fill-opacity: 0.7;
@@ -1055,12 +1049,14 @@ tr td.chata-hidden{
     justify-content: center;
     align-self: center;
 }
+
 .autoql-vanilla-renderer-container line{
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
 }
+
 .autoql-vanilla-renderer-container text{
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
