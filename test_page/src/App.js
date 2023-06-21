@@ -228,7 +228,7 @@ class App extends React.Component {
     };
 
     renderDataMessenger = () => {
-        this.datamessenger = new DataMessenger("#datamessenger", {
+        this.datamessenger = new DataMessenger({
             authentication: {
                 token: "",
                 domain: getStoredProp('domain-url') || '',
