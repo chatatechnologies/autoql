@@ -16,6 +16,7 @@
 
 .autoql-vanilla-notification-wrapper{
     height: calc(100vh - 35px);
+    background: var(--autoql-vanilla-background-color-primary);
 }
 
 .chata-notification-dismiss-icon path{
@@ -601,10 +602,13 @@
 }
 
 .autoql-vanilla-empty-state{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     margin-top: 75px !important;
     height: calc(100% - 20px);
+    width: 100%;
 }
 
 .autoql-vanilla-empy-notification-message{
@@ -624,9 +628,7 @@
 }
 
 .autoql-vanilla-empty-state-img{
-    width: 100%;
-    height: auto;
-    max-width: 250px;
+    width: 200px;
 }
 
 @keyframes slideIn{

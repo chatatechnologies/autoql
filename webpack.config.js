@@ -23,6 +23,12 @@ module.exports = {
                 test: /\.(c|sc)ss$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
+            {
+                test: /\.(jpg|png)$/,
+                use: {
+                  loader: 'url-loader',
+                },
+            },
         ],
     },
     resolve: {

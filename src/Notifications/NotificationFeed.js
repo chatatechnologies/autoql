@@ -4,7 +4,7 @@ import {
     apiCallGet,
     apiCallPost
 } from '../Api'
-import { DISMISS, EMPTY_STATE_BLUE } from '../Svg'
+import { DISMISS } from '../Svg'
 import { Notification } from './Notification'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
@@ -12,6 +12,8 @@ import { refreshTooltips } from '../Tooltips'
 import { ChataConfirmDialog } from '../ChataComponents'
 import { $dom } from '../Dom'
 import { strings } from '../Strings'
+import emptyStateImg from '../images/notifications_empty_state.png'
+
 import '../../css/Notifications.css'
 
 export function NotificationFeed(selector, options) {
@@ -92,11 +94,9 @@ export function NotificationFeed(selector, options) {
         classes: ['autoql-vanilla-empty-state'],
     });
     emptyStateContainer.style.display = 'none';
-    var img = htmlToElement(`
-        <img
-            class="autoql-vanilla-empty-state-img"
-            src="${EMPTY_STATE_BLUE}"/>
-    `);
+    var img = document.createElement('img')
+    img.setAttribute('src', emptyStateImg)
+    img.classList.add('autoql-vanilla-empty-state-img')
     var createDatalertButton = htmlToElement(`
         <button class="autoql-vanilla-chata-btn primary large">
             Create Data Alert
@@ -228,7 +228,7 @@ export function NotificationFeed(selector, options) {
         wrapper.isLoading = true;
         var response = await apiCallGet(URL, wrapper.options);
         if (!response) {
-            emptyStateContainer.style.display = 'block';
+            emptyStateContainer.style.display = 'flex';
             dismissContent.style.display = 'none';
             wrapper.isLoading = false;
             return;

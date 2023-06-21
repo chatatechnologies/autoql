@@ -41,17 +41,20 @@
         "@babel/preset-env": "^7.20.2",
         "babel-loader": "^9.1.0",
         "babel-plugin-import-css-to-jss": "^3.1.1",
+        "babel-plugin-transform-remove-imports": "^1.7.0",
         "babel-template": "^6.26.0",
         "cross-env": "^7.0.3",
         "css-loader": "^6.7.3",
+        "file-loader": "^6.2.0",
         "mini-css-extract-plugin": "^2.7.2",
         "npm-watch": "^0.11.0",
+        "rimraf": "^5.0.1",
         "sass": "^1.63.4",
         "sass-loader": "^13.3.2",
         "style-loader": "^3.3.1",
+        "url-loader": "^4.1.1",
         "webpack": "^5.75.0",
-        "webpack-cli": "^5.1.4",
-        "babel-plugin-transform-remove-imports": "^1.7.0"
+        "webpack-cli": "^5.1.4"
     },
     "dependencies": {
         "axios": "^1.2.1",
