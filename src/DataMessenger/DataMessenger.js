@@ -93,7 +93,7 @@ import { refreshTooltips } from '../Tooltips';
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
 
-export function DataMessenger(elem, options = {}) {
+export function DataMessenger(options = {}) {
     checkAndApplyTheme();
 
     var obj = this;
@@ -365,22 +365,18 @@ export function DataMessenger(elem, options = {}) {
     };
 
     obj.createDrawer = () => {
-        var rootElem = document.querySelector(elem);
+        var rootElem = document.createElement('div');
+        rootElem.id = obj.id;
+        rootElem.classList.add('autoql-vanilla-drawer');
+        rootElem.classList.add(`autoql-vanilla-drawer-${obj.options.placement}`);
         
-        if (!rootElem) {
-            rootElem = document.createElement('div');
-            rootElem.id = obj.id;
-            rootElem.classList.add('autoql-vanilla-drawer');
-            rootElem.classList.add(`autoql-vanilla-drawer-${obj.options.placement}`);
-            
-            if (obj.isVisible) {
-                rootElem.classList.add('autoql-vanilla-drawer-open');
-            }
-            
-            obj.rootElem = rootElem
-
-            document.body.appendChild(obj.rootElem);
+        if (obj.isVisible) {
+            rootElem.classList.add('autoql-vanilla-drawer-open');
         }
+        
+        obj.rootElem = rootElem
+
+        document.body.appendChild(obj.rootElem);
     }
 
     obj.createContentWrapper = () => {
