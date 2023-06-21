@@ -28,7 +28,7 @@
         "build": "npx webpack --mode=production --config webpack.config.js",
         "build-cdn": "cross-env NODE_ENV=production webpack --config webpack.config.js",
         "watch": "cross-env NODE_ENV=development webpack --mode development --config webpack-test.config.js",
-        "prepublish": "npx rimraf build && npm run build"
+        "prepublishOnly": "npx rimraf build && npm run build"
     },
     "repository": {
         "type": "git",
