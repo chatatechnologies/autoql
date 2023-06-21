@@ -4,13 +4,11 @@ import { DashboardPage } from "./DashboardPage";
 import { DataMessengerPage } from "./DataMessengerPage";
 import { QueryOutputInputPage } from "./QueryOutputInputPage";
 import { DataAlertsSettingsPage } from "./DataAlertsSettingsPage";
-import { DataMessenger } from "autoql";
-import { NotificationIcon } from "autoql";
+import { DataMessenger, NotificationIcon, configureTheme } from "autoql";
 import { NotificationListPage } from "./NotificationListPage";
 import { Modal, Input } from "antd";
 import { isEqual, sortBy } from 'lodash'
 import axios from "axios";
-import { configureTheme } from "../../src/Utils";
 
 import "./App.css";
 

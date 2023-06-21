@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import 'antd/dist/antd.css';
-import 'autoql/dist/autoql.min.css';
+import 'autoql/build/autoql.min.css';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

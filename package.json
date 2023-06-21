@@ -1,9 +1,12 @@
 {
     "name": "autoql",
-    "version": "2.5.1",
+    "version": "3.0.0",
     "description": "Javascript widget library",
     "main": "build/autoql-min.js",
     "style": "build/autoql.min.css",
+    "files": [
+        "build"
+    ],
     "sideEffects": [
         "*.css",
         "*.scss"

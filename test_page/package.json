@@ -1,43 +1,43 @@
 {
-  "name": "test_page",
-  "version": "0.4.0",
-  "private": true,
-  "engines": {
-    "node": ">=16.4.2",
-    "npm": ">=7.18.1"
-  },
-  "scripts": {
-    "start": "react-app-rewired start",
-    "build": "react-app-rewired build",
-    "test": "react-app-rewired test",
-    "eject": "react-scripts eject",
-    "preinstall": "npx npm-force-resolutions"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "dependencies": {
-    "antd": "^4.0.1",
-    "autoql": "file:autoql-2.5.1.tgz",
-    "axios": "^1.2.2",
-    "lodash": "^4.17.21",
-    "react": "^16.14.0",
-    "react-dom": "^16.14.0",
-    "react-scripts": "^3.4.1",
-    "react-sortable": "^2.0.0"
-  },
-  "devDependencies": {
-    "react-app-rewired": "^2.2.1"
-  }
+    "name": "test_page",
+    "version": "0.4.0",
+    "private": true,
+    "engines": {
+        "node": ">=16.4.2",
+        "npm": ">=7.18.1"
+    },
+    "scripts": {
+        "start": "react-app-rewired start",
+        "build": "react-app-rewired build",
+        "test": "react-app-rewired test",
+        "eject": "react-scripts eject",
+        "preinstall": "npx npm-force-resolutions"
+    },
+    "eslintConfig": {
+        "extends": "react-app"
+    },
+    "browserslist": {
+        "production": [
+            ">0.2%",
+            "not op_mini all"
+        ],
+        "development": [
+            "last 1 chrome version",
+            "last 1 firefox version",
+            "last 1 safari version"
+        ]
+    },
+    "dependencies": {
+        "antd": "^4.0.1",
+        "autoql": "file:autoql-3.0.0.tgz",
+        "axios": "^1.2.2",
+        "lodash": "^4.17.21",
+        "react": "^16.14.0",
+        "react-dom": "^16.14.0",
+        "react-scripts": "^3.4.1",
+        "react-sortable": "^2.0.0"
+    },
+    "devDependencies": {
+        "react-app-rewired": "^2.2.1"
+    }
 }

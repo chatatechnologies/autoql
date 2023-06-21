@@ -48,7 +48,7 @@ Import the widget and styles
 
 ```
 import { DataMessenger } from 'autoql';
-import 'autoql/dist/autoql.min.css';
+import 'autoql/build/autoql.min.css';
 ```
 
 Instance the widget
