@@ -11,3 +11,6 @@ test_page/node_modules
 test_node.js
 index.html
 index_node.html
+.DS_Store
+src/.DS_Store
+
