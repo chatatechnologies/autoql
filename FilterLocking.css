@@ -1,12 +1,12 @@
 .autoql-vanilla-filter-locking-view{
     right: 20px !important;
-    background: var(--autoql-vanilla-background-color-primary);
     padding: 15px 20px !important;
     min-width: 450px;
     max-width: 95vw;
     min-height: 0;
     max-height: 95vh;
     width: 450px;
+    background: var(--autoql-vanilla-background-color-primary);
 }
 
 .autoql-vanilla-close-filter-locking{
