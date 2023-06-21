@@ -1,6 +1,9 @@
 const path = require('path');
 
+const RemoveEmptyScriptsPlugin = require('webpack-remove-empty-scripts');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+
+const isProduction = process.env.NODE_ENV !== 'production'
 
 module.exports = {
     mode: 'production',
@@ -11,15 +14,10 @@ module.exports = {
         libraryTarget: 'umd',
         globalObject: 'this',
     },
-    plugins: [new MiniCssExtractPlugin({ filename: 'autoql.min.css' })],
+    plugins: [new MiniCssExtractPlugin({ filename: 'autoql.min.css' }), new RemoveEmptyScriptsPlugin()],
     module: {
         rules: [
-            {
-                test: /\.js$/,
-                exclude: [/node_modules/, /test_page/, /test/],
-                loader: 'babel-loader',
-            },
-            {
+            {   // This must go first, so the css file is generated before removing the imports
                 test: /\.(c|sc)ss$/,
                 use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
             },
@@ -29,6 +27,12 @@ module.exports = {
                   loader: 'url-loader',
                 },
             },
+            {
+                test: /\.js$/,
+                exclude: [/node_modules/, /test_page/, /test/],
+                loader: 'babel-loader',
+            },
+
         ],
     },
     resolve: {
@@ -39,6 +43,6 @@ module.exports = {
         '/.*/': 'umd $0',
     },
     optimization: {
-        minimize: process.env.NODE_ENV === 'production',
+        minimize: isProduction,
     },
 };
