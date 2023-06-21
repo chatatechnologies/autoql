@@ -12,8 +12,7 @@ import {
 import { strings } from '../Strings'
 import moment from 'moment'
 
-import './Tabulator.css';
-import './TabulatorBootstrap.css';
+import 'tabulator-tables/dist/css/tabulator.min.css'
 import './ChataTable.css';
 import './ChataTable.scss';
 
@@ -90,6 +89,7 @@ function getPivotColumns(json, pivotColumns, options){
                     headerValue.toLowerCase(), rowValue, options
                 );
             },
+            hozAlign: col.type === 'DOLLAR_AMT' || col.type === 'RATIO' || col.type === 'NUMBER' ? 'right' : 'center',
             formatter: (cell) => {
                 let value;
                 if(
@@ -177,6 +177,7 @@ function getColumnsData(json, options, onHeaderClick){
             headerFilter: "input",
             headerFilterPlaceholder: strings.headerFilterPlaceholder,
             visible: isVisible,
+            hozAlign: col.type === 'DOLLAR_AMT' || col.type === 'RATIO' || col.type === 'NUMBER' ? 'right' : 'center',
             formatter: (cell) => {
                 return formatData(cell.getValue(), col, options);
             },
@@ -253,6 +254,9 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
         `[data-componentid='${idRequest}']`
     );
 
+    component.classList.add('table-condensed')
+    component.isFiltering = true
+
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
         invalidOptionWarnings: false,
@@ -292,6 +296,14 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
     table.toggleFilters = () => {
         var domTable = table.element;
         var filters = domTable.querySelectorAll('.tabulator-header-filter');
+        component.isFiltering = !component.isFiltering
+
+        if (component.isFiltering) {
+            component.classList.add('is-filtering')
+        } else {
+            component.classList.remove('is-filtering')
+        }
+        
         for (var i = 0; i < filters.length; i++) {
             var filter = filters[i];
             var input = filter.children[0];
@@ -302,6 +314,7 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
                 if(input.value){
                     table.addFilterTag(filter.parentElement);
                 }
+                
                 filter.style.display = 'none';
             }
         }
@@ -323,6 +336,9 @@ export function ChataTable(
     const component = document.querySelector(
         `[data-componentid='${idRequest}']`
     );
+    component.classList.add('table-condensed')
+    component.isFiltering = true
+    
     var table = new Tabulator(component, {
         layout: 'fitDataFill',
         virtualDomBuffer: 350,
@@ -369,6 +385,14 @@ export function ChataTable(
     table.toggleFilters = () => {
         var domTable = table.element;
         var filters = domTable.querySelectorAll('.tabulator-header-filter');
+        component.isFiltering = !component.isFiltering
+
+        if (component.isFiltering) {
+            component.classList.add('is-filtering')
+        } else {
+            component.classList.remove('is-filtering')
+        }
+        
         for (var i = 0; i < filters.length; i++) {
             var filter = filters[i];
             var input = filter.children[0];

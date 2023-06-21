@@ -424,7 +424,7 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.showWarningIcon = (messageBubble, json) => {
+    obj.showWarningIcon = (responseContentContainer, json) => {
         if (json.data.rows.length >= 500) {
             const warningIcon = htmlToElement(`
                 <span
@@ -433,7 +433,7 @@ export function DataMessenger(options = {}) {
                     ${DATA_LIMIT_WARNING}
                 </span>
             `);
-            messageBubble.appendChild(warningIcon);
+            responseContentContainer.appendChild(warningIcon);
             refreshTooltips();
         }
     };
@@ -2292,7 +2292,7 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
         allColHiddenMessage(tableWrapper);
-        obj.showWarningIcon(messageBubble, jsonResponse);
+        obj.showWarningIcon(responseContentContainer, jsonResponse);
         return idRequest;
     };
 
