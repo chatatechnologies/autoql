@@ -14,6 +14,7 @@ import {
   getFirstDateCol,
   getGroupableCount,
   formatColumnName,
+  getChartColorVars,
 } from '../../Utils'
 import {
   ColumnChart
@@ -32,9 +33,9 @@ export function Chart(widgetOptions, options) {
   const numericSeries = [];
   const stringSeries = [];
   const groupableCount = getGroupableCount(json);
-  var metadataComponent = getMetadataElement(component);
-
-  let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
+  const chartColors = getChartColorVars();
+  const metadataComponent = getMetadataElement(component);
+  const tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
   
   if (indexList['STRING']) {
     stringSeries.push(...indexList['STRING']);
@@ -102,6 +103,7 @@ export function Chart(widgetOptions, options) {
       cols,
       indexList,
       numericSeries,
+      chartColors,
       stringSeries,
       minMaxValues,
       serieColName,
@@ -115,6 +117,6 @@ export function Chart(widgetOptions, options) {
       component,
       metadataComponent,
       tooltipClass,
-    })
+    });
   }
 }
