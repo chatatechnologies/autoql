@@ -51,6 +51,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
+import { Chart } from '../Charts/v2'
 import {
     LIGHT_THEME,
     DARK_THEME,
@@ -2334,6 +2335,13 @@ export function DataMessenger(elem, options){
         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        Chart(obj.options, {
+            width: 500,
+            height: 400,
+            displayType: 'column_chart',
+            json,
+            component,
+        })
         obj.registerDrilldownChartEvent(component);
     }
 
