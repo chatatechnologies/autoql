@@ -23,7 +23,7 @@
 
             &:not(:first-child) {
                 border-left: 1px solid !important;
-                border-color: var(--react-autoql-table-border-color) !important;
+                border-color: var(--autoql-vanilla-table-border-color) !important;
             }
         }
     }
