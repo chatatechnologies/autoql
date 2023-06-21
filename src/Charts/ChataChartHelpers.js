@@ -357,9 +357,8 @@ export const getIndexesByType = (cols) => {
     return output;
 }
 
-export const getMetadataElement = (component, isDataMessenger) => {
-    if(isDataMessenger)return component.parentElement.parentElement
-    else return component.parentElement.parentElement
+export const getMetadataElement = (component) => {
+    return component.parentElement.parentElement
 }
 
 

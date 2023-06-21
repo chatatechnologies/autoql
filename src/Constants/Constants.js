@@ -94,3 +94,10 @@ export const DAYJS_PRECISION_FORMATS = {
   DATE_HOUR: 'll h:00A',
   DATE_MINUTE: 'll h:mmA',
 }
+
+export const CHART_MARGINS = {
+  top: 10,
+  right: 10,
+  bottom: 10,
+  left: 10,
+}

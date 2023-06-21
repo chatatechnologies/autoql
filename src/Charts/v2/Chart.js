@@ -1,34 +1,41 @@
 import { 
   shouldRotateLabels,
-  getTickValues 
+  getTickValues,
+  getLegendGroups,
 } from './Helpers'
 import {
   enumerateCols,
   getIndexesByType,
   getMinAndMaxValues,
   makeGroups,
+  getMetadataElement,
 } from '../ChataChartHelpers'
 import {
   getFirstDateCol,
   getGroupableCount,
-} from '../../Uttils'
-import { tooltipCharts } from '../Tooltips'
-import { strings } from '../Strings'
+  formatColumnName,
+  getChartColorVars,
+} from '../../Utils'
+import {
+  ColumnChart
+} from './Charts'
 
 export function Chart(widgetOptions, options) {
   const { 
     width,
     height,
+    displayType,
     json,
     component,
-    metadataComponent
   } = options
   const cols = enumerateCols(json);
   const indexList = getIndexesByType(cols);
   const numericSeries = [];
   const stringSeries = [];
   const groupableCount = getGroupableCount(json);
-  let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
+  const chartColors = getChartColorVars();
+  const metadataComponent = getMetadataElement(component);
+  const tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
   
   if (indexList['STRING']) {
     stringSeries.push(...indexList['STRING']);
@@ -39,13 +46,15 @@ export function Chart(widgetOptions, options) {
   if (indexList['DATE_STRING']) {
     stringSeries.push(...indexList['DATE_STRING']);
   }
-    
+
   if (indexList['DOLLAR_AMT']) {
-    numericSeries = indexList['DOLLAR_AMT'];
-  } else if (indexList['QUANTITY']) {
-    numericSeries = indexList['QUANTITY'];
-  }else if (indexList['PERCENT']) {
-    numericSeries = indexList['PERCENT'];
+    numericSeries.push(...indexList['DOLLAR_AMT']);
+  }
+  if (indexList['QUANTITY']) {
+    numericSeries.push(...indexList['QUANTITY']);
+  }
+  if (indexList['PERCENT']) {
+    numericSeries.push(...indexList['PERCENT']);
   }
 
   if(!metadataComponent.metadata){
@@ -68,7 +77,7 @@ export function Chart(widgetOptions, options) {
     activeSeries,
     cols[groupBy].index
   );
-  const minMaxValues = getMinAndMaxValues(data);
+  const minMaxValues = getMinAndMaxValues(groupedData);
   const serieIndex = activeSeries[0].index;
   const groupIndex = cols[groupBy].index;
 
@@ -78,12 +87,36 @@ export function Chart(widgetOptions, options) {
   const serieColName = formatColumnName(serieName);
   const groupColName = formatColumnName(groupName);
 
-  const rotateLabels = shouldRotateLabels(width, data);
-  const tickValues = getTickValues(width, data);
-  const labelsNames = data.map(function(d) { return d.label; });
-  const groupNames = data[0].values.map(function(d) { return d.group; });
-  const groupable2Index = index2 === 0 ? 1 : 0
+  const rotateLabels = shouldRotateLabels(width, groupedData.length);
+  const tickValues = getTickValues(width, groupedData);
+  const labelsNames = groupedData.map(function(d) { return d.label; });
+  const groupNames = groupedData[0].values.map(function(d) { return d.group; });
+  const groupableIndex = groupIndex === 0 ? 1 : 0;
   const legendGroups = getLegendGroups(
     groupNames, groupIndex, cols, widgetOptions
-  )
+  );
+
+  if(displayType === 'column_chart') {
+    ColumnChart(widgetOptions, {
+      ...options,
+      data: groupedData,
+      cols,
+      indexList,
+      numericSeries,
+      chartColors,
+      stringSeries,
+      minMaxValues,
+      serieColName,
+      groupColName,
+      rotateLabels,
+      tickValues,
+      labelsNames,
+      groupNames,
+      groupableIndex,
+      legendGroups,
+      component,
+      metadataComponent,
+      tooltipClass,
+    });
+  }
 }

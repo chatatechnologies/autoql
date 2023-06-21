@@ -51,9 +51,9 @@ import {
     createLineChart,
     createPieChart,
     createStackedBarChart,
-    createStackedColumnChart,
-} from '../Charts';
-
+    createStackedColumnChart
+} from '../Charts'
+import { Chart } from '../Charts/v2'
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -1943,6 +1943,13 @@ export function DataMessenger(options = {}) {
         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        Chart(obj.options, {
+            width: 500,
+            height: 400,
+            displayType: 'column_chart',
+            json,
+            component,
+        })
         obj.registerDrilldownChartEvent(component);
     };
 
