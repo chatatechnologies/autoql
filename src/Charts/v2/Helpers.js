@@ -18,3 +18,16 @@ export const getTickValues = (size, data) => {
     });
   }
 }
+
+export const getLegendGroups = (groupNames, groupIndex, cols, options) => {
+  const legendGroups = {}  
+  groupNames.forEach((group) => {
+    legendGroups[
+        formatChartData(group, cols[groupable2Index], options)
+    ] = {
+        value: group
+    }
+  })
+
+  return legendGroups;
+}

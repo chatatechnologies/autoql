@@ -62,18 +62,28 @@ export function Chart(widgetOptions, options) {
 
   const groupBy = metadataComponent.metadata.groupBy.index;
   const activeSeries = metadataComponent.metadata.series;
-  const groupedData = makeGroups(json, options, activeSeries, cols[groupBy].index);
+  const groupedData = makeGroups(
+    json,
+    widgetOptions,
+    activeSeries,
+    cols[groupBy].index
+  );
   const minMaxValues = getMinAndMaxValues(data);
-  const index1 = activeSeries[0].index;
-  const index2 = cols[groupBy].index;
+  const serieIndex = activeSeries[0].index;
+  const groupIndex = cols[groupBy].index;
 
-  const serieName = cols[index1]['display_name'] || cols[index1]['name'];
-  const groupName = cols[index2]['display_name'] || cols[index2]['name'];
+  const serieName = cols[serieIndex]['display_name'] || cols[serieIndex]['name'];
+  const groupName = cols[groupIndex]['display_name'] || cols[groupIndex]['name'];
 
   const serieColName = formatColumnName(serieName);
   const groupColName = formatColumnName(groupName);
 
   const rotateLabels = shouldRotateLabels(width, data);
-  const tickValues = getTickValues(width, data)
-
+  const tickValues = getTickValues(width, data);
+  const labelsNames = data.map(function(d) { return d.label; });
+  const groupNames = data[0].values.map(function(d) { return d.group; });
+  const groupable2Index = index2 === 0 ? 1 : 0
+  const legendGroups = getLegendGroups(
+    groupNames, groupIndex, cols, widgetOptions
+  )
 }
