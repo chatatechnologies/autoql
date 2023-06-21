@@ -21,7 +21,7 @@
   box-sizing: border-box;
   width: 100%;
   border-bottom: 2px solid #ddd;
-  background-color: #fff;
+  background-color: inherit;
   font-weight: bold;
   white-space: nowrap;
   overflow: hidden;
@@ -402,7 +402,7 @@
   margin: 0 auto;
   padding: 10px 20px;
   border-radius: 10px;
-  background: #fff;
+  background: inherit;
   font-weight: bold;
   font-size: 16px;
 }

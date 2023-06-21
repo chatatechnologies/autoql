@@ -1,5 +1,5 @@
 .autoql-vanilla-chata-input-container .autoql-vanilla-chata-input-settings {
-    border: 1px solid var(--autoql-vanilla-border-color);
+    border: 1px solid var(--autoql-vanilla-border-color) !important;
     background: inherit;
     line-height: 32px;
     min-height: 34px;
@@ -14,7 +14,7 @@
 
 .autoql-vanilla-chata-input-container .chata-input-icon {
     position: absolute;
-    left: 12px;
+    left: 14px;
     top: 8px;
     -webkit-transition: all .2s ease;
     transition: all .2s ease;
@@ -42,7 +42,7 @@
 .autoql-vanilla-dashboard-tile-input-container .dashboard-tile-left-input-container input{
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
-    color: var(--autoql-vanilla-text-color-primary,#356f90);
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-dashboard-tile-input-container .dashboard-tile-right-input-container input{
@@ -50,11 +50,10 @@
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
     z-index: 2;
-    color: var(--autoql-vanilla-text-color-primary,#356f90);
+    color: var(--autoql-vanilla-text-color-primary);
 }
 
 .autoql-vanilla-icon-blue{
-    color: #28a8e0;
-    fill: #28a8e0 !important;
-
+    color: var(--autoql-vanilla-accent-color);
+    fill: var(--autoql-vanilla-accent-color) !important;
 }

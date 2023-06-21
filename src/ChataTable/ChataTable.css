@@ -49,7 +49,7 @@
 .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar {
     display: unset;
     opacity: 0;
-    background-color: var(--autoql-vanilla-background-color);
+    background-color: var(--autoql-vanilla-background-color-primary);
     width: 7px;
     height: 7px;
     -webkit-transition: all .3s ease;
@@ -65,7 +65,7 @@
 }
 
 .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-corner, .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-track, .autoql-vanilla-chata-table .tabulator-tableHolder::-webkit-scrollbar-track-piece{
-    background-color: var(--autoql-vanilla-background-color);
+    background-color: var(--autoql-vanilla-background-color-primary);
 }
 
 .autoql-vanilla-chata-table .tabulator-tableHolder:hover::-webkit-scrollbar-thumb {
@@ -75,7 +75,7 @@
 }
 
 .autoql-vanilla-chata-table .tabulator-header-filter input:focus {
-    border: 1px solid #28a8e0 !important;
+    border: 1px solid var(--autoql-vanilla-accent-color) !important;
     box-shadow: none !important;
 }
 

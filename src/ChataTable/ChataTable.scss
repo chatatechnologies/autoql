@@ -1,0 +1,30 @@
+.autoql-vanilla-chata-table {
+    .tabulator-row,
+    .tabulator-header,
+    .tabulator-headers,
+    .tabulator-header .tabulator-col,
+    .tabulator-tableholder .tabulator-table {
+        background-color: inherit;
+    }
+
+    .tabulator-row {
+        /* user-select: none; This breaks copy/paste */
+        border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
+        background-color: var(--autoql-vanilla-background-color-secondary);
+        z-index: 1;
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: 15px;
+        }
+
+        .tabulator-cell {
+            line-height: 1.5em;
+
+            &:not(:first-child) {
+                border-left: 1px solid !important;
+                border-color: var(--autoql-vanilla-table-border-color) !important;
+            }
+        }
+    }
+}

@@ -26,7 +26,8 @@ import {
     formatChartData,
     formatColumnName,
     closeAllChartPopovers,
-    formatData
+    formatData,
+    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 
@@ -43,6 +44,8 @@ export function createStackedBarChart(
     var notGroupableField = getNotGroupableField(json);
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     var allLengths = [];
+    var chartColors = getChartColorVars();
+
     if(!metadataComponent.metadata3D){
         metadataComponent.metadata3D = {
             groupBy: {
@@ -296,7 +299,7 @@ export function createStackedBarChart(
         yAxis.tickValues(yTickValues);
     }
 
-    var color = getColorScale(subgroups, options.themeConfig.chartColors)
+    var color = getColorScale(subgroups, chartColors)
 
     svg.append("g")
     .call(yAxis.tickFormat(function(d){
@@ -397,7 +400,7 @@ export function createStackedBarChart(
     });
     var legendScale = getColorScale(
         legendValues,
-        options.themeConfig.chartColors
+        chartColors
     )
 
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')

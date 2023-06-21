@@ -84,7 +84,7 @@
   width: 100%;
   border: 1px solid #999;
   padding: 1px;
-  background: #fff;
+  background: inherit;
 }
 
 .tabulator .tabulator-header .tabulator-col .tabulator-col-content .tabulator-arrow {
@@ -265,7 +265,7 @@
 .tabulator .tabulator-tableHolder .tabulator-table {
   position: relative;
   display: inline-block;
-  background-color: #fff;
+  background-color: inherit;
   white-space: nowrap;
   overflow: visible;
   color: #333;
@@ -403,7 +403,7 @@
   margin: 0 auto;
   padding: 10px 20px;
   border-radius: 10px;
-  background: #fff;
+  background: inherit;
   font-weight: bold;
   font-size: 16px;
 }
@@ -422,11 +422,11 @@
   position: relative;
   box-sizing: border-box;
   min-height: 22px;
-  background-color: #fff;
+  background-color: inherit;
 }
 
 .tabulator-row.tabulator-row-even {
-  background-color: #EFEFEF;
+  background-color: inherit;
 }
 
 .tabulator-row.tabulator-selectable:hover {
@@ -754,7 +754,7 @@
   position: absolute;
   display: inline-block;
   box-sizing: border-box;
-  background: #fff;
+  background: inherit;
   border: 1px solid #aaa;
   box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.2);
   font-size: 14px;

@@ -27,7 +27,8 @@ import {
     formatColumnName,
     closeAllChartPopovers,
     formatData,
-    getChartLeftMargin
+    getChartLeftMargin,
+    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 
@@ -43,6 +44,7 @@ export function createStackedColumnChart(
     var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
+    var chartColors = getChartColorVars();
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -306,10 +308,10 @@ export function createStackedColumnChart(
     .range([ height - margin.bottomChart, 0 ]).nice();
     var yAxis = getAxisLeft(y);
 
-    var color = getColorScale(subgroups, options.themeConfig.chartColors)
+    var color = getColorScale(subgroups, chartColors)
     // chataD3.scaleOrdinal()
     // .domain(subgroups)
-    // .range(options.themeConfig.chartColors)
+    // .range(chartColors)
 
     svg.append("g")
     .attr("class", "grid")
@@ -411,7 +413,7 @@ export function createStackedColumnChart(
     });
     var legendScale = getColorScale(
         legendValues,
-        options.themeConfig.chartColors
+        chartColors
     )
 
     // new MultiSeriesSelector(svg, {

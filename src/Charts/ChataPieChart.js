@@ -15,7 +15,8 @@ import {
     formatColumnName,
     formatData,
     formatChartData,
-    getFirstDateCol
+    getFirstDateCol,
+    getChartColorVars
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
@@ -33,6 +34,7 @@ export function createPieChart(
     var indexList = getIndexesByType(colsEnum);
     var xIndexes = [];
     var yIndexes = [];
+    var chartColors = getChartColorVars();
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
@@ -164,7 +166,7 @@ export function createPieChart(
         for(let [key] of Object.entries(data)){
             colorLabels.push(key);
         }
-        var color = getColorScale(colorLabels, options.themeConfig.chartColors)
+        var color = getColorScale(colorLabels, chartColors)
 
         pieChartContainer.selectAll('path')
         .data(dataReady)
@@ -247,7 +249,7 @@ export function createPieChart(
     }
 
     const legendWrapLength = width / 2 - 50
-    var legendScale = getColorScale(labels, options.themeConfig.chartColors)
+    var legendScale = getColorScale(labels, chartColors)
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical');
 
     svgLegend.call(legendOrdinal)

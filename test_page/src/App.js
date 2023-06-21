@@ -8,9 +8,11 @@ import { DataMessenger } from "autoql";
 import { NotificationIcon } from "autoql";
 import { NotificationListPage } from "./NotificationListPage";
 import { Modal, Input } from "antd";
-import _ from 'lodash'
-import "./App.css";
+import { isEqual, sortBy } from 'lodash'
 import axios from "axios";
+import { configureTheme } from "../../src/Utils";
+
+import "./App.css";
 
 const getStoredProp = (name) => {
     return localStorage.getItem(name)
@@ -45,6 +47,12 @@ class App extends React.Component {
     componentDidMount = () => {
         this.renderDataMessenger();
     };
+
+    componentDidUpdate = (prevProps, prevState) => {
+        if (!isEqual(this.state.themeConfig, prevState.themeConfig)) {
+            configureTheme(this.state.themeConfig)
+        }
+    }
 
     onChangeDashboard = (val, dashboardpage) => {
         if (val !== "new-dashboard") {
@@ -82,11 +90,7 @@ class App extends React.Component {
     onChangeTheme = (key, value) => {
         var themeConfig = this.state.themeConfig;
         themeConfig[key] = value;
-        this.setState({
-            themeConfig: {
-                ...themeConfig,
-            },
-        });
+        this.setState({ themeConfig });
     };
 
 
@@ -125,7 +129,7 @@ class App extends React.Component {
         .then(function (response) {
             var names = [];
             var items = response.data
-            items = _.sortBy(
+            items = sortBy(
                 response.data,
                 (dashboard) => {
                     return new Date(dashboard.created_at)
@@ -193,7 +197,6 @@ class App extends React.Component {
                 dashboards={this.state.dashboards}
                 updateDashboard={this.updateDashboard}
                 authentication={this.state.authentication}
-                themeConfig={this.state.themeConfig}
                 />
             );
             break;
@@ -201,7 +204,6 @@ class App extends React.Component {
             widgetPage = (
                 <QueryOutputInputPage
                 authentication={this.state.authentication}
-                themeConfig={this.state.themeConfig}
                 />
             );
             break;
@@ -209,7 +211,6 @@ class App extends React.Component {
             widgetPage = (
                 <DataAlertsSettingsPage
                 authentication={this.state.authentication}
-                themeConfig={this.state.themeConfig}
                 />
             );
             break;
@@ -217,7 +218,6 @@ class App extends React.Component {
             widgetPage = (
                 <NotificationListPage
                 authentication={this.state.authentication}
-                themeConfig={this.state.themeConfig}
                 />
             );
             break;
@@ -233,9 +233,6 @@ class App extends React.Component {
                 token: "",
                 domain: getStoredProp('domain-url') || '',
                 apiKey: getStoredProp('api-key') || '',
-            },
-            themeConfig: {
-                ...this.props.themeConfig,
             },
             autoQLConfig: {
                 debug: true,

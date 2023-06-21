@@ -17,6 +17,7 @@ import {
     formatColumnName,
     formatData,
     formatLabels,
+    getChartColorVars,
     getNotGroupableField,
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
@@ -39,6 +40,7 @@ export function createBubbleChart(
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
     var cols = json['data']['columns'];
+    var chartColors = getChartColorVars();
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options
@@ -238,7 +240,7 @@ export function createBubbleChart(
         return y(d.labelY) + getBandWidth(y) / 3;
     })
     .attr("r", function (d) { return d.value < 0 ? 0 : radiusScale(d.value) * .7; })
-    .attr("fill", options.themeConfig.chartColors[0])
+    .attr("fill", chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'tooltip-3d circle')
     tooltipCharts();
