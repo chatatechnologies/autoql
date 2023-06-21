@@ -68,9 +68,6 @@ export class DashboardPage extends Component {
                 apiKey: authentication.apiKey,
                 domain: authentication.domain,
             },
-            themeConfig: {
-                ...this.props.themeConfig
-            },
             autoQLConfig: {
                 debug: true
             },
@@ -85,7 +82,6 @@ export class DashboardPage extends Component {
         if(this.props.dashboards){
             this.instanceDashboard()
         }else{
-            this.dashboard.options.themeConfig = this.props.themeConfig
             this.dashboard.applyCSS()
         }
     }
@@ -169,11 +165,6 @@ export class DashboardPage extends Component {
                         onClick={() => {this.dashboard.run()}}
                         style={{ marginLeft: '10px' }}
                         icon={<PlayCircleOutlined/>}>Execute</Button>
-                    <Button
-                        onClick={() => {console.log(this.dashboard.tiles);}}
-                        style={{ marginLeft: '10px' }}>
-                        Log Current Tile State
-                    </Button>
                     <div
                         style={{
                             marginTop: '10px',

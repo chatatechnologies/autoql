@@ -437,7 +437,7 @@ export const styleLegendTitleWithBorder = (svg, params, onClick) => {
         .select('.legendTitle')
         .node()
         .getBBox()
-    } catch (error) { console.log(error) }
+    } catch (error) { console.error(error) }
 
     svg.append('rect')
     .attr('x', titleBBox.x - 10)

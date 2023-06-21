@@ -9,11 +9,13 @@ import {
     cloneObject,
     getNumberOfGroupables
 } from '../Utils';
+import { strings } from '../Strings'
+import moment from 'moment'
+
 import './Tabulator.css';
 import './TabulatorBootstrap.css';
 import './ChataTable.css';
-import { strings } from '../Strings'
-import moment from 'moment'
+import './ChataTable.scss';
 
 function callTableFilter(col, headerValue, rowValue, options){
     const colType = col.type
@@ -65,7 +67,6 @@ function callTableFilter(col, headerValue, rowValue, options){
 }
 
 function getPivotColumns(json, pivotColumns, options){
-    console.log(pivotColumns);
     const columns = json['data']['columns'];
     var columnsData = [];
     pivotColumns.map((col, index) => {

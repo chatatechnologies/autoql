@@ -48,7 +48,7 @@ Import the widget and styles
 
 ```
 import { DataMessenger } from 'autoql';
-import 'autoql/dist/autoql.min.css';
+import 'autoql/build/autoql.min.css';
 ```
 
 Instance the widget
@@ -59,11 +59,6 @@ var datamessenger = new DataMessenger('#datamessenger', {
         apiKey: "your-api-key",
         domain: "https://yourdomain.com",
         token: "yourToken"
-    },
-    themeConfig: {
-        chartColors: [
-            '#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'
-        ],
     },
     autoQLConfig: {
         debug: true
@@ -92,9 +87,6 @@ var dashboard = new Dashboard('#dashboard', {
         apiKey: "your-api-key",
         domain: "https://yourdomain.com",
         token: "yourToken"
-    },
-    themeConfig: {
-        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
     },
     autoQLConfig: {
         debug: true
