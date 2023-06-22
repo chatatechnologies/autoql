@@ -1,30 +1,186 @@
-.autoql-vanilla-chata-table {
-    .tabulator-row,
-    .tabulator-header,
-    .tabulator-headers,
-    .tabulator-header .tabulator-col,
-    .tabulator-tableholder .tabulator-table {
-        background-color: inherit;
-    }
+.autoql-vanilla-chata-table-container {
+    height: 100%;
+    background-color: inherit;
+    visibility: visible;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
 
-    .tabulator-row {
-        /* user-select: none; This breaks copy/paste */
-        border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
-        background-color: var(--autoql-vanilla-background-color-secondary);
-        z-index: 1;
+    .autoql-vanilla-chata-table {
+        &.tabulator {
+            border: none;
+            background: var(--autoql-vanilla-background-color-secondary);
+            margin-bottom: 0;
 
-        &:last-child {
-            border-bottom: none;
-            margin-bottom: 15px;
-        }
+            .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left,
+            .tabulator-header .tabulator-frozen.tabulator-frozen-left {
+                border-right: 2px solid var(--autoql-vanilla-table-border-color);
+                cursor: default;
+            }
 
-        .tabulator-cell {
-            line-height: 1.5em;
+            .tabulator-row,
+            .tabulator-header,
+            .tabulator-headers,
+            .tabulator-header .tabulator-col,
+            .tabulator-tableholder .tabulator-table {
+                background-color: inherit;
+                color: inherit;
+            }
 
-            &:not(:first-child) {
-                border-left: 1px solid !important;
-                border-color: var(--autoql-vanilla-table-border-color) !important;
+            &.no-drilldown .tabulator-tableHolder .tabulator-table .tabulator-row {
+                cursor: default;
+            }
+
+            &.is-filtering {
+                .tabulator-tableHolder {
+                    max-height: calc(100% - 60px) !important;
+                    min-height: calc(100% - 60px) !important;
+                    height: calc(100% - 60px) !important;
+                }
+
+                .tabulator-header {
+                    max-height: 60px;
+                    height: 60px;
+                }
+            }
+
+            &:not(.is-filtering) {
+                .tabulator-tableHolder {
+                    height: calc(100% - 32px) !important;
+                    min-height: calc(100% - 32px) !important;
+                    max-height: calc(100% - 32px) !important;
+                }
+
+                .tabulator-header {
+                    max-height: 32px;
+                    height: 32px;
+                }
+            }
+
+            .tabulator-header {
+                border-bottom: 2px solid var(--autoql-vanilla-table-border-color);
+
+                .autoql-vanilla-filter-tag {
+                    color: #2ecc40;
+                }
+
+                .autoql-vanilla-filter-tag {
+                    border: 1px solid;
+                    padding: 2px 4px !important;
+                    border-radius: 4px;
+                    font-weight: 400;
+                    font-size: 10px;
+                    margin-right: 5px !important;
+                    vertical-align: top;
+                    line-height: 21px;
+                }
+
+                .tabulator-header-filter input {
+                    border: 1px solid var(--autoql-vanilla-border-color);
+                    border-radius: 4px;
+                    background: transparent;
+                    padding: 4px 9px !important;
+                    outline: none;
+                    height: 25px;
+                    font-size: 12px;
+                    font-weight: normal;
+                    color: var(--autoql-vanilla-text-color-primary);
+
+                    &:focus {
+                        border: 1px solid var(--autoql-vanilla-accent-color);
+                        box-shadow: none;
+                    }
+                }
+            }
+
+            .tabulator-row {
+                /* user-select: none; This breaks copy/paste */
+                border-color: var(--autoql-vanilla-table-border-color);
+                background-color: inherit !important;
+                z-index: 1;
+
+                &:last-child {
+                    border-bottom: none;
+                    margin-bottom: 15px;
+                }
+
+                .tabulator-cell {
+                    padding: 1px 8px;
+                    line-height: 23px;
+                    font-size: 11px;
+                    cursor: auto;
+
+                    &:not(:first-child) {
+                        border-color: var(--autoql-vanilla-table-border-color);
+                    }
+                }
+            }
+
+            .tabulator-header .tabulator-col {
+                text-align: center;
+                border-color: transparent;
+                background-color: var(--autoql-vanilla-background-color-secondary);
+                font-size: 11px;
+
+                .tabulator-col-title {
+                    padding-left: 12px;
+                    padding-right: 15px;
+                }
+
+                .tabulator-col-content {
+                    padding: 8px 5px;
+
+                    .tabulator-col-sorter {
+                        color: var(--autoql-vanilla-text-color-primary);
+                    }
+
+                    .tabulator-arrow {
+                        color: currentColor;
+                        border-left: 4px solid transparent;
+                        border-right: 4px solid transparent;
+                        right: 4px;
+                        top: calc(50% - 3px);
+                    }
+                }
+
+                &.tabulator-sortable:hover {
+                    background-color: var(--autoql-vanilla-hover-color);
+                }
+
+                &.tabulator-sortable[aria-sort='desc'] .tabulator-col-content .tabulator-arrow {
+                    border-top: 4px solid currentColor !important;
+                    opacity: 0.5;
+                }
+
+                &.tabulator-sortable[aria-sort='asc'] .tabulator-col-content .tabulator-arrow {
+                    border-bottom: 4px solid currentColor !important;
+                    opacity: 0.5;
+                }
+
+                &.tabulator-sortable[aria-sort='none'] .tabulator-col-content .tabulator-arrow {
+                    border-bottom: 4px solid currentColor !important;
+                    opacity: 0;
+                }
+
+                &:hover {
+                    .tabulator-col-content .tabulator-arrow {
+                        opacity: 0.5 !important;
+                    }
+                }
+            }
+
+            .tabulator-cell {
+                border-color: var(--autoql-vanilla-table-border-color);
+                background-color: var(--autoql-vanilla-background-color-secondary);
+            }
+
+            .tabulator-tableholder {
+                background-color: inherit;
             }
         }
+    }
+
+    .autoql-vanilla-chata-table-scrollbox {
+        flex: 1;
     }
 }

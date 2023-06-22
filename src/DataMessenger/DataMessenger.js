@@ -196,9 +196,10 @@ export function DataMessenger(options = {}) {
                 }
                 break;
             case 'placement':
-                obj.rootElem.classList.remove(`autoql-vanilla-drawer-${value}`);
                 obj.rootElem.classList.remove(`autoql-vanilla-drawer-${obj.options.placement}`);
+                obj.rootElem.classList.add(`autoql-vanilla-drawer-${value}`);
                 obj.options.placement = value;
+                obj.setDMWidthOrHeight()
                 break;
             case 'width':
                 obj.options.width = parseInt(value);
@@ -369,29 +370,31 @@ export function DataMessenger(options = {}) {
         rootElem.id = obj.id;
         rootElem.classList.add('autoql-vanilla-drawer');
         rootElem.classList.add(`autoql-vanilla-drawer-${obj.options.placement}`);
-        
+
         if (obj.isVisible) {
             rootElem.classList.add('autoql-vanilla-drawer-open');
         }
-        
+
         obj.rootElem = rootElem
 
         document.body.appendChild(obj.rootElem);
+    }
+
+    obj.setDMWidthOrHeight = () => {
+        if (obj.isPortrait()) {
+            obj.drawerContentWrapper.style.height = '100%'
+            obj.drawerContentWrapper.style.width = obj.options.width + 'px';
+        } else {
+            obj.drawerContentWrapper.style.width = '100%'
+            obj.drawerContentWrapper.style.height = obj.options.height + 'px';
+        }
     }
 
     obj.createContentWrapper = () => {
         obj.drawerContentWrapper = document.createElement('div');
         obj.drawerContentWrapper.classList.add('autoql-vanilla-drawer-content-wrapper')
 
-        if (obj.options.placement == 'right') {
-            obj.drawerContentWrapper.style.width = obj.options.width + 'px';
-        } else if (obj.options.placement == 'left') {
-            obj.drawerContentWrapper.style.width = obj.options.width + 'px';
-        } else if (obj.options.placement == 'bottom') {
-            obj.drawerContentWrapper.style.height = obj.options.height + 'px';
-        } else if (obj.options.placement == 'top') {
-            obj.drawerContentWrapper.style.height = obj.options.height + 'px';
-        }
+        obj.setDMWidthOrHeight()
 
         obj.drawerBody = document.createElement('div')
         obj.drawerBody.classList.add('autoql-vanilla-drawer-body')
@@ -421,7 +424,7 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.showWarningIcon = (messageBubble, json) => {
+    obj.showWarningIcon = (responseContentContainer, json) => {
         if (json.data.rows.length >= 500) {
             const warningIcon = htmlToElement(`
                 <span
@@ -430,7 +433,7 @@ export function DataMessenger(options = {}) {
                     ${DATA_LIMIT_WARNING}
                 </span>
             `);
-            messageBubble.appendChild(warningIcon);
+            responseContentContainer.appendChild(warningIcon);
             refreshTooltips();
         }
     };
@@ -2296,7 +2299,7 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
         allColHiddenMessage(tableWrapper);
-        obj.showWarningIcon(messageBubble, jsonResponse);
+        obj.showWarningIcon(responseContentContainer, jsonResponse);
         return idRequest;
     };
 
