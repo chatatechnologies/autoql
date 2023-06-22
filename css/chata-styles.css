@@ -185,6 +185,7 @@
     background: var(--autoql-vanilla-background-color-secondary);
     color: var(--autoql-vanilla-text-color-primary);
     min-width: 317px;
+    max-height: 400px;
     box-shadow: var(--autoql-vanilla-box-shadow-1);
 }
 
