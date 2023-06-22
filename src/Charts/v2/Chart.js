@@ -102,6 +102,8 @@ export function Chart(widgetOptions, options) {
       data: groupedData,
       cols,
       indexList,
+      serieIndex,
+      groupIndex,
       numericSeries,
       chartColors,
       stringSeries,

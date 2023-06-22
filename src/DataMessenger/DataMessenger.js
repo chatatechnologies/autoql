@@ -80,7 +80,6 @@ import {
     COLUMN_EDITOR,
     DELETE_MESSAGE,
     VERTICAL_DOTS,
-    DATA_LIMIT_WARNING,
     HELP_ICON,
     FILTER_LOCKING,
     MAXIMIZE_BUTTON,
@@ -421,20 +420,6 @@ export function DataMessenger(options = {}) {
     obj.onLoadHandler = () => {
         if (document.readyState === 'interactive' || document.readyState === 'complete') {
             obj.initialScroll = window.scrollY;
-        }
-    };
-
-    obj.showWarningIcon = (responseContentContainer, json) => {
-        if (json.data.rows.length >= 500) {
-            const warningIcon = htmlToElement(`
-                <span
-                class="chata-icon data-limit-warning-icon warning"
-                data-tippy-content="${strings.dataRowLimit.chataFormat(500)}">
-                    ${DATA_LIMIT_WARNING}
-                </span>
-            `);
-            responseContentContainer.appendChild(warningIcon);
-            refreshTooltips();
         }
     };
 
@@ -1940,9 +1925,9 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
-        createColumnChart(
+/*         createColumnChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
-        );
+        ); */
         Chart(obj.options, {
             width: 500,
             height: 400,
@@ -2299,7 +2284,6 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
         allColHiddenMessage(tableWrapper);
-        obj.showWarningIcon(responseContentContainer, jsonResponse);
         return idRequest;
     };
 
