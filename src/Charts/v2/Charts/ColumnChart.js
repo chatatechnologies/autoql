@@ -19,8 +19,6 @@ import {
 } from '../../ChataChartHelpers';
 
 export function ColumnChart(widgetOptions, options) {
-  console.log(widgetOptions);
-  console.log(options);
   const {
     width,
     height,
