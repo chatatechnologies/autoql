@@ -114,7 +114,6 @@ export function ColumnChart(widgetOptions, options) {
       .style("text-anchor", "center")
   }
 
-
   svg.append("g")
     .attr("class", "autoql-vanilla-axes-grid")
     .call(
