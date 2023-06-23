@@ -48,14 +48,13 @@ export function formatData(val, col, allOptions={}){
             }
         break;
         case 'QUANTITY':
-            var n = Math.abs(parseFloat(val)); // Change to positive
-            var decimal = n - Math.floor(n);
-            if(decimal > 0){
-                value = parseFloat(val).toFixed(options.quantityDecimals);
-            }else{
-                value = parseInt(val);
+            if (!isNaN(parseFloat(val))) {
+                value = new Intl.NumberFormat(options.languageCode, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                    notation,
+                }).format(val)
             }
-
         break;
         case 'RATIO':
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
