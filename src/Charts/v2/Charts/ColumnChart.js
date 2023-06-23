@@ -19,8 +19,6 @@ import {
 } from '../../ChataChartHelpers';
 
 export function ColumnChart(widgetOptions, options) {
-  console.log(widgetOptions);
-  console.log(options);
   const {
     width,
     height,
@@ -117,7 +115,7 @@ export function ColumnChart(widgetOptions, options) {
   }
 
   svg.append("g")
-    .attr("class", "grid")
+    .attr("class", "autoql-vanilla-axes-grid")
     .call(
         yAxis
         .tickSize(-width)

@@ -40,7 +40,7 @@ export function createBubbleChart(
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
     var cols = json['data']['columns'];
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options

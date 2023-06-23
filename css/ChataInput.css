@@ -6,8 +6,8 @@
     padding: 0 10px;
     width: 100%;
     outline: none!important;
-    -webkit-transition: all .2s ease;
-    transition: all .2s ease;
+    -webkit-transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     -webkit-transition-property: border-color,color,opacity;
     transition-property: border-color,color,opacity;
 }
@@ -16,8 +16,8 @@
     position: absolute;
     left: 14px;
     top: 8px;
-    -webkit-transition: all .2s ease;
-    transition: all .2s ease;
+    -webkit-transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
 }
 
 .autoql-vanilla-chata-input-container .chata-input-icon svg {

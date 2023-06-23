@@ -34,7 +34,7 @@ export function createPieChart(
     var indexList = getIndexesByType(colsEnum);
     var xIndexes = [];
     var yIndexes = [];
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
@@ -185,12 +185,12 @@ export function createPieChart(
             select(this)._groups[0][0].style.fill = color(d.data.key)
         })
         .attr('d', arc)
-        .style('fill-opacity', 0.85)
+        .style('fill-opacity', 1)
         .on('mouseover', function() {
-            select(this).style('fill-opacity', 1)
+            select(this).style('fill-opacity', 0.7)
         })
         .on('mouseout', function() {
-            select(this).style('fill-opacity', 0.85)
+            select(this).style('fill-opacity', 1)
         })
         .on('click', function() {
             svg
@@ -230,7 +230,7 @@ export function createPieChart(
     // define legend
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
-    .style('fill-opacity', '0.7')
+    .style('fill-opacity', '1')
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 

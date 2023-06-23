@@ -32,6 +32,8 @@ import {
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 
+import './ChataChart.scss'
+
 export function createStackedColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-stackedchartindex', renderTooltips=true){
@@ -44,7 +46,7 @@ export function createStackedColumnChart(
     var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -187,6 +189,7 @@ export function createStackedColumnChart(
     .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
 
+    var axesGrid = svg.append("g").attr("class", "autoql-vanilla-axes-grid")
 
     // X AXIS
     var labelXContainer = svg.append('g');
@@ -277,7 +280,8 @@ export function createStackedColumnChart(
         xAxis.tickValues(xTickValues);
     }
     if(rotateLabels){
-        svg.append("g")
+        axesGrid.append("g")
+        .classed('x-axis', true)
         .attr(
             "transform", "translate(0," + (height - margin.bottomChart) + ")"
         )
@@ -290,7 +294,8 @@ export function createStackedColumnChart(
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
     }else{
-        svg.append("g")
+        axesGrid.append("g")
+        .classed('x-axis', true)
         .attr(
             "transform", "translate(0," + (height - margin.bottomChart) + ")"
         )
@@ -304,24 +309,18 @@ export function createStackedColumnChart(
     }
 
     var y = SCALE_LINEAR()
-    .domain([0, maxValue])
-    .range([ height - margin.bottomChart, 0 ]).nice();
-    var yAxis = getAxisLeft(y);
+        .domain([0, maxValue])
+        .range([ height - margin.bottomChart, 0 ]).nice();
+
+    var yAxis = getAxisLeft(y)
+        .tickFormat(function(d){return formatChartData(d, cols[notGroupableIndex], options)})
+        .tickSize(-chartWidth)
 
     var color = getColorScale(subgroups, chartColors)
-    // chataD3.scaleOrdinal()
-    // .domain(subgroups)
-    // .range(chartColors)
 
-    svg.append("g")
-    .attr("class", "grid")
-    .call(yAxis.tickFormat(function(d){
-            return formatChartData(d, cols[notGroupableIndex], options)}
-        )
-        .tickSize(-chartWidth)
-    );
-    svg.append("g")
-    .call(yAxis).select(".domain").remove();
+    axesGrid.append("g")
+        .classed('y-axis', true)
+        .call(yAxis);
 
     let stackedG;
 
@@ -330,7 +329,8 @@ export function createStackedColumnChart(
         var stackedData = getStackedData(visibleGroups, data);
         if(stackedG)stackedG.remove();
 
-        stackedG = svg.append("g")
+        stackedG = svg.select('.autoql-vanilla-axes-grid')
+        .insert("g",":first-child")
         .selectAll("g")
         .data(stackedData)
         .enter().append("g")
@@ -376,7 +376,6 @@ export function createStackedColumnChart(
             .attr('data-unformatvalue2', unformatvalue2)
             .attr('data-unformatvalue3', d.value)
         })
-        .attr('opacity', '0.7')
         .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
         .attr("x", function(d) {
             return x(d.data.group);
@@ -403,7 +402,6 @@ export function createStackedColumnChart(
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
-    .style('fill-opacity', '0.7')
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
