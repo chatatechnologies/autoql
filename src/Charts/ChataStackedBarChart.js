@@ -315,8 +315,6 @@ export function createStackedBarChart(
 
     let stackedG;
 
-    console.log('RENDERING STACKED BAR CHART!')
-
     function createBars(){
         var visibleGroups = getVisibleGroups(allSubgroups);
         var stackedData = getStackedData(visibleGroups, data);
