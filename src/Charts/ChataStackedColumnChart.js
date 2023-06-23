@@ -318,8 +318,7 @@ export function createStackedColumnChart(
 
     var color = getColorScale(subgroups, chartColors)
 
-    axesGrid
-        .append("g")
+    axesGrid.append("g")
         .classed('y-axis', true)
         .call(yAxis);
 
