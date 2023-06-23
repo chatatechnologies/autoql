@@ -61,7 +61,7 @@ export function createColumnChart(
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -400,7 +400,7 @@ export function createColumnChart(
     }
 
     svg.append("g")
-    .attr("class", "grid")
+    .attr("class", "autoql-vanilla-axes-grid")
     .call(
         yAxis
         .tickSize(-chartWidth)
@@ -422,10 +422,10 @@ export function createColumnChart(
         var rectIndex = 0;
         var cloneData = getVisibleSeries(data);
         if(slice)slice.remove();
-        slice = svg.selectAll(".slice")
+        slice = svg.select('.autoql-vanilla-axes-grid').selectAll(".autoql-vanilla-chart-bar")
         .remove()
         .data(cloneData)
-        .enter().append("g")
+        .enter().insert("g", ":first-child")
         .attr("class", "g")
         .attr("transform",function(d) {
             return "translate(" + x0(d.label) + ",0)";
@@ -505,8 +505,8 @@ export function createColumnChart(
         .attr("width", getBandWidth(x1))
         .attr("x", function(d) { return x1(d.group); })
         .style("fill", function(d) { return colorScale(d.group) })
-        .attr('fill-opacity', '0.7')
-        .attr('class', `${tooltipClass} bar`)
+        .attr('fill-opacity', '1')
+        .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
         .attr("y", function(d) { return y(Math.max(0, d.value)); })
         .attr("height", function(d) { return calculateHeight(d) })
 
@@ -525,7 +525,7 @@ export function createColumnChart(
 
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '0.7')
+        .style('fill-opacity', '1')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
 

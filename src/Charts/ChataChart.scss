@@ -1,0 +1,37 @@
+.autoql-vanilla-chata-chart-container {
+    .autoql-vanilla-stacked-rect,
+    .autoql-vanilla-chart-bar {
+        cursor: pointer;
+
+        &:hover {
+            fill-opacity: 0.7 !important;
+        }
+    }
+
+    g.tick,
+    path.domain {
+        pointer-events: none;
+        fill: transparent;
+        stroke: transparent;
+        stroke-opacity: 0;
+    }
+
+    .autoql-vanilla-axes-grid {
+        g.tick {
+            text {
+                fill: currentcolor;
+                fill-opacity: 1;
+                font-family: inherit;
+                cursor: default;
+            }
+            line {
+                color: currentColor;
+                stroke-opacity: 0.1 !important;
+                shape-rendering: crispedges;
+            }
+            path {
+                stroke-width: 0;
+            }
+        }
+    }
+}

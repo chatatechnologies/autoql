@@ -39,7 +39,7 @@ export function createHeatmap(
     var data = formatDataToHeatmap(json, options);
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     var cols = json['data']['columns'];
 

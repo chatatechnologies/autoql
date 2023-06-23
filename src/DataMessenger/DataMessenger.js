@@ -1248,7 +1248,6 @@ export function DataMessenger(options = {}) {
     };
 
     obj.onEnterHandler = (evt) => {
-        console.log({autoCompleteList: obj.autoCompleteList})
         if (evt.key == 'Enter' && obj.input.value) {
             try {
                 obj.options.xhr.abort();
@@ -2878,7 +2877,7 @@ export function DataMessenger(options = {}) {
         obj.input?.addEventListener('keydown',  obj.onEnterHandler);
         document.removeEventListener('DOMContentLoaded', obj.onLoadHandler);
         window.removeEventListener('resize', obj.dispatchResizeEvent);
-        obj.parentNode.removeChild(obj)
+        // obj.parentNode.removeChild(obj)
     }
 
     return obj;

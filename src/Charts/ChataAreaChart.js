@@ -42,7 +42,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -298,7 +298,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var color = getColorScale(subgroups, chartColors)
 
     svg.append("g")
-    .attr("class", "grid")
+    .attr("class", "autoql-vanilla-axes-grid")
     .call(yAxis.tickFormat(function(d){
             return formatChartData(d, cols[notGroupableIndex], options)}
         )
@@ -317,11 +317,11 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         if(layers)layers.remove();
         if(layerPoints)layerPoints.remove();
 
-        layers = svg
+        layers = svg // .select('.autoql-vanilla-axes-grid')
         .selectAll("mylayers")
         .data(stackedData)
         .enter()
-        .append("path")
+        .append("g") // .insert("g",".domain")
         .style("fill", function(d) {
             if(d.key) return color(d.key); else return 'transparent'
         })
@@ -351,7 +351,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
             .y0(function(d) { return y(d[0]) || 0; })
             .y1(function(d) { return y(d[1]) || 0; })
         )
-        .attr('fill-opacity', '0.7')
+        .attr('fill-opacity', '1')
 
         layerPoints = svg.selectAll("circle")
         .data(points)
@@ -361,7 +361,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr("r", 4)
         .attr('class', 'line-dot')
         .attr('stroke-width', '3')
-        .attr('stroke-opacity', '0.7')
+        .attr('stroke-opacity', '1')
         .attr("fill", 'transparent')
         .attr('stroke', function() {'transparent' })
         // .attr("stroke", (d) => color(d.group))
@@ -424,7 +424,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
-    .style('fill-opacity', '0.7')
+    .style('fill-opacity', '1')
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
