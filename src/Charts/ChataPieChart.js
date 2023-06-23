@@ -187,10 +187,10 @@ export function createPieChart(
         .attr('d', arc)
         .style('fill-opacity', 1)
         .on('mouseover', function() {
-            select(this).style('fill-opacity', 1)
+            select(this).style('fill-opacity', 0.7)
         })
         .on('mouseout', function() {
-            select(this).style('fill-opacity', 0.7)
+            select(this).style('fill-opacity', 1)
         })
         .on('click', function() {
             svg

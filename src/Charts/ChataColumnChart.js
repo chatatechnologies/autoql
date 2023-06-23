@@ -234,7 +234,7 @@ export function createColumnChart(
 
     var colorScale = getColorScale(
         groupNames,
-        chartColors.chartColors
+        chartColors
     );
 
     var svg = select(component)

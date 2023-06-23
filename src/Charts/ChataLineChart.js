@@ -437,7 +437,6 @@ export function createLineChart(
         .attr("stroke", function(d){ return colorScale(d.name) })
         .style("stroke-width", 1)
         .style("fill", "none")
-        .attr('opacity', '0.7')
 
         points = svg
         .selectAll("dot")
@@ -454,6 +453,7 @@ export function createLineChart(
         })
         .enter()
         .append("circle")
+        .attr('class', 'autoql-vanilla-chart-circle')
         .each(function (d, i) {
             if(groupableCount === 2){
                 let index3 = index2 === 0 ? 1 : 0
@@ -523,7 +523,6 @@ export function createLineChart(
         .attr("r", 3)
         .attr('stroke', function(d) { return colorScale(d.name) })
         .attr('stroke-width', '2')
-        .attr('stroke-opacity', '0.7')
         .attr("fill", 'white')
         .attr('class', `${tooltipClass} line-dot`)
         .style('opacity', '0')
@@ -541,7 +540,6 @@ export function createLineChart(
         )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '1')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
 

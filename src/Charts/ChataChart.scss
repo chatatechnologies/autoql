@@ -8,6 +8,10 @@
         }
     }
 
+    .line-dot {
+        cursor: pointer;
+    }
+
     g.tick,
     path.domain {
         pointer-events: none;
