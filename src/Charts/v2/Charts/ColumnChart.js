@@ -116,7 +116,6 @@ export function ColumnChart(widgetOptions, options) {
       .style("text-anchor", "center")
   }
 
-
   svg.append("g")
     .attr("class", "grid")
     .call(
