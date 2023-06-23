@@ -12,7 +12,7 @@ import {
 } from '../Notifications'
 // TODO: NEXT DEPLOY
 // import { ReverseTranslation } from '../ReverseTranslation'
-import { 
+import {
     apiCallV2,
     apiCallGet,
     apiCallPut,
@@ -115,7 +115,6 @@ export function DataMessenger(options = {}) {
         enableNotificationsTab: false,
         inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
-        queryQuickStartTopics: undefined,
         landingPage: 'data-messenger',
         autoChartAggregations: true,
         xhr: new XMLHttpRequest(),
@@ -150,8 +149,8 @@ export function DataMessenger(options = {}) {
             enableDrilldowns: true,
             enableNotifications: false,
             enableCSVDownload: true,
-            enableReportProblem: true,    
-            ...(options.autoQLConfig ?? {}),      
+            enableReportProblem: true,
+            ...(options.autoQLConfig ?? {}),
         },
     };
 
@@ -223,7 +222,7 @@ export function DataMessenger(options = {}) {
                 break;
             case 'showHandle':
                 obj.options.showHandle = value;
-                
+
                 value
                   ? obj.drawerButton.classList.remove('autoql-vanilla-drawer-handle-hidden')
                   : obj.drawerButton.classList.add('autoql-vanilla-drawer-handle-hidden')
@@ -253,7 +252,7 @@ export function DataMessenger(options = {}) {
             case 'enableExploreQueriesTab':
                 obj.options.enableExploreQueriesTab = value;
                 value
-                  ? obj.tabQueryTips.classList.remove('autoql-vanilla-data-messenger-tab-hidden') 
+                  ? obj.tabQueryTips.classList.remove('autoql-vanilla-data-messenger-tab-hidden')
                   : obj.tabQueryTips.classList.add('autoql-vanilla-data-messenger-tab-hidden');
 
                 if (!value && obj.landingPage === 'explore-queries') {
@@ -264,7 +263,7 @@ export function DataMessenger(options = {}) {
             case 'enableNotificationsTab':
                 obj.options.enableNotificationsTab = value;
                 value
-                  ? obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden') 
+                  ? obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden')
                   : obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
 
                 if (!value && obj.landingPage === 'notifications') {
@@ -287,10 +286,6 @@ export function DataMessenger(options = {}) {
             case 'introMessage':
                 obj.options.introMessage = value;
                 obj.introMessageBubble.textContent = value;
-                break;
-            case 'queryQuickStartTopics':
-                obj.options.queryQuickStartTopics = value;
-                obj.createIntroMessageTopics();
                 break;
             default:
                 obj.options[option] = value;
@@ -331,7 +326,7 @@ export function DataMessenger(options = {}) {
         drawerIcon.classList.add('autoql-vanilla-chata-bubbles-icon');
         drawerIcon.innerHTML = CHATA_BUBBLES_ICON;
         drawerButton.appendChild(drawerIcon);
-        
+
         obj.drawerButton = drawerButton;
 
         if (!obj.options.showHandle) {
@@ -409,12 +404,12 @@ export function DataMessenger(options = {}) {
       if (obj.options.showMask) {
         obj.drawerMask.onclick = () => {
           obj.closeDrawer()
-        } 
+        }
       } else {
         obj.drawerMask.classList.add('autoql-vanilla-drawer-mask-hidden')
       }
 
-      obj.rootElem.appendChild(obj.drawerMask) 
+      obj.rootElem.appendChild(obj.drawerMask)
     }
 
     obj.onLoadHandler = () => {
@@ -542,7 +537,7 @@ export function DataMessenger(options = {}) {
         });
 
         if (obj.isPortrait()) {
-            notificationList.style.height = obj.drawerContent.clientHeight - 60 + 'px'; 
+            notificationList.style.height = obj.drawerContent.clientHeight - 60 + 'px';
         } else {
             notificationList.style.height = obj.options.height - 60 + 'px';
         }
@@ -569,7 +564,7 @@ export function DataMessenger(options = {}) {
       tab.classList.add('autoql-vanilla-data-messenger-tab');
       tab.setAttribute('data-tippy-content', tooltip);
       tab.setAttribute('data-tab', name)
-  
+
       if (content) tab.appendChild(content);
       if (!isEnabled) tab.classList.add('autoql-vanilla-data-messenger-tab-hidden');
       if (obj.options.landingPage === name) tab.classList.add('autoql-vanilla-data-messenger-tab-active');
@@ -586,7 +581,7 @@ export function DataMessenger(options = {}) {
         var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Data Messenger', isEnabled: true})
         var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(QUERY_TIPS), tooltip: strings.exploreQueries, isEnabled: enableExploreQueriesTab })
         var tabNotifications = obj.createQueryTab({name: 'notifications', tooltip: strings.notifications, isEnabled: enableNotificationsTab })
-      
+
         tabChataUtils.onclick = function () {
             obj.setActiveTab(this)
             obj.scrollBox.style.overflow = 'auto';
@@ -627,7 +622,7 @@ export function DataMessenger(options = {}) {
         var tabContainer = document.createElement('div');
         tabContainer.classList.add('autoql-vanilla-data-messenger-tab-container');
         tabContainer.appendChild(pageSwitcherShadowContainer);
-        
+
         obj.tabChataUtils = tabChataUtils
         obj.tabQueryTips = tabQueryTips
         obj.tabNotifications = tabNotifications
@@ -975,7 +970,7 @@ export function DataMessenger(options = {}) {
                 obj.drawerContentWrapper.style.height = newHeight + 'px';
                 obj.options.height = newHeight;
             }
-            
+
             clearTimeout(timer);
             timer = setTimeout(() => {
                 window.dispatchEvent(new CustomEvent('chata-resize', {}));
@@ -1066,22 +1061,6 @@ export function DataMessenger(options = {}) {
         obj.scrollBox = scrollBox;
         obj.introMessageBubble = chatMessageBubble;
         obj.introMessage = firstMessage;
-    };
-
-    obj.createIntroMessageTopics = () => {
-        const topics = obj.options.queryQuickStartTopics;
-        if (obj.topicsWidget) {
-            obj.drawerContent.removeChild(obj.topicsWidget._elem);
-        }
-
-        if (topics && topics.length) {
-            const topicsWidget = new Cascader(topics, obj);
-            obj.drawerContent.insertBefore(topicsWidget._elem, obj.introMessageBubble.nextSibling);
-            obj.topicsWidget = topicsWidget;
-            if (obj.options.landingPage !== 'data-messenger') {
-                obj.topicsWidget._elem.style.display = 'none';
-            }
-        }
     };
 
     obj.createHeader = () => {
@@ -2704,7 +2683,7 @@ export function DataMessenger(options = {}) {
         }
 
         let response = await apiCallV2(
-            obj.options, 
+            obj.options,
             {
                 "date_format": TIMESTAMP_FORMATS.iso8601,
                 "page_size": 500,
@@ -2844,7 +2823,6 @@ export function DataMessenger(options = {}) {
     obj.createDrawerButton();
     obj.createHeader();
     obj.createDrawerContent();
-    obj.createIntroMessageTopics();
     obj.createBar();
     obj.createResizeHandler();
     obj.createQueryTabs();
