@@ -2633,6 +2633,7 @@ export function DataMessenger(options = {}) {
 
         if (obj.options.autoQLConfig.enableQueryValidation) {
             let response = await apiCallGet(URL_SAFETYNET, obj.options);
+            const { status } = response
             if (!response) {
                 obj.input.removeAttribute('disabled');
                 if (responseLoadingContainer) {
@@ -2643,20 +2644,24 @@ export function DataMessenger(options = {}) {
             }
 
             obj.input.removeAttribute('disabled');
-            if (response.status != 200) {
+            if (status != 200) {
                 let msg = response.data.message;
                 let ref = response.data['reference_id'];
                 if (ref === '1.1.482') {
-                    obj.putSimpleResponse(response.data, textValue, response.status);
+                    obj.putSimpleResponse(response.data, textValue, status);
                 } else {
-                    obj.sendResponse(
-                        `
-                        <div>${msg}</div>
-                        <br/>
-                        <div>${strings.errorID}: ${ref}</div>
-                        `,
-                        true,
-                    );
+                    if(status === 401) {
+                        obj.sendResponse(strings.accessDenied,true);
+                    }else{
+                        obj.sendResponse(
+                            `
+                            <div>${msg}</div>
+                            <br/>
+                            <div>${strings.errorID}: ${ref}</div>
+                            `,
+                            true
+                        );
+                    }
                 }
                 if (responseLoadingContainer) {
                     obj.drawerContent.removeChild(responseLoadingContainer);
