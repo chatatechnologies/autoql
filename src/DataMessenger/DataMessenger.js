@@ -159,7 +159,6 @@ export function DataMessenger(options = {}) {
     obj.finalTranscript = '';
     obj.isRecordVoiceActive = false;
     obj.zIndexBubble = 1000000;
-    obj.lastQuery = '';
     obj.id = options?.id ?? `autoql-vanilla-data-messenger-${uuidv4()}`;
     obj.isVisible = !!obj.options.defaultOpen
     obj.notificationTabId = uuidv4();
@@ -318,9 +317,7 @@ export function DataMessenger(options = {}) {
     obj.createDrawerButton = () => {
         var drawerButton = document.createElement('div');
         drawerButton.classList.add('autoql-vanilla-drawer-handle');
-        drawerButton.addEventListener('click', function () {
-            obj.openDrawer();
-        });
+        drawerButton.addEventListener('click', obj.openDrawer);
 
         var drawerIcon = document.createElement('div');
         drawerIcon.classList.add('autoql-vanilla-chata-bubbles-icon');
@@ -417,6 +414,10 @@ export function DataMessenger(options = {}) {
             obj.initialScroll = window.scrollY;
         }
     };
+
+    obj.dispatchResizeEvent = () => {
+        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+    }
 
     obj.tabsAnimation = function (displayNodes, displayBar) {
         var nodes = obj.drawerContent.childNodes;
@@ -659,10 +660,9 @@ export function DataMessenger(options = {}) {
         var chatBarInputIcon = document.createElement('div');
 
         var input = document.createElement('input');
-
         textBar.classList.add('autoql-vanilla-text-bar');
         textBar.classList.add('autoql-vanilla-text-bar-animation');
-        textBar.classList.add('autoql-vanilla-text-bar-with-icon')
+        textBar.classList.add('autoql-vanilla-text-bar-with-icon');
         chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
         container.classList.add('autoql-vanilla-querytips-container');
         queryTipsResultContainer.classList.add('autoql-vanilla-query-tips-result-container');
@@ -683,8 +683,8 @@ export function DataMessenger(options = {}) {
         container.appendChild(textBar);
         container.appendChild(queryTipsResultContainer);
 
-        input.onkeypress = async function (event) {
-            if (event.keyCode == 13 && this.value) {
+        input.addEventListener('keydown', async event => {
+            if (event.key == 'Enter' && this.value) {
                 var chatBarLoadingSpinner = document.createElement('div');
                 var searchVal = this.value.split(' ').join(',');
                 var spinnerLoader = document.createElement('div');
@@ -699,7 +699,7 @@ export function DataMessenger(options = {}) {
                 textBar.removeChild(chatBarLoadingSpinner);
                 obj.putRelatedQueries(response.data, queryTipsResultContainer, container, searchVal);
             }
-        };
+        });
 
         container.style.display = 'none';
 
@@ -1034,7 +1034,7 @@ export function DataMessenger(options = {}) {
 
             if (evt.target.classList.contains('suggestion')) {
                 obj.autoCompleteList.style.display = 'none';
-                obj.lastQuery = evt.target.textContent;
+                localStorage.setItem('lastQuery', evt.target.textContent);
                 obj.sendMessage(evt.target.textContent, 'data_messenger.user');
             }
         });
@@ -1227,7 +1227,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.onEnterHandler = (evt) => {
-        if (evt.keyCode == 13 && obj.input.value) {
+        if (evt.key == 'Enter' && obj.input.value) {
             try {
                 obj.options.xhr.abort();
             } catch (e) {
@@ -1238,6 +1238,17 @@ export function DataMessenger(options = {}) {
             obj.sendMessage(obj.input.value, 'data_messenger.user');
         }
     };
+
+    obj.onArrowUpHandler = (evt) => {
+        if (evt.key === 'ArrowUp' && !obj.input.value) {
+            evt.stopPropagation()
+            const lastQuery = localStorage.getItem('lastQuery');
+            if (lastQuery) {
+                obj.input.value = lastQuery;
+                setTimeout(() => obj.input.setSelectionRange(lastQuery.length, lastQuery.length), 0);
+            }
+        }
+    }
 
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
@@ -1300,14 +1311,8 @@ export function DataMessenger(options = {}) {
         obj.voiceRecordButton = voiceRecordButton;
         obj.autoCompleteList = autoCompleteList;
         obj.input.onkeyup = obj.autoCompleteHandler;
-        obj.input.onkeypress = obj.onEnterHandler;
-        obj.input.onkeydown = (evt) => {
-            if (evt.keyCode == 38) {
-                if (obj.lastQuery !== '') {
-                    obj.input.value = obj.lastQuery;
-                }
-            }
-        };
+        obj.input.addEventListener('keydown',  obj.onEnterHandler);
+        obj.input.addEventListener('keydown',  obj.onArrowUpHandler);
 
         obj.drawerBody.appendChild(chataBarContainer);
     };
@@ -1904,16 +1909,9 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
-/*         createColumnChart(
-            component, json, obj.options, obj.registerDrilldownChartEvent
-        ); */
-        Chart(obj.options, {
-            width: 500,
-            height: 400,
-            displayType: 'column_chart',
-            json,
-            component,
-        })
+        createColumnChart(
+          component, json, obj.options, obj.registerDrilldownChartEvent
+        );
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2124,7 +2122,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.putMessage = (value) => {
-        obj.lastQuery = value;
+        localStorage.setItem('lastQuery', value)
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseLoadingContainer = document.createElement('div');
@@ -2837,9 +2835,21 @@ export function DataMessenger(options = {}) {
 
     refreshTooltips();
 
-    document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
-    window.addEventListener('resize', () => {
+    obj.dispatchResizeEvent = () => {
         window.dispatchEvent(new CustomEvent('chata-resize', {}));
-    });
+    }
+
+    document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
+    window.addEventListener('resize', obj.dispatchResizeEvent);
+
+    obj.destroy = () => {
+        obj.drawerButton?.addEventListener('click', obj.openDrawer);
+        obj.input?.removeEventListener('keydown',  obj.onArrowUpHandler);
+        obj.input?.addEventListener('keydown',  obj.onEnterHandler);
+        document.removeEventListener('DOMContentLoaded', obj.onLoadHandler);
+        window.removeEventListener('resize', obj.dispatchResizeEvent);
+        // obj.parentNode.removeChild(obj)
+    }
+
     return obj;
 }

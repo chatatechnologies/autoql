@@ -114,12 +114,12 @@ export const getChartColorVars = () => {
             }
             counter += 1;
         }
-        return { chartColors, chartColorsDark };
     } catch (error) {
         console.error('Could not get chart color css vars. See below for error details');
         console.error(error);
-        return [];
     }
+
+    return { chartColors, chartColorsDark };
 };
 
 export const getThemeValue = (property, prefix = 'autoql-vanilla-') => {

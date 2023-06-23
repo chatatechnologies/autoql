@@ -57,8 +57,8 @@
     border-radius: 4px !important;
     cursor: pointer !important;
     outline: none !important;
-    -webkit-transition: all 0.2s ease;
-    transition: all 0.2s ease;
+    -webkit-transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     border-width: 2px;
     display: inline-block;
     text-align: center;
@@ -150,7 +150,6 @@
     flex-shrink: 1;
     flex-basis: 0%;
     background: var(--autoql-vanilla-background-color-primary);
-    padding-top: 10px;
 }
 
 .autoql-vanilla-chata-scrollbox {
@@ -439,10 +438,11 @@ input.autoql-vanilla-chata-input {
     border-radius: 24px;
     z-index: 3;
     border: 1px solid var(--autoql-vanilla-border-color);
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
     color: var(--autoql-vanilla-text-color-primary);
     position: fixed;
     list-style: none;
+    padding: 5px 10px;
     bottom: 60px;
     width: calc(100% - 72px);
     display: none;
@@ -538,7 +538,7 @@ input.autoql-vanilla-chata-input {
     outline: none !important;
     cursor: pointer;
     letter-spacing: 0.05em;
-    transition: all 0.1s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     border-color: #e2e2e26e;
     color: var(--autoql-vanilla-text-color-primary);
 }
@@ -864,29 +864,6 @@ tr td.chata-hidden{
     fill: currentColor !important;
 }
 
-.domain{
-    stroke: transparent;
-    fill: transparent !important;
-}
-
-.tick{
-    transition: all .3s ease;
-}
-
-.autoql-vanilla-chata-response-content-container line{
-    stroke-width: 1px;
-    stroke: currentColor;
-    opacity: 0.15;
-    shape-rendering: crispedges;
-
-}
-
-.autoql-vanilla-chata-response-content-container text{
-    fill: currentcolor;
-    fill-opacity: 0.7;
-    font-family: inherit;
-}
-
 /* RESPONSE RENDERER */
 .autoql-vanilla-renderer-container{
     display: flex;
@@ -910,24 +887,13 @@ tr td.chata-hidden{
 
 text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     fill: currentColor;
-    fill-opacity: 0.7;
+    fill-opacity: 1;
     text-anchor: middle;
     font-weight: bold;
     font-size: 12px;
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
     white-space: nowrap;
-}
-
-.autoql-vanilla-chata-chart-container .bar.active,
-.autoql-vanilla-chata-chart-container .circle.active,
-.autoql-vanilla-chata-chart-container .square.active {
-    fill-opacity: 1;
-}
-
-.autoql-vanilla-chata-chart-container .line-dot.active{
-    opacity: 1 !important;
-    fill: rgb(38, 167, 233);
 }
 
 .line-dot:hover{
@@ -937,9 +903,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .chart-full-width{
     width: 100%;
 }
-
-.grid line {stroke: currentColor; stroke-opacity: 1;shape-rendering: crispEdges;}
-.grid path {stroke-width: 0;}
 
 .autoql-vanilla-chata-safety-net-container {
     width: 100%;
@@ -971,7 +934,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin: 0 3px;
     padding: 0 11px;
     color: var(--autoql-vanilla-accent-color);
-    transition: all .2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     cursor: pointer;
 }
 
@@ -1044,7 +1007,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     cursor: pointer;
     outline: none!important;
     border-color: hsla(0,0%,88.6%,.43);
-    transition: all .2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
 }
 
 .autoql-vanilla-chata-safety-net-execute-btn:hover {
@@ -1070,7 +1033,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     outline: none !important;
     cursor: pointer;
     letter-spacing: 0.05em;
-    transition: all 0.1s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     border-color: #e2e2e26e;
     color: inherit;
 }
@@ -1108,7 +1071,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .label{
     fill: currentcolor;
-    fill-opacity: 0.7;
+    fill-opacity: 1;
     font-family: inherit;
     font-size: 10px;
 }
@@ -1405,8 +1368,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     border-radius: 4px;
     cursor: pointer;
     outline: none!important;
-    -webkit-transition: all .2s ease;
-    transition: all .2s ease;
+    -webkit-transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     width: auto;
     display: inline-block;
     font-size: 12px !important;

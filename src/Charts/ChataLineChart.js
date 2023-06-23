@@ -62,7 +62,7 @@ export function createLineChart(
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -401,7 +401,7 @@ export function createLineChart(
     var yAxis = getAxisLeft(y);
 
     svg.append("g")
-    .attr("class", "grid")
+    .attr("class", "autoql-vanilla-axes-grid")
     .call(yAxis.tickFormat(function(d){
         return formatChartData(d, cols[index1], options)}
     )
@@ -437,7 +437,6 @@ export function createLineChart(
         .attr("stroke", function(d){ return colorScale(d.name) })
         .style("stroke-width", 1)
         .style("fill", "none")
-        .attr('opacity', '0.7')
 
         points = svg
         .selectAll("dot")
@@ -454,6 +453,7 @@ export function createLineChart(
         })
         .enter()
         .append("circle")
+        .attr('class', 'autoql-vanilla-chart-circle')
         .each(function (d, i) {
             if(groupableCount === 2){
                 let index3 = index2 === 0 ? 1 : 0
@@ -523,7 +523,6 @@ export function createLineChart(
         .attr("r", 3)
         .attr('stroke', function(d) { return colorScale(d.name) })
         .attr('stroke-width', '2')
-        .attr('stroke-opacity', '0.7')
         .attr("fill", 'white')
         .attr('class', `${tooltipClass} line-dot`)
         .style('opacity', '0')
@@ -541,7 +540,6 @@ export function createLineChart(
         )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '0.7')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
 

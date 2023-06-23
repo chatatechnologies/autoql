@@ -39,7 +39,7 @@ export function createHeatmap(
     var data = formatDataToHeatmap(json, options);
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     var cols = json['data']['columns'];
 
@@ -211,6 +211,7 @@ export function createHeatmap(
     .append("rect")
     .each(function (d, i) {
         select(this).attr(valueClass, i)
+        .attr('class', 'autoql-vanilla-heatmap-rect')
         .attr('data-col1', col1)
         .attr('data-col2', col2)
         .attr('data-col3', col3)

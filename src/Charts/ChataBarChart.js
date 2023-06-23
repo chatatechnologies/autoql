@@ -59,7 +59,7 @@ export function createBarChart(
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-    var chartColors = getChartColorVars();
+    var { chartColors } = getChartColorVars();
 
     const legendBoxMargin = 15;
     if(indexList['STRING']){
@@ -408,7 +408,7 @@ export function createBarChart(
     }
 
     svg.append("g")
-        .attr("class", "grid")
+        .attr("class", "autoql-vanilla-axes-grid")
         .call(xAxis
             .tickSize(height - margin.bottomChart)
             .tickFormat("")
@@ -416,7 +416,6 @@ export function createBarChart(
 
     svg.append("g")
     .attr("class", "y axis")
-    .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
         let fLabel = formatChartData(d, cols[index2], options);
         if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
@@ -426,10 +425,10 @@ export function createBarChart(
     function createBars(){
         var rectIndex = 0;
         var cloneData = getVisibleSeries(data);
-        if(slice)slice.remove()
-        slice = svg.selectAll(".slice")
+        if(slice) slice.remove()
+        slice = svg.select('.autoql-vanilla-axes-grid').selectAll(".autoql-vanilla-chart-bar")
         .data(cloneData)
-        .enter().append("g")
+        .enter().insert("g", ":first-child")
         .attr("class", "g")
         .attr("transform",function(d) {
             return "translate(0,"+ y0(d.label) +")";
@@ -526,8 +525,7 @@ export function createBarChart(
         .attr("x", function(d) { return getXRect(d) })
         .attr("y", function(d) { return y1(d.group); })
         .attr("height", function() { return getBandWidth(y1) })
-        .attr('fill-opacity', '0.7')
-        .attr('class', `${tooltipClass} bar`)
+        .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
         .style("fill", function(d) { return colorScale(d.group) })
 
         tooltipCharts();
@@ -543,7 +541,6 @@ export function createBarChart(
         )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '0.7')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
         const legendWrapLength = width / 2 - 50
