@@ -52,7 +52,6 @@ export function formatData(val, col, allOptions={}){
                 value = new Intl.NumberFormat(options.languageCode, {
                     minimumFractionDigits: 0,
                     maximumFractionDigits: 0,
-                    notation,
                 }).format(val)
             }
         break;
