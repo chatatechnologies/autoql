@@ -361,7 +361,6 @@ export const getMetadataElement = (component) => {
     return component.parentElement.parentElement
 }
 
-
 export const getChartDimensions = (chatContainer, displayType) => {
     let chartWidth = 0
     let chartHeight = 0
