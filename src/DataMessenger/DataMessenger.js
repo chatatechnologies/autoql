@@ -1930,9 +1930,11 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
-        createColumnChart(
-          component, json, obj.options, obj.registerDrilldownChartEvent
-        );
+        Chart(obj.options, {
+          displayType: 'column_chart',
+          json,
+          component,
+        })
         obj.registerDrilldownChartEvent(component);
     };
 

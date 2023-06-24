@@ -1,4 +1,4 @@
-import { 
+import {
   shouldRotateLabels,
   getTickValues,
   getLegendGroups,
@@ -21,13 +21,14 @@ import {
 } from './Charts'
 
 export function Chart(widgetOptions, options) {
-  const { 
-    width,
-    height,
+  const {
     displayType,
     json,
     component,
   } = options
+  const width = component.offsetWidth;
+  const height = component.offsetHeight;
+  console.log(width);
   const cols = enumerateCols(json);
   const indexList = getIndexesByType(cols);
   const numericSeries = [];
@@ -36,7 +37,7 @@ export function Chart(widgetOptions, options) {
   const chartColors = getChartColorVars();
   const metadataComponent = getMetadataElement(component);
   const tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-  
+
   if (indexList['STRING']) {
     stringSeries.push(...indexList['STRING']);
   }
@@ -100,6 +101,8 @@ export function Chart(widgetOptions, options) {
     ColumnChart(widgetOptions, {
       ...options,
       data: groupedData,
+      width,
+      height,
       cols,
       indexList,
       serieIndex,
