@@ -42,7 +42,7 @@ export function ColumnChart(widgetOptions, options) {
   const x1 = SCALE_BAND();
   const y = SCALE_LINEAR();
 
-  setDomainRange(x0, labelsNames, 0, width, false, .1)
+  setDomainRange(x0, labelsNames, 0, 484, false, .1)
   const x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
   setDomainRange(x1, groupNames, 0, x1Range, false, .1)
 
@@ -64,13 +64,13 @@ export function ColumnChart(widgetOptions, options) {
     .append("g")
     .attr("transform",
     "translate(" +(CHART_MARGINS.left) + "," + CHART_MARGINS.top + ")")
-  
+
   const labelXContainer = svg.append('g');
   const labelYContainer = svg.append('g');
 
   const textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -(width / 2))
+    .attr('y', 0)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -80,7 +80,7 @@ export function ColumnChart(widgetOptions, options) {
 
   const textContainerX = labelXContainer.append('text')
     .attr('x', width / 2)
-    .attr('y', height + 50)
+    .attr('y', height - CHART_MARGINS.bottom)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
 
@@ -93,7 +93,7 @@ export function ColumnChart(widgetOptions, options) {
 
   if(rotateLabels){
       svg.append("g")
-      .attr("transform", "translate(0," + (height - CHART_MARGINS.bottom) + ")")
+      .attr("transform", "translate(0," + '272' + ")")
       .call(xAxis.tickFormat(function(d){
           let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
           if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
@@ -104,7 +104,7 @@ export function ColumnChart(widgetOptions, options) {
       .style("text-anchor", "end")
   }else{
       svg.append("g")
-      .attr("transform", "translate(0," + (height - CHART_MARGINS.bottom) + ")")
+      .attr("transform", "translate(0," + '272' + ")")
       .call(xAxis.tickFormat(function(d){
           let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
           if(fLabel === 'Invalid date')fLabel = 'Untitled Category'

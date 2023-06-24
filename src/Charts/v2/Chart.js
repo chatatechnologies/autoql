@@ -26,9 +26,9 @@ export function Chart(widgetOptions, options) {
     json,
     component,
   } = options
-  const width = component.offsetWidth;
-  const height = component.offsetHeight;
-  console.log(width);
+  const width = component.clientWidth;
+  const height = component.clientHeight;
+
   const cols = enumerateCols(json);
   const indexList = getIndexesByType(cols);
   const numericSeries = [];
