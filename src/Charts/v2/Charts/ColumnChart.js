@@ -18,7 +18,8 @@ import {
   formatLabel,
 } from '../../ChataChartHelpers';
 import {
-  getTextDimensions
+  getTextDimensions,
+  getLabelMaxSize
 } from '../Helpers'
 
 export function ColumnChart(widgetOptions, options) {
@@ -44,6 +45,8 @@ export function ColumnChart(widgetOptions, options) {
   const { textWidth } = getTextDimensions(
     formatChartData(minMaxValues.max, cols[groupIndex], widgetOptions)
   )
+  const dimensions = getLabelMaxSize(labelsNames)
+  console.log(dimensions);
   const chartWidth = (width - (textWidth + CHART_MARGINS.left));
   const x0 = SCALE_BAND();
   const x1 = SCALE_BAND();

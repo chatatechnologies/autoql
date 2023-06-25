@@ -66,5 +66,5 @@ export const getLabelMaxSize = (labels) => {
     return a.length > b.length ? a : b;
   });
 
-  return getTextWidth(longestLabel);
+  return getTextDimensions(longestLabel);
 }
