@@ -46,7 +46,6 @@ export function ColumnChart(widgetOptions, options) {
     formatChartData(minMaxValues.max, cols[groupIndex], widgetOptions)
   )
   const dimensions = getLabelMaxSize(labelsNames)
-  console.log(dimensions);
   const chartWidth = (width - (textWidth + CHART_MARGINS.left));
   const x0 = SCALE_BAND();
   const x1 = SCALE_BAND();
@@ -55,8 +54,8 @@ export function ColumnChart(widgetOptions, options) {
   setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
   const x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
   setDomainRange(x1, groupNames, 0, x1Range, false, .1)
-
-  y.range([ 312, 0 ])
+  const domainSize = height - ((dimensions.textWidth / 2) + CHART_MARGINS.bottom + CHART_MARGINS.top)
+  y.range([ domainSize, 0 ])
   .domain([minMaxValues.min, minMaxValues.max]).nice()
 
   const xAxis = getAxisBottom(x0)
@@ -113,7 +112,7 @@ export function ColumnChart(widgetOptions, options) {
 
   if(rotateLabels){
       svg.append("g")
-      .attr("transform", `translate(${0},272)`)
+      .attr("transform", `translate(0,${domainSize})`)
       .call(xAxis.tickFormat(function(d){
           let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
           if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
@@ -124,7 +123,7 @@ export function ColumnChart(widgetOptions, options) {
       .style("text-anchor", "end")
   }else{
       svg.append("g")
-      .attr("transform", `translate(${0},272)`)
+      .attr("transform", `translate(0,${domainSize})`)
       .call(xAxis.tickFormat(function(d){
           let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
           if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
