@@ -14,10 +14,10 @@ export const shouldRotateLabels = (size, length) => {
 
 export const getTickValues = (size, data) => {
   const barSize = getBarSize(size, data.length);
-  const interval = Math.ceil((data.length * 16) / size);
+  const interval = Math.ceil((data.length * 20) / size);
 
   const tickValues = [];
-  if (barSize < 16) {
+  if (barSize < 20) {
     data.forEach((element, index) => {
       if (index % interval === 0) {
         tickValues.push(element.label);
@@ -53,11 +53,12 @@ export const dummyElement = (text) => {
   return div;
 }
 
-export const getTextWidth = (text) =>  {
+export const getTextDimensions = (text) =>  {
   const div = dummyElement(text);
-  const width = div.clientWidth;
+  const textWidth = div.clientWidth;
+  const textHeight = div.clientWidth;
   document.body.removeChild(div);
-  return width;
+  return { textWidth, textHeight };
 }
 
 export const getLabelMaxSize = (labels) => {

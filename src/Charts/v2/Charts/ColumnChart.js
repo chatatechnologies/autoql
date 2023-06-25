@@ -18,7 +18,7 @@ import {
   formatLabel,
 } from '../../ChataChartHelpers';
 import {
-  getTextWidth
+  getTextDimensions
 } from '../Helpers'
 
 export function ColumnChart(widgetOptions, options) {
@@ -41,7 +41,7 @@ export function ColumnChart(widgetOptions, options) {
 
   component.innerHTML = '';
 
-  const textWidth = getTextWidth(
+  const { textWidth } = getTextDimensions(
     formatChartData(minMaxValues.max, cols[groupIndex], widgetOptions)
   )
   const chartWidth = (width - (textWidth + CHART_MARGINS.left));
@@ -77,7 +77,7 @@ export function ColumnChart(widgetOptions, options) {
 
   const textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2) + (textWidth / 2))
-    .attr('y', 0)
+    .attr('y', (-textWidth))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -86,7 +86,7 @@ export function ColumnChart(widgetOptions, options) {
   .text(serieColName);
 
   const textContainerX = labelXContainer.append('text')
-    .attr('x', width / 2)
+    .attr('x', chartWidth / 2)
     .attr('y', height - CHART_MARGINS.bottom)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
