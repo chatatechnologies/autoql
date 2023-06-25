@@ -15,8 +15,11 @@ import {
   formatChartData
 } from '../../../Utils';
 import {
-  formatLabel
+  formatLabel,
 } from '../../ChataChartHelpers';
+import {
+  getTextWidth
+} from '../Helpers'
 
 export function ColumnChart(widgetOptions, options) {
   const {
@@ -38,15 +41,19 @@ export function ColumnChart(widgetOptions, options) {
 
   component.innerHTML = '';
 
+  const textWidth = getTextWidth(
+    formatChartData(minMaxValues.max, cols[groupIndex], widgetOptions)
+  )
+  const chartWidth = (width - (textWidth + CHART_MARGINS.left));
   const x0 = SCALE_BAND();
   const x1 = SCALE_BAND();
   const y = SCALE_LINEAR();
 
-  setDomainRange(x0, labelsNames, 0, 484, false, .1)
+  setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
   const x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
   setDomainRange(x1, groupNames, 0, x1Range, false, .1)
 
-  y.range([ height - (CHART_MARGINS.bottom), 0 ])
+  y.range([ 312, 0 ])
   .domain([minMaxValues.min, minMaxValues.max]).nice()
 
   const xAxis = getAxisBottom(x0)
@@ -63,13 +70,13 @@ export function ColumnChart(widgetOptions, options) {
     .attr("height", height)
     .append("g")
     .attr("transform",
-    "translate(" +(CHART_MARGINS.left) + "," + CHART_MARGINS.top + ")")
+    "translate(" +(textWidth + CHART_MARGINS.left) + "," + CHART_MARGINS.top + ")")
 
   const labelXContainer = svg.append('g');
   const labelYContainer = svg.append('g');
 
   const textContainerY = labelYContainer.append('text')
-    .attr('x', -(height / 2))
+    .attr('x', -(height / 2) + (textWidth / 2))
     .attr('y', 0)
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
@@ -91,9 +98,19 @@ export function ColumnChart(widgetOptions, options) {
     xAxis.tickValues(tickValues);
   }
 
+  svg.append("g")
+  .attr("class", "autoql-vanilla-axes-grid")
+  .call(
+      yAxis
+      .tickSize(-width)
+      .tickFormat(function(d){
+          return formatChartData(d, cols[serieIndex], widgetOptions)}
+      )
+  )
+
   if(rotateLabels){
       svg.append("g")
-      .attr("transform", "translate(0," + '272' + ")")
+      .attr("transform", `translate(${0},272)`)
       .call(xAxis.tickFormat(function(d){
           let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
           if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
@@ -104,7 +121,7 @@ export function ColumnChart(widgetOptions, options) {
       .style("text-anchor", "end")
   }else{
       svg.append("g")
-      .attr("transform", "translate(0," + '272' + ")")
+      .attr("transform", `translate(${0},272)`)
       .call(xAxis.tickFormat(function(d){
           let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
           if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
@@ -113,14 +130,4 @@ export function ColumnChart(widgetOptions, options) {
       .selectAll("text")
       .style("text-anchor", "center")
   }
-
-  svg.append("g")
-    .attr("class", "autoql-vanilla-axes-grid")
-    .call(
-        yAxis
-        .tickSize(-width)
-        .tickFormat(function(d){
-            return formatChartData(d, cols[serieIndex], widgetOptions)}
-        )
-    )
 }

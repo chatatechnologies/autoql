@@ -46,7 +46,7 @@ export const dummyElement = (text) => {
   div.style.display = 'inline-block';
   div.style.position = 'absolute';
   div.style.visibility = 'hidden';
-  div.style.fontSize = '10px';
+  div.style.fontSize = '14px';
   div.style.fontFamily = 'sans-serif';
   div.innerHTML = text;
   document.body.appendChild(div);
