@@ -21,6 +21,7 @@ import {
   getTextDimensions,
   getLabelMaxSize
 } from '../Helpers'
+import { ChartSvg } from './ChartSvg';
 
 export function ColumnChart(widgetOptions, options) {
   const {
@@ -54,7 +55,9 @@ export function ColumnChart(widgetOptions, options) {
   setDomainRange(x0, labelsNames, 0, chartWidth, false, .1)
   const x1Range = minMaxValues.max === 0 ? 0 : getBandWidth(x0)
   setDomainRange(x1, groupNames, 0, x1Range, false, .1)
-  const domainSize = height - ((dimensions.textWidth / 2) + CHART_MARGINS.bottom + CHART_MARGINS.top)
+  const domainSize = height - (
+    (dimensions.textWidth / 2) + CHART_MARGINS.bottom + CHART_MARGINS.top + CHART_MARGINS.bottomLabelChart
+    )
   y.range([ domainSize, 0 ])
   .domain([minMaxValues.min, minMaxValues.max]).nice()
 
@@ -66,14 +69,12 @@ export function ColumnChart(widgetOptions, options) {
       chartColors
   );
 
-  const svg = select(component)
-    .append("svg")
-    .attr("width", width)
-    .attr("height", height)
-    .append("g")
-    .attr("transform",
-    "translate(" +(textWidth + CHART_MARGINS.left) + "," + CHART_MARGINS.top + ")")
-
+  const svg = new ChartSvg({
+    width,
+    height,
+    component,
+    textWidthLeft: textWidth
+  })
   const labelXContainer = svg.append('g');
   const labelYContainer = svg.append('g');
 

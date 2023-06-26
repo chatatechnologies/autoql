@@ -99,5 +99,6 @@ export const CHART_MARGINS = {
   top: 10,
   right: 10,
   bottom: 10,
+  bottomLabelChart: 10,
   left: 10,
 }
