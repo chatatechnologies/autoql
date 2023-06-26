@@ -6,7 +6,7 @@
     min-height: 0;
     max-height: 95vh;
     width: 450px;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .autoql-vanilla-close-filter-locking{

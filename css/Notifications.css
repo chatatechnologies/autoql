@@ -7,6 +7,7 @@
 
 
 .chata-notification-list-container {
+    background: var(--autoql-vanilla-background-color-primary);
     color: var(--autoql-vanilla-accent-color);
     padding: 20px !important;
     text-align: left;
@@ -16,7 +17,7 @@
 
 .autoql-vanilla-notification-wrapper{
     height: calc(100vh - 35px);
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .chata-notification-dismiss-icon path{
@@ -69,7 +70,7 @@
     -webkit-animation-delay: 0s;
     animation-delay: 0s;
     cursor: pointer;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .chata-notification-list-container .chata-notification-list-item-header {
