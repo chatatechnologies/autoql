@@ -181,7 +181,8 @@ export function createBarChart(
         }
     }else{
         data.forEach((item) => {
-            allLengths.push(formatLabel(item.label).length);
+            const formattedValue = formatData(item.label, cols[index2], options)
+            allLengths.push(formatLabel(formattedValue).length);
         });
     }
     let longestStringWidth = Math.max.apply(null, allLengths);
