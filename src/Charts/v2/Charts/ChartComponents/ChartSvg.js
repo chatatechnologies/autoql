@@ -1,5 +1,5 @@
 import { select } from 'd3-selection'
-import { CHART_MARGINS } from '../../../Constants'
+import { CHART_MARGINS } from '../../../../Constants'
 
 export function ChartSvg(options) {
   const {

@@ -50,6 +50,7 @@ export const dummyElement = (text) => {
   div.style.fontFamily = 'sans-serif';
   div.innerHTML = text;
   document.body.appendChild(div);
+  console.log(div);
   return div;
 }
 

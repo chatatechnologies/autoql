@@ -63,7 +63,7 @@ export function Chart(widgetOptions, options) {
     let i = dateCol !== -1 ? dateCol : stringSeries[0].index
     metadataComponent.metadata = {
       groupBy: {
-        index: i,
+        index: stringSeries[3].index,
         currentLi: 0,
       },
       series: numericSeries

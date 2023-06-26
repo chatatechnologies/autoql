@@ -23,8 +23,9 @@ import {
   getTextDimensions,
   getLabelMaxSize
 } from '../Helpers'
-import { ChartSvg } from './ChartSvg';
+import { ChartSvg } from './ChartComponents';
 import { tooltipCharts } from '../../../Tooltips'
+import { LabelAxis } from './ChartComponents/LabelAxis';
 
 export function ColumnChart(widgetOptions, options) {
   const {
@@ -64,8 +65,8 @@ export function ColumnChart(widgetOptions, options) {
   setDomainRange(x1, groupNames, 0, x1Range, false, .1)
   const domainSize = height - (
     (dimensions.textWidth / 2) + CHART_MARGINS.bottom + CHART_MARGINS.top + CHART_MARGINS.bottomLabelChart
-    )
-  y.range([ domainSize, 0 ])
+  )
+  y.range([domainSize, 0])
   .domain([minMaxValues.min, minMaxValues.max]).nice()
 
   const xAxis = getAxisBottom(x0)
@@ -82,27 +83,22 @@ export function ColumnChart(widgetOptions, options) {
     component,
     textWidthLeft: textWidth
   })
-  const labelXContainer = svg.append('g');
-  const labelYContainer = svg.append('g');
 
-  const textContainerY = labelYContainer.append('text')
-    .attr('x', -(height / 2) + (textWidth / 2))
-    .attr('y', (-textWidth))
-    .attr('transform', 'rotate(-90)')
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-y-axis-label')
+  const labelAxisLeft = new LabelAxis({
+    svg,
+    type: 'LEFT',
+    name: serieColName,
+    x: -(height / 2) + (textWidth / 2),
+    y: -textWidth
+  })
 
-  textContainerY.append('tspan')
-  .text(serieColName);
-
-  const textContainerX = labelXContainer.append('text')
-    .attr('x', chartWidth / 2)
-    .attr('y', height - CHART_MARGINS.bottom)
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-x-axis-label')
-
-  textContainerX.append('tspan')
-    .text(groupColName);
+  const labelAxisBottom = new LabelAxis({
+    svg,
+    type: 'BOTTOM',
+    name: groupColName,
+    x: chartWidth / 2,
+    y: height - CHART_MARGINS.bottom
+  })
 
   if(tickValues.length > 0){
     xAxis.tickValues(tickValues);
@@ -154,10 +150,10 @@ export function ColumnChart(widgetOptions, options) {
   function createBars(){
     var rectIndex = 0;
     var cloneData = getVisibleSeries(data);
-    console.log(cloneData);
     if(slice)slice.remove();
     slice = svg.select('.autoql-vanilla-axes-grid').selectAll(".autoql-vanilla-chart-bar")
     .remove()
+    .data(cloneData)
     .enter().insert("g", ":first-child")
     .attr("class", "g")
     .attr("transform",function(d) {
