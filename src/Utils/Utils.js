@@ -3,7 +3,7 @@ import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import {
     PRECISION_TYPES,
-    DAYJS_PRECISION_FORMATS
+    dataFormattingDefault,
 } from '../Constants'
 import _get from 'lodash.get'
 import { strings } from '../Strings'

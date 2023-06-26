@@ -97,6 +97,7 @@ export function Chart(widgetOptions, options) {
     groupNames, groupIndex, cols, widgetOptions
   );
   component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
+  const valueClass = 'data-chartindex';
 
   if(displayType === 'column_chart') {
     ColumnChart(widgetOptions, {
@@ -123,6 +124,8 @@ export function Chart(widgetOptions, options) {
       component,
       metadataComponent,
       tooltipClass,
+      groupableCount,
+      valueClass,
     });
   }
 }

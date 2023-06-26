@@ -102,3 +102,15 @@ export const CHART_MARGINS = {
   bottomLabelChart: 10,
   left: 10,
 }
+
+export const dataFormattingDefault = {
+  timestampFormat: TIMESTAMP_FORMATS.iso8601,
+  currencyCode: 'USD',
+  languageCode: 'en-US',
+  currencyDecimals: 2,
+  quantityDecimals: 2,
+  ratioDecimals: 4,
+  comparisonDisplay: 'PERCENT',
+  monthYearFormat: 'MMMM YYYY',
+  dayMonthYearFormat: 'll',
+}
