@@ -408,7 +408,7 @@ input.autoql-vanilla-chata-input {
     display: none;
 
     font-family: var(--autoql-vanilla-font-family) !important;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
     color: var(--autoql-vanilla-text-color-primary) !important;
 
 }
@@ -654,7 +654,6 @@ tr td.chata-hidden{
 
 .autoql-vanilla-table-response tr{
     border-bottom: 1px solid var(--autoql-vanilla-border-color);
-    background: var(--autoql-vanilla-background-color-primary);
     margin-top: 10px;
     margin-bottom: 10px;
     width: 100%;
@@ -1450,7 +1449,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-tiny-popover-container .chata-context-menu {
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
     width: 150px;
     padding: 10px 0;
 }
@@ -1486,7 +1485,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
     border-color: var(--autoql-vanilla-border-color);
     color: var(--autoql-vanilla-text-color-primary);
-    background: var(--autoql-vanilla-background-color-primary,#fff);
+    background: var(--autoql-vanilla-background-color-secondary,#fff);
 }
 
 .autoql-vanilla-no-columns-error-message {
@@ -1553,8 +1552,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-top: 10px;
     font-size: 12px;
     padding: 0 18px 7px;
-    font-weight: 500;
-    opacity: .6;
+    font-weight: 600;
 }
 
 .autoql-vanilla-chata-list-item:not(:last-child) {
