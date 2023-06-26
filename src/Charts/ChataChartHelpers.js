@@ -458,3 +458,75 @@ export const styleLegendTitleNoBorder = (svg) => {
     .style('font-weight', 'bold')
     .style('transform', 'translate(0, -5px)')
 }
+
+
+export const getLabelBBox = (axesGrid) => {
+    let labelsBBox;
+    const labelBboxes = []
+    axesGrid.select('.x-axis')
+      .selectAll('g.tick text')
+      .each(function () {
+        const textBoundingRect = select(this).node().getBoundingClientRect()
+        labelBboxes.push({
+          left: textBoundingRect.left - xDiff,
+          bottom: textBoundingRect.bottom - yDiff,
+          right: textBoundingRect.right - xDiff,
+          top: textBoundingRect.top - yDiff,
+        })
+      })
+
+    if (labelBboxes) {
+      const allLabelsBbox = mergeBboxes(labelBboxes)
+      labelsBBox = { ...allLabelsBbox }
+    }
+
+    return labelsBBox
+}
+
+export const mergeBboxes = (boundingBoxes) => {
+    const filteredBBoxes = boundingBoxes.filter((bbox) => !!bbox)
+  
+    if (!filteredBBoxes?.length) {
+      return undefined
+    }
+  
+    try {
+      let minX
+      let minY
+      let maxR
+      let maxB
+
+      filteredBBoxes.forEach(({ x, y, width, height, left, bottom, right, top } = {}) => {
+        let w = width
+        let h = height
+        let l = x
+        let t = y
+
+        if (isNaN(w) || isNaN(h) || isNaN(l) || isNaN(t)) {
+            // BBox is from bounding client rect not SVG. Use l/r/t/b
+            if (isNaN(left) || isNaN(right) || isNaN(top) || isNaN(bottom)) {
+                return
+            }
+
+            x = left
+            y = top
+            w = right - left
+            h = bottom - top
+        }
+
+        if (w <= 0 && h <= 0) {
+          return
+        }
+  
+        if (isNaN(minX) || l < minX) minX = l
+        if (isNaN(minY) || y < minY) minY = y
+        if (isNaN(maxR) || (x + w) > maxR) maxR = (x + w)
+        if (isNaN(maxB) || (y + h) > maxB) maxB = (y + h)
+      })
+  
+      return { x: minX, y: minY, height: Math.abs(maxB - minY), width: Math.abs(maxR - minX) }
+    } catch (error) {
+      console.error(error)
+      return undefined
+    }
+  }
