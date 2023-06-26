@@ -158,7 +158,6 @@ export function ColumnChart(widgetOptions, options) {
     if(slice)slice.remove();
     slice = svg.select('.autoql-vanilla-axes-grid').selectAll(".autoql-vanilla-chart-bar")
     .remove()
-    .data(cloneData)
     .enter().insert("g", ":first-child")
     .attr("class", "g")
     .attr("transform",function(d) {
@@ -174,7 +173,6 @@ export function ColumnChart(widgetOptions, options) {
     })
     .enter().append("rect")
     .each(function (d) {
-        console.log(d);
         if(groupableCount === 2){
             let index3 = groupIndex === 0 ? 1 : 0
             let colStr3 = cols[index3]['display_name']

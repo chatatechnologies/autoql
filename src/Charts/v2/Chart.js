@@ -34,7 +34,7 @@ export function Chart(widgetOptions, options) {
   const numericSeries = [];
   const stringSeries = [];
   const groupableCount = getGroupableCount(json);
-  const chartColors = getChartColorVars();
+  const { chartColors } = getChartColorVars()
   const metadataComponent = getMetadataElement(component);
   const tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
 
