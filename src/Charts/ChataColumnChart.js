@@ -152,7 +152,8 @@ export function createColumnChart(
     // }
 
     data.forEach((item) => {
-        allLengths.push(formatLabel(item.label).length);
+        const formattedValue = formatData(item.label, cols[index2], options)
+        allLengths.push(formatLabel(formattedValue).length);
     });
 
     let longestString = 0;
@@ -211,7 +212,7 @@ export function createColumnChart(
         'chata-hidden-scrollbox'
     );
 
-    const stringWidth = getChartLeftMargin(minMaxValues.max.toString())
+    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
     const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
     : (margin.left - 15)
     const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
