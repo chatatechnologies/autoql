@@ -67,11 +67,12 @@ function callTableFilter(col, headerValue, rowValue, options){
 
 function getPivotColumns(json, pivotColumns, options){
     const columns = json['data']['columns'];
+
     var columnsData = [];
     pivotColumns.map((col, index) => {
         var colIndex = index;
         var title = col;
-        if(index > 1)colIndex = 1
+        if(index == 0)colIndex = 1
 
         if(!title)title = 'null'
         if(!col)col = 'null'
