@@ -149,20 +149,21 @@ export function createBarChart(
             value: group
         }
     })
-    const hasLegend = false
-    // var hasLegend = groupNames.length > 1;
-    // if(hasLegend && groupNames.length < 3){
-    //     margin.bottom = 80;
-    //     margin.marginLabel = 0;
-    // }
 
-    // if(groupNames.length < 3){
-    //     chartWidth = width;
-    // }else{
-    //     chartWidth = width - margin.chartLeft;
-    //     legendOrientation = 'vertical';
-    //     shapePadding = 5;
-    // }
+    var hasLegend = false;
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 80;
+        margin.marginLabel = 0;
+    }
+
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - margin.chartLeft;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
 
     const barHeight = height / data.length;
     const interval = Math.ceil((data.length * 16) / height);
