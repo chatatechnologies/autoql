@@ -115,7 +115,6 @@ export function DataMessenger(options = {}) {
         enableNotificationsTab: false,
         inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
-        queryQuickStartTopics: undefined,
         landingPage: 'data-messenger',
         autoChartAggregations: true,
         xhr: new XMLHttpRequest(),
@@ -137,6 +136,7 @@ export function DataMessenger(options = {}) {
             comparisonDisplay: 'PERCENT',
             monthYearFormat: 'MMM YYYY',
             dayMonthYearFormat: 'll',
+            percentDecimals: 2,
             ...(options.dataFormatting ?? {}),
         },
         autoQLConfig: {
@@ -286,10 +286,6 @@ export function DataMessenger(options = {}) {
             case 'introMessage':
                 obj.options.introMessage = value;
                 obj.introMessageBubble.textContent = value;
-                break;
-            case 'queryQuickStartTopics':
-                obj.options.queryQuickStartTopics = value;
-                obj.createIntroMessageTopics();
                 break;
             default:
                 obj.options[option] = value;
@@ -1067,22 +1063,6 @@ export function DataMessenger(options = {}) {
         obj.scrollBox = scrollBox;
         obj.introMessageBubble = chatMessageBubble;
         obj.introMessage = firstMessage;
-    };
-
-    obj.createIntroMessageTopics = () => {
-        const topics = obj.options.queryQuickStartTopics;
-        if (obj.topicsWidget) {
-            obj.drawerContent.removeChild(obj.topicsWidget._elem);
-        }
-
-        if (topics && topics.length) {
-            const topicsWidget = new Cascader(topics, obj);
-            obj.drawerContent.insertBefore(topicsWidget._elem, obj.introMessageBubble.nextSibling);
-            obj.topicsWidget = topicsWidget;
-            if (obj.options.landingPage !== 'data-messenger') {
-                obj.topicsWidget._elem.style.display = 'none';
-            }
-        }
     };
 
     obj.createHeader = () => {
@@ -2197,10 +2177,12 @@ export function DataMessenger(options = {}) {
                 json['data']['rows'][0][0] = selectedColumn.definition.field;
                 json['data']['rows'][0][1] = row.data.Month;
             } else {
-                json['data']['rows'][0][0] = entries[0][1];
-                json['data']['rows'][0][1] = selectedColumn.definition.field;
+                json['data']['rows'][0][0] = selectedColumn.definition.field;
+                json['data']['rows'][0][1] = entries[0][1];
                 json['data']['rows'][0][2] = cell.getValue();
             }
+
+            console.log(json['data']['rows'][0]);
             obj.sendDrilldownMessage(json, 0, obj.options);
         }
     };
@@ -2655,6 +2637,7 @@ export function DataMessenger(options = {}) {
 
         if (obj.options.autoQLConfig.enableQueryValidation) {
             let response = await apiCallGet(URL_SAFETYNET, obj.options);
+            const { status } = response
             if (!response) {
                 obj.input.removeAttribute('disabled');
                 if (responseLoadingContainer) {
@@ -2665,20 +2648,24 @@ export function DataMessenger(options = {}) {
             }
 
             obj.input.removeAttribute('disabled');
-            if (response.status != 200) {
+            if (status != 200) {
                 let msg = response.data.message;
                 let ref = response.data['reference_id'];
                 if (ref === '1.1.482') {
-                    obj.putSimpleResponse(response.data, textValue, response.status);
+                    obj.putSimpleResponse(response.data, textValue, status);
                 } else {
-                    obj.sendResponse(
-                        `
-                        <div>${msg}</div>
-                        <br/>
-                        <div>${strings.errorID}: ${ref}</div>
-                        `,
-                        true,
-                    );
+                    if(status === 401) {
+                        obj.sendResponse(strings.accessDenied,true);
+                    }else{
+                        obj.sendResponse(
+                            `
+                            <div>${msg}</div>
+                            <br/>
+                            <div>${strings.errorID}: ${ref}</div>
+                            `,
+                            true
+                        );
+                    }
                 }
                 if (responseLoadingContainer) {
                     obj.drawerContent.removeChild(responseLoadingContainer);
@@ -2843,7 +2830,6 @@ export function DataMessenger(options = {}) {
     obj.createDrawerButton();
     obj.createHeader();
     obj.createDrawerContent();
-    obj.createIntroMessageTopics();
     obj.createBar();
     obj.createResizeHandler();
     obj.createQueryTabs();

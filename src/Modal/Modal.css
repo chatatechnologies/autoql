@@ -17,7 +17,7 @@
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 5000;
+  z-index: 50000;
   visibility: hidden;
   transition: none !important;
   font-family: sans-serif;
@@ -27,7 +27,6 @@
   display: flex;
   flex-direction: column;
   background: var(--autoql-vanilla-background-color-primary);
-
   border-radius: 4px;
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
   margin: 45px auto;
@@ -68,7 +67,6 @@
 .chata-modal-body {
   display: flex;
   flex-direction: column;
-
   padding: 25px;
   flex: 1;
   overflow: auto;

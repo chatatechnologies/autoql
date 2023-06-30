@@ -959,6 +959,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     -ms-appearance: none;
     appearance: none;
     background-image: none;
+    font-weight: bold;
 }
 
 .autoql-vanilla-chata-safetynet-select::-ms-expand {
@@ -997,16 +998,28 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-chata-safety-net-execute-btn {
-    height: 38px;
-    background: none;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
     border-radius: 4px;
-    margin-top: 24px;
-    width: 100%;
-    color: inherit;
-    cursor: pointer;
     outline: none!important;
-    border-color: hsla(0,0%,88.6%,.43);
-    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    transition: border-color .2s ease,background-color .2s ease,opacity .2s ease,color .2s ease;
+    cursor: pointer;    
+    border: 1px solid var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-accent-color);
+    background: inherit;
+    width: 100%;
+    font-size: 14px;
+    padding: 13px;
+    margin-top: 24px;
+}
+
+.autoql-vanilla-chata-safety-net-execute-btn:hover {
+    background-color: var(--autoql-vanilla-mask-color);
 }
 
 .autoql-vanilla-chata-safety-net-execute-btn:hover {

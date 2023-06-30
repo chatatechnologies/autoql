@@ -108,7 +108,7 @@
                     padding: 1px 8px;
                     line-height: 23px;
                     font-size: 11px;
-                    cursor: auto;
+                    cursor: pointer;
 
                     &:not(:first-child) {
                         border-color: var(--autoql-vanilla-table-border-color);

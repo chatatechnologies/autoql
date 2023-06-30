@@ -19,6 +19,7 @@ export function formatData(val, col, allOptions={}){
     const options = allOptions.dataFormatting;
     var value = '';
     let type = col['type'];
+    const { percentDecimals } = allOptions.dataFormatting
     switch (type) {
         case 'DOLLAR_AMT':
             val = parseFloat(val);
@@ -39,12 +40,12 @@ export function formatData(val, col, allOptions={}){
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
                 val = parseFloat(val);
                 if(!isNaN(val)){
-                    value =  val.toFixed(2) + '%';
+                    value =  val.toFixed(percentDecimals) + '%';
                 }else{
                     value = '';
                 }
             }else{
-                value = parseFloat(val).toFixed(4);
+                value = parseFloat(val).toFixed(percentDecimals);
             }
         break;
         case 'QUANTITY':
@@ -56,15 +57,16 @@ export function formatData(val, col, allOptions={}){
             }
         break;
         case 'RATIO':
+            const { percentDecimals } = allOptions.dataFormatting
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
                 val = parseFloat(val) * 100;
                 if(!isNaN(val)){
-                    value =  val.toFixed(2) + '%';
+                    value =  val.toFixed(percentDecimals) + '%';
                 }else{
                     value = '';
                 }
             }else{
-                value = parseFloat(val).toFixed(4);
+                value = parseFloat(val).toFixed(percentDecimals);
             }
         break;
         case 'NUMBER':

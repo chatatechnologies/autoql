@@ -134,22 +134,20 @@ export function createColumnChart(
         }
     })
 
-    const hasLegend = false;
-
-    // var hasLegend = groupNames.length > 1;
-    //
-    // if(hasLegend && groupNames.length < 3){
-    //     margin.bottom = 70;
-    //     margin.marginLabel = 10;
-    // }
-
-    // if(groupNames.length < 3){
-    //     chartWidth = width;
-    // }else{
-    //     chartWidth = width - margin.chartLeft;
-    //     legendOrientation = 'vertical';
-    //     shapePadding = 5;
-    // }
+    var hasLegend = false; 
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 70;
+        margin.marginLabel = 10;
+    }
+    
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - margin.chartLeft;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
 
     data.forEach((item) => {
         const formattedValue = formatData(item.label, cols[index2], options)
