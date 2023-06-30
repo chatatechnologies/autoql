@@ -2175,10 +2175,12 @@ export function DataMessenger(options = {}) {
                 json['data']['rows'][0][0] = selectedColumn.definition.field;
                 json['data']['rows'][0][1] = row.data.Month;
             } else {
-                json['data']['rows'][0][0] = entries[0][1];
-                json['data']['rows'][0][1] = selectedColumn.definition.field;
+                json['data']['rows'][0][0] = selectedColumn.definition.field;
+                json['data']['rows'][0][1] = entries[0][1];
                 json['data']['rows'][0][2] = cell.getValue();
             }
+
+            console.log(json['data']['rows'][0]);
             obj.sendDrilldownMessage(json, 0, obj.options);
         }
     };
