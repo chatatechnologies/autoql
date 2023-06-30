@@ -709,6 +709,7 @@ export function DataMessenger(options = {}) {
         container.style.display = 'none';
 
         input.classList.add('autoql-vanilla-chata-input');
+        input.classList.add('autoql-vanilla-explore-queries-input');
         input.classList.add('left-padding');
         input.setAttribute('placeholder', strings.exploreQueriesInput);
         obj.queryTips = container;

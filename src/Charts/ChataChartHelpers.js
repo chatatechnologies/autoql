@@ -9,6 +9,7 @@ import {
 import {
     ChataUtils
 } from '../ChataUtils'
+import { mergeBboxes } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -458,7 +459,6 @@ export const styleLegendTitleNoBorder = (svg) => {
     .style('font-weight', 'bold')
     .style('transform', 'translate(0, -5px)')
 }
-
 
 export const getLabelBBox = (axesGrid) => {
     let labelsBBox;
