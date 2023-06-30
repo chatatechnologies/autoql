@@ -136,6 +136,7 @@ export function DataMessenger(options = {}) {
             comparisonDisplay: 'PERCENT',
             monthYearFormat: 'MMM YYYY',
             dayMonthYearFormat: 'll',
+            percentDecimals: 2,
             ...(options.dataFormatting ?? {}),
         },
         autoQLConfig: {
