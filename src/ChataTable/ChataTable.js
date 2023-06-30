@@ -70,9 +70,10 @@ function getPivotColumns(json, pivotColumns, options){
 
     var columnsData = [];
     pivotColumns.map((col, index) => {
-        var colIndex = index;
+        var colIndex = index + 1;
         var title = col;
-        if(index == 0)colIndex = 1
+
+        if(colIndex > 2) colIndex = 2
 
         if(!title)title = 'null'
         if(!col)col = 'null'
@@ -107,7 +108,7 @@ function getPivotColumns(json, pivotColumns, options){
 
                 return formatData(value, columns[colIndex], options);
             },
-            frozen: colIndex === 0 ? true : false,
+            frozen: index === 0 ? true : false,
             sorter: setSorterFunction(columns[colIndex])
         })
     });
