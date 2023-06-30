@@ -44,7 +44,7 @@ module.exports = (env, options) => {
             '/.*/': 'umd $0',
         },
         optimization: {
-            minimize: isProduction,
+            minimize: false // isProduction,
         },
     };
 };
