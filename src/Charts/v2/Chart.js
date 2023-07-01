@@ -26,9 +26,8 @@ export function Chart(widgetOptions, options) {
     json,
     component,
   } = options
-  const width = component.clientWidth;
-  const height = component.clientHeight;
-
+  const width = component.parentElement.clientWidth;
+  const height = component.parentElement.clientHeight;
   const cols = enumerateCols(json);
   const indexList = getIndexesByType(cols);
   const numericSeries = [];
@@ -126,6 +125,7 @@ export function Chart(widgetOptions, options) {
       tooltipClass,
       groupableCount,
       valueClass,
+      json,
     });
   }
 }

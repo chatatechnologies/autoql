@@ -26,27 +26,30 @@ import {
 import { ChartSvg } from './ChartComponents';
 import { tooltipCharts } from '../../../Tooltips'
 import { LabelAxis } from './ChartComponents/LabelAxis';
+import { Chart } from '../Chart'
 
 export function ColumnChart(widgetOptions, options) {
   const {
     data,
     width,
     height,
-    labelsNames,
-    minMaxValues,
-    groupNames,
+    cols,
+    serieIndex,
+    groupIndex,
     chartColors,
-    component,
+    minMaxValues,
     serieColName,
     groupColName,
     rotateLabels,
     tickValues,
-    groupIndex,
-    serieIndex,
-    cols,
+    labelsNames,
+    groupNames,
+    groupableIndex,
+    component,
+    json,
+    tooltipClass,
     groupableCount,
     valueClass,
-    tooltipClass,
   } = options
 
   component.innerHTML = '';
@@ -170,8 +173,7 @@ export function ColumnChart(widgetOptions, options) {
     .enter().append("rect")
     .each(function (d) {
         if(groupableCount === 2){
-            let index3 = groupIndex === 0 ? 1 : 0
-            let colStr3 = cols[index3]['display_name']
+            let colStr3 = cols[groupableIndex]['display_name']
             || cols[serieIndex]['name']
             let col3 = formatColumnName(colStr3);
             toolTipColValue1 = formatData(
@@ -182,7 +184,7 @@ export function ColumnChart(widgetOptions, options) {
             let unformatvalue2 = undefined
             let unformatvalue3 = undefined
 
-            if(index3 === 0){
+            if(groupableIndex === 0){
                 unformatvalue1 = d.group
                 unformatvalue2 = d.label
             }else{
@@ -200,7 +202,7 @@ export function ColumnChart(widgetOptions, options) {
                 widgetOptions
             ))
             .attr('data-colvalue3', formatData(
-                d.group, cols[index3],
+                d.group, cols[groupableIndex],
                 widgetOptions
             ))
             .attr('data-unformatvalue1', unformatvalue1)
@@ -242,9 +244,13 @@ export function ColumnChart(widgetOptions, options) {
 
   select(window).on(
     "chata-resize." + component.dataset.componentid, () => {
-      ColumnChart(widgetOptions, options);
+      Chart(widgetOptions, {
+        displayType: 'column_chart',
+        json,
+        component,
+      });
     }
-);
+  );
 
   createBars();
 }
