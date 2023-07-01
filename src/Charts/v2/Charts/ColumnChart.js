@@ -21,12 +21,14 @@ import {
 } from '../../ChataChartHelpers';
 import {
   getTextDimensions,
-  getLabelMaxSize
+  getLabelMaxSize,
+  calculateHeight
 } from '../Helpers'
 import { ChartSvg } from './ChartComponents';
 import { tooltipCharts } from '../../../Tooltips'
 import { LabelAxis } from './ChartComponents/LabelAxis';
 import { Chart } from '../Chart'
+import { AxisBottom } from './ChartComponents/AxisBottom';
 
 export function ColumnChart(widgetOptions, options) {
   const {
@@ -117,37 +119,15 @@ export function ColumnChart(widgetOptions, options) {
       )
   )
 
-  if(rotateLabels){
-      svg.append("g")
-      .attr("transform", `translate(0,${domainSize})`)
-      .call(xAxis.tickFormat(function(d){
-          let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
-          if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
-          return formatLabel(fLabel);
-      }))
-      .selectAll("text")
-      .attr("transform", "translate(-10,0)rotate(-45)")
-      .style("text-anchor", "end")
-  }else{
-      svg.append("g")
-      .attr("transform", `translate(0,${domainSize})`)
-      .call(xAxis.tickFormat(function(d){
-          let fLabel = formatChartData(d, cols[groupIndex], widgetOptions);
-          if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
-          return formatLabel(fLabel);
-      }))
-      .selectAll("text")
-      .style("text-anchor", "center")
-  }
+  AxisBottom(widgetOptions, {
+    index: groupIndex,
+    axis: xAxis,
+    rotateLabels,
+    svg,
+    domainSize,
+    cols,
+  });
   
-  const calculateHeight = (d) => {
-    if(minMaxValues.min < 0){
-        return Math.abs(y(d.value) - y(0));
-    }else{
-        return domainSize - y(d.value);
-    }
-  }
-
   var slice = undefined;
 
   function createBars(){
@@ -238,7 +218,7 @@ export function ColumnChart(widgetOptions, options) {
     .attr('fill-opacity', '1')
     .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
-    .attr("height", function(d) { return calculateHeight(d) })
+    .attr("height", function(d) { return calculateHeight(minMaxValues, y, d, domainSize) })
     tooltipCharts();
   }
 

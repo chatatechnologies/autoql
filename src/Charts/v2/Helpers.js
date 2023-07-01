@@ -28,6 +28,14 @@ export const getTickValues = (size, data) => {
   return tickValues;
 }
 
+export const calculateHeight = (minMaxValues, y, d, domainSize) => {
+  if(minMaxValues.min < 0){
+      return Math.abs(y(d.value) - y(0));
+  }else{
+      return domainSize - y(d.value);
+  }
+}
+
 export const getLegendGroups = (groupNames, groupIndex, cols, options) => {
   const legendGroups = {}  
   groupNames.forEach((group) => {

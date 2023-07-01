@@ -260,7 +260,6 @@ export const formatLabel = (label) => {
         return label.toString()
     }
     return label.toString().slice(0, 15) + ' ...'
-
 }
 
 export const getGroupableFields = (json) => {
