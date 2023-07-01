@@ -23,6 +23,7 @@
         top: 0;
         left: 0;
         transition: opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), height 0s ease 0.3s;
+        z-index: 9998;
     }
 
     .autoql-vanilla-page-switcher-shadow-container {
@@ -84,6 +85,7 @@
         box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
         transition: transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86),
             opacity 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86), box-shadow 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+        z-index: 9999;
 
         .autoql-vanilla-drawer-body {
             visibility: visible;
@@ -210,6 +212,10 @@
 
     .autoql-vanilla-text-bar-animation {
         animation: 0.5s ease 0s 1 normal none running slideDown;
+    }
+
+    .autoql-vanilla-explore-queries-input {
+        margin: 10px 0;
     }
 
     // ************************** DRAWER OPEN STYLES ************************* //

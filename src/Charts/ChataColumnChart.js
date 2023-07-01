@@ -134,25 +134,24 @@ export function createColumnChart(
         }
     })
 
-    const hasLegend = false;
-
-    // var hasLegend = groupNames.length > 1;
-    //
-    // if(hasLegend && groupNames.length < 3){
-    //     margin.bottom = 70;
-    //     margin.marginLabel = 10;
-    // }
-
-    // if(groupNames.length < 3){
-    //     chartWidth = width;
-    // }else{
-    //     chartWidth = width - margin.chartLeft;
-    //     legendOrientation = 'vertical';
-    //     shapePadding = 5;
-    // }
+    var hasLegend = false; 
+    var hasLegend = groupNames.length > 1;
+    if(hasLegend && groupNames.length < 3){
+        margin.bottom = 70;
+        margin.marginLabel = 10;
+    }
+    
+    if(groupNames.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - margin.chartLeft;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
 
     data.forEach((item) => {
-        allLengths.push(formatLabel(item.label).length);
+        const formattedValue = formatData(item.label, cols[index2], options)
+        allLengths.push(formatLabel(formattedValue).length);
     });
 
     let longestString = 0;
@@ -211,7 +210,7 @@ export function createColumnChart(
         'chata-hidden-scrollbox'
     );
 
-    const stringWidth = getChartLeftMargin(minMaxValues.max.toString())
+    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
     const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
     : (margin.left - 15)
     const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66

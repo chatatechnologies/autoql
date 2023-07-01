@@ -65,7 +65,8 @@ export function createStackedBarChart(
     var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
     var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
-
+    var cols = json['data']['columns'];
+    
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2], true
@@ -76,7 +77,11 @@ export function createStackedBarChart(
         data, row => row[groupableIndex1], true
     );
 
-    groups.map(element => allLengths.push(formatLabel(element).length));
+    groups.map(element => {
+        const formattedValue = formatData(element, cols[groupableIndex2], options);
+        allLengths.push(formatLabel(formattedValue).length);
+    });
+
     let longestString = Math.max.apply(null, allLengths);
 
     margin.chartLeft = longestString * 10;
@@ -90,7 +95,6 @@ export function createStackedBarChart(
 
     var allSubgroups = {}
     var legendGroups = {}
-    var cols = json['data']['columns'];
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true

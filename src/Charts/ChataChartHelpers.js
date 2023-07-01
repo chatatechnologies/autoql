@@ -9,6 +9,7 @@ import {
 import {
     ChataUtils
 } from '../ChataUtils'
+import { mergeBboxes } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -456,4 +457,27 @@ export const styleLegendTitleNoBorder = (svg) => {
     .select('.legendTitle')
     .style('font-weight', 'bold')
     .style('transform', 'translate(0, -5px)')
+}
+
+export const getLabelBBox = (axesGrid) => {
+    let labelsBBox;
+    const labelBboxes = []
+    axesGrid.select('.x-axis')
+      .selectAll('g.tick text')
+      .each(function () {
+        const textBoundingRect = select(this).node().getBoundingClientRect()
+        labelBboxes.push({
+          left: textBoundingRect.left - xDiff,
+          bottom: textBoundingRect.bottom - yDiff,
+          right: textBoundingRect.right - xDiff,
+          top: textBoundingRect.top - yDiff,
+        })
+      })
+
+    if (labelBboxes) {
+      const allLabelsBbox = mergeBboxes(labelBboxes)
+      labelsBBox = { ...allLabelsBbox }
+    }
+
+    return labelsBBox
 }

@@ -119,13 +119,13 @@ export function createLineChart(
             value: group
         }
     })
-    const hasLegend = false;
+    var hasLegend = false;
 
-    // var hasLegend = allGroup.length > 1;
-    // if(hasLegend && allGroup.length < 3){
-    //     margin.bottom = 70;
-    //     margin.marginLabel = 10;
-    // }
+    var hasLegend = allGroup.length > 1;
+    if(hasLegend && allGroup.length < 3){
+        margin.bottom = 70;
+        margin.marginLabel = 10;
+    }
     var allData = [];
 
     var colorScale = getColorScale(
@@ -156,7 +156,8 @@ export function createLineChart(
         });
     }
     data.forEach((item) => {
-        allLengths.push(formatLabel(item.label).length);
+        const formattedValue = formatData(item.label, cols[index2], options)
+        allLengths.push(formatLabel(formattedValue).length);
     });
 
     let longestString = 0;
@@ -166,13 +167,13 @@ export function createLineChart(
     if(longestString <= 4)longestString = 5;
     if(!hasLegend)increment = 3;
 
-    // if(allGroup.length < 3){
-    //     chartWidth = width;
-    // }else{
-    //     chartWidth = width - 135;
-    //     legendOrientation = 'vertical';
-    //     shapePadding = 5;
-    // }
+    if(allGroup.length < 3){
+        chartWidth = width;
+    }else{
+        chartWidth = width - 135;
+        legendOrientation = 'vertical';
+        shapePadding = 5;
+    }
 
     if(legendOrientation == 'horizontal'){
         if(rotateLabels){
@@ -224,7 +225,7 @@ export function createLineChart(
         'chata-hidden-scrollbox'
     );
 
-    const stringWidth = getChartLeftMargin(minMaxValues.max.toString())
+    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
     const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
     : (margin.left - 15)
     const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
