@@ -29,6 +29,7 @@ import { tooltipCharts } from '../../../Tooltips'
 import { LabelAxis } from './ChartComponents/LabelAxis';
 import { Chart } from '../Chart'
 import { AxisBottom } from './ChartComponents/AxisBottom';
+import { AxisLeft } from './ChartComponents/AxisLeft';
 
 export function ColumnChart(widgetOptions, options) {
   const {
@@ -109,15 +110,13 @@ export function ColumnChart(widgetOptions, options) {
     xAxis.tickValues(tickValues);
   }
 
-  svg.append("g")
-  .attr("class", "autoql-vanilla-axes-grid")
-  .call(
-      yAxis
-      .tickSize(-width)
-      .tickFormat(function(d){
-          return formatChartData(d, cols[serieIndex], widgetOptions)}
-      )
-  )
+  AxisLeft(widgetOptions, {
+    index: serieIndex,
+    axis: yAxis,
+    tickSize: width,
+    cols,
+    svg,
+  })
 
   AxisBottom(widgetOptions, {
     index: groupIndex,
