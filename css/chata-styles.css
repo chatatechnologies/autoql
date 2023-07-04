@@ -309,11 +309,10 @@ input.autoql-vanilla-chata-input {
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
     outline: none !important;
-    font-family: inherit;
     background: var(--autoql-vanilla-background-color-secondary);
     border: 1px solid var(--autoql-vanilla-border-color);
     color: var(--autoql-vanilla-text-color-primary);
-    width: calc(100% - 20px);   
+    width: calc(100% - 20px);
     margin: 0;
     width: 100%;
     padding-left: 46px;
@@ -1008,7 +1007,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     border-radius: 4px;
     outline: none!important;
     transition: border-color .2s ease,background-color .2s ease,opacity .2s ease,color .2s ease;
-    cursor: pointer;    
+    cursor: pointer;
     border: 1px solid var(--autoql-vanilla-accent-color);
     color: var(--autoql-vanilla-accent-color);
     background: inherit;
