@@ -685,9 +685,9 @@ export function DataMessenger(options = {}) {
         container.appendChild(queryTipsResultContainer);
 
         input.addEventListener('keydown', async event => {
-            if (event.key == 'Enter' && this.value) {
+            if (event.key == 'Enter' && input.value) {
                 var chatBarLoadingSpinner = document.createElement('div');
-                var searchVal = this.value.split(' ').join(',');
+                var searchVal = input.value.split(' ').join(',');
                 var spinnerLoader = document.createElement('div');
                 spinnerLoader.classList.add('autoql-vanilla-spinner-loader');
                 chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
