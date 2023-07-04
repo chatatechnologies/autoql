@@ -26,15 +26,18 @@ import {
     formatChartData,
     formatColumnName,
     closeAllChartPopovers,
-    formatData
+    formatData,
+    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
+
+import './ChataChart.scss'
 
 export function createStackedBarChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-stackedchartindex', renderTooltips=true){
 
-    var margin = {top: 5, right: 10, bottom: 30, left: 142, chartLeft: 140},
+    var margin = {top: 5, right: 10, bottom: 40, left: 142, chartLeft: 140},
     width = component.parentElement.clientWidth - margin.left;
     margin.chartLeft = 90;
     var height;
@@ -43,6 +46,8 @@ export function createStackedBarChart(
     var notGroupableField = getNotGroupableField(json);
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     var allLengths = [];
+    var { chartColors } = getChartColorVars();
+
     if(!metadataComponent.metadata3D){
         metadataComponent.metadata3D = {
             groupBy: {
@@ -60,7 +65,8 @@ export function createStackedBarChart(
     var groupableIndex1 = metadataComponent.metadata3D.groupBy.groupable1;
     var groupableIndex2 = metadataComponent.metadata3D.groupBy.groupable2;
     var notGroupableIndex = notGroupableField.indexCol;
-
+    var cols = json['data']['columns'];
+    
     var data = cloneObject(json['data']['rows']);
     var groups = ChataUtils.getUniqueValues(
         data, row => row[groupableIndex2], true
@@ -71,7 +77,11 @@ export function createStackedBarChart(
         data, row => row[groupableIndex1], true
     );
 
-    groups.map(element => allLengths.push(formatLabel(element).length));
+    groups.map(element => {
+        const formattedValue = formatData(element, cols[groupableIndex2], options);
+        allLengths.push(formatLabel(formattedValue).length);
+    });
+
     let longestString = Math.max.apply(null, allLengths);
 
     margin.chartLeft = longestString * 10;
@@ -85,7 +95,6 @@ export function createStackedBarChart(
 
     var allSubgroups = {}
     var legendGroups = {}
-    var cols = json['data']['columns'];
     subgroups.map(subgroup => {
         allSubgroups[subgroup] = {
             isVisible: true
@@ -162,6 +171,8 @@ export function createStackedBarChart(
     .append("g")
     .attr("transform",
     "translate(" + margin.chartLeft + "," + margin.top + ")");
+
+    var axesGrid = svg.append("g").attr("class", "autoql-vanilla-axes-grid")
 
     var labelYContainer = svg.append('g');
 
@@ -259,25 +270,26 @@ export function createStackedBarChart(
     .domain([0, maxValue])
     .range([ 0, chartWidth ]).nice();
 
+    
     if(tickWidth < 135){
-        svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
-        .call(getAxisBottom(x).ticks(9).tickSize(1).tickFormat(function(d){
+        axesGrid.append("g")
+        .classed('x-axis', true)
+        // .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        .call(getAxisBottom(x).ticks(9).tickSize(height - margin.bottom).tickFormat(function(d){
             return formatChartData(d, cols[2], options)}
         ))
         .selectAll("text")
-        .attr("transform", "translate(-10,0)rotate(-45)")
+        .attr('transform', `rotate(-45, 0, ${height - margin.bottom}) translate(-5, 0)`)
         .style("text-anchor", "end");
     }else{
-        svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottom) + ")")
+        axesGrid.append("g")
+        .classed('x-axis', true)
         .call(getAxisBottom(x).tickFormat(function(d){
             return formatChartData(d, cols[2], options)}
-        ))
+        ).tickSize(height - margin.bottom))
         .selectAll("text")
         .style("text-anchor", "center");
     }
-
 
     // Add Y axis
     var y = SCALE_BAND()
@@ -290,25 +302,20 @@ export function createStackedBarChart(
         0.2
     )
 
-    var yAxis = getAxisLeft(y);
+    var yAxis = getAxisLeft(y)
+        .tickFormat(function(d){
+            return formatLabel(formatChartData(d, cols[groupableIndex2], options));
+        })
 
     if(yTickValues.length > 0){
         yAxis.tickValues(yTickValues);
     }
 
-    var color = getColorScale(subgroups, options.themeConfig.chartColors)
+    var color = getColorScale(subgroups, chartColors)
 
-    svg.append("g")
-    .call(yAxis.tickFormat(function(d){
-        return formatLabel(formatChartData(d, cols[groupableIndex2], options));
-    })).select(".domain").remove();
-
-    svg.append("g")
-    .attr("class", "grid")
-    .call(getAxisBottom(x)
-        .tickSize(height - margin.bottom)
-        .tickFormat("")
-    );
+    axesGrid.append("g")
+        .classed('y-axis', true)
+        .call(yAxis)
 
     let stackedG;
 
@@ -317,7 +324,7 @@ export function createStackedBarChart(
         var stackedData = getStackedData(visibleGroups, data);
         if(stackedG)stackedG.remove();
 
-        stackedG = svg.append("g")
+        stackedG = svg.select('.autoql-vanilla-axes-grid').insert("g",":first-child")
         .selectAll("g")
         .data(stackedData)
         .enter().append("g")
@@ -326,7 +333,6 @@ export function createStackedBarChart(
         .data(function(d) { return d; })
         .enter().append("rect")
         .each(function (d, i) {
-
             var pos = d[1];
             var sum = 0;
             for (var [key, value] of Object.entries(d.data)){
@@ -361,9 +367,8 @@ export function createStackedBarChart(
             .attr('data-unformatvalue1', unformatvalue1)
             .attr('data-unformatvalue2', unformatvalue2)
             .attr('data-unformatvalue3', d.value)
-
         })
-        .attr('opacity', '0.7')
+        // .attr('opacity', '1')
         .attr('class', 'tooltip-3d autoql-vanilla-stacked-rect')
         .attr("x", function(d) {
             return x(d[0]);
@@ -387,7 +392,7 @@ export function createStackedBarChart(
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
-    .style('fill-opacity', '0.7')
+    // .style('fill-opacity', '1')
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
@@ -397,7 +402,7 @@ export function createStackedBarChart(
     });
     var legendScale = getColorScale(
         legendValues,
-        options.themeConfig.chartColors
+        chartColors
     )
 
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')

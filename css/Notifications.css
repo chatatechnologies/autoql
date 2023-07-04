@@ -7,16 +7,17 @@
 
 
 .chata-notification-list-container {
-    color: #26a7df;
+    background: var(--autoql-vanilla-background-color-primary);
+    color: var(--autoql-vanilla-accent-color);
     padding: 20px !important;
     text-align: left;
-    background: var(--autoql-vanilla-background-color-secondary);
     overflow-y: auto;
     height: 100%;
 }
 
 .autoql-vanilla-notification-wrapper{
     height: calc(100vh - 35px);
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .chata-notification-dismiss-icon path{
@@ -41,7 +42,7 @@
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {
-    color: #26a7df;
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .chata-notification-list-item:nth-of-type(2) {
@@ -69,7 +70,7 @@
     -webkit-animation-delay: 0s;
     animation-delay: 0s;
     cursor: pointer;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .chata-notification-list-container .chata-notification-list-item-header {
@@ -79,18 +80,18 @@
     padding-left: 25px;
     cursor: pointer;
     color: var(--autoql-vanilla-text-color-primary);
-
+    background: var(--autoql-vanilla-background-color-secondary);
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-display-name {
     font-weight: 500;
     -webkit-transition: color .2s ease;
     transition: color .2s ease;
-    color: var(--autoql-vanilla-accent-color), #26a7df)
+    color: var(--autoql-vanilla-accent-color, #26a7df);
 }
 
 .chata-notification-list-container .chata-notification-list-item.triggered .chata-notification-list-item-header {
-    color: #26a7df;
+    color: var(--autoql-vanilla-accent-color);
 }
 
 .chata-notification-list-container .chata-notification-dismiss-icon {
@@ -125,7 +126,7 @@
     left: 0;
     top: 0;
     width: 4px;
-    background: #26a7df;
+    background: var(--autoql-vanilla-accent-color);
     -webkit-transition-property: opacity,height;
     transition-property: opacity,height;
     -webkit-transition-duration: .2s,.3s;
@@ -602,10 +603,13 @@
 }
 
 .autoql-vanilla-empty-state{
-    display: block;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     margin-top: 75px !important;
     height: calc(100% - 20px);
+    width: 100%;
 }
 
 .autoql-vanilla-empy-notification-message{
@@ -625,9 +629,7 @@
 }
 
 .autoql-vanilla-empty-state-img{
-    width: 100%;
-    height: auto;
-    max-width: 250px;
+    width: 200px;
 }
 
 @keyframes slideIn{

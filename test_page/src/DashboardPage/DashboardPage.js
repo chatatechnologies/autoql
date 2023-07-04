@@ -12,9 +12,7 @@ import {
     RollbackOutlined,
     SaveOutlined
 } from '@ant-design/icons'
-import {
-    put
-} from 'axios'
+import axios from 'axios'
 const { Option } = Select
 
 export class DashboardPage extends Component {
@@ -28,7 +26,7 @@ export class DashboardPage extends Component {
     renderSelector = () => {
         const { dashboardNames, activeDashboard } = this.props
         var options = []
-        dashboardNames.map((name, index) => {
+        dashboardNames.forEach((name, index) => {
             options.push(
                 <Option value={index} key={index}>{name}</Option>
             )
@@ -70,9 +68,6 @@ export class DashboardPage extends Component {
                 apiKey: authentication.apiKey,
                 domain: authentication.domain,
             },
-            themeConfig: {
-                ...this.props.themeConfig
-            },
             autoQLConfig: {
                 debug: true
             },
@@ -87,7 +82,6 @@ export class DashboardPage extends Component {
         if(this.props.dashboards){
             this.instanceDashboard()
         }else{
-            this.dashboard.options.themeConfig = this.props.themeConfig
             this.dashboard.applyCSS()
         }
     }
@@ -127,7 +121,7 @@ export class DashboardPage extends Component {
         this.dashboard.tiles.map(tile => tiles.push(tile.getValues()))
 
         d.data = tiles
-        var response = await put(URL, d, {
+        await axios.put(URL, d, {
             headers: {
                 Authorization: `Bearer ${authentication.token}`,
                 'Integrator-Domain': authentication.domain,
@@ -171,11 +165,6 @@ export class DashboardPage extends Component {
                         onClick={() => {this.dashboard.run()}}
                         style={{ marginLeft: '10px' }}
                         icon={<PlayCircleOutlined/>}>Execute</Button>
-                    <Button
-                        onClick={() => {console.log(this.dashboard.tiles);}}
-                        style={{ marginLeft: '10px' }}>
-                        Log Current Tile State
-                    </Button>
                     <div
                         style={{
                             marginTop: '10px',

@@ -8,10 +8,12 @@ import {
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
+} from '../Utils'
+import {
     apiCallPut,
     apiCallPost,
-} from '../Utils'
-import sqlFormatter from "sql-formatter";
+} from '../Api'
+import { format } from "sql-formatter";
 import { ChataConfirmDialog } from '../ChataComponents'
 import {
     DOWNLOAD_CSV_ICON,
@@ -155,7 +157,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
     var text = document.createElement('textarea');
     text.classList.add('copy-sql-formatted-text');
     text.setAttribute('disabled', 'true');
-    text.value = sqlFormatter.format(sql);
+    text.value = format(sql);
     modalContent.classList.add('copy-sql-modal-content');
     copyButton.classList.add('autoql-vanilla-chata-btn');
     copyButton.classList.add('copy-sql-btn');

@@ -87,9 +87,6 @@ export class DataMessengerPage extends Component {
                         (color) => color !== item
                     )
                     this.setState({ chartColors: newChartColors })
-                    this.props.setDMOption('themeConfig', {
-                        chartColors: newChartColors
-                    })
                     this.props.onChangeTheme('chartColors', newChartColors)
                 }}
                 />
@@ -117,10 +114,6 @@ export class DataMessengerPage extends Component {
                         this.setState(
                             { chartColors: newChartColors, newColorInput: '' }
                         )
-                        this.props.setDMOption('themeConfig', {
-                            chartColors: newChartColors
-                        })
-
                         this.props.onChangeTheme('chartColors', newChartColors)
 
                     }
@@ -169,10 +162,6 @@ export class DataMessengerPage extends Component {
                     if(propName === 'theme'){
                         var accentColor = this.state.theme === 'light' ? this.state.lightAccentColor : this.state.darkAccentColor
                         this.props.onChangeTheme('accentColor', accentColor)
-                        this.props.setDMOption('themeConfig', {
-                            theme: e.target.value,
-                            accentColor: accentColor
-                        })
                         this.props.onChangeTheme('theme', e.target.value)
                     }
                     else this.props.setDMOption(propName, e.target.value)
@@ -345,7 +334,7 @@ export class DataMessengerPage extends Component {
                 <h4>Format for Month, Year</h4>
                 <h6>
                     Don't know the syntax for formats?{' '}
-                    <a href="https://devhints.io/moment" target="_blank">
+                    <a href="https://devhints.io/moment" target="_blank" rel="noopener noreferrer">
                         View the cheat sheet
                     </a>
                 </h6>
@@ -362,7 +351,7 @@ export class DataMessengerPage extends Component {
                 <h4>Format for Day, Month, Year</h4>
                 <h6>
                     Don't know the syntax for formats?{' '}
-                    <a href="https://devhints.io/moment" target="_blank">
+                    <a href="https://devhints.io/moment" target="_blank" rel="noopener noreferrer">
                         View the cheat sheet
                     </a>
                 </h6>
@@ -468,9 +457,6 @@ export class DataMessengerPage extends Component {
                 type="text"
                 onChange={(e) => {
                     this.setState({ fontFamily: e.target.value })
-                    this.props.setDMOption('themeConfig', {
-                        fontFamily: e.target.value
-                    })
                 }}
                 value={this.state.fontFamily}
                 />
@@ -518,9 +504,6 @@ export class DataMessengerPage extends Component {
                         lightAccentColor: e.target.value
                     }, () => {
                         var accentColor = this.state.theme === 'light' ? this.state.lightAccentColor : this.state.darkAccentColor
-                        this.props.setDMOption('themeConfig', {
-                            accentColor: accentColor
-                        })
                         this.props.onChangeTheme('accentColor', accentColor)
                     })
                 }}
@@ -534,9 +517,6 @@ export class DataMessengerPage extends Component {
                         darkAccentColor: e.target.value
                     }, () => {
                         var accentColor = this.state.theme === 'light' ? this.state.lightAccentColor : this.state.darkAccentColor
-                        this.props.setDMOption('themeConfig', {
-                            accentColor: accentColor
-                        })
                         this.props.onChangeTheme('accentColor', accentColor)
                     })
 

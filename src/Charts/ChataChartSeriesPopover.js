@@ -114,6 +114,10 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick, s
         series['Quantity'] = [...indexList['QUANTITY']]
     }
 
+    if(indexList['PERCENT']){
+        series['Percent'] = [...indexList['PERCENT']]
+    }
+
     obj.createContent = () => {
         var wrapper = document.createElement('div');
         var buttonWrapper = document.createElement('div');

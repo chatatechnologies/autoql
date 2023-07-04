@@ -12,9 +12,6 @@ export class QueryOutputInputPage extends Component {
             authentication: {
                 ...this.props.authentication
             },
-            themeConfig: {
-                ...this.props.themeConfig
-            },
             autoCompletePlacement: 'bottom',
         })
 

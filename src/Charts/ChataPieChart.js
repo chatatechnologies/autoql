@@ -15,7 +15,8 @@ import {
     formatColumnName,
     formatData,
     formatChartData,
-    getFirstDateCol
+    getFirstDateCol,
+    getChartColorVars
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
@@ -33,6 +34,7 @@ export function createPieChart(
     var indexList = getIndexesByType(colsEnum);
     var xIndexes = [];
     var yIndexes = [];
+    var { chartColors } = getChartColorVars();
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
@@ -50,6 +52,8 @@ export function createPieChart(
         yIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
+    }else if(indexList['PERCENT']){
+        yIndexes = indexList['PERCENT'];
     }
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
@@ -73,13 +77,13 @@ export function createPieChart(
 
     var groups = {}
     var legendGroups = {}
-    for(let [key] of Object.entries(data)){
+    for(let [key, value] of Object.entries(data)){
         groups[key] = {
             isVisible: true
         }
-
         legendGroups[
-            formatChartData(key, cols[index1], options)
+            formatChartData(key, cols[index1], options) + ": " +
+            formatChartData(value, cols[index2], options)
         ] = {
             value: key
         }
@@ -162,7 +166,7 @@ export function createPieChart(
         for(let [key] of Object.entries(data)){
             colorLabels.push(key);
         }
-        var color = getColorScale(colorLabels, options.themeConfig.chartColors)
+        var color = getColorScale(colorLabels, chartColors)
 
         pieChartContainer.selectAll('path')
         .data(dataReady)
@@ -181,12 +185,12 @@ export function createPieChart(
             select(this)._groups[0][0].style.fill = color(d.data.key)
         })
         .attr('d', arc)
-        .style('fill-opacity', 0.85)
+        .style('fill-opacity', 1)
         .on('mouseover', function() {
-            select(this).style('fill-opacity', 1)
+            select(this).style('fill-opacity', 0.7)
         })
         .on('mouseout', function() {
-            select(this).style('fill-opacity', 0.85)
+            select(this).style('fill-opacity', 1)
         })
         .on('click', function() {
             svg
@@ -226,7 +230,7 @@ export function createPieChart(
     // define legend
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
-    .style('fill-opacity', '0.7')
+    .style('fill-opacity', '1')
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
@@ -245,7 +249,7 @@ export function createPieChart(
     }
 
     const legendWrapLength = width / 2 - 50
-    var legendScale = getColorScale(labels, options.themeConfig.chartColors)
+    var legendScale = getColorScale(labels, chartColors)
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical');
 
     svgLegend.call(legendOrdinal)
@@ -272,7 +276,7 @@ export function createPieChart(
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }
-        var unformatGroup = legendGroups[words.join(' ').split(':')[0]].value;
+        var unformatGroup = legendGroups[words.join(' ')].value;
         groups[unformatGroup].isVisible =
         !groups[unformatGroup].isVisible;
         createSlices();

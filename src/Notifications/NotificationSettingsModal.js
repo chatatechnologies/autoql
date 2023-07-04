@@ -4,7 +4,7 @@ import {
     INPUT_BUBBLES,
     INPUT_DELETE,
     WARNING_TRIANGLE,
-    CHECK
+    CHECK,
 } from '../Svg'
 import { convert } from '../RuleParser'
 import {
@@ -16,13 +16,14 @@ import {
     ChataModalStep,
     FrequencyBox,
     PopupContainer,
-    TimezoneSelector
+    TimezoneSelector,
+    InfoIcon
 } from './NotificationComponents'
 import { refreshTooltips } from '../Tooltips'
 import {
-    apiCallPost,
     getHeightForChildrens
 } from '../Utils'
+import { apiCallPost } from '../Api'
 import { strings } from '../Strings'
 
 export function NotificationSettingsModal(options, mode='create', rule={}){
@@ -51,6 +52,8 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     var titleContainer = new InputContainer(
         ['chata-notification-display-name-input']
     )
+    var infoIconTitle = new InfoIcon(strings.infoIconDataAlertName)
+
     var titleInput = new ChataInput('input', {
         placeholder: strings.dataAlertNamePlaceholder,
         maxlength: '50',
@@ -69,10 +72,11 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
     }
     titleContainer.appendChild(titleInput.input);
     titleContainer.appendChild(titleInput.spanIcon);
+    titleContainer.appendChild(infoIconTitle);
 
     var ruleContainer = document.createElement('div');
     var checkContainer = htmlToElement(`
-        <span class="autoql-vanilla-icon"></span>
+        <div class="autoql-vanilla-icon check-container"></div>
     `)
     var step1NextButton = new StepButton(
         'autoql-vanilla-chata-btn primary large autoql-vanilla-first-step-next-btn',
@@ -356,7 +360,7 @@ export function NotificationSettingsModal(options, mode='create', rule={}){
         var ruleGroups = convert(rule.expression, false);
         await ruleGroups.map(() => {
             newGroupLine.setExpression(ruleGroups)
-            validateFn()
+            // validateFn()
         })
 
         var groups = document.getElementsByClassName(
@@ -592,6 +596,8 @@ function GroupLine(params, expression=[]){
     var termError2 = new ruleTermError();
     var compareButton = document.createElement('button')
     conditionValueSelect.innerHTML = '>';
+    var infoIcon = new InfoIcon(strings.infoIconRuleContainer)
+    infoIcon.classList.add('autoql-vanilla-info-icon-query')
     var uuid = uuidv4();
     ruleContainer.conditionValue = '>';
     ruleContainer.termType = 'query';
@@ -825,6 +831,8 @@ function GroupLine(params, expression=[]){
     ruleContainer.appendChild(chataSelect);
     ruleContainer.appendChild(secondContainer);
     ruleContainer.appendChild(compareButton);
+    ruleContainer.appendChild(infoIcon);
+
     ruleContainer.appendChild(chataRuleDeleteBtn);
     ruleContainer.setAttribute('data-uuid', uuid);
 

@@ -8,7 +8,7 @@ Full documentation can be found [here](https://chata.readme.io/docs/vanilla-comp
 
 # Demo
 
-A live demo can be found [here](https://vanilla-autoql.herokuapp.com/)
+A live demo can be found [here](https://tubular-hamster-7f326f.netlify.app)
 
 # Components
 
@@ -44,10 +44,11 @@ Using npm:
 $ npm install autoql
 ```
 
-Import the widget
+Import the widget and styles
 
 ```
 import { DataMessenger } from 'autoql';
+import 'autoql/build/autoql.min.css';
 ```
 
 Instance the widget
@@ -58,11 +59,6 @@ var datamessenger = new DataMessenger('#datamessenger', {
         apiKey: "your-api-key",
         domain: "https://yourdomain.com",
         token: "yourToken"
-    },
-    themeConfig: {
-        chartColors: [
-            '#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'
-        ],
     },
     autoQLConfig: {
         debug: true
@@ -81,6 +77,7 @@ Dashboard Example
 
 ```
 import { Dashboard } from 'autoql';
+import 'autoql/dist/autoql.min.css';
 ```
 Mount Dashboard
 
@@ -90,9 +87,6 @@ var dashboard = new Dashboard('#dashboard', {
         apiKey: "your-api-key",
         domain: "https://yourdomain.com",
         token: "yourToken"
-    },
-    themeConfig: {
-        chartColors: ['#355C7D', '#6C5B7B', '#C06C84', '#f67280', '#F8B195'],
     },
     autoQLConfig: {
         debug: true

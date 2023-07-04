@@ -1,0 +1,33 @@
+.autoql-vanilla-reverse-translation-container{
+    color: var(--autoql-vanilla-text-color-primary);
+    background-color: var(--autoql-vanilla-background-color-secondary);
+    border-radius: 5px;
+    padding: 4px 6px !important;
+    margin: 2px !important;
+    min-height: 26px;
+    min-width: 300px;
+    margin-top: 6px !important;
+}
+
+.autoql-vanilla-reverse-translation-container span{
+    line-height: 22px;
+    letter-spacing: .04em;
+}
+
+.autoql-vanilla-reverse-translation-icon svg{
+    vertical-align: middle;
+    font-size: 16px;
+    margin: 0px !important;
+    padding: 0px !important;
+    height: unset !important;
+}
+
+.autoql-vanilla-condition-link {
+    background: none!important;
+    border: none;
+    padding: 0!important;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    color: var(--autoql-vanilla-accent-color)!important;
+}
