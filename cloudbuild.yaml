@@ -8,7 +8,7 @@ steps:
       - |
         pwd
         npm set progress=false
-        npm install
+        npm ci
         npm run test
         npx webpack --version
         npx webpack --mode=production --config webpack.config.js

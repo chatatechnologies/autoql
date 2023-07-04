@@ -9,6 +9,7 @@ import {
 import {
     ChataUtils
 } from '../ChataUtils'
+import { mergeBboxes } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -20,7 +21,7 @@ export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
         seriesIndexes.push(col.index);
     })
     var seriesData = [];
-    if(groupables.length === 1){
+    if(groupables.length === 1 && seriesCols.length === 1){
         var group = getGroupableField(json);
         var value = getNotGroupableField(json);
         for (var i = 0; i < data.length; i++) {
@@ -195,6 +196,18 @@ export const groupByIndex = (items, columns, labelIndex, seriesIndexes) => {
     return convertoTo2DChartData(obj);
 }
 
+export const convertToNumber = (value) => {
+  try {
+    const number = Number(value)
+    if (isNaN(number)) {
+      return 0
+    }
+    return number
+  } catch (error) {
+    return 0
+  }
+}
+
 export const sumMultiSeries = (
     items, labelIndex, key, serieIndex, multiSerieIndex, multiSerieValue
 ) => {
@@ -203,7 +216,7 @@ export const sumMultiSeries = (
         const label = item[labelIndex]
         const serie = item[multiSerieIndex]
         if(label == key && serie == multiSerieValue){
-            sum += item[serieIndex];
+            sum += convertToNumber(item[serieIndex]);
         }
     })
     return sum;
@@ -214,7 +227,7 @@ export const sumEquals = (items, labelIndex, key, serieIndex) => {
     items.forEach((item) => {
         const label = item[labelIndex];
         if(label === key){
-            sum += item[serieIndex];
+            sum += convertToNumber(item[serieIndex]);
         }
     })
     return sum;
@@ -345,9 +358,8 @@ export const getIndexesByType = (cols) => {
     return output;
 }
 
-export const getMetadataElement = (component, isDataMessenger) => {
-    if(isDataMessenger)return component.parentElement.parentElement
-    else return component.parentElement.parentElement
+export const getMetadataElement = (component) => {
+    return component.parentElement.parentElement
 }
 
 
@@ -426,7 +438,7 @@ export const styleLegendTitleWithBorder = (svg, params, onClick) => {
         .select('.legendTitle')
         .node()
         .getBBox()
-    } catch (error) { console.log(error) }
+    } catch (error) { console.error(error) }
 
     svg.append('rect')
     .attr('x', titleBBox.x - 10)
@@ -446,4 +458,27 @@ export const styleLegendTitleNoBorder = (svg) => {
     .select('.legendTitle')
     .style('font-weight', 'bold')
     .style('transform', 'translate(0, -5px)')
+}
+
+export const getLabelBBox = (axesGrid) => {
+    let labelsBBox;
+    const labelBboxes = []
+    axesGrid.select('.x-axis')
+      .selectAll('g.tick text')
+      .each(function () {
+        const textBoundingRect = select(this).node().getBoundingClientRect()
+        labelBboxes.push({
+          left: textBoundingRect.left - xDiff,
+          bottom: textBoundingRect.bottom - yDiff,
+          right: textBoundingRect.right - xDiff,
+          top: textBoundingRect.top - yDiff,
+        })
+      })
+
+    if (labelBboxes) {
+      const allLabelsBbox = mergeBboxes(labelBboxes)
+      labelsBBox = { ...allLabelsBbox }
+    }
+
+    return labelsBBox
 }

@@ -32,7 +32,9 @@ import {
     formatChartData,
     closeAllChartPopovers,
     getFirstDateCol,
-    getGroupableCount
+    getGroupableCount,
+    getChartLeftMargin,
+    getChartColorVars
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -55,11 +57,12 @@ export function createLineChart(
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
-    let chartWidth;
+    let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
+    var { chartColors } = getChartColorVars();
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -78,6 +81,8 @@ export function createLineChart(
         yIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
+    }else if(indexList['PERCENT']){
+        yIndexes = indexList['PERCENT'];
     }
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
@@ -114,6 +119,8 @@ export function createLineChart(
             value: group
         }
     })
+    var hasLegend = false;
+
     var hasLegend = allGroup.length > 1;
     if(hasLegend && allGroup.length < 3){
         margin.bottom = 70;
@@ -123,7 +130,7 @@ export function createLineChart(
 
     var colorScale = getColorScale(
         allGroup,
-        options.themeConfig.chartColors
+        chartColors
     );
 
     data.map(function(d) {
@@ -149,7 +156,8 @@ export function createLineChart(
         });
     }
     data.forEach((item) => {
-        allLengths.push(formatLabel(item.label).length);
+        const formattedValue = formatData(item.label, cols[index2], options)
+        allLengths.push(formatLabel(formattedValue).length);
     });
 
     let longestString = 0;
@@ -217,14 +225,18 @@ export function createLineChart(
         'chata-hidden-scrollbox'
     );
 
-
+    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
+    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
+    : (margin.left - 15)
+    const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
+    chartWidth -= stringWidth
     var svg = select(component)
     .append("svg")
     .attr("width", width + margin.left + margin.right)
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + (margin.left+ stringWidth) + "," + margin.top + ")");
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -232,7 +244,7 @@ export function createLineChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right + 5)
+    .attr('y', -(labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -249,7 +261,7 @@ export function createLineChart(
         const xWidthRect = getStringWidth(col2) + paddingRect;
 
         labelYContainer.append('rect')
-        .attr('x', 66)
+        .attr('x', labelContainerPos)
         .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
         .attr('height', xWidthRect + paddingRect)
         .attr('width', 24)
@@ -390,7 +402,7 @@ export function createLineChart(
     var yAxis = getAxisLeft(y);
 
     svg.append("g")
-    .attr("class", "grid")
+    .attr("class", "autoql-vanilla-axes-grid")
     .call(yAxis.tickFormat(function(d){
         return formatChartData(d, cols[index1], options)}
     )
@@ -426,7 +438,6 @@ export function createLineChart(
         .attr("stroke", function(d){ return colorScale(d.name) })
         .style("stroke-width", 1)
         .style("fill", "none")
-        .attr('opacity', '0.7')
 
         points = svg
         .selectAll("dot")
@@ -443,6 +454,7 @@ export function createLineChart(
         })
         .enter()
         .append("circle")
+        .attr('class', 'autoql-vanilla-chart-circle')
         .each(function (d, i) {
             if(groupableCount === 2){
                 let index3 = index2 === 0 ? 1 : 0
@@ -512,7 +524,6 @@ export function createLineChart(
         .attr("r", 3)
         .attr('stroke', function(d) { return colorScale(d.name) })
         .attr('stroke-width', '2')
-        .attr('stroke-opacity', '0.7')
         .attr("fill", 'white')
         .attr('class', `${tooltipClass} line-dot`)
         .style('opacity', '0')
@@ -526,11 +537,10 @@ export function createLineChart(
         })
         var legendScale = getColorScale(
             legendValues,
-            options.themeConfig.chartColors
+            chartColors
         )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '0.7')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
 

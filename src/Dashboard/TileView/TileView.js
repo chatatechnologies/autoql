@@ -4,8 +4,6 @@ import {
     uuidv4,
     createTableContainer,
     formatData,
-    apiCall,
-    apiCallGet,
     closeAllToolbars,
     cloneObject,
     getNumberOfGroupables,
@@ -13,11 +11,15 @@ import {
     getSafetynetUserSelection,
     getSupportedDisplayTypes,
     getRecommendationPath,
-    apiCallPut,
     htmlToElement,
     getGroupables,
     showBadge
 } from '../../Utils'
+import {
+    apiCall,
+    apiCallGet,
+    apiCallPut
+} from '../../Api'
 import { ChataTable, ChataPivotTable } from '../../ChataTable'
 import { ChataPopover } from '../../ChataComponents'
 import { ErrorMessage } from '../../ErrorMessage'

@@ -26,7 +26,9 @@ import {
     formatChartData,
     formatColumnName,
     closeAllChartPopovers,
-    formatData
+    formatData,
+    getChartLeftMargin,
+    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 import { area } from 'd3-shape'
@@ -40,6 +42,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
+    var { chartColors } = getChartColorVars();
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -141,6 +144,19 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     }else{
         margin.bottomChart = 13;
     }
+    var maxValue = max(data, function(d) {
+        var sum = 0;
+        for (var [key, value] of Object.entries(d)){
+            if(key == 'group')continue;
+            sum += parseFloat(value);
+        }
+        return sum;
+    });
+
+    const stringWidth = getChartLeftMargin(maxValue.toString())
+    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
+    : (margin.left - 15)
+    chartWidth -= stringWidth
 
     var svg = select(component)
     .append("svg")
@@ -148,15 +164,18 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")");
+    "translate(" + ( margin.left + stringWidth) + "," + margin.top + ")");
+
 
     svg.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right)
+    .attr('y', -(labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
     .text(col3);
+
+    var axesGrid = svg.append("g").attr('class', 'autoql-vanilla-axes-grid')
 
     // X AXIS
     var labelXContainer = svg.append('g');
@@ -233,9 +252,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var x = SCALE_BAND()
     setDomainRange(
         x,
-        groups.map(function(element){
-            return element;
-        }),
+        groups,
         0,
         chartWidth,
         false,
@@ -250,8 +267,10 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     if(xTickValues.length > 0){
         xAxis.tickValues(xTickValues);
     }
+
     if(rotateLabels){
-        svg.append("g")
+        axesGrid.append("g")
+        .classed('x-axis', true)
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatLabel(
@@ -262,7 +281,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
     }else{
-        svg.append("g")
+        axesGrid.append("g")
+        .classed('x-axis', true)
         .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatLabel(
@@ -273,31 +293,21 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .style("text-anchor", "center");
     }
 
-    var maxValue = max(data, function(d) {
-        var sum = 0;
-        for (var [key, value] of Object.entries(d)){
-            if(key == 'group')continue;
-            sum += parseFloat(value);
-        }
-        return sum;
-    });
-
     var y = SCALE_LINEAR()
     .domain([0, maxValue])
     .range([ height - margin.bottomChart, 0]).nice();
-    var yAxis = getAxisLeft(y);
-
-    var color = getColorScale(subgroups, options.themeConfig.chartColors)
-
-    svg.append("g")
-    .attr("class", "grid")
-    .call(yAxis.tickFormat(function(d){
+    var yAxis = getAxisLeft(y)
+        .tickFormat(function(d){
             return formatChartData(d, cols[notGroupableIndex], options)}
         )
         .tickSize(-chartWidth)
-    );
-    svg.append("g")
-    .call(yAxis).select(".domain").remove();
+
+    var color = getColorScale(subgroups, chartColors)
+
+    axesGrid.append("g")
+        .classed('y-axis', true)
+        .call(yAxis);
+
     let layers;
     let layerPoints;
 
@@ -309,11 +319,11 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         if(layers)layers.remove();
         if(layerPoints)layerPoints.remove();
 
-        layers = svg
+        layers = axesGrid
         .selectAll("mylayers")
         .data(stackedData)
         .enter()
-        .append("path")
+        .insert("path", ":first-child")
         .style("fill", function(d) {
             if(d.key) return color(d.key); else return 'transparent'
         })
@@ -343,7 +353,6 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
             .y0(function(d) { return y(d[0]) || 0; })
             .y1(function(d) { return y(d[1]) || 0; })
         )
-        .attr('fill-opacity', '0.7')
 
         layerPoints = svg.selectAll("circle")
         .data(points)
@@ -353,12 +362,8 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         .attr("r", 4)
         .attr('class', 'line-dot')
         .attr('stroke-width', '3')
-        .attr('stroke-opacity', '0.7')
         .attr("fill", 'transparent')
         .attr('stroke', function() {'transparent' })
-        // .attr("stroke", (d) => color(d.group))
-        // .attr('fill', 'white')
-        .attr("fill-opacity", '1')
         .each(function(d, i){
             var unformatvalue1 = d.key
             var unformatvalue2 = d.group
@@ -384,7 +389,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                 .attr('data-unformatvalue1', unformatvalue1)
                 .attr('data-unformatvalue2', unformatvalue2)
                 .attr('data-unformatvalue3', d.valueY)
-                .attr('class', 'tooltip-3d')
+                .attr('class', 'tooltip-3d line-dot')
             }
         })
         .on("mouseover", function(d){
@@ -416,7 +421,6 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
 
     var svgLegend = svg.append('g')
     .style('fill', 'currentColor')
-    .style('fill-opacity', '0.7')
     .style('font-family', 'inherit')
     .style('font-size', '10px')
 
@@ -425,7 +429,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         subgroups.map(elem => {
             return formatChartData(elem, cols[groupableIndex1], options);
         }),
-        options.themeConfig.chartColors
+        chartColors
     )
     var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical')
 

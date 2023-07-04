@@ -11,7 +11,7 @@
 
 .autoql-vanilla-axis-selector-container {
     z-index: 100000001;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
     color: var(--autoql-vanilla-text-color-primary);
     padding: 5px 0;
     max-height: 287px;

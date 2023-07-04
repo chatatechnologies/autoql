@@ -1,7 +1,10 @@
 import { ChataUtils } from '../ChataUtils'
 import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
-import axios from 'axios'
+import {
+    PRECISION_TYPES,
+    DAYJS_PRECISION_FORMATS
+} from '../Constants'
 import _get from 'lodash.get'
 import { strings } from '../Strings'
 import dayjs from './dayjsPlugins'
@@ -16,6 +19,7 @@ export function formatData(val, col, allOptions={}){
     const options = allOptions.dataFormatting;
     var value = '';
     let type = col['type'];
+    const { percentDecimals } = allOptions.dataFormatting
     switch (type) {
         case 'DOLLAR_AMT':
             val = parseFloat(val);
@@ -27,52 +31,42 @@ export function formatData(val, col, allOptions={}){
             }).format(val);
         break;
         case 'DATE':
-            var colName = col.name;
-            if(!val)return ''
-            if(colName.includes('year')){
-                value = dayjs.utc(parseInt(val)*1000).format('YYYY');
-            }else if(colName.includes('month')){
-                value = dayjs.utc(parseInt(val)*1000).format(
-                    options.monthYearFormat
-                );
-            }else{
-                value = dayjs.utc(parseInt(val)*1000).format(
-                    options.dayMonthYearFormat
-                );
-            }
+            value = formatDateType(val, col, options, true)
+        break;
+        case 'DATE_STRING':
+            value = formatDateStringType(val, col, options)
         break;
         case 'PERCENT':
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
-                val = parseFloat(val) * 100;
+                val = parseFloat(val);
                 if(!isNaN(val)){
-                    value =  val.toFixed(2) + '%';
+                    value =  val.toFixed(percentDecimals) + '%';
                 }else{
                     value = '';
                 }
             }else{
-                value = parseFloat(val).toFixed(4);
+                value = parseFloat(val).toFixed(percentDecimals);
             }
         break;
         case 'QUANTITY':
-            var n = Math.abs(parseFloat(val)); // Change to positive
-            var decimal = n - Math.floor(n);
-            if(decimal > 0){
-                value = parseFloat(val).toFixed(options.quantityDecimals);
-            }else{
-                value = parseInt(val);
+            if (!isNaN(parseFloat(val))) {
+                value = new Intl.NumberFormat(options.languageCode, {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 0,
+                }).format(val)
             }
-
         break;
         case 'RATIO':
+            const { percentDecimals } = allOptions.dataFormatting
             if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
                 val = parseFloat(val) * 100;
                 if(!isNaN(val)){
-                    value =  val.toFixed(2) + '%';
+                    value =  val.toFixed(percentDecimals) + '%';
                 }else{
                     value = '';
                 }
             }else{
-                value = parseFloat(val).toFixed(4);
+                value = parseFloat(val).toFixed(percentDecimals);
             }
         break;
         case 'NUMBER':
@@ -82,9 +76,6 @@ export function formatData(val, col, allOptions={}){
             }else{
                 value = '';
             }
-        break;
-        case 'DATE_STRING':
-            value = formatStringDate(val, options)
         break;
         default:
             if(Object.prototype.toString.call(val) === '[object Object]'){
@@ -101,36 +92,317 @@ export const isDayJSDateValid = date => {
   return date !== 'Invalid Date'
 }
 
+export const isNumber = (str) => {
+    return /^\d+$/.test(str)
+}  
+
+export const formatDateType = (element, column = {}, config = {}, isDateObj) => {
+    if (isNumber(element)) {
+      return formatEpochDate(element, column, config)
+    }
+  
+    return formatISODateWithPrecision(element, column, config)
+  }
+  
+  export const formatDateStringType = (element, column = {}, config = {}, scale) => {
+    if (column.precision) {
+      return formatStringDateWithPrecision(element, column, config)
+    }
+  
+    return formatStringDate(element, config)
+  }
+  
+  export const formatISODateWithPrecision = (value, col = {}, config = {}) => {
+    if (!value) {
+      return undefined
+    }
+  
+    const precision = col.precision
+    const dayMonthYearFormat = config.dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
+    const dateDayJS = dayjs.utc(value).utc()
+  
+    if (!dateDayJS.isValid()) {
+      return value
+    }
+  
+    let date = dateDayJS.format(dayMonthYearFormat)
+  
+    try {
+      switch (precision) {
+        case PRECISION_TYPES.DAY: {
+          // default
+          break
+        }
+        case PRECISION_TYPES.WEEK: {
+          const dateJSStart = dateDayJS.startOf('week').format('MMM D')
+          const dateJSEnd = dateDayJS.endOf('week').format('MMM D')
+          const week = dateDayJS.week()
+          const year = dateDayJS.format('YYYY')
+          date = `${dateJSStart} - ${dateJSEnd}, ${year} (Week ${week})`
+          break
+        }
+        case PRECISION_TYPES.MONTH: {
+          const monthYearFormat = config.monthYearFormat || dataFormattingDefault.monthYearFormat
+          date = dateDayJS.format(monthYearFormat)
+          break
+        }
+        case PRECISION_TYPES.QUARTER: {
+          const quarter = dateDayJS.quarter()
+          const year = dateDayJS.format('YYYY')
+          date = `${year}-Q${quarter}`
+          break
+        }
+        case PRECISION_TYPES.YEAR: {
+          date = dateDayJS.format('YYYY')
+          break
+        }
+        case PRECISION_TYPES.DATE_HOUR: {
+          date = dateDayJS.format(`${dayMonthYearFormat} h:00A`)
+          break
+        }
+        case PRECISION_TYPES.DATE_MINUTE: {
+          date = dateDayJS.format(`${dayMonthYearFormat} h:mmA`)
+          break
+        }
+        default: {
+          break
+        }
+      }
+      return date
+    } catch (error) {
+      console.error(error)
+    }
+}
+
+export const formatEpochDate = (value, col = {}, config = {}) => {
+    if (!value) {
+      // If this is 0, its most likely not the right date
+      // Any other falsy values are invalid
+      return undefined
+    }
+  
+    try {
+      const { monthYearFormat, dayMonthYearFormat } = config
+      const year = 'YYYY'
+      const monthYear = monthYearFormat || dataFormattingDefault.monthYearFormat
+      const dayMonthYear = dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
+  
+      // Use title to determine significant digits of date format
+      const title = col.title
+  
+      let dayJSObj
+      if (isNaN(parseFloat(value))) {
+        dayJSObj = dayjs.utc(value).utc()
+      } else {
+        dayJSObj = dayjs.unix(value).utc()
+      }
+  
+      if (!dayJSObj.isValid()) {
+        return value
+      }
+  
+      let date = dayJSObj.format(dayMonthYear)
+  
+      if (isNaN(parseFloat(value))) {
+        // Not an epoch time. Try converting using dayjs
+        if (title && title.toLowerCase().includes('year')) {
+          date = dayJSObj.format(year)
+        } else if (title && title.toLowerCase().includes('month')) {
+          date = dayJSObj.format(monthYear)
+        }
+        date = dayJSObj.format(dayMonthYear)
+      } else if (title && title.toLowerCase().includes('year')) {
+        date = dayJSObj.format(year)
+      } else if (title && title.toLowerCase().includes('month')) {
+        date = dayJSObj.format(monthYear)
+      }
+  
+      return date
+    } catch (error) {
+      console.error(error)
+      return value
+    }
+}
+  
+const formatDOW = (value, col) => {
+    let dowStyle = col.dow_style
+  
+    if (!dowStyle) {
+      dowStyle = 'NUM_1_MON'
+    }
+  
+    let formattedValue = value
+    let weekdayNumber = Number(value)
+    switch (dowStyle) {
+      case 'NUM_1_MON': {
+        const weekdays = WEEKDAY_NAMES_MON
+        const index = weekdayNumber - 1
+        if (index >= 0) {
+          formattedValue = weekdays[index]
+        } else {
+          console.warn(`dow style is NUM_1_MON but the value could not be converted to a number: ${value}`)
+        }
+        break
+      }
+      case 'NUM_1_SUN': {
+        const weekdays = WEEKDAY_NAMES_SUN
+        const index = weekdayNumber - 1
+        if (index >= 0) {
+          formattedValue = weekdays[index]
+        } else {
+          console.warn(`dow style is NUM_1_SUN but the value could not be converted to a number: ${value}`)
+        }
+        break
+      }
+      case 'NUM_0_MON': {
+        const weekdays = WEEKDAY_NAMES_MON
+        if (weekdayNumber >= 0) {
+          formattedValue = weekdays[weekdayNumber]
+        } else {
+          console.warn(`dow style is NUM_0_MON but the value could not be converted to a number: ${value}`)
+        }
+        break
+      }
+      case 'NUM_0_SUN': {
+        const weekdays = WEEKDAY_NAMES_SUN
+        if (weekdayNumber >= 0) {
+          formattedValue = weekdays[weekdayNumber]
+        } else {
+          console.warn(`dow style is NUM_0_SUN but the value could not be converted to a number: ${value}`)
+        }
+        break
+      }
+      case 'ALPHA_MON':
+      case 'ALPHA_SUN': {
+        const weekday = WEEKDAY_NAMES_MON.find((weekday) => weekday.toLowerCase().includes(value.trim().toLowerCase()))
+        if (weekday) {
+          formattedValue = weekday
+        } else {
+          console.warn(`dow style is ALPHA but the value could not be matched to a weekday name: ${value}`)
+        }
+        break
+      }
+      default: {
+        console.warn(`could not format dow value. dow_style was not recognized: ${col.dow_style}`)
+        break
+      }
+    }
+  
+    return formattedValue
+}
+  
+export const getDayjsObjForStringType = (value, col) => {
+    if (!value) {
+      return undefined
+    }
+  
+    try {
+      switch (col.precision) {
+        case 'DOW': {
+          return undefined
+        }
+        case 'HOUR':
+        case 'MINUTE': {
+          return dayjs.utc(value, 'THH:mm:ss.SSSZ').utc()
+        }
+        case 'MONTH': {
+          return undefined
+        }
+        default: {
+          return undefined
+        }
+      }
+    } catch (error) {
+      console.error(error)
+      return undefined
+    }
+}
+  
+export const formatStringDateWithPrecision = (value, col, config = {}) => {
+    if (!value) {
+      return undefined
+    }
+  
+    let formattedValue = value
+    try {
+      switch (col.precision) {
+        case 'DOW': {
+          formattedValue = formatDOW(value, col)
+          break
+        }
+        case 'HOUR': {
+          const dayjsTime = dayjs.utc(value, 'THH:mm:ss.SSSZ').utc()
+          if (dayjsTime.isValid()) {
+            formattedValue = dayjsTime.format('h:00A')
+          }
+          break
+        }
+        case 'MINUTE': {
+          const dayjsTime = dayjs.utc(value, 'THH:mm:ss.SSSZ').utc()
+          if (dayjsTime.isValid()) {
+            formattedValue = dayjsTime.format('h:mmA')
+          }
+          break
+        }
+        case 'MONTH': {
+          // This shouldnt be an ISO string since its a DATE_STRING, but
+          // if it is valid, we should use it
+          formattedValue = value
+          break
+        }
+        default: {
+          formattedValue = value
+          break
+        }
+      }
+      return formattedValue
+    } catch (error) {
+      console.error(error)
+      return value
+    }
+}  
+
 export const formatStringDate = (value, config) => {
     if (!value) {
-        return undefined
+      return undefined
     }
-
+  
     if (value && typeof value === 'string') {
-        const dateArray = value.split('-')
-        const year = dateArray[0]
-        const month = dateArray[1]
-        const day = dateArray[2]
-
-        const { monthYearFormat, dayMonthYearFormat } = config
-        const monthYear = monthYearFormat || 'MMM YYYY'
-        const dayMonthYear = dayMonthYearFormat || 'll'
-
-        if (day) {
-            const date = dayjs.utc(value).format(dayMonthYear)
-            if (isDayJSDateValid(date)) {
-                return date
-            }
-        } else if (month) {
-            const date = dayjs.utc(value).format(monthYear)
-            if (isDayJSDateValid(date)) {
-                return date
-            }
-        } else if (year) {
-            return year
-        }
+      const dateArray = value.split('-')
+      const year = _get(dateArray, '[0]')
+      const day = _get(dateArray, '[2]')
+  
+      let month
+      let week
+      if (_get(dateArray, '[1]', '').includes('W')) {
+        week = _get(dateArray, '[1]')
+      } else {
+        month = _get(dateArray, '[1]')
+      }
+  
+      const { monthYearFormat, dayMonthYearFormat } = config
+      const monthYear = monthYearFormat || dataFormattingDefault.monthYearFormat
+      const dayMonthYear = dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
+      const dayJSObj = dayjs.utc(value).utc()
+  
+      if (!dayJSObj.isValid()) {
+        return value
+      }
+  
+      let date = value
+      if (day) {
+        date = dayJSObj.format(dayMonthYear)
+      } else if (month) {
+        date = dayJSObj.format(monthYear)
+      } else if (week) {
+        // dayjs doesn't format this correctly
+      } else if (year) {
+        date = year
+      }
+      return date
     }
-
+  
+    // Unable to parse...
     return value
 }
 
@@ -155,7 +427,7 @@ export function copyTextToClipboard(text) {
     try {
         document.execCommand('copy');
     } catch (err) {
-        console.log(err);
+        console.error(err);
     }
 
     document.body.removeChild(textArea);
@@ -716,6 +988,13 @@ export function getStringWidth(string){
     return width;
 }
 
+export function getChartLeftMargin(yValue){
+    const { length } = yValue
+    if(length < 9)return 0
+
+    return yValue.length * 2
+}
+
 export function showBadge(json){
     const cols = json.data.columns
     for (let i = 0; i < cols.length; i++) {
@@ -782,7 +1061,7 @@ export function allColHiddenMessage(table){
         table.style.display = 'inline-block';
         csvHandlerOption.style.display = 'block';
         csvCopyOption.style.display = 'block';
-        filterOption.style.display = 'inline-block';
+        filterOption.style.display = 'flex';
         table.tabulator.redraw();
     }
 }
@@ -862,139 +1141,6 @@ export function getFirstNotificationLine (step1) {
 
 export function getRecommendationPath(options, text) {
     return `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${text}&scope=narrow`;
-}
-
-
-export const apiCall = (val, options, source, userSelection=undefined) => {
-    const {
-        token,
-        apiKey,
-        domain
-    } = options.authentication
-
-    const {
-        test
-    } = options.autoQLConfig
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
-    const url = `${domain}/autoql/api/v1/query?key=${apiKey}`
-
-    const data = {
-        text: val,
-        source: source,
-        test: test,
-        translation: "include"
-    }
-
-    if(userSelection)data.user_selection = userSelection
-
-    return axios.post(url, data, config).then((response) => {
-        return Promise.resolve(response)
-    }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
-}
-
-export const apiCallPost = (url, data, options) => {
-    const {
-        token,
-    } = options.authentication
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
-    return axios.post(url, data, config).then((response) => {
-        return Promise.resolve(response)
-    }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
-}
-
-export const apiCallPut = (url, data, options) => {
-    const {
-        token,
-    } = options.authentication
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
-    return axios.put(url, data, config).then((response) => {
-        return Promise.resolve(response)
-    }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
-}
-
-export const apiCallDelete = (url, options) => {
-    const {
-        token,
-    } = options.authentication
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    }
-
-    return axios.delete(url, config).then((response) => {
-        return Promise.resolve(response)
-    }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
-}
-
-export const apiCallGet = (url, options, extraHeaders={}) => {
-    const {
-        token
-    } = options.authentication
-
-    const config = {
-        headers: {
-            Authorization: `Bearer ${token}`,
-            ...extraHeaders
-        },
-    }
-
-    return axios.get(url, config).then((response) => {
-        return Promise.resolve(response)
-    }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
-}
-
-export const apiCallNotificationCount = (url, options) => {
-    const {
-        token
-    } = options.authentication
-
-    const axiosInstance = axios.create({
-        headers: {
-            Authorization: `Bearer ${token}`,
-        },
-    })
-    const config = {
-        timeout: 180000,
-    }
-
-    return axiosInstance
-    .get(url, config)
-    .then((response) => {
-        return Promise.resolve(response)
-    })
-    .catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
-    })
 }
 
 export function getSVGString(svgNode) {
@@ -1164,7 +1310,7 @@ export const svgToPng = (svgElement, margin = 0, fill) => {
                 resolve(canvas.toDataURL('image/png', 1))
             }
             img.onerror = function(error) {
-                console.log(error);
+                console.error(error);
             }
 
             // load image

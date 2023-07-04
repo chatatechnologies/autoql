@@ -1,0 +1,29 @@
+.autoql-vanilla-filter-locking-line{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    margin: 7px 0px !important;
+    color: var(--autoql-vanilla-text-color-primary);
+}
+
+.autoql-vanilla-condition-table-list-item{
+    margin-right: 25px !important;
+    max-width: 350px;
+    font-family: var(--autoql-vanilla-font-family);
+    font-size: 14px;
+}
+
+.autoql-vanilla-remove-condition-button{
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.autoql-vanilla-slider-wrapper{
+    margin-right: 25px !important;
+}
+
+.autoql-vanilla-remove-condition-button:hover{
+    color: var(--autoql-vanilla-danger-color);
+}

@@ -11,9 +11,6 @@ export class NotificationListPage extends Component{
             authentication: {
                 ...this.props.authentication
             },
-            themeConfig: {
-                ...this.props.themeConfig
-            },
         })
 
     }

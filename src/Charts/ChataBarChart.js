@@ -30,7 +30,8 @@ import {
     formatChartData,
     closeAllChartPopovers,
     getFirstDateCol,
-    getGroupableCount
+    getGroupableCount,
+    getChartColorVars
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -53,11 +54,12 @@ export function createBarChart(
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
-    let chartWidth;
+    let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
+    var { chartColors } = getChartColorVars();
 
     const legendBoxMargin = 15;
     if(indexList['STRING']){
@@ -76,7 +78,10 @@ export function createBarChart(
         xIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         xIndexes = indexList['QUANTITY'];
+    }else if(indexList['PERCENT']){
+        xIndexes = indexList['PERCENT'];
     }
+
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
@@ -145,6 +150,7 @@ export function createBarChart(
         }
     })
 
+    var hasLegend = false;
     var hasLegend = groupNames.length > 1;
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 80;
@@ -176,7 +182,8 @@ export function createBarChart(
         }
     }else{
         data.forEach((item) => {
-            allLengths.push(formatLabel(item.label).length);
+            const formattedValue = formatData(item.label, cols[index2], options)
+            allLengths.push(formatLabel(formattedValue).length);
         });
     }
     let longestStringWidth = Math.max.apply(null, allLengths);
@@ -242,7 +249,7 @@ export function createBarChart(
 
     var colorScale = getColorScale(
         groupNames,
-        options.themeConfig.chartColors
+        chartColors
     );
 
 
@@ -403,7 +410,7 @@ export function createBarChart(
     }
 
     svg.append("g")
-        .attr("class", "grid")
+        .attr("class", "autoql-vanilla-axes-grid")
         .call(xAxis
             .tickSize(height - margin.bottomChart)
             .tickFormat("")
@@ -411,7 +418,6 @@ export function createBarChart(
 
     svg.append("g")
     .attr("class", "y axis")
-    .style('opacity','1')
     .call(yAxis.tickFormat(function(d){
         let fLabel = formatChartData(d, cols[index2], options);
         if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
@@ -421,10 +427,10 @@ export function createBarChart(
     function createBars(){
         var rectIndex = 0;
         var cloneData = getVisibleSeries(data);
-        if(slice)slice.remove()
-        slice = svg.selectAll(".slice")
+        if(slice) slice.remove()
+        slice = svg.select('.autoql-vanilla-axes-grid').selectAll(".autoql-vanilla-chart-bar")
         .data(cloneData)
-        .enter().append("g")
+        .enter().insert("g", ":first-child")
         .attr("class", "g")
         .attr("transform",function(d) {
             return "translate(0,"+ y0(d.label) +")";
@@ -521,8 +527,7 @@ export function createBarChart(
         .attr("x", function(d) { return getXRect(d) })
         .attr("y", function(d) { return y1(d.group); })
         .attr("height", function() { return getBandWidth(y1) })
-        .attr('fill-opacity', '0.7')
-        .attr('class', `${tooltipClass} bar`)
+        .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
         .style("fill", function(d) { return colorScale(d.group) })
 
         tooltipCharts();
@@ -534,11 +539,10 @@ export function createBarChart(
         })
         var legendScale = getColorScale(
             legendValues,
-            options.themeConfig.chartColors
+            chartColors
         )
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '0.7')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
         const legendWrapLength = width / 2 - 50

@@ -1,9 +1,9 @@
 import {
     uuidv4,
     createTableContainer,
-    apiCallPost,
     getNumberOfGroupables
 } from '../../Utils'
+import { apiCallPost } from '../../Api'
 import {
     getGroupableFields
 } from '../../Charts/ChataChartHelpers'

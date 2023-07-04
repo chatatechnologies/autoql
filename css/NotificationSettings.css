@@ -46,14 +46,32 @@
     color: var(--autoql-vanilla-accent-color,#26a7df);
 }
 
-.chata-notification-display-name-input, .chata-notification-message-input {
+.chata-notification-message-input {
     width: 100%;
+}
+
+.chata-notification-display-name-input{
+    width: 80%;
+    display: flex;
+}
+
+.autoql-vanilla-chata-icon-info svg{
+    font-size: 24px !important;
+    color: rgb(38, 167, 223) !important;
+    margin-top: 5px;
+}
+
+.autoql-vanilla-info-icon-query svg{
+    margin-top: -5px;
 }
 
 .chata-icon svg {
     margin-bottom: -.1em;
 }
 
+.check-container{
+    width: 75%;
+}
 
 .chata-step-dot {
     position: absolute;

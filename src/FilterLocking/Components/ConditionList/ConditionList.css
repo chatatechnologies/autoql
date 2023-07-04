@@ -1,0 +1,19 @@
+.autoql-vanilla-condition-list{
+    padding: 0 !important;
+    margin: 0 auto;
+    min-height: 182px;
+}
+
+.autoql-vanilla-empty-condition-list{
+    text-align: center;
+    padding: 20px !important;
+    height: 140px !important;
+    font-family: var(--autoql-vanilla-font-family);
+    font-size: 12px;
+}
+
+.autoql-vanilla-empty-condition-list p {
+    margin-top: 20px!important;
+    vertical-align: middle;
+    color: var(--autoql-vanilla-text-color-primary);
+}

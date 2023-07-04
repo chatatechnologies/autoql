@@ -1,0 +1,54 @@
+.autoql-vanilla-filter-locking-view{
+    right: 20px !important;
+    padding: 15px 20px !important;
+    min-width: 450px;
+    max-width: 95vw;
+    min-height: 0;
+    max-height: 95vh;
+    width: 450px;
+    background: var(--autoql-vanilla-background-color-secondary);
+}
+
+.autoql-vanilla-close-filter-locking{
+    color: var(--autoql-vanilla-text-color-primary) !important;
+    flex: auto;
+}
+
+.autoql-vanilla-filter-locking-title-container{
+    display: flex;
+    width: 100%;
+    padding-top: 4px !important;
+    padding-left: 6px !important;
+}
+
+.autoql-vanilla-filter-locking-title-container h3 {
+    color: var(--autoql-vanilla-text-color-primary);
+    width: 95%;
+    font-family: var(--autoql-vanilla-font-family);
+    margin-bottom: 0;
+    margin-top: 0;
+    display: block;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.autoql-vanilla-filter-locking-title-container h3 span svg {
+    color: var(--autoql-vanilla-accent-color) !important;
+    margin: -3px 0px !important;
+}
+
+.autoql-vanilla-close-filter-locking{
+    cursor: pointer;
+    text-align: left;
+    font-size: 20px;
+}
+
+.autoql-vanilla-condition-lock-menu-footer {
+    bottom: 0;
+    right: 0;
+}
+
+.autoql-vanilla-condition-lock-menu-footer button {
+    float: right;
+    margin: 6px!important;
+}

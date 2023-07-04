@@ -15,7 +15,7 @@ import {
 import { strings } from '../../Strings'
 import Split from 'split.js'
 import './Tile.css'
-
+import { refreshTooltips } from '../../Tooltips'
 
 export function Tile(dashboard, options){
     var item = document.createElement('div')
@@ -342,6 +342,7 @@ export function Tile(dashboard, options){
         vizToolbarSplitButton.setAttribute(
             'data-tippy-content', tooltip
         )
+        refreshTooltips()
     }
 
     item.refreshViews = () => {

@@ -11,9 +11,6 @@ export class DataAlertsSettingsPage extends Component {
             authentication: {
                 ...this.props.authentication
             },
-            themeConfig: {
-                ...this.props.themeConfig
-            },
         })
     }
 

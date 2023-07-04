@@ -30,7 +30,9 @@ import {
     formatChartData,
     closeAllChartPopovers,
     getFirstDateCol,
-    getGroupableCount
+    getGroupableCount,
+    getChartLeftMargin,
+    getChartColorVars,
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -54,11 +56,12 @@ export function createColumnChart(
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
-    let chartWidth;
+    let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
+    var { chartColors } = getChartColorVars();
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -77,6 +80,8 @@ export function createColumnChart(
         yIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
         yIndexes = indexList['QUANTITY'];
+    }else if(indexList['PERCENT']){
+        yIndexes = indexList['PERCENT'];
     }
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
@@ -129,14 +134,13 @@ export function createColumnChart(
         }
     })
 
+    var hasLegend = false; 
     var hasLegend = groupNames.length > 1;
-
-
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 70;
         margin.marginLabel = 10;
     }
-
+    
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
@@ -146,7 +150,8 @@ export function createColumnChart(
     }
 
     data.forEach((item) => {
-        allLengths.push(formatLabel(item.label).length);
+        const formattedValue = formatData(item.label, cols[index2], options)
+        allLengths.push(formatLabel(formattedValue).length);
     });
 
     let longestString = 0;
@@ -205,6 +210,12 @@ export function createColumnChart(
         'chata-hidden-scrollbox'
     );
 
+    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
+    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
+    : (margin.left - 15)
+    const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
+    chartWidth -= stringWidth
+
     var x0 = SCALE_BAND()
     var x1 = SCALE_BAND();
     var y = SCALE_LINEAR();
@@ -220,10 +231,9 @@ export function createColumnChart(
     var xAxis = getAxisBottom(x0)
     var yAxis = getAxisLeft(y)
 
-
     var colorScale = getColorScale(
         groupNames,
-        options.themeConfig.chartColors
+        chartColors
     );
 
     var svg = select(component)
@@ -232,7 +242,7 @@ export function createColumnChart(
     .attr("height", height + margin.top + margin.bottom)
     .append("g")
     .attr("transform",
-    "translate(" + margin.left + "," + margin.top + ")")
+    "translate(" +( margin.left + stringWidth) + "," + margin.top + ")")
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -240,7 +250,7 @@ export function createColumnChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -margin.left + margin.right + 5)
+    .attr('y', -(labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -258,7 +268,7 @@ export function createColumnChart(
         const xWidthRect = getStringWidth(col2) + paddingRect;
 
         labelYContainer.append('rect')
-        .attr('x', 66)
+        .attr('x', labelContainerPos)
         .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
         .attr('height', xWidthRect + paddingRect)
         .attr('width', 24)
@@ -389,7 +399,7 @@ export function createColumnChart(
     }
 
     svg.append("g")
-    .attr("class", "grid")
+    .attr("class", "autoql-vanilla-axes-grid")
     .call(
         yAxis
         .tickSize(-chartWidth)
@@ -411,10 +421,10 @@ export function createColumnChart(
         var rectIndex = 0;
         var cloneData = getVisibleSeries(data);
         if(slice)slice.remove();
-        slice = svg.selectAll(".slice")
+        slice = svg.select('.autoql-vanilla-axes-grid').selectAll(".autoql-vanilla-chart-bar")
         .remove()
         .data(cloneData)
-        .enter().append("g")
+        .enter().insert("g", ":first-child")
         .attr("class", "g")
         .attr("transform",function(d) {
             return "translate(" + x0(d.label) + ",0)";
@@ -494,8 +504,8 @@ export function createColumnChart(
         .attr("width", getBandWidth(x1))
         .attr("x", function(d) { return x1(d.group); })
         .style("fill", function(d) { return colorScale(d.group) })
-        .attr('fill-opacity', '0.7')
-        .attr('class', `${tooltipClass} bar`)
+        .attr('fill-opacity', '1')
+        .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
         .attr("y", function(d) { return y(Math.max(0, d.value)); })
         .attr("height", function(d) { return calculateHeight(d) })
 
@@ -509,12 +519,12 @@ export function createColumnChart(
         })
         var legendScale = getColorScale(
             legendValues,
-            options.themeConfig.chartColors
+            chartColors
         )
 
         var svgLegend = svg.append('g')
         .style('fill', 'currentColor')
-        .style('fill-opacity', '0.7')
+        .style('fill-opacity', '1')
         .style('font-family', 'inherit')
         .style('font-size', '10px')
 
