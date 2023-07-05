@@ -1,22 +1,23 @@
-import { formatChartData } from '../../../../Utils';
-import { formatLabel } from '../../../ChataChartHelpers';
+import { formatChartLabel } from 'autoql-fe-utils'
 
-export function AxisBottom(widgetOptions, options) {
+export function AxisBottom(options) {
   const {
     rotateLabels,
     svg,
     domainSize,
-    col,
+    column,
     axis,
-    scale,
+    dataFormatting,
   } = options;
 
   const axisElement = svg.append("g")
     .attr("transform", `translate(0,${domainSize})`)
     .call(axis.tickFormat(function(d){
-      let fLabel = formatChartData(d, col, widgetOptions);
-      if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
-      return formatLabel(fLabel);
+      return formatChartLabel({
+        d,
+        column,
+        dataFormatting,
+      }).formattedLabel;
     }))
 
   if(rotateLabels) {

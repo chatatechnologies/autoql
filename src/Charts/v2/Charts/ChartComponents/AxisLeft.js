@@ -1,12 +1,13 @@
 import { formatChartData } from '../../../../Utils';
+import { formatChartLabel } from 'autoql-fe-utils';
 
-export function AxisLeft(widgetOptions, options) {
+export function AxisLeft(options) {
   const {
     svg,
     axis,
     tickSize,
-    col,
-    scale,
+    column,
+    dataFormatting,
   } = options;
 
   svg.append("g")
@@ -15,7 +16,12 @@ export function AxisLeft(widgetOptions, options) {
     axis
       .tickSize(-tickSize)
       .tickFormat(function(d){
-          return formatChartData(d, col, widgetOptions)}
+          return formatChartLabel({
+            d,
+            column,
+            dataFormatting,
+          }).formattedLabel;
+        }
       )
   )
 }

@@ -110,20 +110,21 @@ export function ColumnChart(widgetOptions, options) {
     xAxis.tickValues(tickValues);
   }
 
-  AxisLeft(widgetOptions, {
-    col: cols[serieIndex],
+  AxisLeft({
+    column: cols[serieIndex],
     axis: yAxis,
     tickSize: width,
+    dataFormatting: widgetOptions.dataFormatting,
     svg,
   })
 
-  AxisBottom(widgetOptions, {
-    col: cols[groupIndex],
+  AxisBottom({
+    column: cols[groupIndex],
     axis: xAxis,
     rotateLabels,
     svg,
     domainSize,
-    cols,
+    dataFormatting: widgetOptions.dataFormatting,
   });
   
   var slice = undefined;
