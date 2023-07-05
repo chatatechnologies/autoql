@@ -1,5 +1,6 @@
 // TODO: NEXT DEPLOY
 // import { ReverseTranslation } from '../ReverseTranslation'
+import { dataFormattingDefault } from 'autoql-fe-utils'
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -126,7 +127,7 @@ export function DataMessenger(options = {}) {
             demo: false,
             ...(options.authentication ?? {}),
         },
-        dataFormatting:{
+        dataFormatting: {
             timestampFormat: TIMESTAMP_FORMATS.iso8601,
             currencyCode: 'USD',
             languageCode: 'en-US',

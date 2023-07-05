@@ -3,8 +3,8 @@ import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import {
     PRECISION_TYPES,
-    dataFormattingDefault,
 } from '../Constants'
+import { dataFormattingDefault } from 'autoql-fe-utils'
 import _get from 'lodash.get'
 import { strings } from '../Strings'
 import dayjs from './dayjsPlugins'

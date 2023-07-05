@@ -87,30 +87,10 @@ export const PRECISION_TYPES = {
   MINUTE: 'MINUTE',
 }
 
-export const DAYJS_PRECISION_FORMATS = {
-  DAY: 'll',
-  MONTH: 'MMMM YYYY',
-  YEAR: 'YYYY',
-  DATE_HOUR: 'll h:00A',
-  DATE_MINUTE: 'll h:mmA',
-}
-
 export const CHART_MARGINS = {
   top: 10,
   right: 10,
   bottom: 10,
   bottomLabelChart: 10,
   left: 10,
-}
-
-export const dataFormattingDefault = {
-  timestampFormat: TIMESTAMP_FORMATS.iso8601,
-  currencyCode: 'USD',
-  languageCode: 'en-US',
-  currencyDecimals: 2,
-  quantityDecimals: 2,
-  ratioDecimals: 4,
-  comparisonDisplay: 'PERCENT',
-  monthYearFormat: 'MMMM YYYY',
-  dayMonthYearFormat: 'll',
 }
