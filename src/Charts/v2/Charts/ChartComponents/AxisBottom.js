@@ -6,15 +6,15 @@ export function AxisBottom(widgetOptions, options) {
     rotateLabels,
     svg,
     domainSize,
-    cols,
-    index,
+    col,
     axis,
+    scale,
   } = options;
 
   const axisElement = svg.append("g")
     .attr("transform", `translate(0,${domainSize})`)
     .call(axis.tickFormat(function(d){
-      let fLabel = formatChartData(d, cols[index], widgetOptions);
+      let fLabel = formatChartData(d, col, widgetOptions);
       if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
       return formatLabel(fLabel);
     }))

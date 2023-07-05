@@ -111,15 +111,14 @@ export function ColumnChart(widgetOptions, options) {
   }
 
   AxisLeft(widgetOptions, {
-    index: serieIndex,
+    col: cols[serieIndex],
     axis: yAxis,
     tickSize: width,
-    cols,
     svg,
   })
 
   AxisBottom(widgetOptions, {
-    index: groupIndex,
+    col: cols[groupIndex],
     axis: xAxis,
     rotateLabels,
     svg,
@@ -214,7 +213,6 @@ export function ColumnChart(widgetOptions, options) {
     .attr("width", getBandWidth(x1))
     .attr("x", function(d) { return x1(d.group); })
     .style("fill", function(d) { return colorScale(d.group) })
-    .attr('fill-opacity', '1')
     .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
     .attr("y", function(d) { return y(Math.max(0, d.value)); })
     .attr("height", function(d) { return calculateHeight(minMaxValues, y, d, domainSize) })

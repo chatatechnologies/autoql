@@ -5,8 +5,8 @@ export function AxisLeft(widgetOptions, options) {
     svg,
     axis,
     tickSize,
-    cols,
-    index,
+    col,
+    scale,
   } = options;
 
   svg.append("g")
@@ -15,7 +15,7 @@ export function AxisLeft(widgetOptions, options) {
     axis
       .tickSize(-tickSize)
       .tickFormat(function(d){
-          return formatChartData(d, cols[index], widgetOptions)}
+          return formatChartData(d, col, widgetOptions)}
       )
   )
 }

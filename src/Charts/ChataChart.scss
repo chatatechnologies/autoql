@@ -3,7 +3,9 @@
     .autoql-vanilla-heatmap-rect,
     .autoql-vanilla-chart-bar {
         cursor: pointer;
-
+        transition: fill-opacity .3s ease;
+        fill-opacity: 1!important;
+        outline: none!important;
         &:hover {
             fill-opacity: 0.7 !important;
         }
