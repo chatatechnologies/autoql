@@ -1,6 +1,5 @@
 // TODO: NEXT DEPLOY
 // import { ReverseTranslation } from '../ReverseTranslation'
-import { dataFormattingDefault } from 'autoql-fe-utils'
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -33,7 +32,6 @@ import {
     allColHiddenMessage,
     closeAllToolbars,
     cloneObject,
-    getNumberOfGroupables,
     formatData,
     getRecommendationPath,
     getSafetynetValues,
@@ -89,6 +87,7 @@ import {
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
+import { getNumberOfGroupables } from 'autoql-fe-utils';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';

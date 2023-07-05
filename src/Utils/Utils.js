@@ -4,10 +4,18 @@ import { WARNING, COLUMN_EDITOR } from '../Svg'
 import {
     PRECISION_TYPES,
 } from '../Constants'
-import { dataFormattingDefault } from 'autoql-fe-utils'
 import _get from 'lodash.get'
 import { strings } from '../Strings'
 import dayjs from './dayjsPlugins'
+import { 
+    dataFormattingDefault,
+    supportsPieChart,
+    supports2DCharts,
+    supportsRegularPivotTable,
+    isColumnNumberType,
+    isColumnStringType,
+    isAggregation,
+} from 'autoql-fe-utils'
 
 export function formatChartData(val, col, options){
     var clone = cloneObject(options);
@@ -777,98 +785,6 @@ export function createTableContainer(){
     var div = document.createElement('div');
     div.classList.add('autoql-vanilla-chata-table');
     return div;
-}
-
-export const getNumberOfGroupables = columns => {
-    if (columns) {
-        let numberOfGroupables = 0
-        columns.forEach(col => {
-            if (col.groupable) {
-                numberOfGroupables += 1
-            }
-        })
-        return numberOfGroupables
-    }
-    return null
-}
-
-export const supportsRegularPivotTable = columns => {
-    const hasTwoGroupables = getNumberOfGroupables(columns) === 2
-    return hasTwoGroupables && columns.length === 3
-}
-
-export const isColumnNumberType = col => {
-    const type = col.type
-    return (
-        type === 'DOLLAR_AMT' ||
-        type === 'QUANTITY' ||
-        type === 'PERCENT' ||
-        type === 'RATIO'
-    )
-}
-
-export const isColumnStringType = col => {
-    const  type = col.type
-    return type === 'STRING' || type === 'DATE_STRING' || type === 'DATE'
-}
-
-export const getColumnTypeAmounts = columns => {
-    let amountOfStringColumns = 0
-    let amountOfNumberColumns = 0
-
-    columns.forEach(col => {
-        if (isColumnNumberType(col)) {
-            amountOfNumberColumns += 1
-        } else if (isColumnStringType(col)) {
-            amountOfStringColumns += 1
-        }
-    })
-
-    return { amountOfNumberColumns, amountOfStringColumns }
-}
-
-export const supports2DCharts = columns => {
-    const amounts =
-    getColumnTypeAmounts(
-        columns
-    )
-
-    return amounts.amountOfNumberColumns > 0
-    && amounts.amountOfStringColumns > 0
-}
-
-export const isAggregation = (columns) => {
-    try {
-        let isAgg = false
-        if (columns) {
-            isAgg = !!columns.find((col) => col.groupable)
-        }
-        return isAgg
-    } catch (error) {
-        console.error(error)
-        return false
-    }
-}
-
-export const shouldPlotMultiSeries = (columns) => {
-    if (isAggregation(columns)) {
-        return false
-    }
-
-    const multiSeriesIndex = columns.findIndex((col) => col.multi_series === true)
-    return multiSeriesIndex >= 0
-}
-
-export const supportsPieChart = (columns, chartData) => {
-    if (shouldPlotMultiSeries(columns)) {
-        return false
-    }
-
-    if (chartData) {
-        return chartData.length < 7
-    }
-
-    return true
 }
 
 export const getSupportedDisplayTypes = response => {

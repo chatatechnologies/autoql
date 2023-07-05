@@ -11,7 +11,6 @@ import {
     cloneObject,
     getSafetynetValues,
     getSafetynetUserSelection,
-    getNumberOfGroupables,
     getClickedData,
     formatData,
     checkAndApplyTheme
@@ -23,6 +22,7 @@ import {
 } from '../Safetynet'
 import { refreshTooltips } from '../Tooltips'
 import { ChataTable } from '../ChataTable'
+import { getNumberOfGroupables } from 'autoql-fe-utils';
 
 export function QueryInput(selector, options) {
     checkAndApplyTheme();

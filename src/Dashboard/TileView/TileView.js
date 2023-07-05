@@ -6,7 +6,6 @@ import {
     formatData,
     closeAllToolbars,
     cloneObject,
-    getNumberOfGroupables,
     getSafetynetValues,
     getSafetynetUserSelection,
     getSupportedDisplayTypes,
@@ -58,6 +57,7 @@ import {
     InputToolbar
 } from '../InputToolbar'
 import { strings } from '../../Strings'
+import { getNumberOfGroupables } from 'autoql-fe-utils';
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')

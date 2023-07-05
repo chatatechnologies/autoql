@@ -7,8 +7,8 @@ import {
     getPivotColumnArray,
     htmlToElement,
     cloneObject,
-    getNumberOfGroupables
 } from '../Utils';
+import { getNumberOfGroupables } from 'autoql-fe-utils';
 import { strings } from '../Strings'
 import moment from 'moment'
 

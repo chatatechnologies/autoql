@@ -1,7 +1,6 @@
 import {
     uuidv4,
     createTableContainer,
-    getNumberOfGroupables
 } from '../../Utils'
 import { apiCallPost } from '../../Api'
 import {
@@ -29,6 +28,7 @@ import {
 import {
     DrilldownToolbar
 } from '../DrilldownToolbar'
+import { getNumberOfGroupables } from 'autoql-fe-utils';
 import './DrilldownView.css'
 
 export function DrilldownView(

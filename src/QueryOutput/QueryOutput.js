@@ -1,6 +1,5 @@
 import {
     getClickedData,
-    getNumberOfGroupables,
     getGroupables,
     uuidv4,
     cloneObject,
@@ -23,6 +22,7 @@ import {
 } from '../Charts';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { ChataUtils } from '../ChataUtils';
+import { getNumberOfGroupables } from 'autoql-fe-utils';
 
 export function QueryOutput(selector, options = {}) {
     checkAndApplyTheme();
