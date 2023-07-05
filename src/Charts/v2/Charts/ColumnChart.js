@@ -30,6 +30,7 @@ import { LabelAxis } from './ChartComponents/LabelAxis';
 import { Chart } from '../Chart'
 import { AxisBottom } from './ChartComponents/AxisBottom';
 import { AxisLeft } from './ChartComponents/AxisLeft';
+import { formatChartLabel } from 'autoql-fe-utils';
 
 export function ColumnChart(widgetOptions, options) {
   const {
@@ -58,8 +59,12 @@ export function ColumnChart(widgetOptions, options) {
   component.innerHTML = '';
 
   const { textWidth } = getTextDimensions(
-    formatChartData(minMaxValues.max, cols[groupIndex], widgetOptions)
-  )
+    formatChartLabel({
+      d: minMaxValues.max,
+      column: cols[serieIndex],
+      dataFormatting: widgetOptions.dataFormatting,
+    }).formattedLabel
+  );
   const dimensions = getLabelMaxSize(labelsNames)
   const chartWidth = (width - (textWidth + CHART_MARGINS.left));
   const x0 = SCALE_BAND();

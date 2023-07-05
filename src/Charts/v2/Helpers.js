@@ -62,9 +62,10 @@ export const dummyElement = (text) => {
 }
 
 export const getTextDimensions = (text) =>  {
+  const padding = 15;
   const div = dummyElement(text);
-  const textWidth = div.clientWidth;
-  const textHeight = div.clientWidth;
+  const textWidth = div.clientWidth + padding;
+  const textHeight = div.clientWidth + padding;
   document.body.removeChild(div);
   return { textWidth, textHeight };
 }
