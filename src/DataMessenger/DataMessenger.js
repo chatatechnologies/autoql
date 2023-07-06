@@ -182,7 +182,7 @@ export function DataMessenger(options = {}) {
         } = obj.options.authentication;
 
         if(!token) {
-            obj.subjects = []
+            return []
         } else {
             const response = await fetchSubjectList({
                 token,
@@ -190,13 +190,12 @@ export function DataMessenger(options = {}) {
                 domain,
             });
             if(response.status === 200) {
-                obj.subjects = response.data.data.subjects;
+                return response.data.data.subjects;
             }
         }
-        console.log(obj.subjects);
     }
 
-    obj.setOption = (option, value) => {
+    obj.setOption = async (option, value) => {
         try {
           if (obj.options[option] === value) {
             return
@@ -208,7 +207,8 @@ export function DataMessenger(options = {}) {
                 if (obj.notificationIcon) {
                     obj.notificationIcon.setOption('authentication', value);
                 }
-                obj.getSubjects();
+                const subjects = await obj.getSubjects();
+                obj.dataExplorer.setSubjects(subjects);
                 break;
             case 'dataFormatting':
                 obj.setObjectProp('dataFormatting', value);
@@ -673,9 +673,10 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.createQueryTips = function () {
+    obj.createDataExplorer = async function () {
+        const subjects = await obj.getSubjects();
         const dataExplorer = new DataExplorer({
-            subjects: obj.subjects
+            subjects
         });
         obj.dataExplorer = dataExplorer;
         obj.drawerContent.appendChild(dataExplorer.container);
@@ -2624,11 +2625,10 @@ export function DataMessenger(options = {}) {
     obj.createBar();
     obj.createResizeHandler();
     obj.createQueryTabs();
-    obj.createQueryTips();
+    obj.createDataExplorer();
     obj.createNotifications();
     obj.speechToTextEvent();
     obj.registerWindowClicks();
-    obj.getSubjects();
     obj.scrollBox.onscroll = () => {
         closeAllChartPopovers();
         closeAllSafetynetSelectors();

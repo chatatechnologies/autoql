@@ -13,6 +13,7 @@ export function DataExplorer({ subjects }) {
   let obj = this;
 
   obj.subjects = subjects;
+  console.log(obj.subjects);
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
@@ -24,6 +25,8 @@ export function DataExplorer({ subjects }) {
   const p = document.createElement('p');
   const instructionList = document.createElement('div');
   const listWrapper = document.createElement('div');
+  const autocomplete = document.createElement('div');
+  const subjectsWrapper = document.createElement('ul'); 
 
   const texts = [
     { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
@@ -59,9 +62,17 @@ export function DataExplorer({ subjects }) {
     listWrapper.appendChild(elem);
   })
 
+  obj.subjects.map((subject) => {
+    const li = document.createElement('li');
+    li.appendChild(document.createTextNode(subject.display_name));
+    subjectsWrapper.appendChild(li);
+  })
+
   chatBarInputIcon.appendChild(searchIcon);
+  autocomplete.appendChild(subjectsWrapper);
   textBar.appendChild(input);
   textBar.appendChild(chatBarInputIcon);
+  textBar.appendChild(autocomplete);
   instructionList.appendChild(listWrapper);
   instructions.appendChild(p);
   instructions.appendChild(instructionList);
