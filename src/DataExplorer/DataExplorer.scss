@@ -6,6 +6,7 @@
   font-size: 15px;
   min-height: 0;
   flex: 1 1;
+
   h2 {
     display: flex;
     flex-direction: row;
@@ -17,5 +18,17 @@
     margin-inline-start: 0;
     margin-inline-end: 0;
     color: var(--autoql-vanilla-text-color-primary);
+    .autoql-vanilla-icon {
+      margin-left: 5px;
+    }
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
+
+  .autoql-vanilla-icon {
+    margin-right: 5px;
+    vertical-align: middle;
   }
 }
