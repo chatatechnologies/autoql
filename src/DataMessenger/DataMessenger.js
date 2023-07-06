@@ -89,10 +89,11 @@ import {
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
+import { DataExplorer } from '../DataExplorer';
+import { fetchSubjectList } from 'autoql-fe-utils';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
-import { DataExplorer } from '../DataExplorer';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
@@ -173,6 +174,28 @@ export function DataMessenger(options = {}) {
     obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement)
     obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement)
 
+    obj.getSubjects = async () => {
+        const {
+            token,
+            apiKey,
+            domain,
+        } = obj.options.authentication;
+
+        if(!token) {
+            obj.subjects = []
+        } else {
+            const response = await fetchSubjectList({
+                token,
+                apiKey,
+                domain,
+            });
+            if(response.status === 200) {
+                obj.subjects = response.data.data.subjects;
+            }
+        }
+        console.log(obj.subjects);
+    }
+
     obj.setOption = (option, value) => {
         try {
           if (obj.options[option] === value) {
@@ -185,6 +208,7 @@ export function DataMessenger(options = {}) {
                 if (obj.notificationIcon) {
                     obj.notificationIcon.setOption('authentication', value);
                 }
+                obj.getSubjects();
                 break;
             case 'dataFormatting':
                 obj.setObjectProp('dataFormatting', value);
@@ -2779,6 +2803,7 @@ export function DataMessenger(options = {}) {
     obj.createNotifications();
     obj.speechToTextEvent();
     obj.registerWindowClicks();
+    obj.getSubjects();
     obj.scrollBox.onscroll = () => {
         closeAllChartPopovers();
         closeAllSafetynetSelectors();
