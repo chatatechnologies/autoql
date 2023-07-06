@@ -20,6 +20,13 @@ export function DataExplorer() {
   const instructions = document.createElement('div');
   const p = document.createElement('p');
   const instructionList = document.createElement('div');
+  const listWrapper = document.createElement('div');
+
+  const texts = [
+    { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
+    { icon: ABACUS_ICON, string: 'Explore data structure and column types' },
+    { icon: CHATA_BUBBLES_ICON, string: 'View a variety of query suggestions' },
+  ];
 
   textBar.classList.add('autoql-vanilla-text-bar');
   textBar.classList.add('autoql-vanilla-text-bar-animation');
@@ -39,9 +46,21 @@ export function DataExplorer() {
   p.appendChild(document.createTextNode(`
     Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:
   `));
+
+  texts.map((text) => {
+    const icon = document.createElement('span');
+    const elem = document.createElement('p');
+
+    icon.innerHTML = text.icon;
+    elem.appendChild(icon);
+    elem.appendChild(document.createTextNode(text.string));
+    listWrapper.appendChild(elem);
+  })
+
   chatBarInputIcon.appendChild(searchIcon);
   textBar.appendChild(input);
   textBar.appendChild(chatBarInputIcon);
+  instructionList.appendChild(listWrapper);
   instructions.appendChild(p);
   instructions.appendChild(instructionList);
   introMessage.appendChild(title);
