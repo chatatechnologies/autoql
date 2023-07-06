@@ -9,8 +9,10 @@ import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
 import './DataExplorer.scss';
 
-export function DataExplorer() {
+export function DataExplorer({ subjects }) {
   let obj = this;
+
+  obj.subjects = subjects;
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
@@ -51,7 +53,7 @@ export function DataExplorer() {
   texts.map((text) => {
     const icon = createIcon(text.icon);
     const elem = document.createElement('p');
-    
+
     elem.appendChild(icon);
     elem.appendChild(document.createTextNode(text.string));
     listWrapper.appendChild(elem);
@@ -82,6 +84,10 @@ export function DataExplorer() {
   obj.show = () => {
     container.style.display = 'block';
     input.focus();
+  }
+  
+  obj.setSubjects = (subjects) => {
+    obj.subjects = subjects;
   }
 
   obj.container = container;
