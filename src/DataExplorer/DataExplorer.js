@@ -3,6 +3,7 @@ import { htmlToElement } from "../Utils";
 import { strings } from "../Strings";
 
 export function DataExplorer() {
+  let obj = this;
   const searchIcon = htmlToElement(SEARCH_ICON);
   var container = document.createElement('div');
   var textBar = document.createElement('div');
@@ -58,4 +59,16 @@ export function DataExplorer() {
   input.classList.add('autoql-vanilla-explore-queries-input');
   input.classList.add('left-padding');
   input.setAttribute('placeholder', strings.exploreQueriesInput);
+
+  obj.hide = () => {
+    container.style.display = 'none';
+  }
+
+  obj.show = () => {
+    container.style.display = 'block';
+    input.focus();
+  }
+
+  obj.container = container;
+
 }
