@@ -5,8 +5,9 @@ import {
   ABACUS_ICON,
   TABLE_ICON,
 } from "../Svg";
-import { htmlToElement } from "../Utils";
+import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
+import './DataExplorer.scss';
 
 export function DataExplorer() {
   let obj = this;
@@ -41,17 +42,16 @@ export function DataExplorer() {
   input.setAttribute('placeholder', strings.exploreQueriesInput);
 
   title.appendChild(document.createTextNode('Welcome to '));
-  title.appendChild(htmlToElement(DATA_EXPLORER_SEARCH_ICON));
+  title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
   title.appendChild(document.createTextNode('Data Explorer'));
   p.appendChild(document.createTextNode(`
     Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:
   `));
 
   texts.map((text) => {
-    const icon = document.createElement('span');
+    const icon = createIcon(text.icon);
     const elem = document.createElement('p');
-
-    icon.innerHTML = text.icon;
+    
     elem.appendChild(icon);
     elem.appendChild(document.createTextNode(text.string));
     listWrapper.appendChild(elem);

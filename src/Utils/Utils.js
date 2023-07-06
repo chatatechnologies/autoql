@@ -773,6 +773,14 @@ export function htmlToElement(html) {
     return template.content.firstChild;
 }
 
+export function createIcon(icon) {
+    const span = document.createElement('span');
+    span.appendChild(htmlToElement(icon));
+    span.classList.add('autoql-vanilla-icon');
+    
+    return span;
+}
+
 export function createTableContainer(){
     var div = document.createElement('div');
     div.classList.add('autoql-vanilla-chata-table');

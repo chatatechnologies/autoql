@@ -1612,6 +1612,19 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-bottom: 3px;
 }
 
+.autoql-vanilla-icon {
+    position: relative;
+    opacity: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: initial;
+    line-height: 1em;
+    box-sizing: initial;
+    height: 1em;
+    width: 1em;
+}
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
