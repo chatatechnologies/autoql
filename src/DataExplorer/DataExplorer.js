@@ -1,4 +1,10 @@
-import { SEARCH_ICON, DATA_EXPLORER_SEARCH_ICON } from "../Svg";
+import {
+  SEARCH_ICON,
+  DATA_EXPLORER_SEARCH_ICON,
+  CHATA_BUBBLES_ICON,
+  ABACUS_ICON,
+  TABLE_ICON,
+} from "../Svg";
 import { htmlToElement } from "../Utils";
 import { strings } from "../Strings";
 
@@ -11,6 +17,9 @@ export function DataExplorer() {
   const chatBarInputIcon  = document.createElement('div');
   const introMessage = document.createElement('div');
   const title = document.createElement('h2');
+  const instructions = document.createElement('div');
+  const p = document.createElement('p');
+  const instructionList = document.createElement('div');
 
   textBar.classList.add('autoql-vanilla-text-bar');
   textBar.classList.add('autoql-vanilla-text-bar-animation');
@@ -21,15 +30,22 @@ export function DataExplorer() {
   input.classList.add('autoql-vanilla-explore-queries-input');
   input.classList.add('left-padding');
   introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
+  instructionList.classList.add('autoql-vanilla-intro-message-list-container');
   input.setAttribute('placeholder', strings.exploreQueriesInput);
+
   title.appendChild(document.createTextNode('Welcome to '));
   title.appendChild(htmlToElement(DATA_EXPLORER_SEARCH_ICON));
   title.appendChild(document.createTextNode('Data Explorer'));
-  
+  p.appendChild(document.createTextNode(`
+    Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:
+  `));
   chatBarInputIcon.appendChild(searchIcon);
   textBar.appendChild(input);
   textBar.appendChild(chatBarInputIcon);
+  instructions.appendChild(p);
+  instructions.appendChild(instructionList);
   introMessage.appendChild(title);
+  introMessage.appendChild(instructions);
   container.appendChild(textBar);
   container.appendChild(introMessage);
   container.style.display = 'none';

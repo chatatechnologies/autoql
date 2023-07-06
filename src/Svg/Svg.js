@@ -28,6 +28,13 @@ export const TABLE_ICON = `
 </svg>
 `;
 
+export const ABACUS_ICON = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 3H4V21H2zM20 3H22V21H20zM5 13L7 13 7 14 9 14 9 13 11 13 11 14 13 14 13 13 17 13 17 14 19 14 19 13 19 11 19 10 17 10 17 11 13 11 13 10 11 10 11 11 9 11 9 10 7 10 7 11 5 11zM5 4L5 5 5 7 5 8 7 8 7 7 15 7 15 8 17 8 17 7 19 7 19 5 17 5 17 4 15 4 15 5 7 5 7 4zM5 17L5 19 5 20 7 20 7 19 9 19 9 20 11 20 11 19 19 19 19 17 11 17 11 16 9 16 9 17 7 17 7 16 5 16z">
+    </path>
+</svg>
+`;
+
 export const PIVOT_ICON = `
 <svg class="pivot_table" x="0px" y="0px" width="16px" height="16px" viewBox="0 0 16 16" stroke="currentColor" fill="currentColor" stroke-width="0" height="1em" width="1em">
     <path class="pivot_table chart-icon-svg-0" d="M8,0.7c2.3,0,4.6,0,6.9,0C15.7,0.7,16,1,16,1.8c0,4,0,7.9,0,11.9c0,0.8-0.3,1.1-1.1,1.1c-4.6,0-9.3,0-13.9,0 c-0.7,0-1-0.3-1-1c0-4,0-8,0-12c0-0.7,0.3-1,1-1C3.4,0.7,5.7,0.7,8,0.7L8,0.7z M5.1,6.4h4.4V3.8H5.1V6.4L5.1,6.4z M14.9,6.4V3.8 h-4.4v2.7L14.9,6.4L14.9,6.4z M5.1,10.1h4.4V7.4H5.1V10.1L5.1,10.1z M14.9,10.1V7.4h-4.4v2.7H14.9L14.9,10.1z M5.1,13.7h4.4V11H5.1 V13.7L5.1,13.7z M14.9,13.7V11h-4.4v2.7L14.9,13.7L14.9,13.7z">

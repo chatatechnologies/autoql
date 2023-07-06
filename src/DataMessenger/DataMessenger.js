@@ -84,6 +84,7 @@ import {
     FILTER_LOCKING,
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
+    DATA_EXPLORER_SEARCH_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -577,7 +578,7 @@ export function DataMessenger(options = {}) {
         pageSwitcherContainer.classList.add('autoql-vanilla-page-switcher-container');
 
         var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Data Messenger', isEnabled: true})
-        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(QUERY_TIPS), tooltip: strings.exploreQueries, isEnabled: enableExploreQueriesTab })
+        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(DATA_EXPLORER_SEARCH_ICON), tooltip: strings.exploreQueries, isEnabled: enableExploreQueriesTab })
         var tabNotifications = obj.createQueryTab({name: 'notifications', tooltip: strings.notifications, isEnabled: enableNotificationsTab })
 
         tabChataUtils.onclick = function () {
