@@ -49,3 +49,31 @@
     vertical-align: middle;
   }
 }
+
+.autoql-vanilla-data-explorer-autocomplete {
+  box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  border-radius: 24px;
+  z-index: 3;
+  border: 1px solid var(--autoql-vanilla-border-color);
+  background: var(--autoql-vanilla-background-color-secondary);
+  color: var(--autoql-vanilla-text-color-primary);
+  position: absolute;
+  list-style: none;
+  padding: 5px 10px;
+  top: 60px;
+  left: 10px;
+  right: 10px;
+  display: none;
+
+  .autoql-vanilla-subject {
+    cursor: pointer;
+    padding: 2px 2px 2px 18px;
+    letter-spacing: .05em;
+    line-height: 22.5px;
+    
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

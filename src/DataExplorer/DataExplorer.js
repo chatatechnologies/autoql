@@ -42,6 +42,7 @@ export function DataExplorer({ subjects }) {
   input.classList.add('autoql-vanilla-chata-input');
   input.classList.add('autoql-vanilla-explore-queries-input');
   input.classList.add('left-padding');
+  autocomplete.classList.add('autoql-vanilla-data-explorer-autocomplete');
   introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
   instructionList.classList.add('autoql-vanilla-intro-message-list-container');
   input.setAttribute('placeholder', strings.exploreQueriesInput);
@@ -64,6 +65,7 @@ export function DataExplorer({ subjects }) {
 
   obj.subjects.map((subject) => {
     const li = document.createElement('li');
+    li.classList.add('autoql-vanilla-subject');
     li.appendChild(document.createTextNode(subject.display_name));
     subjectsWrapper.appendChild(li);
   })
