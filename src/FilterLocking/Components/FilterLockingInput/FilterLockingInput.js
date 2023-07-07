@@ -1,4 +1,5 @@
-import './FilterLockingInput.css'
+import './FilterLockingInput.scss'
+import { animateInputText } from 'autoql-fe-utils';
 import {
     apiCallGet,
     apiCallPut
@@ -19,8 +20,10 @@ export function FilterLockingInput(datamessenger, filterLocking){
     view.classList.add('autoql-vanilla-autosuggest-top')
 
     inputContainer.classList.add('autoql-vanilla-text-bar')
+    inputContainer.classList.add('autoql-vanilla-filter-locking-input-container')
     input.classList.add('autoql-vanilla-condition-locking-input')
     input.setAttribute('placeholder', strings.filterLockingInputPlaceholder)
+    view.input = input
     autocompleteContainer.classList.add('autoql-vanilla-auto-complete-suggestions')
     autoCompleteList.classList.add('autoql-vanilla-auto-complete-filter-locking')
 
@@ -120,13 +123,23 @@ export function FilterLockingInput(datamessenger, filterLocking){
         input.value = ''
     }
 
+    view.animateInputWithText = (text) => {
+        animateInputText({
+            text,
+            inputRef: input,
+            totalAnimationTime: 500,
+            callback: () => {
+                view.autoCompleteCall(text);
+            },
+        });
+    };
+
     input.onkeyup = (evt) => {
         autoCompleteList.style.display = 'none'
         if(evt.target.value){
             view.autoCompleteCall(evt.target.value)
         }
     }
-
 
     return view
 }

@@ -4,8 +4,9 @@ import {
     apiCallDelete,
     apiCallPut
 } from '../../../Api'
-import './FilterLockingLine.css'
 import { strings } from '../../../Strings'
+
+import './FilterLockingLine.scss'
 
 export function FilterLockingLine(datamessenger, conditionList, conditionData){
     const {

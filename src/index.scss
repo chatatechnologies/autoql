@@ -1,0 +1,16 @@
+.tippy-box {
+    font-family: var(--autoql-vanilla-font-family) !important;
+    border-radius: 4px !important;
+    line-height: 1.5em !important;
+    font-size: 13px !important;
+    word-break: break-word;
+    letter-spacing: 0.04em;
+
+    .tippy-content {
+        padding: 7px 15px;
+    }
+
+    .tippy-arrow {
+        color: #000000 !important;
+    }
+}
