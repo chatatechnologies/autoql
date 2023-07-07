@@ -7,23 +7,6 @@
     margin-top: 13px;
 }
 
-.autoql-vanilla-chat-header-container {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    height: 60px;
-    background: var(--autoql-vanilla-accent-color);
-    box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
-    flex-grow: 0;
-    flex-shrink: 0;
-    z-index: 2;
-    word-wrap: break-word;
-    align-items: center;
-    color:white;
-    position: relative;
-    z-index: 100000003;
-}
-
 .autoql-vanilla-popover-container{
     z-index: 9999;
     border: 1px solid #ababab52;
@@ -92,6 +75,9 @@
     color: #faad14;
     display: inline-block;
 }
+.autoql-vanilla-chata-button:hover {
+    opacity: 0.7;
+}
 
 .autoql-vanilla-chata-header-center-container {
     position: relative;
@@ -107,39 +93,8 @@
     letter-spacing: 0.05em;
 }
 
-.autoql-vanilla-chat-header-container button {
-    background: transparent;
-    border: none;
-    color: white;
-    margin: 10px;
-    margin-right: 0;
-    font-size: 20px;
-    cursor: pointer;
-    outline: none !important;
-}
-
 .autoql-vanilla-chata-button{
     background: none !important;
-}
-.autoql-vanilla-chata-button.close-action svg {
-    width: 30px;
-    height: 30px;
-    padding-top: 3px;
-}
-
-.autoql-vanilla-chat-header-container button svg {
-    width: 22px;
-    height: 22px;
-    padding-right: 2px;
-    padding-top: 2px;
-}
-
-.autoql-vanilla-chat-header-container .autoql-vanilla-chata-button:hover{
-    opacity: .7;
-}
-
-.autoql-vanilla-chata-button.clear-all {
-    margin-right: 11px;
 }
 
 .autoql-vanilla-drawer-content {
@@ -234,10 +189,6 @@
     animation: scale-up-bl 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 }
 
-.autoql-vanilla-chat-single-message-container.text{
-    max-width: 85%;
-}
-
 .autoql-vanilla-chat-single-message-container.autoql-vanilla-suggestions-container{
     display: block !important;
  }
@@ -322,8 +273,8 @@ input.autoql-vanilla-chata-input {
 .autoql-vanilla-chata-input-full-width{
     width: 100%;
 }
-.autoql-vanilla-chata-input:hover, .autoql-vanilla-chata-input-renderer:hover{
-    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1) !important;
+.autoql-vanilla-chata-input:hover, .autoql-vanilla-chata-input-renderer:hover, .autoql-vanilla-condition-locking-input:hover{
+    box-shadow: 0px 0px 5px 1px var(--autoql-vanilla-box-shadow-color, rgba(0, 0, 0, 0.15)) !important;
 }
 
 .autoql-vanilla-chata-input:focus, .autoql-vanilla-chata-input-renderer:focus{
@@ -1606,10 +1557,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input .autoql-vanilla-chata-checkbox-tick{
     top: 3px;
-}
-
-.autoql-vanilla-screen-menu svg{
-    margin-bottom: 3px;
 }
 
 @keyframes fadeIn {

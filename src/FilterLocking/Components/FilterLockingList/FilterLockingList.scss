@@ -1,0 +1,56 @@
+.autoql-vanilla-filter-list-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    flex-wrap: nowrap;
+    padding-top: 10px;
+    color: var(--autoql-vanilla-text-color-primary);
+    font-family: var(--autoql-vanilla-font-family);
+
+    .autoql-vanilla-filter-list-title-section {
+        display: flex;
+        align-items: center;
+        color: var(--autoql-vanilla-text-color-primary);
+        font-size: 14px;
+
+        h4 {
+            margin: 0;
+            color: var(--autoql-vanilla-text-color-primary);
+            font-size: 14px;
+
+            .autoql-vanilla-filter-lock-category-title {
+                padding-right: 10px !important;
+                padding-top: 1px !important;
+                max-width: 195px;
+                overflow: hidden;
+                font-size: 14px !important;
+            }
+        }
+
+        .autoql-vanilla-filter-list-title-section-icon {
+            display: inline-block;
+            width: 18px;
+            height: 18px;
+            vertical-align: middle;
+        }
+
+        .autoql-vanilla-radio-btn-container {
+            padding-bottom: 0 !important;
+        }
+    }
+}
+
+.autoql-vaniall-persist-toggle-column {
+    margin-right: 25px !important;
+    max-width: 350px;
+}
+
+.autoql-vanilla-condition-table-settings {
+    display: flex;
+}
+
+.autoql-vaniall-persist-toggle-column .autoql-vanilla-interpretation-icon {
+    height: 20px;
+    font-size: 15px;
+}
