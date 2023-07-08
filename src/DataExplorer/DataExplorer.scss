@@ -60,7 +60,7 @@
   color: var(--autoql-vanilla-text-color-primary);
   position: absolute;
   list-style: none;
-  padding: 5px 10px;
+  padding: 5px 0px;
   top: 60px;
   left: 10px;
   right: 10px;
@@ -78,6 +78,11 @@
     
     &:hover {
       background-color: rgba(0, 0, 0, 0.1);
+    }
+    
+    .autoql-vanilla-icon {
+      margin-right: 5px;
+      vertical-align: middle;
     }
   }
 }

@@ -4,6 +4,7 @@ import {
   CHATA_BUBBLES_ICON,
   ABACUS_ICON,
   TABLE_ICON,
+  BOOK_ICON,
 } from "../Svg";
 import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
@@ -66,6 +67,7 @@ export function DataExplorer({ subjects }) {
   obj.subjects.map((subject) => {
     const li = document.createElement('li');
     li.classList.add('autoql-vanilla-subject');
+    li.appendChild(createIcon(BOOK_ICON));
     li.appendChild(document.createTextNode(subject.display_name));
     subjectsWrapper.appendChild(li);
   })
@@ -95,7 +97,7 @@ export function DataExplorer({ subjects }) {
   });
   
   input.addEventListener("blur", () => {
-    autocomplete.classList.remove('show');
+    //autocomplete.classList.remove('show');
   });
 
   obj.hide = () => {
