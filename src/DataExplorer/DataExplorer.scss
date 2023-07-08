@@ -66,6 +66,10 @@
   right: 10px;
   display: none;
 
+  &.show {
+    display: block;
+  }
+
   .autoql-vanilla-subject {
     cursor: pointer;
     padding: 2px 2px 2px 18px;

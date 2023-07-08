@@ -90,6 +90,14 @@ export function DataExplorer({ subjects }) {
       }
   });
 
+  input.addEventListener("focus", () => {
+    autocomplete.classList.add('show');
+  });
+  
+  input.addEventListener("blur", () => {
+    autocomplete.classList.remove('show');
+  });
+
   obj.hide = () => {
     container.style.display = 'none';
   }
