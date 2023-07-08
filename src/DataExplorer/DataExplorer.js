@@ -104,7 +104,6 @@ export function DataExplorer({ subjects }) {
 
   obj.show = () => {
     container.style.display = 'block';
-    input.focus();
   }
   
   obj.setSubjects = (subjects) => {
