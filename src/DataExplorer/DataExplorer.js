@@ -12,9 +12,8 @@ import './DataExplorer.scss';
 
 export function DataExplorer({ subjects }) {
   let obj = this;
-
   obj.subjects = subjects;
-  console.log(obj.subjects);
+
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
@@ -64,12 +63,17 @@ export function DataExplorer({ subjects }) {
     listWrapper.appendChild(elem);
   })
 
-  obj.subjects.map((subject) => {
+  obj.subjects.forEach((subject) => {
     const li = document.createElement('li');
     li.classList.add('autoql-vanilla-subject');
     li.appendChild(createIcon(BOOK_ICON));
     li.appendChild(document.createTextNode(subject.display_name));
     subjectsWrapper.appendChild(li);
+    li.onclick = () => {
+      console.log('test');
+      autocomplete.classList.remove('show')
+      input.value = subject.display_name;
+    }
   })
 
   chatBarInputIcon.appendChild(searchIcon);
