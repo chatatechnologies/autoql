@@ -676,7 +676,8 @@ export function DataMessenger(options = {}) {
     obj.createDataExplorer = async function () {
         const subjects = await obj.getSubjects();
         const dataExplorer = new DataExplorer({
-            subjects
+            authentication: obj.options.authentication,
+            subjects,
         });
         obj.dataExplorer = dataExplorer;
         obj.drawerContent.appendChild(dataExplorer.container);

@@ -9,10 +9,17 @@ import {
 import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
 import './DataExplorer.scss';
+import { fetchDataPreview  } from 'autoql-fe-utils';
 
-export function DataExplorer({ subjects }) {
+export function DataExplorer({ subjects, authentication }) {
   let obj = this;
   obj.subjects = subjects;
+
+  const {
+    token,
+    domain,
+    apiKey
+  } = authentication;
 
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
@@ -69,10 +76,18 @@ export function DataExplorer({ subjects }) {
     li.appendChild(createIcon(BOOK_ICON));
     li.appendChild(document.createTextNode(subject.display_name));
     subjectsWrapper.appendChild(li);
-    li.onclick = () => {
+    li.onclick = async () => {
       console.log('test');
       autocomplete.classList.remove('show')
       input.value = subject.display_name;
+      const response = await fetchDataPreview({
+        subject: subject.name,
+        domain,
+        apiKey,
+        token,
+      });
+
+      console.log(response)
     }
   })
 
