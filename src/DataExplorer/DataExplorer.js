@@ -127,7 +127,7 @@ export function DataExplorer({ subjects, authentication }) {
   });
   
   input.addEventListener("blur", () => {
-    //autocomplete.classList.remove('show');
+    setTimeout(() => autocomplete.classList.remove('show'), 100);
   });
 
   obj.hide = () => {
