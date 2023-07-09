@@ -1,0 +1,34 @@
+.autoql-vanilla-card {
+  background: var(--react-autoql-background-color-secondary);
+  border-radius: 6px;
+  box-shadow: var(--react-autoql-box-shadow-1);
+  padding: 15px;
+  margin: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
+.autoql-vanilla-card .autoql-vanilla-card-title {
+  cursor: pointer;
+  padding: 0 10px;
+  flex: 0 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: nowrap;
+  font-size: 18px;
+  margin: 4px 0;
+  font-weight: 600;
+}
+
+.autoql-vanilla-card-title-text {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+
+  .react-autoql-icon {
+    margin-right: 5px;
+  }
+}
