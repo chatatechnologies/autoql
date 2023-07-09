@@ -9,7 +9,7 @@ import {
 import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
 import './DataExplorer.scss';
-import { fetchDataPreview  } from 'autoql-fe-utils';
+import { fetchDataPreview, fetchDataExplorerSuggestions } from 'autoql-fe-utils';
 
 export function DataExplorer({ subjects, authentication }) {
   let obj = this;
@@ -87,7 +87,18 @@ export function DataExplorer({ subjects, authentication }) {
         token,
       });
 
-      console.log(response)
+      const realtedQueries = await fetchDataExplorerSuggestions({
+        context: subject.name,
+        skipQueryValidation: true,
+        pageNumber: 1,
+        pageSize: 25,
+        domain,
+        apiKey,
+        token,
+      })
+
+      console.log(response);
+      console.log(realtedQueries);
     }
   })
 
