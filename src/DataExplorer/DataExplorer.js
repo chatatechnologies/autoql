@@ -11,6 +11,7 @@ import { strings } from "../Strings";
 import './DataExplorer.scss';
 import { fetchDataPreview, fetchDataExplorerSuggestions } from 'autoql-fe-utils';
 import { Card } from './Components'
+import { DataPreview } from "./Components/DataPreview";
 
 export function DataExplorer({ subjects, authentication }) {
   let obj = this;
@@ -35,6 +36,7 @@ export function DataExplorer({ subjects, authentication }) {
   const listWrapper = document.createElement('div');
   const autocomplete = document.createElement('div');
   const subjectsWrapper = document.createElement('ul'); 
+  const contentWrapper = document.createElement('div');
 
   const texts = [
     { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
@@ -81,6 +83,10 @@ export function DataExplorer({ subjects, authentication }) {
       console.log('test');
       autocomplete.classList.remove('show')
       input.value = subject.display_name;
+      contentWrapper.innerHTML = '';
+      const previewSection = new DataPreview({ icon: TABLE_ICON, title: `Data Preview "${subject.query}"` });
+      contentWrapper.appendChild(previewSection.container);
+
       const response = await fetchDataPreview({
         subject: subject.name,
         domain,
@@ -113,13 +119,14 @@ export function DataExplorer({ subjects, authentication }) {
   instructions.appendChild(instructionList);
   introMessage.appendChild(title);
   introMessage.appendChild(instructions);
+  contentWrapper.appendChild(introMessage);
   container.appendChild(textBar);
-  container.appendChild(introMessage);
+  container.appendChild(contentWrapper);
   container.style.display = 'none';
   
   input.addEventListener('keydown', async event => {
       if (event.key == 'Enter' && input.value) {
-        
+        container.removeChild(introMessage);
       }
   });
 

@@ -1,4 +1,5 @@
 import { createIcon } from '../../../Utils';
+import './Card.scss'
 
 export function Card({ icon, title }) {
   const container = document.createElement('div');
@@ -9,6 +10,7 @@ export function Card({ icon, title }) {
 
   container.classList.add('autoql-vanilla-card');
   titleText.classList.add('autoql-vanilla-card-title-text');
+  titleContainer.classList.add('autoql-vanilla-card-title');
   content.classList.add('autoql-vanilla-card-content');
 
   titleText.appendChild(createIcon(icon));
@@ -17,4 +19,6 @@ export function Card({ icon, title }) {
   titleContainer.appendChild(titleWrapper);
   container.appendChild(titleContainer);
   container.appendChild(content);
+
+  return container;
 }
