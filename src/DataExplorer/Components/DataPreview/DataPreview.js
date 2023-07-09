@@ -1,4 +1,5 @@
 import { Card } from "../Card";
+import './DataPreview.scss';
 
 export function DataPreview({ icon, title }) {
   let obj = this;

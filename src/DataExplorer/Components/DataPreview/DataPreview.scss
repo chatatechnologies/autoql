@@ -7,3 +7,15 @@
   flex-direction: column;
   margin: 0 10px;
 }
+
+.autoql-vanilla-data-preview-section {
+  opacity: 0;
+  -webkit-transform: translateY(100%);
+  transform: translateY(100%);
+  -webkit-animation: slideUp .6s cubic-bezier(.26,.26,0,1);
+  animation: slideUp .6s cubic-bezier(.26,.26,0,1);
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-delay: 0s;
+  animation-delay: 0s;
+}

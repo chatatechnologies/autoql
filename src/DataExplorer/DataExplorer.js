@@ -10,7 +10,6 @@ import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
 import './DataExplorer.scss';
 import { fetchDataPreview, fetchDataExplorerSuggestions } from 'autoql-fe-utils';
-import { Card } from './Components'
 import { DataPreview } from "./Components/DataPreview";
 
 export function DataExplorer({ subjects, authentication }) {
