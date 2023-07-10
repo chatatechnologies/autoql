@@ -1,10 +1,10 @@
+import { fetchFilters } from 'autoql-fe-utils'
 import { FilterLockingInput } from './Components/FilterLockingInput'
 import { ConditionList } from './Components/ConditionList'
 import { INFO_ICON, CLOSE_ICON } from '../Svg'
 import { strings } from '../Strings'
-import { apiCallGet } from '../Api'
 import { refreshTooltips } from '../Tooltips'
-import './FilterLocking.css'
+import './FilterLocking.scss'
 
 export function FilterLocking(datamessenger){
     var view = document.createElement('div')
@@ -17,6 +17,8 @@ export function FilterLocking(datamessenger){
     var continueButton = document.createElement('button')
     var input = new FilterLockingInput(datamessenger, view)
     var conditionList = new ConditionList(datamessenger)
+
+    view.input = input;
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')
     header.classList.add('autoql-vanilla-condition-lock-header')
@@ -79,13 +81,13 @@ export function FilterLocking(datamessenger){
 
     view.existsFilter = (filter) => {
         const data = conditionList.getData()
-        const finded = data.find((line) => {
+        const found = data.find((line) => {
             const lineData = line.getData()
-            return lineData.key === filter.canonical
-            && lineData.value === filter.keyword
+            return lineData.key === (filter.key ?? filter.canonical)
+            && lineData.value === (filter.value ?? filter.keyword)
         })
 
-        return finded
+        return found
     }
 
     view.hide = () => {
@@ -94,13 +96,38 @@ export function FilterLocking(datamessenger){
         view.isOpen = false
     }
 
+    view.highlightFilter = (filter) => {
+        if (!filter) {
+            return
+        }
+
+        setTimeout(() => {
+            filter?.classList.add('autoql-vanilla-highlighted-filter')
+            setTimeout(() => {
+                filter?.classList.remove('autoql-vanilla-highlighted-filter')
+            }, 1000)
+        }, 300)
+    }
+
+    view.submitVL = (vl, text) => {
+        const foundFilter = view.existsFilter(vl)
+
+        if (foundFilter) {
+            view.highlightFilter(foundFilter)
+        } else {
+            view.submitText(text)
+        }
+    }
+
+    view.submitText = view.input?.animateInputWithText
+
     view.getConditions = async () => {
-        const {
-            authentication
-        } = datamessenger.options
-        const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
-        const response = await apiCallGet(url, datamessenger.options)
-        return response.data.data
+        if (datamessenger?.options?.authentication) {
+            const response = await fetchFilters(datamessenger.options.authentication)
+            return response?.data?.data
+        }
+
+        return
     }
 
     view.loadConditions = async () => {

@@ -1,5 +1,5 @@
 .autoql-vanilla-condition-list{
-    padding: 0 !important;
+    padding: 6px !important;
     margin: 0 auto;
     min-height: 182px;
 }
@@ -9,7 +9,7 @@
     padding: 20px !important;
     height: 140px !important;
     font-family: var(--autoql-vanilla-font-family);
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .autoql-vanilla-empty-condition-list p {
