@@ -44,7 +44,7 @@ export function Card({ icon, title }) {
     var responseLoadingContainer = document.createElement('div');
     var responseLoading = document.createElement('div');
 
-    responseLoadingContainer.classList.add('response-loading-container');
+    responseLoadingContainer.classList.add('autoql-vanilla-card-loading');
     responseLoading.classList.add('response-loading');
     for (var i = 0; i <= 3; i++) {
         responseLoading.appendChild(document.createElement('div'));

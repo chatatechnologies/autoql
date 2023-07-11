@@ -38,8 +38,24 @@
     position: relative;
     overflow: hidden;
     display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
     height: 100%;
+
+    .autoql-vanilla-card-loading {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    .response-loading {
+      display: flex;
+      align-items: center;
+      min-height: 100px;
+      div {
+        top: unset;
+      }
+    }
   }
 }
