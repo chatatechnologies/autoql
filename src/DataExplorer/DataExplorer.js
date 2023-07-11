@@ -12,7 +12,7 @@ import './DataExplorer.scss';
 import { fetchDataPreview, fetchDataExplorerSuggestions } from 'autoql-fe-utils';
 import { DataPreview } from "./Components/DataPreview";
 
-export function DataExplorer({ subjects, authentication }) {
+export function DataExplorer({ subjects, widgetOptions }) {
   let obj = this;
   obj.subjects = subjects;
 
@@ -20,7 +20,7 @@ export function DataExplorer({ subjects, authentication }) {
     token,
     domain,
     apiKey
-  } = authentication;
+  } = widgetOptions.authentication;
 
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
@@ -87,7 +87,7 @@ export function DataExplorer({ subjects, authentication }) {
         icon: TABLE_ICON,
         title: `Data Preview "${subject.query}"`,
         subject,
-        authentication,
+        widgetOptions,
       });
       contentWrapper.appendChild(previewSection.container);
 

@@ -1,8 +1,10 @@
 import { Card } from "../Card";
 import './DataPreview.scss';
 import { fetchDataPreview } from 'autoql-fe-utils'; 
-
-export function DataPreview({ icon, title, subject, authentication }) {
+import { ChataTable } from "../../../ChataTable";
+import { uuidv4 } from "../../../Utils";
+import { ChataUtils } from "../../../ChataUtils";
+export function DataPreview({ icon, title, subject, widgetOptions }) {
   let obj = this;
   const container = document.createElement('div');
   const card = new Card({ icon, title });
@@ -10,7 +12,7 @@ export function DataPreview({ icon, title, subject, authentication }) {
     domain,
     apiKey,
     token,
-  } = authentication;
+  } = widgetOptions.authentication;
 
   container.classList.add('autoql-vanilla-data-explorer-section');
   container.classList.add('autoql-vanilla-data-preview-section');
@@ -23,10 +25,21 @@ export function DataPreview({ icon, title, subject, authentication }) {
     card.showLoading();
     const response = await fetchDataPreview({
       subject: subject.name,
+      numRows: 5,
+      source: 'data_explorer.data_preview',
       domain,
       apiKey,
       token,
     });
+    obj.displayResponse(response);
+  }
+
+  obj.displayResponse = (r) => {
+    card.clearView();
+    const idRequest = uuidv4();
+    card.userContent.setAttribute('data-componentid', idRequest);
+    ChataUtils.responses[idRequest] = r.data;
+    new ChataTable(idRequest, widgetOptions, () => {});
   }
 
   obj.getPreview();
