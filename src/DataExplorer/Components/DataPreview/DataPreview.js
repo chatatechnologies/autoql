@@ -37,7 +37,14 @@ export function DataPreview({ icon, title, subject, widgetOptions }) {
   obj.displayResponse = (r) => {
     card.clearView();
     const idRequest = uuidv4();
-    card.userContent.setAttribute('data-componentid', idRequest);
+    const tableContainer = document.createElement('div');
+    const table = document.createElement('div');
+
+    table.setAttribute('data-componentid', idRequest);
+    tableContainer.classList.add('autoql-vanilla-chata-table-container');
+    table.classList.add('autoql-vanilla-chata-table');
+    tableContainer.appendChild(table);
+    card.setContent(tableContainer)
     ChataUtils.responses[idRequest] = r.data;
     new ChataTable(idRequest, widgetOptions, () => {});
   }

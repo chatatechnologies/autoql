@@ -44,6 +44,10 @@ export function Card({ icon, title }) {
     userContent.innerHTML = '';
   }
 
+  container.setContent = (node) => {
+    userContent.appendChild(node)
+  }
+
   container.showLoading = () => {
     var responseLoadingContainer = document.createElement('div');
     var responseLoading = document.createElement('div');
@@ -65,8 +69,6 @@ export function Card({ icon, title }) {
       container.show();
     }
   }
-
-  container.userContent = userContent;
 
   return container;
 }
