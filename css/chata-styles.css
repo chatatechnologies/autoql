@@ -108,16 +108,15 @@
 }
 
 .autoql-vanilla-chata-scrollbox {
-  width: 100%;
-  height: 100%;
-  max-height: calc(100% - 150px);
-  overflow: auto;
-  visibility: hidden;
-  scroll-behavior: smooth;
-  scrollbar-width: thin;
-  border-radius: 3px;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: calc(100% - 150px);
+    overflow: hidden;
+    visibility: hidden;
+    border-radius: 3px;
+    overscroll-behavior: contain
 }
-
 .autoql-vanilla-chata-scrollbox.max-height{
     max-height: 100% !important;
 }
