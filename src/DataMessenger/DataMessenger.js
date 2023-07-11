@@ -1,3 +1,5 @@
+import PerfectScrollbar from 'perfect-scrollbar'
+import { runQuery } from 'autoql-fe-utils';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -114,6 +116,7 @@ export function DataMessenger(options = {}) {
         enableDynamicCharting: true,
         landingPage: 'data-messenger',
         autoChartAggregations: true,
+        pageSize: 50,
         xhr: new XMLHttpRequest(),
         ...options, // Spread all provided options to overwrite defaults
         authentication: {
@@ -1385,14 +1388,31 @@ export function DataMessenger(options = {}) {
         return ChataUtils.getActionButton(svg, tooltip, idRequest, onClick, evtParams);
     };
 
+    obj.scrollIntoView = (element, checkElement) => {
+        if (obj.ps.element && element?.scrollIntoView) {
+            const scrollElementClientRect = obj.ps.element.getBoundingClientRect();
+            const scrollTop = scrollElementClientRect?.y; 
+            const scrollBottom = scrollTop + scrollElementClientRect?.height; 
+
+            const elementClientRect = (checkElement ?? element).getBoundingClientRect();
+            const elemTop = elementClientRect?.y; 
+            const elemBottom = elemTop + elementClientRect?.height; 
+
+            if (elemBottom > scrollBottom || elemTop < scrollTop) {
+                element.scrollIntoView({ block: 'end', inline: 'nearest' });
+            }
+        }
+    };
+
     obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         closeAllToolbars();
         reportProblem.classList.toggle('show');
         toolbar.classList.toggle('show');
-        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`);
+        var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
+        var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         if (bubble === obj.getLastMessageBubble()) {
             if (!bubble.classList.contains('autoql-vanilla-chat-message-response')) {
-                bubble.scrollIntoView();
+                obj.scrollIntoView(bubbleWithRT, bubble)
             }
         }
     };
@@ -1401,22 +1421,27 @@ export function DataMessenger(options = {}) {
         closeAllToolbars();
         moreOptions.classList.toggle('show');
         toolbar.classList.toggle('show');
-        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`);
+        var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
+        var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         if (bubble === obj.getLastMessageBubble()) {
             if (!bubble.classList.contains('autoql-vanilla-chat-message-response')) {
-                bubble.scrollIntoView();
+                obj.scrollIntoView(bubbleWithRT, bubble)
             }
         }
     };
 
     obj.filterTableHandler = (evt, idRequest) => {
         var table = document.querySelector(`[data-componentid="${idRequest}"]`);
-        var bubble = document.querySelector(`[data-bubble-id='${idRequest}']`);
+        var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
+        var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         var tabulator = table.tabulator;
         tabulator.toggleFilters();
-        setTimeout(() => {
-            bubble.scrollIntoView();
-        }, 50);
+
+        if (table.isFiltering) {
+            setTimeout(() => {
+                obj.scrollIntoView(bubbleWithRT, bubble);
+            }, 50);
+        }
     };
 
     obj.openColumnEditorHandler = (evt, idRequest, badge) => {
@@ -1896,10 +1921,24 @@ export function DataMessenger(options = {}) {
     obj.displayTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
         var parentContainer = obj.getParentFromComponent(component);
+        var useInfiniteScroll = true // console.log('TEMP - calculate this value later')
+        var tableParams = undefined
+
         obj.refreshToolbarButtons(component, 'table');
-        var table = new ChataTable(idRequest, obj.options, obj.onRowClick, () => {
-            parentContainer.parentElement.scrollIntoView();
-        });
+
+        function scrollMessageIntoView() {
+            parentContainer?.parentElement?.scrollIntoView?.();
+        }
+
+        var table = new ChataTable(
+            idRequest,
+            obj.options,
+            obj.onRowClick,
+            scrollMessageIntoView,
+            useInfiniteScroll,
+            tableParams,
+        );
+
         component.internalTable = table;
         component.tabulator = table;
         obj.setDefaultFilters(component, table, 'table');
@@ -2253,6 +2292,7 @@ export function DataMessenger(options = {}) {
         messageBubble.appendChild(responseContentContainer);
         var chatMessageBubbleContainer = document.createElement('div');
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.setAttribute('data-bubble-container-id', idRequest);
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer)
         obj.drawerContent.appendChild(containerMessage);
@@ -2275,7 +2315,7 @@ export function DataMessenger(options = {}) {
         setTimeout(function () {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
-        allColHiddenMessage(tableWrapper);
+
         return idRequest;
     };
 
@@ -2663,25 +2703,47 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        const URL_SAFETYNET = `${domain}/autoql/api/v1/query/validate?text=${encodeURIComponent(
-            textValue,
-        )}&key=${apiKey}`;
+        const queryParams = {
+            query: textValue,
+            domain,
+            apiKey,
+            token,
+            userSelection: undefined,
+            userSelectionFinal: undefined,
+            debug: false,
+            test: obj.options.autoQLConfig.test,
+            source: 'data_messenger.user',
+            scope: 'data_messenger',
+            filters: [],
+            orders: [],
+            tableFilters: [],
+            pageSize: obj.options.pageSize,
+            translation: "include",
+            allowSuggestions: true,
+            enableQueryValidation: obj.options.autoQLConfig.enableQueryValidation,
+            skipQueryValidation: false,
+        }
 
-        if (obj.options.autoQLConfig.enableQueryValidation) {
-            let response = await apiCallGet(URL_SAFETYNET, obj.options);
-            const { status } = response
-            if (!response) {
-                obj.input.removeAttribute('disabled');
-                if (responseLoadingContainer) {
-                    obj.drawerContent.removeChild(responseLoadingContainer);
-                }
-                obj.sendResponse(strings.accessDenied);
-                return;
+        let response;
+        try {
+            response = await runQuery(queryParams);
+        } catch (error) {
+            response = error;
+        }
+
+        obj.input.removeAttribute('disabled');
+
+        if (!response) {
+            if (responseLoadingContainer) {
+                obj.drawerContent.removeChild(responseLoadingContainer);
             }
+            obj.sendResponse(strings.accessDenied);
+            return;
+        }
 
-            obj.input.removeAttribute('disabled');
-            if (status != 200) {
-                let msg = response.data.message;
+        const { status } = response
+        if (status != 200) {
+            let msg = response.data.message;
                 let ref = response.data['reference_id'];
                 if (ref === '1.1.482') {
                     obj.putSimpleResponse(response.data, textValue, status);
@@ -2704,46 +2766,31 @@ export function DataMessenger(options = {}) {
                 }
                 refreshTooltips();
                 return;
-            } else {
-                let suggestions = {};
-                if (response.data != undefined) {
-                    suggestions = response.data['full_suggestion'] || response.data['data']['replacements'];
-                }
+        }
 
-                if (textValue != 'None Of these' && suggestions.length > 0 && typeof selections === 'undefined') {
-                    obj.input.removeAttribute('disabled');
-                    if (responseLoadingContainer) {
-                        obj.drawerContent.removeChild(responseLoadingContainer);
-                    }
-                    obj.putSafetynetMessage(response.data);
-                    return;
+        if (response?.data?.data?.replacements) {
+            const suggestions = response.data.data.replacements;
+            
+            if (textValue != 'None Of these' && suggestions?.length > 0 && typeof selections === 'undefined') {
+                obj.input.removeAttribute('disabled');
+                if (responseLoadingContainer) {
+                    obj.drawerContent.removeChild(responseLoadingContainer);
                 }
+                obj.putSafetynetMessage(response.data);
+                return;
             }
         }
 
-        let response = await apiCallV2(
-            obj.options,
-            {
-                "date_format": TIMESTAMP_FORMATS.iso8601,
-                "page_size": 500,
-                "scope": "data_messenger",
-                "session_filter_locks": [],
-                "source": "data_messenger.user",
-                "test":  obj.options.autoQLConfig.test,
-                "text": textValue,
-                "translation": "include"
-            }
-        )
-        if(!response){
-            obj.input.removeAttribute("disabled")
-            if(responseLoadingContainer){
-                obj.drawerContent.removeChild(responseLoadingContainer)
-            }
-            obj.sendResponse(strings.accessDenied);
-            return;
-        }
-        var status = response.status;
         var jsonResponse = response.data;
+
+        jsonResponse.queryFn = (params = {}) => {
+            return runQuery({
+                ...queryParams,
+                ...(obj.options.authentication ?? {}),
+                ...params,
+            })
+        }
+
         var groupables = [];
         if (jsonResponse.data.columns) {
             groupables = getGroupables(jsonResponse);
@@ -2757,7 +2804,6 @@ export function DataMessenger(options = {}) {
             displayType = 'stacked_column';
         }
 
-        obj.input.removeAttribute('disabled');
         if (responseLoadingContainer) {
             obj.drawerContent.removeChild(responseLoadingContainer);
         }
@@ -2873,6 +2919,8 @@ export function DataMessenger(options = {}) {
         closeAllChartPopovers();
         closeAllSafetynetSelectors();
     };
+
+    obj.ps = new PerfectScrollbar(obj.scrollBox);
 
     refreshTooltips();
 
