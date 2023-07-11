@@ -83,15 +83,13 @@ export function DataExplorer({ subjects, authentication }) {
       autocomplete.classList.remove('show')
       input.value = subject.display_name;
       contentWrapper.innerHTML = '';
-      const previewSection = new DataPreview({ icon: TABLE_ICON, title: `Data Preview "${subject.query}"` });
-      contentWrapper.appendChild(previewSection.container);
-
-      const response = await fetchDataPreview({
-        subject: subject.name,
-        domain,
-        apiKey,
-        token,
+      const previewSection = new DataPreview({
+        icon: TABLE_ICON,
+        title: `Data Preview "${subject.query}"`,
+        subject,
+        authentication,
       });
+      contentWrapper.appendChild(previewSection.container);
 
       const realtedQueries = await fetchDataExplorerSuggestions({
         context: subject.name,
@@ -103,7 +101,6 @@ export function DataExplorer({ subjects, authentication }) {
         token,
       })
 
-      console.log(response);
       console.log(realtedQueries);
     }
   })
