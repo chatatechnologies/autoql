@@ -30,4 +30,15 @@
       }
     }
   }
+
+  .autoql-vanilla-card-user-content {
+    flex: 0 1 auto;
+    min-height: 100px;
+    max-height: 100%;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
 }
