@@ -11,7 +11,7 @@ export function DataPreview({ icon, title, subject, authentication }) {
     apiKey,
     token,
   } = authentication;
-  
+
   container.classList.add('autoql-vanilla-data-explorer-section');
   container.classList.add('autoql-vanilla-data-preview-section');
 
@@ -20,6 +20,7 @@ export function DataPreview({ icon, title, subject, authentication }) {
   obj.container = container;
 
   obj.getPreview = async() => {
+    card.showLoading();
     const response = await fetchDataPreview({
       subject: subject.name,
       domain,

@@ -3,7 +3,6 @@ import { CARET_DOWN_ICON, CARET_LEFT_ICON} from '../../../Svg';
 import './Card.scss'
 
 export function Card({ icon, title }) {
-  let obj = this;
   const container = document.createElement('div');
   const titleContainer = document.createElement('div');
   const titleWrapper = document.createElement('div');
@@ -12,7 +11,7 @@ export function Card({ icon, title }) {
   const userContent = document.createElement('div');
   const caretDown = createIcon(CARET_DOWN_ICON);
   const caretLeft = createIcon(CARET_LEFT_ICON);
-  obj.isOpen = true;
+  container.isOpen = true;
 
   container.classList.add('autoql-vanilla-card');
   titleText.classList.add('autoql-vanilla-card-title-text');
@@ -29,23 +28,37 @@ export function Card({ icon, title }) {
   container.appendChild(titleContainer);
   container.appendChild(content);
 
-  obj.show = () => {
-    obj.isOpen = true;
+  container.show = () => {
+    container.isOpen = true;
     titleContainer.removeChild(caretLeft);
     titleContainer.appendChild(caretDown);
   }
 
-  obj.hide = () => {
-    obj.isOpen = false;
+  container.hide = () => {
+    container.isOpen = false;
     titleContainer.removeChild(caretDown);
     titleContainer.appendChild(caretLeft);
   }
 
+  container.showLoading = () => {
+    var responseLoadingContainer = document.createElement('div');
+    var responseLoading = document.createElement('div');
+
+    responseLoadingContainer.classList.add('response-loading-container');
+    responseLoading.classList.add('response-loading');
+    for (var i = 0; i <= 3; i++) {
+        responseLoading.appendChild(document.createElement('div'));
+    }
+
+    responseLoadingContainer.appendChild(responseLoading);
+    userContent.appendChild(responseLoadingContainer);
+  };
+
   titleContainer.onclick = () => {
-    if(obj.isOpen) {
-      obj.hide();
+    if(container.isOpen) {
+      container.hide();
     }else{
-      obj.show();
+      container.show();
     }
   }
 
