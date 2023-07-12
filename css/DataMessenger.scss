@@ -4,9 +4,9 @@
     transition: width 0s ease 0.3s, height 0s ease 0.3s, transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
 
     // Disable scrolling in the child message elements while the main message container is being scrolled
-    // .autoql-vanilla-chata-scrollbox.ps--scrolling-y .autoql-vanilla-chat-single-message-container {
-    //     pointer-events: none;
-    // }
+    .autoql-vanilla-chata-scrollbox.ps--scrolling-y .autoql-vanilla-chat-single-message-container {
+        pointer-events: none;
+    }
 
     .autoql-vanilla-chat-header-container {
         display: flex;

@@ -1,4 +1,3 @@
-import PerfectScrollbar from 'perfect-scrollbar'
 import { runQuery, isDataLimited } from 'autoql-fe-utils';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
@@ -12,7 +11,6 @@ import {
 } from '../Notifications'
 import { ReverseTranslation } from '../ReverseTranslation'
 import {
-    apiCallV2,
     apiCallGet,
     apiCallPut,
     apiCallPost,
@@ -52,7 +50,7 @@ import {
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
-import { Chart } from '../Charts/v2'
+import { Scrollbars } from '../Scrollbars'
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -1926,7 +1924,7 @@ export function DataMessenger(options = {}) {
         var component = obj.getComponent(idRequest);
         var json = obj.getRequest(idRequest)
         var parentContainer = obj.getParentFromComponent(component);
-        var useInfiniteScroll = false // isDataLimited(json)
+        var useInfiniteScroll = isDataLimited(json)
         var tableParams = undefined
 
         obj.refreshToolbarButtons(component, 'table');
@@ -2925,7 +2923,12 @@ export function DataMessenger(options = {}) {
         closeAllSafetynetSelectors();
     };
 
-    obj.ps = new PerfectScrollbar(obj.scrollBox);
+    obj.ps = new Scrollbars(obj.scrollBox, {
+        wheelPropagation: false,
+        scrollingThreshold: 200,
+        scrollXMarginOffset: 5,
+        scrollYMarginOffset: 5,
+    });
 
     refreshTooltips();
 

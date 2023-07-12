@@ -1,6 +1,5 @@
 import axios from 'axios';
-import PerfectScrollbar from 'perfect-scrollbar'
-import { ChataUtils } from '../ChataUtils';
+import moment from 'moment';
 import {
     runQueryNewPage,
     formatTableParams,
@@ -12,6 +11,8 @@ import {
 import _isEqual from 'lodash.isequal';
 import _cloneDeep from 'lodash.clonedeep';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
+import { Scrollbars } from '../Scrollbars'
+import { ChataUtils } from '../ChataUtils';
 import {
     formatData,
     formatColumnName,
@@ -23,7 +24,6 @@ import {
     allColHiddenMessage,
 } from '../Utils';
 import { strings } from '../Strings';
-import moment from 'moment';
 
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
@@ -551,14 +551,19 @@ export function ChataTable(
         }
     };
 
-    component.replaceWithPerfectScrollbar = () => {
+    component.replaceScrollbar = () => {
         var tableholder = table.element?.querySelector('.tabulator-tableholder')
         // tableholder.setAttribute('data-mdb-perfect-scrollbar', 'true')
 
         console.log({tableholder, element:table.element, selection: table.element?.querySelector('.tabulator-tableholder')})
     
         if (tableholder) {
-            component.ps = new PerfectScrollbar(tableholder)
+            component.ps = new Scrollbars(tableholder, {
+                wheelPropagation: false,
+                scrollingThreshold: 200,
+                scrollXMarginOffset: 5,
+                scrollYMarginOffset: 5,
+            })
         }
     }
 
@@ -590,7 +595,7 @@ export function ChataTable(
 
             component.createScrollLoader();
             component.createPageLoader();
-            component.replaceWithPerfectScrollbar();
+            component.replaceScrollbar();
         });
 
         return tabulator;
@@ -732,7 +737,7 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
 
         tabulator.on('tableBuilt', async () => {
             component.isInitialized = true;
-            component.replaceWithPerfectScrollbar();
+            component.replaceScrollbar();
         });
 
         return tabulator;
