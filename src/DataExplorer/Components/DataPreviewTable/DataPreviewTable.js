@@ -1,4 +1,4 @@
-import './DataPreview.scss'
+import './DataPreviewTable.scss'
 import { formatElement } from 'autoql-fe-utils';
 
 export function DataPreviewTable({ previewResponse }) {
