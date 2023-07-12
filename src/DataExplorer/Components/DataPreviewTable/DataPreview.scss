@@ -9,7 +9,16 @@
 
     tbody {
       tr:not(:last-child) {
-        border-bottom: 1px solid var(--autql-vanilla-border-color);
+        border-bottom: 1px solid var(--autoql-vanilla-border-color);
+      }
+      tr {
+        height: 24px;
+        td:not(:last-child) {
+          border-right: 1px solid var(--autoql-vanilla-border-color);
+        }
+        td {
+          padding: 0 10px;
+        }
       }
     }
   }

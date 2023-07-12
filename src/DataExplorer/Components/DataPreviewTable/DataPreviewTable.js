@@ -1,4 +1,5 @@
 import './DataPreview.scss'
+import { formatElement } from 'autoql-fe-utils';
 
 export function DataPreviewTable({ previewResponse }) {
   const container = document.createElement('div');
@@ -22,12 +23,15 @@ export function DataPreviewTable({ previewResponse }) {
   rows.forEach((row) => {
     const dataPreviewRow = document.createElement('tr');
     dataPreviewRow.classList.add('autoql-vanilla-data-preview-row');
-    row.forEach((value) => {
+    row.forEach((value, index) => {
       const td = document.createElement('td');
       const cell = document.createElement('div');
       cell.classList.add('data-preview-cell')
 
-      cell.textContent = value;
+      cell.textContent = formatElement({
+        element: value,
+        column: columns[index],
+      });
       td.appendChild(cell);
       dataPreviewRow.appendChild(td);
     })
