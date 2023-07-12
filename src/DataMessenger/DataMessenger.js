@@ -1773,11 +1773,11 @@ export function DataMessenger(options = {}) {
         }
 
         responseLoadingContainer.appendChild(responseLoading);
-        obj.drawerContent.appendChild(responseLoadingContainer);
+        obj.chataBarContainer.appendChild(responseLoadingContainer);
         var response = await apiCallPost(URL, data, options);
         var responseJson = response.data;
         var status = response.status;
-        obj.drawerContent.removeChild(responseLoadingContainer);
+        obj.chataBarContainer.removeChild(responseLoadingContainer);
         if (!responseJson['data']['rows']) {
             obj.putClientResponse(strings.errorMessage);
         } else if (responseJson['data']['rows'].length > 0) {
@@ -2195,7 +2195,7 @@ export function DataMessenger(options = {}) {
             obj.hideBubbles();
             return null;
         }
-        obj.drawerContent.appendChild(responseLoadingContainer);
+        obj.chataBarContainer.appendChild(responseLoadingContainer);
         return responseLoadingContainer;
     };
 
@@ -2395,6 +2395,11 @@ export function DataMessenger(options = {}) {
 
     obj.createSuggestions = async function (responseContentContainer, relatedJson, json) {
         var data = json['data']['items'];
+
+        if (!data) {
+            return
+        }
+
         var { domain, apiKey } = obj.options.authentication;
         var queryId = relatedJson['data']['query_id'];
         const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`;
@@ -2451,7 +2456,6 @@ export function DataMessenger(options = {}) {
         );
 
         responseContentContainer.classList.add('suggestions')
-
         obj.createSuggestions(responseContentContainer, relatedJson, jsonResponse);
         messageBubble.appendChild(responseContentContainer);
         var chatMessageBubbleContainer = document.createElement('div');
@@ -2509,7 +2513,7 @@ export function DataMessenger(options = {}) {
         }
 
         responseLoadingContainer.appendChild(responseLoading);
-        obj.drawerContent.appendChild(responseLoadingContainer);
+        obj.chataBarContainer.appendChild(responseLoadingContainer);
 
         return responseLoadingContainer;
     };
@@ -2699,7 +2703,7 @@ export function DataMessenger(options = {}) {
 
         if (!token) {
             if (responseLoadingContainer) {
-                obj.drawerContent.removeChild(responseLoadingContainer);
+                obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
             obj.sendResponse(strings.accessDenied, true);
             obj.input.removeAttribute('disabled');
@@ -2739,7 +2743,7 @@ export function DataMessenger(options = {}) {
 
         if (!response) {
             if (responseLoadingContainer) {
-                obj.drawerContent.removeChild(responseLoadingContainer);
+                obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
             obj.sendResponse(strings.accessDenied);
             return;
@@ -2766,7 +2770,7 @@ export function DataMessenger(options = {}) {
                     }
                 }
                 if (responseLoadingContainer) {
-                    obj.drawerContent.removeChild(responseLoadingContainer);
+                    obj.chataBarContainer.removeChild(responseLoadingContainer);
                 }
                 refreshTooltips();
                 return;
@@ -2778,7 +2782,7 @@ export function DataMessenger(options = {}) {
             if (textValue != 'None Of these' && suggestions?.length > 0 && typeof selections === 'undefined') {
                 obj.input.removeAttribute('disabled');
                 if (responseLoadingContainer) {
-                    obj.drawerContent.removeChild(responseLoadingContainer);
+                    obj.chataBarContainer.removeChild(responseLoadingContainer);
                 }
                 obj.putSafetynetMessage(response.data);
                 return;
@@ -2809,7 +2813,7 @@ export function DataMessenger(options = {}) {
         }
 
         if (responseLoadingContainer) {
-            obj.drawerContent.removeChild(responseLoadingContainer);
+            obj.chataBarContainer.removeChild(responseLoadingContainer);
         }
         if (jsonResponse.data.rows && jsonResponse.data.rows.length === 0) {
             obj.putSimpleResponse(jsonResponse, textValue, status);
