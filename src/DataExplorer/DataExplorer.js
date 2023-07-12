@@ -11,6 +11,7 @@ import { strings } from "../Strings";
 import './DataExplorer.scss';
 import { fetchDataPreview, fetchDataExplorerSuggestions } from 'autoql-fe-utils';
 import { DataPreview } from "./Components/DataPreview";
+import { RelatedQueries } from "./Components/RelatedQueries";
 
 export function DataExplorer({ subjects, widgetOptions }) {
   let obj = this;
@@ -90,6 +91,13 @@ export function DataExplorer({ subjects, widgetOptions }) {
         widgetOptions,
       });
       contentWrapper.appendChild(previewSection.container);
+
+      const relatedQueriesSection = new RelatedQueries({
+        icon: CHATA_BUBBLES_ICON,
+        title: `Query suggestions for "${subject.display_name}"`,
+      });
+
+      contentWrapper.appendChild(relatedQueriesSection);
 
       const realtedQueries = await fetchDataExplorerSuggestions({
         context: subject.name,

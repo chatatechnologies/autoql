@@ -6,10 +6,10 @@
   display: flex;
   flex-direction: column;
   margin: 0 10px;
+  opacity: 0;
 }
 
-.autoql-vanilla-data-preview-section {
-  opacity: 0;
+.autoql-vanilla-data-explorer-section {
   -webkit-transform: translateY(100%);
   transform: translateY(100%);
   -webkit-animation: slideUp .6s cubic-bezier(.26,.26,0,1);

@@ -1,0 +1,15 @@
+.autoql-vanilla-query-suggestions-section {
+  flex: 0 1 auto;
+  max-height: 100%;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0 10px;
+  opacity: 0;
+}
+
+.autoql-vanilla-data-explorer-section:nth-of-type(2) {
+  -webkit-animation-delay: .2s;
+  animation-delay: .2s;
+}
