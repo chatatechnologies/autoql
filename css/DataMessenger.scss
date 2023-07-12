@@ -617,3 +617,44 @@
         }
     }
 }
+
+.response-loading-container {
+    display: flex;
+    position: absolute;
+    bottom: 0px;
+    left: 20px;
+
+    .response-loading {
+        display: inline-block;
+        position: relative;
+        height: 12px;
+        width: 64px;
+
+        div {
+            position: absolute;
+            top: 0;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #e2e2e2;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+
+            &:nth-child(1) {
+                left: 6px;
+                animation: response-loading1 0.6s infinite;
+            }
+            &:nth-child(2) {
+                left: 6px;
+                animation: response-loading2 0.6s infinite;
+            }
+            &:nth-child(3) {
+                left: 26px;
+                animation: response-loading2 0.6s infinite;
+            }
+            &:nth-child(4) {
+                left: 45px;
+                animation: response-loading3 0.6s infinite;
+            }
+        }
+    }
+}
