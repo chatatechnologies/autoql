@@ -342,7 +342,7 @@ export function ChataTable(
     component.isFiltering = true
     
     var table = new Tabulator(component, {
-        layout: 'fitDataTable',
+        layout: 'fitDataFill',
         virtualDomBuffer: 350,
         virtualDom: true,
         movableColumns: true,
