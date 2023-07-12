@@ -983,7 +983,7 @@ export function getStringWidth(string){
     div.style.position = 'absolute';
     div.style.visibility = 'hidden';
     document.body.appendChild(div);
-    var width = div.offsetWidth;
+    var width = div?.offsetWidth ?? 0;
     document.body.removeChild(div);
     return width;
 }
@@ -1017,52 +1017,58 @@ export function allColsHidden(json){
     return isAllHidden;
 }
 
-export function allColHiddenMessage(table){
-    const requestId = table.dataset.componentid;
-    var csvHandlerOption = table.tabulator.parentContainer.querySelector(
-        '[data-name-option="csv-handler"]'
-    );
+export function allColHiddenMessage(table) {
+    try {
+        const requestId = table?.dataset?.componentid;
+        if (!requestId || !table?.tabulator?.parentContainer) {
+            return;
+        }
 
-    var csvCopyOption = table.tabulator.parentContainer.querySelector(
-        '[data-name-option="copy-csv-handler"]'
-    );
+        var csvHandlerOption = table.tabulator.parentContainer.querySelector('[data-name-option="csv-handler"]');
 
-    var filterOption = table.tabulator.parentContainer.querySelector(
-        '[data-name-option="filter-action"]'
-    );
-    const json = ChataUtils.responses[requestId];
-    var isAllHidden = allColsHidden(json);
-    let message;
-    if(table.noColumnsElement){
-        message = table.noColumnsElement;
-    }else{
-        message = htmlToElement(
-        `<div class="autoql-vanilla-no-columns-error-message">
+        var csvCopyOption = table.tabulator.parentContainer.querySelector('[data-name-option="copy-csv-handler"]');
+
+        var filterOption = table.tabulator.parentContainer.querySelector('[data-name-option="filter-action"]');
+
+        const json = ChataUtils.responses[requestId];
+        var isAllHidden = allColsHidden(json);
+        let message;
+        if (table.noColumnsElement) {
+            message = table.noColumnsElement;
+        } else {
+            message = htmlToElement(
+                `<div class="autoql-vanilla-no-columns-error-message">
             <div>
                 <span class="chata-icon warning-icon">
                     ${WARNING}
                 </span>
                 ${strings.allColsHidden.chataFormat(COLUMN_EDITOR)}
             </div>
-        </div>`);
-        table.parentElement.appendChild(message);
-        table.noColumnsElement = message;
-    }
+        </div>`,
+            );
+            table.parentElement.appendChild(message);
+            table.noColumnsElement = message;
+        }
 
-    if(isAllHidden){
-        message.style.display = 'flex';
-        table.style.display = 'none';
-        csvHandlerOption.style.display = 'none';
-        csvCopyOption.style.display = 'none';
-        filterOption.style.display = 'none';
+        if (isAllHidden) {
+            message.style.display = 'flex';
+            table.style.display = 'none';
+            csvHandlerOption.style.display = 'none';
+            csvCopyOption.style.display = 'none';
+            filterOption.style.display = 'none';
+        } else {
+            message.style.display = 'none';
+            table.style.display = 'inline-block';
+            csvHandlerOption.style.display = 'block';
+            csvCopyOption.style.display = 'block';
+            filterOption.style.display = 'flex';
 
-    }else{
-        message.style.display = 'none';
-        table.style.display = 'inline-block';
-        csvHandlerOption.style.display = 'block';
-        csvCopyOption.style.display = 'block';
-        filterOption.style.display = 'flex';
-        table.tabulator.redraw();
+            if (table.isInitialized) {
+                table.tabulator.redraw();
+            }
+        }
+    } catch (error) {
+        return;
     }
 }
 

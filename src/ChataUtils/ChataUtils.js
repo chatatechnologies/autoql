@@ -681,7 +681,10 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
             }else{
                 tableCols[i].hide();
             }
-            table.tabulator.redraw();
+
+            if (table.isInitialized) {
+                table.tabulator.redraw();
+            }
         }
 
         await apiCallPut(url, {columns: data}, opts)

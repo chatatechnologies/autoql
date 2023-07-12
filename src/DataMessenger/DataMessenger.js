@@ -1,5 +1,5 @@
 import PerfectScrollbar from 'perfect-scrollbar'
-import { runQuery } from 'autoql-fe-utils';
+import { runQuery, isDataLimited } from 'autoql-fe-utils';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -1681,12 +1681,12 @@ export function DataMessenger(options = {}) {
             var json = ChataUtils.responses[uuid];
             var displayTypes = getSupportedDisplayTypes(json);
             if (displayTypes.length <= 5) {
-                messageBubble.classList.remove('full-width');
+                messageBubble.classList.remove('chart-full-width');
             } else {
-                messageBubble.classList.add('full-width');
+                messageBubble.classList.add('chart-full-width');
             }
         } else {
-            messageBubble.classList.add('full-width');
+            messageBubble.classList.add('chart-full-width');
         }
 
         var scrollBox = messageBubble.querySelector('.autoql-vanilla-chata-table-scrollbox');
@@ -1904,6 +1904,10 @@ export function DataMessenger(options = {}) {
     };
 
     obj.setDefaultFilters = (component, table, type) => {
+        if (!table?.toggleFilters) {
+            return
+        }
+
         var filters = [];
         if (type === 'table') filters = component.filterMetadata;
         else if (type === 'pivot') filters = component.pivotFilterMetadata;
@@ -1920,8 +1924,9 @@ export function DataMessenger(options = {}) {
 
     obj.displayTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
+        var json = obj.getRequest(idRequest)
         var parentContainer = obj.getParentFromComponent(component);
-        var useInfiniteScroll = true // console.log('TEMP - calculate this value later')
+        var useInfiniteScroll = false // isDataLimited(json)
         var tableParams = undefined
 
         obj.refreshToolbarButtons(component, 'table');
@@ -2631,7 +2636,7 @@ export function DataMessenger(options = {}) {
         containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('full-width');
+        messageBubble.classList.add('chart-full-width');
         messageBubble.append(
             createSafetynetContent(suggestionArray, () => {
                 var words = getSafetynetValues(messageBubble);
@@ -2676,7 +2681,7 @@ export function DataMessenger(options = {}) {
 
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('full-width');
+        messageBubble.classList.add('chart-full-width');
 
         var chatMessageBubbleContainer = document.createElement('div');
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')

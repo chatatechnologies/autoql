@@ -1,4 +1,5 @@
 import './index.scss'
+import './scrollbar.scss'
 
 export { DataMessenger } from './DataMessenger';
 export { Dashboard } from './Dashboard';

@@ -12,7 +12,7 @@
             background: var(--autoql-vanilla-background-color-secondary);
             margin-bottom: 0;
 
-            .tabulator-tableHolder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left,
+            .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-frozen.tabulator-frozen-left,
             .tabulator-header .tabulator-frozen.tabulator-frozen-left {
                 border-right: 2px solid var(--autoql-vanilla-table-border-color);
                 cursor: default;
@@ -27,25 +27,30 @@
                 color: inherit;
             }
 
-            &.no-drilldown .tabulator-tableHolder .tabulator-table .tabulator-row {
-                cursor: default;
+            &:not(.no-drilldown) .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell {
+                cursor: pointer;
             }
 
             &.is-filtering {
-                .tabulator-tableHolder {
+                .tabulator-tableholder {
                     max-height: calc(100% - 60px) !important;
                     min-height: calc(100% - 60px) !important;
                     height: calc(100% - 60px) !important;
                 }
 
-                .tabulator-header {
-                    max-height: 60px;
-                    height: 60px;
+                .tabulator-header-content {
+                    min-height: 60px !important;
+                    max-height: 60px !important;
+                    height: 60px !important;
+
+                    input {
+                        visibility: visible;
+                    }
                 }
             }
 
             &:not(.is-filtering) {
-                .tabulator-tableHolder {
+                .tabulator-tableholder {
                     height: calc(100% - 32px) !important;
                     min-height: calc(100% - 32px) !important;
                     max-height: calc(100% - 32px) !important;
@@ -54,6 +59,14 @@
                 .tabulator-header {
                     max-height: 32px;
                     height: 32px;
+
+                    input {
+                        visibility: hidden;
+                    }
+                }
+
+                .tabulator-col-content.is-filtered .tabulator-col-title:before {
+                    opacity: 1;
                 }
             }
 
@@ -90,6 +103,13 @@
                         border: 1px solid var(--autoql-vanilla-accent-color);
                         box-shadow: none;
                     }
+
+                    &::-webkit-search-decoration,
+                    &::-webkit-search-cancel-button,
+                    &::-webkit-search-results-button,
+                    &::-webkit-search-results-decoration {
+                        -webkit-appearance: none;
+                    }
                 }
             }
 
@@ -106,9 +126,7 @@
 
                 .tabulator-cell {
                     padding: 1px 8px;
-                    line-height: 23px;
                     font-size: 11px;
-                    cursor: pointer;
 
                     &:not(:first-child) {
                         border-color: var(--autoql-vanilla-table-border-color);
@@ -121,10 +139,29 @@
                 border-color: transparent;
                 background-color: var(--autoql-vanilla-background-color-secondary);
                 font-size: 11px;
+                min-height: 58px;
 
                 .tabulator-col-title {
                     padding-left: 12px;
                     padding-right: 15px;
+
+                    &:before {
+                        content: '';
+                        display: inline-block;
+                        vertical-align: middle;
+                        opacity: 0;
+
+                        height: 8px;
+                        width: 8px;
+
+                        margin-right: 5px;
+                        margin-left: -12px;
+                        margin-bottom: 2px;
+
+                        border-radius: 10px;
+                        background: var(--react-autoql-warning-color);
+                        transition: opacity 0.3s ease;
+                    }
                 }
 
                 .tabulator-col-content {
@@ -176,11 +213,83 @@
 
             .tabulator-tableholder {
                 background-color: inherit;
+                position: relative;
+                overflow: hidden;
             }
         }
     }
 
     .autoql-vanilla-chata-table-scrollbox {
         flex: 1;
+        height: 100%;
+        max-width: 100%;
+        overflow: hidden;
+        visibility: visible;
+    }
+}
+
+.autoql-vanilla-table-loader {
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    background-color: transparent;
+    color: var(--react-autoql-accent-color);
+
+    &.autoql-vanilla-table-loader-hidden {
+        visibility: hidden;
+    }
+
+    &.autoql-vanilla-table-placeholder {
+        color: var(--react-autoql-text-color-primary);
+        font-size: 12px;
+        opacity: 0.5;
+        top: 20px;
+    }
+
+    &.autoql-vanilla-table-scroll-loader {
+        bottom: 0;
+        right: 0;
+        left: 0;
+        pointer-events: none;
+
+        .autoql-vanilla-spinner-loader {
+            margin: 0;
+            height: 17px;
+            width: 17px;
+        }
+    }
+
+    &.autoql-vanilla-table-page-loader {
+        top: 0;
+        bottom: 0;
+        right: 0;
+        left: 0;
+        pointer-events: none;
+
+        .autoql-vanilla-page-loader-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background-color: var(--react-autoql-background-color-secondary);
+            border: 1px solid var(--react-autoql-border-color);
+            box-shadow: var(--react-autoql-box-shadow-1);
+            border-radius: 4px;
+
+            .autoql-vanilla-spinner-loader {
+                margin: 0;
+                height: 17px;
+                width: 17px;
+            }
+        }
+    }
+
+    &.autoql-vanilla-table-scroll-loader {
+        bottom: 20px;
+        width: 100%;
+        z-index: 0;
     }
 }
