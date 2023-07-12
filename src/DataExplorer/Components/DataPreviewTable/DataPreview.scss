@@ -2,7 +2,39 @@
   max-height: 100%;
   padding: 0 5px;
 
+  table {
+    min-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+
+    tbody {
+      tr:not(:last-child) {
+        border-bottom: 1px solid var(--autql-vanilla-border-color);
+      }
+    }
+  }
+
+  th {
+    top: 0;
+    padding: 0 6px;
+    height: 35px;
+    position: -webkit-sticky;
+    position: sticky;
+    background: var(--autoql-vanilla-background-color-secondary);
+    box-shadow: inset 0 -2px 0 var(--autoql-vanilla-border-color);
+    transition: color .2s ease;
+    color: var(--autoql-vanilla-accent-color);
+    cursor: default;
+    .autoql-vanilla-data-preview-col-header {
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
   .autoql-vanilla-data-preview-scroll {
-    
+
   }
 }
