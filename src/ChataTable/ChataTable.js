@@ -29,6 +29,50 @@ import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
 import './ChataTable.scss';
 
+function replaceScrollbar (table) {
+    var tableholder = table.element?.querySelector('.tabulator-tableholder')
+
+    if (tableholder) {
+        return new Scrollbars(tableholder)
+    }
+}
+
+function instantiateTabulator(component, tableOptions) {
+    // Instantiate Tabulator when element is mounted
+    var tabulator = new Tabulator(component, tableOptions);
+    // data: !tableOptions?.ajaxRequestFunc ? tableOptions.data : [],
+
+    tabulator.on('renderComplete', () => {
+        // Block redraw after every update for performance
+        // Restore redraw manually before updating table data
+        // setTimeout(component.blockRedraw, 1000);
+        // TODO: console.log('set up this redraw blocking')
+    });
+    tabulator.on('dataLoadError', component.onDataLoadError);
+    tabulator.on('cellClick', component.onCellClick);
+    tabulator.on('dataSorting', component.onDataSorting);
+    tabulator.on('dataSorted', component.onDataSorted);
+    tabulator.on('dataFiltering', component.onDataFiltering);
+    tabulator.on('dataFiltered', component.onDataFiltered);
+
+    tabulator.on('tableBuilt', async () => {
+        component.isInitialized = true;
+        if (tableOptions.ajaxRequestFunc) {
+            await tabulator.setData();
+        }
+
+        allColHiddenMessage(component);
+
+        await currentEventLoopEnd();
+
+        component.createPageLoader();
+        component.createScrollLoader();
+        component.ps = replaceScrollbar(tabulator);
+    });
+
+    return tabulator;
+}
+
 function callTableFilter(col, headerValue, rowValue, options) {
     const colType = col.type;
     if (!rowValue && !['DOLLAR_AMT', 'QUANTITY', 'PERCENT'].includes(colType)) {
@@ -537,71 +581,66 @@ export function ChataTable(
     component.onDataFiltered = () => {
     };
 
-    component.blockRedraw = () => {
-        if (component.isInitialized) {
-            component.redrawRestored = false;
-            component.tabulator?.blockRedraw();
-        }
-    };
+    // component.blockRedraw = () => {
+    //     if (component.isInitialized) {
+    //         component.redrawRestored = false;
+    //         component.tabulator?.blockRedraw();
+    //     }
+    // };
 
-    component.restoreRedraw = () => {
-        if (component.tabulator && component.isInitialized && !component.redrawRestored) {
-            component.redrawRestored = true;
-            component.tabulator?.restoreRedraw();
-        }
-    };
+    // component.restoreRedraw = () => {
+    //     if (component.tabulator && component.isInitialized && !component.redrawRestored) {
+    //         component.redrawRestored = true;
+    //         component.tabulator?.restoreRedraw();
+    //     }
+    // };
 
-    component.replaceScrollbar = () => {
-        var tableholder = table.element?.querySelector('.tabulator-tableholder')
-        // tableholder.setAttribute('data-mdb-perfect-scrollbar', 'true')
+    // component.replaceScrollbar = (component) => {
+    //     var tableholder = table.element?.querySelector('.tabulator-tableholder')
+    //     // tableholder.setAttribute('data-mdb-perfect-scrollbar', 'true')
 
-        console.log({tableholder, element:table.element, selection: table.element?.querySelector('.tabulator-tableholder')})
+    //     console.log({tableholder, element:table.element, selection: table.element?.querySelector('.tabulator-tableholder')})
     
-        if (tableholder) {
-            component.ps = new Scrollbars(tableholder, {
-                wheelPropagation: false,
-                scrollingThreshold: 200,
-                scrollXMarginOffset: 5,
-                scrollYMarginOffset: 5,
-            })
-        }
-    }
+    //     if (tableholder) {
+    //         component.ps = new Scrollbars(tableholder)
+    //     }
+    // }
 
-    function instantiateTabulator(tableOptions) {
-        // Instantiate Tabulator when element is mounted
-        var tabulator = new Tabulator(component, tableOptions);
-        // data: !tableOptions?.ajaxRequestFunc ? tableOptions.data : [],
+    // function instantiateTabulator(tableOptions) {
+    //     // Instantiate Tabulator when element is mounted
+    //     var tabulator = new Tabulator(component, tableOptions);
+    //     // data: !tableOptions?.ajaxRequestFunc ? tableOptions.data : [],
 
-        tabulator.on('renderComplete', () => {
-            // Block redraw after every update for performance
-            // Restore redraw manually before updating table data
-            // setTimeout(component.blockRedraw, 1000);
-            // TODO: console.log('set up this redraw blocking')
-        });
-        tabulator.on('dataLoadError', component.onDataLoadError);
-        tabulator.on('cellClick', component.onCellClick);
-        tabulator.on('dataSorting', component.onDataSorting);
-        tabulator.on('dataSorted', component.onDataSorted);
-        tabulator.on('dataFiltering', component.onDataFiltering);
-        tabulator.on('dataFiltered', component.onDataFiltered);
+    //     tabulator.on('renderComplete', () => {
+    //         // Block redraw after every update for performance
+    //         // Restore redraw manually before updating table data
+    //         // setTimeout(component.blockRedraw, 1000);
+    //         // TODO: console.log('set up this redraw blocking')
+    //     });
+    //     tabulator.on('dataLoadError', component.onDataLoadError);
+    //     tabulator.on('cellClick', component.onCellClick);
+    //     tabulator.on('dataSorting', component.onDataSorting);
+    //     tabulator.on('dataSorted', component.onDataSorted);
+    //     tabulator.on('dataFiltering', component.onDataFiltering);
+    //     tabulator.on('dataFiltered', component.onDataFiltered);
 
-        tabulator.on('tableBuilt', async () => {
-            component.isInitialized = true;
-            if (tableOptions.ajaxRequestFunc) {
-                await table.setData();
-            }
+    //     tabulator.on('tableBuilt', async () => {
+    //         component.isInitialized = true;
+    //         if (tableOptions.ajaxRequestFunc) {
+    //             await table.setData();
+    //         }
 
-            allColHiddenMessage(component);
+    //         allColHiddenMessage(component);
 
-            component.createScrollLoader();
-            component.createPageLoader();
-            component.replaceScrollbar();
-        });
+    //         component.createScrollLoader();
+    //         component.createPageLoader();
+    //         component.ps = replaceScrollbar(tabulator);
+    //     });
 
-        return tabulator;
-    }
+    //     return tabulator;
+    // }
 
-    var table = instantiateTabulator(tableOptions);
+    var table = instantiateTabulator(component, tableOptions);
 
     if (!table) {
         return;
@@ -731,19 +770,19 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
         },
     }
 
-    function instantiateTabulator(tableOptions) {
-        // Instantiate Tabulator when element is mounted
-        var tabulator = new Tabulator(component, tableOptions);
+    // function instantiateTabulator(tableOptions) {
+    //     // Instantiate Tabulator when element is mounted
+    //     var tabulator = new Tabulator(component, tableOptions);
 
-        tabulator.on('tableBuilt', async () => {
-            component.isInitialized = true;
-            component.replaceScrollbar();
-        });
+    //     tabulator.on('tableBuilt', async () => {
+    //         component.isInitialized = true;
+    //         component.ps = replaceScrollbar(tabulator);
+    //     });
 
-        return tabulator;
-    }
+    //     return tabulator;
+    // }
 
-    var table = instantiateTabulator(tableOptions);
+    var table = instantiateTabulator(component, tableOptions);
 
     return table;
 }

@@ -1473,6 +1473,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg * {
+    stroke: var(--autoql-vanilla-warning-color);
     fill: unset;
 }
 

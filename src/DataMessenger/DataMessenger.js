@@ -1034,7 +1034,7 @@ export function DataMessenger(options = {}) {
 
             if (evt.target.classList.contains('suggestion')) {
                 obj.autoCompleteList.style.display = 'none';
-                localStorage.setItem('lastQuery', evt.target.textContent);
+                if (evt.target.textContent) localStorage.setItem('lastQuery', evt.target.textContent);
                 obj.sendMessage(evt.target.textContent, 'data_messenger.user');
             }
         });
@@ -2166,7 +2166,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.putMessage = (value) => {
-        localStorage.setItem('lastQuery', value)
+        if (value) localStorage.setItem('lastQuery', value)
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseLoadingContainer = document.createElement('div');
@@ -2332,6 +2332,7 @@ export function DataMessenger(options = {}) {
 
     obj.showColumnEditor = function (id, badge) {
         ChataUtils.showColumnEditor(id, obj.options, () => {
+            console.log('inside onHideCols callback...')
             var json = ChataUtils.responses[id];
             var component = obj.rootElem.querySelector(`[data-componentid='${id}']`);
             obj.setScrollBubble(obj.getParentFromComponent(component));
@@ -2924,10 +2925,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.ps = new Scrollbars(obj.scrollBox, {
-        wheelPropagation: false,
         scrollingThreshold: 200,
-        scrollXMarginOffset: 5,
-        scrollYMarginOffset: 5,
     });
 
     refreshTooltips();

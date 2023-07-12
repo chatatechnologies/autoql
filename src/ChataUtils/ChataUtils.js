@@ -31,6 +31,7 @@ import { AntdMessage } from '../Antd'
 import '../../css/PopoverMenu.css'
 import { saveSvgAsPng } from 'save-svg-as-png'
 import { strings } from '../Strings'
+import { setColumnVisibility } from "autoql-fe-utils";
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -657,40 +658,39 @@ ChataUtils.showColumnEditor = (id, options, onHideCols=()=>{}) => {
         modal.close();
     }
 
-    saveButton.onclick = async function(){
-        var opts = options
-        const url = opts.authentication.demo
-        ? `https://backend-staging.chata.ai/api/v1/chata/query`
-        : `${opts.authentication.domain}/autoql/api/v1/query/column-visibility?key=${opts.authentication.apiKey}`
+    saveButton.onclick = async function(e){
         this.classList.add('disabled');
         spinner.classList.remove('hidden');
+        var opts = options
         var inputs = container.querySelectorAll('[data-line]');
-        var data = [];
         var table = document.querySelector(`[data-componentid='${id}']`);
+        var tableColumns = table.tabulator.getColumns();
 
-        const tableCols = table.tabulator.getColumns();
-        for (var i = 0; i < inputs.length; i++) {
-            var colName = inputs[i].dataset.colName;
-            data.push({
-                name: colName,
-                is_visible: inputs[i].checked
-            })
-            json['data']['columns'][i]['is_visible'] = inputs[i].checked;
-            if(inputs[i].checked){
-                tableCols[i].show();
-            }else{
-                tableCols[i].hide();
+        table.tabulator.blockRedraw()
+
+        const data = tableColumns.map((col, i) => {
+            json['data']['columns'][i]['is_visible'] = !!inputs[i].checked;
+            return {
+                name: inputs[i].dataset.colName,
+                is_visible: !!inputs[i].checked
             }
+        })
 
-            if (table.isInitialized) {
-                table.tabulator.redraw();
-            }
-        }
+        const newColumnDefinitions = table.tabulator.getColumnDefinitions()?.map((col, i) => ({
+            ...col,
+            visible: !!inputs[i].checked
+        }))
 
-        await apiCallPut(url, {columns: data}, opts)
+        table.tabulator.setColumns(newColumnDefinitions)
+
+        await setColumnVisibility({ ...opts.authentication, columns: data })
+
         modal.close();
+
         allColHiddenMessage(table);
         onHideCols();
+
+        table.tabulator.restoreRedraw()
     }
 
     modal.addView(container);

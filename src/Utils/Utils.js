@@ -1,3 +1,4 @@
+import { areAllColumnsHidden } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
 import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
@@ -1004,19 +1005,6 @@ export function showBadge(json){
     return false
 }
 
-export function allColsHidden(json){
-    var cols = json['data']['columns'];
-    var isAllHidden = true;
-    for (var i = 0; i < cols.length; i++) {
-        if(cols[i].is_visible){
-            isAllHidden = false;
-            break;
-        }
-    }
-
-    return isAllHidden;
-}
-
 export function allColHiddenMessage(table) {
     try {
         const requestId = table?.dataset?.componentid;
@@ -1031,7 +1019,7 @@ export function allColHiddenMessage(table) {
         var filterOption = table.tabulator.parentContainer.querySelector('[data-name-option="filter-action"]');
 
         const json = ChataUtils.responses[requestId];
-        var isAllHidden = allColsHidden(json);
+        var isAllHidden = areAllColumnsHidden(json?.data?.columns);
         let message;
         if (table.noColumnsElement) {
             message = table.noColumnsElement;
