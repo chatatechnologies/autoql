@@ -2332,7 +2332,6 @@ export function DataMessenger(options = {}) {
 
     obj.showColumnEditor = function (id, badge) {
         ChataUtils.showColumnEditor(id, obj.options, () => {
-            console.log('inside onHideCols callback...')
             var json = ChataUtils.responses[id];
             var component = obj.rootElem.querySelector(`[data-componentid='${id}']`);
             obj.setScrollBubble(obj.getParentFromComponent(component));
@@ -2795,6 +2794,7 @@ export function DataMessenger(options = {}) {
             return runQuery({
                 ...queryParams,
                 ...(obj.options.authentication ?? {}),
+                skipQueryValidation: true,
                 ...params,
             })
         }

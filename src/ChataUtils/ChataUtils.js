@@ -986,6 +986,8 @@ ChataUtils.registerWindowClicks = () => {
         'autoql-vanilla-chata-col-selector-name',
         'autoql-vanilla-button-wrapper-selector',
         'autoql-vanilla-chata-list-item',
+        'autoql-vanilla-chart-row-selector',
+        'autoql-vanilla-chart-row-selector-text'
     ]
 
     const excludeElementsForToolbars = [

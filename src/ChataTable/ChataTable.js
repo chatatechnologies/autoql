@@ -40,14 +40,7 @@ function replaceScrollbar (table) {
 function instantiateTabulator(component, tableOptions) {
     // Instantiate Tabulator when element is mounted
     var tabulator = new Tabulator(component, tableOptions);
-    // data: !tableOptions?.ajaxRequestFunc ? tableOptions.data : [],
 
-    tabulator.on('renderComplete', () => {
-        // Block redraw after every update for performance
-        // Restore redraw manually before updating table data
-        // setTimeout(component.blockRedraw, 1000);
-        // TODO: console.log('set up this redraw blocking')
-    });
     tabulator.on('dataLoadError', component.onDataLoadError);
     tabulator.on('cellClick', component.onCellClick);
     tabulator.on('dataSorting', component.onDataSorting);
@@ -413,16 +406,12 @@ export function ChataTable(
 
     component.queryFn = json?.queryFn;
 
-    component.onNewPage = (newRows) => {
-        console.log('ON NEW PAGE CALLBACK GOES HERE', { newRows });
-    };
+    component.onNewPage = (newRows) => {};
 
-    component.onTableParamsChange = (params, nextTableParamsFormatted) => {
-        console.log('ON TABLE PARAMS CHANGE', params, nextTableParamsFormatted);
-    };
+    component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
 
     component.onNewData = (response, component) => {
-        console.log('ON NEW DATA CALLBACK GOES HERE', { response });
+        // console.log('ON NEW DATA CALLBACK GOES HERE', { response });
         // this.queryResponse = response
         // const responseData = response?.data?.data;
         // tableData = responseData?.rows || [];
@@ -580,65 +569,6 @@ export function ChataTable(
     };
     component.onDataFiltered = () => {
     };
-
-    // component.blockRedraw = () => {
-    //     if (component.isInitialized) {
-    //         component.redrawRestored = false;
-    //         component.tabulator?.blockRedraw();
-    //     }
-    // };
-
-    // component.restoreRedraw = () => {
-    //     if (component.tabulator && component.isInitialized && !component.redrawRestored) {
-    //         component.redrawRestored = true;
-    //         component.tabulator?.restoreRedraw();
-    //     }
-    // };
-
-    // component.replaceScrollbar = (component) => {
-    //     var tableholder = table.element?.querySelector('.tabulator-tableholder')
-    //     // tableholder.setAttribute('data-mdb-perfect-scrollbar', 'true')
-
-    //     console.log({tableholder, element:table.element, selection: table.element?.querySelector('.tabulator-tableholder')})
-    
-    //     if (tableholder) {
-    //         component.ps = new Scrollbars(tableholder)
-    //     }
-    // }
-
-    // function instantiateTabulator(tableOptions) {
-    //     // Instantiate Tabulator when element is mounted
-    //     var tabulator = new Tabulator(component, tableOptions);
-    //     // data: !tableOptions?.ajaxRequestFunc ? tableOptions.data : [],
-
-    //     tabulator.on('renderComplete', () => {
-    //         // Block redraw after every update for performance
-    //         // Restore redraw manually before updating table data
-    //         // setTimeout(component.blockRedraw, 1000);
-    //         // TODO: console.log('set up this redraw blocking')
-    //     });
-    //     tabulator.on('dataLoadError', component.onDataLoadError);
-    //     tabulator.on('cellClick', component.onCellClick);
-    //     tabulator.on('dataSorting', component.onDataSorting);
-    //     tabulator.on('dataSorted', component.onDataSorted);
-    //     tabulator.on('dataFiltering', component.onDataFiltering);
-    //     tabulator.on('dataFiltered', component.onDataFiltered);
-
-    //     tabulator.on('tableBuilt', async () => {
-    //         component.isInitialized = true;
-    //         if (tableOptions.ajaxRequestFunc) {
-    //             await table.setData();
-    //         }
-
-    //         allColHiddenMessage(component);
-
-    //         component.createScrollLoader();
-    //         component.createPageLoader();
-    //         component.ps = replaceScrollbar(tabulator);
-    //     });
-
-    //     return tabulator;
-    // }
 
     var table = instantiateTabulator(component, tableOptions);
 

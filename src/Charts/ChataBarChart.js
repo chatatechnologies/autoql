@@ -35,6 +35,7 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
+import { ChartRowSelector } from './ChartRowSelector'
 
 export function createBarChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -343,7 +344,7 @@ export function createBarChart(
         .text('▼')
         .style('font-size', '8px')
 
-        labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+        labelXContainer.attr('class', 'autoql-vanilla-chart-selector').style('display', 'none').style('visibility', 'hidden')
         const paddingRect = 15;
         const xWidthRect = getStringWidth(col2) + paddingRect;
         var _y = 0;
@@ -628,6 +629,23 @@ export function createBarChart(
                 valueClass,
                 renderTooltips
             )
+        }
+    );
+
+    const onDataFetching = () => console.log('show loading indicator now!')
+    const onNewData = (newJson) => console.log('on new data callback inside bar chart! stop loading indicator', newJson)
+    const onDataFetchError = () => console.log('stop loading indicator')
+
+    new ChartRowSelector(
+        svg,
+        json,
+        onDataFetching,
+        onNewData,
+        onDataFetchError,
+        metadataComponent,
+        {
+            x: width / 2,
+            y: height + margin.marginLabel,
         }
     );
 
