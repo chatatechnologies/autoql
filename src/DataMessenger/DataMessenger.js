@@ -990,6 +990,7 @@ export function DataMessenger(options = {}) {
         obj.drawerBody.appendChild(chatHeaderContainer);
         obj.headerRight = headerRight;
         obj.headerTitle = headerTitle;
+        obj.header = chatHeaderContainer;
         obj.clearMessagePop = popover;
         filterLocking.loadConditions();
     };

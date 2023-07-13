@@ -10,6 +10,9 @@ export function RelatedQueries({ icon, title, widget, subject }) {
   const container = document.createElement('div');
   const suggestionList = document.createElement('div');
   const list = document.createElement('div');
+  const headerHeight = widget.header.clientHeight;
+  const viewHeight = widget.drawerContent.clientHeight;
+  console.log(viewHeight);
   const card = new Card({ icon, title, widget, subject });
   const {
     domain,

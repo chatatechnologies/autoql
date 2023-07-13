@@ -1204,12 +1204,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     color: var(--autoql-vanilla-accent-color);
 }
 
-.autoql-vanilla-querytips-container{
-    font-family: sans-serif;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
 .autoql-vanilla-query-tips-result-container {
     color: var(--autoql-vanilla-text-color-primary);
     padding: 0 20px;

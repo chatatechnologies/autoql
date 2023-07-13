@@ -87,6 +87,8 @@ export function DataExplorer({ subjects, widget }) {
       const relatedQueriesSection = new RelatedQueries({
         icon: CHATA_BUBBLES_ICON,
         title: `Query suggestions for "${subject.display_name}"`,
+        containerHeight: container.clientHeight,
+        previewSectionHeight: previewSection.container.clientHeight,
         subject,
         widget,
       });

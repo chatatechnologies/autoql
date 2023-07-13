@@ -15,6 +15,13 @@
 }
 
 .autoql-vanilla-query-suggestion-list {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    flex: 0 1 100vh;
+    height: 100%;
+    padding-left: 8px;
+    min-height: 0;
   .autoql-vanilla-query-tip-item {
     cursor: pointer;
     position: relative;
