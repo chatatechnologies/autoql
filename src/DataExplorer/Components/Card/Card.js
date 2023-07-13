@@ -2,7 +2,7 @@ import { createIcon } from '../../../Utils';
 import { CARET_DOWN_ICON, CARET_LEFT_ICON} from '../../../Svg';
 import './Card.scss'
 
-export function Card({ icon, title }) {
+export function Card({ icon, title, maxHeight }) {
   const container = document.createElement('div');
   const titleContainer = document.createElement('div');
   const titleWrapper = document.createElement('div');
@@ -12,7 +12,7 @@ export function Card({ icon, title }) {
   const caretDown = createIcon(CARET_DOWN_ICON);
   const caretLeft = createIcon(CARET_LEFT_ICON);
   container.isOpen = true;
-
+  content.style.maxHeight = `${maxHeight}px`;
   container.classList.add('autoql-vanilla-card');
   titleText.classList.add('autoql-vanilla-card-title-text');
   titleContainer.classList.add('autoql-vanilla-card-title');
@@ -32,12 +32,14 @@ export function Card({ icon, title }) {
     container.isOpen = true;
     titleContainer.removeChild(caretLeft);
     titleContainer.appendChild(caretDown);
+    content.style.maxHeight = `${maxHeight}px`;
   }
 
   container.hide = () => {
     container.isOpen = false;
     titleContainer.removeChild(caretDown);
     titleContainer.appendChild(caretLeft);
+    content.style.maxHeight = '0px'; 
   }
 
   container.clearView = () => {

@@ -6,7 +6,7 @@ import { DataPreviewTable } from "../DataPreviewTable";
 export function DataPreview({ icon, title, subject, widgetOptions }) {
   let obj = this;
   const container = document.createElement('div');
-  const card = new Card({ icon, title });
+  const card = new Card({ icon, title, maxHeight: 155 });
   const {
     domain,
     apiKey,
