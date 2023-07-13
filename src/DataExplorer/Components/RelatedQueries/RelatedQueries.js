@@ -49,6 +49,11 @@ export function RelatedQueries({ icon, title, widgetOptions, subject }) {
       text.appendChild(document.createTextNode(suggestion));
       item.appendChild(text);
       list.appendChild(item);
+
+      item.onclick = () => {
+        console.log('test');
+        console.log(suggestion);
+      }
     });
 
     console.log(items);
