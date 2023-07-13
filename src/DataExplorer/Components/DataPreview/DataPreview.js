@@ -36,7 +36,6 @@ export function DataPreview({ icon, title, subject, widgetOptions }) {
   obj.displayResponse = (r) => {
     card.clearView();
     const { data } = r.data
-
     const table = new DataPreviewTable({ previewResponse: data });
     card.setContent(table);
   }

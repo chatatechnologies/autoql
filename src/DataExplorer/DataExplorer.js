@@ -9,20 +9,12 @@ import {
 import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
 import './DataExplorer.scss';
-import { fetchDataPreview, fetchDataExplorerSuggestions } from 'autoql-fe-utils';
 import { DataPreview } from "./Components/DataPreview";
 import { RelatedQueries } from "./Components/RelatedQueries";
 
 export function DataExplorer({ subjects, widgetOptions }) {
   let obj = this;
   obj.subjects = subjects;
-
-  const {
-    token,
-    domain,
-    apiKey
-  } = widgetOptions.authentication;
-
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
@@ -95,21 +87,10 @@ export function DataExplorer({ subjects, widgetOptions }) {
       const relatedQueriesSection = new RelatedQueries({
         icon: CHATA_BUBBLES_ICON,
         title: `Query suggestions for "${subject.display_name}"`,
+        subject,
+        widgetOptions,
       });
-
       contentWrapper.appendChild(relatedQueriesSection);
-
-      const realtedQueries = await fetchDataExplorerSuggestions({
-        context: subject.name,
-        skipQueryValidation: true,
-        pageNumber: 1,
-        pageSize: 25,
-        domain,
-        apiKey,
-        token,
-      })
-
-      console.log(realtedQueries);
     }
   })
 
