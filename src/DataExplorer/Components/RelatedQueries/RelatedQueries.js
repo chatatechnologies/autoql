@@ -5,15 +5,13 @@ import { CHATA_BUBBLES_ICON } from "../../../Svg";
 import { createIcon } from "../../../Utils";
 import './RelatedQueries.scss';
 
-export function RelatedQueries({ icon, title, widget, subject }) {
+export function RelatedQueries({ icon, title, widget, subject, containerHeight, previewSectionHeight }) {
   this.currentPage = 1;
   const container = document.createElement('div');
   const suggestionList = document.createElement('div');
   const list = document.createElement('div');
   const headerHeight = widget.header.clientHeight;
-  const viewHeight = widget.drawerContent.clientHeight;
-  console.log(viewHeight);
-  const card = new Card({ icon, title, widget, subject });
+  const card = new Card({ icon, title, widget, subject, maxHeight: 520 });
   const {
     domain,
     apiKey,
@@ -48,11 +46,6 @@ export function RelatedQueries({ icon, title, widget, subject }) {
       item.classList.add('autoql-vanilla-animated-item');
       text.classList.add('autoql-vanilla-query-suggestion-text');
 
-      text.appendChild(icon);
-      text.appendChild(document.createTextNode(suggestion));
-      item.appendChild(text);
-      list.appendChild(item);
-
       item.onclick = () => {
         widget.tabChataUtils.classList.add('active');
         widget.tabQueryTips.classList.remove('active');
@@ -62,9 +55,11 @@ export function RelatedQueries({ icon, title, widget, subject }) {
         widget.keyboardAnimation(suggestion);
         widget.options.landingPage = 'data-messenger';
       }
+      text.appendChild(icon);
+      text.appendChild(document.createTextNode(suggestion));
+      item.appendChild(text);
+      list.appendChild(item);
     });
-
-    console.log(items);
   }
 
   getRelatedQueries();
