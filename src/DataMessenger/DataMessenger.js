@@ -709,12 +709,15 @@ export function DataMessenger(options = {}) {
             subQuery += text[index];
             if (index >= text.length) {
                 clearInterval(int);
-                var ev = new KeyboardEvent('keypress', {
+                var keyboardEvent = new KeyboardEvent('keydown', {
+                    code: 'Enter',
+                    key: 'Enter',
+                    charCode: 13,
                     keyCode: 13,
-                    type: 'keypress',
-                    which: 13,
+                    view: window
                 });
-                chataInput.dispatchEvent(ev);
+            
+                chataInput.dispatchEvent(keyboardEvent);
             } else {
                 chataInput.value = subQuery;
             }
