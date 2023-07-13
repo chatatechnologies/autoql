@@ -676,7 +676,7 @@ export function DataMessenger(options = {}) {
     obj.createDataExplorer = async function () {
         const subjects = await obj.getSubjects();
         const dataExplorer = new DataExplorer({
-            widgetOptions: obj.options,
+            widget: obj,
             subjects,
         });
         obj.dataExplorer = dataExplorer;

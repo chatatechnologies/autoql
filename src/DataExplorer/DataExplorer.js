@@ -12,7 +12,7 @@ import './DataExplorer.scss';
 import { DataPreview } from "./Components/DataPreview";
 import { RelatedQueries } from "./Components/RelatedQueries";
 
-export function DataExplorer({ subjects, widgetOptions }) {
+export function DataExplorer({ subjects, widget }) {
   let obj = this;
   obj.subjects = subjects;
   const searchIcon = htmlToElement(SEARCH_ICON);
@@ -80,7 +80,7 @@ export function DataExplorer({ subjects, widgetOptions }) {
         icon: TABLE_ICON,
         title: `Data Preview "${subject.query}"`,
         subject,
-        widgetOptions,
+        widgetOptions: widget.options,
       });
       contentWrapper.appendChild(previewSection.container);
 
@@ -88,7 +88,7 @@ export function DataExplorer({ subjects, widgetOptions }) {
         icon: CHATA_BUBBLES_ICON,
         title: `Query suggestions for "${subject.display_name}"`,
         subject,
-        widgetOptions,
+        widget,
       });
       contentWrapper.appendChild(relatedQueriesSection);
     }

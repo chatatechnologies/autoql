@@ -5,17 +5,17 @@ import { CHATA_BUBBLES_ICON } from "../../../Svg";
 import { createIcon } from "../../../Utils";
 import './RelatedQueries.scss';
 
-export function RelatedQueries({ icon, title, widgetOptions, subject }) {
+export function RelatedQueries({ icon, title, widget, subject }) {
   this.currentPage = 1;
   const container = document.createElement('div');
   const suggestionList = document.createElement('div');
   const list = document.createElement('div');
-  const card = new Card({ icon, title, widgetOptions, subject });
+  const card = new Card({ icon, title, widget, subject });
   const {
     domain,
     apiKey,
     token,
-  } = widgetOptions.authentication;
+  } = widget.options.authentication;
 
   container.classList.add('autoql-vanilla-data-explorer-section');
   container.classList.add('autoql-vanilla-query-suggestions-section');
@@ -51,8 +51,13 @@ export function RelatedQueries({ icon, title, widgetOptions, subject }) {
       list.appendChild(item);
 
       item.onclick = () => {
-        console.log('test');
-        console.log(suggestion);
+        widget.tabChataUtils.classList.add('active');
+        widget.tabQueryTips.classList.remove('active');
+        widget.tabsAnimation('flex', 'block');
+        widget.dataExplorer.hide();
+        widget.notificationsAnimation('none');
+        widget.keyboardAnimation(suggestion);
+        widget.options.landingPage = 'data-messenger';
       }
     });
 
