@@ -1,9 +1,14 @@
 import { Card } from "../Card";
 import './RelatedQueries.scss';
 import { fetchDataExplorerSuggestions } from "autoql-fe-utils";
+import { CHATA_BUBBLES_ICON } from "../../../Svg";
+import { createIcon } from "../../../Utils";
 
 export function RelatedQueries({ icon, title, widgetOptions, subject }) {
+  this.currentPage = 1;
   const container = document.createElement('div');
+  const suggestionList = document.createElement('div');
+  const list = document.createElement('div');
   const card = new Card({ icon, title, widgetOptions, subject });
   const {
     domain,
@@ -13,6 +18,10 @@ export function RelatedQueries({ icon, title, widgetOptions, subject }) {
 
   container.classList.add('autoql-vanilla-data-explorer-section');
   container.classList.add('autoql-vanilla-query-suggestions-section');
+  list.classList.add('autoql-vanilla-query-suggestion-list');
+  suggestionList.classList.add('autoql-vanilla-data-explorer-query-suggestion-list');
+  suggestionList.appendChild(list);
+  card.setContent(suggestionList);
   container.appendChild(card);
 
   const getRelatedQueries = async() => {
@@ -24,7 +33,24 @@ export function RelatedQueries({ icon, title, widgetOptions, subject }) {
       domain,
       apiKey,
       token,
-    })
+    });
+    const { items } = relatedQueries.data.data;
+
+    items.forEach((suggestion) => {
+      const item = document.createElement('div');
+      const icon = createIcon(CHATA_BUBBLES_ICON);
+      const text = document.createElement('div');
+      item.classList.add('autoql-vanilla-query-tip-item');
+      item.classList.add('autoql-vanilla-animated-item');
+      text.classList.add('autoql-vanilla-query-suggestion-text');
+
+      text.appendChild(icon);
+      text.appendChild(document.createTextNode(suggestion));
+      item.appendChild(text);
+      list.appendChild(item);
+    });
+
+    console.log(items);
   }
 
   getRelatedQueries();
