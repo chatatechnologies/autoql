@@ -13,3 +13,31 @@
   -webkit-animation-delay: .2s;
   animation-delay: .2s;
 }
+
+.autoql-vanilla-query-suggestion-list {
+  .autoql-vanilla-query-tip-item {
+    cursor: pointer;
+    position: relative;
+    padding: 3px;
+    color: var(--autoql-vanilla-accent-color);
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-weight: 600;
+    &:hover {
+      text-decoration: underline;
+    }
+    .autoql-vanilla-query-suggestion-text {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: flex-start;
+      white-space: normal;
+      .autoql-vanilla-icon {
+        margin-right: 5px;
+        margin-top: 2px;
+      }
+    }
+  }
+}

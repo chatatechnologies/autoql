@@ -3,6 +3,7 @@ import './RelatedQueries.scss';
 import { fetchDataExplorerSuggestions } from "autoql-fe-utils";
 import { CHATA_BUBBLES_ICON } from "../../../Svg";
 import { createIcon } from "../../../Utils";
+import './RelatedQueries.scss';
 
 export function RelatedQueries({ icon, title, widgetOptions, subject }) {
   this.currentPage = 1;
