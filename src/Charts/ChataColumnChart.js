@@ -98,7 +98,7 @@ export function createColumnChart(
     }
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
-    var activeSeries = metadataComponent.metadata.series;
+    var activeSeries = [metadataComponent.metadata.series[0]];
     var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
