@@ -439,7 +439,7 @@ export function putLoadingContainer(target){
     var responseLoading = document.createElement('div');
 
     responseLoadingContainer.classList.add('chat-bar-loading');
-    responseLoading.classList.add('response-loading');
+    responseLoading.classList.add('autoql-vanilla-response-loading');
     for (var i = 0; i <= 3; i++) {
         responseLoading.appendChild(document.createElement('div'));
     }

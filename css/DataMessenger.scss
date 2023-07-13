@@ -618,13 +618,13 @@
     }
 }
 
-.response-loading-container {
+.autoql-vanilla-response-loading-container {
     display: flex;
     position: absolute;
     top: 0px;
     left: 20px;
 
-    .response-loading {
+    .autoql-vanilla-response-loading {
         display: inline-block;
         position: relative;
         height: 12px;
