@@ -39,6 +39,9 @@
     opacity: 1;
     flex: 0 1 auto;
     min-height: 0;
+    &.autoql-vanilla-hidden {
+      overflow: hidden;
+    }
     
     .autoql-vanilla-card-user-content {
       min-height: 100px;

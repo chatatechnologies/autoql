@@ -34,6 +34,7 @@ export function Card({ icon, title, maxHeight, onScroll = () => {} }) {
     titleContainer.removeChild(caretLeft);
     titleContainer.appendChild(caretDown);
     content.style.maxHeight = `${maxHeight}px`;
+    content.classList.remove('autoql-vanilla-hidden');
   }
 
   container.hide = () => {
@@ -41,6 +42,7 @@ export function Card({ icon, title, maxHeight, onScroll = () => {} }) {
     titleContainer.removeChild(caretDown);
     titleContainer.appendChild(caretLeft);
     content.style.maxHeight = '0px'; 
+    content.classList.add('autoql-vanilla-hidden');
   }
 
   container.clearView = () => {
