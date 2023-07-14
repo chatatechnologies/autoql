@@ -13,6 +13,7 @@ export function Card({ icon, title, maxHeight }) {
   const caretLeft = createIcon(CARET_LEFT_ICON);
   container.isOpen = true;
   content.style.maxHeight = `${maxHeight}px`;
+  content.style.height = `${maxHeight}px`;
   container.classList.add('autoql-vanilla-card');
   titleText.classList.add('autoql-vanilla-card-title-text');
   titleContainer.classList.add('autoql-vanilla-card-title');
@@ -63,6 +64,17 @@ export function Card({ icon, title, maxHeight }) {
     responseLoadingContainer.appendChild(responseLoading);
     userContent.appendChild(responseLoadingContainer);
   };
+
+  userContent.addEventListener('scroll', () => {
+    const endOfPage =
+    userContent.clientHeight + userContent.scrollTop >= userContent.scrollHeight;
+    console.log(userContent.scrollHeight);
+    console.log(userContent.clientHeight + userContent.scrollTop);
+    if (endOfPage) {
+      console.log('load ')
+    }
+    
+  })
 
   titleContainer.onclick = () => {
     if(container.isOpen) {

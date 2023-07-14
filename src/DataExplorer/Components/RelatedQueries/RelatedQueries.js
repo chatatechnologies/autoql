@@ -16,7 +16,6 @@ export function RelatedQueries({
   const padding = 10;
   const margin = 40;
   const titleHeight = 37;
-  console.log(previewSectionHeight);
   const maxHeight = (containerHeight - previewSectionHeight - headerHeight - textBarHeight - titleHeight - margin - padding);
   const card = new Card({ icon, title, widget, subject, maxHeight });
   const {
