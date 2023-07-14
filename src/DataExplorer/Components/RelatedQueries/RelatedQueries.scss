@@ -7,6 +7,12 @@
   flex-direction: column;
   margin: 0 10px;
   opacity: 0;
+  .autoql-vanilla-card .autoql-vanilla-card-content {
+    overflow: unset;
+    .autoql-vanilla-card-user-content{
+      overflow-y: scroll;
+    }
+  }
 }
 
 .autoql-vanilla-data-explorer-section:nth-of-type(2) {
