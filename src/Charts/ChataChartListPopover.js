@@ -1,7 +1,7 @@
 import { PopoverChartSelector } from './PopoverChartSelector'
 import { formatColumnName } from '../Utils'
 
-export function ChataChartListPopover(position, indexes, onClick, showOnBaseline=false){
+export function ChataChartListPopover(e, indexes, onClick, placement, align){
     var obj = this;
     var elements = [];
 
@@ -39,12 +39,9 @@ export function ChataChartListPopover(position, indexes, onClick, showOnBaseline
     }
 
 
-    var popover = new PopoverChartSelector(position, showOnBaseline);
+    var popover = new PopoverChartSelector(e, placement, align);
     obj.createContent();
-    if((position.left + popover.clientWidth) >= window.innerWidth) {
-        position.left = window.innerWidth - popover.clientWidth - 60
-    }
-    popover.position = position
+
     popover.setSelectedItem = (index) => {
         elements.map(elem => elem.classList.remove('active'));
         elements[parseInt(index)].classList.add('active');

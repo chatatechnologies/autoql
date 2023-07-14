@@ -65,7 +65,7 @@ export function Chart(widgetOptions, options) {
         index: i,
         currentLi: 0,
       },
-      series: numericSeries
+      series: [numericSeries[0]]
     }
   }
 

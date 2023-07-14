@@ -4,7 +4,7 @@ import { htmlToElement, formatColumnName } from '../Utils'
 import { strings } from '../Strings'
 import { TICK } from '../Svg'
 
-export function ChataChartSeriesPopover(position, cols, activeSeries, onClick, showOnBaseline=false){
+export function ChataChartSeriesPopover(evt, placement, align, cols, activeSeries, onClick, padding){
     var obj = this;
     var indexList = getIndexesByType(cols);
     var seriesIndexes = [];
@@ -12,7 +12,7 @@ export function ChataChartSeriesPopover(position, cols, activeSeries, onClick, s
         seriesIndexes.push(col.index);
     })
     var content = document.createElement('div');
-    var popover = new PopoverChartSelector(position, showOnBaseline);
+    var popover = new PopoverChartSelector(evt, placement, align, padding);
     var series = {};
     const applyButton = htmlToElement(`
         <button

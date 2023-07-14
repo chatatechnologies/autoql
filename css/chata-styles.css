@@ -441,7 +441,7 @@ input.autoql-vanilla-chata-input {
 }
 
 .autoql-vanilla-chata-suggestion-btn, .autoql-vanilla-chata-suggestion-btn-renderer {
-    padding: 6px 14px;
+    padding: 8px 14px;
     background: transparent;
     border-radius: 4px;
     font-family: var(--autoql-vanilla-font-family);
@@ -452,6 +452,7 @@ input.autoql-vanilla-chata-input {
     letter-spacing: 0.05em;
     transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
     border-color: #e2e2e26e;
+    border: 1px solid rgba(0, 0, 0, 0.15);
     color: var(--autoql-vanilla-text-color-primary);
 }
 
@@ -1447,63 +1448,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-no-columns-error-message .eye-icon {
     vertical-align: bottom;
     line-height: 18px;
-}
-
-.autoql-vanilla-chata-axis-selector-arrow{
-    opacity: 1 !important;
-}
-.autoql-vanilla-x-axis-label-border, .autoql-vanilla-y-axis-label-border {
-    stroke: transparent;
-    opacity: .5;
-    transition: stroke .3s ease;
-    z-index: 3;
-    cursor: pointer;
-}
-
-.autoql-vanilla-y-axis-label-border:hover, .autoql-vanilla-x-axis-label-border:hover{
-    stroke: #508bb8;
-
-}
-
-.autoql-vanilla-chart-selector{
-    cursor: pointer;
-}
-.autoql-vanilla-chart-selector:hover .autoql-vanilla-x-axis-label-border,
-.autoql-vanilla-chart-selector:hover .autoql-vanilla-y-axis-label-border {
-    stroke: #508bb8;
-}
-
-
-.autoql-vanilla-axis-selector-container .number-selector-header {
-    margin-top: 10px;
-    font-size: 12px;
-    padding: 0 18px 7px;
-    font-weight: 600;
-}
-
-.autoql-vanilla-chata-list-item:not(:last-child) {
-    border-bottom: 1px solid hsla(0,0%,82.7%,.29);
-}
-
-.autoql-vanilla-chata-list-item {
-    padding: 0 20px;
-    display: flex;
-    justify-content: space-between;
-    line-height: 36px;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-
-.autoql-vanilla-chata-list-item {
-    padding-left: 25px;
-    padding-right: 15px;
-    font-size: 12px;
-    line-height: 28px;
-}
-.autoql-vanilla-chata-list-item:hover {
-    background: rgba(0,0,0,.03);
 }
 
 .autoql-vanilla-m-checkbox__input {

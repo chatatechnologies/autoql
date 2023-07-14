@@ -65,7 +65,7 @@ export function createPieChart(
                 index: i,
                 currentLi: 0,
             },
-            series: yIndexes
+            series: [yIndexes[0]]
         }
     }
 

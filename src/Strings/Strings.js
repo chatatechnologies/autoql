@@ -152,6 +152,9 @@ export const strings = new LocalizedStrings({
         persist: 'Persist',
         maximizeButton: 'Full Screen',
         maximizeButtonExit: 'Exit Full Screen',
+        visualizingText: 'Visualizing',
+        rowsText: 'rows',
+        suggestionResponse: 'I want to make sure I understood your query. Did you mean:'
     }
     ,
     es: {
@@ -297,5 +300,8 @@ export const strings = new LocalizedStrings({
         persist: 'Persistir',
         maximizeButton: 'Pantalla completa',
         maximizeButtonExit: 'Salir pantalla completa',
+        visualizingText: 'Visualizando',
+        rowsText: 'filas',
+        suggestionResponse: 'Quiero asegurarme de que entendí tu consulta. Querías decir:'
     }
 });

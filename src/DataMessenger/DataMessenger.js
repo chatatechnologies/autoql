@@ -88,6 +88,7 @@ import { refreshTooltips } from '../Tooltips';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
+import testdata from '../../testdata';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
@@ -1766,8 +1767,8 @@ export function DataMessenger(options = {}) {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
+        responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (let i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }
@@ -1792,8 +1793,8 @@ export function DataMessenger(options = {}) {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
+        responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }
@@ -1966,6 +1967,7 @@ export function DataMessenger(options = {}) {
         createBarChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
+        obj.createChartLoader(component);
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2172,8 +2174,8 @@ export function DataMessenger(options = {}) {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
+        responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }
@@ -2392,7 +2394,7 @@ export function DataMessenger(options = {}) {
         }, 45);
     };
 
-    obj.createSuggestions = async function (responseContentContainer, relatedJson, json) {
+    obj.createSuggestions = async function (responseContentContainer, json) {
         var data = json['data']['items'];
 
         if (!data) {
@@ -2400,7 +2402,7 @@ export function DataMessenger(options = {}) {
         }
 
         var { domain, apiKey } = obj.options.authentication;
-        var queryId = relatedJson['data']['query_id'];
+        var queryId = json['data']['query_id'];
         const url = `${domain}/autoql/api/v1/query/${queryId}/suggestions?key=${apiKey}`;
 
         for (var i = 0; i < data.length; i++) {
@@ -2433,20 +2435,19 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.putSuggestionResponse = (relatedJson, jsonResponse) => {
+    obj.putSuggestionResponse = (jsonResponse) => {
         var uuid = uuidv4();
         ChataUtils.responses[uuid] = jsonResponse;
+
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
 
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-
         containerMessage.classList.add('autoql-vanilla-suggestions-container');
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.setAttribute('data-bubble-id', uuid);
-        // containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('suggestions')
@@ -2455,14 +2456,17 @@ export function DataMessenger(options = {}) {
         );
 
         responseContentContainer.classList.add('suggestions')
-        obj.createSuggestions(responseContentContainer, relatedJson, jsonResponse);
+        obj.createSuggestions(responseContentContainer, jsonResponse);
         messageBubble.appendChild(responseContentContainer);
         var chatMessageBubbleContainer = document.createElement('div');
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container-text');
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer)
+
+        obj.putClientResponse(strings.suggestionResponse)
         obj.drawerContent.appendChild(containerMessage);
+
         messageBubble.appendChild(obj.getActionToolbar(uuid, 'suggestions', ''));
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         3;
@@ -2487,7 +2491,11 @@ export function DataMessenger(options = {}) {
         var chatMessageBubbleContainer = document.createElement('div');
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
         var div = document.createElement('div');
-        div.classList.add('autoql-vanilla-chata-single-response');
+
+        if (json.data) {
+            div.classList.add('autoql-vanilla-chata-single-response');
+        }
+
         div.appendChild(document.createTextNode(msg.toString()));
         messageBubble.appendChild(div);
         chatMessageBubbleContainer.appendChild(messageBubble);
@@ -2505,8 +2513,8 @@ export function DataMessenger(options = {}) {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
+        responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }
@@ -2605,13 +2613,9 @@ export function DataMessenger(options = {}) {
                 jsonResponse['data']['query_id'];
             var response = await apiCallGet(path, obj.options);
             var { status } = response;
-            if (status == 200) {
-                chatMessageBubbleContainer.appendChild(messageBubble);
-                containerMessage.appendChild(chatMessageBubbleContainer)
-                obj.putSuggestionResponse(jsonResponse, response.data);
-            } else {
-                obj.putSimpleResponse(response.data, '', status);
-            }
+
+            obj.putSimpleResponse(response.data, '', status);
+
             if (loading) obj.drawerContent.removeChild(loading);
             if (obj.options.landingPage !== 'data-messenger') {
                 obj.hideBubbles();
@@ -2694,6 +2698,30 @@ export function DataMessenger(options = {}) {
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };
 
+    obj.createChartLoader = (container) => {
+        var chartLoader = document.createElement('div');
+        var spinnerContainer = document.createElement('div');
+        var spinner = document.createElement('div');
+
+        chartLoader.classList.add('autoql-vanilla-table-loader');
+        chartLoader.classList.add('autoql-vanilla-table-page-loader');
+        chartLoader.classList.add('autoql-vanilla-table-loader-hidden');
+        spinnerContainer.classList.add('autoql-vanilla-page-loader-spinner');
+        spinner.classList.add('autoql-vanilla-spinner-loader');
+
+        spinnerContainer.appendChild(spinner);
+        chartLoader.appendChild(spinnerContainer);
+        container.setChartLoading = (isLoading) => {
+            if (isLoading) {
+                chartLoader.classList.remove('autoql-vanilla-table-loader-hidden');
+            } else {
+                chartLoader.classList.add('autoql-vanilla-table-loader-hidden');
+            }
+        };
+        
+        container.appendChild(chartLoader);
+    };
+
     obj.sendMessage = async (textValue, source, selections = undefined) => {
         obj.input.disabled = true;
         obj.input.value = '';
@@ -2734,6 +2762,7 @@ export function DataMessenger(options = {}) {
         let response;
         try {
             response = await runQuery(queryParams);
+            // response = testdata;
         } catch (error) {
             response = error;
         }
@@ -2790,6 +2819,15 @@ export function DataMessenger(options = {}) {
 
         var jsonResponse = response.data;
 
+        if (responseLoadingContainer) {
+            obj.chataBarContainer.removeChild(responseLoadingContainer);
+        }
+
+        if (jsonResponse?.data?.items) {
+            obj.putSuggestionResponse(jsonResponse);
+            return;
+        }
+
         jsonResponse.queryFn = (params = {}) => {
             return runQuery({
                 ...queryParams,
@@ -2812,9 +2850,6 @@ export function DataMessenger(options = {}) {
             displayType = 'stacked_column';
         }
 
-        if (responseLoadingContainer) {
-            obj.chataBarContainer.removeChild(responseLoadingContainer);
-        }
         if (jsonResponse.data.rows && jsonResponse.data.rows.length === 0) {
             obj.putSimpleResponse(jsonResponse, textValue, status);
             return;
@@ -2864,6 +2899,7 @@ export function DataMessenger(options = {}) {
             case 'bar':
                 var barContainer = obj.putTableResponse(jsonResponse);
                 createBarChart(barContainer, jsonResponse, obj.options);
+                obj.createChartLoader(barContainer);
                 obj.refreshToolbarButtons(barContainer, 'bar');
                 break;
             case 'word_cloud':

@@ -39,4 +39,57 @@
             }
         }
     }
+
+    .autoql-vanilla-chart-selector,
+    .autoql-vanilla-chart-row-selector {
+        font-size: 12px;
+
+        .autoql-vanilla-chata-axis-selector-arrow {
+            opacity: 1 !important;
+        }
+    }
+
+    .autoql-vanilla-x-axis-label-border,
+    .autoql-vanilla-y-axis-label-border,
+    .autoql-vanilla-chart-row-selector-box {
+        stroke: transparent;
+        fill: transparent;
+        stroke-width: 1px;
+        opacity: 0.5;
+        transition: stroke 0.2s ease;
+        z-index: 3;
+        cursor: pointer;
+
+        &:hover {
+            stroke: var(--autoql-vanilla-accent-color);
+        }
+    }
+}
+
+.autoql-vanilla-axis-selector-container .number-selector-header {
+    margin-top: 10px;
+    font-size: 12px;
+    padding: 0 18px 7px;
+    font-weight: 600;
+}
+
+.autoql-vanilla-chata-list-item {
+    display: flex;
+    justify-content: space-between;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-left: 25px;
+    padding-right: 15px;
+    font-size: 12px;
+    line-height: 28px;
+
+    &:hover {
+        background: rgba(0, 0, 0, 0.03);
+    }
+
+    &:not(:last-child) {
+        border-bottom: 1px solid hsla(0, 0%, 82.7%, 0.29);
+    }
 }

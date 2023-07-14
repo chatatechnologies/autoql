@@ -419,18 +419,14 @@ export function formatDataToHeatmap(json, options){
 }
 
 export const styleLegendTitleWithBorder = (svg, params, onClick) => {
-
-    const {
-        showOnBaseline,
-        legendEvent
-    } = params
+    const { legendEvent } = params
 
     svg.select('.legendTitle')
-    .style('font-weight', 'bold')
-    .style('transform', 'translate(0, -5px)')
-    .append('tspan')
-    .text('  ▼')
-    .style('font-size', '8px')
+        .style('font-weight', 'bold')
+        .style('transform', 'translate(0, -5px)')
+        .append('tspan')
+        .text('  ▼')
+        .style('font-size', '8px')
 
     let titleBBox = {}
     try {
@@ -441,16 +437,13 @@ export const styleLegendTitleWithBorder = (svg, params, onClick) => {
     } catch (error) { console.error(error) }
 
     svg.append('rect')
-    .attr('x', titleBBox.x - 10)
-    .attr('y', titleBBox.y - 10)
-    .attr('height', titleBBox.height + 10)
-    .attr('width', titleBBox.width + 20)
-    .attr('fill', 'transparent')
-    .attr('stroke', '#508bb8')
-    .attr('stroke-width', '1px')
-    .attr('rx', '4')
-    .attr('class', 'autoql-vanilla-x-axis-label-border')
-    .on('click', (evt) => { onClick(evt, showOnBaseline, legendEvent) })
+        .on('click', e => onClick('bottom', 'end', e, legendEvent))
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
+        .attr('x', titleBBox.x - 10)
+        .attr('y', titleBBox.y - 10)
+        .attr('height', titleBBox.height + 10)
+        .attr('width', titleBBox.width + 20)
+        .attr('rx', '4')
 }
 
 export const styleLegendTitleNoBorder = (svg) => {

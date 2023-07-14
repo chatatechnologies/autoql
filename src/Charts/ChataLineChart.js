@@ -63,6 +63,9 @@ export function createLineChart(
     let groupableCount = getGroupableCount(json)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
     var { chartColors } = getChartColorVars();
+
+    const paddingRectVert = 4;
+    const paddingRectHoz = 8;
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -93,12 +96,12 @@ export function createLineChart(
                 index: i,
                 currentLi: 0,
             },
-            series: yIndexes
+            series: [yIndexes[0]]
         }
     }
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
-    var activeSeries = [metadataComponent.metadata.series[0]];
+    var activeSeries = metadataComponent.metadata.series;
     var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
@@ -253,31 +256,26 @@ export function createLineChart(
 
     if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
+
         labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col2) + paddingRect;
+
+        var yLabelBBox = labelYContainer.node().getBBox()
 
         labelYContainer.append('rect')
-        .attr('x', labelContainerPos)
-        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-        .attr('height', xWidthRect + paddingRect)
-        .attr('width', 24)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('transform', 'rotate(-180)')
-        .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('transform', labelYContainer.attr('transform'))
+            .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('x', yLabelBBox.x - paddingRectVert)
+            .attr('y', yLabelBBox.y - paddingRectHoz)
+            .attr('height', yLabelBBox.height + paddingRectHoz * 2)
+            .attr('width', yLabelBBox.width + paddingRectVert * 2)
+            .attr('rx', '4')
 
-        labelYContainer.on('mouseup', () => {
+        labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
-            new ChataChartSeriesPopover({
-                left: event.clientX,
-                top: event.clientY
-            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+            new ChataChartSeriesPopover(evt, 'right', 'middle', cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createLineChart(
                     component,
@@ -303,13 +301,10 @@ export function createLineChart(
     textContainerX.append('tspan')
     .text(col1);
 
-    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+    const onSelectorClick = (placement, align, evt, legendEvent) => {
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-        var popoverSelector = new ChataChartListPopover({
-            left: event.clientX,
-            top: event.clientY
-        }, xIndexes, (evt, popover) => {
+        var popoverSelector = new ChataChartListPopover(evt, xIndexes, (evt, popover) => {
             var xAxisIndex = evt.target.dataset.popoverIndex;
             var currentLi = evt.target.dataset.popoverPosition;
             metadataComponent.metadata.groupBy.index = xAxisIndex;
@@ -328,39 +323,30 @@ export function createLineChart(
                 renderTooltips
             )
             popover.close();
-        }, true);
+        }, placement, align);
 
         popoverSelector.setSelectedItem(selectedItem)
     }
 
     if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
 
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col1) + paddingRect;
-        var _y = 0;
-        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
-        if(hasLegend && allGroup.length < 3){
-            _y = height - (margin.marginLabel/2) + 3;
-        }else{
-            _y = height + (margin.marginLabel/2) + 6;
-        }
-        labelXContainer.append('rect')
-        .attr('x', _x)
-        .attr('y', _y)
-        .attr('height', 24)
-        .attr('width', xWidthRect + paddingRect)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', onSelectorClick)
+        var xLabelBBox = labelXContainer.node().getBBox()
+
+        labelXContainer.append('rect')
+            .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('x', xLabelBBox.x - paddingRectHoz)
+            .attr('y', xLabelBBox.y - paddingRectVert)
+            .attr('height', xLabelBBox.height + paddingRectVert * 2)
+            .attr('width', xLabelBBox.width + paddingRectHoz * 2)
+            .attr('rx', '4')
+
+        labelXContainer.on('mouseup', e => onSelectorClick('top', 'middle', e))
     }
 
 
