@@ -39,13 +39,11 @@
     opacity: 1;
     flex: 0 1 auto;
     min-height: 0;
-    overflow: hidden;
     
     .autoql-vanilla-card-user-content {
       min-height: 100px;
       max-height: 100%;
       position: relative;
-      overflow: hidden;
       height: 100%;
   
       .autoql-vanilla-card-loading {
