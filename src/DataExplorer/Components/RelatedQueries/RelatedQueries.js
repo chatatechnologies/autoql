@@ -17,30 +17,16 @@ export function RelatedQueries({
   const margin = 40;
   const titleHeight = 37;
   const maxHeight = (containerHeight - previewSectionHeight - headerHeight - textBarHeight - titleHeight - margin - padding);
-  const card = new Card({ icon, title, widget, subject, maxHeight });
-  const {
-    domain,
-    apiKey,
-    token,
-  } = widget.options.authentication;
-  
-  container.classList.add('autoql-vanilla-data-explorer-section');
-  container.classList.add('autoql-vanilla-query-suggestions-section');
-  list.classList.add('autoql-vanilla-query-suggestion-list');
-  suggestionList.classList.add('autoql-vanilla-data-explorer-query-suggestion-list');
-  suggestionList.appendChild(list);
-  card.setContent(suggestionList);
-  container.appendChild(card);
-
-  const getRelatedQueries = async() => {
+  let pageNumber = 1;
+  const getRelatedQueries = async({ pageNumber }) => {
     const relatedQueries = await fetchDataExplorerSuggestions({
       context: subject.name,
       skipQueryValidation: true,
-      pageNumber: 1,
       pageSize: 25,
       domain,
       apiKey,
       token,
+      pageNumber,
     });
     const { items } = relatedQueries.data.data;
 
@@ -68,7 +54,27 @@ export function RelatedQueries({
     });
   }
 
-  getRelatedQueries();
+  const onScroll = () => {
+    pageNumber++;
+    getRelatedQueries({ pageNumber })
+  }
+
+  const card = new Card({ icon, title, widget, subject, maxHeight, onScroll });
+  const {
+    domain,
+    apiKey,
+    token,
+  } = widget.options.authentication;
+  
+  container.classList.add('autoql-vanilla-data-explorer-section');
+  container.classList.add('autoql-vanilla-query-suggestions-section');
+  list.classList.add('autoql-vanilla-query-suggestion-list');
+  suggestionList.classList.add('autoql-vanilla-data-explorer-query-suggestion-list');
+  suggestionList.appendChild(list);
+  card.setContent(suggestionList);
+  container.appendChild(card);
+
+  getRelatedQueries(pageNumber);
 
   return container;
 }

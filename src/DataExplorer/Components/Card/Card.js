@@ -2,7 +2,7 @@ import { createIcon } from '../../../Utils';
 import { CARET_DOWN_ICON, CARET_LEFT_ICON} from '../../../Svg';
 import './Card.scss'
 
-export function Card({ icon, title, maxHeight }) {
+export function Card({ icon, title, maxHeight, onScroll = () => {} }) {
   const container = document.createElement('div');
   const titleContainer = document.createElement('div');
   const titleWrapper = document.createElement('div');
@@ -71,9 +71,8 @@ export function Card({ icon, title, maxHeight }) {
     console.log(userContent.scrollHeight);
     console.log(userContent.clientHeight + userContent.scrollTop);
     if (endOfPage) {
-      console.log('load ')
+      onScroll()
     }
-    
   })
 
   titleContainer.onclick = () => {
