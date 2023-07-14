@@ -70,8 +70,6 @@ export function Card({ icon, title, maxHeight, onScroll = () => {} }) {
   userContent.addEventListener('scroll', () => {
     const endOfPage =
     userContent.clientHeight + userContent.scrollTop >= userContent.scrollHeight;
-    console.log(userContent.scrollHeight);
-    console.log(userContent.clientHeight + userContent.scrollTop);
     if (endOfPage) {
       onScroll()
     }

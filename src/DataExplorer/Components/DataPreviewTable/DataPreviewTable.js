@@ -38,7 +38,6 @@ export function DataPreviewTable({ previewResponse }) {
     body.appendChild(dataPreviewRow);
   })
 
-  console.log(previewResponse);
   container.classList.add('autoql-vanilla-data-preview');
   scroll.classList.add('autoql-vanilla-data-preview-scroll');
 
