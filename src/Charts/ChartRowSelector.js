@@ -11,8 +11,6 @@ export function ChartRowSelector(
     onDataFetchError = () => {},
     metadataComponent,
     position,
-    placement,
-    align
 ) {
     var currentPageSize = json.data.row_limit;
     var initialPageSize = json.originalPageSize ?? currentPageSize;
@@ -89,14 +87,10 @@ export function ChartRowSelector(
             return li;
         };
 
-        var popover = new PopoverChartSelector(e, placement, align);
-        console.log({popover})
+        var popover = new PopoverChartSelector(e, 'top', 'middle');
+
         obj.createContent(currentPageSize);
 
-        // if (position.left + popover.clientWidth >= window.innerWidth) {
-        //     position.left = window.innerWidth - popover.clientWidth - 60;
-        // }
-        // popover.position = position;
         popover.setSelectedItem = (index) => {
             elements.map((elem) => elem.classList.remove('active'));
             elements[parseInt(index)].classList.add('active');
@@ -156,7 +150,6 @@ export function ChartRowSelector(
         .attr('y', numberSelectorBBox.y - 3)
         .attr('rx', 4)
         .on('mouseup', function (evt) {
-            console.log('ON SELECTOR CLICK!', this, evt)
             onSelectorClick(evt);
         });
 

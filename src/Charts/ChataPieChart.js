@@ -226,7 +226,6 @@ export function createPieChart(
 
         var chartCenter = width / 2
         var bbox = pieChartContainer?.node()?.getBBox?.()
-        console.log({bbox})
         if (bbox) {
             var bboxCenterX = bbox.x + bbox.width / 2
             pieChartContainer.attr('transform', `translate(${chartCenter - bboxCenterX}, 0)`)
@@ -286,7 +285,6 @@ export function createPieChart(
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }
-        console.log({legendGroups, group: legendGroups[words.join(' ')], words})
         var unformatGroup = legendGroups[words.join(' ')]?.value;
         groups[unformatGroup].isVisible = !groups[unformatGroup].isVisible;
         createSlices();

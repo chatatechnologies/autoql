@@ -1,4 +1,4 @@
-import { aggregateData, isDataLimited } from 'autoql-fe-utils'
+import { aggregateData } from 'autoql-fe-utils'
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
@@ -27,7 +27,6 @@ import {
 } from './d3-compatibility'
 import {
     formatColumnName,
-    getStringWidth,
     formatData,
     formatChartData,
     closeAllChartPopovers,
@@ -37,23 +36,26 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
+import { ChartLoader } from './ChartLoader'
 
 export function createBarChart(
     component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
 
+    var chartLoader = new ChartLoader(component)
+
     var margin = {
         top: 5,
         right: 10,
         bottom: 60,
+        bottomChart: 60,
         left: 160,
+        chartLeft: 120,
         marginLabel: 50,
         marginRowSelector: 0,
-        chartLeft: 120,
-        bottomChart: 60
     }
 
-    var hasRowSelector = isDataLimited({data: origJson})
+    var hasRowSelector = options.pageSize < origJson?.data?.count_rows
     if (hasRowSelector) {
         margin.marginRowSelector = 20
         margin.bottom += margin.marginRowSelector
@@ -115,7 +117,7 @@ export function createBarChart(
 
     var rows = aggregateData({
         data: origJson.data.rows,
-        columns: origJson.data.columns,
+        columns: cols,
         aggColIndex: yAxisIndex,
         numberIndices: xIndexes.map(indexObj => indexObj.index),
         dataFormatting: options.dataFormatting,
@@ -295,7 +297,6 @@ export function createBarChart(
     textContainerY.append('tspan').text(col1)
 
     const onSelectorClick = (placement, align, evt, legendEvent) => {
-        console.log({placement, align, evt, legendEvent})
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
         var popoverSelector = new ChataChartListPopover(evt, yIndexes, (evt, popover) => {
@@ -396,7 +397,7 @@ export function createBarChart(
 
     if(rotateLabels){
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart - margin.marginRowSelector) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[index1], options)}
         ))
@@ -405,7 +406,7 @@ export function createBarChart(
         .style("text-anchor", "end");
     }else{
         svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
+        .attr("transform", "translate(0," + (height - margin.bottomChart - margin.marginRowSelector) + ")")
         .call(xAxis.tickFormat(function(d){
             return formatChartData(d, cols[index1], options)}
         ))
@@ -416,7 +417,7 @@ export function createBarChart(
     svg.append("g")
         .attr("class", "autoql-vanilla-axes-grid")
         .call(xAxis
-            .tickSize(height - margin.bottomChart)
+            .tickSize(height - margin.bottomChart - margin.marginRowSelector)
             .tickFormat("")
         );
 
@@ -631,7 +632,8 @@ export function createBarChart(
         }
     );
 
-    const onDataFetching = () => component.setChartLoading?.(true)
+    const onDataFetching = () => chartLoader?.setChartLoading(true)
+
     const onNewData = (newJson) => {
         createBarChart(
             component,
@@ -640,13 +642,14 @@ export function createBarChart(
             onUpdate,
             fromChataUtils,
             valueClass,
-            renderTooltips
+            renderTooltips,
         )
-        component.setChartLoading?.(false)
+
+        chartLoader?.setChartLoading(false)
     } 
     const onDataFetchError = (error) =>  {
         console.error(error)
-        component.setChartLoading?.(false)
+        chartLoader?.setChartLoading(false)
     }
 
     if (hasRowSelector) {
@@ -660,11 +663,11 @@ export function createBarChart(
             {
                 x: width / 2,
                 y: height + margin.marginLabel + margin.marginRowSelector,
-            },
-            'top',
-            'middle'
+            }
         );
     }
+
+    component.appendChild(chartLoader)
 
     createBars();
 }

@@ -27,7 +27,6 @@ import {
 } from './d3-compatibility'
 import {
     formatColumnName,
-    getStringWidth,
     formatData,
     formatChartData,
     closeAllChartPopovers,
@@ -38,20 +37,35 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
+import { ChartLoader } from './ChartLoader'
 
 export function createColumnChart(
     component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
+    
+    if (!component.chartLoader) {
+        var chartLoader = new ChartLoader(component)
+        component.chartLoader = chartLoader
+    }
+
     var margin = {
         top: 20,
         right: 10,
         bottom: 60,
+        bottomChart: 50,
         left: 90,
         chartLeft: 120,
         marginLabel: 50,
-        bottomChart: 50
-    },
-    width = component.parentElement.clientWidth - margin.left;
+        marginRowSelector: 0,
+    }
+
+    var hasRowSelector = options.pageSize < origJson?.data?.count_rows
+    if (hasRowSelector) {
+        margin.marginRowSelector = 20
+        margin.bottom += margin.marginRowSelector
+    }
+   
+    var width = component.parentElement.clientWidth - margin.left;
     var height;
 
     var cols = enumerateCols(origJson);
@@ -76,11 +90,9 @@ export function createColumnChart(
     if(indexList['DATE']){
         xIndexes.push(...indexList['DATE'])
     }
-
     if(indexList['DATE_STRING']){
         xIndexes.push(...indexList['DATE_STRING'])
     }
-
     if(indexList['DOLLAR_AMT']){
         yIndexes = indexList['DOLLAR_AMT'];
     }else if(indexList['QUANTITY']){
@@ -106,7 +118,6 @@ export function createColumnChart(
     var activeSeries = metadataComponent.metadata.series;
     var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
-
     var rows = aggregateData({
         data: origJson.data.rows,
         columns: origJson.data.columns,
@@ -233,9 +244,10 @@ export function createColumnChart(
     );
 
     const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
-    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
-    : (margin.left - 15)
-    const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
+    const labelSelectorPadding = stringWidth > 0 
+        ? (margin.left + stringWidth / 2)
+        : (margin.left - 15)
+
     chartWidth -= stringWidth
 
     var x0 = SCALE_BAND()
@@ -247,7 +259,7 @@ export function createColumnChart(
     setDomainRange(x1, groupNames, 0, x1Range, false, .1)
 
     y
-    .range([ height - (margin.bottomChart), 0 ])
+    .range([ height - margin.bottomChart - margin.marginRowSelector, 0 ])
     .domain([minMaxValues.min, minMaxValues.max]).nice()
 
     var xAxis = getAxisBottom(x0)
@@ -320,13 +332,12 @@ export function createColumnChart(
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
-    .attr('x', chartWidth / 2)
-    .attr('y', height + margin.marginLabel - 3)
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-x-axis-label')
+        .attr('x', chartWidth / 2)
+        .attr('y', height + margin.marginLabel - 5)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'autoql-vanilla-x-axis-label')
 
-    textContainerX.append('tspan')
-    .text(col1);
+    textContainerX.append('tspan').text(col1);
 
     const onSelectorClick = (placement, align, evt, legendEvent) =>{
         closeAllChartPopovers();
@@ -414,11 +425,7 @@ export function createColumnChart(
     )
 
     const calculateHeight = (d) => {
-        if(minMaxValues.min < 0){
-            return Math.abs(y(d.value) - y(0));
-        }else{
-            return (height - margin.bottomChart) - y(d.value);
-        }
+        return Math.abs(y(d.value) - y(0));
     }
 
     var slice = undefined;
@@ -444,7 +451,6 @@ export function createColumnChart(
         })
         .enter().append("rect")
         .each(function (d) {
-
             if(groupableCount === 2){
                 let index3 = index2 === 0 ? 1 : 0
                 let colStr3 = cols[index3]['display_name']
@@ -507,11 +513,14 @@ export function createColumnChart(
             rectIndex++
         })
         .attr("width", getBandWidth(x1))
-        .attr("x", function(d) { return x1(d.group); })
+        .attr("x", function(d) { 
+            return x1(d.group); 
+        })
         .style("fill", function(d) { return colorScale(d.group) })
         .attr('fill-opacity', '1')
         .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
-        .attr("y", function(d) { return y(Math.max(0, d.value)); })
+        .attr("y", function(d) { 
+            return y(Math.max(0, d.value)); })
         .attr("height", function(d) { return calculateHeight(d) })
 
         onUpdate(component);
@@ -618,6 +627,43 @@ export function createColumnChart(
             )
         }
     );
+
+
+    const onDataFetching = () => component.chartLoader?.setChartLoading(true)
+    
+    const onNewData = (newJson) => {
+        createColumnChart(
+            component,
+            newJson,
+            options,
+            onUpdate,
+            fromChataUtils,
+            valueClass,
+            renderTooltips
+        )
+        component.chartLoader?.setChartLoading(false)
+    } 
+    const onDataFetchError = (error) =>  {
+        console.error(error)
+        component.chartLoader?.setChartLoading(false)
+    }
+
+    if (hasRowSelector) {
+        new ChartRowSelector(
+            svg,
+            json,
+            onDataFetching,
+            onNewData,
+            onDataFetchError,
+            metadataComponent,
+            {
+                x: width / 2,
+                y: height + margin.marginLabel + margin.marginRowSelector,
+            }
+        );
+    }
+
+    component.appendChild(component.chartLoader)
 
     createBars();
 }
