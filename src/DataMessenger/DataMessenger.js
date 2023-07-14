@@ -1,5 +1,3 @@
-// TODO: NEXT DEPLOY
-// import { ReverseTranslation } from '../ReverseTranslation'
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -10,8 +8,7 @@ import {
     NotificationIcon,
     NotificationFeed
 } from '../Notifications'
-// TODO: NEXT DEPLOY
-// import { ReverseTranslation } from '../ReverseTranslation'
+import { ReverseTranslation } from '../ReverseTranslation'
 import {
     apiCallV2,
     apiCallGet,
@@ -841,6 +838,9 @@ export function DataMessenger(options = {}) {
     obj.createDrawerContent = () => {
         var drawerContent = document.createElement('div');
         var firstMessage = document.createElement('div');
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container-text');
         var chatMessageBubble = document.createElement('div');
         var scrollBox = document.createElement('div');
         scrollBox.classList.add('autoql-vanilla-chata-scrollbox');
@@ -849,9 +849,8 @@ export function DataMessenger(options = {}) {
         firstMessage.classList.add('autoql-vanilla-chat-single-message-container');
         firstMessage.classList.add('response');
         chatMessageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        chatMessageBubble.classList.add('text');
-
-        firstMessage.appendChild(chatMessageBubble);
+        firstMessage.appendChild(chatMessageBubbleContainer)
+        chatMessageBubbleContainer.appendChild(chatMessageBubble);
         drawerContent.appendChild(firstMessage);
         scrollBox.appendChild(drawerContent);
         obj.drawerBody.appendChild(scrollBox);
@@ -971,7 +970,7 @@ export function DataMessenger(options = {}) {
                 screenButton.innerHTML = MAXIMIZE_BUTTON;
                 screenButtonTooltip.setContent(strings.maximizeButton);
 
-                obj.isPortrait() ? obj.setOption('width', obj.options.width) : obj.setOption('height', obj.options.height);
+                obj.isPortrait() ? obj.drawerContentWrapper.style.width = `${obj.options.width}px` : o.drawerContentWrapper.style.height = `${obj.options.height}px`;
             }
 
             window.dispatchEvent(new CustomEvent('chata-resize', {}));
@@ -993,6 +992,7 @@ export function DataMessenger(options = {}) {
         obj.header = chatHeaderContainer;
         obj.clearMessagePop = popover;
         filterLocking.loadConditions();
+        obj.filterLocking = filterLocking;
     };
 
     obj.closePopOver = (popover) => {
@@ -1979,8 +1979,17 @@ export function DataMessenger(options = {}) {
                 json['data']['rows'][0][2] = cell.getValue();
             }
 
-            console.log(json['data']['rows'][0]);
             obj.sendDrilldownMessage(json, 0, obj.options);
+        }
+    };
+
+    obj.onRTVLClick = (rtChunk) => {
+        closeAllChartPopovers();
+        obj.filterLocking?.show();
+        if (rtChunk.lockedFilter) {
+            obj.filterLocking.submitVL(rtChunk.lockedFilter, rtChunk.eng);
+        } else {
+            obj.filterLocking?.submitText(rtChunk.eng);
         }
     };
 
@@ -1993,7 +2002,7 @@ export function DataMessenger(options = {}) {
         var tableWrapper = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
         var idRequest = uuidv4();
-        var { interpretation } = jsonResponse.data;
+        var { parsed_interpretation } = jsonResponse.data;
 
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
 
@@ -2039,7 +2048,10 @@ export function DataMessenger(options = {}) {
         scrollbox.appendChild(tableContainer);
         responseContentContainer.appendChild(scrollbox);
         messageBubble.appendChild(responseContentContainer);
-        containerMessage.appendChild(messageBubble);
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.appendChild(messageBubble);
+        containerMessage.appendChild(chatMessageBubbleContainer)
         obj.drawerContent.appendChild(containerMessage);
         var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
         messageBubble.appendChild(actions);
@@ -2053,11 +2065,10 @@ export function DataMessenger(options = {}) {
         tableWrapper.internalTable = table;
         tableWrapper.tabulator = table;
         table.parentContainer = parentContainer;
-        // TODO: next deploy
-        // if(interpretation && !isDrilldown){
-        //     var interpretationView = new ReverseTranslation(interpretation)
-        //     messageBubble.appendChild(interpretationView)
-        // }
+        if(parsed_interpretation && !isDrilldown){
+            var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick)
+            containerMessage.appendChild(interpretationView)
+        }
         setTimeout(function () {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
@@ -2093,7 +2104,6 @@ export function DataMessenger(options = {}) {
         var lastBubble = obj.getLastMessageBubble();
         var uuid = uuidv4();
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-        containerMessage.classList.add('text');
         containerMessage.setAttribute('data-bubble-id', uuid);
         containerMessage.style.zIndex = --obj.zIndexBubble;
         containerMessage.relatedQuery = obj.lastQuery;
@@ -2101,7 +2111,11 @@ export function DataMessenger(options = {}) {
         containerMessage.classList.add('response');
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.innerHTML = text;
-        containerMessage.appendChild(messageBubble);
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container-text');
+        chatMessageBubbleContainer.appendChild(messageBubble);
+        containerMessage.appendChild(chatMessageBubbleContainer)
         obj.drawerContent.appendChild(containerMessage);
         if (withDeleteBtn) {
             let toolbarButtons = obj.getActionToolbar(uuid, 'safety-net', '');
@@ -2178,7 +2192,6 @@ export function DataMessenger(options = {}) {
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
 
         containerMessage.classList.add('autoql-vanilla-suggestions-container');
-        containerMessage.classList.add('text');
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.setAttribute('data-bubble-id', uuid);
@@ -2194,7 +2207,11 @@ export function DataMessenger(options = {}) {
 
         obj.createSuggestions(responseContentContainer, relatedJson, jsonResponse);
         messageBubble.appendChild(responseContentContainer);
-        containerMessage.appendChild(messageBubble);
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container-text');
+        chatMessageBubbleContainer.appendChild(messageBubble);
+        containerMessage.appendChild(chatMessageBubbleContainer)
         obj.drawerContent.appendChild(containerMessage);
         messageBubble.appendChild(obj.getActionToolbar(uuid, 'suggestions', ''));
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
@@ -2208,20 +2225,23 @@ export function DataMessenger(options = {}) {
         var messageBubble = document.createElement('div');
         var uuid = uuidv4();
         ChataUtils.responses[uuid] = json;
+
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
         containerMessage.style.zIndex = --obj.zIndexBubble;
-
         containerMessage.classList.add('response');
         containerMessage.setAttribute('data-bubble-id', uuid);
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response');
         messageBubble.classList.add('no-hover-response');
 
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
         var div = document.createElement('div');
         div.classList.add('autoql-vanilla-chata-single-response');
         div.appendChild(document.createTextNode(msg.toString()));
         messageBubble.appendChild(div);
-        containerMessage.appendChild(messageBubble);
+        chatMessageBubbleContainer.appendChild(messageBubble);
+        containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
         if (withDeleteBtn) {
             var toolbarButtons = obj.getActionToolbar(uuid, 'safety-net', '');
@@ -2248,13 +2268,12 @@ export function DataMessenger(options = {}) {
     };
 
     obj.putSimpleResponse = async (jsonResponse, text, statusCode, isDrilldown = false) => {
-        var { interpretation } = jsonResponse.data;
+        var { parsed_interpretation } = jsonResponse.data;
         var ref = jsonResponse['reference_id'];
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-        containerMessage.classList.add('text');
         containerMessage.style.zIndex = --obj.zIndexBubble;
 
         containerMessage.classList.add('response');
@@ -2266,6 +2285,11 @@ export function DataMessenger(options = {}) {
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('simple-response');
         containerMessage.relatedQuery = obj.lastQuery;
+
+
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container-text');
 
         if (
             jsonResponse['reference_id'] === '1.1.211' ||
@@ -2313,8 +2337,10 @@ export function DataMessenger(options = {}) {
             toolbarButtons = obj.getActionToolbar(idRequest, 'safety-net', '');
             messageBubble.appendChild(toolbarButtons);
         }
+
         if (ref != '1.1.430') {
-            containerMessage.appendChild(messageBubble);
+            chatMessageBubbleContainer.appendChild(messageBubble);
+            containerMessage.appendChild(chatMessageBubbleContainer)
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }
         if (ref === '1.1.430') {
@@ -2330,7 +2356,8 @@ export function DataMessenger(options = {}) {
             var response = await apiCallGet(path, obj.options);
             var { status } = response;
             if (status == 200) {
-                containerMessage.appendChild(messageBubble);
+                chatMessageBubbleContainer.appendChild(messageBubble);
+                containerMessage.appendChild(chatMessageBubbleContainer)
                 obj.putSuggestionResponse(jsonResponse, response.data);
             } else {
                 obj.putSimpleResponse(response.data, '', status);
@@ -2340,11 +2367,10 @@ export function DataMessenger(options = {}) {
                 obj.hideBubbles();
             }
         }
-        // TODO: Next deploy
-        // if(interpretation){
-        //     var interpretationView = new ReverseTranslation(interpretation)
-        //     messageBubble.appendChild(interpretationView)
-        // }
+        if(parsed_interpretation){
+            var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick)
+            containerMessage.appendChild(interpretationView)
+        }
         refreshTooltips();
     };
 
@@ -2374,7 +2400,10 @@ export function DataMessenger(options = {}) {
             }),
         );
 
-        containerMessage.appendChild(messageBubble);
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
+        chatMessageBubbleContainer.appendChild(messageBubble);
+        containerMessage.appendChild(chatMessageBubbleContainer)
         obj.drawerContent.appendChild(containerMessage);
         var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         messageBubble.appendChild(toolbar);
@@ -2406,8 +2435,11 @@ export function DataMessenger(options = {}) {
         messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
         messageBubble.classList.add('full-width');
 
+        var chatMessageBubbleContainer = document.createElement('div');
+        chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container')
         messageBubble.innerHTML = obj.createHelpContent(jsonResponse['data']['rows'][0]);
-        containerMessage.appendChild(messageBubble);
+        chatMessageBubbleContainer.appendChild(messageBubble);
+        containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };

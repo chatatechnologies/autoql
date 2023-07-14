@@ -1,4 +1,3 @@
-import './FilterLockingList.css'
 import { ButtonContainer } from '../ButtonContainer'
 import { FilterLockingLine } from '../FilterLockingLine'
 import {
@@ -7,12 +6,15 @@ import {
 import { INFO_ICON } from '../../../Svg'
 import { strings } from '../../../Strings'
 
+import './FilterLockingList.scss'
+
 export function FilterLockingList(datamessenger, conditionList,  data){
     const category = data[0]
     const lines = data[1]
     var view = document.createElement('div')
     var titleContainer = document.createElement('div')
     var titleWrapper = document.createElement('div')
+    titleWrapper.classList.add('autoql-vanilla-filter-list-title-section')
     var title = document.createElement('h4')
     var categoryContainer = document.createElement('span')
     var btnContainer = new ButtonContainer(lines)
@@ -23,14 +25,17 @@ export function FilterLockingList(datamessenger, conditionList,  data){
     titleContainer.classList.add('autoql-vanilla-filter-list-title')
 
     title.appendChild(categoryContainer)
-    title.appendChild(btnContainer)
+
 
     titleWrapper.appendChild(title)
+    titleWrapper.appendChild(btnContainer)
     titleContainer.appendChild(titleWrapper)
     if(FilterLockingList.index === 0){
         var toggleColumn = document.createElement('div')
+        toggleColumn.classList.add('autoql-vanilla-filter-list-title-section')
         var toggleColumnContent = document.createElement('h4')
         var infoIcon = document.createElement('div')
+        infoIcon.classList.add('autoql-vanilla-filter-list-title-section-icon')
         infoIcon.innerHTML = INFO_ICON
         infoIcon.setAttribute(
             'data-tippy-content',

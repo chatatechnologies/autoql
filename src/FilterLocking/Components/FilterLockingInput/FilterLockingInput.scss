@@ -1,0 +1,49 @@
+.autoql-vanilla-filter-locking-input-container {
+    margin: 0 !important;
+    margin-top: 10px !important;
+    margin-bottom: 5px !important;
+    padding: 0 !important;
+
+    .autoql-vanilla-condition-locking-input {
+        padding: 5px 5px 5px 20px !important;
+        margin: 0 !important;
+        height: 32px;
+        box-sizing: border-box !important;
+        border-radius: 24px !important;
+        font-size: 12px;
+        letter-spacing: 0.04em;
+        outline: none !important;
+        border: 1px solid var(--autoql-vanilla-border-color, rgba(0, 0, 0, 0.1));
+        background: var(--autoql-vanilla-background-color-seceondary);
+        color: var(--autoql-vanilla-text-color-primary);
+    }
+}
+
+.autoql-vanilla-auto-complete-filter-locking {
+    position: absolute !important;
+    width: 100% !important;
+    bottom: unset !important;
+    top: 35px;
+    left: -5px;
+    border-radius: unset !important;
+    max-height: 185px;
+    overflow-y: auto !important;
+    margin: 0;
+
+    .autoql-vanilla-auto-complete-suggestions ul {
+        padding: 5px 0px !important;
+
+        li {
+            padding: 3px 0px 3px 15px !important;
+        }
+    }
+}
+
+.autoql-vanilla-suggestion-content {
+    display: flex;
+}
+
+.autoql-vanilla-suggestion-content div {
+    width: 50%;
+    text-align: left;
+}
