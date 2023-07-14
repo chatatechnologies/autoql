@@ -72,7 +72,6 @@ export function DataExplorer({ subjects, widget }) {
     li.appendChild(document.createTextNode(subject.display_name));
     subjectsWrapper.appendChild(li);
     li.onclick = async () => {
-      console.log('test');
       autocomplete.classList.remove('show')
       input.value = subject.display_name;
       contentWrapper.innerHTML = '';
@@ -89,6 +88,7 @@ export function DataExplorer({ subjects, widget }) {
         title: `Query suggestions for "${subject.display_name}"`,
         containerHeight: container.clientHeight,
         previewSectionHeight: previewSection.container.clientHeight,
+        textBarHeight: textBar.clientHeight,
         subject,
         widget,
       });

@@ -5,19 +5,26 @@ import { CHATA_BUBBLES_ICON } from "../../../Svg";
 import { createIcon } from "../../../Utils";
 import './RelatedQueries.scss';
 
-export function RelatedQueries({ icon, title, widget, subject, containerHeight, previewSectionHeight }) {
+export function RelatedQueries({ 
+  icon, title, widget, subject, textBarHeight, containerHeight, previewSectionHeight 
+}) {
   this.currentPage = 1;
   const container = document.createElement('div');
   const suggestionList = document.createElement('div');
   const list = document.createElement('div');
   const headerHeight = widget.header.clientHeight;
-  const card = new Card({ icon, title, widget, subject, maxHeight: 520 });
+  const padding = 10;
+  const margin = 40;
+  const titleHeight = 37;
+  console.log(previewSectionHeight);
+  const maxHeight = (containerHeight - previewSectionHeight - headerHeight - textBarHeight - titleHeight - margin - padding);
+  const card = new Card({ icon, title, widget, subject, maxHeight });
   const {
     domain,
     apiKey,
     token,
   } = widget.options.authentication;
-
+  
   container.classList.add('autoql-vanilla-data-explorer-section');
   container.classList.add('autoql-vanilla-query-suggestions-section');
   list.classList.add('autoql-vanilla-query-suggestion-list');
