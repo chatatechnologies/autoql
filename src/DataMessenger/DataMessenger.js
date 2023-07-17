@@ -450,7 +450,7 @@ export function DataMessenger(options = {}) {
         }
         obj.chataBarContainer.style.display = displayBar;
         if (displayNodes == 'none') {
-            obj.headerTitle.innerHTML = strings.exploreQueries;
+            obj.headerTitle.innerHTML = strings.dataExplorer;
             obj.headerRight.style.visibility = 'hidden';
             obj.scrollBox.classList.add('max-height');
         } else {
@@ -598,8 +598,8 @@ export function DataMessenger(options = {}) {
         var pageSwitcherContainer = document.createElement('div');
         pageSwitcherContainer.classList.add('autoql-vanilla-page-switcher-container');
 
-        var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Data Messenger', isEnabled: true})
-        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(DATA_EXPLORER_SEARCH_ICON), tooltip: strings.exploreQueries, isEnabled: enableExploreQueriesTab })
+        var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Home', isEnabled: true})
+        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(DATA_EXPLORER_SEARCH_ICON), tooltip: strings.dataExplorer, isEnabled: enableExploreQueriesTab })
         var tabNotifications = obj.createQueryTab({name: 'notifications', tooltip: strings.notifications, isEnabled: enableNotificationsTab })
 
         tabChataUtils.onclick = function () {
