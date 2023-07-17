@@ -191,7 +191,7 @@ export const strings = new LocalizedStrings({
         closeDrawer: 'Cerrar Data mesenger',
         clearMessages: 'Limpiar respuestas',
         exploreQueries: 'Explorar Consultas',
-		dataExplorer:'explorateur de données',
+		dataExplorer:'Exploradora de datos',
         notifications: 'Notificaciones',
         dmInputPlaceholder: 'escriba sus consultas aquí',
         voiceRecord: 'Mantenga presionado para convertir voz a texto',
