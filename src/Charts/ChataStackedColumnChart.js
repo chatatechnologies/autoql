@@ -171,7 +171,7 @@ export function createStackedColumnChart(
         return sum;
     });
 
-    const stringWidth = getChartLeftMargin(maxValue.toString())
+    const stringWidth = getChartLeftMargin(maxValue.toString(), cols[notGroupableIndex], options)
     const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
     : (margin.left - 15)
     chartWidth -= stringWidth

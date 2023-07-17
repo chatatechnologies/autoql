@@ -1,13 +1,18 @@
-import { areAllColumnsHidden, formatElement } from 'autoql-fe-utils'
+import { areAllColumnsHidden, formatChartLabel, formatElement } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
-import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
 
-export function formatChartData(val, col, options){
-    var clone = cloneObject(options);
-    clone.dataFormatting.currencyDecimals = 0;
-    return formatData(val, col, clone, true);
+export function formatChartData(d, column, options, scale){
+    // return formatData(val, col, options, true);
+    const formattedLabel = formatChartLabel({
+        d,
+        column,
+        scale,
+        dataFormatting: options.dataFormatting,
+    })
+
+    return formattedLabel?.formattedLabel ?? d
 }
 
 export function formatData(val, col, allOptions={}, isChart){
@@ -570,11 +575,16 @@ export function getStringWidth(string){
     return width;
 }
 
-export function getChartLeftMargin(yValue){
-    const { length } = yValue
+export function getChartLeftMargin(yValue, col, options){
+    let value = yValue;
+    if (col && options) {
+        value = formatChartData(yValue, col, options)
+    }
+
+    const { length } = value
     if(length < 9)return 0
 
-    return yValue.length * 2
+    return value.length * 2
 }
 
 export function showBadge(json){

@@ -4,16 +4,17 @@ import {
     formatColumnName,
     getGroupableField,
     getNotGroupableField,
+    formatChartData,
     formatData
 } from '../Utils'
 import {
     ChataUtils
 } from '../ChataUtils'
-import { mergeBboxes } from 'autoql-fe-utils'
+import { formatChartLabel, mergeBboxes } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
-    var data = json['data']['rows'];
+    var data = json['data']['aggreggatedRows'] ?? json['data']['rows'];
     var columns = enumerateCols(json);
     var multiSeriesCol = isMultiSeries(columns)
     var seriesIndexes = []
@@ -253,14 +254,17 @@ export const enumerateCols = (json) => {
     return clone;
 }
 
-export const formatLabel = (label) => {
-    if(!label)label = ''
-    if(label === 'null')label = 'Untitled Category'
-    if(label.toString().length < 20){
-        return label.toString()
+export const formatLabel = (label, column, options, scale) => {
+    if (!column || !options) {
+        if(!label)label = ''
+        if(label === 'null')label = 'Untitled Category'
+        if(label.toString().length < 20){
+            return label.toString()
+        }
+        return label.toString().slice(0, 15) + ' ...'
     }
-    return label.toString().slice(0, 15) + ' ...'
 
+    return formatChartData(label, column, options, scale)
 }
 
 export const getGroupableFields = (json) => {

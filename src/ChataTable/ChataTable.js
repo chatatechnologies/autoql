@@ -9,7 +9,6 @@ import {
     formatElement,
 } from 'autoql-fe-utils';
 import _isEqual from 'lodash.isequal';
-import _cloneDeep from 'lodash.clonedeep';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import { Scrollbars } from '../Scrollbars'
 import { ChataUtils } from '../ChataUtils';
@@ -294,7 +293,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
             return previousData;
         }
 
-        component.tableParams = _cloneDeep(params);
+        component.tableParams = cloneObject(params);
 
         if (!response?.data?.fe_req) {
             console.warn(

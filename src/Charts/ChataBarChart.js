@@ -1,4 +1,4 @@
-import { aggregateData } from 'autoql-fe-utils'
+import { aggregateData, scaleZero, cloneObject, onlyUnique, getBandScale } from 'autoql-fe-utils'
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
@@ -32,7 +32,8 @@ import {
     closeAllChartPopovers,
     getFirstDateCol,
     getGroupableCount,
-    getChartColorVars
+    getChartColorVars,
+    getStringWidth,
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -48,17 +49,17 @@ export function createBarChart(
         top: 5,
         right: 10,
         bottom: 60,
-        bottomChart: 60,
-        left: 160,
+        left: 30,
         chartLeft: 120,
-        marginLabel: 50,
+        bottomChart: 0,
+        marginLabel: 30,
         marginRowSelector: 0,
     }
 
     var hasRowSelector = options.pageSize < origJson?.data?.count_rows
     if (hasRowSelector) {
         margin.marginRowSelector = 20
-        margin.bottom += margin.marginRowSelector
+        margin.bottomChart += margin.marginRowSelector
     }
 
     var width = component.parentElement.clientWidth - margin.left;
@@ -123,13 +124,8 @@ export function createBarChart(
         dataFormatting: options.dataFormatting,
     });
 
-    var json = {
-        ...origJson,
-        data: {
-            ...origJson.data,
-            rows,
-        },
-    };
+    var json = cloneObject(origJson)
+    json.data.rows = rows
 
     var data = makeGroups(json, options, activeSeries, cols[yAxisIndex].index);
     const minMaxValues = getMinAndMaxValues(data);
@@ -140,11 +136,13 @@ export function createBarChart(
     var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
     const rotateLabels = tickWidth < 135;
+    
+    let totalVerticalMargins = margin.bottom + margin.top - margin.marginRowSelector - margin.marginLabel
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight
-            - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight - totalVerticalMargins;
+        
             if(height < 250){
                 height = 300;
             }
@@ -152,9 +150,9 @@ export function createBarChart(
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight
-        - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight - totalVerticalMargins;
     }
+
     component.innerHTML = '';
     if(component.headerElement){
         component.parentElement.parentElement.removeChild(
@@ -189,7 +187,7 @@ export function createBarChart(
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - margin.chartLeft;
+        chartWidth = width - 100;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -207,44 +205,66 @@ export function createBarChart(
     }
     if(yTickValues.length > 0){
         for (var i = 0; i < yTickValues.length; i++) {
-            allLengths.push(formatLabel(yTickValues[i]).length);
+            allLengths.push(getStringWidth(formatLabel(yTickValues[i], cols[index2], options)));
         }
     }else{
         data.forEach((item) => {
-            const formattedValue = formatData(item.label, cols[index2], options)
-            allLengths.push(formatLabel(formattedValue).length);
+            allLengths.push(getStringWidth(formatLabel(item.label, cols[index2], options)));
         });
     }
-    let longestStringWidth = Math.max.apply(null, allLengths);
-    let longestStringHeight = minMaxValues.max.toString().length;
-    var extraMargin = hasLegend ? 15 : 0;
-    var increment = 5;
-    var factor = 10;
-    if(longestStringHeight <= 4)longestStringHeight = 5;
-    if(!hasLegend)increment = 2;
 
-    margin.chartLeft = longestStringWidth * factor;
-    if(margin.chartLeft <= 80) margin.chartLeft = 90;
-    if(margin.chartLeft > 150) margin.chartLeft = 150;
-
-    if(legendOrientation == 'horizontal'){
-        if(rotateLabels){
-            let m = longestStringHeight * increment + extraMargin;
-            if(hasLegend && m <= 50) m = 55;
-            margin.bottomChart = m;
-        }else{
-            margin.bottomChart = 13 + extraMargin;
-        }
-
-    }else{
-        if(rotateLabels){
-            let m = longestStringHeight * 3;
-            margin.bottomChart = m;
-        }else{
-            margin.bottomChart = 13;
-        }
-
+    let longestStringWidth = Math.max(allLengths);
+    
+    let legendMargin = 0
+    if (hasLegend && legendOrientation == 'horizontal') {
+        legendMargin = 30
     }
+    
+    // var increment = 5;
+    // var factor = 10;
+    // if(longestStringHeight <= 4)longestStringHeight = 5;
+    // if(!hasLegend)increment = 1;
+    // console.log({longestStringWidth, yTickValues})
+    const labelSelectorPadding = longestStringWidth > 0 ? 10 : (margin.left - 15)
+    chartWidth -= longestStringWidth
+
+    // margin.left = longestStringWidth + labelSelectorPadding;
+    // margin.chartLeft = longestStringWidth + labelSelectorPadding;
+    // if(margin.chartLeft <= 80) margin.chartLeft = 90;
+    // if(margin.chartLeft > 150) margin.chartLeft = 150;
+    
+    const fontSize = 12
+    let xLabelsHeight = fontSize
+    if (rotateLabels) {
+        // const allXLabelHeights = []
+        // console.log({data})
+        // data.forEach((item) => {
+        //     const fontSize = 12
+        //     const labelWidth = getStringWidth(formatChartData(item.label, cols[index], options))
+        //     const labelWidthHoz = (labelWidth + fontSize) / Math.sqrt(2)
+            
+        //     console.log({label: item.label, labelWidth, labelWidthHoz})
+        //     allXLabelHeights.push(labelWidthHoz);
+        // });
+        const labelWidth = getStringWidth(formatLabel(minMaxValues.max, cols[index1], options));
+        const longestStringHeight = (labelWidth + fontSize) / Math.sqrt(2)
+        xLabelsHeight = longestStringHeight
+    }
+
+    margin.bottomChart = xLabelsHeight + margin.marginRowSelector + legendMargin;
+    // margin.bottom = margin.marginLabel + legendMargin
+
+    // if(legendOrientation == 'horizontal'){
+        // if(rotateLabels){
+        //     let m = xLabelsHeight * increment + extraMargin;
+        //     if(hasLegend && m <= 50) m = 55;
+        //     margin.bottomChart = m;
+        // }else{
+            
+        // }
+    // }else{
+    //     margin.bottomChart = xLabelsHeight;
+    // }
 
     var y0 = SCALE_BAND();
     var y1 = SCALE_BAND();
@@ -281,7 +301,7 @@ export function createBarChart(
         .attr("width", width + margin.left)
         .attr("height", height + margin.top + margin.bottom)
         .append("g")
-        .attr("transform", `translate(${margin.chartLeft}, ${margin.top})`);
+        .attr("transform", `translate(${margin.left + longestStringWidth}, ${margin.top})`);
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -289,7 +309,7 @@ export function createBarChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
         .attr('x', -(height / 2))
-        .attr('y', -margin.chartLeft + margin.right + 5)
+        .attr('y', -(longestStringWidth + labelSelectorPadding))
         .attr('transform', 'rotate(-90)')
         .attr('text-anchor', 'middle')
         .attr('class', 'autoql-vanilla-y-axis-label')
@@ -347,12 +367,12 @@ export function createBarChart(
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
-    .attr('x', chartWidth / 2)
-    .attr('y', height + margin.marginLabel)
-    .attr('text-anchor', 'middle')
-    .attr("class", "autoql-vanilla-x-axis-label")
-    textContainerX.append('tspan')
-    .text(col2);
+        .attr('x', chartWidth / 2)
+        .attr('y', height - margin.marginLabel - margin.marginRowSelector)
+        .attr('text-anchor', 'middle')
+        .attr("class", "autoql-vanilla-x-axis-label")
+        textContainerX.append('tspan')
+        .text(col2);
 
     if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
@@ -395,22 +415,25 @@ export function createBarChart(
         yAxis.tickValues(yTickValues);
     }
 
+    var xAxisElement;
     if(rotateLabels){
-        svg.append("g")
+        xAxisElement = svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart - margin.marginRowSelector) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index1], options)}
+            return formatLabel(d, cols[index1], options)}
         ))
-        .selectAll("text")
+        
+        xAxisElement.selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
     }else{
-        svg.append("g")
+        xAxisElement = svg.append("g")
         .attr("transform", "translate(0," + (height - margin.bottomChart - margin.marginRowSelector) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index1], options)}
+            return formatLabel(d, cols[index1], options)}
         ))
-        .selectAll("text")
+        
+        xAxisElement.selectAll("text")
         .style("text-anchor", "center");
     }
 
@@ -424,9 +447,12 @@ export function createBarChart(
     svg.append("g")
     .attr("class", "y axis")
     .call(yAxis.tickFormat(function(d){
-        let fLabel = formatChartData(d, cols[index2], options);
-        if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
-        return formatLabel(fLabel);
+        // let fLabel = formatChartData(d, cols[index2], options);
+        // console.log({fLabel})
+        // if(fLabel === 'Invalid date') {
+        //     fLabel = 'Untitled Category'
+        // }
+        return formatLabel(d, cols[index2], options);
     }))
     let slice;
     function createBars(){
@@ -442,11 +468,7 @@ export function createBarChart(
         });
 
         const calculateWidth = (d) => {
-            if(minMaxValues.min < 0){
-                return Math.abs(x(d.value) - x(0));
-            }else{
-                return x(d.value);
-            }
+            return Math.abs(x(d.value) - scaleZero(x))
         }
 
         const getXRect = (d) => {
@@ -635,15 +657,20 @@ export function createBarChart(
     const onDataFetching = () => chartLoader?.setChartLoading(true)
 
     const onNewData = (newJson) => {
-        createBarChart(
-            component,
-            newJson,
-            options,
-            onUpdate,
-            fromChataUtils,
-            valueClass,
-            renderTooltips,
-        )
+        if (newJson?.data?.rows) {
+            origJson.data.rows = newJson.data.rows
+            origJson.data.row_limit = newJson.data.row_limit
+
+            createBarChart(
+                component,
+                origJson,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips,
+            )
+        }
 
         chartLoader?.setChartLoading(false)
     } 
@@ -652,21 +679,24 @@ export function createBarChart(
         chartLoader?.setChartLoading(false)
     }
 
+    const popoverPosition = {
+        x: chartWidth / 2,
+        y: height - margin.marginRowSelector,
+    }
+
     if (hasRowSelector) {
         new ChartRowSelector(
             svg,
-            json,
+            origJson,
             onDataFetching,
             onNewData,
             onDataFetchError,
             metadataComponent,
-            {
-                x: width / 2,
-                y: height + margin.marginLabel + margin.marginRowSelector,
-            }
+            popoverPosition,
+            options,
         );
     }
-
+    
     component.appendChild(chartLoader)
 
     createBars();

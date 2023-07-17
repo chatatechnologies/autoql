@@ -3,9 +3,44 @@ import { axisBottom, axisLeft } from 'd3-axis'
 import { pie, area, line, arc, stack } from 'd3-shape'
 import legendColor from './Legend'
 import 'd3-transition'
+import { getBandScale } from 'autoql-fe-utils'
 
 export const SCALE_LINEAR = scaleLinear;
 export const SCALE_BAND = scaleBand;
+
+// export const SCALE_BAND2 = ({
+//     data,
+//     columns,
+//     columnIndex,
+//     axis,
+//     domain,
+//     dataFormatting,
+//     outerPadding,
+//     innerPadding,
+//     height,
+//     width,
+//     stringColumnIndices,
+//     changeColumnIndices,
+//     enableAxisDropdown,
+//     changeStringColumnIndex,
+// }) => {
+//     getBandScale({
+//         data: Rows
+//         columns: Column[]
+//         columnIndex: number
+//         axis: string
+//         domain: number[]
+//         dataFormatting: DataFormatting
+//         outerPadding: number
+//         innerPadding: number
+//         height: number
+//         width: number
+//         stringColumnIndices: number[]
+//         changeColumnIndices: number[]
+//         enableAxisDropdown: boolean
+//         changeStringColumnIndex: Function
+//       })
+// }
 
 export const getAxisBottom = (scale) => {
     let axis;

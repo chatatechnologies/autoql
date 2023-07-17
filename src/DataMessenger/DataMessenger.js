@@ -1,5 +1,4 @@
 import { runQuery, isDataLimited } from 'autoql-fe-utils';
-import _cloneDeep from 'lodash.clonedeep'
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -1958,7 +1957,6 @@ export function DataMessenger(options = {}) {
         createColumnChart(
           component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        // obj.createChartLoader(component);
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -1989,7 +1987,6 @@ export function DataMessenger(options = {}) {
         createLineChart(
             component, json, obj.options, obj.registerDrilldownChartEvent
         );
-        // obj.createChartLoader(component);
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2700,31 +2697,6 @@ export function DataMessenger(options = {}) {
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };
 
-    // obj.createChartLoader = (container) => {
-    //     var chartLoader = document.createElement('div');
-    //     var spinnerContainer = document.createElement('div');
-    //     var spinner = document.createElement('div');
-
-    //     chartLoader.classList.add('autoql-vanilla-table-loader');
-    //     chartLoader.classList.add('autoql-vanilla-table-page-loader');
-    //     chartLoader.classList.add('autoql-vanilla-table-loader-hidden');
-    //     spinnerContainer.classList.add('autoql-vanilla-page-loader-spinner');
-    //     spinner.classList.add('autoql-vanilla-spinner-loader');
-
-    //     spinnerContainer.appendChild(spinner);
-    //     chartLoader.appendChild(spinnerContainer);
-    //     container.setChartLoading = (isLoading) => {
-    //         console.log('SETTING CHART LOADING')
-    //         if (isLoading) {
-    //             chartLoader.classList.remove('autoql-vanilla-table-loader-hidden');
-    //         } else {
-    //             chartLoader.classList.add('autoql-vanilla-table-loader-hidden');
-    //         }
-    //     };
-        
-    //     // container.appendChild(chartLoader);
-    // };
-
     obj.sendMessage = async (textValue, source, selections = undefined) => {
         obj.input.disabled = true;
         obj.input.value = '';
@@ -2831,14 +2803,27 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        // var jsonResponseCopy = _cloneDeep(response)
-
         jsonResponse.queryFn = (params = {}) => {
+            // ------- test data -------
+            // var jsonResponseCopy = cloneObject(response)
+            // var pageSize = params.pageSize ?? response.data.data.row_limit
+
+            // var rows = []
+            // for(let i = 0; i < pageSize; i++) {
+            //     rows.push(response.data.data.rows[0])
+            // }
+
+            // jsonResponseCopy.data.data.rows = rows
+            // jsonResponseCopy.data.data.row_limit = pageSize
+            // jsonResponseCopy.data.data.fe_req.page_size = pageSize
+
             // return new Promise((res, rej) => {
             //     setTimeout(() => {
             //         res(jsonResponseCopy)
             //     }, 2000)
             // })
+            // -------------------------
+
             return runQuery({
                 ...queryParams,
                 ...(obj.options.authentication ?? {}),
@@ -2904,7 +2889,6 @@ export function DataMessenger(options = {}) {
             case 'line':
                 var lineContainer = obj.putTableResponse(jsonResponse);
                 createLineChart(lineContainer, jsonResponse, obj.options);
-                // obj.createChartLoader(lineContainer);
                 obj.refreshToolbarButtons(lineContainer, 'line');
                 break;
             case 'bar':

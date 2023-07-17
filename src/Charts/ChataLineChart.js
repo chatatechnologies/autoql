@@ -38,29 +38,45 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
+import { ChartLoader } from './ChartLoader'
+import { ChartRowSelector } from './ChartRowSelector'
+import { aggregateData } from 'autoql-fe-utils'
 
 export function createLineChart(
-    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+    component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
+
+    if (!component.chartLoader) {
+        var chartLoader = new ChartLoader(component)
+        component.chartLoader = chartLoader
+    }
 
     var margin = {
         top: 15,
         right: 10,
-        bottom: 50,
-        left: 90,
-        marginLabel: 40,
-        bottomChart: 0
-    },
-    width = component.parentElement.clientWidth - margin.left;
+        bottom: 40,
+        left: 30,
+        bottomChart: 0,
+        marginLabel: 30,
+        marginRowSelector: 0,
+    }
+
+    var hasRowSelector = options.pageSize < origJson?.data?.count_rows
+    if (hasRowSelector) {
+        margin.marginRowSelector = 20
+        margin.bottom += margin.marginRowSelector
+    }
+
+    var width = component.parentElement.clientWidth - margin.left;
     var height;
-    var cols = enumerateCols(json);
+    var cols = enumerateCols(origJson);
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
     let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
-    let groupableCount = getGroupableCount(json)
+    let groupableCount = getGroupableCount(origJson)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
     var { chartColors } = getChartColorVars();
 
@@ -102,10 +118,27 @@ export function createLineChart(
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;
-    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
-    const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
+
+    var rows = aggregateData({
+        data: origJson.data.rows,
+        columns: origJson.data.columns,
+        aggColIndex: xAxisIndex,
+        numberIndices: yIndexes.map(indexObj => indexObj.index),
+        dataFormatting: options.dataFormatting,
+    });
+
+    var json = {
+        ...origJson,
+        data: {
+            ...origJson.data,
+            rows,
+        },
+    };
+
+    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
+    const minMaxValues = getMinAndMaxValues(data);
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
@@ -142,8 +175,8 @@ export function createLineChart(
             allData.push(v)
         })
     })
-    var grouped = groupBy(allData, 'group');
 
+    var grouped = groupBy(allData, 'group');
 
     const barWidth = width / data.length;
     const interval = Math.ceil((data.length * 16) / width);
@@ -173,7 +206,7 @@ export function createLineChart(
     if(allGroup.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - 135;
+        chartWidth = width - 100;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -228,18 +261,16 @@ export function createLineChart(
         'chata-hidden-scrollbox'
     );
 
-    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
-    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
-    : (margin.left - 15)
-    const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
+    const stringWidth = getStringWidth(formatChartData(minMaxValues.max, cols[index1], options))
+    const labelSelectorPadding = stringWidth > 0 ? 10 : (margin.left - 15)
     chartWidth -= stringWidth
+    
     var svg = select(component)
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform",
-    "translate(" + (margin.left+ stringWidth) + "," + margin.top + ")");
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left + stringWidth}, ${margin.top})`);
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -247,7 +278,7 @@ export function createLineChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -(labelSelectorPadding))
+    .attr('y', -(stringWidth + labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -294,7 +325,7 @@ export function createLineChart(
     // X AXIS
     var textContainerX = labelXContainer.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.marginLabel + 3)
+    .attr('y', height + margin.marginLabel)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
 
@@ -604,6 +635,52 @@ export function createLineChart(
             )
         }
     }
+
+    const onDataFetching = () => component.chartLoader?.setChartLoading(true)
+    
+    const onNewData = (newJson) => {
+        if (newJson?.data?.rows) {
+            origJson.data.rows = newJson.data.rows
+            origJson.data.row_limit = newJson.data.row_limit
+
+            createLineChart(
+                component,
+                origJson,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+
+        component.chartLoader?.setChartLoading(false)
+    } 
+    const onDataFetchError = (error) =>  {
+        console.error(error)
+        component.chartLoader?.setChartLoading(false)
+    }
+
+
+    const popoverPosition = {
+        x: chartWidth / 2,
+        y: height + margin.marginLabel + margin.marginRowSelector,
+    }
+
+    if (hasRowSelector) {
+        new ChartRowSelector(
+            svg,
+            origJson,
+            onDataFetching,
+            onNewData,
+            onDataFetchError,
+            metadataComponent,
+            popoverPosition,
+            options
+        );
+    }
+
+    component.appendChild(component.chartLoader)
 
     createLines();
 

@@ -67,8 +67,6 @@
         "dayjs": "^1.11.7",
         "gridstack": "^3.1.2",
         "localized-strings": "^0.2.4",
-        "lodash.clonedeep": "^4.5.0",
-        "lodash.get": "^4.4.2",
         "lodash.isequal": "^4.5.0",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.40",

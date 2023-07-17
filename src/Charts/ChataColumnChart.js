@@ -1,4 +1,4 @@
-import { aggregateData } from 'autoql-fe-utils'
+import { aggregateData, scaleZero } from 'autoql-fe-utils'
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
@@ -32,8 +32,8 @@ import {
     closeAllChartPopovers,
     getFirstDateCol,
     getGroupableCount,
-    getChartLeftMargin,
     getChartColorVars,
+    getStringWidth,
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
@@ -49,13 +49,12 @@ export function createColumnChart(
     }
 
     var margin = {
-        top: 20,
+        top: 15,
         right: 10,
-        bottom: 60,
-        bottomChart: 50,
-        left: 90,
-        chartLeft: 120,
-        marginLabel: 50,
+        bottom: 40,
+        left: 30,
+        bottomChart: 0,
+        marginLabel: 30,
         marginRowSelector: 0,
     }
 
@@ -177,7 +176,7 @@ export function createColumnChart(
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - margin.chartLeft;
+        chartWidth = width - 100;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -243,11 +242,8 @@ export function createColumnChart(
         'chata-hidden-scrollbox'
     );
 
-    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
-    const labelSelectorPadding = stringWidth > 0 
-        ? (margin.left + stringWidth / 2)
-        : (margin.left - 15)
-
+    const stringWidth = getStringWidth(formatChartData(minMaxValues.max, cols[index1], options))
+    const labelSelectorPadding = stringWidth > 0 ? 10 : (margin.left - 15)
     chartWidth -= stringWidth
 
     var x0 = SCALE_BAND()
@@ -258,8 +254,7 @@ export function createColumnChart(
 
     setDomainRange(x1, groupNames, 0, x1Range, false, .1)
 
-    y
-    .range([ height - margin.bottomChart - margin.marginRowSelector, 0 ])
+    y.range([ height - margin.bottomChart, 0 ])
     .domain([minMaxValues.min, minMaxValues.max]).nice()
 
     var xAxis = getAxisBottom(x0)
@@ -271,23 +266,22 @@ export function createColumnChart(
     );
 
     var svg = select(component)
-    .append("svg")
-    .attr("width", width + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform",
-    "translate(" +( margin.left + stringWidth) + "," + margin.top + ")")
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left + stringWidth}, ${margin.top})`);
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
 
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
-    .attr('x', -(height / 2))
-    .attr('y', -(labelSelectorPadding))
-    .attr('transform', 'rotate(-90)')
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-y-axis-label')
+        .attr('x', -(height / 2))
+        .attr('y', -(stringWidth + labelSelectorPadding))
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'autoql-vanilla-y-axis-label')
 
     textContainerY.append('tspan')
     .text(col2)
@@ -333,7 +327,7 @@ export function createColumnChart(
     // X AXIS
     var textContainerX = labelXContainer.append('text')
         .attr('x', chartWidth / 2)
-        .attr('y', height + margin.marginLabel - 5)
+        .attr('y', height + margin.marginLabel)
         .attr('text-anchor', 'middle')
         .attr('class', 'autoql-vanilla-x-axis-label')
 
@@ -415,17 +409,17 @@ export function createColumnChart(
     }
 
     svg.append("g")
-    .attr("class", "autoql-vanilla-axes-grid")
-    .call(
-        yAxis
-        .tickSize(-chartWidth)
-        .tickFormat(function(d){
-            return formatChartData(d, cols[index1], options)}
+        .attr("class", "autoql-vanilla-axes-grid")
+        .call(
+            yAxis
+            .tickSize(-chartWidth)
+            .tickFormat(function(d){
+                return formatChartData(d, cols[index1], options)}
+            )
         )
-    )
 
     const calculateHeight = (d) => {
-        return Math.abs(y(d.value) - y(0));
+        return Math.abs(y(d.value) - scaleZero(y))
     }
 
     var slice = undefined;
@@ -614,6 +608,53 @@ export function createColumnChart(
         }
     }
 
+    const onDataFetching = () => component.chartLoader?.setChartLoading(true)
+    
+    const onNewData = (newJson) => {
+        if (newJson?.data?.rows) {
+            origJson.data.rows = newJson.data.rows
+            origJson.data.row_limit = newJson.data.row_limit
+
+            createColumnChart(
+                component,
+                origJson,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+
+        component.chartLoader?.setChartLoading(false)
+    } 
+    const onDataFetchError = (error) =>  {
+        console.error(error)
+        component.chartLoader?.setChartLoading(false)
+    }
+
+    const popoverPosition = {
+        x: chartWidth / 2,
+        y: height + margin.marginLabel + margin.marginRowSelector,
+    }
+
+    if (hasRowSelector) {
+        new ChartRowSelector(
+            svg,
+            origJson,
+            onDataFetching,
+            onNewData,
+            onDataFetchError,
+            metadataComponent,
+            popoverPosition,
+            options
+        );
+    }
+
+    component.appendChild(component.chartLoader)
+
+    createBars();
+
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {
             createColumnChart(
@@ -627,43 +668,4 @@ export function createColumnChart(
             )
         }
     );
-
-
-    const onDataFetching = () => component.chartLoader?.setChartLoading(true)
-    
-    const onNewData = (newJson) => {
-        createColumnChart(
-            component,
-            newJson,
-            options,
-            onUpdate,
-            fromChataUtils,
-            valueClass,
-            renderTooltips
-        )
-        component.chartLoader?.setChartLoading(false)
-    } 
-    const onDataFetchError = (error) =>  {
-        console.error(error)
-        component.chartLoader?.setChartLoading(false)
-    }
-
-    if (hasRowSelector) {
-        new ChartRowSelector(
-            svg,
-            json,
-            onDataFetching,
-            onNewData,
-            onDataFetchError,
-            metadataComponent,
-            {
-                x: width / 2,
-                y: height + margin.marginLabel + margin.marginRowSelector,
-            }
-        );
-    }
-
-    component.appendChild(component.chartLoader)
-
-    createBars();
 }
