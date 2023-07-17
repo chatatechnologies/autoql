@@ -39,8 +39,7 @@ export function RelatedQueries({
       text.classList.add('autoql-vanilla-query-suggestion-text');
 
       item.onclick = () => {
-        widget.tabChataUtils.classList.add('active');
-        widget.tabQueryTips.classList.remove('active');
+        widget.setActiveTab(widget.tabChataUtils);
         widget.tabsAnimation('flex', 'block');
         widget.dataExplorer.hide();
         widget.notificationsAnimation('none');
