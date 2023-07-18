@@ -1098,6 +1098,16 @@ export function mouseY(evt) {
     }
 }
 
+export function closeAutocompleteObjects() {
+    var list = document.querySelectorAll(
+        '.autoql-vanilla-data-explorer-autocomplete'
+    )
+    for (var i = 0; i < list.length; i++) {
+        list[i].classList.remove('show');
+    }
+
+}
+
 export function closeAllChartPopovers(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-popover-selector'
