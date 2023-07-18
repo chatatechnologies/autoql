@@ -1391,7 +1391,8 @@ export function DataMessenger(options = {}) {
                 type !== 'suggestions' &&
                 request['reference_id'] !== '1.9.502' &&
                 request['reference_id'] !== '1.1.550' &&
-                request['reference_id'] !== '1.1.432'
+                request['reference_id'] !== '1.1.432' &&
+                request['reference_id'] !== '1.1.461'
             ) {
                 toolbar.appendChild(moreOptionsBtn);
                 toolbar.appendChild(moreOptions);
