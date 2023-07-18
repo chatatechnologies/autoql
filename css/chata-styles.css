@@ -1459,7 +1459,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-no-columns-error-message .warning-icon {
     font-size: 22px;
     display: block;
-    margin-bottom: -13px;
+    color: var(--autoql-vanilla-warning-color);
+    margin-bottom: 5px;
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg line{
@@ -1476,7 +1477,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-no-columns-error-message .eye-icon {
-    vertical-align: bottom;
+    vertical-align: middle;
     line-height: 18px;
 }
 
