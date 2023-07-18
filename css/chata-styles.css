@@ -725,7 +725,12 @@ tr td.chata-hidden{
 .autoql-vanilla-chat-message-toolbar.left {
     left: -9px;
 }
+
 .autoql-vanilla-chat-message-bubble:hover .autoql-vanilla-chat-message-toolbar{
+    display: flex;
+}
+
+.autoql-vanilla-chat-message-bubble .autoql-vanilla-chat-message-toolbar.show{
     display: flex;
 }
 
