@@ -121,9 +121,9 @@ export function DataExplorer({ subjects, widget }) {
     autocomplete.classList.add('show');
   });
   
-  input.addEventListener("blur", () => {
+/*   input.addEventListener("blur", () => {
     setTimeout(() => autocomplete.classList.remove('show'), 100);
-  });
+  }); */
 
   obj.hide = () => {
     container.style.display = 'none';
