@@ -18,6 +18,13 @@
     animation: slideUp .6s cubic-bezier(.26,.26,0,1);
     animation-fill-mode: forwards;
     animation-delay: 0s;
+
+    .autoql-vanilla-intro-message-list-container{
+      display: flex;
+      text-align: left;
+      justify-content: center;
+      align-items: center;
+    }
     
     @keyframes slideUp {
       0% {
