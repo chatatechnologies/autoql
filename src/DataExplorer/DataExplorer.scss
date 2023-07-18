@@ -65,12 +65,16 @@
     background: var(--autoql-vanilla-background-color-secondary);
     color: var(--autoql-vanilla-text-color-primary);
     position: absolute;
-    list-style: none;
     padding: 5px 0px;
     top: 60px;
     left: 10px;
     right: 10px;
     display: none;
+
+    ul {
+      list-style: none;
+      list-style-type: none;
+    }
   
     &.show {
       display: block;
