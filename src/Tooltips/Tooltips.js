@@ -7,6 +7,7 @@ export function refreshDelegate(parent, target){
         theme: 'chata-theme',
         allowHTML: true,
         delay: [500],
+        maxWidth: 300,
     });
 }
 
@@ -16,6 +17,7 @@ export function refreshTooltips(){
         allowHTML: true,
         delay: [500],
         dynamicTitle: true,
+        maxWidth: 300,
     })
 }
 
@@ -38,6 +40,7 @@ export function tooltipCharts(){
     tippy('.tooltip-2d', {
         theme: 'chata-theme',
         allowHTML: true,
+        maxWidth: 300,
         onShow: function(instance){
             instance.setContent(
                 get2dContent(instance)
@@ -48,6 +51,7 @@ export function tooltipCharts(){
     tippy('.tooltip-3d', {
         theme: 'chata-theme',
         allowHTML: true,
+        maxWidth: 300,
         onShow: function(instance){
             var dataset = instance.reference.dataset;
             var content = get2dContent(instance);

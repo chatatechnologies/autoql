@@ -1,4 +1,4 @@
-.autoql-vanilla-filter-locking-view{
+.autoql-vanilla-filter-locking-view {
     right: 20px !important;
     padding: 15px 20px !important;
     min-width: 450px;
@@ -9,12 +9,12 @@
     background: var(--autoql-vanilla-background-color-secondary);
 }
 
-.autoql-vanilla-close-filter-locking{
+.autoql-vanilla-close-filter-locking {
     color: var(--autoql-vanilla-text-color-primary) !important;
     flex: auto;
 }
 
-.autoql-vanilla-filter-locking-title-container{
+.autoql-vanilla-filter-locking-title-container {
     display: flex;
     width: 100%;
     padding-top: 4px !important;
@@ -37,7 +37,7 @@
     margin: -3px 0px !important;
 }
 
-.autoql-vanilla-close-filter-locking{
+.autoql-vanilla-close-filter-locking {
     cursor: pointer;
     text-align: left;
     font-size: 20px;
@@ -50,5 +50,5 @@
 
 .autoql-vanilla-condition-lock-menu-footer button {
     float: right;
-    margin: 6px!important;
+    margin: 6px !important;
 }

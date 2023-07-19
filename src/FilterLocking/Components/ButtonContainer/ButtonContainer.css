@@ -4,7 +4,7 @@
     align-items: center;
     height: 26px;
     font-size: 12px;
-    font-weight: 200;
+    font-weight: 400;
     padding-bottom: 10px !important;
 }
 
@@ -37,6 +37,7 @@
     background-color: var(--autoql-vanilla-border-color);
     color: var(--autoql-vanilla-accent-color);
     border-color: var(--autoql-vanilla-accent-color);
+    font-weight: 600;
 }
 
 .autoql-vanilla-radio-btn-container:first-child.autoql-vanilla-radio-btn.active,

@@ -1,3 +1,5 @@
+import './index.scss'
+
 export { DataMessenger } from './DataMessenger';
 export { Dashboard } from './Dashboard';
 export { NotificationIcon } from './Notifications';
