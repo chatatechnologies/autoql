@@ -1,0 +1,74 @@
+.autoql-vanilla-data-preview {
+  max-height: 100%;
+  padding: 0 5px;
+
+  &:hover {
+    .autoql-vanilla-data-preview-scroll {
+      visibility: visible;
+    }
+  }
+
+  table {
+    min-width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    visibility: visible;
+
+    tbody {
+      tr:not(:last-child) {
+        border-bottom: 1px solid var(--autoql-vanilla-border-color);
+      }
+      tr {
+        height: 24px;
+        td:not(:last-child) {
+          border-right: 1px solid var(--autoql-vanilla-border-color);
+        }
+        td {
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+
+  th {
+    top: 0;
+    padding: 0 6px;
+    height: 35px;
+    position: -webkit-sticky;
+    position: sticky;
+    background: var(--autoql-vanilla-background-color-secondary);
+    box-shadow: inset 0 -2px 0 var(--autoql-vanilla-border-color);
+    transition: color .2s ease;
+    color: var(--autoql-vanilla-accent-color);
+    cursor: default;
+    .autoql-vanilla-data-preview-col-header {
+      height: 100%;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+
+  .autoql-vanilla-data-preview-scroll {
+    overflow: auto;
+    white-space: nowrap;
+    width: 100%;
+    height: 100%;
+    visibility: hidden;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    border-radius: 6px;
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--autoql-vanilla-scrollbar-color);
+      opacity: .5;
+      border-radius: 5px;
+    }
+
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+      transition: background-color .2s linear,height .2s ease-in-out;
+    }
+  }
+}

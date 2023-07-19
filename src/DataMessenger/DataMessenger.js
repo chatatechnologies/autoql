@@ -81,10 +81,13 @@ import {
     FILTER_LOCKING,
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
+    DATA_EXPLORER_SEARCH_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
+import { DataExplorer } from '../DataExplorer';
+import { fetchSubjectList } from 'autoql-fe-utils';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
@@ -168,7 +171,28 @@ export function DataMessenger(options = {}) {
     obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement)
     obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement)
 
-    obj.setOption = (option, value) => {
+    obj.getSubjects = async () => {
+        const {
+            token,
+            apiKey,
+            domain,
+        } = obj.options.authentication;
+
+        if(!token) {
+            return []
+        } else {
+            const response = await fetchSubjectList({
+                token,
+                apiKey,
+                domain,
+            });
+            if(response.status === 200) {
+                return response.data.data.subjects;
+            }
+        }
+    }
+
+    obj.setOption = async (option, value) => {
         try {
           if (obj.options[option] === value) {
             return
@@ -180,6 +204,8 @@ export function DataMessenger(options = {}) {
                 if (obj.notificationIcon) {
                     obj.notificationIcon.setOption('authentication', value);
                 }
+                const subjects = await obj.getSubjects();
+                obj.dataExplorer.setSubjects(subjects);
                 break;
             case 'dataFormatting':
                 obj.setObjectProp('dataFormatting', value);
@@ -424,7 +450,7 @@ export function DataMessenger(options = {}) {
         }
         obj.chataBarContainer.style.display = displayBar;
         if (displayNodes == 'none') {
-            obj.headerTitle.innerHTML = strings.exploreQueries;
+            obj.headerTitle.innerHTML = strings.dataExplorer;
             obj.headerRight.style.visibility = 'hidden';
             obj.scrollBox.classList.add('max-height');
         } else {
@@ -443,11 +469,6 @@ export function DataMessenger(options = {}) {
                 if (component && component.tabulator) component.tabulator.redraw(true);
             }
         }
-    };
-
-    obj.queryTipsAnimation = function (display) {
-        obj.queryTips.style.display = display;
-        if (display !== 'none') obj.queryTipsInput.focus();
     };
 
     obj.createNotifications = function () {
@@ -577,8 +598,8 @@ export function DataMessenger(options = {}) {
         var pageSwitcherContainer = document.createElement('div');
         pageSwitcherContainer.classList.add('autoql-vanilla-page-switcher-container');
 
-        var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Data Messenger', isEnabled: true})
-        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(QUERY_TIPS), tooltip: strings.exploreQueries, isEnabled: enableExploreQueriesTab })
+        var tabChataUtils = obj.createQueryTab({name: 'data-messenger', content: htmlToElement(DATA_MESSENGER), tooltip: 'Home', isEnabled: true})
+        var tabQueryTips = obj.createQueryTab({name: 'explore-queries', content: htmlToElement(DATA_EXPLORER_SEARCH_ICON), tooltip: strings.dataExplorer, isEnabled: enableExploreQueriesTab })
         var tabNotifications = obj.createQueryTab({name: 'notifications', tooltip: strings.notifications, isEnabled: enableNotificationsTab })
 
         tabChataUtils.onclick = function () {
@@ -586,7 +607,7 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
             obj.tabsAnimation('flex', 'block');
-            obj.queryTipsAnimation('none');
+            obj.dataExplorer.hide();
             obj.notificationsAnimation('none');
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         };
@@ -594,7 +615,7 @@ export function DataMessenger(options = {}) {
         tabQueryTips.onclick = function () {
             obj.setActiveTab(this)
             obj.tabsAnimation('none', 'none');
-            obj.queryTipsAnimation('block');
+            obj.dataExplorer.show();
             obj.notificationsAnimation('none');
         };
 
@@ -605,7 +626,7 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.style.overflow = 'hidden';
             obj.scrollBox.style.maxHeight = '100%';
             obj.tabsAnimation('none', 'none');
-            obj.queryTipsAnimation('none');
+            obj.dataExplorer.hide();
             obj.notificationsAnimation('block');
             obj.headerTitle.innerHTML = strings.notifications;
         };
@@ -649,65 +670,14 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.createQueryTips = function () {
-        const searchIcon = htmlToElement(SEARCH_ICON);
-        var container = document.createElement('div');
-        var textBar = document.createElement('div');
-        var queryTipsResultContainer = document.createElement('div');
-        var queryTipsResultPlaceHolder = document.createElement('div');
-        var chatBarInputIcon = document.createElement('div');
-
-        var input = document.createElement('input');
-        textBar.classList.add('autoql-vanilla-text-bar');
-        textBar.classList.add('autoql-vanilla-text-bar-animation');
-        textBar.classList.add('autoql-vanilla-text-bar-with-icon');
-        chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
-        container.classList.add('autoql-vanilla-querytips-container');
-        queryTipsResultContainer.classList.add('autoql-vanilla-query-tips-result-container');
-        queryTipsResultPlaceHolder.classList.add('query-tips-result-placeholder');
-        queryTipsResultPlaceHolder.innerHTML = `
-            <p>
-                ${strings.exploreQueriesMessage1}
-            <p>
-            <p>
-                ${strings.exploreQueriesMessage2}
-            <p>
-        `;
-
-        queryTipsResultContainer.appendChild(queryTipsResultPlaceHolder);
-        chatBarInputIcon.appendChild(searchIcon);
-        textBar.appendChild(input);
-        textBar.appendChild(chatBarInputIcon);
-        container.appendChild(textBar);
-        container.appendChild(queryTipsResultContainer);
-
-        input.addEventListener('keydown', async event => {
-            if (event.key == 'Enter' && input.value) {
-                var chatBarLoadingSpinner = document.createElement('div');
-                var searchVal = input.value.split(' ').join(',');
-                var spinnerLoader = document.createElement('div');
-                spinnerLoader.classList.add('autoql-vanilla-spinner-loader');
-                chatBarLoadingSpinner.classList.add('chat-bar-loading-spinner');
-                chatBarLoadingSpinner.appendChild(spinnerLoader);
-                textBar.appendChild(chatBarLoadingSpinner);
-                var options = obj.options;
-                const URL = obj.getRelatedQueriesPath(1, searchVal, options);
-
-                var response = await apiCallGet(URL, options);
-                textBar.removeChild(chatBarLoadingSpinner);
-                obj.putRelatedQueries(response.data, queryTipsResultContainer, container, searchVal);
-            }
+    obj.createDataExplorer = async function () {
+        const subjects = await obj.getSubjects();
+        const dataExplorer = new DataExplorer({
+            widget: obj,
+            subjects,
         });
-
-        container.style.display = 'none';
-
-        input.classList.add('autoql-vanilla-chata-input');
-        input.classList.add('autoql-vanilla-explore-queries-input');
-        input.classList.add('left-padding');
-        input.setAttribute('placeholder', strings.exploreQueriesInput);
-        obj.queryTips = container;
-        obj.drawerContent.appendChild(container);
-        obj.queryTipsInput = input;
+        obj.dataExplorer = dataExplorer;
+        obj.drawerContent.appendChild(dataExplorer.container);
     };
 
     obj.safetynetAnimation = (text, selections) => {
@@ -736,194 +706,20 @@ export function DataMessenger(options = {}) {
             subQuery += text[index];
             if (index >= text.length) {
                 clearInterval(int);
-                var ev = new KeyboardEvent('keypress', {
+                var keyboardEvent = new KeyboardEvent('keydown', {
+                    code: 'Enter',
+                    key: 'Enter',
+                    charCode: 13,
                     keyCode: 13,
-                    type: 'keypress',
-                    which: 13,
+                    view: window
                 });
-                chataInput.dispatchEvent(ev);
+            
+                chataInput.dispatchEvent(keyboardEvent);
             } else {
                 chataInput.value = subQuery;
             }
             index++;
         }, 45);
-    };
-
-    obj.putRelatedQueries = (response, queryTipsResultContainer, container, searchVal) => {
-        var delay = 0.08;
-        var list = response.data.items;
-        var queryTipListContainer = document.createElement('div');
-        var paginationContainer = document.createElement('div');
-        var pagination = document.createElement('ul');
-        var paginationPrevious = document.createElement('li');
-        var aPrevious = document.createElement('a');
-        var aNext = document.createElement('a');
-        var paginationNext = document.createElement('li');
-        var options = obj.options;
-        var nextPath = response.data.pagination.next_url;
-        var previousPath = response.data.pagination.previous_url;
-        var nextUrl = `${options.authentication.domain}${nextPath}`;
-        var previousUrl = `${options.authentication.domain}${previousPath}`;
-
-        const totalItems = response.data.pagination.total_items;
-        const pages = response.data.pagination.total_pages;
-        var currentPage = response.data.pagination.current_page;
-        aPrevious.textContent = '←';
-        aNext.textContent = '→';
-
-        paginationContainer.classList.add('autoql-vanilla-chata-paginate');
-        paginationContainer.classList.add('animated-item');
-        paginationContainer.classList.add('pagination');
-        paginationPrevious.classList.add('pagination-previous');
-        paginationNext.classList.add('pagination-next');
-        paginationPrevious.appendChild(aPrevious);
-        paginationNext.appendChild(aNext);
-        pagination.appendChild(paginationPrevious);
-
-        queryTipListContainer.classList.add('query-tip-list-container');
-
-        if (!nextPath) {
-            paginationNext.classList.add('disabled');
-        }
-
-        if (!previousPath) {
-            paginationPrevious.classList.add('disabled');
-        }
-
-        paginationNext.onclick = async (evt) => {
-            if (!evt.target.classList.contains('disabled')) {
-                var response = await apiCallGet(nextUrl, obj.options);
-                obj.putRelatedQueries(response.data, queryTipsResultContainer, container, searchVal);
-            }
-        };
-
-        paginationPrevious.onclick = async (evt) => {
-            if (!evt.target.classList.contains('disabled')) {
-                var response = await apiCallGet(previousUrl, obj.options);
-                obj.putRelatedQueries(response.data, queryTipsResultContainer, container, searchVal);
-            }
-        };
-
-        const dotEvent = async (evt) => {
-            var page = evt.target.dataset.page;
-            var path = obj.getRelatedQueriesPath(page, searchVal, obj.options);
-            var response = await apiCallGet(path, obj.options);
-            obj.putRelatedQueries(response.data, queryTipsResultContainer, container, searchVal);
-        };
-
-        for (var i = 0; i < list.length; i++) {
-            var item = document.createElement('div');
-            item.classList.add('animated-item');
-            item.classList.add('query-tip-item');
-            item.innerHTML = list[i];
-            item.style.animationDelay = delay * i + 's';
-            item.onclick = function (event) {
-                obj.tabChataUtils.classList.add('active');
-                obj.tabQueryTips.classList.remove('active');
-                obj.tabsAnimation('flex', 'block');
-                obj.queryTipsAnimation('none');
-                obj.notificationsAnimation('none');
-                var selectedQuery = event.target.textContent;
-                obj.keyboardAnimation(selectedQuery);
-                obj.options.landingPage = 'data-messenger';
-            };
-            queryTipListContainer.appendChild(item);
-        }
-
-        queryTipsResultContainer.innerHTML = '';
-        queryTipsResultContainer.appendChild(queryTipListContainer);
-        for (let i = 0; i < 3; i++) {
-            if (i >= pages) break;
-            var li = document.createElement('li');
-            var a = document.createElement('a');
-
-            if (i == currentPage - 1) {
-                li.classList.add('selected');
-            }
-            li.appendChild(a);
-            pagination.appendChild(li);
-
-            if (i == 2) {
-                if (currentPage == 3) {
-                    a.textContent = currentPage;
-                    let rightDots = document.createElement('li');
-                    let aDots = document.createElement('a');
-                    if (pages != 3) {
-                        aDots.textContent = '...';
-                        rightDots.appendChild(aDots);
-                        pagination.appendChild(rightDots);
-                        aDots.setAttribute('data-page', currentPage + 1);
-                        rightDots.onclick = dotEvent;
-                    }
-                } else if (currentPage > 3 && currentPage <= pages - 2) {
-                    a.textContent = currentPage;
-                    li.classList.add('selected');
-                    let rightDots = document.createElement('li');
-                    let aDots = document.createElement('a');
-                    aDots.textContent = '...';
-                    rightDots.appendChild(aDots);
-                    aDots.setAttribute('data-page', currentPage + 1);
-
-                    var leftDots = document.createElement('li');
-                    var aDotsLeft = document.createElement('a');
-                    aDotsLeft.textContent = '...';
-                    leftDots.appendChild(aDotsLeft);
-                    aDotsLeft.setAttribute('data-page', currentPage - 1);
-                    pagination.insertBefore(leftDots, li);
-                    if (currentPage < pages - 2) {
-                        pagination.appendChild(rightDots);
-                    }
-
-                    rightDots.onclick = dotEvent;
-                    leftDots.onclick = dotEvent;
-                } else {
-                    if (pages != 3) {
-                        a.textContent = '...';
-                    } else {
-                        a.textContent = i + 1;
-                    }
-                }
-            } else {
-                a.textContent = i + 1;
-            }
-
-            a.setAttribute('data-page', i + 1);
-            li.onclick = dotEvent;
-        }
-
-        if (pages > 3) {
-            for (let i = pages - 2; i < pages; i++) {
-                if (i >= pages) break;
-                let li = document.createElement('li');
-                let a = document.createElement('a');
-                if (i == currentPage - 1) {
-                    li.classList.add('selected');
-                }
-                li.appendChild(a);
-                a.textContent = i + 1;
-                a.setAttribute('data-page', i + 1);
-
-                li.onclick = async (evt) => {
-                    var page = evt.target.dataset.page;
-                    var path = obj.getRelatedQueriesPath(page, searchVal, obj.options);
-                    var response = await apiCallGet(path, obj.options);
-                    obj.putRelatedQueries(response.data, queryTipsResultContainer, container, searchVal);
-                };
-
-                pagination.appendChild(li);
-            }
-        }
-        pagination.appendChild(paginationNext);
-        if (totalItems != 0) {
-            paginationContainer.appendChild(pagination);
-        } else {
-            queryTipsResultContainer.appendChild(document.createTextNode(strings.relatedQueriesNotFound));
-        }
-        container.appendChild(paginationContainer);
-        if (obj.pagination) {
-            container.removeChild(obj.pagination);
-        }
-        obj.pagination = paginationContainer;
     };
 
     obj.getRelatedQueriesPath = (page, searchVal, options) => {
@@ -1193,6 +989,7 @@ export function DataMessenger(options = {}) {
         obj.drawerBody.appendChild(chatHeaderContainer);
         obj.headerRight = headerRight;
         obj.headerTitle = headerTitle;
+        obj.header = chatHeaderContainer;
         obj.clearMessagePop = popover;
         filterLocking.loadConditions();
         obj.filterLocking = filterLocking;
@@ -1594,7 +1391,8 @@ export function DataMessenger(options = {}) {
                 type !== 'suggestions' &&
                 request['reference_id'] !== '1.9.502' &&
                 request['reference_id'] !== '1.1.550' &&
-                request['reference_id'] !== '1.1.432'
+                request['reference_id'] !== '1.1.432' &&
+                request['reference_id'] !== '1.1.461'
             ) {
                 toolbar.appendChild(moreOptionsBtn);
                 toolbar.appendChild(moreOptions);
@@ -2865,7 +2663,7 @@ export function DataMessenger(options = {}) {
     obj.createBar();
     obj.createResizeHandler();
     obj.createQueryTabs();
-    obj.createQueryTips();
+    obj.createDataExplorer();
     obj.createNotifications();
     obj.speechToTextEvent();
     obj.registerWindowClicks();

@@ -1,0 +1,71 @@
+.autoql-vanilla-card {
+  background: var(--autoql-vanilla-background-color-secondary);
+  border-radius: 6px;
+  box-shadow: var(--autoql-vanilla-box-shadow-1);
+  padding: 15px;
+  margin: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+
+  .autoql-vanilla-card-title {
+    cursor: pointer;
+    padding: 0 10px;
+    flex: 0 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: nowrap;
+    font-size: 18px;
+    margin: 4px 0;
+    font-weight: 600;
+    .autoql-vanilla-card-title-text {
+      display: flex;
+      flex-wrap: nowrap;
+      align-items: center;
+    
+      .autoql-vanilla-icon {
+        margin-right: 5px;
+      }
+    }
+  }
+
+  .autoql-vanilla-card-content {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    transition: max-height .3s ease,opacity .3s ease;
+    opacity: 1;
+    flex: 0 1 auto;
+    min-height: 0;
+    &.autoql-vanilla-hidden {
+      overflow: hidden;
+    }
+    
+    .autoql-vanilla-card-user-content {
+      min-height: 100px;
+      max-height: 100%;
+      position: relative;
+      height: 100%;
+  
+      .autoql-vanilla-card-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        position: relative;
+      }
+      .response-loading {
+        display: flex;
+        align-items: center;
+        min-height: 160px;
+        div {
+          top: unset;
+        }
+      }
+    }
+  }
+}
