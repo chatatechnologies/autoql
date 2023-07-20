@@ -77,7 +77,8 @@
     left: 10px;
     right: 10px;
     display: none;
-
+    max-height: 600px;
+    overflow: scroll;
     ul {
       list-style: none;
       list-style-type: none;
