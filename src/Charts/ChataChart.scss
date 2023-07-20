@@ -1,7 +1,22 @@
+.autoql-vanilla-drawer-resizing {
+    .autoql-vanilla-chart-content-container {
+        visibility: hidden !important;
+    }
+}
+
 .autoql-vanilla-chata-chart-container {
+    height: 100vh;
+    width: 100vw;
+    max-height: 100% !important;
+    max-width: 100% !important;
+    display: block;
+
     .autoql-vanilla-stacked-rect,
     .autoql-vanilla-heatmap-rect,
     .autoql-vanilla-chart-bar {
+        stroke-width: 0;
+        stroke-opacity: 0;
+        transition: fill-opacity 0.2s ease;
         cursor: pointer;
 
         &:hover {
@@ -13,30 +28,39 @@
         cursor: pointer;
     }
 
-    g.tick,
-    path.domain {
-        pointer-events: none;
-        fill: transparent;
-        stroke: transparent;
-        stroke-opacity: 0;
-    }
-
-    .autoql-vanilla-axes-grid {
+    .autoql-vanilla-axes {
         g.tick {
             text {
                 fill: currentcolor;
                 fill-opacity: 1;
                 font-family: inherit;
+                stroke-opacity: 0;
+                stroke-width: 0;
                 cursor: default;
             }
             line {
                 color: currentColor;
-                stroke-opacity: 0.1 !important;
                 shape-rendering: crispedges;
             }
             path {
                 stroke-width: 0;
             }
+        }
+    }
+
+    .autoql-vanilla-axis-title {
+        stroke-opacity: 0;
+        stroke-width: 0;
+        font-weight: 600;
+        font-size: inherit;
+        font-family: inherit;
+        fill: inherit;
+        fill-opacity: inherit;
+        letter-spacing: inherit;
+        cursor: inherit;
+
+        .autoql-vanilla-axis-selector-arrow {
+            opacity: 1 !important;
         }
     }
 
@@ -51,6 +75,7 @@
 
     .autoql-vanilla-x-axis-label-border,
     .autoql-vanilla-y-axis-label-border,
+    .autoql-vanilla-axis-selector-box,
     .autoql-vanilla-chart-row-selector-box {
         stroke: transparent;
         fill: transparent;
@@ -62,6 +87,19 @@
 
         &:hover {
             stroke: var(--autoql-vanilla-accent-color);
+        }
+    }
+
+    .autoql-vanilla-axis {
+        g.tick {
+            text {
+                cursor: default;
+            }
+
+            line {
+                opacity: 1;
+                pointer-events: none;
+            }
         }
     }
 }

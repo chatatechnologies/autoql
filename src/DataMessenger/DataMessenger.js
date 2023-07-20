@@ -89,6 +89,7 @@ import { refreshTooltips } from '../Tooltips';
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
 import testdata from '../../testdata';
+import { ChataChartNew } from '../NewCharts';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
@@ -945,6 +946,8 @@ export function DataMessenger(options = {}) {
         resize.classList.add('autoql-vanilla-chata-drawer-resize-handle');
 
         function resizeItem(e) {
+            obj.rootElem.classList.add('autoql-vanilla-drawer-resizing')
+
             let newWidth;
             let newHeight;
             switch (obj.options.placement) {
@@ -975,17 +978,16 @@ export function DataMessenger(options = {}) {
             clearTimeout(timer);
             timer = setTimeout(() => {
                 window.dispatchEvent(new CustomEvent('chata-resize', {}));
+                obj.rootElem.classList.remove('autoql-vanilla-drawer-resizing')
             }, 100);
         }
 
         function stopResize() {
-            obj.rootElem.classList.remove('autoql-vanilla-drawer-resizing')
             window.removeEventListener('mousemove', resizeItem, false);
             window.removeEventListener('mouseup', stopResize, false);
         }
 
         function initResize(e) {
-            obj.rootElem.classList.add('autoql-vanilla-drawer-resizing')
             startX = e.clientX;
             startY = e.clientY;
             startWidth = parseInt(document.defaultView.getComputedStyle(obj.drawerContentWrapper).width, 10);
@@ -1964,9 +1966,10 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bar');
-        createBarChart(
-            component, json, obj.options, obj.registerDrilldownChartEvent
-        );
+        new ChataChartNew(component, 'bar', json, obj.options, obj.registerDrilldownChartEvent);
+        // createBarChart(
+        //     component, json, obj.options, obj.registerDrilldownChartEvent
+        // );
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2893,8 +2896,9 @@ export function DataMessenger(options = {}) {
                 break;
             case 'bar':
                 var barContainer = obj.putTableResponse(jsonResponse);
-                createBarChart(barContainer, jsonResponse, obj.options);
-                obj.refreshToolbarButtons(barContainer, 'bar');
+                new ChataChartNew(barContainer, displayType, jsonResponse, obj.options);
+                // createBarChart(barContainer, jsonResponse, obj.options);
+                obj.refreshToolbarButtons(barContainer, displayType);
                 break;
             case 'word_cloud':
                 obj.putTableResponse(jsonResponse);
