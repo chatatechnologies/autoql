@@ -29,7 +29,7 @@ export function DataExplorer({ subjects, widget }) {
   const autocomplete = document.createElement('div');
   const subjectsWrapper = document.createElement('ul'); 
   const contentWrapper = document.createElement('div');
-
+  const headerHeight = widget.header.clientHeight;
   const texts = [
     { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
     { icon: ABACUS_ICON, string: 'Explore data structure and column types' },
@@ -48,23 +48,23 @@ export function DataExplorer({ subjects, widget }) {
   introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
   instructionList.classList.add('autoql-vanilla-intro-message-list-container');
   input.setAttribute('placeholder', strings.exploreQueriesInput);
-
+  
   title.appendChild(document.createTextNode('Welcome to '));
   title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
   title.appendChild(document.createTextNode('Data Explorer'));
   p.appendChild(document.createTextNode(`
-    Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:
+  Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:
   `));
-
+  
   texts.map((text) => {
     const icon = createIcon(text.icon);
     const elem = document.createElement('p');
-
+    
     elem.appendChild(icon);
     elem.appendChild(document.createTextNode(text.string));
     listWrapper.appendChild(elem);
   })
-
+  
   obj.subjects.forEach((subject) => {
     const li = document.createElement('li');
     li.classList.add('autoql-vanilla-subject');
@@ -82,7 +82,7 @@ export function DataExplorer({ subjects, widget }) {
         widgetOptions: widget.options,
       });
       contentWrapper.appendChild(previewSection.container);
-
+      
       const relatedQueriesSection = new RelatedQueries({
         icon: CHATA_BUBBLES_ICON,
         title: `Query suggestions for "${subject.display_name}"`,
@@ -95,7 +95,7 @@ export function DataExplorer({ subjects, widget }) {
       contentWrapper.appendChild(relatedQueriesSection);
     }
   })
-
+  
   chatBarInputIcon.appendChild(searchIcon);
   autocomplete.appendChild(subjectsWrapper);
   textBar.appendChild(input);
@@ -112,19 +112,24 @@ export function DataExplorer({ subjects, widget }) {
   container.style.display = 'none';
   
   input.addEventListener('keydown', async event => {
-      if (event.key == 'Enter' && input.value) {
-        container.removeChild(introMessage);
-      }
+    if (event.key == 'Enter' && input.value) {
+      container.removeChild(introMessage);
+    }
   });
-
+  
   input.addEventListener("focus", () => {
+    const height = container.clientHeight;
+    const textBarHeight = textBar.clientHeight;
+    const headerHeight = widget.header.clientHeight;
+    const margin = 60;
+    subjectsWrapper.style.maxHeight = (height - (textBarHeight + headerHeight + margin)) + 'px'; 
     autocomplete.classList.add('show');
   });
-
+  
   obj.hide = () => {
     container.style.display = 'none';
   }
-
+  
   obj.show = () => {
     container.style.display = 'block';
   }
@@ -132,6 +137,6 @@ export function DataExplorer({ subjects, widget }) {
   obj.setSubjects = (subjects) => {
     obj.subjects = subjects;
   }
-
+  
   obj.container = container;
 }
