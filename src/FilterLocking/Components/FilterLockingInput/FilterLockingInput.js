@@ -141,5 +141,11 @@ export function FilterLockingInput(datamessenger, filterLocking){
         }
     }
 
+    input.onfocus = (evt) => {
+        if(evt.target.value){
+            view.autoCompleteCall(evt.target.value)
+        }
+    }
+
     return view
 }
