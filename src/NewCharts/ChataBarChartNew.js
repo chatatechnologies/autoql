@@ -5,6 +5,7 @@ import { tooltipCharts } from '../Tooltips';
 export function BarChartNew(container, params = {}) {
     const {
         data,
+        json,
         columns,
         height,
         width,
@@ -17,11 +18,19 @@ export function BarChartNew(container, params = {}) {
         colorScale,
         options = {},
         isScaled,
+        hasRowSelector,
         toggleChartScale,
         enableAxisDropdown,
+        changeNumberColumnIndices,
+        changeStringColumnIndices,
         stringIndexConfig = {},
         numberIndexConfig = {},
+        onDataFetching,
+        onNewData,
+        onDataFetchError,
+        pageSize,
     } = params;
+    
     const { stringColumnIndices, stringColumnIndex } = stringIndexConfig;
     const { numberColumnIndices, numberColumnIndex } = numberIndexConfig;
     const { dataFormatting } = options;
@@ -35,15 +44,18 @@ export function BarChartNew(container, params = {}) {
         dataFormatting,
         stringColumnIndices,
         enableAxisDropdown,
-        changeColumnIndices: () => {}, // TODO
-        changeNumberColumnIndices: () => {},
-        changeStringColumnIndex: () => {}, // TODO
+        changeNumberColumnIndices,
+        changeStringColumnIndices,
     };
 
     this.yScale = getBandScale({
         ...scaleParams,
         axis: 'y',
         columnIndex: stringColumnIndex,
+        // : () => {
+        //     console.log('change string column indices here!!')
+        //     changeStringColumnIndex()
+        // }
     });
 
     this.xScale = getLinearScales({
@@ -98,8 +110,6 @@ export function BarChartNew(container, params = {}) {
                 }
             });
 
-            console.log('this is the series data for the bars:', {seriesForRow})
-
             return seriesForRow;
         };
 
@@ -128,6 +138,8 @@ export function BarChartNew(container, params = {}) {
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
     new Axes(this.axesWrapper, {
+        json,
+        columns,
         xScale: this.xScale,
         yScale: this.yScale,
         xCol,
@@ -141,6 +153,12 @@ export function BarChartNew(container, params = {}) {
         toggleChartScale, // TODO
         options,
         firstDraw,
+        hasRowSelector,
+        stringColumnIndices,
+        onDataFetching,
+        onNewData,
+        onDataFetchError,
+        pageSize,
     });
 
     if (firstDraw) {

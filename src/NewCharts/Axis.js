@@ -9,25 +9,45 @@ import {
     CHART_PADDING,
     transformLabels,
     AXIS_TITLE_BORDER_PADDING_TOP,
-    AXIS_TITLE_BORDER_PADDING_LEFT
+    AXIS_TITLE_BORDER_PADDING_LEFT,
 } from 'autoql-fe-utils';
 
 import { CSS_PREFIX } from '../Constants';
+import { ChataChartListPopover } from '../Charts/ChataChartListPopover';
+import { closeAllChartPopovers } from '../Utils';
+import { ChartRowSelector } from '../Charts/ChartRowSelector';
+import { select } from 'd3';
 
 export function Axis(container, params = {}, axisOptions = {}) {
-    const { outerHeight, outerWidth, deltaX, deltaY, toggleChartScale, firstDraw, options = {} } = params;
+    const {
+        json,
+        outerHeight,
+        outerWidth,
+        deltaX,
+        deltaY,
+        columns,
+        hasRowSelector,
+        toggleChartScale,
+        firstDraw,
+        pageSize,
+        options = {},
+        onDataFetching,
+        onNewData,
+        onDataFetchError,
+    } = params;
     const { orient, scale, innerHeight, innerWidth } = axisOptions;
+
+    const FONT_SIZE = 12
 
     this.axisElement = container
         .append('g')
         .attr('class', `autoql-vanilla-axis autoql-vanilla-axis-${orient}`)
-        .style('font-size', '12px')
+        .style('font-size', FONT_SIZE)
         .style('font-family', getThemeValue('font-family', CSS_PREFIX))
         .style('fill', 'currentColor')
         .style('fill-opacity', 1)
         .style('cursor', 'default')
         .style('letter-spacing', 'normal');
-    // .attr('transform', `translate(${translateX}, ${translateY})`) // TODO
 
     if (!['left', 'bottom', 'right', 'top'].includes(orient)) {
         console.warn(`Unable to create axis - orientation provided was invalid: ${orient}`);
@@ -39,7 +59,6 @@ export function Axis(container, params = {}, axisOptions = {}) {
         return;
     }
 
-    // this.shouldLabelsRotate = false; // TODO
     var maxLabelWidth = getMaxTickLabelWidth({ orient, outerHeight, outerWidth });
     var axis = getAxis({ orient, scale, innerWidth, innerHeight, maxLabelWidth });
 
@@ -55,6 +74,21 @@ export function Axis(container, params = {}, axisOptions = {}) {
         });
     };
 
+    const onSelectorClick = (evt, legendEvent) => {
+        let placement;
+        if (orient === 'left') {
+            placement = 'right';
+        } else if (orient === 'bottom') {
+            placement = 'top';
+        } else if (orient === 'right') {
+            placement = 'left';
+        } else if (orient === 'top') {
+            placement = 'bottom';
+        }
+
+        new ChataChartListPopover(evt, scale, columns, placement, 'middle');
+    };
+
     const createAxisTitle = () => {
         this.axisTitleContainer = this.axisElement.append('g');
         var axisTitle = this.axisTitleContainer
@@ -63,7 +97,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             .attr('dominant-baseline', 'middle')
             .attr('text-anchor', 'middle')
             .attr('length-adjust', 'spacingAndGlyphs')
-            .attr('text-length', MINIMUM_TITLE_LENGTH) // TODO
+            .attr('text-length', MINIMUM_TITLE_LENGTH); // TODO
 
         const fullTitle = scale?.title ?? '';
         let title = fullTitle;
@@ -122,20 +156,49 @@ export function Axis(container, params = {}, axisOptions = {}) {
         positionTitle(this.axisTitleContainer.node());
 
         // Axis Selector
-        if (scale?.hasDropdown) {
-            const titleBBox = axisTitle.node()?.getBBox()
-            const titleHeight = titleBBox?.height ?? 0
-            const titleWidth = titleBBox?.width ?? 0
+        this.titleBBox = axisTitle.node()?.getBBox();
+        const titleHeight = this.titleBBox?.height ?? 0;
+        const titleWidth = this.titleBBox?.width ?? 0;
 
-            this.axisSelector = this.axisElement.append('rect')
-                .attr('class', 'autoql-vanilla-axis-selector-box')
-                .attr('transform', axisTitle.attr('transform'))
-                .attr('width', Math.round(titleWidth + 2 * AXIS_TITLE_BORDER_PADDING_LEFT))
-                .attr('height', Math.round(titleHeight + 2 * AXIS_TITLE_BORDER_PADDING_TOP))
-                .attr('x', Math.round(titleBBox?.x - AXIS_TITLE_BORDER_PADDING_LEFT))
-                .attr('y', Math.round(titleBBox?.y - AXIS_TITLE_BORDER_PADDING_TOP))
-                .attr('rx', 4)
-                .on('click', function (d) {console.log('ON CLICK AXIS SELECTOR', d)})
+        this.axisTitleBorder = this.axisElement
+            .append('rect')
+            .attr('class', 'autoql-vanilla-axis-selector-box')
+            .attr('transform', axisTitle.attr('transform'))
+            .attr('width', Math.round(titleWidth + 2 * AXIS_TITLE_BORDER_PADDING_LEFT))
+            .attr('height', Math.round(titleHeight + 2 * AXIS_TITLE_BORDER_PADDING_TOP))
+            .attr('x', Math.round(this.titleBBox?.x - AXIS_TITLE_BORDER_PADDING_LEFT))
+            .attr('y', Math.round(this.titleBBox?.y - AXIS_TITLE_BORDER_PADDING_TOP))
+            .style('visibility', 'hidden')
+            .attr('rx', 4)
+            
+        if (scale?.hasDropdown) {
+            this.axisTitleBorder.style('visibility', 'visible').on('click', onSelectorClick)
+        }
+    };
+
+    const createRowSelector = () => {
+        try {
+            if (!hasRowSelector || orient !== 'bottom') {
+                return;
+            }
+    
+            if (this.rowSelectorElement) this.rowSelectorElement.remove();
+            this.rowSelectorElement = new ChartRowSelector(
+                this.axisElement,
+                json,
+                onDataFetching,
+                onNewData,
+                onDataFetchError,
+                options,
+            );
+            
+            const axisTitleBBox = this.axisTitleContainer?.node()?.getBBox()
+            const translateX = innerWidth / 2;
+            const translateY = axisTitleBBox?.y + axisTitleBBox?.height + FONT_SIZE + AXIS_TITLE_BORDER_PADDING_TOP * 2;
+    
+            this.rowSelectorElement.attr('transform', `translate(${translateX}, ${translateY})`);
+        } catch (error) {
+            console.error(error)
         }
     };
 
@@ -196,6 +259,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
     this.labelsBBox = getLabelsBBox(this.axisElement.node());
 
     createAxisTitle();
+    createRowSelector();
     addTooltipsToLabels();
     styleTicks();
 

@@ -1,12 +1,13 @@
 .autoql-vanilla-popover-selector{
     position: absolute;
     z-index: 100000001;
-    border: 1px solid hsla(0,0%,67.1%,.32);
+    border: 1px solid var(--autoql-vanilla-border-color);
     border-radius: 4px;
     box-shadow: 0 0 8px rgba(0,0,0,.15);
     transition: opacity .2s ease 0s!important;
     opacity: 0;
-    font-family: sans-serif;
+    font-family: var(--autoql-vanilla-font-family, 'sans-serif');
+    overflow: hidden;
 }
 
 .autoql-vanilla-axis-selector-container {

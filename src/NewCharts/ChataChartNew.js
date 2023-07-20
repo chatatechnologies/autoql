@@ -7,7 +7,7 @@ import {
     getStringColumnIndices,
     DOUBLE_AXIS_CHART_TYPES,
     getColorScales,
-    usePivotDataForChart
+    usePivotDataForChart,
 } from 'autoql-fe-utils';
 
 import { uuidv4 } from '../Utils';
@@ -132,29 +132,53 @@ export function ChataChartNew(
 
     const numberIndexConfig = getNumberColumnIndices(columns) ?? {};
     const stringIndexConfig = getStringColumnIndices(columns) ?? {};
-    const metadataElement = component.parentElement.parentElement;
+
     const indices1 = numberIndexConfig.numberColumnIndices ?? [];
     const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? numberIndexConfig.numberColumnIndices2 ?? [] : [];
     const numberIndices = [...indices1, ...indices2];
-    const isDataAggregated = usePivotDataForChart({data: origJson})
-    console.log({isDataAggregated})
+    const isDataAggregated = usePivotDataForChart({ data: origJson });
+    const hasRowSelector = options.pageSize < origJson?.data?.count_rows;
+
+    var metadataElement = component.parentElement.parentElement;
+    // TODO: update send in index config directly instead of using the metadata component
+    if (!metadataElement.metadata) {
+        // var dateCol = getFirstDateCol(cols)
+        // let i = dateCol !== -1 ? dateCol : yIndexes[0]?.index
+        metadataElement.metadata = {
+            groupBy: {
+                index: stringIndexConfig.stringColumnIndex,
+                currentLi: 0,
+            },
+            series: indices1,
+            stringIndexConfig,
+            numberIndexConfig,
+        };
+    }
 
     const chartID = uuidv4();
 
-    if (isDataAggregated) {
-        return sortDataByDate(origRows, columns, 'asc');
-    } else {
-        var data = origRows;
+    this.getData = (rows) => {
+        let newRows = rows ?? origRows
+
+        if (isDataAggregated) {
+            return sortDataByDate(newRows, columns, 'asc');
+        }
+
+        var data = newRows;
         if (numberIndices.length) {
             data = aggregateData({
-                data: origRows,
+                data: newRows,
                 aggColIndex: stringIndexConfig.stringColumnIndex,
                 columns: columns,
                 numberIndices,
                 dataFormatting,
             });
         }
-    }
+
+        return data;
+    };
+
+    this.data = this.getData();
 
     // this.onLabelRotation = () => {
     //     this.chartComponent = this.drawChart();
@@ -169,9 +193,9 @@ export function ChataChartNew(
     this.isScaled = false;
 
     this.toggleChartScale = () => {
-        this.isScaled = !this.isScaled
-        this.drawChart()
-    }
+        this.isScaled = !this.isScaled;
+        this.drawChart();
+    };
 
     this.drawChart = (firstDraw = true) => {
         if (drawCount > 50) {
@@ -217,12 +241,12 @@ export function ChataChartNew(
                 .append('g')
                 .attr('class', CHART_CONTAINER_CLASS)
                 .attr('transform', `translate(${this.deltaX}, ${this.deltaY})`)
-                .style('visibility', 'hidden')
+                .style('visibility', 'hidden');
 
-            const colorScales = getColorScales({ ...numberIndexConfig })
-            
+            const colorScales = getColorScales({ ...numberIndexConfig });
+
             const params = {
-                data,
+                data: this.data,
                 columns,
                 options,
                 height: this.innerHeight ?? this.outerHeight,
@@ -230,19 +254,28 @@ export function ChataChartNew(
                 numberIndexConfig,
                 stringIndexConfig,
                 visibleSeries: numberIndexConfig.numberColumnIndices, // TODO
-                metadataElement,
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
                 deltaY: this.deltaY,
                 firstDraw,
+                hasRowSelector,
                 isScaled: this.isScaled,
                 colorScale: colorScales.colorScale,
                 colorScale2: colorScales.colorScale2,
                 toggleChartScale: this.toggleChartScale,
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
-                changeNumberColumnIndices: () => {}, // TODO
-                changeStringColumnIndex: () => {}, // TODO
+                changeNumberColumnIndices: () => {
+                    console.log('CHANGE NUMBER COLUMN INDICES... FROM CHATA CHART');
+                }, // TODO
+                changeStringColumnIndices: () => {
+                    console.log('CHANGE STRING COLUMN INDICES... FROM CHATA CHART');
+                }, // TODO
+                onDataFetching: this.onDataFetching,
+                onNewData: this.onNewData,
+                onDataFetchError: this.onDataFetchError,
+                json: origJson,
+                pageSize: undefined, // metadataComponent.metadata?.pageSize, // TODO: do we need this?
                 // onLabelRotation: this.onLabelRotation,
             };
 
@@ -287,6 +320,25 @@ export function ChataChartNew(
 
         onUpdate(component);
         return;
+    };
+
+    this.onDataFetching = () => this.chartLoader?.setChartLoading(true);
+
+    this.onNewData = (newJson) => {
+        if (newJson?.data?.rows) {
+            origJson.data.rows = newJson.data.rows;
+            origJson.data.row_limit = newJson.data.row_limit;
+            this.data = this.getData(newJson.data.rows)
+
+            this.drawChart();
+        }
+
+        this.chartLoader?.setChartLoading(false);
+    };
+
+    this.onDataFetchError = (error) => {
+        console.error(error);
+        this.chartLoader?.setChartLoading(false);
     };
 
     // ----------- TODO move this outside of this component ----------------------

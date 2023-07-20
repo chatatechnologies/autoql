@@ -67,6 +67,8 @@
     .autoql-vanilla-chart-selector,
     .autoql-vanilla-chart-row-selector {
         font-size: 12px;
+        stroke-width: 0;
+        stroke: transparent;
 
         .autoql-vanilla-chata-axis-selector-arrow {
             opacity: 1 !important;
@@ -84,6 +86,11 @@
         transition: stroke 0.2s ease;
         z-index: 3;
         cursor: pointer;
+
+        &.autoql-vanilla-axis-selector-box-hidden {
+            stroke: transparent !important;
+            pointer-events: none !important;
+        }
 
         &:hover {
             stroke: var(--autoql-vanilla-accent-color);

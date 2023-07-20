@@ -224,7 +224,6 @@ export function createBarChart(
     // var factor = 10;
     // if(longestStringHeight <= 4)longestStringHeight = 5;
     // if(!hasLegend)increment = 1;
-    // console.log({longestStringWidth, yTickValues})
     const labelSelectorPadding = longestStringWidth > 0 ? 10 : (margin.left - 15)
     chartWidth -= longestStringWidth
 
@@ -237,13 +236,11 @@ export function createBarChart(
     let xLabelsHeight = fontSize
     if (rotateLabels) {
         // const allXLabelHeights = []
-        // console.log({data})
         // data.forEach((item) => {
         //     const fontSize = 12
         //     const labelWidth = getStringWidth(formatChartData(item.label, cols[index], options))
         //     const labelWidthHoz = (labelWidth + fontSize) / Math.sqrt(2)
             
-        //     console.log({label: item.label, labelWidth, labelWidthHoz})
         //     allXLabelHeights.push(labelWidthHoz);
         // });
         const labelWidth = getStringWidth(formatLabel(minMaxValues.max, cols[index1], options));
@@ -448,7 +445,6 @@ export function createBarChart(
     .attr("class", "y axis")
     .call(yAxis.tickFormat(function(d){
         // let fLabel = formatChartData(d, cols[index2], options);
-        // console.log({fLabel})
         // if(fLabel === 'Invalid date') {
         //     fLabel = 'Untitled Category'
         // }

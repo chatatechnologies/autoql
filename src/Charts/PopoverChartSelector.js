@@ -1,6 +1,8 @@
 import '../../css/PopoverChartSelector.css'
+import { closeAllChartPopovers } from '../Utils';
 
 export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'start', padding=5) {
+    closeAllChartPopovers();
     var popover = document.createElement('div');
     popover.classList.add('autoql-vanilla-popover-selector');
     popover.target = evt.target
