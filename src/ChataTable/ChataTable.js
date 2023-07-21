@@ -405,34 +405,11 @@ export function ChataTable(
 
     component.queryFn = json?.queryFn;
 
-    component.onNewPage = (newRows) => {};
+    component.onNewPage = (newRows) => {}; // console.log('TODO')
 
-    component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
+    component.onTableParamsChange = (params, nextTableParamsFormatted) => {}; // console.log('TODO')
 
-    component.onNewData = (response, component) => {
-        // console.log('ON NEW DATA CALLBACK GOES HERE', { response });
-        // this.queryResponse = response
-        // const responseData = response?.data?.data;
-        // tableData = responseData?.rows || [];
-
-        // if (this.state.displayType !== 'table' && this.props.allowDisplayTypeChange) {
-        //   // The rows were changed from a chart, update data manually. ChataTable will handle
-        //   // toggling infinite scroll on or off
-        //   const stillHasMoreData = hasMoreData(tableData?.length, response)
-        //   component.table?.updateData(tableData, stillHasMoreData)
-        // }
-
-        // this.setState(
-        //   {
-        //     visibleRows: response.data.data.rows,
-        //     visibleRowChangeCount: this.state.visibleRowChangeCount + 1,
-        //   },
-        //   () => {
-        //     const dataPageSize = pageSize ?? response?.data?.data?.fe_req?.page_size
-        //     this.props.onPageSizeChange(dataPageSize, this.state.visibleRows)
-        //   },
-        // )
-    };
+    component.onNewData = (response, component) => { }; // console.log('TODO')
 
     component.getNewPage = (tableParams) => {
         return runQueryNewPage({

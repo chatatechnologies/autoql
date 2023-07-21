@@ -131,7 +131,7 @@ export function BarChartNew(container, params = {}) {
             .style('fill', (d) => d.style?.fill)
             .style('fill-opacity', (d) => d.style?.fillOpacity)
             .attr('data-tippy-content', (d) => d.tooltip)
-            .on('click', function (d) {
+            .on('click', function (e, d) {
                 console.log(d);
             }) // TODO            
     };

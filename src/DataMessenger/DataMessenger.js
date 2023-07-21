@@ -115,7 +115,7 @@ export function DataMessenger(options = {}) {
         inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
         landingPage: 'data-messenger',
-        autoChartAggregations: true,
+        autoChartAggregations: false,
         pageSize: 50,
         xhr: new XMLHttpRequest(),
         ...options, // Spread all provided options to overwrite defaults
@@ -2743,8 +2743,8 @@ export function DataMessenger(options = {}) {
 
         let response;
         try {
-            // response = await runQuery(queryParams);
-            response = testdata;
+            response = await runQuery(queryParams);
+            // response = testdata;
         } catch (error) {
             response = error;
         }
@@ -2812,23 +2812,23 @@ export function DataMessenger(options = {}) {
 
         jsonResponse.queryFn = (params = {}) => {
             // ------- test data -------
-            var jsonResponseCopy = cloneObject(response)
-            var pageSize = params.pageSize ?? response.data.data.row_limit
+            // var jsonResponseCopy = cloneObject(response)
+            // var pageSize = params.pageSize ?? response.data.data.row_limit
 
-            var rows = []
-            for(let i = 0; i < pageSize; i++) {
-                rows.push(response.data.data.rows[0])
-            }
+            // var rows = []
+            // for(let i = 0; i < pageSize; i++) {
+            //     rows.push(response.data.data.rows[0])
+            // }
+  
+            // jsonResponseCopy.data.data.rows = rows
+            // jsonResponseCopy.data.data.row_limit = pageSize
+            // jsonResponseCopy.data.data.fe_req.page_size = pageSize
 
-            jsonResponseCopy.data.data.rows = rows
-            jsonResponseCopy.data.data.row_limit = pageSize
-            jsonResponseCopy.data.data.fe_req.page_size = pageSize
-
-            return new Promise((res, rej) => {
-                setTimeout(() => {
-                    res(jsonResponseCopy)
-                }, 2000)
-            })
+            // return new Promise((res, rej) => {
+            //     setTimeout(() => {
+            //         res(jsonResponseCopy)
+            //     }, 2000)
+            // })
             // -------------------------
 
             return runQuery({

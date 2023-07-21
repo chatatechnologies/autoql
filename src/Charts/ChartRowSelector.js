@@ -139,8 +139,6 @@ export function ChartRowSelector(
                 )
                 .html(DATA_LIMIT_WARNING);
 
-            console.log({warningColor: getThemeValue('warning-color', CSS_PREFIX)})
-
             if (totalRows > MAX_DATA_PAGE_SIZE) {
                 warningIcon
                     .style('color', getThemeValue('warning-color', CSS_PREFIX))
