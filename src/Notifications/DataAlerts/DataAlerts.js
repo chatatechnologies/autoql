@@ -1,16 +1,16 @@
-import { NotificationSettingsItem } from './NotificationSettingsItem'
-import { NotificationSettingsModal } from './NotificationSettingsModal'
-import { Modal } from '../Modal'
-import { ChataConfirmDialog } from '../ChataComponents'
-import { htmlToElement } from '../Utils'
-import { apiCallGet, apiCallPost } from '../Api'
-import { refreshTooltips } from '../Tooltips'
+import { NotificationSettingsItem } from '../NotificationSettingsItem'
+import { NotificationSettingsModal } from '../NotificationSettingsModal'
+import { Modal } from '../../Modal'
+import { ChataConfirmDialog } from '../../ChataComponents'
+import { htmlToElement, checkAndApplyTheme } from '../../Utils'
+import { apiCallGet, apiCallPost } from '../../Api'
+import { refreshTooltips } from '../../Tooltips'
 import {
     TitleContainer
-} from './TitleContainer'
-import { strings } from '../Strings'
+} from '../TitleContainer'
+import { strings } from '../../Strings'
 
-import '../../css/NotificationSettings.css'
+import '../../../css/NotificationSettings.css'
 
 export function DataAlerts(selector, options) {
     checkAndApplyTheme();
@@ -26,6 +26,7 @@ export function DataAlerts(selector, options) {
             username: undefined,
             domain: undefined,
             demo: false,
+            ...(options.authentication ?? {}),
         },
         autoQLConfig: {
             debug: false,
@@ -34,24 +35,13 @@ export function DataAlerts(selector, options) {
             enableQueryValidation: true,
             enableQuerySuggestions: true,
             enableColumnVisibilityManager: true,
-            enableDrilldowns: true,
+            ...(options.autoQLConfig ?? {}),
         },
         onErrorCallback: () => {},
+        ...options
     };
 
-    if ('authentication' in options) {
-        for (let [key, value] of Object.entries(options['authentication'])) {
-            wrapper.options.authentication[key] = value;
-        }
-    }
-
-    if ('autoQLConfig' in options) {
-        for (let [key, value] of Object.entries(options['autoQLConfig'])) {
-            wrapper.options.autoQLConfig[key] = value;
-        }
-    }
-
-    wrapper.showLoadingDots = () => {
+/*     wrapper.showLoadingDots = () => {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
@@ -202,7 +192,7 @@ export function DataAlerts(selector, options) {
     if (parent) parent.appendChild(wrapper);
     setTimeout(function () {
         refreshTooltips();
-    }, 3000);
+    }, 3000); */
 
     return wrapper;
 }
