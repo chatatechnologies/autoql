@@ -1966,10 +1966,14 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'bar');
-        new ChataChartNew(component, 'bar', json, obj.options, obj.registerDrilldownChartEvent);
-        // createBarChart(
-        //     component, json, obj.options, obj.registerDrilldownChartEvent
-        // );
+        new ChataChartNew(component, {
+            type: 'bar',
+            queryJson: json,
+            options: obj.options,
+            onUpdate: obj.registerDrilldownChartEvent,
+            chartConfig: undefined,
+        });
+
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2739,8 +2743,8 @@ export function DataMessenger(options = {}) {
 
         let response;
         try {
-            response = await runQuery(queryParams);
-            // response = testdata;
+            // response = await runQuery(queryParams);
+            response = testdata;
         } catch (error) {
             response = error;
         }
@@ -2808,23 +2812,23 @@ export function DataMessenger(options = {}) {
 
         jsonResponse.queryFn = (params = {}) => {
             // ------- test data -------
-            // var jsonResponseCopy = cloneObject(response)
-            // var pageSize = params.pageSize ?? response.data.data.row_limit
+            var jsonResponseCopy = cloneObject(response)
+            var pageSize = params.pageSize ?? response.data.data.row_limit
 
-            // var rows = []
-            // for(let i = 0; i < pageSize; i++) {
-            //     rows.push(response.data.data.rows[0])
-            // }
+            var rows = []
+            for(let i = 0; i < pageSize; i++) {
+                rows.push(response.data.data.rows[0])
+            }
 
-            // jsonResponseCopy.data.data.rows = rows
-            // jsonResponseCopy.data.data.row_limit = pageSize
-            // jsonResponseCopy.data.data.fe_req.page_size = pageSize
+            jsonResponseCopy.data.data.rows = rows
+            jsonResponseCopy.data.data.row_limit = pageSize
+            jsonResponseCopy.data.data.fe_req.page_size = pageSize
 
-            // return new Promise((res, rej) => {
-            //     setTimeout(() => {
-            //         res(jsonResponseCopy)
-            //     }, 2000)
-            // })
+            return new Promise((res, rej) => {
+                setTimeout(() => {
+                    res(jsonResponseCopy)
+                }, 2000)
+            })
             // -------------------------
 
             return runQuery({

@@ -75,8 +75,6 @@
         }
     }
 
-    .autoql-vanilla-x-axis-label-border,
-    .autoql-vanilla-y-axis-label-border,
     .autoql-vanilla-axis-selector-box,
     .autoql-vanilla-chart-row-selector-box {
         stroke: transparent;
@@ -85,6 +83,7 @@
         opacity: 0.5;
         transition: stroke 0.2s ease;
         z-index: 3;
+        opacity: 1 !important;
         cursor: pointer;
 
         &.autoql-vanilla-axis-selector-box-hidden {

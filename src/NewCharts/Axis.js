@@ -10,6 +10,8 @@ import {
     transformLabels,
     AXIS_TITLE_BORDER_PADDING_TOP,
     AXIS_TITLE_BORDER_PADDING_LEFT,
+    LABEL_FONT_SIZE,
+    TITLE_FONT_SIZE,
 } from 'autoql-fe-utils';
 
 import { CSS_PREFIX } from '../Constants';
@@ -37,12 +39,10 @@ export function Axis(container, params = {}, axisOptions = {}) {
     } = params;
     const { orient, scale, innerHeight, innerWidth } = axisOptions;
 
-    const FONT_SIZE = 12
-
     this.axisElement = container
         .append('g')
         .attr('class', `autoql-vanilla-axis autoql-vanilla-axis-${orient}`)
-        .style('font-size', FONT_SIZE)
+        .style('font-size', LABEL_FONT_SIZE)
         .style('font-family', getThemeValue('font-family', CSS_PREFIX))
         .style('fill', 'currentColor')
         .style('fill-opacity', 1)
@@ -96,8 +96,11 @@ export function Axis(container, params = {}, axisOptions = {}) {
             .attr('class', 'autoql-vanilla-axis-title')
             .attr('dominant-baseline', 'middle')
             .attr('text-anchor', 'middle')
-            .attr('length-adjust', 'spacingAndGlyphs')
-            .attr('text-length', MINIMUM_TITLE_LENGTH); // TODO
+            .style('font-size', TITLE_FONT_SIZE)
+            .style('font-weight', 600)
+            .style('stroke-width', 0)
+            // .attr('lengthAdjust', 'spacingAndGlyphs')
+            // .attr('textLength', MINIMUM_TITLE_LENGTH); // TODO
 
         const fullTitle = scale?.title ?? '';
         let title = fullTitle;
@@ -169,8 +172,9 @@ export function Axis(container, params = {}, axisOptions = {}) {
             .attr('x', Math.round(this.titleBBox?.x - AXIS_TITLE_BORDER_PADDING_LEFT))
             .attr('y', Math.round(this.titleBBox?.y - AXIS_TITLE_BORDER_PADDING_TOP))
             .style('visibility', 'hidden')
+            .style('opacity', 0)
             .attr('rx', 4)
-            
+
         if (scale?.hasDropdown) {
             this.axisTitleBorder.style('visibility', 'visible').on('click', onSelectorClick)
         }

@@ -1,6 +1,6 @@
 import { getBandScale, getLinearScales, getBarRectObj } from 'autoql-fe-utils';
 import { Axes } from './Axes';
-import { tooltipCharts } from '../Tooltips';
+import { refreshChartTooltips } from '../Tooltips';
 
 export function BarChartNew(container, params = {}) {
     const {
@@ -31,7 +31,7 @@ export function BarChartNew(container, params = {}) {
         pageSize,
     } = params;
     
-    const { stringColumnIndices, stringColumnIndex } = stringIndexConfig;
+    const { stringColumnIndices, stringColumnIndex, legendColumnIndex } = stringIndexConfig;
     const { numberColumnIndices, numberColumnIndex } = numberIndexConfig;
     const { dataFormatting } = options;
     // TODO: var visibleSeries = numberColumnIndices.filter(index => !columns[index].isSeriesHidden)
@@ -94,7 +94,7 @@ export function BarChartNew(container, params = {}) {
                         yScale,
                         colorScale,
                         activeKey: undefined, // TODO
-                        legendColumn: undefined, // TODO
+                        legendColumn: columns[legendColumnIndex], // TODO
                         dataFormatting,
                         colIndex,
                         visibleIndex,
@@ -127,12 +127,13 @@ export function BarChartNew(container, params = {}) {
             .attr('y', (d) => d.y)
             .attr('height', (d) => d.height)
             .attr('width', (d) => d.width)
+            .style('stroke-width', 0)
             .style('fill', (d) => d.style?.fill)
             .style('fill-opacity', (d) => d.style?.fillOpacity)
+            .attr('data-tippy-content', (d) => d.tooltip)
             .on('click', function (d) {
-                console.log('ON CLICK', d.onClickData);
-            }) // TODO
-            .attr('data-tippy-content-chart', (d) => d.tooltip)
+                console.log(d);
+            }) // TODO            
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');

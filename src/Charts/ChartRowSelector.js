@@ -1,8 +1,9 @@
-import { MAX_DATA_PAGE_SIZE, getRowNumberListForPopover } from 'autoql-fe-utils';
+import { DEFAULT_DATA_PAGE_SIZE, MAX_DATA_PAGE_SIZE, getRowNumberListForPopover, getThemeValue } from 'autoql-fe-utils';
 import { PopoverChartSelector } from './PopoverChartSelector';
 import { closeAllChartPopovers } from '../Utils';
 import { strings } from '../Strings';
 import { DATA_LIMIT_WARNING } from '../Svg';
+import { CSS_PREFIX } from '../Constants';
 
 export function ChartRowSelector(
     svg,
@@ -43,43 +44,46 @@ export function ChartRowSelector(
             var obj = this;
             var elements = [];
 
-            obj.createContent = () => {
-                var selectorContainer = document.createElement('div');
-                var selectorContent = document.createElement('ul');
+            var popover = new PopoverChartSelector(e, 'top', 'middle');
 
-                selectorContainer.classList.add('autoql-vanilla-axis-selector-container');
-                selectorContent.classList.add('autoql-vanilla-axis-selector-content');
-
-                if (pageSizeList.length) {
-                    pageSizeList.forEach((pageSize, i) => {
-                        selectorContent.appendChild(obj.createListItem(pageSize, i));
-                    });
-                }
-
-                selectorContainer.appendChild(selectorContent);
-                popover.appendContent(selectorContainer);
-            };
-
-            obj.createListItem = (pageSize, i) => {
+            obj.createListItem = (pageSize) => {
                 var li = document.createElement('li');
-                li.classList.add('autoql-vanilla-string-select-list-item');
-                li.innerHTML = `${pageSize}`;
-                li.setAttribute('data-popover-page-size', pageSize);
-                li.onclick = (evt) => {
-                    onPageSizeClick(evt, popover);
-                };
 
+                li.setAttribute('data-popover-page-size', pageSize);
+                li.onclick = (evt) => onPageSizeClick(evt, popover);
+
+                li.classList.add('autoql-vanilla-string-select-list-item');
                 if (pageSize === currentPageSize) {
                     li.classList.add('active');
                 }
+
+                let rowNumberString = pageSize
+                if (pageSize === MAX_DATA_PAGE_SIZE) {
+                  rowNumberString = `${MAX_DATA_PAGE_SIZE} (Maximum)`
+                } else if (pageSize !== DEFAULT_DATA_PAGE_SIZE && pageSize !== DEFAULT_DATA_PAGE_SIZE * 10) {
+                  rowNumberString = `${pageSize} (All)`
+                }
+
+                li.innerHTML = `${rowNumberString}`;
 
                 elements.push(li);
                 return li;
             };
 
-            var popover = new PopoverChartSelector(e, 'top', 'middle');
+            var selectorContainer = document.createElement('div');
+            var selectorContent = document.createElement('ul');
 
-            obj.createContent(currentPageSize);
+            selectorContainer.classList.add('autoql-vanilla-axis-selector-container');
+            selectorContent.classList.add('autoql-vanilla-axis-selector-content');
+
+            if (pageSizeList.length) {
+                pageSizeList.forEach((pageSize) => {
+                    selectorContent.appendChild(obj.createListItem(pageSize));
+                }); 
+            }
+
+            selectorContainer.appendChild(selectorContent);
+            popover.appendContent(selectorContainer);
 
             popover.show();
             return popover;
@@ -99,7 +103,10 @@ export function ChartRowSelector(
         var textContainer = rowSelectorD3
             .append('text')
             .attr('dominant-baseline', 'text-before-edge')
-            .attr('text-anchor', 'start');
+            .attr('text-anchor', 'start')
+            .style('stroke-width', 0)
+            .style('font-size', 'inherit')
+            .style('font-family', 'inherit')
 
         // Text before selector
         textContainer.append('tspan').text(`${strings.visualizingText} `);
@@ -132,13 +139,15 @@ export function ChartRowSelector(
                 )
                 .html(DATA_LIMIT_WARNING);
 
+            console.log({warningColor: getThemeValue('warning-color', CSS_PREFIX)})
+
             if (totalRows > MAX_DATA_PAGE_SIZE) {
                 warningIcon
-                    .style('color', 'var(--autoql-vanilla-warning-color)')
+                    .style('color', getThemeValue('warning-color', CSS_PREFIX))
                     .attr('data-tippy-content', strings.maxDataWarningTooltip);
             } else if (currentPageSize < totalRows) {
                 warningIcon
-                    .style('color', 'var(--autoql-vanilla-info-color)')
+                    .style('color', getThemeValue('info-color', CSS_PREFIX))
                     .attr('data-tippy-content', strings.dataSubsetWarningTooltip);
             }
         }
@@ -154,6 +163,7 @@ export function ChartRowSelector(
             .attr('x', numberSelectorBBox.x - 3)
             .attr('y', numberSelectorBBox.y - 3)
             .attr('rx', 4)
+            .style('opacity', 0) // use CSS to change the opacity to 1 so it doesnt show in the PNG export
             .on('mouseup', function (evt) {
                 onSelectorClick(evt);
             });

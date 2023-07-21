@@ -1,13 +1,15 @@
 import tippy, { delegate } from 'tippy.js';
 import 'tippy.js/dist/tippy.css';
 
+const maxWidth = 300
+
 export function refreshDelegate(parent, target){
     delegate(parent, {
         target: target,
         theme: 'chata-theme',
         allowHTML: true,
         delay: [500],
-        maxWidth: 300,
+        maxWidth,
     });
 }
 
@@ -17,52 +19,60 @@ export function refreshTooltips(){
         allowHTML: true,
         delay: [500],
         dynamicTitle: true,
-        maxWidth: 300,
+        maxWidth,
     })
 }
 
-export function tooltipCharts(){
-    var get2dContent = (instance) => {
-        var dataset = instance.reference.dataset;
-        let content = ''
-        content  = `
-            <span class='title-tip'>${dataset.col1}:</span>
-            <span class="text-tip">${dataset.colvalue1}</span>
-        `;
-        content += '<br/>';
-        content += `
-            <span class='title-tip'>${dataset.col2}:</span>
-            <span class="text-tip">${dataset.colvalue2}</span>
-        `;
-        return content;
-    }
-
-    tippy('.tooltip-2d', {
+export function refreshChartTooltips(){
+    tippy('[data-tippy-content-chart]', {
         theme: 'chata-theme',
+        delay: [0],
         allowHTML: true,
-        maxWidth: 300,
-        onShow: function(instance){
-            instance.setContent(
-                get2dContent(instance)
-            );
-        }
+        dynamicTitle: true,
+        maxWidth,
     })
 
-    tippy('.tooltip-3d', {
-        theme: 'chata-theme',
-        allowHTML: true,
-        maxWidth: 300,
-        onShow: function(instance){
-            var dataset = instance.reference.dataset;
-            var content = get2dContent(instance);
-            content += '<br/>';
-            content += `
-                <span class='title-tip'>${dataset.col3}:</span>
-                <span class="text-tip">${dataset.colvalue3}</span>
-            `;
-            instance.setContent(
-                content
-            );
-        }
-    })
+    // var get2dContent = (instance) => {
+    //     var dataset = instance.reference.dataset;
+    //     let content = ''
+    //     content  = `
+    //         <span class='title-tip'>${dataset.col1}:</span>
+    //         <span class="text-tip">${dataset.colvalue1}</span>
+    //     `;
+    //     content += '<br/>';
+    //     content += `
+    //         <span class='title-tip'>${dataset.col2}:</span>
+    //         <span class="text-tip">${dataset.colvalue2}</span>
+    //     `;
+    //     return content;
+    // }
+
+    // tippy('.tooltip-2d', {
+    //     theme: 'chata-theme',
+    //     allowHTML: true,
+    //     maxWidth: 300,
+    //     onShow: function(instance){
+    //         instance.setContent(
+    //             get2dContent(instance)
+    //         );
+    //     }
+    // })
+
+    // tippy('.tooltip-3d', {
+    //     theme: 'chata-theme',
+    //     allowHTML: true,
+    //     maxWidth: 300,
+    //     onShow: function(instance){
+    //         var dataset = instance.reference.dataset;
+    //         var content = get2dContent(instance);
+    //         content += '<br/>';
+    //         content += `
+    //             <span class='title-tip'>${dataset.col3}:</span>
+    //             <span class="text-tip">${dataset.colvalue3}</span>
+    //         `;
+    //         instance.setContent(
+    //             content
+    //         );
+    //     }
+    // })
 }
