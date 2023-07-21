@@ -202,11 +202,9 @@ ChataUtils.copyHandler = (idRequest) => {
  
 ChataUtils.exportPNGHandler = async (idRequest) => {
     try {
-        console.log('SAVING AS PNG');
         var component = document.querySelector(`[data-componentid='${idRequest}']`);
         var svg = component.getElementsByTagName('svg')[0];
  
-        console.log({ component, svg });
         if (!svg) {
             console.warn('Unable to download SVG - no svg was found');
         }
