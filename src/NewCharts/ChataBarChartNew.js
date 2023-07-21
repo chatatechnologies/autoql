@@ -131,8 +131,8 @@ export function BarChartNew(container, params = {}) {
             .style('fill-opacity', (d) => d.style?.fillOpacity)
             .on('click', function (d) {
                 console.log('ON CLICK', d.onClickData);
-            }); // TODO
-            // .attr('data-tippy-content', (d) => d.tooltip)
+            }) // TODO
+            .attr('data-tippy-content-chart', (d) => d.tooltip)
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');

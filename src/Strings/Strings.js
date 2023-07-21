@@ -1,3 +1,4 @@
+import { MAX_DATA_PAGE_SIZE } from 'autoql-fe-utils';
 import LocalizedStrings from 'localized-strings';
 
 String.prototype.chataFormat = function () {
@@ -152,6 +153,8 @@ export const strings = new LocalizedStrings({
         persist: 'Persist',
         maximizeButton: 'Full Screen',
         maximizeButtonExit: 'Exit Full Screen',
+        maxDataWarningTooltip: `Row limit (${MAX_DATA_PAGE_SIZE}) reached. Try applying a filter or narrowing your search to return full results.`,
+        dataSubsetWarningTooltip: 'This visualization is showing a subset of the data. <em>Drilldowns</em> will be executed on the <strong>full</strong> dataset.',
         visualizingText: 'Visualizing',
         rowsText: 'rows',
         suggestionResponse: 'I want to make sure I understood your query. Did you mean:'
@@ -300,6 +303,8 @@ export const strings = new LocalizedStrings({
         persist: 'Persistir',
         maximizeButton: 'Pantalla completa',
         maximizeButtonExit: 'Salir pantalla completa',
+        maxDataWarningTooltip: `Límite de filas (${MAX_DATA_PAGE_SIZE}) alcanzado. Intenta aplicar un filtro o reducir tu búsqueda para obtener resultados completos.`,
+        dataSubsetWarningTooltip: 'Esta visualización muestra un subconjunto de los datos. Las <em>Desgloses</em> se ejecutarán en el conjunto de datos <strong>completo</strong>.',
         visualizingText: 'Visualizando',
         rowsText: 'filas',
         suggestionResponse: 'Quiero asegurarme de que entendí tu consulta. Querías decir:'

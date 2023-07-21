@@ -14,6 +14,7 @@ import { uuidv4 } from '../Utils';
 import { select } from 'd3-selection';
 import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from '../Charts/ChartLoader';
+import { refreshTooltips } from '../Tooltips';
 
 const getRenderedChartDimensions = (chartComponent) => {
     const axes = chartComponent?.axesWrapper;
@@ -357,6 +358,8 @@ export function ChataChartNew(
     this.drawChart();
 
     select(window).on('chata-resize.' + component.dataset.componentid, this.drawChart);
+
+    refreshTooltips();
 
     return this.svg?.node();
 }

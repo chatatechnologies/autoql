@@ -1,7 +1,8 @@
-import { getRowNumberListForPopover } from 'autoql-fe-utils';
+import { MAX_DATA_PAGE_SIZE, getRowNumberListForPopover } from 'autoql-fe-utils';
 import { PopoverChartSelector } from './PopoverChartSelector';
 import { closeAllChartPopovers } from '../Utils';
 import { strings } from '../Strings';
+import { DATA_LIMIT_WARNING } from '../Svg';
 
 export function ChartRowSelector(
     svg,
@@ -19,7 +20,7 @@ export function ChartRowSelector(
         const pageSizeList = getRowNumberListForPopover(initialPageSize, totalRows);
 
         const onPageSizeClick = async (evt, popover) => {
-            var clickedPageSize = parseInt(evt.target.dataset.popoverPageSize)
+            var clickedPageSize = parseInt(evt.target.dataset.popoverPageSize);
 
             popover.close();
 
@@ -64,7 +65,6 @@ export function ChartRowSelector(
                 li.classList.add('autoql-vanilla-string-select-list-item');
                 li.innerHTML = `${pageSize}`;
                 li.setAttribute('data-popover-page-size', pageSize);
-                li.setAttribute('data-popover-position', i);
                 li.onclick = (evt) => {
                     onPageSizeClick(evt, popover);
                 };
@@ -90,37 +90,62 @@ export function ChartRowSelector(
             new RowSelectorPopover(evt);
         };
 
-        // container
-        var rowSelectorD3 = svg.append('g').attr('class', 'autoql-vanilla-chart-row-selector');
+        // Element that is returned
+        var rowSelectorD3Container = svg.append('g').attr('class', 'autoql-vanilla-chart-row-selector');
 
-        // text wrapper
+        // Group to apply center transform to
+        var rowSelectorD3 = rowSelectorD3Container.append('g');
+
         var textContainer = rowSelectorD3
             .append('text')
-            .attr('class', 'autoql-vanilla-chart-row-selector-text-container')
-            .attr('text-anchor', 'middle');
+            .attr('dominant-baseline', 'text-before-edge')
+            .attr('text-anchor', 'start');
 
-        // text before selector
-        textContainer
-            .append('tspan')
-            .attr('class', 'autoql-vanilla-chart-row-selector-text')
-            .text(`${strings.visualizingText} `);
+        // Text before selector
+        textContainer.append('tspan').text(`${strings.visualizingText} `);
 
-        // selector inner text
+        // Selector text
         var numberSelector = textContainer
             .append('tspan')
             .attr('class', 'autoql-vanilla-chart-row-selector')
             .style('text-decoration', 'underline')
             .text(currentPageSize);
 
-        // text after selector
-        textContainer
-            .append('tspan')
-            .attr('class', 'autoql-vanilla-chart-row-selector-text')
-            .text(` / ${totalRows} ${strings.rowsText}`);
+        // Text after selector
+        textContainer.append('tspan').text(` / ${totalRows} ${strings.rowsText}`);
+
+        // Warning icon if necessary
+        if (totalRows > MAX_DATA_PAGE_SIZE || currentPageSize < totalRows) {
+            const textContainerBBox = textContainer.node().getBBox();
+            const textContainerTop = textContainerBBox?.y ?? 0;
+            const textContainerX = textContainerBBox?.x ?? 0;
+            const textContainerWidth = textContainerBBox?.width ?? 0;
+            const textContainerRightX = textContainerX + textContainerWidth;
+            const warningIconLeftPadding = 5;
+
+            var warningIcon = rowSelectorD3
+                .append('g')
+                .style('font-size', '16px')
+                .attr(
+                    'transform',
+                    `translate(${textContainerRightX + warningIconLeftPadding}, ${textContainerTop - 1})`,
+                )
+                .html(DATA_LIMIT_WARNING);
+
+            if (totalRows > MAX_DATA_PAGE_SIZE) {
+                warningIcon
+                    .style('color', 'var(--autoql-vanilla-warning-color)')
+                    .attr('data-tippy-content', strings.maxDataWarningTooltip);
+            } else if (currentPageSize < totalRows) {
+                warningIcon
+                    .style('color', 'var(--autoql-vanilla-info-color)')
+                    .attr('data-tippy-content', strings.dataSubsetWarningTooltip);
+            }
+        }
 
         const numberSelectorBBox = numberSelector.node().getBBox();
 
-        // hover box for selector
+        // Hover box for selector
         rowSelectorD3
             .append('rect')
             .attr('class', 'autoql-vanilla-chart-row-selector-box')
@@ -133,7 +158,14 @@ export function ChartRowSelector(
                 onSelectorClick(evt);
             });
 
-        return rowSelectorD3;
+        // Finally, anchor the whole element vertically and horizontally
+        const rowSelectorBBox = rowSelectorD3.node().getBBox() ?? {};
+        const rowSelectorWidth = rowSelectorBBox.width ?? 0;
+        const rowSelectorY = rowSelectorBBox.y ?? 0;
+
+        rowSelectorD3.attr('transform', `translate(${-rowSelectorWidth / 2}, ${-rowSelectorY / 2})`);
+
+        return rowSelectorD3Container;
     } catch (error) {
         console.error(error);
         return;

@@ -194,7 +194,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             
             const axisTitleBBox = this.axisTitleContainer?.node()?.getBBox()
             const translateX = innerWidth / 2;
-            const translateY = axisTitleBBox?.y + axisTitleBBox?.height + FONT_SIZE + AXIS_TITLE_BORDER_PADDING_TOP * 2;
+            const translateY = axisTitleBBox?.y + axisTitleBBox?.height + AXIS_TITLE_BORDER_PADDING_TOP * 2;
     
             this.rowSelectorElement.attr('transform', `translate(${translateX}, ${translateY})`);
         } catch (error) {
@@ -229,7 +229,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
     };
 
     const styleTicks = () => {
-        this.axisElement.selectAll('.autoql-vanilla-axis path').style('display', 'none');
+        this.axisElement.selectAll('.autoql-vanilla-axis path.domain').style('display', 'none');
 
         if (scale?.type !== 'LINEAR') {
             this.axisElement.selectAll('g.tick line').style('opacity', 0);
