@@ -8,7 +8,7 @@ import { strings } from '../../../Strings'
 
 import './FilterLockingList.scss'
 
-export function FilterLockingList(datamessenger, conditionList,  data){
+export function FilterLockingList(datamessenger, conditionList,  data,filterLocking){
     const category = data[0]
     const lines = data[1]
     var view = document.createElement('div')
@@ -51,7 +51,7 @@ export function FilterLockingList(datamessenger, conditionList,  data){
 
     view.refreshLines = (lines) => {
         lines.map(condition => {
-            view.appendChild(new FilterLockingLine(datamessenger, conditionList, condition))
+            view.appendChild(new FilterLockingLine(datamessenger, conditionList, condition,filterLocking))
         })
     }
 
@@ -61,6 +61,10 @@ export function FilterLockingList(datamessenger, conditionList,  data){
     }
 
     const onButtonGroupClick = async (action) => {
+		filterLocking.showSavingIndicator()
+		setTimeout(()=>{
+			filterLocking.hideSavingIndicator()
+		}, 1500);
         const {
             authentication
         } = datamessenger.options

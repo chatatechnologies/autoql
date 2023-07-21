@@ -11,27 +11,30 @@ export function FilterLocking(datamessenger){
     var header = document.createElement('div')
     var footer = document.createElement('div')
     var titleContainer = document.createElement('div')
+	var closeAndSavingContainer = document.createElement('div')
     var title = document.createElement('h3')
     var infoIcon = document.createElement('span')
+	var savingIndicator = document.createElement('div')
     var closeButton = document.createElement('span')
     var continueButton = document.createElement('button')
     var input = new FilterLockingInput(datamessenger, view)
-    var conditionList = new ConditionList(datamessenger)
+    var conditionList = new ConditionList(datamessenger,view)
 
     view.input = input;
     view.classList.add('autoql-vanilla-filter-locking-view')
     view.classList.add('autoql-vanilla-popover-container')
     header.classList.add('autoql-vanilla-condition-lock-header')
     titleContainer.classList.add('autoql-vanilla-filter-locking-title-container')
+	closeAndSavingContainer.classList.add('autoql-vanilla-filter-locking-close-and-saving-container')
+	savingIndicator.classList.add('autoql-vanilla-filter-locking-saving-indicator')
     title.classList.add('autoql-vanilla-filter-locking-title')
     closeButton.classList.add('autoql-vanilla-close-filter-locking')
     footer.classList.add('autoql-vanilla-condition-lock-menu-footer')
     continueButton.classList.add('autoql-vanilla-chata-btn')
     continueButton.classList.add('default')
     continueButton.classList.add('large')
-    // infoIcon.classList.add('autoql-vanilla-chata-icon')
-
     title.textContent = strings.filterLocking
+	savingIndicator.textContent = strings.filterLockingSaving
     infoIcon.innerHTML = INFO_ICON
     closeButton.innerHTML = CLOSE_ICON
     continueButton.textContent = strings.continue
@@ -42,8 +45,12 @@ export function FilterLocking(datamessenger){
     )
 
     title.appendChild(infoIcon)
+	closeAndSavingContainer.appendChild(savingIndicator)
+	closeAndSavingContainer.appendChild(closeButton)
     titleContainer.appendChild(title)
-    titleContainer.appendChild(closeButton)
+	titleContainer.appendChild(closeAndSavingContainer)
+	
+    // titleContainer.appendChild(closeButton)
     header.appendChild(titleContainer)
     header.appendChild(input)
 
@@ -134,7 +141,14 @@ export function FilterLocking(datamessenger){
         const { data } = await view.getConditions()
         view.refreshConditions(data)
     }
-
+	view.showSavingIndicator = () => {
+        savingIndicator.style.visibility = 'visible';
+        savingIndicator.style.opacity = 1;
+    }
+	view.hideSavingIndicator = () => {
+        savingIndicator.style.visibility = 'hidden';
+        savingIndicator.style.opacity = 0;
+    }
     closeButton.onclick = () => {
         view.hide()
     }

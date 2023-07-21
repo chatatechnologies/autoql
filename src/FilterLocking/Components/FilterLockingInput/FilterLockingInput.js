@@ -106,6 +106,10 @@ export function FilterLockingInput(datamessenger, filterLocking){
             })
             return Promise.resolve(0)
         }else{
+			filterLocking.showSavingIndicator()
+			setTimeout(()=>{
+				filterLocking.hideSavingIndicator()
+			}, 1500);
             const url = `${authentication.domain}/autoql/api/v1/query/filter-locking?key=${authentication.apiKey}`
             const response = await apiCallPut(url, body, datamessenger.options)
 
