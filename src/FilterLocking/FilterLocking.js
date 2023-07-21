@@ -141,14 +141,14 @@ export function FilterLocking(datamessenger){
         const { data } = await view.getConditions()
         view.refreshConditions(data)
     }
-	view.showSavingIndicator = () => {
-        savingIndicator.style.visibility = 'visible';
+	view.displaySavingIndicator = () =>{
+		savingIndicator.style.visibility = 'visible';
         savingIndicator.style.opacity = 1;
-    }
-	view.hideSavingIndicator = () => {
-        savingIndicator.style.visibility = 'hidden';
-        savingIndicator.style.opacity = 0;
-    }
+		setTimeout(()=>{
+			savingIndicator.style.visibility = 'hidden';
+			savingIndicator.style.opacity = 0;
+		}, 1500);
+	}
     closeButton.onclick = () => {
         view.hide()
     }

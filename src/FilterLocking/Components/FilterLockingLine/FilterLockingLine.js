@@ -42,10 +42,7 @@ export function FilterLockingLine(datamessenger, conditionList, conditionData,fi
             authentication
         } = datamessenger.options
         const { id } = view.values
-		filterLocking.showSavingIndicator()
-		setTimeout(()=>{
-			filterLocking.hideSavingIndicator()
-		}, 1500);
+		filterLocking.displaySavingIndicator()
         if(slider.isChecked()){
             const {
                 filter_type,
@@ -106,10 +103,7 @@ export function FilterLockingLine(datamessenger, conditionList, conditionData,fi
 
     removeButton.onclick = () => {
         view.remove()
-		filterLocking.showSavingIndicator()
-		setTimeout(()=>{
-			filterLocking.hideSavingIndicator()
-		}, 1500);
+		filterLocking.displaySavingIndicator()
         if(!conditionList.getData().length){
             conditionList.clearList()
             conditionList.showConditionEmptyMessage()

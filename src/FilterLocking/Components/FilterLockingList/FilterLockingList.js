@@ -61,10 +61,7 @@ export function FilterLockingList(datamessenger, conditionList,  data,filterLock
     }
 
     const onButtonGroupClick = async (action) => {
-		filterLocking.showSavingIndicator()
-		setTimeout(()=>{
-			filterLocking.hideSavingIndicator()
-		}, 1500);
+		filterLocking.displaySavingIndicator()
         const {
             authentication
         } = datamessenger.options
