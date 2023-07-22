@@ -1,23 +1,21 @@
-import { NotificationSettingsItem } from '../NotificationSettingsItem'
-import { NotificationSettingsModal } from '../NotificationSettingsModal'
 import { Modal } from '../../Modal'
 import { ChataConfirmDialog } from '../../ChataComponents'
 import { htmlToElement, checkAndApplyTheme } from '../../Utils'
-import { apiCallGet, apiCallPost } from '../../Api'
-import { refreshTooltips } from '../../Tooltips'
-import {
-    TitleContainer
-} from '../TitleContainer'
 import { strings } from '../../Strings'
+import { fetchDataAlerts } from 'autoql-fe-utils'
 
 import './DataAlerts.scss'
 
 export function DataAlerts(selector, options) {
     checkAndApplyTheme();
 
-    var parent = document.querySelector(selector);
+    const parent = document.querySelector(selector);
+    const listContainer = document.createElement('div');
     var wrapper = document.createElement('div');
+
     wrapper.classList.add('autoql-vanilla-notification-settings');
+    listContainer.classList.add('autoql-vanilla-data-alerts-list-container');
+
     wrapper.options = {
         authentication: {
             token: undefined,
@@ -193,7 +191,26 @@ export function DataAlerts(selector, options) {
     setTimeout(function () {
         refreshTooltips();
     }, 3000); */
+
+    wrapper.loadAlerts = async () => {
+        const {
+            domain,
+            apiKey,
+            token
+        } = wrapper.options.authentication;
+        const response = await fetchDataAlerts({
+            domain,
+            apiKey,
+            token,
+        });
+
+        console.log(response);
+    }
+
+    wrapper.loadAlerts();
     
+    wrapper.appendChild(listContainer);
+
     if (parent) parent.appendChild(wrapper);
     wrapper.showLoadingDots();
 

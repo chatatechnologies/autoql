@@ -1,8 +1,16 @@
 .autoql-vanilla-notification-settings {
   width: 100%;
-  min-height: 200px;
   display: flex;
   justify-content: center;
+  background-color: initial;
+  color: var(--autoql-vanilla-text-color-primary);
+  padding-top: 20px;
+  padding-bottom: 100px;
+  height: 100%;
+  
+  .autoql-vanilla-data-alerts-list-container {
+    padding-bottom: 20px;
+  }
 
   .response-loading-container {
     position: inherit;
