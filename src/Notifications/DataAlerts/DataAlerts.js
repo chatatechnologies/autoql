@@ -39,10 +39,33 @@ export function DataAlerts(selector, options) {
         onErrorCallback: () => {},
         ...options
     };
+    
+    wrapper.createTitle = () => {
+        const title = document.createElement('div');
+        const titleWrapper = document.createElement('div');
+        const sectionTitle = document.createElement('div');
+        const sectionSubtitle = document.createElement('div');
+        const subtitleWrapper = document.createElement('span');
+
+        title.classList.add('autoql-vanilla-data-alert-section-title-container');
+        sectionTitle.classList.add('autoql-vanilla-data-alert-section-title');
+        sectionSubtitle.classList.add('autoql-vanilla-data-alert-section-subtitle');
+        sectionTitle.textContent = 'Custom Data Alerts';
+        subtitleWrapper.innerHTML = `
+            View and manage your Custom Alerts here. 
+            To create a new Custom Alert, simply click on the "Create Data Alert" option from a query result in 
+            <a>DataMessenger</a> or a <a>Dashboard</a>.`;
+
+        sectionSubtitle.appendChild(subtitleWrapper);
+        titleWrapper.appendChild(sectionTitle);
+        titleWrapper.appendChild(sectionSubtitle);
+        title.appendChild(titleWrapper);
+        wrapper.appendChild(title);
+    }
 
     wrapper.showLoadingDots = () => {
-        var responseLoadingContainer = document.createElement('div');
-        var responseLoading = document.createElement('div');
+        const responseLoadingContainer = document.createElement('div');
+        const responseLoading = document.createElement('div');
 
         responseLoadingContainer.classList.add('response-loading-container');
         responseLoading.classList.add('response-loading');
@@ -203,16 +226,17 @@ export function DataAlerts(selector, options) {
             apiKey,
             token,
         });
-
+        wrapper.hideLoadingDots();
+        wrapper.createTitle();
         console.log(response);
     }
 
+    wrapper.showLoadingDots();
     wrapper.loadAlerts();
     
     wrapper.appendChild(listContainer);
 
     if (parent) parent.appendChild(wrapper);
-    wrapper.showLoadingDots();
 
     return wrapper;
 }
