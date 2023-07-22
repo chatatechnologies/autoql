@@ -67,6 +67,7 @@ export function DataAlerts(selector, options) {
     }
 
     wrapper.showLoadingDots = () => {
+        wrapper.classList.add('flex');
         const responseLoadingContainer = document.createElement('div');
         const responseLoading = document.createElement('div');
 
@@ -82,6 +83,7 @@ export function DataAlerts(selector, options) {
     };
 
     wrapper.hideLoadingDots = () => {
+        wrapper.classList.remove('flex');
         wrapper.removeChild(wrapper.loading);
     };
 
@@ -230,6 +232,8 @@ export function DataAlerts(selector, options) {
             token,
         });
         wrapper.hideLoadingDots();
+        wrapper.createTitle();
+        wrapper.appendChild(listContainer);
         const { data } = response;
         const dataAlerts = data.project_alerts.concat(data.custom_alerts);
         console.log(dataAlerts);
@@ -242,9 +246,6 @@ export function DataAlerts(selector, options) {
     }
     
     wrapper.showLoadingDots();
-    
-    wrapper.createTitle();
-    wrapper.appendChild(listContainer);
     wrapper.loadAlerts();
 
     if (parent) parent.appendChild(wrapper);

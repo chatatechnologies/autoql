@@ -1,12 +1,15 @@
 .autoql-vanilla-notification-settings {
   width: 100%;
-  display: flex;
-  justify-content: center;
   background-color: initial;
   color: var(--autoql-vanilla-text-color-primary);
   padding-top: 20px;
   padding-bottom: 100px;
   height: 100%;
+
+  &.flex {
+    display: flex;
+    justify-content: center;
+  }
   
   .autoql-vanilla-data-alerts-list-container {
     padding-bottom: 20px;

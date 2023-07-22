@@ -18,6 +18,7 @@ export function DataAlertItem({ dataAlert }) {
     const value = document.createElement('span');
 
     section.classList.add('autoql-vanilla-data-alert-list-item-section');
+    section.classList.add(className);
     content.classList.add('autoql-vanilla-data-alert-section-content');
     wrapperContent.classList.add('autoql-vanilla-notification-setting-display-name-title');
     value.textContent = text;
