@@ -3,6 +3,7 @@ import { ChataConfirmDialog } from '../../ChataComponents'
 import { htmlToElement, checkAndApplyTheme } from '../../Utils'
 import { strings } from '../../Strings'
 import { fetchDataAlerts } from 'autoql-fe-utils'
+import { DataAlertItem } from './Components/DataAlertItem';
 
 import './DataAlerts.scss'
 
@@ -11,10 +12,12 @@ export function DataAlerts(selector, options) {
 
     const parent = document.querySelector(selector);
     const listContainer = document.createElement('div');
+    const settingsContainer = document.createElement('div');
     var wrapper = document.createElement('div');
 
     wrapper.classList.add('autoql-vanilla-notification-settings');
     listContainer.classList.add('autoql-vanilla-data-alerts-list-container');
+    settingsContainer.classList.add('autoql-vanilla-notification-settings-container');
 
     wrapper.options = {
         authentication: {
@@ -227,14 +230,22 @@ export function DataAlerts(selector, options) {
             token,
         });
         wrapper.hideLoadingDots();
-        wrapper.createTitle();
-        console.log(response);
+        const { data } = response;
+        const dataAlerts = data.project_alerts.concat(data.custom_alerts);
+        console.log(dataAlerts);
+        dataAlerts.forEach((dataAlert) => {
+            const item = new DataAlertItem({
+                dataAlert
+            });
+            listContainer.appendChild(item);
+        })
     }
-
-    wrapper.showLoadingDots();
-    wrapper.loadAlerts();
     
+    wrapper.showLoadingDots();
+    
+    wrapper.createTitle();
     wrapper.appendChild(listContainer);
+    wrapper.loadAlerts();
 
     if (parent) parent.appendChild(wrapper);
 
