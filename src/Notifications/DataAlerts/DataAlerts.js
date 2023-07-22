@@ -10,13 +10,14 @@ import {
 } from '../TitleContainer'
 import { strings } from '../../Strings'
 
-import '../../../css/NotificationSettings.css'
+import './DataAlerts.scss'
 
 export function DataAlerts(selector, options) {
     checkAndApplyTheme();
 
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');
+    wrapper.classList.add('autoql-vanilla-notification-settings');
     wrapper.options = {
         authentication: {
             token: undefined,
@@ -41,7 +42,7 @@ export function DataAlerts(selector, options) {
         ...options
     };
 
-/*     wrapper.showLoadingDots = () => {
+    wrapper.showLoadingDots = () => {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
@@ -60,7 +61,7 @@ export function DataAlerts(selector, options) {
         wrapper.removeChild(wrapper.loading);
     };
 
-    wrapper.loadRules = async () => {
+   /* wrapper.loadRules = async () => {
         const URL = `${options.authentication.domain}/autoql/api/v1/data-alerts?key=${options.authentication.apiKey}&type=user`;
         var response = await apiCallGet(URL, wrapper.options);
         var jsonResponse = response.data;
@@ -189,10 +190,12 @@ export function DataAlerts(selector, options) {
     wrapper.classList.add('autoql-vanilla-data-alerts-settings');
     wrapper.showLoadingDots();
     wrapper.loadRules();
-    if (parent) parent.appendChild(wrapper);
     setTimeout(function () {
         refreshTooltips();
     }, 3000); */
+    
+    if (parent) parent.appendChild(wrapper);
+    wrapper.showLoadingDots();
 
     return wrapper;
 }

@@ -1,0 +1,13 @@
+.autoql-vanilla-notification-settings {
+  width: 100%;
+  min-height: 200px;
+  display: flex;
+  justify-content: center;
+
+  .response-loading-container {
+    position: inherit;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+  }
+}
