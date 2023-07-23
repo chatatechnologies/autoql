@@ -1,3 +1,5 @@
+import './DataAlertItem.scss';
+
 export function DataAlertItem({ dataAlert }) {
   console.log(dataAlert);
   const item = document.createElement('div');
@@ -20,7 +22,6 @@ export function DataAlertItem({ dataAlert }) {
     section.classList.add('autoql-vanilla-data-alert-list-item-section');
     section.classList.add(className);
     content.classList.add('autoql-vanilla-data-alert-section-content');
-    wrapperContent.classList.add('autoql-vanilla-notification-setting-display-name-title');
     value.textContent = text;
 
     wrapperContent.appendChild(value);

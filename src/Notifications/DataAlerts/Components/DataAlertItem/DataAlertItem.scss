@@ -1,0 +1,36 @@
+.autoql-vanilla-notification-setting-item {
+  display: block;
+  min-height: 55px;
+  transition: height .3s cubic-bezier(.26,.26,0,1);
+  background-color: var(--autoql-vanilla-background-color-secondary);
+  box-shadow: var(--autoql-vanilla-box-shadow-1);
+  position: relative;
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--autoql-vanilla-box-shadow-color);
+  }
+
+  .autoql-vanilla-notification-setting-item-header {
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .autoql-vanilla-data-alert-list-item-section {
+      flex: 1 0 50px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: nowrap;
+      text-align: center;
+      overflow: hidden;
+      &.autoql-vanilla-notification-setting-display-name {
+        flex: 3 0 50px;
+        padding-left: 12px;
+        justify-content: flex-start;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-next-check, &.autoql-vanilla-data-alert-list-item-section-frequency {
+        flex: 1.5 0 50px;
+      }
+    }
+  }
+}

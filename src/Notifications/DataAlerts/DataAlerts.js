@@ -233,6 +233,7 @@ export function DataAlerts(selector, options) {
         });
         wrapper.hideLoadingDots();
         wrapper.createTitle();
+        listContainer.appendChild(settingsContainer);
         wrapper.appendChild(listContainer);
         const { data } = response;
         const dataAlerts = data.project_alerts.concat(data.custom_alerts);
@@ -241,7 +242,7 @@ export function DataAlerts(selector, options) {
             const item = new DataAlertItem({
                 dataAlert
             });
-            listContainer.appendChild(item);
+            settingsContainer.appendChild(item);
         })
     }
     
