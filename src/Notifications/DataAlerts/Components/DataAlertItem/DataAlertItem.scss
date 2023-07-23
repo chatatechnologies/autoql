@@ -23,6 +23,14 @@
       flex-wrap: nowrap;
       text-align: center;
       overflow: hidden;
+      .autoql-vanilla-data-alert-section-content {
+        padding: 8px 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 13px;
+        cursor: default;
+      }
       &.autoql-vanilla-notification-setting-display-name {
         flex: 3 0 50px;
         padding-left: 12px;

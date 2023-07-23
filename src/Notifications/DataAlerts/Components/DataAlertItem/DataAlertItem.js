@@ -1,4 +1,5 @@
 import './DataAlertItem.scss';
+import { getScheduleFrequencyObject, formatNextScheduleDate } from 'autoql-fe-utils';
 
 export function DataAlertItem({ dataAlert }) {
   console.log(dataAlert);
@@ -22,7 +23,7 @@ export function DataAlertItem({ dataAlert }) {
     section.classList.add('autoql-vanilla-data-alert-list-item-section');
     section.classList.add(className);
     content.classList.add('autoql-vanilla-data-alert-section-content');
-    value.textContent = text;
+    value.innerHTML = text;
 
     wrapperContent.appendChild(value);
     content.appendChild(wrapperContent);
@@ -31,11 +32,15 @@ export function DataAlertItem({ dataAlert }) {
     row.appendChild(section);
   }
 
-  createCol('autoql-vanilla-notification-setting-display-name', title)
-  createCol('autoql-vanilla-data-alert-list-item-section-frequency', title)
-  createCol('autoql-vanilla-data-alert-list-item-section-state', title)
-  createCol('autoql-vanilla-data-alert-list-item-section-next-check', title)
-  createCol('autoql-vanilla-data-alert-list-item-section-status', status)
+  const renderDataAlertCycleStart = () => {
+    
+  }
+
+  createCol('autoql-vanilla-notification-setting-display-name', title);
+  createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
+  createCol('autoql-vanilla-data-alert-list-item-section-state', title);
+  createCol('autoql-vanilla-data-alert-list-item-section-next-check', formatNextScheduleDate(dataAlert.schedules, true));
+  createCol('autoql-vanilla-data-alert-list-item-section-status', status);
 
   item.appendChild(row);
 
