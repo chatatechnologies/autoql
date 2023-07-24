@@ -14,6 +14,8 @@ export function Axes(container, params = {}) {
         yScale2,
         toggleChartScale,
         options = {},
+        bottomLabelsRotated,
+        topLabelsRotated,
     } = params;
 
     if (!yScale || !xScale || isNaN(height) || isNaN(width)) {
@@ -44,7 +46,13 @@ export function Axes(container, params = {}) {
                 return new Axis(axes, params, { orient, scale: yScale, column: yCol, ...axesOptions });
             }
             case 'bottom': {
-                return new Axis(axes, params, { orient, scale: xScale, column: xCol, ...axesOptions });
+                return new Axis(axes, params, {
+                    orient,
+                    scale: xScale,
+                    column: xCol,
+                    rotateLabels: bottomLabelsRotated,
+                    ...axesOptions,
+                });
             }
             case 'right': {
                 if (!!yCol2 && !!yScale2) {
@@ -54,7 +62,13 @@ export function Axes(container, params = {}) {
             }
             case 'top': {
                 if (!!xCol2 && !!xScale2) {
-                    return new Axis(axes, params, { orient, scale: xScale2, column: xCol2, ...axesOptions });
+                    return new Axis(axes, params, {
+                        orient,
+                        scale: xScale2,
+                        column: xCol2,
+                        rotateLabels: topLabelsRotated,
+                        ...axesOptions,
+                    });
                 }
             }
             default: {
@@ -64,9 +78,13 @@ export function Axes(container, params = {}) {
     };
 
     this.leftAxis = this.createAxis('left');
-    this.bottomAxis = this.createAxis('bottom');
     this.rightAxis = this.createAxis('right');
+    this.bottomAxis = this.createAxis('bottom');
     this.topAxis = this.createAxis('top');
+
+    // if (bottomAxisLabelsRotated || topAxisLabelsRotated) {
+    // REDRAW LEFT AND RIGHT AXES
+    // }
 
     return axes.node();
 }

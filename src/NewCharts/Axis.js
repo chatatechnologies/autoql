@@ -31,13 +31,12 @@ export function Axis(container, params = {}, axisOptions = {}) {
         hasRowSelector,
         toggleChartScale,
         firstDraw,
-        pageSize,
         options = {},
         onDataFetching,
         onNewData,
         onDataFetchError,
     } = params;
-    const { orient, scale, innerHeight, innerWidth } = axisOptions;
+    const { orient, scale, innerHeight, innerWidth, rotateLabels } = axisOptions;
 
     this.axisElement = container
         .append('g')
@@ -89,6 +88,11 @@ export function Axis(container, params = {}, axisOptions = {}) {
         new ChataChartListPopover(evt, scale, columns, placement, 'middle');
     };
 
+    const handleLabelRotation = () => {
+        const didLabelsRotate = transformLabels(orient, this.axisElement.node(), innerHeight, rotateLabels);
+        this.axisElement.classed('autoql-vanilla-axis-labels-rotated', !!didLabelsRotate);
+    };
+
     const createAxisTitle = () => {
         this.axisTitleContainer = this.axisElement.append('g');
         var axisTitle = this.axisTitleContainer
@@ -98,9 +102,9 @@ export function Axis(container, params = {}, axisOptions = {}) {
             .attr('text-anchor', 'middle')
             .style('font-size', TITLE_FONT_SIZE)
             .style('font-weight', 600)
-            .style('stroke-width', 0)
-            // .attr('lengthAdjust', 'spacingAndGlyphs')
-            // .attr('textLength', MINIMUM_TITLE_LENGTH); // TODO
+            .style('stroke-width', 0);
+        // .attr('lengthAdjust', 'spacingAndGlyphs')
+        // .attr('textLength', MINIMUM_TITLE_LENGTH); // TODO
 
         const fullTitle = scale?.title ?? '';
         let title = fullTitle;
@@ -173,10 +177,10 @@ export function Axis(container, params = {}, axisOptions = {}) {
             .attr('y', Math.round(this.titleBBox?.y - AXIS_TITLE_BORDER_PADDING_TOP))
             .style('visibility', 'hidden')
             .style('opacity', 0)
-            .attr('rx', 4)
+            .attr('rx', 4);
 
         if (scale?.hasDropdown) {
-            this.axisTitleBorder.style('visibility', 'visible').on('click', onSelectorClick)
+            this.axisTitleBorder.style('visibility', 'visible').on('click', onSelectorClick);
         }
     };
 
@@ -185,7 +189,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             if (!hasRowSelector || orient !== 'bottom') {
                 return;
             }
-    
+
             if (this.rowSelectorElement) this.rowSelectorElement.remove();
             this.rowSelectorElement = new ChartRowSelector(
                 this.axisElement,
@@ -195,14 +199,14 @@ export function Axis(container, params = {}, axisOptions = {}) {
                 onDataFetchError,
                 options,
             );
-            
-            const axisTitleBBox = this.axisTitleContainer?.node()?.getBBox()
+
+            const axisTitleBBox = this.axisTitleContainer?.node()?.getBBox();
             const translateX = innerWidth / 2;
             const translateY = axisTitleBBox?.y + axisTitleBBox?.height + AXIS_TITLE_BORDER_PADDING_TOP * 2;
-    
+
             this.rowSelectorElement.attr('transform', `translate(${translateX}, ${translateY})`);
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
 
@@ -258,7 +262,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
 
     this.axisElement.call(axis);
 
-    transformLabels(orient, this.axisElement.node(), innerHeight);
+    handleLabelRotation();
 
     this.labelsBBox = getLabelsBBox(this.axisElement.node());
 

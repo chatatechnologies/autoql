@@ -2,14 +2,14 @@ import {
     mergeBboxes,
     aggregateData,
     getThemeValue,
-    sortDataByDate,
-    getNumberColumnIndices,
-    getStringColumnIndices,
     DOUBLE_AXIS_CHART_TYPES,
     getColorScales,
     usePivotDataForChart,
     DEFAULT_CHART_CONFIG,
     getDataFormatting,
+    getColumnIndexConfig,
+    formatQueryColumns,
+    isColumnIndexConfigValid,
 } from 'autoql-fe-utils';
 
 import { uuidv4 } from '../Utils';
@@ -18,6 +18,7 @@ import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from '../Charts/ChartLoader';
 import { refreshChartTooltips, refreshTooltips } from '../Tooltips';
 import { CSS_PREFIX } from '../Constants';
+import { isTableConfigValid } from 'autoql-fe-utils';
 
 const getRenderedChartDimensions = (chartComponent) => {
     const axes = chartComponent?.axesWrapper;
@@ -126,7 +127,6 @@ export function ChataChartNew(
 
     var origRows = queryJson?.data?.rows;
     var columns = queryJson?.data?.columns;
-    var drawCount = 1;
 
     if (!origRows?.length || !columns?.length) {
         return null;
@@ -136,11 +136,10 @@ export function ChataChartNew(
     const CHART_CONTAINER_CLASS = 'autoql-vanilla-chart-content-container';
     const FONT_SIZE = 12;
 
-    const numberIndexConfig = getNumberColumnIndices(columns) ?? {};
-    const stringIndexConfig = getStringColumnIndices(columns) ?? {};
-
-    const indices1 = numberIndexConfig.numberColumnIndices ?? [];
-    const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? numberIndexConfig.numberColumnIndices2 ?? [] : [];
+    const columnIndexConfig =
+        chartConfig?.columnIndexConfig ?? getColumnIndexConfig({ response: { data: queryJson }, columns });
+    const indices1 = columnIndexConfig.numberColumnIndices ?? [];
+    const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? columnIndexConfig.numberColumnIndices2 ?? [] : [];
     const numberIndices = [...indices1, ...indices2];
     const isDataAggregated = usePivotDataForChart({ data: queryJson });
     const hasRowSelector = options.pageSize < queryJson?.data?.count_rows;
@@ -157,27 +156,30 @@ export function ChataChartNew(
         // let i = dateCol !== -1 ? dateCol : yIndexes[0]?.index
         metadataElement.metadata = {
             groupBy: {
-                index: stringIndexConfig.stringColumnIndex,
+                index: columnIndexConfig.stringColumnIndex,
                 currentLi: 0,
             },
             series: indices1,
-            stringIndexConfig,
-            numberIndexConfig,
+            columnIndexConfig,
         };
     }
 
     this.getData = (rows) => {
         let newRows = rows ?? origRows;
 
-        if (isDataAggregated) {
-            return sortDataByDate(newRows, columns, 'asc');
-        }
+        // TODO: console.log('set pivot table data as chart data for double groupbys')
+        // OR: use legend column to find unique values and get bar height from that.
+        // we might not need to use the pivot table data for charts
+        // console.log('important - come back to this later')
+        // if (isDataAggregated) {
+        //     return sortDataByDate(newRows, columns, 'asc');
+        // }
 
         var data = newRows;
         if (numberIndices.length) {
             data = aggregateData({
                 data: newRows,
-                aggColIndex: stringIndexConfig.stringColumnIndex,
+                aggColIndex: columnIndexConfig.stringColumnIndex,
                 columns: columns,
                 numberIndices,
                 dataFormatting: getDataFormatting(options.dataFormatting),
@@ -187,6 +189,41 @@ export function ChataChartNew(
         return data;
     };
 
+    this.updateColumns = (newColumns) => {
+        // formatQueryColumns({columns})
+        columns = newColumns;
+    };
+
+    this.changeNumberColumnIndexConfig = (indices, indices2, newColumns) => {
+        if (indices) {
+            columnIndexConfig.numberColumnIndices = indices;
+            columnIndexConfig.numberColumnIndex = indices[0];
+        }
+
+        if (indices2) {
+            columnIndexConfig.numberColumnIndices2 = indices2;
+            columnIndexConfig.numberColumnIndex2 = indices2[0];
+        }
+
+        if (newColumns) {
+            this.updateColumns(newColumns);
+        }
+
+        const isValid = isColumnIndexConfigValid({
+            columnIndexConfig: columnIndexConfig,
+            response: { data: queryJson },
+            columns,
+            displayType: type,
+        });
+
+        if (!isValid) {
+            console.warn('Current column config is not valid for new axis selection. Resetting column config now...');
+            columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
+        }
+
+        this.drawChart();
+    };
+
     this.data = this.getData();
 
     // Default starting size and position
@@ -194,7 +231,7 @@ export function ChataChartNew(
     this.deltaY = 0;
     this.innerHeight = component.parentElement.clientHeight - 100;
     this.innerWidth = component.parentElement.clientWidth - 100;
-
+    this.drawCount = 0;
     this.isScaled = false;
 
     this.toggleChartScale = () => {
@@ -202,8 +239,20 @@ export function ChataChartNew(
         this.drawChart();
     };
 
+    const areLabelsRotated = (component, axis) => {
+        return !!component?.select(`.autoql-vanilla-axis-${axis}.autoql-vanilla-axis-labels-rotated`)?.node?.();
+    };
+
+    const resetChartRedrawParams = () => {
+        this.prevBottomLabelsRotated = undefined;
+        this.prevTopLabelsRotated = undefined;
+        this.bottomLabelsRotated = undefined;
+        this.topLabelsRotated = undefined;
+        this.drawCount = 0;
+    };
+
     this.drawChart = (firstDraw = true, redrawParams = {}) => {
-        if (drawCount > 50) {
+        if (this.drawCount > 10) {
             console.warn('recursive drawChart was called over 50 times. Something is wrong.');
             return;
         }
@@ -248,7 +297,7 @@ export function ChataChartNew(
                 .attr('transform', `translate(${this.deltaX}, ${this.deltaY})`)
                 .style('visibility', 'hidden');
 
-            const colorScales = getColorScales({ ...numberIndexConfig });
+            const colorScales = getColorScales({ ...columnIndexConfig });
 
             const params = {
                 data: this.data,
@@ -257,9 +306,8 @@ export function ChataChartNew(
                 options,
                 height: this.innerHeight ?? this.outerHeight,
                 width: this.innerWidth ?? this.outerWidth,
-                numberIndexConfig,
-                stringIndexConfig,
-                visibleSeries: numberIndexConfig.numberColumnIndices, // TODO
+                columnIndexConfig,
+                visibleSeries: columnIndexConfig.numberColumnIndices, // TODO
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
@@ -271,8 +319,10 @@ export function ChataChartNew(
                 colorScale2: colorScales.colorScale2,
                 toggleChartScale: this.toggleChartScale,
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
-                changeNumberColumnIndices: () => console.log('CHANGE NUMBER COLUMN INDICES... FROM CHATA CHART'), // TODO
-                changeStringColumnIndices: () => console.log('CHANGE STRING COLUMN INDICES... FROM CHATA CHART'), // TODO
+                changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
+                changeStringColumnIndices: () => {
+                    console.log('CHANGE STRING COLUMN INDICES... FROM CHATA CHART');
+                }, // TODO
                 onDataFetching: this.onDataFetching,
                 onNewData: this.onNewData,
                 onDataFetchError: this.onDataFetchError,
@@ -304,14 +354,26 @@ export function ChataChartNew(
                     return null; // 'Unknown Display Type'
             }
 
-            // This is a safety fallback in case of infinite recursion
-            drawCount += 1;
-            setTimeout(() => {
-                drawCount = 0;
-            }, 1000);
+            // This is used for a safety fallback in case of infinite recursion
+            this.drawCount += 1;
+
+            this.prevBottomLabelsRotated = this.bottomLabelsRotated;
+            this.prevTopLabelsRotated = this.topLabelsRotated;
+            this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
+            this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+
+            const labelsRotatedOnSecondDraw =
+                this.drawCount === 2 &&
+                ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
+                    (this.topLabelsRotated && !this.prevTopLabelsRotated));
 
             if (firstDraw) {
                 return this.drawChart(false);
+            } else if (labelsRotatedOnSecondDraw) {
+                this.drawChart(false, {
+                    bottomLabelsRotated: this.bottomLabelsRotated,
+                    topLabelsRotated: this.topLabelsRotated,
+                });
             }
         } catch (error) {
             console.error(error);
@@ -321,8 +383,10 @@ export function ChataChartNew(
 
         refreshTooltips();
         refreshChartTooltips();
+        resetChartRedrawParams();
 
         onUpdate(component);
+
         return;
     };
 

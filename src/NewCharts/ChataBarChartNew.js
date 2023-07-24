@@ -1,6 +1,5 @@
 import { getBandScale, getLinearScales, getBarRectObj } from 'autoql-fe-utils';
 import { Axes } from './Axes';
-import { refreshChartTooltips } from '../Tooltips';
 
 export function BarChartNew(container, params = {}) {
     const {
@@ -23,16 +22,17 @@ export function BarChartNew(container, params = {}) {
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
-        stringIndexConfig = {},
-        numberIndexConfig = {},
+        columnIndexConfig = {},
         onDataFetching,
         onNewData,
         onDataFetchError,
         pageSize,
+        bottomLabelsRotated,
+        topLabelsRotated,
     } = params;
-    
-    const { stringColumnIndices, stringColumnIndex, legendColumnIndex } = stringIndexConfig;
-    const { numberColumnIndices, numberColumnIndex } = numberIndexConfig;
+
+    const { stringColumnIndices, stringColumnIndex, legendColumnIndex, numberColumnIndices, numberColumnIndex } =
+        columnIndexConfig;
     const { dataFormatting } = options;
     // TODO: var visibleSeries = numberColumnIndices.filter(index => !columns[index].isSeriesHidden)
 
@@ -87,14 +87,13 @@ export function BarChartNew(container, params = {}) {
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
                     const rectData = getBarRectObj({
-                        ...stringIndexConfig,
-                        ...numberIndexConfig,
+                        ...columnIndexConfig,
                         columns,
                         xScale,
                         yScale,
                         colorScale,
                         activeKey: undefined, // TODO
-                        legendColumn: columns[legendColumnIndex], // TODO
+                        legendColumn: columns[legendColumnIndex],
                         dataFormatting,
                         colIndex,
                         visibleIndex,
@@ -133,7 +132,7 @@ export function BarChartNew(container, params = {}) {
             .attr('data-tippy-content', (d) => d.tooltip)
             .on('click', function (e, d) {
                 console.log(d);
-            }) // TODO            
+            }); // TODO
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
@@ -160,6 +159,8 @@ export function BarChartNew(container, params = {}) {
         onNewData,
         onDataFetchError,
         pageSize,
+        bottomLabelsRotated,
+        topLabelsRotated,
     });
 
     if (firstDraw) {
