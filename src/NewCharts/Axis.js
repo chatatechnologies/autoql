@@ -268,6 +268,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
 
     createAxisTitle();
     createRowSelector();
+
     addTooltipsToLabels();
     styleTicks();
 

@@ -1,4 +1,6 @@
+import { getLegendLabelsForMultiSeries, getLegendLocation } from 'autoql-fe-utils';
 import { Axis } from './Axis';
+import { Legend } from './Legend';
 
 export function Axes(container, params = {}) {
     const {
@@ -16,6 +18,7 @@ export function Axes(container, params = {}) {
         options = {},
         bottomLabelsRotated,
         topLabelsRotated,
+        legend = {},
     } = params;
 
     if (!yScale || !xScale || isNaN(height) || isNaN(width)) {
@@ -77,10 +80,49 @@ export function Axes(container, params = {}) {
         }
     };
 
+    this.createLegend = () => {
+        if (!legend.location) {
+            return;
+        }
+
+        // const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+        // const legendLabels = getLegendLabelsForMultiSeries(columns, colorScale, columnIndexConfig.numberColumnIndices);
+        // const orientation = location === 'bottom' ? 'horizontal' : 'vertical';
+
+        const hasSecondAxis = (!!yCol2 && !!yScale2) || (!!xCol2 && !!xScale2);
+
+        let translateX = 0;
+        let translateY = 0;
+
+
+        if (this.rightAxis) {
+            // bbox = this.rightAxis.node()?.getBBox()
+        } else {
+
+        }
+
+        const bottomAxisBBox = this.bottomAxis?.node()?.getBBox()
+        const bottomAxisBBoxRight = bottomAxisBBox.x + bottomAxisBBox.width
+        const bottomAxisBBoxBottom = bottomAxisBBox.y + bottomAxisBBox.height
+
+        if (legend.location === 'right') {
+            translateX = bottomAxisBBoxRight
+        } else if (legend.location === 'bottom') {
+            translateY = bottomAxisBBoxBottom
+        }
+
+        var legendElement = new Legend(axes, { ...params, ...legend, hasSecondAxis });
+
+        legendElement.attr('transform', `translate(${translateX}, ${translateY})`)
+
+        return legendElement
+    };
+
     this.leftAxis = this.createAxis('left');
     this.rightAxis = this.createAxis('right');
     this.bottomAxis = this.createAxis('bottom');
     this.topAxis = this.createAxis('top');
+    this.legend = this.createLegend();
 
     // if (bottomAxisLabelsRotated || topAxisLabelsRotated) {
     // REDRAW LEFT AND RIGHT AXES

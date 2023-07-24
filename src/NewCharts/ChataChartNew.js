@@ -8,8 +8,10 @@ import {
     DEFAULT_CHART_CONFIG,
     getDataFormatting,
     getColumnIndexConfig,
-    formatQueryColumns,
     isColumnIndexConfigValid,
+    getLegendLocation,
+    getLegendLabels,
+    getLegendTitleFromColumns,
 } from 'autoql-fe-utils';
 
 import { uuidv4 } from '../Utils';
@@ -18,7 +20,6 @@ import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from '../Charts/ChartLoader';
 import { refreshChartTooltips, refreshTooltips } from '../Tooltips';
 import { CSS_PREFIX } from '../Constants';
-import { isTableConfigValid } from 'autoql-fe-utils';
 
 const getRenderedChartDimensions = (chartComponent) => {
     const axes = chartComponent?.axesWrapper;
@@ -33,15 +34,9 @@ const getRenderedChartDimensions = (chartComponent) => {
         const topAxisBBox = axes.select('.autoql-vanilla-axis-top')?.node()?.getBoundingClientRect();
         const bottomAxisBBox = axes.select('.autoql-vanilla-axis-bottom')?.node()?.getBoundingClientRect();
         const rightAxisBBox = axes.select('.autoql-vanilla-axis-right')?.node()?.getBoundingClientRect();
-        // const clippedLegendBBox = axes.select('.autoql-vanilla-chart-legend')?.node()?.getBoundingClientRect(); // TODO
+        const clippedLegendBBox = axes.select('.autoql-vanilla-chart-legend-clipping-container')?.node()?.getBoundingClientRect();
 
-        const axesBBox = mergeBboxes([
-            leftAxisBBox,
-            bottomAxisBBox,
-            rightAxisBBox,
-            topAxisBBox,
-            //  clippedLegendBBox
-        ]);
+        const axesBBox = mergeBboxes([leftAxisBBox, bottomAxisBBox, rightAxisBBox, topAxisBBox, clippedLegendBBox]);
 
         const axesWidth = axesBBox?.width ?? 0;
         const axesHeight = axesBBox?.height ?? 0;
@@ -170,7 +165,6 @@ export function ChataChartNew(
         // TODO: console.log('set pivot table data as chart data for double groupbys')
         // OR: use legend column to find unique values and get bar height from that.
         // we might not need to use the pivot table data for charts
-        // console.log('important - come back to this later')
         // if (isDataAggregated) {
         //     return sortDataByDate(newRows, columns, 'asc');
         // }
@@ -209,16 +203,20 @@ export function ChataChartNew(
             this.updateColumns(newColumns);
         }
 
-        const isValid = isColumnIndexConfigValid({
-            columnIndexConfig: columnIndexConfig,
-            response: { data: queryJson },
-            columns,
-            displayType: type,
-        });
+        this.drawChart();
+    };
 
-        if (!isValid) {
-            console.warn('Current column config is not valid for new axis selection. Resetting column config now...');
-            columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
+    this.changeStringColumnIndices = (index) => {
+        if (columnIndexConfig.legendColumnIndex === index) {
+            // console.log('do we need to use legend column index?')
+            columnIndexConfig.legendColumnIndex = undefined;
+        }
+
+        if (typeof index === 'number') {
+            columnIndexConfig.stringColumnIndex = index;
+        } else if (Array.isArray(index) && index?.length) {
+            const indices = index;
+            columnIndexConfig.stringColumnIndex = indices[0];
         }
 
         this.drawChart();
@@ -251,9 +249,50 @@ export function ChataChartNew(
         this.drawCount = 0;
     };
 
+    const getLegendObject = () => {
+        const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+        const labels =
+            getLegendLabels({
+                isDataAggregated,
+                columns,
+                colorScales: this.colorScales,
+                columnIndexConfig,
+            }) ?? {};
+
+        const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
+        const title = getLegendTitleFromColumns({
+            columnIndices: columnIndexConfig.numberColumnIndices,
+            isDataAggregated,
+            columns,
+            hasSecondAxis,
+        });
+
+        return {
+            ...labels,
+            title,
+            location,
+            orientation: location === 'bottom' ? 'horizontal' : 'vertical',
+        };
+    };
+
+    this.isColumnIndexConfigValid = () => {
+        return isColumnIndexConfigValid({
+            columnIndexConfig,
+            response: { data: queryJson },
+            columns,
+            displayType: type,
+        });
+    };
+
     this.drawChart = (firstDraw = true, redrawParams = {}) => {
         if (this.drawCount > 10) {
             console.warn('recursive drawChart was called over 50 times. Something is wrong.');
+            return;
+        }
+
+        if (!this.isColumnIndexConfigValid()) {
+            console.warn('Current column config is not valid for new axis selection. Resetting column config now...');
+            // columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
             return;
         }
 
@@ -297,7 +336,7 @@ export function ChataChartNew(
                 .attr('transform', `translate(${this.deltaX}, ${this.deltaY})`)
                 .style('visibility', 'hidden');
 
-            const colorScales = getColorScales({ ...columnIndexConfig });
+            this.colorScales = getColorScales({ ...columnIndexConfig });
 
             const params = {
                 data: this.data,
@@ -315,14 +354,12 @@ export function ChataChartNew(
                 firstDraw,
                 hasRowSelector,
                 isScaled,
-                colorScale: colorScales.colorScale,
-                colorScale2: colorScales.colorScale2,
-                toggleChartScale: this.toggleChartScale,
+                colorScales: this.colorScales,
+                legend: getLegendObject(),
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
+                toggleChartScale: this.toggleChartScale,
                 changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
-                changeStringColumnIndices: () => {
-                    console.log('CHANGE STRING COLUMN INDICES... FROM CHATA CHART');
-                }, // TODO
+                changeStringColumnIndices: this.changeStringColumnIndices,
                 onDataFetching: this.onDataFetching,
                 onNewData: this.onNewData,
                 onDataFetchError: this.onDataFetchError,

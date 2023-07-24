@@ -1,3 +1,4 @@
+import { ChataChartSeriesPopover } from './ChataChartSeriesPopover';
 import { PopoverChartSelector } from './PopoverChartSelector';
 
 export function ChataChartListPopover(e, scale, columns, placement, align) {
@@ -5,6 +6,10 @@ export function ChataChartListPopover(e, scale, columns, placement, align) {
     var elements = [];
 
     if (!scale) console.warn('No scale provided to ChataChartListPover');
+
+    if (scale.type === 'LINEAR') {
+        return new ChataChartSeriesPopover(e, placement, align, columns, scale)
+    }
 
     obj.createContent = () => {
         var selectorContainer = document.createElement('div');
