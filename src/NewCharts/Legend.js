@@ -34,7 +34,7 @@ export function Legend(container, params = {}) {
         orientation = 'vertical',
         hasSecondAxis,
         title,
-        shape,
+        legendShape,
         onLegendClick,
     } = params;
 
@@ -92,8 +92,8 @@ export function Legend(container, params = {}) {
 
         if (isSecondLegend) {
             legendOrdinal.shape('line');
-        } else if (shape) {
-            legendOrdinal.shape(shape);
+        } else if (legendShape) {
+            legendOrdinal.shape(legendShape);
         }
 
         var legendElement = this.legendElementContainer.append('g');

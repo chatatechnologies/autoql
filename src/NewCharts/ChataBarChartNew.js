@@ -112,6 +112,7 @@ export function BarChartNew(container, params = {}) {
             .style('stroke-width', 0)
             .style('fill', (d) => d?.style?.fill)
             .style('fill-opacity', (d) => d?.style?.fillOpacity)
+            .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
                 console.log(d);
@@ -125,12 +126,10 @@ export function BarChartNew(container, params = {}) {
         xScale: this.xScale,
         yScale: this.yScale,
         xCol,
-        yCol
+        yCol,
     });
 
-    if (firstDraw) {
-        // Do not render bars on first draw
-    } else {
+    if (!firstDraw) {
         this.createBars();
     }
 

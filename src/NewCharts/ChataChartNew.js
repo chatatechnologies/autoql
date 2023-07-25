@@ -11,101 +11,18 @@ import {
     getLegendLocation,
     getLegendLabels,
     getLegendTitleFromColumns,
-    mergeBoundingClientRects,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
 import { select } from 'd3-selection';
 import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from '../Charts/ChartLoader';
-import { refreshChartTooltips, refreshTooltips } from '../Tooltips';
 import { CSS_PREFIX } from '../Constants';
 import { ColumnChartNew } from './ChataColumnChartNew';
-
-const getRenderedChartDimensions = (chartComponent) => {
-    const axes = chartComponent?.axesWrapper;
-
-    if (!axes) {
-        console.warn('Unable to get chart dimensions - couldnt find axes element');
-        return {};
-    }
-
-    try {
-        const leftAxisBBox = axes.select('.autoql-vanilla-axis-left')?.node()?.getBoundingClientRect();
-        const topAxisBBox = axes.select('.autoql-vanilla-axis-top')?.node()?.getBoundingClientRect();
-        const bottomAxisBBox = axes.select('.autoql-vanilla-axis-bottom')?.node()?.getBoundingClientRect();
-        const rightAxisBBox = axes.select('.autoql-vanilla-axis-right')?.node()?.getBoundingClientRect();
-        const clippedLegendBBox = axes.select('.autoql-vanilla-chart-legend-clipping-container')?.node()?.getBoundingClientRect();
-
-        const axesBBox = mergeBoundingClientRects([leftAxisBBox, bottomAxisBBox, rightAxisBBox, topAxisBBox, clippedLegendBBox]);
-
-        const axesWidth = axesBBox?.width ?? 0;
-        const axesHeight = axesBBox?.height ?? 0;
-        const axesX = axesBBox?.x ?? 0;
-        const axesY = axesBBox?.y ?? 0;
-
-        return {
-            chartHeight: axesHeight,
-            chartWidth: axesWidth,
-            chartX: axesX,
-            chartY: axesY,
-        };
-    } catch (error) {
-        console.error(error);
-        return {};
-    }
-};
-
-const getInnerDimensions = (chartComponent, containerHeight, containerWidth) => {
-    const { chartWidth, chartHeight } = getRenderedChartDimensions(chartComponent);
-    if (!chartWidth || !chartHeight) {
-        return {};
-    }
-
-    const CHART_PADDING = 0;
-
-    const xScale = chartComponent?.xScale;
-    const yScale = chartComponent?.yScale;
-
-    let innerWidth = containerWidth - 2 * CHART_PADDING;
-    if (xScale && chartWidth) {
-        const rangeInPx = xScale.range()[1] - xScale.range()[0];
-        const totalHorizontalMargins = chartWidth - rangeInPx;
-        innerWidth = containerWidth - totalHorizontalMargins - 2 * CHART_PADDING;
-    }
-
-    let innerHeight = containerHeight - 2 * CHART_PADDING;
-    if (yScale && chartHeight) {
-        const rangeInPx = yScale.range()[0] - yScale.range()[1];
-        const totalVerticalMargins = chartHeight - rangeInPx;
-        innerHeight = containerHeight - totalVerticalMargins - 2 * CHART_PADDING;
-    }
-
-    if (innerWidth < 1) {
-        innerWidth = 1;
-    }
-
-    if (innerHeight < 1) {
-        innerHeight = 1;
-    }
-
-    return { innerWidth, innerHeight };
-};
-
-const getDeltas = (chartComponent) => {
-    const CHART_PADDING = 0; // TODO remove or move
-    const axesBBox = chartComponent?.axesWrapper?.node()?.getBBox();
-
-    // Get distance in px to shift to the right
-    const axesBBoxX = Math.ceil(axesBBox?.x ?? 0);
-    const deltaX = -1 * axesBBoxX + CHART_PADDING;
-
-    // Get distance in px to shift down
-    const axesBBoxY = Math.ceil(axesBBox?.y ?? 0);
-    const deltaY = -1 * axesBBoxY + CHART_PADDING;
-
-    return { deltaX, deltaY };
-};
+import { LineChartNew } from './ChataLineChartNew';
+import { refreshTooltips } from '../Tooltips';
+import tippy from 'tippy.js';
+import { getDeltas, getInnerDimensions } from './helpers';
 
 export function ChataChartNew(
     component,
@@ -252,10 +169,10 @@ export function ChataChartNew(
     };
 
     const onLegendClick = (label) => {
-        const newColumns = cloneObject(columns)
-        newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden
-        this.updateColumns(newColumns)
-    }
+        const newColumns = cloneObject(columns);
+        newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
+        this.updateColumns(newColumns);
+    };
 
     const getLegendObject = () => {
         const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
@@ -282,6 +199,20 @@ export function ChataChartNew(
             onLegendClick,
             orientation: location === 'bottom' ? 'horizontal' : 'vertical',
         };
+    };
+
+    const refreshChartTooltips = () => {
+        this.tippyInstance?.destroy?.();
+        console.log('has destroy method???', this.tippyInstance?.destroy, !!this.tippyInstance?.destroy);
+
+        this.tippyInstance = tippy('[data-tippy-chart]', {
+            theme: 'chata-theme',
+            delay: [0],
+            allowHTML: true,
+            dynamicTitle: true,
+            maxWidth: 300,
+            inertia: true,
+        });
     };
 
     this.isColumnIndexConfigValid = () => {
@@ -355,7 +286,7 @@ export function ChataChartNew(
                 height: this.innerHeight ?? this.outerHeight,
                 width: this.innerWidth ?? this.outerWidth,
                 columnIndexConfig,
-                visibleSeries: columnIndexConfig.numberColumnIndices.filter(index => !columns[index].isSeriesHidden),
+                visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns[index].isSeriesHidden),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
@@ -366,6 +297,7 @@ export function ChataChartNew(
                 colorScales: this.colorScales,
                 legend: getLegendObject(),
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
+                tippyInstance: this.tippyInstance,
                 toggleChartScale: this.toggleChartScale,
                 changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
                 changeStringColumnIndices: this.changeStringColumnIndices,
@@ -384,7 +316,8 @@ export function ChataChartNew(
                     this.chartComponent = new BarChartNew(chartContentWrapper, params);
                     break;
                 case 'line':
-                    return null;
+                    this.chartComponent = new LineChartNew(chartContentWrapper, params);
+                    break;
                 case 'pie':
                     return null;
                 case 'bubble':
@@ -428,9 +361,9 @@ export function ChataChartNew(
 
         chartContentWrapper.style('visibility', 'visible');
 
-        refreshTooltips();
-        refreshChartTooltips();
         resetChartRedrawParams();
+        refreshChartTooltips();
+        refreshTooltips();
 
         onUpdate(component);
 

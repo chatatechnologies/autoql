@@ -1993,9 +1993,13 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'line');
-        createLineChart(
-            component, json, obj.options, obj.registerDrilldownChartEvent
-        );
+        new ChataChartNew(component, {
+            type: 'line',
+            queryJson: json,
+            options: obj.options,
+            onUpdate: obj.registerDrilldownChartEvent,
+            chartConfig: undefined,
+        });
         obj.registerDrilldownChartEvent(component);
     };
 
@@ -2896,15 +2900,12 @@ export function DataMessenger(options = {}) {
                 obj.putTableResponse(jsonResponse);
                 break;
             case 'line':
-                var lineContainer = obj.putTableResponse(jsonResponse);
-                createLineChart(lineContainer, jsonResponse, obj.options);
-                obj.refreshToolbarButtons(lineContainer, 'line');
+                var _idRequest = obj.putTableResponse(jsonResponse);
+                obj.displayLineChartHandler(null, _idRequest);
                 break;
             case 'bar':
-                var barContainer = obj.putTableResponse(jsonResponse);
-                new ChataChartNew(barContainer, displayType, jsonResponse, obj.options);
-                // createBarChart(barContainer, jsonResponse, obj.options);
-                obj.refreshToolbarButtons(barContainer, displayType);
+                var _idRequest = obj.putTableResponse(jsonResponse);
+                obj.displayBarChartHandler(null, _idRequest);
                 break;
             case 'word_cloud':
                 obj.putTableResponse(jsonResponse);
