@@ -26,10 +26,10 @@
 .autoql-vanilla-slider:before {
     content: " ";
     position: absolute;
-    top: 2px;
+    top: 3px;
     right: 18px;
-    bottom: 2px;
-    left: 2px;
+    bottom: 3px;
+    left: 3px;
     border-radius: 50%;
     background: #fff;
     transition: all .2s;
@@ -44,10 +44,10 @@
 }
 
 .autoql-vanilla-switch input:checked + .autoql-vanilla-slider:before {
-    right: 2px;
+    right: 3px;
     left: 18px;
-    top: 2px;
-    bottom: 2px;
+    top: 3px;
+    bottom: 3px;
 }
 
 .autoql-vanilla-slider.autoql-vanilla-round {

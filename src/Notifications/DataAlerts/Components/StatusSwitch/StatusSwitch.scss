@@ -12,11 +12,13 @@
     position: absolute;
     bottom: 3px;
     font-size: 12px;
+    font-weight: 700;
+    color: var(--autoql-vanilla-text-color-accent);
     &.left {
-      left: 18px;
+      left: 15px;
     }
     &.right {
-      right: 18px;
+      right: 12px;
     }
   }
 }
