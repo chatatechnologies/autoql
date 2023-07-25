@@ -3,7 +3,7 @@ import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, 
 import { CALENDAR, CHECK } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
-import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
+import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES, DATA_ALERT_STATUSES } from 'autoql-fe-utils';
 
 export function DataAlertItem({ dataAlert, authentication }) {
   console.log(dataAlert);
@@ -20,6 +20,17 @@ export function DataAlertItem({ dataAlert, authentication }) {
   } = dataAlert;
 
   const isEnabled = (s) => DATA_ALERT_ENABLED_STATUSES.includes(s)
+  
+  const toggleAlertStatusView = (s) => {
+    if(isEnabled(s)) {
+      item.classList.remove('autoql-vanilla-data-alert-disabled');
+    } else {
+      item.classList.add('autoql-vanilla-data-alert-disabled');
+    }
+    const newState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
+    row.replaceChild(newState, item.state);
+    item.state = newState;
+  }
 
   const createCol = (className, element) => {
     const section = document.createElement('div');
@@ -43,6 +54,8 @@ export function DataAlertItem({ dataAlert, authentication }) {
     section.appendChild(content);
 
     row.appendChild(section);
+
+    return section;
   }
 
   const hasError = () => {
@@ -100,24 +113,21 @@ export function DataAlertItem({ dataAlert, authentication }) {
   }
 
   const onStatusChange = async ({ status }) => {
-    console.log(authentication);
     const response = await updateDataAlertStatus({ dataAlertId: id, type, status, ...authentication });
+    dataAlert.status = status;
+    toggleAlertStatusView(status)
     return response;
   }
 
-  createCol('autoql-vanilla-notification-setting-display-name', title);
-  createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
-  createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
-  createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
-  createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
+  item.title = createCol('autoql-vanilla-notification-setting-display-name', title);
+  item.frequency = createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
+  item.state = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
+  item.cycleStart = createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
+  item.status = createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
 
   item.appendChild(row);
 
-  if(isEnabled(status)) {
-    item.classList.add('autoql-vanilla-data-alert-enabled');
-  } else {
-    item.classList.add('autoql-vanilla-data-alert-disabled');
-  }
+  toggleAlertStatusView(status);
 
   return item;
 }
