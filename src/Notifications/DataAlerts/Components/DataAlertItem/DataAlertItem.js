@@ -2,6 +2,7 @@ import './DataAlertItem.scss';
 import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, SCHEDULED_TYPE } from 'autoql-fe-utils';
 import { CALENDAR, CHECK } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
+import { StatusSwitch } from '../StatusSwitch';
 
 export function DataAlertItem({ dataAlert }) {
   console.log(dataAlert);
@@ -98,7 +99,7 @@ export function DataAlertItem({ dataAlert }) {
   createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
   createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
   createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
-  createCol('autoql-vanilla-data-alert-list-item-section-status', status);
+  createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ status }));
 
   item.appendChild(row);
 
