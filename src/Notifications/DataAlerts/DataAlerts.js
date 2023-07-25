@@ -240,7 +240,8 @@ export function DataAlerts(selector, options) {
         console.log(dataAlerts);
         dataAlerts.forEach((dataAlert) => {
             const item = new DataAlertItem({
-                dataAlert
+                dataAlert,
+                authentication: wrapper.options.authentication,
             });
             settingsContainer.appendChild(item);
         })

@@ -3,8 +3,9 @@ import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, 
 import { CALENDAR, CHECK } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
+import { updateDataAlertStatus  } from 'autoql-fe-utils';
 
-export function DataAlertItem({ dataAlert }) {
+export function DataAlertItem({ dataAlert, authentication }) {
   console.log(dataAlert);
   const item = document.createElement('div');
   const row = document.createElement('div');
@@ -15,6 +16,8 @@ export function DataAlertItem({ dataAlert }) {
     title,
     schedules,
     status,
+    id,
+    type
   } = dataAlert;
 
   const createCol = (className, element) => {
@@ -95,11 +98,17 @@ export function DataAlertItem({ dataAlert }) {
     return `<span>${formatResetDate(dataAlert, true)}</span>`;
   }
 
+  const onStatusChange = async ({ status }) => {
+    console.log(authentication);
+    const response = await updateDataAlertStatus({ dataAlertId: id, type, status, ...authentication });
+    return response;
+  }
+
   createCol('autoql-vanilla-notification-setting-display-name', title);
   createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
   createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
   createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
-  createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ status }));
+  createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
 
   item.appendChild(row);
 
