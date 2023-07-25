@@ -25,10 +25,9 @@ export function LineChartNew(container, params = {}) {
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
-        toggleChartScale, // TODO
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, legendColumnIndex, numberColumnIndices, numberColumnIndex } =
+    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } =
         columnIndexConfig;
     const { dataFormatting } = options;
 
@@ -86,7 +85,6 @@ export function LineChartNew(container, params = {}) {
                         xScale: self.xScale,
                         yScale: self.yScale,
                         activeKey: undefined, // TODO
-                        legendColumn: columns[legendColumnIndex],
                         dataFormatting,
                         colIndex,
                         backgroundColor,

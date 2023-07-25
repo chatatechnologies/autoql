@@ -11,6 +11,9 @@ import {
     getLegendLocation,
     getLegendLabels,
     getLegendTitleFromColumns,
+    sortDataByDate,
+    generatePivotTableData,
+    getPivotColumnIndexConfig,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -49,8 +52,9 @@ export function ChataChartNew(
     const CHART_CONTAINER_CLASS = 'autoql-vanilla-chart-content-container';
     const FONT_SIZE = 12;
 
-    const columnIndexConfig =
+    var columnIndexConfig =
         chartConfig?.columnIndexConfig ?? getColumnIndexConfig({ response: { data: queryJson }, columns });
+
     const indices1 = columnIndexConfig.numberColumnIndices ?? [];
     const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? columnIndexConfig.numberColumnIndices2 ?? [] : [];
     const numberIndices = [...indices1, ...indices2];
@@ -79,16 +83,48 @@ export function ChataChartNew(
 
     this.getData = (rows) => {
         let newRows = rows ?? origRows;
-
-        // TODO: console.log('set pivot table data as chart data for double groupbys')
-        // OR: use legend column to find unique values and get bar height from that.
-        // we might not need to use the pivot table data for charts
-        // if (isDataAggregated) {
-        //     return sortDataByDate(newRows, columns, 'asc');
-        // }
-
         var data = newRows;
-        if (numberIndices.length) {
+
+        if (isDataAggregated) {
+            const sortedRows =  sortDataByDate(newRows, columns, 'asc');
+            try {
+                const {
+                    legendColumnIndex,
+                    pivotColumnHeaders,
+                    pivotRowHeaders,
+                    pivotTableColumns,
+                    pivotTableData,
+                    stringColumnIndex,
+                } = generatePivotTableData({
+                    isFirstGeneration: !!this.chartComponent,
+                    rows: sortedRows,
+                    columns,
+                    tableConfig: columnIndexConfig,
+                    dataFormatting: options.dataFormatting,
+                });
+
+                let pivotColumnIndexConfig = {
+                    stringColumnIndex,
+                    legendColumnIndex,
+                };
+
+                // TODO: do we need these for anything? Drilldowns specifically
+                this.pivotRowHeaders = pivotRowHeaders;
+                this.pivotColumnHeaders = pivotColumnHeaders;
+
+                columnIndexConfig = getPivotColumnIndexConfig({
+                    pivotTableColumns,
+                    columnIndexConfig: pivotColumnIndexConfig,
+                    isFirstGeneration: !!this.chartComponent,
+                    response: queryJson,
+                });
+
+                data = pivotTableData;
+                columns = pivotTableColumns;
+            } catch (error) {
+                console.error(error);
+            }
+        } else if (numberIndices.length) {
             data = aggregateData({
                 data: newRows,
                 aggColIndex: columnIndexConfig.stringColumnIndex,
@@ -127,7 +163,6 @@ export function ChataChartNew(
 
     this.changeStringColumnIndices = (index) => {
         if (columnIndexConfig.legendColumnIndex === index) {
-            // console.log('do we need to use legend column index?')
             columnIndexConfig.legendColumnIndex = undefined;
         }
 
@@ -203,7 +238,6 @@ export function ChataChartNew(
 
     const refreshChartTooltips = () => {
         this.tippyInstance?.destroy?.();
-        console.log('has destroy method???', this.tippyInstance?.destroy, !!this.tippyInstance?.destroy);
 
         this.tippyInstance = tippy('[data-tippy-chart]', {
             theme: 'chata-theme',
@@ -291,6 +325,7 @@ export function ChataChartNew(
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
                 deltaY: this.deltaY,
+                legendColumn: columns[columnIndexConfig?.legendColumnIndex],
                 firstDraw,
                 hasRowSelector,
                 isScaled,
