@@ -1,9 +1,9 @@
 import './DataAlertItem.scss';
 import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, SCHEDULED_TYPE } from 'autoql-fe-utils';
-import { CALENDAR, CHECK } from '../../../../Svg';
+import { CALENDAR, CHECK, SETTINGS, TRASH_ICON } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
-import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES, DATA_ALERT_STATUSES } from 'autoql-fe-utils';
+import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
 
 export function DataAlertItem({ dataAlert, authentication }) {
   console.log(dataAlert);
@@ -28,8 +28,8 @@ export function DataAlertItem({ dataAlert, authentication }) {
       item.classList.add('autoql-vanilla-data-alert-disabled');
     }
     const newState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
-    row.replaceChild(newState, item.state);
-    item.state = newState;
+    row.replaceChild(newState, item.elementState);
+    item.elementStatestate = newState;
   }
 
   const createCol = (className, element) => {
@@ -119,15 +119,35 @@ export function DataAlertItem({ dataAlert, authentication }) {
     return response;
   }
 
-  item.title = createCol('autoql-vanilla-notification-setting-display-name', title);
-  item.frequency = createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
-  item.state = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
-  item.cycleStart = createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
-  item.status = createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
+  const createActionButton = (icon, className) => {
+    const btn = document.createElement('div');
+    btn.classList.add('autoql-vanilla-notification-action-btn');
+    btn.appendChild(createIcon(icon));
+    btn.classList.add(className);
+
+    return btn
+  }
+
+  const createActions = () => {
+    const actionWrapper = document.createElement('div');
+    const settingsButton = createActionButton(SETTINGS, 'autoql-vanilla-notification-action-btn-settings'); 
+    const deleteButton = createActionButton(TRASH_ICON, 'autoql-vanilla-notification-action-btn-delete');
+    actionWrapper.appendChild(settingsButton);
+    actionWrapper.appendChild(deleteButton);
+
+    item.actionButtons = createCol('autoql-vanilla-data-alert-list-item-section-actions', actionWrapper);
+  }
+
+  item.elementTitle = createCol('autoql-vanilla-notification-setting-display-name', title);
+  item.elementFrequency = createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
+  item.elementState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
+  item.elementCycleStart = createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
+  item.elementStatus = createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
 
   item.appendChild(row);
 
   toggleAlertStatusView(status);
+  createActions();
 
   return item;
 }
