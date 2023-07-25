@@ -30,6 +30,12 @@
         align-items: center;
         font-size: 13px;
         cursor: default;
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-scheduled {
+          color: var(--autoql-vanilla-success-color);
+        }
+        .autoql-vanilla-icon {
+          margin-right: 5px;
+        }
       }
       &.autoql-vanilla-notification-setting-display-name {
         flex: 3 0 50px;
