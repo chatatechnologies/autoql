@@ -35,11 +35,10 @@ export function Legend(container, params = {}) {
         hasSecondAxis,
         title,
         shape,
+        onLegendClick,
     } = params;
 
     this.legendElements = [];
-    this.legendLabels1 = [];
-    this.legendLabels2 = [];
 
     const legendPadding = { top: 0, bottom: 0, left: 20, right: 0 };
     if (orientation === 'horizontal') {
@@ -50,19 +49,18 @@ export function Legend(container, params = {}) {
     const translateX = getTotalLeftPadding(legendPadding);
     const translateY = getTotalTopPadding(legendPadding) + LEGEND_TOP_ADJUSTMENT;
 
-    const onLegendCellClick = (labelText, labels) => {
-        console.log('TODO ON LEGEND CLICK', { labelText, labels });
-        //     const label = labels?.find((l) => l.label === labelText)
-        //     if (!label) {
-        //       return
-        //     }
-        //     const isHidingLabel = !label.hidden
-        //     const visibleLegendLabels = labels?.filter((l) => !l.hidden)
-        //     const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1
-        //     if (allowClick) {
-        //       this.props.onLegendClick(label)
-        //     }
-        //   }
+    const onLegendCellClick = (labelText, legendLabels) => {
+        const label = legendLabels?.find((l) => l.label === labelText);
+        if (!label) {
+            return;
+        }
+
+        const isHidingLabel = !label.hidden;
+        const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
+        const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1;
+        if (allowClick) {
+            onLegendClick(label);
+        }
     };
 
     const createLegend = (legendLabels, sectionIndex) => {
@@ -75,7 +73,7 @@ export function Legend(container, params = {}) {
         const legendNumber = legendLabels[0]?.legendNumber;
         const isFirstSection = !!legendLabels[0]?.isFirst;
         const isSecondLegend = legendNumber === 2;
-        const allLabels = legendNumber === 2 ? this.legendLabels2 : this.legendLabels1;
+        const allLabels = legendNumber === 2 ? labels2 : labels;
         const legendScale = getLegendScale(legendLabels);
         const maxSectionWidth = getMaxLegendSectionWidth({ orientation, outerWidth, legendPadding });
 
@@ -88,8 +86,8 @@ export function Legend(container, params = {}) {
             .scale(legendScale)
             .title(title)
             .titleWidth(maxSectionWidth)
-            .on('cellclick', function (d) {
-                onLegendCellClick(d, allLabels);
+            .on('cellclick', function () {
+                onLegendCellClick(this['__data__'], allLabels);
             });
 
         if (isSecondLegend) {

@@ -4,38 +4,24 @@ import { Axes } from './Axes';
 export function BarChartNew(container, params = {}) {
     const {
         data,
-        json,
         columns,
         height,
         width,
-        outerHeight,
-        outerWidth,
-        deltaX,
-        deltaY,
         firstDraw,
         visibleSeries,
         colorScales,
         options = {},
         isScaled,
-        hasRowSelector,
-        toggleChartScale,
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
-        onDataFetching,
-        onNewData,
-        onDataFetchError,
-        pageSize,
-        bottomLabelsRotated,
-        topLabelsRotated,
-        legend,
+        toggleChartScale, // TODO
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, legendColumnIndex, numberColumnIndices, numberColumnIndex } =
         columnIndexConfig;
     const { dataFormatting } = options;
-    // TODO: var visibleSeries = numberColumnIndices.filter(index => !columns[index].isSeriesHidden)
 
     const scaleParams = {
         data,
@@ -53,17 +39,13 @@ export function BarChartNew(container, params = {}) {
         ...scaleParams,
         axis: 'y',
         columnIndex: stringColumnIndex,
-        // : () => {
-        //     console.log('change string column indices here!!')
-        //     changeStringColumnIndex()
-        // }
     });
 
     this.xScale = getLinearScales({
         ...scaleParams,
         axis: 'x',
         isScaled,
-        columnIndices1: numberColumnIndices,
+        columnIndices1: visibleSeries,
         colorScales,
     }).scale;
 
@@ -139,32 +121,11 @@ export function BarChartNew(container, params = {}) {
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
     new Axes(this.axesWrapper, {
-        json,
-        columns,
+        ...params,
         xScale: this.xScale,
         yScale: this.yScale,
         xCol,
-        yCol,
-        deltaX,
-        deltaY,
-        height,
-        width,
-        outerHeight,
-        outerWidth,
-        toggleChartScale, // TODO
-        options,
-        firstDraw,
-        hasRowSelector,
-        stringColumnIndices,
-        onDataFetching,
-        onNewData,
-        onDataFetchError,
-        pageSize,
-        bottomLabelsRotated,
-        topLabelsRotated,
-        columnIndexConfig,
-        legend,
-        colorScales,
+        yCol
     });
 
     if (firstDraw) {

@@ -14,7 +14,7 @@ import {
     getLegendTitleFromColumns,
 } from 'autoql-fe-utils';
 
-import { uuidv4 } from '../Utils';
+import { uuidv4, cloneObject } from '../Utils';
 import { select } from 'd3-selection';
 import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from '../Charts/ChartLoader';
@@ -186,6 +186,7 @@ export function ChataChartNew(
     this.updateColumns = (newColumns) => {
         // formatQueryColumns({columns})
         columns = newColumns;
+        this.drawChart();
     };
 
     this.changeNumberColumnIndexConfig = (indices, indices2, newColumns) => {
@@ -249,6 +250,12 @@ export function ChataChartNew(
         this.drawCount = 0;
     };
 
+    const onLegendClick = (label) => {
+        const newColumns = cloneObject(columns)
+        newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden
+        this.updateColumns(newColumns)
+    }
+
     const getLegendObject = () => {
         const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
         const labels =
@@ -271,6 +278,7 @@ export function ChataChartNew(
             ...labels,
             title,
             location,
+            onLegendClick,
             orientation: location === 'bottom' ? 'horizontal' : 'vertical',
         };
     };
@@ -286,7 +294,7 @@ export function ChataChartNew(
 
     this.drawChart = (firstDraw = true, redrawParams = {}) => {
         if (this.drawCount > 10) {
-            console.warn('recursive drawChart was called over 50 times. Something is wrong.');
+            console.warn('recursive drawChart was called over 10 times. Something is wrong.');
             return;
         }
 
@@ -346,7 +354,7 @@ export function ChataChartNew(
                 height: this.innerHeight ?? this.outerHeight,
                 width: this.innerWidth ?? this.outerWidth,
                 columnIndexConfig,
-                visibleSeries: columnIndexConfig.numberColumnIndices, // TODO
+                visibleSeries: columnIndexConfig.numberColumnIndices.filter(index => !columns[index].isSeriesHidden),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,

@@ -24,6 +24,56 @@
         }
     }
 
+    .legend-hidden-field-arrow {
+        outline: none !important;
+    }
+
+    .autoql-vanilla-chart-legend {
+        .legendCells {
+            .cell {
+                &.hidden {
+                    text {
+                        color: var(--react-autoql-background-disabled);
+                        opacity: 0.4 !important;
+                    }
+                    line.swatch,
+                    path.swatch {
+                        fill: var(--react-autoql-background-color-disabled) !important;
+                        stroke: var(--react-autoql-background-color-disabled) !important;
+                    }
+                }
+
+                &:hover path.swatch {
+                    stroke-width: 2px;
+                }
+                &:hover line.swatch {
+                    stroke-width: 3px;
+                }
+
+                text:hover {
+                    font-weight: 600;
+                }
+            }
+        }
+
+        path.swatch {
+            outline: none !important;
+            fill-opacity: 1;
+            &:hover,
+            &.active {
+                fill-opacity: 0.7;
+            }
+        }
+        line.swatch {
+            stroke-width: 2px;
+            outline: none !important;
+            &:hover,
+            &.active {
+                stroke-width: 3px;
+            }
+        }
+    }
+
     .line-dot {
         cursor: pointer;
     }
