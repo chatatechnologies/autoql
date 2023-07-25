@@ -41,12 +41,10 @@ import {
 } from '../Utils';
 import {
     createAreaChart,
-    createBarChart,
     createBubbleChart,
-    createColumnChart,
     createHeatmap,
     createLineChart,
-    createPieChart,
+    createPieChart, 
     createStackedBarChart,
     createStackedColumnChart
 } from '../Charts'
@@ -1956,9 +1954,13 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'column');
-        createColumnChart(
-          component, json, obj.options, obj.registerDrilldownChartEvent
-        );
+        new ChataChartNew(component, {
+            type: 'column',
+            queryJson: json,
+            options: obj.options,
+            onUpdate: obj.registerDrilldownChartEvent,
+            chartConfig: undefined,
+        });
         obj.registerDrilldownChartEvent(component);
     };
 

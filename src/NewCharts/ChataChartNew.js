@@ -1,5 +1,4 @@
 import {
-    mergeBboxes,
     aggregateData,
     getThemeValue,
     DOUBLE_AXIS_CHART_TYPES,
@@ -12,6 +11,7 @@ import {
     getLegendLocation,
     getLegendLabels,
     getLegendTitleFromColumns,
+    mergeBoundingClientRects,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -20,6 +20,7 @@ import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from '../Charts/ChartLoader';
 import { refreshChartTooltips, refreshTooltips } from '../Tooltips';
 import { CSS_PREFIX } from '../Constants';
+import { ColumnChartNew } from './ChataColumnChartNew';
 
 const getRenderedChartDimensions = (chartComponent) => {
     const axes = chartComponent?.axesWrapper;
@@ -36,7 +37,7 @@ const getRenderedChartDimensions = (chartComponent) => {
         const rightAxisBBox = axes.select('.autoql-vanilla-axis-right')?.node()?.getBoundingClientRect();
         const clippedLegendBBox = axes.select('.autoql-vanilla-chart-legend-clipping-container')?.node()?.getBoundingClientRect();
 
-        const axesBBox = mergeBboxes([leftAxisBBox, bottomAxisBBox, rightAxisBBox, topAxisBBox, clippedLegendBBox]);
+        const axesBBox = mergeBoundingClientRects([leftAxisBBox, bottomAxisBBox, rightAxisBBox, topAxisBBox, clippedLegendBBox]);
 
         const axesWidth = axesBBox?.width ?? 0;
         const axesHeight = axesBBox?.height ?? 0;
@@ -377,7 +378,8 @@ export function ChataChartNew(
 
             switch (type) {
                 case 'column':
-                    return null;
+                    this.chartComponent = new ColumnChartNew(chartContentWrapper, params);
+                    break;
                 case 'bar':
                     this.chartComponent = new BarChartNew(chartContentWrapper, params);
                     break;

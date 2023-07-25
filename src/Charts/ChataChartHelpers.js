@@ -10,7 +10,7 @@ import {
 import {
     ChataUtils
 } from '../ChataUtils'
-import { formatChartLabel, mergeBboxes } from 'autoql-fe-utils'
+import { mergeBoundingClientRects } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -473,7 +473,7 @@ export const getLabelBBox = (axesGrid) => {
       })
 
     if (labelBboxes) {
-      const allLabelsBbox = mergeBboxes(labelBboxes)
+      const allLabelsBbox = mergeBoundingClientRects(labelBboxes)
       labelsBBox = { ...allLabelsBbox }
     }
 

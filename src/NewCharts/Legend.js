@@ -6,7 +6,6 @@ import {
     getMaxLegendSectionWidth,
     getlegendLabelSections,
     legendColor,
-    mergeBboxes,
     LEGEND_SHAPE_SIZE,
     getMaxLegendHeight,
     getTotalVerticalPadding,
@@ -20,6 +19,7 @@ import {
     applyStylesForHiddenSeries,
     LOAD_MORE_DROPDOWN_PADDING_BOTTOM,
     TITLE_FONT_SIZE,
+    mergeBoundingClientRects,
 } from 'autoql-fe-utils';
 
 import { symbol, symbolSquare } from 'd3-shape';
@@ -112,7 +112,7 @@ export function Legend(container, params = {}) {
         this.legendElements.push(legendElement.node());
 
         if (sectionIndex > 0) {
-            const previousLegendSectionsBBox = mergeBboxes(
+            const previousLegendSectionsBBox = mergeBoundingClientRects(
                 this.legendElements.filter((el, i) => el && i < sectionIndex).map((el) => el.getBoundingClientRect()),
             );
 
@@ -131,7 +131,7 @@ export function Legend(container, params = {}) {
             legendElement: legendElement.node(),
         });
 
-        const mergedBBox = mergeBboxes(this.legendElements.map((el) => el?.getBoundingClientRect()));
+        const mergedBBox = mergeBoundingClientRects(this.legendElements.map((el) => el?.getBoundingClientRect()));
 
         this.combinedLegendWidth = !isNaN(mergedBBox?.width) ? mergedBBox?.width : 0;
         this.combinedLegendHeight = !isNaN(mergedBBox?.height) ? mergedBBox?.height : 0;
