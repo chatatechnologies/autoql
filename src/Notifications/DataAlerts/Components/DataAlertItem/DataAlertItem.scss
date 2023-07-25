@@ -9,6 +9,20 @@
     border-bottom: 1px solid var(--autoql-vanilla-box-shadow-color);
   }
 
+  &.autoql-vanilla-data-alert-enabled {
+
+  }
+
+  &.autoql-vanilla-data-alert-disabled {
+    .autoql-vanilla-notification-setting-item-header {
+      .autoql-vanilla-data-alert-list-item-section-frequency,
+      .autoql-vanilla-data-alert-list-item-section-state,
+      .autoql-vanilla-data-alert-list-item-section-next-check {
+        opacity: .5;
+      }
+    }
+  }
+
   .autoql-vanilla-notification-setting-item-header {
     min-height: 55px;
     display: flex;
@@ -46,5 +60,6 @@
         flex: 1.5 0 50px;
       }
     }
+
   }
 }

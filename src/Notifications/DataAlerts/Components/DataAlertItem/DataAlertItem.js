@@ -3,7 +3,7 @@ import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, 
 import { CALENDAR, CHECK } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
-import { updateDataAlertStatus  } from 'autoql-fe-utils';
+import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
 
 export function DataAlertItem({ dataAlert, authentication }) {
   console.log(dataAlert);
@@ -14,11 +14,12 @@ export function DataAlertItem({ dataAlert, authentication }) {
 
   const {
     title,
-    schedules,
     status,
     id,
     type
   } = dataAlert;
+
+  const isEnabled = (s) => DATA_ALERT_ENABLED_STATUSES.includes(s)
 
   const createCol = (className, element) => {
     const section = document.createElement('div');
@@ -111,6 +112,12 @@ export function DataAlertItem({ dataAlert, authentication }) {
   createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
 
   item.appendChild(row);
+
+  if(isEnabled(status)) {
+    item.classList.add('autoql-vanilla-data-alert-enabled');
+  } else {
+    item.classList.add('autoql-vanilla-data-alert-disabled');
+  }
 
   return item;
 }
