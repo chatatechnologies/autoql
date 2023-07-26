@@ -9,10 +9,6 @@
     border-bottom: 1px solid var(--autoql-vanilla-box-shadow-color);
   }
 
-  &.autoql-vanilla-data-alert-enabled {
-
-  }
-
   &.autoql-vanilla-data-alert-disabled {
     .autoql-vanilla-notification-setting-item-header {
       .autoql-vanilla-data-alert-list-item-section-frequency,
@@ -37,6 +33,9 @@
       flex-wrap: nowrap;
       text-align: center;
       overflow: hidden;
+      &:last-child {
+        flex: 0 0 auto;
+      }
       .autoql-vanilla-data-alert-section-content {
         padding: 8px 12px;
         display: flex;
@@ -49,6 +48,23 @@
         }
         .autoql-vanilla-icon {
           margin-right: 5px;
+        }
+
+        .autoql-vanilla-action-buttons-section {
+          display: flex;
+          .autoql-vanilla-notification-action-btn {
+            display: flex;
+            font-size: 18px;
+            transition-property: color,border-color,background-color,opacity;
+            transition-duration: .3s;
+            transition-timing-function: ease;
+            padding: 0 10px;
+            color: var(--autoql-vanilla-text-color-primary);
+            cursor: pointer;
+            &:hover {
+              color: var(--autoql-vanilla-accent-color);
+            }
+          }
         }
       }
       &.autoql-vanilla-notification-setting-display-name {

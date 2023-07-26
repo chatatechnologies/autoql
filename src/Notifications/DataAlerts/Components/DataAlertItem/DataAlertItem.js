@@ -132,6 +132,7 @@ export function DataAlertItem({ dataAlert, authentication }) {
     const actionWrapper = document.createElement('div');
     const settingsButton = createActionButton(SETTINGS, 'autoql-vanilla-notification-action-btn-settings'); 
     const deleteButton = createActionButton(TRASH_ICON, 'autoql-vanilla-notification-action-btn-delete');
+    actionWrapper.classList.add('autoql-vanilla-action-buttons-section');
     actionWrapper.appendChild(settingsButton);
     actionWrapper.appendChild(deleteButton);
 
