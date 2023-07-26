@@ -44,7 +44,6 @@ import {
     createBubbleChart,
     createHeatmap,
     createPieChart, 
-    createStackedBarChart,
 } from '../Charts'
 import { Scrollbars } from '../Scrollbars'
 import {
@@ -1948,58 +1947,58 @@ export function DataMessenger(options = {}) {
         allColHiddenMessage(component);
         select(window).on('chata-resize.' + idRequest, null);
     }
-    obj.displayColumChartHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'column');
-        new ChataChartNew(component, {
-            type: 'column',
-            queryJson: json,
-            options: obj.options,
-            onUpdate: obj.registerDrilldownChartEvent,
-            chartConfig: undefined,
-        });
-        obj.registerDrilldownChartEvent(component);
-    };
+    // obj.displayColumChartHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'column');
+    //     new ChataChartNew(component, {
+    //         type: 'column',
+    //         queryJson: json,
+    //         options: obj.options,
+    //         onUpdate: obj.registerDrilldownChartEvent,
+    //         chartConfig: undefined,
+    //     });
+    //     obj.registerDrilldownChartEvent(component);
+    // };
 
-    obj.displayBarChartHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'bar');
-        new ChataChartNew(component, {
-            type: 'bar',
-            queryJson: json,
-            options: obj.options,
-            onUpdate: obj.registerDrilldownChartEvent,
-            chartConfig: undefined,
-        });
+    // obj.displayBarChartHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'bar');
+    //     new ChataChartNew(component, {
+    //         type: 'bar',
+    //         queryJson: json,
+    //         options: obj.options,
+    //         onUpdate: obj.registerDrilldownChartEvent,
+    //         chartConfig: undefined,
+    //     });
 
-        obj.registerDrilldownChartEvent(component);
-    };
+    //     obj.registerDrilldownChartEvent(component);
+    // };
 
-    obj.displayPieChartHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'pie');
-        createPieChart(
-            component, json, obj.options, obj.registerDrilldownChartEvent
-        );
-        obj.registerDrilldownChartEvent(component);
-    };
+    // obj.displayPieChartHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'pie');
+    //     createPieChart(
+    //         component, json, obj.options, obj.registerDrilldownChartEvent
+    //     );
+    //     obj.registerDrilldownChartEvent(component);
+    // };
 
-    obj.displayLineChartHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'line');
-        new ChataChartNew(component, {
-            type: 'line',
-            queryJson: json,
-            options: obj.options,
-            onUpdate: obj.registerDrilldownChartEvent,
-            chartConfig: undefined,
-        });
-        obj.registerDrilldownChartEvent(component);
-    };
+    // obj.displayLineChartHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'line');
+    //     new ChataChartNew(component, {
+    //         type: 'line',
+    //         queryJson: json,
+    //         options: obj.options,
+    //         onUpdate: obj.registerDrilldownChartEvent,
+    //         chartConfig: undefined,
+    //     });
+    //     obj.registerDrilldownChartEvent(component);
+    // };
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
@@ -2013,56 +2012,81 @@ export function DataMessenger(options = {}) {
         component.pivotTabulator = table
     }
 
-    obj.displayHeatmapHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'heatmap');
-        createHeatmap(component, json, obj.options);
-        obj.registerDrilldownChartEvent(component);
-    };
+    // obj.displayHeatmapHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'heatmap');
+    //     createHeatmap(component, json, obj.options);
+    //     obj.registerDrilldownChartEvent(component);
+    // };
 
-    obj.displayBubbleCharthandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'bubble');
-        createBubbleChart(component, json, obj.options);
-        obj.registerDrilldownChartEvent(component);
-    };
+    // obj.displayBubbleCharthandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'bubble');
+    //     createBubbleChart(component, json, obj.options);
+    //     obj.registerDrilldownChartEvent(component);
+    // };
 
-    obj.displayStackedColumnHandler = (evt, idRequest) => {
+    // obj.displayStackedColumnHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'stacked_column');
+    //     new ChataChartNew(component, {
+    //         type: 'stacked_column',
+    //         queryJson: json,
+    //         options: obj.options,
+    //         onUpdate: obj.registerDrilldownChartEvent,
+    //         chartConfig: undefined,
+    //     });
+    //     obj.registerDrilldownStackedChartEvent(component);
+    // };
+
+    obj.displayChartHandler = (evt, idRequest, displayType) => {
+        console.log('inside chart handler', {displayType})
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'stacked_column');
+        obj.refreshToolbarButtons(component, displayType);
+        console.log('displaying stacked bar!')
         new ChataChartNew(component, {
-            type: 'stacked_column',
+            type: displayType,
             queryJson: json,
             options: obj.options,
             onUpdate: obj.registerDrilldownChartEvent,
             chartConfig: undefined,
         });
-        obj.registerDrilldownStackedChartEvent(component);
-    };
 
-    obj.displayStackedBarHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'stacked_bar');
-        createStackedBarChart(
-            component, cloneObject(json), obj.options,
-            obj.registerDrilldownStackedChartEvent
-        );
-        obj.registerDrilldownStackedChartEvent(component);
-    };
-
-    obj.displayAreaHandler = (evt, idRequest) => {
-        var json = obj.getRequest(idRequest);
-        var component = obj.getComponent(idRequest);
-        obj.refreshToolbarButtons(component, 'stacked_line');
-        createAreaChart(
-            component, cloneObject(json), obj.options,
-            obj.registerDrilldownStackedChartEvent
-        );
+        if (['stacked_column', 'stacked_bar', 'stacked_line'].includes(displayType)) {
+            obj.registerDrilldownStackedChartEvent(component);
+        } else {
+            obj.registerDrilldownChartEvent(component);
+        }
     }
+
+    // obj.displayStackedBarHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'stacked_bar');
+    //     console.log('displaying stacked bar!')
+    //     new ChataChartNew(component, {
+    //         type: 'stacked_bar',
+    //         queryJson: json,
+    //         options: obj.options,
+    //         onUpdate: obj.registerDrilldownChartEvent,
+    //         chartConfig: undefined,
+    //     });
+    //     obj.registerDrilldownStackedChartEvent(component);
+    // };
+
+    // obj.displayAreaHandler = (evt, idRequest) => {
+    //     var json = obj.getRequest(idRequest);
+    //     var component = obj.getComponent(idRequest);
+    //     obj.refreshToolbarButtons(component, 'stacked_line');
+    //     createAreaChart(
+    //         component, cloneObject(json), obj.options,
+    //         obj.registerDrilldownStackedChartEvent
+    //     );
+    // }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
         var button = htmlToElement(`
@@ -2086,96 +2110,107 @@ export function DataMessenger(options = {}) {
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
-        for (var i = 0; i < displayTypes.length; i++) {
+        displayTypes.forEach(displayType => {
             let button;
-            //if(displayTypes[i] == ignore)continue;
-            if(displayTypes[i] == 'table'){
+
+            const displayChartHandlerFn = (evt, idRequest) => obj.displayChartHandler(evt, idRequest, displayType)
+
+            console.log('display type:', displayType)
+            if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
-                    idRequest, TABLE_ICON, strings.table, obj.displayTableHandler
-                )
+                    idRequest,
+                    TABLE_ICON,
+                    strings.displayTypes[displayType],
+                    obj.displayTableHandler,
+                );
             }
-            if (displayTypes[i] == 'column') {
+            if (displayType == 'column') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     COLUMN_CHART_ICON,
-                    strings.columnChart,
-                    obj.displayColumChartHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
-            if (displayTypes[i] == 'bar') {
+            if (displayType == 'bar') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     BAR_CHART_ICON,
-                    strings.barChart,
-                    obj.displayBarChartHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
-            if (displayTypes[i] == 'pie') {
+            if (displayType == 'pie') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     PIE_CHART_ICON,
-                    strings.pieChart,
-                    obj.displayPieChartHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
-            if (displayTypes[i] == 'line') {
+            if (displayType == 'line') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     LINE_CHART_ICON,
-                    strings.lineChart,
-                    obj.displayLineChartHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
-            if (displayTypes[i] == 'pivot_table') {
+            if (displayType == 'pivot_table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     PIVOT_ICON,
-                    strings.pivotTable,
+                    strings.displayTypes[displayType],
                     obj.displayPivotTableHandler,
                 );
             }
-            if (displayTypes[i] == 'heatmap') {
-                button = obj.getDisplayTypeButton(idRequest, HEATMAP_ICON, strings.heatmap, obj.displayHeatmapHandler);
+            if (displayType == 'heatmap') {
+                button = obj.getDisplayTypeButton(
+                    idRequest,
+                    HEATMAP_ICON,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
+                );
             }
-            if (displayTypes[i] == 'bubble') {
+            if (displayType == 'bubble') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     BUBBLE_CHART_ICON,
-                    strings.bubbleChart,
-                    obj.displayBubbleCharthandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
-            if (displayTypes[i] == 'stacked_column') {
+            if (displayType == 'stacked_column') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_COLUMN_CHART_ICON,
-                    strings.stackedColumn,
-                    obj.displayStackedColumnHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
-            if (displayTypes[i] == 'stacked_bar') {
+            if (displayType == 'stacked_bar') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_BAR_CHART_ICON,
-                    strings.stackedBar,
-                    obj.displayStackedBarHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
 
-            if (displayTypes[i] == 'stacked_line') {
+            if (displayType == 'stacked_line') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_AREA_CHART_ICON,
-                    strings.stackedLine,
-                    obj.displayAreaHandler,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
                 );
             }
 
-            if(displayTypes[i] == active){
-                button.classList.add('autoql-vanilla-viz-toolbar-btn-active')
+            if (displayType == active) {
+                button.classList.add('autoql-vanilla-viz-toolbar-btn-active');
             }
             buttons.push(button);
-        }
+        })
 
         return buttons;
     };

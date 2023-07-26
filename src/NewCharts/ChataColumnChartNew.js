@@ -39,7 +39,6 @@ export function ColumnChartNew(container, params = {}) {
     this.xScale = getBandScale({
         ...scaleParams,
         axis: 'x',
-        columnIndex: stringColumnIndex,
     });
 
     this.yScale = getLinearScales({

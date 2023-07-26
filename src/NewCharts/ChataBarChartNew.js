@@ -16,6 +16,7 @@ export function BarChartNew(container, params = {}) {
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
+        stacked,
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } =
@@ -28,6 +29,7 @@ export function BarChartNew(container, params = {}) {
         height,
         width,
         dataFormatting,
+        stringColumnIndex,
         stringColumnIndices,
         enableAxisDropdown,
         changeNumberColumnIndices,
@@ -37,7 +39,6 @@ export function BarChartNew(container, params = {}) {
     this.yScale = getBandScale({
         ...scaleParams,
         axis: 'y',
-        columnIndex: stringColumnIndex,
     });
 
     this.xScale = getLinearScales({
@@ -46,6 +47,7 @@ export function BarChartNew(container, params = {}) {
         isScaled,
         columnIndices1: visibleSeries,
         colorScales,
+        stacked,
     }).scale;
 
     var xCol = columns[numberColumnIndex];
@@ -59,13 +61,18 @@ export function BarChartNew(container, params = {}) {
 
         if (this.bars) this.bars.remove();
 
-        var barHeight = this.yScale.tickSize / visibleSeries.length;
+        let barHeight = this.yScale.tickSize
+        if (!stacked) {
+            barHeight = barHeight / visibleSeries.length;
+        }
 
         var self = this;
 
         var barData = function (d, index) {
             var seriesForRow = [];
             var visibleIndex = 0;
+            let prevX;
+            let prevWidth;
 
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
@@ -80,11 +87,19 @@ export function BarChartNew(container, params = {}) {
                         visibleIndex,
                         barHeight,
                         index,
+                        stacked,
+                        prevX,
+                        prevWidth,
                         i,
                         d,
                     });
 
                     visibleIndex += 1;
+
+                    if (rectData && stacked) {
+                        prevX = rectData?.x;
+                        prevWidth = rectData?.width;
+                    }
 
                     seriesForRow.push(rectData);
                 }

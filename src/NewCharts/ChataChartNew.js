@@ -24,14 +24,14 @@ import { CSS_PREFIX } from '../Constants';
 import { ColumnChartNew } from './ChataColumnChartNew';
 import { LineChartNew } from './ChataLineChartNew';
 import { refreshTooltips } from '../Tooltips';
-import tippy from 'tippy.js';
 import { getDeltas, getInnerDimensions } from './helpers';
-import { StackedColumnChartNew } from './ChataStackedColumnChartNew';
+import tippy from 'tippy.js';
 
 export function ChataChartNew(
     component,
     { type = 'bar', queryJson, options, onUpdate = () => {}, chartConfig = {} } = {},
 ) {
+    console.log('IN CHATA CHART NEW', { type });
     if (!component || !queryJson) {
         console.warn('Unable to create chart - one of the following parameters were not supplied:', {
             component: !!component,
@@ -87,7 +87,7 @@ export function ChataChartNew(
         var data = newRows;
 
         if (isDataAggregated) {
-            const sortedRows =  sortDataByDate(newRows, columns, 'asc');
+            const sortedRows = sortDataByDate(newRows, columns, 'asc');
             try {
                 const {
                     legendColumnIndex,
@@ -132,6 +132,11 @@ export function ChataChartNew(
                 columns: columns,
                 numberIndices,
                 dataFormatting: getDataFormatting(options.dataFormatting),
+            });
+
+            // REMOVE AFTER TESTING console.log('IMPORTANT')
+            data.forEach((row) => {
+                row[numberColumnIndex] = row[numberColumnIndex] * -1;
             });
         }
 
@@ -364,7 +369,8 @@ export function ChataChartNew(
                     this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
                 case 'stacked_bar':
-                    return null;
+                    this.chartComponent = new BarChartNew(chartContentWrapper, { ...params, stacked: true });
+                    break;
                 case 'stacked_line':
                     return null;
                 default:
