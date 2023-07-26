@@ -4,12 +4,12 @@ import { htmlToElement, checkAndApplyTheme } from '../../Utils'
 import { strings } from '../../Strings'
 import { fetchDataAlerts } from 'autoql-fe-utils'
 import { DataAlertItem } from './Components/DataAlertItem';
+import { DataAlertHeader } from './Components/DataAlertHeader';
 
 import './DataAlerts.scss'
 
 export function DataAlerts(selector, options) {
     checkAndApplyTheme();
-
     const parent = document.querySelector(selector);
     const listContainer = document.createElement('div');
     const settingsContainer = document.createElement('div');
@@ -233,11 +233,13 @@ export function DataAlerts(selector, options) {
         });
         wrapper.hideLoadingDots();
         wrapper.createTitle();
+        const header = new DataAlertHeader();
         listContainer.appendChild(settingsContainer);
         wrapper.appendChild(listContainer);
         const { data } = response;
         const dataAlerts = data.project_alerts.concat(data.custom_alerts);
         console.log(dataAlerts);
+        settingsContainer.appendChild(header);
         dataAlerts.forEach((dataAlert) => {
             const item = new DataAlertItem({
                 dataAlert,

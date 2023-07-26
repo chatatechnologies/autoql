@@ -6,7 +6,6 @@ import { StatusSwitch } from '../StatusSwitch';
 import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
 
 export function DataAlertItem({ dataAlert, authentication }) {
-  console.log(dataAlert);
   const item = document.createElement('div');
   const row = document.createElement('div');
   item.classList.add('autoql-vanilla-notification-setting-item');
