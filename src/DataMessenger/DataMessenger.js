@@ -480,7 +480,7 @@ export function DataMessenger(options = {}) {
             </div>
         `);
         const button = htmlToElement(`
-            <button class="autoql-vanilla-chata-btn primary"
+            <button class="autoql-vanilla-chata-btn autoql-vanilla-primary"
             style="padding: 5px 16px; margin: 10px 5px 2px;">
                 Create a New Notification
             </button>
@@ -498,7 +498,7 @@ export function DataMessenger(options = {}) {
                 },
             );
             var cancelButton = htmlToElement(
-                `<div class="autoql-vanilla-chata-btn default"
+                `<div class="autoql-vanilla-chata-btn autoql-vanilla-default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`,
             );
             var spinner = htmlToElement(`

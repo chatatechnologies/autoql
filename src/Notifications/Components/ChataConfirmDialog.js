@@ -1,11 +1,13 @@
 import { Modal } from '../../Modal'
 import { htmlToElement } from '../../Utils'
 import { strings } from '../../Strings'
-import './ChataConfirmDialog.css'
+import './ChataConfirmDialog.scss'
 
-export function ChataConfirmDialog({ title, message, onDiscard }){
+export function ChataConfirmDialog({ title, message, onDiscard, cancelString = strings.back, discardString = strings.discardChanges }){
     var titleEl = document.createElement('h3')
     var messageEl = document.createElement('p')
+
+    titleEl.classList.add('autoql-vanilla-confirm-title');
 
     titleEl.innerHTML = title
     messageEl.innerHTML = message
@@ -19,14 +21,13 @@ export function ChataConfirmDialog({ title, message, onDiscard }){
 
     var discardButton = htmlToElement(`
         <button
-            class="autoql-vanilla-chata-btn danger large">
-                ${strings.discardChanges}
+            class="autoql-vanilla-chata-btn autoql-vanilla-danger autoql-vanilla-large">
+                ${discardString}
         </button>
     `)
 
     var cancelButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn default"
-            style="padding: 5px 16px; margin: 2px 5px;">${strings.back}</div>`
+        `<div class="autoql-vanilla-chata-btn autoql-vanilla-default autoql-vanilla-large">${cancelString}</div>`
     )
 
     cancelButton.onclick = () => {

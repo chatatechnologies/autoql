@@ -147,9 +147,11 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   }
 
   const deleteDataAlertItemHandler = () => {
-    const modal = ChataConfirmDialog({
+    ChataConfirmDialog({
       title: 'Are you sure you want to delete this Data Alert?',
       message: 'You will no longer be notified about these changes in your data.',
+      cancelString: 'Go Back',
+      discardString: 'Delete',
       onDiscard: () => {
         console.log('discard');
       }

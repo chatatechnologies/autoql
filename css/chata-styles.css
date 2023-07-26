@@ -1342,42 +1342,41 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     pointer-events: none;
 }
 
-.autoql-vanilla-chata-btn.default {
-    color: var(--autoql-vanilla-text-color-primary);
-    border: 1px solid var(--autoql-vanilla-border-color);
+.autoql-vanilla-chata-btn.autoql-vanilla-default {
+    border: 1px solid var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-accent-color);
     background: inherit;
 }
 
-.autoql-vanilla-chata-btn.large {
-    padding: 8px 16px !important;
+.autoql-vanilla-chata-btn.autoql-vanilla-large {
+    padding: 10px 16px !important;
     margin: 2px 5px;
     line-height: normal;
+    font-size: 14px !important;
 }
 
-.autoql-vanilla-chata-btn.danger:hover {
-    background-color: var(--autoql-vanilla-danger-color,#ca0b00);
-    color: #fff;
+.autoql-vanilla-chata-btn.autoql-vanilla-danger:hover {
+    opacity: .8;
 }
 
-.autoql-vanilla-chata-btn.danger {
-    color: var(--autoql-vanilla-danger-color,#ca0b00);
-    border: 1px solid #ca0b00;
-    border: 1px solid var(--autoql-vanilla-danger-color,#ca0b00);
-    background: inherit;
+.autoql-vanilla-chata-btn.autoql-vanilla-danger {
+    color: var(--autoql-vanilla-text-color-accent);
+    background: var(--autoql-vanilla-danger-color-default);
+    background: var(--autoql-vanilla-danger-color,var(--autoql-vanilla-danger-color-default));
+    border: 1px solid var(--autoql-vanilla-danger-color,var(--autoql-vanilla-danger-color-default));
 }
 
-.autoql-vanilla-chata-btn.primary {
+.autoql-vanilla-chata-btn.autoql-vanilla-primary {
     background: var(--autoql-vanilla-accent-color);
     border: 1px solid var(--autoql-vanilla-accent-color);
     color: #fff;
 }
 
-.autoql-vanilla-chata-btn.default:hover{
-    border-color: var(--autoql-vanilla-accent-color);
-    color: var(--autoql-vanilla-accent-color);
+.autoql-vanilla-chata-btn.autoql-vanilla-default:hover{
+    background: var(--autoql-vanilla-mask-color);
 }
 
-.autoql-vanilla-chata-btn.primary:hover{
+.autoql-vanilla-chata-btn.autoql-vanilla-primary:hover{
      opacity: 0.8;
 }
 
