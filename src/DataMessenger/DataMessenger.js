@@ -1947,58 +1947,6 @@ export function DataMessenger(options = {}) {
         allColHiddenMessage(component);
         select(window).on('chata-resize.' + idRequest, null);
     }
-    // obj.displayColumChartHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'column');
-    //     new ChataChartNew(component, {
-    //         type: 'column',
-    //         queryJson: json,
-    //         options: obj.options,
-    //         onUpdate: obj.registerDrilldownChartEvent,
-    //         chartConfig: undefined,
-    //     });
-    //     obj.registerDrilldownChartEvent(component);
-    // };
-
-    // obj.displayBarChartHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'bar');
-    //     new ChataChartNew(component, {
-    //         type: 'bar',
-    //         queryJson: json,
-    //         options: obj.options,
-    //         onUpdate: obj.registerDrilldownChartEvent,
-    //         chartConfig: undefined,
-    //     });
-
-    //     obj.registerDrilldownChartEvent(component);
-    // };
-
-    // obj.displayPieChartHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'pie');
-    //     createPieChart(
-    //         component, json, obj.options, obj.registerDrilldownChartEvent
-    //     );
-    //     obj.registerDrilldownChartEvent(component);
-    // };
-
-    // obj.displayLineChartHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'line');
-    //     new ChataChartNew(component, {
-    //         type: 'line',
-    //         queryJson: json,
-    //         options: obj.options,
-    //         onUpdate: obj.registerDrilldownChartEvent,
-    //         chartConfig: undefined,
-    //     });
-    //     obj.registerDrilldownChartEvent(component);
-    // };
 
     obj.displayPivotTableHandler = (evt, idRequest) => {
         var component = obj.getComponent(idRequest);
@@ -2012,42 +1960,10 @@ export function DataMessenger(options = {}) {
         component.pivotTabulator = table
     }
 
-    // obj.displayHeatmapHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'heatmap');
-    //     createHeatmap(component, json, obj.options);
-    //     obj.registerDrilldownChartEvent(component);
-    // };
-
-    // obj.displayBubbleCharthandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'bubble');
-    //     createBubbleChart(component, json, obj.options);
-    //     obj.registerDrilldownChartEvent(component);
-    // };
-
-    // obj.displayStackedColumnHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'stacked_column');
-    //     new ChataChartNew(component, {
-    //         type: 'stacked_column',
-    //         queryJson: json,
-    //         options: obj.options,
-    //         onUpdate: obj.registerDrilldownChartEvent,
-    //         chartConfig: undefined,
-    //     });
-    //     obj.registerDrilldownStackedChartEvent(component);
-    // };
-
     obj.displayChartHandler = (evt, idRequest, displayType) => {
-        console.log('inside chart handler', {displayType})
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, displayType);
-        console.log('displaying stacked bar!')
         new ChataChartNew(component, {
             type: displayType,
             queryJson: json,
@@ -2062,31 +1978,6 @@ export function DataMessenger(options = {}) {
             obj.registerDrilldownChartEvent(component);
         }
     }
-
-    // obj.displayStackedBarHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'stacked_bar');
-    //     console.log('displaying stacked bar!')
-    //     new ChataChartNew(component, {
-    //         type: 'stacked_bar',
-    //         queryJson: json,
-    //         options: obj.options,
-    //         onUpdate: obj.registerDrilldownChartEvent,
-    //         chartConfig: undefined,
-    //     });
-    //     obj.registerDrilldownStackedChartEvent(component);
-    // };
-
-    // obj.displayAreaHandler = (evt, idRequest) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'stacked_line');
-    //     createAreaChart(
-    //         component, cloneObject(json), obj.options,
-    //         obj.registerDrilldownStackedChartEvent
-    //     );
-    // }
 
     obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
         var button = htmlToElement(`
@@ -2115,7 +2006,6 @@ export function DataMessenger(options = {}) {
 
             const displayChartHandlerFn = (evt, idRequest) => obj.displayChartHandler(evt, idRequest, displayType)
 
-            console.log('display type:', displayType)
             if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
@@ -2935,39 +2825,9 @@ export function DataMessenger(options = {}) {
             case 'pivot_table':
                 obj.putTableResponse(jsonResponse);
                 break;
-            // case 'line':
-            //     var _idRequest = obj.putTableResponse(jsonResponse);
-            //     obj.displayLineChartHandler(null, _idRequest);
-            //     break;
-            // case 'bar':
-            //     var _idRequest = obj.putTableResponse(jsonResponse);
-            //     obj.displayBarChartHandler(null, _idRequest);
-            //     break;
             case 'word_cloud':
                 obj.putTableResponse(jsonResponse);
                 break;
-            // case 'stacked_column':
-            //     var idRequest = obj.putTableResponse(jsonResponse);
-            //     obj.displayStackedColumnHandler(null, idRequest);
-            //     break;
-            // case 'stacked_bar':
-            //     var component = obj.putTableResponse(jsonResponse);
-            //     obj.refreshToolbarButtons(component, 'stacked_bar');
-            //     createStackedBarChart(component, cloneObject(jsonResponse), obj.options);
-            //     break;
-            // case 'bubble':
-            //     var bubbleContainer = obj.putTableResponse(jsonResponse);
-            //     createBubbleChart(bubbleContainer, jsonResponse, obj.options);
-            //     obj.refreshToolbarButtons(bubbleContainer, 'bubble');
-            //     break;
-            // case 'heatmap':
-            //     var mapContainer = obj.putTableResponse(jsonResponse);
-            //     createHeatmap(mapContainer, jsonResponse, obj.options);
-            //     obj.refreshToolbarButtons(mapContainer, 'heatmap');
-            //     break;
-            // case 'pie':
-            //     obj.putTableResponse(jsonResponse);
-            //     break;
             case 'column':
             case 'bar':
             case 'line':
@@ -3040,7 +2900,6 @@ export function DataMessenger(options = {}) {
         obj.input?.addEventListener('keydown',  obj.onEnterHandler);
         document.removeEventListener('DOMContentLoaded', obj.onLoadHandler);
         window.removeEventListener('resize', obj.dispatchResizeEvent);
-        // obj.parentNode.removeChild(obj)
     }
 
     return obj;
