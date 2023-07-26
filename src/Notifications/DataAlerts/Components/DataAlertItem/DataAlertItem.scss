@@ -58,8 +58,17 @@
         align-items: center;
         font-size: 13px;
         cursor: default;
-        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-scheduled {
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-scheduled,
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-live {
           color: var(--autoql-vanilla-success-color);
+        }
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-live .autoql-vanilla-icon {
+          background-color: var(--autoql-vanilla-success-color);
+          border-radius: 20px;
+          color: #fff;
+          padding: 3px;
+          font-size: 1.1em;
+          box-sizing: initial;
         }
         .autoql-vanilla-icon {
           margin-right: 5px;

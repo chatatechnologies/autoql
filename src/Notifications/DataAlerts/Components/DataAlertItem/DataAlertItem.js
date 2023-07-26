@@ -1,9 +1,9 @@
 import './DataAlertItem.scss';
 import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, SCHEDULED_TYPE } from 'autoql-fe-utils';
-import { CALENDAR, CHECK, SETTINGS, TRASH_ICON } from '../../../../Svg';
+import { CALENDAR, CHECK, LIVE_ICON, SETTINGS, TRASH_ICON } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
-import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES, deleteDataAlert  } from 'autoql-fe-utils';
+import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES, deleteDataAlert, formatResetDate } from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
 
@@ -108,6 +108,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
 
   const getState = () => {
     const nextScheduledDate = formatNextScheduleDate(dataAlert.schedules);
+    const enabled = isEnabled(dataAlert.status);
 
     if (dataAlert.status === 'ACTIVE' && dataAlert.notification_type === SCHEDULED_TYPE) {
       let tooltip = 'This Alert runs on a schedule'
@@ -115,6 +116,11 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
         tooltip = `${tooltip} - a notification is scheduled for ${nextScheduledDate}. If your data hasn't changed by then, you will not receive a notification.`
       }
       return createStatusElement('Scheduled', CALENDAR, 'autoql-vanilla-data-alert-scheduled');
+    }
+
+    if (enabled) {
+      const tooltip = 'This Alert is live - Whenever the conditions are met, you will be notified.';
+      return createStatusElement('Live', LIVE_ICON, 'autoql-vanilla-data-alert-live');;
     }
 
     return createStatusElement('Ready', CHECK, 'autoql-vanilla-data-alert-ready');
