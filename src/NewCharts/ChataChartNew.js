@@ -26,12 +26,13 @@ import { LineChartNew } from './ChataLineChartNew';
 import { refreshTooltips } from '../Tooltips';
 import { getDeltas, getInnerDimensions } from './helpers';
 import tippy from 'tippy.js';
+import { HeatmapNew } from './ChataHeatmap';
+import { BubbleChartNew } from './ChataBubbleChart';
 
 export function ChataChartNew(
     component,
     { type = 'bar', queryJson, options, onUpdate = () => {}, chartConfig = {} } = {},
 ) {
-    console.log('IN CHATA CHART NEW', { type });
     if (!component || !queryJson) {
         console.warn('Unable to create chart - one of the following parameters were not supplied:', {
             component: !!component,
@@ -132,11 +133,6 @@ export function ChataChartNew(
                 columns: columns,
                 numberIndices,
                 dataFormatting: getDataFormatting(options.dataFormatting),
-            });
-
-            // REMOVE AFTER TESTING console.log('IMPORTANT')
-            data.forEach((row) => {
-                row[numberColumnIndex] = row[numberColumnIndex] * -1;
             });
         }
 
@@ -362,9 +358,11 @@ export function ChataChartNew(
                 case 'pie':
                     return null;
                 case 'bubble':
-                    return null;
+                    this.chartComponent = new BubbleChartNew(chartContentWrapper, params);
+                    break;
                 case 'heatmap':
-                    return null;
+                    this.chartComponent = new HeatmapNew(chartContentWrapper, params);
+                    break;
                 case 'stacked_column':
                     this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
@@ -372,7 +370,8 @@ export function ChataChartNew(
                     this.chartComponent = new BarChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
                 case 'stacked_line':
-                    return null;
+                    this.chartComponent = new LineChartNew(chartContentWrapper, { ...params, stacked: true });
+                    break;
                 default:
                     return null; // 'Unknown Display Type'
             }

@@ -25,10 +25,10 @@ export function LineChartNew(container, params = {}) {
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
+        stacked,
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } =
-        columnIndexConfig;
+    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } = columnIndexConfig;
     const { dataFormatting } = options;
 
     const scaleParams = {
@@ -37,6 +37,7 @@ export function LineChartNew(container, params = {}) {
         height,
         width,
         dataFormatting,
+        stringColumnIndex,
         stringColumnIndices,
         enableAxisDropdown,
         changeNumberColumnIndices,
@@ -46,7 +47,8 @@ export function LineChartNew(container, params = {}) {
     this.xScale = getBandScale({
         ...scaleParams,
         axis: 'x',
-        columnIndex: stringColumnIndex,
+        innerPadding: stacked ? 1 : undefined,
+        outerPadding: stacked ? 0 : undefined,
     });
 
     this.yScale = getLinearScales({
@@ -55,6 +57,7 @@ export function LineChartNew(container, params = {}) {
         isScaled,
         columnIndices1: visibleSeries,
         colorScales,
+        stacked,
     }).scale;
 
     var xCol = columns[stringColumnIndex];
@@ -73,9 +76,29 @@ export function LineChartNew(container, params = {}) {
 
         if (this.lines) this.lines.remove();
 
+        const smoothing = PATH_SMOOTHING; // stacked ? 0 : PATH_SMOOTHING
+
+        let minValue = this.yScale.domain()[0];
+        if (minValue < 0) {
+            minValue = 0;
+        }
+
+        let prevVertices = [];
+        let cumulativeValues = [];
         var lineData = function (colIndex, i) {
+            if (i === 0) {
+                prevVertices = [];
+                cumulativeValues = [];
+        
+                self.xScale.domain().forEach((xLabel) => {
+                    cumulativeValues.push(minValue);
+                    prevVertices.push([self.xScale(xLabel), self.yScale(minValue)]);
+                });
+            }
+
             const vertices = [];
             const color = self.yScale?.colorScale?.(colIndex);
+            const currentValues = [];
 
             data.forEach((d, index) => {
                 if (visibleSeries.includes(colIndex)) {
@@ -90,22 +113,48 @@ export function LineChartNew(container, params = {}) {
                         backgroundColor,
                         color,
                         index,
+                        stacked,
+                        prevVertices,
+                        cumulativeValues,
                         d,
                     });
+
+                    if (stacked && vertexData) {
+                        currentValues[index] = vertexData.value;
+                    }
 
                     vertices.push(vertexData);
                 }
             });
 
-            const pathD = createSVGPath(
-                vertices.map((circle) => [circle.cx, circle.cy]),
-                PATH_SMOOTHING,
-            );
+            if (stacked && currentValues) {
+                cumulativeValues = currentValues;
+            }
+
+            const currentVertices = vertices.map((circle) => [circle.cx, circle.cy]);
+
+            let pathD;
+
+            if (prevVertices && stacked) {
+                const prevVerticesReversed = [...prevVertices].reverse();
+
+                // Create closed loop by combining vertices then adding a copy of the first point at the end
+                pathD = createSVGPath([...currentVertices, ...prevVerticesReversed, currentVertices[0]], smoothing);
+
+                console.log('merged paths:', {
+                    pathD,
+                });
+
+                prevVertices = currentVertices;
+            } else {
+                pathD = createSVGPath(currentVertices, smoothing);
+            }
 
             const path = {
                 key: `line-${getKey(0, i)}`,
                 pathD,
                 stroke: color,
+                fill: stacked ? color : 'transparent',
             };
 
             return [
@@ -115,6 +164,13 @@ export function LineChartNew(container, params = {}) {
                 },
             ];
         };
+
+        // ---temp
+        // Reverse the final values so the strokes on the bottom are drawn on top
+        const cumulativeData = visibleSeries.map(lineData);
+        const reversedCumulativeData = [...cumulativeData].reverse();
+        console.log({ cumulativeData, reversedCumulativeData });
+        //
 
         const seriesContainerClass = 'autoql-vanilla-line-chart-series-container';
         const vertexClass = 'autoql-vanilla-inner-vertex';
@@ -139,46 +195,49 @@ export function LineChartNew(container, params = {}) {
             .attr('class', pathClass)
             .attr('d', (d) => d.path.pathD)
             .style('stroke', (d) => d.path.stroke)
-            .style('fill', 'none')
+            .style('fill', (d) => d.path.fill)
+            .style('fill-opacity', 0.7)
             .style('stroke-width', 2);
 
-        // Circles
-        seriesContainers
-            .append('g')
-            .attr('class', 'autoql-vanilla-line-chart-vertices')
-            .selectAll(`circle.${vertexClass}`)
-            .data((d) => d.vertices)
-            .enter()
-            .append('circle')
-            .attr('class', vertexClass)
-            .attr('cx', (d) => d.cx)
-            .attr('cy', (d) => d.cy)
-            .attr('r', 2.5)
-            .style('pointer-events', 'none')
-            .style('stroke', (d) => d.style.color)
-            .style('stroke-width', 4)
-            .style('paint-order', 'stroke')
-            .style('opacity', largeDataset ? 0 : 1)
-            .style('color', (d) => d.style.color)
-            .style('fill', (d) => d.style.fill);
+        if (!stacked) {
+            // Circles
+            seriesContainers
+                .append('g')
+                .attr('class', 'autoql-vanilla-line-chart-vertices')
+                .selectAll(`circle.${vertexClass}`)
+                .data((d) => d.vertices)
+                .enter()
+                .append('circle')
+                .attr('class', vertexClass)
+                .attr('cx', (d) => d.cx)
+                .attr('cy', (d) => d.cy)
+                .attr('r', 2.5)
+                .style('pointer-events', 'none')
+                .style('stroke', (d) => d.style.color)
+                .style('stroke-width', 4)
+                .style('paint-order', 'stroke')
+                .style('opacity', largeDataset ? 0 : 1)
+                .style('color', (d) => d.style.color)
+                .style('fill', (d) => d.style.fill);
 
-        // Hover Circles
-        seriesContainers
-            .append('g')
-            .attr('class', 'autoql-vanilla-line-chart-hover-vertices')
-            .selectAll(`circle.${hoverVertexClass}`)
-            .data((d) => d.vertices)
-            .enter()
-            .append('circle')
-            .attr('class', hoverVertexClass)
-            .attr('cx', (d) => d.cx)
-            .attr('cy', (d) => d.cy)
-            .attr('r', 2.5)
-            .attr('data-tippy-chart', true)
-            .attr('data-tippy-content', (d) => d.tooltip)
-            .style('stroke', 'transparent')
-            .style('fill', 'transparent')
-            .style('cursor', 'pointer');
+            // Hover Circles
+            seriesContainers
+                .append('g')
+                .attr('class', 'autoql-vanilla-line-chart-hover-vertices')
+                .selectAll(`circle.${hoverVertexClass}`)
+                .data((d) => d.vertices)
+                .enter()
+                .append('circle')
+                .attr('class', hoverVertexClass)
+                .attr('cx', (d) => d.cx)
+                .attr('cy', (d) => d.cy)
+                .attr('r', 2.5)
+                .attr('data-tippy-chart', true)
+                .attr('data-tippy-content', (d) => d.tooltip)
+                .style('stroke', 'transparent')
+                .style('fill', 'transparent')
+                .style('cursor', 'pointer');
+        }
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
