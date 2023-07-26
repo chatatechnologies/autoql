@@ -16,6 +16,7 @@ export function ColumnChartNew(container, params = {}) {
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
+        stacked,
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } =
@@ -28,6 +29,7 @@ export function ColumnChartNew(container, params = {}) {
         height,
         width,
         dataFormatting,
+        stringColumnIndex,
         stringColumnIndices,
         enableAxisDropdown,
         changeNumberColumnIndices,
@@ -46,6 +48,7 @@ export function ColumnChartNew(container, params = {}) {
         isScaled,
         columnIndices1: visibleSeries,
         colorScales,
+        stacked,
     }).scale;
 
     var xCol = columns[stringColumnIndex];
@@ -59,13 +62,18 @@ export function ColumnChartNew(container, params = {}) {
 
         if (this.bars) this.bars.remove();
 
-        var barWidth = this.xScale.tickSize / visibleSeries.length;
-
+        let barWidth = this.xScale.tickSize
+        if (!stacked) {
+            barWidth = barWidth / visibleSeries.length;
+        }
+       
         var self = this;
 
         var barData = function (d, index) {
             var seriesForRow = [];
             var visibleIndex = 0;
+            let prevY;
+            let prevHeight;
 
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
@@ -80,11 +88,19 @@ export function ColumnChartNew(container, params = {}) {
                         visibleIndex,
                         barWidth,
                         index,
+                        stacked,
+                        prevY,
+                        prevHeight,
                         i,
                         d,
                     });
 
                     visibleIndex += 1;
+
+                    if (rectData && stacked) {
+                        prevY = rectData?.y;
+                        prevHeight = rectData?.height;
+                    }
 
                     seriesForRow.push(rectData);
                 }

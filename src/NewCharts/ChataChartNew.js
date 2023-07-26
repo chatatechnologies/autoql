@@ -361,7 +361,7 @@ export function ChataChartNew(
                 case 'heatmap':
                     return null;
                 case 'stacked_column':
-                    this.chartComponent = new StackedColumnChartNew(chartContentWrapper, params);
+                    this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
                 case 'stacked_bar':
                     return null;
