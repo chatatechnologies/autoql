@@ -1,9 +1,26 @@
 import './DataAlertItem.scss';
-import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, SCHEDULED_TYPE } from 'autoql-fe-utils';
-import { CALENDAR, CHECK, LIVE_ICON, SETTINGS, TRASH_ICON } from '../../../../Svg';
+import { 
+  CALENDAR,
+  CHECK,
+  LIVE_ICON,
+  SETTINGS,
+  TRASH_ICON,
+  LIGHTNING_ICON,
+  REFRESH_ICON 
+} from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
-import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES, deleteDataAlert, formatResetDate } from 'autoql-fe-utils';
+import {
+  updateDataAlertStatus,
+  deleteDataAlert,
+  formatResetDate,
+  getScheduleFrequencyObject,
+  formatNextScheduleDate,
+  resetDateIsFuture, 
+  SCHEDULED_TYPE,
+  DATA_ALERT_ENABLED_STATUSES,
+  CUSTOM_TYPE,
+} from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
 
@@ -109,6 +126,20 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   const getState = () => {
     const nextScheduledDate = formatNextScheduleDate(dataAlert.schedules);
     const enabled = isEnabled(dataAlert.status);
+    const resetDateFormatted = formatResetDate(dataAlert);
+    const isCustom = dataAlert.type === CUSTOM_TYPE
+
+    if (dataAlert.reset_date && resetDateIsFuture(dataAlert)) {
+      const tooltip = `This Alert has been triggered for this cycle. You will not receive notifications until the start of the next cycle, ${resetDateFormatted}.<br/>You can edit this in the <em>Data Alert Settings</em>`;
+      const triggeredStatus = createStatusElement('Triggered', LIGHTNING_ICON, 'autoql-vanilla-data-alert-triggered');
+      if(isCustom) {
+        const refreshIcon = createIcon(REFRESH_ICON);
+        refreshIcon.classList.add('autoql-vanilla-notification-state-action-btn');
+        triggeredStatus.appendChild(refreshIcon);
+      }
+
+      return triggeredStatus;
+    }
 
     if (dataAlert.status === 'ACTIVE' && dataAlert.notification_type === SCHEDULED_TYPE) {
       let tooltip = 'This Alert runs on a schedule'
@@ -120,7 +151,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
 
     if (enabled) {
       const tooltip = 'This Alert is live - Whenever the conditions are met, you will be notified.';
-      return createStatusElement('Live', LIVE_ICON, 'autoql-vanilla-data-alert-live');;
+      return createStatusElement('Live', LIVE_ICON, 'autoql-vanilla-data-alert-live');
     }
 
     return createStatusElement('Ready', CHECK, 'autoql-vanilla-data-alert-ready');

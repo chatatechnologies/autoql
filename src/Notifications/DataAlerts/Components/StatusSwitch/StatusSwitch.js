@@ -2,12 +2,18 @@ import './StatusSwitch.scss';
 import { ChataSlider } from '../../../../ChataComponents';
 import { DATA_ALERT_STATUSES } from 'autoql-fe-utils';
 
+const statusMap = {
+  [DATA_ALERT_STATUSES.ACTIVE]: 'Active',
+  [DATA_ALERT_STATUSES.WAITING]: 'Active', 
+  [DATA_ALERT_STATUSES.INACTIVE]: 'Inactive',
+}
+
 export function StatusSwitch({ status, onChange }) {
   const slider = new ChataSlider();
   const textStatus = document.createElement('span');
   textStatus.classList.add('autql-vanilla-switch-text');
   slider.classList.add('autoql-vanilla-switcher-status');
-  textStatus.textContent = status.charAt(0).toUpperCase() + status.slice(1).toLowerCase();
+  textStatus.textContent = statusMap[status];
   slider.appendChild(textStatus);
 
   slider.setOnChange(async () => {
@@ -24,7 +30,7 @@ export function StatusSwitch({ status, onChange }) {
     }
   })
 
-  if(status === 'ACTIVE') {
+  if(status === 'ACTIVE' || status === 'WAITING') {
     slider.setChecked(true);
     textStatus.classList.add('left');
   } else {
