@@ -1,0 +1,30 @@
+.autoql-vanilla-notification-setting-item {
+  .autoql-vanilla-notification-setting-item-header {
+    .autoql-vanilla-data-alert-list-item-section {
+      &.autoql-vanilla-notification-setting-display-name-header {
+        flex: 2.8 0 30px;
+        padding-left: 12px;
+        justify-content: flex-start;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-frequency-header {
+        justify-content: center;
+        flex: 1.5 0 35px;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-state-header {
+        flex: 1;
+        justify-content: end;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-next-check-header {
+        justify-content: center;
+        flex: 1.5 0 100px;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-status-header {
+        justify-content: center;
+        flex: 1 0 0px;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-actions-header {
+        flex: 1 0 0px !important;
+      }
+    }
+  }
+}

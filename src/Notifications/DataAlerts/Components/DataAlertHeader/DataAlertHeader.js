@@ -1,11 +1,13 @@
+import './DataAlertHeader.scss';
+
 export function DataAlertHeader() {
   const labelsMap = [
-    {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name'},
-    {name: 'Notification Frequency', className: 'autoql-vanilla-data-alert-list-item-section-frequency'},
-    {name: 'State', className: 'autoql-vanilla-data-alert-list-item-section-state'},
-    {name: 'Next Check', className: 'autoql-vanilla-data-alert-list-item-section-next-check'},
-    {name: 'Status', className: 'autoql-vanilla-data-alert-list-item-section-status'},
-    {name: 'Actions', className: 'autoql-vanilla-data-alert-list-item-section-actions' }
+    {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name-header'},
+    {name: 'Notification Frequency', className: 'autoql-vanilla-data-alert-list-item-section-frequency-header'},
+    {name: 'State', className: 'autoql-vanilla-data-alert-list-item-section-state-header'},
+    {name: 'Next Check', className: 'autoql-vanilla-data-alert-list-item-section-next-check-header'},
+    {name: 'Status', className: 'autoql-vanilla-data-alert-list-item-section-status-header'},
+    {name: 'Actions', className: 'autoql-vanilla-data-alert-list-item-section-actions-header'}
   ];
   const item = document.createElement('div');
   const row = document.createElement('div');
