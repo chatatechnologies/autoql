@@ -5,7 +5,16 @@ import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
 import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
 
-export function DataAlertItem({ dataAlert, authentication }) {
+const labelsMap = [
+  {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name-header'},
+  {name: 'Notification Frequency', className: 'autoql-vanilla-data-alert-list-item-section-frequency-header'},
+  {name: 'State', className: 'autoql-vanilla-data-alert-list-item-section-state-header'},
+  {name: 'Next Check', className: 'autoql-vanilla-data-alert-list-item-section-next-check-header'},
+  {name: 'Status', className: 'autoql-vanilla-data-alert-list-item-section-status-header'},
+  {name: 'Actions', className: 'autoql-vanilla-data-alert-list-item-section-actions-header'}
+];
+
+export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   const item = document.createElement('div');
   const row = document.createElement('div');
   item.classList.add('autoql-vanilla-notification-setting-item');
@@ -26,26 +35,45 @@ export function DataAlertItem({ dataAlert, authentication }) {
     } else {
       item.classList.add('autoql-vanilla-data-alert-disabled');
     }
-    const newState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
+    const newState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState(), 2);
     row.replaceChild(newState, item.elementState);
     item.elementStatestate = newState;
   }
 
-  const createCol = (className, element) => {
+  const createHeaderValue = ({ className, name }) => {
+    const headerCol = document.createElement('div');
+    const value = document.createElement('span');
+
+    headerCol.classList.add('autoql-vanilla-data-alert-header-item');
+    headerCol.classList.add(className);
+
+    value.textContent = name;
+    headerCol.appendChild(value);
+
+    return headerCol;
+  }
+
+  const createCol = (className, element, index) => {
     const section = document.createElement('div');
     const content = document.createElement('div');
     const wrapperContent = document.createElement('span');
     const value = document.createElement('span');
-
+    
     section.classList.add('autoql-vanilla-data-alert-list-item-section');
     section.classList.add(className);
     content.classList.add('autoql-vanilla-data-alert-section-content');
+    
+    if(showHeader) {
+      console.log(index);
+      const labelValue = labelsMap[index];
+      const headerCol = createHeaderValue({ ...labelValue });
+      section.appendChild(headerCol);
+    }
 
     if(typeof element === 'string') {
       value.innerHTML = element;
     }else {
       value.appendChild(element);
-      console.log(element);
     }
 
     wrapperContent.appendChild(value);
@@ -135,14 +163,14 @@ export function DataAlertItem({ dataAlert, authentication }) {
     actionWrapper.appendChild(settingsButton);
     actionWrapper.appendChild(deleteButton);
 
-    item.actionButtons = createCol('autoql-vanilla-data-alert-list-item-section-actions', actionWrapper);
+    item.actionButtons = createCol('autoql-vanilla-data-alert-list-item-section-actions', actionWrapper, 5);
   }
 
-  item.elementTitle = createCol('autoql-vanilla-notification-setting-display-name', title);
-  item.elementFrequency = createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText);
-  item.elementState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState());
-  item.elementCycleStart = createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart());
-  item.elementStatus = createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }));
+  item.elementTitle = createCol('autoql-vanilla-notification-setting-display-name', title, 0);
+  item.elementFrequency = createCol('autoql-vanilla-data-alert-list-item-section-frequency', getScheduleFrequencyObject(dataAlert).displayText, 1);
+  item.elementState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState(), 2);
+  item.elementCycleStart = createCol('autoql-vanilla-data-alert-list-item-section-next-check', getDataAlertCycleStart(), 3);
+  item.elementStatus = createCol('autoql-vanilla-data-alert-list-item-section-status', new StatusSwitch({ onChange: onStatusChange, status }), 4);
 
   item.appendChild(row);
 

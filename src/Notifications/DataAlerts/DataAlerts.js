@@ -4,8 +4,6 @@ import { htmlToElement, checkAndApplyTheme } from '../../Utils'
 import { strings } from '../../Strings'
 import { fetchDataAlerts } from 'autoql-fe-utils'
 import { DataAlertItem } from './Components/DataAlertItem';
-import { DataAlertHeader } from './Components/DataAlertHeader';
-
 import './DataAlerts.scss'
 
 export function DataAlerts(selector, options) {
@@ -233,17 +231,16 @@ export function DataAlerts(selector, options) {
         });
         wrapper.hideLoadingDots();
         wrapper.createTitle();
-        const header = new DataAlertHeader();
         listContainer.appendChild(settingsContainer);
         wrapper.appendChild(listContainer);
         const { data } = response;
         const dataAlerts = data.project_alerts.concat(data.custom_alerts);
         console.log(dataAlerts);
-        settingsContainer.appendChild(header);
-        dataAlerts.forEach((dataAlert) => {
+        dataAlerts.forEach((dataAlert, index) => {
             const item = new DataAlertItem({
                 dataAlert,
                 authentication: wrapper.options.authentication,
+                showHeader: index === 0 ? true : false,
             });
             settingsContainer.appendChild(item);
         })
