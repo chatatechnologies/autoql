@@ -1,9 +1,9 @@
-import { Modal } from '../Modal'
-import { htmlToElement } from '../Utils'
-import { strings } from '../Strings'
+import { Modal } from '../../Modal'
+import { htmlToElement } from '../../Utils'
+import { strings } from '../../Strings'
 import './ChataConfirmDialog.css'
 
-export function ChataConfirmDialog(title, message, onDiscard){
+export function ChataConfirmDialog({ title, message, onDiscard }){
     var titleEl = document.createElement('h3')
     var messageEl = document.createElement('p')
 
@@ -15,7 +15,7 @@ export function ChataConfirmDialog(title, message, onDiscard){
         destroyOnClose: true,
         withHeader: false
     })
-    configModal.chataModal.style.width = '400px';
+    configModal.chataModal.style.width = '450px';
 
     var discardButton = htmlToElement(`
         <button

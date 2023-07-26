@@ -225,7 +225,7 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
     tabulator.toggleFilters();
 }
 
-ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
+/* ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var o = extraParams.caller.options;
     var modalView = new NotificationSettingsModal(o);
     var configModal = new Modal({
@@ -297,7 +297,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
         configModal.close();
     }
 }
-
+ */
 ChataUtils.makeMoreOptionsMenu = (
     idRequest, chataPopover, options, extraParams={}
 ) => {

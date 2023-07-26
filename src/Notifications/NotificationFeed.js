@@ -9,7 +9,6 @@ import { Notification } from './Notification'
 import { NotificationSettingsModal } from './NotificationSettingsModal'
 import { Modal } from '../Modal'
 import { refreshTooltips } from '../Tooltips'
-import { ChataConfirmDialog } from '../ChataComponents'
 import { $dom } from '../Dom'
 import { strings } from '../Strings'
 import emptyStateImg from '../images/notifications_empty_state.png'
@@ -197,13 +196,13 @@ export function NotificationFeed(selector, options) {
         configModal.show();
         refreshTooltips();
         cancelButton.onclick = () => {
-            new ChataConfirmDialog(
+/*             new ChataConfirmDialog(
                 'Are you sure you want to leave this page?',
                 'All unsaved changes will be lost.',
                 () => {
                     configModal.close();
                 },
-            );
+            ); */
         };
         saveButton.onclick = async () => {
             spinner.classList.remove('hidden');

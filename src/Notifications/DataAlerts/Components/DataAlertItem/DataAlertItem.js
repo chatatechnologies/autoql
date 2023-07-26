@@ -4,6 +4,7 @@ import { CALENDAR, CHECK, SETTINGS, TRASH_ICON } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
 import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
+import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
 
 const labelsMap = [
   {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name-header'},
@@ -37,7 +38,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     }
     const newState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState(), 2);
     row.replaceChild(newState, item.elementState);
-    item.elementStatestate = newState;
+    item.elementState = newState;
   }
 
   const createHeaderValue = ({ className, name }) => {
@@ -64,7 +65,6 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     content.classList.add('autoql-vanilla-data-alert-section-content');
     
     if(showHeader) {
-      console.log(index);
       const labelValue = labelsMap[index];
       const headerCol = createHeaderValue({ ...labelValue });
       section.appendChild(headerCol);
@@ -146,6 +146,16 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     return response;
   }
 
+  const deleteDataAlertItemHandler = () => {
+    const modal = ChataConfirmDialog({
+      title: 'Are you sure you want to delete this Data Alert?',
+      message: 'You will no longer be notified about these changes in your data.',
+      onDiscard: () => {
+        console.log('discard');
+      }
+    })
+  }
+
   const createActionButton = (icon, className) => {
     const btn = document.createElement('div');
     btn.classList.add('autoql-vanilla-notification-action-btn');
@@ -162,6 +172,8 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     actionWrapper.classList.add('autoql-vanilla-action-buttons-section');
     actionWrapper.appendChild(settingsButton);
     actionWrapper.appendChild(deleteButton);
+
+    deleteButton.onclick = deleteDataAlertItemHandler;
 
     item.actionButtons = createCol('autoql-vanilla-data-alert-list-item-section-actions', actionWrapper, 5);
   }
