@@ -47,8 +47,8 @@ export function LineChartNew(container, params = {}) {
     this.xScale = getBandScale({
         ...scaleParams,
         axis: 'x',
-        innerPadding: stacked ? 1 : undefined,
-        outerPadding: stacked ? 0 : undefined,
+        innerPadding: 1,
+        outerPadding: 0,
     });
 
     this.yScale = getLinearScales({
@@ -76,8 +76,6 @@ export function LineChartNew(container, params = {}) {
 
         if (this.lines) this.lines.remove();
 
-        const smoothing = PATH_SMOOTHING; // stacked ? 0 : PATH_SMOOTHING
-
         let minValue = this.yScale.domain()[0];
         if (minValue < 0) {
             minValue = 0;
@@ -89,7 +87,7 @@ export function LineChartNew(container, params = {}) {
             if (i === 0) {
                 prevVertices = [];
                 cumulativeValues = [];
-        
+
                 self.xScale.domain().forEach((xLabel) => {
                     cumulativeValues.push(minValue);
                     prevVertices.push([self.xScale(xLabel), self.yScale(minValue)]);
@@ -133,23 +131,21 @@ export function LineChartNew(container, params = {}) {
 
             const currentVertices = vertices.map((circle) => [circle.cx, circle.cy]);
 
-            let pathD;
-
+            let pathD = createSVGPath(currentVertices, PATH_SMOOTHING);
             if (prevVertices && stacked) {
+                // Create closed loop by
+                // 1. Combining vertices with the previous vertices reversed
+                // 2. Adding a copy of the last point without smoothing to start the loop
+                // 3. Adding a copy of the first point without smoothing at the end to close the loop
                 const prevVerticesReversed = [...prevVertices].reverse();
+                const prevPathDSliced = createSVGPath([...prevVerticesReversed], PATH_SMOOTHING).replace('M', 'L');
+                const firstPoint = `L ${currentVertices[0].join(',')}`
+                const lastPoint = `L ${currentVertices.slice(-1).pop().join(',')}`
 
-                // Create closed loop by combining vertices then adding a copy of the first point at the end
-                pathD = createSVGPath([...currentVertices, ...prevVerticesReversed, currentVertices[0]], smoothing);
-
-                console.log('merged paths:', {
-                    pathD,
-                });
-
-                prevVertices = currentVertices;
-            } else {
-                pathD = createSVGPath(currentVertices, smoothing);
+                pathD = `${pathD} ${lastPoint} ${prevPathDSliced} ${firstPoint}`;
             }
 
+            prevVertices = currentVertices;
             const path = {
                 key: `line-${getKey(0, i)}`,
                 pathD,
@@ -157,20 +153,12 @@ export function LineChartNew(container, params = {}) {
                 fill: stacked ? color : 'transparent',
             };
 
-            return [
-                {
-                    path,
-                    vertices,
-                },
-            ];
+            return [{ path, vertices }];
         };
 
-        // ---temp
         // Reverse the final values so the strokes on the bottom are drawn on top
         const cumulativeData = visibleSeries.map(lineData);
         const reversedCumulativeData = [...cumulativeData].reverse();
-        console.log({ cumulativeData, reversedCumulativeData });
-        //
 
         const seriesContainerClass = 'autoql-vanilla-line-chart-series-container';
         const vertexClass = 'autoql-vanilla-inner-vertex';
@@ -181,12 +169,12 @@ export function LineChartNew(container, params = {}) {
             .append('g')
             .attr('class', 'autoql-vanilla-line-chart-element-container')
             .selectAll(`g.${seriesContainerClass}`)
-            .data(numberColumnIndices)
+            .data(reversedCumulativeData) //  numberColumnIndices)
             .enter()
             .append('g')
             .attr('class', seriesContainerClass)
             .selectAll(`path.${pathClass}`)
-            .data(lineData)
+            .data((d) => d)
             .enter();
 
         // Paths
