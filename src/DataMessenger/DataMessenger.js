@@ -43,10 +43,8 @@ import {
     createAreaChart,
     createBubbleChart,
     createHeatmap,
-    createLineChart,
     createPieChart, 
     createStackedBarChart,
-    createStackedColumnChart
 } from '../Charts'
 import { Scrollbars } from '../Scrollbars'
 import {
@@ -2035,10 +2033,13 @@ export function DataMessenger(options = {}) {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'stacked_column');
-        createStackedColumnChart(
-            component, cloneObject(json), obj.options,
-            obj.registerDrilldownStackedChartEvent
-        );
+        new ChataChartNew(component, {
+            type: 'stacked_column',
+            queryJson: json,
+            options: obj.options,
+            onUpdate: obj.registerDrilldownChartEvent,
+            chartConfig: undefined,
+        });
         obj.registerDrilldownStackedChartEvent(component);
     };
 
@@ -2899,42 +2900,59 @@ export function DataMessenger(options = {}) {
             case 'pivot_table':
                 obj.putTableResponse(jsonResponse);
                 break;
-            case 'line':
-                var _idRequest = obj.putTableResponse(jsonResponse);
-                obj.displayLineChartHandler(null, _idRequest);
-                break;
-            case 'bar':
-                var _idRequest = obj.putTableResponse(jsonResponse);
-                obj.displayBarChartHandler(null, _idRequest);
-                break;
+            // case 'line':
+            //     var _idRequest = obj.putTableResponse(jsonResponse);
+            //     obj.displayLineChartHandler(null, _idRequest);
+            //     break;
+            // case 'bar':
+            //     var _idRequest = obj.putTableResponse(jsonResponse);
+            //     obj.displayBarChartHandler(null, _idRequest);
+            //     break;
             case 'word_cloud':
                 obj.putTableResponse(jsonResponse);
                 break;
-            case 'stacked_column':
-                var idRequest = obj.putTableResponse(jsonResponse);
-                obj.displayStackedColumnHandler(null, idRequest);
-                break;
-            case 'stacked_bar':
-                var component = obj.putTableResponse(jsonResponse);
-                obj.refreshToolbarButtons(component, 'stacked_bar');
-                createStackedBarChart(component, cloneObject(jsonResponse), obj.options);
-                break;
-            case 'bubble':
-                var bubbleContainer = obj.putTableResponse(jsonResponse);
-                createBubbleChart(bubbleContainer, jsonResponse, obj.options);
-                obj.refreshToolbarButtons(bubbleContainer, 'bubble');
-                break;
-            case 'heatmap':
-                var mapContainer = obj.putTableResponse(jsonResponse);
-                createHeatmap(mapContainer, jsonResponse, obj.options);
-                obj.refreshToolbarButtons(mapContainer, 'heatmap');
-                break;
-            case 'pie':
-                obj.putTableResponse(jsonResponse);
-                break;
+            // case 'stacked_column':
+            //     var idRequest = obj.putTableResponse(jsonResponse);
+            //     obj.displayStackedColumnHandler(null, idRequest);
+            //     break;
+            // case 'stacked_bar':
+            //     var component = obj.putTableResponse(jsonResponse);
+            //     obj.refreshToolbarButtons(component, 'stacked_bar');
+            //     createStackedBarChart(component, cloneObject(jsonResponse), obj.options);
+            //     break;
+            // case 'bubble':
+            //     var bubbleContainer = obj.putTableResponse(jsonResponse);
+            //     createBubbleChart(bubbleContainer, jsonResponse, obj.options);
+            //     obj.refreshToolbarButtons(bubbleContainer, 'bubble');
+            //     break;
+            // case 'heatmap':
+            //     var mapContainer = obj.putTableResponse(jsonResponse);
+            //     createHeatmap(mapContainer, jsonResponse, obj.options);
+            //     obj.refreshToolbarButtons(mapContainer, 'heatmap');
+            //     break;
+            // case 'pie':
+            //     obj.putTableResponse(jsonResponse);
+            //     break;
             case 'column':
-                var _idRequest = obj.putTableResponse(jsonResponse);
-                obj.displayColumChartHandler(null, _idRequest);
+            case 'bar':
+            case 'line':
+            case 'stacked_column':
+            case 'stacked_bar':
+            case 'stacked_line':
+            case 'bubble':
+            case 'heatmap':
+            case 'pie':
+                var json = obj.getRequest(_idRequest);
+                var component = obj.getComponent(_idRequest);
+                obj.refreshToolbarButtons(component, displayType);
+                new ChataChartNew(component, {
+                    type: displayType,
+                    queryJson: json,
+                    options: obj.options,
+                    onUpdate: obj.registerDrilldownChartEvent,
+                    chartConfig: undefined,
+                });
+                obj.registerDrilldownChartEvent(component);
                 break;
             case 'help':
                 obj.putHelpMessage(jsonResponse);

@@ -26,6 +26,7 @@ import { LineChartNew } from './ChataLineChartNew';
 import { refreshTooltips } from '../Tooltips';
 import tippy from 'tippy.js';
 import { getDeltas, getInnerDimensions } from './helpers';
+import { StackedColumnChartNew } from './ChataStackedColumnChartNew';
 
 export function ChataChartNew(
     component,
@@ -360,7 +361,8 @@ export function ChataChartNew(
                 case 'heatmap':
                     return null;
                 case 'stacked_column':
-                    return null;
+                    this.chartComponent = new StackedColumnChartNew(chartContentWrapper, params);
+                    break;
                 case 'stacked_bar':
                     return null;
                 case 'stacked_line':
