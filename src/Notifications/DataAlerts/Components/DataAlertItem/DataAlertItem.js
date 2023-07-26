@@ -3,8 +3,9 @@ import { getScheduleFrequencyObject, formatNextScheduleDate, resetDateIsFuture, 
 import { CALENDAR, CHECK, SETTINGS, TRASH_ICON } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
-import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES } from 'autoql-fe-utils';
+import { updateDataAlertStatus, DATA_ALERT_ENABLED_STATUSES, deleteDataAlert  } from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
+import { AntdMessage } from '../../../../Antd';
 
 const labelsMap = [
   {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name-header'},
@@ -152,8 +153,14 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
       message: 'You will no longer be notified about these changes in your data.',
       cancelString: 'Go Back',
       discardString: 'Delete',
-      onDiscard: () => {
-        console.log('discard');
+      onDiscard: async () => {
+        const response = await deleteDataAlert(id, authentication);
+        if(response.status === 200) {
+          item.parentElement.removeChild(item);
+          new AntdMessage('Data Alert was successfully deleted.', 3000);
+        } else {
+          new AntdMessage('Error', 3000);
+        }
       }
     })
   }
