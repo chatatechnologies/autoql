@@ -1,4 +1,10 @@
 .autoql-vanilla-modal-full-size {
   width: 95vw;
   height: 100%;
+  .autoql-vanilla-modal-footer {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
+  }
 }

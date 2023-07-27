@@ -1348,6 +1348,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     background: inherit;
 }
 
+.autoql-vanilla-chata-btn.autoql-vanilla-btn-no-border {
+    border: none!important;
+}
+
 .autoql-vanilla-chata-btn.autoql-vanilla-large {
     padding: 10px 16px !important;
     margin: 2px 5px;
