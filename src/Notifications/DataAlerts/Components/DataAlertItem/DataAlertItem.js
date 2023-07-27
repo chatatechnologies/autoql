@@ -130,7 +130,6 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     const enabled = isEnabled(dataAlert.status);
     const resetDateFormatted = formatResetDate(dataAlert);
     const isCustom = dataAlert.type === CUSTOM_TYPE
-
     if (dataAlert.reset_date && resetDateIsFuture(dataAlert)) {
       const tooltip = `This Alert has been triggered for this cycle. You will not receive notifications until the start of the next cycle, ${resetDateFormatted}.<br/>You can edit this in the <em>Data Alert Settings</em>`;
       const triggeredStatus = createStatusElement('Triggered', LIGHTNING_ICON, 'autoql-vanilla-data-alert-triggered');
@@ -138,11 +137,10 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
         const refreshIcon = createIcon(REFRESH_ICON);
         refreshIcon.classList.add('autoql-vanilla-notification-state-action-btn');
         refreshIcon.onclick = async () => {
-          const response = await initializeAlert({ id, ...authentication });
-          if(response.status === 200) {
-            dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
-            toggleAlertStatusView(dataAlert.status);
-          }
+          await initializeAlert({ id, ...authentication });
+          dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
+          dataAlert.reset_date = null;
+          toggleAlertStatusView(dataAlert.status);
         }
         triggeredStatus.appendChild(refreshIcon);
       }
