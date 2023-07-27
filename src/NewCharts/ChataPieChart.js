@@ -22,6 +22,7 @@ export function PieChartNew(container, params = {}) {
         colorScales,
         chartColors,
         legendColumn,
+        onLegendClick,
         outerWidth: width,
         outerHeight: height,
     } = params;
@@ -105,11 +106,8 @@ export function PieChartNew(container, params = {}) {
             .append('path')
             .attr('class', 'autoql-vanilla-pie-chart-slice')
             .attr('d', arc().innerRadius(self.innerRadius).outerRadius(self.outerRadius))
-            .attr('fill', (d, i) => {
-                console.log('getting fill color:', { d, i });
-                return colorScale?.(i);
-            })
-            .attr('data-tippy-content-chart', true)
+            .attr('fill', (d, i) => colorScale?.(i))
+            .attr('data-tippy-chart', true)
             .attr('data-tippy-content', function (d) {
                 return getTooltipContent({
                     row: d.data.value,
@@ -176,6 +174,27 @@ export function PieChartNew(container, params = {}) {
         }
     };
 
+    this.onLegendCellClick = (labelElement) => {
+        console.log({ labelElement });
+        const labelText = labelElement['__data__'];
+        console.log({ labelText });
+        const labelObj = json.parse(labelText);
+        console.log({ jsonParsed: labelObj });
+        const label = legendLabels?.find((l) => l.label === labelText);
+        console.log('CLICKED LABEL:', label);
+        if (!label) {
+            console.warn('unable to find legend item that was clicked');
+            return;
+        }
+
+        const isHidingLabel = !label.hidden;
+        const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
+        const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1;
+        if (allowClick) {
+            onLegendClick(label);
+        }
+    };
+
     this.renderLegend = () => {
         // The legend wrap length threshold should be half of the width
         // Because the pie will never be larger than half the width
@@ -196,9 +215,8 @@ export function PieChartNew(container, params = {}) {
             .labelWrap(legendWrapLength)
             .labelOffset(10)
             .scale(self.legendScale)
-            .on('cellclick', (d) => {
-                // TODO
-                console.log('on legend click', { d });
+            .on('cellclick', function (d) {
+                self.onLegendCellClick(this);
             });
 
         console.log({ legendOrdinal });
