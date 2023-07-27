@@ -16,7 +16,6 @@ export function PieChartNew(container, params = {}) {
         data,
         legend,
         columns,
-        activeKey,
         outerWidth,
         outerHeight,
         chartColors,
@@ -41,23 +40,38 @@ export function PieChartNew(container, params = {}) {
         this.innerRadius = this.outerRadius - 50 > 15 ? this.outerRadius - 50 : 0;
     };
 
-    this.onSliceClick = (d) => {
+    this.onSliceClick = (element, e) => {
+        const newActiveKey = element['__data__']?.data?.key;
+
+        self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
+            select(this)
+                .transition()
+                .duration(500)
+                .attr('transform', function (d) {
+                    console.log(newActiveKey, d.data.key, { d });
+                    if (d.data.key === newActiveKey) {
+                        const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;
+                        const x = Math.cos(a) * 10;
+                        const y = Math.sin(a) * 10;
+                        // move it away from the circle center
+                        return `translate(${x},${y})`;
+                    }
+
+                    return `translate(0,0)`;
+                });
+        });
+
+        this.activeKey = newActiveKey;
+
         // TODO
-        console.log('drilldown click!', { d });
-        const newActiveKey = d?.data?.key;
-        if (newActiveKey === activeKey) {
-            // Put it back if it is expanded
-        } else {
-            // onChartClick({
-            //   row: d.data.value,
-            //   columnIndex: numberColumnIndex,
-            //   columns: columns,
-            //   stringColumnIndex: stringColumnIndex,
-            //   legendColumn: legendColumn,
-            //   activeKey: newActiveKey,
-            // })
-            // activeKey = newActiveKey
-        }
+        // onChartClick({
+        //   row: d.data.value,
+        //   columnIndex: numberColumnIndex,
+        //   columns: columns,
+        //   stringColumnIndex: stringColumnIndex,
+        //   legendColumn: legendColumn,
+        //   activeKey: newActiveKey,
+        // })
     };
 
     this.renderPieSlices = () => {
@@ -94,7 +108,9 @@ export function PieChartNew(container, params = {}) {
             .on('mouseout', function (d) {
                 select(this).style('fill-opacity', 1);
             })
-            .on('click', this.onSliceClick);
+            .on('click', function (e) {
+                self.onSliceClick(this, e);
+            });
 
         // render active pie slice if there is one
         self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
@@ -102,7 +118,7 @@ export function PieChartNew(container, params = {}) {
                 .transition()
                 .duration(500)
                 .attr('transform', function (d) {
-                    if (d.data.key === activeKey) {
+                    if (d.data.key === this.activeKey) {
                         const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;
                         const x = Math.cos(a) * 10;
                         const y = Math.sin(a) * 10;
