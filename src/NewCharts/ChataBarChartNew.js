@@ -128,7 +128,7 @@ export function BarChartNew(container, params = {}) {
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
-                console.log(d);
+                console.log('drilldown click', d);
             }); // TODO
     };
 

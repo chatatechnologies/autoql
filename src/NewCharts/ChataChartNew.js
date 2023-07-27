@@ -15,6 +15,7 @@ import {
     generatePivotTableData,
     getPivotColumnIndexConfig,
     getChartColorVars,
+    CHARTS_WITHOUT_AXES,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -197,7 +198,7 @@ export function ChataChartNew(
     this.data = this.getData();
 
     // Default starting size and position
-    this.deltaX = 100;
+    this.deltaX = 0;
     this.deltaY = 0;
     this.innerHeight = component.parentElement.clientHeight - 100;
     this.innerWidth = component.parentElement.clientWidth - 100;
@@ -222,6 +223,7 @@ export function ChataChartNew(
     };
 
     const onLegendClick = (label) => {
+        console.log('ON LEGEND CLICK IN CHATACHART', { label });
         const newColumns = cloneObject(columns);
         newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
         this.updateColumns(newColumns);
@@ -239,8 +241,6 @@ export function ChataChartNew(
                 data: this.data,
                 type,
             }) ?? {};
-
-        console.log({ labels });
 
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
@@ -281,6 +281,23 @@ export function ChataChartNew(
         });
     };
 
+    this.didLabelsRotate = (chartContentWrapper) => {
+        let labelsRotatedOnSecondDraw = false;
+        if (type !== 'pie') {
+            this.prevBottomLabelsRotated = this.bottomLabelsRotated;
+            this.prevTopLabelsRotated = this.topLabelsRotated;
+            this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
+            this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+
+            labelsRotatedOnSecondDraw =
+                this.drawCount === 2 &&
+                ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
+                    (this.topLabelsRotated && !this.prevTopLabelsRotated));
+        }
+
+        return labelsRotatedOnSecondDraw;
+    };
+
     this.drawChart = (firstDraw = true, redrawParams = {}) => {
         if (this.drawCount > 10) {
             console.warn('recursive drawChart was called over 10 times. Something is wrong.');
@@ -299,7 +316,7 @@ export function ChataChartNew(
             this.outerHeight = component.parentElement.clientHeight;
             this.outerWidth = component.parentElement.clientWidth;
 
-            if (hasDrawnOnce) {
+            if (hasDrawnOnce && !CHARTS_WITHOUT_AXES.includes(type)) {
                 const { innerWidth, innerHeight } = getInnerDimensions(
                     this.chartComponent,
                     this.outerHeight,
@@ -403,28 +420,16 @@ export function ChataChartNew(
                     return null; // 'Unknown Display Type'
             }
 
-            if (type !== 'pie') {
-                // This is used for a safety fallback in case of infinite recursion
-                this.drawCount += 1;
+            // This is used for a safety fallback in case of infinite recursion
+            this.drawCount += 1;
 
-                this.prevBottomLabelsRotated = this.bottomLabelsRotated;
-                this.prevTopLabelsRotated = this.topLabelsRotated;
-                this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
-                this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
-
-                const labelsRotatedOnSecondDraw =
-                    this.drawCount === 2 &&
-                    ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
-                        (this.topLabelsRotated && !this.prevTopLabelsRotated));
-
-                if (firstDraw) {
-                    return this.drawChart(false);
-                } else if (labelsRotatedOnSecondDraw) {
-                    this.drawChart(false, {
-                        bottomLabelsRotated: this.bottomLabelsRotated,
-                        topLabelsRotated: this.topLabelsRotated,
-                    });
-                }
+            if (firstDraw && !CHARTS_WITHOUT_AXES.includes(type)) {
+                return this.drawChart(false);
+            } else if (this.didLabelsRotate(chartContentWrapper)) {
+                this.drawChart(false, {
+                    bottomLabelsRotated: this.bottomLabelsRotated,
+                    topLabelsRotated: this.topLabelsRotated,
+                });
             }
         } catch (error) {
             console.error(error);

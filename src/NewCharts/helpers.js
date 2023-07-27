@@ -3,44 +3,43 @@ import { mergeBoundingClientRects } from 'autoql-fe-utils';
 export const getRenderedChartDimensions = (chartComponent) => {
     const axes = chartComponent?.axesWrapper;
 
-    if (!axes) {
-        console.warn('Unable to get chart dimensions - couldnt find axes element');
-        return {};
+    if (axes) {
+        try {
+            const leftAxisBBox = axes.select('.autoql-vanilla-axis-left')?.node()?.getBoundingClientRect();
+            const topAxisBBox = axes.select('.autoql-vanilla-axis-top')?.node()?.getBoundingClientRect();
+            const bottomAxisBBox = axes.select('.autoql-vanilla-axis-bottom')?.node()?.getBoundingClientRect();
+            const rightAxisBBox = axes.select('.autoql-vanilla-axis-right')?.node()?.getBoundingClientRect();
+            const clippedLegendBBox = axes
+                .select('.autoql-vanilla-chart-legend-clipping-container')
+                ?.node()
+                ?.getBoundingClientRect();
+
+            const axesBBox = mergeBoundingClientRects([
+                leftAxisBBox,
+                bottomAxisBBox,
+                rightAxisBBox,
+                topAxisBBox,
+                clippedLegendBBox,
+            ]);
+
+            const axesWidth = axesBBox?.width ?? 0;
+            const axesHeight = axesBBox?.height ?? 0;
+            const axesX = axesBBox?.x ?? 0;
+            const axesY = axesBBox?.y ?? 0;
+
+            return {
+                chartHeight: axesHeight,
+                chartWidth: axesWidth,
+                chartX: axesX,
+                chartY: axesY,
+            };
+        } catch (error) {
+            console.error(error);
+        }
     }
 
-    try {
-        const leftAxisBBox = axes.select('.autoql-vanilla-axis-left')?.node()?.getBoundingClientRect();
-        const topAxisBBox = axes.select('.autoql-vanilla-axis-top')?.node()?.getBoundingClientRect();
-        const bottomAxisBBox = axes.select('.autoql-vanilla-axis-bottom')?.node()?.getBoundingClientRect();
-        const rightAxisBBox = axes.select('.autoql-vanilla-axis-right')?.node()?.getBoundingClientRect();
-        const clippedLegendBBox = axes
-            .select('.autoql-vanilla-chart-legend-clipping-container')
-            ?.node()
-            ?.getBoundingClientRect();
-
-        const axesBBox = mergeBoundingClientRects([
-            leftAxisBBox,
-            bottomAxisBBox,
-            rightAxisBBox,
-            topAxisBBox,
-            clippedLegendBBox,
-        ]);
-
-        const axesWidth = axesBBox?.width ?? 0;
-        const axesHeight = axesBBox?.height ?? 0;
-        const axesX = axesBBox?.x ?? 0;
-        const axesY = axesBBox?.y ?? 0;
-
-        return {
-            chartHeight: axesHeight,
-            chartWidth: axesWidth,
-            chartX: axesX,
-            chartY: axesY,
-        };
-    } catch (error) {
-        console.error(error);
-        return {};
-    }
+    console.warn('Unable to get chart dimensions - couldnt find inner element');
+    return {};
 };
 
 export const getInnerDimensions = (chartComponent, containerHeight, containerWidth) => {

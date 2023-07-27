@@ -1,7 +1,5 @@
 import {
     applyStylesForHiddenSeries,
-    formatElement,
-    getColorScale,
     getPieChartData,
     getThemeValue,
     getTooltipContent,
@@ -19,13 +17,13 @@ export function PieChartNew(container, params = {}) {
         legend,
         columns,
         activeKey,
-        colorScales,
+        outerWidth,
+        outerHeight,
         chartColors,
         legendColumn,
-        onLegendClick,
-        outerWidth: width,
-        outerHeight: height,
     } = params;
+
+    this.innerChartWrapper = container.append('g').attr('class', 'autoql-vanilla-pie-chart-container');
 
     const { stringColumnIndex, numberColumnIndex } = columnIndexConfig;
     const { dataFormatting } = options;
@@ -33,42 +31,11 @@ export function PieChartNew(container, params = {}) {
     const self = this;
 
     const legendLabels = legend?.labels;
-    const colorScale = colorScales?.colorScale;
-
-    // this.colorScale = getColorScale(
-    //     data.map((d) => d[stringColumnIndex]),
-    //     chartColors,
-    // );
-
-    // const legendLabels = data.map((d, i) => {
-    //     const legendString = `${formatElement({
-    //         element: d[stringColumnIndex] || 'Untitled Category',
-    //         column: columns?.[stringColumnIndex],
-    //     })}: ${formatElement({
-    //         element: d[numberColumnIndex] || 0,
-    //         column: columns?.[numberColumnIndex],
-    //         config: columns?.[dataFormatting],
-    //     })}`;
-    //     return {
-    //         label: legendString.trim(),
-    //         hidden: false,
-    //         dataIndex: i,
-    //     };
-    // });
-
-    console.log({ legendLabels });
 
     this.setRadius = () => {
-        let margin = 40;
+        const PADDING = 20;
 
-        let pieWidth;
-        if (width < height) {
-            pieWidth = width / 2 - margin;
-        } else if (height * 2 < width) {
-            pieWidth = height - margin;
-        } else {
-            pieWidth = width / 2 - margin;
-        }
+        const pieWidth = Math.min(outerWidth / 2 - PADDING, outerHeight - PADDING);
 
         this.outerRadius = pieWidth / 2;
         this.innerRadius = this.outerRadius - 50 > 15 ? this.outerRadius - 50 : 0;
@@ -76,7 +43,7 @@ export function PieChartNew(container, params = {}) {
 
     this.onSliceClick = (d) => {
         // TODO
-        console.log('on click!', { d });
+        console.log('drilldown click!', { d });
         const newActiveKey = d?.data?.key;
         if (newActiveKey === activeKey) {
             // Put it back if it is expanded
@@ -94,19 +61,19 @@ export function PieChartNew(container, params = {}) {
     };
 
     this.renderPieSlices = () => {
-        this.slicesContainer = this.pieChartContainer
+        this.slicesContainer = this.innerChartWrapper
             .append('g')
             .attr('class', 'autoql-vanilla-pie-chart-slices')
-            .attr('transform', `translate(${width / 2 + this.outerRadius},${height / 2})`);
+            .attr('transform', `translate(${outerWidth / 2 + this.outerRadius},${outerHeight / 2})`);
 
         this.slicesContainer
             .selectAll('.autoql-vanilla-pie-chart-slices')
-            .data(self.dataReady)
+            .data(self.pieData)
             .enter()
             .append('path')
             .attr('class', 'autoql-vanilla-pie-chart-slice')
             .attr('d', arc().innerRadius(self.innerRadius).outerRadius(self.outerRadius))
-            .attr('fill', (d, i) => colorScale?.(i))
+            .attr('fill', (d) => d.data?.value?.legendLabel?.color)
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', function (d) {
                 return getTooltipContent({
@@ -122,15 +89,15 @@ export function PieChartNew(container, params = {}) {
             .attr('stroke-width', '0.5px')
             .attr('stroke', getThemeValue('background-color-secondary', CSS_PREFIX))
             .on('mouseover', function (d) {
-                select(this).style('fill-opacity', 1);
+                select(this).style('fill-opacity', 0.7);
             })
             .on('mouseout', function (d) {
-                select(this).style('fill-opacity', 0.85);
+                select(this).style('fill-opacity', 1);
             })
             .on('click', this.onSliceClick);
 
         // render active pie slice if there is one
-        self.pieChartContainer.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
+        self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
             select(this)
                 .transition()
                 .duration(500)
@@ -149,14 +116,8 @@ export function PieChartNew(container, params = {}) {
     this.applyStylesForHiddenSeries = () => {
         try {
             // const legendLabelTexts = legendLabels.filter((l) => l.hidden).map((l) => l.label);
-
-            // console.log({ legendLabels, legendD3: this.legend });
             // this.legendSwatchElements = this.legend.select(`.label tspan`);
-
-            // console.log('legend swatch elements:', this.legendSwatchElements);
-
             // this.legendSwatchElements.each(function (d) {
-            //     console.log('IN FOR EACH!', this);
             //     const cellNode = select(this).node();
             //     const swatchElement = cellNode.parentElement.parentElement.querySelector('.swatch');
             //     swatchElement.style.strokeWidth = '2px';
@@ -174,36 +135,29 @@ export function PieChartNew(container, params = {}) {
         }
     };
 
-    this.onLegendCellClick = (labelElement) => {
-        console.log({ labelElement });
-        const labelText = labelElement['__data__'];
-        console.log({ labelText });
-        const labelObj = json.parse(labelText);
-        console.log({ jsonParsed: labelObj });
-        const label = legendLabels?.find((l) => l.label === labelText);
-        console.log('CLICKED LABEL:', label);
+    this.onLegendCellClick = (label) => {
         if (!label) {
             console.warn('unable to find legend item that was clicked');
             return;
         }
 
-        const isHidingLabel = !label.hidden;
         const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
-        const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1;
+        const allowClick = label.hidden || visibleLegendLabels?.length > 1;
         if (allowClick) {
-            onLegendClick(label);
+            legend.onLegendClick?.(label);
         }
     };
 
     this.renderLegend = () => {
+        // TODO: use existing legend component instead of this custom legend
         // The legend wrap length threshold should be half of the width
         // Because the pie will never be larger than half the width
-        const legendWrapLength = width / 2 - 70; // 70 for the width of the circles and padding
-        this.legend = this.pieChartContainer
+        const legendWrapLength = outerWidth / 2 - 70; // 70 for the width of the circles and padding
+        this.legend = this.innerChartWrapper
             .append('g')
             .attr('class', 'legendOrdinal')
             .style('fill', 'currentColor')
-            .style('fill-opacity', '0.7')
+            .style('fill-opacity', 1)
             .style('font-family', 'inherit')
             .style('font-size', '10px')
             .style('stroke-width', '2px');
@@ -215,40 +169,33 @@ export function PieChartNew(container, params = {}) {
             .labelWrap(legendWrapLength)
             .labelOffset(10)
             .scale(self.legendScale)
-            .on('cellclick', function (d) {
-                self.onLegendCellClick(this);
+            .on('cellclick', function (e, d) {
+                const cellElement = e.target?.parentElement?.parentElement;
+                const cellDataJson = JSON.parse(select(cellElement).data());
+                self.onLegendCellClick(cellDataJson);
             });
-
-        console.log({ legendOrdinal });
 
         this.legend.call(legendOrdinal);
 
         const legendBBox = this.legend?.node()?.getBBox() ?? {};
         const legendHeight = legendBBox?.height ?? 0;
         const legendWidth = legendBBox?.width ?? 0;
-        const legendXPosition = width / 2 - legendWidth - 20;
-        const legendYPosition = legendHeight < height - 20 ? (height - legendHeight) / 2 : 15;
+        const legendXPosition = outerWidth / 2 - legendWidth - 20;
+        const legendYPosition = legendHeight < outerHeight - 20 ? (outerHeight - legendHeight) / 2 : 15;
 
         this.legend.attr('transform', `translate(${legendXPosition}, ${legendYPosition})`);
         this.applyStylesForHiddenSeries();
     };
 
     this.centerVisualization = () => {
-        try {
-            const containerBBox = this.pieChartContainer?.node()?.getBBox();
+        const chartBBox = this.innerChartWrapper?.node()?.getBBox();
 
-            if (!containerBBox) {
-                return;
-            }
+        if (chartBBox) {
+            const currentXPosition = chartBBox.x;
+            const finalXPosition = (outerWidth - chartBBox.width) / 2;
+            const deltaX = finalXPosition - currentXPosition;
 
-            const containerWidth = containerBBox?.width ?? 0;
-            const currentXPosition = containerBBox?.x ?? 0;
-            const finalXPosition = (width - containerWidth) / 2;
-            const xDelta = finalXPosition - currentXPosition;
-
-            this.pieChartContainer.attr('transform', `translate(${xDelta},0)`);
-        } catch (error) {
-            console.error(error);
+            this.innerChartWrapper.attr('transform', `translate(${deltaX},0)`);
         }
     };
 
@@ -262,20 +209,20 @@ export function PieChartNew(container, params = {}) {
             chartColors,
         });
 
-        this.dataReady = pieChartFn;
+        this.pieData = pieChartFn;
         this.legendScale = legendScale;
-
-        this.pieChartContainer = container
-            .append('g')
-            .attr('class', 'autoql-vanilla-pie-chart-container')
-            .attr('id', `autoql-vanilla-pie-chart-container-${this.CHART_ID}`);
 
         this.renderPieSlices();
         this.renderLegend();
         this.centerVisualization();
     };
 
-    this.renderPie();
+    try {
+        this.renderPie();
+    } catch (error) {
+        this.innerChartWrapper?.select('*')?.remove();
+        console.error(error);
+    }
 
     return this;
 }
