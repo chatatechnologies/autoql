@@ -38,6 +38,7 @@ import {
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
 import { ChartLoader } from './ChartLoader'
+import { CSS_PREFIX } from '../Constants'
 
 export function createBarChart(
     component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -73,7 +74,7 @@ export function createBarChart(
     var shapePadding = 100;
     let groupableCount = getGroupableCount(origJson)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     const paddingRectVert = 4;
     const paddingRectHoz = 8;

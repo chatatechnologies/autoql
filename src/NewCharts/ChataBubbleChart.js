@@ -26,6 +26,7 @@ export function BubbleChartNew(container, params = {}) {
         columns,
         height,
         width,
+        chartColors,
         dataFormatting,
         stringColumnIndex,
         stringColumnIndices,
@@ -47,8 +48,8 @@ export function BubbleChartNew(container, params = {}) {
         axis: 'y',
         innerPadding: 0.01,
         outerPadding: 0,
-      })
-    
+    });
+
     var xCol = columns[stringColumnIndex];
     var yCol = legendColumn;
 
@@ -59,7 +60,7 @@ export function BubbleChartNew(container, params = {}) {
         }
 
         if (this.squares) this.squares.remove();
-       
+
         var self = this;
 
         var barData = function (d, index) {
@@ -79,6 +80,7 @@ export function BubbleChartNew(container, params = {}) {
                         radiusScale: getRadiusScale(data, visibleSeries, self.xScale, self.yScale),
                         legendLabels: legend.labels,
                         legendColumn,
+                        chartColors,
                         i,
                         d,
                     });

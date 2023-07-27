@@ -19,6 +19,7 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
+import { CSS_PREFIX } from '../Constants'
 
 export function createPieChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -33,7 +34,7 @@ export function createPieChart(
     var indexList = getIndexesByType(colsEnum);
     var xIndexes = [];
     var yIndexes = [];
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])

@@ -14,6 +14,7 @@ import {
     sortDataByDate,
     generatePivotTableData,
     getPivotColumnIndexConfig,
+    getChartColorVars,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -28,11 +29,14 @@ import { getDeltas, getInnerDimensions } from './helpers';
 import tippy from 'tippy.js';
 import { HeatmapNew } from './ChataHeatmap';
 import { BubbleChartNew } from './ChataBubbleChart';
+import { PieChartNew } from './ChataPieChart';
 
 export function ChataChartNew(
     component,
-    { type = 'bar', queryJson, options, onUpdate = () => {}, chartConfig = {} } = {},
+    { type = 'bar', queryJson, options = {}, onUpdate = () => {}, chartConfig = {} } = {},
 ) {
+    const dataFormatting = getDataFormatting(options.dataFormatting);
+
     if (!component || !queryJson) {
         console.warn('Unable to create chart - one of the following parameters were not supplied:', {
             component: !!component,
@@ -80,16 +84,28 @@ export function ChataChartNew(
             },
             series: indices1,
             columnIndexConfig,
+            activeKey: undefined,
         };
     }
 
+    var colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
+
     this.getData = (rows) => {
-        let newRows = rows ?? origRows;
+        let newRows = rows ?? origRows ?? [];
         var data = newRows;
+
+        if (type === 'pie') {
+            return [...data].sort((aRow, bRow) => {
+                const a = aRow[columnIndexConfig.numberColumnIndex] || 0;
+                const b = bRow[columnIndexConfig.numberColumnIndex] || 0;
+                return parseFloat(b) - parseFloat(a);
+            });
+        }
 
         if (isDataAggregated) {
             const sortedRows = sortDataByDate(newRows, columns, 'asc');
             try {
+                // TODO: pass this data in from parent
                 const {
                     legendColumnIndex,
                     pivotColumnHeaders,
@@ -102,7 +118,7 @@ export function ChataChartNew(
                     rows: sortedRows,
                     columns,
                     tableConfig: columnIndexConfig,
-                    dataFormatting: options.dataFormatting,
+                    dataFormatting,
                 });
 
                 let pivotColumnIndexConfig = {
@@ -132,7 +148,7 @@ export function ChataChartNew(
                 aggColIndex: columnIndexConfig.stringColumnIndex,
                 columns: columns,
                 numberIndices,
-                dataFormatting: getDataFormatting(options.dataFormatting),
+                dataFormatting,
             });
         }
 
@@ -217,9 +233,14 @@ export function ChataChartNew(
             getLegendLabels({
                 isDataAggregated,
                 columns,
-                colorScales: this.colorScales,
+                colorScales,
                 columnIndexConfig,
+                dataFormatting,
+                data: this.data,
+                type,
             }) ?? {};
+
+        console.log({ labels });
 
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
@@ -312,7 +333,9 @@ export function ChataChartNew(
                 .attr('transform', `translate(${this.deltaX}, ${this.deltaY})`)
                 .style('visibility', 'hidden');
 
-            this.colorScales = getColorScales({ ...columnIndexConfig });
+            colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
+
+            const chartColors = getChartColorVars(CSS_PREFIX) ?? {};
 
             const params = {
                 data: this.data,
@@ -331,10 +354,11 @@ export function ChataChartNew(
                 firstDraw,
                 hasRowSelector,
                 isScaled,
-                colorScales: this.colorScales,
+                colorScales,
                 legend: getLegendObject(),
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
                 tippyInstance: this.tippyInstance,
+                activeKey: metadataElement.metadata.activeKey,
                 toggleChartScale: this.toggleChartScale,
                 changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
                 changeStringColumnIndices: this.changeStringColumnIndices,
@@ -342,6 +366,8 @@ export function ChataChartNew(
                 onNewData: this.onNewData,
                 onDataFetchError: this.onDataFetchError,
                 redraw: this.drawChart,
+                ...colorScales,
+                ...chartColors,
                 ...redrawParams,
             };
 
@@ -356,7 +382,8 @@ export function ChataChartNew(
                     this.chartComponent = new LineChartNew(chartContentWrapper, params);
                     break;
                 case 'pie':
-                    return null;
+                    this.chartComponent = new PieChartNew(chartContentWrapper, params);
+                    break;
                 case 'bubble':
                     this.chartComponent = new BubbleChartNew(chartContentWrapper, params);
                     break;
@@ -376,26 +403,28 @@ export function ChataChartNew(
                     return null; // 'Unknown Display Type'
             }
 
-            // This is used for a safety fallback in case of infinite recursion
-            this.drawCount += 1;
+            if (type !== 'pie') {
+                // This is used for a safety fallback in case of infinite recursion
+                this.drawCount += 1;
 
-            this.prevBottomLabelsRotated = this.bottomLabelsRotated;
-            this.prevTopLabelsRotated = this.topLabelsRotated;
-            this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
-            this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+                this.prevBottomLabelsRotated = this.bottomLabelsRotated;
+                this.prevTopLabelsRotated = this.topLabelsRotated;
+                this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
+                this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
 
-            const labelsRotatedOnSecondDraw =
-                this.drawCount === 2 &&
-                ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
-                    (this.topLabelsRotated && !this.prevTopLabelsRotated));
+                const labelsRotatedOnSecondDraw =
+                    this.drawCount === 2 &&
+                    ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
+                        (this.topLabelsRotated && !this.prevTopLabelsRotated));
 
-            if (firstDraw) {
-                return this.drawChart(false);
-            } else if (labelsRotatedOnSecondDraw) {
-                this.drawChart(false, {
-                    bottomLabelsRotated: this.bottomLabelsRotated,
-                    topLabelsRotated: this.topLabelsRotated,
-                });
+                if (firstDraw) {
+                    return this.drawChart(false);
+                } else if (labelsRotatedOnSecondDraw) {
+                    this.drawChart(false, {
+                        bottomLabelsRotated: this.bottomLabelsRotated,
+                        topLabelsRotated: this.topLabelsRotated,
+                    });
+                }
             }
         } catch (error) {
             console.error(error);

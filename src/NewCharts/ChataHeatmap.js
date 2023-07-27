@@ -11,6 +11,7 @@ export function HeatmapNew(container, params = {}) {
         visibleSeries,
         options = {},
         legendColumn,
+        chartColors,
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
@@ -79,6 +80,7 @@ export function HeatmapNew(container, params = {}) {
                         opacityScale: getOpacityScale(data, visibleSeries),
                         legendLabels: legend.labels,
                         legendColumn,
+                        chartColors,
                         i,
                         d,
                     });

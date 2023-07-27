@@ -32,6 +32,7 @@ import {
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 import { area } from 'd3-shape'
+import { CSS_PREFIX } from '../Constants'
 
 export function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 15, right: 10, bottom: 50, left: 80},
@@ -41,7 +42,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var height;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     const paddingRectVert = 4;
     const paddingRectHoz = 8;

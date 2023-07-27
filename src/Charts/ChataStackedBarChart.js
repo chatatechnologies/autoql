@@ -32,6 +32,7 @@ import {
 import { ChataUtils } from '../ChataUtils'
 
 import './ChataChart.scss'
+import { CSS_PREFIX } from '../Constants'
 
 export function createStackedBarChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -45,7 +46,7 @@ export function createStackedBarChart(
     var notGroupableField = getNotGroupableField(json);
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     var allLengths = [];
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     const paddingRectVert = 4;
     const paddingRectHoz = 8;

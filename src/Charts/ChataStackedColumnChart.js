@@ -33,6 +33,7 @@ import {
 import { ChataUtils } from '../ChataUtils'
 
 import './ChataChart.scss'
+import { CSS_PREFIX } from '../Constants'
 
 export function createStackedColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -45,7 +46,7 @@ export function createStackedColumnChart(
     var height;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     const paddingRectVert = 4;
     const paddingRectHoz = 8;
