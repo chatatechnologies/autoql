@@ -360,6 +360,14 @@ export function htmlToElement(html) {
     return template.content.firstChild;
 }
 
+export function createIcon(icon) {
+    const span = document.createElement('span');
+    span.appendChild(htmlToElement(icon));
+    span.classList.add('autoql-vanilla-icon');
+    
+    return span;
+}
+
 export function createTableContainer(){
     var div = document.createElement('div');
     div.classList.add('autoql-vanilla-chata-table');
@@ -673,6 +681,16 @@ export function mouseY(evt) {
     }else{
         return null;
     }
+}
+
+export function closeAutocompleteObjects() {
+    var list = document.querySelectorAll(
+        '.autoql-vanilla-data-explorer-autocomplete'
+    )
+    for (var i = 0; i < list.length; i++) {
+        list[i].classList.remove('show');
+    }
+
 }
 
 export function closeAllChartPopovers(){

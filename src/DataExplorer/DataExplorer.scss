@@ -1,0 +1,123 @@
+.autoql-vanilla-querytips-container{
+  font-family: sans-serif;
+  line-height: 1.5;
+  font-size: 14px;
+  max-height: 100%;
+  height: 100%;
+  .autoql-vanilla-data-explorer-intro-message {
+    color: var(--autoql-vanilla-text-color-primary);
+    text-align: center;
+    margin: 50px auto;
+    padding: 0 40px;
+    font-size: 15px;
+    min-height: 0;
+    flex: 1 1;
+  
+    opacity: 0;
+    transform: translateY(100%);
+    animation: slideUp .6s cubic-bezier(.26,.26,0,1);
+    animation-fill-mode: forwards;
+    animation-delay: 0s;
+
+    .autoql-vanilla-intro-message-list-container{
+      display: flex;
+      text-align: left;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    @keyframes slideUp {
+      0% {
+        transform: translateY(100%);
+        opacity: 0; 
+      }
+      100% {
+        transform: translateY(0%);
+        opacity: 1; 
+      } 
+    }
+  
+    h2 {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5em;
+      margin-block-start: 0.83em;
+      margin-block-end: 0.83em;
+      margin-inline-start: 0;
+      margin-inline-end: 0;
+      color: var(--autoql-vanilla-text-color-primary);
+      .autoql-vanilla-icon {
+        margin-left: 5px;
+      }
+    }
+  
+    p {
+      margin-bottom: 1em;
+    }
+  
+    .autoql-vanilla-icon {
+      margin-right: 5px;
+      vertical-align: middle;
+    }
+  }
+  
+  .autoql-vanilla-data-explorer-autocomplete {
+    position: absolute;
+    padding: 5px 0px;
+    top: 60px;
+    left: 10px;
+    right: 10px;
+    display: none;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 24px;
+    z-index: 3;
+    border: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color-secondary);
+    color: var(--autoql-vanilla-text-color-primary);
+    padding-right: 3px;
+    padding-top: 10px;
+    ul {
+      list-style: none;
+      list-style-type: none;
+      visibility: hidden;
+      padding: 0px;
+      padding-right: 5px;
+      overflow: scroll;
+      &:hover {
+        visibility: visible;
+      }
+      &::-webkit-scrollbar-thumb {
+        background-color: var(--autoql-vanilla-scrollbar-color);
+        opacity: .5;
+        border-radius: 5px;
+      }
+      &::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      .autoql-vanilla-subject {
+        cursor: pointer;
+        padding: 2px 2px 2px 18px;
+        letter-spacing: .05em;
+        line-height: 22.5px;
+        visibility: visible;
+        &:hover {
+          background-color: rgba(0, 0, 0, 0.1);
+        }
+        
+        .autoql-vanilla-icon {
+          margin-right: 5px;
+          vertical-align: middle;
+        }
+      }
+    }
+  
+    &.show {
+      display: block;
+    }
+  }
+}

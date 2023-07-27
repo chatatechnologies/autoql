@@ -1,5 +1,6 @@
 .autoql-vanilla-chata-dashboard *, .autoql-vanilla-chata-dashboard *:before, .autoql-vanilla-chata-dashboard *:after{
     box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
     padding: 0px;
     margin: 0px;
     font-family: sans-serif;

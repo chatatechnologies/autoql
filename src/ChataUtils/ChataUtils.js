@@ -4,6 +4,7 @@ import {
     closeAllChartPopovers,
     closeAllToolbars,
     closeAllSafetynetSelectors,
+    closeAutocompleteObjects,
     formatColumnName,
     allColHiddenMessage,
     getNotGroupableField,
@@ -970,10 +971,16 @@ ChataUtils.registerWindowClicks = () => {
 
     const excludeElementsForSafetynet = ['autoql-vanilla-safetynet-selector', 'autoql-vanilla-chata-safetynet-select'];
 
+    const excludeElementsForSubjectAutocomplete = [
+        'autoql-vanilla-subject',
+        'autoql-vanilla-explore-queries-input'
+    ]
+
     document.body.addEventListener('click', (evt) => {
         var closeChartPopovers = true;
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
+        var closeAutocomplete = true;
 
         for (let i = 0; i < excludeElementsForSafetynet.length; i++) {
             let c = excludeElementsForSafetynet[i];
@@ -998,7 +1005,15 @@ ChataUtils.registerWindowClicks = () => {
             }
         }
 
-        if (closeChartPopovers) {
+        for (let i = 0; i < excludeElementsForSubjectAutocomplete.length; i++) {
+            let c = excludeElementsForSubjectAutocomplete[i]
+            if(evt.target.classList.contains(c)){
+                closeAutocomplete = false;
+                break;
+            }
+        }
+
+        if(closeChartPopovers){
             closeAllChartPopovers();
         }
 
@@ -1009,8 +1024,12 @@ ChataUtils.registerWindowClicks = () => {
         if (closeSafetynetSelectors) {
             closeAllSafetynetSelectors();
         }
-    });
-};
+
+        if(closeAutocomplete) {
+            closeAutocompleteObjects();
+        }
+    })
+}
 
 (function () {
     var initEvents = () => {

@@ -688,7 +688,12 @@ tr td.chata-hidden{
 .autoql-vanilla-chat-message-toolbar.left {
     left: -9px;
 }
+
 .autoql-vanilla-chat-message-bubble:hover .autoql-vanilla-chat-message-toolbar{
+    display: flex;
+}
+
+.autoql-vanilla-chat-message-bubble .autoql-vanilla-chat-message-toolbar.show{
     display: flex;
 }
 
@@ -1118,12 +1123,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     color: var(--autoql-vanilla-accent-color);
 }
 
-.autoql-vanilla-querytips-container{
-    font-family: sans-serif;
-    line-height: 1.5;
-    font-size: 14px;
-}
-
 .autoql-vanilla-query-tips-result-container {
     color: var(--autoql-vanilla-text-color-primary);
     padding: 0 20px;
@@ -1428,7 +1427,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 .autoql-vanilla-no-columns-error-message .warning-icon {
     font-size: 22px;
     display: block;
-    margin-bottom: -13px;
+    color: var(--autoql-vanilla-warning-color);
+    margin-bottom: 5px;
 }
 
 .autoql-vanilla-no-columns-error-message .warning-icon svg line{
@@ -1446,7 +1446,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-no-columns-error-message .eye-icon {
-    vertical-align: bottom;
+    vertical-align: middle;
     line-height: 18px;
 }
 
@@ -1464,6 +1464,23 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input .autoql-vanilla-chata-checkbox-tick{
     top: 3px;
+}
+
+.autoql-vanilla-screen-menu svg{
+    margin-bottom: 3px;
+}
+
+.autoql-vanilla-icon {
+    position: relative;
+    opacity: 1;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    vertical-align: initial;
+    line-height: 1em;
+    box-sizing: initial;
+    height: 1em;
+    width: 1em;
 }
 
 @keyframes fadeIn {
