@@ -16,10 +16,12 @@ import {
   formatResetDate,
   getScheduleFrequencyObject,
   formatNextScheduleDate,
-  resetDateIsFuture, 
+  resetDateIsFuture,
+  initializeAlert,
   SCHEDULED_TYPE,
   DATA_ALERT_ENABLED_STATUSES,
   CUSTOM_TYPE,
+  DATA_ALERT_STATUSES,
 } from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
@@ -135,6 +137,13 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
       if(isCustom) {
         const refreshIcon = createIcon(REFRESH_ICON);
         refreshIcon.classList.add('autoql-vanilla-notification-state-action-btn');
+        refreshIcon.onclick = async () => {
+          const response = await initializeAlert({ id, ...authentication });
+          if(response.status === 200) {
+            dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
+            toggleAlertStatusView(dataAlert.status);
+          }
+        }
         triggeredStatus.appendChild(refreshIcon);
       }
 
