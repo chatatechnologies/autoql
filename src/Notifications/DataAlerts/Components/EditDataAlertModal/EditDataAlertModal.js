@@ -1,5 +1,6 @@
 import { ChataConfirmDialog } from "../../../Components/ChataConfirmDialog";
-import 'EditDataAlertModal.scss';
+import { Modal } from "../../../../Modal";
+import './EditDataAlertModal.scss';
 
 export function EditDataAlertModal() {
   const confirmDialogProps = {
@@ -23,5 +24,8 @@ export function EditDataAlertModal() {
         new ChataConfirmDialog({ ...confirmDialogProps });
     },
 );
-  modal.chataModal.classList.add('autoql-vanilla-modal-full-width');
+  modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
+  modal.setTitle('Edit Data Alert Settings');
+
+  return modal;
 }

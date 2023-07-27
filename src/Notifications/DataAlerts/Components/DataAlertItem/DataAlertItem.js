@@ -25,6 +25,7 @@ import {
 } from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
+import { EditDataAlertModal } from '../EditDataAlertModal/EditDataAlertModal';
 
 const labelsMap = [
   {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name-header'},
@@ -137,6 +138,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
         const refreshIcon = createIcon(REFRESH_ICON);
         refreshIcon.classList.add('autoql-vanilla-notification-state-action-btn');
         refreshIcon.onclick = async () => {
+          refreshIcon.classList.add('autoql-vanilla-spinning');
           await initializeAlert({ id, ...authentication });
           dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
           dataAlert.reset_date = null;
@@ -209,6 +211,11 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     })
   }
 
+  const editDataAlertItemHandler = () => {
+    const modal = new EditDataAlertModal();
+    modal.show();
+  }
+
   const createActionButton = (icon, className) => {
     const btn = document.createElement('div');
     btn.classList.add('autoql-vanilla-notification-action-btn');
@@ -227,6 +234,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     actionWrapper.appendChild(deleteButton);
 
     deleteButton.onclick = deleteDataAlertItemHandler;
+    settingsButton.onclick = editDataAlertItemHandler;
 
     item.actionButtons = createCol('autoql-vanilla-data-alert-list-item-section-actions', actionWrapper, 5);
   }

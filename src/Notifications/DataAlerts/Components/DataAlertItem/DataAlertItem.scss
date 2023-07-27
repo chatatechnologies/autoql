@@ -76,6 +76,20 @@
             color: var(--autoql-vanilla-info-color);
             border: 1px solid var(--autoql-vanilla-info-color);
             cursor: pointer;
+            &.autoql-vanilla-spinning {
+              animation-name: state-spin;
+              animation-duration: 1000ms;
+              animation-iteration-count: infinite;
+              animation-timing-function: linear; 
+            }
+            @keyframes state-spin {
+              from {
+                  transform:rotate(0deg);
+              }
+              to {
+                  transform:rotate(360deg);
+                }
+              }
           }
         }
         .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-live .autoql-vanilla-icon {
