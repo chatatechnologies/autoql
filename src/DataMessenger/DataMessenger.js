@@ -1,4 +1,4 @@
-import { runQuery, isDataLimited } from 'autoql-fe-utils';
+import { runQuery, isDataLimited, runDrilldown, getAuthentication, getAutoQLConfig, DEFAULT_DATA_PAGE_SIZE, isColumnDateType, getFilterDrilldown } from 'autoql-fe-utils';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -1635,6 +1635,84 @@ export function DataMessenger(options = {}) {
         }
     };
 
+    obj.processDrilldown = async ({
+        json,
+        groupBys,
+        supportedByAPI,
+        row,
+        stringColumnIndex,
+        queryID,
+        source,
+        column,
+    }) => {
+        if (getAutoQLConfig(obj.options.autoQLConfig).enableDrilldowns) {
+            try {
+                // This will be a new query so we want to reset the page size back to default
+                const pageSize = obj.options.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
+
+                if (supportedByAPI) {
+                    return runDrilldown({
+                        ...getAuthentication(obj.options.authentication),
+                        ...getAutoQLConfig(obj.options.autoQLConfig),
+                        queryID,
+                        source,
+                        groupBys,
+                        pageSize,
+                    });
+                } else if (!isNaN(stringColumnIndex) && !!row?.length) {
+                    if (!isDataLimited(json) && !isColumnDateType(column)) {
+                        // --------- 1. Use mock filter drilldown from client side --------
+                        const mockData = getFilterDrilldown({ stringColumnIndex, row, json })
+                        return new Promise((resolve, reject) => {
+                            return setTimeout(() => {
+                                return resolve(mockData);
+                            }, 1500);
+                        });
+                    } else {
+                        // --------- 2. Use subquery for filter drilldown --------
+                        console.log('USE SUBQUERY FOR DRILLDOWN... NOT IMPLEMENTED YET');
+                        //  const clickedFilter = this.constructFilter({
+                        //     column: this.state.columns[stringColumnIndex],
+                        //     value: row[stringColumnIndex],
+                        //   })
+
+                        // const allFilters = this.getCombinedFilters(clickedFilter)
+                        // let response
+                        // try {
+                        //   response = await this.queryFn({ tableFilters: allFilters, pageSize })
+                        // } catch (error) {
+                        //   response = error
+                        // }
+
+                        // this.props.onDrilldownEnd({ response, originalQueryID: this.queryID })
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        return;
+    };
+
+    obj.onChartClick = async (data, idRequest) => {
+        const json = ChataUtils.responses[idRequest];
+
+        obj.input.disabled = true;
+        obj.input.value = '';
+
+        var responseLoadingContainer = obj.putMessage('Drilldown');
+
+        const response = await obj.processDrilldown({
+            ...data,
+            queryID: json?.data?.query_id,
+            source: json?.data?.fe_req?.source,
+            json: {data: json},
+        });
+
+        obj.createResponseMessage({ response, responseLoadingContainer, isDrilldown: true });
+    };
+
     obj.chartElementClick = (evt, idRequest) => {
         var json = cloneObject(ChataUtils.responses[idRequest]);
         var target = evt.target;
@@ -1758,7 +1836,7 @@ export function DataMessenger(options = {}) {
         component.pivotTabulator = table
     }
 
-    obj.displayChartHandler = (evt, idRequest, displayType) => {
+    obj.displayChartHandler = (idRequest, displayType) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, displayType);
@@ -1766,8 +1844,8 @@ export function DataMessenger(options = {}) {
             type: displayType,
             queryJson: json,
             options: obj.options,
-            onUpdate: obj.registerDrilldownChartEvent,
             chartConfig: undefined,
+            onChartClick: (data) => obj.onChartClick(data, idRequest)
         });
 
         if (['stacked_column', 'stacked_bar', 'stacked_line'].includes(displayType)) {
@@ -1802,7 +1880,7 @@ export function DataMessenger(options = {}) {
         displayTypes.forEach(displayType => {
             let button;
 
-            const displayChartHandlerFn = (evt, idRequest) => obj.displayChartHandler(evt, idRequest, displayType)
+            const displayChartHandlerFn = (evt, idRequest) => obj.displayChartHandler(idRequest, displayType)
 
             if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
@@ -1904,9 +1982,25 @@ export function DataMessenger(options = {}) {
     };
 
     obj.putMessage = (value) => {
-        if (value) localStorage.setItem('lastQuery', value)
-        var containerMessage = document.createElement('div');
-        var messageBubble = document.createElement('div');
+        if (value) {
+            if (value !== 'Drilldown') {
+                localStorage.setItem('lastQuery', value)
+            }
+
+            var containerMessage = document.createElement('div');
+            var messageBubble = document.createElement('div');
+
+            containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
+            containerMessage.style.zIndex = --obj.zIndexBubble;
+            containerMessage.classList.add('request');
+            messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+            messageBubble.classList.add('single');
+            messageBubble.classList.add('text');
+            messageBubble.textContent = value;
+            containerMessage.appendChild(messageBubble);
+            obj.drawerContent.appendChild(containerMessage);
+        } 
+
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
@@ -1918,15 +2012,6 @@ export function DataMessenger(options = {}) {
 
         responseLoadingContainer.appendChild(responseLoading);
 
-        containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-        containerMessage.style.zIndex = --obj.zIndexBubble;
-        containerMessage.classList.add('request');
-        messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-        messageBubble.classList.add('single');
-        messageBubble.classList.add('text');
-        messageBubble.textContent = value;
-        containerMessage.appendChild(messageBubble);
-        obj.drawerContent.appendChild(containerMessage);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         obj.checkMaxMessages();
         if (obj.options.landingPage !== 'data-messenger') {
@@ -2434,51 +2519,7 @@ export function DataMessenger(options = {}) {
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };
 
-    obj.sendMessage = async (textValue, source, selections = undefined) => {
-        obj.input.disabled = true;
-        obj.input.value = '';
-        const { domain, apiKey, token } = obj.options.authentication;
-        var responseLoadingContainer = obj.putMessage(textValue);
-
-        if (!token) {
-            if (responseLoadingContainer) {
-                obj.chataBarContainer.removeChild(responseLoadingContainer);
-            }
-            obj.sendResponse(strings.accessDenied, true);
-            obj.input.removeAttribute('disabled');
-            refreshTooltips();
-            return;
-        }
-
-        const queryParams = {
-            query: textValue,
-            domain,
-            apiKey,
-            token,
-            userSelection: undefined,
-            userSelectionFinal: undefined,
-            debug: false,
-            test: obj.options.autoQLConfig.test,
-            source: 'data_messenger.user',
-            scope: 'data_messenger',
-            filters: [],
-            orders: [],
-            tableFilters: [],
-            pageSize: obj.options.pageSize,
-            translation: "include",
-            allowSuggestions: true,
-            enableQueryValidation: obj.options.autoQLConfig.enableQueryValidation,
-            skipQueryValidation: false,
-        }
-
-        let response;
-        try {
-            response = await runQuery(queryParams);
-            // response = testdata;
-        } catch (error) {
-            response = error;
-        }
-
+    obj.createResponseMessage = ({response, responseLoadingContainer, textValue, isDrilldown}) => {
         obj.input.removeAttribute('disabled');
 
         if (!response) {
@@ -2549,7 +2590,7 @@ export function DataMessenger(options = {}) {
             // for(let i = 0; i < pageSize; i++) {
             //     rows.push(response.data.data.rows[0])
             // }
-  
+
             // jsonResponseCopy.data.data.rows = rows
             // jsonResponseCopy.data.data.row_limit = pageSize
             // jsonResponseCopy.data.data.fe_req.page_size = pageSize
@@ -2583,14 +2624,14 @@ export function DataMessenger(options = {}) {
         }
 
         if (jsonResponse.data.rows && jsonResponse.data.rows.length === 0) {
-            obj.putSimpleResponse(jsonResponse, textValue, status);
+            obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
             return;
         }
 
         switch (displayType) {
             case 'table':
                 if (jsonResponse['data']['columns'].length == 1) {
-                    obj.putSimpleResponse(jsonResponse, textValue, status);
+                    obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
                 } else {
                     obj.putTableResponse(jsonResponse);
                 }
@@ -2604,13 +2645,13 @@ export function DataMessenger(options = {}) {
                     } else if (cols[0]['name'] == 'Help Link') {
                         obj.putHelpMessage(jsonResponse);
                     } else {
-                        obj.putSimpleResponse(jsonResponse, textValue, status);
+                        obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
                     }
                 } else {
                     if (rows.length > 0) {
                         obj.putTableResponse(jsonResponse);
                     } else {
-                        obj.putSimpleResponse(jsonResponse, textValue, status);
+                        obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
                     }
                 }
                 break;
@@ -2635,29 +2676,73 @@ export function DataMessenger(options = {}) {
             case 'bubble':
             case 'heatmap':
             case 'pie':
-                var json = obj.getRequest(_idRequest);
                 var component = obj.getComponent(_idRequest);
                 obj.refreshToolbarButtons(component, displayType);
-                new ChataChartNew(component, {
-                    type: displayType,
-                    queryJson: json,
-                    options: obj.options,
-                    onUpdate: obj.registerDrilldownChartEvent,
-                    chartConfig: undefined,
-                });
-                obj.registerDrilldownChartEvent(component);
+                obj.displayChartHandler(_idRequest, displayType)
                 break;
             case 'help':
                 obj.putHelpMessage(jsonResponse);
                 break;
             default:
-                obj.putSimpleResponse(jsonResponse, textValue, status);
+                obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
         }
         obj.checkMaxMessages();
         refreshTooltips();
 
         if (obj.options.landingPage != 'data-messenger') {
             obj.hideBubbles();
+        }
+    }
+
+    obj.sendMessage = async (textValue, source, selections = undefined) => {
+        try {
+            obj.input.disabled = true;
+            obj.input.value = '';
+            const { domain, apiKey, token } = obj.options.authentication;
+            var responseLoadingContainer = obj.putMessage(textValue);
+
+            if (!token) {
+                if (responseLoadingContainer) {
+                    obj.chataBarContainer.removeChild(responseLoadingContainer);
+                }
+                obj.sendResponse(strings.accessDenied, true);
+                obj.input.removeAttribute('disabled');
+                refreshTooltips();
+                return;
+            }
+
+            const queryParams = {
+                query: textValue,
+                domain,
+                apiKey,
+                token,
+                userSelection: undefined,
+                userSelectionFinal: undefined,
+                debug: false,
+                test: obj.options.autoQLConfig.test,
+                source: 'data_messenger.user',
+                scope: 'data_messenger',
+                filters: [],
+                orders: [],
+                tableFilters: [],
+                pageSize: obj.options.pageSize,
+                translation: "include",
+                allowSuggestions: true,
+                enableQueryValidation: obj.options.autoQLConfig.enableQueryValidation,
+                skipQueryValidation: false,
+            }
+
+            let response;
+            try {
+                response = await runQuery(queryParams);
+                // response = testdata;
+            } catch (error) {
+                response = error;
+            }
+
+            obj.createResponseMessage({response, responseLoadingContainer, textValue})
+        } catch (error) {
+            console.error(error)
         }
     };
 

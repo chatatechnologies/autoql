@@ -16,11 +16,12 @@ export function BarChartNew(container, params = {}) {
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
+        onChartClick,
         stacked,
+        legendColumn,
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } =
-        columnIndexConfig;
+    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } = columnIndexConfig;
     const { dataFormatting } = options;
 
     const scaleParams = {
@@ -61,7 +62,7 @@ export function BarChartNew(container, params = {}) {
 
         if (this.bars) this.bars.remove();
 
-        let barHeight = this.yScale.tickSize
+        let barHeight = this.yScale.tickSize;
         if (!stacked) {
             barHeight = barHeight / visibleSeries.length;
         }
@@ -77,8 +78,9 @@ export function BarChartNew(container, params = {}) {
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
                     const rectData = getBarRectObj({
-                        ...columnIndexConfig,
+                        columnIndexConfig,
                         columns,
+                        legendColumn,
                         xScale: self.xScale,
                         yScale: self.yScale,
                         activeKey: undefined, // TODO
@@ -128,8 +130,8 @@ export function BarChartNew(container, params = {}) {
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
-                console.log('drilldown click', d);
-            }); // TODO
+                onChartClick(d.drilldownData);
+            });
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');

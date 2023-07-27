@@ -12,6 +12,8 @@ export function ColumnChartNew(container, params = {}) {
         colorScales,
         options = {},
         isScaled,
+        onChartClick,
+        legendColumn,
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
@@ -19,8 +21,7 @@ export function ColumnChartNew(container, params = {}) {
         stacked,
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } =
-        columnIndexConfig;
+    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } = columnIndexConfig;
     const { dataFormatting } = options;
 
     const scaleParams = {
@@ -61,11 +62,11 @@ export function ColumnChartNew(container, params = {}) {
 
         if (this.bars) this.bars.remove();
 
-        let barWidth = this.xScale.tickSize
+        let barWidth = this.xScale.tickSize;
         if (!stacked) {
             barWidth = barWidth / visibleSeries.length;
         }
-       
+
         var self = this;
 
         var barData = function (d, index) {
@@ -77,7 +78,7 @@ export function ColumnChartNew(container, params = {}) {
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
                     const rectData = getColumnRectObj({
-                        ...columnIndexConfig,
+                        columnIndexConfig,
                         columns,
                         xScale: self.xScale,
                         yScale: self.yScale,
@@ -85,6 +86,7 @@ export function ColumnChartNew(container, params = {}) {
                         dataFormatting,
                         colIndex,
                         visibleIndex,
+                        legendColumn,
                         barWidth,
                         index,
                         stacked,
@@ -128,8 +130,8 @@ export function ColumnChartNew(container, params = {}) {
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
-                console.log('drilldown click', d);
-            }); // TODO
+                onChartClick(d.drilldownData);
+            });
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');

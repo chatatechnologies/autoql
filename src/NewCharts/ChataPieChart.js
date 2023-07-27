@@ -1,5 +1,6 @@
 import {
     applyStylesForHiddenSeries,
+    getDrilldownData,
     getPieChartData,
     getThemeValue,
     getTooltipContent,
@@ -20,6 +21,7 @@ export function PieChartNew(container, params = {}) {
         outerHeight,
         chartColors,
         legendColumn,
+        onChartClick,
     } = params;
 
     this.innerChartWrapper = container.append('g').attr('class', 'autoql-vanilla-pie-chart-container');
@@ -41,19 +43,23 @@ export function PieChartNew(container, params = {}) {
     };
 
     this.onSliceClick = (element, e) => {
-        const newActiveKey = element['__data__']?.data?.key;
+        const sliceData = element['__data__']?.data
+
+        if (!sliceData) {
+            return
+        }
+        
+        const newActiveKey = sliceData?.key;
 
         self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
             select(this)
                 .transition()
                 .duration(500)
                 .attr('transform', function (d) {
-                    console.log(newActiveKey, d.data.key, { d });
                     if (d.data.key === newActiveKey) {
                         const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;
                         const x = Math.cos(a) * 10;
                         const y = Math.sin(a) * 10;
-                        // move it away from the circle center
                         return `translate(${x},${y})`;
                     }
 
@@ -63,15 +69,15 @@ export function PieChartNew(container, params = {}) {
 
         this.activeKey = newActiveKey;
 
-        // TODO
-        // onChartClick({
-        //   row: d.data.value,
-        //   columnIndex: numberColumnIndex,
-        //   columns: columns,
-        //   stringColumnIndex: stringColumnIndex,
-        //   legendColumn: legendColumn,
-        //   activeKey: newActiveKey,
-        // })
+        const drilldownData = getDrilldownData({
+            row: Object.values(sliceData.value),
+            colIndex: numberColumnIndex,
+            columns: columns,
+            legendColumn,
+            columnIndexConfig
+        })
+
+        onChartClick(drilldownData)
     };
 
     this.renderPieSlices = () => {
@@ -91,12 +97,12 @@ export function PieChartNew(container, params = {}) {
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', function (d) {
                 return getTooltipContent({
+                    legendColumn,
+                    dataFormatting,
                     row: d.data.value,
                     columns: columns,
                     colIndex: numberColumnIndex,
                     colIndex2: stringColumnIndex,
-                    legendColumn: legendColumn,
-                    dataFormatting: dataFormatting,
                 });
             })
             .style('fill-opacity', 0.85)

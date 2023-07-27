@@ -11,6 +11,8 @@ export function BubbleChartNew(container, params = {}) {
         visibleSeries,
         options = {},
         legendColumn,
+        onChartClick,
+        chartColors,
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
@@ -44,6 +46,7 @@ export function BubbleChartNew(container, params = {}) {
 
     this.yScale = getBandScale({
         ...scaleParams,
+        column: legendColumn,
         domain: legend?.labels?.map((d) => d.label),
         axis: 'y',
         innerPadding: 0.01,
@@ -69,7 +72,7 @@ export function BubbleChartNew(container, params = {}) {
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
                     const rectData = getBubbleObj({
-                        ...columnIndexConfig,
+                        columnIndexConfig,
                         columns,
                         xScale: self.xScale,
                         yScale: self.yScale,
@@ -112,8 +115,8 @@ export function BubbleChartNew(container, params = {}) {
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
-                console.log('drilldown click', d);
-            }); // TODO
+                onChartClick(d.drilldownData);
+            });
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');

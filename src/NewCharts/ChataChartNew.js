@@ -34,7 +34,7 @@ import { PieChartNew } from './ChataPieChart';
 
 export function ChataChartNew(
     component,
-    { type = 'bar', queryJson, options = {}, onUpdate = () => {}, chartConfig = {} } = {},
+    { type = 'bar', queryJson, options = {}, onChartClick = () => {}, chartConfig = {} } = {},
 ) {
     const dataFormatting = getDataFormatting(options.dataFormatting);
 
@@ -86,6 +86,14 @@ export function ChataChartNew(
             series: indices1,
             columnIndexConfig,
             activeKey: undefined,
+            tippyInstance: tippy('[data-tippy-chart]', {
+                theme: 'chata-theme',
+                delay: [300],
+                allowHTML: true,
+                dynamicTitle: true,
+                maxWidth: 300,
+                inertia: true,
+            })
         };
     }
 
@@ -260,16 +268,18 @@ export function ChataChartNew(
     };
 
     const refreshChartTooltips = () => {
-        this.tippyInstance?.destroy?.();
+        if (metadataElement?.metadata) {
+            metadataElement.metadata.tippyInstance?.destroy?.();
 
-        this.tippyInstance = tippy('[data-tippy-chart]', {
-            theme: 'chata-theme',
-            delay: [0],
-            allowHTML: true,
-            dynamicTitle: true,
-            maxWidth: 300,
-            inertia: true,
-        });
+            metadataElement.metadata.tippyInstance = tippy('[data-tippy-chart]', {
+                theme: 'chata-theme',
+                delay: [0],
+                allowHTML: true,
+                dynamicTitle: true,
+                maxWidth: 300,
+                inertia: true,
+            });
+        }
     };
 
     this.isColumnIndexConfigValid = () => {
@@ -353,7 +363,7 @@ export function ChataChartNew(
             colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
 
             const chartColors = getChartColorVars(CSS_PREFIX) ?? {};
-
+            
             const params = {
                 data: this.data,
                 json: queryJson,
@@ -367,7 +377,7 @@ export function ChataChartNew(
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
                 deltaY: this.deltaY,
-                legendColumn: columns[columnIndexConfig?.legendColumnIndex],
+                legendColumn: queryJson?.data?.columns[columnIndexConfig?.legendColumnIndex],
                 firstDraw,
                 hasRowSelector,
                 isScaled,
@@ -383,6 +393,7 @@ export function ChataChartNew(
                 onNewData: this.onNewData,
                 onDataFetchError: this.onDataFetchError,
                 redraw: this.drawChart,
+                onChartClick,
                 ...colorScales,
                 ...chartColors,
                 ...redrawParams,
@@ -440,8 +451,6 @@ export function ChataChartNew(
         resetChartRedrawParams();
         refreshChartTooltips();
         refreshTooltips();
-
-        onUpdate(component);
 
         return;
     };

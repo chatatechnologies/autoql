@@ -12,6 +12,7 @@ export function HeatmapNew(container, params = {}) {
         options = {},
         legendColumn,
         chartColors,
+        onChartClick,
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
@@ -27,6 +28,7 @@ export function HeatmapNew(container, params = {}) {
         columns,
         height,
         width,
+        legendColumn,
         dataFormatting,
         stringColumnIndex,
         stringColumnIndices,
@@ -44,12 +46,13 @@ export function HeatmapNew(container, params = {}) {
 
     this.yScale = getBandScale({
         ...scaleParams,
+        column: legendColumn,
         domain: legend?.labels?.map((d) => d.label),
         axis: 'y',
         innerPadding: 0.01,
         outerPadding: 0,
-      })
-    
+    });
+
     var xCol = columns[stringColumnIndex];
     var yCol = legendColumn;
 
@@ -60,7 +63,7 @@ export function HeatmapNew(container, params = {}) {
         }
 
         if (this.squares) this.squares.remove();
-       
+
         var self = this;
 
         var barData = function (d, index) {
@@ -69,7 +72,7 @@ export function HeatmapNew(container, params = {}) {
             numberColumnIndices.forEach((colIndex, i) => {
                 if (visibleSeries.includes(colIndex)) {
                     const rectData = getHeatmapRectObj({
-                        ...columnIndexConfig,
+                        columnIndexConfig,
                         columns,
                         xScale: self.xScale,
                         yScale: self.yScale,
@@ -112,8 +115,8 @@ export function HeatmapNew(container, params = {}) {
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
-                console.log('drilldown click', d);
-            }); // TODO
+                onChartClick(d.drilldownData);
+            });
     };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');

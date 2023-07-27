@@ -21,6 +21,8 @@ export function LineChartNew(container, params = {}) {
         colorScales,
         options = {},
         isScaled,
+        onChartClick,
+        legendColumn,
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
@@ -28,7 +30,7 @@ export function LineChartNew(container, params = {}) {
         stacked,
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } = columnIndexConfig;
+    const { stringColumnIndices, stringColumnIndex, numberColumnIndex } = columnIndexConfig;
     const { dataFormatting } = options;
 
     const scaleParams = {
@@ -47,8 +49,8 @@ export function LineChartNew(container, params = {}) {
     this.xScale = getBandScale({
         ...scaleParams,
         axis: 'x',
-        innerPadding: 1,
-        outerPadding: 0,
+        innerPadding: stacked ? 1 : undefined,
+        outerPadding: stacked ? 0 : 0.05,
     });
 
     this.yScale = getLinearScales({
@@ -101,12 +103,13 @@ export function LineChartNew(container, params = {}) {
             data.forEach((d, index) => {
                 if (visibleSeries.includes(colIndex)) {
                     const vertexData = getLineVertexObj({
-                        ...columnIndexConfig,
+                        columnIndexConfig,
                         columns,
                         xScale: self.xScale,
                         yScale: self.yScale,
                         activeKey: undefined, // TODO
                         dataFormatting,
+                        legendColumn,
                         colIndex,
                         backgroundColor,
                         color,
@@ -139,8 +142,8 @@ export function LineChartNew(container, params = {}) {
                 // 3. Adding a copy of the first point without smoothing at the end to close the loop
                 const prevVerticesReversed = [...prevVertices].reverse();
                 const prevPathDSliced = createSVGPath([...prevVerticesReversed], PATH_SMOOTHING).replace('M', 'L');
-                const firstPoint = `L ${currentVertices[0].join(',')}`
-                const lastPoint = `L ${currentVertices.slice(-1).pop().join(',')}`
+                const firstPoint = `L ${currentVertices[0].join(',')}`;
+                const lastPoint = `L ${currentVertices.slice(-1).pop().join(',')}`;
 
                 pathD = `${pathD} ${lastPoint} ${prevPathDSliced} ${firstPoint}`;
             }
@@ -224,7 +227,10 @@ export function LineChartNew(container, params = {}) {
                 .attr('data-tippy-content', (d) => d.tooltip)
                 .style('stroke', 'transparent')
                 .style('fill', 'transparent')
-                .style('cursor', 'pointer');
+                .style('cursor', 'pointer')
+                .on('click', function (e, d) {
+                    onChartClick(d.drilldownData);
+                });
         }
     };
 
