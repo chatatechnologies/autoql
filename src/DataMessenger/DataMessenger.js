@@ -1,4 +1,4 @@
-import { runQuery, isDataLimited, runDrilldown, getAuthentication, getAutoQLConfig, DEFAULT_DATA_PAGE_SIZE, isColumnDateType, getFilterDrilldown } from 'autoql-fe-utils';
+import { runQuery, isDataLimited, runDrilldown, getAuthentication, getAutoQLConfig, DEFAULT_DATA_PAGE_SIZE, isColumnDateType, getFilterDrilldown, constructFilter, getCombinedFilters, runQueryOnly } from 'autoql-fe-utils';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants'
 import { ChataTable, ChataPivotTable } from '../ChataTable'
@@ -1645,6 +1645,10 @@ export function DataMessenger(options = {}) {
         source,
         column,
     }) => {
+        if (!json?.data?.data) {
+            return
+        }
+
         if (getAutoQLConfig(obj.options.autoQLConfig).enableDrilldowns) {
             try {
                 // This will be a new query so we want to reset the page size back to default
@@ -1662,7 +1666,7 @@ export function DataMessenger(options = {}) {
                 } else if (!isNaN(stringColumnIndex) && !!row?.length) {
                     if (!isDataLimited(json) && !isColumnDateType(column)) {
                         // --------- 1. Use mock filter drilldown from client side --------
-                        const mockData = getFilterDrilldown({ stringColumnIndex, row, json })
+                        const mockData = getFilterDrilldown({ stringColumnIndex, row, json });
                         return new Promise((resolve, reject) => {
                             return setTimeout(() => {
                                 return resolve(mockData);
@@ -1670,21 +1674,23 @@ export function DataMessenger(options = {}) {
                         });
                     } else {
                         // --------- 2. Use subquery for filter drilldown --------
-                        console.log('USE SUBQUERY FOR DRILLDOWN... NOT IMPLEMENTED YET');
-                        //  const clickedFilter = this.constructFilter({
-                        //     column: this.state.columns[stringColumnIndex],
-                        //     value: row[stringColumnIndex],
-                        //   })
+                        const clickedFilter = constructFilter({
+                            column: json.data.data.columns[stringColumnIndex],
+                            value: row[stringColumnIndex],
+                        });
 
-                        // const allFilters = this.getCombinedFilters(clickedFilter)
-                        // let response
-                        // try {
-                        //   response = await this.queryFn({ tableFilters: allFilters, pageSize })
-                        // } catch (error) {
-                        //   response = error
-                        // }
+                        const allFilters = getCombinedFilters(clickedFilter, json, undefined); // TODO: add table params
 
-                        // this.props.onDrilldownEnd({ response, originalQueryID: this.queryID })
+                        let response;
+                        try {
+                            response = await json.data?.queryFn?.({ tableFilters: allFilters, pageSize });
+                        } catch (error) {
+                            console.error(error)
+                            return
+                            // response = error;
+                        }
+
+                        return response;
                     }
                 }
             } catch (error) {
@@ -1709,6 +1715,11 @@ export function DataMessenger(options = {}) {
             source: json?.data?.fe_req?.source,
             json: {data: json},
         });
+
+        if (response?.data) {
+            response.data.originalQueryID = json.data?.data?.query_id;
+        }
+       
 
         obj.createResponseMessage({ response, responseLoadingContainer, isDrilldown: true });
     };
@@ -2519,6 +2530,61 @@ export function DataMessenger(options = {}) {
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };
 
+    obj.getQueryFn = ({ response, isDrilldown }) => {
+        // ------- test data -------
+        // var jsonResponseCopy = cloneObject(response)
+        // var pageSize = params.pageSize ?? response.data.data.row_limit
+
+        // var rows = []
+        // for(let i = 0; i < pageSize; i++) {
+        //     rows.push(response.data.data.rows[0])
+        // }
+
+        // jsonResponseCopy.data.data.rows = rows
+        // jsonResponseCopy.data.data.row_limit = pageSize
+        // jsonResponseCopy.data.data.fe_req.page_size = pageSize
+
+        // return new Promise((res, rej) => {
+        //     setTimeout(() => {
+        //         res(jsonResponseCopy)
+        //     }, 2000)
+        // })
+        // -------------------------
+
+        return ({ formattedTableParams, ...args }) => {
+            const queryRequestData = response?.data?.data?.fe_req;
+            const allFilters = getCombinedFilters(undefined, response, undefined);
+
+            const queryParams = {
+                ...getAuthentication(obj.options.authentication),
+                ...getAutoQLConfig(obj.options.autoQLConfig),
+                source: obj.options.source,
+                scope: obj.options.scope,
+                debug: queryRequestData?.translation === 'include',
+                filters: queryRequestData?.session_filter_locks,
+                pageSize: queryRequestData?.page_size,
+                groupBys: queryRequestData?.columns,
+                queryID: response.data.originalQueryID,
+                orders: formattedTableParams?.sorters,
+                tableFilters: allFilters,
+            };
+
+            if (isDrilldown) {
+                return runDrilldown({
+                    ...queryParams,
+                    ...args,
+                });
+            }
+            return runQueryOnly({
+                ...queryParams,
+                query: queryRequestData?.text,
+                debug: queryRequestData?.translation === 'include',
+                userSelection: queryRequestData?.disambiguation,
+                ...args,
+            });
+        };
+    };
+
     obj.createResponseMessage = ({response, responseLoadingContainer, textValue, isDrilldown}) => {
         obj.input.removeAttribute('disabled');
 
@@ -2581,34 +2647,7 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        jsonResponse.queryFn = (params = {}) => {
-            // ------- test data -------
-            // var jsonResponseCopy = cloneObject(response)
-            // var pageSize = params.pageSize ?? response.data.data.row_limit
-
-            // var rows = []
-            // for(let i = 0; i < pageSize; i++) {
-            //     rows.push(response.data.data.rows[0])
-            // }
-
-            // jsonResponseCopy.data.data.rows = rows
-            // jsonResponseCopy.data.data.row_limit = pageSize
-            // jsonResponseCopy.data.data.fe_req.page_size = pageSize
-
-            // return new Promise((res, rej) => {
-            //     setTimeout(() => {
-            //         res(jsonResponseCopy)
-            //     }, 2000)
-            // })
-            // -------------------------
-
-            return runQuery({
-                ...queryParams,
-                ...(obj.options.authentication ?? {}),
-                skipQueryValidation: true,
-                ...params,
-            })
-        }
+        jsonResponse.queryFn = obj.getQueryFn({response, isDrilldown})
 
         var groupables = [];
         if (jsonResponse.data.columns) {

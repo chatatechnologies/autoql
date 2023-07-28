@@ -16,6 +16,7 @@ import {
     getPivotColumnIndexConfig,
     getChartColorVars,
     CHARTS_WITHOUT_AXES,
+    getNumberColumnIndices,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -156,7 +157,7 @@ export function ChataChartNew(
                 data: newRows,
                 aggColIndex: columnIndexConfig.stringColumnIndex,
                 columns: columns,
-                numberIndices,
+                numberIndices: getNumberColumnIndices(columns).allNumberColumnIndices,
                 dataFormatting,
             });
         }
@@ -200,6 +201,8 @@ export function ChataChartNew(
             columnIndexConfig.stringColumnIndex = indices[0];
         }
 
+        this.data = this.getData();
+
         this.drawChart();
     };
 
@@ -231,7 +234,6 @@ export function ChataChartNew(
     };
 
     const onLegendClick = (label) => {
-        console.log('ON LEGEND CLICK IN CHATACHART', { label });
         const newColumns = cloneObject(columns);
         newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
         this.updateColumns(newColumns);
