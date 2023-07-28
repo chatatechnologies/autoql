@@ -32,6 +32,7 @@ import {
 import { ChataUtils } from '../ChataUtils'
 
 import './ChataChart.scss'
+import { CSS_PREFIX } from '../Constants'
 
 export function createStackedBarChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -41,12 +42,15 @@ export function createStackedBarChart(
     width = component.parentElement.clientWidth - margin.left;
     margin.chartLeft = 90;
     var height;
-    var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     var allLengths = [];
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
+
+    const paddingRectVert = 4;
+    const paddingRectHoz = 8;
+    const legendBoxMargin = 15;
 
     if(!metadataComponent.metadata3D){
         metadataComponent.metadata3D = {
@@ -189,10 +193,7 @@ export function createStackedBarChart(
 
     const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
         closeAllChartPopovers();
-        new ChataChartListPopover({
-            left: evt.clientX,
-            top: evt.clientY
-        }, groupCols, (evt, popover) => {
+        new ChataChartListPopover(evt, groupCols, (evt, popover) => {
             var selectedIndex = evt.target.dataset.popoverIndex;
             var oldGroupable
             = metadataComponent.metadata3D.groupBy.groupable2;
@@ -227,35 +228,32 @@ export function createStackedBarChart(
 
     if(options.enableDynamicCharting){
         textContainerY.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
+        
         labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col2) + paddingRect;
+
+        var yLabelBBox = labelYContainer.node().getBBox()
 
         labelYContainer.append('rect')
-        .attr('x', margin.chartLeft - 25)
-        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-        .attr('height', xWidthRect + paddingRect)
-        .attr('width', 23)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('transform', 'rotate(-180)')
-        .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('transform', labelYContainer.attr('transform'))
+            .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('x', yLabelBBox.x - paddingRectVert)
+            .attr('y', yLabelBBox.y - paddingRectHoz)
+            .attr('height', yLabelBBox.height + paddingRectHoz * 2)
+            .attr('width', yLabelBBox.width + paddingRectVert * 2)
+            .attr('rx', '4')
 
         labelYContainer.on('mouseup', onSelectorClick)
-
     }
 
     svg.append('text')
-    .attr('x', chartWidth / 2)
-    .attr('y', height + margin.bottom - 7)
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-x-axis-label')
-    .text(col3);
+        .attr('x', chartWidth / 2)
+        .attr('y', height + margin.bottom - 7)
+        .attr('text-anchor', 'middle')
+        .attr('class', 'autoql-vanilla-x-axis-label')
+        .text(col3);
 
     var maxValue = max(data, function(d) {
         var sum = 0;
@@ -267,8 +265,8 @@ export function createStackedBarChart(
     });
 
     var x = SCALE_LINEAR()
-    .domain([0, maxValue])
-    .range([ 0, chartWidth ]).nice();
+        .domain([0, maxValue])
+        .range([ 0, chartWidth ]).nice();
 
     
     if(tickWidth < 135){

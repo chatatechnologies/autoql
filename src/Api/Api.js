@@ -1,5 +1,4 @@
 import axios from 'axios'
-import _get from 'lodash.get'
 
 export const apiCallV2 = (widgetOptions, data) => {
     const {
@@ -19,7 +18,7 @@ export const apiCallV2 = (widgetOptions, data) => {
     return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }
 
@@ -54,7 +53,7 @@ export const apiCall = (val, options, source, userSelection=undefined) => {
     return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }
 
@@ -72,7 +71,7 @@ export const apiCallPost = (url, data, options) => {
     return axios.post(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }
 
@@ -90,7 +89,7 @@ export const apiCallPut = (url, data, options) => {
     return axios.put(url, data, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }
 
@@ -108,7 +107,7 @@ export const apiCallDelete = (url, options) => {
     return axios.delete(url, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }
 
@@ -127,7 +126,7 @@ export const apiCallGet = (url, options, extraHeaders={}) => {
     return axios.get(url, config).then((response) => {
         return Promise.resolve(response)
     }).catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }
 
@@ -151,6 +150,6 @@ export const apiCallNotificationCount = (url, options) => {
         return Promise.resolve(response)
     })
     .catch((error) => {
-        return Promise.resolve(_get(error, 'response'))
+        return Promise.resolve(error?.response)
     })
 }

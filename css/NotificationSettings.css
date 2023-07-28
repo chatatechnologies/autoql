@@ -10,7 +10,7 @@
     position: relative;
 }
 
-.autoql-vanilla-data-alerts-settings .response-loading-container{
+.autoql-vanilla-data-alerts-settings .autoql-vanilla-response-loading-container{
     left: 50%;
     top: 60px;
 }

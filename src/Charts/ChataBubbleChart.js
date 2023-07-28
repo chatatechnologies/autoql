@@ -22,6 +22,7 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
+import { CSS_PREFIX } from '../Constants'
 
 export function createBubbleChart(
     component, json, options, fromChataUtils=true,
@@ -40,7 +41,7 @@ export function createBubbleChart(
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
     var cols = json['data']['columns'];
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options

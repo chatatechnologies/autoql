@@ -4,16 +4,17 @@ import {
     formatColumnName,
     getGroupableField,
     getNotGroupableField,
+    formatChartData,
     formatData
 } from '../Utils'
 import {
     ChataUtils
 } from '../ChataUtils'
-import { mergeBboxes } from 'autoql-fe-utils'
+import { mergeBoundingClientRects } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
-    var data = json['data']['rows'];
+    var data = json['data']['aggreggatedRows'] ?? json['data']['rows'];
     var columns = enumerateCols(json);
     var multiSeriesCol = isMultiSeries(columns)
     var seriesIndexes = []
@@ -253,14 +254,17 @@ export const enumerateCols = (json) => {
     return clone;
 }
 
-export const formatLabel = (label) => {
-    if(!label)label = ''
-    if(label === 'null')label = 'Untitled Category'
-    if(label.toString().length < 20){
-        return label.toString()
+export const formatLabel = (label, column, options, scale) => {
+    if (!column || !options) {
+        if(!label)label = ''
+        if(label === 'null')label = 'Untitled Category'
+        if(label.toString().length < 20){
+            return label.toString()
+        }
+        return label.toString().slice(0, 15) + ' ...'
     }
-    return label.toString().slice(0, 15) + ' ...'
 
+    return formatChartData(label, column, options, scale)
 }
 
 export const getGroupableFields = (json) => {
@@ -419,18 +423,14 @@ export function formatDataToHeatmap(json, options){
 }
 
 export const styleLegendTitleWithBorder = (svg, params, onClick) => {
-
-    const {
-        showOnBaseline,
-        legendEvent
-    } = params
+    const { legendEvent } = params
 
     svg.select('.legendTitle')
-    .style('font-weight', 'bold')
-    .style('transform', 'translate(0, -5px)')
-    .append('tspan')
-    .text('  ▼')
-    .style('font-size', '8px')
+        .style('font-weight', 'bold')
+        .style('transform', 'translate(0, -5px)')
+        .append('tspan')
+        .text('  ▼')
+        .style('font-size', '8px')
 
     let titleBBox = {}
     try {
@@ -441,16 +441,13 @@ export const styleLegendTitleWithBorder = (svg, params, onClick) => {
     } catch (error) { console.error(error) }
 
     svg.append('rect')
-    .attr('x', titleBBox.x - 10)
-    .attr('y', titleBBox.y - 10)
-    .attr('height', titleBBox.height + 10)
-    .attr('width', titleBBox.width + 20)
-    .attr('fill', 'transparent')
-    .attr('stroke', '#508bb8')
-    .attr('stroke-width', '1px')
-    .attr('rx', '4')
-    .attr('class', 'autoql-vanilla-x-axis-label-border')
-    .on('click', (evt) => { onClick(evt, showOnBaseline, legendEvent) })
+        .on('click', e => onClick('bottom', 'end', e, legendEvent))
+        .attr('class', 'autoql-vanilla-x-axis-label-border')
+        .attr('x', titleBBox.x - 10)
+        .attr('y', titleBBox.y - 10)
+        .attr('height', titleBBox.height + 10)
+        .attr('width', titleBBox.width + 20)
+        .attr('rx', '4')
 }
 
 export const styleLegendTitleNoBorder = (svg) => {
@@ -476,7 +473,7 @@ export const getLabelBBox = (axesGrid) => {
       })
 
     if (labelBboxes) {
-      const allLabelsBbox = mergeBboxes(labelBboxes)
+      const allLabelsBbox = mergeBoundingClientRects(labelBboxes)
       labelsBBox = { ...allLabelsBbox }
     }
 

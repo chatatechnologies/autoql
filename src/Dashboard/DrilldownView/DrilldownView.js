@@ -149,7 +149,7 @@ export function DrilldownView(
         responseLoadingContainer.classList.add(
             'autoql-vanilla-tile-response-loading-container'
         )
-        responseLoading.classList.add('response-loading')
+        responseLoading.classList.add('autoql-vanilla-response-loading')
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'))
         }

@@ -38,31 +38,51 @@ import {
 } from '../Utils'
 import { tooltipCharts } from '../Tooltips'
 import { strings } from '../Strings'
+import { ChartLoader } from './ChartLoader'
+import { ChartRowSelector } from './ChartRowSelector'
+import { aggregateData } from 'autoql-fe-utils'
+import { CSS_PREFIX } from '../Constants'
 
 export function createLineChart(
-    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+    component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
+
+    if (!component.chartLoader) {
+        var chartLoader = new ChartLoader(component)
+        component.chartLoader = chartLoader
+    }
 
     var margin = {
         top: 15,
         right: 10,
-        bottom: 50,
-        left: 90,
-        marginLabel: 40,
-        bottomChart: 0
-    },
-    width = component.parentElement.clientWidth - margin.left;
+        bottom: 40,
+        left: 30,
+        bottomChart: 0,
+        marginLabel: 30,
+        marginRowSelector: 0,
+    }
+
+    var hasRowSelector = options.pageSize < origJson?.data?.count_rows
+    if (hasRowSelector) {
+        margin.marginRowSelector = 20
+        margin.bottom += margin.marginRowSelector
+    }
+
+    var width = component.parentElement.clientWidth - margin.left;
     var height;
-    var cols = enumerateCols(json);
+    var cols = enumerateCols(origJson);
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
     let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
-    let groupableCount = getGroupableCount(json)
+    let groupableCount = getGroupableCount(origJson)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
+
+    const paddingRectVert = 4;
+    const paddingRectHoz = 8;
     const legendBoxMargin = 15;
 
     if(indexList['STRING']){
@@ -93,16 +113,33 @@ export function createLineChart(
                 index: i,
                 currentLi: 0,
             },
-            series: yIndexes
+            series: [yIndexes[0]]
         }
     }
 
     var xAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;
-    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
-    const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
     var index2 = cols[xAxisIndex].index;
+
+    var rows = aggregateData({
+        data: origJson.data.rows,
+        columns: origJson.data.columns,
+        aggColIndex: xAxisIndex,
+        numberIndices: yIndexes.map(indexObj => indexObj.index),
+        dataFormatting: options.dataFormatting,
+    });
+
+    var json = {
+        ...origJson,
+        data: {
+            ...origJson.data,
+            rows,
+        },
+    };
+
+    var data = makeGroups(json, options, activeSeries, cols[xAxisIndex].index);
+    const minMaxValues = getMinAndMaxValues(data);
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
@@ -139,8 +176,8 @@ export function createLineChart(
             allData.push(v)
         })
     })
-    var grouped = groupBy(allData, 'group');
 
+    var grouped = groupBy(allData, 'group');
 
     const barWidth = width / data.length;
     const interval = Math.ceil((data.length * 16) / width);
@@ -170,7 +207,7 @@ export function createLineChart(
     if(allGroup.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - 135;
+        chartWidth = width - 100;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -225,18 +262,16 @@ export function createLineChart(
         'chata-hidden-scrollbox'
     );
 
-    const stringWidth = getChartLeftMargin(formatData(minMaxValues.max, cols[index1], options))
-    const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
-    : (margin.left - 15)
-    const labelContainerPos = stringWidth > 0 ? (66 + stringWidth) : 66
+    const stringWidth = getStringWidth(formatChartData(minMaxValues.max, cols[index1], options))
+    const labelSelectorPadding = stringWidth > 0 ? 10 : (margin.left - 15)
     chartWidth -= stringWidth
+    
     var svg = select(component)
-    .append("svg")
-    .attr("width", width + margin.left + margin.right)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform",
-    "translate(" + (margin.left+ stringWidth) + "," + margin.top + ")");
+        .append('svg')
+        .attr('width', width + margin.left + margin.right)
+        .attr('height', height + margin.top + margin.bottom)
+        .append('g')
+        .attr('transform', `translate(${margin.left + stringWidth}, ${margin.top})`);
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
@@ -244,7 +279,7 @@ export function createLineChart(
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
     .attr('x', -(height / 2))
-    .attr('y', -(labelSelectorPadding))
+    .attr('y', -(stringWidth + labelSelectorPadding))
     .attr('transform', 'rotate(-90)')
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-y-axis-label')
@@ -253,31 +288,26 @@ export function createLineChart(
 
     if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
+
         labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col2) + paddingRect;
+
+        var yLabelBBox = labelYContainer.node().getBBox()
 
         labelYContainer.append('rect')
-        .attr('x', labelContainerPos)
-        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-        .attr('height', xWidthRect + paddingRect)
-        .attr('width', 24)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('transform', 'rotate(-180)')
-        .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('transform', labelYContainer.attr('transform'))
+            .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('x', yLabelBBox.x - paddingRectVert)
+            .attr('y', yLabelBBox.y - paddingRectHoz)
+            .attr('height', yLabelBBox.height + paddingRectHoz * 2)
+            .attr('width', yLabelBBox.width + paddingRectVert * 2)
+            .attr('rx', '4')
 
-        labelYContainer.on('mouseup', () => {
+        labelYContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
-            new ChataChartSeriesPopover({
-                left: event.clientX,
-                top: event.clientY
-            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+            new ChataChartSeriesPopover(evt, 'right', 'middle', cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createLineChart(
                     component,
@@ -296,20 +326,17 @@ export function createLineChart(
     // X AXIS
     var textContainerX = labelXContainer.append('text')
     .attr('x', chartWidth / 2)
-    .attr('y', height + margin.marginLabel + 3)
+    .attr('y', height + margin.marginLabel)
     .attr('text-anchor', 'middle')
     .attr('class', 'autoql-vanilla-x-axis-label')
 
     textContainerX.append('tspan')
     .text(col1);
 
-    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+    const onSelectorClick = (placement, align, evt, legendEvent) => {
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-        var popoverSelector = new ChataChartListPopover({
-            left: event.clientX,
-            top: event.clientY
-        }, xIndexes, (evt, popover) => {
+        var popoverSelector = new ChataChartListPopover(evt, xIndexes, (evt, popover) => {
             var xAxisIndex = evt.target.dataset.popoverIndex;
             var currentLi = evt.target.dataset.popoverPosition;
             metadataComponent.metadata.groupBy.index = xAxisIndex;
@@ -328,39 +355,30 @@ export function createLineChart(
                 renderTooltips
             )
             popover.close();
-        }, true);
+        }, placement, align);
 
         popoverSelector.setSelectedItem(selectedItem)
     }
 
     if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
 
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col1) + paddingRect;
-        var _y = 0;
-        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
-        if(hasLegend && allGroup.length < 3){
-            _y = height - (margin.marginLabel/2) + 3;
-        }else{
-            _y = height + (margin.marginLabel/2) + 6;
-        }
-        labelXContainer.append('rect')
-        .attr('x', _x)
-        .attr('y', _y)
-        .attr('height', 24)
-        .attr('width', xWidthRect + paddingRect)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('class', 'autoql-vanilla-x-axis-label-border')
 
-        labelXContainer.on('mouseup', onSelectorClick)
+        var xLabelBBox = labelXContainer.node().getBBox()
+
+        labelXContainer.append('rect')
+            .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('x', xLabelBBox.x - paddingRectHoz)
+            .attr('y', xLabelBBox.y - paddingRectVert)
+            .attr('height', xLabelBBox.height + paddingRectVert * 2)
+            .attr('width', xLabelBBox.width + paddingRectHoz * 2)
+            .attr('rx', '4')
+
+        labelXContainer.on('mouseup', e => onSelectorClick('top', 'middle', e))
     }
 
 
@@ -618,6 +636,52 @@ export function createLineChart(
             )
         }
     }
+
+    const onDataFetching = () => component.chartLoader?.setChartLoading(true)
+    
+    const onNewData = (newJson) => {
+        if (newJson?.data?.rows) {
+            origJson.data.rows = newJson.data.rows
+            origJson.data.row_limit = newJson.data.row_limit
+
+            createLineChart(
+                component,
+                origJson,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips
+            )
+        }
+
+        component.chartLoader?.setChartLoading(false)
+    } 
+    const onDataFetchError = (error) =>  {
+        console.error(error)
+        component.chartLoader?.setChartLoading(false)
+    }
+
+
+    const popoverPosition = {
+        x: chartWidth / 2,
+        y: height + margin.marginLabel + margin.marginRowSelector,
+    }
+
+    if (hasRowSelector) {
+        new ChartRowSelector(
+            svg,
+            origJson,
+            onDataFetching,
+            onNewData,
+            onDataFetchError,
+            metadataComponent,
+            popoverPosition,
+            options
+        );
+    }
+
+    component.appendChild(component.chartLoader)
 
     createLines();
 
