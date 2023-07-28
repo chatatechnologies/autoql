@@ -36,7 +36,7 @@ function replaceScrollbar (table) {
     }
 }
 
-function instantiateTabulator(component, tableOptions) {
+function instantiateTabulator(component, tableOptions, table) {
     // Instantiate Tabulator when element is mounted
     var tabulator = new Tabulator(component, tableOptions);
 
@@ -48,7 +48,8 @@ function instantiateTabulator(component, tableOptions) {
     tabulator.on('dataFiltered', component.onDataFiltered);
 
     tabulator.on('tableBuilt', async () => {
-        component.isInitialized = true;
+        table.isInitialized = true;
+
         if (tableOptions.ajaxRequestFunc) {
             await tabulator.setData();
         }
@@ -271,13 +272,13 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
     const previousData = { ...previousResponseData, page: 1, isPreviousData: true };
 
     try {
-        if (component.hidden) {
+        if (component.hidden || !table.isInitialized) {
             return previousData;
         }
 
         const requestedNewPageWhileLoadingFilter = params?.page > 1 && component.isPageLoading;
-        if (!component.hasSetInitialData) {
-            component.hasSetInitialData = true;
+        if (!table.hasSetInitialData) {
+            table.hasSetInitialData = true;
             return previousData;
         }
 
@@ -382,6 +383,7 @@ export function ChataTable(
     useInfiniteScroll = true,
     tableParams,
 ) {
+    const self = this
     const json = ChataUtils.responses[idRequest];
     if (!json?.data?.rows) {
         return;
@@ -391,6 +393,9 @@ export function ChataTable(
     var columns = getColumnsData(json, options, onHeaderClick);
     var firstDateFound = getFirstDateColumn(json);
     var defaultInitialSort = firstDateFound ? [{ column: firstDateFound, dir: 'asc' }] : undefined;
+
+    this.isInitialized = false
+    this.hasSetInitialData = false
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
     component.classList.add('table-condensed');
@@ -527,7 +532,7 @@ export function ChataTable(
         tableOptions.initialFilter = undefined;
         tableOptions.ajaxRequesting = (url, params) => ajaxRequesting(params);
         tableOptions.ajaxRequestFunc = function (url, config, params) {
-            return ajaxRequestFunc(params, json, component, columns, this);
+            return ajaxRequestFunc(params, json, component, columns, self);
         };
         tableOptions.ajaxResponse = (url, params, response) => ajaxResponseFunc(response, component);
     }
@@ -546,7 +551,7 @@ export function ChataTable(
     component.onDataFiltered = () => {
     };
 
-    var table = instantiateTabulator(component, tableOptions);
+    var table = instantiateTabulator(component, tableOptions, this);
 
     if (!table) {
         return;
