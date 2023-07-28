@@ -1,6 +1,7 @@
 import { ChataConfirmDialog } from "../../../Components/ChataConfirmDialog";
 import { Modal } from "../../../../Modal";
 import './EditDataAlertModal.scss';
+import { ConditionsView } from "../ConditionsView/ConditionsView";
 
 export function EditDataAlertModal() {
   const btnDelete = document.createElement('button');
@@ -9,6 +10,10 @@ export function EditDataAlertModal() {
   const modalFooter = document.createElement('div');
   const buttonContainerRight = document.createElement('div');
   const buttonContainerLeft = document.createElement('div');
+  const container = document.createElement('div');
+  const conditionsView = new ConditionsView();
+
+  container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
 
   btnCancel.textContent = 'Cancel';
   btnCancel.classList.add('autoql-vanilla-chata-btn');
@@ -60,7 +65,9 @@ export function EditDataAlertModal() {
   );
   
   btnCancel.onclick = onDiscard;
-
+  
+  container.appendChild(conditionsView);
+  modal.addView(container);
   modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
   modal.setTitle('Edit Data Alert Settings');
   modal.addFooterElement(modalFooter);
