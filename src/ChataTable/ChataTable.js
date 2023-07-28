@@ -248,7 +248,6 @@ function getFirstDateColumn(json) {
 }
 
 function getTableData(rows) {
-    // const data = json?.data?.rows;
     var tableData = [];
 
     for (var i = 0; i < rows.length; i++) {
@@ -410,11 +409,14 @@ export function ChataTable(
 
     component.queryFn = json?.queryFn;
 
-    component.onNewPage = (newRows) => {}; // console.log('TODO')
+    // TODO(Nikki) - update parent component with changes
+    component.onNewPage = (newRows) => {};
 
-    component.onTableParamsChange = (params, nextTableParamsFormatted) => {}; // console.log('TODO')
+    // TODO(Nikki) - update parent component with changes
+    component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
 
-    component.onNewData = (response, component) => { }; // console.log('TODO')
+    // TODO(Nikki) - update parent component with changes
+    component.onNewData = (response, component) => { };
 
     component.getNewPage = (tableParams) => {
         return runQueryNewPage({
@@ -596,7 +598,8 @@ export function ChataTable(
 
             clearBtn.addEventListener('click', (e) => {
                 e.stopPropagation();
-                //   this.setHeaderInputValue(inputElement, '') console.log('TODO')
+                // TODO(Nikki) - make this date picker component
+                //   this.setHeaderInputValue(inputElement, '')
                 //   if (col.type === 'DATE' && !col.pivot) {
                 //     this.currentDateRangeSelections = {}
                 //     this.debounceSetState({
@@ -680,18 +683,6 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
             onCellClick(e, cell, cloneObject(json));
         },
     }
-
-    // function instantiateTabulator(tableOptions) {
-    //     // Instantiate Tabulator when element is mounted
-    //     var tabulator = new Tabulator(component, tableOptions);
-
-    //     tabulator.on('tableBuilt', async () => {
-    //         component.isInitialized = true;
-    //         component.ps = replaceScrollbar(tabulator);
-    //     });
-
-    //     return tabulator;
-    // }
 
     var table = instantiateTabulator(component, tableOptions);
 
