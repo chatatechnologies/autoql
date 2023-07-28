@@ -220,49 +220,19 @@ export function createBarChart(
     if (hasLegend && legendOrientation == 'horizontal') {
         legendMargin = 30
     }
-    
-    // var increment = 5;
-    // var factor = 10;
-    // if(longestStringHeight <= 4)longestStringHeight = 5;
-    // if(!hasLegend)increment = 1;
+
     const labelSelectorPadding = longestStringWidth > 0 ? 10 : (margin.left - 15)
     chartWidth -= longestStringWidth
 
-    // margin.left = longestStringWidth + labelSelectorPadding;
-    // margin.chartLeft = longestStringWidth + labelSelectorPadding;
-    // if(margin.chartLeft <= 80) margin.chartLeft = 90;
-    // if(margin.chartLeft > 150) margin.chartLeft = 150;
-    
     const fontSize = 12
     let xLabelsHeight = fontSize
     if (rotateLabels) {
-        // const allXLabelHeights = []
-        // data.forEach((item) => {
-        //     const fontSize = 12
-        //     const labelWidth = getStringWidth(formatChartData(item.label, cols[index], options))
-        //     const labelWidthHoz = (labelWidth + fontSize) / Math.sqrt(2)
-            
-        //     allXLabelHeights.push(labelWidthHoz);
-        // });
         const labelWidth = getStringWidth(formatLabel(minMaxValues.max, cols[index1], options));
         const longestStringHeight = (labelWidth + fontSize) / Math.sqrt(2)
         xLabelsHeight = longestStringHeight
     }
 
     margin.bottomChart = xLabelsHeight + margin.marginRowSelector + legendMargin;
-    // margin.bottom = margin.marginLabel + legendMargin
-
-    // if(legendOrientation == 'horizontal'){
-        // if(rotateLabels){
-        //     let m = xLabelsHeight * increment + extraMargin;
-        //     if(hasLegend && m <= 50) m = 55;
-        //     margin.bottomChart = m;
-        // }else{
-            
-        // }
-    // }else{
-    //     margin.bottomChart = xLabelsHeight;
-    // }
 
     var y0 = SCALE_BAND();
     var y1 = SCALE_BAND();
@@ -445,10 +415,6 @@ export function createBarChart(
     svg.append("g")
     .attr("class", "y axis")
     .call(yAxis.tickFormat(function(d){
-        // let fLabel = formatChartData(d, cols[index2], options);
-        // if(fLabel === 'Invalid date') {
-        //     fLabel = 'Untitled Category'
-        // }
         return formatLabel(d, cols[index2], options);
     }))
     let slice;
