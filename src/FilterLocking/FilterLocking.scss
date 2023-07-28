@@ -42,6 +42,23 @@
     text-align: left;
     font-size: 20px;
 }
+.autoql-vanilla-filter-locking-close-and-saving-container{
+	display: flex;
+	justify-content: flex-end;
+}
+.autoql-vanilla-filter-locking-saving-indicator{
+	display: inline-block;
+    font-weight: 400;
+    font-size: 14px;
+    padding-right: 20px;
+    color: var(--react-autoql-accent-color);
+    transition: opacity 0.2s ease;
+	visibility: hidden;
+	&.visible {
+		opacity: 1;
+		visibility: visible;
+	  }
+}
 
 .autoql-vanilla-condition-lock-menu-footer {
     bottom: 0;
