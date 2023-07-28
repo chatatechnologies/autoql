@@ -1,3 +1,5 @@
+import './ConditionsView.scss';
+
 export function ConditionsView() {
   const container = document.createElement('div');
   const title = document.createElement('div');

@@ -28,7 +28,7 @@
 .chata-modal {
   display: flex;
   flex-direction: column;
-  background: var(--autoql-vanilla-background-color-primary);
+  background: white;
   border-radius: 4px;
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
   margin: 45px auto;
