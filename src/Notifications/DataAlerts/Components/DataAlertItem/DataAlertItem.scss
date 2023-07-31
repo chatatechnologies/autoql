@@ -62,8 +62,14 @@
         .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-live {
           color: var(--autoql-vanilla-success-color);
         }
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-error {
+          color: var(--autoql-vanilla-warning-color);
+        }
+
         .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-triggered {
           color: var(--autoql-vanilla-info-color);
+        }
+        .autoql-vanilla-data-alert-state{
           .autoql-vanilla-notification-state-action-btn {
             display: inline-block;
             transition: background-color .2s ease;

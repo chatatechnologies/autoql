@@ -6,7 +6,8 @@ import {
   SETTINGS,
   TRASH_ICON,
   LIGHTNING_ICON,
-  REFRESH_ICON 
+  REFRESH_ICON,
+  WARNING
 } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import { StatusSwitch } from '../StatusSwitch';
@@ -126,6 +127,21 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     return statusContainer;
   }
 
+  const createRefreshIcon = () => {
+    const refreshIcon = createIcon(REFRESH_ICON);
+    refreshIcon.classList.add('autoql-vanilla-notification-state-action-btn');
+    refreshIcon.onclick = async () => {
+      refreshIcon.classList.add('autoql-vanilla-spinning');
+      await initializeAlert({ id, ...authentication });
+      dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
+      dataAlert.reset_date = null;
+      toggleAlertStatusView(dataAlert.status);
+      refreshIcon.onclick = () => {}
+    }
+
+    return refreshIcon;
+  }
+
   const getState = () => {
     const nextScheduledDate = formatNextScheduleDate(dataAlert.schedules);
     const enabled = isEnabled(dataAlert.status);
@@ -133,19 +149,20 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     const isCustom = dataAlert.type === CUSTOM_TYPE
     const error = hasError();
 
+    if(error) {
+      const errorStatus = createStatusElement('Error', WARNING, 'autoql-vanilla-data-alert-error');
+      if(isCustom) {
+        const refreshIcon = createRefreshIcon();
+        errorStatus.appendChild(refreshIcon);
+      }
+      return errorStatus;
+    }
+
     if (dataAlert.reset_date && resetDateIsFuture(dataAlert)) {
       const tooltip = `This Alert has been triggered for this cycle. You will not receive notifications until the start of the next cycle, ${resetDateFormatted}.<br/>You can edit this in the <em>Data Alert Settings</em>`;
       const triggeredStatus = createStatusElement('Triggered', LIGHTNING_ICON, 'autoql-vanilla-data-alert-triggered');
       if(isCustom) {
-        const refreshIcon = createIcon(REFRESH_ICON);
-        refreshIcon.classList.add('autoql-vanilla-notification-state-action-btn');
-        refreshIcon.onclick = async () => {
-          refreshIcon.classList.add('autoql-vanilla-spinning');
-          await initializeAlert({ id, ...authentication });
-          dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
-          dataAlert.reset_date = null;
-          toggleAlertStatusView(dataAlert.status);
-        }
+        const refreshIcon = createRefreshIcon();
         triggeredStatus.appendChild(refreshIcon);
       }
 
