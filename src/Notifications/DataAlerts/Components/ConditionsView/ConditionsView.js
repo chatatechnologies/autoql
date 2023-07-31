@@ -8,12 +8,17 @@ export function ConditionsView() {
   const readOnlyContainer = document.createElement('div');
   const labelContainer = document.createElement('div');
   const inputLabel = document.createElement('div');
+  const conditionWrapper = document.createElement('div');
+  const conditionLabel = document.createElement('div');
+
   const inputContainer = document.createElement('div');
   const wrapperInputContainer = document.createElement('div');
   const queryInput = document.createElement('input');
+  const ruleContainer = document.createElement('div');
   
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
+  conditionLabel.textContent = 'Meets this condition';
   queryInput.setAttribute('type', 'text');
   queryInput.setAttribute('value', 'Total trade size this year');
   queryInput.setAttribute('disabled', 'true');
@@ -26,11 +31,17 @@ export function ConditionsView() {
   readOnlyContainer.classList.add('autoql-vanilla-data-alert-rule-query-readonly-container');
   labelContainer.classList.add('autoql-vanilla-input-and-label-container');
   inputLabel.classList.add('autoql-vanilla-input-label');
+  conditionLabel.classList.add('autoql-vanilla-input-label');
   inputContainer.classList.add('autoql-vanilla-input-container');
   inputContainer.classList.add('autoql-vanilla-input-large');
   wrapperInputContainer.classList.add('autoql-vanilla-input-and-icon');
   queryInput.classList.add('autoql-vanilla-input');
+  ruleContainer.classList.add('autoql-vanilla-notification-rule-container');
+  conditionWrapper.classList.add('autoql-vanilla-select-and-label');
+  conditionWrapper.classList.add('autoql-vanilla-rule-condition-select')
 
+  conditionWrapper.appendChild(conditionLabel);
+  ruleContainer.appendChild(conditionWrapper);
   wrapperInputContainer.appendChild(queryInput);
   inputContainer.appendChild(wrapperInputContainer);
   labelContainer.appendChild(inputLabel);
@@ -38,6 +49,7 @@ export function ConditionsView() {
   readOnlyContainer.appendChild(labelContainer);
   ruleInput.appendChild(readOnlyContainer);
   wrapper.appendChild(ruleInput);
+  wrapper.appendChild(ruleContainer);
   container.appendChild(title);
   container.appendChild(wrapper);
 

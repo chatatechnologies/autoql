@@ -6,6 +6,27 @@
     font-weight: 600;
   }
 
+  .autoql-vanilla-input-label{
+    display: flex;
+    align-items: center;
+    padding-bottom: 3px;
+    margin: 0;
+    font-size: .9em;
+    color: var(--autoql-vanilla-text-color-primary);
+    opacity: .8;
+    white-space: nowrap;
+    text-align: left;
+  }
+
+  .autoql-vanilla-select-and-label {
+    position: relative;
+    padding: 2px 5px;
+    display: inline-flex;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 10px;
+  }
+
   .autoql-vanilla-data-alerts-container{
     .autoql-vanilla-rule-input{
       .autoql-vanilla-data-alert-rule-query-readonly-container{
@@ -19,17 +40,6 @@
           display: inline-flex;
           flex-direction: column;
           width: 100%;
-          .autoql-vanilla-input-label{
-            display: flex;
-            align-items: center;
-            padding-bottom: 3px;
-            margin: 0;
-            font-size: .9em;
-            color: var(--autoql-vanilla-text-color-primary);
-            opacity: .8;
-            white-space: nowrap;
-            text-align: left;
-          }
           .autoql-vanilla-input-container {
             position: relative;
             display: inline-flex;
