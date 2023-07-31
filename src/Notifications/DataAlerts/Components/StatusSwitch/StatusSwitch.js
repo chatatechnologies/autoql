@@ -6,6 +6,7 @@ const statusMap = {
   [DATA_ALERT_STATUSES.ACTIVE]: 'Active',
   [DATA_ALERT_STATUSES.WAITING]: 'Active', 
   [DATA_ALERT_STATUSES.INACTIVE]: 'Inactive',
+  [DATA_ALERT_STATUSES.EVALUATION_ERROR]: 'Inactive'
 }
 
 export function StatusSwitch({ status, onChange }) {

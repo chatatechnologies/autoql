@@ -131,6 +131,8 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     const enabled = isEnabled(dataAlert.status);
     const resetDateFormatted = formatResetDate(dataAlert);
     const isCustom = dataAlert.type === CUSTOM_TYPE
+    const error = hasError();
+
     if (dataAlert.reset_date && resetDateIsFuture(dataAlert)) {
       const tooltip = `This Alert has been triggered for this cycle. You will not receive notifications until the start of the next cycle, ${resetDateFormatted}.<br/>You can edit this in the <em>Data Alert Settings</em>`;
       const triggeredStatus = createStatusElement('Triggered', LIGHTNING_ICON, 'autoql-vanilla-data-alert-triggered');
