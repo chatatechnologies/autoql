@@ -20,7 +20,7 @@ import {
     getChartColorVars,
     getNotGroupableField,
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 import { CSS_PREFIX } from '../Constants'
 
@@ -244,7 +244,7 @@ export function createBubbleChart(
     .attr("fill", chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'tooltip-3d circle')
-    tooltipCharts();
+    refreshTooltips();
 
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {

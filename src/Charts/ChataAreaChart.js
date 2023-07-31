@@ -1,7 +1,7 @@
 import { select } from 'd3-selection'
 import { max } from 'd3-array'
 import { ChataChartListPopover } from './ChataChartListPopover'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import {
     getGroupableFields,
     getMetadataElement,
@@ -407,7 +407,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         })
         .attr("cy", function(d) { return y(d.y); });
 
-        tooltipCharts();
+        refreshTooltips();
         onUpdate(component);
     }
 

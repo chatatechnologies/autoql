@@ -17,7 +17,7 @@ import {
     getFirstDateCol,
     getChartColorVars
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 import { CSS_PREFIX } from '../Constants'
 
@@ -232,7 +232,7 @@ export function createPieChart(
             pieChartContainer.attr('transform', `translate(${chartCenter - bboxCenterX}, 0)`)
         }
 
-        tooltipCharts();
+        refreshTooltips();
         onUpdate(component)
     }
 
