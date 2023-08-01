@@ -14,7 +14,7 @@ import { RelatedQueries } from "./Components/RelatedQueries";
 
 export function DataExplorer({ subjects, widget }) {
   let obj = this;
-  obj.subjects = subjects;
+  obj.subjects = subjects || [];
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
