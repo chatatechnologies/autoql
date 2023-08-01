@@ -2,23 +2,36 @@
     "name": "test_page",
     "version": "0.4.0",
     "private": true,
-    "engines": {
-        "node": ">=16.4.2",
-        "npm": ">=7.18.1"
+    "dependencies": {
+        "@testing-library/jest-dom": "^5.17.0",
+        "@testing-library/react": "^13.4.0",
+        "@testing-library/user-event": "^13.5.0",
+        "antd": "^4.0.1",
+        "autoql": "file:autoql-3.2.0.tgz",
+        "axios": "^1.2.2",
+        "lodash": "^4.17.21",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-scripts": "5.0.1",
+        "react-sortable": "^2.0.0",
+        "web-vitals": "^2.1.4"
     },
     "scripts": {
-        "start": "react-app-rewired start",
-        "build": "react-app-rewired build",
-        "test": "react-app-rewired test",
-        "eject": "react-scripts eject",
-        "preinstall": "npx npm-force-resolutions"
+        "start": "react-scripts start",
+        "build": "react-scripts build",
+        "test": "react-scripts test",
+        "eject": "react-scripts eject"
     },
     "eslintConfig": {
-        "extends": "react-app"
+        "extends": [
+            "react-app",
+            "react-app/jest"
+        ]
     },
     "browserslist": {
         "production": [
             ">0.2%",
+            "not dead",
             "not op_mini all"
         ],
         "development": [
@@ -26,18 +39,5 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    },
-    "dependencies": {
-        "antd": "^4.0.1",
-        "autoql": "file:autoql-3.2.0.tgz",
-        "axios": "^1.2.2",
-        "lodash": "^4.17.21",
-        "react": "^16.14.0",
-        "react-dom": "^16.14.0",
-        "react-scripts": "4.0.3",
-        "react-sortable": "^2.0.0"
-    },
-    "devDependencies": {
-        "react-app-rewired": "^2.2.1"
     }
 }

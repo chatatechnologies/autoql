@@ -228,9 +228,12 @@ class App extends React.Component {
     renderDataMessenger = () => {
         this.datamessenger = new DataMessenger({
             authentication: {
-                token: "",
+                /* token: "",
                 domain: getStoredProp('domain-url') || '',
-                apiKey: getStoredProp('api-key') || '',
+                apiKey: getStoredProp('api-key') || '', */
+                token: 'eyJ0eXAiOiAiSldUIiwgImFsZyI6ICJSUzI1NiIsICJraWQiOiAiNzUxZmYzY2YxMjA2ZGUwODJhNzM1MjY5OTI2ZDg0NTgzYjcyOTZmNCJ9.eyJpYXQiOiAxNjkwNzc3NzQyLCAiZXhwIjogMTY5MDc4MTM0MiwgImlzcyI6ICJkZW1vMy1qd3RhY2NvdW50QHN0YWdpbmctMjQ1NTE0LmlhbS5nc2VydmljZWFjY291bnQuY29tIiwgImF1ZCI6ICJ2ZXJ0aWNhLXN0YWdpbmcuY2hhdGEuaW8iLCAic3ViIjogImRlbW8zLWp3dGFjY291bnRAc3RhZ2luZy0yNDU1MTQuaWFtLmdzZXJ2aWNlYWNjb3VudC5jb20iLCAiZW1haWwiOiAiZGVtbzMtand0YWNjb3VudEBzdGFnaW5nLTI0NTUxNC5pYW0uZ3NlcnZpY2VhY2NvdW50LmNvbSIsICJwcm9qZWN0X2lkIjogIkNUX29YWldIQnpueDF1NmFtTSIsICJ1c2VyX2lkIjogInZpZGh5YUBjaGF0YS5haSIsICJkaXNwbGF5X25hbWUiOiAidmlkaHlhQGNoYXRhLmFpIiwgInJlc291cmNlX2FjY2VzcyI6IFsiL2F1dG9xbC9hcGkvdjEvdGhlbWVzIiwgIi9hdXRvcWwvYXBpL3YxL3J1bGVzLyoqIiwgIi9hdXRvcWwvYXBpL3YxL3J1bGVzIiwgIi9hdXRvcWwvYXBpL3YxL2RhdGEtYWxlcnRzLyoqIiwgIi9hdXRvcWwvYXBpL3YxL3RvcGljLXNldCIsICIvYXV0b3FsL2FwaS92MS9kYXNoYm9hcmRzLyoqIiwgIi9hdXRvcWwvYXBpL3YyL3F1ZXJ5IiwgIi9hdXRvcWwvYXBpL3YxL3F1ZXJ5LyoqIiwgIi9hdXRvcWwvYXBpL3YxL2RhdGEtYWxlcnRzIiwgIi9hdXRvcWwvYXBpL3YxL2Rhc2hib2FyZHMiLCAiL2F1dG9xbC9hcGkvdjEvbm90aWZpY2F0aW9ucy8qKiIsICIvYXV0b3FsL2FwaS92MS9xdWVyeSIsICIvYXV0b3FsL2FwaS92MS8qKiJdfQ.Pe4TszEKOrygqEDRb72YcefVw0OpnUqYyfzR0C7Z7vh_j5ZqGeJhUrV_T8Lph-zoSMeg8wFy-geaUTL6AHEeg3_CzsBr_nOJUwirvlgAPpijiCZnzA59WLIkfCfwXI3yXarrp2SX2a984v1w1Zj-qLW3icIYi-uxFd6QHOHaHAWNXOVpLSW8IFNqBDjSYljLSIE52KOCF_1sl4IkLzaFkHrclyUyV6th5R9BRck9EYfUsm_xh-sPnUmMt0KbWD27UF4k5wz42HbUxv0xNGTTVnG1P2c0rfy4Gp2oWZ9fEIABaDHG-hiGMhtrT8FjuMz3KBFZFdLH6D1ABJQ0_1FnOg',
+                domain: 'https://vertica-staging.chata.io',
+                apiKey: 'YTkxNTNjMzUtY2ZiYy00MWQxLWI4MmItMDA4ZGRlOWE2Njcy',
             },
             autoQLConfig: {
                 debug: true,
