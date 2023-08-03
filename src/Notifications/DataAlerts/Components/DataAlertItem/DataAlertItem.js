@@ -24,7 +24,7 @@ import {
   CUSTOM_TYPE,
   DATA_ALERT_STATUSES,
 } from 'autoql-fe-utils';
-import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog';
+import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
 import { EditDataAlertModal } from '../EditDataAlertModal/EditDataAlertModal';
 

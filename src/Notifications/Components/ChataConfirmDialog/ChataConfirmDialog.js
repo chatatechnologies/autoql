@@ -1,6 +1,6 @@
-import { Modal } from '../../Modal'
-import { htmlToElement } from '../../Utils'
-import { strings } from '../../Strings'
+import { Modal } from '../../../Modal'
+import { htmlToElement } from '../../../Utils'
+import { strings } from '../../../Strings'
 import './ChataConfirmDialog.scss'
 
 export function ChataConfirmDialog({ title, message, onDiscard, cancelString = strings.back, discardString = strings.discardChanges }){

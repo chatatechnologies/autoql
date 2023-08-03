@@ -1,4 +1,4 @@
-import { ChataConfirmDialog } from "../../../Components/ChataConfirmDialog";
+import { ChataConfirmDialog } from "../../../Components/ChataConfirmDialog/ChataConfirmDialog";
 import { Modal } from "../../../../Modal";
 import './EditDataAlertModal.scss';
 import { ConditionsView } from "../ConditionsView/ConditionsView";

@@ -12,7 +12,7 @@ import {
 } from '../Utils';
 import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataConfirmDialog } from '../Notifications/Components/ChataConfirmDialog';
+import { ChataConfirmDialog } from '../Notifications/Components/ChataConfirmDialog/ChataConfirmDialog';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';

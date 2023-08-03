@@ -1,6 +1,8 @@
+import { Selector } from '../../../Components/Selector/Selector';
 import './ConditionsView.scss';
 
 export function ConditionsView() {
+  //Trigger alert section
   const container = document.createElement('div');
   const title = document.createElement('div');
   const wrapper = document.createElement('div');
@@ -11,11 +13,13 @@ export function ConditionsView() {
   const conditionWrapper = document.createElement('div');
   const conditionLabel = document.createElement('div');
 
+  // Meets this condition section
   const inputContainer = document.createElement('div');
   const wrapperInputContainer = document.createElement('div');
   const queryInput = document.createElement('input');
   const ruleContainer = document.createElement('div');
-  
+  const conditionSelect = new Selector();
+
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
   conditionLabel.textContent = 'Meets this condition';
@@ -41,6 +45,7 @@ export function ConditionsView() {
   conditionWrapper.classList.add('autoql-vanilla-rule-condition-select')
 
   conditionWrapper.appendChild(conditionLabel);
+  conditionWrapper.appendChild(conditionSelect);
   ruleContainer.appendChild(conditionWrapper);
   wrapperInputContainer.appendChild(queryInput);
   inputContainer.appendChild(wrapperInputContainer);
