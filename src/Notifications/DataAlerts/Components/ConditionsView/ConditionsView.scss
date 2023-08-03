@@ -27,51 +27,70 @@
 
   .autoql-vanilla-data-alerts-container{
     .autoql-vanilla-rule-input{
-      .autoql-vanilla-data-alert-rule-query-readonly-container{
-        .autoql-vanilla-input-full-width {
-          width: 100%;
-          display: flex;
-        }
-        .autoql-vanilla-input-and-label-container {
+      .autoql-vanilla-input-and-label-container {
+        position: relative;
+        padding: 2px 5px;
+        display: inline-flex;
+        flex-direction: column;
+        width: 100%;
+        .autoql-vanilla-input-container {
           position: relative;
-          padding: 2px 5px;
           display: inline-flex;
-          flex-direction: column;
+          flex-direction: row;
           width: 100%;
-          .autoql-vanilla-input-container {
-            position: relative;
-            display: inline-flex;
-            flex-direction: row;
-            width: 100%;
-            .autoql-vanilla-input-and-icon{
-              flex: 1 1;
-              .autoql-vanilla-input {
-                border: 1px solid var(--autoql-vanilla-border-color);
-                border-radius: 4px;
-                background: inherit;
-                width: 100%;
-                font-size: inherit;
-                font-family: inherit;
-                outline: none!important;
-                transition-property: color,border-color,background-color,opacity;
-                transition-duration: .3s;
-                transition-timing-function: ease;
-                padding: 10px;
-                line-height: 1em;
-              }
-              .autoql-vanilla-input:not(textarea) {
-                padding: 0 10px;
-                height: 32px;
-                &.autoql-vanilla-input:disabled {
-                  background: var(--autoql-vanilla-hover-color);
-                  border-color: var(--autoql-vanilla-border-color)!important;
-                  cursor: default;
-                }
+          .autoql-vanilla-input-and-icon{
+            flex: 1 1;
+            .autoql-vanilla-input {
+              border: 1px solid var(--autoql-vanilla-border-color);
+              border-radius: 4px;
+              background: inherit;
+              width: 100%;
+              font-size: inherit;
+              font-family: inherit;
+              outline: none!important;
+              transition-property: color,border-color,background-color,opacity;
+              transition-duration: .3s;
+              transition-timing-function: ease;
+              padding: 10px;
+              line-height: 1em;
+            }
+            .autoql-vanilla-input:not(textarea) {
+              padding: 0 10px;
+              height: 32px;
+              &.autoql-vanilla-input:disabled {
+                background: var(--autoql-vanilla-hover-color);
+                border-color: var(--autoql-vanilla-border-color)!important;
+                cursor: default;
               }
             }
           }
         }
       }
+      .autoql-vanilla-data-alert-rule-query-readonly-container{
+        .autoql-vanilla-input-full-width {
+          width: 100%;
+          display: flex;
+        }
+      }
+    }
+
+    .autoql-vanilla-notification-rule-container {
+      display: flex;
+      align-items: flex-end;
+      margin-top: 5px;
+      .autoql-vanilla-rule-second-input-container {
+        display: flex;
+        flex-direction: column;
+        padding: 2px 0;
+        border-radius: 4px;
+        transition-property: color,border-color,background-color,opacity;
+        transition-duration: .3s;
+        transition-timing-function: ease;
+        flex: 1 1;
+        .autoql-vanilla-rule-input {
+          flex: 1 1;
+        }
+      } 
     }
   }
 }

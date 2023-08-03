@@ -32,7 +32,7 @@ export function Selector({ defaultValue, options }) {
     item.classList.add('autoql-vanilla-select-menu-item');
     optionsContainer.appendChild(item);
 
-    const name = option.displayText;
+    const name = option?.displayText ?? option.displayName;
     item.innerHTML = name;
 
     item.onclick = () => {
