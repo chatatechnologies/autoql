@@ -35,7 +35,7 @@ import {
     getChartColorVars,
     getStringWidth,
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { strings } from '../Strings'
 import { ChartLoader } from './ChartLoader'
 import { CSS_PREFIX } from '../Constants'
@@ -519,7 +519,7 @@ export function createColumnChart(
         .attr("height", function(d) { return calculateHeight(d) })
 
         onUpdate(component);
-        tooltipCharts();
+        refreshTooltips();
     }
 
     if(hasLegend){

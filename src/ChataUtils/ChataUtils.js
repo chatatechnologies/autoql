@@ -12,7 +12,7 @@ import {
 } from '../Utils';
 import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataConfirmDialog } from '../ChataComponents';
+import { ChataConfirmDialog } from '../Notifications/Components/ChataConfirmDialog';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
@@ -27,21 +27,6 @@ export var ChataUtils = {
     xhr: new XMLHttpRequest(),
     responses: [],
 };
-
-// ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
-//     var json = ChataUtils.responses[idRequest];
-//     var queryId = json['data']['query_id'];
-//     const URL = options.authentication.demo
-//     ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-//     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
-//
-//     await apiCallPut(URL, {is_correct: false}, options)
-//     if(menu)menu.classList.remove('show');
-//     if(toolbar)toolbar.classList.remove('show');
-//     new AntdMessage(strings.feedback, 3000);
-//
-//     return Promise.resolve()
-// }
 
 ChataUtils.sendReportMessage = async (idRequest, options, menu, toolbar, msg) => {
     var json = ChataUtils.responses[idRequest];
@@ -227,7 +212,7 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
     tabulator.toggleFilters();
 };
 
-/* ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
+ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     var o = extraParams.caller.options;
     var modalView = new NotificationSettingsModal(o);
     var configModal = new Modal(

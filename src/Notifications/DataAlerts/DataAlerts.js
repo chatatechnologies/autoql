@@ -11,7 +11,7 @@ export function DataAlerts(selector, options) {
     const parent = document.querySelector(selector);
     const listContainer = document.createElement('div');
     const settingsContainer = document.createElement('div');
-    var wrapper = document.createElement('div');
+    const wrapper = document.createElement('div');
 
     wrapper.classList.add('autoql-vanilla-notification-settings');
     listContainer.classList.add('autoql-vanilla-data-alerts-list-container');

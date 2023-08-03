@@ -20,7 +20,7 @@ import {
     getChartColorVars,
     getNotGroupableField,
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 import { CSS_PREFIX } from '../Constants'
 
@@ -236,7 +236,7 @@ export function createHeatmap(
     .attr('opacity', function(d) { return colorScale(Math.abs(d.value))})
     .attr('class', 'tooltip-3d square')
 
-    tooltipCharts();
+    refreshTooltips();
 
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {

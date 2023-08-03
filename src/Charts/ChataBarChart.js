@@ -35,7 +35,7 @@ import {
     getChartColorVars,
     getStringWidth,
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { strings } from '../Strings'
 import { ChartLoader } from './ChartLoader'
 import { CSS_PREFIX } from '../Constants'
@@ -520,7 +520,7 @@ export function createBarChart(
         .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
         .style("fill", function(d) { return colorScale(d.group) })
 
-        tooltipCharts();
+        refreshTooltips();
         onUpdate(component);
     }
     if(hasLegend){
