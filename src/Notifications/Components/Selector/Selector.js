@@ -1,3 +1,4 @@
+import { PopoverChartSelector } from '../../../Charts/PopoverChartSelector';
 import { SELECT_ARROW } from '../../../Svg';
 import { createIcon } from '../../../Utils';
 import './Selector.scss';
@@ -12,6 +13,8 @@ export function Selector({ defaultIndex, options }) {
   const popup = document.createElement('div');
   const item = document.createElement('li');
 
+  this.isOpen = false;
+
   itemValue.classList.add('autoql-vanilla-menu-item-value-title');
   selectArrow.classList.add('autoql-vanilla-select-arrow');
   selectText.classList.add('autoql-vanilla-select-text');
@@ -25,11 +28,24 @@ export function Selector({ defaultIndex, options }) {
   itemValue.innerHTML = `<span><span>Is <strong>greater</strong> than</span></span>`;
   item.innerHTML = `<span><span>Is <strong>greater</strong> than (>)</span></span>`;
 
+  select.onclick = () => {
+    if(!this.isOpen){
+      var pos = select.getBoundingClientRect();
+      popup.style.transform = `translate(${pos.left}px, ${pos.bottom + 2}px)`;
+      popup.style.visibility = 'visible';
+      document.body.appendChild(popup);
+    }else{
+      popup.style.visibility = 'hidden';
+      document.body.removeChild(popup);
+    }
+
+    this.isOpen = !this.isOpen;
+  }
+  
   optionsContainer.appendChild(item);
   selectArrow.appendChild(arrow);
   selectText.appendChild(itemValue);
   popup.appendChild(optionsContainer);
-  document.body.appendChild(popup);
   select.appendChild(selectText);
   select.appendChild(selectArrow);
 

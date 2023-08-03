@@ -54,7 +54,8 @@
   top: 0;
   font-family: var(--autoql-vanilla-font-family);
   font-size: 14px;
-
+  visibility: hidden;
+  
   .autoql-vanilla-select-menu {
     list-style-type: none;
     padding: 10px 0;
