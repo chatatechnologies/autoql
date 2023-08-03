@@ -1,0 +1,43 @@
+.autoql-vanilla-select{
+  display: inline-flex;
+  justify-content: space-between;
+  transition: color .2s ease,border-color .2s ease;
+  white-space: nowrap;
+  font-size: inherit;
+  cursor: pointer;
+
+  &.autoql-vanilla-outlined {
+    padding: 0 16px;
+    color: var(--autoql-vanilla-text-color-primary);
+    border: 1px solid var(--autoql-vanilla-border-color);
+    border-radius: 4px;
+    background: #fff;
+    background: var(--autoql-vanilla-background-color-secondary,#fff);
+    &:hover {
+      color: var(--autoql-vanilla-accent-color);
+      border-color: var(--autoql-vanilla-accent-color);
+    }
+  }
+
+  &.autoql-vanilla-select-large {
+    line-height: 36px;
+    height: 38px;
+  }
+
+  .autoql-vanilla-select-text {
+    display: block;
+    height: 100%;
+  }
+
+  .autoql-vanilla-select-arrow {
+    display: flex;
+    align-items: center;
+    padding-left: 8px;
+    font-size: .875em;
+    color: var(--autoql-vanilla-text-color-placeholder);
+  }
+
+  &:hover .autoql-vanilla-select-arrow {
+    color: var(--autoql-vanilla-accent-color,#26a7df);
+  }
+}
