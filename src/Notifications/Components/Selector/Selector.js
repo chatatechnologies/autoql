@@ -11,7 +11,6 @@ export function Selector({ defaultValue, options }) {
   const arrow = createIcon(SELECT_ARROW);
   const optionsContainer = document.createElement('ul');
   const popup = document.createElement('div');
-  const keys = Object.keys(options);
   
   select.isOpen = false;
   
@@ -25,22 +24,19 @@ export function Selector({ defaultValue, options }) {
   select.classList.add('autoql-vanilla-select-large');
   
   if(defaultValue) {
-    itemValue.innerHTML = options[defaultValue].displayName;
+    itemValue.innerHTML = options[0].displayName;
   }
 
-  keys.forEach((key) => {
+  options.forEach((option) => {
     const item = document.createElement('li');
-    const value = options[key];
     item.classList.add('autoql-vanilla-select-menu-item');
     optionsContainer.appendChild(item);
-    let name = value.displayName;
-    if(value?.symbol) {
-      name = `${name} (${value.symbol})`;
-    }
+
+    const name = option.displayText;
     item.innerHTML = name;
 
     item.onclick = () => {
-      itemValue.innerHTML = options[key].displayName;
+      itemValue.innerHTML = option.displayName;
       select.closePopup();
     }
   })

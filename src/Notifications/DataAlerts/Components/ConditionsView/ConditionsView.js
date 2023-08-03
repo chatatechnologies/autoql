@@ -25,7 +25,21 @@ export function ConditionsView({ dataAlert }) {
     defaultValue = dataAlert.expression[0].condition;
   }
 
-  const conditionSelect = new Selector({ defaultValue, options: DATA_ALERT_OPERATORS });
+  this.getOperatorSelectValues = () => {
+    const keys = Object.keys(DATA_ALERT_OPERATORS);
+    return keys.map((key) => {
+      const value = DATA_ALERT_OPERATORS[key];
+      const { displayName, symbol } = value;
+      const displayText = `${displayName} (${symbol})`;
+      return {
+        displayName,
+        displayText,
+        value: key,
+      }
+    })
+  }
+
+  const conditionSelect = new Selector({ defaultValue, options: this.getOperatorSelectValues() });
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
