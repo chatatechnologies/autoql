@@ -1,0 +1,71 @@
+.autoql-vanilla-input-number-container{
+  flex: 1 1;
+  display: flex;
+
+  .autoql-vanilla-number-input {
+    border: 1px solid var(--autoql-vanilla-border-color);
+    border-radius: 0 4px 4px 0;
+    background: inherit;
+    width: 100%;
+    font-size: inherit;
+    font-family: inherit;
+    outline: none!important;
+    transition-property: color,border-color,background-color,opacity;
+    transition-duration: .3s;
+    transition-timing-function: ease;
+    padding: 10px;
+    line-height: 1em;
+    padding-left: 14px;
+
+    &:hover, &:focus {
+      border-color: var(--autoql-vanilla-accent-color);
+    }
+
+    &::-webkit-outer-spin-button,
+    &::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+  }
+
+  .autoql-vanilla-input-number-spin-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-wrap: nowrap;
+    flex: 0 0 18px;
+    overflow: hidden;
+    border-radius: 0 4px 4px 0;
+    border: 1px solid var(--autoql-vanilla-border-color);
+    border-left: none;
+    transition-property: color,border-color,background-color,opacity;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+
+    .autoql-vanilla-spin-button {
+      flex: 1 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      outline: none!important;
+      border: none;
+      padding: 0;
+      color: var(--autoql-vanilla-text-color-primary);
+      background-color: var(--autoql-vanilla-background-color-secondary);
+      
+      &:first-child {
+        border-bottom: 1px solid var(--autoql-vanilla-border-color);
+      }
+      
+      &:active {
+        background-color: var(--autoql-vanilla-accent-color);
+        color: var(--autoql-vanilla-text-color-accent);
+      }
+
+      &:hover {
+        color: var(--autoql-vanilla-accent-color);
+      }
+    }
+  }
+}

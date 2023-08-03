@@ -78,7 +78,8 @@
       display: flex;
       align-items: flex-end;
       margin-top: 5px;
-      .autoql-vanilla-rule-second-input-container {
+      padding: 0px 0px 0px 5px;
+      .autoql-vanilla-rule-condition-select {
         display: flex;
         flex-direction: column;
         padding: 2px 0;
@@ -86,9 +87,28 @@
         transition-property: color,border-color,background-color,opacity;
         transition-duration: .3s;
         transition-timing-function: ease;
+        flex: 0 0 auto;
+        margin-right: 12px;
+        width: auto;
+      }
+      .autoql-vanilla-rule-second-input-container {
+        display: flex;
+        flex-direction: column;
+        border-radius: 4px;
+        transition-property: color,border-color,background-color,opacity;
+        transition-duration: .3s;
+        transition-timing-function: ease;
         flex: 1 1;
         .autoql-vanilla-rule-input {
           flex: 1 1;
+          .autoql-vanilla-input-and-label-container{
+            .autoql-vanilla-input-number{
+              .autoql-vanilla-select {
+                border-right: none;
+                border-radius: 4px 0 0 4px;
+              }
+            }
+          }
         }
       } 
     }

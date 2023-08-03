@@ -23,6 +23,7 @@ export function ConditionsView({ dataAlert }) {
   const ruleSecondInputContainer = document.createElement('div');
   const secondRuleInput = document.createElement('div');
   const secondInputContainer = document.createElement('div');
+  const secondLabelContainer = document.createElement('div');
   
   let defaultValue = undefined;
   if(dataAlert?.expression) {
@@ -83,6 +84,7 @@ export function ConditionsView({ dataAlert }) {
   secondRuleInput.classList.add('autoql-vanilla-rule-input');
   readOnlyContainer.classList.add('autoql-vanilla-data-alert-rule-query-readonly-container');
   labelContainer.classList.add('autoql-vanilla-input-and-label-container');
+  secondLabelContainer.classList.add('autoql-vanilla-input-and-label-container');
   inputLabel.classList.add('autoql-vanilla-input-label');
   conditionLabel.classList.add('autoql-vanilla-input-label');
   inputContainer.classList.add('autoql-vanilla-input-container');
@@ -99,7 +101,8 @@ export function ConditionsView({ dataAlert }) {
 
   secondInputContainer.appendChild(secondTermSelect);
   secondInputContainer.appendChild(termInputValue);
-  secondRuleInput.appendChild(secondInputContainer);
+  secondLabelContainer.appendChild(secondInputContainer);
+  secondRuleInput.appendChild(secondLabelContainer);
   ruleSecondInputContainer.appendChild(secondRuleInput);
   conditionWrapper.appendChild(conditionLabel);
   conditionWrapper.appendChild(conditionSelect);
