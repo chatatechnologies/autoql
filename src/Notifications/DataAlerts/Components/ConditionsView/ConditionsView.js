@@ -1,3 +1,4 @@
+import { NumberInput } from '../../../Components/NumberInput';
 import { Selector } from '../../../Components/Selector/Selector';
 import './ConditionsView.scss';
 import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE } from 'autoql-fe-utils';
@@ -65,6 +66,7 @@ export function ConditionsView({ dataAlert }) {
 
   const conditionSelect = new Selector({ defaultValue, options: this.getOperatorSelectValues() });
   const secondTermSelect = new Selector({ defaultValue, options: this.getSecondTermValues() });
+  const termInputValue = new NumberInput();
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
@@ -96,6 +98,7 @@ export function ConditionsView({ dataAlert }) {
   ruleSecondInputContainer.classList.add('autoql-vanilla-rule-second-input-container');
 
   secondInputContainer.appendChild(secondTermSelect);
+  secondInputContainer.appendChild(termInputValue);
   secondRuleInput.appendChild(secondInputContainer);
   ruleSecondInputContainer.appendChild(secondRuleInput);
   conditionWrapper.appendChild(conditionLabel);
