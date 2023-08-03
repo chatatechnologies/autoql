@@ -18,7 +18,7 @@ export function ConditionsView() {
   const wrapperInputContainer = document.createElement('div');
   const queryInput = document.createElement('input');
   const ruleContainer = document.createElement('div');
-  const conditionSelect = new Selector();
+  const conditionSelect = new Selector({ defaultIndex: 0, options: [] });
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
