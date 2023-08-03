@@ -13,7 +13,7 @@ import { strings } from '../Strings'
 import '../../css/NotificationSettings.css'
 
 export function DataAlerts(selector, options) {
-    checkAndApplyTheme();
+    //checkAndApplyTheme();
 
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');

@@ -129,12 +129,16 @@ export function FilterLocking(datamessenger){
     view.submitText = view.input?.animateInputWithText
 
     view.getConditions = async () => {
-        if (datamessenger?.options?.authentication) {
-            const response = await fetchFilters(datamessenger.options.authentication)
-            return response?.data?.data
+        try {
+            const { token } = datamessenger?.options?.authentication
+            if (token && token !== '') {
+                const response = await fetchFilters(datamessenger.options.authentication)
+                return response?.data?.data
+            }
+        } catch (error) {
+         console.log(error);   
+         return []
         }
-
-        return
     }
 
     view.loadConditions = async () => {

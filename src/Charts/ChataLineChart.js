@@ -36,7 +36,7 @@ import {
     getChartLeftMargin,
     getChartColorVars
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { tooltipChrefreshTooltipsarts } from '../Tooltips'
 import { strings } from '../Strings'
 import { ChartLoader } from './ChartLoader'
 import { ChartRowSelector } from './ChartRowSelector'
@@ -545,7 +545,7 @@ export function createLineChart(
         .attr("fill", 'white')
         .attr('class', `${tooltipClass} line-dot`)
         .style('opacity', '0')
-        tooltipCharts();
+        refreshTooltips();
         onUpdate(component)
     }
 

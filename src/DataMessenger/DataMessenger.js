@@ -172,19 +172,23 @@ export function DataMessenger(options = {}) {
 
     obj.getSubjects = async () => {
         const { token, apiKey, domain } = obj.options.authentication;
-
-        if (!token) {
-            return [];
-        } else {
-            const response = await fetchSubjectList({
-                token,
-                apiKey,
-                domain,
-            });
-            if (response.status === 200) {
-                return response.data.data.subjects;
+        try {
+            if (!token || token === '') {
+                return [];
+            } else {
+                const response = await fetchSubjectList({
+                    token,
+                    apiKey,
+                    domain,
+                });
+                if (response.status === 200) {
+                    return response.data.data.subjects;
+                }
             }
+        } catch (error) {
+            console.log(error);
         }
+
     };
 
     obj.setOption = async (option, value) => {
