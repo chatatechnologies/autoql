@@ -32,6 +32,7 @@ import {
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 import { area } from 'd3-shape'
+import { CSS_PREFIX } from '../Constants'
 
 export function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 15, right: 10, bottom: 50, left: 80},
@@ -39,10 +40,13 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
     var height;
-    var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
+
+    const paddingRectVert = 4;
+    const paddingRectHoz = 8;
+    const legendBoxMargin = 15;
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -153,7 +157,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         return sum;
     });
 
-    const stringWidth = getChartLeftMargin(maxValue.toString())
+    const stringWidth = getChartLeftMargin(maxValue.toString(), cols[notGroupableIndex], options)
     const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
     : (margin.left - 15)
     chartWidth -= stringWidth
@@ -187,12 +191,9 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     textContainerX.append('tspan')
     .text(col2);
 
-    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+    const onSelectorClick = (placement, align, evt, legendEvent) => {
         closeAllChartPopovers();
-        new ChataChartListPopover({
-            left: evt.clientX,
-            top: evt.clientY
-        }, groupCols, (evt, popover) => {
+        new ChataChartListPopover(evt, groupCols, (evt, popover) => {
             var selectedIndex = evt.target.dataset.popoverIndex;
             var oldGroupable
             = metadataComponent.metadata3D.groupBy.groupable2;
@@ -218,16 +219,18 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
                 renderTooltips
             )
             popover.close();
-        }, true);
-
+        }, placement, align);
     }
 
     if(options.enableDynamicCharting){
         textContainerX.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
+        
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
+
+        var xLabelBBox = labelXContainer.node().getBBox()
 
         const paddingRect = 15;
         const xWidthRect = getStringWidth(col2) + paddingRect;
@@ -235,17 +238,14 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
         const Y = height + (margin.bottom/2);
 
         labelXContainer.append('rect')
-        .attr('x', X)
-        .attr('y', Y)
-        .attr('height', 20)
-        .attr('width', xWidthRect + paddingRect)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('x', xLabelBBox.x - paddingRectHoz)
+            .attr('y', xLabelBBox.y - paddingRectVert)
+            .attr('height', xLabelBBox.height + paddingRectVert * 2)
+            .attr('width', xLabelBBox.width + paddingRectHoz * 2)
+            .attr('rx', '4')
 
-        labelXContainer.on('mouseup', onSelectorClick)
+        labelXContainer.on('mouseup', onSelectorClick.bind('top', 'middle'))
     }
 
 
@@ -453,7 +453,7 @@ export function createAreaChart(component, json, options, onUpdate=()=>{}, fromC
     styleLegendTitleWithBorder(svgLegend, {
         showOnBaseline: true,
         legendEvent: true
-    }, onSelectorClick)
+    }, onSelectorClick.bind('bottom', 'middle'))
 
     const newX = chartWidth + legendBoxMargin
     svgLegend

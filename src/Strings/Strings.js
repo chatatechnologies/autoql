@@ -1,3 +1,4 @@
+import { MAX_DATA_PAGE_SIZE } from 'autoql-fe-utils';
 import LocalizedStrings from 'localized-strings';
 
 String.prototype.chataFormat = function () {
@@ -56,17 +57,19 @@ export const strings = new LocalizedStrings({
         cascaderFooter: 'to further explore the possibilities.',
         seeMore: 'See more...',
         use: 'Use',
-        barChart: 'Bar Chart',
-        columnChart: 'Column Chart',
-        lineChart: 'Line Chart',
-        pieChart: 'Pie Chart',
-        stackedBar: 'Stacked Bar Chart',
-        stackedColumn: 'Stacked Column Chart',
-        stackedLine: 'Stacked Area Chart',
-        heatmap: 'Heatmap',
-        bubbleChart: 'Bubble Chart',
-        table: 'Table',
-        pivotTable: 'Pivot Table',
+        displayTypes: {
+            table: 'Table',
+            pivot_table: 'Pivot Table',
+            bar: 'Bar Chart',
+            column: 'Column Chart',
+            line: 'Line Chart',
+            pie: 'Pie Chart',
+            stacked_bar: 'Stacked Bar Chart',
+            stacked_column: 'Stacked Column Chart',
+            stacked_line: 'Stacked Area Chart',
+            heatmap: 'Heatmap',
+            bubble: 'Bubble Chart',
+        },
         deleteDataResponse: 'Delete data response',
         moreOptions: 'More options',
         downloadPNG: 'Download as PNG',
@@ -141,6 +144,7 @@ export const strings = new LocalizedStrings({
         reverseTranslationLabel: 'Interpreted as: ',
         reverseTranslationTooltip: 'This statement reflects how your query was interpreted in order to return this data response.',
         filterLocking: 'Filter Locking',
+		filterLockingSaving: ' Saving...',
         continue: 'Continue',
         filterLockingTooltip: 'Filters can be applied to narrow down<br /> your query results. Locking a filter<br /> ensures that only the specific data<br /> you wish to see is returned.',
         filterLockingInputPlaceholder: 'Search & select a filter',
@@ -153,6 +157,11 @@ export const strings = new LocalizedStrings({
         persist: 'Persist',
         maximizeButton: 'Full Screen',
         maximizeButtonExit: 'Exit Full Screen',
+        maxDataWarningTooltip: `Row limit (${MAX_DATA_PAGE_SIZE}) reached. Try applying a filter or narrowing your search to return full results.`,
+        dataSubsetWarningTooltip: 'This visualization is showing a subset of the data. <em>Drilldowns</em> will be executed on the <strong>full</strong> dataset.',
+        visualizingText: 'Visualizing',
+        rowsText: 'rows',
+        suggestionResponse: 'I want to make sure I understood your query. Did you mean:'
     }
     ,
     es: {
@@ -287,6 +296,7 @@ export const strings = new LocalizedStrings({
         reverseTranslationLabel: 'Interpretado como: ',
         reverseTranslationTooltip: 'Esta declaración refleja cómo se interpretó su consulta para devolver esta respuesta de datos.',
         filterLocking: 'Bloqueo de filtros',
+		filterLockingSaving: 'Ahorro...',
         continue: 'Continuar',
         filterLockingTooltip: 'Se pueden aplicar filtros para restringir<br /> los resultados de su consulta. Bloquear un filtro<br /> garantiza que solo se devuelvan los datos específicos<br /> que desea ver.',
         filterLockingInputPlaceholder: 'Buscar y seleccionar un filtro',
@@ -299,5 +309,10 @@ export const strings = new LocalizedStrings({
         persist: 'Persistir',
         maximizeButton: 'Pantalla completa',
         maximizeButtonExit: 'Salir pantalla completa',
+        maxDataWarningTooltip: `Límite de filas (${MAX_DATA_PAGE_SIZE}) alcanzado. Intenta aplicar un filtro o reducir tu búsqueda para obtener resultados completos.`,
+        dataSubsetWarningTooltip: 'Esta visualización muestra un subconjunto de los datos. Las <em>Desgloses</em> se ejecutarán en el conjunto de datos <strong>completo</strong>.',
+        visualizingText: 'Visualizando',
+        rowsText: 'filas',
+        suggestionResponse: 'Quiero asegurarme de que entendí tu consulta. Querías decir:'
     }
 });

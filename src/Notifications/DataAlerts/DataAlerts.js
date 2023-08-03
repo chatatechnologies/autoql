@@ -69,8 +69,8 @@ export function DataAlerts(selector, options) {
         const responseLoadingContainer = document.createElement('div');
         const responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
+        responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }

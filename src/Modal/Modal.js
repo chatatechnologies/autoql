@@ -73,7 +73,9 @@ export function Modal(options={}, onShow=()=>{}, onClose=undefined){
     }
 
     obj.destroy = function(){
-        body.removeChild(modalContainer);
+        if (modalContainer) {
+            modalContainer.parentElement.removeChild(modalContainer)
+        }
     }
 
     obj.setTitle = function(value){

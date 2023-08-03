@@ -1,7 +1,7 @@
 import './ConditionList.css'
 import { FilterLockingList } from '../FilterLockingList'
 
-export function ConditionList(datamessenger){
+export function ConditionList(datamessenger,filterLocking){
     var container = document.createElement('div')
     var emptyConditionListContainer = document.createElement('div')
     var conditionListWrapper = document.createElement('div')
@@ -26,7 +26,7 @@ export function ConditionList(datamessenger){
         if(conditionList.length === 0){
             container.hideConditionEmptyMessage()
         }
-        var list = new FilterLockingList(datamessenger, container, data)
+        var list = new FilterLockingList(datamessenger, container, data,filterLocking)
         conditionListWrapper.appendChild(list)
         conditionList.push(list)
     }

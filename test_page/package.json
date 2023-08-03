@@ -29,12 +29,12 @@
     },
     "dependencies": {
         "antd": "^4.0.1",
-        "autoql": "file:autoql-3.0.0.tgz",
+        "autoql": "file:autoql-3.1.0.tgz",
         "axios": "^1.2.2",
         "lodash": "^4.17.21",
         "react": "^16.14.0",
         "react-dom": "^16.14.0",
-        "react-scripts": "^3.4.1",
+        "react-scripts": "4.0.3",
         "react-sortable": "^2.0.0"
     },
     "devDependencies": {

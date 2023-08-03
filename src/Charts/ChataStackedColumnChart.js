@@ -33,6 +33,7 @@ import {
 import { ChataUtils } from '../ChataUtils'
 
 import './ChataChart.scss'
+import { CSS_PREFIX } from '../Constants'
 
 export function createStackedColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -43,10 +44,13 @@ export function createStackedColumnChart(
     var wLegendBox = 140;
     var chartWidth = width - wLegendBox;
     var height;
-    var legendBoxMargin = 15;
     var groupables = getGroupableFields(json);
     var notGroupableField = getNotGroupableField(json);
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
+
+    const paddingRectVert = 4;
+    const paddingRectHoz = 8;
+    const legendBoxMargin = 15;
 
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata3D){
@@ -168,7 +172,7 @@ export function createStackedColumnChart(
         return sum;
     });
 
-    const stringWidth = getChartLeftMargin(maxValue.toString())
+    const stringWidth = getChartLeftMargin(maxValue.toString(), cols[notGroupableIndex], options)
     const labelSelectorPadding = stringWidth > 0 ? (margin.left + stringWidth / 2)
     : (margin.left - 15)
     chartWidth -= stringWidth
@@ -182,32 +186,28 @@ export function createStackedColumnChart(
     "translate(" + ( margin.left + stringWidth) + "," + margin.top + ")");
 
     svg.append('text')
-    .attr('x', -(height / 2))
-    .attr('y', -(labelSelectorPadding))
-    .attr('transform', 'rotate(-90)')
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-y-axis-label')
-    .text(col3);
+        .attr('x', -(height / 2))
+        .attr('y', -(labelSelectorPadding))
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'autoql-vanilla-y-axis-label')
+        .text(col3);
 
     var axesGrid = svg.append("g").attr("class", "autoql-vanilla-axes-grid")
 
     // X AXIS
     var labelXContainer = svg.append('g');
     var textContainerX = labelXContainer.append('text')
-    .attr('x', chartWidth / 2)
-    .attr('y', height + (margin.bottom - 10))
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-x-axis-label')
+        .attr('x', chartWidth / 2)
+        .attr('y', height + (margin.bottom - 10))
+        .attr('text-anchor', 'middle')
+        .attr('class', 'autoql-vanilla-x-axis-label')
 
-    textContainerX.append('tspan')
-    .text(col2);
+    textContainerX.append('tspan').text(col2);
 
-    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+    const onSelectorClick = (placement, align, evt, legendEvent) => {
         closeAllChartPopovers();
-        new ChataChartListPopover({
-            left: evt.clientX,
-            top: evt.clientY
-        }, groupCols, (evt, popover) => {
+        new ChataChartListPopover(evt, groupCols, (evt, popover) => {
             var selectedIndex = evt.target.dataset.popoverIndex;
             var oldGroupable
             = metadataComponent.metadata3D.groupBy.groupable2;
@@ -233,35 +233,29 @@ export function createStackedColumnChart(
                 renderTooltips
             )
             popover.close();
-        }, true);
+        }, placement, align);
 
     }
 
     if(options.enableDynamicCharting){
         textContainerX.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
 
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
 
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col2) + paddingRect;
-        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
-        const _y = height + (margin.bottom/2) + 5;
+        var xLabelBBox = labelXContainer.node().getBBox()
 
         labelXContainer.append('rect')
-        .attr('x', _x)
-        .attr('y', _y)
-        .attr('height', 20)
-        .attr('width', xWidthRect + paddingRect)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('x', xLabelBBox.x - paddingRectHoz)
+            .attr('y', xLabelBBox.y - paddingRectVert)
+            .attr('height', xLabelBBox.height + paddingRectVert * 2)
+            .attr('width', xLabelBBox.width + paddingRectHoz * 2)
+            .attr('rx', '4')
 
-        labelXContainer.on('mouseup', onSelectorClick)
+        labelXContainer.on('mouseup', e => onSelectorClick('top', 'middle', e))
     }
 
     var x = SCALE_BAND()
@@ -442,10 +436,7 @@ export function createStackedColumnChart(
     });
     legendOrdinal.title(col1).titleWidth(100)
     svgLegend.call(legendOrdinal)
-    styleLegendTitleWithBorder(svgLegend, {
-        showOnBaseline: true,
-        legendEvent: true
-    }, onSelectorClick)
+    styleLegendTitleWithBorder(svgLegend, { legendEvent: true }, onSelectorClick)
 
     const newX = chartWidth + legendBoxMargin
     svgLegend

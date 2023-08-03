@@ -1,409 +1,22 @@
+import { areAllColumnsHidden, formatChartLabel, formatElement } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
-import { DataMessenger } from '../DataMessenger'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
-import {
-    PRECISION_TYPES,
-    DAYJS_PRECISION_FORMATS
-} from '../Constants'
-import _get from 'lodash.get'
 import { strings } from '../Strings'
-import dayjs from './dayjsPlugins'
 
-export function formatChartData(val, col, options){
-    var clone = cloneObject(options);
-    clone.dataFormatting.currencyDecimals = 0;
-    return formatData(val, col, clone);
+export function formatChartData(d, column, options, scale){
+    // return formatData(val, col, options, true);
+    const formattedLabel = formatChartLabel({
+        d,
+        column,
+        scale,
+        dataFormatting: options.dataFormatting,
+    })
+
+    return formattedLabel?.formattedLabel ?? d
 }
 
-export function formatData(val, col, allOptions={}){
-    const options = allOptions.dataFormatting;
-    var value = '';
-    let type = col['type'];
-    const { percentDecimals } = allOptions.dataFormatting
-    switch (type) {
-        case 'DOLLAR_AMT':
-            val = parseFloat(val);
-            if(isNaN(val))val = 0;
-            value = new Intl.NumberFormat(options.languageCode, {
-                style: 'currency',
-                currency: options.currencyCode,
-                minimumFractionDigits: options.currencyDecimals
-            }).format(val);
-        break;
-        case 'DATE':
-            value = formatDateType(val, col, options, true)
-        break;
-        case 'DATE_STRING':
-            value = formatDateStringType(val, col, options)
-        break;
-        case 'PERCENT':
-            if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
-                val = parseFloat(val);
-                if(!isNaN(val)){
-                    value =  val.toFixed(percentDecimals) + '%';
-                }else{
-                    value = '';
-                }
-            }else{
-                value = parseFloat(val).toFixed(percentDecimals);
-            }
-        break;
-        case 'QUANTITY':
-            if (!isNaN(parseFloat(val))) {
-                value = new Intl.NumberFormat(options.languageCode, {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 0,
-                }).format(val)
-            }
-        break;
-        case 'RATIO':
-            const { percentDecimals } = allOptions.dataFormatting
-            if(allOptions.dataFormatting.comparisonDisplay == 'PERCENT'){
-                val = parseFloat(val) * 100;
-                if(!isNaN(val)){
-                    value =  val.toFixed(percentDecimals) + '%';
-                }else{
-                    value = '';
-                }
-            }else{
-                value = parseFloat(val).toFixed(percentDecimals);
-            }
-        break;
-        case 'NUMBER':
-            val = parseFloat(val) * 100;
-            if(!isNaN(val)){
-                value =  val.toFixed(2) + '%';
-            }else{
-                value = '';
-            }
-        break;
-        default:
-            if(Object.prototype.toString.call(val) === '[object Object]'){
-                value = '';
-            }else{
-                value = val;
-            }
-    }
-    if(value === undefined)return '';
-    else return value;
-}
-
-export const isDayJSDateValid = date => {
-  return date !== 'Invalid Date'
-}
-
-export const isNumber = (str) => {
-    return /^\d+$/.test(str)
-}  
-
-export const formatDateType = (element, column = {}, config = {}, isDateObj) => {
-    if (isNumber(element)) {
-      return formatEpochDate(element, column, config)
-    }
-  
-    return formatISODateWithPrecision(element, column, config)
-  }
-  
-  export const formatDateStringType = (element, column = {}, config = {}, scale) => {
-    if (column.precision) {
-      return formatStringDateWithPrecision(element, column, config)
-    }
-  
-    return formatStringDate(element, config)
-  }
-  
-  export const formatISODateWithPrecision = (value, col = {}, config = {}) => {
-    if (!value) {
-      return undefined
-    }
-  
-    const precision = col.precision
-    const dayMonthYearFormat = config.dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
-    const dateDayJS = dayjs.utc(value).utc()
-  
-    if (!dateDayJS.isValid()) {
-      return value
-    }
-  
-    let date = dateDayJS.format(dayMonthYearFormat)
-  
-    try {
-      switch (precision) {
-        case PRECISION_TYPES.DAY: {
-          // default
-          break
-        }
-        case PRECISION_TYPES.WEEK: {
-          const dateJSStart = dateDayJS.startOf('week').format('MMM D')
-          const dateJSEnd = dateDayJS.endOf('week').format('MMM D')
-          const week = dateDayJS.week()
-          const year = dateDayJS.format('YYYY')
-          date = `${dateJSStart} - ${dateJSEnd}, ${year} (Week ${week})`
-          break
-        }
-        case PRECISION_TYPES.MONTH: {
-          const monthYearFormat = config.monthYearFormat || dataFormattingDefault.monthYearFormat
-          date = dateDayJS.format(monthYearFormat)
-          break
-        }
-        case PRECISION_TYPES.QUARTER: {
-          const quarter = dateDayJS.quarter()
-          const year = dateDayJS.format('YYYY')
-          date = `${year}-Q${quarter}`
-          break
-        }
-        case PRECISION_TYPES.YEAR: {
-          date = dateDayJS.format('YYYY')
-          break
-        }
-        case PRECISION_TYPES.DATE_HOUR: {
-          date = dateDayJS.format(`${dayMonthYearFormat} h:00A`)
-          break
-        }
-        case PRECISION_TYPES.DATE_MINUTE: {
-          date = dateDayJS.format(`${dayMonthYearFormat} h:mmA`)
-          break
-        }
-        default: {
-          break
-        }
-      }
-      return date
-    } catch (error) {
-      console.error(error)
-    }
-}
-
-export const formatEpochDate = (value, col = {}, config = {}) => {
-    if (!value) {
-      // If this is 0, its most likely not the right date
-      // Any other falsy values are invalid
-      return undefined
-    }
-  
-    try {
-      const { monthYearFormat, dayMonthYearFormat } = config
-      const year = 'YYYY'
-      const monthYear = monthYearFormat || dataFormattingDefault.monthYearFormat
-      const dayMonthYear = dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
-  
-      // Use title to determine significant digits of date format
-      const title = col.title
-  
-      let dayJSObj
-      if (isNaN(parseFloat(value))) {
-        dayJSObj = dayjs.utc(value).utc()
-      } else {
-        dayJSObj = dayjs.unix(value).utc()
-      }
-  
-      if (!dayJSObj.isValid()) {
-        return value
-      }
-  
-      let date = dayJSObj.format(dayMonthYear)
-  
-      if (isNaN(parseFloat(value))) {
-        // Not an epoch time. Try converting using dayjs
-        if (title && title.toLowerCase().includes('year')) {
-          date = dayJSObj.format(year)
-        } else if (title && title.toLowerCase().includes('month')) {
-          date = dayJSObj.format(monthYear)
-        }
-        date = dayJSObj.format(dayMonthYear)
-      } else if (title && title.toLowerCase().includes('year')) {
-        date = dayJSObj.format(year)
-      } else if (title && title.toLowerCase().includes('month')) {
-        date = dayJSObj.format(monthYear)
-      }
-  
-      return date
-    } catch (error) {
-      console.error(error)
-      return value
-    }
-}
-  
-const formatDOW = (value, col) => {
-    let dowStyle = col.dow_style
-  
-    if (!dowStyle) {
-      dowStyle = 'NUM_1_MON'
-    }
-  
-    let formattedValue = value
-    let weekdayNumber = Number(value)
-    switch (dowStyle) {
-      case 'NUM_1_MON': {
-        const weekdays = WEEKDAY_NAMES_MON
-        const index = weekdayNumber - 1
-        if (index >= 0) {
-          formattedValue = weekdays[index]
-        } else {
-          console.warn(`dow style is NUM_1_MON but the value could not be converted to a number: ${value}`)
-        }
-        break
-      }
-      case 'NUM_1_SUN': {
-        const weekdays = WEEKDAY_NAMES_SUN
-        const index = weekdayNumber - 1
-        if (index >= 0) {
-          formattedValue = weekdays[index]
-        } else {
-          console.warn(`dow style is NUM_1_SUN but the value could not be converted to a number: ${value}`)
-        }
-        break
-      }
-      case 'NUM_0_MON': {
-        const weekdays = WEEKDAY_NAMES_MON
-        if (weekdayNumber >= 0) {
-          formattedValue = weekdays[weekdayNumber]
-        } else {
-          console.warn(`dow style is NUM_0_MON but the value could not be converted to a number: ${value}`)
-        }
-        break
-      }
-      case 'NUM_0_SUN': {
-        const weekdays = WEEKDAY_NAMES_SUN
-        if (weekdayNumber >= 0) {
-          formattedValue = weekdays[weekdayNumber]
-        } else {
-          console.warn(`dow style is NUM_0_SUN but the value could not be converted to a number: ${value}`)
-        }
-        break
-      }
-      case 'ALPHA_MON':
-      case 'ALPHA_SUN': {
-        const weekday = WEEKDAY_NAMES_MON.find((weekday) => weekday.toLowerCase().includes(value.trim().toLowerCase()))
-        if (weekday) {
-          formattedValue = weekday
-        } else {
-          console.warn(`dow style is ALPHA but the value could not be matched to a weekday name: ${value}`)
-        }
-        break
-      }
-      default: {
-        console.warn(`could not format dow value. dow_style was not recognized: ${col.dow_style}`)
-        break
-      }
-    }
-  
-    return formattedValue
-}
-  
-export const getDayjsObjForStringType = (value, col) => {
-    if (!value) {
-      return undefined
-    }
-  
-    try {
-      switch (col.precision) {
-        case 'DOW': {
-          return undefined
-        }
-        case 'HOUR':
-        case 'MINUTE': {
-          return dayjs.utc(value, 'THH:mm:ss.SSSZ').utc()
-        }
-        case 'MONTH': {
-          return undefined
-        }
-        default: {
-          return undefined
-        }
-      }
-    } catch (error) {
-      console.error(error)
-      return undefined
-    }
-}
-  
-export const formatStringDateWithPrecision = (value, col, config = {}) => {
-    if (!value) {
-      return undefined
-    }
-  
-    let formattedValue = value
-    try {
-      switch (col.precision) {
-        case 'DOW': {
-          formattedValue = formatDOW(value, col)
-          break
-        }
-        case 'HOUR': {
-          const dayjsTime = dayjs.utc(value, 'THH:mm:ss.SSSZ').utc()
-          if (dayjsTime.isValid()) {
-            formattedValue = dayjsTime.format('h:00A')
-          }
-          break
-        }
-        case 'MINUTE': {
-          const dayjsTime = dayjs.utc(value, 'THH:mm:ss.SSSZ').utc()
-          if (dayjsTime.isValid()) {
-            formattedValue = dayjsTime.format('h:mmA')
-          }
-          break
-        }
-        case 'MONTH': {
-          // This shouldnt be an ISO string since its a DATE_STRING, but
-          // if it is valid, we should use it
-          formattedValue = value
-          break
-        }
-        default: {
-          formattedValue = value
-          break
-        }
-      }
-      return formattedValue
-    } catch (error) {
-      console.error(error)
-      return value
-    }
-}  
-
-export const formatStringDate = (value, config) => {
-    if (!value) {
-      return undefined
-    }
-  
-    if (value && typeof value === 'string') {
-      const dateArray = value.split('-')
-      const year = _get(dateArray, '[0]')
-      const day = _get(dateArray, '[2]')
-  
-      let month
-      let week
-      if (_get(dateArray, '[1]', '').includes('W')) {
-        week = _get(dateArray, '[1]')
-      } else {
-        month = _get(dateArray, '[1]')
-      }
-  
-      const { monthYearFormat, dayMonthYearFormat } = config
-      const monthYear = monthYearFormat || dataFormattingDefault.monthYearFormat
-      const dayMonthYear = dayMonthYearFormat || dataFormattingDefault.dayMonthYearFormat
-      const dayJSObj = dayjs.utc(value).utc()
-  
-      if (!dayJSObj.isValid()) {
-        return value
-      }
-  
-      let date = value
-      if (day) {
-        date = dayJSObj.format(dayMonthYear)
-      } else if (month) {
-        date = dayJSObj.format(monthYear)
-      } else if (week) {
-        // dayjs doesn't format this correctly
-      } else if (year) {
-        date = year
-      }
-      return date
-    }
-  
-    // Unable to parse...
-    return value
+export function formatData(val, col, allOptions={}, isChart){
+    return formatElement({element: val, column: col, config: allOptions.dataFormatting, isChart })
 }
 
 export function formatColumnName(col){
@@ -438,7 +51,7 @@ export function putLoadingContainer(target){
     var responseLoading = document.createElement('div');
 
     responseLoadingContainer.classList.add('chat-bar-loading');
-    responseLoading.classList.add('response-loading');
+    responseLoading.classList.add('autoql-vanilla-response-loading');
     for (var i = 0; i <= 3; i++) {
         responseLoading.appendChild(document.createElement('div'));
     }
@@ -475,32 +88,6 @@ export function getSafetynetValues(node){
         words.push(nodes[i].textContent.trim());
     }
     return words;
-}
-
-export function runQuery(event, objContext){
-    let node
-    if(event.target.tagName == 'svg'){
-        node = event.target.parentElement.parentElement;
-    }else if(event.target.tagName == 'path'){
-        node = event.target.parentElement.parentElement.parentElement;
-    }else{
-        node = event.target.parentElement;
-    }
-    if(node.classList.contains('autoql-vanilla-chata-safety-net-execute-btn')){
-        node = node.parentElement;
-    }
-    var words = getSafetynetValues(node);
-
-    switch (objContext.constructor) {
-        case DataMessenger:
-            objContext.keyboardAnimation(words.join(' '));
-            break;
-        default:
-            objContext.sendMessageToResponseRenderer(
-                words.join(' ')
-            );
-        break
-    }
 }
 
 export function deleteSuggestion(event){
@@ -991,16 +578,21 @@ export function getStringWidth(string){
     div.style.position = 'absolute';
     div.style.visibility = 'hidden';
     document.body.appendChild(div);
-    var width = div.offsetWidth;
+    var width = div?.offsetWidth ?? 0;
     document.body.removeChild(div);
     return width;
 }
 
-export function getChartLeftMargin(yValue){
-    const { length } = yValue
+export function getChartLeftMargin(yValue, col, options){
+    let value = yValue;
+    if (col && options) {
+        value = formatChartData(yValue, col, options)
+    }
+
+    const { length } = value
     if(length < 9)return 0
 
-    return yValue.length * 2
+    return value.length * 2
 }
 
 export function showBadge(json){
@@ -1012,65 +604,58 @@ export function showBadge(json){
     return false
 }
 
-export function allColsHidden(json){
-    var cols = json['data']['columns'];
-    var isAllHidden = true;
-    for (var i = 0; i < cols.length; i++) {
-        if(cols[i].is_visible){
-            isAllHidden = false;
-            break;
+export function allColHiddenMessage(table) {
+    try {
+        const requestId = table?.dataset?.componentid;
+        if (!requestId || !table?.tabulator?.parentContainer) {
+            return;
         }
-    }
 
-    return isAllHidden;
-}
+        var csvHandlerOption = table.tabulator.parentContainer.querySelector('[data-name-option="csv-handler"]');
 
-export function allColHiddenMessage(table){
-    const requestId = table.dataset.componentid;
-    var csvHandlerOption = table.tabulator.parentContainer.querySelector(
-        '[data-name-option="csv-handler"]'
-    );
+        var csvCopyOption = table.tabulator.parentContainer.querySelector('[data-name-option="copy-csv-handler"]');
 
-    var csvCopyOption = table.tabulator.parentContainer.querySelector(
-        '[data-name-option="copy-csv-handler"]'
-    );
+        var filterOption = table.tabulator.parentContainer.querySelector('[data-name-option="filter-action"]');
 
-    var filterOption = table.tabulator.parentContainer.querySelector(
-        '[data-name-option="filter-action"]'
-    );
-    const json = ChataUtils.responses[requestId];
-    var isAllHidden = allColsHidden(json);
-    let message;
-    if(table.noColumnsElement){
-        message = table.noColumnsElement;
-    }else{
-        message = htmlToElement(
-        `<div class="autoql-vanilla-no-columns-error-message">
+        const json = ChataUtils.responses[requestId];
+        var isAllHidden = areAllColumnsHidden(json?.data?.columns);
+        let message;
+        if (table.noColumnsElement) {
+            message = table.noColumnsElement;
+        } else {
+            message = htmlToElement(
+                `<div class="autoql-vanilla-no-columns-error-message">
             <div>
                 <span class="chata-icon warning-icon">
                     ${WARNING}
                 </span>
                 ${strings.allColsHidden.chataFormat(COLUMN_EDITOR)}
             </div>
-        </div>`);
-        table.parentElement.appendChild(message);
-        table.noColumnsElement = message;
-    }
+        </div>`,
+            );
+            table.parentElement.appendChild(message);
+            table.noColumnsElement = message;
+        }
 
-    if(isAllHidden){
-        message.style.display = 'flex';
-        table.style.display = 'none';
-        csvHandlerOption.style.display = 'none';
-        csvCopyOption.style.display = 'none';
-        filterOption.style.display = 'none';
+        if (isAllHidden) {
+            message.style.display = 'flex';
+            table.style.display = 'none';
+            csvHandlerOption.style.display = 'none';
+            csvCopyOption.style.display = 'none';
+            filterOption.style.display = 'none';
+        } else {
+            message.style.display = 'none';
+            table.style.display = 'inline-block';
+            csvHandlerOption.style.display = 'block';
+            csvCopyOption.style.display = 'block';
+            filterOption.style.display = 'flex';
 
-    }else{
-        message.style.display = 'none';
-        table.style.display = 'inline-block';
-        csvHandlerOption.style.display = 'block';
-        csvCopyOption.style.display = 'block';
-        filterOption.style.display = 'flex';
-        table.tabulator.redraw();
+            if (table.isInitialized) {
+                table.tabulator.redraw();
+            }
+        }
+    } catch (error) {
+        return;
     }
 }
 

@@ -19,6 +19,7 @@ import {
 import {
   ColumnChart
 } from './Charts'
+import { CSS_PREFIX } from '../../Constants'
 
 export function Chart(widgetOptions, options) {
   const { 
@@ -33,7 +34,7 @@ export function Chart(widgetOptions, options) {
   const numericSeries = [];
   const stringSeries = [];
   const groupableCount = getGroupableCount(json);
-  const chartColors = getChartColorVars();
+  const chartColors = getChartColorVars(CSS_PREFIX);
   const metadataComponent = getMetadataElement(component);
   const tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
   
@@ -65,7 +66,7 @@ export function Chart(widgetOptions, options) {
         index: i,
         currentLi: 0,
       },
-      series: numericSeries
+      series: [numericSeries[0]]
     }
   }
 
