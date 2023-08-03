@@ -11,22 +11,27 @@ export function Selector({ defaultIndex, options }) {
   const arrow = createIcon(SELECT_ARROW);
   const optionsContainer = document.createElement('ul');
   const popup = document.createElement('div');
-  const item = document.createElement('li');
-
+  const keys = Object.keys(options);
+  
   this.isOpen = false;
-
+  
   itemValue.classList.add('autoql-vanilla-menu-item-value-title');
   selectArrow.classList.add('autoql-vanilla-select-arrow');
   selectText.classList.add('autoql-vanilla-select-text');
   optionsContainer.classList.add('autoql-vanilla-select-menu');
-  item.classList.add('autoql-vanilla-select-menu-item');
   popup.classList.add('autoql-vanilla-select-popup');
   select.classList.add('autoql-vanilla-select');
   select.classList.add('autoql-vanilla-outlined');
   select.classList.add('autoql-vanilla-select-large');
-
+  
   itemValue.innerHTML = `<span><span>Is <strong>greater</strong> than</span></span>`;
-  item.innerHTML = `<span><span>Is <strong>greater</strong> than (>)</span></span>`;
+  
+  keys.forEach((key) => {
+    const item = document.createElement('li');
+    item.classList.add('autoql-vanilla-select-menu-item');
+    optionsContainer.appendChild(item);
+    item.innerHTML = options[key].displayName;
+  })
 
   select.onclick = () => {
     if(!this.isOpen){
@@ -42,7 +47,6 @@ export function Selector({ defaultIndex, options }) {
     this.isOpen = !this.isOpen;
   }
   
-  optionsContainer.appendChild(item);
   selectArrow.appendChild(arrow);
   selectText.appendChild(itemValue);
   popup.appendChild(optionsContainer);
