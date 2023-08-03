@@ -3,7 +3,7 @@ import { SELECT_ARROW } from '../../../Svg';
 import { createIcon } from '../../../Utils';
 import './Selector.scss';
 
-export function Selector({ defaultIndex, options }) {
+export function Selector({ defaultValue, options }) {
   const select = document.createElement('div');
   const selectText = document.createElement('span');
   const itemValue = document.createElement('span');
@@ -13,7 +13,7 @@ export function Selector({ defaultIndex, options }) {
   const popup = document.createElement('div');
   const keys = Object.keys(options);
   
-  this.isOpen = false;
+  select.isOpen = false;
   
   itemValue.classList.add('autoql-vanilla-menu-item-value-title');
   selectArrow.classList.add('autoql-vanilla-select-arrow');
@@ -24,27 +24,47 @@ export function Selector({ defaultIndex, options }) {
   select.classList.add('autoql-vanilla-outlined');
   select.classList.add('autoql-vanilla-select-large');
   
-  itemValue.innerHTML = `<span><span>Is <strong>greater</strong> than</span></span>`;
-  
+  if(defaultValue) {
+    itemValue.innerHTML = options[defaultValue].displayName;
+  }
+
   keys.forEach((key) => {
     const item = document.createElement('li');
+    const value = options[key];
     item.classList.add('autoql-vanilla-select-menu-item');
     optionsContainer.appendChild(item);
-    item.innerHTML = options[key].displayName;
+    let name = value.displayName;
+    if(value?.symbol) {
+      name = `${name} (${value.symbol})`;
+    }
+    item.innerHTML = name;
+
+    item.onclick = () => {
+      itemValue.innerHTML = options[key].displayName;
+      select.closePopup();
+    }
   })
+
+  select.closePopup = () => {
+    popup.style.visibility = 'hidden';
+    document.body.removeChild(popup);
+    select.isOpen = false;
+  }
+
+  select.openPopup = () => {
+    var pos = select.getBoundingClientRect();
+    popup.style.transform = `translate(${pos.left}px, ${pos.bottom + 2}px)`;
+    popup.style.visibility = 'visible';
+    document.body.appendChild(popup);
+    select.isOpen = true;
+  }
 
   select.onclick = () => {
     if(!this.isOpen){
-      var pos = select.getBoundingClientRect();
-      popup.style.transform = `translate(${pos.left}px, ${pos.bottom + 2}px)`;
-      popup.style.visibility = 'visible';
-      document.body.appendChild(popup);
+      select.openPopup();
     }else{
-      popup.style.visibility = 'hidden';
-      document.body.removeChild(popup);
+      select.closePopup();
     }
-
-    this.isOpen = !this.isOpen;
   }
   
   selectArrow.appendChild(arrow);

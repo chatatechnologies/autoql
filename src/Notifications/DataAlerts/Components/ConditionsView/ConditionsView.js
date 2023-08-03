@@ -2,7 +2,7 @@ import { Selector } from '../../../Components/Selector/Selector';
 import './ConditionsView.scss';
 import { DATA_ALERT_OPERATORS } from 'autoql-fe-utils';
 
-export function ConditionsView() {
+export function ConditionsView({ dataAlert }) {
   //Trigger alert section
   const container = document.createElement('div');
   const title = document.createElement('div');
@@ -19,7 +19,13 @@ export function ConditionsView() {
   const wrapperInputContainer = document.createElement('div');
   const queryInput = document.createElement('input');
   const ruleContainer = document.createElement('div');
-  const conditionSelect = new Selector({ defaultIndex: 0, options: DATA_ALERT_OPERATORS });
+  
+  let defaultValue = undefined;
+  if(dataAlert?.expression) {
+    defaultValue = dataAlert.expression[0].condition;
+  }
+
+  const conditionSelect = new Selector({ defaultValue, options: DATA_ALERT_OPERATORS });
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';

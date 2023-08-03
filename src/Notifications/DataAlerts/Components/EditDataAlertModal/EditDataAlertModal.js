@@ -3,7 +3,7 @@ import { Modal } from "../../../../Modal";
 import './EditDataAlertModal.scss';
 import { ConditionsView } from "../ConditionsView/ConditionsView";
 
-export function EditDataAlertModal() {
+export function EditDataAlertModal({ dataAlert }) {
   const btnDelete = document.createElement('button');
   const btnCancel = document.createElement('button');
   const btnSave = document.createElement('button');
@@ -11,7 +11,7 @@ export function EditDataAlertModal() {
   const buttonContainerRight = document.createElement('div');
   const buttonContainerLeft = document.createElement('div');
   const container = document.createElement('div');
-  const conditionsView = new ConditionsView();
+  const conditionsView = new ConditionsView({ dataAlert });
 
   container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
 
