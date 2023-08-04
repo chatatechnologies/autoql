@@ -96,7 +96,7 @@ export function ConditionsView({ dataAlert }) {
   queryInput.classList.add('autoql-vanilla-input');
   ruleContainer.classList.add('autoql-vanilla-notification-rule-container');
   conditionWrapper.classList.add('autoql-vanilla-select-and-label');
-  conditionWrapper.classList.add('autoql-vanilla-rule-condition-select')
+  conditionWrapper.classList.add('autoql-vanilla-rule-condition-select');
   ruleSecondInputContainer.classList.add('autoql-vanilla-rule-second-input-container');
 
   secondInputContainer.appendChild(secondTermSelect);
