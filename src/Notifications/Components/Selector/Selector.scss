@@ -23,6 +23,9 @@
   .autoql-vanilla-select-text {
     display: block;
     height: 100%;
+    .autoql-vanilla-menu-icon {
+      margin-right: 7px;
+    }
   }
   
   .autoql-vanilla-select-arrow {
@@ -63,6 +66,7 @@
     max-height: 250px;
     background: var(--autoql-vanilla-background-color-secondary);
     overflow-y: auto;
+    line-height: 1.5715;
 
     .autoql-vanilla-select-menu-item {
       color: var(--autoql-vanilla-text-color-primary);
@@ -70,6 +74,17 @@
       cursor: pointer;  
       &:hover{
         background: var(--autoql-vanilla-hover-color);
+      }
+      .autoql-vanilla-menu-item-title {
+        display: flex;
+        .autoql-vanilla-menu-icon {
+          margin-right: 5px;
+          font-size: 1.1em;
+        }
+      }
+      .autoql-vanilla-select-option-value-subtitle{
+        font-size: .875em;
+        opacity: .8;
       }
     }
   }
