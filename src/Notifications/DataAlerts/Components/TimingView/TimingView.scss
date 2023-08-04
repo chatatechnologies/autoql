@@ -1,0 +1,13 @@
+.autoql-vanilla-data-alert-setting-group {
+  display: flex;
+  .autoql-vanilla-data-alert-setting {
+    flex: 1 1 0%;
+    display: block;
+    .autoql-vanilla-select-and-label{
+      &.autoql-vanilla-select-full-width{
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
