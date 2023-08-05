@@ -1,7 +1,12 @@
 import { createIcon } from "../../../../Utils";
 import { Selector } from "../../../Components/Selector/Selector";
 import { LIVE_ICON, CALENDAR } from '../../../../Svg';
-import { SCHEDULED_TYPE, CONTINUOUS_TYPE, SCHEDULE_INTERVAL_OPTIONS } from "autoql-fe-utils";
+import { 
+  SCHEDULED_TYPE,
+  CONTINUOUS_TYPE,
+  SCHEDULE_INTERVAL_OPTIONS,
+  WEEKDAY_NAMES_MON 
+} from "autoql-fe-utils";
 import './TimingView.scss';
 
 export function TimingView() {
@@ -52,7 +57,31 @@ export function TimingView() {
         displayName: value.displayName,
         value: key,
       }
-    })
+    });
+  }
+
+  this.getDaysOptions = () => {
+    return WEEKDAY_NAMES_MON.map((dayName) => {
+      return {
+        value: dayName,
+        displayName: `
+        <span>
+          on <strong>${dayName}</strong>
+        </span>`
+      }
+    });
+  }
+
+  this.createConnector = () => {
+    const connector = document.createElement('div');
+    const t = document.createElement('span');
+
+    connector.classList.add('autoql-vanilla-data-alert-frequency-option');
+    connector.classList.add('autoql-vanilla-schedule-builder-at-connector');
+    t.textContent = 'at';
+    connector.appendChild(t);
+
+    return connector
   }
 
   this.createFrequencyOption = ({ label, defaultValue, selectorOptions }) => {
@@ -129,8 +158,15 @@ export function TimingView() {
     selectorOptions: this.getScheduleIntervalOptions()
   });
 
-  frequencyContainer.appendChild(intervalContainer);
+  const daysContainer = this.createFrequencyOption({
+    defaultValue: 1,
+    selectorOptions: this.getDaysOptions()
+  });
 
+  frequencyContainer.appendChild(intervalContainer);
+  frequencyContainer.appendChild(daysContainer);
+  frequencyContainer.appendChild(this.createConnector());
+  
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
   alertTypeWrapper.appendChild(alertTypeInputLabel);

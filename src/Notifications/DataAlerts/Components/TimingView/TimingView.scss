@@ -21,6 +21,11 @@
       display: flex;
       align-items: flex-end;
       flex-wrap: wrap;
+      .autoql-vanilla-data-alert-frequency-option{
+        &.autoql-vanilla-schedule-builder-at-connector{
+          padding-bottom: 8px;
+        }
+      }
     }
   }
 }
