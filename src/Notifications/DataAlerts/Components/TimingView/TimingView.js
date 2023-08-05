@@ -1,7 +1,7 @@
 import { createIcon } from "../../../../Utils";
 import { Selector } from "../../../Components/Selector/Selector";
 import { LIVE_ICON, CALENDAR } from '../../../../Svg';
-import { SCHEDULED_TYPE, CONTINUOUS_TYPE} from "autoql-fe-utils";
+import { SCHEDULED_TYPE, CONTINUOUS_TYPE, SCHEDULE_INTERVAL_OPTIONS } from "autoql-fe-utils";
 import './TimingView.scss';
 
 export function TimingView() {
@@ -41,6 +41,42 @@ export function TimingView() {
       displayName: labelContainer.innerHTML,
       displayText: span.innerHTML,
     }
+  }
+
+  this.getScheduleIntervalOptions = () => {
+    const keys = Object.keys(SCHEDULE_INTERVAL_OPTIONS);
+    return keys.map((key) => {
+      const value = SCHEDULE_INTERVAL_OPTIONS[key];
+
+      return {
+        displayName: value.displayName,
+        value: key,
+      }
+    })
+  }
+
+  this.createFrequencyOption = ({ label, defaultValue, selectorOptions }) => {
+    const option = document.createElement('div');
+    const wrapperLabel = document.createElement('div');
+    const selector = new Selector({
+      defaultValue,
+      options: selectorOptions,
+    })
+    
+    wrapperLabel.classList.add('autoql-vanilla-select-and-label');
+    option.classList.add('autoql-vanilla-data-alert-frequency-option');
+
+    if(label) {
+      const labelItem = document.createElement('div');
+      labelItem.classList.add('autoql-vanilla-input-label');
+      labelItem.textContent = label;
+      wrapperLabel.appendChild(labelItem);
+    }
+
+    wrapperLabel.appendChild(selector);
+    option.appendChild(wrapperLabel);
+
+    return option;
   }
   
   this.getTypeValues = () => {
@@ -86,7 +122,15 @@ export function TimingView() {
 
   title.textContent = 'Timing';
   alertTypeInputLabel.textContent = 'Alert Type';
-  
+
+  const intervalContainer = this.createFrequencyOption({
+    label: 'Send a Notification',
+    defaultValue: 1,
+    selectorOptions: this.getScheduleIntervalOptions()
+  });
+
+  frequencyContainer.appendChild(intervalContainer);
+
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
   alertTypeWrapper.appendChild(alertTypeInputLabel);
