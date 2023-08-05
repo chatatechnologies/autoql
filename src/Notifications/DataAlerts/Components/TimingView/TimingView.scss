@@ -1,5 +1,9 @@
 .autoql-vanilla-data-alert-setting-group {
   display: flex;
+  &.autoql-vanilla-data-alert-frequency-setting-group{
+    flex: 2 1 0%;
+    display: block;
+  }
   .autoql-vanilla-data-alert-setting {
     flex: 1 1 0%;
     display: block;
@@ -8,6 +12,15 @@
         display: flex;
         flex-direction: column;
       }
+    }
+  }
+
+  .autoql-vanilla-frequency-settings {
+    display: block;
+    .autoql-vanilla-data-alert-frequency-options-container {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
     }
   }
 }

@@ -12,9 +12,11 @@ export function TimingView() {
   const dataAlertSetting = document.createElement('div');
   const alertTypeWrapper = document.createElement('div');
   const alertTypeInputLabel = document.createElement('div');
-
-  const dataAlertSettingGroup = document.createElement('div');
   
+  const dataAlertSettingGroup = document.createElement('div');
+  const dataAlertSettingFrequency = document.createElement('div');
+  const frequencyContainer = document.createElement('div');
+
   this.createSelectorValueWithSubtitle = ({ label, subtitle, icon }) => {
     const span = document.createElement('span');
     const labelContainer = document.createElement('span');
@@ -66,7 +68,6 @@ export function TimingView() {
     ]
   }
   
-  
   const typeSelector = new Selector({ defaultValue: 1, options: this.getTypeValues() });
   
   container.classList.add('autoql-vanilla-data-alert-setting-section');
@@ -79,11 +80,15 @@ export function TimingView() {
   alertTypeWrapper.classList.add('autoql-vanilla-select-full-width');
   alertTypeInputLabel.classList.add('autoql-vanilla-input-label');
   dataAlertSettingGroup.classList.add('autoql-vanilla-data-alert-setting-group');
-  
+  dataAlertSettingGroup.classList.add('autoql-vanilla-data-alert-frequency-setting-group'); 
+  dataAlertSettingFrequency.classList.add('autoql-vanilla-frequency-settings');
+  frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
+
   title.textContent = 'Timing';
   alertTypeInputLabel.textContent = 'Alert Type';
   
-  
+  dataAlertSettingFrequency.appendChild(frequencyContainer);
+  dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
   alertTypeWrapper.appendChild(alertTypeInputLabel);
   alertTypeWrapper.appendChild(typeSelector);
   dataAlertSetting.appendChild(alertTypeWrapper);
