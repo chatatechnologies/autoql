@@ -1,6 +1,7 @@
 import { getTimeOptionArray } from './helpers';
 import { createIcon } from "../../../../Utils";
 import { Selector } from "../../../Components/Selector/Selector";
+import momentTZ from 'moment-timezone'
 import { LIVE_ICON, CALENDAR } from '../../../../Svg';
 import { 
   SCHEDULED_TYPE,
@@ -78,6 +79,15 @@ export function TimingView() {
       return {
         value: o.value,
         displayName: `<span>${o.value}</span>`
+      }
+    });
+  }
+
+  this.getTimeZoneOptions = () => {
+    return momentTZ.tz.names().map((tz) => {
+      return {
+        value: tz,
+        displayName: `<span>${tz}</span>`,
       }
     });
   }
@@ -177,11 +187,18 @@ export function TimingView() {
     defaultValue: 1,
     selectorOptions: this.getTimeOptions()
   });
+  
+  const timeeZoneContainer = this.createFrequencyOption({
+    label: 'Time Zone',
+    defaultValue: 1,
+    selectorOptions: this.getTimeZoneOptions()
+  });
 
   frequencyContainer.appendChild(intervalContainer);
   frequencyContainer.appendChild(daysContainer);
   frequencyContainer.appendChild(this.createConnector());
   frequencyContainer.appendChild(timeContainer);
+  frequencyContainer.appendChild(timeeZoneContainer);
   
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);

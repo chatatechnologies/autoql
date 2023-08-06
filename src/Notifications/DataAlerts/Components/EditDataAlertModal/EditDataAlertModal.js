@@ -12,6 +12,7 @@ export function EditDataAlertModal({ dataAlert }) {
   const buttonContainerRight = document.createElement('div');
   const buttonContainerLeft = document.createElement('div');
   const container = document.createElement('div');
+  
   const conditionsView = new ConditionsView({ dataAlert });
   const timingView = new TimingView();
 
