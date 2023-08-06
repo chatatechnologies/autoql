@@ -1,3 +1,4 @@
+import { getTimeOptionArray } from './helpers';
 import { createIcon } from "../../../../Utils";
 import { Selector } from "../../../Components/Selector/Selector";
 import { LIVE_ICON, CALENDAR } from '../../../../Svg';
@@ -68,6 +69,15 @@ export function TimingView() {
         <span>
           on <strong>${dayName}</strong>
         </span>`
+      }
+    });
+  }
+
+  this.getTimeOptions = () => {
+    return getTimeOptionArray().map((o) => {
+      return {
+        value: o.value,
+        displayName: `<span>${o.value}</span>`
       }
     });
   }
@@ -163,9 +173,15 @@ export function TimingView() {
     selectorOptions: this.getDaysOptions()
   });
 
+  const timeContainer = this.createFrequencyOption({
+    defaultValue: 1,
+    selectorOptions: this.getTimeOptions()
+  });
+
   frequencyContainer.appendChild(intervalContainer);
   frequencyContainer.appendChild(daysContainer);
   frequencyContainer.appendChild(this.createConnector());
+  frequencyContainer.appendChild(timeContainer);
   
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
