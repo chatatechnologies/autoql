@@ -3,6 +3,7 @@ import { Modal } from "../../../../Modal";
 import './EditDataAlertModal.scss';
 import { ConditionsView } from "../ConditionsView/ConditionsView";
 import { TimingView } from "../TimingView";
+import { AppearanceView } from "../AppearanceView";
 
 export function EditDataAlertModal({ dataAlert }) {
   const btnDelete = document.createElement('button');
@@ -15,6 +16,7 @@ export function EditDataAlertModal({ dataAlert }) {
   
   const conditionsView = new ConditionsView({ dataAlert });
   const timingView = new TimingView();
+  const appearanceView = new AppearanceView();
 
   container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
 
@@ -71,6 +73,7 @@ export function EditDataAlertModal({ dataAlert }) {
   
   container.appendChild(conditionsView);
   container.appendChild(timingView);
+  container.appendChild(appearanceView);
   modal.addView(container);
   modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
   modal.setTitle('Edit Data Alert Settings');
