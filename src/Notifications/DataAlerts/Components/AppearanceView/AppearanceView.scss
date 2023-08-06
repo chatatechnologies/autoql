@@ -1,4 +1,13 @@
 .autoql-vanilla-compose-message-section{
   display: flex;
   flex-wrap: wrap;
+  .autoql-vanilla-form-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1;
+    .autoql-vanilla-notification-message-input { 
+      flex: 1 1;
+      margin-top: 10px;
+    }
+  }
 }

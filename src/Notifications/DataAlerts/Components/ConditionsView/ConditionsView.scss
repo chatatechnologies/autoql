@@ -39,6 +39,11 @@
         width: 100%;
         .autoql-vanilla-input-and-icon{
           flex: 1 1;
+          textarea {
+            resize: none;
+            flex: 1 1;
+            line-height: inherit;
+          }
           .autoql-vanilla-input {
             border: 1px solid var(--autoql-vanilla-border-color);
             border-radius: 4px;
@@ -52,6 +57,9 @@
             transition-timing-function: ease;
             padding: 10px;
             line-height: 1em;
+            &.autoql-vanilla-with-icon {
+              padding-left: 35px;
+            }
           }
           .autoql-vanilla-input:not(textarea) {
             padding: 0 10px;
@@ -62,6 +70,19 @@
               cursor: default;
             }
           }
+        }
+
+        .autoql-vanilla-icon {
+          position: absolute;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transition: color .2s ease,opacity .2s ease;
+          color: var(--autoql-vanilla-text-color-placeholder);
+          height: 100%;
+          line-height: 100%;
+          left: 12px;
+          top: 0;
         }
       }
     }
