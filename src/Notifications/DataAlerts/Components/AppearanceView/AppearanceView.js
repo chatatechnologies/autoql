@@ -20,7 +20,7 @@ export function AppearanceView() {
     return container;
   }
   
-  const createInputContainer = ({ inputType, placeholder, icon, label }) => {
+  const createInputContainer = ({ inputType, placeholder, icon, label, onChange }) => {
     const container = createInputLabel({ label });
     const inputContainer = document.createElement('div');
     const inputWrapper = document.createElement('div');
@@ -42,6 +42,14 @@ export function AppearanceView() {
     input.setAttribute('type', 'text');
     input.setAttribute('placeholder', placeholder);
     
+    input.onkeyup = ((evt) => {
+      let val = evt.target.value;
+      if(inputType === 'input' &&  val === '') {
+        val = '[Title]';
+      }
+      onChange(val);
+    })
+
     return container;
   }
 
@@ -71,7 +79,7 @@ export function AppearanceView() {
     strip.classList.add('autoql-vanilla-notification-alert-strip')
     displayName.textContent = 'Test1';
     timestamp.appendChild(createIcon(CALENDAR));
-    timestamp.appendChild(document.createTextNode('Today at 8:32pm'));
+    timestamp.appendChild(document.createTextNode(new Date().toISOString()));
 
     btnContainer.appendChild(verticalDots);
     timestampContainer.appendChild(timestamp);
@@ -83,6 +91,14 @@ export function AppearanceView() {
     header.appendChild(btnContainer);
     item.appendChild(header);
     item.appendChild(strip);
+
+    item.setTitle = (val) => {
+      displayName.textContent = val;
+    }
+
+    item.setDescription = (val) => {
+      description.textContent = val;
+    }
 
     return item;
   }
@@ -99,27 +115,46 @@ export function AppearanceView() {
     previewSection.appendChild(inputlabelContainer);
     previewSection.appendChild(dataAlertPreview);
     
+    previewSection.setTitle = (val) => {
+      item.setTitle(val)
+    }
+
+    previewSection.setDescription = (val) => {
+      item.setDescription(val)
+    }
+
     return previewSection;
   }
   
   title.textContent = 'Appearance';
+
+  const previewSection = createPreview({
+    label: 'Preview',
+  });
+
+  const handleTitleChange = (val) => {
+    previewSection.setTitle(val);
+  }
+
+  const handleDescriptionChange = (val) => {
+    previewSection.setDescription(val);
+  }
   
   const titleSection = createInputContainer({
     inputType: 'input',
     placeholder: 'eg. "Budget alert!"',
     icon: createIcon(NOTEBOOK),
-    label: 'Title'
+    label: 'Title',
+    onChange: handleTitleChange,
   });
   
   const messageSection = createInputContainer({
     inputType: 'textarea',
     placeholder: 'eg. "You have spent 80% of your budget for the month."',
     label: 'Message (optional)',
+    onChange: handleDescriptionChange,
   });
 
-  const previewSection = createPreview({
-    label: 'Preview',
-  });
 
   messageSection.classList.add('autoql-vanilla-notification-message-input');
 
