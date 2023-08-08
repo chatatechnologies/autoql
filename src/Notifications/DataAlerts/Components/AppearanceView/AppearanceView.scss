@@ -16,6 +16,16 @@
     flex-direction: column;
     margin-left: 14px;
     flex: 1 1;
+    .autoql-vanilla-data-alert-preview {
+      flex: 1 1;
+      padding: 20px;
+      border: 1px solid var(--autoql-vanilla-border-color);
+      border-radius: 2px;
+      background: var(--autoql-vanilla-background-color-primary);
+      overflow: auto;
+      pointer-events: none!important;
+    }
+
   }
 
 }
