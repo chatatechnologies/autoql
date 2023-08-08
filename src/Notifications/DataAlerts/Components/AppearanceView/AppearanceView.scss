@@ -24,6 +24,56 @@
       background: var(--autoql-vanilla-background-color-primary);
       overflow: auto;
       pointer-events: none!important;
+      .autoql-vanilla-notification-list-item {
+        display: flex;
+        flex-direction: column;
+        flex-basis: auto;
+        position: relative;
+        overflow: hidden;
+        background: var(--autoql-vanilla-background-color-secondary,#fff);
+        border-radius: 4px;
+        box-shadow: var(--autoql-vanilla-box-shadow-1);
+        margin-bottom: 8px;
+        color: rgba(0,0,0,.6);
+        color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
+        font-family: var(--autoql-vanilla-font-family),sans-serif;
+        .autoql-vanilla-notification-list-item-header {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding-left: 22px;
+          cursor: pointer;
+          .autoql-vanilla-notification-display-name-container {
+            flex: 1 1;
+            line-height: 23px;
+            padding: 13px 0;
+            transition: color .2s ease;
+            .autoql-vanilla-notification-display-name {
+              font-weight: 500;
+              font-size: 18px;
+              color: var(--autoql-vanilla-accent-color);
+            }
+            .autoql-vanilla-notification-description {
+              color: rgba(0,0,0,.6);
+              color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
+              opacity: .8;
+              font-size: 14px;
+            }
+            .autoql-vanilla-notification-timestamp-container {
+              font-size: 12px;
+              opacity: .5;
+              .autoql-vanilla-notification-timestamp {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                .autoql-vanilla-icon {
+                  margin-right: 3px;
+                }
+              }
+            }
+          }
+        }
+      }
     }
 
   }

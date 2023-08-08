@@ -56,7 +56,7 @@ export function AppearanceView() {
     item.classList.add('autoql-vanilla-notification-list-item');
     header.classList.add('autoql-vanilla-notification-list-item-header');
     displayNameContainer.classList.add('autoql-vanilla-notification-display-name-container');
-    displayName.classList.add('autoql-notification-display-name');
+    displayName.classList.add('autoql-vanilla-notification-display-name');
     description.classList.add('autoql-vanilla-notification-description');
     timestampContainer.classList.add('autoql-vanilla-notification-timestamp-container');
     timestamp.classList.add('autoql-vanilla-notification-timestamp');
