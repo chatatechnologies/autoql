@@ -8,14 +8,24 @@ export function AppearanceView() {
   const wrapper = document.createElement('div');
   const composeMessageSection = document.createElement('div');
   const formSection = document.createElement('div');
-  
-  const createInputContainer = ({ inputType, placeholder, icon, label }) => {
+  const previewSection = document.createElement('div');
+
+  const createInputLabel = ({ label }) => {
     const container = document.createElement('div');
     const inputLabel = document.createElement('div');
+    inputLabel.textContent = label;
+    container.appendChild(inputLabel);
+    container.classList.add('autoql-vanilla-input-and-label-container');
+    inputLabel.classList.add('autoql-vanilla-input-label');
+
+    return container;
+  }
+
+  const createInputContainer = ({ inputType, placeholder, icon, label }) => {
+    const container = createInputLabel({ label });
     const inputContainer = document.createElement('div');
     const inputWrapper = document.createElement('div');
     const input = document.createElement(inputType);
-    inputLabel.textContent = label;
     inputWrapper.appendChild(input);
 
     inputContainer.appendChild(inputWrapper);
@@ -24,17 +34,20 @@ export function AppearanceView() {
       input.classList.add('autoql-vanilla-with-icon');
     }
 
-    container.appendChild(inputLabel);
     container.appendChild(inputContainer);
 
-    container.classList.add('autoql-vanilla-input-and-label-container');
-    inputLabel.classList.add('autoql-vanilla-input-label');
     inputContainer.classList.add('autoql-vanilla-input-container');
     inputWrapper.classList.add('autoql-vanilla-input-and-icon');
     input.classList.add('autoql-vanilla-input');
     input.setAttribute('type', 'text');
     input.setAttribute('placeholder', placeholder);
 
+    return container;
+  }
+
+  const createPreview = ({ label }) => {
+    const container = createInputLabel({ label });
+    
     return container;
   }
 
@@ -52,6 +65,11 @@ export function AppearanceView() {
     placeholder: 'eg. "You have spent 80% of your budget for the month."',
     label: 'Message (optional)',
   });
+
+  const previewSectionContainer = createPreview({
+    label: 'Preview',
+  });
+
   messageSection.classList.add('autoql-vanilla-notification-message-input');
 
   title.classList.add('autoql-vanilla-data-alert-setting-section-title');
@@ -59,10 +77,13 @@ export function AppearanceView() {
   container.classList.add('autoql-vanilla-data-alert-setting-section');
   composeMessageSection.classList.add('autoql-vanilla-compose-message-section');
   formSection.classList.add('autoql-vanilla-form-section');
+  previewSection.classList.add('autoql-vanilla-preview-section');
 
+  previewSection.appendChild(previewSectionContainer);
   formSection.appendChild(titleSection);
   formSection.appendChild(messageSection);
   composeMessageSection.appendChild(formSection);
+  composeMessageSection.appendChild(previewSection);
   wrapper.appendChild(composeMessageSection);
   container.appendChild(title);
   container.appendChild(wrapper);
