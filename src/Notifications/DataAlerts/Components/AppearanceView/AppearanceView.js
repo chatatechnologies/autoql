@@ -1,6 +1,8 @@
 import './AppearanceView.scss';
 import { NOTEBOOK, CALENDAR, VERTICAL_DOTS } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
+import dayjs from '../../../../Utils/dayjsPlugins';
+import { isNumber } from 'autoql-fe-utils';
 
 export function AppearanceView() {
   const container = document.createElement('div');
@@ -9,6 +11,32 @@ export function AppearanceView() {
   const composeMessageSection = document.createElement('div');
   const formSection = document.createElement('div');
   
+  const getFormattedTimestamp = () => {
+    const timestamp = new Date().toISOString();
+
+    let dateDayJS
+    if (isNumber(timestamp)) {
+      dateDayJS = dayjs.unix(timestamp)
+    } else {
+      dateDayJS = dayjs(timestamp)
+    }
+
+    const time = dateDayJS.format('h:mma')
+    const day = dateDayJS.format('MM-DD-YY')
+
+    const today = dayjs().format('MM-DD-YY')
+    const yesterday = dayjs().subtract(1, 'd').format('MM-DD-YY')
+
+    if (day === today) {
+      return `Today at ${time}`
+    } else if (day === yesterday) {
+      return `Yesterday at ${time}`
+    } else if (dayjs().isSame(dateDayJS, 'year')) {
+      return `${dateDayJS.format('MMMM Do')} at ${time}`
+    }
+    return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`
+  }
+
   const createInputLabel = ({ label }) => {
     const container = document.createElement('div');
     const inputLabel = document.createElement('div');
@@ -79,7 +107,7 @@ export function AppearanceView() {
     strip.classList.add('autoql-vanilla-notification-alert-strip')
     displayName.textContent = 'Test1';
     timestamp.appendChild(createIcon(CALENDAR));
-    timestamp.appendChild(document.createTextNode(new Date().toISOString()));
+    timestamp.appendChild(document.createTextNode(getFormattedTimestamp()));
 
     btnContainer.appendChild(verticalDots);
     timestampContainer.appendChild(timestamp);
