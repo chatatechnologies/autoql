@@ -70,19 +70,21 @@
               cursor: default;
             }
           }
-        }
 
-        .autoql-vanilla-icon {
-          position: absolute;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transition: color .2s ease,opacity .2s ease;
-          color: var(--autoql-vanilla-text-color-placeholder);
-          height: 100%;
-          line-height: 100%;
-          left: 12px;
-          top: 0;
+          &.autoql-vanilla-with-icon {
+            .autoql-vanilla-icon {
+              position: absolute;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              transition: color .2s ease,opacity .2s ease;
+              color: var(--autoql-vanilla-text-color-placeholder);
+              height: 100%;
+              line-height: 100%;
+              left: 12px;
+              top: 0;
+            }
+          }
         }
       }
     }

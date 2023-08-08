@@ -1,5 +1,5 @@
 import './AppearanceView.scss';
-import { NOTEBOOK, CALENDAR } from '../../../../Svg';
+import { NOTEBOOK, CALENDAR, VERTICAL_DOTS } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 
 export function AppearanceView() {
@@ -30,6 +30,7 @@ export function AppearanceView() {
     inputContainer.appendChild(inputWrapper);
     if(icon) {
       inputWrapper.appendChild(icon);
+      inputWrapper.classList.add('autoql-vanilla-with-icon');
       input.classList.add('autoql-vanilla-with-icon');
     }
     
@@ -53,6 +54,11 @@ export function AppearanceView() {
     const timestampContainer = document.createElement('div');
     const timestamp = document.createElement('span');
 
+    const btnContainer = document.createElement('div');
+    const verticalDots = createIcon(VERTICAL_DOTS);
+
+    const strip = document.createElement('div');
+
     item.classList.add('autoql-vanilla-notification-list-item');
     header.classList.add('autoql-vanilla-notification-list-item-header');
     displayNameContainer.classList.add('autoql-vanilla-notification-display-name-container');
@@ -60,18 +66,23 @@ export function AppearanceView() {
     description.classList.add('autoql-vanilla-notification-description');
     timestampContainer.classList.add('autoql-vanilla-notification-timestamp-container');
     timestamp.classList.add('autoql-vanilla-notification-timestamp');
-
+    btnContainer.classList.add('autoql-vanilla-notification-options-btn-container')
+    verticalDots.classList.add('autoql-vanilla-notification-options-btn');
+    strip.classList.add('autoql-vanilla-notification-alert-strip')
     displayName.textContent = 'Test1';
     timestamp.appendChild(createIcon(CALENDAR));
     timestamp.appendChild(document.createTextNode('Today at 8:32pm'));
 
+    btnContainer.appendChild(verticalDots);
     timestampContainer.appendChild(timestamp);
     displayNameContainer.appendChild(displayName);
     displayNameContainer.appendChild(description);
     displayNameContainer.appendChild(timestampContainer);
 
     header.appendChild(displayNameContainer);
+    header.appendChild(btnContainer);
     item.appendChild(header);
+    item.appendChild(strip);
 
     return item;
   }

@@ -72,10 +72,40 @@
               }
             }
           }
+          .autoql-vanilla-notification-options-btn-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            padding: 13px 8px;
+            .autoql-vanilla-notification-options-btn {
+              display: flex;
+              opacity: .8;
+              width: 40px;
+              height: 40px;
+              font-size: 24px;
+              line-height: 20px;
+              border-radius: 20px;
+              background-color: initial;
+              transition: background-color .2s ease;
+              cursor: pointer;
+            }
+          }
+        }
+        .autoql-vanilla-notification-alert-strip {
+          height: 100%;
+          opacity: 1;
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 4px;
+          background: var(--autoql-vanilla-accent-color,#26a7df);
+          color: var(--autoql-vanilla-text-color-accent);
+          transition-property: opacity;
+          transition-duration: .2s;
+          transition-timing-function: ease;
         }
       }
     }
-
   }
-
 }
