@@ -1,5 +1,5 @@
 import './AppearanceView.scss';
-import { NOTEBOOK } from '../../../../Svg';
+import { NOTEBOOK, CALENDAR } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 
 export function AppearanceView() {
@@ -43,14 +43,48 @@ export function AppearanceView() {
     
     return container;
   }
+
+  const createPreviewItem = () => {
+    const item = document.createElement('div');
+    const header = document.createElement('div');
+    const displayNameContainer = document.createElement('div');
+    const displayName = document.createElement('div');
+    const description = document.createElement('div');
+    const timestampContainer = document.createElement('div');
+    const timestamp = document.createElement('span');
+
+    item.classList.add('autoql-vanilla-notification-list-item');
+    header.classList.add('autoql-vanilla-notification-list-item-header');
+    displayNameContainer.classList.add('autoql-vanilla-notification-display-name-container');
+    displayName.classList.add('autoql-notification-display-name');
+    description.classList.add('autoql-vanilla-notification-description');
+    timestampContainer.classList.add('autoql-vanilla-notification-timestamp-container');
+    timestamp.classList.add('autoql-vanilla-notification-timestamp');
+
+    displayName.textContent = 'Test1';
+    timestamp.appendChild(createIcon(CALENDAR));
+    timestamp.appendChild(document.createTextNode('Today at 8:32pm'));
+
+    timestampContainer.appendChild(timestamp);
+    displayNameContainer.appendChild(displayName);
+    displayNameContainer.appendChild(description);
+    displayNameContainer.appendChild(timestampContainer);
+
+    header.appendChild(displayNameContainer);
+    item.appendChild(header);
+
+    return item;
+  }
   
   const createPreview = ({ label }) => {
     const inputlabelContainer = createInputLabel({ label });
     const previewSection = document.createElement('div');
     const dataAlertPreview = document.createElement('div');
-    
+    const item = createPreviewItem();
+
     previewSection.classList.add('autoql-vanilla-preview-section');
     dataAlertPreview.classList.add('autoql-vanilla-data-alert-preview');
+    dataAlertPreview.appendChild(item);
     previewSection.appendChild(inputlabelContainer);
     previewSection.appendChild(dataAlertPreview);
     
