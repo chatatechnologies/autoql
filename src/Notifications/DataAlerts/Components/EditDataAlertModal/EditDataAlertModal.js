@@ -15,8 +15,8 @@ export function EditDataAlertModal({ dataAlert }) {
   const container = document.createElement('div');
   
   const conditionsView = new ConditionsView({ dataAlert });
-  const timingView = new TimingView();
-  const appearanceView = new AppearanceView();
+  const timingView = new TimingView({ dataAlert });
+  const appearanceView = new AppearanceView({ dataAlert });
 
   container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
 

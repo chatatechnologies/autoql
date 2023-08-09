@@ -4,7 +4,7 @@ import { createIcon } from '../../../../Utils';
 import dayjs from '../../../../Utils/dayjsPlugins';
 import { isNumber } from 'autoql-fe-utils';
 
-export function AppearanceView() {
+export function AppearanceView({ dataAlert }) {
   const container = document.createElement('div');
   const title = document.createElement('div');
   const wrapper = document.createElement('div');
@@ -48,7 +48,7 @@ export function AppearanceView() {
     return container;
   }
   
-  const createInputContainer = ({ inputType, placeholder, icon, label, onChange }) => {
+  const createInputContainer = ({ inputType, placeholder, icon, label, onChange, defaultValue }) => {
     const container = createInputLabel({ label });
     const inputContainer = document.createElement('div');
     const inputWrapper = document.createElement('div');
@@ -77,6 +77,8 @@ export function AppearanceView() {
       }
       onChange(val);
     })
+
+    input.value = defaultValue;
 
     return container;
   }
@@ -131,7 +133,7 @@ export function AppearanceView() {
     return item;
   }
   
-  const createPreview = ({ label }) => {
+  const createPreview = ({ label, defaultTitle, defaultMessage }) => {
     const inputlabelContainer = createInputLabel({ label });
     const previewSection = document.createElement('div');
     const dataAlertPreview = document.createElement('div');
@@ -151,6 +153,9 @@ export function AppearanceView() {
       item.setDescription(val)
     }
 
+    previewSection.setTitle(defaultTitle);
+    previewSection.setDescription(defaultMessage);
+
     return previewSection;
   }
   
@@ -158,6 +163,8 @@ export function AppearanceView() {
 
   const previewSection = createPreview({
     label: 'Preview',
+    defaultTitle: dataAlert.title,
+    defaultMessage: dataAlert.message,
   });
 
   const handleTitleChange = (val) => {
@@ -174,6 +181,7 @@ export function AppearanceView() {
     icon: createIcon(NOTEBOOK),
     label: 'Title',
     onChange: handleTitleChange,
+    defaultValue: dataAlert.title,
   });
   
   const messageSection = createInputContainer({
@@ -181,6 +189,7 @@ export function AppearanceView() {
     placeholder: 'eg. "You have spent 80% of your budget for the month."',
     label: 'Message (optional)',
     onChange: handleDescriptionChange,
+    defaultValue: dataAlert.message,
   });
 
 

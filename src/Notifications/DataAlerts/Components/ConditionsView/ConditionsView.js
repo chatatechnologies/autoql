@@ -25,10 +25,8 @@ export function ConditionsView({ dataAlert }) {
   const secondInputContainer = document.createElement('div');
   const secondLabelContainer = document.createElement('div');
   
-  let defaultValue = undefined;
-  if(dataAlert?.expression) {
-    defaultValue = dataAlert.expression[0].condition;
-  }
+  const defaultValueCondition = dataAlert.expression[0].condition;
+  const defaultSecontTerm = dataAlert.expression[1].term_type;
 
   this.getOperatorSelectValues = () => {
     const keys = Object.keys(DATA_ALERT_OPERATORS);
@@ -65,15 +63,15 @@ export function ConditionsView({ dataAlert }) {
     ]
   }
 
-  const conditionSelect = new Selector({ defaultValue, options: this.getOperatorSelectValues() });
-  const secondTermSelect = new Selector({ defaultValue, options: this.getSecondTermValues() });
+  const conditionSelect = new Selector({ defaultValue: defaultValueCondition, options: this.getOperatorSelectValues() });
+  const secondTermSelect = new Selector({ defaultValue: defaultSecontTerm, options: this.getSecondTermValues() });
   const termInputValue = new NumberInput();
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
   conditionLabel.textContent = 'Meets this condition';
   queryInput.setAttribute('type', 'text');
-  queryInput.setAttribute('value', 'Total trade size this year');
+  queryInput.setAttribute('value', dataAlert.data_return_query);
   queryInput.setAttribute('disabled', 'true');
   queryInput.setAttribute('readonly', 'true');
 

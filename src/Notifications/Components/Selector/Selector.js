@@ -24,7 +24,10 @@ export function Selector({ defaultValue, options }) {
   select.classList.add('autoql-vanilla-select-large');
   
   if(defaultValue) {
-    itemValue.innerHTML = options[0].displayName;
+    const finded = options.find(o => o.value === defaultValue)
+    if(finded) {
+      itemValue.innerHTML = finded.displayName;
+    }
   }
 
   options.forEach((option) => {

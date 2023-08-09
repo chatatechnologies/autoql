@@ -11,7 +11,7 @@ import {
 } from "autoql-fe-utils";
 import './TimingView.scss';
 
-export function TimingView() {
+export function TimingView({ dataAlert }) {
   const container = document.createElement('div');
   const title = document.createElement('div');
   const wrapper = document.createElement('div');
@@ -153,7 +153,7 @@ export function TimingView() {
     ]
   }
   
-  const typeSelector = new Selector({ defaultValue: 1, options: this.getTypeValues() });
+  const typeSelector = new Selector({ defaultValue: dataAlert.notification_type, options: this.getTypeValues() });
   
   container.classList.add('autoql-vanilla-data-alert-setting-section');
   title.classList.add('autoql-vanilla-data-alert-setting-section-title');
@@ -174,7 +174,7 @@ export function TimingView() {
 
   const intervalContainer = this.createFrequencyOption({
     label: 'Send a Notification',
-    defaultValue: 1,
+    defaultValue: dataAlert.notification_type,
     selectorOptions: this.getScheduleIntervalOptions()
   });
 
@@ -188,9 +188,9 @@ export function TimingView() {
     selectorOptions: this.getTimeOptions()
   });
   
-  const timeeZoneContainer = this.createFrequencyOption({
+  const timeZoneContainer = this.createFrequencyOption({
     label: 'Time Zone',
-    defaultValue: 1,
+    defaultValue: dataAlert.time_zone,
     selectorOptions: this.getTimeZoneOptions()
   });
 
@@ -198,7 +198,7 @@ export function TimingView() {
   frequencyContainer.appendChild(daysContainer);
   frequencyContainer.appendChild(this.createConnector());
   frequencyContainer.appendChild(timeContainer);
-  frequencyContainer.appendChild(timeeZoneContainer);
+  frequencyContainer.appendChild(timeZoneContainer);
   
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
