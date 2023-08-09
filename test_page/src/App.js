@@ -85,6 +85,9 @@ class App extends React.Component {
         this.datamessenger.setOption("authentication", {
             ...values,
         });
+
+        this.datamessenger.dataExplorer.createSubjects();
+        console.log(this.datamessenger.dataExplorer);
         this.setState({
             isLogged: true,
             authentication: {
