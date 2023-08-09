@@ -65,6 +65,39 @@ export function DataExplorer({ subjects, widget }) {
     listWrapper.appendChild(elem);
   })
 
+  obj.createSubjects = () => {
+    obj.subjects.forEach((subject) => {
+      const li = document.createElement('li');
+      li.classList.add('autoql-vanilla-subject');
+      li.appendChild(createIcon(BOOK_ICON));
+      li.appendChild(document.createTextNode(subject.display_name));
+      subjectsWrapper.appendChild(li);
+      li.onclick = async () => {
+        autocomplete.classList.remove('show')
+        input.value = subject.display_name;
+        contentWrapper.innerHTML = '';
+        const previewSection = new DataPreview({
+          icon: TABLE_ICON,
+          title: `Data Preview "${subject.query}"`,
+          subject,
+          widgetOptions: widget.options,
+        });
+        contentWrapper.appendChild(previewSection.container);
+        
+        const relatedQueriesSection = new RelatedQueries({
+          icon: CHATA_BUBBLES_ICON,
+          title: `Query suggestions for "${subject.display_name}"`,
+          containerHeight: container.clientHeight,
+          previewSectionHeight: previewSection.container.clientHeight,
+          textBarHeight: textBar.clientHeight,
+          subject,
+          widget,
+        });
+        contentWrapper.appendChild(relatedQueriesSection);
+      }
+    })
+  }
+
   chatBarInputIcon.appendChild(searchIcon);
   autocomplete.appendChild(subjectsWrapper);
   textBar.appendChild(input);
@@ -104,45 +137,11 @@ export function DataExplorer({ subjects, widget }) {
   }
   
   obj.setSubjects = (subjects) => {
-    console.log('test');
     obj.subjects = subjects;
     obj.createSubjects();
   }
 
-  obj.createSubjects = () => {
-    obj.subjects.forEach((subject) => {
-      const li = document.createElement('li');
-      li.classList.add('autoql-vanilla-subject');
-      li.appendChild(createIcon(BOOK_ICON));
-      li.appendChild(document.createTextNode(subject.display_name));
-      subjectsWrapper.appendChild(li);
-      li.onclick = async () => {
-        autocomplete.classList.remove('show')
-        input.value = subject.display_name;
-        contentWrapper.innerHTML = '';
-        const previewSection = new DataPreview({
-          icon: TABLE_ICON,
-          title: `Data Preview "${subject.query}"`,
-          subject,
-          widgetOptions: widget.options,
-        });
-        contentWrapper.appendChild(previewSection.container);
-        
-        const relatedQueriesSection = new RelatedQueries({
-          icon: CHATA_BUBBLES_ICON,
-          title: `Query suggestions for "${subject.display_name}"`,
-          containerHeight: container.clientHeight,
-          previewSectionHeight: previewSection.container.clientHeight,
-          textBarHeight: textBar.clientHeight,
-          subject,
-          widget,
-        });
-        contentWrapper.appendChild(relatedQueriesSection);
-      }
-    })
-  }
-
-  //obj.createSubjects();
+  obj.createSubjects();
   
   obj.container = container;
 }

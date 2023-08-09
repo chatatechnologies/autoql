@@ -86,8 +86,6 @@ class App extends React.Component {
             ...values,
         });
 
-        this.datamessenger.dataExplorer.createSubjects();
-        console.log(this.datamessenger.dataExplorer);
         this.setState({
             isLogged: true,
             authentication: {
