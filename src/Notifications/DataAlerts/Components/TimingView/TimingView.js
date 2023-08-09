@@ -8,6 +8,8 @@ import {
   CONTINUOUS_TYPE,
   SCHEDULE_INTERVAL_OPTIONS,
   WEEKDAY_NAMES_MON,
+  EVALUATION_FREQUENCY_OPTIONS,
+  RESET_PERIOD_OPTIONS,
   getTimeObjFromTimeStamp,
   getWeekdayFromTimeStamp,
 } from "autoql-fe-utils";
@@ -25,6 +27,21 @@ export function TimingView({ dataAlert }) {
   const dataAlertSettingGroup = document.createElement('div');
   const dataAlertSettingFrequency = document.createElement('div');
   const frequencyContainer = document.createElement('div');
+  
+  this.DEFAULT_EVALUATION_FREQUENCY = 5
+  this.DEFAULT_WEEKDAY_SELECT_VALUE = 'Friday'
+  this.DEFAULT_MONTH_DAY_SELECT_VALUE = 'LAST'
+  this.DEFAULT_MONTH_OF_YEAR_SELECT_VALUE = 'December'
+  this.DEFAULT_FREQUENCY_TYPE = SCHEDULED_TYPE
+  this.DEFAULT_RESET_PERIOD_SELECT_VALUE = 'MONTH'
+  this.DEFAULT_TIME_SELECT_VALUE = {
+    ampm: 'pm',
+    minute: 0,
+    hour: 5,
+    hour24: 17,
+    value: '5:00pm',
+    value24hr: '17:00',
+  }
 
   this.createSelectorValueWithSubtitle = ({ label, subtitle, icon }) => {
     const span = document.createElement('span');
@@ -56,6 +73,30 @@ export function TimingView({ dataAlert }) {
     const keys = Object.keys(SCHEDULE_INTERVAL_OPTIONS);
     return keys.map((key) => {
       const value = SCHEDULE_INTERVAL_OPTIONS[key];
+
+      return {
+        displayName: value.displayName,
+        value: key,
+      }
+    });
+  }
+
+  this.getFrequencyOptions = () => {
+    const keys = Object.keys(EVALUATION_FREQUENCY_OPTIONS);
+    return keys.map((key) => {
+      const value = EVALUATION_FREQUENCY_OPTIONS[key];
+
+      return {
+        displayName: value.label,
+        value: value.value,
+      }
+    });
+  }
+
+  this.getResetOptions = () => {
+    const keys = Object.keys(RESET_PERIOD_OPTIONS);
+    return keys.map((key) => {
+      const value = RESET_PERIOD_OPTIONS[key];
 
       return {
         displayName: value.displayName,
@@ -160,7 +201,7 @@ export function TimingView({ dataAlert }) {
 
     const intervalContainer = this.createFrequencyOption({
       label: 'Send a Notification',
-      defaultValue: schedules[0].notification_period,
+      defaultValue: schedules[0].notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
       selectorOptions: this.getScheduleIntervalOptions()
     });
   
@@ -170,7 +211,7 @@ export function TimingView({ dataAlert }) {
     });
   
     const timeContainer = this.createFrequencyOption({
-      defaultValue: getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone).value,
+      defaultValue: getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone).value ?? this.DEFAULT_TIME_SELECT_VALUE,
       selectorOptions: this.getTimeOptions()
     });
     
@@ -187,14 +228,32 @@ export function TimingView({ dataAlert }) {
     frequencyContainer.appendChild(timeZoneContainer);
   }
 
+  this.createLiveView = () => {
+    const frequencySelectorContainer = this.createFrequencyOption({
+      label: 'Check conditions every',
+      defaultValue: this.DEFAULT_EVALUATION_FREQUENCY,
+      selectorOptions: this.getFrequencyOptions()
+    });
+
+    const resetContainer = this.createFrequencyOption({
+      label: 'Check conditions every',
+      defaultValue: dataAlert?.reset_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
+      selectorOptions: this.getResetOptions()
+    });
+
+    frequencyContainer.appendChild(frequencySelectorContainer);
+    frequencyContainer.appendChild(resetContainer);
+  }
+
   this.handleTypeChange = (option) => {
     frequencyContainer.innerHTML = '';
     console.log(option);
     switch(option.value){
       case 'SCHEDULED':
-        this.createScheduledView()
+        this.createScheduledView();
         break;
       case 'CONTINUOUS':
+        this.createLiveView();
         break;
     }
   }
