@@ -97,6 +97,7 @@ export function DataExplorer({ subjects, widget }) {
       }
     })
   }
+
   chatBarInputIcon.appendChild(searchIcon);
   autocomplete.appendChild(subjectsWrapper);
   textBar.appendChild(input);

@@ -203,8 +203,6 @@ export function DataMessenger(options = {}) {
                     if (obj.notificationIcon) {
                         obj.notificationIcon.setOption('authentication', value);
                     }
-                    const subjects = await obj.getSubjects();
-                    obj.dataExplorer.setSubjects(subjects);
                     break;
                 case 'dataFormatting':
                     obj.setObjectProp('dataFormatting', value);
@@ -312,6 +310,9 @@ export function DataMessenger(options = {}) {
                 default:
                     obj.options[option] = value;
             }
+            const subjects = await obj.getSubjects();
+            obj.dataExplorer.setSubjects(subjects);
+            obj.filterLocking.loadConditions();
         } catch (error) {
             console.error(error);
         }
