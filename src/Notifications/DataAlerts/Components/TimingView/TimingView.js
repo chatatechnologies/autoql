@@ -7,7 +7,9 @@ import {
   SCHEDULED_TYPE,
   CONTINUOUS_TYPE,
   SCHEDULE_INTERVAL_OPTIONS,
-  WEEKDAY_NAMES_MON 
+  WEEKDAY_NAMES_MON,
+  getTimeObjFromTimeStamp,
+  getWeekdayFromTimeStamp,
 } from "autoql-fe-utils";
 import './TimingView.scss';
 
@@ -152,8 +154,56 @@ export function TimingView({ dataAlert }) {
       },
     ]
   }
+
+  this.createScheduledView = () => {
+    const { schedules } = dataAlert
+
+    const intervalContainer = this.createFrequencyOption({
+      label: 'Send a Notification',
+      defaultValue: schedules[0].notification_period,
+      selectorOptions: this.getScheduleIntervalOptions()
+    });
   
-  const typeSelector = new Selector({ defaultValue: dataAlert.notification_type, options: this.getTypeValues() });
+    const daysContainer = this.createFrequencyOption({
+      defaultValue: getWeekdayFromTimeStamp(schedules[0]?.start_date, dataAlert?.time_zone),
+      selectorOptions: this.getDaysOptions()
+    });
+  
+    const timeContainer = this.createFrequencyOption({
+      defaultValue: getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone).value,
+      selectorOptions: this.getTimeOptions()
+    });
+    
+    const timeZoneContainer = this.createFrequencyOption({
+      label: 'Time Zone',
+      defaultValue: dataAlert.time_zone,
+      selectorOptions: this.getTimeZoneOptions()
+    });
+  
+    frequencyContainer.appendChild(intervalContainer);
+    frequencyContainer.appendChild(daysContainer);
+    frequencyContainer.appendChild(this.createConnector());
+    frequencyContainer.appendChild(timeContainer);
+    frequencyContainer.appendChild(timeZoneContainer);
+  }
+
+  this.handleTypeChange = (option) => {
+    frequencyContainer.innerHTML = '';
+    console.log(option);
+    switch(option.value){
+      case 'SCHEDULED':
+        this.createScheduledView()
+        break;
+      case 'CONTINUOUS':
+        break;
+    }
+  }
+  
+  const typeSelector = new Selector({ 
+    defaultValue: dataAlert.notification_type,
+    options: this.getTypeValues(),
+    onChange: this.handleTypeChange,
+  });
   
   container.classList.add('autoql-vanilla-data-alert-setting-section');
   title.classList.add('autoql-vanilla-data-alert-setting-section-title');
@@ -171,34 +221,6 @@ export function TimingView({ dataAlert }) {
 
   title.textContent = 'Timing';
   alertTypeInputLabel.textContent = 'Alert Type';
-
-  const intervalContainer = this.createFrequencyOption({
-    label: 'Send a Notification',
-    defaultValue: dataAlert.notification_type,
-    selectorOptions: this.getScheduleIntervalOptions()
-  });
-
-  const daysContainer = this.createFrequencyOption({
-    defaultValue: 1,
-    selectorOptions: this.getDaysOptions()
-  });
-
-  const timeContainer = this.createFrequencyOption({
-    defaultValue: 1,
-    selectorOptions: this.getTimeOptions()
-  });
-  
-  const timeZoneContainer = this.createFrequencyOption({
-    label: 'Time Zone',
-    defaultValue: dataAlert.time_zone,
-    selectorOptions: this.getTimeZoneOptions()
-  });
-
-  frequencyContainer.appendChild(intervalContainer);
-  frequencyContainer.appendChild(daysContainer);
-  frequencyContainer.appendChild(this.createConnector());
-  frequencyContainer.appendChild(timeContainer);
-  frequencyContainer.appendChild(timeZoneContainer);
   
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
@@ -210,6 +232,8 @@ export function TimingView({ dataAlert }) {
   wrapper.appendChild(settingGroup);
   container.appendChild(title);
   container.appendChild(wrapper);
+
+  this.createScheduledView();
 
   return container;
 }

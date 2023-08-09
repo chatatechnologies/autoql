@@ -3,7 +3,7 @@ import { SELECT_ARROW } from '../../../Svg';
 import { createIcon } from '../../../Utils';
 import './Selector.scss';
 
-export function Selector({ defaultValue, options }) {
+export function Selector({ defaultValue, options, onChange = () => {} }) {
   const select = document.createElement('div');
   const selectText = document.createElement('span');
   const itemValue = document.createElement('span');
@@ -13,6 +13,7 @@ export function Selector({ defaultValue, options }) {
   const popup = document.createElement('div');
   
   select.isOpen = false;
+  select.value = defaultValue;
   
   itemValue.classList.add('autoql-vanilla-menu-item-value-title');
   selectArrow.classList.add('autoql-vanilla-select-arrow');
@@ -40,7 +41,9 @@ export function Selector({ defaultValue, options }) {
 
     item.onclick = () => {
       itemValue.innerHTML = option.displayName;
+      select.value = option.value;
       select.closePopup();
+      onChange(option);
     }
   })
 
