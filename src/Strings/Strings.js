@@ -296,7 +296,7 @@ export const strings = new LocalizedStrings({
         reverseTranslationLabel: 'Interpretado como: ',
         reverseTranslationTooltip: 'Esta declaración refleja cómo se interpretó su consulta para devolver esta respuesta de datos.',
         filterLocking: 'Bloqueo de filtros',
-		filterLockingSaving: 'Ahorro...',
+		filterLockingSaving: 'Cargando...',
         continue: 'Continuar',
         filterLockingTooltip: 'Se pueden aplicar filtros para restringir<br /> los resultados de su consulta. Bloquear un filtro<br /> garantiza que solo se devuelvan los datos específicos<br /> que desea ver.',
         filterLockingInputPlaceholder: 'Buscar y seleccionar un filtro',

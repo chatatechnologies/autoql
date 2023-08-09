@@ -145,7 +145,8 @@ export function FilterLocking(datamessenger){
         const { data } = await view.getConditions()
         view.refreshConditions(data)
     }
-	view.displaySavingIndicator = () =>{
+	view.displaySavingIndicator = () => {
+        console.log('displaySavingIndicator');
 		savingIndicator.style.visibility = 'visible';
         savingIndicator.style.opacity = 1;
 		setTimeout(()=>{
