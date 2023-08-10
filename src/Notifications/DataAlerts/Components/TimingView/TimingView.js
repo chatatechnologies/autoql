@@ -9,6 +9,7 @@ import {
   SCHEDULE_INTERVAL_OPTIONS,
   WEEKDAY_NAMES_MON,
   EVALUATION_FREQUENCY_OPTIONS,
+  MONTH_DAY_SELECT_OPTIONS,
   RESET_PERIOD_OPTIONS,
   getTimeObjFromTimeStamp,
   getWeekdayFromTimeStamp,
@@ -117,6 +118,18 @@ export function TimingView({ dataAlert }) {
     });
   }
 
+  this.getMonthDaySelectOptions = () => {
+    const keys = Object.keys(MONTH_DAY_SELECT_OPTIONS);
+    return keys.map((key) => {
+      const value = MONTH_DAY_SELECT_OPTIONS[key];
+
+      return {
+        displayName: value,
+        value: key,
+      }
+    });
+  }
+
   this.getTimeOptions = () => {
     return getTimeOptionArray().map((o) => {
       return {
@@ -147,12 +160,13 @@ export function TimingView({ dataAlert }) {
     return connector
   }
 
-  this.createFrequencyOption = ({ label, defaultValue, selectorOptions }) => {
+  this.createFrequencyOption = ({ label, defaultValue, selectorOptions, onChange }) => {
     const option = document.createElement('div');
     const wrapperLabel = document.createElement('div');
     const selector = new Selector({
       defaultValue,
       options: selectorOptions,
+      onChange
     })
     
     wrapperLabel.classList.add('autoql-vanilla-select-and-label');
@@ -196,20 +210,30 @@ export function TimingView({ dataAlert }) {
     ]
   }
 
-  this.createScheduledView = () => {
+  this.handleDayChange = (option) => {
+    this.createScheduledView({ notificationPeriod: option.value });
+  }
+  this.createScheduledView = ({ notificationPeriod }) => {
+    frequencyContainer.innerHTML = '';
     const { schedules } = dataAlert
 
     const intervalContainer = this.createFrequencyOption({
       label: 'Send a Notification',
-      defaultValue: schedules[0].notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
-      selectorOptions: this.getScheduleIntervalOptions()
+      defaultValue: notificationPeriod,
+      selectorOptions: this.getScheduleIntervalOptions(),
+      onChange: this.handleDayChange
     });
-  
+
     const daysContainer = this.createFrequencyOption({
       defaultValue: getWeekdayFromTimeStamp(schedules[0]?.start_date, dataAlert?.time_zone),
       selectorOptions: this.getDaysOptions()
     });
-  
+
+    const monthContainer = this.createFrequencyOption({
+      defaultValue: this.DEFAULT_MONTH_DAY_SELECT_VALUE,
+      selectorOptions: this.getMonthDaySelectOptions()
+    })
+    
     const timeContainer = this.createFrequencyOption({
       defaultValue: getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone).value ?? this.DEFAULT_TIME_SELECT_VALUE,
       selectorOptions: this.getTimeOptions()
@@ -220,11 +244,22 @@ export function TimingView({ dataAlert }) {
       defaultValue: dataAlert.time_zone,
       selectorOptions: this.getTimeZoneOptions()
     });
-  
+    
     frequencyContainer.appendChild(intervalContainer);
-    frequencyContainer.appendChild(daysContainer);
-    frequencyContainer.appendChild(this.createConnector());
-    frequencyContainer.appendChild(timeContainer);
+    if(notificationPeriod === 'DAY') {
+      frequencyContainer.appendChild(this.createConnector());
+      frequencyContainer.appendChild(timeContainer);
+    }
+    else if(notificationPeriod === 'WEEK') {
+      frequencyContainer.appendChild(daysContainer);
+      frequencyContainer.appendChild(this.createConnector());
+      frequencyContainer.appendChild(timeContainer);
+    }else if (notificationPeriod === 'MONTH') {
+      frequencyContainer.appendChild(      monthContainer);
+      frequencyContainer.appendChild(this.createConnector());
+      frequencyContainer.appendChild(timeContainer);
+    }
+
     frequencyContainer.appendChild(timeZoneContainer);
   }
 
@@ -247,10 +282,11 @@ export function TimingView({ dataAlert }) {
 
   this.handleTypeChange = (option) => {
     frequencyContainer.innerHTML = '';
-    console.log(option);
-    switch(option.value){
+    const notificationPeriod = dataAlert.schedules[0].notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
+
+    switch(option.value) {
       case 'SCHEDULED':
-        this.createScheduledView();
+        this.createScheduledView({ notificationPeriod });
         break;
       case 'CONTINUOUS':
         this.createLiveView();
@@ -292,7 +328,11 @@ export function TimingView({ dataAlert }) {
   container.appendChild(title);
   container.appendChild(wrapper);
 
-  this.createScheduledView();
+  if(dataAlert.notification_type === 'SCHEDULED') {
+    this.createScheduledView({ notificationPeriod: dataAlert.schedules[0].notification_period });
+  } else {
+    this.createLiveView();
+  }
 
   return container;
 }
