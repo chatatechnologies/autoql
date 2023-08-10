@@ -1,4 +1,4 @@
-import { NumberInput } from '../../../Components/NumberInput';
+import { QueryResultInput } from '../../../Components/QueryResultInput';
 import { Selector } from '../../../Components/Selector/Selector';
 import './ConditionsView.scss';
 import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE } from 'autoql-fe-utils';
@@ -26,7 +26,7 @@ export function ConditionsView({ dataAlert }) {
   const secondLabelContainer = document.createElement('div');
   
   const defaultValueCondition = dataAlert.expression[0].condition;
-  const defaultSecontTerm = dataAlert.expression[1].term_type;
+  const defaultSecondTerm = dataAlert.expression[1].term_type;
 
   this.getOperatorSelectValues = () => {
     const keys = Object.keys(DATA_ALERT_OPERATORS);
@@ -63,9 +63,21 @@ export function ConditionsView({ dataAlert }) {
     ]
   }
 
+  
+  const termInputType = defaultSecondTerm === NUMBER_TERM_TYPE ? 'number' : 'text';
+  const inputDefaultValue = dataAlert.expression[1].term_value;
   const conditionSelect = new Selector({ defaultValue: defaultValueCondition, options: this.getOperatorSelectValues() });
-  const secondTermSelect = new Selector({ defaultValue: defaultSecontTerm, options: this.getSecondTermValues() });
-  const termInputValue = new NumberInput();
+  const termInputValue = new QueryResultInput({ termInputType, inputDefaultValue });
+  this.handleInputType = (option) => {
+    const type = option.value === NUMBER_TERM_TYPE ? 'number' : 'text';
+    termInputValue.setInputType(type);
+  }
+  
+  const secondTermSelect = new Selector({
+    defaultValue: defaultSecondTerm,
+    options: this.getSecondTermValues(),
+    onChange: this.handleInputType
+  });
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';

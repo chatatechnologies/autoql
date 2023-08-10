@@ -1,9 +1,8 @@
-import { create } from 'd3';
 import { ARROW_DOWN, ARROW_UP } from '../../../Svg';
 import { createIcon } from '../../../Utils';
-import './NumberInput.scss';
+import './QueryResultInput.scss';
 
-export function NumberInput() {
+export function QueryResultInput({ termInputType, inputDefaultValue }) {
   const container = document.createElement('div');
   const btnUp = document.createElement('button');
   const btnDown = document.createElement('button');
@@ -22,14 +21,30 @@ export function NumberInput() {
   spinButtonContainer.classList.add('autoql-vanilla-input-number-spin-button-container')
 
   input.classList.add('autoql-vanilla-number-input');
-  input.setAttribute('placeholder', 'Type a number');
   input.setAttribute('type', 'number');
-  input.setAttribute('spellcheck', 'number');
-
+  
   container.appendChild(input);
   container.appendChild(spinButtonContainer);
-
+  
   container.classList.add('autoql-vanilla-input-number-container');
+  
+  container.setInputType = (type) => {
+    input.setAttribute('type', type);
+    
+    if(type === 'number') {
+      input.setAttribute('spellcheck', 'number');
+      input.setAttribute('placeholder', 'Type a number');
+      spinButtonContainer.style.display = 'flex';
+    } else {
+      input.setAttribute('spellcheck', 'false');
+      input.setAttribute('placeholder', 'Type a query');
+      spinButtonContainer.style.display = 'none';
+    }
+    input.value = '';
+  }
+  
+  container.setInputType(termInputType);
+  input.value = inputDefaultValue;
 
   return container;
 }
