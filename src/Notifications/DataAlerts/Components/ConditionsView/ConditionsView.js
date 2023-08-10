@@ -12,10 +12,10 @@ export function ConditionsView({ dataAlert }) {
   const readOnlyContainer = document.createElement('div');
   const labelContainer = document.createElement('div');
   const inputLabel = document.createElement('div');
+  
+  // Meets this condition section
   const conditionWrapper = document.createElement('div');
   const conditionLabel = document.createElement('div');
-
-  // Meets this condition section
   const inputContainer = document.createElement('div');
   const wrapperInputContainer = document.createElement('div');
   const queryInput = document.createElement('input');
@@ -26,8 +26,7 @@ export function ConditionsView({ dataAlert }) {
   const secondLabelContainer = document.createElement('div');
   
   const defaultValueCondition = dataAlert.expression[0].condition;
-  const defaultSecondTerm = dataAlert.expression[1].term_type;
-
+  
   this.getOperatorSelectValues = () => {
     const keys = Object.keys(DATA_ALERT_OPERATORS);
     return keys.map((key) => {
@@ -41,47 +40,50 @@ export function ConditionsView({ dataAlert }) {
       }
     })
   }
-
+  
   this.getSecondTermValues = () => {
     return [
       {
         value: NUMBER_TERM_TYPE,
         displayName: `
-          <span>
-            this <strong>number:</strong>
-          </span>
+        <span>
+        this <strong>number:</strong>
+        </span>
         `,
       },
       {
         value: QUERY_TERM_TYPE,
         displayName: `
-          <span>
-            the result of this <strong>query:</strong>
-          </span>
+        <span>
+        the result of this <strong>query:</strong>
+        </span>
         `,
       }
     ]
   }
-
   
-  const termInputType = defaultSecondTerm === NUMBER_TERM_TYPE ? 'number' : 'text';
-  const inputDefaultValue = dataAlert.expression[1].term_value;
-  const conditionSelect = new Selector({ defaultValue: defaultValueCondition, options: this.getOperatorSelectValues() });
-  const termInputValue = new QueryResultInput({ termInputType, inputDefaultValue });
-  this.handleInputType = (option) => {
-    const type = option.value === NUMBER_TERM_TYPE ? 'number' : 'text';
-    termInputValue.setInputType(type);
+  this.createConditionsSection = () => {
+    const defaultSecondTerm = dataAlert.expression[1].term_type;
+    const termInputType = defaultSecondTerm === NUMBER_TERM_TYPE ? 'number' : 'text';
+    const inputDefaultValue = dataAlert.expression[1].term_value;
+    const termInputValue = new QueryResultInput({ termInputType, inputDefaultValue });
+    const handleInputType = (option) => {
+      const type = option.value === NUMBER_TERM_TYPE ? 'number' : 'text';
+      termInputValue.setInputType(type);
+    }
+    const secondTermSelect = new Selector({
+      defaultValue: defaultSecondTerm,
+      options: this.getSecondTermValues(),
+      onChange: handleInputType
+    });
   }
   
-  const secondTermSelect = new Selector({
-    defaultValue: defaultSecondTerm,
-    options: this.getSecondTermValues(),
-    onChange: this.handleInputType
-  });
+  const conditionSelect = new Selector({ defaultValue: defaultValueCondition, options: this.getOperatorSelectValues() });
+  
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
-  conditionLabel.textContent = 'Meets this condition';
+  //conditionLabel.textContent = 'Meets this condition';
   queryInput.setAttribute('type', 'text');
   queryInput.setAttribute('value', dataAlert.data_return_query);
   queryInput.setAttribute('disabled', 'true');
@@ -96,7 +98,7 @@ export function ConditionsView({ dataAlert }) {
   labelContainer.classList.add('autoql-vanilla-input-and-label-container');
   secondLabelContainer.classList.add('autoql-vanilla-input-and-label-container');
   inputLabel.classList.add('autoql-vanilla-input-label');
-  conditionLabel.classList.add('autoql-vanilla-input-label');
+  //conditionLabel.classList.add('autoql-vanilla-input-label');
   inputContainer.classList.add('autoql-vanilla-input-container');
   inputContainer.classList.add('autoql-vanilla-input-large');
   secondInputContainer.classList.add('autoql-vanilla-input-container');
@@ -109,15 +111,15 @@ export function ConditionsView({ dataAlert }) {
   conditionWrapper.classList.add('autoql-vanilla-rule-condition-select');
   ruleSecondInputContainer.classList.add('autoql-vanilla-rule-second-input-container');
 
-  secondInputContainer.appendChild(secondTermSelect);
+  /* secondInputContainer.appendChild(secondTermSelect);
   secondInputContainer.appendChild(termInputValue);
   secondLabelContainer.appendChild(secondInputContainer);
   secondRuleInput.appendChild(secondLabelContainer);
-  ruleSecondInputContainer.appendChild(secondRuleInput);
-  conditionWrapper.appendChild(conditionLabel);
-  conditionWrapper.appendChild(conditionSelect);
-  ruleContainer.appendChild(conditionWrapper);
-  ruleContainer.appendChild(ruleSecondInputContainer);
+  ruleSecondInputContainer.appendChild(secondRuleInput); */
+  //conditionWrapper.appendChild(conditionLabel);
+  //conditionWrapper.appendChild(conditionSelect);
+  //ruleContainer.appendChild(conditionWrapper);
+  /* ruleContainer.appendChild(ruleSecondInputContainer); */
   wrapperInputContainer.appendChild(queryInput);
   inputContainer.appendChild(wrapperInputContainer);
   labelContainer.appendChild(inputLabel);
