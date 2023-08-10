@@ -1306,7 +1306,6 @@ export function DataMessenger(options = {}) {
             case 'simple':
                 if (request['reference_id'] !== '1.9.502') {
                     toolbar.appendChild(reportProblemButton);
-                    moreOptionsArray.push('copy_sql');
                     moreOptionsArray.push('notification');
                 }
                 toolbar.appendChild(
@@ -1364,7 +1363,6 @@ export function DataMessenger(options = {}) {
                 );
                 moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
-                moreOptionsArray.push('copy_sql');
                 moreOptionsArray.push('notification');
                 break;
             case 'chart-view':
@@ -1381,7 +1379,6 @@ export function DataMessenger(options = {}) {
                     ),
                 );
                 moreOptionsArray.push('png');
-                moreOptionsArray.push('copy_sql');
                 moreOptionsArray.push('notification');
                 break;
             case 'safety-net':
