@@ -4,8 +4,10 @@ import './EditDataAlertModal.scss';
 import { ConditionsView } from "../ConditionsView/ConditionsView";
 import { TimingView } from "../TimingView";
 import { AppearanceView } from "../AppearanceView";
+import { updateDataAlert } from "autoql-fe-utils";
+import { AntdMessage } from "../../../../Antd";
 
-export function EditDataAlertModal({ dataAlert }) {
+export function EditDataAlertModal({ dataAlert, authentication }) {
   const btnDelete = document.createElement('button');
   const btnCancel = document.createElement('button');
   const btnSave = document.createElement('button');
@@ -77,9 +79,17 @@ export function EditDataAlertModal({ dataAlert }) {
   );
   
   btnCancel.onclick = onDiscard;
-  btnSave.onclick = () => {
+  btnSave.onclick = async () => {
     spinner.classList.remove('hidden');
     btnSave.setAttribute('disabled', 'true');
+    const response = await updateDataAlert({ dataAlert, ...authentication });
+    modal.close();
+    if(response.status === 200) {
+      new AntdMessage('Data Alert updated!', 2500);
+    }else {
+      new AntdMessage('Error', 2500);
+    }
+
   }
 
   container.appendChild(conditionsView);

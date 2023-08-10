@@ -231,7 +231,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   }
 
   const editDataAlertItemHandler = () => {
-    const modal = new EditDataAlertModal({ dataAlert });
+    const modal = new EditDataAlertModal({ dataAlert, authentication });
     modal.show();
   }
 
