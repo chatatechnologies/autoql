@@ -35,9 +35,13 @@
     font-size: .875em;
     color: var(--autoql-vanilla-text-color-placeholder);
   }
+
   &.autoql-vanilla-select-large {
     line-height: 36px;
     height: 38px;
+  }
+
+  &.autoql-vanilla-full-width {
     width: 100%;
   }
 
