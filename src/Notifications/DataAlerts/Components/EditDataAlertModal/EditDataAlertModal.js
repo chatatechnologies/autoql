@@ -85,12 +85,12 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
     const response = await updateDataAlert({ dataAlert, ...authentication });
     modal.close();
     console.log(conditionsView.getValues());
+    console.log(appearanceView.getValues());
     if(response.status === 200) {
       new AntdMessage('Data Alert updated!', 2500);
     }else {
       new AntdMessage('Error', 2500);
     }
-
   }
 
   container.appendChild(conditionsView);

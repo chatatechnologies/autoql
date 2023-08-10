@@ -80,6 +80,10 @@ export function AppearanceView({ dataAlert }) {
 
     input.value = defaultValue;
 
+    container.getValue = () => {
+      return input.value;
+    }
+
     return container;
   }
 
@@ -208,5 +212,13 @@ export function AppearanceView({ dataAlert }) {
   wrapper.appendChild(composeMessageSection);
   container.appendChild(title);
   container.appendChild(wrapper);
+
+  container.getValues = () => {
+    return {
+      title: titleSection.getValue(),
+      message: messageSection.getValue(),
+    }
+  }
+
   return container;
 }
