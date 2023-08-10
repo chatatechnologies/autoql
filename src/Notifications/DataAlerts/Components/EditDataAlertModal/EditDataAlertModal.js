@@ -84,6 +84,7 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
     btnSave.setAttribute('disabled', 'true');
     const response = await updateDataAlert({ dataAlert, ...authentication });
     modal.close();
+    console.log(conditionsView.getValues());
     if(response.status === 200) {
       new AntdMessage('Data Alert updated!', 2500);
     }else {

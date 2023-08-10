@@ -42,6 +42,10 @@ export function QueryResultInput({ termInputType, inputDefaultValue }) {
     }
     input.value = '';
   }
+
+  container.getValue = () => {
+    return input.value;
+  }
   
   container.setInputType(termInputType);
   input.value = inputDefaultValue;

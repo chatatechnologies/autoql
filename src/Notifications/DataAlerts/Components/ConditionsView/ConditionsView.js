@@ -129,5 +129,14 @@ export function ConditionsView({ dataAlert }) {
   container.appendChild(title);
   container.appendChild(wrapper);
 
+  container.getValues = () => {
+    const { expression } = dataAlert;
+    expression[0].condition = conditionSelect.value;
+    expression[1].term_type = secondTermSelect.value;
+    expression[1].term_value = termInputValue.getValue();
+
+    return { expression }
+  }
+
   return container;
 }
