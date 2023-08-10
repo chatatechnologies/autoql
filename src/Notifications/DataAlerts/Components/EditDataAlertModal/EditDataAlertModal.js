@@ -78,7 +78,27 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
     onDiscard
   );
   
+  const deleteDataAlertItemHandler = () => {
+    ChataConfirmDialog({
+      title: 'Are you sure you want to delete this Data Alert?',
+      message: 'You will no longer be notified about these changes in your data.',
+      cancelString: 'Go Back',
+      discardString: 'Delete',
+      onDiscard: async () => {
+        const response = await deleteDataAlert(id, authentication);
+        if(response.status === 200) {
+          new AntdMessage('Data Alert was successfully deleted.', 3000);
+        } else {
+          new AntdMessage('Error', 3000);
+        }
+        modal.close();
+      }
+    })
+  }
+
   btnCancel.onclick = onDiscard;
+  btnDelete.onclick = deleteDataAlertItemHandler;
+
   btnSave.onclick = async () => {
     spinner.classList.remove('hidden');
     btnSave.setAttribute('disabled', 'true');
