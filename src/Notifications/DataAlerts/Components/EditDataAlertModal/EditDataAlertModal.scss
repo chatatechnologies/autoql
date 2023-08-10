@@ -6,6 +6,11 @@
     display: flex;
     justify-content: space-between;
     padding: 8px 10px;
+    .autoql-vanilla-chata-btn {
+      .autoql-vanilla-btn-text-wrapper {
+        margin-left: 5px;
+      }
+    }
   }
   .autoql-vanilla-data-alert-settings-modal-content {
     padding: 20px 70px;

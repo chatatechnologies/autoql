@@ -12,13 +12,17 @@ export function EditDataAlertModal({ dataAlert }) {
   const modalFooter = document.createElement('div');
   const buttonContainerRight = document.createElement('div');
   const buttonContainerLeft = document.createElement('div');
+  const spinner = document.createElement('div');
   const container = document.createElement('div');
+  const btnSaveString = document.createElement('span');
   
   const conditionsView = new ConditionsView({ dataAlert });
   const timingView = new TimingView({ dataAlert });
   const appearanceView = new AppearanceView({ dataAlert });
 
   container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
+  spinner.classList.add('autoql-vanilla-spinner-loader');
+  spinner.classList.add('hidden');
 
   btnCancel.textContent = 'Cancel';
   btnCancel.classList.add('autoql-vanilla-chata-btn');
@@ -31,7 +35,10 @@ export function EditDataAlertModal({ dataAlert }) {
   btnDelete.classList.add('autoql-vanilla-large');
   btnDelete.classList.add('autoql-vanilla-danger');
 
-  btnSave.textContent = 'Save Changes';
+  btnSave.appendChild(spinner);
+  btnSave.appendChild(btnSaveString);
+  btnSaveString.textContent = 'Save Changes';
+  btnSaveString.classList.add('autoql-vanilla-btn-text-wrapper');
   btnSave.classList.add('autoql-vanilla-chata-btn');
   btnSave.classList.add('autoql-vanilla-large');
   btnSave.classList.add('autoql-vanilla-primary');
@@ -70,7 +77,11 @@ export function EditDataAlertModal({ dataAlert }) {
   );
   
   btnCancel.onclick = onDiscard;
-  
+  btnSave.onclick = () => {
+    spinner.classList.remove('hidden');
+    btnSave.setAttribute('disabled', 'true');
+  }
+
   container.appendChild(conditionsView);
   container.appendChild(timingView);
   container.appendChild(appearanceView);
