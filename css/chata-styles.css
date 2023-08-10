@@ -1299,7 +1299,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     font-size: 12px !important;
 }
 
-.autoql-vanilla-chata-btn.disabled {
+.autoql-vanilla-chata-btn.autoql-vanilla-disabled {
     opacity: .4;
     cursor: not-allowed;
     pointer-events: none;

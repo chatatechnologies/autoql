@@ -93,6 +93,17 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
     }
   }
 
+  container.addEventListener('keyup', () => {
+    console.log('TEST');
+    if(!conditionsView.isValid() || !appearanceView.isValid()) {
+      btnSave.disabled = true;
+      btnSave.classList.add('autoql-vanilla-disabled');
+    } else {
+      btnSave.classList.remove('autoql-vanilla-disabled');
+      btnSave.disabled = false;
+    }
+  })
+
   container.appendChild(conditionsView);
   container.appendChild(timingView);
   container.appendChild(appearanceView);

@@ -220,5 +220,9 @@ export function AppearanceView({ dataAlert }) {
     }
   }
 
+  container.isValid = () => {
+    return titleSection.getValue() !== '';
+  }
+
   return container;
 }

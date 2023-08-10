@@ -138,5 +138,9 @@ export function ConditionsView({ dataAlert }) {
     return { expression }
   }
 
+  container.isValid = () => {
+    return termInputValue.getValue() !== '';
+  }
+
   return container;
 }
