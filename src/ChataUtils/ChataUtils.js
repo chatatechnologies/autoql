@@ -13,7 +13,7 @@ import {
 import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
 import { ChataConfirmDialog } from '../ChataComponents';
-import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
+import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
 import { NotificationSettingsModal } from '../Notifications';
@@ -320,10 +320,6 @@ ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams 
                 action.setAttribute('data-name-option', 'copy-csv-handler');
                 ul.appendChild(action);
                 break;
-            case 'copy_sql':
-                action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
-                ul.appendChild(action);
-                break;
             case 'png':
                 action = ChataUtils.getActionOption(EXPORT_PNG_ICON, strings.downloadPNG, ChataUtils.exportPNGHandler, [
                     idRequest,
@@ -370,10 +366,6 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                     idRequest,
                 ]);
                 action.setAttribute('data-name-option', 'copy-csv-handler');
-                menu.ul.appendChild(action);
-                break;
-            case 'copy_sql':
-                action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
                 menu.ul.appendChild(action);
                 break;
             case 'png':
