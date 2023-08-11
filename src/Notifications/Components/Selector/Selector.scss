@@ -51,19 +51,6 @@
 }
 
 .autoql-vanilla-select-popup {
-  box-shadow: 0 0 8px var(--autoql-vanilla-box-shadow-color,rgba(0,0,0,.15));
-  background-color: var(--autoql-vanilla-background-color-secondary);
-  border: 1px solid hsla(0,0%,67.1%,.3215686274509804);
-  border-radius: 4px;
-  display: flex;
-  position: fixed;
-  z-index: 1000000;
-  left: 0;
-  top: 0;
-  font-family: var(--autoql-vanilla-font-family);
-  font-size: 14px;
-  visibility: hidden;
-  
   .autoql-vanilla-select-menu {
     list-style-type: none;
     padding: 10px 0;
@@ -72,7 +59,7 @@
     background: var(--autoql-vanilla-background-color-secondary);
     overflow-y: auto;
     line-height: 1.5715;
-
+  
     .autoql-vanilla-select-menu-item {
       color: var(--autoql-vanilla-text-color-primary);
       padding: 10px 20px;

@@ -1,4 +1,5 @@
 import { PopoverChartSelector } from '../../../Charts/PopoverChartSelector';
+import { Popup } from '../../../Popup';
 import { SELECT_ARROW } from '../../../Svg';
 import { createIcon } from '../../../Utils';
 import './Selector.scss';
@@ -10,7 +11,7 @@ export function Selector({ defaultValue, options, onChange = () => {} }) {
   const selectArrow = document.createElement('div');
   const arrow = createIcon(SELECT_ARROW);
   const optionsContainer = document.createElement('ul');
-  const popup = document.createElement('div');
+  const popup = new Popup();
   
   select.isOpen = false;
   select.value = defaultValue;
@@ -19,7 +20,6 @@ export function Selector({ defaultValue, options, onChange = () => {} }) {
   selectArrow.classList.add('autoql-vanilla-select-arrow');
   selectText.classList.add('autoql-vanilla-select-text');
   optionsContainer.classList.add('autoql-vanilla-select-menu');
-  popup.classList.add('autoql-vanilla-select-popup');
   select.classList.add('autoql-vanilla-select');
   select.classList.add('autoql-vanilla-outlined');
   select.classList.add('autoql-vanilla-select-large');
@@ -48,16 +48,13 @@ export function Selector({ defaultValue, options, onChange = () => {} }) {
   })
 
   select.closePopup = () => {
-    popup.style.visibility = 'hidden';
-    document.body.removeChild(popup);
+    popup.close();
     select.isOpen = false;
   }
 
   select.openPopup = () => {
     var pos = select.getBoundingClientRect();
-    popup.style.transform = `translate(${pos.left}px, ${pos.bottom + 2}px)`;
-    popup.style.visibility = 'visible';
-    document.body.appendChild(popup);
+    popup.show({ x: pos.left, y: pos.bottom + 2 });
     select.isOpen = true;
   }
 
