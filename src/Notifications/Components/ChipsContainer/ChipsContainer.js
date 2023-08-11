@@ -8,6 +8,14 @@ export function ChipsContainer({ filters }) {
     container.appendChild(new Chip({ data: filter }));
   });
 
+  container.getValues = () => {
+    const chips = container.querySelectorAll('.autoql-vanilla-chip');
+    const values = [];
+    chips.forEach(chip => values.push(chip.getData()));
+    
+    return values;
+  }
+
   container.classList.add('autoql-vanilla-data-alert-filters-container');
 
   return container;

@@ -17,6 +17,11 @@ export function ConditionsView({ dataAlert }) {
   const wrapperInputContainer = document.createElement('div');
   const queryInput = document.createElement('input');
   
+  this.handleInputType = (option) => {
+    const type = option.value === NUMBER_TERM_TYPE ? 'number' : 'text';
+    termInputValue.setInputType(type);
+  }
+
   this.getOperatorSelectValues = () => {
     const keys = Object.keys(DATA_ALERT_OPERATORS);
     return keys.map((key) => {
@@ -52,9 +57,22 @@ export function ConditionsView({ dataAlert }) {
     ]
   }
 
+  const defaultSecondTerm = dataAlert.expression?.[1]?.term_type;
+  const termInputType = defaultSecondTerm === NUMBER_TERM_TYPE ? 'number' : 'text';
+  const inputDefaultValue = dataAlert.expression?.[1]?.term_value;
+  const defaultValueCondition = dataAlert.expression?.[0]?.condition;
+  const termInputValue = new QueryResultInput({ termInputType, inputDefaultValue });
+  const conditionSelect = new Selector({ defaultValue: defaultValueCondition, options: this.getOperatorSelectValues() });
+  const secondTermSelect = new Selector({
+    defaultValue: defaultSecondTerm,
+    options: this.getSecondTermValues(),
+    onChange: this.handleInputType
+  });
+
   this.createChips = () => {
-    const chipsContainer = new ChipsContainer({ filters: dataAlert.expression[0].session_filter_locks });
-    ruleInput.appendChild(chipsContainer)
+    this.chipsContainer = new ChipsContainer({ filters: dataAlert.expression[0].session_filter_locks });
+    if(dataAlert?.expression?.[0]?.session_filter_locks?.length === 0)return;
+    ruleInput.appendChild(this.chipsContainer)
   }
   
   this.createConditionsSection = () => {
@@ -62,26 +80,10 @@ export function ConditionsView({ dataAlert }) {
     const conditionLabel = document.createElement('div');
     const ruleContainer = document.createElement('div');
     const secondInputContainer = document.createElement('div');
-    const defaultValueCondition = dataAlert.expression[0].condition;
-    const defaultSecondTerm = dataAlert.expression[1].term_type;
-    const termInputType = defaultSecondTerm === NUMBER_TERM_TYPE ? 'number' : 'text';
-    const inputDefaultValue = dataAlert.expression[1].term_value;
-    const termInputValue = new QueryResultInput({ termInputType, inputDefaultValue });
     const ruleSecondInputContainer = document.createElement('div');
     const secondRuleInput = document.createElement('div');
     const secondLabelContainer = document.createElement('div');
-  
-    const handleInputType = (option) => {
-      const type = option.value === NUMBER_TERM_TYPE ? 'number' : 'text';
-      termInputValue.setInputType(type);
-    }
-    const conditionSelect = new Selector({ defaultValue: defaultValueCondition, options: this.getOperatorSelectValues() });
     
-    const secondTermSelect = new Selector({
-      defaultValue: defaultSecondTerm,
-      options: this.getSecondTermValues(),
-      onChange: handleInputType
-    });
     conditionLabel.textContent = 'Meets this condition';
     
     conditionLabel.classList.add('autoql-vanilla-input-label');
@@ -138,11 +140,12 @@ export function ConditionsView({ dataAlert }) {
 
   container.getValues = () => {
     const { expression } = dataAlert;
-    expression[0].condition = conditionSelect.value;
-    expression[1].term_type = secondTermSelect.value;
-    expression[1].term_value = termInputValue.getValue();
-
-    return { expression }
+    if(dataAlert.notification_type !== PERIODIC_TYPE) {
+      expression[0].condition = conditionSelect.value;
+      expression[1].term_type = secondTermSelect.value;
+      expression[1].term_value = termInputValue.getValue();
+    }
+    return { expression, session_filter_locks: this.chipsContainer.getValues() }
   }
 
   container.isValid = () => {
@@ -151,9 +154,8 @@ export function ConditionsView({ dataAlert }) {
 
   if(dataAlert.notification_type !== PERIODIC_TYPE ) {
     this.createConditionsSection();
-  } else {
-    this.createChips();
-  }
+  }  
+  this.createChips();
 
   return container;
 }
