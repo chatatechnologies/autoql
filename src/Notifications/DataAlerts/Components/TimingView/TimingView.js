@@ -45,6 +45,11 @@ export function TimingView({ dataAlert }) {
     value24hr: '17:00',
   }
 
+  this.notificationType = dataAlert.notification_type;
+  this.resetPeriod = dataAlert.reset_period;
+  this.timezone = dataAlert.timezone;
+  this.evaluationFrequency = dataAlert.evaluation_frequency;
+
   this.createSelectorValueWithSubtitle = ({ label, subtitle, icon }) => {
     const span = document.createElement('span');
     const labelContainer = document.createElement('span');
@@ -242,6 +247,11 @@ export function TimingView({ dataAlert }) {
   this.handleDayChange = (option) => {
     this.createScheduledView({ notificationPeriod: option.value });
   }
+
+  this.handleTimezoneChange = (option) => {
+    this.timezone = option.value;
+  }
+
   this.createScheduledView = ({ notificationPeriod }) => {
     frequencyContainer.innerHTML = '';
     const { schedules } = dataAlert
@@ -273,7 +283,8 @@ export function TimingView({ dataAlert }) {
     const timeZoneContainer = this.createFrequencyOption({
       label: 'Time Zone',
       defaultValue: dataAlert.time_zone,
-      selectorOptions: this.getTimeZoneOptions()
+      selectorOptions: this.getTimeZoneOptions(),
+      onChange: this.handleTimezoneChange
     });
     
     frequencyContainer.appendChild(intervalContainer);
@@ -294,11 +305,20 @@ export function TimingView({ dataAlert }) {
     frequencyContainer.appendChild(timeZoneContainer);
   }
 
+  this.handleResetPeriodChange = (option) => {
+    this.resetPeriod = option.value;
+  }
+
+  this.handleResetEvaluationFrequencyChange = (option) => {
+    this.evaluationFrequency = option.value;
+  }
+
   this.createLiveView = () => {
     const frequencySelectorContainer = this.createFrequencyOption({
       label: 'Check conditions every',
-      defaultValue: this.DEFAULT_EVALUATION_FREQUENCY,
-      selectorOptions: this.getFrequencyOptions()
+      defaultValue: dataAlert?.evaluation_frequency ?? this.DEFAULT_EVALUATION_FREQUENCY,
+      selectorOptions: this.getFrequencyOptions(),
+      onChange: this.handleResetEvaluationFrequencyChange,
     });
     frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
     frequencyContainer.appendChild(frequencySelectorContainer);
@@ -307,15 +327,32 @@ export function TimingView({ dataAlert }) {
       const resetContainer = this.createFrequencyOption({
         label: 'Check conditions every',
         defaultValue: dataAlert?.reset_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
-        selectorOptions: this.getResetOptions()
+        selectorOptions: this.getResetOptions(),
+        onChange: this.handleResetPeriodChange,
       });
       frequencyContainer.appendChild(resetContainer);
     }
   }
 
+  this.getNotificationType = (value) => {
+    if (value === CONTINUOUS_TYPE && value !== 'NONE') {
+      return PERIODIC_TYPE
+    }
+
+    return value
+  }
+
+  this.getResetPeriod = (resetPeriodSelectValue) => {
+    if (resetPeriodSelectValue === 'NONE') {
+      return null
+    }
+
+    return resetPeriodSelectValue
+  }
+
   this.handleTypeChange = (option) => {
     frequencyContainer.innerHTML = '';
-
+    this.notificationType = option.value;
     switch(option.value) {
       case SCHEDULED_TYPE:
         this.createScheduledView({ notificationPeriod: this.getNotificationPeriod() });
@@ -365,6 +402,20 @@ export function TimingView({ dataAlert }) {
     this.createScheduledView({ notificationPeriod: this.getNotificationPeriod() });
   } else {
     this.createLiveView();
+  }
+
+  container.getValues = () => {
+    const resetPeriod = this.notification_type !== SCHEDULED_TYPE ? this.getResetPeriod(this.resetPeriod) : undefined
+    const notificationType = this.getNotificationType(this.notificationType);
+    const timezone = this.timezone;
+    const evaluationFrequency = this.evaluationFrequency;
+
+    return {
+      notification_type: notificationType,
+      reset_period: resetPeriod,
+      evaluation_frequency: evaluationFrequency,
+      timezone,
+    }
   }
 
   return container;
