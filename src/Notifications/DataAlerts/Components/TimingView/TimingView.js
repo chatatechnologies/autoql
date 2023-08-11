@@ -6,6 +6,7 @@ import { LIVE_ICON, CALENDAR } from '../../../../Svg';
 import { 
   SCHEDULED_TYPE,
   CONTINUOUS_TYPE,
+  PERIODIC_TYPE,
   SCHEDULE_INTERVAL_OPTIONS,
   WEEKDAY_NAMES_MON,
   EVALUATION_FREQUENCY_OPTIONS,
@@ -198,17 +199,31 @@ export function TimingView({ dataAlert }) {
       label: 'Live',
       subtitle: 'Get notifications as soon as the conditions are met.',
     });
+
+    const values = []
+
+    values.push({
+      value: SCHEDULED_TYPE,
+      ...scheduledValues
+    })
+
+    if(dataAlert.notification_type !== PERIODIC_TYPE){
+      values.push(
+        {
+          value: CONTINUOUS_TYPE,
+          ...liveValues
+        },
+      )
+    } else {
+      values.push(
+        {
+          value: PERIODIC_TYPE,
+          ...liveValues
+        },
+      )
+    }
     
-    return [
-      {
-        value: SCHEDULED_TYPE,
-        ...scheduledValues
-      },
-      {
-        value: CONTINUOUS_TYPE,
-        ...liveValues
-      },
-    ]
+    return values;
   }
 
   this.getNotificationPeriod = () => {
@@ -216,7 +231,7 @@ export function TimingView({ dataAlert }) {
       schedules
     } = dataAlert;
 
-    let notificationPeriod = schedules[0].notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
+    let notificationPeriod = schedules?.[0]?.notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
     if(notificationPeriod == 'WEEK' && schedules.length === 7) {
       notificationPeriod = 'DAY';
     }
@@ -248,8 +263,10 @@ export function TimingView({ dataAlert }) {
       selectorOptions: this.getMonthDaySelectOptions()
     })
     
+    const valueFromTimeStamp = getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone)
+
     const timeContainer = this.createFrequencyOption({
-      defaultValue: getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone).value ?? this.DEFAULT_TIME_SELECT_VALUE,
+      defaultValue: valueFromTimeStamp ? valueFromTimeStamp.value : this.DEFAULT_TIME_SELECT_VALUE.value,
       selectorOptions: this.getTimeOptions()
     });
     
@@ -283,28 +300,28 @@ export function TimingView({ dataAlert }) {
       defaultValue: this.DEFAULT_EVALUATION_FREQUENCY,
       selectorOptions: this.getFrequencyOptions()
     });
-
-    
-    const resetContainer = this.createFrequencyOption({
-      label: 'Check conditions every',
-      defaultValue: dataAlert?.reset_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
-      selectorOptions: this.getResetOptions()
-    });
-    
-    frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
-
     frequencyContainer.appendChild(frequencySelectorContainer);
-    frequencyContainer.appendChild(resetContainer);
+
+    if(dataAlert.notification_type !== PERIODIC_TYPE) {
+      const resetContainer = this.createFrequencyOption({
+        label: 'Check conditions every',
+        defaultValue: dataAlert?.reset_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
+        selectorOptions: this.getResetOptions()
+      });
+      frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
+      frequencyContainer.appendChild(resetContainer);
+    }
   }
 
   this.handleTypeChange = (option) => {
     frequencyContainer.innerHTML = '';
 
     switch(option.value) {
-      case 'SCHEDULED':
+      case SCHEDULED_TYPE:
         this.createScheduledView({ notificationPeriod: this.getNotificationPeriod() });
         break;
-      case 'CONTINUOUS':
+      case CONTINUOUS_TYPE:
+      case PERIODIC_TYPE:
         this.createLiveView();
         break;
     }
