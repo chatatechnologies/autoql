@@ -300,6 +300,7 @@ export function TimingView({ dataAlert }) {
       defaultValue: this.DEFAULT_EVALUATION_FREQUENCY,
       selectorOptions: this.getFrequencyOptions()
     });
+    frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
     frequencyContainer.appendChild(frequencySelectorContainer);
 
     if(dataAlert.notification_type !== PERIODIC_TYPE) {
@@ -308,7 +309,6 @@ export function TimingView({ dataAlert }) {
         defaultValue: dataAlert?.reset_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE,
         selectorOptions: this.getResetOptions()
       });
-      frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
       frequencyContainer.appendChild(resetContainer);
     }
   }

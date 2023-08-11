@@ -1322,6 +1322,14 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     font-size: 14px !important;
 }
 
+.autoql-vanilla-chata-btn.autoql-vanilla-medium {
+    padding: 6px 12px;
+    margin: 3px;
+    line-height: normal;
+    font-size: 14px !important;
+
+}
+
 .autoql-vanilla-chata-btn.autoql-vanilla-danger:hover {
     opacity: .8;
 }
