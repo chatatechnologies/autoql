@@ -1,3 +1,4 @@
+import { ChipsContainer } from '../../../Components/ChipsContainer/ChipsContainer';
 import { QueryResultInput } from '../../../Components/QueryResultInput';
 import { Selector } from '../../../Components/Selector/Selector';
 import './ConditionsView.scss';
@@ -50,6 +51,11 @@ export function ConditionsView({ dataAlert }) {
       }
     ]
   }
+
+  this.createChips = () => {
+    const chipsContainer = new ChipsContainer({ filters: dataAlert.expression[0].session_filter_locks });
+    ruleInput.appendChild(chipsContainer)
+  }
   
   this.createConditionsSection = () => {
     const conditionWrapper = document.createElement('div');
@@ -78,6 +84,7 @@ export function ConditionsView({ dataAlert }) {
     });
     conditionLabel.textContent = 'Meets this condition';
     
+    conditionLabel.classList.add('autoql-vanilla-input-label');
     conditionWrapper.classList.add('autoql-vanilla-select-and-label');
     conditionWrapper.classList.add('autoql-vanilla-rule-condition-select');
     ruleContainer.classList.add('autoql-vanilla-notification-rule-container');
@@ -98,10 +105,7 @@ export function ConditionsView({ dataAlert }) {
     ruleContainer.appendChild(conditionWrapper);
     ruleContainer.appendChild(ruleSecondInputContainer);
     wrapper.appendChild(ruleContainer);
-    
   }
-  
-  
 
   title.textContent = 'Conditions';
   inputLabel.textContent = 'Trigger Alert when this query';
@@ -117,12 +121,10 @@ export function ConditionsView({ dataAlert }) {
   readOnlyContainer.classList.add('autoql-vanilla-data-alert-rule-query-readonly-container');
   labelContainer.classList.add('autoql-vanilla-input-and-label-container');
   inputLabel.classList.add('autoql-vanilla-input-label');
-  //conditionLabel.classList.add('autoql-vanilla-input-label');
   inputContainer.classList.add('autoql-vanilla-input-container');
   inputContainer.classList.add('autoql-vanilla-input-large');
   wrapperInputContainer.classList.add('autoql-vanilla-input-and-icon');
   queryInput.classList.add('autoql-vanilla-input');
-
   
   wrapperInputContainer.appendChild(queryInput);
   inputContainer.appendChild(wrapperInputContainer);
@@ -149,6 +151,8 @@ export function ConditionsView({ dataAlert }) {
 
   if(dataAlert.notification_type !== PERIODIC_TYPE ) {
     this.createConditionsSection();
+  } else {
+    this.createChips();
   }
 
   return container;

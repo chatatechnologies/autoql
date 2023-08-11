@@ -114,7 +114,6 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
   }
 
   container.addEventListener('keyup', () => {
-    console.log('TEST');
     if(!conditionsView.isValid() || !appearanceView.isValid()) {
       btnSave.disabled = true;
       btnSave.classList.add('autoql-vanilla-disabled');
