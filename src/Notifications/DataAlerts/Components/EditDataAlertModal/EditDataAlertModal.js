@@ -106,6 +106,7 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
     modal.close();
     console.log(conditionsView.getValues());
     console.log(appearanceView.getValues());
+    console.log(timingView.getValues());
     if(response.status === 200) {
       new AntdMessage('Data Alert updated!', 2500);
     }else {

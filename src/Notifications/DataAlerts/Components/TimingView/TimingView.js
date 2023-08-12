@@ -47,8 +47,11 @@ export function TimingView({ dataAlert }) {
 
   this.notificationType = dataAlert.notification_type;
   this.resetPeriod = dataAlert.reset_period;
-  this.timezone = dataAlert.timezone;
+  this.timezone = dataAlert.time_zone;
   this.evaluationFrequency = dataAlert.evaluation_frequency;
+  this.intervalTimeSelectValue = this.DEFAULT_TIME_SELECT_VALUE;
+  this.monthDaySelectValue = this.DEFAULT_MONTH_DAY_SELECT_VALUE;
+  this.weekDaySelectValue = this.DEFAULT_WEEKDAY_SELECT_VALUE;
 
   this.createSelectorValueWithSubtitle = ({ label, subtitle, icon }) => {
     const span = document.createElement('span');
@@ -76,6 +79,43 @@ export function TimingView({ dataAlert }) {
     }
   }
 
+  this.getLocalStartDate = ({ daysToAdd } = {}) => {
+    return SCHEDULE_INTERVAL_OPTIONS[this.resetPeriod]?.getLocalStartDate({
+      timeObj: this.intervalTimeSelectValue,
+      timezone: this.timezone,
+      monthDay: this.monthDaySelectValue,
+      weekDay: this.weekDaySelectValue,
+      daysToAdd,
+    })
+  }
+
+  this.getSchedules = () => {
+    if (this.notificationType !== SCHEDULED_TYPE) {
+      return []
+    }
+
+    if (this.resetPeriod === 'DAY') {
+      const schedules = []
+      WEEKDAY_NAMES_MON.forEach((weekday, i) => {
+        schedules.push({
+          notification_period: 'WEEK',
+          start_date: this.getLocalStartDate({ daysToAdd: i }),
+          time_zone: this.timezone,
+        })
+      })
+      
+      return schedules
+    }
+    
+    return [
+      {
+        notification_period: this.getNotificationPeriod(),
+        start_date: this.getLocalStartDate(),
+        time_zone: this.timezone,
+      },
+    ]
+  }
+
   this.getScheduleIntervalOptions = () => {
     const keys = Object.keys(SCHEDULE_INTERVAL_OPTIONS);
     return keys.map((key) => {
@@ -92,10 +132,10 @@ export function TimingView({ dataAlert }) {
     const keys = Object.keys(EVALUATION_FREQUENCY_OPTIONS);
     return keys.map((key) => {
       const value = EVALUATION_FREQUENCY_OPTIONS[key];
-
       return {
         displayName: value.label,
         value: value.value,
+        obj: value,
       }
     });
   }
@@ -140,7 +180,8 @@ export function TimingView({ dataAlert }) {
     return getTimeOptionArray().map((o) => {
       return {
         value: o.value,
-        displayName: `<span>${o.value}</span>`
+        displayName: `<span>${o.value}</span>`,
+        obj: o,
       }
     });
   }
@@ -252,10 +293,13 @@ export function TimingView({ dataAlert }) {
     this.timezone = option.value;
   }
 
+  this.handleMonthDaySelectValueChange = (option) => {
+    this.monthDaySelectValue = option.value
+  }
+ 
   this.createScheduledView = ({ notificationPeriod }) => {
     frequencyContainer.innerHTML = '';
     const { schedules } = dataAlert
-
     const intervalContainer = this.createFrequencyOption({
       label: 'Send a Notification',
       defaultValue: notificationPeriod,
@@ -270,14 +314,16 @@ export function TimingView({ dataAlert }) {
 
     const monthContainer = this.createFrequencyOption({
       defaultValue: this.DEFAULT_MONTH_DAY_SELECT_VALUE,
-      selectorOptions: this.getMonthDaySelectOptions()
+      selectorOptions: this.getMonthDaySelectOptions(),
+      onChange: this.handleMonthDaySelectValueChange,
     })
     
     const valueFromTimeStamp = getTimeObjFromTimeStamp(schedules?.[0]?.start_date, dataAlert?.time_zone)
 
     const timeContainer = this.createFrequencyOption({
       defaultValue: valueFromTimeStamp ? valueFromTimeStamp.value : this.DEFAULT_TIME_SELECT_VALUE.value,
-      selectorOptions: this.getTimeOptions()
+      selectorOptions: this.getTimeOptions(),
+      onChange: this.handleResetEvaluationFrequencyChange,
     });
     
     const timeZoneContainer = this.createFrequencyOption({
@@ -310,7 +356,9 @@ export function TimingView({ dataAlert }) {
   }
 
   this.handleResetEvaluationFrequencyChange = (option) => {
+    console.log(option);
     this.evaluationFrequency = option.value;
+    this.intervalTimeSelectValue = option.obj;
   }
 
   this.createLiveView = () => {
@@ -409,12 +457,13 @@ export function TimingView({ dataAlert }) {
     const notificationType = this.getNotificationType(this.notificationType);
     const timezone = this.timezone;
     const evaluationFrequency = this.evaluationFrequency;
-
+    const schedules = this.getSchedules();
     return {
       notification_type: notificationType,
       reset_period: resetPeriod,
       evaluation_frequency: evaluationFrequency,
-      timezone,
+      time_zone: timezone,
+      schedules,
     }
   }
 
