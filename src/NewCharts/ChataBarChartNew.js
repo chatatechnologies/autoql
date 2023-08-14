@@ -128,11 +128,11 @@ export function BarChartNew(container, params = {}) {
             .attr('width', (d) => d?.width)
             .style('stroke-width', 0)
             .style('fill', (d) => d?.style?.fill)
-            .style('fill-opacity', (d) => d.drilldownData.activeKey === activeKey ? 0.7 : d?.style?.fillOpacity)
+            .style('fill-opacity', (d) => d?.drilldownData?.activeKey === activeKey ? 0.7 : d?.style?.fillOpacity)
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
-                onChartClick(d.drilldownData);
+                onChartClick(d?.drilldownData);
                 
                 container.selectAll('.autoql-vanilla-chart-bar').style('fill-opacity', d?.style?.fillOpacity);
                 select(this).style('fill-opacity', 0.7);
