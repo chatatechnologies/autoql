@@ -31,7 +31,6 @@ import {
     closeAllChartPopovers,
     closeAllSafetynetSelectors,
     uuidv4,
-    getSupportedDisplayTypes,
     allColHiddenMessage,
     closeAllToolbars,
     cloneObject,
@@ -44,8 +43,8 @@ import {
     showBadge,
     supportsVoiceRecord,
     checkAndApplyTheme,
+    getSupportedDisplayTypes,
 } from '../Utils';
-import { createAreaChart, createBubbleChart, createHeatmap, createPieChart } from '../Charts';
 import { Scrollbars } from '../Scrollbars';
 import {
     CHATA_BUBBLES_ICON,
@@ -1497,10 +1496,11 @@ export function DataMessenger(options = {}) {
             obj.copyPivotFilterMetadata(oldComponent);
         }
         var messageBubble = obj.getParentFromComponent(oldComponent);
+        var uuid = messageBubble.parentNode.dataset.bubbleContainerId;
+        var json = ChataUtils.responses[uuid];
+        var displayTypes = getSupportedDisplayTypes(json);
+
         if (['table', 'pivot_table'].includes(ignore)) {
-            var uuid = messageBubble.parentNode.dataset.bubbleId;
-            var json = ChataUtils.responses[uuid];
-            var displayTypes = getSupportedDisplayTypes(json);
             if (displayTypes.length <= 5) {
                 messageBubble.classList.remove('chart-full-width');
             } else {
@@ -1526,10 +1526,16 @@ export function DataMessenger(options = {}) {
 
         if (toolbarLeft) {
             toolbarLeft.innerHTML = '';
-            let displayTypes = obj.getDisplayTypesButtons(oldComponent.dataset.componentid, ignore);
+            let displayTypeButtons = obj.getDisplayTypesButtons(oldComponent.dataset.componentid, ignore);
 
-            for (var i = 0; i < displayTypes.length; i++) {
-                toolbarLeft.appendChild(displayTypes[i]);
+            displayTypeButtons.forEach(button => {
+                toolbarLeft.appendChild(button);
+            })
+
+            if (displayTypeButtons.length > 1) {
+                toolbarLeft.style.visibility = 'visible'
+            } else {
+                toolbarLeft.style.visibility = 'hidden'
             }
         }
 
@@ -1925,87 +1931,79 @@ export function DataMessenger(options = {}) {
                     strings.displayTypes[displayType],
                     obj.displayTableHandler,
                 );
-            }
-            if (displayType == 'column') {
+            } else if (displayType == 'column') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     COLUMN_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'bar') {
+            } else if (displayType == 'bar') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     BAR_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'pie') {
+            } else if (displayType == 'pie') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     PIE_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'line') {
+            } else if (displayType == 'line') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     LINE_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'pivot_table') {
+            } else if (displayType == 'pivot_table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     PIVOT_ICON,
                     strings.displayTypes[displayType],
                     obj.displayPivotTableHandler,
                 );
-            }
-            if (displayType == 'heatmap') {
+            } else if (displayType == 'heatmap') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     HEATMAP_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'bubble') {
+            } else if (displayType == 'bubble') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     BUBBLE_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'stacked_column') {
+            } else if (displayType == 'stacked_column') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_COLUMN_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-            if (displayType == 'stacked_bar') {
+            } else if (displayType == 'stacked_bar') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_BAR_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
-            }
-
-            if (displayType == 'stacked_line') {
+            } else if (displayType == 'stacked_line') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_AREA_CHART_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
+            } else {
+                console.warn('Unable to create button for display type: ', displayType)
+                return
             }
 
             if (displayType == active) {
@@ -2189,6 +2187,9 @@ export function DataMessenger(options = {}) {
             var component = obj.rootElem.querySelector(`[data-componentid='${id}']`);
             obj.setScrollBubble(obj.getParentFromComponent(component));
             component.tabulator.redraw(true);
+
+            obj.refreshToolbarButtons(component, 'table')
+
             if (showBadge(json)) {
                 badge.style.visibility = 'visible';
             } else {
