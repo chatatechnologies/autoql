@@ -1550,30 +1550,20 @@ export function DataMessenger(options = {}) {
             }
         }
 
-        const URL = options.authentication.demo
-            ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
-            : `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`;
-        let data;
+        var cols = [];
+        for (let [key, value] of Object.entries(params)) {
+            cols.push({
+                name: key,
+                value: value,
+            });
+        }
 
-        if (options.authentication.demo) {
-            data = {
-                query_id: queryId,
-                group_bys: params,
-                username: 'demo',
-                debug: options.autoQLConfig.debug,
-            };
-        } else {
-            var cols = [];
-            for (let [key, value] of Object.entries(params)) {
-                cols.push({
-                    name: key,
-                    value: value,
-                });
-            }
-            data = {
-                debug: options.autoQLConfig.debug,
-                columns: cols,
-            };
+        const data = {
+            ...options.authentication,
+            queryID: queryId,
+            debug: options.autoQLConfig.debug,
+            groupBys: cols,
+            source: obj.options.source
         }
 
         var responseLoadingContainer = document.createElement('div');
@@ -1587,8 +1577,15 @@ export function DataMessenger(options = {}) {
 
         responseLoadingContainer.appendChild(responseLoading);
         obj.chataBarContainer.appendChild(responseLoadingContainer);
-        var response = await apiCallPost(URL, data, options);
-        var responseJson = response.data;
+
+        var response = await runDrilldown(data);
+        var responseJson = response?.data;
+
+        if (!responseJson) {
+            console.error('Error processing drilldown')
+            return
+        }
+
         var status = response.status;
         obj.chataBarContainer.removeChild(responseLoadingContainer);
         if (!responseJson['data']['rows']) {
