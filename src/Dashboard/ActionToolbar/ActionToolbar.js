@@ -82,6 +82,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 toolbar.appendChild(
                     reportProblemButton
                 );
+				moreOptionsArray.push('copy_sql');
                 moreOptionsArray.push('notification');
                 reportProblem.classList.remove(
                     'chata-popover-single-message'
@@ -131,6 +132,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
             }
             moreOptionsArray.push('csv');
             moreOptionsArray.push('copy');
+			moreOptionsArray.push('copy_sql');
             moreOptionsArray.push('notification');
             break;
         case 'chart-view':
@@ -140,6 +142,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 );
             }
             moreOptionsArray.push('png');
+			moreOptionsArray.push('copy_sql');
             moreOptionsArray.push('notification');
         break;
         case 'safety-net':

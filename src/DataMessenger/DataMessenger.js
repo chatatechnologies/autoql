@@ -1284,6 +1284,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.getActionToolbar = (idRequest, type, displayType) => {
+		var isCopySqlEnabled = obj.options.autoQLConfig.debug
         var request = ChataUtils.responses[idRequest];
         let moreOptionsArray = [];
         var toolbar = htmlToElement(`
@@ -1306,6 +1307,9 @@ export function DataMessenger(options = {}) {
             case 'simple':
                 if (request['reference_id'] !== '1.9.502') {
                     toolbar.appendChild(reportProblemButton);
+					if(isCopySqlEnabled){
+						moreOptionsArray.push('copy_sql');
+					}
                     moreOptionsArray.push('notification');
                 }
                 toolbar.appendChild(
@@ -1363,6 +1367,9 @@ export function DataMessenger(options = {}) {
                 );
                 moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
+				if(isCopySqlEnabled){
+						moreOptionsArray.push('copy_sql');
+					}
                 moreOptionsArray.push('notification');
                 break;
             case 'chart-view':
@@ -1379,6 +1386,9 @@ export function DataMessenger(options = {}) {
                     ),
                 );
                 moreOptionsArray.push('png');
+					if(isCopySqlEnabled){
+						moreOptionsArray.push('copy_sql');
+					}
                 moreOptionsArray.push('notification');
                 break;
             case 'safety-net':
@@ -2100,7 +2110,7 @@ export function DataMessenger(options = {}) {
 
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
 
-        containerMessage.style.zIndex = --obj.zIndexBubble;
+        containerMessage.style.zIndex = ++obj.zIndexBubble;
         containerMessage.style.maxHeight = '85%';
 
         containerMessage.setAttribute('data-bubble-id', idRequest);
