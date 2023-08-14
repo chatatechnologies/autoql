@@ -79,8 +79,6 @@ export function ChataChartNew(
     var metadataElement = component.parentElement.parentElement;
     // TODO: update send in index config directly instead of using the metadata component
     if (!metadataElement.metadata) {
-        // var dateCol = getFirstDateCol(cols)
-        // let i = dateCol !== -1 ? dateCol : yIndexes[0]?.index
         metadataElement.metadata = {
             groupBy: {
                 index: columnIndexConfig.stringColumnIndex,
