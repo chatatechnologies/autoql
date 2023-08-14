@@ -2232,12 +2232,12 @@ export function DataMessenger(options = {}) {
             subQuery += selectedQuery[index];
             if (index >= selectedQuery.length) {
                 clearInterval(int);
-                var evt = new KeyboardEvent('keypress', {
+                var evt = new KeyboardEvent('keydown', {
+					key: 'Enter',
                     keyCode: 13,
-                    type: 'keypress',
                     which: 13,
                 });
-                input.dispatchEvent(evt);
+				input.dispatchEvent(evt);
             } else {
                 input.value = subQuery;
             }
@@ -2273,12 +2273,11 @@ export function DataMessenger(options = {}) {
                 } else {
                     obj.inputAnimation(evt.target.textContent);
                 }
-
                 await apiCallPut(url, body, obj.options);
 
                 if (loading) {
                     setTimeout(() => {
-                        obj.drawerContent.removeChild(loading);
+                        obj.chataBarContainer.removeChild(loading);
                         obj.putClientResponse(strings.feedback, {}, true);
                     }, 500);
                 }
