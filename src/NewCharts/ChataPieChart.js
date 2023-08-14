@@ -171,7 +171,8 @@ export function PieChartNew(container, params = {}) {
             .style('fill-opacity', 1)
             .style('font-family', 'inherit')
             .style('font-size', '10px')
-            .style('stroke-width', '2px');
+            .style('stroke-width', '2px')
+			.style('stroke','none');
 
         var legendOrdinal = legendColor()
             .orient('vertical')
