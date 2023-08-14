@@ -2236,6 +2236,7 @@ export function DataMessenger(options = {}) {
                     keyCode: 13,
                     which: 13,
                 });
+				input.dispatchEvent(evt);
             } else {
                 input.value = subQuery;
             }
