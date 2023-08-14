@@ -186,7 +186,7 @@ export function DataMessenger(options = {}) {
                 }
             }
         } catch (error) {
-            console.log(error);
+            console.error(error);
         }
 
     };
@@ -1730,6 +1730,9 @@ export function DataMessenger(options = {}) {
 
     obj.onChartClick = async (data, idRequest) => {
         const json = ChataUtils.responses[idRequest];
+        const component = obj.getComponent(idRequest);
+       
+        component.activeKey = data.activeKey
 
         obj.input.disabled = true;
         obj.input.value = '';
@@ -1876,12 +1879,13 @@ export function DataMessenger(options = {}) {
     obj.displayChartHandler = (idRequest, displayType) => {
         var json = obj.getRequest(idRequest);
         var component = obj.getComponent(idRequest);
+
         obj.refreshToolbarButtons(component, displayType);
+
         new ChataChartNew(component, {
             type: displayType,
             queryJson: json,
             options: obj.options,
-            chartConfig: undefined,
             onChartClick: (data) => obj.onChartClick(data, idRequest),
         });
 

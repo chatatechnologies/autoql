@@ -35,7 +35,7 @@ import { PieChartNew } from './ChataPieChart';
 
 export function ChataChartNew(
     component,
-    { type = 'bar', queryJson, options = {}, onChartClick = () => {}, chartConfig = {} } = {},
+    { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {},
 ) {
     const dataFormatting = getDataFormatting(options.dataFormatting);
 
@@ -60,19 +60,21 @@ export function ChataChartNew(
     const CHART_CONTAINER_CLASS = 'autoql-vanilla-chart-content-container';
     const FONT_SIZE = 12;
 
-    var columnIndexConfig =
-        chartConfig?.columnIndexConfig ?? getColumnIndexConfig({ response: { data: queryJson }, columns });
+    if (!component.columnIndexConfig) {
+        component.columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
+    }
+
+    var columnIndexConfig = component.columnIndexConfig
+
+    if (component.isChartScaled == undefined) {
+        component.isChartScaled = DEFAULT_CHART_CONFIG.isScaled
+    }
 
     const indices1 = columnIndexConfig.numberColumnIndices ?? [];
     const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? columnIndexConfig.numberColumnIndices2 ?? [] : [];
     const numberIndices = [...indices1, ...indices2];
     const isDataAggregated = usePivotDataForChart({ data: queryJson });
     const hasRowSelector = options.pageSize < queryJson?.data?.count_rows;
-
-    const { isScaled } = {
-        ...DEFAULT_CHART_CONFIG,
-        ...chartConfig,
-    };
 
     var metadataElement = component.parentElement.parentElement;
     // TODO: update send in index config directly instead of using the metadata component
@@ -86,7 +88,6 @@ export function ChataChartNew(
             },
             series: indices1,
             columnIndexConfig,
-            activeKey: undefined,
             tippyInstance: tippy('[data-tippy-chart]', {
                 theme: 'chata-theme',
                 delay: [300],
@@ -214,10 +215,9 @@ export function ChataChartNew(
     this.innerHeight = component.parentElement.clientHeight - 100;
     this.innerWidth = component.parentElement.clientWidth - 100;
     this.drawCount = 0;
-    this.isScaled = false;
 
     this.toggleChartScale = () => {
-        this.isScaled = !this.isScaled;
+        component.isChartScaled = !component.isChartScaled
         this.drawChart();
     };
 
@@ -382,12 +382,12 @@ export function ChataChartNew(
                 legendColumn: queryJson?.data?.columns[columnIndexConfig?.legendColumnIndex],
                 firstDraw,
                 hasRowSelector,
-                isScaled,
+                isScaled: component.isChartScaled,
                 colorScales,
                 legend: getLegendObject(),
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
                 tippyInstance: this.tippyInstance,
-                activeKey: metadataElement.metadata.activeKey,
+                activeKey: component.activeKey,
                 toggleChartScale: this.toggleChartScale,
                 changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
                 changeStringColumnIndices: this.changeStringColumnIndices,

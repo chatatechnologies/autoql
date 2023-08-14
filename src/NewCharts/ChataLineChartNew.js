@@ -8,6 +8,7 @@ import {
     getKey,
 } from 'autoql-fe-utils';
 import { Axes } from './Axes';
+import { select } from 'd3-selection';
 import { CSS_PREFIX } from '../Constants';
 
 export function LineChartNew(container, params = {}) {
@@ -27,6 +28,7 @@ export function LineChartNew(container, params = {}) {
         changeNumberColumnIndices,
         changeStringColumnIndices,
         columnIndexConfig = {},
+        activeKey,
         stacked,
     } = params;
 
@@ -107,7 +109,7 @@ export function LineChartNew(container, params = {}) {
                         columns,
                         xScale: self.xScale,
                         yScale: self.yScale,
-                        activeKey: undefined, // TODO
+                        activeKey,
                         dataFormatting,
                         legendColumn,
                         colIndex,
@@ -209,7 +211,7 @@ export function LineChartNew(container, params = {}) {
                 .style('paint-order', 'stroke')
                 .style('opacity', largeDataset ? 0 : 1)
                 .style('color', (d) => d.style.color)
-                .style('fill', (d) => d.style.fill);
+                .style('fill', (d) => d.drilldownData.activeKey === activeKey ? d.style.color : d.style.fill);
 
             // Hover Circles
             seriesContainers
@@ -230,6 +232,9 @@ export function LineChartNew(container, params = {}) {
                 .style('cursor', 'pointer')
                 .on('click', function (e, d) {
                     onChartClick(d.drilldownData);
+                    
+                    container.selectAll(`circle.${vertexClass}`).style('fill', d?.style?.fill);
+                    select(this).style('fill', d?.style?.color);
                 });
         }
     };
