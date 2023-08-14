@@ -2230,13 +2230,15 @@ export function DataMessenger(options = {}) {
         var int = setInterval(function () {
             subQuery += selectedQuery[index];
             if (index >= selectedQuery.length) {
+				console.log(2233)
                 clearInterval(int);
-                var evt = new KeyboardEvent('keypress', {
+                var evt = new KeyboardEvent('keydown', {
+					key: 'Enter',
                     keyCode: 13,
-                    type: 'keypress',
                     which: 13,
                 });
-                input.dispatchEvent(evt);
+                var eventReturns = input.dispatchEvent(evt);
+				console.log({isdispatch: eventReturns});	
             } else {
                 input.value = subQuery;
             }
@@ -2271,6 +2273,7 @@ export function DataMessenger(options = {}) {
                     loading = obj.showLoading();
                 } else {
                     obj.inputAnimation(evt.target.textContent);
+					// obj.sendMessage(obj.input.value, 'data_messenger.user');
                 }
 
                 await apiCallPut(url, body, obj.options);
