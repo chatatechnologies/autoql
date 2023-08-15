@@ -22,7 +22,6 @@ export function Chip({ data }) {
   const btnCancel = document.createElement('button');
   const btnConfirm = document.createElement('button');
 
-
   popoverTitle.textContent = 'Remove this filter?';
   btnCancel.textContent = 'Cancel';
   btnConfirm.textContent = 'Remove';
