@@ -12,7 +12,6 @@ import { refreshTooltips } from '../Tooltips'
 import { $dom } from '../Dom'
 import { strings } from '../Strings'
 import emptyStateImg from '../images/notifications_empty_state.png'
-
 import '../../css/Notifications.css'
 
 export function NotificationFeed(selector, options) {
