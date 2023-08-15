@@ -16,8 +16,6 @@ import {
   getWeekdayFromTimeStamp,
 } from "autoql-fe-utils";
 import './TimingView.scss';
-import dayjs from '../../../../Utils/dayjsPlugins';
-
 
 export function TimingView({ dataAlert }) {
   const container = document.createElement('div');
@@ -48,7 +46,7 @@ export function TimingView({ dataAlert }) {
   }
 
   this.notificationType = dataAlert.notification_type;
-  this.resetPeriod = dataAlert.reset_period;
+  this.resetPeriod = dataAlert?.schedules?.[0]?.notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
   this.timezone = dataAlert.time_zone;
   this.evaluationFrequency = dataAlert.evaluation_frequency;
   this.intervalTimeSelectValue = this.DEFAULT_TIME_SELECT_VALUE;
@@ -81,20 +79,6 @@ export function TimingView({ dataAlert }) {
     }
   }
 
-  var getMonthLocalStartDate = ({ monthDay, timeObj, timezone2 }) => {
-    const now = dayjs().tz(timezone2);
-    let nextMonthStr;
-    if (monthDay === "LAST") {
-      nextMonthStr = now.endOf("month").startOf("day").format("ll HH:mm");
-    } else if (monthDay === "FIRST") {
-      nextMonthStr = now.add(1, "month").startOf("month").format("ll HH:mm");
-    }
-    
-    const nextMonth = dayjs.tz(nextMonthStr, timezone2);
-    const nextMonthWithTime = nextMonth.hour(timeObj.hour24).minute(timeObj.minute);
-    return nextMonthWithTime.format("YYYY-MM-DD[T]HH:mm:00");
-  };
-
   this.getLocalStartDate = ({ daysToAdd } = {}) => {
     return SCHEDULE_INTERVAL_OPTIONS[this.resetPeriod]?.getLocalStartDate({
       timeObj: this.intervalTimeSelectValue,
@@ -102,13 +86,15 @@ export function TimingView({ dataAlert }) {
       monthDay: this.monthDaySelectValue,
       weekDay: this.weekDaySelectValue,
       daysToAdd,
-    })
+    });
   }
 
   this.getSchedules = () => {
     if (this.notificationType !== SCHEDULED_TYPE) {
       return []
     }
+
+    console.log(this.resetPeriod);
 
     if (this.resetPeriod === 'DAY') {
       const schedules = []
@@ -122,15 +108,11 @@ export function TimingView({ dataAlert }) {
       
       return schedules
     }
-    
+
     return [
       {
         notification_period: this.getNotificationPeriod(),
-        start_date: getMonthLocalStartDate({
-          monthDay: this.monthDaySelectValue,
-          timeObj: this.intervalTimeSelectValue,
-          timezone2: this.timezone,
-        }),
+        start_date: this.getLocalStartDate(),
         time_zone: this.timezone,
       },
     ]
@@ -372,6 +354,7 @@ export function TimingView({ dataAlert }) {
   }
 
   this.handleResetPeriodChange = (option) => {
+    console.log(option.value);
     this.resetPeriod = option.value;
   }
 

@@ -102,11 +102,14 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
   btnSave.onclick = async () => {
     spinner.classList.remove('hidden');
     btnSave.setAttribute('disabled', 'true');
-    const response = await updateDataAlert({ dataAlert, ...authentication });
+    const newValues = {
+      ...dataAlert,
+      ...conditionsView.getValues(),
+      ...appearanceView.getValues(),
+      ...timingView.getValues(),
+    }
+    const response = await updateDataAlert({ dataAlert: newValues, ...authentication });
     modal.close();
-    console.log(conditionsView.getValues());
-    console.log(appearanceView.getValues());
-    console.log(timingView.getValues());
     if(response.status === 200) {
       new AntdMessage('Data Alert updated!', 2500);
     }else {
