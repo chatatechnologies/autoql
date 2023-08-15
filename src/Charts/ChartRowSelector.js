@@ -15,7 +15,7 @@ export function ChartRowSelector(
 ) {
     try {
         var currentPageSize = json.data.row_limit;
-        var initialPageSize = options?.pageSize ?? currentPageSize;
+        var initialPageSize = options?.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
         var totalRows = json.data.count_rows;
 
         const pageSizeList = getRowNumberListForPopover(initialPageSize, totalRows);
@@ -41,35 +41,7 @@ export function ChartRowSelector(
         };
 
         function RowSelectorPopover(e) {
-            var obj = this;
-            var elements = [];
-
             var popover = new PopoverChartSelector(e, 'top', 'middle');
-
-            obj.createListItem = (pageSize) => {
-                var li = document.createElement('li');
-
-                li.setAttribute('data-popover-page-size', pageSize);
-                li.onclick = (evt) => onPageSizeClick(evt, popover);
-
-                li.classList.add('autoql-vanilla-string-select-list-item');
-                if (pageSize === currentPageSize) {
-                    li.classList.add('active');
-                }
-
-                let rowNumberString = pageSize
-                if (pageSize === MAX_DATA_PAGE_SIZE) {
-                  rowNumberString = `${MAX_DATA_PAGE_SIZE} (Maximum)`
-                } else if (pageSize !== DEFAULT_DATA_PAGE_SIZE && pageSize !== DEFAULT_DATA_PAGE_SIZE * 10) {
-                  rowNumberString = `${pageSize} (All)`
-                }
-
-                li.innerHTML = `${rowNumberString}`;
-
-                elements.push(li);
-                return li;
-            };
-
             var selectorContainer = document.createElement('div');
             var selectorContent = document.createElement('ul');
 
@@ -77,8 +49,30 @@ export function ChartRowSelector(
             selectorContent.classList.add('autoql-vanilla-axis-selector-content');
 
             if (pageSizeList.length) {
-                pageSizeList.forEach((pageSize) => {
-                    selectorContent.appendChild(obj.createListItem(pageSize));
+                pageSizeList.forEach((pageSize, i) => {           
+                    var li = document.createElement('li');
+
+                    li.setAttribute('data-popover-page-size', pageSize);
+                    li.onclick = (evt) => onPageSizeClick(evt, popover);
+    
+                    li.classList.add('autoql-vanilla-string-select-list-item');
+                    if (pageSize === currentPageSize) {
+                        li.classList.add('active');
+                    }
+
+                    let rowCountSuffix = ''
+
+                    if (i === pageSizeList.length - 1) {
+                        if (pageSize >= MAX_DATA_PAGE_SIZE) {
+                          rowCountSuffix = ' (Maximum)'
+                        } else {
+                          rowCountSuffix = ' (All)'
+                        }
+                    }
+
+                    li.innerHTML = `${pageSize}${rowCountSuffix}`;
+
+                    selectorContent.appendChild(li);
                 }); 
             }
 

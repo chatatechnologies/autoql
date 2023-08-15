@@ -305,10 +305,10 @@ ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams 
                 action.setAttribute('data-name-option', 'copy-csv-handler');
                 ul.appendChild(action);
                 break;
-            case 'copy_sql':
-                action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
-                ul.appendChild(action);
-                break;
+			case 'copy_sql':
+				action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
+				ul.appendChild(action);
+				break;
             case 'png':
                 action = ChataUtils.getActionOption(EXPORT_PNG_ICON, strings.downloadPNG, ChataUtils.exportPNGHandler, [
                     idRequest,
@@ -357,10 +357,10 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                 action.setAttribute('data-name-option', 'copy-csv-handler');
                 menu.ul.appendChild(action);
                 break;
-            case 'copy_sql':
-                action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
-                menu.ul.appendChild(action);
-                break;
+			case 'copy_sql':
+				action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
+				menu.ul.appendChild(action);
+				break;
             case 'png':
                 action = ChataUtils.getActionOption(EXPORT_PNG_ICON, strings.downloadPNG, ChataUtils.exportPNGHandler, [
                     idRequest,

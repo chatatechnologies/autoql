@@ -1,4 +1,4 @@
-import { areAllColumnsHidden, formatChartLabel, formatElement } from 'autoql-fe-utils'
+import { areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
@@ -478,7 +478,8 @@ export const getSupportedDisplayTypes = response => {
             return [displayType]
         }
 
-        const columns = response.data.columns || [];
+        const columns = getVisibleColumns(response.data.columns || []);
+
         const rows = response.data.rows || [];
         if (!columns || rows.length <= 1) {
             return []

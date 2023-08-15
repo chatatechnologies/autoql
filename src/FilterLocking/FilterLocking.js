@@ -136,7 +136,7 @@ export function FilterLocking(datamessenger){
                 return response?.data?.data
             }
         } catch (error) {
-         console.log(error);   
+         console.error(error);   
          return []
         }
     }
@@ -146,7 +146,6 @@ export function FilterLocking(datamessenger){
         view.refreshConditions(data)
     }
 	view.displaySavingIndicator = () => {
-        console.log('displaySavingIndicator');
 		savingIndicator.style.visibility = 'visible';
         savingIndicator.style.opacity = 1;
 		setTimeout(()=>{

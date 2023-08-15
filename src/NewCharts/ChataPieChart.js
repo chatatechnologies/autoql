@@ -22,6 +22,7 @@ export function PieChartNew(container, params = {}) {
         chartColors,
         legendColumn,
         onChartClick,
+        activeKey,
     } = params;
 
     this.innerChartWrapper = container.append('g').attr('class', 'autoql-vanilla-pie-chart-container');
@@ -30,6 +31,8 @@ export function PieChartNew(container, params = {}) {
     const { dataFormatting } = options;
 
     const self = this;
+
+    this.activeKey = activeKey;
 
     const legendLabels = legend?.labels;
 
@@ -137,20 +140,6 @@ export function PieChartNew(container, params = {}) {
 
     this.applyStylesForHiddenSeries = () => {
         try {
-            // const legendLabelTexts = legendLabels.filter((l) => l.hidden).map((l) => l.label);
-            // this.legendSwatchElements = this.legend.select(`.label tspan`);
-            // this.legendSwatchElements.each(function (d) {
-            //     const cellNode = select(this).node();
-            //     const swatchElement = cellNode.parentElement.parentElement.querySelector('.swatch');
-            //     swatchElement.style.strokeWidth = '2px';
-
-            //     if (legendLabelTexts.includes(cellNode.textContent)) {
-            //         swatchElement.style.opacity = 0.3;
-            //     } else {
-            //         swatchElement.style.opacity = 1;
-            //     }
-            // });
-
             applyStylesForHiddenSeries({ legendElement: this.legend?.node(), legendLabels });
         } catch (error) {
             console.error(error);
@@ -182,7 +171,8 @@ export function PieChartNew(container, params = {}) {
             .style('fill-opacity', 1)
             .style('font-family', 'inherit')
             .style('font-size', '10px')
-            .style('stroke-width', '2px');
+            .style('stroke-width', '2px')
+			.style('stroke','none');
 
         var legendOrdinal = legendColor()
             .orient('vertical')
