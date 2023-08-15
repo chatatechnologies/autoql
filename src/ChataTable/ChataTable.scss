@@ -32,6 +32,9 @@
 
             &:not(.no-drilldown) .tabulator-tableholder .tabulator-table .tabulator-row .tabulator-cell {
                 cursor: pointer;
+                &:hover {
+                    color: var(--autoql-vanilla-accent-color);
+                }
             }
 
             &.is-filtering {
@@ -162,7 +165,7 @@
                         margin-bottom: 2px;
 
                         border-radius: 10px;
-                        background: var(--react-autoql-warning-color);
+                        background: var(--autoql-vanilla-warning-color);
                         transition: opacity 0.3s ease;
                     }
                 }
@@ -237,14 +240,14 @@
     align-items: center;
     pointer-events: none;
     background-color: transparent;
-    color: var(--react-autoql-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 
     &.autoql-vanilla-table-loader-hidden {
         visibility: hidden;
     }
 
     &.autoql-vanilla-table-placeholder {
-        color: var(--react-autoql-text-color-primary);
+        color: var(--autoql-vanilla-text-color-primary);
         font-size: 12px;
         opacity: 0.5;
         top: 20px;
@@ -276,9 +279,9 @@
             align-items: center;
             width: 40px;
             height: 40px;
-            background-color: var(--react-autoql-background-color-secondary);
-            border: 1px solid var(--react-autoql-border-color);
-            box-shadow: var(--react-autoql-box-shadow-1);
+            background-color: var(--autoql-vanilla-background-color-secondary);
+            border: 1px solid var(--autoql-vanilla-border-color);
+            box-shadow: var(--autoql-vanilla-box-shadow-1);
             border-radius: 4px;
 
             .autoql-vanilla-spinner-loader {
