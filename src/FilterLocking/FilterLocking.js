@@ -142,7 +142,8 @@ export function FilterLocking(datamessenger){
     }
 
     view.loadConditions = async () => {
-        const { data } = await view.getConditions()
+        const conditions = await view.getConditions()
+        const data = conditions?.data
         view.refreshConditions(data)
     }
 	view.displaySavingIndicator = () => {
