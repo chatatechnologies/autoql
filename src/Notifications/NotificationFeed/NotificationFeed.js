@@ -1,7 +1,9 @@
+import { fetchNotificationFeed } from "autoql-fe-utils";
 import { MARK_ALL } from "../../Svg";
 import { checkAndApplyTheme, createIcon } from "../../Utils";
+import './NotificationFeed.scss';
 
-export function NotificationFeed(selector) {
+export function NotificationFeed(selector, options) {
   checkAndApplyTheme();
   const container = document.createElement('div');
   const parent = document.querySelector(selector);
@@ -54,6 +56,7 @@ export function NotificationFeed(selector) {
 
   this.createTopOptions = () => {
     const optionsContainer = document.createElement('div');
+    const gap = document.createElement('div');
     const confirmPopoverButton = document.createElement('div');
     const markAllButton = document.createElement('div');
   
@@ -65,16 +68,40 @@ export function NotificationFeed(selector) {
     markAllButton.appendChild(document.createTextNode('Mark all as read'));
 
     confirmPopoverButton.appendChild(markAllButton);
+    optionsContainer.appendChild(gap);
     optionsContainer.appendChild(confirmPopoverButton);
 
     return optionsContainer;
   }
 
-  container.classList.add('autoql-vanila-notification-list-container');
+  this.fetchFeed = async() => {
+    const {
+      domain,
+      apiKey,
+      token,
+    } = container.options.authentication;
+
+    const {
+      offset,
+      limit
+    } = container;
+    const response = await fetchNotificationFeed({
+      domain,
+      apiKey,
+      token,
+      offset,
+      limit
+    });
+    console.log(response.items);
+  }
+
+  container.classList.add('autoql-vanilla-notification-list-container');
 
   container.appendChild(this.createTopOptions());
 
   if(parent) parent.appendChild(container);
+
+  this.fetchFeed();
 
   return container;
 }

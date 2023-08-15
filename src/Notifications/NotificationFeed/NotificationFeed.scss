@@ -1,0 +1,34 @@
+.autoql-vanilla-notification-list-container  {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: var(--autoql-vanilla-background-color-primary);
+  font-family: var(--autoql-vanilla-font-family),sans-serif;
+  color: var(--autoql-vanilla-text-color-primary);
+
+  .autoql-vanilla-notification-feed-top-options-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-end;
+    padding: 15px 22px 8px;
+    flex: 0 1;
+    .autoql-vanilla-confirm-popover-click-wrapper {
+      display: flex;
+      .autoql-vanilla-notification-mark-all {
+        flex: 0 0 auto;
+        display: flex;
+        align-items: center;
+        color: inherit;
+        transition: color .1s ease;
+        opacity: .8;
+        cursor: pointer;
+        font-size: 14px;
+        .autoql-vanilla-icon {
+          margin-right: 6px;
+          margin-bottom: 3px;
+        }
+      }
+    }
+  }
+}
