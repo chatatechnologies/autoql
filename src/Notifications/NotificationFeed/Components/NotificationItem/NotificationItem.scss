@@ -1,0 +1,82 @@
+.autoql-vanilla-notification-list-item {
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  position: relative;
+  overflow: hidden;
+  background: var(--autoql-vanilla-background-color-secondary,#fff);
+  border-radius: 4px;
+  box-shadow: var(--autoql-vanilla-box-shadow-1);
+  margin-bottom: 8px;
+  color: rgba(0,0,0,.6);
+  color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
+  font-family: var(--autoql-vanilla-font-family),sans-serif;
+  .autoql-vanilla-notification-list-item-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 22px;
+    cursor: pointer;
+    .autoql-vanilla-notification-display-name-container {
+      flex: 1 1;
+      line-height: 23px;
+      padding: 13px 0;
+      transition: color .2s ease;
+      .autoql-vanilla-notification-display-name {
+        font-weight: 500;
+        font-size: 18px;
+        color: var(--autoql-vanilla-accent-color);
+      }
+      .autoql-vanilla-notification-description {
+        color: rgba(0,0,0,.6);
+        color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
+        opacity: .8;
+        font-size: 14px;
+      }
+      .autoql-vanilla-notification-timestamp-container {
+        font-size: 12px;
+        opacity: .5;
+        .autoql-vanilla-notification-timestamp {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          .autoql-vanilla-icon {
+            margin-right: 3px;
+          }
+        }
+      }
+    }
+    .autoql-vanilla-notification-options-btn-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 13px 8px;
+      .autoql-vanilla-notification-options-btn {
+        display: flex;
+        opacity: .8;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        line-height: 20px;
+        border-radius: 20px;
+        background-color: initial;
+        transition: background-color .2s ease;
+        cursor: pointer;
+      }
+    }
+  }
+  .autoql-vanilla-notification-alert-strip {
+    height: 100%;
+    opacity: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    background: var(--autoql-vanilla-accent-color,#26a7df);
+    color: var(--autoql-vanilla-text-color-accent);
+    transition-property: opacity;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+  }
+}
