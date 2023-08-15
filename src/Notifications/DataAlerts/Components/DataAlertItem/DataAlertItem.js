@@ -42,13 +42,14 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   const row = document.createElement('div');
   item.classList.add('autoql-vanilla-notification-setting-item');
   row.classList.add('autoql-vanilla-notification-setting-item-header');
+  this.dataAlert = dataAlert;
 
   const {
     title,
     status,
     id,
     type
-  } = dataAlert;
+  } = this.dataAlert;
 
   const isEnabled = (s) => DATA_ALERT_ENABLED_STATUSES.includes(s)
   
@@ -109,9 +110,9 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
 
   const hasError = () => {
     return (
-      dataAlert.status === 'GENERAL_ERROR' ||
-      dataAlert.status === 'EVALUATION_ERROR' ||
-      dataAlert.status === 'DATA_RETURN_ERROR'
+      this.dataAlert.status === 'GENERAL_ERROR' ||
+      this.dataAlert.status === 'EVALUATION_ERROR' ||
+      this.dataAlert.status === 'DATA_RETURN_ERROR'
     )
   }
 
@@ -133,9 +134,9 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     refreshIcon.onclick = async () => {
       refreshIcon.classList.add('autoql-vanilla-spinning');
       await initializeAlert({ id, ...authentication });
-      dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
-      dataAlert.reset_date = null;
-      toggleAlertStatusView(dataAlert.status);
+      this.dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
+      this.dataAlert.reset_date = null;
+      toggleAlertStatusView(this.dataAlert.status);
       refreshIcon.onclick = () => {}
     }
 
@@ -143,10 +144,10 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   }
 
   const getState = () => {
-    const nextScheduledDate = formatNextScheduleDate(dataAlert.schedules);
-    const enabled = isEnabled(dataAlert.status);
-    const resetDateFormatted = formatResetDate(dataAlert);
-    const isCustom = dataAlert.type === CUSTOM_TYPE
+    const nextScheduledDate = formatNextScheduleDate(this.dataAlert.schedules);
+    const enabled = isEnabled(this.dataAlert.status);
+    const resetDateFormatted = formatResetDate(this.dataAlert);
+    const isCustom = this.dataAlert.type === CUSTOM_TYPE
     const error = hasError();
 
     if(error) {
@@ -158,7 +159,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
       return errorStatus;
     }
 
-    if (dataAlert.reset_date && resetDateIsFuture(dataAlert)) {
+    if (this.dataAlert.reset_date && resetDateIsFuture(this.dataAlert)) {
       const tooltip = `This Alert has been triggered for this cycle. You will not receive notifications until the start of the next cycle, ${resetDateFormatted}.<br/>You can edit this in the <em>Data Alert Settings</em>`;
       const triggeredStatus = createStatusElement('Triggered', LIGHTNING_ICON, 'autoql-vanilla-data-alert-triggered');
       if(isCustom) {
@@ -169,7 +170,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
       return triggeredStatus;
     }
 
-    if (dataAlert.status === 'ACTIVE' && dataAlert.notification_type === SCHEDULED_TYPE) {
+    if (this.dataAlert.status === 'ACTIVE' && this.dataAlert.notification_type === SCHEDULED_TYPE) {
       let tooltip = 'This Alert runs on a schedule'
       if (nextScheduledDate) {
         tooltip = `${tooltip} - a notification is scheduled for ${nextScheduledDate}. If your data hasn't changed by then, you will not receive a notification.`
@@ -189,25 +190,25 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
     if (hasError()) {
       return '-';
     }
-    if (dataAlert.notification_type === SCHEDULED_TYPE) {
-      const nextScheduledDate = formatNextScheduleDate(dataAlert.schedules, true);
+    if (this.dataAlert.notification_type === SCHEDULED_TYPE) {
+      const nextScheduledDate = formatNextScheduleDate(this.dataAlert.schedules, true);
       if (!nextScheduledDate) {
         return '-';
       }
       return `<span>${nextScheduledDate}</span>`;
     }
 
-    if (!dataAlert.reset_date || !resetDateIsFuture(dataAlert)) {
-      const evaluationFrequency = dataAlert.evaluation_frequency ?? DEFAULT_EVALUATION_FREQUENCY
+    if (!this.dataAlert.reset_date || !resetDateIsFuture(this.dataAlert)) {
+      const evaluationFrequency = this.dataAlert.evaluation_frequency ?? DEFAULT_EVALUATION_FREQUENCY
       return `< ${evaluationFrequency}m`;
     }
 
-    return `<span>${formatResetDate(dataAlert, true)}</span>`;
+    return `<span>${formatResetDate(this.dataAlert, true)}</span>`;
   }
 
   const onStatusChange = async ({ status }) => {
     const response = await updateDataAlertStatus({ dataAlertId: id, type, status, ...authentication });
-    dataAlert.status = status;
+    this.dataAlert.status = status;
     toggleAlertStatusView(status)
     return response;
   }
@@ -231,7 +232,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   }
 
   const editDataAlertItemHandler = () => {
-    const modal = new EditDataAlertModal({ dataAlert, authentication });
+    const modal = new EditDataAlertModal({ dataAlertItem: item, dataAlert, authentication });
     modal.show();
   }
 
@@ -268,6 +269,10 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
 
   toggleAlertStatusView(status);
   createActions();
+
+  item.setDataAlert = ({ newValues }) => {
+
+  }
 
   return item;
 }
