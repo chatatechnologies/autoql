@@ -6,6 +6,52 @@ export function NotificationFeed(selector) {
   const container = document.createElement('div');
   const parent = document.querySelector(selector);
 
+  container.options = {
+    authentication: {
+        token: undefined,
+        apiKey: undefined,
+        customerId: undefined,
+        userId: undefined,
+        username: undefined,
+        domain: undefined,
+        demo: false,
+        ...(options.authentication ?? {}),
+    },
+    dataFormatting: {
+        currencyCode: 'USD',
+        languageCode: 'en-US',
+        currencyDecimals: 2,
+        quantityDecimals: 1,
+        comparisonDisplay: 'PERCENT',
+        monthYearFormat: 'MMM YYYY',
+        dayMonthYearFormat: 'MMM D, YYYY',
+        ...(options.dataFormatting ?? {}),
+    },
+    autoQLConfig: {
+        debug: false,
+        test: false,
+        enableAutocomplete: true,
+        enableQueryValidation: true,
+        enableQuerySuggestions: true,
+        enableColumnVisibilityManager: true,
+        enableDrilldowns: true,
+        ...(options.autoQLConfig ?? {}),
+    },
+    enableDynamicCharting: true,
+    onExpandCallback: () => {},
+    onCollapseCallback: () => {},
+    activeNotificationData: undefined,
+    showNotificationDetails: true,
+    showDescription: true,
+    onErrorCallback: () => {},
+    onSuccessCallback: () => {},
+    autoChartAggregations: true,
+    ...options
+  };
+  
+  container.limit = 10;
+  container.offset = 0;
+
   this.createTopOptions = () => {
     const optionsContainer = document.createElement('div');
     const confirmPopoverButton = document.createElement('div');
