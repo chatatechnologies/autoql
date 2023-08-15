@@ -33,13 +33,13 @@
             .cell {
                 &.hidden {
                     text {
-                        color: var(--react-autoql-background-disabled);
+                        color: var(--autoql-vanilla-background-disabled);
                         opacity: 0.4 !important;
                     }
                     line.swatch,
                     path.swatch {
-                        fill: var(--react-autoql-background-color-disabled) !important;
-                        stroke: var(--react-autoql-background-color-disabled) !important;
+                        fill: var(--autoql-vanilla-background-color-disabled) !important;
+                        stroke: var(--autoql-vanilla-background-color-disabled) !important;
                     }
                 }
 
