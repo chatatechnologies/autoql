@@ -103,7 +103,8 @@ export function EditDataAlertModal({ dataAlert, authentication }) {
     spinner.classList.remove('hidden');
     btnSave.setAttribute('disabled', 'true');
     const newValues = {
-      ...dataAlert,
+      data_return_query: dataAlert.data_return_query,
+      id: dataAlert.id,
       ...conditionsView.getValues(),
       ...appearanceView.getValues(),
       ...timingView.getValues(),

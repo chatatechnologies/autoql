@@ -46,12 +46,25 @@ export function TimingView({ dataAlert }) {
   }
 
   this.notificationType = dataAlert.notification_type;
-  this.resetPeriod = dataAlert?.schedules?.[0]?.notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
   this.timezone = dataAlert.time_zone;
   this.evaluationFrequency = dataAlert.evaluation_frequency;
   this.intervalTimeSelectValue = this.DEFAULT_TIME_SELECT_VALUE;
   this.monthDaySelectValue = this.DEFAULT_MONTH_DAY_SELECT_VALUE;
   this.weekDaySelectValue = this.DEFAULT_WEEKDAY_SELECT_VALUE;
+  
+  this.getNotificationPeriod = () => {
+    const {
+      schedules
+    } = dataAlert;
+    
+    let notificationPeriod = schedules?.[0]?.notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
+    if(notificationPeriod == 'WEEK' && schedules.length === 7) {
+      notificationPeriod = 'DAY';
+    }
+    
+    return notificationPeriod;
+  }
+  this.resetPeriod = this.getNotificationPeriod();
 
   this.createSelectorValueWithSubtitle = ({ label, subtitle, icon }) => {
     const span = document.createElement('span');
@@ -93,8 +106,6 @@ export function TimingView({ dataAlert }) {
     if (this.notificationType !== SCHEDULED_TYPE) {
       return []
     }
-
-    console.log(this.resetPeriod);
 
     if (this.resetPeriod === 'DAY') {
       const schedules = []
@@ -274,21 +285,9 @@ export function TimingView({ dataAlert }) {
     return values;
   }
 
-  this.getNotificationPeriod = () => {
-    const {
-      schedules
-    } = dataAlert;
-
-    let notificationPeriod = schedules?.[0]?.notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
-    if(notificationPeriod == 'WEEK' && schedules.length === 7) {
-      notificationPeriod = 'DAY';
-    }
-
-    return notificationPeriod;
-  }
-
   this.handleDayChange = (option) => {
     this.createScheduledView({ notificationPeriod: option.value });
+    this.resetPeriod = option.value;
   }
 
   this.handleTimezoneChange = (option) => {
@@ -354,7 +353,6 @@ export function TimingView({ dataAlert }) {
   }
 
   this.handleResetPeriodChange = (option) => {
-    console.log(option.value);
     this.resetPeriod = option.value;
   }
 
@@ -456,14 +454,12 @@ export function TimingView({ dataAlert }) {
   }
 
   container.getValues = () => {
-    const resetPeriod = this.notification_type !== SCHEDULED_TYPE ? this.getResetPeriod(this.resetPeriod) : undefined
     const notificationType = this.getNotificationType(this.notificationType);
     const timezone = this.timezone;
     const evaluationFrequency = this.evaluationFrequency;
     const schedules = this.getSchedules();
     return {
       notification_type: notificationType,
-      reset_period: resetPeriod,
       evaluation_frequency: evaluationFrequency,
       time_zone: timezone,
       schedules,
