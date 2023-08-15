@@ -54,8 +54,6 @@ import {
     WATERMARK,
     VOICE_RECORD_IMAGE,
     DATA_MESSENGER,
-    QUERY_TIPS,
-    SEARCH_ICON,
     TABLE_ICON,
     COLUMN_CHART_ICON,
     BAR_CHART_ICON,
@@ -114,7 +112,7 @@ export function DataMessenger(options = {}) {
         enableDynamicCharting: true,
         landingPage: 'data-messenger',
         autoChartAggregations: false,
-        pageSize: 50,
+        pageSize: 500,
         xhr: new XMLHttpRequest(),
         ...options, // Spread all provided options to overwrite defaults
         authentication: {
@@ -1489,23 +1487,30 @@ export function DataMessenger(options = {}) {
 
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
         closeAllChartPopovers();
-        if (oldComponent.internalTable) {
+
+        if (!oldComponent) {
+            return
+        }
+
+        if (oldComponent?.internalTable) {
             obj.copyFilterMetadata(oldComponent);
         }
-        if (oldComponent.pivotTabulator) {
+        if (oldComponent?.pivotTabulator) {
             obj.copyPivotFilterMetadata(oldComponent);
         }
+
         var messageBubble = obj.getParentFromComponent(oldComponent);
         var uuid = messageBubble.parentNode.dataset.bubbleContainerId;
         var json = ChataUtils.responses[uuid];
+
+        if (!json) {
+            return 
+        }
+
         var displayTypes = getSupportedDisplayTypes(json);
 
-        if (['table', 'pivot_table'].includes(ignore)) {
-            if (displayTypes.length <= 5) {
-                messageBubble.classList.remove('chart-full-width');
-            } else {
-                messageBubble.classList.add('chart-full-width');
-            }
+        if (['table', 'pivot_table'].includes(ignore) && displayTypes.length <= 5) {
+            messageBubble.classList.remove('chart-full-width');
         } else {
             messageBubble.classList.add('chart-full-width');
         }
@@ -1679,7 +1684,7 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        if (getAutoQLConfig(obj.options.autoQLConfig).enableDrilldowns) {
+        if (getAutoQLConfig(obj.options.autoQLConfig)?.enableDrilldowns) {
             try {
                 // This will be a new query so we want to reset the page size back to default
                 const pageSize = obj.options.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
@@ -1848,15 +1853,10 @@ export function DataMessenger(options = {}) {
 
         obj.refreshToolbarButtons(component, 'table');
 
-        function scrollMessageIntoView() {
-            parentContainer?.parentElement?.scrollIntoView?.();
-        }
-
         var table = new ChataTable(
             idRequest,
             obj.options,
-            obj.onRowClick,
-            scrollMessageIntoView,
+            (data) => obj.onCellClick(data, idRequest),
             useInfiniteScroll,
             tableParams,
         );
@@ -1869,10 +1869,10 @@ export function DataMessenger(options = {}) {
         select(window).on('chata-resize.' + idRequest, null);
     };
 
-    obj.displayPivotTableHandler = (evt, idRequest) => {
+    obj.displayPivotTableHandler = (idRequest) => {
         var component = obj.getComponent(idRequest);
         obj.refreshToolbarButtons(component, 'pivot_table');
-        var table = new ChataPivotTable(idRequest, obj.options, obj.onCellClick);
+        var table = new ChataPivotTable(idRequest, obj.options, (data) => obj.onCellClick(data, idRequest));
         obj.setDefaultFilters(component, table, 'pivot');
         select(window).on('chata-resize.' + idRequest, null);
         component.tabulator = table;
@@ -2057,33 +2057,28 @@ export function DataMessenger(options = {}) {
         return responseLoadingContainer;
     };
 
-    obj.onRowClick = (e, row, json) => {
-        var index = 0;
-        var groupableCount = getNumberOfGroupables(json['data']['columns']);
-        if (groupableCount > 0) {
-            for (var entries of Object.entries(row._row.data)) {
-                json['data']['rows'][0][index++] = entries[1];
-            }
-            obj.sendDrilldownMessage(json, 0, obj.options);
-        }
-    };
+    obj.onCellClick = async (data, idRequest) => {
+        const json = ChataUtils.responses[idRequest];
+ 
+        obj.input.disabled = true;
+        obj.input.value = '';
 
-    obj.onCellClick = (e, cell, json) => {
-        const selectedColumn = cell._cell.column;
-        const row = cell._cell.row;
-        if (selectedColumn.definition.index != 0) {
-            var entries = Object.entries(row.data);
-            if (row.data.Month) {
-                json['data']['rows'][0][0] = selectedColumn.definition.field;
-                json['data']['rows'][0][1] = row.data.Month;
-            } else {
-                json['data']['rows'][0][0] = selectedColumn.definition.field;
-                json['data']['rows'][0][1] = entries[0][1];
-                json['data']['rows'][0][2] = cell.getValue();
-            }
+        var responseLoadingContainer = obj.putMessage('Drilldown');
 
-            obj.sendDrilldownMessage(json, 0, obj.options);
+        const queryID = json?.data?.query_id;
+
+        const response = await obj.processDrilldown({
+            ...data,
+            queryID,
+            source: json?.data?.fe_req?.source,
+            json: { data: json },
+        });
+
+        if (response?.data) {
+            response.data.originalQueryID = queryID;
         }
+
+        obj.createResponseMessage({ response, responseLoadingContainer, isDrilldown: true });
     };
 
     obj.onRTVLClick = (rtChunk) => {
@@ -2617,7 +2612,7 @@ export function DataMessenger(options = {}) {
     obj.createResponseMessage = ({ response, responseLoadingContainer, textValue, isDrilldown }) => {
         obj.input.removeAttribute('disabled');
 
-        if (!response) {
+        if (!response || !response?.status || !response?.data) {
             if (responseLoadingContainer) {
                 obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
