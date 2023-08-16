@@ -5,8 +5,10 @@ import { DATA_ALERT_STATUSES } from 'autoql-fe-utils';
 const statusMap = {
   [DATA_ALERT_STATUSES.ACTIVE]: 'Active',
   [DATA_ALERT_STATUSES.WAITING]: 'Active', 
+  [DATA_ALERT_STATUSES.RETRY]: 'Active', 
   [DATA_ALERT_STATUSES.INACTIVE]: 'Inactive',
-  [DATA_ALERT_STATUSES.EVALUATION_ERROR]: 'Inactive'
+  [DATA_ALERT_STATUSES.EVALUATION_ERROR]: 'Inactive',
+  [DATA_ALERT_STATUSES.GENERAL_ERROR]: 'Inactive',
 }
 
 export function StatusSwitch({ status, onChange }) {
@@ -31,7 +33,7 @@ export function StatusSwitch({ status, onChange }) {
     }
   })
 
-  if(status === 'ACTIVE' || status === 'WAITING') {
+  if(['ACTIVE', 'WAITING', 'RETRY'].includes(status)) {
     slider.setChecked(true);
     textStatus.classList.add('left');
   } else {

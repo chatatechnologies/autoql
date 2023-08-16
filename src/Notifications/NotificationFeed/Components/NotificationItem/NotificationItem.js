@@ -36,6 +36,17 @@ export function NotificationItem({ itemData }) {
     return strip;
   }
 
+  this.createBtnContainer = () => {
+    const btnContainer = document.createElement('div');
+    const verticalDots = createIcon(VERTICAL_DOTS);
+
+    btnContainer.classList.add('autoql-vanilla-notification-options-btn-container');
+    verticalDots.classList.add('autoql-vanilla-notification-options-btn');
+    btnContainer.appendChild(verticalDots);
+
+    return btnContainer;
+  }
+
   this.createHeader = () => {
     const {
       title,
@@ -49,18 +60,12 @@ export function NotificationItem({ itemData }) {
     const timestampContainer = document.createElement('div');
     const timestamp = document.createElement('span');
 
-    const btnContainer = document.createElement('div');
-    const verticalDots = createIcon(VERTICAL_DOTS);
-
-
     header.classList.add('autoql-vanilla-notification-list-item-header');
     displayNameContainer.classList.add('autoql-vanilla-notification-display-name-container');
     displayName.classList.add('autoql-vanilla-notification-display-name');
     description.classList.add('autoql-vanilla-notification-description');
     timestampContainer.classList.add('autoql-vanilla-notification-timestamp-container');
     timestamp.classList.add('autoql-vanilla-notification-timestamp');
-    btnContainer.classList.add('autoql-vanilla-notification-options-btn-container');
-    verticalDots.classList.add('autoql-vanilla-notification-options-btn');
     
     displayName.textContent = title;
     description.textContent = message;
@@ -68,14 +73,13 @@ export function NotificationItem({ itemData }) {
     timestamp.appendChild(createIcon(CALENDAR));
     timestamp.appendChild(document.createTextNode(this.getFormattedTimestamp()));
 
-    btnContainer.appendChild(verticalDots);
     timestampContainer.appendChild(timestamp);
     displayNameContainer.appendChild(displayName);
     displayNameContainer.appendChild(description);
     displayNameContainer.appendChild(timestampContainer);
 
     header.appendChild(displayNameContainer);
-    header.appendChild(btnContainer);
+    header.appendChild(this.createBtnContainer());
     item.appendChild(header);
 
     if(state === 'ACKNOWLEDGED') {
