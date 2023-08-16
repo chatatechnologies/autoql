@@ -11,6 +11,7 @@ import {
     getCombinedFilters,
     runQueryOnly,
     isDrilldown as isDrilldownResponse,
+    areAllColumnsHidden,
 } from 'autoql-fe-utils';
 
 import { ErrorMessage } from '../ErrorMessage';
@@ -1527,7 +1528,7 @@ export function DataMessenger(options = {}) {
         var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
         var toolbarRight = messageBubble.getElementsByClassName('right')[0];
 
-        if (oldComponent.noColumnsElement) {
+        if (oldComponent.noColumnsElement && !areAllColumnsHidden(json?.data?.columns)) {
             oldComponent.parentElement.removeChild(oldComponent.noColumnsElement);
             oldComponent.noColumnsElement = null;
             oldComponent.style.display = 'block';
