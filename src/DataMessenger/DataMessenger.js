@@ -46,7 +46,7 @@ import {
     checkAndApplyTheme,
     getSupportedDisplayTypes,
 } from '../Utils';
-import { Scrollbars } from '../Scrollbars';
+
 import {
     CHATA_BUBBLES_ICON,
     CLOSE_ICON,
@@ -384,6 +384,11 @@ export function DataMessenger(options = {}) {
     };
 
     obj.createDrawer = () => {
+        const existingDataMessenger = document.body.querySelector('.autoql-vanilla-drawer')
+        if (existingDataMessenger) {
+            console.warn('You just attempted to create a Data Messenger when one already existed. The previous instance will now be replaced with the new one.')
+            existingDataMessenger.parentElement.removeChild(existingDataMessenger)
+        }
         var rootElem = document.createElement('div');
         rootElem.id = obj.id;
         rootElem.classList.add('autoql-vanilla-drawer');
