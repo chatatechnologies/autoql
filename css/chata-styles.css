@@ -1487,7 +1487,8 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     display: inline-flex;
     justify-content: center;
     align-items: center;
-    vertical-align: initial;
+    vertical-align: middle;
+    padding-bottom: 3px;
     line-height: 1em;
     box-sizing: initial;
     height: 1em;
