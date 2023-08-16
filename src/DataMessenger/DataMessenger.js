@@ -360,7 +360,10 @@ export function DataMessenger(options = {}) {
         if (!obj.rootElem) return;
 
         obj.isVisible = true;
+
         obj.rootElem.classList.add('autoql-vanilla-drawer-open');
+        document.body.classList.add('autoql-vanilla-drawer-open-body');
+
         obj.initialScroll = window.scrollY;
         obj.input.focus();
     };
@@ -370,6 +373,8 @@ export function DataMessenger(options = {}) {
         closeAllChartPopovers();
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
+        document.body.classList.remove('autoql-vanilla-drawer-open-body');
+
         obj.options.isVisible = false;
 
         if (obj.options.clearOnClose) {
@@ -385,6 +390,7 @@ export function DataMessenger(options = {}) {
 
         if (obj.isVisible) {
             rootElem.classList.add('autoql-vanilla-drawer-open');
+            document.body.classList.add('autoql-vanilla-drawer-open-body');
         }
 
         obj.rootElem = rootElem;
@@ -420,7 +426,8 @@ export function DataMessenger(options = {}) {
         obj.drawerMask.classList.add('autoql-vanilla-drawer-mask');
 
         if (obj.options.showMask) {
-            obj.drawerMask.onclick = () => {
+            obj.drawerMask.onclick = (e) => {
+                e.stopPropagation();
                 obj.closeDrawer();
             };
         } else {
@@ -1199,8 +1206,9 @@ export function DataMessenger(options = {}) {
     };
 
     obj.scrollIntoView = (element, checkElement) => {
-        if (obj.ps.element && element?.scrollIntoView) {
-            const scrollElementClientRect = obj.ps.element.getBoundingClientRect();
+        const scrollboxElement = obj.ps?.element ?? obj.scrollBox
+        if (scrollboxElement && element?.scrollIntoView) {
+            const scrollElementClientRect = scrollboxElement.getBoundingClientRect();
             const scrollTop = scrollElementClientRect?.y;
             const scrollBottom = scrollTop + scrollElementClientRect?.height;
 
