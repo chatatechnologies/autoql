@@ -57,7 +57,7 @@
 
 
 .chata-more-options-menu, .report-problem-menu {
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
     padding: 10px 0;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .chata-more-options-menu .chata-menu-list li{
-    color: var(--autoql-vanilla-text-color-primary);
+    color: var(--autoql-vanilla-text-color-secondary);
     width: 100%;
     line-height: 35px;
     padding: 0 20px;
