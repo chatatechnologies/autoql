@@ -25,7 +25,7 @@
       .autoql-vanilla-notification-display-name {
         font-weight: 500;
         font-size: 18px;
-        color: var(--autoql-vanilla-accent-color);
+        color: var(--autoql-vanilla-text-color-primary, rgba(0, 0, 0, .7));
         .autoql-vanilla-icon {
           vertical-align: middle;
           padding-bottom: 3px;
@@ -87,14 +87,20 @@
   }
 
   &.autoql-vanilla-notification-error {
-    .autoql-vanilla-notification-alert-strip {
-      background: var(--autoql-vanilla-warning-color,#26a7df);
-    }
-
     .autoql-vanilla-notification-list-item-header {
       .autoql-vanilla-notification-display-name-container{
         .autoql-vanilla-notification-display-name {
-          color: var(--autoql-vanilla-warning-color,#26a7df);
+        color: var(--autoql-vanilla-text-color-primary, rgba(0, 0, 0, .7));
+        }
+      }
+    }
+  }
+
+  &.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-list-item-header {
+      .autoql-vanilla-notification-display-name-container{
+        .autoql-vanilla-notification-display-name {
+          color: var(--autoql-vanilla-accent-color);
         }
       }
     }
