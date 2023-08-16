@@ -51,7 +51,9 @@ function instantiateTabulator(component, tableOptions, table) {
 
         component.createPageLoader();
         component.createScrollLoader();
-        component.ps = replaceScrollbar(tabulator);
+
+        // Remove for now - causing buggy behavious
+        // component.ps = replaceScrollbar(tabulator);
     });
 
     return tabulator;
@@ -110,6 +112,10 @@ function getFirstDateColumn(json) {
 }
 
 function getTableData(rows) {
+    if (!rows) {
+        return []
+    }
+    
     var tableData = [];
 
     for (var i = 0; i < rows.length; i++) {

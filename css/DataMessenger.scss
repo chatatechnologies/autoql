@@ -70,10 +70,6 @@
     }
 
     .autoql-vanilla-chat-single-message-container {
-        &.response:first-child {
-            padding-top: 18px;
-        }
-
         &.response {
             display: flex;
             flex-direction: column;
