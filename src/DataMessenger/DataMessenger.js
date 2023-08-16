@@ -1473,7 +1473,7 @@ export function DataMessenger(options = {}) {
     obj.hideBubbles = () => {
         var nodes = obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container');
         for (var i = 0; i < nodes.length; i++) {
-            nodes[i].style.display = 'none';
+            nodes[i].style.display = 'none !important';
         }
     };
 
