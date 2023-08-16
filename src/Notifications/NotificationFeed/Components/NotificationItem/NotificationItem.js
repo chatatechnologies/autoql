@@ -9,7 +9,7 @@ const DELAY = 0.08;
 export function NotificationItem({ itemData, index }) {
   const item = document.createElement('div');
   
-  this.isExpanded = false;
+  this.isOpen = false;
 
   this.getFormattedTimestamp = () => {
     const timestamp = itemData.created_at;
@@ -74,6 +74,25 @@ export function NotificationItem({ itemData, index }) {
     return itemData.state === 'ACKNOWLEDGED';
   }
 
+  this.createContent = () => {
+    const content = document.createElement('div');
+    const contentContainer = document.createElement('div');
+
+    content.classList.add('autoql-vanilla-notification-expanded-content');
+    content.classList.add('autoql-vanilla-notification-content-collapsed');
+    contentContainer.classList.add('autoql-vanilla-notification-content-container');
+
+    content.appendChild(contentContainer);
+
+    this.content = content;
+
+    return content;
+  }
+
+  this.handleExpand = () => {
+
+  }
+
   this.createItem = () => {
     const {
       title,
@@ -114,6 +133,7 @@ export function NotificationItem({ itemData, index }) {
     header.appendChild(this.createBtnContainer());
     header.appendChild(this.createExpandArrow());
     item.appendChild(header);
+    item.appendChild(this.createContent());
     
     if(this.isUnread()) {
       item.appendChild(this.createStrip());

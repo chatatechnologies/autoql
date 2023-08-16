@@ -148,6 +148,19 @@
       opacity: .5;
     }
   }
+
+  .autoql-vanilla-notification-expanded-content.autoql-vanilla-notification-content-collapsed {
+    visibility: hidden;
+    pointer-events: none;
+    opacity: 0;
+
+    .autoql-vanilla-notification-content-container {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      width: 100%;
+    }
+  }
 }
 
 @keyframes slideIn {
