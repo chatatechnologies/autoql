@@ -555,6 +555,10 @@ export function DataMessenger(options = {}) {
     };
 
     obj.notificationsAnimation = function (display) {
+        if (!obj.options.autoQLConfig.enableNotifications || !obj.options.enableNotificationsTab) {
+            return
+        }
+
         obj.notificationsContainer.style.display = display;
         obj.notificationsContainer.innerHTML = '';
         var id = obj.notificationsContainerId;
