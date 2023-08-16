@@ -6,6 +6,10 @@
     justify-content: flex-start;
     align-items: center;
 
+    .tabulator-alert {
+        display: none !important;
+    }
+
     .autoql-vanilla-chata-table {
         max-height: 100%;
         max-width: 100%;
@@ -143,7 +147,7 @@
             .tabulator-header .tabulator-col {
                 text-align: center;
                 border-color: transparent;
-                background-color: var(--autoql-vanilla-background-color-secondary);
+                background-color: var(--autoql-vanilla-background-color-secondary) !important;
                 font-size: 11px;
                 min-height: 58px;
 
