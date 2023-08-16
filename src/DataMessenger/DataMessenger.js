@@ -2829,9 +2829,10 @@ export function DataMessenger(options = {}) {
         closeAllSafetynetSelectors();
     };
 
-    obj.ps = new Scrollbars(obj.scrollBox, {
-        scrollingThreshold: 200,
-    });
+    // Remove for now - causing buggy behaviour
+    // obj.ps = new Scrollbars(obj.scrollBox, {
+    //     scrollingThreshold: 200,
+    // });
 
     refreshTooltips();
 
