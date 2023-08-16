@@ -2578,28 +2578,30 @@ export function DataMessenger(options = {}) {
                     filters: queryRequestData?.session_filter_locks,
                     pageSize: queryRequestData?.page_size,
                     groupBys: queryRequestData?.columns,
-                    queryID: response.data.originalQueryID,
                     orders: formattedTableParams?.sorters,
                     tableFilters: allFilters,
                 };
 
                 if (isDrilldownResponse(response)) {
-                    response = await runDrilldown({
+                    newResponse = await runDrilldown({
                         ...queryParams,
+                        queryID: response.data.originalQueryID ?? response.data.data.query_id,
                         ...args,
                     });
 
                     newResponse.data.originalQueryID = response.data.originalQueryID;
+                } else {
+                    newResponse = await runQueryOnly({
+                        ...queryParams,
+                        query: queryRequestData?.text,
+                        debug: queryRequestData?.translation === 'include',
+                        userSelection: queryRequestData?.disambiguation,
+                        ...args,
+                    });
+    
+                    newResponse.data.originalQueryID = response.data.data.query_id;
                 }
-                newResponse = await runQueryOnly({
-                    ...queryParams,
-                    query: queryRequestData?.text,
-                    debug: queryRequestData?.translation === 'include',
-                    userSelection: queryRequestData?.disambiguation,
-                    ...args,
-                });
 
-                newResponse.data.originalQueryID = response.data.data.query_id;
             } catch (error) {
                 console.error(error);
                 newResponse = error;
