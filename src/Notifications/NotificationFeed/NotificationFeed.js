@@ -128,11 +128,17 @@ export function NotificationFeed(selector, options) {
   this.createItems = async() => {
     const loading = this.showLoading();
     const { items } = await this.fetchFeed();
+    const { authentication } = container.options;
     const itemsContainer = document.createElement('div');
     itemsContainer.classList.add('autoql-vanilla-notification-feed-list');
     
     items.forEach((itemData, index) => {
-      const item = new NotificationItem({ itemData, index, onClick: this.collapsePreviousNotification });
+      const item = new NotificationItem({
+        itemData,
+        index,
+        authentication,
+        onClick: this.collapsePreviousNotification
+      });
       itemsContainer.appendChild(item);
     });
     loading.remove();

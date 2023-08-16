@@ -1,3 +1,4 @@
+import { fetchNotificationData } from "autoql-fe-utils";
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import dayjs from '../../../../Utils/dayjsPlugins';
@@ -6,9 +7,10 @@ import './NotificationItem.scss';
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
 
-export function NotificationItem({ itemData, index, onClick }) {
+export function NotificationItem({ itemData, authentication, index, onClick }) {
   const item = document.createElement('div');
   
+  this.queryResponse = undefined;
   this.isOpen = false;
 
   this.getFormattedTimestamp = () => {
@@ -89,33 +91,21 @@ export function NotificationItem({ itemData, index, onClick }) {
     return content;
   }
 
-  item.expand = () => {
-    this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
-    this.content.classList.add('autoql-vanilla-notification-expanded');
-    item.classList.remove('autoql-vanilla-notification-collapsed');
-  }
-  
-  item.collapse = () => {
-    this.content.classList.add('autoql-vanilla-notification-content-collapsed');
-    this.content.classList.remove('autoql-vanilla-notification-expanded');
-    item.classList.add('autoql-vanilla-notification-collapsed');
+  this.fetchNotification = async() => {
+    const response = await fetchNotificationData({ ...authentication, id: itemData.id });
+    return response
   }
 
-  item.toggleOpen = () => {
-    this.isOpen = !this.isOpen;
-  }
-
-  item.setIsOpen = (val) => {
-    this.isOpen = val;
-  }
-  
-  this.handleExpand = () => {
+  this.handleExpand = async() => {
     onClick(item);
     if(this.isOpen) {
       item.collapse();
     } else {
       item.expand();
     }
+
+    const response = await this.fetchNotification()
+    console.log(response);
     item.toggleOpen();
   }
 
@@ -180,6 +170,26 @@ export function NotificationItem({ itemData, index, onClick }) {
 
   if(this.isUnread()) {
     item.classList.add('autoql-vanilla-notification-unread');
+  }
+
+  item.expand = () => {
+    this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
+    this.content.classList.add('autoql-vanilla-notification-expanded');
+    item.classList.remove('autoql-vanilla-notification-collapsed');
+  }
+  
+  item.collapse = () => {
+    this.content.classList.add('autoql-vanilla-notification-content-collapsed');
+    this.content.classList.remove('autoql-vanilla-notification-expanded');
+    item.classList.add('autoql-vanilla-notification-collapsed');
+  }
+
+  item.toggleOpen = () => {
+    this.isOpen = !this.isOpen;
+  }
+
+  item.setIsOpen = (val) => {
+    this.isOpen = val;
   }
 
   item.style.animationDelay = DELAY * index + 's';
