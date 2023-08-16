@@ -4,6 +4,7 @@
   flex-basis: auto;
   position: relative;
   overflow: hidden;
+  background: #fff;
   background: var(--autoql-vanilla-background-color-secondary,#fff);
   border-radius: 4px;
   box-shadow: var(--autoql-vanilla-box-shadow-1);
@@ -11,6 +12,11 @@
   color: rgba(0,0,0,.6);
   color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
   font-family: var(--autoql-vanilla-font-family),sans-serif;
+  transition: height .3s cubic-bezier(.26,.26,0,1);
+  -webkit-animation: slideIn .5s cubic-bezier(.26,.26,0,1);
+  animation: slideIn .5s cubic-bezier(.26,.26,0,1);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
   .autoql-vanilla-notification-list-item-header {
     display: flex;
     flex-direction: row;
@@ -122,4 +128,15 @@
       opacity: .05;
     }
   }
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    top: 500px; 
+  }
+  100% {
+    opacity: 1;
+    top: 0; 
+  } 
 }

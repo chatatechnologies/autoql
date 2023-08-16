@@ -4,9 +4,9 @@ import dayjs from '../../../../Utils/dayjsPlugins';
 import './NotificationItem.scss';
 
 const dataAlertErrorName = 'Data Alert Error';
+const DELAY = 0.08;
 
-export function NotificationItem({ itemData }) {
-  console.log(itemData);
+export function NotificationItem({ itemData, index }) {
   const item = document.createElement('div');
   
   this.getFormattedTimestamp = () => {
@@ -66,7 +66,6 @@ export function NotificationItem({ itemData }) {
     const {
       title,
       message,
-      state
     } = itemData;
     const header = document.createElement('div');
     const displayNameContainer = document.createElement('div');
@@ -121,6 +120,8 @@ export function NotificationItem({ itemData }) {
   if(this.isUnread()) {
     item.classList.add('autoql-vanilla-notification-unread');
   }
+
+  item.style.animationDelay = DELAY * index + 's';
 
   return item;
 }
