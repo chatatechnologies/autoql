@@ -92,6 +92,23 @@
     transition-timing-function: ease;
   }
 
+  .autoql-vanilla-notification-item-expand-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    color: var(--autoql-vanilla-text-color-primary);
+    pointer-events: none;
+    .autoql-vanilla-icon {
+      -webkit-transform: scalex(1.75);
+      transform: scalex(1.75);
+    }
+  }
+
   &.autoql-vanilla-notification-error {
     .autoql-vanilla-notification-list-item-header {
       .autoql-vanilla-notification-display-name-container{
@@ -126,6 +143,9 @@
   &.autoql-vanilla-notification-collapsed:hover {
     .autoql-vanilla-notification-item-hover-overlay{
       opacity: .05;
+    }
+    .autoql-vanilla-notification-item-expand-arrow {
+      opacity: .5;
     }
   }
 }

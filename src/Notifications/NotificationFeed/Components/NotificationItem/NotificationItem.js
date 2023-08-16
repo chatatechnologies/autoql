@@ -1,4 +1,4 @@
-import { CALENDAR, VERTICAL_DOTS, WARNING_TRIANGLE } from "../../../../Svg";
+import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import dayjs from '../../../../Utils/dayjsPlugins';
 import './NotificationItem.scss';
@@ -9,6 +9,8 @@ const DELAY = 0.08;
 export function NotificationItem({ itemData, index }) {
   const item = document.createElement('div');
   
+  this.isExpanded = false;
+
   this.getFormattedTimestamp = () => {
     const timestamp = itemData.created_at;
     const dateDayJS = dayjs.unix(timestamp)
@@ -53,6 +55,16 @@ export function NotificationItem({ itemData, index }) {
     
     return btnContainer;
   }
+
+  this.createExpandArrow = () => {
+    const expandArrow = document.createElement('div');
+    const caredDown = createIcon(CARET_DOWN_ICON);
+
+    expandArrow.classList.add('autoql-vanilla-notification-item-expand-arrow');
+    expandArrow.appendChild(caredDown);
+
+    return expandArrow;
+  }
   
   this.hasError = () => {
     return itemData.outcome === 'ERROR';
@@ -62,7 +74,7 @@ export function NotificationItem({ itemData, index }) {
     return itemData.state === 'ACKNOWLEDGED';
   }
 
-  this.createHeader = () => {
+  this.createItem = () => {
     const {
       title,
       message,
@@ -100,6 +112,7 @@ export function NotificationItem({ itemData, index }) {
     
     header.appendChild(displayNameContainer);
     header.appendChild(this.createBtnContainer());
+    header.appendChild(this.createExpandArrow());
     item.appendChild(header);
     
     if(this.isUnread()) {
@@ -107,9 +120,10 @@ export function NotificationItem({ itemData, index }) {
     }
 
     item.appendChild(this.createHoverOverlay());
+    this.header = header;
   }
   
-  this.createHeader();
+  this.createItem();
   item.classList.add('autoql-vanilla-notification-list-item');
   item.classList.add('autoql-vanilla-notification-collapsed');
   
