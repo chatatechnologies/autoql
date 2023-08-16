@@ -1,3 +1,8 @@
+body.autoql-vanilla-drawer-open-body {
+    // This is required to disallow body scrolling through the DM overlay
+    overflow: hidden;
+}
+
 .autoql-vanilla-drawer {
     position: fixed;
     z-index: 9999;
