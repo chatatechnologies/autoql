@@ -107,7 +107,7 @@ export function DataMessenger(options = {}) {
         clearOnClose: false,
         enableVoiceRecord: true,
         autocompleteStyles: {},
-        enableExploreQueriesTab: true,
+        enableDataExplorerTab: true,
         enableNotificationsTab: false,
         inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
@@ -267,11 +267,11 @@ export function DataMessenger(options = {}) {
                     var display = value ? 'flex' : 'none';
                     obj.voiceRecordButton.style.display = display;
                     break;
-                case 'enableExploreQueriesTab':
-                    obj.options.enableExploreQueriesTab = value;
+                case 'enableDataExplorerTab':
+                    obj.options.enableDataExplorerTab = value;
                     value
-                        ? obj.tabQueryTips.classList.remove('autoql-vanilla-data-messenger-tab-hidden')
-                        : obj.tabQueryTips.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+                        ? obj.tabDataExplorer.classList.remove('autoql-vanilla-data-messenger-tab-hidden')
+                        : obj.tabDataExplorer.classList.add('autoql-vanilla-data-messenger-tab-hidden');
 
                     if (!value && obj.landingPage === 'explore-queries') {
                         obj.setActiveTab(obj.tabChataUtils);
@@ -568,15 +568,10 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.getQueryTipsPageSize = () => {
-        const height = obj.drawerContent.clientHeight;
-        return parseInt((height - 62 - 72 - 60 - 50) / 47);
-    };
-
     obj.setActiveTab = function (tab) {
         if (!tab) return;
 
-        [obj.tabChataUtils, obj.tabQueryTips, obj.tabNotifications].forEach((tab) => {
+        [obj.tabChataUtils, obj.tabDataExplorer, obj.tabNotifications].forEach((tab) => {
             tab?.classList.remove('autoql-vanilla-data-messenger-tab-active');
         });
 
@@ -598,7 +593,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.createQueryTabs = function () {
-        const { enableExploreQueriesTab, enableNotificationsTab } = obj.options;
+        const { enableDataExplorerTab, enableNotificationsTab } = obj.options;
 
         var pageSwitcherContainer = document.createElement('div');
         pageSwitcherContainer.classList.add('autoql-vanilla-page-switcher-container');
@@ -609,11 +604,11 @@ export function DataMessenger(options = {}) {
             tooltip: 'Home',
             isEnabled: true,
         });
-        var tabQueryTips = obj.createQueryTab({
+        var tabDataExplorer = obj.createQueryTab({
             name: 'explore-queries',
             content: htmlToElement(DATA_EXPLORER_SEARCH_ICON),
             tooltip: strings.dataExplorer,
-            isEnabled: enableExploreQueriesTab,
+            isEnabled: enableDataExplorerTab,
         });
         var tabNotifications = obj.createQueryTab({
             name: 'notifications',
@@ -631,7 +626,7 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         };
 
-        tabQueryTips.onclick = function () {
+        tabDataExplorer.onclick = function () {
             obj.setActiveTab(this);
             obj.tabsAnimation('none', 'none');
             obj.dataExplorer.show();
@@ -651,7 +646,7 @@ export function DataMessenger(options = {}) {
         };
 
         pageSwitcherContainer.appendChild(tabChataUtils);
-        pageSwitcherContainer.appendChild(tabQueryTips);
+        pageSwitcherContainer.appendChild(tabDataExplorer);
         pageSwitcherContainer.appendChild(tabNotifications);
 
         var pageSwitcherShadowContainer = document.createElement('div');
@@ -663,7 +658,7 @@ export function DataMessenger(options = {}) {
         tabContainer.appendChild(pageSwitcherShadowContainer);
 
         obj.tabChataUtils = tabChataUtils;
-        obj.tabQueryTips = tabQueryTips;
+        obj.tabDataExplorer = tabDataExplorer;
         obj.tabNotifications = tabNotifications;
 
         obj.drawerBody.appendChild(tabContainer);
@@ -739,15 +734,6 @@ export function DataMessenger(options = {}) {
             }
             index++;
         }, 45);
-    };
-
-    obj.getRelatedQueriesPath = (page, searchVal, options) => {
-        const pageSize = obj.getQueryTipsPageSize();
-        const s = encodeURIComponent(searchVal);
-        const url = options.authentication.demo
-            ? `https://backend-staging.chata.ai/autoql/api/v1/query/related-queries`
-            : `${options.authentication.domain}/autoql/api/v1/query/related-queries?key=${options.authentication.apiKey}&search=${s}&page_size=${pageSize}&page=${page}`;
-        return url;
     };
 
     obj.createResizeHandler = function () {
@@ -1290,6 +1276,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.getActionToolbar = (idRequest, type, displayType) => {
+        const autoQLConfig = obj.options.autoQLConfig ?? {}
 		var isCopySqlEnabled = obj.options.autoQLConfig.debug
         var request = ChataUtils.responses[idRequest];
         let moreOptionsArray = [];
@@ -1313,10 +1300,8 @@ export function DataMessenger(options = {}) {
             case 'simple':
                 if (request['reference_id'] !== '1.9.502') {
                     toolbar.appendChild(reportProblemButton);
-					if(isCopySqlEnabled){
-						moreOptionsArray.push('copy_sql');
-					}
-                    moreOptionsArray.push('notification');
+					autoQLConfig.debug && moreOptionsArray.push('copy_sql');
+                    autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
                 }
                 toolbar.appendChild(
                     obj.getActionButton(
@@ -1371,12 +1356,10 @@ export function DataMessenger(options = {}) {
                         [reportProblem, toolbar],
                     ),
                 );
-                moreOptionsArray.push('csv');
+                autoQLConfig.enableCSVDownload && moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
-				if(isCopySqlEnabled){
-						moreOptionsArray.push('copy_sql');
-					}
-                moreOptionsArray.push('notification');
+                autoQLConfig.debug && moreOptionsArray.push('copy_sql');
+                autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
                 break;
             case 'chart-view':
                 if (request['reference_id'] !== '1.1.420') {
@@ -1392,10 +1375,8 @@ export function DataMessenger(options = {}) {
                     ),
                 );
                 moreOptionsArray.push('png');
-					if(isCopySqlEnabled){
-						moreOptionsArray.push('copy_sql');
-					}
-                moreOptionsArray.push('notification');
+				autoQLConfig.debug && moreOptionsArray.push('copy_sql');
+                autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
                 break;
             case 'safety-net':
                 toolbar.appendChild(

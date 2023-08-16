@@ -47,7 +47,7 @@ export function DataExplorer({ subjects, widget }) {
   autocomplete.classList.add('autoql-vanilla-data-explorer-autocomplete');
   introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
   instructionList.classList.add('autoql-vanilla-intro-message-list-container');
-  input.setAttribute('placeholder', strings.exploreQueriesInput);
+  input.setAttribute('placeholder', strings.dataExplorerInput);
   
   title.appendChild(document.createTextNode('Welcome to '));
   title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
