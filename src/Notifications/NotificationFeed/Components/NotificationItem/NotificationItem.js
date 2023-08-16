@@ -90,7 +90,17 @@ export function NotificationItem({ itemData, index }) {
   }
 
   this.handleExpand = () => {
+    if(this.isOpen) {
+      this.content.classList.add('autoql-vanilla-notification-content-collapsed');
+      this.content.classList.remove('autoql-vanilla-notification-expanded');
+      item.classList.add('autoql-vanilla-notification-collapsed');
+    } else {
+      this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
+      this.content.classList.add('autoql-vanilla-notification-expanded');
+      item.classList.remove('autoql-vanilla-notification-collapsed');
+    }
 
+    this.isOpen = !this.isOpen
   }
 
   this.createItem = () => {
@@ -141,6 +151,7 @@ export function NotificationItem({ itemData, index }) {
 
     item.appendChild(this.createHoverOverlay());
     this.header = header;
+    this.header.onclick = this.handleExpand;
   }
   
   this.createItem();
