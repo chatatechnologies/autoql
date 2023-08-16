@@ -96,8 +96,25 @@ export function NotificationFeed(selector, options) {
 
     return response;
   }
+
+  this.showLoading = () => {
+    const loading = document.createElement('div');
+    const dotsContainer = document.createElement('div');
+    loading.classList.add('autoql-vanilla-loading-wrapper');
+    dotsContainer.classList.add('autoql-vanilla-response-loading');
+
+    
+    for (let index = 0; index < 4; index++) {
+      dotsContainer.appendChild(document.createElement('div'))
+    }
+    
+    loading.appendChild(dotsContainer);
+    container.appendChild(loading);
+    return loading;
+  }
   
   this.createItems = async() => {
+    const loading = this.showLoading();
     const { items } = await this.fetchFeed();
     console.log(items);
     const itemsContainer = document.createElement('div');
@@ -107,13 +124,13 @@ export function NotificationFeed(selector, options) {
       const item = new NotificationItem({ itemData });
       itemsContainer.appendChild(item);
     });
-
+    loading.remove();
+    container.appendChild(this.createTopOptions());
     container.appendChild(itemsContainer);
   }
   
   container.classList.add('autoql-vanilla-notification-list-container');
   
-  container.appendChild(this.createTopOptions());
   this.createItems();
   
   if(parent) parent.appendChild(container);
