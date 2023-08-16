@@ -35,7 +35,14 @@ export function NotificationItem({ itemData }) {
     
     return strip;
   }
-  
+
+  this.createHoverOverlay = () => {
+    const overlay = document.createElement('div');
+    overlay.classList.add('autoql-vanilla-notification-item-hover-overlay');
+    
+    return overlay;
+  }
+
   this.createBtnContainer = () => {
     const btnContainer = document.createElement('div');
     const verticalDots = createIcon(VERTICAL_DOTS);
@@ -99,10 +106,13 @@ export function NotificationItem({ itemData }) {
     if(this.isUnread()) {
       item.appendChild(this.createStrip());
     }
+
+    item.appendChild(this.createHoverOverlay());
   }
   
   this.createHeader();
   item.classList.add('autoql-vanilla-notification-list-item');
+  item.classList.add('autoql-vanilla-notification-collapsed');
   
   if(this.hasError()) {
     item.classList.add('autoql-vanilla-notification-error');

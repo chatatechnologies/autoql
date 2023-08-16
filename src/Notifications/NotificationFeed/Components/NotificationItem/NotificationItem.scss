@@ -105,4 +105,21 @@
       }
     }
   }
+
+  .autoql-vanilla-notification-item-hover-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--autoql-vanilla-accent-color);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.autoql-vanilla-notification-collapsed:hover {
+    .autoql-vanilla-notification-item-hover-overlay{
+      opacity: .05;
+    }
+  }
 }
