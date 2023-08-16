@@ -11,6 +11,10 @@
     max-width: 100% !important;
     display: block;
 
+    text {
+        stroke: transparent;
+    }
+
     .autoql-vanilla-stacked-rect,
     .autoql-vanilla-heatmap-rect,
     .autoql-vanilla-chart-bar {
