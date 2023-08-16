@@ -6,7 +6,7 @@ import './NotificationItem.scss';
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
 
-export function NotificationItem({ itemData, index }) {
+export function NotificationItem({ itemData, index, onClick }) {
   const item = document.createElement('div');
   
   this.isOpen = false;
@@ -89,18 +89,34 @@ export function NotificationItem({ itemData, index }) {
     return content;
   }
 
-  this.handleExpand = () => {
-    if(this.isOpen) {
-      this.content.classList.add('autoql-vanilla-notification-content-collapsed');
-      this.content.classList.remove('autoql-vanilla-notification-expanded');
-      item.classList.add('autoql-vanilla-notification-collapsed');
-    } else {
-      this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
-      this.content.classList.add('autoql-vanilla-notification-expanded');
-      item.classList.remove('autoql-vanilla-notification-collapsed');
-    }
+  item.expand = () => {
+    this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
+    this.content.classList.add('autoql-vanilla-notification-expanded');
+    item.classList.remove('autoql-vanilla-notification-collapsed');
+  }
+  
+  item.collapse = () => {
+    this.content.classList.add('autoql-vanilla-notification-content-collapsed');
+    this.content.classList.remove('autoql-vanilla-notification-expanded');
+    item.classList.add('autoql-vanilla-notification-collapsed');
+  }
 
-    this.isOpen = !this.isOpen
+  item.toggleOpen = () => {
+    this.isOpen = !this.isOpen;
+  }
+
+  item.setIsOpen = (val) => {
+    this.isOpen = val;
+  }
+  
+  this.handleExpand = () => {
+    onClick(item);
+    if(this.isOpen) {
+      item.collapse();
+    } else {
+      item.expand();
+    }
+    item.toggleOpen();
   }
 
   this.createItem = () => {

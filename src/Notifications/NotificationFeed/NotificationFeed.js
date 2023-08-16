@@ -8,7 +8,8 @@ export function NotificationFeed(selector, options) {
   checkAndApplyTheme();
   const container = document.createElement('div');
   const parent = document.querySelector(selector);
-  
+  this.expandedNotification = undefined;
+
   container.options = {
     authentication: {
       token: undefined,
@@ -112,6 +113,17 @@ export function NotificationFeed(selector, options) {
     container.appendChild(loading);
     return loading;
   }
+
+  this.collapsePreviousNotification = (newItem) => {
+    if(this.expandedNotification === newItem) return;
+
+    if(this.expandedNotification) {
+      this.expandedNotification.collapse();
+      this.expandedNotification.setIsOpen(false);
+    }
+
+    this.expandedNotification = newItem;
+  }
   
   this.createItems = async() => {
     const loading = this.showLoading();
@@ -120,7 +132,7 @@ export function NotificationFeed(selector, options) {
     itemsContainer.classList.add('autoql-vanilla-notification-feed-list');
     
     items.forEach((itemData, index) => {
-      const item = new NotificationItem({ itemData, index });
+      const item = new NotificationItem({ itemData, index, onClick: this.collapsePreviousNotification });
       itemsContainer.appendChild(item);
     });
     loading.remove();
