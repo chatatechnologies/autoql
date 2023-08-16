@@ -13,7 +13,7 @@ import { strings } from '../Strings'
 import '../../css/NotificationSettings.css'
 
 export function DataAlerts(selector, options) {
-    checkAndApplyTheme();
+    //checkAndApplyTheme();
 
     var parent = document.querySelector(selector);
     var wrapper = document.createElement('div');
@@ -55,8 +55,8 @@ export function DataAlerts(selector, options) {
         var responseLoadingContainer = document.createElement('div');
         var responseLoading = document.createElement('div');
 
-        responseLoadingContainer.classList.add('response-loading-container');
-        responseLoading.classList.add('response-loading');
+        responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (var i = 0; i <= 3; i++) {
             responseLoading.appendChild(document.createElement('div'));
         }

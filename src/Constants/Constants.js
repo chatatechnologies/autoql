@@ -68,7 +68,7 @@ export const DARK_THEME = {
     'box-shadow-2': '0px 1px 2px 0px var(--autoql-vanilla-box-shadow-color)',
 };
 
-export const CSS_PREFIX = 'autoql-vanilla-';
+export const CSS_PREFIX = 'autoql-vanilla';
 
 export const TIMESTAMP_FORMATS = {
   epoch: 'EPOCH',

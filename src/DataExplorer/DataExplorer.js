@@ -14,7 +14,7 @@ import { RelatedQueries } from "./Components/RelatedQueries";
 
 export function DataExplorer({ subjects, widget }) {
   let obj = this;
-  obj.subjects = subjects;
+  obj.subjects = subjects || [];
   const searchIcon = htmlToElement(SEARCH_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
@@ -47,7 +47,7 @@ export function DataExplorer({ subjects, widget }) {
   autocomplete.classList.add('autoql-vanilla-data-explorer-autocomplete');
   introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
   instructionList.classList.add('autoql-vanilla-intro-message-list-container');
-  input.setAttribute('placeholder', strings.exploreQueriesInput);
+  input.setAttribute('placeholder', strings.dataExplorerInput);
   
   title.appendChild(document.createTextNode('Welcome to '));
   title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
@@ -64,38 +64,40 @@ export function DataExplorer({ subjects, widget }) {
     elem.appendChild(document.createTextNode(text.string));
     listWrapper.appendChild(elem);
   })
-  
-  obj.subjects.forEach((subject) => {
-    const li = document.createElement('li');
-    li.classList.add('autoql-vanilla-subject');
-    li.appendChild(createIcon(BOOK_ICON));
-    li.appendChild(document.createTextNode(subject.display_name));
-    subjectsWrapper.appendChild(li);
-    li.onclick = async () => {
-      autocomplete.classList.remove('show')
-      input.value = subject.display_name;
-      contentWrapper.innerHTML = '';
-      const previewSection = new DataPreview({
-        icon: TABLE_ICON,
-        title: `Data Preview "${subject.query}"`,
-        subject,
-        widgetOptions: widget.options,
-      });
-      contentWrapper.appendChild(previewSection.container);
-      
-      const relatedQueriesSection = new RelatedQueries({
-        icon: CHATA_BUBBLES_ICON,
-        title: `Query suggestions for "${subject.display_name}"`,
-        containerHeight: container.clientHeight,
-        previewSectionHeight: previewSection.container.clientHeight,
-        textBarHeight: textBar.clientHeight,
-        subject,
-        widget,
-      });
-      contentWrapper.appendChild(relatedQueriesSection);
-    }
-  })
-  
+
+  obj.createSubjects = () => {
+    obj.subjects.forEach((subject) => {
+      const li = document.createElement('li');
+      li.classList.add('autoql-vanilla-subject');
+      li.appendChild(createIcon(BOOK_ICON));
+      li.appendChild(document.createTextNode(subject.display_name));
+      subjectsWrapper.appendChild(li);
+      li.onclick = async () => {
+        autocomplete.classList.remove('show')
+        input.value = subject.display_name;
+        contentWrapper.innerHTML = '';
+        const previewSection = new DataPreview({
+          icon: TABLE_ICON,
+          title: `Data Preview "${subject.query}"`,
+          subject,
+          widgetOptions: widget.options,
+        });
+        contentWrapper.appendChild(previewSection.container);
+        
+        const relatedQueriesSection = new RelatedQueries({
+          icon: CHATA_BUBBLES_ICON,
+          title: `Query suggestions for "${subject.display_name}"`,
+          containerHeight: container.clientHeight,
+          previewSectionHeight: previewSection.container.clientHeight,
+          textBarHeight: textBar.clientHeight,
+          subject,
+          widget,
+        });
+        contentWrapper.appendChild(relatedQueriesSection);
+      }
+    })
+  }
+
   chatBarInputIcon.appendChild(searchIcon);
   autocomplete.appendChild(subjectsWrapper);
   textBar.appendChild(input);
@@ -111,10 +113,23 @@ export function DataExplorer({ subjects, widget }) {
   container.appendChild(contentWrapper);
   container.style.display = 'none';
   
-  input.addEventListener('keydown', async event => {
-    if (event.key == 'Enter' && input.value) {
-      container.removeChild(introMessage);
-    }
+  input.addEventListener('keydown', async (event) => {
+      if (event.key == 'Enter' && input.value) {
+          contentWrapper.innerHTML = '';
+          autocomplete.classList.remove('show')
+
+          const relatedQueriesSection = new RelatedQueries({
+              icon: CHATA_BUBBLES_ICON,
+              title: `Query suggestions for "${input.value}"`,
+              containerHeight: container.clientHeight,
+              previewSectionHeight: 0,
+              textBarHeight: textBar.clientHeight,
+              plainText: input.value,
+              widget,
+          });
+
+          contentWrapper.appendChild(relatedQueriesSection);
+      }
   });
   
   input.addEventListener("focus", () => {
@@ -136,7 +151,10 @@ export function DataExplorer({ subjects, widget }) {
   
   obj.setSubjects = (subjects) => {
     obj.subjects = subjects;
+    obj.createSubjects();
   }
+
+  obj.createSubjects();
   
   obj.container = container;
 }

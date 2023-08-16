@@ -82,8 +82,8 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 toolbar.appendChild(
                     reportProblemButton
                 );
-                moreOptionsArray.push('copy_sql');
-                moreOptionsArray.push('notification');
+				autoQLConfig.debug && moreOptionsArray.push('copy_sql');
+                autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
                 reportProblem.classList.remove(
                     'chata-popover-single-message'
                 );
@@ -130,10 +130,10 @@ export function ActionToolbar(idRequest, tileView, tile) {
                     reportProblemButton
                 );
             }
-            moreOptionsArray.push('csv');
+            autoQLConfig.enableCSVDownload && moreOptionsArray.push('csv');
             moreOptionsArray.push('copy');
-            moreOptionsArray.push('copy_sql');
-            moreOptionsArray.push('notification');
+			autoQLConfig.debug && moreOptionsArray.push('copy_sql');
+            autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
             break;
         case 'chart-view':
             if(request['reference_id'] !== '1.1.420'){
@@ -142,8 +142,8 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 );
             }
             moreOptionsArray.push('png');
-            moreOptionsArray.push('copy_sql');
-            moreOptionsArray.push('notification');
+			autoQLConfig.debug && moreOptionsArray.push('copy_sql');
+            autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
         break;
         case 'safety-net':
         break;

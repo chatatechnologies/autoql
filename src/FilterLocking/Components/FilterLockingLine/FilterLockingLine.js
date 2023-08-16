@@ -8,7 +8,7 @@ import { strings } from '../../../Strings'
 
 import './FilterLockingLine.scss'
 
-export function FilterLockingLine(datamessenger, conditionList, conditionData){
+export function FilterLockingLine(datamessenger, conditionList, conditionData,filterLocking){
     const {
         value
     } = conditionData
@@ -42,7 +42,7 @@ export function FilterLockingLine(datamessenger, conditionList, conditionData){
             authentication
         } = datamessenger.options
         const { id } = view.values
-
+		filterLocking.displaySavingIndicator()
         if(slider.isChecked()){
             const {
                 filter_type,
@@ -86,7 +86,12 @@ export function FilterLockingLine(datamessenger, conditionList, conditionData){
         const { id } = view.values
         const url = `${authentication.domain}/autoql/api/v1/query/filter-locking/${id}?key=${authentication.apiKey}`
         apiCallDelete(url, datamessenger.options)
-        view.parentElement.removeChild(view)
+		if(view.parentElement.childElementCount === 2){
+ 			view.parentElement.replaceChildren();
+		}
+		else{
+			view.parentElement.removeChild(view)
+		}
     }
 
     view.exclude = () => {
@@ -103,6 +108,7 @@ export function FilterLockingLine(datamessenger, conditionList, conditionData){
 
     removeButton.onclick = () => {
         view.remove()
+		filterLocking.displaySavingIndicator()
         if(!conditionList.getData().length){
             conditionList.clearList()
             conditionList.showConditionEmptyMessage()

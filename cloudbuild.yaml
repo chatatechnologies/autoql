@@ -28,10 +28,9 @@ steps:
 
           gsutil cp -r /workspace/build/** gs://chata-caas-cdn/autoql/${TAG_NAME}/
 
-          # comment on 20201127 to freeze latest version
-          # if [[ $PROJECT_ID = "production-245514" ]]; then
-          #   gsutil rsync -d -r gs://chata-caas-cdn/autoql/${TAG_NAME} gs://chata-caas-cdn/autoql/latest
-          # fi
+          if [[ $PROJECT_ID = "production-245514" ]]; then
+            gsutil rsync -d -r gs://chata-caas-cdn/autoql/${TAG_NAME} gs://chata-caas-cdn/autoql/latest
+          fi
           
           [[ $_DEBUG != "true" ]] && curl -X POST -H 'Content-Type: application/json' --data '{"text":":white_check_mark: DEPLOY SUCCEEDED! `'$PROJECT_ID/$REPO_NAME:$TAG_NAME'`"}' ${_SLACK_WEBHOOK_URL}
 

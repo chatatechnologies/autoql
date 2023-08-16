@@ -71,20 +71,6 @@ class App extends React.Component {
         }
     };
 
-    fetchTopics = async (values, authentication) => {
-        const url = `https://backend-staging.chata.io/api/v1/topics?key=${values.apiKey}&project_id=${authentication.projectId}`;
-        const topicsResponse = await axios.get(url, {
-            headers: {
-                Authorization: `Bearer ${values.token}`,
-                "Integrator-Domain": values.domain,
-            },
-        });
-        this.datamessenger.setOption(
-            "queryQuickStartTopics",
-            topicsResponse.data.items
-        );
-    };
-
     onChangeTheme = (key, value) => {
         var themeConfig = this.state.themeConfig;
         themeConfig[key] = value;
@@ -99,6 +85,7 @@ class App extends React.Component {
         this.datamessenger.setOption("authentication", {
             ...values,
         });
+
         this.setState({
             isLogged: true,
             authentication: {
@@ -106,7 +93,6 @@ class App extends React.Component {
                 ...authentication,
             },
         });
-        this.fetchTopics(values, authentication);
         if (!this.notificationsIcon) {
             this.notificationsIcon = new NotificationIcon("#notifications-icon", {
                 authentication: {

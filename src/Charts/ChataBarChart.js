@@ -1,6 +1,8 @@
+import { aggregateData, scaleZero, cloneObject, onlyUnique, getBandScale } from 'autoql-fe-utils'
 import { select } from 'd3-selection'
 import { ChataChartListPopover } from './ChataChartListPopover'
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover'
+import { ChartRowSelector } from './ChartRowSelector'
 import {
     enumerateCols,
     getIndexesByType,
@@ -25,43 +27,59 @@ import {
 } from './d3-compatibility'
 import {
     formatColumnName,
-    getStringWidth,
     formatData,
     formatChartData,
     closeAllChartPopovers,
     getFirstDateCol,
     getGroupableCount,
-    getChartColorVars
+    getChartColorVars,
+    getStringWidth,
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { strings } from '../Strings'
+import { ChartLoader } from './ChartLoader'
+import { CSS_PREFIX } from '../Constants'
 
 export function createBarChart(
-    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
+    component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,
     valueClass='data-chartindex', renderTooltips=true){
+
+    var chartLoader = new ChartLoader(component)
+
     var margin = {
         top: 5,
         right: 10,
         bottom: 60,
-        left: 160,
-        marginLabel: 50,
+        left: 30,
         chartLeft: 120,
-        bottomChart: 60
-    },
-    width = component.parentElement.clientWidth - margin.left;
+        bottomChart: 0,
+        marginLabel: 30,
+        marginRowSelector: 0,
+    }
+
+    var hasRowSelector = options.pageSize < origJson?.data?.count_rows
+    if (hasRowSelector) {
+        margin.marginRowSelector = 20
+        margin.bottomChart += margin.marginRowSelector
+    }
+
+    var width = component.parentElement.clientWidth - margin.left;
     var height;
-    var cols = enumerateCols(json);
+    var cols = enumerateCols(origJson);
     var indexList = getIndexesByType(cols);
     var xIndexes = [];
     var yIndexes = [];
     let chartWidth = width;
     var legendOrientation = 'horizontal';
     var shapePadding = 100;
-    let groupableCount = getGroupableCount(json)
+    let groupableCount = getGroupableCount(origJson)
     let tooltipClass = groupableCount === 2 ? 'tooltip-3d' : 'tooltip-2d'
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
+    const paddingRectVert = 4;
+    const paddingRectHoz = 8;
     const legendBoxMargin = 15;
+
     if(indexList['STRING']){
         yIndexes.push(...indexList['STRING'])
     }
@@ -82,26 +100,36 @@ export function createBarChart(
         xIndexes = indexList['PERCENT'];
     }
 
-
     var metadataComponent = getMetadataElement(component, fromChataUtils);
     if(!metadataComponent.metadata){
         var dateCol = getFirstDateCol(cols)
-        let i = dateCol !== -1 ? dateCol : yIndexes[0].index
+        let i = dateCol !== -1 ? dateCol : yIndexes[0]?.index
         metadataComponent.metadata = {
             groupBy: {
                 index: i,
                 currentLi: 0,
             },
-            series: xIndexes
+            series: [xIndexes[0]]
         }
     }
     var yAxisIndex = metadataComponent.metadata.groupBy.index;
     var activeSeries = metadataComponent.metadata.series;
-    var data = makeGroups(json, options, activeSeries, cols[yAxisIndex].index);
-    const minMaxValues = getMinAndMaxValues(data);
     var index1 = activeSeries[0].index;
     var index2 = cols[yAxisIndex].index;
 
+    var rows = aggregateData({
+        data: origJson.data.rows,
+        columns: cols,
+        aggColIndex: yAxisIndex,
+        numberIndices: xIndexes.map(indexObj => indexObj.index),
+        dataFormatting: options.dataFormatting,
+    });
+
+    var json = cloneObject(origJson)
+    json.data.rows = rows
+
+    var data = makeGroups(json, options, activeSeries, cols[yAxisIndex].index);
+    const minMaxValues = getMinAndMaxValues(data);
 
     var colStr1 = cols[index2]['display_name'] || cols[index2]['name'];
     var colStr2 = cols[index1]['display_name'] || cols[index1]['name'];
@@ -109,11 +137,13 @@ export function createBarChart(
     var col2 = formatColumnName(colStr2);
     const tickWidth = (width - margin.left - margin.right) / 6
     const rotateLabels = tickWidth < 135;
+    
+    let totalVerticalMargins = margin.bottom + margin.top - margin.marginRowSelector - margin.marginLabel
 
     if(fromChataUtils){
         if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight
-            - (margin.top + margin.bottom + 3);
+            height = component.parentElement.parentElement.clientHeight - totalVerticalMargins;
+        
             if(height < 250){
                 height = 300;
             }
@@ -121,9 +151,9 @@ export function createBarChart(
             height = 250;
         }
     }else{
-        height = component.parentElement.offsetHeight
-        - (margin.bottom + margin.top);
+        height = component.parentElement.offsetHeight - totalVerticalMargins;
     }
+
     component.innerHTML = '';
     if(component.headerElement){
         component.parentElement.parentElement.removeChild(
@@ -149,8 +179,6 @@ export function createBarChart(
             value: group
         }
     })
-
-    var hasLegend = false;
     var hasLegend = groupNames.length > 1;
     if(hasLegend && groupNames.length < 3){
         margin.bottom = 80;
@@ -160,7 +188,7 @@ export function createBarChart(
     if(groupNames.length < 3){
         chartWidth = width;
     }else{
-        chartWidth = width - margin.chartLeft;
+        chartWidth = width - 100;
         legendOrientation = 'vertical';
         shapePadding = 5;
     }
@@ -178,44 +206,33 @@ export function createBarChart(
     }
     if(yTickValues.length > 0){
         for (var i = 0; i < yTickValues.length; i++) {
-            allLengths.push(formatLabel(yTickValues[i]).length);
+            allLengths.push(getStringWidth(formatLabel(yTickValues[i], cols[index2], options)));
         }
     }else{
         data.forEach((item) => {
-            const formattedValue = formatData(item.label, cols[index2], options)
-            allLengths.push(formatLabel(formattedValue).length);
+            allLengths.push(getStringWidth(formatLabel(item.label, cols[index2], options)));
         });
     }
-    let longestStringWidth = Math.max.apply(null, allLengths);
-    let longestStringHeight = minMaxValues.max.toString().length;
-    var extraMargin = hasLegend ? 15 : 0;
-    var increment = 5;
-    var factor = 10;
-    if(longestStringHeight <= 4)longestStringHeight = 5;
-    if(!hasLegend)increment = 2;
 
-    margin.chartLeft = longestStringWidth * factor;
-    if(margin.chartLeft <= 80) margin.chartLeft = 90;
-    if(margin.chartLeft > 150) margin.chartLeft = 150;
-
-    if(legendOrientation == 'horizontal'){
-        if(rotateLabels){
-            let m = longestStringHeight * increment + extraMargin;
-            if(hasLegend && m <= 50) m = 55;
-            margin.bottomChart = m;
-        }else{
-            margin.bottomChart = 13 + extraMargin;
-        }
-
-    }else{
-        if(rotateLabels){
-            let m = longestStringHeight * 3;
-            margin.bottomChart = m;
-        }else{
-            margin.bottomChart = 13;
-        }
-
+    let longestStringWidth = Math.max(allLengths);
+    
+    let legendMargin = 0
+    if (hasLegend && legendOrientation == 'horizontal') {
+        legendMargin = 30
     }
+
+    const labelSelectorPadding = longestStringWidth > 0 ? 10 : (margin.left - 15)
+    chartWidth -= longestStringWidth
+
+    const fontSize = 12
+    let xLabelsHeight = fontSize
+    if (rotateLabels) {
+        const labelWidth = getStringWidth(formatLabel(minMaxValues.max, cols[index1], options));
+        const longestStringHeight = (labelWidth + fontSize) / Math.sqrt(2)
+        xLabelsHeight = longestStringHeight
+    }
+
+    margin.bottomChart = xLabelsHeight + margin.marginRowSelector + legendMargin;
 
     var y0 = SCALE_BAND();
     var y1 = SCALE_BAND();
@@ -225,14 +242,15 @@ export function createBarChart(
     setDomainRange(
         y0,
         categoriesNames,
-        height - margin.bottomChart,
+        height - margin.bottomChart - margin.marginRowSelector,
         0,
         false,
         .1
     );
+    x.domain([minMaxValues.min, minMaxValues.max]).nice();
+
 
     var y1Range = minMaxValues.max === 0 ? 0 : getBandWidth(y0)
-
     setDomainRange(
         y1,
         groupNames,
@@ -241,46 +259,35 @@ export function createBarChart(
         false,
         .1
     )
-    var xAxis = getAxisBottom(x)
-    .tickSize(0)
-
+    var xAxis = getAxisBottom(x).tickSize(0)
     var yAxis = getAxisLeft(y0)
-    x.domain([minMaxValues.min, minMaxValues.max]).nice();
 
-    var colorScale = getColorScale(
-        groupNames,
-        chartColors
-    );
-
+    var colorScale = getColorScale(groupNames, chartColors);
 
     var svg = select(component)
-    .append("svg")
-    .attr("width", width + margin.left)
-    .attr("height", height + margin.top + margin.bottom)
-    .append("g")
-    .attr("transform",
-    "translate(" + margin.chartLeft + "," + margin.top + ")");
+        .append("svg")
+        .attr("width", width + margin.left)
+        .attr("height", height + margin.top + margin.bottom)
+        .append("g")
+        .attr("transform", `translate(${margin.left + longestStringWidth}, ${margin.top})`);
 
     var labelXContainer = svg.append('g');
     var labelYContainer = svg.append('g');
 
     // Y AXIS
     var textContainerY = labelYContainer.append('text')
-    .attr('x', -(height / 2))
-    .attr('y', -margin.chartLeft + margin.right + 5)
-    .attr('transform', 'rotate(-90)')
-    .attr('text-anchor', 'middle')
-    .attr('class', 'autoql-vanilla-y-axis-label')
-    textContainerY.append('tspan')
-    .text(col1)
+        .attr('x', -(height / 2))
+        .attr('y', -(longestStringWidth + labelSelectorPadding))
+        .attr('transform', 'rotate(-90)')
+        .attr('text-anchor', 'middle')
+        .attr('class', 'autoql-vanilla-y-axis-label')
+    
+    textContainerY.append('tspan').text(col1)
 
-    const onSelectorClick = (evt, showOnBaseline, legendEvent) => {
+    const onSelectorClick = (placement, align, evt, legendEvent) => {
         closeAllChartPopovers();
         const selectedItem = metadataComponent.metadata.groupBy.currentLi;
-        var popoverSelector = new ChataChartListPopover({
-            left: evt.clientX,
-            top: evt.clientY
-        }, yIndexes, (evt, popover) => {
+        var popoverSelector = new ChataChartListPopover(evt, yIndexes, (evt, popover) => {
             var yAxisIndex = evt.target.dataset.popoverIndex;
             var currentLi = evt.target.dataset.popoverPosition;
             metadataComponent.metadata.groupBy.index = yAxisIndex;
@@ -299,78 +306,64 @@ export function createBarChart(
                 renderTooltips
             )
             popover.close();
-        }, showOnBaseline);
+        }, placement, align);
 
         popoverSelector.setSelectedItem(selectedItem)
     }
 
     if(yIndexes.length > 1 && options.enableDynamicCharting){
         textContainerY.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
+
         labelYContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col1) + paddingRect;
+
+        var yLabelBBox = labelYContainer.node().getBBox()
 
         labelYContainer.append('rect')
-        .attr('x', margin.chartLeft - 25)
-        .attr('y', -(height/2 + (xWidthRect/2) + (paddingRect/2)))
-        .attr('height', xWidthRect + paddingRect)
-        .attr('width', 24)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('transform', 'rotate(-180)')
-        .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('transform', labelYContainer.attr('transform'))
+            .attr('class', 'autoql-vanilla-y-axis-label-border')
+            .attr('x', yLabelBBox.x - paddingRectVert)
+            .attr('y', yLabelBBox.y - paddingRectHoz)
+            .attr('height', yLabelBBox.height + paddingRectHoz * 2)
+            .attr('width', yLabelBBox.width + paddingRectVert * 2)
+            .attr('rx', '4')
 
-        labelYContainer.on('mouseup', (evt) => { onSelectorClick(evt, false) })
+        labelYContainer.on('mouseup', (e) => onSelectorClick('right', 'middle', e))
     }
 
     // X AXIS
     var textContainerX = labelXContainer.append('text')
-    .attr('x', chartWidth / 2)
-    .attr('y', height + margin.marginLabel)
-    .attr('text-anchor', 'middle')
-    .attr("class", "autoql-vanilla-x-axis-label")
-    textContainerX.append('tspan')
-    .text(col2);
+        .attr('x', chartWidth / 2)
+        .attr('y', height - margin.marginLabel - margin.marginRowSelector)
+        .attr('text-anchor', 'middle')
+        .attr("class", "autoql-vanilla-x-axis-label")
+        textContainerX.append('tspan')
+        .text(col2);
 
     if(xIndexes.length > 1 && options.enableDynamicCharting){
         textContainerX.append('tspan')
-        .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
-        .text('▼')
-        .style('font-size', '8px')
+            .attr('class', 'autoql-vanilla-chata-axis-selector-arrow')
+            .text('▼')
+            .style('font-size', '8px')
 
         labelXContainer.attr('class', 'autoql-vanilla-chart-selector')
-        const paddingRect = 15;
-        const xWidthRect = getStringWidth(col2) + paddingRect;
-        var _y = 0;
-        const _x = (chartWidth / 2) - (xWidthRect/2) - (paddingRect/2);
-        if(hasLegend && groupNames.length < 3){
-            _y = height - (margin.marginLabel/2) + 3;
-        }else{
-            _y = height + (margin.marginLabel/2) + 28;
-        }
+
+        var xLabelBBox = labelXContainer.node().getBBox()
+
         labelXContainer.append('rect')
-        .attr('x', _x)
-        .attr('y', _y - 20)
-        .attr('height', 24)
-        .attr('width', xWidthRect + paddingRect)
-        .attr('fill', 'transparent')
-        .attr('stroke', '#508bb8')
-        .attr('stroke-width', '1px')
-        .attr('rx', '4')
-        .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('class', 'autoql-vanilla-x-axis-label-border')
+            .attr('x', xLabelBBox.x - paddingRectHoz)
+            .attr('y', xLabelBBox.y - paddingRectVert)
+            .attr('height', xLabelBBox.height + paddingRectVert * 2)
+            .attr('width', xLabelBBox.width + paddingRectHoz * 2)
+            .attr('rx', '4')
 
         labelXContainer.on('mouseup', (evt) => {
             closeAllChartPopovers();
 
-            new ChataChartSeriesPopover({
-                left: evt.clientX,
-                top: evt.clientY
-            }, cols, activeSeries, (evt, popover, _activeSeries) => {
+            new ChataChartSeriesPopover(evt, 'top', 'middle', cols, activeSeries, (evt, popover, _activeSeries) => {
                 metadataComponent.metadata.series = _activeSeries;
                 createBarChart(
                     component,
@@ -382,7 +375,7 @@ export function createBarChart(
                     renderTooltips
                 )
                 popover.close();
-            }, true);
+            });
         })
     }
 
@@ -390,38 +383,39 @@ export function createBarChart(
         yAxis.tickValues(yTickValues);
     }
 
+    var xAxisElement;
     if(rotateLabels){
-        svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
+        xAxisElement = svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottomChart - margin.marginRowSelector) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index1], options)}
+            return formatLabel(d, cols[index1], options)}
         ))
-        .selectAll("text")
+        
+        xAxisElement.selectAll("text")
         .attr("transform", "translate(-10,0)rotate(-45)")
         .style("text-anchor", "end");
     }else{
-        svg.append("g")
-        .attr("transform", "translate(0," + (height - margin.bottomChart) + ")")
+        xAxisElement = svg.append("g")
+        .attr("transform", "translate(0," + (height - margin.bottomChart - margin.marginRowSelector) + ")")
         .call(xAxis.tickFormat(function(d){
-            return formatChartData(d, cols[index1], options)}
+            return formatLabel(d, cols[index1], options)}
         ))
-        .selectAll("text")
+        
+        xAxisElement.selectAll("text")
         .style("text-anchor", "center");
     }
 
     svg.append("g")
         .attr("class", "autoql-vanilla-axes-grid")
         .call(xAxis
-            .tickSize(height - margin.bottomChart)
+            .tickSize(height - margin.bottomChart - margin.marginRowSelector)
             .tickFormat("")
         );
 
     svg.append("g")
     .attr("class", "y axis")
     .call(yAxis.tickFormat(function(d){
-        let fLabel = formatChartData(d, cols[index2], options);
-        if(fLabel === 'Invalid date')fLabel = 'Untitled Category'
-        return formatLabel(fLabel);
+        return formatLabel(d, cols[index2], options);
     }))
     let slice;
     function createBars(){
@@ -437,11 +431,7 @@ export function createBarChart(
         });
 
         const calculateWidth = (d) => {
-            if(minMaxValues.min < 0){
-                return Math.abs(x(d.value) - x(0));
-            }else{
-                return x(d.value);
-            }
+            return Math.abs(x(d.value) - scaleZero(x))
         }
 
         const getXRect = (d) => {
@@ -530,7 +520,7 @@ export function createBarChart(
         .attr('class', `${tooltipClass} autoql-vanilla-chart-bar`)
         .style("fill", function(d) { return colorScale(d.group) })
 
-        tooltipCharts();
+        refreshTooltips();
         onUpdate(component);
     }
     if(hasLegend){
@@ -586,10 +576,7 @@ export function createBarChart(
             styleLegendTitleNoBorder(svgLegend)
         }else{
             if(groupNames.length > 2){
-                styleLegendTitleWithBorder(svgLegend, {
-                    showOnBaseline: true,
-                    legendEvent: true
-                }, onSelectorClick)
+                styleLegendTitleWithBorder(svgLegend, { legendEvent: true }, onSelectorClick)
             }
         }
 
@@ -614,7 +601,6 @@ export function createBarChart(
                 `translate(${legendXPosition}, ${legendYPosition})`
             )
         }
-
     }
 
     select(window).on(
@@ -630,6 +616,51 @@ export function createBarChart(
             )
         }
     );
+
+    const onDataFetching = () => chartLoader?.setChartLoading(true)
+
+    const onNewData = (newJson) => {
+        if (newJson?.data?.rows) {
+            origJson.data.rows = newJson.data.rows
+            origJson.data.row_limit = newJson.data.row_limit
+
+            createBarChart(
+                component,
+                origJson,
+                options,
+                onUpdate,
+                fromChataUtils,
+                valueClass,
+                renderTooltips,
+            )
+        }
+
+        chartLoader?.setChartLoading(false)
+    } 
+    const onDataFetchError = (error) =>  {
+        console.error(error)
+        chartLoader?.setChartLoading(false)
+    }
+
+    const popoverPosition = {
+        x: chartWidth / 2,
+        y: height - margin.marginRowSelector,
+    }
+
+    if (hasRowSelector) {
+        new ChartRowSelector(
+            svg,
+            origJson,
+            onDataFetching,
+            onNewData,
+            onDataFetchError,
+            metadataComponent,
+            popoverPosition,
+            options,
+        );
+    }
+    
+    component.appendChild(chartLoader)
 
     createBars();
 }

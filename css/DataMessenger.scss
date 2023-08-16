@@ -1,7 +1,17 @@
+body.autoql-vanilla-drawer-open-body {
+    // This is required to disallow body scrolling through the DM overlay
+    overflow: hidden;
+}
+
 .autoql-vanilla-drawer {
     position: fixed;
     z-index: 9999;
     transition: width 0s ease 0.3s, height 0s ease 0.3s, transform 0.3s cubic-bezier(0.78, 0.14, 0.15, 0.86);
+
+    // Disable scrolling in the child message elements while the main message container is being scrolled
+    .autoql-vanilla-chata-scrollbox.ps--scrolling-y .autoql-vanilla-chat-single-message-container {
+        pointer-events: none;
+    }
 
     .autoql-vanilla-chat-header-container {
         display: flex;
@@ -65,19 +75,15 @@
     }
 
     .autoql-vanilla-chat-single-message-container {
-        &.response:first-child {
-            padding-top: 18px;
-        }
-
         &.response {
             display: flex;
             flex-direction: column;
             justify-content: flex-start;
             align-items: flex-start;
-            width: 100%;
-            padding: 10px 20px 5px 20px;
+            padding: 6px 20px 3px 20px;
             transition: background-color 0.2s ease;
             position: relative;
+            width: calc(100% - 20px);
 
             .autoql-vanilla-chat-message-bubble-container {
                 display: flex;
@@ -101,7 +107,7 @@
                     font-size: 14px;
                     letter-spacing: 0.04em;
                     box-sizing: border-box;
-                    box-shadow: var(--react-autoql-box-shadow-1);
+                    box-shadow: var(--autoql-vanilla-box-shadow-1);
                     max-height: 400px;
                 }
             }
@@ -356,6 +362,13 @@
         .autoql-vanilla-drawer-body {
             pointer-events: none;
             opacity: 0;
+
+            div,
+            span {
+                visibility: hidden;
+                pointer-events: none;
+                opacity: 0;
+            }
         }
     }
 
@@ -601,6 +614,47 @@
                         width: 65px;
                     }
                 }
+            }
+        }
+    }
+}
+
+.autoql-vanilla-response-loading-container {
+    display: flex;
+    position: absolute;
+    top: 0px;
+    left: 20px;
+
+    .autoql-vanilla-response-loading {
+        display: inline-block;
+        position: relative;
+        height: 12px;
+        width: 64px;
+
+        div {
+            position: absolute;
+            top: 0;
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+            background: #e2e2e2;
+            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+
+            &:nth-child(1) {
+                left: 6px;
+                animation: response-loading1 0.6s infinite;
+            }
+            &:nth-child(2) {
+                left: 6px;
+                animation: response-loading2 0.6s infinite;
+            }
+            &:nth-child(3) {
+                left: 26px;
+                animation: response-loading2 0.6s infinite;
+            }
+            &:nth-child(4) {
+                left: 45px;
+                animation: response-loading3 0.6s infinite;
             }
         }
     }

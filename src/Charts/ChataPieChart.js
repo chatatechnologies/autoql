@@ -14,12 +14,12 @@ import {
 import {
     formatColumnName,
     formatData,
-    formatChartData,
     getFirstDateCol,
     getChartColorVars
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
+import { CSS_PREFIX } from '../Constants'
 
 export function createPieChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
@@ -34,7 +34,7 @@ export function createPieChart(
     var indexList = getIndexesByType(colsEnum);
     var xIndexes = [];
     var yIndexes = [];
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     if(indexList['STRING']){
         xIndexes.push(...indexList['STRING'])
@@ -65,7 +65,7 @@ export function createPieChart(
                 index: i,
                 currentLi: 0,
             },
-            series: yIndexes
+            series: [yIndexes[0]]
         }
     }
 
@@ -82,8 +82,8 @@ export function createPieChart(
             isVisible: true
         }
         legendGroups[
-            formatChartData(key, cols[index1], options) + ": " +
-            formatChartData(value, cols[index2], options)
+            formatData(key, cols[index1], options) + ": " +
+            formatData(value, cols[index2], options)
         ] = {
             value: key
         }
@@ -144,8 +144,9 @@ export function createPieChart(
         (d) => { return d.value }
     )
 
-
-    let pieChartContainer
+    let slicesContainer;
+    var pieChartContainer = svg.append('g')
+    
     const entries = (map, visibleGroups) => {
         var entries = [];
         visibleGroups.map((group) => {
@@ -157,18 +158,19 @@ export function createPieChart(
     }
 
     const createSlices = () => {
+        if (slicesContainer)slicesContainer.remove()
+        slicesContainer = pieChartContainer.append('g').attr("transform", `translate(${width / 2 + outerRadius}, ${height / 2})`);
+        
         var visibleGroups = getPieGroups(groups);
         var dataReady = pie(entries(data, visibleGroups))
-        if(pieChartContainer)pieChartContainer.remove()
-        pieChartContainer = svg.append('g')
-        .attr("transform", "translate(" + (width / 2 + outerRadius) + "," + (height / 2) + ")");
+
         var colorLabels = []
         for(let [key] of Object.entries(data)){
             colorLabels.push(key);
         }
         var color = getColorScale(colorLabels, chartColors)
 
-        pieChartContainer.selectAll('path')
+        slicesContainer.selectAll('path')
         .data(dataReady)
         .enter()
         .append('path')
@@ -222,17 +224,25 @@ export function createPieChart(
             })
         })
         .attr('class', 'tooltip-2d pie-slice slice')
-        tooltipCharts();
+
+        var chartCenter = width / 2
+        var bbox = pieChartContainer?.node()?.getBBox?.()
+        if (bbox) {
+            var bboxCenterX = bbox.x + bbox.width / 2
+            pieChartContainer.attr('transform', `translate(${chartCenter - bboxCenterX}, 0)`)
+        }
+
+        refreshTooltips();
         onUpdate(component)
     }
 
 
     // define legend
-    var svgLegend = svg.append('g')
-    .style('fill', 'currentColor')
-    .style('fill-opacity', '1')
-    .style('font-family', 'inherit')
-    .style('font-size', '10px')
+    var svgLegend = pieChartContainer.append('g')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', '1')
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
 
     var labels = []
 
@@ -262,7 +272,7 @@ export function createPieChart(
 
     const legendHeight = legendBBox.height
     const legendWidth = legendBBox.width
-    const legendXPosition = width / 2 - legendWidth
+    const legendXPosition = width / 2 - legendWidth - 10
     const legendYPosition =
       legendHeight < height - 20 ? (height - legendHeight) / 2 : 15
 
@@ -276,9 +286,8 @@ export function createPieChart(
         for (var i = 0; i < nodes.length; i++) {
             words.push(nodes[i].textContent)
         }
-        var unformatGroup = legendGroups[words.join(' ')].value;
-        groups[unformatGroup].isVisible =
-        !groups[unformatGroup].isVisible;
+        var unformatGroup = legendGroups[words.join(' ')]?.value;
+        groups[unformatGroup].isVisible = !groups[unformatGroup].isVisible;
         createSlices();
         const legendCell = select(this);
         legendCell.classed(

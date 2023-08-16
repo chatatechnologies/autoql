@@ -20,8 +20,9 @@ import {
     getChartColorVars,
     getNotGroupableField,
 } from '../Utils'
-import { tooltipCharts } from '../Tooltips'
+import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
+import { CSS_PREFIX } from '../Constants'
 
 export function createBubbleChart(
     component, json, options, fromChataUtils=true,
@@ -40,7 +41,7 @@ export function createBubbleChart(
     var labelsX = ChataUtils.getUniqueValues(data, row => row.unformatX)
     var labelsY = ChataUtils.getUniqueValues(data, row => row.unformatY).sort()
     var cols = json['data']['columns'];
-    var { chartColors } = getChartColorVars();
+    var { chartColors } = getChartColorVars(CSS_PREFIX);
 
     labelsY = formatLabels(
         labelsY, cols[groupableIndex1], options
@@ -243,7 +244,7 @@ export function createBubbleChart(
     .attr("fill", chartColors[0])
     .attr("opacity", "0.7")
     .attr('class', 'tooltip-3d circle')
-    tooltipCharts();
+    refreshTooltips();
 
     select(window).on(
         "chata-resize." + component.dataset.componentid, () => {

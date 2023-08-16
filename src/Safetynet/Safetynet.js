@@ -28,7 +28,6 @@ export function createSafetynetContent(
     runQueryButton.onclick = function(event){
         closeAllSafetynetSelectors();
         onClick(event)
-        // runQuery(event, context);
     }
     var responseContentContainer = document.createElement('div');
     var safetyNetContainer = document.createElement('div');
