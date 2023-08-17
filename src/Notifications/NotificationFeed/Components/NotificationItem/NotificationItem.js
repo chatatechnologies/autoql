@@ -55,8 +55,8 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     const messageContainer = document.createElement('div');
     const wrapper = document.createElement('div');
     const refreshButton = document.createElement('button');
-    const message = `This Data Alert encountered an error on ${this.getFormattedTimestamp()}.
-    To resolve this issue, try restarting the Alert by clicking the button below.`;
+    const message = `This Data Alert encountered an error on ${this.getFormattedTimestamp()}.`;
+    const secondMessage = 'To resolve this issue, try restarting the Alert by clicking the button below.';
     const instructions = `
       If the problem persists, you may need to create a new Data Alert from the query "${itemData.data_return_query}"
     `;
@@ -65,9 +65,16 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     refreshButton.appendChild(document.createTextNode('Restart Alert'));
     wrapper.appendChild(document.createTextNode(message));
     wrapper.appendChild(document.createElement('br'));
+    wrapper.appendChild(document.createTextNode(secondMessage));
+    wrapper.appendChild(document.createElement('br'));
     wrapper.appendChild(refreshButton);
     wrapper.appendChild(document.createElement('br'));
     wrapper.appendChild(document.createTextNode(instructions));
+
+    refreshButton.classList.add('autoql-vanilla-chata-btn');
+    refreshButton.classList.add('autoql-vanilla-primary');
+    refreshButton.classList.add('autoql-vanilla-large');
+    refreshButton.classList.add('autoql-vanilla-notification-error-reinitialize-btn');
 
     messageContainer.classList.add('autoql-vanilla-notification-error-message-container');
     messageContainer.appendChild(wrapper);
@@ -140,6 +147,8 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     content.appendChild(loading);
 
     this.content = content;
+    this.contentContainer = contentContainer;
+  
     this.loading = loading;
 
     return content;
@@ -235,13 +244,14 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   }
 
   this.createContentResponse = async() => {
-    if(this.queryResponse === undefined) {
-      const response = await this.fetchNotification()
-      this.queryResponse = response.data;
-    }
+    if(this.queryResponse !== undefined) return;
+
+    const response = await this.fetchNotification()
+    this.queryResponse = response.data;
 
     if(this.hasError()) {
       this.loading.remove();
+      this.contentContainer.appendChild(this.createMessageError());
     }
   }
   
