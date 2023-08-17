@@ -1,8 +1,9 @@
 import { dismissNotification, fetchNotificationData } from "autoql-fe-utils";
-import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from "../../../../Svg";
+import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE, REFRESH_ICON } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import dayjs from '../../../../Utils/dayjsPlugins';
 import './NotificationItem.scss';
+import { isEmpty } from "lodash";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -47,6 +48,31 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
       return `${dateDayJS.format('MMMM Do')} at ${time}`
     }
     return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`
+  }
+
+  
+  this.createMessageError = () => {
+    const messageContainer = document.createElement('div');
+    const wrapper = document.createElement('div');
+    const refreshButton = document.createElement('button');
+    const message = `This Data Alert encountered an error on ${this.getFormattedTimestamp()}.
+    To resolve this issue, try restarting the Alert by clicking the button below.`;
+    const instructions = `
+      If the problem persists, you may need to create a new Data Alert from the query "${itemData.data_return_query}"
+    `;
+
+    refreshButton.appendChild(createIcon(REFRESH_ICON));
+    refreshButton.appendChild(document.createTextNode('Restart Alert'));
+    wrapper.appendChild(document.createTextNode(message));
+    wrapper.appendChild(document.createElement('br'));
+    wrapper.appendChild(refreshButton);
+    wrapper.appendChild(document.createElement('br'));
+    wrapper.appendChild(document.createTextNode(instructions));
+
+    messageContainer.classList.add('autoql-vanilla-notification-error-message-container');
+    messageContainer.appendChild(wrapper);
+
+    return messageContainer;
   }
   
   this.createStrip = () => {
@@ -131,9 +157,6 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     } else {
       item.expand();
     }
-
-    const response = await this.fetchNotification()
-    console.log(response);
     item.toggleOpen();
   }
 
@@ -206,6 +229,19 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
         item.classList.remove('autoql-vanilla-notification-unread')
         itemData.state = 'DISMISSED';
       }
+    }
+
+    this.createContentResponse();
+  }
+
+  this.createContentResponse = async() => {
+    if(this.queryResponse === undefined) {
+      const response = await this.fetchNotification()
+      this.queryResponse = response.data;
+    }
+
+    if(this.hasError()) {
+      this.loading.remove();
     }
   }
   
