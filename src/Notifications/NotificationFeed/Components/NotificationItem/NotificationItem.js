@@ -1,4 +1,4 @@
-import { fetchNotificationData } from "autoql-fe-utils";
+import { dismissNotification, fetchNotificationData } from "autoql-fe-utils";
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import dayjs from '../../../../Utils/dayjsPlugins';
@@ -68,6 +68,15 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     return expandArrow;
   }
   
+  this.dismissNotification = async () => {
+    const response = await dismissNotification({
+      notificationId: itemData.id,
+      ...authentication,
+    });
+
+    return response;
+  }
+
   this.hasError = () => {
     return itemData.outcome === 'ERROR';
   }
@@ -172,10 +181,17 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     item.classList.add('autoql-vanilla-notification-unread');
   }
 
-  item.expand = () => {
+  item.expand = async() => {
     this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
     this.content.classList.add('autoql-vanilla-notification-expanded');
     item.classList.remove('autoql-vanilla-notification-collapsed');
+    if(this.isUnread()) {
+      const response = await this.dismissNotification();
+      if(response.status === 200) {
+        item.classList.remove('autoql-vanilla-notification-unread')
+        itemData.state = 'DISMISSED';
+      }
+    }
   }
   
   item.collapse = () => {
