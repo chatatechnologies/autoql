@@ -78,6 +78,7 @@
       }
     }
   }
+
   .autoql-vanilla-notification-alert-strip {
     height: 100%;
     opacity: 1;
@@ -90,6 +91,12 @@
     transition-property: opacity;
     transition-duration: .2s;
     transition-timing-function: ease;
+  }
+
+  &.autoql-vanilla-notification-error {
+    .autoql-vanilla-notification-alert-strip {
+      background: var(--autoql-vanilla-warning-color,#FFB600);
+    }
   }
 
   .autoql-vanilla-notification-item-expand-arrow {
@@ -114,6 +121,16 @@
       .autoql-vanilla-notification-display-name-container{
         .autoql-vanilla-notification-display-name {
         color: var(--autoql-vanilla-text-color-primary, rgba(0, 0, 0, .7));
+        }
+      }
+    }
+  }
+
+  &.autoql-vanilla-notification-error.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-list-item-header {
+      .autoql-vanilla-notification-display-name-container{
+        .autoql-vanilla-notification-display-name {
+        color: var(--autoql-vanilla-warning-color,#FFB600) !important;
         }
       }
     }

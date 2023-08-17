@@ -192,6 +192,8 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     this.isOpen = val;
   }
 
+  console.log(itemData)
+
   item.style.animationDelay = DELAY * index + 's';
 
   return item;
