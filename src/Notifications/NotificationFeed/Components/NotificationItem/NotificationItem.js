@@ -13,6 +13,22 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   this.queryResponse = undefined;
   this.isOpen = false;
 
+  this.getLoadingDots = () => {
+    const loading = document.createElement('div');
+    const dotsContainer = document.createElement('div');
+    loading.classList.add('autoql-vanilla-loading-wrapper');
+    loading.classList.add('autoql-vanilla-notification-content-loading');
+    dotsContainer.classList.add('autoql-vanilla-response-loading');
+
+    
+    for (let index = 0; index < 4; index++) {
+      dotsContainer.appendChild(document.createElement('div'))
+    }
+    
+    loading.appendChild(dotsContainer);
+    return loading;
+  }
+
   this.getFormattedTimestamp = () => {
     const timestamp = itemData.created_at;
     const dateDayJS = dayjs.unix(timestamp)
@@ -88,14 +104,17 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   this.createContent = () => {
     const content = document.createElement('div');
     const contentContainer = document.createElement('div');
+    const loading = this.getLoadingDots();
 
     content.classList.add('autoql-vanilla-notification-expanded-content');
     content.classList.add('autoql-vanilla-notification-content-collapsed');
     contentContainer.classList.add('autoql-vanilla-notification-content-container');
 
     content.appendChild(contentContainer);
+    content.appendChild(loading);
 
     this.content = content;
+    this.loading = loading;
 
     return content;
   }
@@ -169,18 +188,14 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     this.header.onclick = this.handleExpand;
   }
   
-  this.createItem();
-  item.classList.add('autoql-vanilla-notification-list-item');
-  item.classList.add('autoql-vanilla-notification-collapsed');
-  
   if(this.hasError()) {
     item.classList.add('autoql-vanilla-notification-error');
   }
-
+  
   if(this.isUnread()) {
     item.classList.add('autoql-vanilla-notification-unread');
   }
-
+  
   item.expand = async() => {
     this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
     this.content.classList.add('autoql-vanilla-notification-expanded');
@@ -199,18 +214,22 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     this.content.classList.remove('autoql-vanilla-notification-expanded');
     item.classList.add('autoql-vanilla-notification-collapsed');
   }
-
+  
   item.toggleOpen = () => {
     this.isOpen = !this.isOpen;
   }
-
+  
   item.setIsOpen = (val) => {
     this.isOpen = val;
   }
-
+  
   console.log(itemData)
-
+  
+  this.createItem();
+  item.classList.add('autoql-vanilla-notification-list-item');
+  item.classList.add('autoql-vanilla-notification-collapsed');
   item.style.animationDelay = DELAY * index + 's';
 
+  
   return item;
 }

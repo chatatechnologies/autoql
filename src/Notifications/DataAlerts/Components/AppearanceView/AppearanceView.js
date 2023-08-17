@@ -102,6 +102,7 @@ export function AppearanceView({ dataAlert }) {
     const strip = document.createElement('div');
 
     item.classList.add('autoql-vanilla-notification-list-item');
+    item.classList.add('autoql-vanilla-notification-unread');
     header.classList.add('autoql-vanilla-notification-list-item-header');
     displayNameContainer.classList.add('autoql-vanilla-notification-display-name-container');
     displayName.classList.add('autoql-vanilla-notification-display-name');

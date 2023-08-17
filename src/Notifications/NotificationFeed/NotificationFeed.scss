@@ -6,6 +6,10 @@
   font-family: var(--autoql-vanilla-font-family),sans-serif;
   color: var(--autoql-vanilla-text-color-primary);
 
+  .autoql-vanilla-notification-content-loading {
+    margin-top: 0 !important;
+  }
+
   .autoql-vanilla-loading-wrapper {
     text-align: center;
     margin-top: 100px;
