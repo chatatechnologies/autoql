@@ -86,16 +86,23 @@
     left: 0;
     top: 0;
     width: 4px;
-    background: var(--autoql-vanilla-accent-color,#26a7df);
-    color: var(--autoql-vanilla-text-color-accent);
+    color: transparent;
+    background: transparent;
     transition-property: opacity;
     transition-duration: .2s;
     transition-timing-function: ease;
   }
 
-  &.autoql-vanilla-notification-error {
+  &.autoql-vanilla-notification-error.autoql-vanilla-notification-unread {
     .autoql-vanilla-notification-alert-strip {
       background: var(--autoql-vanilla-warning-color,#FFB600);
+    }
+  }
+
+  &.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-alert-strip {
+      background: var(--autoql-vanilla-accent-color,#26a7df);
+      color: var(--autoql-vanilla-text-color-accent);
     }
   }
 
