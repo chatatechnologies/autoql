@@ -29,7 +29,6 @@ import { createSafetynetContent, createSuggestionArray } from '../Safetynet';
 import {
     getSpeech,
     htmlToElement,
-    closeAllChartPopovers,
     closeAllSafetynetSelectors,
     uuidv4,
     allColHiddenMessage,
@@ -371,7 +370,6 @@ export function DataMessenger(options = {}) {
 
     obj.closeDrawer = () => {
         obj.closePopOver(obj.clearMessagePop);
-        closeAllChartPopovers();
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
         document.body.classList.remove('autoql-vanilla-drawer-open-body');
@@ -942,13 +940,11 @@ export function DataMessenger(options = {}) {
         };
 
         clearAllButton.onclick = () => {
-            closeAllChartPopovers();
             popover.style.visibility = 'visible';
             popover.style.opacity = 1;
         };
 
         filterButton.onclick = () => {
-            closeAllChartPopovers();
             if (filterLocking.isOpen) {
                 filterLocking.hide();
             } else {
@@ -1485,8 +1481,6 @@ export function DataMessenger(options = {}) {
     };
 
     obj.refreshToolbarButtons = (oldComponent, ignore) => {
-        closeAllChartPopovers();
-
         if (!oldComponent) {
             return
         }
@@ -2086,7 +2080,6 @@ export function DataMessenger(options = {}) {
     };
 
     obj.onRTVLClick = (rtChunk) => {
-        closeAllChartPopovers();
         obj.filterLocking?.show();
         if (rtChunk.lockedFilter) {
             obj.filterLocking.submitVL(rtChunk.lockedFilter, rtChunk.eng);
@@ -2555,7 +2548,7 @@ export function DataMessenger(options = {}) {
     obj.getQueryFn = (response) => {
         // ------- test data -------
         // var jsonResponseCopy = cloneObject(response)
-        // var pageSize = params.pageSize ?? response.data.data.row_limit
+        // var pageSize = obj.options.pageSize ?? response.data.data.row_limit
 
         // var rows = []
         // for(let i = 0; i < pageSize; i++) {
@@ -2566,11 +2559,11 @@ export function DataMessenger(options = {}) {
         // jsonResponseCopy.data.data.row_limit = pageSize
         // jsonResponseCopy.data.data.fe_req.page_size = pageSize
 
-        // return new Promise((res, rej) => {
+        // return () => (new Promise((res, rej) => {
         //     setTimeout(() => {
         //         res(jsonResponseCopy)
         //     }, 2000)
-        // })
+        // }))
         // -------------------------
 
         let newResponse;
@@ -2836,7 +2829,6 @@ export function DataMessenger(options = {}) {
     obj.speechToTextEvent();
     obj.registerWindowClicks();
     obj.scrollBox.onscroll = () => {
-        closeAllChartPopovers();
         closeAllSafetynetSelectors();
     };
 

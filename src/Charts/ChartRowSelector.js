@@ -1,6 +1,5 @@
 import { DEFAULT_DATA_PAGE_SIZE, MAX_DATA_PAGE_SIZE, getRowNumberListForPopover, getThemeValue } from 'autoql-fe-utils';
 import { PopoverChartSelector } from './PopoverChartSelector';
-import { closeAllChartPopovers } from '../Utils';
 import { strings } from '../Strings';
 import { DATA_LIMIT_WARNING } from '../Svg';
 import { CSS_PREFIX } from '../Constants';
@@ -84,7 +83,6 @@ export function ChartRowSelector(
         }
 
         const onSelectorClick = (evt) => {
-            closeAllChartPopovers();
             new RowSelectorPopover(evt);
         };
 
