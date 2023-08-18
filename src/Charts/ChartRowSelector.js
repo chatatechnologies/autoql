@@ -13,7 +13,7 @@ export function ChartRowSelector(
     options,
 ) {
     try {
-        var currentPageSize = json.data.row_limit;
+        var currentPageSize = Math.min(json.data.count_rows, json.data.row_limit);
         var initialPageSize = options?.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
         var totalRows = json.data.count_rows;
 
