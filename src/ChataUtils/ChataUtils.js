@@ -1,7 +1,6 @@
 import 'regenerator-runtime/runtime.js';
 import {
     htmlToElement,
-    closeAllChartPopovers,
     closeAllToolbars,
     closeAllSafetynetSelectors,
     closeAutocompleteObjects,
@@ -948,20 +947,6 @@ ChataUtils.createSuggestions = function (
 };
 
 ChataUtils.registerWindowClicks = () => {
-    const excludeElementsForChartSelector = [
-        'autoql-vanilla-x-axis-label-border',
-        'autoql-vanilla-y-axis-label-border',
-        'autoql-vanilla-axis-selector-container',
-        'number-selector-header',
-        'chata-chart-selector-checkbox',
-        'autoql-vanilla-chata-col-selector-name',
-        'autoql-vanilla-button-wrapper-selector',
-        'autoql-vanilla-chata-list-item',
-        'autoql-vanilla-chart-row-selector',
-        'autoql-vanilla-chart-row-selector-box',
-        'autoql-vanilla-axis-selector-box',
-    ];
-
     const excludeElementsForToolbars = [
         'autoql-vanilla-chata-toolbar-btn',
         'autoql-vanilla-more-options',
@@ -977,7 +962,6 @@ ChataUtils.registerWindowClicks = () => {
     ]
 
     document.body.addEventListener('click', (evt) => {
-        var closeChartPopovers = true;
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
         var closeAutocomplete = true;
@@ -986,14 +970,6 @@ ChataUtils.registerWindowClicks = () => {
             let c = excludeElementsForSafetynet[i];
             if (evt.target.classList.contains(c)) {
                 closeSafetynetSelectors = false;
-            }
-        }
-
-        for (let i = 0; i < excludeElementsForChartSelector.length; i++) {
-            let c = excludeElementsForChartSelector[i];
-            if (evt.target.classList.contains(c)) {
-                closeChartPopovers = false;
-                break;
             }
         }
 
@@ -1011,10 +987,6 @@ ChataUtils.registerWindowClicks = () => {
                 closeAutocomplete = false;
                 break;
             }
-        }
-
-        if(closeChartPopovers){
-            closeAllChartPopovers();
         }
 
         if (closeToolbars) {
