@@ -276,7 +276,17 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.queryFn = json?.queryFn;
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewPage = (newRows) => {};
+    component.onNewPage = (newRows) => {
+		var tableRowCountElement = component.parentElement.querySelector(".autoql-vanilla-chata-table-row-count")
+		var currentText = tableRowCountElement.textContent;
+		var matches = currentText.match(/(\d+)/);
+		if (matches && matches.length > 0) {
+			var currentTableRowCount = parseInt(matches[0]);
+			var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+			var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
+			tableRowCountElement.textContent = newText;
+		  }
+	};
 
     // TODO(Nikki) - update parent component with changes
     component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
