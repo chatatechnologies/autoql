@@ -86,46 +86,32 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     return messageContainer;
   }
 
+  this.getInterpretationChunk = (chunk) => {
+    switch (chunk.c_type) {
+      case 'VALIDATED_VALUE_LABEL': {
+        return ` ${chunk.eng}`
+      }
+      case 'VALUE_LABEL': {
+        return ` ${chunk.eng}`
+      }
+      case 'DELIM': {
+        return `${chunk.eng}`
+      }
+      default: {
+        return ` ${chunk.eng}`
+      }
+    }
+  }
+
   this.getChunkedInterpretationText = () => {
     const parsedRT = this.queryResponse?.data?.parsed_interpretation
     const rtArray = constructRTArray(parsedRT)
-
-    if (!parsedRT?.length) {
-      return this.queryResponse?.data?.text
-    }
-
-    let queryText = ''
-    let numValueLabels = 0
-    rtArray.forEach((chunk, i) => {
-      let text = chunk.eng?.trim()
-      const type = chunk.c_type
-
-      if (!text || !type || type === 'VL_SUFFIX' || type === 'DELIM') {
-        return
-      }
-
-      let prefix = ''
-      if (type === 'VALUE_LABEL') {
-        if (!numValueLabels) {
-          prefix = 'for '
-        }
-
-        numValueLabels += 1
-      }
-
-      if (type === 'DATE') {
-        const timeFrame = getTimeFrameTextFromChunk(chunk)
-        if (timeFrame) {
-          text = timeFrame
-        } else {
-          return
-        }
-      }
-
-      queryText = `${queryText} ${prefix}${text}`
+    let rtString = ''
+    rtArray.map((chunk, i) => {
+      rtString = `${rtString}${this.getInterpretationChunk(chunk)}`
     })
 
-    return queryText?.trim()
+    return rtString.trim()
   }
   
   this.createStrip = () => {
