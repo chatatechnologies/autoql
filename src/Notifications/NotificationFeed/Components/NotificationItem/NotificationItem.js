@@ -1,9 +1,13 @@
-import { dismissNotification, fetchNotificationData } from "autoql-fe-utils";
+import {
+  constructRTArray,
+  dismissNotification,
+  fetchNotificationData,
+  getTimeFrameTextFromChunk
+} from "autoql-fe-utils";
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE, REFRESH_ICON } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import dayjs from '../../../../Utils/dayjsPlugins';
 import './NotificationItem.scss';
-import { isEmpty } from "lodash";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -80,6 +84,48 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     messageContainer.appendChild(wrapper);
 
     return messageContainer;
+  }
+
+  this.getChunkedInterpretationText = () => {
+    const parsedRT = this.queryResponse?.data?.parsed_interpretation
+    const rtArray = constructRTArray(parsedRT)
+
+    if (!parsedRT?.length) {
+      return this.queryResponse?.data?.text
+    }
+
+    let queryText = ''
+    let numValueLabels = 0
+    rtArray.forEach((chunk, i) => {
+      let text = chunk.eng?.trim()
+      const type = chunk.c_type
+
+      if (!text || !type || type === 'VL_SUFFIX' || type === 'DELIM') {
+        return
+      }
+
+      let prefix = ''
+      if (type === 'VALUE_LABEL') {
+        if (!numValueLabels) {
+          prefix = 'for '
+        }
+
+        numValueLabels += 1
+      }
+
+      if (type === 'DATE') {
+        const timeFrame = getTimeFrameTextFromChunk(chunk)
+        if (timeFrame) {
+          text = timeFrame
+        } else {
+          return
+        }
+      }
+
+      queryText = `${queryText} ${prefix}${text}`
+    })
+
+    return queryText?.trim()
   }
   
   this.createStrip = () => {
@@ -248,6 +294,9 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
 
     const response = await this.fetchNotification()
     this.queryResponse = response.data;
+
+    const text = this.getChunkedInterpretationText();
+    console.log(text);
 
     if(this.hasError()) {
       this.loading.remove();
