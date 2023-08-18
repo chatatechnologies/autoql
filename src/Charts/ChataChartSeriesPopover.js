@@ -180,8 +180,6 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                     obj.groupType = cols[i].col.type;
                 }
 
-                const selector = createAggSelector(cols[i]);
-
                 var checkbox = createCheckbox(cols[i], isChecked);
                 var n = cols[i].col.display_name || cols[i].col.name;
                 colName.innerHTML = formatColumnName(n);
@@ -189,7 +187,12 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
 
                 const nameAndSelectContainer = document.createElement('div');
                 nameAndSelectContainer.classList.add('autoql-vanilla-chata-col-selector-name');
-                nameAndSelectContainer.appendChild(selector);
+
+                if (cols[i]?.col?.aggType) {
+                    const selector = createAggSelector(cols[i]);
+                    nameAndSelectContainer.appendChild(selector);
+                }
+
                 nameAndSelectContainer.appendChild(colName);
 
                 listItem.appendChild(nameAndSelectContainer);
