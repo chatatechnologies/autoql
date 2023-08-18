@@ -618,6 +618,7 @@ export function allColHiddenMessage(table) {
 
         var filterOption = table.tabulator.parentContainer.querySelector('[data-name-option="filter-action"]');
 
+		var tableRowCount = table.parentElement.querySelector('.autoql-vanilla-chata-table-row-count');
         const json = ChataUtils.responses[requestId];
         var isAllHidden = areAllColumnsHidden(json?.data?.columns);
         let message;
@@ -641,12 +642,14 @@ export function allColHiddenMessage(table) {
         if (isAllHidden) {
             message.style.display = 'flex';
             table.style.display = 'none';
+			tableRowCount.style.display = 'none';
             csvHandlerOption.style.display = 'none';
             csvCopyOption.style.display = 'none';
             filterOption.style.display = 'none';
         } else {
             message.style.display = 'none';
             table.style.display = 'inline-block';
+			tableRowCount.style.display = '';
             csvHandlerOption.style.display = 'block';
             csvCopyOption.style.display = 'block';
             filterOption.style.display = 'flex';
