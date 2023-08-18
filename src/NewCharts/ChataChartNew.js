@@ -303,24 +303,31 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         });
     };
 
-    this.didLabelsRotate = (chartContentWrapper) => {
-        let labelsRotatedOnSecondDraw = false;
-        if (type !== 'pie') {
-            this.prevBottomLabelsRotated = this.bottomLabelsRotated;
-            this.prevTopLabelsRotated = this.topLabelsRotated;
-            this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
-            this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+    this.setLabelRotationValues = (chartContentWrapper) => {
+        this.prevBottomLabelsRotated = this.bottomLabelsRotated;
+        this.prevTopLabelsRotated = this.topLabelsRotated;
 
-            labelsRotatedOnSecondDraw =
-                this.drawCount === 2 &&
-                ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
-                    (this.topLabelsRotated && !this.prevTopLabelsRotated));
-        }
+        const bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
+        const topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+
+        this.bottomLabelsRotated = bottomLabelsRotated;
+        this.topLabelsRotated = topLabelsRotated;
+
+        return { bottomLabelsRotated, topLabelsRotated };
+    };
+
+    this.didLabelsRotateOnSecondDraw = () => {
+        let labelsRotatedOnSecondDraw = false;
+
+        labelsRotatedOnSecondDraw =
+            this.drawCount === 2 &&
+            ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
+                (this.topLabelsRotated && !this.prevTopLabelsRotated));
 
         return labelsRotatedOnSecondDraw;
     };
 
-    this.drawChart = (firstDraw = true, redrawParams = {}) => {
+    this.drawChart = (firstDraw = true) => {
         if (this.drawCount > 10) {
             console.warn('recursive drawChart was called over 10 times. Something is wrong.');
             return;
@@ -376,7 +383,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
             const chartColors = getChartColorVars(CSS_PREFIX) ?? {};
 
-            const aggregated = !CHARTS_WITHOUT_AGGREGATED_DATA.includes(type)
+            const aggregated = !CHARTS_WITHOUT_AGGREGATED_DATA.includes(type);
 
             const params = {
                 data: this.data,
@@ -402,6 +409,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
                 tippyInstance: this.tippyInstance,
                 activeKey: component.activeKey,
+                topLabelsRotated: this.topLabelsRotated,
+                bottomLabelsRotated: this.bottomLabelsRotated,
                 toggleChartScale: this.toggleChartScale,
                 changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
                 changeStringColumnIndices: this.changeStringColumnIndices,
@@ -412,7 +421,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 onChartClick,
                 ...colorScales,
                 ...chartColors,
-                ...redrawParams,
             };
 
             switch (type) {
@@ -450,13 +458,17 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             // This is used for a safety fallback in case of infinite recursion
             this.drawCount += 1;
 
-            if (firstDraw && !CHARTS_WITHOUT_AXES.includes(type)) {
-                return this.drawChart(false);
-            } else if (this.didLabelsRotate(chartContentWrapper)) {
-                this.drawChart(false, {
-                    bottomLabelsRotated: this.bottomLabelsRotated,
-                    topLabelsRotated: this.topLabelsRotated,
-                });
+            if (CHARTS_WITHOUT_AXES.includes(type)) {
+                // Do not redraw
+            } else {
+                this.setLabelRotationValues(chartContentWrapper);
+
+                if (firstDraw) {
+                    this.drawChart(false);
+                } else if (this.didLabelsRotateOnSecondDraw()) {
+                    // Labels rotated after seconds draw - redraw one last time
+                    this.drawChart(false);
+                }
             }
         } catch (error) {
             console.error(error);
