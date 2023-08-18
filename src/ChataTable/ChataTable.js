@@ -139,7 +139,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
     const previousData = { ...previousResponseData, page: 1, isPreviousData: true };
 
     try {
-        if (component.hidden || !table.isInitialized) {
+        if (component.style.display === 'none' || component.hidden || !table.isInitialized) {
             return previousData;
         }
 

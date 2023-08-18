@@ -646,6 +646,10 @@ export function allColHiddenMessage(table) {
             csvHandlerOption.style.display = 'none';
             csvCopyOption.style.display = 'none';
             filterOption.style.display = 'none';
+
+            if (table.isInitialized) {
+                table.tabulator.blockRedraw();
+            }
         } else {
             message.style.display = 'none';
             table.style.display = 'inline-block';
