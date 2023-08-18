@@ -160,6 +160,7 @@ export const strings = new LocalizedStrings({
         maxDataWarningTooltip: `Row limit (${MAX_DATA_PAGE_SIZE}) reached. Try applying a filter or narrowing your search to return full results.`,
         dataSubsetWarningTooltip: 'This visualization is showing a subset of the data. <em>Drilldowns</em> will be executed on the <strong>full</strong> dataset.',
         visualizingText: 'Visualizing',
+		scrolledText: 'Scrolled',
         rowsText: 'rows',
         suggestionResponse: 'I want to make sure I understood your query. Did you mean:'
     }
@@ -312,6 +313,7 @@ export const strings = new LocalizedStrings({
         maxDataWarningTooltip: `Límite de filas (${MAX_DATA_PAGE_SIZE}) alcanzado. Intenta aplicar un filtro o reducir tu búsqueda para obtener resultados completos.`,
         dataSubsetWarningTooltip: 'Esta visualización muestra un subconjunto de los datos. Las <em>Desgloses</em> se ejecutarán en el conjunto de datos <strong>completo</strong>.',
         visualizingText: 'Visualizando',
+		scrolledText: 'Desplazado',
         rowsText: 'filas',
         suggestionResponse: 'Quiero asegurarme de que entendí tu consulta. Querías decir:'
     }

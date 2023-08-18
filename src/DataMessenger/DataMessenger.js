@@ -1841,6 +1841,7 @@ export function DataMessenger(options = {}) {
         var component = obj.getComponent(idRequest);
         var json = obj.getRequest(idRequest);
         var parentContainer = obj.getParentFromComponent(component);
+		var parentElement = component.parentElement;
         var useInfiniteScroll = isDataLimited({ data: json });
         var tableParams = undefined;
 
@@ -1858,6 +1859,10 @@ export function DataMessenger(options = {}) {
         component.tabulator = table;
         obj.setDefaultFilters(component, table, 'table');
         table.parentContainer = parentContainer;
+		table.parentElement = parentElement;
+		if(table.parentElement.classList.contains('autoql-vanilla-chata-chart-container')){
+			table.parentElement.classList.remove('autoql-vanilla-chata-chart-container')
+		};
         allColHiddenMessage(component);
         select(window).on('chata-resize.' + idRequest, null);
     };
@@ -2088,6 +2093,7 @@ export function DataMessenger(options = {}) {
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
         var tableContainer = document.createElement('div');
+		var tableRowCount = document.createElement('div');
         var scrollbox = document.createElement('div');
         var tableWrapper = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -2110,6 +2116,8 @@ export function DataMessenger(options = {}) {
         containerMessage.relatedQuery = obj.lastQuery;
 
         ChataUtils.responses[idRequest] = jsonResponse;
+		var totalRows = jsonResponse.data.count_rows;
+		var initialRows = jsonResponse.data.rows.length;
         var supportedDisplayTypes = obj.getDisplayTypesButtons(idRequest, 'table');
 
         var toolbar = undefined;
@@ -2128,14 +2136,18 @@ export function DataMessenger(options = {}) {
         }
 
         tableContainer.classList.add('autoql-vanilla-chata-table-container');
+		if(tableContainer.classList.contains('autoql-vanilla-chata-chart-container')){
+			tableContainer.classList.remove('autoql-vanilla-chata-chart-container')
+		};
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+		tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
+		tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
         responseContentContainer.classList.add('autoql-vanilla-chata-response-content-container');
-
         tableWrapper.setAttribute('data-componentid', idRequest);
         tableWrapper.classList.add('autoql-vanilla-chata-table');
-
         tableContainer.appendChild(tableWrapper);
         scrollbox.appendChild(tableContainer);
+		tableContainer.appendChild(tableRowCount);
         responseContentContainer.appendChild(scrollbox);
         messageBubble.appendChild(responseContentContainer);
         var chatMessageBubbleContainer = document.createElement('div');
