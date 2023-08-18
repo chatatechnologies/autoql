@@ -1282,7 +1282,6 @@ export function DataMessenger(options = {}) {
 
     obj.getActionToolbar = (idRequest, type, displayType) => {
         const autoQLConfig = obj.options.autoQLConfig ?? {}
-		var isCopySqlEnabled = obj.options.autoQLConfig.debug
         var request = ChataUtils.responses[idRequest];
         let moreOptionsArray = [];
         var toolbar = htmlToElement(`
@@ -1434,8 +1433,11 @@ export function DataMessenger(options = {}) {
                 request['reference_id'] !== '1.1.432' &&
                 request['reference_id'] !== '1.1.461'
             ) {
-                toolbar.appendChild(moreOptionsBtn);
-                toolbar.appendChild(moreOptions);
+                if (moreOptionsArray?.length) {
+                    toolbar.appendChild(moreOptionsBtn);
+                    toolbar.appendChild(moreOptions);
+                }
+
                 toolbar.appendChild(reportProblem);
             }
 
