@@ -257,6 +257,8 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
 
+    component.columnIndexConfig = tableConfig
+
     // TODO - move this to its parent element instead
     var groupableCount = getNumberOfGroupables(json?.data?.columns);
     if (groupableCount === 0) {
@@ -510,12 +512,15 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     return table;
 }
 
-export function ChataPivotTable(idRequest, options, onClick = () => {}) {
+export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
+    const component = document.querySelector(`[data-componentid='${idRequest}']`);
     const json = ChataUtils.responses[idRequest];
 
     if (!json?.data?.rows) {
         return;
     }
+
+    const { dataFormatting } = options
 
     const columns = formatQueryColumns({ columns: json?.data?.columns, queryResponse: { data: json } });
 
@@ -524,13 +529,17 @@ export function ChataPivotTable(idRequest, options, onClick = () => {}) {
         rows: json?.data?.rows,
         columns,
         tableConfig,
-        dataFormatting: options.dataFormatting,
+        dataFormatting,
+        isFirstGeneration: true,
     });
+
+    tableConfig.stringColumnIndex = pivotData.stringColumnIndex
+    tableConfig.legendColumnIndex = pivotData.legendColumnIndex
 
     const pivotTableData = pivotData.pivotTableData;
     const pivotColumns = pivotData.pivotTableColumns;
 
-    const component = document.querySelector(`[data-componentid='${idRequest}']`);
+    component.columnIndexConfig = tableConfig
 
     component.classList.add('table-condensed');
 
