@@ -127,8 +127,13 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
 
   this.createTextOperator = (text) => {
     const operator = document.createElement('span');
-    operator.classList.add('autoql-vanilla-data-alert-condition-statement-operator');
-    operator.textContent = text;
+    const textContent = document.createElement('span');
+
+    textContent.textContent = text;
+    textContent.classList.add('autoql-vanilla-data-alert-condition-statement-operator');
+    operator.appendChild(document.createTextNode(' '));
+    operator.appendChild(textContent);
+    operator.appendChild(document.createTextNode(' '));
 
     return operator;
   }
@@ -145,7 +150,7 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     const summaryContainer = document.createElement('div');
     const summaryLabel = document.createElement('span');
     
-    summaryLabel.textContent = 'Summary: ';
+    summaryLabel.textContent = 'Summary:';
     summaryContainer.appendChild(summaryLabel);
     summaryContainer.classList.add('autoql-vanilla-notification-condition-statement');
     
