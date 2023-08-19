@@ -2,7 +2,7 @@ import {
   constructRTArray,
   dismissNotification,
   fetchNotificationData,
-  getTimeFrameTextFromChunk
+  DATA_ALERT_OPERATORS,
 } from "autoql-fe-utils";
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE, REFRESH_ICON } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
@@ -114,18 +114,58 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     return rtString.trim()
   }
 
+  this.hasOperator = () => {
+    return itemData?.expression?.length === 2;
+  }
+
+  this.getTextOperator = (operator) => {
+    if(!operator) return 'New data was detected for the query.';
+    const operatorText = DATA_ALERT_OPERATORS[operator].conditionTextPast;
+
+    return operatorText;
+  } 
+
+  this.createTextOperator = (text) => {
+    const operator = document.createElement('span');
+    operator.classList.add('autoql-vanilla-data-alert-condition-statement-operator');
+    operator.textContent = text;
+
+    return operator;
+  }
+
+  this.createTerm = (text) => {
+    const term = document.createElement('span');
+    term.classList.add('autoql-vanilla-data-alert-condition-statement-term');
+    term.textContent = `"${text}"`;
+
+    return term;
+  }
+
   this.createSummary = () => {
     const summaryContainer = document.createElement('div');
     const summaryLabel = document.createElement('span');
-    const queryContainer = document.createElement('span');
-    const text = this.getChunkedInterpretationText();
-
+    
     summaryLabel.textContent = 'Summary: ';
-    summaryContainer.classList.add('autoql-vanilla-notification-condition-statement');
-    queryContainer.textContent = text;
-
     summaryContainer.appendChild(summaryLabel);
-    summaryContainer.appendChild(queryContainer);
+    summaryContainer.classList.add('autoql-vanilla-notification-condition-statement');
+    
+    if(this.hasOperator()) {
+      const operator = itemData.expression[0].condition;
+      const termValue = itemData.expression[0].term_value;
+      const secondTermValue = itemData.expression[1].term_value;
+      
+      summaryContainer.appendChild(this.createTerm(termValue));
+      summaryContainer.appendChild(this.createTextOperator(this.getTextOperator(operator)));
+      summaryContainer.appendChild(this.createTerm(secondTermValue));
+      
+    } else {
+      const text = this.getChunkedInterpretationText();
+      const operatorText = this.getTextOperator();
+
+      summaryContainer.appendChild(this.createTextOperator(operatorText));
+      summaryContainer.appendChild(this.createTerm(text));
+    }
+
 
     return summaryContainer;
   }
