@@ -224,7 +224,7 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   }
 
   this.isUnread = () => {
-    return itemData.state === 'ACKNOWLEDGED';
+    return itemData.state !== 'DISMISSED';
   }
 
   this.createContent = () => {
@@ -304,10 +304,6 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     item.appendChild(header);
     item.appendChild(this.createContent());
     
-    if(this.isUnread()) {
-      item.appendChild(this.createStrip());
-    }
-
     item.appendChild(this.createHoverOverlay());
     this.header = header;
     this.header.onclick = this.handleExpand;
@@ -316,8 +312,8 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   if(this.hasError()) {
     item.classList.add('autoql-vanilla-notification-error');
   }
-  
   if(this.isUnread()) {
+    item.appendChild(this.createStrip());
     item.classList.add('autoql-vanilla-notification-unread');
   }
   
