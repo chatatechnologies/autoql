@@ -208,12 +208,20 @@
           }
         }
       }
+      .autoql-vanilla-notification-condition-statement {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        padding: 10px 20px;
+        font-weight: 500;
+        color: var(--autoql-vanilla-accent-color);
+      }
     }
 
     &.autoql-vanilla-notification-expanded {
       position: relative;
       min-height: 70px;
       max-height: 500px;
+      font-size: 14px;
     }
   }  
 }

@@ -113,6 +113,22 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
 
     return rtString.trim()
   }
+
+  this.createSummary = () => {
+    const summaryContainer = document.createElement('div');
+    const summaryLabel = document.createElement('span');
+    const queryContainer = document.createElement('span');
+    const text = this.getChunkedInterpretationText();
+
+    summaryLabel.textContent = 'Summary: ';
+    summaryContainer.classList.add('autoql-vanilla-notification-condition-statement');
+    queryContainer.textContent = text;
+
+    summaryContainer.appendChild(summaryLabel);
+    summaryContainer.appendChild(queryContainer);
+
+    return summaryContainer;
+  }
   
   this.createStrip = () => {
     const strip = document.createElement('div');
@@ -281,13 +297,13 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     const response = await this.fetchNotification()
     this.queryResponse = response.data;
 
-    const text = this.getChunkedInterpretationText();
-    console.log(text);
-
     if(this.hasError()) {
       this.loading.remove();
       this.contentContainer.appendChild(this.createMessageError());
+      return;
     }
+
+    this.contentContainer.appendChild(this.createSummary());
   }
   
   item.collapse = () => {
