@@ -8,7 +8,11 @@ export function NotificationFeed(selector, options) {
   checkAndApplyTheme();
   const container = document.createElement('div');
   const parent = document.querySelector(selector);
+  const itemsContainer = document.createElement('div');
+
+  itemsContainer.classList.add('autoql-vanilla-notification-feed-list');
   parent.classList.add('autoql-vanilla-notifiation-list');
+
   this.expandedNotification = undefined;
 
   container.options = {
@@ -105,7 +109,6 @@ export function NotificationFeed(selector, options) {
     loading.classList.add('autoql-vanilla-loading-wrapper');
     dotsContainer.classList.add('autoql-vanilla-response-loading');
 
-    
     for (let index = 0; index < 4; index++) {
       dotsContainer.appendChild(document.createElement('div'))
     }
@@ -125,14 +128,10 @@ export function NotificationFeed(selector, options) {
 
     this.expandedNotification = newItem;
   }
-  
-  this.createItems = async() => {
-    const loading = this.showLoading();
+
+  this.createPaginateItems = async () => {
     const { items } = await this.fetchFeed();
     const { authentication } = container.options;
-    const itemsContainer = document.createElement('div');
-    itemsContainer.classList.add('autoql-vanilla-notification-feed-list');
-    
     items.forEach((itemData, index) => {
       const item = new NotificationItem({
         itemData,
@@ -142,6 +141,11 @@ export function NotificationFeed(selector, options) {
       });
       itemsContainer.appendChild(item);
     });
+  }
+  
+  this.createItems = async() => {
+    const loading = this.showLoading();
+    await this.createPaginateItems()
     loading.remove();
     container.appendChild(this.createTopOptions());
     container.appendChild(itemsContainer);
@@ -149,6 +153,15 @@ export function NotificationFeed(selector, options) {
   
   container.classList.add('autoql-vanilla-notification-list-container');
   
+  container.addEventListener('scroll', () => {
+    const endOfPage =
+    container.clientHeight + container.scrollTop >= container.scrollHeight;
+    if (endOfPage) {
+      container.offset += 10;
+      this.createPaginateItems();
+    }
+  })
+
   this.createItems();
   
   if(parent) parent.appendChild(container);
