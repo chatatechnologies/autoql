@@ -8,6 +8,7 @@ export function NotificationFeed(selector, options) {
   checkAndApplyTheme();
   const container = document.createElement('div');
   const parent = document.querySelector(selector);
+  parent.classList.add('autoql-vanilla-notifiation-list');
   this.expandedNotification = undefined;
 
   container.options = {
