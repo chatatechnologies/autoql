@@ -2,6 +2,7 @@ import { areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
+import dayjs from './dayjsPlugins';
 
 export function formatChartData(d, column, options, scale){
     // return formatData(val, col, options, true);
@@ -958,4 +959,23 @@ export const hasErrorTag = (text) => {
     if(values.length > 1)return true
 
     return false
+}
+
+export const getFormattedTimestamp = (timestamp) => {
+    const dateDayJS = dayjs.unix(timestamp)
+    
+    const time = dateDayJS.format('h:mma')
+    const day = dateDayJS.format('MM-DD-YY')
+    
+    const today = dayjs().format('MM-DD-YY')
+    const yesterday = dayjs().subtract(1, 'd').format('MM-DD-YY')
+
+    if (day === today) {
+      return `Today at ${time}`
+    } else if (day === yesterday) {
+      return `Yesterday at ${time}`
+    } else if (dayjs().isSame(dateDayJS, 'year')) {
+      return `${dateDayJS.format('MMMM Do')} at ${time}`
+    }
+    return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`
 }

@@ -195,19 +195,6 @@
       flex-direction: column;
       overflow: hidden;
       width: 100%;
-      .autoql-vanilla-notification-error-message-container {
-        text-align: center;
-        padding: 30px;
-        border-top: 1px solid var(--autoql-vanilla-background-color-primary);
-        font-size: 14px;
-        line-height: 1.5;
-        .autoql-vanilla-notification-error-reinitialize-btn{
-          margin: 20px;
-          .autoql-vanilla-icon {
-            margin-right: 6px;
-          }
-        }
-      }
       .autoql-vanilla-notification-condition-statement {
         text-overflow: ellipsis;
         overflow: hidden;

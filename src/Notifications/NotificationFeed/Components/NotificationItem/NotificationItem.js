@@ -5,9 +5,9 @@ import {
   DATA_ALERT_OPERATORS,
 } from "autoql-fe-utils";
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE, REFRESH_ICON } from "../../../../Svg";
-import { createIcon } from "../../../../Utils";
-import dayjs from '../../../../Utils/dayjsPlugins';
+import { createIcon, getFormattedTimestamp } from "../../../../Utils";
 import './NotificationItem.scss';
+import { NotificationMessageError } from "../NotificationMessageError";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -33,57 +33,9 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     loading.appendChild(dotsContainer);
     return loading;
   }
-
-  this.getFormattedTimestamp = () => {
-    const timestamp = itemData.created_at;
-    const dateDayJS = dayjs.unix(timestamp)
-    
-    const time = dateDayJS.format('h:mma')
-    const day = dateDayJS.format('MM-DD-YY')
-    
-    const today = dayjs().format('MM-DD-YY')
-    const yesterday = dayjs().subtract(1, 'd').format('MM-DD-YY')
-
-    if (day === today) {
-      return `Today at ${time}`
-    } else if (day === yesterday) {
-      return `Yesterday at ${time}`
-    } else if (dayjs().isSame(dateDayJS, 'year')) {
-      return `${dateDayJS.format('MMMM Do')} at ${time}`
-    }
-    return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`
-  }
-
   
   this.createMessageError = () => {
-    const messageContainer = document.createElement('div');
-    const wrapper = document.createElement('div');
-    const refreshButton = document.createElement('button');
-    const message = `This Data Alert encountered an error on ${this.getFormattedTimestamp()}.`;
-    const secondMessage = 'To resolve this issue, try restarting the Alert by clicking the button below.';
-    const instructions = `
-      If the problem persists, you may need to create a new Data Alert from the query "${itemData.data_return_query}"
-    `;
-
-    refreshButton.appendChild(createIcon(REFRESH_ICON));
-    refreshButton.appendChild(document.createTextNode('Restart Alert'));
-    wrapper.appendChild(document.createTextNode(message));
-    wrapper.appendChild(document.createElement('br'));
-    wrapper.appendChild(document.createTextNode(secondMessage));
-    wrapper.appendChild(document.createElement('br'));
-    wrapper.appendChild(refreshButton);
-    wrapper.appendChild(document.createElement('br'));
-    wrapper.appendChild(document.createTextNode(instructions));
-
-    refreshButton.classList.add('autoql-vanilla-chata-btn');
-    refreshButton.classList.add('autoql-vanilla-primary');
-    refreshButton.classList.add('autoql-vanilla-large');
-    refreshButton.classList.add('autoql-vanilla-notification-error-reinitialize-btn');
-
-    messageContainer.classList.add('autoql-vanilla-notification-error-message-container');
-    messageContainer.appendChild(wrapper);
-
-    return messageContainer;
+    return new NotificationMessageError({ itemData });
   }
 
   this.getInterpretationChunk = (chunk) => {
@@ -291,7 +243,7 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     }
     
     timestamp.appendChild(createIcon(CALENDAR));
-    timestamp.appendChild(document.createTextNode(this.getFormattedTimestamp()));
+    timestamp.appendChild(document.createTextNode(getFormattedTimestamp(itemData.created_at)));
     
     timestampContainer.appendChild(timestamp);
     displayNameContainer.appendChild(displayName);
