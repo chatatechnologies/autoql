@@ -27,7 +27,14 @@ export function ColumnChartNew(container, params = {}) {
         columnLineCombo = false,
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex, numberColumnIndex2 } = columnIndexConfig;
+    const {
+        stringColumnIndices,
+        stringColumnIndex,
+        numberColumnIndices,
+        numberColumnIndices2,
+        numberColumnIndex,
+        numberColumnIndex2,
+    } = columnIndexConfig;
     const { dataFormatting } = options;
 
     const scaleParams = {
@@ -169,7 +176,14 @@ export function ColumnChartNew(container, params = {}) {
         this.createBars();
 
         if (columnLineCombo) {
-            createLines(container, { ...params, xScale: this.xScale, yScale: this.yScale2 });
+            createLines(container, {
+                ...params,
+                xScale: this.xScale,
+                yScale: this.yScale2,
+                visibleSeries: visibleSeries2,
+                numberColumnIndex: numberColumnIndex2,
+                numberColumnIndices: numberColumnIndices2,
+            });
         }
     }
 
