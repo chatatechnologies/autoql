@@ -2020,20 +2020,19 @@ export function DataMessenger(options = {}) {
         if (value) {
             if (value !== 'Drilldown') {
                 localStorage.setItem('lastQuery', value);
+				var containerMessage = document.createElement('div');
+				var messageBubble = document.createElement('div');
+	
+				containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
+				containerMessage.style.zIndex = --obj.zIndexBubble;
+				containerMessage.classList.add('request');
+				messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+				messageBubble.classList.add('single');
+				messageBubble.classList.add('text');
+				messageBubble.textContent = value;
+				containerMessage.appendChild(messageBubble);
+				obj.drawerContent.appendChild(containerMessage);
             }
-
-            var containerMessage = document.createElement('div');
-            var messageBubble = document.createElement('div');
-
-            containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-            containerMessage.style.zIndex = --obj.zIndexBubble;
-            containerMessage.classList.add('request');
-            messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-            messageBubble.classList.add('single');
-            messageBubble.classList.add('text');
-            messageBubble.textContent = value;
-            containerMessage.appendChild(messageBubble);
-            obj.drawerContent.appendChild(containerMessage);
         }
 
         var responseLoadingContainer = document.createElement('div');
