@@ -1,8 +1,10 @@
-import { REFRESH_ICON } from "../../../../Svg";
+import { initializeAlert } from "autoql-fe-utils";
+import { AntdMessage } from "../../../../Antd";
+import { REFRESH_ICON, CHECK } from "../../../../Svg";
 import { createIcon, getFormattedTimestamp } from "../../../../Utils";
 import './NotificationMessageError.scss';
 
-export function NotificationMessageError({ itemData }) {
+export function NotificationMessageError({ itemData, authentication }) {
   const messageContainer = document.createElement('div');
   const wrapper = document.createElement('div');
   const refreshButton = document.createElement('button');
@@ -10,9 +12,14 @@ export function NotificationMessageError({ itemData }) {
   const secondMessage = 'To resolve this issue, try restarting the Alert by clicking the button below.';
   const instructions = `
     If the problem persists, you may need to create a new Data Alert from the query "${itemData.data_return_query}"
-    `;
-  refreshButton.appendChild(createIcon(REFRESH_ICON));
-  refreshButton.appendChild(document.createTextNode('Restart Alert'));
+  `;
+  const btnIcon = createIcon(REFRESH_ICON);
+  const spinner = document.createElement('div');
+  const btnString = document.createTextNode('Restart Alert');
+  spinner.classList.add('autoql-vanilla-spinner-loader');
+
+  refreshButton.appendChild(btnIcon);
+  refreshButton.appendChild(btnString);
   wrapper.appendChild(document.createTextNode(message));
   wrapper.appendChild(document.createElement('br'));
   wrapper.appendChild(document.createTextNode(secondMessage));
@@ -20,6 +27,20 @@ export function NotificationMessageError({ itemData }) {
   wrapper.appendChild(refreshButton);
   wrapper.appendChild(document.createElement('br'));
   wrapper.appendChild(document.createTextNode(instructions));
+
+  refreshButton.onclick = async () => {
+    btnIcon.innerHTML = '';
+    btnIcon.appendChild(spinner);
+    const response = await initializeAlert({ id: itemData.data_alert_id, ...authentication });
+    if(response) {
+      spinner.remove();
+      refreshButton.classList.remove('autoql-vanilla-primary');
+      refreshButton.classList.add('restart-success');
+      btnIcon.innerHTML = CHECK;
+      btnString.textContent = 'Restarted';
+      new AntdMessage('Restart successful! Your Data Alert is now active.', 4000);
+    }
+  }
 
   refreshButton.classList.add('autoql-vanilla-primary');
   refreshButton.classList.add('autoql-vanilla-chata-btn');

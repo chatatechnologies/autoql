@@ -34,7 +34,7 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   }
   
   this.createMessageError = () => {
-    return new NotificationMessageError({ itemData });
+    return new NotificationMessageError({ itemData, authentication });
   }
 
   this.createSummary = () => {

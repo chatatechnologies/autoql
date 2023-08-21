@@ -10,6 +10,13 @@
       .autoql-vanilla-icon {
         margin-right: 6px;
       }
+      &.restart-success {
+        background-color: var(--autoql-vanilla-success-color);
+        border: none;
+        color: #fff;
+        pointer-events: none;
+        cursor: default;
+      }
     }
   }
 }
