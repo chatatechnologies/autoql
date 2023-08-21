@@ -1,5 +1,4 @@
 import { PopoverChartSelector } from '../../Charts/PopoverChartSelector';
-import { ChataPopover } from '../ChataPopover';
 
 import './Select.scss';
 
@@ -72,13 +71,6 @@ export function Select({
         }
 
         selectElement.addEventListener('click', (e) => {
-            // const currentPopovers = document.querySelectorAll('.autoql-vanilla-select-popover')
-            // if (currentPopovers?.length) {
-            //     currentPopovers.forEach(popoverElement => {
-            //         popoverElement?.close?.()
-            //     })
-            // }
-
             if (this.popover) {
                 this.popover = undefined;
             } else {
@@ -109,7 +101,6 @@ export function Select({
                 li.classList.add('active');
             }
 
-            // li.setAttribute('data-column-index', column.index);
             li.onclick = (e) => {
                 e.stopPropagation();
                 this.selectedValue = options.value;
@@ -132,24 +123,6 @@ export function Select({
         selectorContainer.appendChild(selectorContent);
         return selectorContainer;
     };
-
-    // if (options?.length) {
-    //     options.forEach((option) => {
-    //         const listItem = document.createElement('option');
-    //         listItem.setAttribute('value', option.value);
-    //         listItem.setAttribute('label', option.label);
-
-    //         if (option.selected) {
-    //             listItem.setAttribute('selected', true);
-    //         }
-
-    //         if (option.disabled) {
-    //             listItem.setAttribute('disabled', true);
-    //         }
-
-    //         select.appendChild(listItem);
-    //     });
-    // }
 
     this.createSelect();
     this.createPopoverContent();

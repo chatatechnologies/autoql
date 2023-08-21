@@ -20,8 +20,6 @@ import {
     getAggConfig,
     formatQueryColumns,
     CHARTS_WITHOUT_AGGREGATED_DATA,
-    MINIMUM_INNER_HEIGHT,
-    MINIMUM_INNER_WIDTH,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
