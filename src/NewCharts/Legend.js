@@ -157,6 +157,10 @@ export function Legend(container, params = {}) {
             .style('fill', 'transparent')
             .style('pointer-events', 'none');
 
+        if (this.legendBorder?.node()) {
+            this.legendBorder.remove();
+        }
+
         var legendBorder = this.legendContainer
             .append('rect')
             .attr('class', 'autoql-vanilla-chart-legend-border')
@@ -173,6 +177,8 @@ export function Legend(container, params = {}) {
                     -LEGEND_BORDER_PADDING - LEGEND_TOP_ADJUSTMENT - LEGEND_BORDER_THICKNESS
                 })`,
             );
+
+        this.legendBorder = legendBorder;
 
         const legendElementNode = legendElement.node();
         const legendBorderNode = legendBorder.node();
