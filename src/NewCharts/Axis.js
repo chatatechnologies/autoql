@@ -184,7 +184,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
 
     const createRowSelector = () => {
         try {
-            if (!hasRowSelector || orient !== 'bottom') {
+            if (orient !== 'bottom') {
                 return;
             }
 

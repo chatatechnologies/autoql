@@ -160,11 +160,30 @@
     }
 }
 
-.autoql-vanilla-axis-selector-container .number-selector-header {
-    margin-top: 10px;
-    font-size: 12px;
-    padding: 0 18px 7px;
-    font-weight: 600;
+.autoql-vanilla-axis-selector-container {
+    .autoql-vanilla-chata-list-item {
+        .autoql-vanilla-select {
+            font-weight: 600;
+            font-size: 12px;
+            height: 26px;
+            line-height: 25px;
+            padding: 0 8px !important;
+            margin-right: 10px;
+        }
+    }
+
+    .number-selector-header {
+        margin-top: 10px;
+        font-size: 12px;
+        padding: 0 18px 7px;
+        font-weight: 600;
+    }
+}
+
+.autoql-vanilla-chata-col-selector-name {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
 }
 
 .autoql-vanilla-chata-list-item {

@@ -1,0 +1,102 @@
+.autoql-vanilla-popover-selector {
+    .autoql-vanilla-select-list-item {
+        color: var(--autoql-vanilla-text-color-primary);
+        font-size: 12px;
+        padding: 5px 15px;
+        cursor: pointer;
+
+        &:hover,
+        &.active {
+            background: var(--autoql-vanilla-hover-color);
+        }
+
+        .agg-select-list-symbol {
+            font-weight: 600;
+            margin-right: 10px;
+        }
+    }
+}
+
+.autoql-vanilla-select-and-label {
+    display: inline-flex;
+    flex-direction: column;
+    padding: 2px 5px;
+
+    &.autoql-vanilla-select-full-width {
+        display: flex;
+    }
+
+    .autoql-vanilla-select {
+        display: inline-flex;
+        justify-content: space-between;
+        transition: color 0.2s ease, border-color 0.2s ease;
+        white-space: nowrap;
+        font-size: inherit;
+        cursor: pointer;
+
+        &.autoql-vanilla-select-large {
+            line-height: 36px;
+            height: 38px;
+        }
+
+        &.autoql-vanilla-select-small {
+            line-height: 32px;
+            height: 34px;
+        }
+
+        &:hover {
+            color: var(--autoql-vanilla-accent-color, #26a7df);
+            .autoql-vanilla-select-arrow {
+                color: var(--autoql-vanilla-accent-color, #26a7df);
+            }
+        }
+
+        &:not(.outlined) {
+            font-weight: 600;
+            padding: 0;
+            margin: 0;
+        }
+
+        &.outlined {
+            padding: 0px 16px;
+            color: var(--autoql-vanilla-text-color-primary);
+            border: 1px solid var(--autoql-vanilla-border-color);
+            border-radius: 4px;
+            background: var(--autoql-vanilla-background-color-secondary, white);
+
+            &.autoql-vanilla-select-small {
+                padding: 0px 14px;
+            }
+
+            &:hover {
+                color: var(--autoql-vanilla-accent-color);
+                border-color: var(--autoql-vanilla-accent-color);
+            }
+        }
+
+        .autoql-vanilla-select-text {
+            display: block;
+            height: 100%;
+            pointer-events: none;
+
+            .autoql-vanilla-select-text-placeholder {
+                color: var(--autoql-vanilla-text-color-placeholder);
+                font-style: italic;
+            }
+        }
+
+        .autoql-vanilla-select-arrow {
+            display: flex;
+            align-items: center;
+            padding-left: 8px;
+            font-size: 0.875em;
+            color: var(--autoql-vanilla-text-color-placeholder);
+        }
+    }
+}
+
+.autoql-vanilla-select-popup-container {
+    background: var(--autoql-vanilla-background-color-secondary);
+    max-height: 300px;
+    overflow-y: auto;
+}

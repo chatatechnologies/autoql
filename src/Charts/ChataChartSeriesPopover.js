@@ -1,8 +1,10 @@
 import { PopoverChartSelector } from './PopoverChartSelector';
 import { getIndexesByType } from './ChataChartHelpers';
-import { htmlToElement, formatColumnName } from '../Utils';
+import { htmlToElement, formatColumnName, cloneObject } from '../Utils';
 import { strings } from '../Strings';
 import { TICK } from '../Svg';
+import { Select } from '../ChataComponents/Select';
+import { AGG_TYPES, getAggConfig } from 'autoql-fe-utils';
 
 export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padding) {
     const activeSeries = scale?.fields;
@@ -10,6 +12,8 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     var obj = this;
     var indexList = getIndexesByType(cols);
     var seriesIndexes = [];
+    var aggConfig = getAggConfig(cols) ?? {};
+    const allColumns = cloneObject(cols)
     activeSeries.map((col) => {
         seriesIndexes.push(col.index);
     });
@@ -50,6 +54,43 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     };
 
     content.classList.add('autoql-vanilla-axis-selector-container');
+
+    var createAggSelector = (column) => {
+        const options = Object.values(AGG_TYPES).map((agg) => {
+            const listLabel = document.createElement('span');
+
+            const listLabelSymbol = document.createElement('span');
+            listLabelSymbol.classList.add('agg-select-list-symbol');
+            listLabelSymbol.innerHTML = agg.symbol;
+
+            const listLabelText = document.createElement('span');
+            listLabelText.innerHTML = agg.displayName;
+
+            listLabel.appendChild(listLabelSymbol);
+            listLabel.appendChild(listLabelText);
+
+            return {
+                value: agg.type,
+                label: agg.symbol,
+                listLabel,
+                tooltip: agg.tooltip,
+            };
+        });
+
+        const selector = new Select({
+            options,
+            initialValue: column?.col?.aggType,
+            showArrow: false,
+            size: 'small',
+            onChange: (option) => {
+                if (column?.col) {
+                    aggConfig[column?.col?.name] = option.value
+                }
+            },
+        });
+
+        return selector;
+    };
 
     var createCheckbox = (column, checked = false) => {
         var colObj = column.col;
@@ -138,13 +179,23 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 if (isChecked && !obj.groupType) {
                     obj.groupType = cols[i].col.type;
                 }
+
                 var checkbox = createCheckbox(cols[i], isChecked);
                 var n = cols[i].col.display_name || cols[i].col.name;
                 colName.innerHTML = formatColumnName(n);
                 listItem.classList.add('autoql-vanilla-chata-list-item');
-                colName.classList.add('autoql-vanilla-chata-col-selector-name');
 
-                listItem.appendChild(colName);
+                const nameAndSelectContainer = document.createElement('div');
+                nameAndSelectContainer.classList.add('autoql-vanilla-chata-col-selector-name');
+
+                if (cols[i]?.col?.aggType) {
+                    const selector = createAggSelector(cols[i]);
+                    nameAndSelectContainer.appendChild(selector);
+                }
+
+                nameAndSelectContainer.appendChild(colName);
+
+                listItem.appendChild(nameAndSelectContainer);
                 listItem.appendChild(checkbox);
                 selectableList.appendChild(listItem);
             }
@@ -159,8 +210,20 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                     activeSeries.push(inputs[i].col.index);
                 }
             }
-            
-            scale?.changeColumnIndices?.(activeSeries);
+
+            const newColumns = allColumns.map(col => {
+                const aggType = aggConfig[col?.name]
+                if (aggType && col) {
+                    col.aggType = aggType
+                }
+
+                return col
+            })
+
+            scale?.changeColumnIndices?.(activeSeries, undefined, newColumns);
+            scale?.changeAggConfig?.(aggConfig)
+
+            popover.close();
         };
 
         buttonWrapper.appendChild(applyButton);

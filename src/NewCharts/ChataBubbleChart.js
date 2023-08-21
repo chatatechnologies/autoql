@@ -18,6 +18,7 @@ export function BubbleChartNew(container, params = {}) {
         changeStringColumnIndices,
         columnIndexConfig = {},
         legend,
+        aggregated
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndices } = columnIndexConfig;
@@ -35,6 +36,7 @@ export function BubbleChartNew(container, params = {}) {
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
+        aggregated
     };
 
     this.xScale = getBandScale({
