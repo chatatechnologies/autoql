@@ -1291,13 +1291,11 @@ export function DataMessenger(options = {}) {
 
         var reportProblem = obj.getReportProblemMenu(toolbar, idRequest, type);
         reportProblem.classList.add('report-problem');
-
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
             strings.reportProblemTitle,
             idRequest,
-            obj.reportProblemHandler,
-            [reportProblem, toolbar],
+            obj.openModalReport,[obj.options,undefined,toolbar]
         );
 
         switch (type) {
@@ -2177,7 +2175,7 @@ export function DataMessenger(options = {}) {
         return ChataUtils.sendReport(idRequest, options, menu, toolbar);
     };
 
-    obj.openModalReport = function (idRequest, options, menu, toolbar) {
+    obj.openModalReport = function (evt,idRequest, options, menu, toolbar) {
         ChataUtils.openModalReport(idRequest, options, menu, toolbar);
     };
 
