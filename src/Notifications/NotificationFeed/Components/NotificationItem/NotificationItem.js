@@ -7,6 +7,7 @@ import { createIcon, getFormattedTimestamp } from "../../../../Utils";
 import './NotificationItem.scss';
 import { NotificationMessageError } from "../NotificationMessageError";
 import { NotificationSummary } from "../NotificationSummary";
+import { NotificationDataContainer } from "../NotificationDataContainer";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -24,7 +25,6 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     loading.classList.add('autoql-vanilla-notification-content-loading');
     dotsContainer.classList.add('autoql-vanilla-response-loading');
 
-    
     for (let index = 0; index < 4; index++) {
       dotsContainer.appendChild(document.createElement('div'))
     }
@@ -39,6 +39,10 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
 
   this.createSummary = () => {
     return new NotificationSummary({ itemData, queryResponse: this.queryResponse });
+  }
+
+  this.createNotificationResponse = () => {
+    return new NotificationDataContainer({ queryResponse: this.queryResponse })
   }
   
   this.createStrip = () => {
@@ -204,13 +208,15 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     const response = await this.fetchNotification()
     this.queryResponse = response.data;
 
+    this.loading.remove();
+    
     if(this.hasError()) {
-      this.loading.remove();
       this.contentContainer.appendChild(this.createMessageError());
       return;
     }
 
     this.contentContainer.appendChild(this.createSummary());
+    this.contentContainer.appendChild(this.createNotificationResponse());
   }
   
   item.collapse = () => {

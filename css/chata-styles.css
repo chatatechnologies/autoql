@@ -1144,25 +1144,6 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-inline-end: 0px;
 }
 
-.autoql-vanilla-spinner-loader {
-    display: inline-block;
-    width: 14px;
-    height: 14px;
-    margin-right: 6px;
-}
-
-.autoql-vanilla-spinner-loader:after {
-    content: " ";
-    display: block;
-    width: 16px;
-    height: 16px;
-    margin: 0px;
-    border-radius: 50%;
-    border: 1px solid currentColor;
-    border-color: currentColor transparent currentColor transparent;
-    animation: spinner-loader 1.2s linear infinite;
-}
-
 .chat-bar-loading-spinner {
   position: absolute;
   right: 20px;
