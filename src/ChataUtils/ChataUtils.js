@@ -450,7 +450,6 @@ ChataUtils.getPopover = () => {
 };
 
 ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
-	var shouldDisableConfirmButton = true
 	var reportOptions = [
         {
             label: strings.dataIncorrect,
