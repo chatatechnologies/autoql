@@ -35,6 +35,7 @@ import tippy from 'tippy.js';
 import { HeatmapNew } from './ChataHeatmap';
 import { BubbleChartNew } from './ChataBubbleChart';
 import { PieChartNew } from './ChataPieChart';
+import { Scatterplot } from './ChataScatterplot';
 
 export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     const dataFormatting = getDataFormatting(options.dataFormatting);
@@ -161,7 +162,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             } catch (error) {
                 console.error(error);
             }
-        } else if (numberIndices.length) {
+        } else if (!CHARTS_WITHOUT_AGGREGATED_DATA.includes(type) && numberIndices.length) {
             data = aggregateData({
                 data: newRows,
                 aggColIndex: columnIndexConfig.stringColumnIndex,
@@ -450,6 +451,9 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     break;
                 case 'stacked_line':
                     this.chartComponent = new LineChartNew(chartContentWrapper, { ...params, stacked: true });
+                    break;
+                case 'scatterplot':
+                    this.chartComponent = new Scatterplot(chartContentWrapper, params);
                     break;
                 default:
                     return null; // 'Unknown Display Type'

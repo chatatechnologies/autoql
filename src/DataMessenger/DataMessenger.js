@@ -75,6 +75,7 @@ import {
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
+    SCATTERPLOT_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -1998,6 +1999,13 @@ export function DataMessenger(options = {}) {
                 button = obj.getDisplayTypeButton(
                     idRequest,
                     STACKED_AREA_CHART_ICON,
+                    strings.displayTypes[displayType],
+                    displayChartHandlerFn,
+                );
+            } else if (displayType == 'scatterplot') {
+                button = obj.getDisplayTypeButton(
+                    idRequest,
+                    SCATTERPLOT_ICON,
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
