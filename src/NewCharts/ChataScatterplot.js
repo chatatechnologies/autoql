@@ -1,10 +1,7 @@
 import {
-    getBandScale,
-    getBubbleObj,
     getLinearScale,
     getMinAndMaxValues,
     getPointObj,
-    getRadiusScale,
 } from 'autoql-fe-utils';
 import { Axes } from './Axes';
 

@@ -20,6 +20,8 @@ import {
     getAggConfig,
     formatQueryColumns,
     CHARTS_WITHOUT_AGGREGATED_DATA,
+    MINIMUM_INNER_HEIGHT,
+    MINIMUM_INNER_WIDTH,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -223,8 +225,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     // Default starting size and position
     this.deltaX = 0;
     this.deltaY = 0;
-    this.innerHeight = component.parentElement.clientHeight - 100;
-    this.innerWidth = component.parentElement.clientWidth - 100;
+    this.innerHeight = Math.round(component.parentElement.clientHeight / 2); 
+    this.innerWidth = Math.round(component.parentElement.clientWidth / 2); 
     this.drawCount = 0;
 
     this.toggleChartScale = () => {
@@ -397,6 +399,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 aggConfig,
                 aggregated,
                 visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns[index].isSeriesHidden),
+                visibleSeries2: columnIndexConfig.numberColumnIndices2.filter((index) => !columns[index].isSeriesHidden),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
@@ -451,6 +454,9 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     break;
                 case 'stacked_line':
                     this.chartComponent = new LineChartNew(chartContentWrapper, { ...params, stacked: true });
+                    break;
+                case 'column_line':
+                    this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, columnLineCombo: true });
                     break;
                 case 'scatterplot':
                     this.chartComponent = new Scatterplot(chartContentWrapper, params);

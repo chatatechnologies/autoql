@@ -20,6 +20,7 @@ import {
     LOAD_MORE_DROPDOWN_PADDING_BOTTOM,
     TITLE_FONT_SIZE,
     mergeBoundingClientRects,
+    HORIZONTAL_LEGEND_SPACING,
 } from 'autoql-fe-utils';
 
 import { symbol, symbolSquare } from 'd3-shape';
