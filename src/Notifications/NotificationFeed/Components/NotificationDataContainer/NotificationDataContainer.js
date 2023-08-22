@@ -1,3 +1,4 @@
+import { formatElement } from 'autoql-fe-utils';
 import './NotificationDataContainer.scss';
 
 export function NotificationDataContainer({ queryResponse }) {
@@ -16,13 +17,21 @@ export function NotificationDataContainer({ queryResponse }) {
     const singleValue = document.createElement('div');
     const queryContainer = document.createElement('span');
     const queryWrapper = document.createElement('strong');
+    const {
+      text,
+      columns,
+      rows,
+    } = queryResponse?.data
 
-    queryWrapper.textContent = queryResponse?.data?.text;
-    
+    queryWrapper.textContent = text;
+
     queryContainer.appendChild(queryWrapper)
     queryContainer.appendChild(document.createTextNode(': '));
     singleValue.appendChild(queryContainer);
-    singleValue.appendChild(document.createTextNode('test'));
+    singleValue.appendChild(document.createTextNode(formatElement({
+      element: rows[0][0],
+      column: columns[0],
+    })));
     responseContainer.appendChild(singleValue);
 
     singleValue.classList.add('autoql-vanilla-single-value-response');
