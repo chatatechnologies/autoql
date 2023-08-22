@@ -1,14 +1,15 @@
-import { formatElement } from 'autoql-fe-utils';
+import { dataFormattingDefault, formatElement, isDataLimited } from 'autoql-fe-utils';
 import './NotificationDataContainer.scss';
 import { ChataUtils } from '../../../../ChataUtils';
 import { uuidv4 } from '../../../../Utils';
+import { ChataTable } from '../../../../ChataTable';
 
 export function NotificationDataContainer({ queryResponse }) {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const responseContentContainer = document.createElement('div');
   var idRequest = uuidv4();
-  ChataUtils.responses[idRequest] = queryResponse;
+  ChataUtils.responses[idRequest] = queryResponse.data;
 
   responseContentContainer.classList.add('autoql-vanilla-response-content-container');
   wrapper.classList.add('autoql-vanilla-notification-chart-container');
@@ -42,6 +43,20 @@ export function NotificationDataContainer({ queryResponse }) {
     responseContainer.classList.add('autoql-vanilla-single-value-response-flex-container');
     return responseContainer;
   }
+
+  this.createTable = () => {
+    console.log(idRequest);
+    console.log(document.querySelector(`[data-componentid='${idRequest}']`));
+    var useInfiniteScroll = isDataLimited({ data: queryResponse.data });
+    new ChataTable(
+      idRequest,
+      { options: dataFormattingDefault },
+      () => {},
+      () => {},
+      useInfiniteScroll,
+      undefined,
+    );
+  }
   
   this.createTableResponse = () => {
     var tableContainer = document.createElement('div');
@@ -73,6 +88,7 @@ export function NotificationDataContainer({ queryResponse }) {
         } else {
           console.log('TABLE');
           responseContentContainer.appendChild(this.createTableResponse());
+          this.createTable();
         }
         break;
     }
@@ -81,8 +97,9 @@ export function NotificationDataContainer({ queryResponse }) {
   const displayType = queryResponse.data.display_type;
 
   this.showResponse(displayType);
-
+  
   wrapper.appendChild(responseContentContainer);
   container.appendChild(wrapper);
+
   return container;
 }
