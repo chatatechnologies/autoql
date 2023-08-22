@@ -17,6 +17,9 @@ import {
     getChartColorVars,
     CHARTS_WITHOUT_AXES,
     getNumberColumnIndices,
+    getAggConfig,
+    formatQueryColumns,
+    CHARTS_WITHOUT_AGGREGATED_DATA,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -32,11 +35,9 @@ import tippy from 'tippy.js';
 import { HeatmapNew } from './ChataHeatmap';
 import { BubbleChartNew } from './ChataBubbleChart';
 import { PieChartNew } from './ChataPieChart';
+import { Scatterplot } from './ChataScatterplot';
 
-export function ChataChartNew(
-    component,
-    { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {},
-) {
+export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     const dataFormatting = getDataFormatting(options.dataFormatting);
 
     if (!component || !queryJson) {
@@ -50,7 +51,12 @@ export function ChataChartNew(
     const chartID = uuidv4();
 
     var origRows = queryJson?.data?.rows;
-    var columns = queryJson?.data?.columns;
+    var columns = formatQueryColumns({
+        columns: queryJson?.data?.columns,
+        aggConfig: component.aggConfig,
+        queryResponse: { data: queryJson },
+        dataFormatting,
+    });
 
     if (!origRows?.length || !columns?.length) {
         return null;
@@ -64,11 +70,16 @@ export function ChataChartNew(
         component.columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
     }
 
-    var columnIndexConfig = component.columnIndexConfig
+    if (!component.aggConfig) {
+        component.aggConfig = getAggConfig(columns);
+    }
 
     if (component.isChartScaled == undefined) {
-        component.isChartScaled = DEFAULT_CHART_CONFIG.isScaled
+        component.isChartScaled = DEFAULT_CHART_CONFIG.isScaled;
     }
+
+    var columnIndexConfig = component.columnIndexConfig;
+    var aggConfig = component.aggConfig;
 
     const indices1 = columnIndexConfig.numberColumnIndices ?? [];
     const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? columnIndexConfig.numberColumnIndices2 ?? [] : [];
@@ -93,7 +104,7 @@ export function ChataChartNew(
                 dynamicTitle: true,
                 maxWidth: 300,
                 inertia: true,
-            })
+            }),
         };
     }
 
@@ -151,11 +162,11 @@ export function ChataChartNew(
             } catch (error) {
                 console.error(error);
             }
-        } else if (numberIndices.length) {
+        } else if (!CHARTS_WITHOUT_AGGREGATED_DATA.includes(type) && numberIndices.length) {
             data = aggregateData({
                 data: newRows,
                 aggColIndex: columnIndexConfig.stringColumnIndex,
-                columns: columns,
+                columns,
                 numberIndices: getNumberColumnIndices(columns).allNumberColumnIndices,
                 dataFormatting,
             });
@@ -165,7 +176,6 @@ export function ChataChartNew(
     };
 
     this.updateColumns = (newColumns) => {
-        // formatQueryColumns({columns})
         columns = newColumns;
         this.drawChart();
     };
@@ -182,8 +192,11 @@ export function ChataChartNew(
         }
 
         if (newColumns) {
-            this.updateColumns(newColumns);
+            columns = newColumns;
+            component.aggConfig = getAggConfig(columns);
         }
+
+        this.data = this.getData();
 
         this.drawChart();
     };
@@ -210,12 +223,12 @@ export function ChataChartNew(
     // Default starting size and position
     this.deltaX = 0;
     this.deltaY = 0;
-    this.innerHeight = component.parentElement.clientHeight - 100;
-    this.innerWidth = component.parentElement.clientWidth - 100;
+    this.innerHeight = Math.round(component.parentElement.clientHeight / 2); 
+    this.innerWidth = Math.round(component.parentElement.clientWidth / 2); 
     this.drawCount = 0;
 
     this.toggleChartScale = () => {
-        component.isChartScaled = !component.isChartScaled
+        component.isChartScaled = !component.isChartScaled;
         this.drawChart();
     };
 
@@ -291,24 +304,31 @@ export function ChataChartNew(
         });
     };
 
-    this.didLabelsRotate = (chartContentWrapper) => {
-        let labelsRotatedOnSecondDraw = false;
-        if (type !== 'pie') {
-            this.prevBottomLabelsRotated = this.bottomLabelsRotated;
-            this.prevTopLabelsRotated = this.topLabelsRotated;
-            this.bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
-            this.topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+    this.setLabelRotationValues = (chartContentWrapper) => {
+        this.prevBottomLabelsRotated = this.bottomLabelsRotated;
+        this.prevTopLabelsRotated = this.topLabelsRotated;
 
-            labelsRotatedOnSecondDraw =
-                this.drawCount === 2 &&
-                ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
-                    (this.topLabelsRotated && !this.prevTopLabelsRotated));
-        }
+        const bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
+        const topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+
+        this.bottomLabelsRotated = bottomLabelsRotated;
+        this.topLabelsRotated = topLabelsRotated;
+
+        return { bottomLabelsRotated, topLabelsRotated };
+    };
+
+    this.didLabelsRotateOnSecondDraw = () => {
+        let labelsRotatedOnSecondDraw = false;
+
+        labelsRotatedOnSecondDraw =
+            this.drawCount === 2 &&
+            ((this.bottomLabelsRotated && !this.prevBottomLabelsRotated) ||
+                (this.topLabelsRotated && !this.prevTopLabelsRotated));
 
         return labelsRotatedOnSecondDraw;
     };
 
-    this.drawChart = (firstDraw = true, redrawParams = {}) => {
+    this.drawChart = (firstDraw = true) => {
         if (this.drawCount > 10) {
             console.warn('recursive drawChart was called over 10 times. Something is wrong.');
             return;
@@ -363,7 +383,9 @@ export function ChataChartNew(
             colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
 
             const chartColors = getChartColorVars(CSS_PREFIX) ?? {};
-            
+
+            const aggregated = !CHARTS_WITHOUT_AGGREGATED_DATA.includes(type);
+
             const params = {
                 data: this.data,
                 json: queryJson,
@@ -372,7 +394,10 @@ export function ChataChartNew(
                 height: this.innerHeight ?? this.outerHeight,
                 width: this.innerWidth ?? this.outerWidth,
                 columnIndexConfig,
+                aggConfig,
+                aggregated,
                 visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns[index].isSeriesHidden),
+                visibleSeries2: columnIndexConfig.numberColumnIndices2.filter((index) => !columns[index].isSeriesHidden),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
@@ -386,6 +411,8 @@ export function ChataChartNew(
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
                 tippyInstance: this.tippyInstance,
                 activeKey: component.activeKey,
+                topLabelsRotated: this.topLabelsRotated,
+                bottomLabelsRotated: this.bottomLabelsRotated,
                 toggleChartScale: this.toggleChartScale,
                 changeNumberColumnIndices: this.changeNumberColumnIndexConfig,
                 changeStringColumnIndices: this.changeStringColumnIndices,
@@ -396,7 +423,6 @@ export function ChataChartNew(
                 onChartClick,
                 ...colorScales,
                 ...chartColors,
-                ...redrawParams,
             };
 
             switch (type) {
@@ -427,6 +453,12 @@ export function ChataChartNew(
                 case 'stacked_line':
                     this.chartComponent = new LineChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
+                case 'column_line':
+                    this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, columnLineCombo: true });
+                    break;
+                case 'scatterplot':
+                    this.chartComponent = new Scatterplot(chartContentWrapper, params);
+                    break;
                 default:
                     return null; // 'Unknown Display Type'
             }
@@ -434,13 +466,17 @@ export function ChataChartNew(
             // This is used for a safety fallback in case of infinite recursion
             this.drawCount += 1;
 
-            if (firstDraw && !CHARTS_WITHOUT_AXES.includes(type)) {
-                return this.drawChart(false);
-            } else if (this.didLabelsRotate(chartContentWrapper)) {
-                this.drawChart(false, {
-                    bottomLabelsRotated: this.bottomLabelsRotated,
-                    topLabelsRotated: this.topLabelsRotated,
-                });
+            if (CHARTS_WITHOUT_AXES.includes(type)) {
+                // Do not redraw
+            } else {
+                this.setLabelRotationValues(chartContentWrapper);
+
+                if (firstDraw) {
+                    this.drawChart(false);
+                } else if (this.didLabelsRotateOnSecondDraw()) {
+                    // Labels rotated after seconds draw - redraw one last time
+                    this.drawChart(false);
+                }
             }
         } catch (error) {
             console.error(error);

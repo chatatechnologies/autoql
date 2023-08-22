@@ -1,38 +1,29 @@
 import axios from 'axios';
-import moment from 'moment';
 import {
     runQueryNewPage,
     formatTableParams,
     currentEventLoopEnd,
     REQUEST_CANCELLED_ERROR,
-    isColumnNumberType,
-    formatElement,
+    generatePivotData,
+    getColumnIndexConfig,
+    formatQueryColumns,
+    onTableCellClick,
 } from 'autoql-fe-utils';
 import _isEqual from 'lodash.isequal';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
-import { Scrollbars } from '../Scrollbars'
+import { Scrollbars } from '../Scrollbars';
 import { ChataUtils } from '../ChataUtils';
-import {
-    formatData,
-    formatColumnName,
-    getDatePivotArray,
-    getPivotColumnArray,
-    htmlToElement,
-    cloneObject,
-    getNumberOfGroupables,
-    allColHiddenMessage,
-} from '../Utils';
-import { strings } from '../Strings';
+import { formatData, htmlToElement, getNumberOfGroupables, allColHiddenMessage, cloneObject } from '../Utils';
 
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
 import './ChataTable.scss';
 
-function replaceScrollbar (table) {
-    var tableholder = table.element?.querySelector('.tabulator-tableholder')
+function replaceScrollbar(table) {
+    var tableholder = table.element?.querySelector('.tabulator-tableholder');
 
     if (tableholder) {
-        return new Scrollbars(tableholder)
+        return new Scrollbars(tableholder);
     }
 }
 
@@ -60,7 +51,9 @@ function instantiateTabulator(component, tableOptions, table) {
 
         component.createPageLoader();
         component.createScrollLoader();
-        component.ps = replaceScrollbar(tabulator);
+
+        // Remove for now - causing buggy behavious
+        // component.ps = replaceScrollbar(tabulator);
     });
 
     return tabulator;
@@ -105,135 +98,6 @@ function callTableFilter(col, headerValue, rowValue, options) {
     }
 }
 
-function getPivotColumns(json, pivotColumns, options) {
-    const columns = json['data']['columns'];
-
-    var columnsData = [];
-    pivotColumns.map((col, index) => {
-        var colIndex = index + 1;
-        var title = col;
-
-        if (colIndex > 2) colIndex = 2;
-
-        if (!title) title = 'null';
-        if (!col) col = 'null';
-
-        columnsData.push({
-            title: title.toString(),
-            field: col.toString(),
-            index: index,
-            headerFilterPlaceholder: strings.headerFilterPlaceholder,
-            headerFilter: 'input',
-            headerFilterFunc: (headerValue, rowValue) => {
-                return callTableFilter(columns[colIndex], headerValue.toLowerCase(), rowValue, options);
-            },
-            hozAlign: col.type === 'DOLLAR_AMT' || col.type === 'RATIO' || col.type === 'NUMBER' ? 'right' : 'center',
-            formatter: (cell) => {
-                let value;
-                if (
-                    cell.getValue() === '' &&
-                    (columns[colIndex].type == 'DOLLAR_AMT' || columns[colIndex].type === 'QUANTITY')
-                ) {
-                    value = 0;
-                } else {
-                    value = cell.getValue();
-                }
-
-                return formatData(value, columns[colIndex], options);
-            },
-            frozen: index === 0 ? true : false,
-            sorter: setSorterFunction(columns[colIndex]),
-        });
-    });
-
-    return columnsData;
-}
-
-function getPivotData(pivotArray, pivotColumns) {
-    var tableData = [];
-    for (var i = 0; i < pivotArray.length; i++) {
-        var line = pivotArray[i];
-        var row = {};
-        for (var x = 0; x < line.length; x++) {
-            var colName = pivotColumns[x].field;
-            row[colName] = line[x];
-        }
-        tableData.push(row);
-    }
-    return tableData;
-}
-
-const dateSortFn = (a, b) => {
-    // First try to convert to number. It will sort properly if its a plain year or a unix timestamp
-    let aDate = Number(a);
-    let bDate = Number(b);
-
-    // If one is not a number, use dayjs to format
-    if (Number.isNaN(aDate) || Number.isNaN(bDate)) {
-        aDate = moment(a).unix();
-        bDate = moment(b).unix();
-    }
-
-    // Finally if all else fails, just compare the 2 values directly
-    if (!aDate || !bDate) {
-        return b - a;
-    }
-
-    return bDate - aDate;
-};
-
-const setSorterFunction = (col) => {
-    if (!col) return undefined;
-    if (col.type === 'DATE' || col.type === 'DATE_STRING') {
-        return (a, b) => dateSortFn(a, b);
-    } else if (col.type === 'STRING') {
-        // There is some bug in tabulator where its not sorting
-        // certain columns. This explicitly sets the sorter so
-        // it works every time
-        return 'string';
-    }
-
-    return undefined;
-};
-
-function getColumnsData(json, options, onHeaderClick) {
-    const columns = json['data']['columns'];
-    var columnsData = [];
-    columns.map((col, index) => {
-        var colName = col['display_name'] || col['name'];
-        var isVisible = true;
-        if ('is_visible' in col) {
-            isVisible = col['is_visible'] || false;
-        }
-        columnsData.push({
-            title: formatColumnName(colName),
-            name: col.name,
-            field: `${index}`,
-            headerFilter: 'input',
-            headerFilterPlaceholder: strings.headerFilterPlaceholder,
-            visible: isVisible,
-            hozAlign: isColumnNumberType(col) ? 'right' : 'center',
-            formatter: (cell) => {
-                return formatElement({
-                    element: cell.getValue(),
-                    column: col,
-                    config: options.dataFormatting,
-                    htmlElement: cell.getElement(),
-                });
-            },
-            headerFilterFunc: (headerValue, rowValue) => {
-                return callTableFilter(col, headerValue.toLowerCase(), rowValue, options);
-            },
-            headerClick: () => {
-                onHeaderClick();
-            },
-            sorter: setSorterFunction(col),
-        });
-    });
-
-    return columnsData;
-}
-
 function getFirstDateColumn(json) {
     const columns = json['data']['columns'];
     var firstDateFound = '';
@@ -248,6 +112,10 @@ function getFirstDateColumn(json) {
 }
 
 function getTableData(rows) {
+    if (!rows) {
+        return []
+    }
+    
     var tableData = [];
 
     for (var i = 0; i < rows.length; i++) {
@@ -271,7 +139,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
     const previousData = { ...previousResponseData, page: 1, isPreviousData: true };
 
     try {
-        if (component.hidden || !table.isInitialized) {
+        if (component.style.display === 'none' || component.hidden || !table.isInitialized) {
             return previousData;
         }
 
@@ -287,7 +155,6 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
 
         const tableParamsFormatted = formatTableParams(component.tableParams, columns);
         const nextTableParamsFormatted = formatTableParams(params, columns);
-
 
         if (_isEqual(tableParamsFormatted, nextTableParamsFormatted)) {
             return previousData;
@@ -326,7 +193,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
             component.queryID = responseWrapper?.data?.data?.query_id;
             newResponse = { ...(responseWrapper?.data?.data ?? {}), page: 1 };
 
-            component.scrollLeft = component.tabulator?.rowManager?.element?.scrollLeft; 
+            component.scrollLeft = component.tabulator?.rowManager?.element?.scrollLeft;
 
             /* wait for current event loop to end so table is updated before callbacks are invoked */
             await currentEventLoopEnd();
@@ -374,29 +241,30 @@ const ajaxResponseFunc = (response, component) => {
     };
 };
 
-export function ChataTable(
-    idRequest,
-    options,
-    onRowClick,
-    onHeaderClick = () => {},
-    useInfiniteScroll = true,
-    tableParams,
-) {
-    const self = this
+export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteScroll = true, tableParams) {
+    const self = this;
     const json = ChataUtils.responses[idRequest];
-    if (!json?.data?.rows) {
+    if (!json?.data?.rows?.length || !json?.data?.columns?.length) {
         return;
     }
 
-    var tableData = getTableData(json.data.rows);
-    var columns = getColumnsData(json, options, onHeaderClick);
-    var firstDateFound = getFirstDateColumn(json);
-    var defaultInitialSort = firstDateFound ? [{ column: firstDateFound, dir: 'asc' }] : undefined;
+    const tableData = getTableData(json.data.rows);
+    const columns = formatQueryColumns({ columns: json.data.columns, queryResponse: { data: json } });
+    const tableConfig = getColumnIndexConfig({ response: { data: json } });
 
-    this.isInitialized = false
-    this.hasSetInitialData = false
+    this.isInitialized = false;
+    this.hasSetInitialData = false;
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
+
+    component.columnIndexConfig = tableConfig
+
+    // TODO - move this to its parent element instead
+    var groupableCount = getNumberOfGroupables(json?.data?.columns);
+    if (groupableCount === 0) {
+        component.classList.add('no-drilldown');
+    }
+
     component.classList.add('table-condensed');
     component.isOriginalData = true;
     component.pageSize = json.data.fe_req.page_size;
@@ -405,18 +273,28 @@ export function ChataTable(
     component.isLastPage = component.lastPage === 1;
     component.useInfiniteScroll = !!useInfiniteScroll;
     component.isFiltering = true;
-    component.tableParams = tableParams ?? { sort: defaultInitialSort, filter: undefined };
+    component.tableParams = tableParams ?? { sort: undefined, filter: undefined };
 
     component.queryFn = json?.queryFn;
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewPage = (newRows) => {};
+    component.onNewPage = (newRows) => {
+		var tableRowCountElement = component.parentElement.querySelector(".autoql-vanilla-chata-table-row-count")
+		var currentText = tableRowCountElement.textContent;
+		var matches = currentText.match(/(\d+)/);
+		if (matches && matches.length > 0) {
+			var currentTableRowCount = parseInt(matches[0]);
+			var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+			var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
+			tableRowCountElement.textContent = newText;
+		  }
+	};
 
     // TODO(Nikki) - update parent component with changes
     component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewData = (response, component) => { };
+    component.onNewData = (response, component) => {};
 
     component.getNewPage = (tableParams) => {
         return runQueryNewPage({
@@ -454,8 +332,8 @@ export function ChataTable(
     };
 
     component.clearLoadingIndicators = () => {
-        component.setScrollLoading(false)
-        component.setPageLoading(false)
+        component.setScrollLoading(false);
+        component.setPageLoading(false);
     };
 
     component.createScrollLoader = () => {
@@ -470,7 +348,7 @@ export function ChataTable(
         scrollLoader.appendChild(spinner);
 
         component.scrollLoader = scrollLoader;
-        component.parentElement.appendChild(scrollLoader)
+        component.parentElement.appendChild(scrollLoader);
     };
 
     component.createPageLoader = () => {
@@ -501,15 +379,12 @@ export function ChataTable(
         reactiveData: false,
         autoResize: false,
         movableColumns: true,
-        columns: columns,
+        columns,
         data: tableData,
         downloadConfig: {
             columnGroups: false,
             rowGroups: false,
             columnCalcs: false,
-        },
-        rowClick: (e, row) => {
-            onRowClick(e, row, cloneObject(json));
         },
         selectableCheck: () => false,
         initialSort: component.tableParams?.sort,
@@ -542,27 +417,24 @@ export function ChataTable(
     component.onDataLoadError = (error) => {
         console.warn('on Data Load Error', { error });
     };
-    component.onCellClick = () => {
+    component.onCellClick = (e, cell) => {
+        const drilldownData = onTableCellClick({ cell, columns, tableConfig });
+
+        if (!drilldownData?.groupBys) {
+            return;
+        }
+
+        onClick(drilldownData);
     };
-    component.onDataSorting = () => {
-    };
-    component.onDataSorted = () => {
-    };
-    component.onDataFiltering = () => {
-    };
-    component.onDataFiltered = () => {
-    };
+    component.onDataSorting = () => {};
+    component.onDataSorted = () => {};
+    component.onDataFiltering = () => {};
+    component.onDataFiltered = () => {};
 
     var table = instantiateTabulator(component, tableOptions, this);
 
     if (!table) {
         return;
-    }
-
-    // console.log('TODO - move this to its parent element instead')
-    var groupableCount = getNumberOfGroupables(json?.data?.columns);
-    if (groupableCount === 0) {
-        component.classList.add('no-drilldown');
     }
 
     table.addFilterTag = (col) => {
@@ -593,7 +465,7 @@ export function ChataTable(
 
             const clearBtn = document.createElement('div');
             clearBtn.className = 'autoql-vanilla-input-clear-btn';
-            clearBtn.setAttribute('data-tippy-content', 'Clear filter')
+            clearBtn.setAttribute('data-tippy-content', 'Clear filter');
             clearBtn.appendChild(clearBtnText);
 
             clearBtn.addEventListener('click', (e) => {
@@ -640,28 +512,46 @@ export function ChataTable(
     return table;
 }
 
-export function ChataPivotTable(idRequest, options, onCellClick, onRender = () => {}) {
-    var json = ChataUtils.responses[idRequest];
-    var cols = json['data']['columns'];
-    var isDatePivot = false;
-    let pivotArray;
+export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
+    const component = document.querySelector(`[data-componentid='${idRequest}']`);
+    const json = ChataUtils.responses[idRequest];
 
-    if (
-        (cols[0].type === 'DATE' || cols[0].type === 'DATE_STRING') &&
-        cols[0].display_name.toLowerCase().includes('month')
-    ) {
-        pivotArray = getDatePivotArray(json, options, json['data']['rows']);
-        isDatePivot = true;
-    } else {
-        pivotArray = getPivotColumnArray(json, options, json['data']['rows']);
+    if (!json?.data?.rows) {
+        return;
     }
 
-    var pivotColumns = pivotArray.shift();
-    var columns = getPivotColumns(json, pivotColumns, options);
-    var tableData = getPivotData(pivotArray, columns);
-    const component = document.querySelector(`[data-componentid='${idRequest}']`);
+    const { dataFormatting } = options
+
+    const columns = formatQueryColumns({ columns: json?.data?.columns, queryResponse: { data: json } });
+
+    const tableConfig = getColumnIndexConfig({ response: { data: json } });
+    const pivotData = generatePivotData({
+        rows: json?.data?.rows,
+        columns,
+        tableConfig,
+        dataFormatting,
+        isFirstGeneration: true,
+    });
+
+    tableConfig.stringColumnIndex = pivotData.stringColumnIndex
+    tableConfig.legendColumnIndex = pivotData.legendColumnIndex
+
+    const pivotTableData = pivotData.pivotTableData;
+    const pivotColumns = pivotData.pivotTableColumns;
+
+    component.columnIndexConfig = tableConfig
 
     component.classList.add('table-condensed');
+
+    component.onCellClick = (e, cell) => {
+        const drilldownData = onTableCellClick({ cell, columns, pivotData, tableConfig });
+
+        if (!drilldownData?.groupBys) {
+            return;
+        }
+        
+        onClick(drilldownData);
+    };
 
     const tableOptions = {
         layout: 'fitDataFill',
@@ -675,16 +565,11 @@ export function ChataPivotTable(idRequest, options, onCellClick, onRender = () =
             rowGroups: false,
             columnCalcs: false,
         },
-        initialSort: isDatePivot ? [{ column: 'Month', dir: 'asc' }] : undefined,
-        columns: columns,
-        data: tableData,
-        renderComplete: onRender,
-        cellClick: (e, cell) => {
-            onCellClick(e, cell, cloneObject(json));
-        },
-    }
+        columns: pivotColumns,
+        data: pivotTableData,
+    };
 
-    var table = instantiateTabulator(component, tableOptions);
+    var table = instantiateTabulator(component, tableOptions, this);
 
     return table;
 }

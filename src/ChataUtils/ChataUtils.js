@@ -1,7 +1,6 @@
 import 'regenerator-runtime/runtime.js';
 import {
     htmlToElement,
-    closeAllChartPopovers,
     closeAllToolbars,
     closeAllSafetynetSelectors,
     closeAutocompleteObjects,
@@ -14,6 +13,7 @@ import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
 import { ChataConfirmDialog } from '../Notifications/Components/ChataConfirmDialog/ChataConfirmDialog';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
+import { ChataRadio } from '../ChataComponents';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
 import { NotificationSettingsModal } from '../Notifications';
@@ -28,7 +28,22 @@ export var ChataUtils = {
     responses: [],
 };
 
-ChataUtils.sendReportMessage = async (idRequest, options, menu, toolbar, msg) => {
+// ChataUtils.sendReport = async (idRequest, options, menu, toolbar) => {
+//     var json = ChataUtils.responses[idRequest];
+//     var queryId = json['data']['query_id'];
+//     const URL = options.authentication.demo
+//     ? `https://backend-staging.chata.ai/api/v1/chata/query/drilldown`
+//     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
+//
+//     await apiCallPut(URL, {is_correct: false}, options)
+//     if(menu)menu.classList.remove('show');
+//     if(toolbar)toolbar.classList.remove('show');
+//     new AntdMessage(strings.feedback, 3000);
+//
+//     return Promise.resolve()
+// }
+
+ChataUtils.sendReportMessage = async (idRequest, options, toolbar, msg) => {
     var json = ChataUtils.responses[idRequest];
     var queryId = json['data']['query_id'];
     const URL = options.authentication.demo
@@ -36,7 +51,6 @@ ChataUtils.sendReportMessage = async (idRequest, options, menu, toolbar, msg) =>
         : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 
     await apiCallPut(URL, { is_correct: false, message: msg }, options);
-    if (menu) menu.classList.remove('show');
     if (toolbar) toolbar.classList.remove('show');
     new AntdMessage(strings.feedback, 3000);
 
@@ -437,6 +451,48 @@ ChataUtils.getPopover = () => {
 };
 
 ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
+	var reportOptions = [
+        {
+            label: strings.dataIncorrect,
+            value: strings.dataIncorrect,
+            checked: false
+        },
+        {
+            label: strings.dataIncomplete,
+            value: strings.dataIncomplete,
+            checked: false
+        },
+        {
+            label: 'Other',
+            value: 'other',
+            checked: false
+        },
+    ]
+	var selectedOption = "";
+	var reportRadio = new ChataRadio(reportOptions,(evt)=>{
+		selectedOption = evt.target.value
+		enableButton(evt,selectedOption)
+	})
+	var enableButton = (evt,selectedOption)=>{
+		if (selectedOption === 'The data is incomplete' ||
+			selectedOption === 'The data is incorrect'){
+				
+				reportButton.style.opacity = '';
+				reportButton.style.pointerEvents = '';
+			}
+		else if (selectedOption === 'other') {
+			if(textArea.value !== ''){
+				reportButton.style.opacity = '';
+				reportButton.style.pointerEvents = '';
+			}
+			else{
+				reportButton.style.opacity = '0.5';
+				reportButton.style.pointerEvents = 'none';
+			}
+			
+		  }		  
+			
+	}
     var modal = new Modal({
         destroyOnClose: true,
         withFooter: true,
@@ -445,7 +501,15 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     modal.setTitle(strings.reportProblemTitle);
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');
+	var reportProblemQuestion = document.createElement('h3');
+	var reportProblemMessage = document.createElement('span');
+	reportProblemMessage.textContent = strings.reportProblemMessage;
+	reportProblemQuestion.textContent = strings.reportProblemQuestion;
+	reportProblemQuestion.style.marginTop = "0";
+	reportProblemQuestion.style.marginBottom = "5px";
     textArea.classList.add('autoql-vanilla-report-problem-text-area');
+	textArea.addEventListener("input", (evt) => enableButton(evt, selectedOption));
+	container.classList.add('autoql-vanilla-report-problem-modal-body')
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
         style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
@@ -463,20 +527,32 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
 
     reportButton.appendChild(spinner);
     reportButton.appendChild(document.createTextNode(strings.reportProblem));
-    container.appendChild(document.createTextNode(strings.reportProblemMessage));
-
+	container.appendChild(reportProblemQuestion);
+	container.appendChild(reportRadio);
+    container.appendChild(reportProblemMessage);
+	container.appendChild(textArea);
     modal.addView(container);
-    modal.addView(textArea);
+   
+	
     modal.addFooterElement(cancelButton);
     modal.addFooterElement(reportButton);
 
     cancelButton.onclick = () => {
         modal.close();
     };
-
+	
+	reportButton.style.opacity = "0.5";  // Adjust opacity to your preference
+	reportButton.style.pointerEvents = "none";
     reportButton.onclick = async () => {
+		var message = textArea.value;
+		if(textArea.value === ''){
+			message = selectedOption;
+		}
+		else if(textArea.value!=='' && selectedOption !== 'other'){
+			message = selectedOption + ' - ' + textArea.value
+		}
         spinner.classList.remove('hidden');
-        await ChataUtils.sendReportMessage(idRequest, options, menu, toolbar, textArea.value);
+        await ChataUtils.sendReportMessage(idRequest, options,toolbar,message);
         modal.close();
     };
 
@@ -933,20 +1009,6 @@ ChataUtils.createSuggestions = function (
 };
 
 ChataUtils.registerWindowClicks = () => {
-    const excludeElementsForChartSelector = [
-        'autoql-vanilla-x-axis-label-border',
-        'autoql-vanilla-y-axis-label-border',
-        'autoql-vanilla-axis-selector-container',
-        'number-selector-header',
-        'chata-chart-selector-checkbox',
-        'autoql-vanilla-chata-col-selector-name',
-        'autoql-vanilla-button-wrapper-selector',
-        'autoql-vanilla-chata-list-item',
-        'autoql-vanilla-chart-row-selector',
-        'autoql-vanilla-chart-row-selector-box',
-        'autoql-vanilla-axis-selector-box',
-    ];
-
     const excludeElementsForToolbars = [
         'autoql-vanilla-chata-toolbar-btn',
         'autoql-vanilla-more-options',
@@ -962,7 +1024,6 @@ ChataUtils.registerWindowClicks = () => {
     ]
 
     document.body.addEventListener('click', (evt) => {
-        var closeChartPopovers = true;
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
         var closeAutocomplete = true;
@@ -971,14 +1032,6 @@ ChataUtils.registerWindowClicks = () => {
             let c = excludeElementsForSafetynet[i];
             if (evt.target.classList.contains(c)) {
                 closeSafetynetSelectors = false;
-            }
-        }
-
-        for (let i = 0; i < excludeElementsForChartSelector.length; i++) {
-            let c = excludeElementsForChartSelector[i];
-            if (evt.target.classList.contains(c)) {
-                closeChartPopovers = false;
-                break;
             }
         }
 
@@ -996,10 +1049,6 @@ ChataUtils.registerWindowClicks = () => {
                 closeAutocomplete = false;
                 break;
             }
-        }
-
-        if(closeChartPopovers){
-            closeAllChartPopovers();
         }
 
         if (closeToolbars) {

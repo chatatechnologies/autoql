@@ -34,7 +34,7 @@ export class DataMessengerPage extends Component {
         enableQueryValidation: true,
         enableQuerySuggestions: true,
         enableDrilldowns: true,
-        enableExploreQueriesTab: true,
+        enableDataExplorerTab: true,
         enableNotificationsTab: true,
         enableNotifications: true,
         enableColumnVisibilityManager: true,
@@ -539,8 +539,8 @@ export class DataMessengerPage extends Component {
                     this.onChangeDMProp
                 )}
                 {this.createBooleanRadioGroup(
-                    'Enable Explore Queries Tab',
-                    'enableExploreQueriesTab',
+                    'Enable Data Explorer Tab',
+                    'enableDataExplorerTab',
                     [true, false],
                     this.onChangeDMProp
                 )}

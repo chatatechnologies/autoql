@@ -1,6 +1,5 @@
 import { DEFAULT_DATA_PAGE_SIZE, MAX_DATA_PAGE_SIZE, getRowNumberListForPopover, getThemeValue } from 'autoql-fe-utils';
 import { PopoverChartSelector } from './PopoverChartSelector';
-import { closeAllChartPopovers } from '../Utils';
 import { strings } from '../Strings';
 import { DATA_LIMIT_WARNING } from '../Svg';
 import { CSS_PREFIX } from '../Constants';
@@ -14,7 +13,7 @@ export function ChartRowSelector(
     options,
 ) {
     try {
-        var currentPageSize = json.data.row_limit;
+        var currentPageSize = Math.min(json.data.count_rows, json.data.row_limit);
         var initialPageSize = options?.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
         var totalRows = json.data.count_rows;
 
@@ -49,31 +48,31 @@ export function ChartRowSelector(
             selectorContent.classList.add('autoql-vanilla-axis-selector-content');
 
             if (pageSizeList.length) {
-                pageSizeList.forEach((pageSize, i) => {           
+                pageSizeList.forEach((pageSize, i) => {
                     var li = document.createElement('li');
 
                     li.setAttribute('data-popover-page-size', pageSize);
                     li.onclick = (evt) => onPageSizeClick(evt, popover);
-    
+
                     li.classList.add('autoql-vanilla-string-select-list-item');
                     if (pageSize === currentPageSize) {
                         li.classList.add('active');
                     }
 
-                    let rowCountSuffix = ''
+                    let rowCountSuffix = '';
 
                     if (i === pageSizeList.length - 1) {
                         if (pageSize >= MAX_DATA_PAGE_SIZE) {
-                          rowCountSuffix = ' (Maximum)'
+                            rowCountSuffix = ' (Maximum)';
                         } else {
-                          rowCountSuffix = ' (All)'
+                            rowCountSuffix = ' (All)';
                         }
                     }
 
                     li.innerHTML = `${pageSize}${rowCountSuffix}`;
 
                     selectorContent.appendChild(li);
-                }); 
+                });
             }
 
             selectorContainer.appendChild(selectorContent);
@@ -84,7 +83,6 @@ export function ChartRowSelector(
         }
 
         const onSelectorClick = (evt) => {
-            closeAllChartPopovers();
             new RowSelectorPopover(evt);
         };
 
@@ -100,7 +98,7 @@ export function ChartRowSelector(
             .attr('text-anchor', 'start')
             .style('stroke-width', 0)
             .style('font-size', 'inherit')
-            .style('font-family', 'inherit')
+            .style('font-family', 'inherit');
 
         // Text before selector
         textContainer.append('tspan').text(`${strings.visualizingText} `);
@@ -109,7 +107,6 @@ export function ChartRowSelector(
         var numberSelector = textContainer
             .append('tspan')
             .attr('class', 'autoql-vanilla-chart-row-selector')
-            .style('text-decoration', 'underline')
             .text(currentPageSize);
 
         // Text after selector
@@ -146,19 +143,24 @@ export function ChartRowSelector(
 
         const numberSelectorBBox = numberSelector.node().getBBox();
 
-        // Hover box for selector
-        rowSelectorD3
-            .append('rect')
-            .attr('class', 'autoql-vanilla-chart-row-selector-box')
-            .attr('height', numberSelectorBBox.height + 6)
-            .attr('width', numberSelectorBBox.width + 6)
-            .attr('x', numberSelectorBBox.x - 3)
-            .attr('y', numberSelectorBBox.y - 3)
-            .attr('rx', 4)
-            .style('opacity', 0) // use CSS to change the opacity to 1 so it doesnt show in the PNG export
-            .on('mouseup', function (evt) {
-                onSelectorClick(evt);
-            });
+        const isSelectable = initialPageSize < totalRows;
+        if (isSelectable) {
+            numberSelector.style('text-decoration', 'underline');
+
+            // Hover box for selector
+            rowSelectorD3
+                .append('rect')
+                .attr('class', 'autoql-vanilla-chart-row-selector-box')
+                .attr('height', numberSelectorBBox.height + 6)
+                .attr('width', numberSelectorBBox.width + 6)
+                .attr('x', numberSelectorBBox.x - 3)
+                .attr('y', numberSelectorBBox.y - 3)
+                .attr('rx', 4)
+                .style('opacity', 0) // use CSS to change the opacity to 1 so it doesnt show in the PNG export
+                .on('mouseup', function (evt) {
+                    onSelectorClick(evt);
+                });
+        }
 
         // Finally, anchor the whole element vertically and horizontally
         const rowSelectorBBox = rowSelectorD3.node().getBBox() ?? {};

@@ -1,3 +1,8 @@
+body.autoql-vanilla-drawer-open-body {
+    // This is required to disallow body scrolling through the DM overlay
+    overflow: hidden;
+}
+
 .autoql-vanilla-drawer {
     position: fixed;
     z-index: 9999;
@@ -20,7 +25,7 @@
         z-index: 2;
         word-wrap: break-word;
         align-items: center;
-        color: white;
+        color: var(--autoql-vanilla-text-color-accent);
         position: relative;
         z-index: 100000003;
 
@@ -36,7 +41,7 @@
             .autoql-vanilla-chata-button {
                 background: transparent;
                 border: none;
-                color: white;
+                color: inherit;
                 font-size: 20px;
                 cursor: pointer;
                 outline: none !important;
@@ -70,10 +75,6 @@
     }
 
     .autoql-vanilla-chat-single-message-container {
-        &.response:first-child {
-            padding-top: 18px;
-        }
-
         &.response {
             display: flex;
             flex-direction: column;
@@ -106,7 +107,7 @@
                     font-size: 14px;
                     letter-spacing: 0.04em;
                     box-sizing: border-box;
-                    box-shadow: var(--react-autoql-box-shadow-1);
+                    box-shadow: var(--autoql-vanilla-box-shadow-1);
                     max-height: 400px;
                 }
             }

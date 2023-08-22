@@ -6,7 +6,7 @@ import { createIcon } from "../../../Utils";
 import './RelatedQueries.scss';
 
 export function RelatedQueries({ 
-  icon, title, widget, subject, textBarHeight, containerHeight, previewSectionHeight 
+  icon, title, widget, subject = {}, plainText, textBarHeight, containerHeight, previewSectionHeight 
 }) {
   this.currentPage = 1;
   const container = document.createElement('div');
@@ -21,12 +21,17 @@ export function RelatedQueries({
   const getRelatedQueries = async({ pageNumber }) => {
     const relatedQueries = await fetchDataExplorerSuggestions({
       context: subject.name,
+      text: plainText,
       skipQueryValidation: true,
       pageSize: 25,
       domain,
       apiKey,
       token,
       pageNumber,
+      // TODO: implement safetynet for plain text input
+      // skipQueryValidation: pageNumber > 1,
+      // selectedVL: undefined,
+      // userVLSelection: undefined,
     });
     const { items } = relatedQueries.data.data;
 

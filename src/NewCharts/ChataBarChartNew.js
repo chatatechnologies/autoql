@@ -21,6 +21,7 @@ export function BarChartNew(container, params = {}) {
         stacked,
         legendColumn,
         activeKey,
+        aggregated
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } = columnIndexConfig;
@@ -37,6 +38,7 @@ export function BarChartNew(container, params = {}) {
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
+        aggregated
     };
 
     this.yScale = getBandScale({

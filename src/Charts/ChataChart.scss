@@ -11,6 +11,10 @@
     max-width: 100% !important;
     display: block;
 
+    text {
+        stroke: transparent;
+    }
+
     .autoql-vanilla-stacked-rect,
     .autoql-vanilla-heatmap-rect,
     .autoql-vanilla-chart-bar {
@@ -33,13 +37,13 @@
             .cell {
                 &.hidden {
                     text {
-                        color: var(--react-autoql-background-disabled);
+                        color: var(--autoql-vanilla-background-disabled);
                         opacity: 0.4 !important;
                     }
                     line.swatch,
                     path.swatch {
-                        fill: var(--react-autoql-background-color-disabled) !important;
-                        stroke: var(--react-autoql-background-color-disabled) !important;
+                        fill: var(--autoql-vanilla-background-color-disabled) !important;
+                        stroke: var(--autoql-vanilla-background-color-disabled) !important;
                     }
                 }
 
@@ -156,11 +160,30 @@
     }
 }
 
-.autoql-vanilla-axis-selector-container .number-selector-header {
-    margin-top: 10px;
-    font-size: 12px;
-    padding: 0 18px 7px;
-    font-weight: 600;
+.autoql-vanilla-axis-selector-container {
+    .autoql-vanilla-chata-list-item {
+        .autoql-vanilla-select {
+            font-weight: 600;
+            font-size: 12px;
+            height: 26px;
+            line-height: 25px;
+            padding: 0 8px !important;
+            margin-right: 10px;
+        }
+    }
+
+    .number-selector-header {
+        margin-top: 10px;
+        font-size: 12px;
+        padding: 0 18px 7px;
+        font-weight: 600;
+    }
+}
+
+.autoql-vanilla-chata-col-selector-name {
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
 }
 
 .autoql-vanilla-chata-list-item {

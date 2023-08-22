@@ -47,7 +47,7 @@ export function DataExplorer({ subjects, widget }) {
   autocomplete.classList.add('autoql-vanilla-data-explorer-autocomplete');
   introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
   instructionList.classList.add('autoql-vanilla-intro-message-list-container');
-  input.setAttribute('placeholder', strings.exploreQueriesInput);
+  input.setAttribute('placeholder', strings.dataExplorerInput);
   
   title.appendChild(document.createTextNode('Welcome to '));
   title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
@@ -113,10 +113,23 @@ export function DataExplorer({ subjects, widget }) {
   container.appendChild(contentWrapper);
   container.style.display = 'none';
   
-  input.addEventListener('keydown', async event => {
-    if (event.key == 'Enter' && input.value) {
-      container.removeChild(introMessage);
-    }
+  input.addEventListener('keydown', async (event) => {
+      if (event.key == 'Enter' && input.value) {
+          contentWrapper.innerHTML = '';
+          autocomplete.classList.remove('show')
+
+          const relatedQueriesSection = new RelatedQueries({
+              icon: CHATA_BUBBLES_ICON,
+              title: `Query suggestions for "${input.value}"`,
+              containerHeight: container.clientHeight,
+              previewSectionHeight: 0,
+              textBarHeight: textBar.clientHeight,
+              plainText: input.value,
+              widget,
+          });
+
+          contentWrapper.appendChild(relatedQueriesSection);
+      }
   });
   
   input.addEventListener("focus", () => {
