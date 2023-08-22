@@ -108,8 +108,8 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
     };
 
     popover.show = () => {
-        popover.style.visibility = 'visible';
         popover.setPosition();
+        popover.style.visibility = 'visible';
 
         setTimeout(() => { document.body.addEventListener('click', popover.onClickOutside) }, 0)
 
@@ -124,10 +124,13 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
 
     popover.close = () => {
         popover.style.visibility = 'hidden';
-        popover.style.opacity = 0;
-        popover.parentElement?.removeChild?.(popover);
         document.body.removeEventListener('click', popover.onClickOutside);
     };
+
+    popover.destroy = () => {
+        popover.parentElement?.removeChild?.(popover);
+        document.body.removeEventListener('click', popover.onClickOutside);
+    }
 
     popover.appendContent = (elem) => {
         popover.appendChild(elem);
