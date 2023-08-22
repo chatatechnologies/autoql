@@ -67,7 +67,7 @@
 .chata-modal-body {
   display: flex;
   flex-direction: column;
-  padding: 25px;
+  padding: 20px 30px;
   flex: 1;
   overflow: auto;
 }

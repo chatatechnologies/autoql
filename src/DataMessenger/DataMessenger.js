@@ -1291,13 +1291,11 @@ export function DataMessenger(options = {}) {
 
         var reportProblem = obj.getReportProblemMenu(toolbar, idRequest, type);
         reportProblem.classList.add('report-problem');
-
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
             strings.reportProblemTitle,
             idRequest,
-            obj.reportProblemHandler,
-            [reportProblem, toolbar],
+            obj.openModalReport,[obj.options,undefined,toolbar]
         );
 
         switch (type) {
@@ -2020,20 +2018,19 @@ export function DataMessenger(options = {}) {
         if (value) {
             if (value !== 'Drilldown') {
                 localStorage.setItem('lastQuery', value);
+				var containerMessage = document.createElement('div');
+				var messageBubble = document.createElement('div');
+	
+				containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
+				containerMessage.style.zIndex = --obj.zIndexBubble;
+				containerMessage.classList.add('request');
+				messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+				messageBubble.classList.add('single');
+				messageBubble.classList.add('text');
+				messageBubble.textContent = value;
+				containerMessage.appendChild(messageBubble);
+				obj.drawerContent.appendChild(containerMessage);
             }
-
-            var containerMessage = document.createElement('div');
-            var messageBubble = document.createElement('div');
-
-            containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-            containerMessage.style.zIndex = --obj.zIndexBubble;
-            containerMessage.classList.add('request');
-            messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-            messageBubble.classList.add('single');
-            messageBubble.classList.add('text');
-            messageBubble.textContent = value;
-            containerMessage.appendChild(messageBubble);
-            obj.drawerContent.appendChild(containerMessage);
         }
 
         var responseLoadingContainer = document.createElement('div');
@@ -2178,7 +2175,7 @@ export function DataMessenger(options = {}) {
         return ChataUtils.sendReport(idRequest, options, menu, toolbar);
     };
 
-    obj.openModalReport = function (idRequest, options, menu, toolbar) {
+    obj.openModalReport = function (evt,idRequest, options, menu, toolbar) {
         ChataUtils.openModalReport(idRequest, options, menu, toolbar);
     };
 
