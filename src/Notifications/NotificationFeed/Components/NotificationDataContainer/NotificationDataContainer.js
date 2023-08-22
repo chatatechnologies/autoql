@@ -102,7 +102,7 @@ export function NotificationDataContainer({ queryResponse }) {
 
   setTimeout(() => {
     this.showResponse(displayType);
-  }, 300);
+  }, 100);
 
   return container;
 }
