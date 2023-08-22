@@ -1,11 +1,15 @@
 import { formatElement } from 'autoql-fe-utils';
 import './NotificationDataContainer.scss';
+import { ChataUtils } from '../../../../ChataUtils';
+import { uuidv4 } from '../../../../Utils';
 
 export function NotificationDataContainer({ queryResponse }) {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const responseContentContainer = document.createElement('div');
-  
+  var idRequest = uuidv4();
+  ChataUtils.responses[idRequest] = queryResponse;
+
   responseContentContainer.classList.add('autoql-vanilla-response-content-container');
   wrapper.classList.add('autoql-vanilla-notification-chart-container');
   container.classList.add('autoql-vanilla-notification-data-container');
@@ -38,12 +42,38 @@ export function NotificationDataContainer({ queryResponse }) {
     responseContainer.classList.add('autoql-vanilla-single-value-response-flex-container');
     return responseContainer;
   }
+  
+  this.createTableResponse = () => {
+    var tableContainer = document.createElement('div');
+    var tableWrapper = document.createElement('div');
+
+    tableWrapper.setAttribute('data-componentid', idRequest);
+    tableWrapper.classList.add('autoql-vanilla-chata-table');
+    tableContainer.classList.add('autoql-vanilla-chata-table-container');
+
+    tableContainer.appendChild(tableWrapper);
+
+    return tableContainer;
+  }
+
+  this.isSingleResponse = () => {
+    const {
+      columns
+    } = queryResponse?.data;
+
+    return columns.length === 1;
+  }
 
   this.showResponse = (displayType) => {
-    console.log(displayType);
+
     switch(displayType) {
       case 'data':
-        responseContentContainer.appendChild(this.createDataResponse());
+        if(this.isSingleResponse()) {
+          responseContentContainer.appendChild(this.createDataResponse());
+        } else {
+          console.log('TABLE');
+          responseContentContainer.appendChild(this.createTableResponse());
+        }
         break;
     }
   }
