@@ -220,8 +220,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 return col
             })
 
-            scale?.changeColumnIndices?.(activeSeries, undefined, newColumns);
-            scale?.changeAggConfig?.(aggConfig)
+            scale?.changeColumnIndices?.(activeSeries, newColumns);
 
             popover.close();
         };

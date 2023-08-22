@@ -68,6 +68,9 @@ export const strings = new LocalizedStrings({
             stacked_bar: 'Stacked Bar Chart',
             stacked_column: 'Stacked Column Chart',
             stacked_line: 'Stacked Area Chart',
+            histogram: 'Histogram',
+            column_line: 'Column Line Combo',
+            scatterplot: 'Scatterplot',
             heatmap: 'Heatmap',
             bubble: 'Bubble Chart',
         },
@@ -317,6 +320,22 @@ export const strings = new LocalizedStrings({
         visualizingText: 'Visualizando',
 		scrolledText: 'Desplazado',
         rowsText: 'filas',
-        suggestionResponse: 'Quiero asegurarme de que entendí tu consulta. Querías decir:'
+        suggestionResponse: 'Quiero asegurarme de que entendí tu consulta. Querías decir:',
+        displayTypes: {
+            table: 'Tabla',
+            pivot_table: 'Tabla dinámica',
+            bar: 'Gráfico de barras',
+            column: 'Gráfico de columnas',
+            line: 'Gráfico de linea',
+            pie: 'Gráfico circular',
+            stacked_bar: 'Gráfico de barras apiladas',
+            stacked_column: 'Gráfico de columnas apiladas',
+            stacked_line: 'Gráfico de áreas apiladas',
+            histogram: 'Histograma',
+            column_line: 'Gráfico combinación columna-línea',
+            scatterplot: 'Gráfico de dispersión',
+            heatmap: 'Mapa de calor',
+            bubble: 'Gráfico de burbujas',
+        },
     }
 });

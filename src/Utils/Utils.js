@@ -504,6 +504,13 @@ export const getSupportedDisplayTypes = response => {
             if(supportsPieChart(columns, rows)){
                 supportedDisplayTypes.push('pie')
             }
+
+            const { amountOfNumberColumns } = getColumnTypeAmounts(columns)
+            if (amountOfNumberColumns > 1) {
+              supportedDisplayTypes.push('column_line')
+              supportedDisplayTypes.push('scatterplot')
+            }
+
                 const dateColumnIndex = columns.findIndex(
                     (col) => col.type === 'DATE' || col.type === 'DATE_STRING'
                 )

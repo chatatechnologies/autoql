@@ -20,6 +20,7 @@ import {
     LOAD_MORE_DROPDOWN_PADDING_BOTTOM,
     TITLE_FONT_SIZE,
     mergeBoundingClientRects,
+    HORIZONTAL_LEGEND_SPACING,
 } from 'autoql-fe-utils';
 
 import { symbol, symbolSquare } from 'd3-shape';
@@ -156,6 +157,10 @@ export function Legend(container, params = {}) {
             .style('fill', 'transparent')
             .style('pointer-events', 'none');
 
+        if (this.legendBorder?.node()) {
+            this.legendBorder.remove();
+        }
+
         var legendBorder = this.legendContainer
             .append('rect')
             .attr('class', 'autoql-vanilla-chart-legend-border')
@@ -172,6 +177,8 @@ export function Legend(container, params = {}) {
                     -LEGEND_BORDER_PADDING - LEGEND_TOP_ADJUSTMENT - LEGEND_BORDER_THICKNESS
                 })`,
             );
+
+        this.legendBorder = legendBorder;
 
         const legendElementNode = legendElement.node();
         const legendBorderNode = legendBorder.node();

@@ -21,7 +21,7 @@ import { ChataUtils } from '../ChataUtils';
 import { Modal } from '../Modal';
 import { NotificationSettingsModal, NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
-import { apiCallGet, apiCallPut, apiCallPost } from '../Api';
+import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
@@ -75,6 +75,9 @@ import {
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
+    SCATTERPLOT_ICON,
+    COLUMN_LINE_ICON,
+    HISTOGRAM_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -1917,6 +1920,24 @@ export function DataMessenger(options = {}) {
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
+        const displayTypeIcons = {
+            table: TABLE_ICON,
+            pivot_table: PIVOT_ICON,
+            column: COLUMN_CHART_ICON,
+            bar: BAR_CHART_ICON,
+            line: LINE_CHART_ICON,
+            pie: PIE_CHART_ICON,
+            heatmap: HEATMAP_ICON,
+            bubble: BUBBLE_CHART_ICON,
+            stacked_column: STACKED_COLUMN_CHART_ICON,
+            stacked_bar: STACKED_BAR_CHART_ICON,
+            stacked_line: STACKED_AREA_CHART_ICON,
+            column_line: COLUMN_LINE_ICON,
+            scatterplot: SCATTERPLOT_ICON,
+            // TODO - next deploy
+            // histogram: HISTOGRAM_ICON,
+        }
+
         displayTypes.forEach((displayType) => {
             let button;
 
@@ -1925,77 +1946,21 @@ export function DataMessenger(options = {}) {
             if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    TABLE_ICON,
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     obj.displayTableHandler,
-                );
-            } else if (displayType == 'column') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    COLUMN_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'bar') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    BAR_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'pie') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    PIE_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'line') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    LINE_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
                 );
             } else if (displayType == 'pivot_table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    PIVOT_ICON,
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     obj.displayPivotTableHandler,
                 );
-            } else if (displayType == 'heatmap') {
+            } else if (Object.keys(displayTypeIcons).includes(displayType)) {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    HEATMAP_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'bubble') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    BUBBLE_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'stacked_column') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    STACKED_COLUMN_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'stacked_bar') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    STACKED_BAR_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'stacked_line') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    STACKED_AREA_CHART_ICON,
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );

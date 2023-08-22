@@ -43,28 +43,32 @@ export function Axes(container, params = {}) {
     var axes = container.append('g').attr('class', 'autoql-vanilla-axes');
 
     this.createAxis = (orient) => {
+        let axis;
+
         switch (orient) {
             case 'left': {
-                return new Axis(axes, params, { orient, scale: yScale, column: yCol, ...axesOptions });
+                axis = new Axis(axes, params, { orient, scale: yScale, column: yCol, ...axesOptions });
+                break;
             }
             case 'bottom': {
-                return new Axis(axes, params, {
+                axis = new Axis(axes, params, {
                     orient,
                     scale: xScale,
                     column: xCol,
                     rotateLabels: bottomLabelsRotated,
                     ...axesOptions,
                 });
+                break;
             }
             case 'right': {
                 if (!!yCol2 && !!yScale2) {
-                    return new Axis(axes, params, { orient, scale: yScale2, column: yCol2, ...axesOptions });
+                    axis = new Axis(axes, params, { orient, scale: yScale2, column: yCol2, ...axesOptions });
                 }
                 break;
             }
             case 'top': {
                 if (!!xCol2 && !!xScale2) {
-                    return new Axis(axes, params, {
+                    axis = new Axis(axes, params, {
                         orient,
                         scale: xScale2,
                         column: xCol2,
@@ -72,11 +76,14 @@ export function Axes(container, params = {}) {
                         ...axesOptions,
                     });
                 }
+                break;
             }
             default: {
-                return;
+                // no axis
             }
         }
+
+        return axis
     };
 
     this.createLegend = () => {
