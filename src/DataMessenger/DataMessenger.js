@@ -44,6 +44,7 @@ import {
     supportsVoiceRecord,
     checkAndApplyTheme,
     getSupportedDisplayTypes,
+    closeAllChartPopovers,
 } from '../Utils';
 
 import {
@@ -372,6 +373,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.closeDrawer = () => {
+        closeAllChartPopovers();
         obj.closePopOver(obj.clearMessagePop);
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
@@ -434,8 +436,7 @@ export function DataMessenger(options = {}) {
 
         if (obj.options.showMask) {
             obj.drawerMask.onclick = (e) => {
-                e.stopPropagation();
-                obj.closeDrawer();
+                obj.closeDrawer(e);
             };
         } else {
             obj.drawerMask.classList.add('autoql-vanilla-drawer-mask-hidden');

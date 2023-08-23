@@ -8,12 +8,15 @@ import {
     getColumnIndexConfig,
     formatQueryColumns,
     onTableCellClick,
+    getFilterPrecision,
+    DAYJS_PRECISION_FORMATS,
 } from 'autoql-fe-utils';
+import dayjs from '../Utils/dayjsPlugins';
 import _isEqual from 'lodash.isequal';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import { Scrollbars } from '../Scrollbars';
 import { ChataUtils } from '../ChataUtils';
-import { DatePicker } from './DatePicker';
+import { DateRangePicker } from '../ChataComponents/DateRangePicker/DateRangePicker';
 import { strings } from '../Strings';
 import { getNumberOfGroupables, allColHiddenMessage, cloneObject, uuidv4 } from '../Utils';
 
@@ -422,7 +425,45 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     table.inputDateSearchListener = () => {
         this.currentDateRangeSelections = {};
-        this.datePickerColumn = undefined;
+    };
+
+    table.onDateRangeSelectionApplied = (dateRangeSelection, column, inputElement) => {
+        if (!dateRangeSelection || !column || !inputElement) {
+            return;
+        }
+
+        const { startDate, endDate } = dateRangeSelection;
+
+        let start = startDate;
+        let end = endDate;
+        if (startDate && !endDate) {
+            end = start;
+        } else if (!startDate && endDate) {
+            start = end;
+        }
+
+        if (inputElement) {
+            const filterPrecision = getFilterPrecision(column);
+            const dayJSFormatStr = DAYJS_PRECISION_FORMATS[filterPrecision];
+
+            const startDateStr = dayjs(start).format(dayJSFormatStr);
+            const startDateUTC = dayjs.utc(startDateStr).toISOString();
+            const formattedStartDate = dayjs(startDateUTC).utc().format(dayJSFormatStr);
+
+            const endDateStr = dayjs(end).format(dayJSFormatStr);
+            const endDateUTC = dayjs.utc(endDateStr).toISOString();
+            const formattedEndDate = dayjs(endDateUTC).utc().format(dayJSFormatStr);
+
+            let filterInputText = `${formattedStartDate} to ${formattedEndDate}`;
+            if (formattedStartDate === formattedEndDate) {
+                filterInputText = formattedStartDate;
+            }
+
+            table.setHeaderInputValue(inputElement, filterInputText);
+            this.currentDateRangeSelections = {
+                [column.field]: dateRangeSelection,
+            };
+        }
     };
 
     table.inputDateClickListener = (e, col, inputElement) => {
@@ -434,13 +475,19 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
                 left: coords.left - tableCoords.left,
             };
 
-            this.datePickerColumn = col;
-
             if (inputElement.datePicker) {
                 inputElement.datePicker.show();
             } else {
-                const datePickerPopover = new DatePicker(e, {});
-                inputElement.datePicker = datePickerPopover
+                const datePickerPopover = new DateRangePicker(e, {
+                    title: col.display_name,
+                    initialRange: this.currentDateRangeSelections?.[col.field],
+                    onSelection: this.onDateRangeSelection,
+                    validRange: col.dateRange,
+                    type: col.precision,
+                    onSelectionApplied: (selection) => table.onDateRangeSelectionApplied(selection, col, inputElement)
+                });
+
+                inputElement.datePicker = datePickerPopover;
 
                 datePickerPopover.show();
             }
@@ -465,6 +512,8 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
             if (inputElement) {
                 inputElement.removeEventListener('keydown', table.inputKeydownListener);
                 inputElement.addEventListener('keydown', table.inputKeydownListener);
+
+                inputElement.column = col
 
                 const clearBtn = inputElement.parentNode.querySelector('.autoql-vanilla-clear-btn');
                 if (!clearBtn) {

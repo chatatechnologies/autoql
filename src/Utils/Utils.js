@@ -714,7 +714,9 @@ export function closeAllChartPopovers(){
     )
 
     for (var i = 0; i < list.length; i++) {
-        if(list[i].isOpen)list[i].close();
+        if(list[i]?.style?.visibility === 'visible') {
+            list[i].close();
+        }
     }
 
 }
