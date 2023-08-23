@@ -9,7 +9,7 @@ export function NotificationVizToolbar({ response }) {
   const container = document.createElement('div');
   const rightButtons = document.createElement('div');
   this.displayType = response?.data?.data.display_type;
-
+  console.log(this.displayType);
   this.createToolbarButton = (svg) => {
     const icon = createIcon(svg);
     const button = document.createElement('button');
@@ -37,6 +37,12 @@ export function NotificationVizToolbar({ response }) {
     supportedDisplayTypes.forEach((dType) => {
       const btn = this.createToolbarButton(TABLE_ICON);
       leftButtons.appendChild(btn);
+      if(
+        (this.displayType === dType) || 
+        (this.displayType === 'data' && dType === DisplayTypes.TABLE)
+      ) {
+        btn.classList.add('autoql-vanilla-toolbar-btn-selected');
+      } 
     });
 
     return leftButtons
