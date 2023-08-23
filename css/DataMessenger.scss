@@ -286,7 +286,24 @@ body.autoql-vanilla-drawer-open-body {
             height: 100%;
             font-size: 20px;
         }
+		.autoql-vanilla-chat-bar-clear-icon {
+		    position: absolute;
+    		display: flex;
+    		justify-content: flex-start;
+    		align-items: center;
+    		right: 0;
+    		top: 0;
+    		width: 50px;
+    		height: 100%;
+    		font-size: 20px;
+    		visibility: hidden;
+    		color: var(--autoql-vanilla-text-color-placeholder);
+    		cursor: pointer;
 
+			&.visible {
+				visibility: visible;
+			  }
+		}
         .autoql-vanilla-chat-voice-record-button {
             display: flex;
             justify-content: center;
