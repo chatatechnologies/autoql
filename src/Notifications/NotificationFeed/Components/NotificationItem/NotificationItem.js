@@ -206,7 +206,7 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
     if(this.queryResponse !== undefined) return;
 
     const response = await this.fetchNotification()
-    this.queryResponse = response.data;
+    this.queryResponse = response;
 
     this.loading.remove();
     

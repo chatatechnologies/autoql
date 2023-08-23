@@ -27,7 +27,7 @@ export function NotificationSummary({ itemData, queryResponse }) {
   }
 
   this.getChunkedInterpretationText = () => {
-    const parsedRT = queryResponse?.data?.parsed_interpretation
+    const parsedRT = queryResponse?.data?.data?.parsed_interpretation
     const rtArray = constructRTArray(parsedRT)
     let rtString = ''
     rtArray.map((chunk, i) => {

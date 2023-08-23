@@ -3,20 +3,19 @@ import './NotificationDataContainer.scss';
 import { ChataUtils } from '../../../../ChataUtils';
 import { uuidv4 } from '../../../../Utils';
 import { ChataTable } from '../../../../ChataTable';
+import { NotificationVizToolbar } from '../NotificationVizToolbar';
 
 export function NotificationDataContainer({ queryResponse }) {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const responseContentContainer = document.createElement('div');
   var idRequest = uuidv4();
-  ChataUtils.responses[idRequest] = queryResponse;
+  ChataUtils.responses[idRequest] = queryResponse.data;
 
   responseContentContainer.classList.add('autoql-vanilla-response-content-container');
   wrapper.classList.add('autoql-vanilla-notification-chart-container');
   container.classList.add('autoql-vanilla-notification-data-container');
  
-  console.log(queryResponse);
-
   this.createDataResponse = () => {
     const responseContainer = document.createElement('div');
     const singleValue = document.createElement('div');
@@ -26,7 +25,7 @@ export function NotificationDataContainer({ queryResponse }) {
       text,
       columns,
       rows,
-    } = queryResponse?.data
+    } = queryResponse?.data?.data
 
     queryWrapper.textContent = text;
 
@@ -44,10 +43,14 @@ export function NotificationDataContainer({ queryResponse }) {
     return responseContainer;
   }
 
+  this.createVizToolbar = () => {
+    return new NotificationVizToolbar({ response: queryResponse });
+  }
+
   this.createTable = () => {
     console.log(idRequest);
     console.log(document.querySelector(`[data-componentid='${idRequest}']`));
-    var useInfiniteScroll = isDataLimited({ data: queryResponse });
+    var useInfiniteScroll = isDataLimited({ data: queryResponse?.data });
     new ChataTable(
       idRequest,
       { options: dataFormattingDefault },
@@ -74,7 +77,7 @@ export function NotificationDataContainer({ queryResponse }) {
   this.isSingleResponse = () => {
     const {
       columns
-    } = queryResponse?.data;
+    } = queryResponse?.data?.data;
 
     return columns.length === 1;
   }
@@ -94,10 +97,10 @@ export function NotificationDataContainer({ queryResponse }) {
     }
   }
 
-  const displayType = queryResponse.data.display_type;
-
+  const displayType = queryResponse.data.data.display_type;
   
   wrapper.appendChild(responseContentContainer);
+  wrapper.appendChild(this.createVizToolbar());
   container.appendChild(wrapper);
 
   setTimeout(() => {
