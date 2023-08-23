@@ -1,0 +1,23 @@
+.autoql-vanilla-notification-toolbar-container {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  .autoql-vanilla-autoql-toolbar {
+    padding: 5px 8px 8px;
+    box-shadow: none;
+    border: none;
+    &.autoql-vanilla-viz-toolbar {
+      display: flex;
+      flex-direction: row;
+      background: inherit;
+      padding: 5px;
+      border-radius: 6px;
+      line-height: 28px;
+      background: var(--autoql-vanilla-background-color-secondary);
+      border: 1px solid var(--autoql-vanilla-border-color);
+      box-shadow: 0 2px 3px -2px var(--autoql-vanilla-box-shadow-color);
+    }
+  }
+}
