@@ -1,35 +1,32 @@
 import dayjs from '../../Utils/dayjsPlugins';
-import { createIcon} from '../../Utils';
+import { createIcon } from '../../Utils';
 import { Select } from '../Select';
 import { CARET_DOWN_ICON } from '../../Svg';
 
-export function YearPicker(
-    component,
-    {
-        initialRange,
-        minDate,
-        maxDate,
-        onRangeSelection = () => {},
-    } = {},
-) {
+const getDecade = (year) => {
+    const yearsSinceDecadeStart = year % 10;
+    const decadeStart = year - yearsSinceDecadeStart;
+    return [decadeStart, decadeStart + 9];
+};
+
+export function YearPicker(component, { initialRange, minDate, maxDate, onRangeSelection = () => {} } = {}) {
     const now = dayjs();
 
-    let visibleYear = now.year();
-    let selectedStart = now.startOf('month');
-    let selectedEnd = now.endOf('month');
+    let visibleDecade = getDecade(now.year());
+    let selectedStart = now.startOf('year');
+    let selectedEnd = now.endOf('year');
 
     if (initialRange) {
-        selectedStart = dayjs(initialRange.startDate).startOf('month');
-        selectedEnd = dayjs(initialRange.endDate).endOf('month');
-        visibleYear = selectedEnd.year();
+        selectedStart = dayjs(initialRange.startDate).startOf('year');
+        selectedEnd = dayjs(initialRange.endDate).endOf('year');
+        visibleDecade = getDecade(selectedEnd.year());
     } else if (minDate && maxDate && (now.isBefore(dayjs(minDate)) || now.isAfter(dayjs(maxDate)))) {
-        selectedStart = dayjs(minDate).startOf('month');
-        selectedEnd = dayjs(maxDate).endOf('month');
+        selectedStart = dayjs(minDate).startOf('year');
+        selectedEnd = dayjs(maxDate).endOf('year');
     }
 
-    this.monthElements = {};
     this.selectedRange = initialRange;
-    this.visibleYear = visibleYear;
+    this.visibleDecade = visibleDecade;
     this.selectedStart = selectedStart;
     this.selectedEnd = selectedEnd;
     this.previewStart = undefined;
@@ -52,10 +49,10 @@ export function YearPicker(
     };
 
     this.isSelected = (timestamp) => {
-        const isSelectedStart = timestamp.startOf('month').isSame(this.selectedStart?.startOf('month'));
+        const isSelectedStart = timestamp.startOf('year').isSame(this.selectedStart?.startOf('year'));
         const isSelectedEnd =
-            (isSelectedStart && !this.selectedEnd) || timestamp.endOf('month').isSame(this.selectedEnd?.endOf('month'));
-        const isSelected = isSelectedStart || isSelectedEnd || this.selectedRangeIncludesMonth(timestamp);
+            (isSelectedStart && !this.selectedEnd) || timestamp.endOf('year').isSame(this.selectedEnd?.endOf('year'));
+        const isSelected = isSelectedStart || isSelectedEnd || this.selectedRangeIncludesYear(timestamp);
 
         return {
             isSelected,
@@ -65,10 +62,10 @@ export function YearPicker(
     };
 
     this.isPreview = (timestamp) => {
-        const isPreviewStart = timestamp.startOf('month').isSame(this.previewStart);
-        const isPreviewEnd = timestamp.endOf('month').isSame(this.previewEnd);
+        const isPreviewStart = timestamp.startOf('year').isSame(this.previewStart);
+        const isPreviewEnd = timestamp.endOf('year').isSame(this.previewEnd);
         const isPreview =
-            isPreviewStart || isPreviewEnd || timestamp.isBetween(this.previewStart, this.previewEnd, 'month');
+            isPreviewStart || isPreviewEnd || timestamp.isBetween(this.previewStart, this.previewEnd, 'year');
 
         return {
             isPreview,
@@ -78,34 +75,38 @@ export function YearPicker(
     };
 
     this.isDisabled = (timestamp) => {
-        const isBeforeMinDate = minDate && timestamp.isBefore(dayjs(minDate).startOf('month'));
-        const isAfterMaxDate = maxDate && timestamp.isAfter(dayjs(maxDate).endOf('month'));
+        const isBeforeMinDate = minDate && timestamp.isBefore(dayjs(minDate).startOf('year'));
+        const isAfterMaxDate = maxDate && timestamp.isAfter(dayjs(maxDate).endOf('year'));
         return isBeforeMinDate || isAfterMaxDate;
     };
 
-    this.selectedRangeIncludesMonth = (timestamp) => {
+    this.isInDecade = (year, decade) => {
+        return year >= decade[0] && year <= decade[1];
+    };
+
+    this.selectedRangeIncludesYear = (timestamp) => {
         if (this.selectedStart && this.selectedEnd) {
-            return timestamp.isBetween(this.selectedStart, this.selectedEnd, 'month');
+            return timestamp.isBetween(this.selectedStart, this.selectedEnd, 'year');
         }
         return false;
     };
 
-    this.onMonthStartSelection = (timestamp) => {
-        this.selectedStart = timestamp.startOf('month');
+    this.onYearStartSelection = (timestamp) => {
+        this.selectedStart = timestamp.startOf('year');
         this.selectedEnd = undefined;
         this.focusedDateDisplay = 'end';
 
         const rangeSelection = [this.selectedStart, timestamp];
-        const selectedStartMonthStart = rangeSelection[0].startOf('month');
-        const selectedEndMonthEnd = rangeSelection[1].endOf('month');
+        const selectedStartYearStart = rangeSelection[0].startOf('year');
+        const selectedEndYearEnd = rangeSelection[1].endOf('year');
 
         onRangeSelection({
-            startDate: selectedStartMonthStart.toDate(),
-            endDate: selectedEndMonthEnd.toDate(),
+            startDate: selectedStartYearStart.toDate(),
+            endDate: selectedEndYearEnd.toDate(),
         });
     };
 
-    this.onMonthEndSelection = (timestamp) => {
+    this.onYearEndSelection = (timestamp) => {
         try {
             if (!this.selectedStart) {
                 this.selectedEnd = timestamp;
@@ -117,109 +118,92 @@ export function YearPicker(
                 rangeSelection.reverse();
             }
 
-            const selectedStartMonthStart = rangeSelection[0].startOf('month');
-            const selectedEndMonthEnd = rangeSelection[1].endOf('month');
+            const selectedStartYearStart = rangeSelection[0].startOf('year');
+            const selectedEndYearEnd = rangeSelection[1].endOf('year');
 
-            this.selectedStart = selectedStartMonthStart;
-            this.selectedEnd = selectedEndMonthEnd;
+            this.selectedStart = selectedStartYearStart;
+            this.selectedEnd = selectedEndYearEnd;
 
             onRangeSelection({
-                startDate: selectedStartMonthStart.toDate(),
-                endDate: selectedEndMonthEnd.toDate(),
+                startDate: selectedStartYearStart.toDate(),
+                endDate: selectedEndYearEnd.toDate(),
             });
         } catch (error) {
             console.error(error);
         }
     };
 
-    this.handleMonthClick = (month) => {
-        const timestamp = this.getTimestamp(month);
+    this.handleYearClick = (year) => {
+        const timestamp = this.getTimestamp(year);
         if (this.focusedDateDisplay === 'start') {
-            this.onMonthStartSelection(timestamp);
+            this.onYearStartSelection(timestamp);
         } else {
-            this.onMonthEndSelection(timestamp);
+            this.onYearEndSelection(timestamp);
         }
 
         this.applyAllSelectedStyles();
     };
 
     this.clearPreviewStyles = () => {
-        for (const month in this.monthElements) {
-            this.monthElements[month].classList.remove('preview-start');
-            this.monthElements[month].classList.remove('preview-end');
-            this.monthElements[month].classList.remove('preview');
-        }
-    };
-
-    this.applyAllStyles = () => {
-        for (const month in this.monthElements) {
-            const monthBtn = this.monthElements[month];
-            const timestamp = this.getTimestamp(month);
-
-            const isDisabled = this.isDisabled(timestamp);
-            const isThisMonth = month === dayjs().month() && this.visibleYear == dayjs().year();
-
-            if (isThisMonth) monthBtn.classList.add('current-month');
-            else monthBtn.classList.remove('current-month');
-            if (isDisabled) monthBtn.classList.add('autoql-vanilla-day-disabled');
-            else monthBtn.classList.remove('autoql-vanilla-day-disabled');
-
-            this.applyPreviewStyles(monthBtn);
-            this.applySelectedStyles(monthBtn);
+        for (const year in this.yearElements) {
+            const yearBtn = this.yearElements[year];
+            yearBtn.classList.remove('preview-start');
+            yearBtn.classList.remove('preview-end');
+            yearBtn.classList.remove('preview');
         }
     };
 
     this.applyAllPreviewStyles = () => {
-        for (const month in this.monthElements) {
-            this.applyPreviewStyles(this.monthElements[month]);
+        for (const year in this.yearElements) {
+            this.applyPreviewStyles(this.yearElements[year]);
         }
     };
 
     this.applyAllSelectedStyles = () => {
-        for (const month in this.monthElements) {
-            this.applySelectedStyles(this.monthElements[month]);
+        for (const year in this.yearElements) {
+            this.applySelectedStyles(this.yearElements[year]);
         }
     };
 
-    this.applyPreviewStyles = (monthBtn) => {
-        const timestamp = this.getTimestamp(monthBtn.month);
+    this.applyPreviewStyles = (yearBtn) => {
+        const timestamp = this.getTimestamp(yearBtn.year);
         const { isPreview, isPreviewStart, isPreviewEnd } = this.isPreview(timestamp);
 
-        if (isPreviewStart) monthBtn.classList.add('preview-start');
-        else monthBtn.classList.remove('preview-start');
-        if (isPreviewEnd) monthBtn.classList.add('preview-end');
-        else monthBtn.classList.remove('preview-end');
-        if (isPreview) monthBtn.classList.add('preview');
-        else monthBtn.classList.remove('preview');
+        if (isPreviewStart) yearBtn.classList.add('preview-start');
+        else yearBtn.classList.remove('preview-start');
+        if (isPreviewEnd) yearBtn.classList.add('preview-end');
+        else yearBtn.classList.remove('preview-end');
+        if (isPreview) yearBtn.classList.add('preview');
+        else yearBtn.classList.remove('preview');
     };
 
-    this.applySelectedStyles = (monthBtn) => {
-        const timestamp = this.getTimestamp(monthBtn.month);
+    this.applySelectedStyles = (yearBtn) => {
+        const timestamp = this.getTimestamp(yearBtn.year);
         const { isSelected, isSelectedStart, isSelectedEnd } = this.isSelected(timestamp);
 
-        if (isSelectedStart) monthBtn.classList.add('selection-start');
-        else monthBtn.classList.remove('selection-start');
-        if (isSelectedEnd) monthBtn.classList.add('selection-end');
-        else monthBtn.classList.remove('selection-end');
-        if (isSelected) monthBtn.classList.add('active');
-        else monthBtn.classList.remove('active');
+        if (isSelectedStart) yearBtn.classList.add('selection-start');
+        else yearBtn.classList.remove('selection-start');
+        if (isSelectedEnd) yearBtn.classList.add('selection-end');
+        else yearBtn.classList.remove('selection-end');
+        if (isSelected) yearBtn.classList.add('active');
+        else yearBtn.classList.remove('active');
     };
 
-    this.handleMonthHover = (month) => {
-        const timestamp = this.getTimestamp(month);
+    this.handleYearHover = (year) => {
+        const timestamp = this.getTimestamp(year);
 
         if (this.isDisabled(timestamp)) {
             return;
         }
 
-        let previewStart = timestamp.startOf('month');
-        let previewEnd = timestamp.endOf('month');
+        let previewStart = timestamp.startOf('year');
+        let previewEnd = timestamp.endOf('year');
 
         if (this.selectedStart && this.focusedDateDisplay === 'end') {
             if (previewEnd.isBefore(this.selectedStart)) {
-                previewEnd = this.selectedStart.endOf('month');
+                previewEnd = this.selectedStart.endOf('year');
             } else if (this.selectedStart.isBefore(previewStart)) {
-                previewStart = this.selectedStart.startOf('month');
+                previewStart = this.selectedStart.startOf('year');
             }
         }
 
@@ -229,21 +213,21 @@ export function YearPicker(
         this.applyAllPreviewStyles();
     };
 
-    this.incrementYear = () => {
-        this.visibleYear = Number(this.visibleYear) + 1;
-        this.yearPickerSelect?.setValue(this.visibleYear);
-        this.applyAllStyles();
+    this.incrementDecade = () => {
+        const currentDecadeEnd = this.visibleDecade[1];
+        this.visibleDecade = [currentDecadeEnd + 1, currentDecadeEnd + 10];
+        this.createYearPicker();
     };
 
-    this.decrementYear = () => {
-        this.visibleYear = Number(this.visibleYear) - 1;
-        this.yearPickerSelect?.setValue(this.visibleYear);
-        this.applyAllStyles();
+    this.decrementDecade = () => {
+        const currentDecadeStart = this.visibleDecade[0];
+        this.visibleDecade = [currentDecadeStart - 10, currentDecadeStart - 1];
+        this.createYearPicker();
     };
 
     this.createDateDisplay = () => {
-        const startDateText = this.selectedStart?.startOf('month').format('MMM YYYY') ?? '';
-        const endDateText = this.selectedEnd?.startOf('month').format('MMM YYYY') ?? startDateText ?? '';
+        const startDateText = this.selectedStart?.year() ?? '';
+        const endDateText = this.selectedEnd?.year() ?? startDateText ?? '';
 
         const dateDisplayWrapper = document.createElement('div');
         dateDisplayWrapper.classList.add('autoql-vanilla-date-display-wrapper');
@@ -268,7 +252,6 @@ export function YearPicker(
             this.focusedDateDisplay = 'start';
             this.dateDisplayStart.classList.add('autoql-vanilla-date-display-item-active');
             this.dateDisplayEnd.classList.remove('autoql-vanilla-date-display-item-active');
-            // this.applyAllStyles();
         });
         dateDisplayStart.appendChild(dateDisplayStartInput);
 
@@ -287,25 +270,31 @@ export function YearPicker(
             this.focusedDateDisplay = 'end';
             this.dateDisplayEnd.classList.add('autoql-vanilla-date-display-item-active');
             this.dateDisplayStart.classList.remove('autoql-vanilla-date-display-item-active');
-            // this.applyAllStyles();
         });
         dateDisplayEnd.appendChild(dateDisplayEndInput);
 
         this.yearPicker?.appendChild(dateDisplayWrapper);
     };
 
-    this.createYearPicker = () => {
-        const lowerYearLimit = parseInt(minDate ? dayjs(minDate).year() : dayjs(new Date()).add(-100, 'year').year());
-        const upperYearLimit = parseInt(maxDate ? dayjs(maxDate).year() : dayjs(new Date()).add(20, 'year').year());
+    this.createDecadePicker = () => {
+        const lowerDecadeLimit = minDate
+            ? getDecade(dayjs(minDate).year())
+            : getDecade(dayjs(new Date()).add(-100, 'year').year());
+
+        const upperDecadeLimit = maxDate
+            ? getDecade(dayjs(maxDate).year())
+            : getDecade(dayjs(new Date()).add(20, 'year').year());
+
+        const numDecades = (upperDecadeLimit[0] - lowerDecadeLimit[0]) / 10;
 
         const yearPicker = document.createElement('div');
-        yearPicker.classList.add('autoql-vanilla-month-picker-year');
+        yearPicker.classList.add('autoql-vanilla-year-picker-decade');
 
         const yearPickerBackBtn = document.createElement('button');
         yearPickerBackBtn.classList.add('autoql-vanilla-next-prev-btn');
         yearPickerBackBtn.classList.add('autoql-vanilla-prev-btn');
-        yearPickerBackBtn.disabled = this.visibleYear == lowerYearLimit;
-        if (!yearPickerBackBtn.disabled) yearPickerBackBtn.onclick = this.decrementYear;
+        yearPickerBackBtn.disabled = this.visibleDecade[0] === lowerDecadeLimit[0];
+        if (!yearPickerBackBtn.disabled) yearPickerBackBtn.onclick = this.decrementDecade;
         yearPicker.appendChild(yearPickerBackBtn);
 
         const yearPickerBackBtnIcon = createIcon(CARET_DOWN_ICON);
@@ -313,22 +302,23 @@ export function YearPicker(
         yearPickerBackBtn.appendChild(yearPickerBackBtnIcon);
 
         const yearPickerSelect = new Select({
-            initialValue: this.visibleYear,
+            initialValue: `${this.visibleDecade[0]} - ${this.visibleDecade[1]}`,
             size: 'small',
             position: 'bottom',
             align: 'middle',
             onChange: (option) => {
-                this.visibleYear = Number(option.value);
-                this.applyAllStyles();
+                const decadeArray = option.value.split(' - ').map((year) => Number(year))
+                this.visibleDecade = decadeArray;
+                this.createYearPicker();
             },
-            options: new Array(upperYearLimit - lowerYearLimit + 1).fill(upperYearLimit).map((val, i) => {
-                const year = val - i;
+            options: new Array(numDecades).fill(lowerDecadeLimit).map((decade, i) => {
+                const decadeText = `${decade[0] + i * 10} - ${decade[1] + i * 10}`;
                 return {
-                    value: year,
-                    label: year,
+                    value: decadeText,
+                    label: decadeText,
                 };
             }),
-            popoverClassName: 'autoql-vanilla-year-picker-popover',
+            popoverClassName: 'autoql-vanilla-decade-picker-popover',
         });
         yearPickerSelect.classList.add('year-picker');
         yearPicker.appendChild(yearPickerSelect);
@@ -337,8 +327,8 @@ export function YearPicker(
         const yearPickerNextBtn = document.createElement('button');
         yearPickerNextBtn.classList.add('autoql-vanilla-next-prev-btn');
         yearPickerNextBtn.classList.add('autoql-vanilla-next-btn');
-        yearPickerNextBtn.disabled = this.visibleYear == upperYearLimit;
-        if (!yearPickerNextBtn.disabled) yearPickerNextBtn.onclick = this.incrementYear;
+        yearPickerNextBtn.disabled = this.visibleDecade[0] === upperDecadeLimit[0];
+        if (!yearPickerNextBtn.disabled) yearPickerNextBtn.onclick = this.incrementDecade;
         yearPicker.appendChild(yearPickerNextBtn);
 
         const yearPickerNextBtnIcon = createIcon(CARET_DOWN_ICON);
@@ -348,45 +338,55 @@ export function YearPicker(
         this.yearPicker.appendChild(yearPicker);
     };
 
-    this.getTimestamp = (month) => {
-        return dayjs(`${this.visibleYear}-${month + 1}-15`);
+    this.getTimestamp = (year) => {
+        return dayjs(`${year}-01-15`);
     };
 
     this.createYearPicker = () => {
-        const monthGrid = [
-            [0, 1, 2],
-            [3, 4, 5],
-            [6, 7, 8],
-            [9, 10, 11],
+        this.yearElements = {}
+
+        if (this.yearPickerContent) {
+            this.yearPickerContent.parentElement.removeChild(this.yearPickerContent)
+        }
+
+        const yearArray = new Array(10).fill(this.visibleDecade[0]).map((val, i) => {
+            return val + i;
+        });
+
+        const yearGrid = [
+            [...yearArray.slice(0, 3)],
+            [...yearArray.slice(3, 6)],
+            [...yearArray.slice(6, 9)],
+            [yearArray[9]],
         ];
 
         const yearPickerContent = document.createElement('div');
-        yearPickerContent.classList.add('autoql-vanilla-month-picker');
+        yearPickerContent.classList.add('autoql-vanilla-year-picker');
+        this.yearPickerContent = yearPickerContent;
 
-        monthGrid.forEach((monthRow) => {
-            const monthRowElement = document.createElement('div');
-            monthRowElement.classList.add('month-picker-row');
+        yearGrid.forEach((yearRow) => {
+            const yearRowElement = document.createElement('div');
+            yearRowElement.classList.add('year-picker-row');
 
-            monthRow.forEach((month) => {
-                const timestamp = this.getTimestamp(month);
-                const monthName = dayjs(`2021-${month + 1}-15`).format('MMM');
+            yearRow.forEach((year) => {
+                const timestamp = this.getTimestamp(year);
 
-                const monthBtn = document.createElement('div');
-                monthBtn.classList.add('month-picker-month');
-                monthBtn.month = month;
+                const yearBtn = document.createElement('div');
+                yearBtn.classList.add('year-picker-year');
+                yearBtn.year = year;
 
                 const isDisabled = this.isDisabled(timestamp);
-                const isThisMonth = month === dayjs().month() && this.visibleYear == dayjs().year();
+                const isThisYear = year === dayjs().year();
 
-                if (isThisMonth) monthBtn.classList.add('current-month');
-                if (isDisabled) monthBtn.classList.add('autoql-vanilla-day-disabled');
+                if (isThisYear) yearBtn.classList.add('current-year');
+                if (isDisabled) yearBtn.classList.add('autoql-vanilla-day-disabled');
 
-                this.applyPreviewStyles(monthBtn);
-                this.applySelectedStyles(monthBtn);
+                this.applyPreviewStyles(yearBtn);
+                this.applySelectedStyles(yearBtn);
 
-                monthBtn.addEventListener('click', () => this.handleMonthClick(month));
-                monthBtn.addEventListener('mouseenter', () => this.handleMonthHover(month));
-                monthBtn.addEventListener('mouseleave', () => {
+                yearBtn.addEventListener('click', () => this.handleYearClick(year));
+                yearBtn.addEventListener('mouseenter', () => this.handleYearHover(year));
+                yearBtn.addEventListener('mouseleave', () => {
                     this.clearPreviewStyles();
                     if (!isDisabled) {
                         this.previewStart = undefined;
@@ -394,23 +394,23 @@ export function YearPicker(
                     }
                 });
 
-                const monthTextWrapper = document.createElement('div');
-                monthTextWrapper.classList.add('month-picker-month-text-wrapper');
-                monthBtn.appendChild(monthTextWrapper);
-                this.monthElements[month] = monthBtn;
+                const yearTextWrapper = document.createElement('div');
+                yearTextWrapper.classList.add('year-picker-year-text-wrapper');
+                yearBtn.appendChild(yearTextWrapper);
+                this.yearElements[year] = yearBtn;
 
-                const monthTextDiv = document.createElement('div');
-                monthTextDiv.classList.add('month-picker-month-text');
-                monthTextWrapper.appendChild(monthTextDiv);
+                const yearTextDiv = document.createElement('div');
+                yearTextDiv.classList.add('year-picker-year-text');
+                yearTextWrapper.appendChild(yearTextDiv);
 
-                const monthTextSpan = document.createElement('span');
-                monthTextSpan.innerHTML = monthName;
-                monthTextDiv.appendChild(monthTextSpan);
+                const yearTextSpan = document.createElement('span');
+                yearTextSpan.innerHTML = year;
+                yearTextDiv.appendChild(yearTextSpan);
 
-                monthRowElement.appendChild(monthBtn);
+                yearRowElement.appendChild(yearBtn);
             });
 
-            yearPickerContent.appendChild(monthRowElement);
+            yearPickerContent.appendChild(yearRowElement);
         });
 
         this.yearPicker?.appendChild(yearPickerContent);
@@ -423,7 +423,7 @@ export function YearPicker(
     this.yearPicker = yearPicker;
 
     this.createDateDisplay();
-    this.createYearPicker();
+    this.createDecadePicker();
     this.createYearPicker();
 
     component?.appendChild(yearPicker);

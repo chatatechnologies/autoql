@@ -47,7 +47,9 @@
     flex-direction: column;
 
     .autoql-vanilla-day-disabled {
-        background-color: rgb(248, 248, 248);
+        background-color: var(--autoql-vanilla-hover-color);
+        pointer-events: none;
+        opacity: 0.3;
     }
 
     .autoql-vanilla-date-display {
@@ -103,7 +105,8 @@
         color: var(--autoql-vanilla-text-color-primary);
     }
 
-    .autoql-vanilla-month-picker-year {
+    .autoql-vanilla-month-picker-year,
+    .autoql-vanilla-year-picker-decade {
         box-sizing: inherit;
         display: flex;
         justify-content: space-between;
@@ -132,7 +135,8 @@
         }
     }
 
-    .autoql-vanilla-year-picker-popover {
+    .autoql-vanilla-year-picker-popover,
+    .autoql-vanilla-decade-picker-popover {
         text-align: center;
     }
 
@@ -151,23 +155,27 @@
             }
         }
     }
-    .autoql-vanilla-month-picker {
+    .autoql-vanilla-month-picker,
+    .autoql-vanilla-year-picker {
         padding-bottom: 20px;
         padding-left: 5px;
         padding-right: 5px;
 
-        .month-picker-row {
+        .month-picker-row,
+        .year-picker-row {
             display: flex;
             justify-content: center;
         }
-        .month-picker-month {
+        .month-picker-month,
+        .year-picker-year {
             cursor: pointer;
             margin: 2px 0px;
             padding: 1px 0px;
             border-top: 1px solid var(--autoql-vanilla-background-color-secondary);
             border-bottom: 1px solid var(--autoql-vanilla-background-color-secondary);
 
-            .month-picker-month-text-wrapper {
+            .month-picker-month-text-wrapper,
+            .year-picker-year-text-wrapper {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -206,7 +214,8 @@
             }
 
             &.active {
-                .month-picker-month-text-wrapper .month-picker-month-text {
+                .month-picker-month-text-wrapper .month-picker-month-text,
+                .year-picker-year-text-wrapper .year-picker-year-text {
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -214,11 +223,13 @@
                     height: 100%;
                     border-radius: 100px;
                 }
-                &:hover .month-picker-month-text-wrapper .month-picker-month-text {
+                &:hover .month-picker-month-text-wrapper .month-picker-month-text,
+                &:hover .year-picker-year-text-wrapper .year-picker-year-text {
                     background: #ffffff2b;
                 }
 
-                .month-picker-month-text-wrapper {
+                .month-picker-month-text-wrapper,
+                .year-picker-year-text-wrapper {
                     background-color: var(--autoql-vanilla-accent-color);
                     color: var(--autoql-vanilla-text-color-accent);
                     border-radius: 1px;
@@ -226,7 +237,8 @@
 
                 // &:first-child,
                 &.selection-start {
-                    .month-picker-month-text-wrapper {
+                    .month-picker-month-text-wrapper,
+                    .year-picker-year-text-wrapper {
                         border-top-left-radius: 100px;
                         border-bottom-left-radius: 100px;
                     }
@@ -234,15 +246,18 @@
 
                 // &:last-child,
                 &.selection-end {
-                    .month-picker-month-text-wrapper {
+                    .month-picker-month-text-wrapper,
+                    .year-picker-year-text-wrapper {
                         border-top-right-radius: 100px;
                         border-bottom-right-radius: 100px;
                     }
                 }
             }
 
-            &.current-month {
-                .month-picker-month-text-wrapper .month-picker-month-text:after {
+            &.current-month,
+            &.current-year {
+                .month-picker-month-text-wrapper .month-picker-month-text:after,
+                .year-picker-year-text-wrapper .year-picker-year-text:after {
                     content: '';
                     position: absolute;
                     bottom: 3px;
@@ -253,7 +268,8 @@
                     border-radius: 2px;
                     background: var(--autoql-vanilla-accent-color);
                 }
-                &.active .month-picker-month-text-wrapper .month-picker-month-text:after {
+                &.active .month-picker-month-text-wrapper .month-picker-month-text:after,
+                &.active .year-picker-year-text-wrapper .year-picker-year-text:after {
                     background: var(--autoql-vanilla-text-color-accent);
                 }
             }

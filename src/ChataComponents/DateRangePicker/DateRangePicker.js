@@ -5,6 +5,7 @@ import { MonthPicker } from './MonthPicker';
 import '../Radio/Radio.scss';
 import '../Button/Button.scss';
 import './DateRangePicker.scss';
+import { YearPicker } from './YearPicker';
 
 export function DateRangePicker(e, { type, title, initialRange, onSelection = () => {}, onSelectionApplied = () => {}, validRange } = {}) {
     const popover = new PopoverChartSelector(e, 'bottom', 'start', 0);
@@ -34,18 +35,20 @@ export function DateRangePicker(e, { type, title, initialRange, onSelection = ()
 
         let datePicker;
 
+        const pickerParams = {
+            minDate: validRange?.startDate,
+            maxDate: validRange?.endDate,
+            initialRange: this.selectedRange,
+            onRangeSelection: (selectedRange) => {
+                this.selectedRange = selectedRange;
+                onSelection(selectedRange);
+            },
+        }
+
         if (type.toLowerCase() === 'month') {
-            datePicker = new MonthPicker(datePickerContainer, {
-                minDate: validRange?.startDate,
-                maxDate: validRange?.endDate,
-                initialRange: this.selectedRange,
-                onRangeSelection: (selectedRange) => {
-                    this.selectedRange = selectedRange;
-                    onSelection(selectedRange);
-                },
-            });
+            datePicker = new MonthPicker(datePickerContainer, pickerParams);
         } else if (type.toLowerCase() === 'year') {
-            // Year picker goes here
+            datePicker = new YearPicker(datePickerContainer, pickerParams);
         } else {
             // Default calendar picker goes here
         }
