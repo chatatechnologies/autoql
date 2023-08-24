@@ -21,6 +21,16 @@
           font-size: 17px;
         }
       }
+      .autoql-vanilla-chata-table-container {
+        height: calc(100% - 20px);
+      }
+      .autoql-vanilla-output-footer {
+        display: flex;
+        align-items: flex-end;
+        max-height: 150px;
+        width: 100%;
+        margin-top: 0px;
+      }
     }
   }
 }

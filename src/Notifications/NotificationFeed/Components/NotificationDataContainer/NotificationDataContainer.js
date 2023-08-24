@@ -4,6 +4,7 @@ import { ChataUtils } from '../../../../ChataUtils';
 import { uuidv4 } from '../../../../Utils';
 import { ChataTable } from '../../../../ChataTable';
 import { NotificationVizToolbar } from '../NotificationVizToolbar';
+import { DataLimitWarningIcon } from '../../../../DataLimitWarningIcon';
 
 export function NotificationDataContainer({ queryResponse }) {
   const container = document.createElement('div');
@@ -82,8 +83,11 @@ export function NotificationDataContainer({ queryResponse }) {
     return columns.length === 1;
   }
 
-  this.showResponse = (displayType) => {
+  this.showDataLimitWarning = () => {
+    return queryResponse?.data?.data?.rows?.length >= 500;
+  }
 
+  this.showResponse = (displayType) => {
     switch(displayType) {
       case 'data':
         if(this.isSingleResponse()) {
@@ -94,6 +98,19 @@ export function NotificationDataContainer({ queryResponse }) {
         }
         break;
     }
+
+    if(this.showDataLimitWarning()) {
+      responseContentContainer.appendChild(this.createFooter());
+    }
+  }
+
+  this.createFooter = () => {
+    const footer = document.createElement('div');
+
+    footer.classList.add('autoql-vanilla-output-footer');
+    footer.appendChild(new DataLimitWarningIcon());
+
+    return footer;
   }
 
   const displayType = queryResponse.data.data.display_type;

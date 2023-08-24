@@ -1,4 +1,4 @@
-import { WARNING } from "../Svg";
+import { DATA_LIMIT_WARNING } from "../Svg";
 import { createIcon } from "../Utils";
 import './DataLimitWarningIcon.scss';
 
@@ -7,7 +7,7 @@ export function DataLimitWarningIcon() {
 
   container.classList.add('autoql-vanilla-data-limit-warning-icon');
 
-  container.appendChild(createIcon(WARNING));
+  container.appendChild(createIcon(DATA_LIMIT_WARNING));
 
   return container;
 }
