@@ -16,6 +16,19 @@
       border-radius: 6px;
       line-height: 28px;
       padding: 5px 5px 5px 0px;
+      width: 100%;
+    }
+    &.autoql-vanilla-options-toolbar {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      background: inherit;
+      padding: 5px 0px 5px 5px;
+      border-radius: 6px;
+      line-height: 28px;
+      background: var(--autoql-vanilla-background-color-secondary);
+      box-shadow: 0 2px 3px -2px var(--autoql-vanilla-box-shadow-color);
+      margin-right: -10px;
     }
     .autoql-vanilla-toolbar-btn {
       height: 28px;

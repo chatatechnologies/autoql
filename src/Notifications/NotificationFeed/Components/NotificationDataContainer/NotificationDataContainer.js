@@ -89,7 +89,6 @@ export function NotificationDataContainer({ queryResponse }) {
         if(this.isSingleResponse()) {
           responseContentContainer.appendChild(this.createDataResponse());
         } else {
-          console.log('TABLE');
           responseContentContainer.appendChild(this.createTableResponse());
           this.createTable();
         }
@@ -100,7 +99,9 @@ export function NotificationDataContainer({ queryResponse }) {
   const displayType = queryResponse.data.data.display_type;
   
   wrapper.appendChild(responseContentContainer);
-  wrapper.appendChild(this.createVizToolbar());
+  if(!this.isSingleResponse()){
+    wrapper.appendChild(this.createVizToolbar());
+  }
   container.appendChild(wrapper);
 
   setTimeout(() => {

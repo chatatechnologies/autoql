@@ -1,6 +1,6 @@
 import { getSupportedDisplayTypes, DisplayTypes } from "autoql-fe-utils";
 import { createIcon } from "../../../../Utils";
-import { BAR_CHART_ICON, BUBBLE_CHART_ICON, COLUMN_CHART_ICON, COLUMN_LINE_ICON, HEATMAP_ICON, LINE_CHART_ICON, PIE_CHART_ICON, STACKED_AREA_CHART_ICON, STACKED_BAR_CHART_ICON, STACKED_COLUMN_CHART_ICON, TABLE_ICON } from "../../../../Svg";
+import { BAR_CHART_ICON, BUBBLE_CHART_ICON, COLUMN_CHART_ICON, COLUMN_LINE_ICON, FILTER_TABLE, HEATMAP_ICON, LINE_CHART_ICON, MORE_OPTIONS, PIE_CHART_ICON, STACKED_AREA_CHART_ICON, STACKED_BAR_CHART_ICON, STACKED_COLUMN_CHART_ICON, TABLE_ICON } from "../../../../Svg";
 
 import './NotificationVizToolbar.scss';
 
@@ -79,7 +79,7 @@ export function NotificationVizToolbar({ response }) {
         default:
           break;
       }
-      
+
       if(btn) {
         leftButtons.appendChild(btn);
       }
@@ -90,16 +90,27 @@ export function NotificationVizToolbar({ response }) {
       ) {
         btn.classList.add('autoql-vanilla-toolbar-btn-selected');
       }
-
     });
 
     return leftButtons
   }
 
+  this.createRightButtons = () => {
+    const rightButtons = this.createToolbar();
+    rightButtons.classList.add('autoql-vanilla-options-toolbar');
+    const filterButton = this.createToolbarButton(FILTER_TABLE);
+    const moreOptionsBtn = this.createToolbarButton(MORE_OPTIONS);
+
+    rightButtons.appendChild(filterButton);
+    rightButtons.appendChild(moreOptionsBtn);
+
+    return rightButtons;
+  }
 
   container.classList.add('autoql-vanilla-notification-toolbar-container');
 
   container.appendChild(this.createLeftButtons());
+  container.appendChild(this.createRightButtons());
   container.appendChild(rightButtons);
 
   return container;
