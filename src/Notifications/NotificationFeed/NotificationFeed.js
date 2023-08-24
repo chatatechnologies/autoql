@@ -55,6 +55,7 @@ export function NotificationFeed(selector, options) {
       onErrorCallback: () => {},
       onSuccessCallback: () => {},
       autoChartAggregations: true,
+      pageSize: 500,
       ...options
   };
   
@@ -137,7 +138,8 @@ export function NotificationFeed(selector, options) {
         itemData,
         index,
         authentication,
-        onClick: this.collapsePreviousNotification
+        onClick: this.collapsePreviousNotification,
+        widgetOptions: container.options,
       });
       itemsContainer.appendChild(item);
     });

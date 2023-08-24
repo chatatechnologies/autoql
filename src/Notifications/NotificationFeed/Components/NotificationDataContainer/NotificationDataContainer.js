@@ -1,12 +1,13 @@
-import { dataFormattingDefault, formatElement, isDataLimited } from 'autoql-fe-utils';
+import { dataFormattingDefault, formatElement, isChartType, isDataLimited } from 'autoql-fe-utils';
 import './NotificationDataContainer.scss';
 import { ChataUtils } from '../../../../ChataUtils';
 import { uuidv4 } from '../../../../Utils';
 import { ChataTable } from '../../../../ChataTable';
 import { NotificationVizToolbar } from '../NotificationVizToolbar';
 import { DataLimitWarningIcon } from '../../../../DataLimitWarningIcon';
+import { ChataChartNew } from '../../../../NewCharts';
 
-export function NotificationDataContainer({ queryResponse }) {
+export function NotificationDataContainer({ queryResponse, widgetOptions }) {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const responseContentContainer = document.createElement('div');
@@ -49,8 +50,6 @@ export function NotificationDataContainer({ queryResponse }) {
   }
 
   this.createTable = () => {
-    console.log(idRequest);
-    console.log(document.querySelector(`[data-componentid='${idRequest}']`));
     var useInfiniteScroll = isDataLimited({ data: queryResponse?.data });
     new ChataTable(
       idRequest,
@@ -61,8 +60,15 @@ export function NotificationDataContainer({ queryResponse }) {
       undefined,
     );
   }
+
+  this.createChartContainer = () => {
+    var chartContainer = document.createElement('div');
+    chartContainer.classList.add('autoql-vanilla-chart-container');
+
+    return chartContainer;
+  }
   
-  this.createTableResponse = () => {
+  this.createTableResponseContainer = () => {
     var tableContainer = document.createElement('div');
     var tableWrapper = document.createElement('div');
 
@@ -87,33 +93,58 @@ export function NotificationDataContainer({ queryResponse }) {
     return queryResponse?.data?.data?.rows?.length >= 500;
   }
 
+  this.initializeContainers = () => {
+    if(!this.isSingleResponse()) {
+      this.tableContainer = this.createTableResponseContainer();
+      this.chartContainer = this.createChartContainer();
+    
+      this.chartContainer.classList.add('autoql-vanilla-hidden');
+    
+      responseContentContainer.appendChild(this.tableContainer);
+      responseContentContainer.appendChild(this.chartContainer);
+    }  
+  }
+
   this.showResponse = (displayType) => {
-    responseContentContainer.innerHTML = '';
-    console.log(displayType);
     switch(displayType) {
       case 'data':
       case 'table':
-        if(this.isSingleResponse()) {
-          responseContentContainer.appendChild(this.createDataResponse());
-        } else {
-          responseContentContainer.appendChild(this.createTableResponse());
-          this.createTable();
-        }
-        break;
+      if(this.isSingleResponse()) {
+        responseContentContainer.appendChild(this.createDataResponse());
+      } else {
+        this.tableContainer.classList.remove('autoql-vanilla-hidden');
+        this.chartContainer.classList.add('autoql-vanilla-hidden');
+        this.createTable();
+      }
+      break;
     }
+    
+    if(isChartType(displayType)) {
+      this.tableContainer.classList.add('autoql-vanilla-hidden');
+      this.chartContainer.classList.remove('autoql-vanilla-hidden');
 
+      const component = document.querySelector(`[data-componentid='${idRequest}']`);
+      
+      new ChataChartNew(component, {
+        type: displayType,
+        queryJson: queryResponse?.data,
+        onChartClick: () => {  },
+        options: widgetOptions,
+      });
+    }
+    
     if(this.showDataLimitWarning()) {
       responseContentContainer.appendChild(this.createFooter());
     }
-  }
-
-  this.createFooter = () => {
-    const footer = document.createElement('div');
-
-    footer.classList.add('autoql-vanilla-output-footer');
-    footer.appendChild(new DataLimitWarningIcon());
-
-    return footer;
+    }
+    
+    this.createFooter = () => {
+      const footer = document.createElement('div');
+      
+      footer.classList.add('autoql-vanilla-output-footer');
+      footer.appendChild(new DataLimitWarningIcon());
+      
+      return footer;
   }
 
   const displayType = queryResponse.data.data.display_type;
@@ -123,6 +154,8 @@ export function NotificationDataContainer({ queryResponse }) {
     wrapper.appendChild(this.createVizToolbar());
   }
   container.appendChild(wrapper);
+  
+  this.initializeContainers();
 
   setTimeout(() => {
     this.showResponse(displayType);

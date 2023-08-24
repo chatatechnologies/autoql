@@ -12,7 +12,7 @@ import { NotificationDataContainer } from "../NotificationDataContainer";
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
 
-export function NotificationItem({ itemData, authentication, index, onClick }) {
+export function NotificationItem({ itemData, authentication, index, onClick, widgetOptions }) {
   const item = document.createElement('div');
   
   this.queryResponse = undefined;
@@ -42,7 +42,7 @@ export function NotificationItem({ itemData, authentication, index, onClick }) {
   }
 
   this.createNotificationResponse = () => {
-    return new NotificationDataContainer({ queryResponse: this.queryResponse })
+    return new NotificationDataContainer({ queryResponse: this.queryResponse, widgetOptions })
   }
   
   this.createStrip = () => {
