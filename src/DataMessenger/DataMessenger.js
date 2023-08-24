@@ -774,7 +774,9 @@ export function DataMessenger(options = {}) {
                     break;
                 default:
             }
-            if (newWidth <= 400) return;
+            if (newWidth <= 400) {
+                newWidth = 400
+            };
 
             if (obj.isPortrait()) {
                 obj.drawerContentWrapper.style.width = newWidth + 'px';

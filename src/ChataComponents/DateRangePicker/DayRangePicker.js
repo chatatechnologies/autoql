@@ -512,10 +512,6 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
                 const isDisabled = this.isDisabled(timestamp);
                 const isToday = timestamp.isToday();
 
-                if (isToday) {
-                    console.log({ isToday, timestamp });
-                }
-
                 if (isToday) dayBtn.classList.add('current-year');
                 if (isDisabled) dayBtn.classList.add('autoql-vanilla-day-disabled');
 

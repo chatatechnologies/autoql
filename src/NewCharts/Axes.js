@@ -105,16 +105,18 @@ export function Axes(container, params = {}) {
             const axesBBoxRight = axesBBox.x + axesBBox.width;
             const axesBBoxBottom = axesBBox.y + axesBBox.height;
     
-            if (legend.location === 'right') {
-                translateX = axesBBoxRight;
-            } else if (legend.location === 'bottom') {
-                translateY = axesBBoxBottom;
-            }
-    
+                
             const hasSecondAxis = (!!yCol2 && !!yScale2) || (!!xCol2 && !!xScale2);
     
             var legendElement = new Legend(axes, { ...params, ...legend, hasSecondAxis });
-    
+
+            if (legend.location === 'right') {
+                translateX = axesBBoxRight;
+            } else if (legend.location === 'bottom') {
+                translateX = (innerWidth / 2) - (legendElement?.node()?.getBoundingClientRect()?.width / 2)
+                translateY = axesBBoxBottom;
+            }
+
             legendElement.attr('transform', `translate(${translateX}, ${translateY})`);
     
             return legendElement;
