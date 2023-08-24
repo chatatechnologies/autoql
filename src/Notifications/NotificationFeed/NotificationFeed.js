@@ -3,6 +3,7 @@ import { MARK_ALL } from "../../Svg";
 import { checkAndApplyTheme, createIcon } from "../../Utils";
 import './NotificationFeed.scss';
 import { NotificationItem } from "./Components/NotificationItem/NotificationItem";
+import { refreshTooltips } from "../../Tooltips";
 
 export function NotificationFeed(selector, options) {
   checkAndApplyTheme();
@@ -151,6 +152,7 @@ export function NotificationFeed(selector, options) {
     loading.remove();
     container.appendChild(this.createTopOptions());
     container.appendChild(itemsContainer);
+    refreshTooltips();
   }
   
   container.classList.add('autoql-vanilla-notification-list-container');
@@ -164,9 +166,10 @@ export function NotificationFeed(selector, options) {
     }
   })
 
-  this.createItems();
   
   if(parent) parent.appendChild(container);
+
+  this.createItems();
   
   return container;
 }
