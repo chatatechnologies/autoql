@@ -55,9 +55,6 @@ export function HeatmapNew(container, params = {}) {
         outerPadding: 0,
     });
 
-    var xCol = columns[stringColumnIndex];
-    var yCol = legendColumn;
-
     this.createSquares = () => {
         if (!visibleSeries?.length) {
             console.warn('Unable to create bars - there are no visible series');
@@ -127,8 +124,6 @@ export function HeatmapNew(container, params = {}) {
         ...params,
         xScale: this.xScale,
         yScale: this.yScale,
-        xCol,
-        yCol,
     });
 
     if (!firstDraw) {

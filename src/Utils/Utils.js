@@ -1,4 +1,4 @@
-import { areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
+import { MIN_HISTOGRAM_SAMPLE, areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
@@ -503,6 +503,10 @@ export const getSupportedDisplayTypes = response => {
             const supportedDisplayTypes = ['table', 'column', 'bar', 'line']
             if(supportsPieChart(columns, rows)){
                 supportedDisplayTypes.push('pie')
+            }
+
+            if (rows.length > MIN_HISTOGRAM_SAMPLE) {
+                supportedDisplayTypes.push('histogram');
             }
 
             const { amountOfNumberColumns } = getColumnTypeAmounts(columns)

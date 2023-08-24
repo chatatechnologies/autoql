@@ -36,6 +36,7 @@ import { HeatmapNew } from './ChataHeatmap';
 import { BubbleChartNew } from './ChataBubbleChart';
 import { PieChartNew } from './ChataPieChart';
 import { Scatterplot } from './ChataScatterplot';
+import { Histogram } from './ChataHistogram';
 
 export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     const dataFormatting = getDataFormatting(options.dataFormatting);
@@ -223,8 +224,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     // Default starting size and position
     this.deltaX = 0;
     this.deltaY = 0;
-    this.innerHeight = Math.round(component.parentElement.clientHeight / 2); 
-    this.innerWidth = Math.round(component.parentElement.clientWidth / 2); 
+    this.innerHeight = Math.round(component.parentElement.clientHeight / 2);
+    this.innerWidth = Math.round(component.parentElement.clientWidth / 2);
     this.drawCount = 0;
 
     this.toggleChartScale = () => {
@@ -378,7 +379,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 .append('g')
                 .attr('class', CHART_CONTAINER_CLASS)
                 .attr('transform', `translate(${this.deltaX}, ${this.deltaY})`)
-                .style('visibility', 'hidden');
+                .style('opacity', 0);
 
             colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
 
@@ -397,7 +398,9 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 aggConfig,
                 aggregated,
                 visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns[index].isSeriesHidden),
-                visibleSeries2: columnIndexConfig.numberColumnIndices2.filter((index) => !columns[index].isSeriesHidden),
+                visibleSeries2: columnIndexConfig.numberColumnIndices2.filter(
+                    (index) => !columns[index].isSeriesHidden,
+                ),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
@@ -459,6 +462,15 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 case 'scatterplot':
                     this.chartComponent = new Scatterplot(chartContentWrapper, params);
                     break;
+                case 'histogram':
+                    this.chartComponent = new Histogram(chartContentWrapper, {
+                        ...params,
+                        initialBucketSize: component.initialBucketSize,
+                        onBucketSizeChange: (bucketSize) => {
+                            component.initialBucketSize = bucketSize;
+                        },
+                    });
+                    break;
                 default:
                     return null; // 'Unknown Display Type'
             }
@@ -469,7 +481,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             if (CHARTS_WITHOUT_AXES.includes(type)) {
                 // Do not redraw
             } else {
-                this.setLabelRotationValues(chartContentWrapper);
+                try {this.setLabelRotationValues(chartContentWrapper);}catch(error){console.error(error)}
 
                 if (firstDraw) {
                     this.drawChart(false);
@@ -482,7 +494,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             console.error(error);
         }
 
-        chartContentWrapper.style('visibility', 'visible');
+        chartContentWrapper.style('opacity', 1);
 
         resetChartRedrawParams();
         refreshChartTooltips();

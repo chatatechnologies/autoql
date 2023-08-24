@@ -238,19 +238,12 @@ export function LineChartNew(container, params = {}) {
         stacked,
     }).scale;
 
-    var xCol = columns[stringColumnIndex];
-    var yCol = columns[numberColumnIndex];
-
-    const self = this;
-
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
     new Axes(this.axesWrapper, {
         ...params,
         xScale: this.xScale,
         yScale: this.yScale,
-        xCol,
-        yCol,
         legendShape: 'line',
     });
 

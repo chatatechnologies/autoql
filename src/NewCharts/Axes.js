@@ -8,10 +8,6 @@ export function Axes(container, params = {}) {
         width,
         xScale,
         yScale,
-        xCol,
-        yCol,
-        xCol2,
-        yCol2,
         xScale2,
         yScale2,
         toggleChartScale,
@@ -47,31 +43,34 @@ export function Axes(container, params = {}) {
 
         switch (orient) {
             case 'left': {
-                axis = new Axis(axes, params, { orient, scale: yScale, column: yCol, ...axesOptions });
+                axis = new Axis(axes, params, {
+                    orient,
+                    scale: yScale,
+                    ...axesOptions,
+                });
                 break;
             }
             case 'bottom': {
                 axis = new Axis(axes, params, {
                     orient,
                     scale: xScale,
-                    column: xCol,
                     rotateLabels: bottomLabelsRotated,
                     ...axesOptions,
                 });
                 break;
             }
             case 'right': {
-                if (!!yCol2 && !!yScale2) {
-                    axis = new Axis(axes, params, { orient, scale: yScale2, column: yCol2, ...axesOptions });
+                if (!!yScale2) {
+                    axis = new Axis(axes, params, { orient, scale: yScale2, 
+                        ...axesOptions });
                 }
                 break;
             }
             case 'top': {
-                if (!!xCol2 && !!xScale2) {
+                if (!!xScale2) {
                     axis = new Axis(axes, params, {
                         orient,
                         scale: xScale2,
-                        column: xCol2,
                         rotateLabels: topLabelsRotated,
                         ...axesOptions,
                     });
@@ -106,7 +105,7 @@ export function Axes(container, params = {}) {
             const axesBBoxBottom = axesBBox.y + axesBBox.height;
     
                 
-            const hasSecondAxis = (!!yCol2 && !!yScale2) || (!!xCol2 && !!xScale2);
+            const hasSecondAxis = (!!yScale2) || (!!xScale2);
     
             var legendElement = new Legend(axes, { ...params, ...legend, hasSecondAxis });
 
