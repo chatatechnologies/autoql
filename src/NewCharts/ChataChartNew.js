@@ -36,6 +36,7 @@ import { HeatmapNew } from './ChataHeatmap';
 import { BubbleChartNew } from './ChataBubbleChart';
 import { PieChartNew } from './ChataPieChart';
 import { Scatterplot } from './ChataScatterplot';
+import '../Charts/ChataChart.scss';
 
 export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     const dataFormatting = getDataFormatting(options.dataFormatting);

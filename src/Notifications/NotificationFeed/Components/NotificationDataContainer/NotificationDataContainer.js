@@ -102,6 +102,9 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
     
       responseContentContainer.appendChild(this.tableContainer);
       responseContentContainer.appendChild(this.chartContainer);
+      if(this.showDataLimitWarning()) {
+        responseContentContainer.appendChild(this.createFooter());
+      }
     }  
   }
 
@@ -112,8 +115,8 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
       if(this.isSingleResponse()) {
         responseContentContainer.appendChild(this.createDataResponse());
       } else {
-        this.tableContainer.classList.remove('autoql-vanilla-hidden');
         this.chartContainer.classList.add('autoql-vanilla-hidden');
+        this.tableContainer.classList.remove('autoql-vanilla-hidden');
         this.createTable();
       }
       break;
@@ -123,20 +126,14 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
       this.tableContainer.classList.add('autoql-vanilla-hidden');
       this.chartContainer.classList.remove('autoql-vanilla-hidden');
 
-      const component = document.querySelector(`[data-componentid='${idRequest}']`);
-      
-      new ChataChartNew(component, {
+      new ChataChartNew(this.chartContainer, {
         type: displayType,
         queryJson: queryResponse?.data,
         onChartClick: () => {  },
         options: widgetOptions,
       });
     }
-    
-    if(this.showDataLimitWarning()) {
-      responseContentContainer.appendChild(this.createFooter());
-    }
-    }
+  }
     
     this.createFooter = () => {
       const footer = document.createElement('div');

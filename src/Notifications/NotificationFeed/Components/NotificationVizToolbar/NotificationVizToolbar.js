@@ -91,7 +91,6 @@ export function NotificationVizToolbar({ response, onClick }) {
         }  
         leftButtons.appendChild(btn);
       }
-      
       if(
         (this.displayType === dType) || 
         (this.displayType === 'data' && dType === DisplayTypes.TABLE)
