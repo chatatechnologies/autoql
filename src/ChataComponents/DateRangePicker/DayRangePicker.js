@@ -1,27 +1,21 @@
 import dayjs from '../../Utils/dayjsPlugins';
-import { cloneObject, createIcon } from '../../Utils';
+import { createIcon } from '../../Utils';
 import { Select } from '../Select';
 import { CARET_DOWN_ICON } from '../../Svg';
 import { MONTH_NAMES, WEEKDAY_NAMES_SUN } from 'autoql-fe-utils';
-
-const getDecade = (year) => {
-    const yearsSinceDecadeStart = year % 10;
-    const decadeStart = year - yearsSinceDecadeStart;
-    return [decadeStart, decadeStart + 9];
-};
 
 export function DayRangePicker(component, { initialRange, minDate, maxDate, onRangeSelection = () => {} } = {}) {
     const now = dayjs();
 
     let visibleYear = now.year();
-    let visibleMonth = now.month();
+    let visibleMonth = now.month() + 1;  // Months are 0 indexed
     let selectedStart = now.startOf('day');
     let selectedEnd = now.endOf('day');
 
     if (initialRange) {
         selectedStart = dayjs(initialRange.startDate).startOf('day');
         selectedEnd = dayjs(initialRange.endDate).endOf('day');
-        visibleMonth = dayjs(initialRange.endDate).month();
+        visibleMonth = dayjs(initialRange.endDate).month() + 1;
         visibleYear = selectedEnd.year();
     } else if (minDate && maxDate && (now.isBefore(dayjs(minDate)) || now.isAfter(dayjs(maxDate)))) {
         selectedStart = dayjs(minDate).startOf('day');
@@ -56,7 +50,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         const isSelectedStart = timestamp.startOf('day').isSame(this.selectedStart?.startOf('day'));
         const isSelectedEnd =
             (isSelectedStart && !this.selectedEnd) || timestamp.endOf('day').isSame(this.selectedEnd?.endOf('day'));
-        const isSelected = isSelectedStart || isSelectedEnd || this.selectedRangeIncludesYear(timestamp);
+        const isSelected = isSelectedStart || isSelectedEnd || this.selectedRangeIncludesDay(timestamp);
 
         return {
             isSelected,
@@ -69,7 +63,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         const isPreviewStart = timestamp.startOf('day').isSame(this.previewStart);
         const isPreviewEnd = timestamp.endOf('day').isSame(this.previewEnd);
         const isPreview =
-            isPreviewStart || isPreviewEnd || timestamp.isBetween(this.previewStart, this.previewEnd, 'year');
+            isPreviewStart || isPreviewEnd || timestamp.isBetween(this.previewStart, this.previewEnd, 'day');
 
         return {
             isPreview,
@@ -84,17 +78,30 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         return isBeforeMinDate || isAfterMaxDate;
     };
 
-    this.selectedRangeIncludesYear = (timestamp) => {
+    this.selectedRangeIncludesDay = (timestamp) => {
         if (this.selectedStart && this.selectedEnd) {
-            return timestamp.isBetween(this.selectedStart, this.selectedEnd, 'year');
+            return timestamp.isBetween(this.selectedStart, this.selectedEnd, 'day');
         }
         return false;
     };
 
+    this.setFocusedDateDisplay = (value) => {
+        this.focusedDateDisplay = value
+
+        if (value === 'start') {
+            this.dateDisplayStart.classList.add('autoql-vanilla-date-display-item-active');
+            this.dateDisplayEnd.classList.remove('autoql-vanilla-date-display-item-active');
+        } else if (value === 'end') {
+            this.dateDisplayEnd.classList.add('autoql-vanilla-date-display-item-active');
+            this.dateDisplayStart.classList.remove('autoql-vanilla-date-display-item-active');
+        }
+    }
+
     this.onYearStartSelection = (timestamp) => {
         this.selectedStart = timestamp.startOf('day');
         this.selectedEnd = undefined;
-        this.focusedDateDisplay = 'end';
+
+        this.setFocusedDateDisplay('end');
 
         const rangeSelection = [this.selectedStart, timestamp];
         const selectedStartYearStart = rangeSelection[0].startOf('day');
@@ -110,7 +117,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         try {
             if (!this.selectedStart) {
                 this.selectedEnd = timestamp;
-                this.focusedDateDisplay = 'start';
+                this.setFocusedDateDisplay('start');
             }
 
             const rangeSelection = [this.selectedStart, timestamp];
@@ -134,7 +141,6 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     };
 
     this.handleDayClick = (timestamp) => {
-        // const timestamp = this.getTimestamp(this.visibleMonth, year);
         if (this.focusedDateDisplay === 'start') {
             this.onYearStartSelection(timestamp);
         } else {
@@ -145,8 +151,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     };
 
     this.clearPreviewStyles = () => {
-        for (const day in this.dayElements) {
-            const dayBtn = this.dayElements[day];
+        for (const timestamp in this.dayElements) {
+            const dayBtn = this.dayElements[timestamp];
             dayBtn?.classList.remove('preview-start');
             dayBtn?.classList.remove('preview-end');
             dayBtn?.classList.remove('preview');
@@ -154,14 +160,14 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     };
 
     this.applyAllPreviewStyles = () => {
-        for (const day in this.dayElements) {
-            this.applyPreviewStyles(this.dayElements[day]);
+        for (const timestamp in this.dayElements) {
+            this.applyPreviewStyles(this.dayElements[timestamp]);
         }
     };
 
     this.applyAllSelectedStyles = () => {
-        for (const day in this.dayElements) {
-            this.applySelectedStyles(this.dayElements[day]);
+        for (const timestamp in this.dayElements) {
+            this.applySelectedStyles(this.dayElements[timestamp]);
         }
     };
 
@@ -170,8 +176,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             return;
         }
 
-        const timestamp = this.getTimestamp(this.visibleMonth, dayBtn.year);
-        const { isPreview, isPreviewStart, isPreviewEnd } = this.isPreview(timestamp);
+        const { isPreview, isPreviewStart, isPreviewEnd } = this.isPreview(dayBtn.timestamp);
 
         if (isPreviewStart) dayBtn.classList.add('preview-start');
         else dayBtn.classList.remove('preview-start');
@@ -186,8 +191,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             return;
         }
 
-        const timestamp = this.getTimestamp(this.visibleMonth, dayBtn.year);
-        const { isSelected, isSelectedStart, isSelectedEnd } = this.isSelected(timestamp);
+        const { isSelected, isSelectedStart, isSelectedEnd } = this.isSelected(dayBtn.timestamp);
 
         if (isSelectedStart) dayBtn.classList.add('selection-start');
         else dayBtn.classList.remove('selection-start');
@@ -198,8 +202,6 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     };
 
     this.handleDayHover = (timestamp) => {
-        // const timestamp = this.getTimestamp(this.visibleMonth, year);
-
         if (this.isDisabled(timestamp)) {
             return;
         }
@@ -281,9 +283,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         dateDisplayStartInput.setAttribute('placeholder', 'Early');
         dateDisplayStartInput.setAttribute('value', startDateText);
         dateDisplayStartInput.addEventListener('click', () => {
-            this.focusedDateDisplay = 'start';
-            this.dateDisplayStart.classList.add('autoql-vanilla-date-display-item-active');
-            this.dateDisplayEnd.classList.remove('autoql-vanilla-date-display-item-active');
+            this.setFocusedDateDisplay('start');
         });
         dateDisplayStart.appendChild(dateDisplayStartInput);
 
@@ -299,9 +299,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         dateDisplayEndInput.setAttribute('placeholder', 'Continuous');
         dateDisplayEndInput.setAttribute('value', endDateText);
         dateDisplayEndInput.addEventListener('click', () => {
-            this.focusedDateDisplay = 'end';
-            this.dateDisplayEnd.classList.add('autoql-vanilla-date-display-item-active');
-            this.dateDisplayStart.classList.remove('autoql-vanilla-date-display-item-active');
+            this.setFocusedDateDisplay('end');
         });
         dateDisplayEnd.appendChild(dateDisplayEndInput);
 
@@ -359,8 +357,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         const lowerYearLimit = parseInt(minDate ? dayjs(minDate).year() : dayjs(new Date()).add(-100, 'year').year());
         const upperYearLimit = parseInt(maxDate ? dayjs(maxDate).year() : dayjs(new Date()).add(20, 'year').year());
 
-        const lowerMonthLimit = parseInt(minDate ? dayjs(minDate).month() : 0);
-        const upperMonthLimit = parseInt(maxDate ? dayjs(maxDate).month() : 11);
+        const lowerMonthLimit = parseInt(minDate ? dayjs(minDate).month() + 1 : 0);
+        const upperMonthLimit = parseInt(maxDate ? dayjs(maxDate).month() + 1 : 11);
 
         const yearPicker = document.createElement('div');
         yearPicker.classList.add('autoql-vanilla-month-picker-year');
@@ -401,10 +399,6 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         this.dayPicker.appendChild(yearPicker);
     };
 
-    this.getTimestamp = (month, year) => {
-        return dayjs(`${year ?? this.visibleYear}-${(month ?? this.visibleMonth) + 1}-15`);
-    };
-
     this.createDayPicker = () => {
         this.dayElements = {};
 
@@ -412,7 +406,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             this.dayPickerContent.parentElement.removeChild(this.dayPickerContent);
         }
 
-        const timestamp = this.getTimestamp();
+        // Use middle of the month to represent the whole month - Avoids confusion between time zones
+        const timestamp = dayjs(`${this.visibleYear}-${this.visibleMonth}-15`);
 
         const daysInMonth = timestamp.daysInMonth();
 
@@ -471,8 +466,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         if (monthEndDayOfWeek !== 6) {
             const daysAfter = 6 - monthEndDayOfWeek;
 
-            const nextDays = new Array(daysAfter).fill(0).map((d, i) => {
-                const day = i + 1;
+            const nextDays = new Array(daysAfter).fill(1).map((val, i) => {
+                const day = (val + i);
                 const dateDayJS = dayjs(`${this.visibleYear}-${this.visibleMonth}-${day}`).add(1, 'month');
 
                 dayjs(`${this.visibleYear}-${this.visibleMonth}-${day}`);
@@ -508,13 +503,18 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
 
             dayRow.forEach(({ day, dateDayJS, currentMonth }) => {
                 const timestamp = dateDayJS;
+                const timestampSeconds = dateDayJS.valueOf();
 
                 const dayBtn = document.createElement('div');
                 dayBtn.classList.add('year-picker-year');
-                dayBtn.day = day;
+                dayBtn.timestamp = dateDayJS;
 
                 const isDisabled = this.isDisabled(timestamp);
                 const isToday = timestamp.isToday();
+
+                if (isToday) {
+                    console.log({ isToday, timestamp });
+                }
 
                 if (isToday) dayBtn.classList.add('current-year');
                 if (isDisabled) dayBtn.classList.add('autoql-vanilla-day-disabled');
@@ -535,7 +535,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
                 const dayTextWrapper = document.createElement('div');
                 dayTextWrapper.classList.add('day-picker-day-text-wrapper');
                 dayBtn.appendChild(dayTextWrapper);
-                this.dayElements[day] = dayBtn;
+
+                this.dayElements[timestampSeconds] = dayBtn;
 
                 const dayTextDiv = document.createElement('div');
                 dayTextDiv.classList.add('year-picker-year-text');

@@ -2,8 +2,8 @@
     .autoql-vanilla-date-picker-container {
         background: var(--autoql-vanilla-background-color-secondary);
         color: var(--autoql-vanilla-text-color-primary);
-        padding: 15px;
-        padding-bottom: 5px;
+        padding: 20px;
+        padding-bottom: 15px;
         display: flex;
         justify-content: center;
         align-items: stretch;
@@ -122,8 +122,8 @@
         padding: 0;
         border: 0;
         border-radius: 5px;
-        background: var(--autoql-vanilla-background-color-primary);
-        color: var(--autoql-vanilla-text-color-primary);
+        background-color: var(--react-autoql-border-color);
+        color: var(--react-autoql-text-color-primary);
         opacity: 0.8;
         box-sizing: inherit;
         cursor: pointer;
@@ -145,10 +145,11 @@
             border-radius: 4px !important;
             border: 1px solid transparent !important;
             outline: 0;
-            cursor: pointer;
             text-align: center;
             transition: none;
             padding: 0px 4px !important;
+            font-size: 13px;
+            cursor: pointer;
 
             &:hover {
                 background-color: var(--autoql-vanilla-border-color);
@@ -159,8 +160,8 @@
     .autoql-vanilla-month-picker,
     .autoql-vanilla-year-picker {
         padding-bottom: 20px;
-        padding-left: 5px;
-        padding-right: 5px;
+        padding-left: 10px;
+        padding-right: 10px;
 
         .month-picker-row,
         .year-picker-row {
@@ -187,10 +188,12 @@
                 width: 60px;
                 height: 30px;
                 border-radius: 100px;
+                font-weight: 200;
             }
 
             .day-picker-day-text-wrapper {
-                width: 45px;
+                width: 46px;
+                height: 28px;
             }
 
             &.preview {
