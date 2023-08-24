@@ -1,6 +1,6 @@
 import { getSupportedDisplayTypes, DisplayTypes } from "autoql-fe-utils";
 import { createIcon } from "../../../../Utils";
-import { TABLE_ICON } from "../../../../Svg";
+import { BAR_CHART_ICON, BUBBLE_CHART_ICON, COLUMN_CHART_ICON, COLUMN_LINE_ICON, HEATMAP_ICON, LINE_CHART_ICON, PIE_CHART_ICON, STACKED_AREA_CHART_ICON, STACKED_BAR_CHART_ICON, STACKED_COLUMN_CHART_ICON, TABLE_ICON } from "../../../../Svg";
 
 import './NotificationVizToolbar.scss';
 
@@ -35,14 +35,62 @@ export function NotificationVizToolbar({ response }) {
     console.log(supportedDisplayTypes);
 
     supportedDisplayTypes.forEach((dType) => {
-      const btn = this.createToolbarButton(TABLE_ICON);
-      leftButtons.appendChild(btn);
+      let btn;
+      switch (dType) {
+        case DisplayTypes.TABLE:
+          btn = this.createToolbarButton(TABLE_ICON);
+          break;
+        case DisplayTypes.BAR:
+          btn = this.createToolbarButton(BAR_CHART_ICON);
+          break;
+        case DisplayTypes.COLUMN:
+          btn = this.createToolbarButton(COLUMN_CHART_ICON);
+        break;
+        case DisplayTypes.LINE:
+          btn = this.createToolbarButton(LINE_CHART_ICON);
+        break;
+        case DisplayTypes.PIE:
+          btn = this.createToolbarButton(PIE_CHART_ICON);
+        break;
+        case DisplayTypes.STACKED_BAR:
+          btn = this.createToolbarButton(STACKED_BAR_CHART_ICON);
+        break;
+        case DisplayTypes.STACKED_COLUMN:
+          btn = this.createToolbarButton(STACKED_COLUMN_CHART_ICON);
+        break;
+        case DisplayTypes.STACKED_LINE:
+          btn = this.createToolbarButton(STACKED_AREA_CHART_ICON);
+        break;
+        case DisplayTypes.HEATMAP:
+          btn = this.createToolbarButton(HEATMAP_ICON);
+        break;
+        case DisplayTypes.BUBBLE:
+          btn = this.createToolbarButton(BUBBLE_CHART_ICON);
+        break;
+        case DisplayTypes.COLUMN_LINE:
+          btn = this.createToolbarButton(COLUMN_LINE_ICON);
+        break;
+        case DisplayTypes.COLUMN_LINE:
+          btn = this.createToolbarButton(COLUMN_LINE_ICON);
+        break;
+        case DisplayTypes.COLUMN_LINE:
+          btn = this.createToolbarButton(COLUMN_LINE_ICON);
+        break;
+        default:
+          break;
+      }
+      
+      if(btn) {
+        leftButtons.appendChild(btn);
+      }
+      
       if(
         (this.displayType === dType) || 
         (this.displayType === 'data' && dType === DisplayTypes.TABLE)
       ) {
         btn.classList.add('autoql-vanilla-toolbar-btn-selected');
-      } 
+      }
+
     });
 
     return leftButtons
