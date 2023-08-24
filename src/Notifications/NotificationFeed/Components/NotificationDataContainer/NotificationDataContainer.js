@@ -45,7 +45,7 @@ export function NotificationDataContainer({ queryResponse }) {
   }
 
   this.createVizToolbar = () => {
-    return new NotificationVizToolbar({ response: queryResponse });
+    return new NotificationVizToolbar({ response: queryResponse, onClick: this.showResponse });
   }
 
   this.createTable = () => {
@@ -88,8 +88,11 @@ export function NotificationDataContainer({ queryResponse }) {
   }
 
   this.showResponse = (displayType) => {
+    responseContentContainer.innerHTML = '';
+    console.log(displayType);
     switch(displayType) {
       case 'data':
+      case 'table':
         if(this.isSingleResponse()) {
           responseContentContainer.appendChild(this.createDataResponse());
         } else {

@@ -4,12 +4,13 @@ import { BAR_CHART_ICON, BUBBLE_CHART_ICON, COLUMN_CHART_ICON, COLUMN_LINE_ICON,
 
 import './NotificationVizToolbar.scss';
 
-export function NotificationVizToolbar({ response }) {
+export function NotificationVizToolbar({ response, onClick }) {
   console.log(response);
   const container = document.createElement('div');
   const rightButtons = document.createElement('div');
   this.displayType = response?.data?.data.display_type;
-  console.log(this.displayType);
+  this.selectedBtn = undefined;
+
   this.createToolbarButton = (svg) => {
     const icon = createIcon(svg);
     const button = document.createElement('button');
@@ -81,6 +82,13 @@ export function NotificationVizToolbar({ response }) {
       }
 
       if(btn) {
+        btn.onclick = () => {
+          this.displayType = dType;
+          this.selectedBtn.classList.remove('autoql-vanilla-toolbar-btn-selected');
+          btn.classList.add('autoql-vanilla-toolbar-btn-selected');
+          this.selectedBtn = btn;
+          onClick(dType);
+        }  
         leftButtons.appendChild(btn);
       }
       
@@ -89,6 +97,7 @@ export function NotificationVizToolbar({ response }) {
         (this.displayType === 'data' && dType === DisplayTypes.TABLE)
       ) {
         btn.classList.add('autoql-vanilla-toolbar-btn-selected');
+        this.selectedBtn = btn;
       }
     });
 
