@@ -1,5 +1,7 @@
 .autoql-vanilla-condition-list{
-    padding: 6px !important;
+	max-height: 300px;
+	overflow: auto;
+    padding: 6px 10px 6px 6px !important;
     margin: 0 auto;
     min-height: 182px;
 }
