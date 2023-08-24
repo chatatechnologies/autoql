@@ -3,6 +3,8 @@ import { createIcon } from "../../../../Utils";
 import { BAR_CHART_ICON, BUBBLE_CHART_ICON, COLUMN_CHART_ICON, COLUMN_LINE_ICON, FILTER_TABLE, HEATMAP_ICON, LINE_CHART_ICON, MORE_OPTIONS, PIE_CHART_ICON, STACKED_AREA_CHART_ICON, STACKED_BAR_CHART_ICON, STACKED_COLUMN_CHART_ICON, TABLE_ICON } from "../../../../Svg";
 
 import './NotificationVizToolbar.scss';
+import { strings } from "../../../../Strings";
+import { filter } from "d3";
 
 export function NotificationVizToolbar({ response, onClick }) {
   console.log(response);
@@ -82,6 +84,7 @@ export function NotificationVizToolbar({ response, onClick }) {
       }
 
       if(btn) {
+        btn.setAttribute('data-tippy-content', strings.displayTypes[dType]);
         btn.onclick = () => {
           this.displayType = dType;
           this.selectedBtn.classList.remove('autoql-vanilla-toolbar-btn-selected');
@@ -108,6 +111,9 @@ export function NotificationVizToolbar({ response, onClick }) {
     rightButtons.classList.add('autoql-vanilla-options-toolbar');
     const filterButton = this.createToolbarButton(FILTER_TABLE);
     const moreOptionsBtn = this.createToolbarButton(MORE_OPTIONS);
+
+    filterButton.setAttribute('data-tippy-content', strings.filterTable);
+    moreOptionsBtn.setAttribute('data-tippy-content', strings.moreOptions);
 
     rightButtons.appendChild(filterButton);
     rightButtons.appendChild(moreOptionsBtn);

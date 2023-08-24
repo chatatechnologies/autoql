@@ -8,6 +8,7 @@ import './NotificationItem.scss';
 import { NotificationMessageError } from "../NotificationMessageError";
 import { NotificationSummary } from "../NotificationSummary";
 import { NotificationDataContainer } from "../NotificationDataContainer";
+import { refreshTooltips } from "../../../../Tooltips";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -217,6 +218,8 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
 
     this.contentContainer.appendChild(this.createSummary());
     this.contentContainer.appendChild(this.createNotificationResponse());
+
+    refreshTooltips();
   }
   
   item.collapse = () => {
