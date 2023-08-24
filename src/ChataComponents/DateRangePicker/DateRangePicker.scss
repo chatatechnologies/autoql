@@ -148,6 +148,7 @@
             cursor: pointer;
             text-align: center;
             transition: none;
+            padding: 0px 4px !important;
 
             &:hover {
                 background-color: var(--autoql-vanilla-border-color);
@@ -166,8 +167,10 @@
             display: flex;
             justify-content: center;
         }
+
         .month-picker-month,
-        .year-picker-year {
+        .year-picker-year,
+        .day-picker-day {
             cursor: pointer;
             margin: 2px 0px;
             padding: 1px 0px;
@@ -175,7 +178,8 @@
             border-bottom: 1px solid var(--autoql-vanilla-background-color-secondary);
 
             .month-picker-month-text-wrapper,
-            .year-picker-year-text-wrapper {
+            .year-picker-year-text-wrapper,
+            .day-picker-day-text-wrapper {
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -183,6 +187,10 @@
                 width: 60px;
                 height: 30px;
                 border-radius: 100px;
+            }
+
+            .day-picker-day-text-wrapper {
+                width: 45px;
             }
 
             &.preview {
@@ -213,9 +221,14 @@
                 }
             }
 
+            .day-picker-day-text-wrapper .year-picker-year-text.inactive {
+                opacity: 0.3;
+            }
+
             &.active {
                 .month-picker-month-text-wrapper .month-picker-month-text,
-                .year-picker-year-text-wrapper .year-picker-year-text {
+                .year-picker-year-text-wrapper .year-picker-year-text,
+                .day-picker-day-text-wrapper .year-picker-year-text {
                     display: flex;
                     justify-content: center;
                     align-items: center;
@@ -224,12 +237,14 @@
                     border-radius: 100px;
                 }
                 &:hover .month-picker-month-text-wrapper .month-picker-month-text,
-                &:hover .year-picker-year-text-wrapper .year-picker-year-text {
+                &:hover .year-picker-year-text-wrapper .year-picker-year-text,
+                &:hover .day-picker-day-text-wrapper .year-picker-year-text {
                     background: #ffffff2b;
                 }
 
                 .month-picker-month-text-wrapper,
-                .year-picker-year-text-wrapper {
+                .year-picker-year-text-wrapper,
+                .day-picker-day-text-wrapper {
                     background-color: var(--autoql-vanilla-accent-color);
                     color: var(--autoql-vanilla-text-color-accent);
                     border-radius: 1px;
@@ -238,7 +253,8 @@
                 // &:first-child,
                 &.selection-start {
                     .month-picker-month-text-wrapper,
-                    .year-picker-year-text-wrapper {
+                    .year-picker-year-text-wrapper,
+                    .day-picker-day-text-wrapper {
                         border-top-left-radius: 100px;
                         border-bottom-left-radius: 100px;
                     }
@@ -247,7 +263,8 @@
                 // &:last-child,
                 &.selection-end {
                     .month-picker-month-text-wrapper,
-                    .year-picker-year-text-wrapper {
+                    .year-picker-year-text-wrapper,
+                    .day-picker-day-text-wrapper {
                         border-top-right-radius: 100px;
                         border-bottom-right-radius: 100px;
                     }
@@ -257,7 +274,8 @@
             &.current-month,
             &.current-year {
                 .month-picker-month-text-wrapper .month-picker-month-text:after,
-                .year-picker-year-text-wrapper .year-picker-year-text:after {
+                .year-picker-year-text-wrapper .year-picker-year-text:after,
+                .day-picker-day-text-wrapper .year-picker-year-text:after {
                     content: '';
                     position: absolute;
                     bottom: 3px;
@@ -269,9 +287,23 @@
                     background: var(--autoql-vanilla-accent-color);
                 }
                 &.active .month-picker-month-text-wrapper .month-picker-month-text:after,
-                &.active .year-picker-year-text-wrapper .year-picker-year-text:after {
+                &.active .year-picker-year-text-wrapper .year-picker-year-text:after,
+                &.active .day-picker-day-text-wrapper .year-picker-year-text:after {
                     background: var(--autoql-vanilla-text-color-accent);
                 }
+            }
+        }
+
+        .autoql-vanilla-weekday-labels {
+            display: flex;
+
+            .autoql-vanilla-weekday-label {
+                color: var(--react-autoql-text-color-placeholder);
+                font-weight: 400;
+                line-height: 2.667em;
+                flex-basis: calc(100% / 7);
+                box-sizing: inherit;
+                text-align: center;
             }
         }
     }

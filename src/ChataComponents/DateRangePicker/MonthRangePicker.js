@@ -3,7 +3,7 @@ import { createIcon } from '../../Utils';
 import { Select } from '../Select';
 import { CARET_DOWN_ICON } from '../../Svg';
 
-export function MonthPicker(
+export function MonthRangePicker(
     component,
     {
         initialRange,

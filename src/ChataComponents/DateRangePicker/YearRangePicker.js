@@ -9,7 +9,7 @@ const getDecade = (year) => {
     return [decadeStart, decadeStart + 9];
 };
 
-export function YearPicker(component, { initialRange, minDate, maxDate, onRangeSelection = () => {} } = {}) {
+export function YearRangePicker(component, { initialRange, minDate, maxDate, onRangeSelection = () => {} } = {}) {
     const now = dayjs();
 
     let visibleDecade = getDecade(now.year());
