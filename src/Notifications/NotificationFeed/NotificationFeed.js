@@ -4,6 +4,7 @@ import { checkAndApplyTheme, createIcon } from "../../Utils";
 import './NotificationFeed.scss';
 import { NotificationItem } from "./Components/NotificationItem/NotificationItem";
 import { refreshTooltips } from "../../Tooltips";
+import { Popup } from "../../Popup";
 
 export function NotificationFeed(selector, options) {
   checkAndApplyTheme();
@@ -62,6 +63,36 @@ export function NotificationFeed(selector, options) {
   
   container.limit = 10;
   container.offset = 0;
+
+  this.createConfirmPopup = () => {
+    const confirmPopup = new Popup();
+    const confirmContent = document.createElement('div');
+    const popoverTitle = document.createElement('div');
+    const buttonContainer = document.createElement('div');
+    const btnCancel = document.createElement('button');
+    const btnConfirm = document.createElement('button');
+    confirmContent.classList.add('autoql-vanilla-confirm-popover-content');
+    popoverTitle.classList.add('autoql-vanilla-confirm-popover-title');
+    buttonContainer.classList.add('autoql-vanilla-confirm-popover-button-container');
+    btnCancel.classList.add('autoql-vanilla-chata-btn');
+    btnCancel.classList.add('autoql-vanilla-default');
+    btnCancel.classList.add('autoql-vanilla-medium');
+    btnConfirm.classList.add('autoql-vanilla-chata-btn');
+    btnConfirm.classList.add('autoql-vanilla-primary');
+    btnConfirm.classList.add('autoql-vanilla-medium');
+
+    popoverTitle.textContent = 'Mark all as read?';
+    btnCancel.textContent = 'Cancel';
+    btnConfirm.textContent = 'Remove';
+  
+    buttonContainer.appendChild(btnCancel);
+    buttonContainer.appendChild(btnConfirm);
+    confirmContent.appendChild(popoverTitle);
+    confirmContent.appendChild(buttonContainer);
+    confirmPopup.appendChild(confirmContent);
+
+    return confirmPopup;
+  }
   
   this.createTopOptions = () => {
     const optionsContainer = document.createElement('div');
@@ -75,6 +106,12 @@ export function NotificationFeed(selector, options) {
     
     markAllButton.appendChild(createIcon(MARK_ALL));
     markAllButton.appendChild(document.createTextNode('Mark all as read'));
+
+    markAllButton.onclick = () => {
+      const pos = markAllButton.getBoundingClientRect();
+      const popup = this.createConfirmPopup();
+      popup.show({ x: pos.left, y: pos.bottom + 2 });
+    }
     
     confirmPopoverButton.appendChild(markAllButton);
     optionsContainer.appendChild(gap);

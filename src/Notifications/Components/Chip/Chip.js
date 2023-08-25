@@ -62,7 +62,6 @@ export function Chip({ data }) {
 
   btnDeleteChip.onclick = () => {
     const pos = chip.getBoundingClientRect();
-    console.log(confirmPopup.clientHeight)
     confirmPopup.show({ x: pos.left, y: pos.bottom + 2 });
   }
 
