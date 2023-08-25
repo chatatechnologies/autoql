@@ -1,4 +1,4 @@
-import { fetchNotificationFeed } from "autoql-fe-utils";
+import { dismissAllNotifications, fetchNotificationFeed } from "autoql-fe-utils";
 import { MARK_ALL } from "../../Svg";
 import { checkAndApplyTheme, createIcon } from "../../Utils";
 import './NotificationFeed.scss';
@@ -83,7 +83,19 @@ export function NotificationFeed(selector, options) {
 
     popoverTitle.textContent = 'Mark all as read?';
     btnCancel.textContent = 'Cancel';
-    btnConfirm.textContent = 'Remove';
+    btnConfirm.textContent = 'Yes';
+
+    btnCancel.onclick = () => {
+      confirmPopup.close();
+    }
+
+    btnConfirm.onclick = async() => {
+      const {
+        authentication
+      } = container.options;
+      confirmPopup.close();
+      await dismissAllNotifications({ ...authentication });
+    }
   
     buttonContainer.appendChild(btnCancel);
     buttonContainer.appendChild(btnConfirm);
@@ -110,7 +122,9 @@ export function NotificationFeed(selector, options) {
     markAllButton.onclick = () => {
       const pos = markAllButton.getBoundingClientRect();
       const popup = this.createConfirmPopup();
-      popup.show({ x: pos.left, y: pos.bottom + 2 });
+      const right = 100;
+
+      popup.show({ x: pos.left - right, y: pos.bottom + 2 });
     }
     
     confirmPopoverButton.appendChild(markAllButton);
