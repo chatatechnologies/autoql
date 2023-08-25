@@ -1,4 +1,5 @@
 import {
+  deleteNotification,
   dismissNotification,
   fetchNotificationData,
 } from "autoql-fe-utils";
@@ -16,6 +17,7 @@ const DELAY = 0.08;
 
 export function NotificationItem({ itemData, authentication, index, onClick, widgetOptions }) {
   const item = document.createElement('div');
+  const moreOptionsPopup = new MoreOptionsPopup({ notificationItem: this });
   
   this.queryResponse = undefined;
   this.isOpen = false;
@@ -61,6 +63,12 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
     return overlay;
   }
 
+  this.delete = async() => {
+    await deleteNotification({ notificationId: itemData.id, ...authentication });
+    item.remove();
+    moreOptionsPopup.close();
+  }
+
   this.createMoreOptionsBtn = () => {
     const btnContainer = document.createElement('div');
     const moreOptions = createIcon(VERTICAL_DOTS);
@@ -73,7 +81,6 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
       event.stopPropagation();
       const right = 290;
       const pos = moreOptions.getBoundingClientRect();
-      const moreOptionsPopup = new MoreOptionsPopup();
       moreOptionsPopup.show({ x: pos.left - right, y: pos.top + 2 });
     }
     return btnContainer;

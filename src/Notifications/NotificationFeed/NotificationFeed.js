@@ -11,19 +11,19 @@ export function NotificationFeed(selector, options) {
   const container = document.createElement('div');
   const parent = document.querySelector(selector);
   const itemsContainer = document.createElement('div');
-
+  
   itemsContainer.classList.add('autoql-vanilla-notification-feed-list');
   parent.classList.add('autoql-vanilla-notifiation-list');
-
+  
   this.expandedNotification = undefined;
-
+  
   container.options = {
     authentication: {
       token: undefined,
       apiKey: undefined,
       customerId: undefined,
       userId: undefined,
-        username: undefined,
+      username: undefined,
         domain: undefined,
         demo: false,
         ...(options.authentication ?? {}),
@@ -59,11 +59,11 @@ export function NotificationFeed(selector, options) {
       autoChartAggregations: true,
       pageSize: 500,
       ...options
-  };
-  
-  container.limit = 10;
-  container.offset = 0;
-
+    };
+    
+    container.limit = 10;
+    container.offset = 0;
+    
   this.createConfirmPopup = () => {
     const confirmPopup = new Popup();
     const confirmContent = document.createElement('div');
@@ -80,15 +80,15 @@ export function NotificationFeed(selector, options) {
     btnConfirm.classList.add('autoql-vanilla-chata-btn');
     btnConfirm.classList.add('autoql-vanilla-primary');
     btnConfirm.classList.add('autoql-vanilla-medium');
-
+    
     popoverTitle.textContent = 'Mark all as read?';
     btnCancel.textContent = 'Cancel';
     btnConfirm.textContent = 'Yes';
-
+    
     btnCancel.onclick = () => {
       confirmPopup.close();
     }
-
+    
     btnConfirm.onclick = async() => {
       const {
         authentication
@@ -101,13 +101,13 @@ export function NotificationFeed(selector, options) {
         element.setAsRead();
       }
     }
-  
+    
     buttonContainer.appendChild(btnCancel);
     buttonContainer.appendChild(btnConfirm);
     confirmContent.appendChild(popoverTitle);
     confirmContent.appendChild(buttonContainer);
     confirmPopup.appendChild(confirmContent);
-
+    
     return confirmPopup;
   }
   
@@ -116,7 +116,8 @@ export function NotificationFeed(selector, options) {
     const gap = document.createElement('div');
     const confirmPopoverButton = document.createElement('div');
     const markAllButton = document.createElement('div');
-    
+    const popup = this.createConfirmPopup();
+
     markAllButton.classList.add('autoql-vanilla-notification-mark-all');
     confirmPopoverButton.classList.add('autoql-vanilla-confirm-popover-click-wrapper');
     optionsContainer.classList.add('autoql-vanilla-notification-feed-top-options-container');
@@ -126,7 +127,6 @@ export function NotificationFeed(selector, options) {
 
     markAllButton.onclick = () => {
       const pos = markAllButton.getBoundingClientRect();
-      const popup = this.createConfirmPopup();
       const right = 100;
 
       popup.show({ x: pos.left - right, y: pos.bottom + 2 });

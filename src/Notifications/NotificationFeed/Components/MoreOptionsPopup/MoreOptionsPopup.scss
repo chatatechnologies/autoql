@@ -9,6 +9,9 @@
     color: var(--autoql-vanilla-text-color-primary);
     padding: 10px 20px;
     cursor: pointer;
+    &:hover {
+      background: var(--autoql-vanilla-hover-color);
+    }
     .autoql-vanilla-select-option-span {
       display: flex;
       align-items: center;

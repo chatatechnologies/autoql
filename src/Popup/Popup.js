@@ -12,7 +12,7 @@ export function Popup() {
 
   popup.close = () => {
     popup.style.visibility = 'hidden';
-    document.body.removeChild(popup);
+    popup.remove();
   }
 
   return popup;

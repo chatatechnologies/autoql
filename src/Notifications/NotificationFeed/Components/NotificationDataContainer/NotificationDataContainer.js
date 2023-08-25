@@ -139,7 +139,7 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
       new ChataChartNew(this.chartContainer, {
         type: displayType,
         queryJson: queryResponse?.data,
-        onChartClick: () => {  },
+        onChartClick: () => { },
         options: widgetOptions,
       });
     }
