@@ -23,8 +23,6 @@ export const getRenderedChartDimensions = (chartComponent) => {
                 clippedLegendBBox,
             ]);
 
-            console.log({ axesBBox });
-
             const axesWidth = axesBBox?.width ?? 0;
             const axesHeight = axesBBox?.height ?? 0;
 

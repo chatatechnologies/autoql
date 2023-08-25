@@ -131,7 +131,6 @@ export function Axis(container, params = {}, axisOptions = {}) {
                 const labelBBoxBottom = (this.labelsBBox?.y ?? 0) + (this.labelsBBox?.height ?? 0);
 
                 this.axisTitle.attr('x', innerWidth / 2).attr('y', labelBBoxBottom + AXIS_TITLE_PADDING_TOP);
-                console.log({y1: labelBBoxBottom + AXIS_TITLE_PADDING_TOP, labelBBoxBottom, AXIS_TITLE_BORDER_PADDING_TOP, labelBBox: this.labelsBBox})
 
                 break;
             }

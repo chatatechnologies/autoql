@@ -86,8 +86,6 @@ export function Histogram(container, params = {}, chartHeaderElement) {
         this.buckets = buckets;
         this.bins = bins;
 
-        console.log({ buckets, bins, bucketConfig: this.bucketConfig });
-
         this.xScale = getBinLinearScale({
             ...scaleParams,
             columnIndex: numberColumnIndex,
@@ -105,12 +103,9 @@ export function Histogram(container, params = {}, chartHeaderElement) {
     };
 
     this.onBucketSizeChange = (bucketSize) => {
-        console.log('on bucket size change!!!', bucketSize);
-
         if (bucketSize !== this.bucketConfig.bucketSize) {
             this.bucketConfig.bucketSize = bucketSize;
             onBucketSizeChange(this.bucketConfig);
-            // this.createHistogram();
             redraw();
         }
     };
@@ -163,8 +158,6 @@ export function Histogram(container, params = {}, chartHeaderElement) {
             paddingLeft = 25;
         }
 
-        console.log({ deltaX, paddingLeft, style: chartHeaderElement.style, chartHeaderElement });
-
         histogramSlider.classList.add('autoql-vanilla-histogram-slider');
 
         chartHeaderElement.style.paddingLeft = paddingLeft;
@@ -214,11 +207,6 @@ export function Histogram(container, params = {}, chartHeaderElement) {
     };
 
     this.createHistogram = () => {
-        console.log('creating histogram with these params', {
-            params: cloneObject(params),
-            scaleParams: cloneObject(this.getScaleParams()),
-        });
-       
         this.setHistogramData();
         this.createHistogramSlider();
 
