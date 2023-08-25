@@ -88,8 +88,6 @@ export function Input(options) {
         const inputWrapper = document.createElement('div');
         inputWrapper.classList.add('autoql-vanilla-input-and-icon');
 
-        console.log({ min, max });
-
         const input = document.createElement('input');
         input.classList.add('autoql-vanilla-input');
         input.value = value;

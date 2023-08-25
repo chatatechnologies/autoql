@@ -37,7 +37,7 @@ export function Axes(container, params = {}) {
     };
 
     // Remove any existing axes
-    container.select('.autoql-vanilla-axes').remove();
+    container.selectAll('.autoql-vanilla-axes').remove();
 
     var axes = container.append('g').attr('class', 'autoql-vanilla-axes');
 
@@ -132,7 +132,7 @@ export function Axes(container, params = {}) {
     this.legend = this.createLegend();
 
     this.destroy = () => {
-        axes.remove();
+        axes.selectAll("*").remove();
     };
 
     return this;

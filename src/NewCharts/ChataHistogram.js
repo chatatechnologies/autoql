@@ -10,6 +10,7 @@ import {
 import { Axes } from './Axes';
 import { select } from 'd3-selection';
 import { Slider } from '../ChataComponents/Slider/Slider';
+import { cloneObject } from '../Utils';
 
 export function Histogram(container, params = {}, chartHeaderElement) {
     const DEFAULT_SLIDER_HEIGHT = 37;
@@ -29,17 +30,18 @@ export function Histogram(container, params = {}, chartHeaderElement) {
         columnIndexConfig = {},
         aggregated,
         activeKey,
-        initialBucketSize,
+        bucketConfig,
         onChartClick,
         onBucketSizeChange = () => {},
+        redraw = () => {},
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndex } = columnIndexConfig;
 
     const { dataFormatting } = options;
 
-    this.bucketSize = initialBucketSize;
-    this.bucketConfig = getDefaultBucketConfig(data, initialBucketSize);
+    this.bucketSize = bucketConfig?.bucketSize;
+    this.bucketConfig = bucketConfig ?? getDefaultBucketConfig(data, bucketConfig?.bucketSize);
 
     this.getChartHeaderHeight = () => {
         const chartHeaderHeight = chartHeaderElement?.clientHeight;
@@ -76,7 +78,7 @@ export function Histogram(container, params = {}, chartHeaderElement) {
 
         const { buckets, bins } = getBinData({
             bucketConfig: this.bucketConfig,
-            newBucketSize: this.bucketSize,
+            newBucketSize: this.bucketConfig.bucketSize,
             data,
             numberColumnIndex,
         });
@@ -103,10 +105,14 @@ export function Histogram(container, params = {}, chartHeaderElement) {
     };
 
     this.onBucketSizeChange = (bucketSize) => {
-        this.bucketSize = bucketSize;
-        console.log('on bucket size change!');
-        onBucketSizeChange(bucketSize);
-        this.createHistogram();
+        console.log('on bucket size change!!!', bucketSize);
+
+        if (bucketSize !== this.bucketConfig.bucketSize) {
+            this.bucketConfig.bucketSize = bucketSize;
+            onBucketSizeChange(this.bucketConfig);
+            // this.createHistogram();
+            redraw();
+        }
     };
 
     this.formatSliderLabel = (value) => {
@@ -208,6 +214,11 @@ export function Histogram(container, params = {}, chartHeaderElement) {
     };
 
     this.createHistogram = () => {
+        console.log('creating histogram with these params', {
+            params: cloneObject(params),
+            scaleParams: cloneObject(this.getScaleParams()),
+        });
+       
         this.setHistogramData();
         this.createHistogramSlider();
 
@@ -215,7 +226,7 @@ export function Histogram(container, params = {}, chartHeaderElement) {
             this.createHistogramColumns();
         }
 
-        const headerHeight = this.getChartHeaderHeight()
+        const headerHeight = this.getChartHeaderHeight();
 
         this.axesElement?.destroy?.();
         this.axesElement = new Axes(this.axesWrapper, {

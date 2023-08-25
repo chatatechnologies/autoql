@@ -29,6 +29,7 @@ export function Slider(options) {
 
     this.ID = uuidv4();
     this.value = initialValue;
+    this.previousValue = initialValue;
 
     const slider = document.createElement('div');
     slider.classList.add('autoql-vanilla-range-slider-wrapper');
@@ -76,8 +77,6 @@ export function Slider(options) {
         const value = e.target.value;
         this.value = this.getValidatedValue(value);
         this.setSliderValue(this.value);
-
-        console.log('on input change', value, this.sliderElement?.value);
     };
 
     this.onInputBlur = () => {
@@ -92,30 +91,40 @@ export function Slider(options) {
     };
 
     this.setSliderValue = (value) => {
-        this.sliderElement.value = `${value}`;
+        if (value != this.sliderElement?.value) {
+            this.sliderElement.value = `${value}`;
+        }
     };
 
     this.debouncedOnChange = (value) => {
         if (!debounce) {
-            onChange(Number(value));
+            this.onChangeCallback(value);
         } else {
             clearTimeout(this.debounceTimer);
             this.debounceTimer = setTimeout(() => {
-                onChange(Number(value));
+                this.onChangeCallback(value);
             }, debounceDelay);
         }
     };
 
     this.throttledOnChange = (value) => {
         if (!this.inThrottle) {
-            onChange(Number(value));
+            this.onChangeCallback(value);
             this.inThrottle = true;
             this.throttleTimer = setTimeout(() => (this.inThrottle = false), throttleDelay);
         }
     };
 
+    this.onChangeCallback = (value) => {
+        if (value != this.previousValue) {
+            this.previousValue = value
+            onChange(Number(value));
+        }
+    }
+
     this.onSliderChange = (e) => {
         const value = e.target.value;
+
         this.value = this.getValidatedValue(value);
 
         this.setInputValue(value);
@@ -125,7 +134,7 @@ export function Slider(options) {
         } else if (debounce) {
             this.debouncedOnChange(value);
         } else {
-            onChange(Number(value));
+            this.onChangeCallback(value);
         }
     };
 

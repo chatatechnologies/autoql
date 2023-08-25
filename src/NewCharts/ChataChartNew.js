@@ -352,7 +352,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     this.outerWidth,
                 );
 
-                console.log('inner dimensions:', {innerWidth, innerHeight})
                 this.innerWidth = innerWidth;
                 this.innerHeight = innerHeight;
 
@@ -463,13 +462,15 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     this.chartComponent = new Scatterplot(chartContentWrapper, params);
                     break;
                 case 'histogram':
-                    this.chartComponent = new Histogram(chartContentWrapper, {
-                        ...params,
-                        initialBucketSize: component.initialBucketSize,
-                        onBucketSizeChange: (bucketSize) => {
-                            component.initialBucketSize = bucketSize;
+                    this.chartComponent = new Histogram(
+                        chartContentWrapper,
+                        {
+                            ...params,
+                            bucketConfig: component.bucketConfig,
+                            onBucketSizeChange: (bucketConfig) => (component.bucketConfig = bucketConfig),
                         },
-                    }, this.chartHeaderElement?.node());
+                        this.chartHeaderElement?.node(),
+                    );
                     break;
                 default:
                     return null; // 'Unknown Display Type'
@@ -539,7 +540,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
     this.chartLoader = new ChartLoader(component);
 
-    this.chartHeaderElement = select(component).append('div').attr('class', 'autoql-vanilla-chart-header')
+    this.chartHeaderElement = select(component).append('div').attr('class', 'autoql-vanilla-chart-header');
 
     this.drawChart();
 

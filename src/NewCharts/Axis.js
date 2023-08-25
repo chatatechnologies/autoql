@@ -142,8 +142,6 @@ export function Axis(container, params = {}, axisOptions = {}) {
                     .attr('transform', 'rotate(-90)')
                     .attr('x', -0.5 * innerHeight)
                     .attr('y', labelBBoxX - AXIS_TITLE_PADDING_TOP);
-
-                    console.log({y2: labelBBoxX - AXIS_TITLE_PADDING_TOP})
                 break;
             }
             case 'right': {
@@ -185,8 +183,6 @@ export function Axis(container, params = {}, axisOptions = {}) {
             .style('opacity', 0)
             .attr('rx', 4);
 
-
-        console.log({y3: Math.round(this.titleBBox?.y - AXIS_TITLE_BORDER_PADDING_TOP)})
         if (scale?.hasDropdown) {
             this.axisTitleBorder.style('visibility', 'visible').on('click', onSelectorClick);
         }
