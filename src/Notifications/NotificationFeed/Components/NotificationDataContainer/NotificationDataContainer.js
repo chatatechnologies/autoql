@@ -46,12 +46,20 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
   }
 
   this.createVizToolbar = () => {
-    return new NotificationVizToolbar({ response: queryResponse, onClick: this.showResponse });
+    return new NotificationVizToolbar({
+      response: queryResponse,
+      onClick: this.showResponse,
+      onClickFilterButton: this.handleFilterClick 
+    });
   }
 
+  this.handleFilterClick = () => {
+    this.tabulator.toggleFilters();
+  }
+ 
   this.createTable = () => {
     var useInfiniteScroll = isDataLimited({ data: queryResponse?.data });
-    new ChataTable(
+    const table = new ChataTable(
       idRequest,
       { options: dataFormattingDefault },
       () => {},
@@ -59,6 +67,8 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
       useInfiniteScroll,
       undefined,
     );
+
+    this.tabulator = table;
   }
 
   this.createChartContainer = () => {
@@ -147,16 +157,17 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
   const displayType = queryResponse.data.data.display_type;
   
   wrapper.appendChild(responseContentContainer);
-  if(!this.isSingleResponse()){
-    wrapper.appendChild(this.createVizToolbar());
-  }
   container.appendChild(wrapper);
   
   this.initializeContainers();
-
+  
   setTimeout(() => {
     this.showResponse(displayType);
   }, 100);
+
+  if(!this.isSingleResponse()){
+    wrapper.appendChild(this.createVizToolbar());
+  }
 
   return container;
 }
