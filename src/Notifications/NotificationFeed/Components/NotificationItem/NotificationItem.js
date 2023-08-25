@@ -195,8 +195,7 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
     if(this.isUnread()) {
       const response = await this.dismissNotification();
       if(response.status === 200) {
-        item.classList.remove('autoql-vanilla-notification-unread')
-        itemData.state = 'DISMISSED';
+        item.setAsRead();
       }
     }
 
@@ -235,8 +234,11 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
   item.setIsOpen = (val) => {
     this.isOpen = val;
   }
-  
-  console.log(itemData)
+
+  item.setAsRead = () => {
+    item.classList.remove('autoql-vanilla-notification-unread');
+    itemData.state = 'DISMISSED';
+  }
   
   this.createItem();
   item.classList.add('autoql-vanilla-notification-list-item');

@@ -95,6 +95,11 @@ export function NotificationFeed(selector, options) {
       } = container.options;
       confirmPopup.close();
       await dismissAllNotifications({ ...authentication });
+      const items = itemsContainer.childNodes;
+      for (let index = 0; index < items.length; index++) {
+        const element = items[index];
+        element.setAsRead();
+      }
     }
   
     buttonContainer.appendChild(btnCancel);
