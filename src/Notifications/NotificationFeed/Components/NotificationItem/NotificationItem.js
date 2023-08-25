@@ -60,13 +60,17 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
     return overlay;
   }
 
-  this.createBtnContainer = () => {
+  this.createMoreOptionsBtn = () => {
     const btnContainer = document.createElement('div');
-    const verticalDots = createIcon(VERTICAL_DOTS);
+    const moreOptions = createIcon(VERTICAL_DOTS);
     
     btnContainer.classList.add('autoql-vanilla-notification-options-btn-container');
-    verticalDots.classList.add('autoql-vanilla-notification-options-btn');
-    btnContainer.appendChild(verticalDots);
+    moreOptions.classList.add('autoql-vanilla-notification-options-btn');
+    btnContainer.appendChild(moreOptions);
+
+    moreOptions.onclick = (event) => {
+      event.stopPropagation();
+    }
     
     return btnContainer;
   }
@@ -170,7 +174,7 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
     displayNameContainer.appendChild(timestampContainer);
     
     header.appendChild(displayNameContainer);
-    header.appendChild(this.createBtnContainer());
+    header.appendChild(this.createMoreOptionsBtn());
     header.appendChild(this.createExpandArrow());
     item.appendChild(header);
     item.appendChild(this.createContent());

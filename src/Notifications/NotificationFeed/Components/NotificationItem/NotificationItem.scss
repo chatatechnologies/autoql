@@ -75,6 +75,11 @@
         background-color: initial;
         transition: background-color .2s ease;
         cursor: pointer;
+        &:hover {
+          opacity: 1;
+          background-color: #ececec;
+          background-color: var(--autoql-vanilla-background-color-primary,#ececec);
+        }
       }
     }
   }
