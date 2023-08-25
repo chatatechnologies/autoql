@@ -1,5 +1,5 @@
 import { Popup } from "../../../../Popup";
-import { SETTINGS } from "../../../../Svg";
+import { DISMISS, ENVELOPE, SETTINGS, TRASH_ICON } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import './MoreOptionsPopup.scss';
 
@@ -28,7 +28,19 @@ export function MoreOptionsPopup() {
     valueContainer.appendChild(subTitleContainer);
     container.appendChild(valueContainer);
     item.appendChild(container);
+
+    return item;
   }
+
+  const settingsBtn = this.createOptions('Settings', 'View and edit this Data Alert', SETTINGS);
+  const turnOffBtn = this.createOptions('Turn off', 'Stop receiving notifications for this Data Alert', DISMISS);
+  const markAsUnreadButton = this.createOptions('Mark as unread', '', ENVELOPE);
+  const deleteBtn = this.createOptions('Delete', '', TRASH_ICON);
+
+  menu.appendChild(settingsBtn);
+  menu.appendChild(turnOffBtn);
+  menu.appendChild(markAsUnreadButton);
+  menu.appendChild(deleteBtn);
 
   menu.classList.add('autoql-vanilla-notifications-more-options');
 

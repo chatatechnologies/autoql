@@ -9,6 +9,7 @@ import { NotificationMessageError } from "../NotificationMessageError";
 import { NotificationSummary } from "../NotificationSummary";
 import { NotificationDataContainer } from "../NotificationDataContainer";
 import { refreshTooltips } from "../../../../Tooltips";
+import { MoreOptionsPopup } from "../MoreOptionsPopup";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -70,8 +71,11 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
 
     moreOptions.onclick = (event) => {
       event.stopPropagation();
+      const right = 290;
+      const pos = moreOptions.getBoundingClientRect();
+      const moreOptionsPopup = new MoreOptionsPopup();
+      moreOptionsPopup.show({ x: pos.left - right, y: pos.top + 2 });
     }
-    
     return btnContainer;
   }
 
