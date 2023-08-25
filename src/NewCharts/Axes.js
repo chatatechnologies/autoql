@@ -36,6 +36,9 @@ export function Axes(container, params = {}) {
         innerHeight,
     };
 
+    // Remove any existing axes
+    container.select('.autoql-vanilla-axes').remove();
+
     var axes = container.append('g').attr('class', 'autoql-vanilla-axes');
 
     this.createAxis = (orient) => {
@@ -61,8 +64,7 @@ export function Axes(container, params = {}) {
             }
             case 'right': {
                 if (!!yScale2) {
-                    axis = new Axis(axes, params, { orient, scale: yScale2, 
-                        ...axesOptions });
+                    axis = new Axis(axes, params, { orient, scale: yScale2, ...axesOptions });
                 }
                 break;
             }
@@ -82,7 +84,7 @@ export function Axes(container, params = {}) {
             }
         }
 
-        return axis
+        return axis;
     };
 
     this.createLegend = () => {
@@ -90,37 +92,36 @@ export function Axes(container, params = {}) {
             if (!legend.location) {
                 return;
             }
-    
+
             let translateX = 0;
             let translateY = 0;
-    
+
             const leftAxisBBox = this.leftAxis?.node()?.getBBox();
             const topAxisBBox = this.topAxis?.node()?.getBBox();
             const bottomAxisBBox = this.bottomAxis?.node()?.getBBox();
             const rightAxisBBox = this.rightAxis?.node()?.getBBox();
-    
+
             const axesBBox = mergeBboxes([leftAxisBBox, bottomAxisBBox, rightAxisBBox, topAxisBBox]);
-    
+
             const axesBBoxRight = axesBBox.x + axesBBox.width;
             const axesBBoxBottom = axesBBox.y + axesBBox.height;
-    
-                
-            const hasSecondAxis = (!!yScale2) || (!!xScale2);
-    
+
+            const hasSecondAxis = !!yScale2 || !!xScale2;
+
             var legendElement = new Legend(axes, { ...params, ...legend, hasSecondAxis });
 
             if (legend.location === 'right') {
                 translateX = axesBBoxRight;
             } else if (legend.location === 'bottom') {
-                translateX = (innerWidth / 2) - (legendElement?.node()?.getBoundingClientRect()?.width / 2)
+                translateX = innerWidth / 2 - legendElement?.node()?.getBoundingClientRect()?.width / 2;
                 translateY = axesBBoxBottom;
             }
 
             legendElement.attr('transform', `translate(${translateX}, ${translateY})`);
-    
+
             return legendElement;
         } catch (error) {
-            console.error(error)
+            console.error(error);
         }
     };
 
@@ -130,5 +131,9 @@ export function Axes(container, params = {}) {
     this.topAxis = this.createAxis('top');
     this.legend = this.createLegend();
 
-    return axes.node();
+    this.destroy = () => {
+        axes.remove();
+    };
+
+    return this;
 }

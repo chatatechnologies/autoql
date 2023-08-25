@@ -1,4 +1,5 @@
 import {
+    formatChartLabel,
     getBinData,
     getBinLinearScale,
     getDefaultBucketConfig,
@@ -8,13 +9,18 @@ import {
 } from 'autoql-fe-utils';
 import { Axes } from './Axes';
 import { select } from 'd3-selection';
+import { Slider } from '../ChataComponents/Slider/Slider';
 
-export function Histogram(container, params = {}) {
+export function Histogram(container, params = {}, chartHeaderElement) {
+    const DEFAULT_SLIDER_HEIGHT = 37;
+
     const {
         data,
         columns,
         height,
         width,
+        deltaX,
+        outerWidth,
         firstDraw,
         options = {},
         chartColors,
@@ -28,56 +34,136 @@ export function Histogram(container, params = {}) {
         onBucketSizeChange = () => {},
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndex, numberColumnIndices } = columnIndexConfig;
+    const { stringColumnIndices, stringColumnIndex, numberColumnIndex } = columnIndexConfig;
 
     const { dataFormatting } = options;
-
-    const scaleParams = {
-        data,
-        columns,
-        height,
-        width,
-        chartColors,
-        dataFormatting,
-        stringColumnIndex,
-        stringColumnIndices,
-        enableAxisDropdown,
-        changeNumberColumnIndices,
-        aggregated,
-    };
 
     this.bucketSize = initialBucketSize;
     this.bucketConfig = getDefaultBucketConfig(data, initialBucketSize);
 
-    const uniqueNumberValues = data.map((d) => d[numberColumnIndex]).filter(onlyUnique).length;
-    if (uniqueNumberValues < this.bucketConfig.maxBucketSize) {
-        this.bucketConfig.maxNumBuckets = uniqueNumberValues;
-    }
+    this.getChartHeaderHeight = () => {
+        const chartHeaderHeight = chartHeaderElement?.clientHeight;
+        if (!chartHeaderHeight || isNaN(chartHeaderHeight)) {
+            return DEFAULT_SLIDER_HEIGHT;
+        }
 
-    const { buckets, bins } = getBinData({
-        bucketConfig: this.bucketConfig,
-        newBucketSize: this.bucketSize,
-        data,
-        numberColumnIndex,
-    });
+        return chartHeaderHeight;
+    };
 
-    this.buckets = buckets;
-    this.bins = bins;
+    this.getScaleParams = () => {
+        return {
+            data,
+            columns,
+            width,
+            height: height - this.getChartHeaderHeight(),
+            chartColors,
+            dataFormatting,
+            stringColumnIndex,
+            stringColumnIndices,
+            enableAxisDropdown,
+            changeNumberColumnIndices,
+            aggregated,
+        };
+    };
 
-    this.xScale = getBinLinearScale({
-        ...scaleParams,
-        columnIndex: numberColumnIndex,
-        axis: 'x',
-        buckets,
-        bins,
-    });
+    this.setHistogramData = () => {
+        const uniqueNumberValues = data.map((d) => d[numberColumnIndex]).filter(onlyUnique).length;
+        if (uniqueNumberValues < this.bucketConfig.maxBucketSize) {
+            this.bucketConfig.maxNumBuckets = uniqueNumberValues;
+        }
 
-    this.yScale = getHistogramScale({
-        ...scaleParams,
-        columnIndex: numberColumnIndex,
-        axis: 'y',
-        buckets,
-    });
+        const scaleParams = this.getScaleParams();
+
+        const { buckets, bins } = getBinData({
+            bucketConfig: this.bucketConfig,
+            newBucketSize: this.bucketSize,
+            data,
+            numberColumnIndex,
+        });
+
+        this.buckets = buckets;
+        this.bins = bins;
+
+        console.log({ buckets, bins, bucketConfig: this.bucketConfig });
+
+        this.xScale = getBinLinearScale({
+            ...scaleParams,
+            columnIndex: numberColumnIndex,
+            axis: 'x',
+            buckets: this.buckets,
+            bins: this.bins,
+        });
+
+        this.yScale = getHistogramScale({
+            ...scaleParams,
+            columnIndex: numberColumnIndex,
+            axis: 'y',
+            buckets: this.buckets,
+        });
+    };
+
+    this.onBucketSizeChange = (bucketSize) => {
+        this.bucketSize = bucketSize;
+        console.log('on bucket size change!');
+        onBucketSizeChange(bucketSize);
+        this.createHistogram();
+    };
+
+    this.formatSliderLabel = (value) => {
+        const sigDigits =
+            this.bucketConfig.bucketStepSize < 1
+                ? this.bucketConfig.bucketStepSize.toString().split('.')[1].length
+                : undefined;
+        return formatChartLabel({
+            d: value,
+            column: columns[numberColumnIndex],
+            dataFormatting,
+            scale: this.xScale,
+            sigDigits,
+        })?.fullWidthLabel;
+    };
+
+    this.createHistogramSlider = () => {
+        if (!chartHeaderElement) {
+            return;
+        }
+
+        const existingSlider = chartHeaderElement.querySelector('.autoql-vanilla-histogram-slider');
+
+        if (existingSlider) {
+            return;
+            existingSlider.parentElement.removeChild(existingSlider);
+        }
+
+        const min = this.bucketConfig.minBucketSize;
+        const max = this.bucketConfig.maxBucketSize;
+
+        const histogramSlider = new Slider({
+            initialValue: this.bucketConfig.bucketSize,
+            min,
+            max,
+            step: this.bucketConfig.bucketStepSize,
+            minLabel: this.formatSliderLabel(min),
+            maxLabel: this.formatSliderLabel(max),
+            onChange: this.onBucketSizeChange,
+            valueFormatter: this.formatSliderLabel,
+            label: 'Interval size',
+            showInput: true,
+            marks: true,
+        });
+
+        let paddingLeft = deltaX - 10;
+        if (paddingLeft < 0 || outerWidth < 300) {
+            paddingLeft = 25;
+        }
+
+        console.log({ deltaX, paddingLeft, style: chartHeaderElement.style, chartHeaderElement });
+
+        histogramSlider.classList.add('autoql-vanilla-histogram-slider');
+
+        chartHeaderElement.style.paddingLeft = paddingLeft;
+        chartHeaderElement.appendChild(histogramSlider);
+    };
 
     this.createHistogramColumns = () => {
         if (!numberColumnIndex) {
@@ -87,7 +173,7 @@ export function Histogram(container, params = {}) {
 
         var self = this;
 
-        var barData = buckets.map((d, index) => {
+        var barData = this.buckets.map((d, index) => {
             return getHistogramColumnObj({
                 xScale: self.xScale,
                 yScale: self.yScale,
@@ -121,17 +207,35 @@ export function Histogram(container, params = {}) {
             });
     };
 
-    if (!firstDraw) {
-        this.createHistogramColumns();
-    }
+    this.createHistogram = () => {
+        this.setHistogramData();
+        this.createHistogramSlider();
+
+        if (!firstDraw) {
+            this.createHistogramColumns();
+        }
+
+        const headerHeight = this.getChartHeaderHeight()
+
+        this.axesElement?.destroy?.();
+        this.axesElement = new Axes(this.axesWrapper, {
+            ...params,
+            height: params.height - headerHeight,
+            outerHeight: params.outerHeight - headerHeight,
+            xScale: this.xScale,
+            yScale: this.yScale,
+        });
+    };
+
+    this.destroy = () => {
+        clearTimeout(this.debounceTimer);
+        clearTimeout(this.throttleTimer);
+        this.axesWrapper?.remove();
+    };
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
-    new Axes(this.axesWrapper, {
-        ...params,
-        xScale: this.xScale,
-        yScale: this.yScale,
-    });
+    this.createHistogram();
 
     return this;
 }

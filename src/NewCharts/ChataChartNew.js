@@ -1,6 +1,5 @@
 import {
     aggregateData,
-    getThemeValue,
     DOUBLE_AXIS_CHART_TYPES,
     getColorScales,
     usePivotDataForChart,
@@ -336,8 +335,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         }
 
         if (!this.isColumnIndexConfigValid()) {
-            console.warn('Current column config is not valid for new axis selection. Resetting column config now...');
-            // columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
+            console.warn('Current column config is not valid for new axis selection.');
             return;
         }
 
@@ -353,6 +351,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     this.outerHeight,
                     this.outerWidth,
                 );
+
+                console.log('inner dimensions:', {innerWidth, innerHeight})
                 this.innerWidth = innerWidth;
                 this.innerHeight = innerHeight;
 
@@ -370,10 +370,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 .attr('width', this.outerWidth)
                 .attr('height', this.outerHeight)
                 .style('font-size', FONT_SIZE)
-                .style('font-family', getThemeValue('font-family', CSS_PREFIX))
-                .style('color', getThemeValue('text-color-primary', CSS_PREFIX))
-                .style('stroke', getThemeValue('text-color-primary', CSS_PREFIX))
-                .style('background', getThemeValue('background-color-secondary', CSS_PREFIX));
+                .style('font-family', '--autoql-vanillafont-family')
+                .style('color', '--autoql-vanillatext-color-primary')
+                .style('stroke', '--autoql-vanillatext-color-primary')
+                .style('background', '--autoql-vanillabackground-color-secondary');
 
             var chartContentWrapper = this.svg
                 .append('g')
@@ -469,7 +469,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                         onBucketSizeChange: (bucketSize) => {
                             component.initialBucketSize = bucketSize;
                         },
-                    });
+                    }, this.chartHeaderElement?.node());
                     break;
                 default:
                     return null; // 'Unknown Display Type'
@@ -481,7 +481,11 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             if (CHARTS_WITHOUT_AXES.includes(type)) {
                 // Do not redraw
             } else {
-                try {this.setLabelRotationValues(chartContentWrapper);}catch(error){console.error(error)}
+                try {
+                    this.setLabelRotationValues(chartContentWrapper);
+                } catch (error) {
+                    console.error(error);
+                }
 
                 if (firstDraw) {
                     this.drawChart(false);
@@ -534,6 +538,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     // ----------------------------------------------------------------------------
 
     this.chartLoader = new ChartLoader(component);
+
+    this.chartHeaderElement = select(component).append('div').attr('class', 'autoql-vanilla-chart-header')
 
     this.drawChart();
 
