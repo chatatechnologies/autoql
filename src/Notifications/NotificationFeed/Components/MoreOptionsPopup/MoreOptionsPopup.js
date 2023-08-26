@@ -36,6 +36,10 @@ export function MoreOptionsPopup({ notificationItem }) {
     notificationItem.delete();
   }
 
+  this.handleSettingsClick = () => {
+    notificationItem.showEditDataAlertModal();
+  }
+
   const settingsBtn = this.createOptions('Settings', 'View and edit this Data Alert', SETTINGS);
   const turnOffBtn = this.createOptions('Turn off', 'Stop receiving notifications for this Data Alert', DISMISS);
   const markAsUnreadButton = this.createOptions('Mark as unread', '', ENVELOPE);
@@ -46,7 +50,9 @@ export function MoreOptionsPopup({ notificationItem }) {
   menu.appendChild(markAsUnreadButton);
   menu.appendChild(deleteBtn);
 
+  settingsBtn.onclick = this.handleSettingsClick;
   deleteBtn.onclick = this.handleDeleteClick;
+
 
   menu.classList.add('autoql-vanilla-notifications-more-options');
 

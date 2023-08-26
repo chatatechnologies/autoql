@@ -11,11 +11,19 @@ import { NotificationSummary } from "../NotificationSummary";
 import { NotificationDataContainer } from "../NotificationDataContainer";
 import { refreshTooltips } from "../../../../Tooltips";
 import { MoreOptionsPopup } from "../MoreOptionsPopup";
+import { EditDataAlertModal } from "../../../DataAlerts/Components/EditDataAlertModal/EditDataAlertModal";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
 
-export function NotificationItem({ itemData, authentication, index, onClick, widgetOptions }) {
+export function NotificationItem({ 
+  itemData,
+  authentication,
+  index,
+  onClick,
+  widgetOptions,
+  dataAlert,
+}) {
   const item = document.createElement('div');
   const moreOptionsPopup = new MoreOptionsPopup({ notificationItem: this });
   
@@ -61,6 +69,12 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
     overlay.classList.add('autoql-vanilla-notification-item-hover-overlay');
     
     return overlay;
+  }
+
+  this.showEditDataAlertModal = () => {
+    const modal = new EditDataAlertModal({ dataAlertItem: item, dataAlert, authentication });
+    modal.show();
+    moreOptionsPopup.close();
   }
 
   this.delete = async() => {

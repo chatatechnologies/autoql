@@ -113,7 +113,9 @@ export function EditDataAlertModal({ dataAlertItem, dataAlert, authentication })
     modal.close();
     if(response.status === 200) {
       new AntdMessage('Data Alert updated!', 2500);
-      dataAlertItem.setDataAlert(response.data.data);
+      if(!dataAlertItem) {
+        dataAlertItem.setDataAlert(response.data.data);
+      }
     }else {
       new AntdMessage('Error', 2500);
     }

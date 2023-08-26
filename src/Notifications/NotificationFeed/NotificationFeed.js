@@ -1,4 +1,4 @@
-import { dismissAllNotifications, fetchNotificationFeed } from "autoql-fe-utils";
+import { dismissAllNotifications, fetchDataAlerts, fetchNotificationFeed } from "autoql-fe-utils";
 import { MARK_ALL } from "../../Svg";
 import { checkAndApplyTheme, createIcon } from "../../Utils";
 import './NotificationFeed.scss';
@@ -191,10 +191,12 @@ export function NotificationFeed(selector, options) {
     const { items } = await this.fetchFeed();
     const { authentication } = container.options;
     items.forEach((itemData, index) => {
+      const dataAlert = this.dataAlerts.find((d) => d.id === itemData.data_alert_id);
       const item = new NotificationItem({
         itemData,
         index,
         authentication,
+        dataAlert,
         onClick: this.collapsePreviousNotification,
         widgetOptions: container.options,
       });
@@ -203,7 +205,14 @@ export function NotificationFeed(selector, options) {
   }
   
   this.createItems = async() => {
+    const { authentication } = container.options;
     const loading = this.showLoading();
+    const response = await fetchDataAlerts({
+      ...authentication
+    });
+    const { data } = response;
+    this.dataAlerts = data.project_alerts.concat(data.custom_alerts);
+
     await this.createPaginateItems()
     loading.remove();
     container.appendChild(this.createTopOptions());
