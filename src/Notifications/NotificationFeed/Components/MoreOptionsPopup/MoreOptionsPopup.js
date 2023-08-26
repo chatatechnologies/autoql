@@ -1,9 +1,17 @@
+import { DATA_ALERT_STATUSES } from "autoql-fe-utils";
 import { Popup } from "../../../../Popup";
-import { DISMISS, ENVELOPE, ENVELOPE_OPEN, SETTINGS, TRASH_ICON } from "../../../../Svg";
+import { 
+  DISMISS,
+  ENVELOPE,
+  ENVELOPE_OPEN,
+  SETTINGS,
+  TRASH_ICON,
+  TURN_ON_NOTIFICATION
+} from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import './MoreOptionsPopup.scss';
 
-export function MoreOptionsPopup({ notificationItem }) {
+export function MoreOptionsPopup({ notificationItem, dataAlert }) {
   const popup = new Popup();
   const menu = document.createElement('ul');
 
@@ -61,11 +69,6 @@ export function MoreOptionsPopup({ notificationItem }) {
       'View and edit this Data Alert',
       SETTINGS
     );
-    const turnOffBtn = this.createOptions(
-      'Turn off',
-      'Stop receiving notifications for this Data Alert',
-      DISMISS
-    );
     const deleteBtn = this.createOptions('Delete', '', TRASH_ICON);
     settingsBtn.onclick = this.handleSettingsClick;
     deleteBtn.onclick = this.handleDeleteClick;
@@ -82,9 +85,22 @@ export function MoreOptionsPopup({ notificationItem }) {
       markAsUnreadButton.onclick = this.handleMarkAsUnreadClick;
     }
 
+    if(dataAlert.status === DATA_ALERT_STATUSES.INACTIVE) {
+      const turnOnBtn = this.createOptions(
+        'Turn on',
+        'Start receiving notifications for this Data Alert again',
+        TURN_ON_NOTIFICATION
+      );
+      menu.appendChild(turnOnBtn);
+    } else {
+      const turnOffBtn = this.createOptions(
+        'Turn off',
+        'Stop receiving notifications for this Data Alert',
+        DISMISS
+      );
+      menu.appendChild(turnOffBtn);
+    }
 
-
-    menu.appendChild(turnOffBtn);
     menu.appendChild(deleteBtn);
 
     popup.show({ x, y });
