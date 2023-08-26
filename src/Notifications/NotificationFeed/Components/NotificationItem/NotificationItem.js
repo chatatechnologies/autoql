@@ -26,7 +26,11 @@ export function NotificationItem({
   dataAlert,
 }) {
   const item = document.createElement('div');
-  const moreOptionsPopup = new MoreOptionsPopup({ notificationItem: this, dataAlert });
+  const moreOptionsPopup = new MoreOptionsPopup({
+    notificationItem: this,
+    dataAlert,
+    authentication
+  });
   
   this.queryResponse = undefined;
   this.isOpen = false;

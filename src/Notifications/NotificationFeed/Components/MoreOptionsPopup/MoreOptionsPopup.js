@@ -1,4 +1,4 @@
-import { DATA_ALERT_STATUSES } from "autoql-fe-utils";
+import { DATA_ALERT_STATUSES, updateDataAlertStatus } from "autoql-fe-utils";
 import { Popup } from "../../../../Popup";
 import { 
   DISMISS,
@@ -10,8 +10,9 @@ import {
 } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import './MoreOptionsPopup.scss';
+import { AntdMessage } from "../../../../Antd";
 
-export function MoreOptionsPopup({ notificationItem, dataAlert }) {
+export function MoreOptionsPopup({ notificationItem, dataAlert, authentication }) {
   const popup = new Popup();
   const menu = document.createElement('ul');
 
@@ -58,6 +59,41 @@ export function MoreOptionsPopup({ notificationItem, dataAlert }) {
     popup.close(); 
   }
 
+  this.updateDataAlertStatus = async(status) => {
+    const {
+      type
+    } = dataAlert
+    const response = await updateDataAlertStatus({ 
+      dataAlertId: dataAlert.id,
+      status, 
+      type,
+      ...authentication 
+    });
+
+    return response
+  }
+
+  this.handleTurnOffDataAlert = async() => {
+    popup.close();
+    const response = await this.updateDataAlertStatus(DATA_ALERT_STATUSES.INACTIVE);
+
+    if(response.status === 200) {
+      new AntdMessage('You will no longer receive notifications like this', 3000);
+      dataAlert.status = DATA_ALERT_STATUSES.INACTIVE;
+    }
+
+  }
+
+  this.handleTurnOnDataAlert = async() => {
+    popup.close();
+    const response = await this.updateDataAlertStatus(DATA_ALERT_STATUSES.ACTIVE);
+
+    if(response.status === 200) {
+      new AntdMessage('Data Alert reactivated! You will start receiving notifications for this Data Alert again.', 3000);
+      dataAlert.status = DATA_ALERT_STATUSES.ACTIVE;
+    }
+  }
+ 
   menu.classList.add('autoql-vanilla-notifications-more-options');
 
   popup.appendChild(menu);
@@ -91,6 +127,7 @@ export function MoreOptionsPopup({ notificationItem, dataAlert }) {
         'Start receiving notifications for this Data Alert again',
         TURN_ON_NOTIFICATION
       );
+      turnOnBtn.onclick = this.handleTurnOnDataAlert;
       menu.appendChild(turnOnBtn);
     } else {
       const turnOffBtn = this.createOptions(
@@ -98,6 +135,7 @@ export function MoreOptionsPopup({ notificationItem, dataAlert }) {
         'Stop receiving notifications for this Data Alert',
         DISMISS
       );
+      turnOffBtn.onclick = this.handleTurnOffDataAlert;
       menu.appendChild(turnOffBtn);
     }
 
