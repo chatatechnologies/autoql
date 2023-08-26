@@ -2,6 +2,7 @@ import {
   deleteNotification,
   dismissNotification,
   fetchNotificationData,
+  markNotificationAsUnread,
 } from "autoql-fe-utils";
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from "../../../../Svg";
 import { createIcon, getFormattedTimestamp } from "../../../../Utils";
@@ -95,7 +96,7 @@ export function NotificationItem({
       event.stopPropagation();
       const right = 290;
       const pos = moreOptions.getBoundingClientRect();
-      moreOptionsPopup.show({ x: pos.left - right, y: pos.top + 2 });
+      moreOptionsPopup.open({ x: pos.left - right, y: pos.top + 2 });
     }
     return btnContainer;
   }
@@ -109,9 +110,32 @@ export function NotificationItem({
 
     return expandArrow;
   }
+
+  this.handleDismissClick = async() => {
+    const response = await this.dismissNotification();
+    if(response.status === 200) {
+      item.setAsRead();
+    }
+  }
+
+  this.handleMarkAsUnreadClick = async() => {
+    const response = await this.markNotificationAsUnread();
+    if(response.status === 200) {
+      item.setAsUnread();
+    }
+  }
   
   this.dismissNotification = async () => {
     const response = await dismissNotification({
+      notificationId: itemData.id,
+      ...authentication,
+    });
+
+    return response;
+  }
+
+  this.markNotificationAsUnread = async () => {
+    const response = await markNotificationAsUnread({
       notificationId: itemData.id,
       ...authentication,
     });
@@ -222,10 +246,7 @@ export function NotificationItem({
     this.content.classList.add('autoql-vanilla-notification-expanded');
     item.classList.remove('autoql-vanilla-notification-collapsed');
     if(this.isUnread()) {
-      const response = await this.dismissNotification();
-      if(response.status === 200) {
-        item.setAsRead();
-      }
+      this.handleDismissClick();
     }
 
     this.createContentResponse();
@@ -267,6 +288,11 @@ export function NotificationItem({
   item.setAsRead = () => {
     item.classList.remove('autoql-vanilla-notification-unread');
     itemData.state = 'DISMISSED';
+  }
+  
+  item.setAsUnread = () => {
+    item.classList.add('autoql-vanilla-notification-unread');
+    itemData.state = 'ACKNOWLEDGED';
   }
   
   this.createItem();

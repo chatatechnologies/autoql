@@ -1,5 +1,5 @@
 import { Popup } from "../../../../Popup";
-import { DISMISS, ENVELOPE, SETTINGS, TRASH_ICON } from "../../../../Svg";
+import { DISMISS, ENVELOPE, ENVELOPE_OPEN, SETTINGS, TRASH_ICON } from "../../../../Svg";
 import { createIcon } from "../../../../Utils";
 import './MoreOptionsPopup.scss';
 
@@ -40,23 +40,55 @@ export function MoreOptionsPopup({ notificationItem }) {
     notificationItem.showEditDataAlertModal();
   }
 
-  const settingsBtn = this.createOptions('Settings', 'View and edit this Data Alert', SETTINGS);
-  const turnOffBtn = this.createOptions('Turn off', 'Stop receiving notifications for this Data Alert', DISMISS);
-  const markAsUnreadButton = this.createOptions('Mark as unread', '', ENVELOPE);
-  const deleteBtn = this.createOptions('Delete', '', TRASH_ICON);
+  this.handleMarkAsUnreadClick = () => {
+    notificationItem.handleMarkAsUnreadClick();
+    popup.close();
+  }
 
-  menu.appendChild(settingsBtn);
-  menu.appendChild(turnOffBtn);
-  menu.appendChild(markAsUnreadButton);
-  menu.appendChild(deleteBtn);
-
-  settingsBtn.onclick = this.handleSettingsClick;
-  deleteBtn.onclick = this.handleDeleteClick;
-
+  this.handleDismissClick = () => {
+    notificationItem.handleDismissClick(); 
+    popup.close(); 
+  }
 
   menu.classList.add('autoql-vanilla-notifications-more-options');
 
   popup.appendChild(menu);
+
+  popup.open = ({ x, y }) => {
+    menu.innerHTML = '';
+    const settingsBtn = this.createOptions(
+      'Settings',
+      'View and edit this Data Alert',
+      SETTINGS
+    );
+    const turnOffBtn = this.createOptions(
+      'Turn off',
+      'Stop receiving notifications for this Data Alert',
+      DISMISS
+    );
+    const deleteBtn = this.createOptions('Delete', '', TRASH_ICON);
+    settingsBtn.onclick = this.handleSettingsClick;
+    deleteBtn.onclick = this.handleDeleteClick;
+    
+    menu.appendChild(settingsBtn);
+    
+    if(notificationItem.isUnread()) {
+      const markAsReadButton = this.createOptions('Mark as read', '', ENVELOPE_OPEN);
+      menu.appendChild(markAsReadButton);  
+      markAsReadButton.onclick = this.handleDismissClick;    
+    } else {
+      const markAsUnreadButton = this.createOptions('Mark as unread', '', ENVELOPE);
+      menu.appendChild(markAsUnreadButton);
+      markAsUnreadButton.onclick = this.handleMarkAsUnreadClick;
+    }
+
+
+
+    menu.appendChild(turnOffBtn);
+    menu.appendChild(deleteBtn);
+
+    popup.show({ x, y });
+  }
 
   return popup;
 }
