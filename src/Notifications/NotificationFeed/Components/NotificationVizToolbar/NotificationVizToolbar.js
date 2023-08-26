@@ -1,4 +1,4 @@
-import { getSupportedDisplayTypes, DisplayTypes } from "autoql-fe-utils";
+import { getSupportedDisplayTypes, DisplayTypes, isChartType } from "autoql-fe-utils";
 import { createIcon } from "../../../../Utils";
 import { 
   BAR_CHART_ICON,
@@ -17,6 +17,7 @@ import {
 } from "../../../../Svg";
 import './NotificationVizToolbar.scss';
 import { strings } from "../../../../Strings";
+import { filter } from "d3";
 
 export function NotificationVizToolbar({ response, onClick, onClickFilterButton }) {
   const container = document.createElement('div');
@@ -121,8 +122,12 @@ export function NotificationVizToolbar({ response, onClick, onClickFilterButton 
     rightButtons.classList.add('autoql-vanilla-options-toolbar');
     const filterButton = this.createToolbarButton(FILTER_TABLE);
     const moreOptionsBtn = this.createToolbarButton(MORE_OPTIONS);
-
+    
     filterButton.onclick = () => {
+      if(isChartType(this.displayType)) {
+        onClick(DisplayTypes.TABLE);
+        this.displayType = DisplayTypes.TABLE;
+      }
       onClickFilterButton();
     }
 
