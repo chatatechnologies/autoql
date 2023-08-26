@@ -110,16 +110,6 @@ export function MoreOptionsPopup({ notificationItem, dataAlert, authentication }
     deleteBtn.onclick = this.handleDeleteClick;
     
     menu.appendChild(settingsBtn);
-    
-    if(notificationItem.isUnread()) {
-      const markAsReadButton = this.createOptions('Mark as read', '', ENVELOPE_OPEN);
-      menu.appendChild(markAsReadButton);  
-      markAsReadButton.onclick = this.handleDismissClick;    
-    } else {
-      const markAsUnreadButton = this.createOptions('Mark as unread', '', ENVELOPE);
-      menu.appendChild(markAsUnreadButton);
-      markAsUnreadButton.onclick = this.handleMarkAsUnreadClick;
-    }
 
     if(dataAlert.status === DATA_ALERT_STATUSES.INACTIVE) {
       const turnOnBtn = this.createOptions(
@@ -137,6 +127,16 @@ export function MoreOptionsPopup({ notificationItem, dataAlert, authentication }
       );
       turnOffBtn.onclick = this.handleTurnOffDataAlert;
       menu.appendChild(turnOffBtn);
+    }
+    
+    if(notificationItem.isUnread()) {
+      const markAsReadButton = this.createOptions('Mark as read', '', ENVELOPE_OPEN);
+      menu.appendChild(markAsReadButton);  
+      markAsReadButton.onclick = this.handleDismissClick;    
+    } else {
+      const markAsUnreadButton = this.createOptions('Mark as unread', '', ENVELOPE);
+      menu.appendChild(markAsUnreadButton);
+      markAsUnreadButton.onclick = this.handleMarkAsUnreadClick;
     }
 
     menu.appendChild(deleteBtn);

@@ -241,9 +241,9 @@ export function NotificationItem({
     item.classList.add('autoql-vanilla-notification-error');
   }
   if(this.isUnread()) {
-    item.appendChild(this.createStrip());
     item.classList.add('autoql-vanilla-notification-unread');
   }
+  item.appendChild(this.createStrip());
   
   item.expand = async() => {
     this.content.classList.remove('autoql-vanilla-notification-content-collapsed');
