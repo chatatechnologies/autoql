@@ -81,6 +81,28 @@
                 }
             }
 
+            .autoql-vanilla-input-clear-btn {
+                position: absolute;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 12px;
+                width: 12px;
+                right: 0;
+                top: 50%;
+                transform: translate(-50%, -50%);
+                color: var(--autoql-vanilla-background-color-secondary);
+                background: var(--autoql-vanilla-text-color-placeholder);
+                border-radius: 6px;
+
+                span {
+                    font-family: sans-serif;
+                    height: 12px;
+                    font-size: 11px;
+                    line-height: 100%;
+                }
+            }
+
             .tabulator-header {
                 border-bottom: 2px solid var(--autoql-vanilla-table-border-color);
 
@@ -104,6 +126,7 @@
                     border-radius: 4px;
                     background: transparent;
                     padding: 4px 9px !important;
+                    padding-right: 15px !important;
                     outline: none;
                     height: 25px;
                     font-size: 12px;

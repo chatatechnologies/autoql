@@ -1,0 +1,18 @@
+.autoql-vanilla-btn {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    height: auto;
+    border-radius: 4px;
+    outline: none !important;
+    transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
+    cursor: pointer;
+    background: var(--autoql-vanilla-accent-color);
+    border: 1px solid var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-text-color-accent);
+    padding: 10px 16px;
+    margin: 2px 5px;
+}

@@ -45,6 +45,7 @@ import {
     supportsVoiceRecord,
     checkAndApplyTheme,
     getSupportedDisplayTypes,
+    closeAllChartPopovers,
 } from '../Utils';
 
 import {
@@ -376,6 +377,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.closeDrawer = () => {
+        closeAllChartPopovers();
         obj.closePopOver(obj.clearMessagePop);
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
@@ -438,8 +440,7 @@ export function DataMessenger(options = {}) {
 
         if (obj.options.showMask) {
             obj.drawerMask.onclick = (e) => {
-                e.stopPropagation();
-                obj.closeDrawer();
+                obj.closeDrawer(e);
             };
         } else {
             obj.drawerMask.classList.add('autoql-vanilla-drawer-mask-hidden');
@@ -777,7 +778,9 @@ export function DataMessenger(options = {}) {
                     break;
                 default:
             }
-            if (newWidth <= 400) return;
+            if (newWidth <= 400) {
+                newWidth = 400
+            };
 
             if (obj.isPortrait()) {
                 obj.drawerContentWrapper.style.width = newWidth + 'px';
