@@ -95,38 +95,7 @@
                     transform: translateY(-5px);
                     cursor: pointer;
                 }
-
-                // &::-webkit-slider-thumb,
-                // &::-moz-range-thumb {
-                //     &:hover,
-                //     &:active {
-                //         .autoql-vanilla-range-slider-value-bubble {
-                //             opacity: 1;
-                //         }
-                //     }
-                // }
             }
-
-            //     .autoql-vanilla-range-slider-value-bubble {
-            //         position: absolute;
-            //         pointer-events: none;
-            //         opacity: 0;
-            //         bottom: 100%;
-            //         background: #000000;
-            //         color: #ffffff;
-            //         left: 50%;
-            //         transform: translate(-50%, 0);
-            //         border-radius: 20px;
-            //         margin-bottom: 2px;
-            //         padding: 2px 8px;
-            //         line-height: 15px;
-            //         font-size: 10px;
-            //         transition: opacity 0.2s ease;
-            //     }
-
-            // .autoql-vanilla-range-slider {
-            //     flex: 0 0 24px;
-            // }
 
             .autoql-vanilla-range-slider-mark {
                 background: var(--autoql-vanilla-border-color);
