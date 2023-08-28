@@ -57,8 +57,8 @@ function instantiateTabulator(component, tableOptions, table) {
         component.createPageLoader();
         component.createScrollLoader();
 
-        tabulator.setHeaderInputEventListeners();
-        tabulator.toggleFilters();
+        tabulator.setHeaderInputEventListeners?.();
+        tabulator.toggleFilters?.();
 
         // Remove for now - causing buggy behavious
         // component.ps = replaceScrollbar(tabulator);

@@ -1682,6 +1682,7 @@ export function DataMessenger(options = {}) {
         queryID,
         source,
         column,
+        filter
     }) => {
         if (!json?.data?.data) {
             return;
@@ -1699,10 +1700,9 @@ export function DataMessenger(options = {}) {
                         queryID,
                         source,
                         groupBys,
-                        pageSize,
                     });
-                } else if (!isNaN(stringColumnIndex) && !!row?.length) {
-                    if (!isDataLimited(json) && !isColumnDateType(column)) {
+                } else if ((!isNaN(stringColumnIndex) && !!row?.length) || filter) {
+                    if (!isDataLimited(json) && !isColumnDateType(column) && !filter) {
                         // --------- 1. Use mock filter drilldown from client side --------
                         const mockData = getFilterDrilldown({ stringColumnIndex, row, json });
                         return new Promise((resolve, reject) => {
@@ -1712,7 +1712,7 @@ export function DataMessenger(options = {}) {
                         });
                     } else {
                         // --------- 2. Use subquery for filter drilldown --------
-                        const clickedFilter = constructFilter({
+                        const clickedFilter = filter ?? constructFilter({
                             column: json.data.data.columns[stringColumnIndex],
                             value: row[stringColumnIndex],
                         });
@@ -1941,8 +1941,7 @@ export function DataMessenger(options = {}) {
             stacked_line: STACKED_AREA_CHART_ICON,
             column_line: COLUMN_LINE_ICON,
             scatterplot: SCATTERPLOT_ICON,
-            // TODO - next deploy
-            // histogram: HISTOGRAM_ICON,
+            histogram: HISTOGRAM_ICON,
         }
 
         displayTypes.forEach((displayType) => {

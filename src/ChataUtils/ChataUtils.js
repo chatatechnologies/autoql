@@ -21,6 +21,7 @@ import { strings } from '../Strings';
 import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
 
 import '../../css/PopoverMenu.css';
+import { CSS_PREFIX } from '../Constants';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -208,7 +209,7 @@ ChataUtils.exportPNGHandler = async (idRequest) => {
             console.warn('Unable to download SVG - no svg was found');
         }
     
-        const base64Data = await svgToPng(svg, 2);
+        const base64Data = await svgToPng(svg, 2, CSS_PREFIX);
         const a = document.createElement('a');
         a.download = 'Chart.png'; 
         a.href = base64Data;

@@ -275,9 +275,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
     addTooltipsToLabels();
     styleTicks();
 
-    // adjustLoadMoreSelectorToFit()
     // adjustAxisScalerBorder()
-    // adjustLegendLocation()
 
     return this.axisElement;
 }

@@ -4,6 +4,17 @@
     }
 }
 
+.autoql-vanilla-chart-header {
+    font-size: 12px;
+}
+
+.autoql-vanilla-chart-new {
+    font-family: var(--autoql-vanilla-font-family);
+    color: var(--autoql-vanilla-text-color-primary);
+    stroke: var(--autoql-vanilla-text-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
+}
+
 .autoql-vanilla-chata-chart-container {
     height: 100vh;
     width: 100vw;

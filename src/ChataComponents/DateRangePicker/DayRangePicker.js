@@ -308,12 +308,12 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
 
     this.createMonthSelect = (lowerYearLimit, upperYearLimit) => {
         const monthPickerSelect = new Select({
-            initialValue: this.visibleMonth,
+            initialValue: this.visibleMonth - 1,
             size: 'small',
             position: 'bottom',
             align: 'middle',
             onChange: (option) => {
-                this.visibleMonth = option.value;
+                this.visibleMonth = option.value + 1;
                 this.createDayPicker();
             },
             options: MONTH_NAMES.map((month, i) => ({
