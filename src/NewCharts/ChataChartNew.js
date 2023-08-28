@@ -189,8 +189,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         if (indices2) {
             columnIndexConfig.numberColumnIndices2 = indices2;
             columnIndexConfig.numberColumnIndex2 = indices2[0];
-
-            console.log('changing second number col indices:', {indices2, columnIndexConfig: cloneObject(columnIndexConfig), newColumns})
         }
 
         if (newColumns) {
