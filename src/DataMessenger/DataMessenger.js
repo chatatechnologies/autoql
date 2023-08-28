@@ -12,8 +12,9 @@ import {
     runQueryOnly,
     isDrilldown as isDrilldownResponse,
     areAllColumnsHidden,
+	REQUEST_CANCELLED_ERROR
 } from 'autoql-fe-utils';
-
+import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
@@ -167,7 +168,10 @@ export function DataMessenger(options = {}) {
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
     }
-
+	
+	obj.cancelCurrentRequest = () => {
+        obj.axiosSource?.cancel(REQUEST_CANCELLED_ERROR);
+    };
     obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement);
     obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement);
 
@@ -1025,9 +1029,9 @@ export function DataMessenger(options = {}) {
         [].forEach.call(obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container'), (e) => {
             e.parentNode.removeChild(e);
         });
-
+		obj.cancelCurrentRequest()
+		obj.input.removeAttribute('disabled');
         obj.drawerContent.appendChild(obj.introMessage);
-
         if (obj.topicsWidget) {
             obj.topicsWidget.reset();
             obj.drawerContent.appendChild(obj.topicsWidget._elem);
@@ -2588,6 +2592,9 @@ export function DataMessenger(options = {}) {
             if (responseLoadingContainer) {
                 obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
+			if(response.data.message === 'Request cancelled'){
+				return;
+			}
             obj.sendResponse(strings.accessDenied);
             return;
         }
@@ -2733,6 +2740,7 @@ export function DataMessenger(options = {}) {
         try {
             obj.input.disabled = true;
             obj.input.value = '';
+			obj.axiosSource = axios.CancelToken?.source();
             const { domain, apiKey, token } = obj.options.authentication;
             var responseLoadingContainer = obj.putMessage(textValue);
 
@@ -2765,6 +2773,7 @@ export function DataMessenger(options = {}) {
                 allowSuggestions: true,
                 enableQueryValidation: obj.options.autoQLConfig.enableQueryValidation,
                 skipQueryValidation: false,
+				cancelToken: obj.axiosSource?.token,
             };
 
             let response;
