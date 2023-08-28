@@ -135,11 +135,12 @@ export function NotificationVizToolbar({ response, onClick, onClickFilterButton 
     }
 
     moreOptionsBtn.onclick = () => {
-      const right = 200;
+      const right = 210;
+      const bottom = 60;
       const pos = moreOptionsBtn.getBoundingClientRect();
       moreOptionsPopup.open({
         x: pos.left - right,
-        y: pos.top + 2,
+        y: pos.top - bottom,
         displayType: this.displayType, 
       });
     }

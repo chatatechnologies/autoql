@@ -3,6 +3,7 @@ import { Popup } from "../../../../Popup";
 import { createIcon } from "../../../../Utils";
 import { CLIPBOARD_ICON, EXPORT_PNG_ICON } from "../../../../Svg";
 import { strings } from "../../../../Strings";
+import './MoreOptionsVizToolbar.scss';
 
 export function MoreOptionsVizToolbar() {
   const popup = new Popup();
@@ -18,7 +19,7 @@ export function MoreOptionsVizToolbar() {
     return item;
   }
 
-  menu.classList.add('autoql-vanilla-more-options');
+  menu.classList.add('autoql-vanilla-toolbar-more-options');
   popup.appendChild(menu);
 
   popup.open = ({ x, y, displayType }) => {
