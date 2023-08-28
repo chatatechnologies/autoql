@@ -17,11 +17,12 @@ import {
 } from "../../../../Svg";
 import './NotificationVizToolbar.scss';
 import { strings } from "../../../../Strings";
-import { filter } from "d3";
+import { MoreOptionsVizToolbar } from "../MoreOptionsVizToolbar/MoreOptionsVizToolbar";
 
 export function NotificationVizToolbar({ response, onClick, onClickFilterButton }) {
   const container = document.createElement('div');
   const rightButtons = document.createElement('div');
+  const moreOptionsPopup = new MoreOptionsVizToolbar();
   this.displayType = response?.data?.data.display_type;
   this.selectedBtn = undefined;
 
@@ -102,6 +103,7 @@ export function NotificationVizToolbar({ response, onClick, onClickFilterButton 
           btn.classList.add('autoql-vanilla-toolbar-btn-selected');
           this.selectedBtn = btn;
           onClick(dType);
+          moreOptionsPopup.close();
         }  
         leftButtons.appendChild(btn);
       }
@@ -124,11 +126,22 @@ export function NotificationVizToolbar({ response, onClick, onClickFilterButton 
     const moreOptionsBtn = this.createToolbarButton(MORE_OPTIONS);
     
     filterButton.onclick = () => {
+      moreOptionsPopup.close();
       if(isChartType(this.displayType)) {
         onClick(DisplayTypes.TABLE);
         this.displayType = DisplayTypes.TABLE;
       }
       onClickFilterButton();
+    }
+
+    moreOptionsBtn.onclick = () => {
+      const right = 200;
+      const pos = moreOptionsBtn.getBoundingClientRect();
+      moreOptionsPopup.open({
+        x: pos.left - right,
+        y: pos.top + 2,
+        displayType: this.displayType, 
+      });
     }
 
     filterButton.setAttribute('data-tippy-content', strings.filterTable);
