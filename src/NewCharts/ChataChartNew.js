@@ -369,10 +369,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 .attr('width', this.outerWidth)
                 .attr('height', this.outerHeight)
                 .style('font-size', FONT_SIZE)
-                .style('font-family', '--autoql-vanillafont-family')
-                .style('color', '--autoql-vanillatext-color-primary')
-                .style('stroke', '--autoql-vanillatext-color-primary')
-                .style('background', '--autoql-vanillabackground-color-secondary');
+                .style('font-family', 'var(--autoql-vanilla-font-family)')
+                .style('color', 'var(--autoql-vanilla-text-color-primary)')
+                .style('stroke', 'var(--autoql-vanilla-text-color-primary)')
+                .style('background', 'var(--autoql-vanilla-background-color-secondary)');
 
             var chartContentWrapper = this.svg
                 .append('g')
