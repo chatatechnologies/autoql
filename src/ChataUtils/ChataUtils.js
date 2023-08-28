@@ -203,13 +203,14 @@ ChataUtils.copyHandler = (idRequest) => {
 ChataUtils.exportPNGHandler = async (idRequest) => {
     try {
         var component = document.querySelector(`[data-componentid='${idRequest}']`);
-        var svg = component.getElementsByTagName('svg')[0];
+        var svg = component.querySelector('svg.autoql-vanilla-chart-svg');
  
         if (!svg) {
             console.warn('Unable to download SVG - no svg was found');
         }
     
         const base64Data = await svgToPng(svg, 2, CSS_PREFIX);
+
         const a = document.createElement('a');
         a.download = 'Chart.png'; 
         a.href = base64Data;
