@@ -43,21 +43,12 @@ export function Histogram(container, params = {}, chartHeaderElement) {
     this.bucketSize = bucketConfig?.bucketSize;
     this.bucketConfig = bucketConfig ?? getDefaultBucketConfig(data, bucketConfig?.bucketSize);
 
-    this.getChartHeaderHeight = () => {
-        const chartHeaderHeight = chartHeaderElement?.clientHeight;
-        if (!chartHeaderHeight || isNaN(chartHeaderHeight)) {
-            return DEFAULT_SLIDER_HEIGHT;
-        }
-
-        return chartHeaderHeight;
-    };
-
     this.getScaleParams = () => {
         return {
             data,
             columns,
             width,
-            height: height - this.getChartHeaderHeight(),
+            height,
             chartColors,
             dataFormatting,
             stringColumnIndex,
@@ -214,13 +205,9 @@ export function Histogram(container, params = {}, chartHeaderElement) {
             this.createHistogramColumns();
         }
 
-        const headerHeight = this.getChartHeaderHeight();
-
         this.axesElement?.destroy?.();
         this.axesElement = new Axes(this.axesWrapper, {
             ...params,
-            height: params.height - headerHeight,
-            outerHeight: params.outerHeight - headerHeight,
             xScale: this.xScale,
             yScale: this.yScale,
         });
