@@ -71,8 +71,8 @@ class App extends React.Component {
         }
     };
 
-    onChangeTheme = (key, value) => {
-        var themeConfig = this.state.themeConfig;
+    onChangeTheme = (key, value) => {	
+        var themeConfig = Object.assign({},this.state.themeConfig);
         themeConfig[key] = value;
         this.setState({ themeConfig });
     };
@@ -218,17 +218,6 @@ class App extends React.Component {
                 domain: getStoredProp('domain-url') || '',
                 apiKey: getStoredProp('api-key') || '',
             },
-            autoQLConfig: {
-                debug: true,
-            },
-            onMaskClick: function (datamessenger) {
-                datamessenger.closeDrawer();
-            },
-            resizable: true,
-            width: 550,
-            enableDynamicCharting: true,
-            enableNotificationsTab: true,
-            placement: "right",
         });
     };
 
