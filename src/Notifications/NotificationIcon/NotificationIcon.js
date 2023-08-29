@@ -1,11 +1,11 @@
-import { NOTIFICATION_BUTTON } from '../Svg'
+import { NOTIFICATION_BUTTON } from '../../Svg';
 import {
 	apiCallNotificationCount,
 	apiCallPut
-} from '../Api'
-import { checkAndApplyTheme } from '../Utils'
+} from '../../Api';
+import { checkAndApplyTheme } from '../../Utils';
 
-import '../../css/ChataNotificationButton.css'
+import './ChataNotificationButton.scss';
 
 export function NotificationIcon(selector, options={}){
     checkAndApplyTheme()
