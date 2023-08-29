@@ -207,7 +207,18 @@
     display: flex;
     align-items: center;
 }
-
+.autoql-vanilla-chata-series-popover-header-wrapper {
+    display: flex;
+    justify-content: space-between;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    padding-right: 15px;
+    font-size: 12px;
+    line-height: 28px;
+    background: rgba(0, 0, 0, 0.03);
+}
 .autoql-vanilla-chata-list-item {
     display: flex;
     justify-content: space-between;

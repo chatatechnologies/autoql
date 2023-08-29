@@ -71,8 +71,8 @@ class App extends React.Component {
         }
     };
 
-    onChangeTheme = (key, value) => {	
-        var themeConfig = Object.assign({},this.state.themeConfig);
+    onChangeTheme = (key, value) => {
+        var themeConfig = { ...this.state.themeConfig };
         themeConfig[key] = value;
         this.setState({ themeConfig });
     };

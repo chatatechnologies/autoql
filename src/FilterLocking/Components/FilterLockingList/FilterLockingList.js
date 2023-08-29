@@ -12,6 +12,7 @@ export function FilterLockingList(datamessenger, conditionList,  data,filterLock
     const category = data[0]
     const lines = data[1]
     var view = document.createElement('div')
+	view.classList.add('autoql-vanilla-filter-list')
     var titleContainer = document.createElement('div')
     var titleWrapper = document.createElement('div')
     titleWrapper.classList.add('autoql-vanilla-filter-list-title-section')
@@ -25,6 +26,7 @@ export function FilterLockingList(datamessenger, conditionList,  data,filterLock
     titleContainer.classList.add('autoql-vanilla-filter-list-title')
 
     title.appendChild(categoryContainer)
+	title.classList.add('autoql-vanilla-filter-list-title')
 
 
     titleWrapper.appendChild(title)
@@ -42,7 +44,7 @@ export function FilterLockingList(datamessenger, conditionList,  data,filterLock
             strings.filterLockingListTooltip,
         )
         toggleColumnContent.textContent = strings.persist
-        toggleColumnContent.classList.add('autoql-vaniall-persist-toggle-column')
+        toggleColumnContent.classList.add('autoql-vanilla-persist-toggle-column')
         toggleColumnContent.appendChild(infoIcon)
         toggleColumn.appendChild(toggleColumnContent)
         titleContainer.appendChild(toggleColumn)
