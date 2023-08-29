@@ -220,6 +220,11 @@
     font-size: 12px;
     line-height: 28px;
 
+    &.autoql-vanilla-chata-list-item-disabled {
+        opacity: 0.4;
+        pointer-events: none;
+    }
+
     &:hover {
         background: rgba(0, 0, 0, 0.03);
     }
