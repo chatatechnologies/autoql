@@ -1,55 +1,19 @@
 import { PopoverChartSelector } from '../../Charts/PopoverChartSelector';
-<<<<<<< HEAD
-import { CARET_DOWN_ICON } from '../../Svg';
-import { createIcon, uuidv4 } from '../../Utils';
-=======
->>>>>>> origin
 
 import './Select.scss';
 
 export function Select({
     options,
     disabled = false,
-<<<<<<< HEAD
-    fullWidth = false,
-=======
     fullWidth,
->>>>>>> origin
     label,
     outlined = true,
     size = 'large',
     initialValue,
     placeholder = 'Select an item',
     showArrow = true,
-<<<<<<< HEAD
-    position = 'bottom',
-    align = 'start',
-    popoverClassName,
     onChange = () => {},
 }) {
-    this.ID = uuidv4();
-
-    this.showPopover = () => {
-        this.popover.show();
-        this.scrollToValue(this.selectedValue);
-    };
-
-    this.scrollToValue = (value) => {
-        const index = options?.findIndex((option) => value == option.value);
-        const element = document.querySelector(`#select-option-${this.ID}-${index}`);
-        if (element) {
-            element.scrollIntoView({
-                behavior: 'auto',
-                block: 'center',
-                inline: 'center',
-            });
-        }
-    };
-
-=======
-    onChange = () => {},
-}) {
->>>>>>> origin
     this.createSelect = () => {
         this.select = document.createElement('div');
         this.select.classList.add('autoql-vanilla-select-and-label');
@@ -103,13 +67,6 @@ export function Select({
         if (showArrow) {
             const selectArrow = document.createElement('div');
             selectArrow.classList.add('autoql-vanilla-select-arrow');
-<<<<<<< HEAD
-
-            const selectArrowIcon = createIcon(CARET_DOWN_ICON);
-            selectArrow.appendChild(selectArrowIcon);
-
-=======
->>>>>>> origin
             selectElement.appendChild(selectArrow);
         }
 
@@ -117,23 +74,13 @@ export function Select({
             if (this.popover) {
                 this.popover = undefined;
             } else {
-<<<<<<< HEAD
-                this.popover = new PopoverChartSelector(e, position, align, 0);
-                this.popover.classList.add('autoql-vanilla-select-popover')
-                if (popoverClassName) this.popover.classList.add(popoverClassName);
-=======
                 this.popover = new PopoverChartSelector(e, 'bottom', 'start', 0, 'autoql-vanilla-select-popover');
->>>>>>> origin
 
                 const selectorContent = this.createPopoverContent();
 
                 this.popover.appendContent(selectorContent);
 
-<<<<<<< HEAD
-                this.showPopover();
-=======
                 this.popover?.show();
->>>>>>> origin
             }
         });
     };
@@ -149,26 +96,16 @@ export function Select({
             const li = document.createElement('li');
 
             li.classList.add('autoql-vanilla-select-list-item');
-<<<<<<< HEAD
-            li.id = `select-option-${this.ID}-${i}`;
-
-            if (option.value == this.selectedValue) {
-=======
 
             if (option.value === this.selectedValue) {
->>>>>>> origin
                 li.classList.add('active');
             }
 
             li.onclick = (e) => {
                 e.stopPropagation();
-<<<<<<< HEAD
-                this.select.setValue(option.value)
-=======
                 this.selectedValue = options.value;
                 this.selectTextContent.innerHTML = option.label ?? option.value;
                 onChange(option);
->>>>>>> origin
                 this.popover?.close();
             };
 

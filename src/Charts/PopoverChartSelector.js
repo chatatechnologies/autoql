@@ -4,25 +4,6 @@ import '../../css/PopoverChartSelector.css';
 
 const clickedOutsideBounds = (e, popover) => {
     if (!popover?.position) {
-<<<<<<< HEAD
-        return false;
-    }
-
-    if (e.x < popover.position.left) {
-        return true;
-    }
-    if (e.y < popover.position.top) {
-        return true;
-    }
-    if (e.x > popover.position.left + popover.clientWidth) {
-        return true;
-    }
-    if (e.y > popover.position.top + popover.clientHeight) {
-        return true;
-    }
-    return false;
-};
-=======
         return false
     }
 
@@ -40,7 +21,6 @@ const clickedOutsideBounds = (e, popover) => {
     }
     return false
 }
->>>>>>> origin
 
 export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'start', padding = 5, className) {
     this.popoverID = uuidv4();
@@ -132,14 +112,7 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
         popover.classList.remove('autoql-vanilla-popover-selector-hidden');
         popover.setPosition();
 
-<<<<<<< HEAD
-        setTimeout(() => {
-            document.body.addEventListener('click', popover.onClickOutside);
-            popover.setPosition();
-        }, 100);
-=======
         setTimeout(() => { document.body.addEventListener('click', popover.onClickOutside) }, 0)
->>>>>>> origin
 
         return popover;
     };
@@ -149,29 +122,10 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
             popover.close();
         }
     };
-<<<<<<< HEAD
-
-    popover.toggleVisibility = () => {
-        if (popover.style.visibility === 'visible') {
-            popover.close();
-        } else {
-            popover.show();
-        }
-    }
-
-    popover.close = () => {
-        popover.style.visibility = 'hidden';
-        popover.classList.add('autoql-vanilla-popover-selector-hidden');
-        document.body.removeEventListener('click', popover.onClickOutside);
-    };
-
-    popover.destroy = () => {
-=======
 
     popover.close = () => {
         popover.style.visibility = 'hidden';
         popover.style.opacity = 0;
->>>>>>> origin
         popover.parentElement?.removeChild?.(popover);
         document.body.removeEventListener('click', popover.onClickOutside);
     };
