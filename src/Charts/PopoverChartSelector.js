@@ -4,23 +4,23 @@ import '../../css/PopoverChartSelector.css';
 
 const clickedOutsideBounds = (e, popover) => {
     if (!popover?.position) {
-        return false;
+        return false
     }
 
     if (e.x < popover.position.left) {
-        return true;
+        return true
     }
     if (e.y < popover.position.top) {
-        return true;
+        return true
     }
     if (e.x > popover.position.left + popover.clientWidth) {
-        return true;
+        return true
     }
     if (e.y > popover.position.top + popover.clientHeight) {
-        return true;
+        return true
     }
-    return false;
-};
+    return false
+}
 
 export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'start', padding = 5, className) {
     this.popoverID = uuidv4();
@@ -92,21 +92,19 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
             position.left = bbox.left - popover.clientWidth - padding;
         }
 
-        const popoverRight = popover.clientWidth + position.left + padding;
-        const screenRight = window.innerWidth;
-        if (popoverRight > screenRight) {
-            position.left = screenRight - popover.clientWidth - padding;
+        var pageYOffset = window.scrollY;
+
+        if (popover.clientWidth + position.left + padding > window.innerWidth) {
+            position.left = window.innerWidth - popover.clientWidth - padding;
         }
 
-        const popoverBottom = popover.clientHeight + position.top + padding;
-        const screenBottom = window.innerHeight;
-        if (popoverBottom > screenBottom) {
-            position.top = screenBottom - popover.clientHeight - padding;
+        if (position.top + popover.offsetHeight > window.screen.height) {
+            position.top += pageYOffset - popover.clientHeight;
         }
 
         popover.position = position;
         popover.style.left = `${position.left}px`;
-        popover.style.top = `${position.top}px`;
+        popover.style.top = `${position.top + pageYOffset}px`;
     };
 
     popover.show = () => {
@@ -114,10 +112,7 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
         popover.classList.remove('autoql-vanilla-popover-selector-hidden');
         popover.setPosition();
 
-        setTimeout(() => {
-            document.body.addEventListener('click', popover.onClickOutside);
-            popover.setPosition();
-        }, 100);
+        setTimeout(() => { document.body.addEventListener('click', popover.onClickOutside) }, 0)
 
         return popover;
     };
@@ -128,21 +123,9 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
         }
     };
 
-    popover.toggleVisibility = () => {
-        if (popover.style.visibility === 'visible') {
-            popover.close();
-        } else {
-            popover.show();
-        }
-    }
-
     popover.close = () => {
         popover.style.visibility = 'hidden';
-        popover.classList.add('autoql-vanilla-popover-selector-hidden');
-        document.body.removeEventListener('click', popover.onClickOutside);
-    };
-
-    popover.destroy = () => {
+        popover.style.opacity = 0;
         popover.parentElement?.removeChild?.(popover);
         document.body.removeEventListener('click', popover.onClickOutside);
     };

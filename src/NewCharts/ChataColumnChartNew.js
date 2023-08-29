@@ -23,8 +23,7 @@ export function ColumnChartNew(container, params = {}) {
         columnIndexConfig = {},
         activeKey,
         stacked,
-        aggregated,
-        columnLineCombo = false,
+        aggregated
     } = params;
 
     const {
@@ -48,7 +47,7 @@ export function ColumnChartNew(container, params = {}) {
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
-        aggregated,
+        aggregated
     };
 
     this.xScale = getBandScale({

@@ -377,7 +377,6 @@ export function DataMessenger(options = {}) {
     };
 
     obj.closeDrawer = () => {
-        closeAllChartPopovers();
         obj.closePopOver(obj.clearMessagePop);
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
@@ -823,6 +822,37 @@ export function DataMessenger(options = {}) {
     obj.registerWindowClicks = () => {
         const excludeElementsForClearMessages = [
             'clear-all',
+			'filter-locking-menu',
+			'autoql-vanilla-condition-locking-input',
+			'autoql-vanilla-condition-list',
+			'autoql-vanilla-filter-locking-saving-indicator',
+			'autoql-vanilla-filter-locking-close-and-saving-container',
+			'autoql-vanilla-filter-locking-view',
+			'autoql-vanilla-empty-condition-list',
+			'autoql-vanilla-filter-locking-title',
+			'autoql-vanilla-filter-locking-title-container',
+			'autoql-vanilla-filter-locking-empty-condition',
+			'autoql-vanilla-suggestion-key-content',
+			'autoql-vanilla-suggestion-message-content',
+			'autoql-vanilla-filter-suggestion',
+			'autoql-vanilla-input',
+			'autoql-vanilla-radio-btn',
+			'autoql-vanilla-slider',
+			'autoql-vanilla-text-include',
+			'autoql-vanilla-text-exclude',
+			'autoql-vanilla-persist-toggle-column',
+			'autoql-vanilla-filter-list-title',
+			'autoql-vanilla-filter-list-title-section',
+			'autoql-vanilla-condition-table-settings',
+			'autoql-vanilla-filter-list',
+			'autoql-vanilla-filter-list-title-section-icon',
+			'autoql-vanilla-chata-bar-container',
+			'autoql-vanilla-filter-lock-category-title',
+			'autoql-vanilla-condition-table-list-item',
+			'autoql-vanilla-filter-locking-line',
+			'autoql-vanilla-interpretation-icon',
+			'autoql-vanilla-filter-locking-input-container',
+			'autoql-vanilla-condition-lock-header',
             'autoql-vanilla-clear-messages-confirm-popover',
             'autoql-vanilla-chata-confirm-text',
             'autoql-vanilla-chata-confirm-icon',
@@ -844,6 +874,7 @@ export function DataMessenger(options = {}) {
 
             if (closePop) {
                 obj.closePopOver(obj.clearMessagePop);
+				obj.filterLocking.hide()
             }
 
             if (closeAutoComplete) {

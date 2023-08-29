@@ -202,7 +202,7 @@ export function LineChartNew(container, params = {}) {
         changeStringColumnIndices,
         columnIndexConfig = {},
         stacked,
-        aggregated,
+        aggregated
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndex } = columnIndexConfig;
@@ -219,7 +219,7 @@ export function LineChartNew(container, params = {}) {
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
-        aggregated,
+        aggregated
     };
 
     this.xScale = getBandScale({
