@@ -10,9 +10,7 @@ export function ButtonContainer(lines){
     view.onIncludeClick = () => {}
     view.onExcludeClick = () => {}
     const filterType = lines[0].filter_type
-	textInclude.classList.add('autoql-vanilla-text-include')
     textInclude.textContent = strings.include
-	textExclude.classList.add('autoql-vanilla-text-exclude')
     textExclude.textContent =  strings.exclude
 
     view.classList.add('autoql-vanilla-radio-btn-container')
