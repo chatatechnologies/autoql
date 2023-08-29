@@ -184,11 +184,16 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 var columnInputs = Array.from(inputs).filter((input) => !input.hasAttribute('data-is-col-header'));
                 var unCheckedColumnInputs = columnInputs.filter((input) => !input.checked);
                 var unCheckedColumnInputsCount = unCheckedColumnInputs.length;
+				var disabledColumnInputs = document.querySelectorAll(`input[disabled='true'][data-col-type='${type}']`);
+				var disabledColumnInputsCount = disabledColumnInputs.length;
                 if (unCheckedColumnInputsCount !== 0) {
                     columnHeaderInput.checked = false;
                 } else {
                     columnHeaderInput.checked = true;
                 }
+				if (disabledColumnInputsCount===unCheckedColumnInputsCount) {
+					columnHeaderInput.checked = true;
+				}
             }
             if (type !== obj.groupType) {
                 obj.groupType = type;
