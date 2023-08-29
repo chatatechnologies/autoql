@@ -20,7 +20,7 @@ import { TIMESTAMP_FORMATS } from '../Constants';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { ChataUtils } from '../ChataUtils';
 import { Modal } from '../Modal';
-import { NotificationSettingsModal, NotificationIcon, NotificationFeed } from '../Notifications';
+import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
@@ -502,7 +502,7 @@ export function DataMessenger(options = {}) {
         `);
 
         button.onclick = () => {
-            var modalView = new NotificationSettingsModal(obj.options);
+           /*  var modalView = new NotificationSettingsModal(obj.options);
             var configModal = new Modal(
                 {
                     withFooter: true,
@@ -550,7 +550,7 @@ export function DataMessenger(options = {}) {
                     modalView.getValues(),
                     o,
                 );
-            };
+            }; */
         };
 
         container.style.display = 'none';

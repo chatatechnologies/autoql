@@ -16,7 +16,6 @@ import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_S
 import { ChataRadio } from '../ChataComponents';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
-import { NotificationSettingsModal } from '../Notifications';
 import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
 import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
@@ -227,7 +226,7 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 };
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
-    var o = extraParams.caller.options;
+/*     var o = extraParams.caller.options;
     var modalView = new NotificationSettingsModal(o);
     var configModal = new Modal(
         {
@@ -292,7 +291,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
         const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
         await apiCallPost(URL, modalView.getValues, o);
         configModal.close();
-    };
+    }; */
 };
 
 ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams = {}) => {
