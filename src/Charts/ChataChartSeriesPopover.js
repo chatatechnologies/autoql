@@ -13,7 +13,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     var indexList = getIndexesByType(cols);
     var seriesIndexes = [];
     var aggConfig = getAggConfig(cols) ?? {};
-    const allColumns = cloneObject(cols);
+    const allColumns = cloneObject(cols)
     activeSeries.map((col) => {
         seriesIndexes.push(col.index);
     });
@@ -97,7 +97,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             size: 'small',
             onChange: (option) => {
                 if (column?.col) {
-                    aggConfig[column?.col?.name] = option.value;
+                    aggConfig[column?.col?.name] = option.value
                 }
             },
         });
@@ -284,16 +284,17 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 }
             }
 
-            const newColumns = allColumns.map((col) => {
-                const aggType = aggConfig[col?.name];
+            const newColumns = allColumns.map(col => {
+                const aggType = aggConfig[col?.name]
                 if (aggType && col) {
-                    col.aggType = aggType;
+                    col.aggType = aggType
                 }
 
-                return col;
-            });
+                return col
+            })
 
-            scale?.changeColumnIndices?.(activeSeries, newColumns);
+            scale?.changeColumnIndices?.(activeSeries, undefined, newColumns);
+            scale?.changeAggConfig?.(aggConfig)
 
             popover.close();
         };

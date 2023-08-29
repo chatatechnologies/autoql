@@ -216,7 +216,11 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
 
+<<<<<<< HEAD
     component.columnIndexConfig = tableConfig;
+=======
+    component.columnIndexConfig = tableConfig
+>>>>>>> origin
 
     // TODO - move this to its parent element instead
     var groupableCount = getNumberOfGroupables(json?.data?.columns);
@@ -238,16 +242,16 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     // TODO(Nikki) - update parent component with changes
     component.onNewPage = (newRows) => {
-        var tableRowCountElement = component.parentElement.querySelector('.autoql-vanilla-chata-table-row-count');
-        var currentText = tableRowCountElement.textContent;
-        var matches = currentText.match(/(\d+)/);
-        if (matches && matches.length > 0) {
-            var currentTableRowCount = parseInt(matches[0]);
-            var newCurrentTableRowCount = currentTableRowCount + newRows.length;
-            var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
-            tableRowCountElement.textContent = newText;
-        }
-    };
+		var tableRowCountElement = component.parentElement.querySelector(".autoql-vanilla-chata-table-row-count")
+		var currentText = tableRowCountElement.textContent;
+		var matches = currentText.match(/(\d+)/);
+		if (matches && matches.length > 0) {
+			var currentTableRowCount = parseInt(matches[0]);
+			var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+			var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
+			tableRowCountElement.textContent = newText;
+		  }
+	};
 
     // TODO(Nikki) - update parent component with changes
     component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
@@ -593,7 +597,11 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
         return;
     }
 
+<<<<<<< HEAD
     const { dataFormatting } = options;
+=======
+    const { dataFormatting } = options
+>>>>>>> origin
 
     const columns = formatQueryColumns({ columns: json?.data?.columns, queryResponse: { data: json } });
 
@@ -606,13 +614,22 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
         isFirstGeneration: true,
     });
 
+<<<<<<< HEAD
     tableConfig.stringColumnIndex = pivotData.stringColumnIndex;
     tableConfig.legendColumnIndex = pivotData.legendColumnIndex;
+=======
+    tableConfig.stringColumnIndex = pivotData.stringColumnIndex
+    tableConfig.legendColumnIndex = pivotData.legendColumnIndex
+>>>>>>> origin
 
     const pivotTableData = pivotData.pivotTableData;
     const pivotColumns = pivotData.pivotTableColumns;
 
+<<<<<<< HEAD
     component.columnIndexConfig = tableConfig;
+=======
+    component.columnIndexConfig = tableConfig
+>>>>>>> origin
 
     component.classList.add('table-condensed');
 

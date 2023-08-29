@@ -4,6 +4,7 @@ import '../../css/PopoverChartSelector.css';
 
 const clickedOutsideBounds = (e, popover) => {
     if (!popover?.position) {
+<<<<<<< HEAD
         return false;
     }
 
@@ -21,6 +22,25 @@ const clickedOutsideBounds = (e, popover) => {
     }
     return false;
 };
+=======
+        return false
+    }
+
+    if (e.x < popover.position.left) {
+        return true
+    }
+    if (e.y < popover.position.top) {
+        return true
+    }
+    if (e.x > popover.position.left + popover.clientWidth) {
+        return true
+    }
+    if (e.y > popover.position.top + popover.clientHeight) {
+        return true
+    }
+    return false
+}
+>>>>>>> origin
 
 export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'start', padding = 5, className) {
     this.popoverID = uuidv4();
@@ -92,21 +112,19 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
             position.left = bbox.left - popover.clientWidth - padding;
         }
 
-        const popoverRight = popover.clientWidth + position.left + padding;
-        const screenRight = window.innerWidth;
-        if (popoverRight > screenRight) {
-            position.left = screenRight - popover.clientWidth - padding;
+        var pageYOffset = window.scrollY;
+
+        if (popover.clientWidth + position.left + padding > window.innerWidth) {
+            position.left = window.innerWidth - popover.clientWidth - padding;
         }
 
-        const popoverBottom = popover.clientHeight + position.top + padding;
-        const screenBottom = window.innerHeight;
-        if (popoverBottom > screenBottom) {
-            position.top = screenBottom - popover.clientHeight - padding;
+        if (position.top + popover.offsetHeight > window.screen.height) {
+            position.top += pageYOffset - popover.clientHeight;
         }
 
         popover.position = position;
         popover.style.left = `${position.left}px`;
-        popover.style.top = `${position.top}px`;
+        popover.style.top = `${position.top + pageYOffset}px`;
     };
 
     popover.show = () => {
@@ -114,10 +132,14 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
         popover.classList.remove('autoql-vanilla-popover-selector-hidden');
         popover.setPosition();
 
+<<<<<<< HEAD
         setTimeout(() => {
             document.body.addEventListener('click', popover.onClickOutside);
             popover.setPosition();
         }, 100);
+=======
+        setTimeout(() => { document.body.addEventListener('click', popover.onClickOutside) }, 0)
+>>>>>>> origin
 
         return popover;
     };
@@ -127,6 +149,7 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
             popover.close();
         }
     };
+<<<<<<< HEAD
 
     popover.toggleVisibility = () => {
         if (popover.style.visibility === 'visible') {
@@ -143,6 +166,12 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
     };
 
     popover.destroy = () => {
+=======
+
+    popover.close = () => {
+        popover.style.visibility = 'hidden';
+        popover.style.opacity = 0;
+>>>>>>> origin
         popover.parentElement?.removeChild?.(popover);
         document.body.removeEventListener('click', popover.onClickOutside);
     };

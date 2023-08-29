@@ -1,19 +1,27 @@
 import { PopoverChartSelector } from '../../Charts/PopoverChartSelector';
+<<<<<<< HEAD
 import { CARET_DOWN_ICON } from '../../Svg';
 import { createIcon, uuidv4 } from '../../Utils';
+=======
+>>>>>>> origin
 
 import './Select.scss';
 
 export function Select({
     options,
     disabled = false,
+<<<<<<< HEAD
     fullWidth = false,
+=======
+    fullWidth,
+>>>>>>> origin
     label,
     outlined = true,
     size = 'large',
     initialValue,
     placeholder = 'Select an item',
     showArrow = true,
+<<<<<<< HEAD
     position = 'bottom',
     align = 'start',
     popoverClassName,
@@ -38,6 +46,10 @@ export function Select({
         }
     };
 
+=======
+    onChange = () => {},
+}) {
+>>>>>>> origin
     this.createSelect = () => {
         this.select = document.createElement('div');
         this.select.classList.add('autoql-vanilla-select-and-label');
@@ -79,37 +91,25 @@ export function Select({
         const selectTextContent = document.createElement('span');
         this.selectTextContent = selectTextContent;
         selectText.appendChild(selectTextContent);
-
-        this.select.setValue = (value) => {
-            const selectedValue = value ?? this.selectedValue;
-            const selectedOption = options.find((option) => option.value == selectedValue);
-
-            if (!selectedOption) {
-                return
-            }
-            
-            this.selectedValue = selectedOption.value;
-
-            if (selectedOption?.label || selectedOption?.value) {
-                selectTextContent.classList.add('autoql-vanilla-menu-item-value-title');
-                selectTextContent.innerHTML = `${selectedOption.label ?? selectedOption.value}`;
-            } else {
-                selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
-                selectTextContent.innerHTML = placeholder;
-            }
-
-            onChange(selectedOption);
-        };
-
-        this.select.setValue();
+        const selectedOption = options.find((option) => option.value === this.selectedValue);
+        if (selectedOption?.label || selectedOption?.value) {
+            selectTextContent.classList.add('autoql-vanilla-menu-item-value-title');
+            selectTextContent.innerHTML = selectedOption.label ?? selectedOption.value;
+        } else {
+            selectTextContent.classList.add('react-autoql-select-text-placeholder');
+            selectTextContent.innerHTML = placeholder;
+        }
 
         if (showArrow) {
             const selectArrow = document.createElement('div');
             selectArrow.classList.add('autoql-vanilla-select-arrow');
+<<<<<<< HEAD
 
             const selectArrowIcon = createIcon(CARET_DOWN_ICON);
             selectArrow.appendChild(selectArrowIcon);
 
+=======
+>>>>>>> origin
             selectElement.appendChild(selectArrow);
         }
 
@@ -117,15 +117,23 @@ export function Select({
             if (this.popover) {
                 this.popover = undefined;
             } else {
+<<<<<<< HEAD
                 this.popover = new PopoverChartSelector(e, position, align, 0);
                 this.popover.classList.add('autoql-vanilla-select-popover')
                 if (popoverClassName) this.popover.classList.add(popoverClassName);
+=======
+                this.popover = new PopoverChartSelector(e, 'bottom', 'start', 0, 'autoql-vanilla-select-popover');
+>>>>>>> origin
 
                 const selectorContent = this.createPopoverContent();
 
                 this.popover.appendContent(selectorContent);
 
+<<<<<<< HEAD
                 this.showPopover();
+=======
+                this.popover?.show();
+>>>>>>> origin
             }
         });
     };
@@ -141,15 +149,26 @@ export function Select({
             const li = document.createElement('li');
 
             li.classList.add('autoql-vanilla-select-list-item');
+<<<<<<< HEAD
             li.id = `select-option-${this.ID}-${i}`;
 
             if (option.value == this.selectedValue) {
+=======
+
+            if (option.value === this.selectedValue) {
+>>>>>>> origin
                 li.classList.add('active');
             }
 
             li.onclick = (e) => {
                 e.stopPropagation();
+<<<<<<< HEAD
                 this.select.setValue(option.value)
+=======
+                this.selectedValue = options.value;
+                this.selectTextContent.innerHTML = option.label ?? option.value;
+                onChange(option);
+>>>>>>> origin
                 this.popover?.close();
             };
 

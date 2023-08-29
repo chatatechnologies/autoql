@@ -377,7 +377,6 @@ export function DataMessenger(options = {}) {
     };
 
     obj.closeDrawer = () => {
-        closeAllChartPopovers();
         obj.closePopOver(obj.clearMessagePop);
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
