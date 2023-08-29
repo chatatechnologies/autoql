@@ -39,7 +39,8 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             inputs[i].checked = false;
         }
 	}
-	// react-autoql doesn't have below feature
+	// TODO - <reason for keeping> react-autoql doesn't have below feature, but still keep it for future. </reason>
+	// 
     // var deselectCheckBox = () => {
     //     const type = obj.groupType;
     //     var inputs = content.querySelectorAll(`[data-col-type="${type}"]`);
