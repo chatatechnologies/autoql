@@ -1,8 +1,12 @@
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
 import './DataAlertCreationModal.scss';
+import { StepContainer } from "./StepContainer";
 
 export function DataAlertCreationModal() {
+  const container = document.createElement('div');
+  const stepContainer = new StepContainer();
+
   const confirmDialogProps = {
     title: 'Are you sure you want to leave this page?',
     message: 'All unsaved changes will be lost.',
@@ -60,9 +64,11 @@ export function DataAlertCreationModal() {
     return modalFooter;
   }
 
+  container.appendChild(stepContainer);
   modal.chataModal.classList.add('autoql-vanilla-data-alert-creation-modal-full-size');
   modal.setTitle('Create Data Alert');
   modal.addFooterElement(this.createFooter());
+  modal.addView(container);
 
   return modal;
 }
