@@ -76,6 +76,12 @@ export function Axis(container, params = {}, axisOptions = {}) {
     };
 
     const onSelectorClick = (evt, legendEvent) => {
+        if (this.axisSelectorPopover?.style?.visibility === 'visible') {
+            this.axisSelectorPopover.destroy();
+            this.axisSelectorPopover = undefined;
+            return
+        }
+
         let placement;
         if (orient === 'left') {
             placement = 'right';
@@ -87,7 +93,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             placement = 'bottom';
         }
 
-        new ChataChartListPopover(evt, scale, columns, placement, 'middle');
+        this.axisSelectorPopover = new ChataChartListPopover(evt, scale, columns, placement, 'middle');
     };
 
     const handleLabelRotation = () => {
