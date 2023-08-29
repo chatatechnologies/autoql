@@ -105,7 +105,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         return selector;
     };
 
-    var createCheckbox = ({ column = '', columnInfo = '',header = '' }, checked = false) => {
+    var createCheckbox = ({ column = '', columnInfo = '',header = '' }, checked = false, disabled = false) => {
 		if(column !== ''){
 			var colObj = column.col;
 			var colName = colObj.display_name || colObj.name;
