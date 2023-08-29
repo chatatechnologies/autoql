@@ -1,4 +1,4 @@
-import { create } from "d3";
+import './StepContainer.scss';
 
 export function StepContainer() {
   const container = document.createElement('div');
@@ -26,14 +26,16 @@ export function StepContainer() {
     step.appendChild(titleContainer);
     stepContainer.appendChild(step);
 
-    return step;
+    return stepContainer;
   }
 
   this.conditionsStep = this.createStep('Set Up Conditions', '1');
   this.timingStep = this.createStep('Configure Timing', '2');
   this.appearanceStep = this.createStep('Customize Appearance', '3');
 
-  stepContainer.appendChild(this.conditionsStep);
+  container.appendChild(this.conditionsStep);
+  container.appendChild(this.timingStep);
+  container.appendChild(this.appearanceStep);
 
-  return stepContainer;
+  return container;
 }
