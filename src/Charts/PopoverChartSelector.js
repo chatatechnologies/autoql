@@ -111,12 +111,13 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
 
     popover.show = () => {
         popover.style.visibility = 'visible';
+        popover.classList.remove('autoql-vanilla-popover-selector-hidden');
         popover.setPosition();
 
         setTimeout(() => {
             document.body.addEventListener('click', popover.onClickOutside);
             popover.setPosition();
-        }, 1000);
+        }, 100);
 
         return popover;
     };
@@ -137,6 +138,7 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
 
     popover.close = () => {
         popover.style.visibility = 'hidden';
+        popover.classList.add('autoql-vanilla-popover-selector-hidden');
         document.body.removeEventListener('click', popover.onClickOutside);
     };
 

@@ -62,6 +62,12 @@
     background: var(--autoql-vanilla-accent-color) !important;
 }
 
+.autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input:disabled {
+    pointer-events: none !important;
+    border: 1px solid var(--autoql-vanilla-border-color) !important;
+    background-color: var(--autoql-vanilla-background-color-disabled) !important;
+}
+
 .autoql-vanilla-m-checkbox__input:before {
     content: " " !important;
     position: absolute !important;
