@@ -18,7 +18,6 @@ import './DataMessengerPage.css'
 const SortableItem = sortable(Item)
 
 export class DataMessengerPage extends Component {
-
     state = {
         uiOverlay: false,
         isVisible: false,
@@ -35,8 +34,8 @@ export class DataMessengerPage extends Component {
         enableQuerySuggestions: true,
         enableDrilldowns: true,
         enableDataExplorerTab: true,
-        enableNotificationsTab: true,
-        enableNotifications: true,
+        enableNotificationsTab: false,
+        enableNotifications: false,
         enableColumnVisibilityManager: true,
         enableVoiceRecord: true,
         dashboardTitleColor: 'rgb(72, 105, 142)',
@@ -47,10 +46,10 @@ export class DataMessengerPage extends Component {
         lightAccentColor: '#26a7df',
         // lightAccentColor: '#2466AE',
         dashboardBackground: '#fafafa',
-        darkAccentColor: '#26a7df',
+        darkAccentColor: '#193a48',
         maxMessages: 12,
         isEditing: false,
-        debug: true,
+        debug: false,
         test: true,
         currencyCode: 'USD',
         languageCode: 'en-US',
@@ -256,7 +255,12 @@ export class DataMessengerPage extends Component {
                     'Debug Mode - Show copy to SQL button in message toolbar',
                     'debug',
                     [true, false],
-                    this.onChangeDMProp
+                    (prop, val) => {
+                        this.setState({ [prop]: val })
+                        this.props.setDMOption('autoQLConfig', {
+                            debug: val
+                        })
+                    }
                 )}
                 {this.createBooleanRadioGroup(
                     'Test Mode (Provides extra logging on the server side)',

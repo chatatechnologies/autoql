@@ -1,0 +1,322 @@
+.autoql-vanilla-popover-selector {
+    .autoql-vanilla-date-picker-container {
+        background: var(--autoql-vanilla-background-color-secondary);
+        color: var(--autoql-vanilla-text-color-primary);
+        padding: 20px;
+        padding-bottom: 15px;
+        display: flex;
+        justify-content: center;
+        align-items: stretch;
+        flex-direction: column;
+
+        h3 {
+            margin-top: 0;
+            margin-left: 5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .autoql-vanilla-date-picker-calendar-container {
+            position: relative;
+            overflow: visible;
+        }
+
+        .autoql-vanilla-month-range-picker,
+        .autoql-vanilla-year-range-picker {
+            .autoql-vanilla-date-display-wrapper {
+                background: var(--autoql-vanilla-background-color-primary);
+
+                .autoql-vanilla-date-display {
+                    color: var(--autoql-vanilla-accent-color) !important;
+
+                    .autoql-vanilla-date-display-item {
+                        background: var(--autoql-vanilla-background-color-secondary);
+                        input {
+                            color: var(--autoql-vanilla-text-color-primary);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &.autoql-vanilla-popover-selector-hidden {
+        transition: none;
+        display: none;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+    }
+}
+
+.autoql-vanilla-month-range-picker,
+.autoql-vanilla-year-range-picker {
+    font-size: 12px;
+    display: inline-flex;
+    flex-direction: column;
+
+    .autoql-vanilla-day-disabled {
+        background-color: var(--autoql-vanilla-hover-color);
+        pointer-events: none;
+        opacity: 0.3;
+    }
+
+    .autoql-vanilla-date-display {
+        display: flex;
+        justify-content: space-between;
+        margin: 0.833em;
+        color: var(--autoql-vanilla-accent-color) !important;
+        margin: 0.833em;
+    }
+
+    .autoql-vanilla-date-picker-input {
+        position: relative;
+        input {
+            outline: none;
+        }
+    }
+
+    .autoql-vanilla-date-display-item {
+        flex: 1 1;
+        width: 0;
+        text-align: center;
+        color: inherit;
+        border-radius: 4px;
+        background-color: var(--autoql-vanilla-background-color-secondary);
+        box-shadow: 0 1px 2px 0 rgba(35, 57, 66, 0.21);
+        border: 1px solid transparent;
+
+        & + .autoql-vanilla-date-display-item {
+            margin-left: 0.833em;
+        }
+    }
+
+    .autoql-vanilla-date-display-item input {
+        text-align: inherit;
+        cursor: pointer;
+        height: 2.5em;
+        line-height: 2.5em;
+        border: 0px;
+        background: transparent;
+        width: 100%;
+        color: #849095;
+
+        &:disabled {
+            cursor: default;
+        }
+    }
+
+    .autoql-vanilla-date-display-item-active {
+        border-color: currentColor;
+    }
+
+    .autoql-vanilla-date-display-item-active input {
+        color: var(--autoql-vanilla-text-color-primary);
+    }
+
+    .autoql-vanilla-month-picker-year,
+    .autoql-vanilla-year-picker-decade {
+        box-sizing: inherit;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex: 0 0 60px;
+    }
+
+    .autoql-vanilla-next-prev-btn {
+        display: block;
+        width: 24px;
+        height: 24px;
+        margin: 0 0.833em;
+        padding: 0;
+        border: 0;
+        border-radius: 5px;
+        background-color: var(--autoql-vanilla-border-color);
+        color: var(--autoql-vanilla-text-color-primary);
+        opacity: 0.8;
+        box-sizing: inherit;
+        cursor: pointer;
+        outline: none;
+
+        &:disabled {
+            opacity: 0.5 !important;
+            cursor: not-allowed;
+        }
+    }
+
+    .autoql-vanilla-year-picker-popover,
+    .autoql-vanilla-decade-picker-popover {
+        text-align: center;
+    }
+
+    .year-picker {
+        .autoql-vanilla-select {
+            border-radius: 4px !important;
+            border: 1px solid transparent !important;
+            outline: 0;
+            text-align: center;
+            transition: none;
+            padding: 0px 4px !important;
+            font-size: 13px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: var(--autoql-vanilla-border-color);
+                color: var(--autoql-vanilla-text-color-primary) !important;
+            }
+        }
+    }
+    .autoql-vanilla-month-picker,
+    .autoql-vanilla-year-picker {
+        padding-bottom: 20px;
+        padding-left: 10px;
+        padding-right: 10px;
+
+        .month-picker-row,
+        .year-picker-row {
+            display: flex;
+            justify-content: center;
+        }
+
+        .month-picker-month,
+        .year-picker-year,
+        .day-picker-day {
+            cursor: pointer;
+            margin: 2px 0px;
+            padding: 1px 0px;
+            border-top: 1px solid var(--autoql-vanilla-background-color-secondary);
+            border-bottom: 1px solid var(--autoql-vanilla-background-color-secondary);
+
+            .month-picker-month-text-wrapper,
+            .year-picker-year-text-wrapper,
+            .day-picker-day-text-wrapper {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                position: relative;
+                width: 60px;
+                height: 30px;
+                border-radius: 100px;
+                font-weight: 200;
+            }
+
+            .day-picker-day-text-wrapper {
+                width: 46px;
+                height: 28px;
+            }
+
+            &.preview {
+                border-radius: 1px;
+                border-top: 1px solid var(--autoql-vanilla-accent-color);
+                border-bottom: 1px solid var(--autoql-vanilla-accent-color);
+
+                &.preview-start {
+                    border-left: 1px solid var(--autoql-vanilla-accent-color);
+                    margin-left: -1px;
+                    border-bottom-left-radius: 100px;
+                    border-top-left-radius: 100px;
+                    &.selection-start {
+                        padding-left: 1px;
+                        margin-left: -2px;
+                    }
+                }
+
+                &.preview-end {
+                    border-right: 1px solid var(--autoql-vanilla-accent-color);
+                    margin-right: -1px;
+                    border-bottom-right-radius: 100px;
+                    border-top-right-radius: 100px;
+                    &.selection-end {
+                        padding-right: 1px;
+                        margin-right: -2px;
+                    }
+                }
+            }
+
+            .day-picker-day-text-wrapper .year-picker-year-text.inactive {
+                opacity: 0.3;
+            }
+
+            &.active {
+                .month-picker-month-text-wrapper .month-picker-month-text,
+                .year-picker-year-text-wrapper .year-picker-year-text,
+                .day-picker-day-text-wrapper .year-picker-year-text {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 100px;
+                }
+                &:hover .month-picker-month-text-wrapper .month-picker-month-text,
+                &:hover .year-picker-year-text-wrapper .year-picker-year-text,
+                &:hover .day-picker-day-text-wrapper .year-picker-year-text {
+                    background: #ffffff2b;
+                }
+
+                .month-picker-month-text-wrapper,
+                .year-picker-year-text-wrapper,
+                .day-picker-day-text-wrapper {
+                    background-color: var(--autoql-vanilla-accent-color);
+                    color: var(--autoql-vanilla-text-color-accent);
+                    border-radius: 1px;
+                }
+
+                // &:first-child,
+                &.selection-start {
+                    .month-picker-month-text-wrapper,
+                    .year-picker-year-text-wrapper,
+                    .day-picker-day-text-wrapper {
+                        border-top-left-radius: 100px;
+                        border-bottom-left-radius: 100px;
+                    }
+                }
+
+                // &:last-child,
+                &.selection-end {
+                    .month-picker-month-text-wrapper,
+                    .year-picker-year-text-wrapper,
+                    .day-picker-day-text-wrapper {
+                        border-top-right-radius: 100px;
+                        border-bottom-right-radius: 100px;
+                    }
+                }
+            }
+
+            &.current-month,
+            &.current-year {
+                .month-picker-month-text-wrapper .month-picker-month-text:after,
+                .year-picker-year-text-wrapper .year-picker-year-text:after,
+                .day-picker-day-text-wrapper .year-picker-year-text:after {
+                    content: '';
+                    position: absolute;
+                    bottom: 3px;
+                    left: 50%;
+                    transform: translate(-50%, 0);
+                    width: 24px;
+                    height: 2px;
+                    border-radius: 2px;
+                    background: var(--autoql-vanilla-accent-color);
+                }
+                &.active .month-picker-month-text-wrapper .month-picker-month-text:after,
+                &.active .year-picker-year-text-wrapper .year-picker-year-text:after,
+                &.active .day-picker-day-text-wrapper .year-picker-year-text:after {
+                    background: var(--autoql-vanilla-text-color-accent);
+                }
+            }
+        }
+
+        .autoql-vanilla-weekday-labels {
+            display: flex;
+
+            .autoql-vanilla-weekday-label {
+                color: var(--autoql-vanilla-text-color-placeholder);
+                font-weight: 400;
+                line-height: 2.667em;
+                flex-basis: calc(100% / 7);
+                box-sizing: inherit;
+                text-align: center;
+            }
+        }
+    }
+}
