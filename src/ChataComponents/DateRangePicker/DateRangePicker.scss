@@ -124,7 +124,9 @@
     }
 
     .autoql-vanilla-next-prev-btn {
-        display: block;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         width: 24px;
         height: 24px;
         margin: 0 0.833em;

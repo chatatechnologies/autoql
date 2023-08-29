@@ -97,10 +97,25 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         }
     };
 
-    this.onDayStartSelection = (timestamp) => {
-        this.selectedStart = timestamp.startOf('day');
-        this.selectedEnd = undefined;
+    this.setSelectedStart = (timestamp) => {
+        this.selectedStart = timestamp
 
+        if (timestamp) {
+            this.dateDisplayStartInput?.setAttribute('value', timestamp.format('ll'))
+        }
+    }
+
+    this.setSelectedEnd = (timestamp) => {
+        this.selectedEnd = timestamp
+
+        if (timestamp) {
+            this.dateDisplayEndInput?.setAttribute('value', timestamp.format('ll'))
+        }
+    }
+
+    this.onDayStartSelection = (timestamp) => {
+        this.setSelectedStart(timestamp.startOf('day'));
+        this.setSelectedEnd(undefined);
         this.setFocusedDateDisplay('end');
 
         const rangeSelection = [this.selectedStart, timestamp];
@@ -116,10 +131,11 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     this.onDayEndSelection = (timestamp) => {
         try {
             if (!this.selectedStart) {
-                this.selectedStart = timestamp;
+                this.setSelectedStart(timestamp)
             }
 
-            this.selectedEnd = timestamp;
+            this.setSelectedEnd(timestamp);
+
             this.setFocusedDateDisplay('start');
 
             const rangeSelection = [this.selectedStart, timestamp];
@@ -130,8 +146,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             const selectedStartYearStart = rangeSelection[0].startOf('day');
             const selectedEndYearEnd = rangeSelection[1].endOf('day');
 
-            this.selectedStart = selectedStartYearStart;
-            this.selectedEnd = selectedEndYearEnd;
+            this.setSelectedStart(selectedStartYearStart)
+            this.setSelectedEnd(selectedEndYearEnd)
 
             onRangeSelection({
                 startDate: selectedStartYearStart.toDate(),
@@ -288,6 +304,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             this.setFocusedDateDisplay('start');
         });
         dateDisplayStart.appendChild(dateDisplayStartInput);
+        this.dateDisplayStartInput = dateDisplayStartInput;
 
         const dateDisplayEnd = document.createElement('span');
         dateDisplayEnd.classList.add('autoql-vanilla-date-picker-input');
@@ -295,6 +312,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         if (this.focusedDateDisplay === 'end') dateDisplayEnd.classList.add('autoql-vanilla-date-display-item-active');
         dateDisplayDiv.appendChild(dateDisplayEnd);
         this.dateDisplayEnd = dateDisplayEnd;
+
 
         const dateDisplayEndInput = document.createElement('input');
         dateDisplayEndInput.setAttribute('readOnly', true);
@@ -304,6 +322,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             this.setFocusedDateDisplay('end');
         });
         dateDisplayEnd.appendChild(dateDisplayEndInput);
+        this.dateDisplayEndInput = dateDisplayEndInput;
 
         this.dayPicker?.appendChild(dateDisplayWrapper);
     };
