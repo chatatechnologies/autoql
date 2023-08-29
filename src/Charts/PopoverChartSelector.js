@@ -127,6 +127,14 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
         }
     };
 
+    popover.toggleVisibility = () => {
+        if (popover.style.visibility === 'visible') {
+            popover.close();
+        } else {
+            popover.show();
+        }
+    }
+
     popover.close = () => {
         popover.style.visibility = 'hidden';
         document.body.removeEventListener('click', popover.onClickOutside);
