@@ -2163,7 +2163,7 @@ export function DataMessenger(options = {}) {
 
         obj.displayTableHandler(idRequest);
 
-        if (parsed_interpretation && !isDrilldown) {
+        if (parsed_interpretation) {
             var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
             containerMessage.appendChild(interpretationView);
         }
