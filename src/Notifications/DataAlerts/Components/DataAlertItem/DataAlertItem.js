@@ -26,7 +26,7 @@ import {
 } from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
-import { EditDataAlertModal } from '../EditDataAlertModal/EditDataAlertModal';
+import { DataAlertEditModal } from '../DataAlertEditModal/DataAlertEditModal';
 
 const labelsMap = [
   {name: 'Data Alert Name', className: 'autoql-vanilla-notification-setting-display-name-header'},
@@ -232,7 +232,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader=false }) {
   }
 
   const editDataAlertItemHandler = () => {
-    const modal = new EditDataAlertModal({ dataAlertItem: item, dataAlert, authentication });
+    const modal = new DataAlertEditModal({ dataAlertItem: item, dataAlert, authentication });
     modal.show();
   }
 

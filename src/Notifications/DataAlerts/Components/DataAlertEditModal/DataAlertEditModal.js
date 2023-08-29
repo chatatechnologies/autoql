@@ -1,13 +1,13 @@
 import { ChataConfirmDialog } from "../../../Components/ChataConfirmDialog/ChataConfirmDialog";
 import { Modal } from "../../../../Modal";
-import './EditDataAlertModal.scss';
+import './DataAlertEditModal.scss';
 import { ConditionsView } from "../ConditionsView/ConditionsView";
 import { TimingView } from "../TimingView";
 import { AppearanceView } from "../AppearanceView";
 import { updateDataAlert } from "autoql-fe-utils";
 import { AntdMessage } from "../../../../Antd";
 
-export function EditDataAlertModal({ dataAlertItem, dataAlert, authentication }) {
+export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication }) {
   const btnDelete = document.createElement('button');
   const btnCancel = document.createElement('button');
   const btnSave = document.createElement('button');

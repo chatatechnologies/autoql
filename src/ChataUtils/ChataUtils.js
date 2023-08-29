@@ -21,6 +21,7 @@ import { strings } from '../Strings';
 import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
 
 import '../../css/PopoverMenu.css';
+import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -226,6 +227,8 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 };
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
+    const modal = new DataAlertCreationModal();
+    modal.show();
 /*     var o = extraParams.caller.options;
     var modalView = new NotificationSettingsModal(o);
     var configModal = new Modal(

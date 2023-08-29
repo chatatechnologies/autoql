@@ -12,7 +12,7 @@ import { NotificationSummary } from "../NotificationSummary";
 import { NotificationDataContainer } from "../NotificationDataContainer";
 import { refreshTooltips } from "../../../../Tooltips";
 import { MoreOptionsPopup } from "../MoreOptionsPopup";
-import { EditDataAlertModal } from "../../../DataAlerts/Components/EditDataAlertModal/EditDataAlertModal";
+import { DataAlertEditModal } from "../../../DataAlerts/Components/DataAlertEditModal/DataAlertEditModal";
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;
@@ -76,8 +76,8 @@ export function NotificationItem({
     return overlay;
   }
 
-  this.showEditDataAlertModal = () => {
-    const modal = new EditDataAlertModal({ dataAlertItem: item, dataAlert, authentication });
+  this.showDataAlertEditModal = () => {
+    const modal = new DataAlertEditModal({ dataAlertItem: item, dataAlert, authentication });
     modal.show();
     moreOptionsPopup.close();
   }
