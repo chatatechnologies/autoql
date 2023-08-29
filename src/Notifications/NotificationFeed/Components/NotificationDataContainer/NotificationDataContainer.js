@@ -11,8 +11,8 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const responseContentContainer = document.createElement('div');
-  var idRequest = uuidv4();
-  ChataUtils.responses[idRequest] = queryResponse.data;
+  this.idRequest = uuidv4();
+  ChataUtils.responses[this.idRequest] = queryResponse.data;
 
   responseContentContainer.classList.add('autoql-vanilla-response-content-container');
   wrapper.classList.add('autoql-vanilla-notification-chart-container');
@@ -48,8 +48,7 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
   this.createVizToolbar = () => {
     return new NotificationVizToolbar({
       response: queryResponse,
-      onClick: this.showResponse,
-      onClickFilterButton: this.handleFilterClick 
+      notificationItem: this,
     });
   }
 
@@ -60,7 +59,7 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
   this.createTable = () => {
     var useInfiniteScroll = isDataLimited({ data: queryResponse?.data });
     const table = new ChataTable(
-      idRequest,
+      this.idRequest,
       { options: dataFormattingDefault },
       () => {},
       () => {},
@@ -82,7 +81,7 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
     var tableContainer = document.createElement('div');
     var tableWrapper = document.createElement('div');
 
-    tableWrapper.setAttribute('data-componentid', idRequest);
+    tableWrapper.setAttribute('data-componentid', this.idRequest);
     tableWrapper.classList.add('autoql-vanilla-chata-table');
     tableContainer.classList.add('autoql-vanilla-chata-table-container');
 

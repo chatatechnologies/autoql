@@ -16,5 +16,9 @@
     .autoql-vanilla-icon {
       margin-right: 10px;
     }
+    &:hover {
+      background: rgba(0,0,0,.05);
+      background: var(--autoql-vanilla-hover-color,rgba(0,0,0,.05));
+    }
   }
 }

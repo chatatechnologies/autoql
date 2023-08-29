@@ -17,12 +17,12 @@ import {
 } from "../../../../Svg";
 import './NotificationVizToolbar.scss';
 import { strings } from "../../../../Strings";
-import { MoreOptionsVizToolbar } from "../MoreOptionsVizToolbar/MoreOptionsVizToolbar";
+import { MoreOptionsVizToolbar } from "../MoreOptionsVizToolbar";
 
-export function NotificationVizToolbar({ response, onClick, onClickFilterButton }) {
+export function NotificationVizToolbar({ response, notificationItem }) {
   const container = document.createElement('div');
   const rightButtons = document.createElement('div');
-  const moreOptionsPopup = new MoreOptionsVizToolbar();
+  const moreOptionsPopup = new MoreOptionsVizToolbar({ notificationItem });
   this.displayType = response?.data?.data.display_type;
   this.selectedBtn = undefined;
 
@@ -102,7 +102,7 @@ export function NotificationVizToolbar({ response, onClick, onClickFilterButton 
           this.selectedBtn.classList.remove('autoql-vanilla-toolbar-btn-selected');
           btn.classList.add('autoql-vanilla-toolbar-btn-selected');
           this.selectedBtn = btn;
-          onClick(dType);
+          notificationItem.showResponse(dType);
           moreOptionsPopup.close();
         }  
         leftButtons.appendChild(btn);
@@ -128,10 +128,10 @@ export function NotificationVizToolbar({ response, onClick, onClickFilterButton 
     filterButton.onclick = () => {
       moreOptionsPopup.close();
       if(isChartType(this.displayType)) {
-        onClick(DisplayTypes.TABLE);
+        notificationItem.showResponse(DisplayTypes.TABLE);
         this.displayType = DisplayTypes.TABLE;
       }
-      onClickFilterButton();
+      notificationItem.handleFilterClick();
     }
 
     moreOptionsBtn.onclick = () => {

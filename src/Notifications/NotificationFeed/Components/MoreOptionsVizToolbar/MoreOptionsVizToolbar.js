@@ -4,8 +4,9 @@ import { createIcon } from "../../../../Utils";
 import { CLIPBOARD_ICON, EXPORT_PNG_ICON } from "../../../../Svg";
 import { strings } from "../../../../Strings";
 import './MoreOptionsVizToolbar.scss';
+import { ChataUtils } from "../../../../ChataUtils";
 
-export function MoreOptionsVizToolbar() {
+export function MoreOptionsVizToolbar({ notificationItem }) {
   const popup = new Popup();
   const menu = document.createElement('ul');
 
@@ -19,6 +20,11 @@ export function MoreOptionsVizToolbar() {
     return item;
   }
 
+  this.handleCopyTableToClipboard = () => {
+    ChataUtils.copyHandler(notificationItem.idRequest);
+    popup.close();
+  }
+
   menu.classList.add('autoql-vanilla-toolbar-more-options');
   popup.appendChild(menu);
 
@@ -30,6 +36,7 @@ export function MoreOptionsVizToolbar() {
     } else {
       const copyTableToClipboard = this.createOption(CLIPBOARD_ICON, strings.copyTable);
       menu.appendChild(copyTableToClipboard);
+      copyTableToClipboard.onclick = this.handleCopyTableToClipboard;
     }
     popup.show({ x, y });
   }
