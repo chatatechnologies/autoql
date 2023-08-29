@@ -397,10 +397,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 columnIndexConfig,
                 aggConfig,
                 aggregated,
-                visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns?.[index]?.isSeriesHidden),
-                visibleSeries2: columnIndexConfig.numberColumnIndices2?.filter(
-                    (index) => !columns?.[index]?.isSeriesHidden,
-                ),
+                visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns[index].isSeriesHidden),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
@@ -483,11 +480,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             if (CHARTS_WITHOUT_AXES.includes(type)) {
                 // Do not redraw
             } else {
-                try {
-                    this.setLabelRotationValues(chartContentWrapper);
-                } catch (error) {
-                    console.error(error);
-                }
+                this.setLabelRotationValues(chartContentWrapper);
 
                 if (firstDraw) {
                     this.drawChart(false);
