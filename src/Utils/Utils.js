@@ -1,4 +1,4 @@
-import { areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
+import { MIN_HISTOGRAM_SAMPLE, areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
@@ -505,6 +505,10 @@ export const getSupportedDisplayTypes = response => {
                 supportedDisplayTypes.push('pie')
             }
 
+            if (rows.length > MIN_HISTOGRAM_SAMPLE) {
+                supportedDisplayTypes.push('histogram');
+            }
+
             const { amountOfNumberColumns } = getColumnTypeAmounts(columns)
             if (amountOfNumberColumns > 1) {
               supportedDisplayTypes.push('column_line')
@@ -714,7 +718,9 @@ export function closeAllChartPopovers(){
     )
 
     for (var i = 0; i < list.length; i++) {
-        if(list[i].isOpen)list[i].close();
+        if(list[i]?.style?.visibility === 'visible') {
+            list[i].close();
+        }
     }
 
 }

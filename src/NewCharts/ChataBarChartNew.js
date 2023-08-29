@@ -55,9 +55,6 @@ export function BarChartNew(container, params = {}) {
         stacked,
     }).scale;
 
-    var xCol = columns[numberColumnIndex];
-    var yCol = columns[stringColumnIndex];
-
     this.createBars = () => {
         if (!visibleSeries?.length) {
             console.warn('Unable to create bars - there are no visible series');
@@ -141,19 +138,17 @@ export function BarChartNew(container, params = {}) {
             });
     };
 
+    if (!firstDraw) {
+        this.createBars();
+    }
+
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
     new Axes(this.axesWrapper, {
         ...params,
         xScale: this.xScale,
         yScale: this.yScale,
-        xCol,
-        yCol,
     });
-
-    if (!firstDraw) {
-        this.createBars();
-    }
 
     return this;
 }

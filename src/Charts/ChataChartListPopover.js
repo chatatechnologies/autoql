@@ -1,4 +1,3 @@
-import { closeAllChartPopovers } from '../Utils';
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover';
 import { PopoverChartSelector } from './PopoverChartSelector';
 

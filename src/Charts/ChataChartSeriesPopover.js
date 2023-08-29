@@ -13,7 +13,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     var indexList = getIndexesByType(cols);
     var seriesIndexes = [];
     var aggConfig = getAggConfig(cols) ?? {};
-    const allColumns = cloneObject(cols)
+    const allColumns = cloneObject(cols);
     activeSeries.map((col) => {
         seriesIndexes.push(col.index);
     });
@@ -97,7 +97,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             size: 'small',
             onChange: (option) => {
                 if (column?.col) {
-                    aggConfig[column?.col?.name] = option.value
+                    aggConfig[column?.col?.name] = option.value;
                 }
             },
         });
@@ -105,14 +105,17 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         return selector;
     };
 
-    var createCheckbox = ({ column = '', columnInfo = '',header = '' }, checked = false) => {
+    var createCheckbox = ({ column = '', columnInfo = '',header = '' }, checked = false, disabled = false) => {
+        let colObj = {}
+        let colName = ''
+        
 		if(column !== ''){
-			var colObj = column.col;
-			var colName = colObj.display_name || colObj.name;
+			colObj = column.col;
+			colName = colObj.display_name || colObj.name;
 		}
 		
 		if(header !== ''){
-			var colName = header
+			colName = header
 		}
         var tick = htmlToElement(`
             <div class="autoql-vanilla-chata-checkbox-tick">
@@ -155,6 +158,10 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
 
         if (checked) {
             checkboxInput.setAttribute('checked', 'true');
+        }
+
+        if (disabled) {
+            checkboxInput.setAttribute('disabled', 'true');
         }
 
         checkboxInput.onchange = (evt) => {
@@ -220,16 +227,24 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
 			var checkedColumnCount = 0;
             for (var i = 0; i < cols.length; i++) {
                 var listItem = document.createElement('div');
+                listItem.classList.add('autoql-vanilla-chata-list-item');
+
                 var colName = document.createElement('div');
                 var colIndex = cols[i].index;
                 var isChecked = seriesIndexes.includes(colIndex);
                 if (isChecked && !obj.groupType) {
                     obj.groupType = cols[i].col.type;
                 }
-                var checkbox = createCheckbox({column:cols[i]}, isChecked);
+
+                var isDisabled = !!scale?.secondScale?.fields?.find((col) => col.index === colIndex);
+                if (isDisabled) {
+                    listItem.classList.add('autoql-vanilla-chata-list-item-disabled');
+                }
+
+                var checkbox = createCheckbox({column:cols[i]}, isChecked, isDisabled);
+                
                 var n = cols[i].col.display_name || cols[i].col.name;
                 colName.innerHTML = formatColumnName(n);
-                listItem.classList.add('autoql-vanilla-chata-list-item');
 
                 const nameAndSelectContainer = document.createElement('div');
                 nameAndSelectContainer.classList.add('autoql-vanilla-chata-col-selector-name');
@@ -272,14 +287,14 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 }
             }
 
-            const newColumns = allColumns.map(col => {
-                const aggType = aggConfig[col?.name]
+            const newColumns = allColumns.map((col) => {
+                const aggType = aggConfig[col?.name];
                 if (aggType && col) {
-                    col.aggType = aggType
+                    col.aggType = aggType;
                 }
 
-                return col
-            })
+                return col;
+            });
 
             scale?.changeColumnIndices?.(activeSeries, newColumns);
 
