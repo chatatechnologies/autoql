@@ -56,7 +56,9 @@ export function FilterLockingInput(datamessenger, filterLocking){
             li.classList.add('autoql-vanilla-filter-suggestion')
             content.classList.add('autoql-vanilla-suggestion-content')
             keyContent.textContent = match.keyword
+			keyContent.classList.add('autoql-vanilla-suggestion-key-content')
             messageContent.textContent = match.show_message
+			messageContent.classList.add('autoql-vanilla-suggestion-message-content')
             content.appendChild(keyContent)
             content.appendChild(messageContent)
             li.appendChild(content)

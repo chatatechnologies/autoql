@@ -1480,6 +1480,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     width: 18px !important;
     height: 18px !important;
 }
+.autoql-vanilla-chata-series-popover-header-wrapper .autoql-vanilla-m-checkbox__input{
+	width: 18px !important;
+    height: 18px !important;
+}
 
 .autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input .autoql-vanilla-chata-checkbox-tick{
     top: 3px;
