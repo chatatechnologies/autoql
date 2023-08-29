@@ -23,6 +23,7 @@ export function ColumnChartNew(container, params = {}) {
         columnIndexConfig = {},
         activeKey,
         stacked,
+		columnLineCombo = false,
         aggregated
     } = params;
 
