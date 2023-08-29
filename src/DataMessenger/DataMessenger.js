@@ -575,6 +575,8 @@ export function DataMessenger(options = {}) {
             showDescription: false,
         });
 
+        console.log(notificationList);
+
         if (obj.isPortrait()) {
             notificationList.style.height = obj.drawerContent.clientHeight - 60 + 'px';
         } else {
