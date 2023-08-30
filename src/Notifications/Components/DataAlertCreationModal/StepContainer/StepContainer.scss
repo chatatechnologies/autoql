@@ -9,12 +9,30 @@
     position: relative;
     padding-left: 8px;
     padding-right: 8px;
-    &.complete {
-      color: var(--autoql-vanilla-accent-color);
-      &.autoql-vanilla-step-hoz-dot {
-        border-color: var(--autoql-vanilla-accent-color);
-        background: var(--autoql-vanilla-accent-color);
-        color: var(--autoql-vanilla-text-color-accent);
+    &.autoql-vanilla-complete, &.autoql-vanilla-active {
+      .autoql-vanilla-step-hoz {
+        color: var(--autoql-vanilla-accent-color);
+        .autoql-vanilla-step-hoz-dot {
+          border-color: var(--autoql-vanilla-accent-color);
+          background: var(--autoql-vanilla-accent-color);
+          color: var(--autoql-vanilla-text-color-accent);
+        }
+      }
+    }
+    &.autoql-vanilla-disabled {
+      .autoql-vanilla-step-hoz {
+        .autoql-vanilla-step-hoz-dot {
+          cursor: default!important;
+          color: var(--autoql-vanilla-text-color-placeholder);
+          border-color: var(--autoql-vanilla-text-color-placeholder);
+        }
+        .autoql-vanilla-step-hoz-title-container {
+          .autoql-vanilla-step-hoz-title {
+            cursor: default!important;
+            color: var(--autoql-vanilla-text-color-placeholder);
+            border-color: var(--autoql-vanilla-text-color-placeholder);
+          }
+        }
       }
     }
     .autoql-vanilla-step-hoz {

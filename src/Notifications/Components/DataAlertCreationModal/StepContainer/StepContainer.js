@@ -33,6 +33,11 @@ export function StepContainer() {
   this.timingStep = this.createStep('Configure Timing', '2');
   this.appearanceStep = this.createStep('Customize Appearance', '3');
 
+  this.conditionsStep.classList.add('autoql-vanilla-active');
+  this.timingStep.classList.add('autoql-vanilla-disabled');
+  this.appearanceStep.classList.add('autoql-vanilla-disabled');
+
+
   container.appendChild(this.conditionsStep);
   container.appendChild(this.timingStep);
   container.appendChild(this.appearanceStep);
