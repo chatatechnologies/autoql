@@ -1,4 +1,4 @@
-import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE } from "autoql-fe-utils";
+import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE } from "autoql-fe-utils";
 import { QueryResultInput } from "../../QueryResultInput";
 import { Selector } from "../../Selector/Selector";
 import { ChipsContainer } from "../../ChipsContainer/ChipsContainer";

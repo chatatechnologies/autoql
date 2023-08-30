@@ -12,7 +12,17 @@
       }
     }
   }
-  .autoql-vanilla-data-alert-settings-modal-content {
-    padding: 20px 70px;
+  .autoql-vanilla-data-alert-modal-step-content-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    .autoql-vanilla-data-alert-modal-step {
+      font-weight: 400;
+      font-size: 15px;
+      padding: 15px 100px 20px;
+    }
   }
 }

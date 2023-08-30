@@ -1,12 +1,14 @@
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
+import { ConditionsStep } from "./ConditionsStep";
 import './DataAlertCreationModal.scss';
 import { StepContainer } from "./StepContainer";
 
-export function DataAlertCreationModal() {
+export function DataAlertCreationModal({ queryResponse }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
   const stepContainer = new StepContainer();
+  const conditionsStep = new ConditionsStep();
 
   const confirmDialogProps = {
     title: 'Are you sure you want to leave this page?',
@@ -67,6 +69,7 @@ export function DataAlertCreationModal() {
 
   stepContentContainer.classList.add('autoql-vanilla-data-alert-modal-step-content-container');
 
+  stepContentContainer.appendChild(conditionsStep);
   container.appendChild(stepContainer);
   container.appendChild(stepContentContainer);
   modal.chataModal.classList.add('autoql-vanilla-data-alert-creation-modal-full-size');
