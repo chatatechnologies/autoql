@@ -46,7 +46,7 @@ export function MoreOptionsPopup({ notificationItem, dataAlert, authentication }
   }
 
   this.handleSettingsClick = () => {
-    notificationItem.showEditDataAlertModal();
+    notificationItem.showDataAlertEditModal();
   }
 
   this.handleMarkAsUnreadClick = () => {
