@@ -2,7 +2,7 @@ import './StepContainer.scss';
 
 export function StepContainer() {
   const container = document.createElement('div');
-
+  this.stepCount = 1;
   container.classList.add('autoql-vanilla-steps-hoz-container');
 
   this.createStep = ({ title, number, withConnector=true }) => {
@@ -29,7 +29,8 @@ export function StepContainer() {
     stepTitle.classList.add('autoql-vanilla-step-hoz-title');
 
     stepTitle.textContent = title;
-    dot.textContent = number;
+    dot.textContent = this.stepCount.toString();
+    this.stepCount++;
 
     step.appendChild(dot);
     titleContainer.appendChild(stepTitle);
@@ -41,18 +42,15 @@ export function StepContainer() {
 
   this.conditionsStep = this.createStep({
     title: 'Set Up Conditions',
-    number: '1',
     withConnector: false
   });
   
   this.timingStep = this.createStep({
     title: 'Configure Timing',
-    number: '2'
   });
   
   this.appearanceStep = this.createStep({
     title: 'Customize Appearance',
-    number: '3'
   });
 
   this.conditionsStep.classList.add('autoql-vanilla-active');

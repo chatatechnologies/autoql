@@ -5,6 +5,7 @@ import { StepContainer } from "./StepContainer";
 
 export function DataAlertCreationModal() {
   const container = document.createElement('div');
+  const stepContentContainer = document.createElement('div');
   const stepContainer = new StepContainer();
 
   const confirmDialogProps = {
@@ -64,7 +65,10 @@ export function DataAlertCreationModal() {
     return modalFooter;
   }
 
+  stepContentContainer.classList.add('autoql-vanilla-data-alert-modal-step-content-container');
+
   container.appendChild(stepContainer);
+  container.appendChild(stepContentContainer);
   modal.chataModal.classList.add('autoql-vanilla-data-alert-creation-modal-full-size');
   modal.setTitle('Create Data Alert');
   modal.addFooterElement(this.createFooter());
