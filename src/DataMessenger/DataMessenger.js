@@ -73,7 +73,8 @@ import {
     DELETE_MESSAGE,
     VERTICAL_DOTS,
     HELP_ICON,
-    FILTER_LOCKING,
+	FILTER_LOCKING_LOCK,
+    FILTER_LOCKING_UNLOCK,
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
@@ -935,7 +936,7 @@ export function DataMessenger(options = {}) {
         var filterButton = htmlToElement(`
             <button class="autoql-vanilla-chata-button filter-locking-menu"
             data-tippy-content="${strings.filterButton}">
-                ${FILTER_LOCKING}
+                ${FILTER_LOCKING_UNLOCK}
             </button>
         `);
 

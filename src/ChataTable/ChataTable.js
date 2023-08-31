@@ -11,6 +11,7 @@ import {
     getFilterPrecision,
     DAYJS_PRECISION_FORMATS,
 } from 'autoql-fe-utils';
+import { AntdMessage } from '../Antd';
 import dayjs from '../Utils/dayjsPlugins';
 import _isEqual from 'lodash.isequal';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
@@ -42,7 +43,7 @@ function instantiateTabulator(component, tableOptions, table) {
     tabulator.on('dataSorted', component.onDataSorted);
     tabulator.on('dataFiltering', component.onDataFiltering);
     tabulator.on('dataFiltered', component.onDataFiltered);
-
+	tabulator.on("downloadComplete", component.onDataDownloaded);
     tabulator.on('tableBuilt', async () => {
         table.isInitialized = true;
 
@@ -389,6 +390,9 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.onDataSorted = () => {};
     component.onDataFiltering = () => {};
     component.onDataFiltered = () => {};
+	component.onDataDownloaded = ()=>{
+		new AntdMessage(strings.csvDownload, 3000);
+	}
 
     var table = instantiateTabulator(component, tableOptions, this);
 
