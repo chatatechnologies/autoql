@@ -1,9 +1,8 @@
 import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE } from "autoql-fe-utils";
 import { QueryResultInput } from "../../QueryResultInput";
 import { Selector } from "../../Selector/Selector";
-import { ChipsContainer } from "../../ChipsContainer/ChipsContainer";
 
-export function ConditionsStep() {
+export function ConditionsStep({ queryResponse }) {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const ruleInput = document.createElement('div');
@@ -98,7 +97,7 @@ export function ConditionsStep() {
 
   inputLabel.textContent = 'Trigger Alert when this query';
   queryInput.setAttribute('type', 'text');
-  queryInput.setAttribute('value', 'TEST QUERY');
+  queryInput.setAttribute('value', queryResponse.data.text);
   queryInput.setAttribute('disabled', 'true');
   queryInput.setAttribute('readonly', 'true');
 

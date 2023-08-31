@@ -1,11 +1,11 @@
 import './StepContainer.scss';
 
-export function StepContainer() {
+export function StepContainer({ steps }) {
   const container = document.createElement('div');
   this.stepCount = 1;
   container.classList.add('autoql-vanilla-steps-hoz-container');
 
-  this.createStep = ({ title, number, withConnector=true }) => {
+  this.createStep = ({ title, isActive, withConnector=true,  }) => {
     const stepContainer = document.createElement('div');
     const step = document.createElement('div');
     const dot = document.createElement('div');
@@ -36,30 +36,22 @@ export function StepContainer() {
     titleContainer.appendChild(stepTitle);
     step.appendChild(titleContainer);
     stepContainer.appendChild(step);
+    
+    if(isActive) {
+      stepContainer.classList.add('autoql-vanilla-active');
+    } else {
+      stepContainer.classList.add('autoql-vanilla-disabled');
+    }
 
     return stepContainer;
   }
 
-  this.conditionsStep = this.createStep({
-    title: 'Set Up Conditions',
-    withConnector: false
+  steps.forEach((step) => {
+    const stepView = this.createStep({
+      ...step
+    });
+    container.appendChild(stepView);
   });
-  
-  this.timingStep = this.createStep({
-    title: 'Configure Timing',
-  });
-  
-  this.appearanceStep = this.createStep({
-    title: 'Customize Appearance',
-  });
-
-  this.conditionsStep.classList.add('autoql-vanilla-active');
-  this.timingStep.classList.add('autoql-vanilla-disabled');
-  this.appearanceStep.classList.add('autoql-vanilla-disabled');
-
-  container.appendChild(this.conditionsStep);
-  container.appendChild(this.timingStep);
-  container.appendChild(this.appearanceStep);
 
   return container;
 }

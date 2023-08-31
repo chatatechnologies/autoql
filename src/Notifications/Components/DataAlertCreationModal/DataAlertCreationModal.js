@@ -7,32 +7,51 @@ import { StepContainer } from "./StepContainer";
 export function DataAlertCreationModal({ queryResponse }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
-  const stepContainer = new StepContainer();
-  const conditionsStep = new ConditionsStep();
-
+  
   const confirmDialogProps = {
     title: 'Are you sure you want to leave this page?',
     message: 'All unsaved changes will be lost.',
     onDiscard: () => {
       modal.closeAnimation();
       setTimeout(() => {
-          modal.hideContainer();
+        modal.hideContainer();
       }, 250);
     }
   }
-
+  
   this.onDiscard = () => {
     new ChataConfirmDialog({ ...confirmDialogProps });
   }
-
+  
   const modal = new Modal(
     {
-        withFooter: true,
-        destroyOnClose: true,
+      withFooter: true,
+      destroyOnClose: true,
     },
     () => {},
     this.onDiscard
   );
+    
+  this.createSteps = () => {
+    const {
+      columns,
+      count_rows
+    } = queryResponse.data;
+    const steps = [];
+
+    if(columns?.length === 1 && count_rows === 1) {
+      
+    } else {
+      steps.push({
+        view: new ConditionsStep({ queryResponse }),
+        withConnector: false,
+        isActive: true,
+        title: 'Set Up Conditions',
+      });
+    }
+    this.stepContainer = new StepContainer({ steps });
+    return this.stepContainer;
+  }
 
   this.createButton = (text, classes) => {
     const button = document.createElement('button');
@@ -69,8 +88,7 @@ export function DataAlertCreationModal({ queryResponse }) {
 
   stepContentContainer.classList.add('autoql-vanilla-data-alert-modal-step-content-container');
 
-  stepContentContainer.appendChild(conditionsStep);
-  container.appendChild(stepContainer);
+  container.appendChild(this.createSteps());
   container.appendChild(stepContentContainer);
   modal.chataModal.classList.add('autoql-vanilla-data-alert-creation-modal-full-size');
   modal.setTitle('Create Data Alert');
