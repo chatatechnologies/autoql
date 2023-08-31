@@ -9,7 +9,8 @@ import { TimingStep } from "./TimingStep/TimingStep";
 export function DataAlertCreationModal({ queryResponse }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
-  
+  this.steps = [];
+
   const confirmDialogProps = {
     title: 'Are you sure you want to leave this page?',
     message: 'All unsaved changes will be lost.',
@@ -39,18 +40,17 @@ export function DataAlertCreationModal({ queryResponse }) {
       columns,
       count_rows
     } = queryResponse.data;
-    const steps = [];
 
     const isSingleResponse = columns?.length === 1 && count_rows === 1;
 
-    steps.push({
+    this.steps.push({
       view: new TimingStep({ queryResponse }),
       withConnector: isSingleResponse,
       isActive: !isSingleResponse,
       title: 'Configure Timing',
     });
 
-    steps.push({
+    this.steps.push({
       view: new AppearanceStep({ queryResponse }),
       withConnector: true,
       isActive: false,
@@ -58,15 +58,23 @@ export function DataAlertCreationModal({ queryResponse }) {
     });
 
     if(isSingleResponse) {
-      steps.unshift({
+      this.steps.unshift({
         view: new ConditionsStep({ queryResponse }),
         withConnector: false,
         isActive: true,
         title: 'Set Up Conditions',
       });
-    } 
-    this.stepContainer = new StepContainer({ steps });
+    }
+    this.addViewSteps();
+    this.stepContainer = new StepContainer({ steps: this.steps });
     return this.stepContainer;
+  }
+
+  this.addViewSteps = () => {
+    this.steps.forEach((step) => {
+      stepContentContainer.appendChild(step.view);
+      if(!step.isActive) step.view.classList.add('autoql-vanilla-hidden');
+    })
   }
 
   this.createButton = (text, classes) => {
