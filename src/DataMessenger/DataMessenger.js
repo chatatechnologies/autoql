@@ -1882,10 +1882,11 @@ export function DataMessenger(options = {}) {
     obj.displayTableHandler = (idRequest) => {
         var component = obj.getComponent(idRequest);
         var json = obj.getRequest(idRequest);
+		var chartsVisibleCount = json.data?.rows.length;
         var parentContainer = obj.getParentFromComponent(component);
 		var parentElement = component.parentElement;
         var useInfiniteScroll = isDataLimited({ data: json });
-        var tableParams = undefined;
+        var tableParams = { queryJson:json, sort: undefined, filter: undefined }
 
         obj.refreshToolbarButtons(component, 'table');
 
@@ -1896,7 +1897,7 @@ export function DataMessenger(options = {}) {
             useInfiniteScroll,
             tableParams,
         );
-
+		table.element.onNewPage({chartsVisibleCount:chartsVisibleCount})
         component.internalTable = table;
         component.tabulator = table;
         obj.setDefaultFilters(component, table, 'table');

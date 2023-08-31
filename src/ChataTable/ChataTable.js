@@ -136,7 +136,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
             component.setScrollLoading(true);
 
             newResponse = await component.getNewPage(nextTableParamsFormatted);
-            component.onNewPage(newResponse?.rows);
+            component.onNewPage({newRows:newResponse?.rows,newResponse});
         } else {
             component.setPageLoading(true);
 
@@ -237,13 +237,24 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.queryFn = json?.queryFn;
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewPage = (newRows) => {
+    component.onNewPage = ({newRows = 0,chartsVisibleCount = 0, newResponse = null}) => {
+		
+		if(newResponse){
+			tableParams.queryJson.data.rows = [...tableParams.queryJson.data.rows, ...newResponse.rows]
+			tableParams.queryJson.data.row_limit = newResponse.row_limit;
+		}
+		var newCurrentTableRowCount = 0;
         var tableRowCountElement = component.parentElement.querySelector('.autoql-vanilla-chata-table-row-count');
         var currentText = tableRowCountElement.textContent;
         var matches = currentText.match(/(\d+)/);
         if (matches && matches.length > 0) {
             var currentTableRowCount = parseInt(matches[0]);
-            var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+			if(newRows !== 0){
+				var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+			}
+			if(chartsVisibleCount !== 0){
+				var newCurrentTableRowCount = chartsVisibleCount
+			}
             var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
             tableRowCountElement.textContent = newText;
         }
