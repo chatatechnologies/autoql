@@ -12,7 +12,8 @@ import {
     runQueryOnly,
     isDrilldown as isDrilldownResponse,
     areAllColumnsHidden,
-	REQUEST_CANCELLED_ERROR
+	REQUEST_CANCELLED_ERROR,
+    getColumnIndexConfig
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -2193,6 +2194,9 @@ export function DataMessenger(options = {}) {
             component.tabulator.redraw(true);
 
             obj.refreshToolbarButtons(component, 'table')
+            
+            const newColumnIndexConfig = getColumnIndexConfig({ response: { data: json } });
+            component.columnIndexConfig = newColumnIndexConfig;
 
             if (showBadge(json)) {
                 badge.style.visibility = 'visible';
