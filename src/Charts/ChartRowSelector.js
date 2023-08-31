@@ -13,7 +13,7 @@ export function ChartRowSelector(
     options,
 ) {
     try {
-        var currentPageSize = Math.min(json.data.count_rows, json.data.row_limit);
+        var currentPageSize = Math.min(json.data.count_rows, json.data.rows.length);
         var initialPageSize = options?.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
         var totalRows = json.data.count_rows;
 
@@ -32,7 +32,6 @@ export function ChartRowSelector(
                     newJson.queryFn = json.queryFn;
                     newJson.originalPageSize = json.originalPageSize ?? json.data.row_limit;
                 }
-
                 onNewData(response?.data);
             } catch (error) {
                 onDataFetchError(error);
