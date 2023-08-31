@@ -707,7 +707,7 @@ export function closeAutocompleteObjects() {
         '.autoql-vanilla-data-explorer-autocomplete'
     )
     for (var i = 0; i < list.length; i++) {
-        list[i].classList.remove('show');
+        list[i].classList.remove('autoql-vanilla-autocomplete-show');
     }
 
 }
@@ -735,12 +735,14 @@ export function closeAllSafetynetSelectors(){
 }
 
 export function closeAllToolbars(){
+    console.log('closing all toolbars...')
+
     var list = document.querySelectorAll(
-        '.autoql-vanilla-chat-message-toolbar.show'
+        '.autoql-vanilla-chat-message-toolbar-show'
     )
 
     var submenus = document.querySelectorAll(
-        '.chata-popover-wrapper.show'
+        '.chata-popover-wrapper-show'
     )
 
     var popovers = document.querySelectorAll(
@@ -748,11 +750,11 @@ export function closeAllToolbars(){
     )
 
     for (let i = 0; i < list.length; i++) {
-        list[i].classList.remove('show');
+        list[i].classList.remove('autoql-vanilla-chat-message-toolbar-show');
     }
 
     for (let i = 0; i < submenus.length; i++) {
-        submenus[i].classList.remove('show');
+        submenus[i].classList.remove('chata-popover-wrapper-show');
     }
     for (let i = 0; i < popovers.length; i++) {
         if(popovers[i].isOpen)popovers[i].close();
