@@ -36,8 +36,8 @@ export var ChataUtils = {
 //     : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 //
 //     await apiCallPut(URL, {is_correct: false}, options)
-//     if(menu)menu.classList.remove('show');
-//     if(toolbar)toolbar.classList.remove('show');
+//     if(menu)menu.classList.remove('autoql-vanilla-chat-message-toolbar-show');
+//     if(toolbar)toolbar.classList.remove('autoql-vanilla-chat-message-toolbar-show');
 //     new AntdMessage(strings.feedback, 3000);
 //
 //     return Promise.resolve()
@@ -51,7 +51,8 @@ ChataUtils.sendReportMessage = async (idRequest, options, toolbar, msg) => {
         : `${options.authentication.domain}/autoql/api/v1/query/${queryId}?key=${options.authentication.apiKey}`;
 
     await apiCallPut(URL, { is_correct: false, message: msg }, options);
-    if (toolbar) toolbar.classList.remove('show');
+    // if (menu) menu.classList.remove('autoql-vanilla-chat-message-toolbar-show');
+    if (toolbar) toolbar.classList.remove('autoql-vanilla-chat-message-toolbar-show');
     new AntdMessage(strings.feedback, 3000);
 
     return Promise.resolve();
@@ -126,8 +127,8 @@ ChataUtils.getReportProblemMenu = (toolbar, idRequest, type, options) => {
 };
 
 ChataUtils.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
-    reportProblem.classList.toggle('show');
-    toolbar.classList.toggle('show');
+    reportProblem.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
+    toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
 };
 
 ChataUtils.downloadCsvHandler = (idRequest) => {

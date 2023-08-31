@@ -1258,8 +1258,8 @@ export function DataMessenger(options = {}) {
 
     obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         closeAllToolbars();
-        reportProblem.classList.toggle('show');
-        toolbar.classList.toggle('show');
+        reportProblem.classList.toggle('chata-popover-wrapper-show');
+        toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
         var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
         var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         if (bubble === obj.getLastMessageBubble()) {
@@ -1271,8 +1271,8 @@ export function DataMessenger(options = {}) {
 
     obj.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
         closeAllToolbars();
-        moreOptions.classList.toggle('show');
-        toolbar.classList.toggle('show');
+        moreOptions.classList.toggle('chata-popover-wrapper-show');
+        toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
         var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
         var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         if (bubble === obj.getLastMessageBubble()) {
@@ -1327,7 +1327,7 @@ export function DataMessenger(options = {}) {
         var request = ChataUtils.responses[idRequest];
         let moreOptionsArray = [];
         var toolbar = htmlToElement(`
-            <div class="autoql-vanilla-chat-message-toolbar right">
+            <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right">
             </div>
         `);
 
@@ -1551,8 +1551,8 @@ export function DataMessenger(options = {}) {
         }
 
         var scrollBox = messageBubble.querySelector('.autoql-vanilla-chata-table-scrollbox');
-        var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
-        var toolbarRight = messageBubble.getElementsByClassName('right')[0];
+        var toolbarLeft = messageBubble.getElementsByClassName('autoql-vanilla-chat-message-toolbar-left')[0];
+        var toolbarRight = messageBubble.getElementsByClassName('autoql-vanilla-chat-message-toolbar-right')[0];
 
         if (oldComponent.noColumnsElement && !areAllColumnsHidden(json?.data?.columns)) {
             oldComponent.parentElement.removeChild(oldComponent.noColumnsElement);
@@ -2125,7 +2125,7 @@ export function DataMessenger(options = {}) {
         var toolbar = undefined;
         if (supportedDisplayTypes.length > 0) {
             toolbar = htmlToElement(`
-                <div class="autoql-vanilla-chat-message-toolbar left">
+                <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-left">
                 </div>
             `);
             for (var i = 0; i < supportedDisplayTypes.length; i++) {

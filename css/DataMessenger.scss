@@ -304,7 +304,7 @@ body.autoql-vanilla-drawer-open-body {
             color: var(--autoql-vanilla-text-color-placeholder);
             cursor: pointer;
 
-            &.visible {
+            &.autoql-vanilla-chat-bar-clear-icon-visible {
                 visibility: visible;
             }
         }

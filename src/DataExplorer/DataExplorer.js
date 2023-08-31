@@ -81,7 +81,7 @@ export function DataExplorer({ subjects, widget }) {
   obj.clearSearch = ()=>{
 	var previewSection = document.querySelector('.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section');
 	var relatedQueriesSection = document.querySelector('.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section');
-	chatBarClearIcon.classList.remove('visible');
+	chatBarClearIcon.classList.remove('autoql-vanilla-chat-bar-clear-icon-visible');
 	if (previewSection) {
 		previewSection.remove()
 	}
@@ -101,8 +101,8 @@ export function DataExplorer({ subjects, widget }) {
       li.appendChild(document.createTextNode(subject.display_name));
       subjectsWrapper.appendChild(li);
       li.onclick = async () => {
-		chatBarClearIcon.classList.add('visible')
-        autocomplete.classList.remove('show');
+		    chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible')
+        autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
         input.value = subject.display_name;
         contentWrapper.innerHTML = '';
         const previewSection = new DataPreview({
@@ -144,15 +144,16 @@ export function DataExplorer({ subjects, widget }) {
   container.appendChild(contentWrapper);
   container.style.display = 'none';
   input.addEventListener('input',()=>{
-	chatBarClearIcon.classList.add('visible');
+	chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible');
 	if(input.value === ''){
-		chatBarClearIcon.classList.remove('visible');
+		chatBarClearIcon.classList.remove('autoql-vanilla-chat-bar-clear-icon-visible');
 	}
 })
   input.addEventListener('keydown', async (event) => {
       if (event.key == 'Enter' && input.value) {
           contentWrapper.innerHTML = '';
-          autocomplete.classList.remove('show')
+          autocomplete.classList.remove('autoql-vanilla-autocomplete-show')
+
           const relatedQueriesSection = new RelatedQueries({
               icon: CHATA_BUBBLES_ICON,
               title: `Query suggestions for "${input.value}"`,
@@ -172,8 +173,8 @@ export function DataExplorer({ subjects, widget }) {
     const textBarHeight = textBar.clientHeight;
     const headerHeight = widget.header.clientHeight;
     const margin = 60;
-    subjectsWrapper.style.maxHeight = (height - (textBarHeight + headerHeight + margin)) + 'px'; 
-    autocomplete.classList.add('show');
+    autocomplete.style.maxHeight = (height - (textBarHeight + headerHeight + margin)) + 'px'; 
+    autocomplete.classList.add('autoql-vanilla-autocomplete-show');
   });
   
   obj.hide = () => {

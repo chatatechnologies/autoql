@@ -684,10 +684,10 @@ tr td.chata-hidden{
     border: 1px solid var(--autoql-vanilla-border-color);
 }
 
-.autoql-vanilla-chat-message-toolbar.right {
+.autoql-vanilla-chat-message-toolbar.autoql-vanilla-chat-message-toolbar-right {
     right: -9px;
 }
-.autoql-vanilla-chat-message-toolbar.left {
+.autoql-vanilla-chat-message-toolbar.autoql-vanilla-chat-message-toolbar-left {
     left: -9px;
 }
 
@@ -695,7 +695,7 @@ tr td.chata-hidden{
     display: flex;
 }
 
-.autoql-vanilla-chat-message-bubble .autoql-vanilla-chat-message-toolbar.show{
+.autoql-vanilla-chat-message-toolbar.autoql-vanilla-chat-message-toolbar-show{
     display: flex;
 }
 
