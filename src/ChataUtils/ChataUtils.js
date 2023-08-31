@@ -227,74 +227,10 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 };
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
-    const modal = new DataAlertCreationModal();
+    const queryResponse = ChataUtils.responses[idRequest];
+    const modal = new DataAlertCreationModal({ queryResponse });
+    console.log(queryResponse);
     modal.show();
-/*     var o = extraParams.caller.options;
-    var modalView = new NotificationSettingsModal(o);
-    var configModal = new Modal(
-        {
-            withFooter: true,
-            destroyOnClose: true,
-        },
-        () => {
-            modalView.step1.expand();
-        },
-        () => {
-            new ChataConfirmDialog(strings.confirmDialogTitle, strings.confirmDialogDescription, () => {
-                configModal.closeAnimation();
-                setTimeout(() => {
-                    configModal.hideContainer();
-                }, 250);
-            });
-        },
-    );
-    var cancelButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
-    );
-    var spinner = htmlToElement(`
-        <div class="autoql-vanilla-spinner-loader hidden"></div>
-        `);
-    var saveButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary disabled"
-        style="padding: 5px 16px; margin: 2px 5px;"></div>`,
-    );
-
-    modalView.checkSteps = () => {
-        if (modalView.isValid()) {
-            saveButton.classList.remove('disabled');
-        } else {
-            saveButton.classList.add('disabled');
-        }
-    };
-
-    saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode(strings.save));
-    configModal.addFooterElement(cancelButton);
-    configModal.addFooterElement(saveButton);
-    configModal.show();
-    refreshTooltips();
-    configModal.chataModal.style.width = '95vw';
-    configModal.addView(modalView);
-    configModal.setTitle(strings.createDataAlert);
-    configModal.show();
-
-    var input = modalView.querySelectorAll('.autoql-vanilla-chata-input-settings')[1];
-
-    input.value = extraParams.query;
-
-    cancelButton.onclick = () => {
-        new ChataConfirmDialog(strings.confirmDialogTitle, strings.confirmDialogDescription, () => {
-            configModal.close();
-        });
-    };
-    saveButton.onclick = async () => {
-        spinner.classList.remove('hidden');
-        saveButton.setAttribute('disabled', 'true');
-        const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-        await apiCallPost(URL, modalView.getValues, o);
-        configModal.close();
-    }; */
 };
 
 ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams = {}) => {

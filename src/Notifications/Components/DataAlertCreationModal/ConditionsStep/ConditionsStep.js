@@ -55,18 +55,13 @@ export function ConditionsStep() {
   }
 
   const termInputValue = new QueryResultInput({ termInputType: NUMBER_TERM_TYPE, inputDefaultValue: '' });
-  const conditionSelect = new Selector({ options: this.getOperatorSelectValues() });
+  const conditionSelect = new Selector({ defaultValue: 'GREATER_THAN', options: this.getOperatorSelectValues() });
   const secondTermSelect = new Selector({
+    defaultValue: NUMBER_TERM_TYPE,
     options: this.getSecondTermValues(),
     onChange: this.handleInputType
   });
 
-  this.createChips = () => {
-    this.chipsContainer = new ChipsContainer({ filters: dataAlert.expression[0].session_filter_locks });
-    if(dataAlert?.expression?.[0]?.session_filter_locks?.length === 0)return;
-    ruleInput.appendChild(this.chipsContainer)
-  }
-  
   this.createConditionsSection = () => {
     const conditionWrapper = document.createElement('div');
     const conditionLabel = document.createElement('div');
@@ -136,7 +131,6 @@ export function ConditionsStep() {
   }
 
   this.createConditionsSection();
-//  this.createChips();
 
   container.classList.add('autoql-vanilla-data-alert-modal-step');
   return container;
