@@ -1,8 +1,10 @@
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
+import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
 import { ConditionsStep } from "./ConditionsStep";
 import './DataAlertCreationModal.scss';
 import { StepContainer } from "./StepContainer";
+import { TimingStep } from "./TimingStep/TimingStep";
 
 export function DataAlertCreationModal({ queryResponse }) {
   const container = document.createElement('div');
@@ -39,16 +41,30 @@ export function DataAlertCreationModal({ queryResponse }) {
     } = queryResponse.data;
     const steps = [];
 
-    if(columns?.length === 1 && count_rows === 1) {
-      
-    } else {
-      steps.push({
+    const isSingleResponse = columns?.length === 1 && count_rows === 1;
+
+    steps.push({
+      view: new TimingStep({ queryResponse }),
+      withConnector: isSingleResponse,
+      isActive: !isSingleResponse,
+      title: 'Configure Timing',
+    });
+
+    steps.push({
+      view: new AppearanceStep({ queryResponse }),
+      withConnector: true,
+      isActive: false,
+      title: 'Customize Appearance',
+    });
+
+    if(isSingleResponse) {
+      steps.unshift({
         view: new ConditionsStep({ queryResponse }),
         withConnector: false,
         isActive: true,
         title: 'Set Up Conditions',
       });
-    }
+    } 
     this.stepContainer = new StepContainer({ steps });
     return this.stepContainer;
   }
