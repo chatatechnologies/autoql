@@ -1642,6 +1642,8 @@ export function DataMessenger(options = {}) {
             return
         }
 
+        responseJson.queryFn = obj.getQueryFn(response);
+
         var status = response.status;
         obj.chataBarContainer.removeChild(responseLoadingContainer);
         if (!responseJson['data']['rows']) {
@@ -2596,7 +2598,10 @@ export function DataMessenger(options = {}) {
                         ...args,
                     });
 
-                    newResponse.data.originalQueryID = response.data.originalQueryID;
+                    if (newResponse?.data) {
+                        newResponse.data.originalQueryID = response.data.originalQueryID;
+                        newResponse.data.queryFn = obj.getQueryFn(response)
+                    }
                 } else {
                     newResponse = await runQueryOnly({
                         ...queryParams,
@@ -2606,7 +2611,10 @@ export function DataMessenger(options = {}) {
                         ...args,
                     });
     
-                    newResponse.data.originalQueryID = response.data.data.query_id;
+                    if (newResponse?.data) {
+                        newResponse.data.originalQueryID = response.data.data.query_id;
+                        newResponse.data.queryFn = obj.getQueryFn(response)
+                    }
                 }
 
             } catch (error) {
@@ -2633,6 +2641,13 @@ export function DataMessenger(options = {}) {
         }
 
         const { status } = response;
+
+        var jsonResponse = response.data;
+
+        if (jsonResponse) {
+            jsonResponse.queryFn = obj.getQueryFn(response);
+        }
+
         if (status != 200) {
             let msg = response.data.message;
             let ref = response.data['reference_id'];
@@ -2672,8 +2687,6 @@ export function DataMessenger(options = {}) {
             }
         }
 
-        var jsonResponse = response.data;
-
         if (responseLoadingContainer) {
             obj.chataBarContainer.removeChild(responseLoadingContainer);
         }
@@ -2682,8 +2695,6 @@ export function DataMessenger(options = {}) {
             obj.putSuggestionResponse(jsonResponse);
             return;
         }
-
-        jsonResponse.queryFn = obj.getQueryFn(response);
 
         var groupables = [];
         if (jsonResponse.data.columns) {
@@ -2812,6 +2823,10 @@ export function DataMessenger(options = {}) {
             let response;
             try {
                 response = await runQuery(queryParams);
+                if (response?.data) {
+                    response.data.queryFn = obj.getQueryFn(response)
+                }
+                
                 // response = testdata;
             } catch (error) {
                 response = error;
