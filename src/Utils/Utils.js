@@ -735,8 +735,6 @@ export function closeAllSafetynetSelectors(){
 }
 
 export function closeAllToolbars(){
-    console.log('closing all toolbars...')
-
     var list = document.querySelectorAll(
         '.autoql-vanilla-chat-message-toolbar-show'
     )
