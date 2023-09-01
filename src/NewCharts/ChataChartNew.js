@@ -66,7 +66,18 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     const CHART_CONTAINER_CLASS = 'autoql-vanilla-chart-content-container';
     const FONT_SIZE = 12;
 
-    if (!component.columnIndexConfig) {
+    this.isColumnIndexConfigValid = () => {
+        return isColumnIndexConfigValid({
+            columnIndexConfig: component.columnIndexConfig,
+            response: { data: queryJson },
+            columns,
+            displayType: type,
+        });
+    };
+
+    const columnIndexConfigExists = !!component.columnIndexConfig;
+
+    if (!columnIndexConfigExists || (columnIndexConfigExists && !this.isColumnIndexConfigValid())) {
         component.columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
     }
 
