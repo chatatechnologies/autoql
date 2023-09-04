@@ -107,13 +107,18 @@ export function DataAlertCreationModal({ queryResponse }) {
     this.updateFooterButtons();
   }
 
+  this.handleSave = () => {
+    console.log('save handler');
+  }
+
   this.updateFooterButtons = () => {
     const { length } = this.steps;
     if((this.currentStepIndex + 1) >= length) {
-      console.log('save handler');
-      //this.btnNextStep.classList.add('autoql-vanilla-hidden');
+      this.btnNextStep.textContent = 'Finish & Save';
+      this.btnNextStep.onclick = this.handleSave;
     } else {
-      this.btnNextStep.classList.remove('autoql-vanilla-hidden');
+      this.btnNextStep.textContent = 'Next';
+      this.btnNextStep.onclick = this.handleNextStep;
     }
 
     if(this.currentStepIndex === 0) {
