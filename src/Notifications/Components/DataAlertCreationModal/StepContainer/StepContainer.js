@@ -1,7 +1,6 @@
 import './StepContainer.scss';
 
 export function StepContainer({ steps }) {
-  console.log(steps);
   const container = document.createElement('div');
   this.stepCount = 1;
   container.classList.add('autoql-vanilla-steps-hoz-container');

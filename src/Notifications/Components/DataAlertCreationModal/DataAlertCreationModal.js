@@ -10,6 +10,7 @@ export function DataAlertCreationModal({ queryResponse }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
   this.steps = [];
+  this.currentStepIndex = 0;
 
   const confirmDialogProps = {
     title: 'Are you sure you want to leave this page?',
@@ -88,6 +89,20 @@ export function DataAlertCreationModal({ queryResponse }) {
     return button;
   }
 
+  this.handleNextStep = () => {
+    const currentStep = this.steps[this.currentStepIndex++];
+    const nextStep = this.steps[this.currentStepIndex];
+    currentStep.view.classList.add('autoql-vanilla-hidden');
+    nextStep.view.classList.remove('autoql-vanilla-hidden');
+  }
+
+  this.handlePreviousStep = () => {
+    const currentStep = this.steps[this.currentStepIndex--];
+    const previousStep = this.steps[this.currentStepIndex];
+    currentStep.view.classList.add('autoql-vanilla-hidden');
+    previousStep.view.classList.remove('autoql-vanilla-hidden');
+  }
+
   this.createFooter = () => {
     const btnCancel = this.createButton(
       'Cancel',
@@ -99,6 +114,8 @@ export function DataAlertCreationModal({ queryResponse }) {
     const modalFooter = document.createElement('div');
     
     btnCancel.onclick = this.onDiscard;
+    btnNextStep.onclick = this.handleNextStep;
+    btnBack.onclick = this.handlePreviousStep;
 
     buttonContainerLeft.appendChild(btnCancel);
     buttonContainerLeft.appendChild(btnBack);
