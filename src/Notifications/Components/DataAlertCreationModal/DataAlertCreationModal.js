@@ -94,9 +94,11 @@ export function DataAlertCreationModal({ queryResponse }) {
     const nextStep = this.steps[this.currentStepIndex];
     currentStep.view.classList.add('autoql-vanilla-hidden');
     nextStep.view.classList.remove('autoql-vanilla-hidden');
+    this.stepContainer.enableStep(this.currentStepIndex);
   }
 
   this.handlePreviousStep = () => {
+    this.stepContainer.disableStep(this.currentStepIndex);
     const currentStep = this.steps[this.currentStepIndex--];
     const previousStep = this.steps[this.currentStepIndex];
     currentStep.view.classList.add('autoql-vanilla-hidden');

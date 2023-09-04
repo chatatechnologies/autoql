@@ -21,7 +21,6 @@ export function StepContainer({ steps }) {
       connectorContainer.appendChild(connector);
       stepContainer.appendChild(connectorContainer);
     }
-    
     stepContainer.classList.add('autoql-vanilla-step-hoz-container');
     step.classList.add('autoql-vanilla-step-hoz');
     dot.classList.add('autoql-vanilla-step-hoz-dot');
@@ -44,6 +43,18 @@ export function StepContainer({ steps }) {
     }
 
     return stepContainer;
+  }
+
+  container.enableStep = (stepIndex) => {
+    const step = container.children[stepIndex];
+    step.classList.add('autoql-vanilla-active');
+    step.classList.remove('autoql-vanilla-disabled');
+  }
+
+  container.disableStep = (stepIndex) => {
+    const step = container.children[stepIndex];
+    step.classList.remove('autoql-vanilla-active');
+    step.classList.add('autoql-vanilla-disabled');
   }
 
   steps.forEach((step) => {
