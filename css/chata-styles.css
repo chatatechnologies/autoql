@@ -1317,6 +1317,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     opacity: .8;
 }
 
+.autoql-vanilla-chata-btn.autoql-vanilla-hidden {
+    display: none;
+}
+
 .autoql-vanilla-chata-btn.autoql-vanilla-danger {
     color: var(--autoql-vanilla-text-color-accent);
     background: var(--autoql-vanilla-danger-color-default);

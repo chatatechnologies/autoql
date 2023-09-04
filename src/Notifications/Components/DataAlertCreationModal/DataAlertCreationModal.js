@@ -95,6 +95,7 @@ export function DataAlertCreationModal({ queryResponse }) {
     currentStep.view.classList.add('autoql-vanilla-hidden');
     nextStep.view.classList.remove('autoql-vanilla-hidden');
     this.stepContainer.enableStep(this.currentStepIndex);
+    this.updateFooterButtons();
   }
 
   this.handlePreviousStep = () => {
@@ -103,27 +104,45 @@ export function DataAlertCreationModal({ queryResponse }) {
     const previousStep = this.steps[this.currentStepIndex];
     currentStep.view.classList.add('autoql-vanilla-hidden');
     previousStep.view.classList.remove('autoql-vanilla-hidden');
+    this.updateFooterButtons();
   }
+
+  this.updateFooterButtons = () => {
+    const { length } = this.steps;
+    if((this.currentStepIndex + 1) >= length) {
+      console.log('save handler');
+      //this.btnNextStep.classList.add('autoql-vanilla-hidden');
+    } else {
+      this.btnNextStep.classList.remove('autoql-vanilla-hidden');
+    }
+
+    if(this.currentStepIndex === 0) {
+      this.btnBack.classList.add('autoql-vanilla-hidden');
+    } else {
+      this.btnBack.classList.remove('autoql-vanilla-hidden');
+    }
+  } 
 
   this.createFooter = () => {
     const btnCancel = this.createButton(
       'Cancel',
       ['autoql-vanilla-default', 'autoql-vanilla-btn-no-border']
     );
-    const btnBack = this.createButton('Back', ['autoql-vanilla-default']);
-    const btnNextStep = this.createButton('Next', ['autoql-vanilla-primary']);
+    this.btnBack = this.createButton('Back', ['autoql-vanilla-default']);
+    this.btnNextStep = this.createButton('Next', ['autoql-vanilla-primary']);
     const buttonContainerLeft = document.createElement('div');
     const modalFooter = document.createElement('div');
     
     btnCancel.onclick = this.onDiscard;
-    btnNextStep.onclick = this.handleNextStep;
-    btnBack.onclick = this.handlePreviousStep;
-
+    this.btnNextStep.onclick = this.handleNextStep;
+    this.btnBack.onclick = this.handlePreviousStep;
+    
     buttonContainerLeft.appendChild(btnCancel);
-    buttonContainerLeft.appendChild(btnBack);
-    buttonContainerLeft.appendChild(btnNextStep);
+    buttonContainerLeft.appendChild(this.btnBack);
+    buttonContainerLeft.appendChild(this.btnNextStep);
     modalFooter.appendChild(buttonContainerLeft);
-
+    
+    this.btnBack.classList.add('autoql-vanilla-hidden');
     modalFooter.classList.add('autoql-vanilla-modal-footer');
 
     return modalFooter;
