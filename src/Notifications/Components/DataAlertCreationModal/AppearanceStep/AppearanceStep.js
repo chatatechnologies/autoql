@@ -2,11 +2,15 @@ import { NOTEBOOK, CALENDAR, VERTICAL_DOTS } from '../../../../Svg';
 import { createIcon } from '../../../../Utils';
 import dayjs from '../../../../Utils/dayjsPlugins';
 import { isNumber } from 'autoql-fe-utils';
+import './AppearanceStep.scss';
 
 export function AppearanceStep({ queryResponse }) {
   const container = document.createElement('div');
+  const composeStepMessage  = document.createElement('div');
   const wrapper = document.createElement('div');
   const composeMessageSection = document.createElement('div');
+  const composeMessageSectionWrapper = document.createElement('span');
+  const boldText = document.createElement('strong');
   const formSection = document.createElement('div');
   
   const getFormattedTimestamp = () => {
@@ -193,17 +197,22 @@ export function AppearanceStep({ queryResponse }) {
     defaultValue: '',
   });
 
+  composeMessageSectionWrapper.textContent = "If the Data Alert conditions are met, you'll receive a notification with this ";
+  boldText.textContent = 'title and message:'
 
   messageSection.classList.add('autoql-vanilla-notification-message-input');
-
+  composeStepMessage.classList.add('autoql-vanilla-compose-message-section-condition-statement');
   wrapper.classList.add('autoql-vanilla-data-alerts-container');
   composeMessageSection.classList.add('autoql-vanilla-compose-message-section');
   formSection.classList.add('autoql-vanilla-form-section');
   
+  composeMessageSectionWrapper.appendChild(boldText);
+  composeStepMessage.appendChild(composeMessageSectionWrapper);
   formSection.appendChild(titleSection);
   formSection.appendChild(messageSection);
   composeMessageSection.appendChild(formSection);
   composeMessageSection.appendChild(previewSection);
+  wrapper.appendChild(composeStepMessage);
   wrapper.appendChild(composeMessageSection);
   container.appendChild(wrapper);
 
