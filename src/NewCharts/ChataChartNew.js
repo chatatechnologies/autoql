@@ -75,10 +75,14 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         });
     };
 
+    this.getColumnIndexConfig = (currentConfig) => {
+        return getColumnIndexConfig({ response: { data: queryJson }, columns, currentTableConfig: currentConfig });
+    };
+
     const columnIndexConfigExists = !!component.columnIndexConfig;
 
     if (!columnIndexConfigExists || (columnIndexConfigExists && !this.isColumnIndexConfigValid())) {
-        component.columnIndexConfig = getColumnIndexConfig({ response: { data: queryJson }, columns });
+        component.columnIndexConfig = this.getColumnIndexConfig();
     }
 
     if (!component.aggConfig) {
@@ -192,15 +196,24 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.changeNumberColumnIndexConfig = (indices, indices2, newColumns) => {
+        const newConfig = cloneObject(columnIndexConfig);
+
         if (indices) {
-            columnIndexConfig.numberColumnIndices = indices;
-            columnIndexConfig.numberColumnIndex = indices[0];
+            newConfig.numberColumnIndices = indices;
+            newConfig.numberColumnIndex = indices[0];
         }
 
         if (indices2) {
-            columnIndexConfig.numberColumnIndices2 = indices2;
-            columnIndexConfig.numberColumnIndex2 = indices2[0];
+            newConfig.numberColumnIndices2 = indices2;
+            newConfig.numberColumnIndex2 = indices2[0];
         }
+
+        if (!this.isColumnIndexConfigValid(newConfig)) {
+            console.warn('Column index config selected was not valid:', newConfig);
+            return;
+        }
+
+        columnIndexConfig = newConfig;
 
         if (newColumns) {
             columns = newColumns;
@@ -306,9 +319,9 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         }
     };
 
-    this.isColumnIndexConfigValid = () => {
+    this.isColumnIndexConfigValid = (newConfig) => {
         return isColumnIndexConfigValid({
-            columnIndexConfig,
+            columnIndexConfig: newConfig ?? columnIndexConfig,
             response: { data: queryJson },
             columns,
             displayType: type,
@@ -346,8 +359,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         }
 
         if (!this.isColumnIndexConfigValid()) {
-            console.warn('Current column config is not valid for new axis selection.');
-            return;
+            console.warn(
+                'Current column config is not valid for new axis selection. Resetting config to default in order to draw the chart.',
+            );
+            columnIndexConfig = this.getColumnIndexConfig(columnIndexConfig);
         }
 
         const hasDrawnOnce = !!this.chartComponent;
@@ -408,7 +423,9 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 columnIndexConfig,
                 aggConfig,
                 aggregated,
-                visibleSeries: columnIndexConfig.numberColumnIndices.filter((index) => !columns?.[index]?.isSeriesHidden),
+                visibleSeries: columnIndexConfig.numberColumnIndices.filter(
+                    (index) => !columns?.[index]?.isSeriesHidden,
+                ),
                 visibleSeries2: columnIndexConfig.numberColumnIndices2?.filter(
                     (index) => !columns?.[index]?.isSeriesHidden,
                 ),
