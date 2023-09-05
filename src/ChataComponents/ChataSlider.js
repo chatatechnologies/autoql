@@ -6,7 +6,7 @@ export function ChataSlider(){
     var slider = document.createElement('span')
 
     input.setAttribute('type', 'checkbox')
-
+	input.classList.add('autoql-vanilla-input')
     view.classList.add('autoql-vanilla-switch')
     slider.classList.add('autoql-vanilla-slider')
     slider.classList.add('autoql-vanilla-round')

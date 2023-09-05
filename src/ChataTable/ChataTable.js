@@ -8,12 +8,17 @@ import {
     getColumnIndexConfig,
     formatQueryColumns,
     onTableCellClick,
+    getFilterPrecision,
+    DAYJS_PRECISION_FORMATS,
 } from 'autoql-fe-utils';
+import dayjs from '../Utils/dayjsPlugins';
 import _isEqual from 'lodash.isequal';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
 import { Scrollbars } from '../Scrollbars';
 import { ChataUtils } from '../ChataUtils';
-import { formatData, htmlToElement, getNumberOfGroupables, allColHiddenMessage, cloneObject } from '../Utils';
+import { DateRangePicker } from '../ChataComponents/DateRangePicker/DateRangePicker';
+import { strings } from '../Strings';
+import { getNumberOfGroupables, allColHiddenMessage, cloneObject, uuidv4 } from '../Utils';
 
 import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
@@ -52,6 +57,9 @@ function instantiateTabulator(component, tableOptions, table) {
         component.createPageLoader();
         component.createScrollLoader();
 
+        tabulator.setHeaderInputEventListeners?.();
+        tabulator.toggleFilters?.();
+
         // Remove for now - causing buggy behavious
         // component.ps = replaceScrollbar(tabulator);
     });
@@ -59,63 +67,11 @@ function instantiateTabulator(component, tableOptions, table) {
     return tabulator;
 }
 
-function callTableFilter(col, headerValue, rowValue, options) {
-    const colType = col.type;
-    if (!rowValue && !['DOLLAR_AMT', 'QUANTITY', 'PERCENT'].includes(colType)) {
-        rowValue = '';
-    }
-
-    if (colType == 'DATE' || colType == 'DATE_STRING') {
-        var formatDate = formatData(rowValue, col, options);
-        return formatDate.toLowerCase().includes(headerValue);
-    } else if (colType == 'DOLLAR_AMT' || colType == 'QUANTITY' || colType == 'PERCENT') {
-        var trimmedValue = headerValue.trim();
-        if (!rowValue) rowValue = 0;
-        if (trimmedValue.length >= 2) {
-            let number;
-            if (trimmedValue[1] === '=') {
-                number = trimmedValue.substr(2);
-            } else {
-                number = parseFloat(trimmedValue.substr(1));
-            }
-            if (trimmedValue[0] === '>' && trimmedValue[1] === '=') {
-                return rowValue >= number;
-            } else if (trimmedValue[0] === '>') {
-                return rowValue > number;
-            } else if (trimmedValue[0] === '<' && trimmedValue[1] === '=') {
-                return rowValue <= number;
-            } else if (trimmedValue[0] === '<') {
-                return rowValue < number;
-            } else if (trimmedValue[0] === '!' && trimmedValue[1] === '=') {
-                return rowValue !== number;
-            } else if (trimmedValue[0] === '=') {
-                return rowValue === number;
-            }
-        }
-        return rowValue.toString().includes(headerValue);
-    } else {
-        return rowValue.toString().toLowerCase().includes(headerValue);
-    }
-}
-
-function getFirstDateColumn(json) {
-    const columns = json['data']['columns'];
-    var firstDateFound = '';
-    for (var i = 0; i < columns.length; i++) {
-        const { type } = columns[i];
-        if (['DATE_STRING', 'DATE'].includes(type)) {
-            firstDateFound = `${i}`;
-            break;
-        }
-    }
-    return firstDateFound;
-}
-
 function getTableData(rows) {
     if (!rows) {
-        return []
+        return [];
     }
-    
+
     var tableData = [];
 
     for (var i = 0; i < rows.length; i++) {
@@ -180,7 +136,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
             component.setScrollLoading(true);
 
             newResponse = await component.getNewPage(nextTableParamsFormatted);
-            component.onNewPage(newResponse?.rows);
+            component.onNewPage({newRows:newResponse?.rows,newResponse});
         } else {
             component.setPageLoading(true);
 
@@ -243,6 +199,9 @@ const ajaxResponseFunc = (response, component) => {
 
 export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteScroll = true, tableParams) {
     const self = this;
+
+    const TABLE_ID = uuidv4();
+
     const json = ChataUtils.responses[idRequest];
     if (!json?.data?.rows?.length || !json?.data?.columns?.length) {
         return;
@@ -257,7 +216,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
 
-    component.columnIndexConfig = tableConfig
+    component.columnIndexConfig = tableConfig;
 
     // TODO - move this to its parent element instead
     var groupableCount = getNumberOfGroupables(json?.data?.columns);
@@ -278,17 +237,28 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.queryFn = json?.queryFn;
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewPage = (newRows) => {
-		var tableRowCountElement = component.parentElement.querySelector(".autoql-vanilla-chata-table-row-count")
-		var currentText = tableRowCountElement.textContent;
-		var matches = currentText.match(/(\d+)/);
-		if (matches && matches.length > 0) {
-			var currentTableRowCount = parseInt(matches[0]);
-			var newCurrentTableRowCount = currentTableRowCount + newRows.length;
-			var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
-			tableRowCountElement.textContent = newText;
-		  }
-	};
+    component.onNewPage = ({newRows = 0,chartsVisibleCount = 0, newResponse = null}) => {
+		
+		if(newResponse){
+			tableParams.queryJson.data.rows = [...tableParams.queryJson.data.rows, ...newResponse.rows]
+			tableParams.queryJson.data.row_limit = newResponse.row_limit;
+		}
+		var newCurrentTableRowCount = 0;
+        var tableRowCountElement = component.parentElement.querySelector('.autoql-vanilla-chata-table-row-count');
+        var currentText = tableRowCountElement.textContent;
+        var matches = currentText.match(/(\d+)/);
+        if (matches && matches.length > 0) {
+            var currentTableRowCount = parseInt(matches[0]);
+			if(newRows !== 0){
+				var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+			}
+			if(chartsVisibleCount !== 0){
+				var newCurrentTableRowCount = chartsVisibleCount
+			}
+            var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
+            tableRowCountElement.textContent = newText;
+        }
+    };
 
     // TODO(Nikki) - update parent component with changes
     component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
@@ -433,55 +403,172 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     var table = instantiateTabulator(component, tableOptions, this);
 
+    table.setHeaderInputValue = (inputElement, value) => {
+        if (!inputElement) {
+            return;
+        }
+
+        inputElement.focus();
+        table?.restoreRedraw();
+        inputElement.value = value;
+        inputElement.title = value;
+        inputElement.blur();
+    };
+
     if (!table) {
         return;
     }
 
-    table.addFilterTag = (col) => {
-        const colTitle = col.querySelector('.tabulator-col-title');
-        const tag = htmlToElement(`
-            <span class="autoql-vanilla-filter-tag">F</span>
-        `);
-
-        colTitle.insertBefore(tag, colTitle.firstChild);
-    };
-
-    table.removeFilterTag = (col) => {
-        const colTitle = col.querySelector('.tabulator-col-title');
-        const tag = colTitle.querySelector('.autoql-vanilla-filter-tag');
-        if (tag) colTitle.removeChild(tag);
-    };
-
-    table.createInputClearButtons = () => {
-        var domTable = table.element;
-        var filters = domTable.querySelectorAll('.tabulator-header-filter');
-
-        for (var i = 0; i < filters.length; i++) {
-            var filter = filters[i];
-            var inputElement = filter.children[0];
-
-            const clearBtnText = document.createElement('span');
-            clearBtnText.innerHTML = '&#x00d7;';
-
-            const clearBtn = document.createElement('div');
-            clearBtn.className = 'autoql-vanilla-input-clear-btn';
-            clearBtn.setAttribute('data-tippy-content', 'Clear filter');
-            clearBtn.appendChild(clearBtnText);
-
-            clearBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                // TODO(Nikki) - make this date picker component
-                //   this.setHeaderInputValue(inputElement, '')
-                //   if (col.type === 'DATE' && !col.pivot) {
-                //     this.currentDateRangeSelections = {}
-                //     this.debounceSetState({
-                //       datePickerColumn: undefined,
-                //     })
-                //   }
-            });
-
-            inputElement.parentNode.appendChild(clearBtn);
+    table.inputKeydownListener = () => {
+        if (!useInfiniteScroll) {
+            // TODO - uncomment if blockRedraw function is implemented
+            // table?.restoreRedraw()
         }
+    };
+
+    table.inputSearchListener = () => {
+        // When "x" button is clicked in the input box
+        if (!useInfiniteScroll) {
+            // TODO - uncomment if blockRedraw function is implemented
+            //   table?.restoreRedraw()
+        }
+    };
+
+    table.inputDateSearchListener = () => {
+        this.currentDateRangeSelections = {};
+    };
+
+    table.onDateRangeSelectionApplied = (dateRangeSelection, column, inputElement) => {
+        if (!dateRangeSelection || !column || !inputElement) {
+            return;
+        }
+
+        const { startDate, endDate } = dateRangeSelection;
+
+        let start = startDate;
+        let end = endDate;
+        if (startDate && !endDate) {
+            end = start;
+        } else if (!startDate && endDate) {
+            start = end;
+        }
+
+        if (inputElement) {
+            const filterPrecision = getFilterPrecision(column);
+            const dayJSFormatStr = DAYJS_PRECISION_FORMATS[filterPrecision];
+
+            const startDateStr = dayjs(start).format(dayJSFormatStr);
+            const startDateUTC = dayjs.utc(startDateStr).toISOString();
+            const formattedStartDate = dayjs(startDateUTC).utc().format(dayJSFormatStr);
+
+            const endDateStr = dayjs(end).format(dayJSFormatStr);
+            const endDateUTC = dayjs.utc(endDateStr).toISOString();
+            const formattedEndDate = dayjs(endDateUTC).utc().format(dayJSFormatStr);
+
+            let filterInputText = `${formattedStartDate} to ${formattedEndDate}`;
+            if (formattedStartDate === formattedEndDate) {
+                filterInputText = formattedStartDate;
+            }
+
+            table.setHeaderInputValue(inputElement, filterInputText);
+            this.currentDateRangeSelections = {
+                [column.field]: dateRangeSelection,
+            };
+        }
+    };
+
+    table.inputDateClickListener = (e, col, inputElement) => {
+        const coords = inputElement.getBoundingClientRect();
+        const tableCoords = table.element?.getBoundingClientRect();
+        if (coords?.top && coords?.left) {
+            this.datePickerLocation = {
+                top: coords.top - tableCoords.top + coords.height + 5,
+                left: coords.left - tableCoords.left,
+            };
+
+            if (inputElement.datePicker) {
+                inputElement.datePicker.show();
+            } else {
+                const datePickerPopover = new DateRangePicker(e, {
+                    title: col.display_name,
+                    initialRange: this.currentDateRangeSelections?.[col.field],
+                    onSelection: this.onDateRangeSelection,
+                    validRange: col.dateRange,
+                    type: col.precision,
+                    onSelectionApplied: (selection) => table.onDateRangeSelectionApplied(selection, col, inputElement)
+                });
+
+                inputElement.datePicker = datePickerPopover;
+
+                datePickerPopover.show();
+            }
+        }
+    };
+
+    table.inputDateKeypressListener = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
+    };
+
+    table.setHeaderInputEventListeners = () => {
+        if (!columns) {
+            return;
+        }
+
+        columns.forEach((col) => {
+            const inputElement = table.element?.querySelector(
+                `.tabulator-col[tabulator-field="${col.field}"] .tabulator-col-content input`,
+            );
+
+            if (inputElement) {
+                inputElement.removeEventListener('keydown', table.inputKeydownListener);
+                inputElement.addEventListener('keydown', table.inputKeydownListener);
+
+                inputElement.column = col
+
+                const clearBtn = inputElement.parentNode.querySelector('.autoql-vanilla-clear-btn');
+                if (!clearBtn) {
+                    table.createInputClearButton(inputElement, col);
+                }
+
+                if (col.type === 'DATE' && !col.pivot) {
+                    // Open Calendar Picker when user clicks on this field
+                    inputElement.removeEventListener('click', (e) =>
+                        table.inputDateClickListener(e, col, inputElement),
+                    );
+                    inputElement.addEventListener('click', (e) => table.inputDateClickListener(e, col, inputElement));
+
+                    // Do not allow user to type in this field
+                    const keyboardEvents = ['keypress', 'keydown', 'keyup'];
+                    keyboardEvents.forEach((evt) => {
+                        inputElement.removeEventListener(evt, table.inputDateKeypressListener);
+                        inputElement.addEventListener(evt, table.inputDateKeypressListener);
+                    });
+                }
+            }
+        });
+    };
+
+    table.createInputClearButton = (inputElement, column) => {
+        const clearBtnText = document.createElement('span');
+        clearBtnText.innerHTML = '&#x00d7;';
+
+        const clearBtn = document.createElement('div');
+        clearBtn.className = 'autoql-vanilla-input-clear-btn';
+        clearBtn.id = `autoql-vanilla-clear-btn-${TABLE_ID}-${column.field}`;
+        clearBtn.setAttribute('data-tippy-content', strings.clearFilter);
+        clearBtn.appendChild(clearBtnText);
+
+        clearBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            table.setHeaderInputValue(inputElement, '');
+
+            if (column.type === 'DATE' && !column.pivot) {
+                this.currentDateRangeSelections = {};
+            }
+        });
+
+        inputElement.parentNode.appendChild(clearBtn);
     };
 
     table.toggleFilters = () => {
@@ -506,9 +593,6 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         }
     };
 
-    table.createInputClearButtons();
-    table.toggleFilters();
-
     return table;
 }
 
@@ -520,7 +604,7 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
         return;
     }
 
-    const { dataFormatting } = options
+    const { dataFormatting } = options;
 
     const columns = formatQueryColumns({ columns: json?.data?.columns, queryResponse: { data: json } });
 
@@ -533,13 +617,13 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
         isFirstGeneration: true,
     });
 
-    tableConfig.stringColumnIndex = pivotData.stringColumnIndex
-    tableConfig.legendColumnIndex = pivotData.legendColumnIndex
+    tableConfig.stringColumnIndex = pivotData.stringColumnIndex;
+    tableConfig.legendColumnIndex = pivotData.legendColumnIndex;
 
     const pivotTableData = pivotData.pivotTableData;
     const pivotColumns = pivotData.pivotTableColumns;
 
-    component.columnIndexConfig = tableConfig
+    component.columnIndexConfig = tableConfig;
 
     component.classList.add('table-condensed');
 
@@ -549,7 +633,7 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
         if (!drilldownData?.groupBys) {
             return;
         }
-        
+
         onClick(drilldownData);
     };
 

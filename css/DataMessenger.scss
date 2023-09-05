@@ -117,6 +117,10 @@ body.autoql-vanilla-drawer-open-body {
     &.autoql-vanilla-drawer-resizing {
         user-select: none;
         pointer-events: none;
+
+        .autoql-vanilla-chart-content-container {
+            visibility: hidden !important;
+        }
     }
 
     .autoql-vanilla-drawer-mask {
@@ -286,7 +290,24 @@ body.autoql-vanilla-drawer-open-body {
             height: 100%;
             font-size: 20px;
         }
+        .autoql-vanilla-chat-bar-clear-icon {
+            position: absolute;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            right: 0;
+            top: 0;
+            width: 50px;
+            height: 100%;
+            font-size: 20px;
+            visibility: hidden;
+            color: var(--autoql-vanilla-text-color-placeholder);
+            cursor: pointer;
 
+            &.autoql-vanilla-chat-bar-clear-icon-visible {
+                visibility: visible;
+            }
+        }
         .autoql-vanilla-chat-voice-record-button {
             display: flex;
             justify-content: center;

@@ -1,6 +1,7 @@
 import { getBandScale, getLinearScales, getColumnRectObj } from 'autoql-fe-utils';
 import { select } from 'd3-selection';
 import { Axes } from './Axes';
+import { createLines } from './ChataLineChartNew';
 
 export function ColumnChartNew(container, params = {}) {
     const {
@@ -10,6 +11,7 @@ export function ColumnChartNew(container, params = {}) {
         width,
         firstDraw,
         visibleSeries,
+        visibleSeries2,
         colorScales,
         options = {},
         isScaled,
@@ -21,10 +23,18 @@ export function ColumnChartNew(container, params = {}) {
         columnIndexConfig = {},
         activeKey,
         stacked,
-        aggregated
+        aggregated,
+        columnLineCombo = false,
     } = params;
 
-    const { stringColumnIndices, stringColumnIndex, numberColumnIndices, numberColumnIndex } = columnIndexConfig;
+    const {
+        stringColumnIndices,
+        stringColumnIndex,
+        numberColumnIndices,
+        numberColumnIndices2,
+        numberColumnIndex,
+        numberColumnIndex2,
+    } = columnIndexConfig;
     const { dataFormatting } = options;
 
     const scaleParams = {
@@ -38,7 +48,7 @@ export function ColumnChartNew(container, params = {}) {
         enableAxisDropdown,
         changeNumberColumnIndices,
         changeStringColumnIndices,
-        aggregated
+        aggregated,
     };
 
     this.xScale = getBandScale({
@@ -46,17 +56,21 @@ export function ColumnChartNew(container, params = {}) {
         axis: 'x',
     });
 
-    this.yScale = getLinearScales({
+    const yScales = getLinearScales({
         ...scaleParams,
         axis: 'y',
         isScaled,
         columnIndices1: visibleSeries,
+        columnIndices2: visibleSeries2,
         colorScales,
         stacked,
-    }).scale;
+    });
 
-    var xCol = columns[stringColumnIndex];
-    var yCol = columns[numberColumnIndex];
+    this.yScale = yScales.scale;
+
+    if (columnLineCombo) {
+        this.yScale2 = yScales.scale2;
+    }
 
     this.createBars = () => {
         if (!visibleSeries?.length) {
@@ -130,16 +144,31 @@ export function ColumnChartNew(container, params = {}) {
             .attr('width', (d) => d?.width)
             .style('stroke-width', 0)
             .style('fill', (d) => d?.style?.fill)
-            .style('fill-opacity', (d) => d?.drilldownData?.activeKey === activeKey ? 0.7 : d?.style?.fillOpacity)
+            .style('fill-opacity', (d) => (d?.drilldownData?.activeKey === activeKey ? 0.7 : d?.style?.fillOpacity))
             .attr('data-tippy-chart', true)
             .attr('data-tippy-content', (d) => d?.tooltip)
             .on('click', function (e, d) {
                 onChartClick(d.drilldownData);
-                
+
                 container.selectAll('.autoql-vanilla-chart-bar').style('fill-opacity', d?.style?.fillOpacity);
                 select(this).style('fill-opacity', 0.7);
             });
     };
+
+    if (!firstDraw) {
+        this.createBars();
+
+        if (columnLineCombo) {
+            createLines(container, {
+                ...params,
+                xScale: this.xScale,
+                yScale: this.yScale2,
+                visibleSeries: visibleSeries2,
+                numberColumnIndex: numberColumnIndex2,
+                numberColumnIndices: numberColumnIndices2,
+            });
+        }
+    }
 
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
@@ -147,13 +176,8 @@ export function ColumnChartNew(container, params = {}) {
         ...params,
         xScale: this.xScale,
         yScale: this.yScale,
-        xCol,
-        yCol,
+        yScale2: this.yScale2,
     });
-
-    if (!firstDraw) {
-        this.createBars();
-    }
 
     return this;
 }

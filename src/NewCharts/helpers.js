@@ -9,6 +9,7 @@ export const getRenderedChartDimensions = (chartComponent) => {
             const topAxisBBox = axes.select('.autoql-vanilla-axis-top')?.node()?.getBoundingClientRect();
             const bottomAxisBBox = axes.select('.autoql-vanilla-axis-bottom')?.node()?.getBoundingClientRect();
             const rightAxisBBox = axes.select('.autoql-vanilla-axis-right')?.node()?.getBoundingClientRect();
+
             const clippedLegendBBox = axes
                 .select('.autoql-vanilla-chart-legend-clipping-container')
                 ?.node()
@@ -24,14 +25,10 @@ export const getRenderedChartDimensions = (chartComponent) => {
 
             const axesWidth = axesBBox?.width ?? 0;
             const axesHeight = axesBBox?.height ?? 0;
-            const axesX = axesBBox?.x ?? 0;
-            const axesY = axesBBox?.y ?? 0;
 
             return {
                 chartHeight: axesHeight,
                 chartWidth: axesWidth,
-                chartX: axesX,
-                chartY: axesY,
             };
         } catch (error) {
             console.error(error);

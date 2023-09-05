@@ -7,6 +7,9 @@
     font-family: var(--autoql-vanilla-font-family, 'sans-serif');
     overflow: hidden;
     border: 1px solid #ababab52;
+    min-width: 20px;
+    min-height: 10px;
+    background: var(--autoql-vanilla-background-color-secondary);
     box-shadow: 0px 0 8px var(--autoql-vanilla-box-shadow-color, rgba(0, 0, 0, 0.15));
 }
 
@@ -51,6 +54,6 @@
 
 .autoql-vanilla-button-wrapper-selector{
     padding: 5px;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
 
 }

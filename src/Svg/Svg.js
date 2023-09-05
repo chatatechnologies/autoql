@@ -182,7 +182,7 @@ export const DELETE_MESSAGE = `
 
 export const INFO_ICON = `
 <svg fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" class="autoql-vanilla-interpretation-icon">
-    <path class="" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
+    <path class="autoql-vanilla-interpretation-icon" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
     </path>
 </svg>
 `;
@@ -543,8 +543,8 @@ export const SELECT_ARROW = `
 `
 
 export const FILTER_LOCKING = `
-    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"></path>
+    <svg class="filter-locking-menu" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path class="filter-locking-menu" d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"></path>
     </svg>
 `
 
@@ -581,3 +581,41 @@ export const CARET_LEFT_ICON = `
     </path>
 </svg>
 `
+
+export const HISTOGRAM_ICON = 
+`<svg fill="currentColor" x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16'>
+    <rect x='0.482' y='9.788' className='chart-icon-svg-0' width='2.016' height='6.212' />
+    <rect x='3.755' y='3.923' className='chart-icon-svg-0' width='2.016' height='12.077' />
+    <rect x='7.027' className='chart-icon-svg-0' width='2.016' height='16' />
+    <rect x='10.3' y='5.406' className='chart-icon-svg-0' width='2.016' height='10.594' />
+    <rect x='13.571' y='11.542' className='chart-icon-svg-0' width='2.016' height='4.458' />
+</svg>`
+  
+export const SCATTERPLOT_ICON = 
+`<svg fill="currentColor" x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16'>
+    <circle className='chart-icon-svg-0' cx='9.399' cy='10.008' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='9.219' cy='6.29' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='11.082' cy='1.73' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='14.596' cy='2.341' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='5.863' cy='13.68' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='3.45' cy='7.892' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='1.504' cy='13.9' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='6.116' cy='10.008' r='1.2' />
+    <circle className='chart-icon-svg-0' cx='13.559' cy='6.895' r='1.2' />
+</svg>`
+
+export const COLUMN_LINE_ICON =
+`<svg fill="currentColor" x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16'>
+      <path
+        className='chart-icon-svg-0'
+        d='M13,4.2H9.5c-0.5,0-0.9,0.4-0.9,0.9v1.3h-3c-0.5,0-0.9,0.4-0.9,0.9v2.4h-3C1.4,9.6,1,10,1,10.5v4.7
+  C1,15.6,1.4,16,1.9,16h3h1.4h2.4h1.4h3c0.5,0,0.9-0.4,0.9-0.9v-10C13.9,4.6,13.5,4.2,13,4.2z M4.8,14.6H2.4V11h2.4V14.6z M8.7,14.6
+  H6.2v-5V7.8h2.4V14.6z M12.5,14.6h-2.4V6.4V5.6h2.4V14.6z'
+      />
+      <path
+        className='chart-icon-svg-0'
+        d='M5.5,5.5c-0.1,0-0.2,0-0.3-0.1l-4-1.7C0.9,3.6,0.7,3.2,0.9,2.9C1,2.5,1.4,2.3,1.8,2.5L5.4,4L9,0.3
+  c0.2-0.2,0.5-0.3,0.8-0.1l4,1.9c0.3,0.2,0.5,0.6,0.3,0.9c-0.2,0.4-0.6,0.5-0.9,0.3L9.6,1.7L6,5.3C5.9,5.4,5.7,5.5,5.5,5.5z'
+      />
+</svg>`
+  

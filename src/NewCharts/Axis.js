@@ -34,7 +34,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
         onNewData,
         onDataFetchError,
     } = params;
-    const { orient, scale, innerHeight, innerWidth, rotateLabels } = axisOptions;
+    const { orient, scale, innerHeight, innerWidth, rotateLabels, transform } = axisOptions;
 
     this.axisElement = container
         .append('g')
@@ -45,6 +45,10 @@ export function Axis(container, params = {}, axisOptions = {}) {
         .style('fill-opacity', 1)
         .style('cursor', 'default')
         .style('letter-spacing', 'normal');
+
+    if (transform) {
+        this.axisElement.attr('transform', transform);
+    }
 
     if (!['left', 'bottom', 'right', 'top'].includes(orient)) {
         console.warn(`Unable to create axis - orientation provided was invalid: ${orient}`);
@@ -68,10 +72,16 @@ export function Axis(container, params = {}, axisOptions = {}) {
             deltaX,
             deltaY,
             chartPadding: CHART_PADDING,
-        });
+        }, CSS_PREFIX);
     };
 
     const onSelectorClick = (evt, legendEvent) => {
+        if (this.axisSelectorPopover?.style?.visibility === 'visible') {
+            this.axisSelectorPopover.destroy();
+            this.axisSelectorPopover = undefined;
+            return
+        }
+
         let placement;
         if (orient === 'left') {
             placement = 'right';
@@ -83,7 +93,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             placement = 'bottom';
         }
 
-        new ChataChartListPopover(evt, scale, columns, placement, 'middle');
+        this.axisSelectorPopover = new ChataChartListPopover(evt, scale, columns, placement, 'middle');
     };
 
     const handleLabelRotation = () => {
@@ -92,17 +102,18 @@ export function Axis(container, params = {}, axisOptions = {}) {
     };
 
     const createAxisTitle = () => {
-        this.axisTitleContainer = this.axisElement.append('g');
-        var axisTitle = this.axisTitleContainer
+        this.axisTitleContainer = this.axisElement.append('g')
+
+        this.axisTitle = this.axisTitleContainer
             .append('text')
-            .attr('class', 'autoql-vanilla-axis-title')
+            .attr('class', `${CSS_PREFIX}-axis-title`)
             .attr('dominant-baseline', 'middle')
             .attr('text-anchor', 'middle')
             .style('font-size', TITLE_FONT_SIZE)
             .style('font-weight', 600)
-            .style('stroke-width', 0);
-        // .attr('lengthAdjust', 'spacingAndGlyphs')
-        // .attr('textLength', MINIMUM_TITLE_LENGTH); // TODO
+            .style('stroke-width', 0)
+            .attr('lengthAdjust', 'spacingAndGlyphs')
+            .attr('textLength', MINIMUM_TITLE_LENGTH);
 
         const fullTitle = scale?.title ?? '';
         let title = fullTitle;
@@ -110,10 +121,10 @@ export function Axis(container, params = {}, axisOptions = {}) {
             title = `${title.substring(0, 35)}...`;
         }
 
-        axisTitle.append('tspan').text(title);
+        this.axisTitle.append('tspan').text(title);
 
         if (scale?.hasDropdown) {
-            axisTitle
+            this.axisTitle
                 .append('tspan')
                 .html('&nbsp;&#9660;')
                 .attr('class', 'autoql-vanilla-axis-selector-arrow')
@@ -125,14 +136,14 @@ export function Axis(container, params = {}, axisOptions = {}) {
             case 'bottom': {
                 const labelBBoxBottom = (this.labelsBBox?.y ?? 0) + (this.labelsBBox?.height ?? 0);
 
-                axisTitle.attr('x', innerWidth / 2).attr('y', labelBBoxBottom + AXIS_TITLE_PADDING_TOP);
+                this.axisTitle.attr('x', innerWidth / 2).attr('y', labelBBoxBottom + AXIS_TITLE_PADDING_TOP);
 
                 break;
             }
             case 'left': {
                 const labelBBoxX = this.labelsBBox?.x ?? 0;
 
-                axisTitle
+                this.axisTitle
                     .attr('transform', 'rotate(-90)')
                     .attr('x', -0.5 * innerHeight)
                     .attr('y', labelBBoxX - AXIS_TITLE_PADDING_TOP);
@@ -141,7 +152,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             case 'right': {
                 const labelBBoxRightX = (this.labelsBBox?.x ?? 0) + (this.labelsBBox?.width ?? 0);
 
-                axisTitle
+                this.axisTitle
                     .attr('transform', 'rotate(-90)')
                     .attr('x', -0.5 * innerHeight)
                     .attr('y', labelBBoxRightX + AXIS_TITLE_PADDING_TOP);
@@ -150,7 +161,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
             case 'top': {
                 const labelBBoxTopY = this.labelsBBox?.y ?? 0;
 
-                axisTitle
+                this.axisTitle
                     .attr('transform', 'rotate(-90)')
                     .attr('x', innerWidth / 2)
                     .attr('y', labelBBoxTopY - AXIS_TITLE_PADDING_TOP);
@@ -161,14 +172,14 @@ export function Axis(container, params = {}, axisOptions = {}) {
         positionTitle(this.axisTitleContainer.node());
 
         // Axis Selector
-        this.titleBBox = axisTitle.node()?.getBBox();
+        this.titleBBox = this.axisTitle.node()?.getBBox();
         const titleHeight = this.titleBBox?.height ?? 0;
         const titleWidth = this.titleBBox?.width ?? 0;
 
-        this.axisTitleBorder = this.axisElement
+        this.axisTitleBorder = this.axisTitleContainer
             .append('rect')
             .attr('class', 'autoql-vanilla-axis-selector-box')
-            .attr('transform', axisTitle.attr('transform'))
+            .attr('transform', this.axisTitle.attr('transform'))
             .attr('width', Math.round(titleWidth + 2 * AXIS_TITLE_BORDER_PADDING_LEFT))
             .attr('height', Math.round(titleHeight + 2 * AXIS_TITLE_BORDER_PADDING_TOP))
             .attr('x', Math.round(this.titleBBox?.x - AXIS_TITLE_BORDER_PADDING_LEFT))
@@ -237,7 +248,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
     const styleTicks = () => {
         this.axisElement.selectAll('.autoql-vanilla-axis path.domain').style('display', 'none');
 
-        if (scale?.type !== 'LINEAR') {
+        if (scale?.type !== 'LINEAR' || orient === 'right' || orient === 'top') {
             this.axisElement.selectAll('g.tick line').style('opacity', 0);
         } else {
             this.axisElement
@@ -270,9 +281,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
     addTooltipsToLabels();
     styleTicks();
 
-    // adjustLoadMoreSelectorToFit()
     // adjustAxisScalerBorder()
-    // adjustLegendLocation()
 
     return this.axisElement;
 }

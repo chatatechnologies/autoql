@@ -27,7 +27,7 @@
     left: -160px;
 }
 
-.chata-popover-wrapper.show{
+.chata-popover-wrapper.chata-popover-wrapper-show{
     opacity: 1;
     visibility: visible;
     display: block;
@@ -44,11 +44,6 @@
 
 .chata-popover-wrapper.up-table-single{
     top: -92px;
-}
-
-
-.autoql-vanilla-chat-message-toolbar.show{
-    display: block;
 }
 
 .more-options-icon svg path{

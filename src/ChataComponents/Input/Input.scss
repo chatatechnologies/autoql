@@ -1,0 +1,230 @@
+.autoql-vanilla-input-and-label-container {
+    position: relative;
+    padding: 2px 5px;
+    display: inline-flex;
+    flex-direction: column;
+
+    &.autoql-vanilla-input-full-width {
+        display: flex;
+    }
+
+    .autoql-vanilla-input-container {
+        position: relative;
+        display: inline-flex;
+        flex-direction: row;
+
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button {
+            /* display: none; <- Crashes Chrome on hover */
+            -webkit-appearance: none;
+            margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+        }
+
+        .autoql-vanilla-input[type='number'] {
+            border-radius: 4px 0px 0px 4px;
+            margin-right: 0;
+        }
+
+        &.autoql-vanilla-input-number {
+            flex: 1;
+
+            .autoql-vanilla-input,
+            .autoql-vanilla-input-number-spin-button-container {
+                height: 100%;
+                max-height: 100%;
+                min-height: 100%;
+            }
+
+            &:hover {
+                .autoql-vanilla-input,
+                .autoql-vanilla-input-number-spin-button-container {
+                    border-color: var(--autoql-vanilla-accent-color);
+                }
+            }
+
+            .autoql-vanilla-input-number-spin-button-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex-wrap: nowrap;
+                flex: 0 0 18px;
+                overflow: hidden;
+                border-radius: 0px 4px 4px 0px;
+                border: 1px solid var(--autoql-vanilla-border-color);
+                border-left: none;
+                transition-property: color, border-color, background-color, opacity;
+                transition-duration: 0.2s;
+                transition-timing-function: ease;
+
+                &:hover .autoql-vanilla-input-number-spin-button {
+                    border-color: var(--autoql-vanilla-accent-color) !important;
+                }
+
+                .autoql-vanilla-input-number-spin-button {
+                    flex: 1;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 100%;
+                    outline: none !important;
+                    border: none;
+                    padding: 0;
+                    color: var(--autoql-vanilla-text-color-primary);
+                    background-color: var(--autoql-vanilla-background-color-secondary);
+
+                    &:first-child {
+                        border-bottom: 1px solid var(--autoql-vanilla-border-color);
+                    }
+
+                    &:last-child {
+                        margin-bottom: -1px;
+                    }
+
+                    &:hover {
+                        color: var(--autoql-vanilla-accent-color);
+                    }
+
+                    &:active {
+                        background-color: var(--autoql-vanilla-accent-color);
+                        color: var(--autoql-vanilla-text-color-accent);
+                    }
+
+                    .autoql-vanilla-icon {
+                        flex: 1;
+                        display: block;
+                        font-size: 12px;
+                        opacity: 0.7;
+                    }
+                }
+            }
+        }
+
+        input[type='search']::-webkit-search-decoration,
+        input[type='search']::-webkit-search-cancel-button,
+        input[type='search']::-webkit-search-results-button,
+        input[type='search']::-webkit-search-results-decoration {
+            -webkit-appearance: none;
+        }
+
+        .autoql-vanilla-input-and-icon {
+            flex: 1;
+        }
+
+        &.with-select {
+            .autoql-vanilla-input {
+                border-radius: 0px 4px 4px 0px;
+            }
+        }
+
+        .autoql-vanilla-text-input-selector {
+            flex: 0;
+            margin: 0;
+            padding: 0;
+
+            .autoql-vanilla-select {
+                border-radius: 4px 0px 0px 4px;
+                border-right: none;
+                margin: 0;
+            }
+        }
+
+        .autoql-vanilla-input {
+            border: 1px solid var(--autoql-vanilla-border-color);
+            border-radius: 4px;
+            background: inherit;
+            width: 100%;
+            font-size: inherit;
+            font-family: inherit;
+            outline: none !important;
+            transition-property: color, border-color, background-color, opacity;
+            transition-duration: 0.3s;
+            transition-timing-function: ease;
+            padding: 10px;
+            line-height: 1em;
+
+            &:disabled {
+                background: var(--autoql-vanilla-hover-color);
+                border-color: var(--autoql-vanilla-border-color) !important;
+                cursor: default;
+            }
+
+            &:hover,
+            &:focus {
+                border-color: var(--autoql-vanilla-accent-color);
+            }
+
+            &.area {
+                line-height: inherit;
+            }
+
+            &:not(textarea) {
+                padding: 0 10px;
+                height: 32px;
+            }
+
+            &.with-select {
+                padding-left: 14px;
+            }
+
+            &.with-icon {
+                padding-left: 35px;
+            }
+
+            &::placeholder {
+                /* Chrome, Firefox, Opera, Safari 10.1+ */
+                color: var(--autoql-vanilla-text-color-placeholder);
+                opacity: 1; /* Firefox */
+                font-style: italic;
+            }
+        }
+
+        .autoql-vanilla-input-icon {
+            position: absolute;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: color 0.2s ease, opacity 0.2s ease;
+            color: var(--autoql-vanilla-text-color-placeholder);
+            height: 100%;
+            line-height: 100%;
+            left: 12px;
+            top: 0;
+
+            span.autoql-vanilla-icon svg {
+                height: 17px;
+                width: 17px;
+            }
+        }
+
+        .autoql-vanilla-text-input-selector .autoql-vanilla-select:hover {
+            border-color: var(--autoql-vanilla-accent-color);
+        }
+
+        &:hover {
+            .autoql-vanilla-input {
+                border-left-color: var(--autoql-vanilla-accent-color);
+            }
+
+            .autoql-vanilla-input-icon {
+                color: var(--autoql-vanilla-accent-color);
+            }
+        }
+    }
+}
+
+.autoql-vanilla-input-label {
+    display: flex;
+    align-items: center;
+    padding-bottom: 3px;
+    margin: 0;
+    font-size: 0.9em;
+    color: var(--autoql-vanilla-text-color-primary);
+    opacity: 0.8;
+    white-space: nowrap;
+    text-align: left;
+
+    .autoql-vanilla-icon {
+        margin: 0 3px;
+        opacity: 0.6;
+    }
+}

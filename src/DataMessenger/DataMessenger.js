@@ -12,8 +12,10 @@ import {
     runQueryOnly,
     isDrilldown as isDrilldownResponse,
     areAllColumnsHidden,
+	REQUEST_CANCELLED_ERROR,
+    getColumnIndexConfig
 } from 'autoql-fe-utils';
-
+import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
@@ -21,7 +23,7 @@ import { ChataUtils } from '../ChataUtils';
 import { Modal } from '../Modal';
 import { NotificationSettingsModal, NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
-import { apiCallGet, apiCallPut, apiCallPost } from '../Api';
+import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
 import { getGroupableFields } from '../Charts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
@@ -44,6 +46,7 @@ import {
     supportsVoiceRecord,
     checkAndApplyTheme,
     getSupportedDisplayTypes,
+    closeAllChartPopovers,
 } from '../Utils';
 
 import {
@@ -75,6 +78,9 @@ import {
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
+    SCATTERPLOT_ICON,
+    COLUMN_LINE_ICON,
+    HISTOGRAM_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -163,7 +169,10 @@ export function DataMessenger(options = {}) {
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
     }
-
+	
+	obj.cancelCurrentRequest = () => {
+        obj.axiosSource?.cancel(REQUEST_CANCELLED_ERROR);
+    };
     obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement);
     obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement);
 
@@ -369,6 +378,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.closeDrawer = () => {
+        closeAllChartPopovers();
         obj.closePopOver(obj.clearMessagePop);
 
         obj.rootElem.classList.remove('autoql-vanilla-drawer-open');
@@ -431,8 +441,7 @@ export function DataMessenger(options = {}) {
 
         if (obj.options.showMask) {
             obj.drawerMask.onclick = (e) => {
-                e.stopPropagation();
-                obj.closeDrawer();
+                obj.closeDrawer(e);
             };
         } else {
             obj.drawerMask.classList.add('autoql-vanilla-drawer-mask-hidden');
@@ -770,7 +779,9 @@ export function DataMessenger(options = {}) {
                     break;
                 default:
             }
-            if (newWidth <= 400) return;
+            if (newWidth <= 400) {
+                newWidth = 400
+            };
 
             if (obj.isPortrait()) {
                 obj.drawerContentWrapper.style.width = newWidth + 'px';
@@ -813,6 +824,37 @@ export function DataMessenger(options = {}) {
     obj.registerWindowClicks = () => {
         const excludeElementsForClearMessages = [
             'clear-all',
+			'filter-locking-menu',
+			'autoql-vanilla-condition-locking-input',
+			'autoql-vanilla-condition-list',
+			'autoql-vanilla-filter-locking-saving-indicator',
+			'autoql-vanilla-filter-locking-close-and-saving-container',
+			'autoql-vanilla-filter-locking-view',
+			'autoql-vanilla-empty-condition-list',
+			'autoql-vanilla-filter-locking-title',
+			'autoql-vanilla-filter-locking-title-container',
+			'autoql-vanilla-filter-locking-empty-condition',
+			'autoql-vanilla-suggestion-key-content',
+			'autoql-vanilla-suggestion-message-content',
+			'autoql-vanilla-filter-suggestion',
+			'autoql-vanilla-input',
+			'autoql-vanilla-radio-btn',
+			'autoql-vanilla-slider',
+			'autoql-vanilla-text-include',
+			'autoql-vanilla-text-exclude',
+			'autoql-vanilla-persist-toggle-column',
+			'autoql-vanilla-filter-list-title',
+			'autoql-vanilla-filter-list-title-section',
+			'autoql-vanilla-condition-table-settings',
+			'autoql-vanilla-filter-list',
+			'autoql-vanilla-filter-list-title-section-icon',
+			'autoql-vanilla-chata-bar-container',
+			'autoql-vanilla-filter-lock-category-title',
+			'autoql-vanilla-condition-table-list-item',
+			'autoql-vanilla-filter-locking-line',
+			'autoql-vanilla-interpretation-icon',
+			'autoql-vanilla-filter-locking-input-container',
+			'autoql-vanilla-condition-lock-header',
             'autoql-vanilla-clear-messages-confirm-popover',
             'autoql-vanilla-chata-confirm-text',
             'autoql-vanilla-chata-confirm-icon',
@@ -834,6 +876,7 @@ export function DataMessenger(options = {}) {
 
             if (closePop) {
                 obj.closePopOver(obj.clearMessagePop);
+				obj.filterLocking.hide()
             }
 
             if (closeAutoComplete) {
@@ -1019,9 +1062,9 @@ export function DataMessenger(options = {}) {
         [].forEach.call(obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container'), (e) => {
             e.parentNode.removeChild(e);
         });
-
+		obj.cancelCurrentRequest()
+		obj.input.removeAttribute('disabled');
         obj.drawerContent.appendChild(obj.introMessage);
-
         if (obj.topicsWidget) {
             obj.topicsWidget.reset();
             obj.drawerContent.appendChild(obj.topicsWidget._elem);
@@ -1216,8 +1259,8 @@ export function DataMessenger(options = {}) {
 
     obj.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
         closeAllToolbars();
-        reportProblem.classList.toggle('show');
-        toolbar.classList.toggle('show');
+        reportProblem.classList.toggle('chata-popover-wrapper-show');
+        toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
         var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
         var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         if (bubble === obj.getLastMessageBubble()) {
@@ -1229,8 +1272,8 @@ export function DataMessenger(options = {}) {
 
     obj.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
         closeAllToolbars();
-        moreOptions.classList.toggle('show');
-        toolbar.classList.toggle('show');
+        moreOptions.classList.toggle('chata-popover-wrapper-show');
+        toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
         var bubble = document.querySelector(`[data-bubble-container-id='${idRequest}']`);
         var bubbleWithRT = document.querySelector(`[data-bubble-id='${idRequest}']`);
         if (bubble === obj.getLastMessageBubble()) {
@@ -1285,19 +1328,17 @@ export function DataMessenger(options = {}) {
         var request = ChataUtils.responses[idRequest];
         let moreOptionsArray = [];
         var toolbar = htmlToElement(`
-            <div class="autoql-vanilla-chat-message-toolbar right">
+            <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right">
             </div>
         `);
 
         var reportProblem = obj.getReportProblemMenu(toolbar, idRequest, type);
         reportProblem.classList.add('report-problem');
-
         var reportProblemButton = obj.getActionButton(
             REPORT_PROBLEM,
             strings.reportProblemTitle,
             idRequest,
-            obj.reportProblemHandler,
-            [reportProblem, toolbar],
+            obj.openModalReport,[obj.options,undefined,toolbar]
         );
 
         switch (type) {
@@ -1511,8 +1552,8 @@ export function DataMessenger(options = {}) {
         }
 
         var scrollBox = messageBubble.querySelector('.autoql-vanilla-chata-table-scrollbox');
-        var toolbarLeft = messageBubble.getElementsByClassName('left')[0];
-        var toolbarRight = messageBubble.getElementsByClassName('right')[0];
+        var toolbarLeft = messageBubble.getElementsByClassName('autoql-vanilla-chat-message-toolbar-left')[0];
+        var toolbarRight = messageBubble.getElementsByClassName('autoql-vanilla-chat-message-toolbar-right')[0];
 
         if (oldComponent.noColumnsElement && !areAllColumnsHidden(json?.data?.columns)) {
             oldComponent.parentElement.removeChild(oldComponent.noColumnsElement);
@@ -1602,6 +1643,8 @@ export function DataMessenger(options = {}) {
             return
         }
 
+        responseJson.queryFn = obj.getQueryFn(response);
+
         var status = response.status;
         obj.chataBarContainer.removeChild(responseLoadingContainer);
         if (!responseJson['data']['rows']) {
@@ -1674,6 +1717,7 @@ export function DataMessenger(options = {}) {
         queryID,
         source,
         column,
+        filter
     }) => {
         if (!json?.data?.data) {
             return;
@@ -1691,10 +1735,9 @@ export function DataMessenger(options = {}) {
                         queryID,
                         source,
                         groupBys,
-                        pageSize,
                     });
-                } else if (!isNaN(stringColumnIndex) && !!row?.length) {
-                    if (!isDataLimited(json) && !isColumnDateType(column)) {
+                } else if ((!isNaN(stringColumnIndex) && !!row?.length) || filter) {
+                    if (!isDataLimited(json) && !isColumnDateType(column) && !filter) {
                         // --------- 1. Use mock filter drilldown from client side --------
                         const mockData = getFilterDrilldown({ stringColumnIndex, row, json });
                         return new Promise((resolve, reject) => {
@@ -1704,7 +1747,7 @@ export function DataMessenger(options = {}) {
                         });
                     } else {
                         // --------- 2. Use subquery for filter drilldown --------
-                        const clickedFilter = constructFilter({
+                        const clickedFilter = filter ?? constructFilter({
                             column: json.data.data.columns[stringColumnIndex],
                             value: row[stringColumnIndex],
                         });
@@ -1842,10 +1885,11 @@ export function DataMessenger(options = {}) {
     obj.displayTableHandler = (idRequest) => {
         var component = obj.getComponent(idRequest);
         var json = obj.getRequest(idRequest);
+		var chartsVisibleCount = json.data?.rows.length;
         var parentContainer = obj.getParentFromComponent(component);
 		var parentElement = component.parentElement;
         var useInfiniteScroll = isDataLimited({ data: json });
-        var tableParams = undefined;
+        var tableParams = { queryJson:json, sort: undefined, filter: undefined }
 
         obj.refreshToolbarButtons(component, 'table');
 
@@ -1856,7 +1900,7 @@ export function DataMessenger(options = {}) {
             useInfiniteScroll,
             tableParams,
         );
-
+		table.element.onNewPage({chartsVisibleCount:chartsVisibleCount})
         component.internalTable = table;
         component.tabulator = table;
         obj.setDefaultFilters(component, table, 'table');
@@ -1919,6 +1963,23 @@ export function DataMessenger(options = {}) {
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
+        const displayTypeIcons = {
+            table: TABLE_ICON,
+            pivot_table: PIVOT_ICON,
+            column: COLUMN_CHART_ICON,
+            bar: BAR_CHART_ICON,
+            line: LINE_CHART_ICON,
+            pie: PIE_CHART_ICON,
+            heatmap: HEATMAP_ICON,
+            bubble: BUBBLE_CHART_ICON,
+            stacked_column: STACKED_COLUMN_CHART_ICON,
+            stacked_bar: STACKED_BAR_CHART_ICON,
+            stacked_line: STACKED_AREA_CHART_ICON,
+            column_line: COLUMN_LINE_ICON,
+            scatterplot: SCATTERPLOT_ICON,
+            histogram: HISTOGRAM_ICON,
+        }
+
         displayTypes.forEach((displayType) => {
             let button;
 
@@ -1927,77 +1988,21 @@ export function DataMessenger(options = {}) {
             if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    TABLE_ICON,
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     obj.displayTableHandler,
-                );
-            } else if (displayType == 'column') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    COLUMN_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'bar') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    BAR_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'pie') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    PIE_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'line') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    LINE_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
                 );
             } else if (displayType == 'pivot_table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    PIVOT_ICON,
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     obj.displayPivotTableHandler,
                 );
-            } else if (displayType == 'heatmap') {
+            } else if (Object.keys(displayTypeIcons).includes(displayType)) {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    HEATMAP_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'bubble') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    BUBBLE_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'stacked_column') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    STACKED_COLUMN_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'stacked_bar') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    STACKED_BAR_CHART_ICON,
-                    strings.displayTypes[displayType],
-                    displayChartHandlerFn,
-                );
-            } else if (displayType == 'stacked_line') {
-                button = obj.getDisplayTypeButton(
-                    idRequest,
-                    STACKED_AREA_CHART_ICON,
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
@@ -2020,20 +2025,19 @@ export function DataMessenger(options = {}) {
         if (value) {
             if (value !== 'Drilldown') {
                 localStorage.setItem('lastQuery', value);
+				var containerMessage = document.createElement('div');
+				var messageBubble = document.createElement('div');
+	
+				containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
+				containerMessage.style.zIndex = --obj.zIndexBubble;
+				containerMessage.classList.add('request');
+				messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+				messageBubble.classList.add('single');
+				messageBubble.classList.add('text');
+				messageBubble.textContent = value;
+				containerMessage.appendChild(messageBubble);
+				obj.drawerContent.appendChild(containerMessage);
             }
-
-            var containerMessage = document.createElement('div');
-            var messageBubble = document.createElement('div');
-
-            containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-            containerMessage.style.zIndex = --obj.zIndexBubble;
-            containerMessage.classList.add('request');
-            messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-            messageBubble.classList.add('single');
-            messageBubble.classList.add('text');
-            messageBubble.textContent = value;
-            containerMessage.appendChild(messageBubble);
-            obj.drawerContent.appendChild(containerMessage);
         }
 
         var responseLoadingContainer = document.createElement('div');
@@ -2125,7 +2129,7 @@ export function DataMessenger(options = {}) {
         var toolbar = undefined;
         if (supportedDisplayTypes.length > 0) {
             toolbar = htmlToElement(`
-                <div class="autoql-vanilla-chat-message-toolbar left">
+                <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-left">
                 </div>
             `);
             for (var i = 0; i < supportedDisplayTypes.length; i++) {
@@ -2163,7 +2167,7 @@ export function DataMessenger(options = {}) {
 
         obj.displayTableHandler(idRequest);
 
-        if (parsed_interpretation && !isDrilldown) {
+        if (parsed_interpretation) {
             var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
             containerMessage.appendChild(interpretationView);
         }
@@ -2178,7 +2182,7 @@ export function DataMessenger(options = {}) {
         return ChataUtils.sendReport(idRequest, options, menu, toolbar);
     };
 
-    obj.openModalReport = function (idRequest, options, menu, toolbar) {
+    obj.openModalReport = function (evt,idRequest, options, menu, toolbar) {
         ChataUtils.openModalReport(idRequest, options, menu, toolbar);
     };
 
@@ -2190,6 +2194,9 @@ export function DataMessenger(options = {}) {
             component.tabulator.redraw(true);
 
             obj.refreshToolbarButtons(component, 'table')
+            
+            const newColumnIndexConfig = getColumnIndexConfig({ response: { data: json } });
+            component.columnIndexConfig = newColumnIndexConfig;
 
             if (showBadge(json)) {
                 badge.style.visibility = 'visible';
@@ -2595,7 +2602,10 @@ export function DataMessenger(options = {}) {
                         ...args,
                     });
 
-                    newResponse.data.originalQueryID = response.data.originalQueryID;
+                    if (newResponse?.data) {
+                        newResponse.data.originalQueryID = response.data.originalQueryID;
+                        newResponse.data.queryFn = obj.getQueryFn(response)
+                    }
                 } else {
                     newResponse = await runQueryOnly({
                         ...queryParams,
@@ -2605,7 +2615,10 @@ export function DataMessenger(options = {}) {
                         ...args,
                     });
     
-                    newResponse.data.originalQueryID = response.data.data.query_id;
+                    if (newResponse?.data) {
+                        newResponse.data.originalQueryID = response.data.data.query_id;
+                        newResponse.data.queryFn = obj.getQueryFn(response)
+                    }
                 }
 
             } catch (error) {
@@ -2624,11 +2637,21 @@ export function DataMessenger(options = {}) {
             if (responseLoadingContainer) {
                 obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
+			if(response.data.message === 'Request cancelled'){
+				return;
+			}
             obj.sendResponse(strings.accessDenied);
             return;
         }
 
         const { status } = response;
+
+        var jsonResponse = response.data;
+
+        if (jsonResponse) {
+            jsonResponse.queryFn = obj.getQueryFn(response);
+        }
+
         if (status != 200) {
             let msg = response.data.message;
             let ref = response.data['reference_id'];
@@ -2668,8 +2691,6 @@ export function DataMessenger(options = {}) {
             }
         }
 
-        var jsonResponse = response.data;
-
         if (responseLoadingContainer) {
             obj.chataBarContainer.removeChild(responseLoadingContainer);
         }
@@ -2678,8 +2699,6 @@ export function DataMessenger(options = {}) {
             obj.putSuggestionResponse(jsonResponse);
             return;
         }
-
-        jsonResponse.queryFn = obj.getQueryFn(response);
 
         var groupables = [];
         if (jsonResponse.data.columns) {
@@ -2769,6 +2788,7 @@ export function DataMessenger(options = {}) {
         try {
             obj.input.disabled = true;
             obj.input.value = '';
+			obj.axiosSource = axios.CancelToken?.source();
             const { domain, apiKey, token } = obj.options.authentication;
             var responseLoadingContainer = obj.putMessage(textValue);
 
@@ -2801,11 +2821,16 @@ export function DataMessenger(options = {}) {
                 allowSuggestions: true,
                 enableQueryValidation: obj.options.autoQLConfig.enableQueryValidation,
                 skipQueryValidation: false,
+				cancelToken: obj.axiosSource?.token,
             };
 
             let response;
             try {
                 response = await runQuery(queryParams);
+                if (response?.data) {
+                    response.data.queryFn = obj.getQueryFn(response)
+                }
+                
                 // response = testdata;
             } catch (error) {
                 response = error;
