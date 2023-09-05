@@ -4,11 +4,13 @@ import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
 import { ConditionsStep } from "./ConditionsStep";
 import './DataAlertCreationModal.scss';
 import { StepContainer } from "./StepContainer";
+import { SummaryFooter } from "./SummaryFooter";
 import { TimingStep } from "./TimingStep/TimingStep";
 
 export function DataAlertCreationModal({ queryResponse }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
+  const summaryFooter = new SummaryFooter({ queryText: queryResponse.data.text })
   this.steps = [];
   this.currentStepIndex = 0;
 
@@ -95,7 +97,7 @@ export function DataAlertCreationModal({ queryResponse }) {
     currentStep.view.classList.add('autoql-vanilla-hidden');
     nextStep.view.classList.remove('autoql-vanilla-hidden');
     this.stepContainer.enableStep(this.currentStepIndex);
-    this.updateFooterButtons();
+    this.updateFooter();
   }
 
   this.handlePreviousStep = () => {
@@ -104,15 +106,17 @@ export function DataAlertCreationModal({ queryResponse }) {
     const previousStep = this.steps[this.currentStepIndex];
     currentStep.view.classList.add('autoql-vanilla-hidden');
     previousStep.view.classList.remove('autoql-vanilla-hidden');
-    this.updateFooterButtons();
+    this.updateFooter();
   }
 
   this.handleSave = () => {
     console.log('save handler');
   }
 
-  this.updateFooterButtons = () => {
+  this.updateFooter = () => {
     const { length } = this.steps;
+    summaryFooter.classList.remove('autoql-vanilla-hidden');
+
     if((this.currentStepIndex + 1) >= length) {
       this.btnNextStep.textContent = 'Finish & Save';
       this.btnNextStep.onclick = this.handleSave;
@@ -123,6 +127,7 @@ export function DataAlertCreationModal({ queryResponse }) {
 
     if(this.currentStepIndex === 0) {
       this.btnBack.classList.add('autoql-vanilla-hidden');
+      summaryFooter.classList.add('autoql-vanilla-hidden');
     } else {
       this.btnBack.classList.remove('autoql-vanilla-hidden');
     }
@@ -159,6 +164,7 @@ export function DataAlertCreationModal({ queryResponse }) {
   container.appendChild(stepContentContainer);
   modal.chataModal.classList.add('autoql-vanilla-data-alert-creation-modal-full-size');
   modal.setTitle('Create Data Alert');
+  modal.addFooterElement(summaryFooter);
   modal.addFooterElement(this.createFooter());
   modal.addView(container);
 

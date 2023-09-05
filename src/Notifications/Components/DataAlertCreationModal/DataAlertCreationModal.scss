@@ -1,15 +1,18 @@
 .autoql-vanilla-data-alert-creation-modal-full-size {
   width: 95vw;
   height: 100%;
-  .autoql-vanilla-modal-footer {
-    width: 100%;
-    display: flex;
-    justify-content: end;
-    padding: 8px 10px;
-    flex-direction: column;
-    .autoql-vanilla-chata-btn {
-      .autoql-vanilla-btn-text-wrapper {
-        margin-left: 5px;
+  .chata-modal-footer {
+    padding: 0px;
+    .autoql-vanilla-modal-footer {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      flex-direction: column;
+      padding: 8px 10px;
+      .autoql-vanilla-chata-btn {
+        .autoql-vanilla-btn-text-wrapper {
+          margin-left: 5px;
+        }
       }
     }
   }
