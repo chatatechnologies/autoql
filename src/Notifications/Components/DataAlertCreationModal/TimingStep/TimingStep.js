@@ -14,11 +14,14 @@ import {
   MONTH_DAY_SELECT_OPTIONS,
   RESET_PERIOD_OPTIONS,
 } from "autoql-fe-utils";
+import './TimingStep.scss';
 
 export function TimingStep() {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const settingGroup = document.createElement('div');
+  const frequencyMessageContainer  = document.createElement('div');
+  const frequencyMessage = document.createElement('span');
   
   const dataAlertSettingGroup = document.createElement('div');
   const dataAlertSettingFrequency = document.createElement('div');
@@ -413,10 +416,15 @@ export function TimingStep() {
   dataAlertSettingGroup.classList.add('autoql-vanilla-data-alert-frequency-setting-group'); 
   dataAlertSettingFrequency.classList.add('autoql-vanilla-frequency-settings');
   frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
+  frequencyMessageContainer.classList.add('autoql-vanilla-frequency-type-container');
 
+  frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
+
+  frequencyMessageContainer.appendChild(frequencyMessage);
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
   settingGroup.appendChild(dataAlertSettingGroup);
+  wrapper.appendChild(frequencyMessageContainer);
   wrapper.appendChild(settingGroup);
   container.appendChild(wrapper);
 
