@@ -6,7 +6,8 @@ import Split from 'split.js'
 export function DrilldownModal(title, views=[]){
 
     var modal = new Modal({
-        destroyOnClose: true
+        destroyOnClose: true,
+        className: 'autoql-vanilla-drilldown-modal'
     }, () => {
         if(views.length > 1){
             Split(views, {

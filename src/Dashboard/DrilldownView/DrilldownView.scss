@@ -1,0 +1,45 @@
+.autoql-vanilla-drilldown-modal {
+    .chata-modal-body {
+        padding: 0;
+
+        .gutter {
+            background-color: transparent;
+            background-repeat: no-repeat;
+            background-position: 50%;
+            border-top: 3px solid #c0c0c0;
+            pointer-events: all !important;
+            margin-bottom: 10px;
+        }
+    }
+
+    .autoql-vanilla-drilldown-wrapper-view {
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+    }
+
+    .autoql-vanilla-dashboard-drilldown-original {
+        height: 47vh;
+        min-height: 35%;
+        padding-bottom: 10px;
+        position: relative;
+
+        &.no-height {
+            height: 15px !important;
+            min-height: 0;
+        }
+    }
+
+    .autoql-vanilla-dashboard-drilldown-table {
+        height: 30vh;
+        display: flex;
+        flex: 1 1;
+
+        .autoql-vanilla-drilldown-wrapper-view {
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    }
+}

@@ -1,11 +1,14 @@
+.autoql-vanilla-tile-response-loading-container {
+    display: flex;
+}
+
 .autoql-vanilla-dashboard-tile-placeholder-text {
     color: var(--autoql-vanilla-text-color-placeholder);
     font-size: 15px;
     font-family: var(--autoql-vanilla-font-family), sans-serif;
-
 }
 
-.autoql-vanilla-tile-view{
+.autoql-vanilla-tile-view {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -16,7 +19,7 @@
     padding: 25px;
 }
 
-.autoql-vanilla-tile-response-wrapper{
+.autoql-vanilla-tile-response-wrapper {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,13 +29,13 @@
     position: relative;
 }
 
-.autoql-vanilla-tile-chart-container{
+.autoql-vanilla-tile-chart-container {
     width: calc(100% - 25px);
     height: calc(100% - 25px);
     color: var(--autoql-vanilla-text-color-primary);
 }
 
-.autoql-vanilla-single-value-response{
+.autoql-vanilla-single-value-response {
     font-size: 32px;
     margin-top: -6px;
     color: var(--autoql-vanilla-text-color-primary);
@@ -41,9 +44,8 @@
 .gutter {
     height: 1px !important;
     background: var(--autoql-vanilla-border-color);
-    opacity: .9;
+    opacity: 0.9;
     pointer-events: none;
-
 }
 .gutter.gutter-vertical {
     cursor: row-resize;
@@ -55,36 +57,37 @@
     cursor: col-resize;
 }
 
-.split.split-horizontal, .gutter.gutter-horizontal {
+.split.split-horizontal,
+.gutter.gutter-horizontal {
     height: 100%;
     float: left;
 }
 
-.autoql-vanilla-chata-dashboard-item.editing .autoql-vanilla-dashboard-tile-response-wrapper .gutter{
+.autoql-vanilla-chata-dashboard-item.editing .autoql-vanilla-dashboard-tile-response-wrapper .gutter {
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: 50%;
-    border-top: 3px solid #C0C0C0;
+    border-top: 3px solid #c0c0c0;
     pointer-events: all;
 }
 
-.autoql-vanilla-tile-response-wrapper .autoql-vanilla-single-value-response:hover{
+.autoql-vanilla-tile-response-wrapper .autoql-vanilla-single-value-response:hover {
     text-decoration: underline;
     font-weight: 600;
     cursor: pointer;
     color: var(--autoql-vanilla-text-color-primary);
 }
 
-.autoql-vanilla-query-output-error-message{
+.autoql-vanilla-query-output-error-message {
     font-size: 14px;
 }
 
-.autoql-vanilla-chata-icon .play-icon{
+.autoql-vanilla-chata-icon .play-icon {
     vertical-align: bottom;
     line-height: 20px;
 }
 
-.autoql-vanilla-suggestions-container{
+.autoql-vanilla-suggestions-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -92,6 +95,6 @@
     align-self: center;
 }
 
-.autoql-vanilla-suggestion-message{
+.autoql-vanilla-suggestion-message {
     color: var(--autoql-vanilla-text-color-placeholder);
 }

@@ -206,17 +206,16 @@ export function TileView(tile, isSecond=false){
     }
 
     view.showLoading = () => {
+        console.log('SHOWING LOADING....')
         responseWrapper.innerHTML = ''
 
         var responseLoadingContainer = document.createElement('div')
         var responseLoading = document.createElement('div')
 
-        responseLoadingContainer.classList.add(
-            'autoql-vanilla-tile-response-loading-container'
-        )
-        responseLoading.classList.add('autoql-vanilla-response-loading')
+        responseLoadingContainer.classList.add('autoql-vanilla-tile-response-loading-container');
+        responseLoading.classList.add('autoql-vanilla-response-loading');
         for (var i = 0; i <= 3; i++) {
-            responseLoading.appendChild(document.createElement('div'))
+            responseLoading.appendChild(document.createElement('div'));
         }
 
         responseLoadingContainer.appendChild(responseLoading)
@@ -398,11 +397,13 @@ export function TileView(tile, isSecond=false){
             view.clearMetadata()
             view.clearFilterMetadata()
             var loading = view.showLoading()
+
+            console.log(loading)
             var validate = await view.executeValidate()
             let json
             if(!validate || validate.status != 200){
                 ChataUtils.responses[UUID] = json
-                responseWrapper.removeChild(loading)
+                // responseWrapper.removeChild(loading)
                 responseWrapper.appendChild(view.getMessageError())
             }
             if(validate.data.data.replacements.length){
@@ -424,7 +425,7 @@ export function TileView(tile, isSecond=false){
                     if(!view.isExecuted){
                         view.checkAutoChartAggregations(json)
                     }
-                    responseWrapper.removeChild(loading)
+                    // responseWrapper.removeChild(loading)
                     view.displayData()
                 }
             }
@@ -822,6 +823,7 @@ export function TileView(tile, isSecond=false){
             var tableContainer = createTableContainer();
             tableContainer.setAttribute('data-componentid', UUID)
             container.appendChild(tableContainer);
+            container.classList.add('autoql-vanilla-chata-table-container');
             var _scrollbox = document.createElement('div');
             _scrollbox.classList.add(
                 'autoql-vanilla-chata-table-scrollbox'
