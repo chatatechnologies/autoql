@@ -19,9 +19,6 @@ export function TimingStep() {
   const container = document.createElement('div');
   const wrapper = document.createElement('div');
   const settingGroup = document.createElement('div');
-  const dataAlertSetting = document.createElement('div');
-  const alertTypeWrapper = document.createElement('div');
-  const alertTypeInputLabel = document.createElement('div');
   
   const dataAlertSettingGroup = document.createElement('div');
   const dataAlertSettingFrequency = document.createElement('div');
@@ -403,33 +400,22 @@ export function TimingStep() {
     }
   }
   
-  const typeSelector = new Selector({ 
+/*   const typeSelector = new Selector({ 
     defaultValue: this.notificationType,
     options: this.getTypeValues(),
     onChange: this.handleTypeChange,
   });
-  
+   */
   container.classList.add('autoql-vanilla-data-alert-modal-step');
   wrapper.classList.add('autoql-vanilla-data-alerts-container');
   settingGroup.classList.add('autoql-vanilla-data-alert-setting-group');
-  dataAlertSetting.classList.add('autoql-vanilla-data-alert-setting');
-  alertTypeWrapper.classList.add('autoql-vanilla-select-and-label');
-  alertTypeWrapper.classList.add('autoql-vanilla-rule-condition-select');
-  alertTypeWrapper.classList.add('autoql-vanilla-select-full-width');
-  alertTypeInputLabel.classList.add('autoql-vanilla-input-label');
   dataAlertSettingGroup.classList.add('autoql-vanilla-data-alert-setting-group');
   dataAlertSettingGroup.classList.add('autoql-vanilla-data-alert-frequency-setting-group'); 
   dataAlertSettingFrequency.classList.add('autoql-vanilla-frequency-settings');
   frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
 
-  alertTypeInputLabel.textContent = 'Alert Type';
-  
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
-  alertTypeWrapper.appendChild(alertTypeInputLabel);
-  alertTypeWrapper.appendChild(typeSelector);
-  dataAlertSetting.appendChild(alertTypeWrapper);
-  settingGroup.appendChild(dataAlertSetting);
   settingGroup.appendChild(dataAlertSettingGroup);
   wrapper.appendChild(settingGroup);
   container.appendChild(wrapper);
