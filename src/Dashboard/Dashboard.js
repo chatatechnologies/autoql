@@ -1,11 +1,11 @@
 import { GridStack } from 'gridstack';
 import { Tile } from './Tile';
-import './Dashboard.css';
 import { htmlToElement } from '../Utils';
 import { checkAndApplyTheme } from '../Utils/theme';
 import { strings } from '../Strings';
 import { refreshTooltips, refreshDelegate } from '../Tooltips';
 
+import './Dashboard.scss';
 import 'gridstack/dist/gridstack.css';
 import 'gridstack/dist/h5/gridstack-dd-native';
 
@@ -73,33 +73,40 @@ export function Dashboard(selector, options = {}) {
         dashboardId: -1,
         autoChartAggregations: true,
         name: undefined,
+        ...options
     };
-
-    obj.options.tiles = options.tiles;
 
     if ('authentication' in options) {
         for (let [key, value] of Object.entries(options['authentication'])) {
-            obj.options.authentication[key] = value;
+            if (obj.options.authentication[key] !== undefined) {
+                obj.options.authentication[key] = value;
+            }
         }
     }
 
     if ('dataFormatting' in options) {
         for (let [key, value] of Object.entries(options['dataFormatting'])) {
-            obj.options.dataFormatting[key] = value;
+            if (obj.options.dataFormatting[key] !== undefined) {
+                obj.options.dataFormatting[key] = value;
+            }
         }
     }
 
     if ('autoQLConfig' in options) {
         for (let [key, value] of Object.entries(options['autoQLConfig'])) {
-            obj.options.autoQLConfig[key] = value;
+            if (obj.options.autoQLConfig[key] !== undefined) {
+                obj.options.autoQLConfig[key] = value;
+            }
         }
     }
 
     for (let [key, value] of Object.entries(options)) {
-        if (typeof value !== 'object') {
+        if (typeof value !== 'object' && value !== undefined) {
             obj.options[key] = value;
         }
     }
+
+    if (!obj.options.tiles) obj.options.tiles = []
 
     var grid = GridStack.init(
         {

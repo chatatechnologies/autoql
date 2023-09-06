@@ -26,19 +26,6 @@
     position: relative;
 }
 
-.autoql-vanilla-tile-chart-container line {
-    stroke-width: 1px;
-    stroke: currentColor;
-    opacity: 0.15;
-    shape-rendering: crispedges;
-}
-
-.autoql-vanilla-tile-chart-container text {
-    fill: currentcolor;
-    fill-opacity: 0.7;
-    font-family: inherit;
-}
-
 .autoql-vanilla-tile-chart-container{
     width: calc(100% - 25px);
     height: calc(100% - 25px);
@@ -48,9 +35,7 @@
 .autoql-vanilla-single-value-response{
     font-size: 32px;
     margin-top: -6px;
-    opacity: .9;
     color: var(--autoql-vanilla-text-color-primary);
-
 }
 
 .gutter {
@@ -91,7 +76,6 @@
 }
 
 .autoql-vanilla-query-output-error-message{
-    opacity: .8;
     font-size: 14px;
 }
 

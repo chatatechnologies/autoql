@@ -76,6 +76,8 @@ export function ActionToolbar(idRequest, tileView, tile) {
         [reportProblem, toolbar]
     )
 
+    const autoQLConfig = tile.dashboard?.options?.autoQLConfig ?? {}
+
     switch (type) {
         case 'simple':
             if(request['reference_id'] !== '1.1.420'){

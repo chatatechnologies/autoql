@@ -867,8 +867,12 @@ ChataUtils.ajaxCall = function (val, callback, options, source) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse, xhr.status);
+            try {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse, xhr.status);
+            } catch(error) {
+                console.error(error)
+            }
         }
     };
     xhr.open('POST', url);
@@ -883,8 +887,12 @@ ChataUtils.putCall = function (url, data, callback, options) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            try {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse);
+            } catch(error) {
+                console.error(error)
+            }
         }
     };
 
@@ -900,8 +908,12 @@ ChataUtils.deleteCall = function (url, callback, options, extraHeaders = []) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            try {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse);
+            } catch(error) {
+                console.error(error)
+            }
         }
     };
 
@@ -927,8 +939,12 @@ ChataUtils.ajaxCallPost = function (url, callback, data, options) {
     }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4) {
-            var jsonResponse = JSON.parse(xmlhttp.responseText);
-            callback(jsonResponse, xmlhttp.status);
+            try {
+                var jsonResponse = JSON.parse(xmlhttp.responseText);
+                callback(jsonResponse, xmlhttp.status);
+            } catch(error) {
+                console.error(error)
+            }
         }
     };
     xmlhttp.send(JSON.stringify(data));
@@ -942,10 +958,14 @@ ChataUtils.ajaxCallAutoComplete = function (url, callback, options) {
                     matches: [],
                 },
             };
-            if (options.xhr.responseText) {
-                jsonResponse = JSON.parse(options.xhr.responseText);
+            try {
+                if (options.xhr.responseText) {
+                    jsonResponse = JSON.parse(options.xhr.responseText);
+                }
+                callback(jsonResponse);
+            } catch(error) {
+                console.error(error)
             }
-            callback(jsonResponse);
         }
     };
     options.xhr.open('GET', url);

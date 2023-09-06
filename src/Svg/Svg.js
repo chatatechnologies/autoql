@@ -619,3 +619,19 @@ export const COLUMN_LINE_ICON =
       />
 </svg>`
   
+export const DISPLAY_TYPE_ICONS = {
+    table: TABLE_ICON,
+    pivot_table: PIVOT_ICON,
+    column: COLUMN_CHART_ICON,
+    bar: BAR_CHART_ICON,
+    line: LINE_CHART_ICON,
+    pie: PIE_CHART_ICON,
+    heatmap: HEATMAP_ICON,
+    bubble: BUBBLE_CHART_ICON,
+    stacked_column: STACKED_COLUMN_CHART_ICON,
+    stacked_bar: STACKED_BAR_CHART_ICON,
+    stacked_line: STACKED_AREA_CHART_ICON,
+    column_line: COLUMN_LINE_ICON,
+    scatterplot: SCATTERPLOT_ICON,
+    histogram: HISTOGRAM_ICON,
+};

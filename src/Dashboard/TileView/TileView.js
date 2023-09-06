@@ -1,4 +1,3 @@
-import './TileView.css'
 import { ChataUtils } from '../../ChataUtils'
 import {
     uuidv4,
@@ -29,17 +28,6 @@ import {
 import {
     DrilldownView
 } from '../DrilldownView'
-import {
-    createAreaChart,
-    createBarChart,
-    createBubbleChart,
-    createColumnChart,
-    createHeatmap,
-    createLineChart,
-    createPieChart,
-    createStackedBarChart,
-    createStackedColumnChart
-} from '../../Charts'
 import { select } from 'd3-selection';
 import {
     refreshTooltips
@@ -58,6 +46,10 @@ import {
     InputToolbar
 } from '../InputToolbar'
 import { strings } from '../../Strings'
+import { CHART_TYPES } from 'autoql-fe-utils'
+import { ChataChartNew } from '../../NewCharts'
+
+import './TileView.scss'
 
 export function TileView(tile, isSecond=false){
     var view = document.createElement('div')
@@ -525,20 +517,22 @@ export function TileView(tile, isSecond=false){
         }
     }
 
-    view.registerDrilldownChartEvent = (component) => {
-        view.componentClickHandler(
-            view.chartElementClick, component, '[data-tilechart]'
-        )
-    }
+    // view.registerDrilldownChartEvent = (component) => {
+    //     view.componentClickHandler(
+    //         view.chartElementClick, component, '[data-tilechart]'
+    //     )
+    // }
 
-    view.registerDrilldownStackedChartEvent = (component) => {
-        view.componentClickHandler(
-            view.stackedChartElementClick, component, '[data-tilechart]'
-        )
-    }
+    // view.registerDrilldownStackedChartEvent = (component) => {
+    //     view.componentClickHandler(
+    //         view.stackedChartElementClick, component, '[data-tilechart]'
+    //     )
+    // }
 
     view.displayDrilldownModal = (title, views=[]) => {
+        console.log('displaying drilldown modal', {title, views})
         var drilldownModal = new DrilldownModal(title, views)
+        console.log({drilldownModal})
         drilldownModal.show()
         setTimeout(function () {
             refreshTooltips()
@@ -551,35 +545,59 @@ export function TileView(tile, isSecond=false){
         target.classList.add('active')
     }
 
-    view.chartElementClick = (evt, idRequest) => {
-        var json = cloneObject(ChataUtils.responses[idRequest])
-        var target = evt.target
-        var indexData = target.dataset.tilechart
-        var colValue = target.dataset.colvalue1
-        var indexValue = target.dataset.filterindex
-        var groupableCount = getNumberOfGroupables(json['data']['columns'])
-        view.selectChartElement(view, target)
-        if(groupableCount == 1 || groupableCount == 2){
-            view.sendDrilldownMessageChart(json, indexData, dashboard.options)
-        }else{
-            view.sendDrilldownClientSideChart(
-                json, indexData, indexValue, colValue, dashboard.options
-            )
+    view.chartElementClick = async (data, idRequest) => {
+        // var target = evt.target
+        // view.selectChartElement(view, target)
+        console.log({data, idRequest})
+        view.activeKey = data.activeKey;
+
+        const json = cloneObject(ChataUtils.responses[idRequest])
+
+        console.log({json})
+
+        const queryID = json?.data?.query_id;
+
+        const drilldownData = {
+            ...data,
+            queryID,
+            source: json?.data?.fe_req?.source,
+            json: { data: json },
         }
+
+        view.sendDrilldownMessageChart(json, drilldownData)
+// 
+
+        // var indexData = target.dataset.tilechart
+        // var colValue = target.dataset.colvalue1
+        // var indexValue = target.dataset.filterindex
+        // var groupableCount = getNumberOfGroupables(json['data']['columns'])
+
+        // if(groupableCount == 1 || groupableCount == 2){
+            // view.sendDrilldownMessageChart(json, indexData, dashboard.options)
+        // }else{
+            // view.sendDrilldownClientSideChart(
+            //     json, indexData, indexValue, colValue, dashboard.options
+            // )
+        // }
     }
 
-    view.stackedChartElementClick = (evt, idRequest) => {
-        var json = cloneObject(ChataUtils.responses[idRequest])
-        json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1
-        json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2
-        json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3
-        view.sendDrilldownMessageChart(json, 0, dashboard.options)
-    }
+    // view.stackedChartElementClick = (evt, idRequest) => {
+    //     var json = cloneObject(ChataUtils.responses[idRequest])
+    //     json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1
+    //     json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2
+    //     json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3
+    //     view.sendDrilldownMessageChart(json, 0, dashboard.options)
+    // }
 
-    view.sendDrilldownMessageChart = async (json, indexData, options) => {
-        if(!dashboard.options.autoQLConfig.enableDrilldowns)return
+    view.sendDrilldownMessageChart = async (json, drilldownData) => {
+        const options = dashboard.options
+        console.log({drilldownData})
+
+        // if(!dashboard.options.autoQLConfig.enableDrilldowns)return
+
+        console.log('this dashboard options needs to have drilldowns enabled:', dashboard.options)
         let title = view.getQuery()
-
+        const indexData = view.activeKey
 
         var tableView = new DrilldownView(
             tile,
@@ -587,102 +605,102 @@ export function TileView(tile, isSecond=false){
             () => {},
             false,
             {
-                json: json,
-                indexData: indexData,
-                options: options
-            }
+                json,
+                indexData,
+                options
+            },
+            drilldownData
         )
 
-        const onClickDrilldownView = (evt, idRequest, currentView) => {
-            var indexData = evt.target.dataset.tilechart
-            var curJson = json
-            var target = evt.target
-            view.selectChartElement(currentView, evt.target)
-            if(
-                target.classList.contains('autoql-vanilla-stacked-rect') ||
-                target.dataset.isStackedDrill
-            ){
-                curJson = cloneObject(curJson)
-                curJson['data']['rows'][0][0] =
-                evt.target.dataset.unformatvalue1
-                curJson['data']['rows'][0][1] =
-                evt.target.dataset.unformatvalue2
-                curJson['data']['rows'][0][2] =
-                evt.target.dataset.unformatvalue3
-                indexData = 0
-            }
+        // const onClickDrilldownView = (evt, idRequest, currentView) => {
+            // var indexData = evt.target.dataset.tilechart
+            // var curJson = json
+            // var target = evt.target
+            // view.selectChartElement(currentView, evt.target)
+            // if(
+            //     target.classList.contains('autoql-vanilla-stacked-rect') ||
+            //     target.dataset.isStackedDrill
+            // ){
+            //     curJson = cloneObject(curJson)
+            //     curJson['data']['rows'][0][0] =
+            //     evt.target.dataset.unformatvalue1
+            //     curJson['data']['rows'][0][1] =
+            //     evt.target.dataset.unformatvalue2
+            //     curJson['data']['rows'][0][2] =
+            //     evt.target.dataset.unformatvalue3
+            //     indexData = 0
+            // }
 
-            tableView.executeDrilldown({
-                json: curJson,
-                indexData: indexData,
-                options: options
-            })
-        }
+            // tableView.executeDrilldown({
+            //     json: curJson,
+            //     indexData: indexData,
+            //     options: options
+            // })
+        // }
 
         var chartView = new DrilldownView(
-            tile, view.internalDisplayType, onClickDrilldownView
+            tile, view.internalDisplayType, view.chartElementClick
         )
 
         view.displayDrilldownModal(title, [chartView, tableView])
         view.copyMetadataToDrilldown(chartView)
         chartView.displayData(json)
-        chartView.setSelectedElement(indexData)
     }
 
-    view.filterData = (json, indexValue, filterBy, options) => {
-        var newJson = cloneObject(json);
-        var newData = [];
-        var oldData = newJson['data']['rows'];
-        var col = newJson['data']['columns'][indexValue];
+    // view.filterData = (json, indexValue, filterBy, options) => {
+    //     var newJson = cloneObject(json);
+    //     var newData = [];
+    //     var oldData = newJson['data']['rows'];
+    //     var col = newJson['data']['columns'][indexValue];
 
-        for (var i = 0; i < oldData.length; i++) {
-            var compareValue = oldData[i][indexValue]
-            if(!compareValue)compareValue = 'null'
-            compareValue = formatData(compareValue, col, options)
-            if(compareValue === filterBy)newData.push(oldData[i]);
-        }
-        newJson.data.rows = newData;
+    //     for (var i = 0; i < oldData.length; i++) {
+    //         var compareValue = oldData[i][indexValue]
+    //         if(!compareValue)compareValue = 'null'
+    //         compareValue = formatData(compareValue, col, options)
+    //         if(compareValue === filterBy)newData.push(oldData[i]);
+    //     }
+    //     newJson.data.rows = newData;
 
 
-        return newJson
-    }
+    //     return newJson
+    // }
 
-    view.sendDrilldownClientSideChart = (
-        json, indexData, indexValue, filterBy, options
-    ) => {
-        if(!options.autoQLConfig.enableDrilldowns)return
-        let title = view.getQuery()
-        var newJson = view.filterData(json, indexValue, filterBy, options)
+    // view.sendDrilldownClientSideChart = (
+    //     json, indexData, indexValue, filterBy, options
+    // ) => {
+    //     if(!options.autoQLConfig.enableDrilldowns)return
+    //     let title = view.getQuery()
+    //     var newJson = view.filterData(json, indexValue, filterBy, options)
 
-        var tableView = new DrilldownView(
-            tile,
-            'table',
-            () => {},
-            false,
-            {
-                json: newJson,
-            }
-        )
+    //     var tableView = new DrilldownView(
+    //         tile,
+    //         'table',
+    //         () => {},
+    //         false,
+    //         {
+    //             json: newJson,
+    //         }
+    //     )
 
-        const onClickDrilldownView = (evt, idRequest, currentView) => {
-            var colValue = evt.target.dataset.colvalue1
-            var indexValue = evt.target.dataset.filterindex
-            var curJson = view.filterData(json, indexValue, colValue, options)
-            view.selectChartElement(currentView, evt.target)
-            tableView.executeDrilldownClientSide({
-                json: curJson,
-            })
-        }
+    //     const onClickDrilldownView = (evt, idRequest, currentView) => {
+    //         var colValue = evt.target.dataset.colvalue1
+    //         var indexValue = evt.target.dataset.filterindex
+    //         var curJson = view.filterData(json, indexValue, colValue, options)
+    //         view.selectChartElement(currentView, evt.target)
+    //         tableView.executeDrilldownClientSide({
+    //             json: curJson,
+    //         })
+    //     }
 
-        var chartView = new DrilldownView(
-            tile, view.internalDisplayType, onClickDrilldownView
-        )
+    //     var chartView = new DrilldownView(
+    //         tile, view.internalDisplayType, onClickDrilldownView
+    //     )
 
-        view.displayDrilldownModal(title, [chartView, tableView])
-        view.copyMetadataToDrilldown(chartView)
-        chartView.displayData(json)
-        chartView.setSelectedElement(indexData)
-    }
+    //     view.displayDrilldownModal(title, [chartView, tableView])
+    //     view.copyMetadataToDrilldown(chartView)
+    //     chartView.displayData(json)
+    //     chartView.setSelectedElement(indexData)
+    // }
 
     view.displaySingleValueDrillDown = () => {
         var json = ChataUtils.responses[UUID]
@@ -762,212 +780,81 @@ export function TileView(tile, isSecond=false){
 
         responseWrapper.innerHTML = ''
 
-        switch (displayType) {
-            case 'table':
-                if(json['data']['columns'].length == 1){
-                    var data = formatData(
-                        json['data']['rows'][0][0],
-                        json['data']['columns'][0],
-                        dashboard.options
-                    );
-                    var singleValue = htmlToElement(`
-                        <div>
-                            <a class="autoql-vanilla-single-value-response">
-                                ${data}
-                            <a/>
-                        </div>
-                    `)
-                    container.appendChild(singleValue)
-                    singleValue.onclick = () => {
-                        view.displaySingleValueDrillDown()
-                    }
-                }else{
-                    var div = createTableContainer();
-                    div.setAttribute('data-componentid', UUID)
-                    container.appendChild(div);
-                    var scrollbox = document.createElement('div');
-                    scrollbox.classList.add(
-                        'autoql-vanilla-chata-table-scrollbox'
-                    );
-                    scrollbox.classList.add('no-full-width');
-                    scrollbox.appendChild(div);
-                    container.appendChild(scrollbox);
-                    var table = new ChataTable(
-                        UUID, dashboard.options, view.onRowClick
-                    )
-                    div.tabulator = table
-                    responseWrapper.tabulator = table
-                    table.parentContainer = view
-                    view.setDefaultFilters(table)
+        if (displayType === 'table') {
+            if(json['data']['columns'].length == 1){
+                var data = formatData(
+                    json['data']['rows'][0][0],
+                    json['data']['columns'][0],
+                    dashboard.options
+                );
+                var singleValue = htmlToElement(`
+                    <div>
+                        <a class="autoql-vanilla-single-value-response">
+                            ${data}
+                        <a/>
+                    </div>
+                `)
+                container.appendChild(singleValue)
+                singleValue.onclick = () => {
+                    view.displaySingleValueDrillDown()
                 }
-                break;
-            case 'bar':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createBarChart(
-                    chartWrapper, json, dashboard.options,
-                    view.registerDrilldownChartEvent, false, 'data-tilechart',
-                    true
-                );
-                view.registerDrilldownChartEvent(chartWrapper)
-                break;
-            case 'column':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createColumnChart(
-                    chartWrapper, json, dashboard.options,
-                    view.registerDrilldownChartEvent, false, 'data-tilechart',
-                    true
-                );
-                view.registerDrilldownChartEvent(chartWrapper)
-                break;
-            case 'line':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createLineChart(
-                    chartWrapper, json, dashboard.options,
-                    view.registerDrilldownChartEvent, false, 'data-tilechart',
-                    true
-                );
-                view.registerDrilldownChartEvent(chartWrapper)
-                break;
-            case 'heatmap':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-
-                createHeatmap(
-                    chartWrapper,
-                    json,
-                    dashboard.options, false,
-                    'data-tilechart', true
-                )
-                view.registerDrilldownChartEvent(chartWrapper)
-                break;
-            case 'bubble':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createBubbleChart(
-                    chartWrapper, json, dashboard.options,
-                    false, 'data-tilechart',
-                    true
-                )
-                view.registerDrilldownChartEvent(chartWrapper)
-                break;
-            case 'stacked_bar':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createStackedBarChart(
-                    chartWrapper, json,
-                    dashboard.options,
-                    view.registerDrilldownStackedChartEvent, false,
-                    'data-tilechart', true
-                )
-                view.registerDrilldownStackedChartEvent(chartWrapper)
-                break;
-            case 'stacked_column':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createStackedColumnChart(
-                    chartWrapper, json,
-                    dashboard.options,
-                    view.registerDrilldownStackedChartEvent, false,
-                    'data-tilechart', true
-                );
-                view.registerDrilldownStackedChartEvent(chartWrapper)
-                break;
-            case 'stacked_line':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createAreaChart(
-                    chartWrapper, json,
-                    dashboard.options,
-                    view.registerDrilldownStackedChartEvent, false,
-                    'data-tilechart', true
-                );
-                view.registerDrilldownStackedChartEvent(chartWrapper)
-            break;
-            case 'pie':
-                chartWrapper = document.createElement('div')
-                chartWrapper.setAttribute('data-componentid', UUID)
-                chartWrapper2 = document.createElement('div')
-                chartWrapper2.classList.add(
-                    'autoql-vanilla-tile-chart-container'
-                )
-                chartWrapper2.appendChild(chartWrapper)
-                container.appendChild(chartWrapper2)
-                createPieChart(chartWrapper, json,
-                    dashboard.options, false,
-                    'data-tilechart', true
-                );
-                view.registerDrilldownChartEvent(chartWrapper)
-                break;
-            case 'pivot_table':
-                var tableContainer = createTableContainer();
-                tableContainer.setAttribute('data-componentid', UUID)
-                container.appendChild(tableContainer);
-                var _scrollbox = document.createElement('div');
-                _scrollbox.classList.add(
+            }else{
+                var div = createTableContainer();
+                div.setAttribute('data-componentid', UUID)
+                container.appendChild(div);
+                container.classList.add('autoql-vanilla-chata-table-container');
+                var scrollbox = document.createElement('div');
+                scrollbox.classList.add(
                     'autoql-vanilla-chata-table-scrollbox'
                 );
-                _scrollbox.classList.add('no-full-width');
-                _scrollbox.appendChild(tableContainer);
-                container.appendChild(_scrollbox);
-                var _table = new ChataPivotTable(
-                    UUID, dashboard.options, view.onCellClick
+                scrollbox.classList.add('no-full-width');
+                scrollbox.appendChild(div);
+                container.appendChild(scrollbox);
+                var table = new ChataTable(
+                    UUID, dashboard.options, view.onRowClick
                 )
-                tableContainer.tabulator = _table;
-                break;
-            default:
+                div.tabulator = table
+                responseWrapper.tabulator = table
+                table.parentContainer = view
+                view.setDefaultFilters(table)
+            }
+        } else if (displayType === 'pivot_table') {
+            var tableContainer = createTableContainer();
+            tableContainer.setAttribute('data-componentid', UUID)
+            container.appendChild(tableContainer);
+            var _scrollbox = document.createElement('div');
+            _scrollbox.classList.add(
+                'autoql-vanilla-chata-table-scrollbox'
+            );
+            _scrollbox.classList.add('no-full-width');
+            _scrollbox.appendChild(tableContainer);
+            container.appendChild(_scrollbox);
+            var _table = new ChataPivotTable(
+                UUID, dashboard.options, view.onCellClick
+            )
+            tableContainer.tabulator = _table;
+        } else if (CHART_TYPES.includes(displayType)) {
+            chartWrapper = document.createElement('div')
+            chartWrapper.setAttribute('data-componentid', UUID)
+            chartWrapper.classList.add('autoql-vanilla-tile-chart-container-data-componentid-holder')
+            chartWrapper2 = document.createElement('div')
+            chartWrapper2.classList.add(
+                'autoql-vanilla-tile-chart-container'
+            )
+            chartWrapper2.appendChild(chartWrapper)
+            container.appendChild(chartWrapper2)
+            new ChataChartNew(chartWrapper, {
+                type: displayType,
+                options: dashboard.options,
+                queryJson: json,
+                onChartClick: (data) => view.chartElementClick(data, UUID),
+            })
+
+            // view.registerDrilldownChartEvent(chartWrapper)
+        } else {
             container.innerHTML = "Oops! We didn't understand that query.";
         }
+
         view.createVizToolbar()
         refreshTooltips()
     }

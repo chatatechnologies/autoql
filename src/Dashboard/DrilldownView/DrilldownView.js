@@ -30,9 +30,10 @@ import {
     DrilldownToolbar
 } from '../DrilldownToolbar'
 import './DrilldownView.css'
+import { CHART_TYPES } from 'autoql-fe-utils'
 
 export function DrilldownView(
-    tile, displayType,onClick=()=>{}, isStatic=true, drilldownMetadata={}
+    tile, displayType,onClick=()=>{}, isStatic=true, drilldownMetadata={}, drilldownRequestData
 ){
     var view = document.createElement('div')
     var wrapperView = document.createElement('div')
@@ -92,41 +93,116 @@ export function DrilldownView(
         }, 400)
     }
 
+
+    view.processDrilldown = async ({
+        json,
+        groupBys,
+        supportedByAPI,
+        row,
+        stringColumnIndex,
+        queryID,
+        source,
+        column,
+        filter
+    }) => {
+        if (!json?.data?.data) {
+            return;
+        }
+
+        // if (getAutoQLConfig(obj.options.autoQLConfig)?.enableDrilldowns) {
+        //     try {
+        //         // This will be a new query so we want to reset the page size back to default
+        //         const pageSize = obj.options.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
+
+        //         if (supportedByAPI) {
+        //             return runDrilldown({
+        //                 ...getAuthentication(obj.options.authentication),
+        //                 ...getAutoQLConfig(obj.options.autoQLConfig),
+        //                 queryID,
+        //                 source,
+        //                 groupBys,
+        //             });
+        //         } else if ((!isNaN(stringColumnIndex) && !!row?.length) || filter) {
+        //             if (!isDataLimited(json) && !isColumnDateType(column) && !filter) {
+        //                 // --------- 1. Use mock filter drilldown from client side --------
+        //                 const mockData = getFilterDrilldown({ stringColumnIndex, row, json });
+        //                 return new Promise((resolve, reject) => {
+        //                     return setTimeout(() => {
+        //                         return resolve(mockData);
+        //                     }, 1500);
+        //                 });
+        //             } else {
+        //                 // --------- 2. Use subquery for filter drilldown --------
+        //                 const clickedFilter = filter ?? constructFilter({
+        //                     column: json.data.data.columns[stringColumnIndex],
+        //                     value: row[stringColumnIndex],
+        //                 });
+
+        //                 const allFilters = getCombinedFilters(clickedFilter, json, undefined); // TODO: add table params
+
+        //                 let response;
+        //                 try {
+        //                     response = await json.data?.queryFn?.({ tableFilters: allFilters, pageSize });
+        //                 } catch (error) {
+        //                     console.error(error);
+        //                     return;
+        //                     // response = error;
+        //                 }
+
+        //                 return response;
+        //             }
+        //         }
+        //     } catch (error) {
+        //         console.error(error);
+        //     }
+        // }
+
+        return;
+    };
+
     view.executeDrilldown = async (args) => {
-        const {
-            json,
-            indexData,
-            options
-        } = args
-
         var loading = view.showLoadingDots()
-        let data
-        var queryId = json['data']['query_id']
-        var params = {}
-        const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`
-        var groupables = getGroupableFields(json)
-        for (var i = 0; i < groupables.length; i++) {
-            var index = groupables[i].indexCol
-            var value = json['data']['rows'][parseInt(indexData)][index]
-            var colData = json['data']['columns'][index]['name']
-            params[colData] = value.toString()
-        }
 
-        var cols = []
-        for(let [key, value] of Object.entries(params)){
-            cols.push({
-                name: key,
-                value: value
-            })
-        }
-        data = {
-            debug: options.autoQLConfig.debug,
-            columns: cols
-        }
+        // const {
+        //     json,
+        //     indexData,
+        //     options
+        // } = args
 
-        var response = await apiCallPost(URL, data, options);
+        
+        // let data
+        // var queryId = json['data']['query_id']
+        // var params = {}
+        // const URL = `${options.authentication.domain}/autoql/api/v1/query/${queryId}/drilldown?key=${options.authentication.apiKey}`
+        // var groupables = getGroupableFields(json)
+        // for (var i = 0; i < groupables.length; i++) {
+        //     var index = groupables[i].indexCol
+        //     var value = json['data']['rows'][parseInt(indexData)][index]
+        //     var colData = json['data']['columns'][index]['name']
+        //     params[colData] = value.toString()
+        // }
+
+        // var cols = []
+        // for(let [key, value] of Object.entries(params)){
+        //     cols.push({
+        //         name: key,
+        //         value: value
+        //     })
+        // }
+        // data = {
+        //     debug: options.autoQLConfig.debug,
+        //     columns: cols
+        // }
+
+        // var response = await apiCallPost(URL, data, options);
+        var response = await view.processDrilldown(drilldownRequestData)
+
         ChataUtils.responses[UUID] = response.data
         view.wrapper.removeChild(loading)
+
+        if (!response) {
+            return
+        }
 
         if(response.data.data.rows.length > 0){
             view.displayData(response.data)
@@ -192,6 +268,10 @@ export function DrilldownView(
         view.wrapper.innerHTML = ''
         let chartWrapper
         let chartWrapper2
+
+        if (CHART_TYPES.includes(displayType)) {
+            
+        }
 
         switch (displayType) {
             case 'table':
