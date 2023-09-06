@@ -3,25 +3,25 @@ import { ChataUtils } from '../../ChataUtils';
 import { ChataTable, ChataPivotTable } from '../../ChataTable';
 import { ErrorMessage } from '../../ErrorMessage';
 import { DrilldownToolbar } from '../DrilldownToolbar';
-import { CHART_TYPES, DEFAULT_DATA_PAGE_SIZE, constructFilter, getAuthentication, getAutoQLConfig, getCombinedFilters, getFilterDrilldown, runDrilldown } from 'autoql-fe-utils';
+import { CHART_TYPES } from 'autoql-fe-utils';
 import { ChataChartNew } from '../../NewCharts';
 
 import './DrilldownView.scss';
 
-export function DrilldownView(
+export function DrilldownView({
     tile,
+    json,
     displayType,
-    onClick = () => {},
     isStatic = true,
-    drilldownMetadata = {},
-    drilldownRequestData,
-) {
+    drilldownFn,
+    activeKey
+}) {
     var view = document.createElement('div');
     var wrapperView = document.createElement('div');
     wrapperView.classList.add('autoql-vanilla-drilldown-wrapper-view');
     view.appendChild(wrapperView);
     view.wrapper = wrapperView;
-    view.onClick = onClick;
+
     if (isStatic) {
         view.classList.add('autoql-vanilla-dashboard-drilldown-original');
     } else {
@@ -49,102 +49,25 @@ export function DrilldownView(
         elem.classList.add('active');
     };
 
-    view.registerDrilldownChartEvent = (component) => {
-        view.componentClickHandler(view.onClick, component, '[data-tilechart]');
-    };
+    view.executeDrilldown = async (data) => {
+        if (!drilldownFn) {
+            setTimeout(() => {
+                ChataUtils.responses[UUID] = json;
+                view.displayData(json);
+            }, 400);
 
-    view.executeDrilldownClientSide = (params) => {
-        const { json } = params;
-
-        view.showLoadingDots();
-
-        setTimeout(() => {
-            ChataUtils.responses[UUID] = json;
-            view.displayData(json);
-        }, 400);
-    };
-
-    view.processDrilldown = async ({
-        json,
-        groupBys,
-        supportedByAPI,
-        row,
-        stringColumnIndex,
-        queryID,
-        source,
-        column,
-        filter,
-    }) => {
-        if (!json?.data?.data) {
             return;
         }
 
-        if (getAutoQLConfig(dashboard.options.autoQLConfig)?.enableDrilldowns) {
-            try {
-                // This will be a new query so we want to reset the page size back to default
-                const pageSize = dashboard.options.pageSize ?? DEFAULT_DATA_PAGE_SIZE;
-
-                if (supportedByAPI) {
-                    return runDrilldown({
-                        ...getAuthentication(dashboard.options.authentication),
-                        ...getAutoQLConfig(dashboard.options.autoQLConfig),
-                        queryID,
-                        source,
-                        groupBys,
-                    });
-                } else if ((!isNaN(stringColumnIndex) && !!row?.length) || filter) {
-                    if (!isDataLimited(json) && !isColumnDateType(column) && !filter) {
-                        // --------- 1. Use mock filter drilldown from client side --------
-                        const mockData = getFilterDrilldown({ stringColumnIndex, row, json });
-                        return new Promise((resolve, reject) => {
-                            return setTimeout(() => {
-                                return resolve(mockData);
-                            }, 1500);
-                        });
-                    } else {
-                        // --------- 2. Use subquery for filter drilldown --------
-                        const clickedFilter =
-                            filter ??
-                            constructFilter({
-                                column: json.data.data.columns[stringColumnIndex],
-                                value: row[stringColumnIndex],
-                            });
-
-                        const allFilters = getCombinedFilters(clickedFilter, json, undefined); // TODO: add table params
-
-                        let response;
-                        try {
-                            response = await json.data?.queryFn?.({ tableFilters: allFilters, pageSize });
-                        } catch (error) {
-                            console.error(error);
-                            return;
-                        }
-
-                        return response;
-                    }
-                }
-            } catch (error) {
-                console.error(error);
-            }
-        }
-
-        return;
-    };
-
-    view.executeDrilldown = async (args) => {
         var loading = view.showLoadingDots();
 
-        var response = await view.processDrilldown(drilldownRequestData);
+        var response = await drilldownFn?.(data);
 
-        view.wrapper.removeChild(loading);
+        loading?.parentElement.removeChild(loading);
 
-        if (!response) {
-            return;
-        }
+        ChataUtils.responses[UUID] = response?.data;
 
-        ChataUtils.responses[UUID] = response.data;
-
-        if (response.data.data.rows.length > 0) {
+        if (response?.data?.data?.rows?.length > 0) {
             view.displayData(response.data);
         } else {
             var error = new ErrorMessage(response.data.message, () => {
@@ -237,28 +160,20 @@ export function DrilldownView(
             chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
             chartWrapper2.appendChild(chartWrapper);
             container.appendChild(chartWrapper2);
+            chartWrapper.activeKey = activeKey
 
             new ChataChartNew(chartWrapper, {
                 type: displayType,
                 options: dashboard.options,
                 queryJson: json,
-                onChartClick: (data) => onClick(data, UUID),
+                onChartClick: view.executeDrilldown
             });
         }
 
         view.displayToolbar();
     };
 
-    if (!isStatic) {
-        var { json } = drilldownMetadata;
-        var colCount = json['data']['columns'].length;
-        var groupableCount = getNumberOfGroupables(json['data']['columns']);
-        if (groupableCount == 1 || groupableCount == 2 || colCount == 1) {
-            view.executeDrilldown(drilldownMetadata);
-        } else {
-            view.executeDrilldownClientSide(drilldownMetadata);
-        }
-    }
+        view.executeDrilldown();
 
     return view;
 }
