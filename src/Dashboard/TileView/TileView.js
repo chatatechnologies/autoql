@@ -31,7 +31,6 @@ import {
     formatData,
     closeAllToolbars,
     cloneObject,
-    getNumberOfGroupables,
     getSafetynetValues,
     getSafetynetUserSelection,
     getSupportedDisplayTypes,
@@ -124,48 +123,17 @@ export function TileView(tile, isSecond = false) {
         });
     };
 
-    view.onRowClick = (e, row, json) => {
-        var index = 0;
-        var groupableCount = getNumberOfGroupables(json['data']['columns']);
-        if (groupableCount > 0) {
-            for (var entries of Object.entries(row._row.data)) {
-                json['data']['rows'][0][index++] = entries[1];
-            }
-            let title = view.getQuery();
+    view.onCellClick = (data, json) => {
+        var tableView = new DrilldownView({
+            tile,
+            displayType: 'table',
+            isStatic: false,
+            drilldownFn: view.getDrilldownFn(data, json),
+        });
 
-            var tableView = new DrilldownView({
-                tile,
-                displayType: 'table',
-                isStatic: false,
-            });
-            view.displayDrilldownModal(title, [tableView]);
-        }
-    };
+        const title = view.getQuery();
 
-    view.onCellClick = (e, cell, json) => {
-        const selectedColumn = cell._cell.column;
-        const row = cell._cell.row;
-        if (selectedColumn.definition.index != 0) {
-            var entries = Object.entries(row.data);
-            if (row.data.Month) {
-                json['data']['rows'][0][0] = selectedColumn.definition.field;
-                json['data']['rows'][0][1] = row.data.Month;
-            } else {
-                json['data']['rows'][0][0] = entries[0][1];
-                json['data']['rows'][0][1] = selectedColumn.definition.field;
-                json['data']['rows'][0][2] = cell.getValue();
-            }
-
-            var tableView = new DrilldownView({
-                tile,
-                displayType: 'table',
-                isStatic: false,
-            });
-
-            const title = view.getQuery();
-
-            view.displayDrilldownModal(title, [tableView]);
-        }
+        view.displayDrilldownModal(title, [tableView]);
     };
 
     view.show = () => {
@@ -676,7 +644,8 @@ export function TileView(tile, isSecond = false) {
                 scrollbox.classList.add('no-full-width');
                 scrollbox.appendChild(div);
                 container.appendChild(scrollbox);
-                var table = new ChataTable(UUID, dashboard.options, view.onRowClick);
+                var table = new ChataTable(UUID, dashboard.options, (data) => view.onCellClick(data, json));
+
                 div.tabulator = table;
                 responseWrapper.tabulator = table;
                 table.parentContainer = view;
@@ -692,7 +661,7 @@ export function TileView(tile, isSecond = false) {
             _scrollbox.classList.add('no-full-width');
             _scrollbox.appendChild(tableContainer);
             container.appendChild(_scrollbox);
-            var _table = new ChataPivotTable(UUID, dashboard.options, view.onCellClick);
+            var _table = new ChataPivotTable(UUID, dashboard.options, (data) => view.onCellClick(data, json));
             tableContainer.tabulator = _table;
         } else if (CHART_TYPES.includes(displayType)) {
             chartWrapper = document.createElement('div');
