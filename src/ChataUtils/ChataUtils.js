@@ -174,9 +174,9 @@ ChataUtils.onCSVDownloadFinish = ({ caller, error, exportLimit, limitReached, qu
 ChataUtils.downloadCsvHandler = async (idRequest, extraParams) => {
     try {
         var uuid = uuidv4();
-        var o = extraParams.caller.options;
-        var c = extraParams.caller;
-        ChataUtils.onCSVDownloadStart(c);
+        var options = extraParams.caller.options;
+        var caller = extraParams.caller;
+        ChataUtils.onCSVDownloadStart(caller);
         var json = ChataUtils.responses[idRequest];
         var queryId = json['data']['query_id'];
         const queryText = json['data']['text'];
@@ -184,9 +184,9 @@ ChataUtils.downloadCsvHandler = async (idRequest, extraParams) => {
         csvDownloadingMessage.setAttribute('id', `autoql-vanilla-CSV-downloading-message-${uuid}`);
         var response = await exportCSV({
             queryId,
-            domain: o.authentication.domain,
-            apiKey: o.authentication.apiKey,
-            token: o.authentication.token,
+            domain: options.authentication.domain,
+            apiKey: options.authentication.apiKey,
+            token: options.authentication.token,
             csvProgressCallback: (percentCompleted) =>
                 ChataUtils.onCSVDownloadProgress({
                     id: uuid,
@@ -201,9 +201,9 @@ ChataUtils.downloadCsvHandler = async (idRequest, extraParams) => {
         link.click();
         const exportLimit = parseInt(response?.headers?.export_limit);
         const limitReached = response?.headers?.limit_reached?.toLowerCase() == 'true' ? true : false;
-        ChataUtils.onCSVDownloadFinish({ caller: c, queryText, exportLimit, limitReached });
+        ChataUtils.onCSVDownloadFinish({ caller, queryText, exportLimit, limitReached });
     } catch (error) {
-        ChataUtils.onCSVDownloadFinish({ caller: c, error });
+        ChataUtils.onCSVDownloadFinish({ caller, error });
         console.error(error);
         return;
     }
@@ -304,8 +304,8 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 };
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
-    var o = extraParams.caller.options;
-    var modalView = new NotificationSettingsModal(o);
+    var options = extraParams.caller.options;
+    var modalView = new NotificationSettingsModal(options);
     var configModal = new Modal(
         {
             withFooter: true,
@@ -366,8 +366,8 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     saveButton.onclick = async () => {
         spinner.classList.remove('hidden');
         saveButton.setAttribute('disabled', 'true');
-        const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-        await apiCallPost(URL, modalView.getValues, o);
+        const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}`;
+        await apiCallPost(URL, modalView.getValues, options);
         configModal.close();
     };
 };
