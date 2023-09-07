@@ -352,6 +352,7 @@ export function TimingStep() {
     defaultValue: this.notificationType,
     options: this.getTypeValues(),
     onChange: this.handleTypeChange,
+    outlined: false
   });
   
   container.classList.add('autoql-vanilla-data-alert-modal-step');
@@ -362,6 +363,7 @@ export function TimingStep() {
   dataAlertSettingFrequency.classList.add('autoql-vanilla-frequency-settings');
   frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
   frequencyMessageContainer.classList.add('autoql-vanilla-frequency-type-container');
+  typeSelectorWrapper.classList.add('autoql-vanilla-data-alert-schedule-step-type-selector');
 
   frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
 

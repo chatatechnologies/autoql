@@ -1,4 +1,10 @@
 .autoql-vanilla-frequency-type-container {
   padding: 3px 5px;
   margin-bottom: 20px;
+  .autoql-vanilla-data-alert-schedule-step-type-selector {
+    border-bottom: 1px solid var(--autoql-vanilla-accent-color);
+    height: 1.5em;
+    margin: 0 5px;
+    padding: 0;
+  }
 }

@@ -4,7 +4,12 @@ import { SELECT_ARROW } from '../../../Svg';
 import { createIcon } from '../../../Utils';
 import './Selector.scss';
 
-export function Selector({ defaultValue, options, onChange = () => {} }) {
+export function Selector({
+  defaultValue,
+  options,
+  outlined = true,
+  onChange = () => {}
+}) {
   const select = document.createElement('div');
   const selectText = document.createElement('span');
   const itemValue = document.createElement('span');
@@ -21,8 +26,11 @@ export function Selector({ defaultValue, options, onChange = () => {} }) {
   selectText.classList.add('autoql-vanilla-select-text');
   optionsContainer.classList.add('autoql-vanilla-select-menu');
   select.classList.add('autoql-vanilla-select');
-  select.classList.add('autoql-vanilla-outlined');
   select.classList.add('autoql-vanilla-select-large');
+  
+  if(outlined) {
+    select.classList.add('autoql-vanilla-outlined');
+  }
   
   if(defaultValue) {
     const finded = options.find(o => o.value === defaultValue)

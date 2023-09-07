@@ -6,8 +6,8 @@
   font-size: inherit;
   cursor: pointer;
   position: relative;
-  font-weight: normal;
   &.autoql-vanilla-outlined {
+    font-weight: normal;
     padding: 0 16px !important;
     color: var(--autoql-vanilla-text-color-primary);
     border: 1px solid var(--autoql-vanilla-border-color);
@@ -18,6 +18,12 @@
       color: var(--autoql-vanilla-accent-color);
       border-color: var(--autoql-vanilla-accent-color);
     }
+  }
+
+  &:not(.autoql-vanilla-outlined) {
+    font-weight: 600;
+    padding: 0;
+    margin: 0;
   }
   
   .autoql-vanilla-select-text {
