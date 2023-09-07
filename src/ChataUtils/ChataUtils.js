@@ -8,12 +8,12 @@ import {
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
-	uuidv4
+    uuidv4,
 } from '../Utils';
 import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
 import { ChataConfirmDialog, ChataRadio } from '../ChataComponents';
-import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK,COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
+import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
 import { NotificationSettingsModal } from '../Notifications';
@@ -133,75 +133,81 @@ ChataUtils.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
 };
 
 ChataUtils.onCSVDownloadStart = (caller) => {
-	caller.sendResponse(
-			`
+    caller.sendResponse(
+        `
 			<div id="autoql-vanilla-CSV-downloading-message">
 			${strings.fetchingCSV}
 			<div class="autoql-vanilla-spinner-loader" id='csv-downloading-spinner'></div>
 		  </div>
 				`,
-	)
-  }
+    );
+};
 
-ChataUtils.onCSVDownloadProgress = ({id,progress}) =>{
-	const csvDownloadingMessage = document.getElementById(`autoql-vanilla-CSV-downloading-message-${id}`);
-	csvDownloadingMessage.textContent = `${strings.downloadingCSV} ... ${progress}%`;
-}
+ChataUtils.onCSVDownloadProgress = ({ id, progress }) => {
+    const csvDownloadingMessage = document.getElementById(`autoql-vanilla-CSV-downloading-message-${id}`);
+    csvDownloadingMessage.textContent = `${strings.downloadingCSV} ... ${progress}%`;
+};
 
-ChataUtils.onCSVDownloadFinish = ({ caller,error, exportLimit, limitReached,queryText }) => {
+ChataUtils.onCSVDownloadFinish = ({ caller, error, exportLimit, limitReached, queryText }) => {
     if (error) {
-      return  caller.sendResponse( error ,true)
+        return caller.sendResponse(error, true);
     }
     caller.sendResponse(
-     `    <div>
+        `    <div>
          ${strings.downloadedCSVSuccessully}${' '}
           <b><i>${queryText}</i></b>.
-          ${limitReached ? (
-            `<div>
+          ${
+              limitReached
+                  ? `<div>
               <p>
                 <br />
                 ${strings.downloadedCSVWarning} ${exportLimit}
                 MB. ${strings.partialCSVDataWarning}
               </p>
             <div/>`
-          ) : ''}
-        <div/>`,true)
-	}
-ChataUtils.downloadCsvHandler = async (idRequest,extraParams) => {
-	try{
-		var uuid = uuidv4()
-		var o = extraParams.caller.options;
-		var c = extraParams.caller
-		ChataUtils.onCSVDownloadStart(c)
-		var json = ChataUtils.responses[idRequest];
-		var queryId = json['data']['query_id'];
-		const queryText = json['data']['text'];
-		const csvDownloadingMessage = document.getElementById('autoql-vanilla-CSV-downloading-message');
-		csvDownloadingMessage.setAttribute('id', `autoql-vanilla-CSV-downloading-message-${uuid}`);
-		var response = await exportCSV({queryId,domain:o.authentication.domain,
-			apiKey:o.authentication.apiKey,
-			token:o.authentication.token,
-			 csvProgressCallback: (percentCompleted) =>
-			ChataUtils.onCSVDownloadProgress({
-				id: uuid,
-          		progress: percentCompleted,
-        	}),})
-		const url = window.URL.createObjectURL(new Blob([response.data]))
-        const link = document.createElement('a')
-        link.href = url
-        link.setAttribute('download', 'export.csv')
-        document.body.appendChild(link)
-        link.click()
-		const exportLimit = parseInt(response?.headers?.export_limit)
-        const limitReached = response?.headers?.limit_reached?.toLowerCase() == 'true' ? true : false
-		ChataUtils.onCSVDownloadFinish({caller:c, queryText,exportLimit,limitReached})
-	}
-	catch (error) {
-		ChataUtils.onCSVDownloadFinish({caller:c,error})
+                  : ''
+          }
+        <div/>`,
+        true,
+    );
+};
+ChataUtils.downloadCsvHandler = async (idRequest, extraParams) => {
+    try {
+        var uuid = uuidv4();
+        var o = extraParams.caller.options;
+        var c = extraParams.caller;
+        ChataUtils.onCSVDownloadStart(c);
+        var json = ChataUtils.responses[idRequest];
+        var queryId = json['data']['query_id'];
+        const queryText = json['data']['text'];
+        const csvDownloadingMessage = document.getElementById('autoql-vanilla-CSV-downloading-message');
+        csvDownloadingMessage.setAttribute('id', `autoql-vanilla-CSV-downloading-message-${uuid}`);
+        var response = await exportCSV({
+            queryId,
+            domain: o.authentication.domain,
+            apiKey: o.authentication.apiKey,
+            token: o.authentication.token,
+            csvProgressCallback: (percentCompleted) =>
+                ChataUtils.onCSVDownloadProgress({
+                    id: uuid,
+                    progress: percentCompleted,
+                }),
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'export.csv');
+        document.body.appendChild(link);
+        link.click();
+        const exportLimit = parseInt(response?.headers?.export_limit);
+        const limitReached = response?.headers?.limit_reached?.toLowerCase() == 'true' ? true : false;
+        ChataUtils.onCSVDownloadFinish({ caller: c, queryText, exportLimit, limitReached });
+    } catch (error) {
+        ChataUtils.onCSVDownloadFinish({ caller: c, error });
         console.error(error);
         return;
     }
-	
+
     var component = document.querySelector(`[data-componentid='${idRequest}']`);
 };
 
@@ -230,7 +236,7 @@ ChataUtils.copySqlHandler = (idRequest) => {
             ${CLIPBOARD_ICON}
         </span>
     `),
-    ); 
+    );
 
     modalContent.appendChild(text);
     modalContent.appendChild(copyButton);
@@ -269,20 +275,20 @@ ChataUtils.copyHandler = (idRequest) => {
     copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
     new AntdMessage(strings.copyTextToClipboard, 3000);
 };
- 
+
 ChataUtils.exportPNGHandler = async (idRequest) => {
     try {
         var component = document.querySelector(`[data-componentid='${idRequest}']`);
         var svg = component.querySelector('svg.autoql-vanilla-chart-svg');
- 
+
         if (!svg) {
             console.warn('Unable to download SVG - no svg was found');
         }
-    
+
         const base64Data = await svgToPng(svg, 2, CSS_PREFIX);
 
         const a = document.createElement('a');
-        a.download = 'Chart.png'; 
+        a.download = 'Chart.png';
         a.href = base64Data;
         a.click();
     } catch (error) {
@@ -390,10 +396,10 @@ ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams 
                 action.setAttribute('data-name-option', 'copy-csv-handler');
                 ul.appendChild(action);
                 break;
-			case 'copy_sql':
-				action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
-				ul.appendChild(action);
-				break;
+            case 'copy_sql':
+                action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
+                ul.appendChild(action);
+                break;
             case 'png':
                 action = ChataUtils.getActionOption(EXPORT_PNG_ICON, strings.downloadPNG, ChataUtils.exportPNGHandler, [
                     idRequest,
@@ -430,7 +436,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                     DOWNLOAD_CSV_ICON,
                     strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
-                    [idRequest,extraParams],
+                    [idRequest, extraParams],
                 );
                 action.setAttribute('data-name-option', 'csv-handler');
                 menu.ul.appendChild(action);
@@ -442,10 +448,10 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                 action.setAttribute('data-name-option', 'copy-csv-handler');
                 menu.ul.appendChild(action);
                 break;
-			case 'copy_sql':
-				action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
-				menu.ul.appendChild(action);
-				break;
+            case 'copy_sql':
+                action = ChataUtils.getActionOption(COPY_SQL, strings.viewSQL, ChataUtils.copySqlHandler, [idRequest]);
+                menu.ul.appendChild(action);
+                break;
             case 'png':
                 action = ChataUtils.getActionOption(EXPORT_PNG_ICON, strings.downloadPNG, ChataUtils.exportPNGHandler, [
                     idRequest,
@@ -522,48 +528,42 @@ ChataUtils.getPopover = () => {
 };
 
 ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
-	var reportOptions = [
+    var reportOptions = [
         {
             label: strings.dataIncorrect,
             value: strings.dataIncorrect,
-            checked: false
+            checked: false,
         },
         {
             label: strings.dataIncomplete,
             value: strings.dataIncomplete,
-            checked: false
+            checked: false,
         },
         {
             label: 'Other',
             value: 'other',
-            checked: false
+            checked: false,
         },
-    ]
-	var selectedOption = "";
-	var reportRadio = new ChataRadio(reportOptions,(evt)=>{
-		selectedOption = evt.target.value
-		enableButton(evt,selectedOption)
-	})
-	var enableButton = (evt,selectedOption)=>{
-		if (selectedOption === 'The data is incomplete' ||
-			selectedOption === 'The data is incorrect'){
-				
-				reportButton.style.opacity = '';
-				reportButton.style.pointerEvents = '';
-			}
-		else if (selectedOption === 'other') {
-			if(textArea.value !== ''){
-				reportButton.style.opacity = '';
-				reportButton.style.pointerEvents = '';
-			}
-			else{
-				reportButton.style.opacity = '0.5';
-				reportButton.style.pointerEvents = 'none';
-			}
-			
-		  }		  
-			
-	}
+    ];
+    var selectedOption = '';
+    var reportRadio = new ChataRadio(reportOptions, (evt) => {
+        selectedOption = evt.target.value;
+        enableButton(evt, selectedOption);
+    });
+    var enableButton = (evt, selectedOption) => {
+        if (selectedOption === 'The data is incomplete' || selectedOption === 'The data is incorrect') {
+            reportButton.style.opacity = '';
+            reportButton.style.pointerEvents = '';
+        } else if (selectedOption === 'other') {
+            if (textArea.value !== '') {
+                reportButton.style.opacity = '';
+                reportButton.style.pointerEvents = '';
+            } else {
+                reportButton.style.opacity = '0.5';
+                reportButton.style.pointerEvents = 'none';
+            }
+        }
+    };
     var modal = new Modal({
         destroyOnClose: true,
         withFooter: true,
@@ -572,15 +572,15 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     modal.setTitle(strings.reportProblemTitle);
     var container = document.createElement('div');
     var textArea = document.createElement('textarea');
-	var reportProblemQuestion = document.createElement('h3');
-	var reportProblemMessage = document.createElement('span');
-	reportProblemMessage.textContent = strings.reportProblemMessage;
-	reportProblemQuestion.textContent = strings.reportProblemQuestion;
-	reportProblemQuestion.style.marginTop = "0";
-	reportProblemQuestion.style.marginBottom = "5px";
+    var reportProblemQuestion = document.createElement('h3');
+    var reportProblemMessage = document.createElement('span');
+    reportProblemMessage.textContent = strings.reportProblemMessage;
+    reportProblemQuestion.textContent = strings.reportProblemQuestion;
+    reportProblemQuestion.style.marginTop = '0';
+    reportProblemQuestion.style.marginBottom = '5px';
     textArea.classList.add('autoql-vanilla-report-problem-text-area');
-	textArea.addEventListener("input", (evt) => enableButton(evt, selectedOption));
-	container.classList.add('autoql-vanilla-report-problem-modal-body')
+    textArea.addEventListener('input', (evt) => enableButton(evt, selectedOption));
+    container.classList.add('autoql-vanilla-report-problem-modal-body');
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
         style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
@@ -598,32 +598,30 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
 
     reportButton.appendChild(spinner);
     reportButton.appendChild(document.createTextNode(strings.reportProblem));
-	container.appendChild(reportProblemQuestion);
-	container.appendChild(reportRadio);
+    container.appendChild(reportProblemQuestion);
+    container.appendChild(reportRadio);
     container.appendChild(reportProblemMessage);
-	container.appendChild(textArea);
+    container.appendChild(textArea);
     modal.addView(container);
-   
-	
+
     modal.addFooterElement(cancelButton);
     modal.addFooterElement(reportButton);
 
     cancelButton.onclick = () => {
         modal.close();
     };
-	
-	reportButton.style.opacity = "0.5";  // Adjust opacity to your preference
-	reportButton.style.pointerEvents = "none";
+
+    reportButton.style.opacity = '0.5'; // Adjust opacity to your preference
+    reportButton.style.pointerEvents = 'none';
     reportButton.onclick = async () => {
-		var message = textArea.value;
-		if(textArea.value === ''){
-			message = selectedOption;
-		}
-		else if(textArea.value!=='' && selectedOption !== 'other'){
-			message = selectedOption + ' - ' + textArea.value
-		}
+        var message = textArea.value;
+        if (textArea.value === '') {
+            message = selectedOption;
+        } else if (textArea.value !== '' && selectedOption !== 'other') {
+            message = selectedOption + ' - ' + textArea.value;
+        }
         spinner.classList.remove('hidden');
-        await ChataUtils.sendReportMessage(idRequest, options,toolbar,message);
+        await ChataUtils.sendReportMessage(idRequest, options, toolbar, message);
         modal.close();
     };
 
@@ -1089,10 +1087,7 @@ ChataUtils.registerWindowClicks = () => {
 
     const excludeElementsForSafetynet = ['autoql-vanilla-safetynet-selector', 'autoql-vanilla-chata-safetynet-select'];
 
-    const excludeElementsForSubjectAutocomplete = [
-        'autoql-vanilla-subject',
-        'autoql-vanilla-explore-queries-input'
-    ]
+    const excludeElementsForSubjectAutocomplete = ['autoql-vanilla-subject', 'autoql-vanilla-explore-queries-input'];
 
     document.body.addEventListener('click', (evt) => {
         var closeToolbars = true;
@@ -1115,8 +1110,8 @@ ChataUtils.registerWindowClicks = () => {
         }
 
         for (let i = 0; i < excludeElementsForSubjectAutocomplete.length; i++) {
-            let c = excludeElementsForSubjectAutocomplete[i]
-            if(evt.target.classList.contains(c)){
+            let c = excludeElementsForSubjectAutocomplete[i];
+            if (evt.target.classList.contains(c)) {
                 closeAutocomplete = false;
                 break;
             }
@@ -1130,11 +1125,11 @@ ChataUtils.registerWindowClicks = () => {
             closeAllSafetynetSelectors();
         }
 
-        if(closeAutocomplete) {
+        if (closeAutocomplete) {
             closeAutocompleteObjects();
         }
-    })
-}
+    });
+};
 
 (function () {
     var initEvents = () => {
