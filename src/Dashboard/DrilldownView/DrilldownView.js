@@ -14,7 +14,8 @@ export function DrilldownView({
     displayType,
     isStatic = true,
     drilldownFn,
-    activeKey
+    activeKey,
+    onClick = () => {}
 }) {
     var view = document.createElement('div');
     var wrapperView = document.createElement('div');
@@ -116,10 +117,10 @@ export function DrilldownView({
     };
 
     view.displayToolbar = () => {
-        if (isStatic) {
-            var drilldownButton = new DrilldownToolbar(view);
-            view.appendChild(drilldownButton);
-        }
+        // if (isStatic) {
+        //     var drilldownButton = new DrilldownToolbar(view);
+        //     view.appendChild(drilldownButton);
+        // }
     };
 
     view.displayData = (json) => {
@@ -166,14 +167,16 @@ export function DrilldownView({
                 type: displayType,
                 options: dashboard.options,
                 queryJson: json,
-                onChartClick: view.executeDrilldown
+                onChartClick: onClick
             });
         }
 
         view.displayToolbar();
     };
 
+    if (!isStatic) {
         view.executeDrilldown();
+    }
 
     return view;
 }

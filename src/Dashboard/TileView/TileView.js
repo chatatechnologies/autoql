@@ -569,6 +569,7 @@ export function TileView(tile, isSecond = false) {
             tile,
             displayType: view.internalDisplayType,
             activeKey: view.activeKey,
+            onClick: (data) => tableView.executeDrilldown(data),
             json,
         });
 
