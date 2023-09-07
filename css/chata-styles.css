@@ -1152,6 +1152,9 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     height: 14px;
     margin-right: 6px;
 }
+#csv-downloading-spinner {
+	color: var(--autoql-vanilla-accent-color);
+}
 
 .autoql-vanilla-spinner-loader:after {
     content: " ";

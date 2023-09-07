@@ -8,6 +8,7 @@ import {
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
+	uuidv4
 } from '../Utils';
 import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
@@ -18,7 +19,7 @@ import { Modal } from '../Modal';
 import { NotificationSettingsModal } from '../Notifications';
 import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
-import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
+import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 
 import '../../css/PopoverMenu.css';
 import { CSS_PREFIX } from '../Constants';
@@ -131,9 +132,77 @@ ChataUtils.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
     toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
 };
 
-ChataUtils.downloadCsvHandler = (idRequest) => {
+ChataUtils.onCSVDownloadStart = (caller) => {
+	caller.sendResponse(
+			`
+			<div id="autoql-vanilla-CSV-downloading-message">
+			${strings.fetchingCSV}
+			<div class="autoql-vanilla-spinner-loader" id='csv-downloading-spinner'></div>
+		  </div>
+				`,
+	)
+  }
+
+ChataUtils.onCSVDownloadProgress = ({id,progress}) =>{
+	const csvDownloadingMessage = document.getElementById(`autoql-vanilla-CSV-downloading-message-${id}`);
+	csvDownloadingMessage.textContent = `${strings.downloadingCSV} ... ${progress}%`;
+}
+
+ChataUtils.onCSVDownloadFinish = ({ caller,error, exportLimit, limitReached,queryText }) => {
+    if (error) {
+      return  caller.sendResponse( error ,true)
+    }
+    caller.sendResponse(
+     `    <div>
+         ${strings.downloadedCSVSuccessully}${' '}
+          <b><i>${queryText}</i></b>.
+          ${limitReached ? (
+            `<div>
+              <p>
+                <br />
+                ${strings.downloadedCSVWarning} ${exportLimit}
+                MB. ${strings.partialCSVDataWarning}
+              </p>
+            <div/>`
+          ) : ''}
+        <div/>`,true)
+	}
+ChataUtils.downloadCsvHandler = async (idRequest,extraParams) => {
+	try{
+		var uuid = uuidv4()
+		var o = extraParams.caller.options;
+		var c = extraParams.caller
+		ChataUtils.onCSVDownloadStart(c)
+		var json = ChataUtils.responses[idRequest];
+		var queryId = json['data']['query_id'];
+		const queryText = json['data']['text'];
+		const csvDownloadingMessage = document.getElementById('autoql-vanilla-CSV-downloading-message');
+		csvDownloadingMessage.setAttribute('id', `autoql-vanilla-CSV-downloading-message-${uuid}`);
+		var response = await exportCSV({queryId,domain:o.authentication.domain,
+			apiKey:o.authentication.apiKey,
+			token:o.authentication.token,
+			 csvProgressCallback: (percentCompleted) =>
+			ChataUtils.onCSVDownloadProgress({
+				id: uuid,
+          		progress: percentCompleted,
+        	}),})
+		const url = window.URL.createObjectURL(new Blob([response.data]))
+        const link = document.createElement('a')
+        link.href = url
+        link.setAttribute('download', 'export.csv')
+        document.body.appendChild(link)
+        link.click()
+		const exportLimit = parseInt(response?.headers?.export_limit)
+        const limitReached = response?.headers?.limit_reached?.toLowerCase() == 'true' ? true : false
+		ChataUtils.onCSVDownloadFinish({caller:c, queryText,exportLimit,limitReached})
+	}
+	catch (error) {
+		ChataUtils.onCSVDownloadFinish({caller:c,error})
+        console.error(error);
+        return;
+    }
+	
     var component = document.querySelector(`[data-componentid='${idRequest}']`);
-    component.tabulator.download('csv', 'table.csv', { delimiter: '\t' });
 };
 
 ChataUtils.copySqlHandler = (idRequest) => {
@@ -361,7 +430,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                     DOWNLOAD_CSV_ICON,
                     strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
-                    [idRequest],
+                    [idRequest,extraParams],
                 );
                 action.setAttribute('data-name-option', 'csv-handler');
                 menu.ul.appendChild(action);
