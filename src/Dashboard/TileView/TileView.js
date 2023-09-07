@@ -585,11 +585,14 @@ export function TileView(tile, isSecond = false) {
         }, 500);
     };
 
-    view.displaySingleValueDrillDown = () => {
+    view.displaySingleValueDrillDown = (json) => {
+        const data = { groupBys: [], supportedByAPI: true }
+
         var tableView = new DrilldownView({
             tile,
             displayType: 'table',
             isStatic: false,
+            drilldownFn: view.getDrilldownFn(data, json),
         });
 
         const title = view.getQuery();
@@ -661,7 +664,7 @@ export function TileView(tile, isSecond = false) {
                 `);
                 container.appendChild(singleValue);
                 singleValue.onclick = () => {
-                    view.displaySingleValueDrillDown();
+                    view.displaySingleValueDrillDown(json);
                 };
             } else {
                 var div = createTableContainer();
