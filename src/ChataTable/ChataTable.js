@@ -36,12 +36,12 @@ function instantiateTabulator(component, tableOptions, table) {
     // Instantiate Tabulator when element is mounted
     var tabulator = new Tabulator(component, tableOptions);
 
-    tabulator.on('dataLoadError', component.onDataLoadError);
-    tabulator.on('cellClick', component.onCellClick);
-    tabulator.on('dataSorting', component.onDataSorting);
-    tabulator.on('dataSorted', component.onDataSorted);
-    tabulator.on('dataFiltering', component.onDataFiltering);
-    tabulator.on('dataFiltered', component.onDataFiltered);
+    component.onDataLoadError && tabulator.on('dataLoadError', component.onDataLoadError);
+    component.onCellClick && tabulator.on('cellClick', component.onCellClick);
+    component.onDataSorting && tabulator.on('dataSorting', component.onDataSorting);
+    component.onDataSorted && tabulator.on('dataSorted', component.onDataSorted);
+    component.onDataFiltering && tabulator.on('dataFiltering', component.onDataFiltering);
+    component.onDataFiltered && tabulator.on('dataFiltered', component.onDataFiltered);
 
     tabulator.on('tableBuilt', async () => {
         table.isInitialized = true;
@@ -54,8 +54,8 @@ function instantiateTabulator(component, tableOptions, table) {
 
         await currentEventLoopEnd();
 
-        component.createPageLoader();
-        component.createScrollLoader();
+        component.createPageLoader?.();
+        component.createScrollLoader?.();
 
         tabulator.setHeaderInputEventListeners?.();
         tabulator.toggleFilters?.();
@@ -599,6 +599,8 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
     const json = ChataUtils.responses[idRequest];
+
+    console.log('inside pivot table.', {component, json})
 
     if (!json?.data?.rows) {
         return;

@@ -152,7 +152,9 @@ export function DrilldownView({
             _scrollbox.classList.add('no-full-width');
             _scrollbox.appendChild(div);
             container.appendChild(scrollbox);
+            console.log('creating pivot table...')
             var _table = new ChataPivotTable(UUID, dashboard.options, view.onCellClick);
+
             div.tabulator = _table;
         } else if (CHART_TYPES.includes(displayType)) {
             chartWrapper = document.createElement('div');
