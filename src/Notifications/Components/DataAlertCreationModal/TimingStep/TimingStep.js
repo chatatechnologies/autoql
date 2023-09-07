@@ -1,9 +1,7 @@
 import { getTimeOptionArray } from '../../../DataAlerts/Components/TimingView/helpers';
-import { createIcon } from "../../../../Utils";
 import dayjs from '../../../../Utils/dayjsPlugins';
 import { Selector } from "../../../Components/Selector/Selector";
 import momentTZ from 'moment-timezone'
-import { LIVE_ICON, CALENDAR } from '../../../../Svg';
 import { 
   SCHEDULED_TYPE,
   CONTINUOUS_TYPE,
@@ -22,6 +20,7 @@ export function TimingStep() {
   const settingGroup = document.createElement('div');
   const frequencyMessageContainer  = document.createElement('div');
   const frequencyMessage = document.createElement('span');
+  const typeSelectorWrapper = document.createElement('span');
   
   const dataAlertSettingGroup = document.createElement('div');
   const dataAlertSettingFrequency = document.createElement('div');
@@ -50,32 +49,6 @@ export function TimingStep() {
   this.weekDaySelectValue = this.DEFAULT_WEEKDAY_SELECT_VALUE;
   
   this.resetPeriod = this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
-
-  this.createSelectorValueWithSubtitle = ({ label, subtitle, icon }) => {
-    const span = document.createElement('span');
-    const labelContainer = document.createElement('span');
-    const menuIcon = document.createElement('span');
-    const labelValue = document.createElement('span');
-    const subtitleContainer = document.createElement('span');
-    
-    labelContainer.classList.add('autoql-vanilla-menu-item-title');
-    menuIcon.classList.add('autoql-vanilla-menu-icon');
-    subtitleContainer.classList.add('autoql-vanilla-select-option-value-subtitle');
-    
-    labelValue.textContent = label;
-    subtitleContainer.textContent = subtitle;
-    
-    menuIcon.appendChild(createIcon(icon));
-    labelContainer.appendChild(menuIcon);
-    labelContainer.appendChild(labelValue);
-    span.appendChild(labelContainer);
-    span.appendChild(subtitleContainer);
-    
-    return {
-      displayName: labelContainer.innerHTML,
-      displayText: span.innerHTML,
-    }
-  }
 
   this.getLocalStartDate = ({ daysToAdd } = {}) => {
     return SCHEDULE_INTERVAL_OPTIONS[this.resetPeriod]?.getLocalStartDate({
@@ -232,48 +205,20 @@ export function TimingStep() {
   }
   
   this.getTypeValues = () => {
-    const scheduledValues = this.createSelectorValueWithSubtitle({
-      icon: CALENDAR,
-      label: 'Scheduled',
-      subtitle: 'Get notifications at specific times.',
-    });
-    
-    const liveValues = this.createSelectorValueWithSubtitle({
-      icon: LIVE_ICON,
-      label: 'Live',
-      subtitle: 'Get notifications as soon as the conditions are met.',
-    });
-
     const values = []
 
     values.push({
       value: SCHEDULED_TYPE,
-      ...scheduledValues
+      displayName: 'at the following times:',
     });
 
     values.push(
       {
         value: CONTINUOUS_TYPE,
-        ...liveValues
+        displayName: 'right away'
       },
     );
 
-/*     if(dataAlert.notification_type !== PERIODIC_TYPE){
-      values.push(
-        {
-          value: CONTINUOUS_TYPE,
-          ...liveValues
-        },
-      )
-    } else {
-      values.push(
-        {
-          value: PERIODIC_TYPE,
-          ...liveValues
-        },
-      )
-    }
-     */
     return values;
   }
 
@@ -402,13 +347,13 @@ export function TimingStep() {
         break;
     }
   }
-  
-/*   const typeSelector = new Selector({ 
+
+  const typeSelector = new Selector({ 
     defaultValue: this.notificationType,
     options: this.getTypeValues(),
     onChange: this.handleTypeChange,
   });
-   */
+  
   container.classList.add('autoql-vanilla-data-alert-modal-step');
   wrapper.classList.add('autoql-vanilla-data-alerts-container');
   settingGroup.classList.add('autoql-vanilla-data-alert-setting-group');
@@ -420,7 +365,9 @@ export function TimingStep() {
 
   frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
 
+  typeSelectorWrapper.appendChild(typeSelector);
   frequencyMessageContainer.appendChild(frequencyMessage);
+  frequencyMessageContainer.appendChild(typeSelectorWrapper);
   dataAlertSettingFrequency.appendChild(frequencyContainer);
   dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
   settingGroup.appendChild(dataAlertSettingGroup);
