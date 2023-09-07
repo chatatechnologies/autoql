@@ -5,7 +5,7 @@ const maxWidth = 300
 
 export function refreshDelegate(parent, target){
     delegate(parent, {
-        target: target,
+        target,
         theme: 'chata-theme',
         allowHTML: true,
         delay: [500],
@@ -20,5 +20,6 @@ export function refreshTooltips(){
         delay: [500],
         dynamicTitle: true,
         maxWidth,
+        zIndex: 99999999999,
     })
 }
