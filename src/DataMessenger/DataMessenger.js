@@ -1310,11 +1310,10 @@ export function DataMessenger(options = {}) {
     obj.deleteMessageHandler = (evt, idRequest) => {
         hideAll({ duration: 0 });
         var bubble = obj.drawerContent.querySelector(`[data-bubble-id="${idRequest}"]`);
-
         setTimeout(() => {
             obj.drawerContent.removeChild(bubble);
         }, 10);
-        if (bubble.relatedMessage) {
+        if ( obj.drawerContent.contains(bubble.relatedMessage)) {
             obj.drawerContent.removeChild(bubble.relatedMessage);
         }
     };
@@ -2213,7 +2212,7 @@ export function DataMessenger(options = {}) {
         var uuid = uuidv4();
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
         containerMessage.setAttribute('data-bubble-id', uuid);
-        containerMessage.style.zIndex = --obj.zIndexBubble;
+        containerMessage.style.zIndex = ++obj.zIndexBubble;
         containerMessage.relatedQuery = obj.lastQuery;
         containerMessage.relatedMessage = lastBubble;
         containerMessage.classList.add('response');
