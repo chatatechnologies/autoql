@@ -600,8 +600,6 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
     const json = ChataUtils.responses[idRequest];
 
-    console.log('inside pivot table.', {component, json})
-
     if (!json?.data?.rows) {
         return;
     }

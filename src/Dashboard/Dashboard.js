@@ -41,6 +41,7 @@ export function Dashboard(selector, options = {}) {
             username: undefined,
             domain: undefined,
             demo: false,
+            ...(options.authentication ?? {})
         },
         dataFormatting: {
             currencyCode: 'USD',
@@ -75,14 +76,6 @@ export function Dashboard(selector, options = {}) {
         name: undefined,
         ...options
     };
-
-    if ('authentication' in options) {
-        for (let [key, value] of Object.entries(options['authentication'])) {
-            if (obj.options.authentication[key] !== undefined) {
-                obj.options.authentication[key] = value;
-            }
-        }
-    }
 
     if ('dataFormatting' in options) {
         for (let [key, value] of Object.entries(options['dataFormatting'])) {
@@ -135,6 +128,48 @@ export function Dashboard(selector, options = {}) {
             minW: 3,
         });
     }
+
+    obj.getTiles = () => {
+        return obj.options.tiles
+    }
+
+    obj.setObjectProp = (key, _obj) => {
+        for (var [keyValue, value] of Object.entries(_obj)) {
+            obj.options[key][keyValue] = value;
+        }
+    };
+
+    obj.setOption = async (option, value) => {
+        try {
+            if (obj.options[option] === value) {
+                return;
+            }
+
+            switch (option) {
+                case 'authentication':
+                    obj.setObjectProp('authentication', value);
+                    break;
+                case 'dataFormatting':
+                    obj.setObjectProp('dataFormatting', value);
+                    break;
+                case 'autoQLConfig':
+                    obj.setObjectProp('autoQLConfig', value);
+                    break;
+                default:
+                    obj.options[option] = value;
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    obj.setOptions = (options = {}) => {
+        for (let [key, value] of Object.entries(options)) {
+            if (typeof value !== 'object') {
+                obj.setOption(key, value);
+            }
+        }
+    };
 
     obj.undoResize = (el, newWidth, newHeight) => {
         obj.grid.update(el, null, null, newWidth, newHeight);
@@ -222,7 +257,7 @@ export function Dashboard(selector, options = {}) {
         obj.tiles.forEach((item) => {
             item.stopEditing();
         });
-        if (obj.options.executeOnStopEditing) obj.run();
+        if (obj.options.executeOnStopEditing) obj.executeDashboard();
         if (obj.isEmpty()) {
             if (obj.options.isEditing) {
                 obj.newTileMessage();
@@ -232,7 +267,7 @@ export function Dashboard(selector, options = {}) {
         }
     };
 
-    obj.run = () => {
+    obj.executeDashboard = () => {
         obj.tiles.forEach((item) => {
             item.runTile();
         });
@@ -399,7 +434,7 @@ export function Dashboard(selector, options = {}) {
     };
 
     if (obj.options.executeOnMount) {
-        obj.run();
+        obj.executeDashboard();
     }
 
     obj.isEmpty = () => {
@@ -461,6 +496,10 @@ export function Dashboard(selector, options = {}) {
     }
     refreshDelegate('.autoql-vanilla-tile-toolbar', '.autoql-vanilla-chata-toolbar-btn');
     refreshTooltips();
+
+    obj.destroy = () => {
+        parent.innerHTML = ''
+    };
 
     return obj;
 }

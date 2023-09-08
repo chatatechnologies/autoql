@@ -24,6 +24,8 @@ import {
     isColumnDateType,
     isDataLimited,
     runDrilldown,
+    runQuery,
+    runQueryOnly,
 } from 'autoql-fe-utils';
 import {
     uuidv4,
@@ -310,41 +312,94 @@ export function TileView(tile, isSecond = false) {
         }
     };
 
+
+    view.getQueryFn = (response) => {
+        let newResponse;
+
+        return async ({ formattedTableParams: undefined, ...args }) => { // todo - formattedTablParams
+            try {
+                const queryRequestData = response?.data?.data?.fe_req;
+                const allFilters = getCombinedFilters(undefined, response, undefined);
+
+                const queryParams = {
+                    ...getAuthentication(dashboard.options.authentication),
+                    ...getAutoQLConfig(dashboard.options.autoQLConfig),
+                    source: 'dashboard.user',
+                    scope: dashboard.options.scope,
+                    debug: queryRequestData?.translation === 'include',
+                    filters: queryRequestData?.session_filter_locks,
+                    pageSize: queryRequestData?.page_size,
+                    groupBys: queryRequestData?.columns,
+                    orders: formattedTableParams?.sorters,
+                    tableFilters: allFilters,
+                };
+
+                  let newResponse = await runQuery({
+                        ...queryParams,
+                        query: queryRequestData?.text,
+                        debug: queryRequestData?.translation === 'include',
+                        userSelection: queryRequestData?.disambiguation,
+                        ...args,
+                    });
+    
+                    if (newResponse?.data) {
+                        newResponse.data.originalQueryID = response.data.data.query_id;
+                        newResponse.data.queryFn = view.getQueryFn(response)
+                    }
+
+            } catch (error) {
+                console.error(error);
+                newResponse = error;
+            }
+
+            return newResponse;
+        };
+    };
+
     view.run = async () => {
-        let query = view.getQuery();
+        const query = view.getQuery();
+
         view.isSuggestions = false;
         view.isSafetynet = false;
+
         if (query) {
             view.clearMetadata();
             view.clearFilterMetadata();
             var loading = view.showLoading();
 
-            var validate = await view.executeValidate();
-            let json;
-            if (!validate || validate.status != 200) {
-                ChataUtils.responses[UUID] = json;
-                // responseWrapper.removeChild(loading)
+            let response;
+            try {
+                response = await runQuery({ ...getAuthentication(dashboard.options.authentication), ...getAutoQLConfig(dashboard.options.autoQLConfig), query, source: 'dashboards.user' })
+                if (response?.data) {
+                    response.data.queryFn = view.getQueryFn(response)
+                }
+            } catch (error) {
+                response = error;
+            }
+
+            const json = response?.data
+
+            ChataUtils.responses[UUID] = json;
+
+            if (!response?.data || response.status != 200) {
                 responseWrapper.appendChild(view.getMessageError());
             }
-            if (validate.data.data.replacements.length) {
-                let json = validate.data;
-                json.status = validate.status;
-                ChataUtils.responses[UUID] = json;
+
+            if (json?.data?.replacements?.length) {
+                json.status = response.status;
                 view.displaySafetynet();
-            } else {
-                var data = await view.executeQuery();
-                let json = data.data;
-                json.status = data.status;
-                ChataUtils.responses[UUID] = json;
-                if (data.data.reference_id === '1.1.430' || data.data.reference_id === '1.1.431') {
+            } else if (json?.data?.items?.length) {
+                json.status = response.status;
+                if (response.data.reference_id === '1.1.430' || response.data.reference_id === '1.1.431') {
                     view.displaySuggestions();
                 } else {
                     if (!view.isExecuted) {
                         view.checkAutoChartAggregations(json);
                     }
-                    // responseWrapper.removeChild(loading)
                     view.displayData();
                 }
+            } else {
+                view.displayData();
             }
             view.isExecuted = true;
         } else {
