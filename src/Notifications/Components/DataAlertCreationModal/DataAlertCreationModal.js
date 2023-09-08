@@ -1,3 +1,4 @@
+import { createDataAlert } from "autoql-fe-utils";
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
 import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
@@ -7,7 +8,7 @@ import { StepContainer } from "./StepContainer";
 import { SummaryFooter } from "./SummaryFooter";
 import { TimingStep } from "./TimingStep/TimingStep";
 
-export function DataAlertCreationModal({ queryResponse }) {
+export function DataAlertCreationModal({ queryResponse, authentication }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
   const summaryFooter = new SummaryFooter({ queryText: queryResponse.data.text })
@@ -109,14 +110,21 @@ export function DataAlertCreationModal({ queryResponse }) {
     this.updateFooter();
   }
 
-  this.handleSave = () => {
-    const values = this.steps.map(step  => step.view.getValues());
-    const newDataAlert = {
+  this.handleSave = async () => {
+    const values = this.steps.map(step  => step.view.getValues())
+    .reduce((r, c) => Object.assign(r, c));
+    
+    const dataAlert = {
       data_return_query: queryResponse.data.text,
       ...values
     }
 
-    console.log(newDataAlert);
+    const response = await createDataAlert({
+      dataAlert,
+      ...authentication
+    })
+
+    console.log(dataAlert);
   }
 
   this.updateFooter = () => {

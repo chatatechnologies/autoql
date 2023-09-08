@@ -228,8 +228,11 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     const queryResponse = ChataUtils.responses[idRequest];
-    const modal = new DataAlertCreationModal({ queryResponse });
+    const { options } = extraParams.caller;
+
+    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication });
     console.log(queryResponse);
+    console.log(extraParams);
     modal.show();
 };
 
