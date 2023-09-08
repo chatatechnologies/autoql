@@ -151,7 +151,9 @@
                 /* user-select: none; This breaks copy/paste */
                 border-color: var(--autoql-vanilla-table-border-color);
                 background-color: inherit !important;
+                border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
                 z-index: 1;
+                line-height: 1.2em;
 
                 &:last-child {
                     border-bottom: none;

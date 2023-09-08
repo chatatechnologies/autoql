@@ -61,7 +61,7 @@ export const strings = new LocalizedStrings({
         use: 'Use',
         displayTypes: {
             table: 'Table',
-            pivot_table: 'Pivot Table',
+            pivot_table: 'Pivot View',
             bar: 'Bar Chart',
             column: 'Column Chart',
             line: 'Line Chart',
@@ -235,7 +235,7 @@ export const strings = new LocalizedStrings({
         heatmap: 'Mapa de calor',
         bubbleChart: 'Gráfico de burbujas',
         table: 'Tabla',
-        pivotTable: 'Tabla Pivote',
+        pivotTable: 'Vista dinámica',
         deleteDataResponse: 'Eliminar respuesta de datos',
         moreOptions: 'Mas opciones',
         downloadPNG: 'Descargar como PNG',

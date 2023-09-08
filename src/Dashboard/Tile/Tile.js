@@ -14,8 +14,9 @@ import {
 } from '../../Utils'
 import { strings } from '../../Strings'
 import Split from 'split.js'
-import './Tile.css'
 import { refreshTooltips } from '../../Tooltips'
+
+import './Tile.scss'
 
 export function Tile(dashboard, options){
     var item = document.createElement('div')

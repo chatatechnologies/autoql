@@ -114,11 +114,11 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             columnIndexConfig,
             tippyInstance: tippy('[data-tippy-chart]', {
                 theme: 'chata-theme',
-                delay: [300],
+                delay: [0],
                 allowHTML: true,
                 dynamicTitle: true,
                 maxWidth: 300,
-                inertia: true,
+                zIndex: 99999999
             }),
         };
     }
@@ -315,6 +315,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 dynamicTitle: true,
                 maxWidth: 300,
                 inertia: true,
+                zIndex: 99999999
             });
         }
     };

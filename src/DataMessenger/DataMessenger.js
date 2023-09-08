@@ -57,17 +57,6 @@ import {
     WATERMARK,
     VOICE_RECORD_IMAGE,
     DATA_MESSENGER,
-    TABLE_ICON,
-    COLUMN_CHART_ICON,
-    BAR_CHART_ICON,
-    PIE_CHART_ICON,
-    LINE_CHART_ICON,
-    PIVOT_ICON,
-    HEATMAP_ICON,
-    BUBBLE_CHART_ICON,
-    STACKED_COLUMN_CHART_ICON,
-    STACKED_BAR_CHART_ICON,
-    STACKED_AREA_CHART_ICON,
     REPORT_PROBLEM,
     FILTER_TABLE,
     COLUMN_EDITOR,
@@ -78,9 +67,7 @@ import {
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
-    SCATTERPLOT_ICON,
-    COLUMN_LINE_ICON,
-    HISTOGRAM_ICON,
+    DISPLAY_TYPE_ICONS
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -1962,23 +1949,6 @@ export function DataMessenger(options = {}) {
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
-        const displayTypeIcons = {
-            table: TABLE_ICON,
-            pivot_table: PIVOT_ICON,
-            column: COLUMN_CHART_ICON,
-            bar: BAR_CHART_ICON,
-            line: LINE_CHART_ICON,
-            pie: PIE_CHART_ICON,
-            heatmap: HEATMAP_ICON,
-            bubble: BUBBLE_CHART_ICON,
-            stacked_column: STACKED_COLUMN_CHART_ICON,
-            stacked_bar: STACKED_BAR_CHART_ICON,
-            stacked_line: STACKED_AREA_CHART_ICON,
-            column_line: COLUMN_LINE_ICON,
-            scatterplot: SCATTERPLOT_ICON,
-            histogram: HISTOGRAM_ICON,
-        }
-
         displayTypes.forEach((displayType) => {
             let button;
 
@@ -1987,21 +1957,21 @@ export function DataMessenger(options = {}) {
             if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    displayTypeIcons[displayType],
+                    DISPLAY_TYPE_ICONS[displayType],
                     strings.displayTypes[displayType],
                     obj.displayTableHandler,
                 );
             } else if (displayType == 'pivot_table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    displayTypeIcons[displayType],
+                    DISPLAY_TYPE_ICONS[displayType],
                     strings.displayTypes[displayType],
                     obj.displayPivotTableHandler,
                 );
-            } else if (Object.keys(displayTypeIcons).includes(displayType)) {
+            } else if (Object.keys(DISPLAY_TYPE_ICONS).includes(displayType)) {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    displayTypeIcons[displayType],
+                    DISPLAY_TYPE_ICONS[displayType],
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
