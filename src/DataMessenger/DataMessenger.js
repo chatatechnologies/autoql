@@ -2692,7 +2692,7 @@ export function DataMessenger(options = {}) {
                 if (jsonResponse['data']['columns'].length == 1) {
                     obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
                 } else {
-                    obj.putTableResponse(jsonResponse);
+                    obj.putTableResponse(jsonResponse,isDrilldown);
                 }
                 break;
             case 'data':
@@ -2708,23 +2708,23 @@ export function DataMessenger(options = {}) {
                     }
                 } else {
                     if (rows.length > 0) {
-                        obj.putTableResponse(jsonResponse);
+                        obj.putTableResponse(jsonResponse,isDrilldown);
                     } else {
                         obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
                     }
                 }
                 break;
             case 'compare_table':
-                obj.putTableResponse(jsonResponse);
+                obj.putTableResponse(jsonResponse,isDrilldown);
                 break;
             case 'date_pivot':
-                obj.putTableResponse(jsonResponse);
+                obj.putTableResponse(jsonResponse,isDrilldown);
                 break;
             case 'pivot_table':
-                obj.putTableResponse(jsonResponse);
+                obj.putTableResponse(jsonResponse,isDrilldown);
                 break;
             case 'word_cloud':
-                obj.putTableResponse(jsonResponse);
+                obj.putTableResponse(jsonResponse,isDrilldown);
                 break;
             case 'column':
             case 'bar':
