@@ -110,7 +110,13 @@ export function DataAlertCreationModal({ queryResponse }) {
   }
 
   this.handleSave = () => {
-    console.log('save handler');
+    const values = this.steps.map(step  => step.view.getValues());
+    const newDataAlert = {
+      data_return_query: queryResponse.data.text,
+      ...values
+    }
+
+    console.log(newDataAlert);
   }
 
   this.updateFooter = () => {

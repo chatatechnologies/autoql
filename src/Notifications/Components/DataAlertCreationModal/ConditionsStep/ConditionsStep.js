@@ -121,8 +121,12 @@ export function ConditionsStep({ queryResponse }) {
   wrapper.appendChild(ruleInput);
   container.appendChild(wrapper);
 
-  container.getValues = () => {
+  this.buildExpression = () => {
     
+  }
+
+  container.getValues = () => {
+    return {}
   }
 
   container.isValid = () => {

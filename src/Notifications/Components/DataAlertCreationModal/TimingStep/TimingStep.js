@@ -347,8 +347,8 @@ export function TimingStep() {
         break;
     }
   }
-
-  const typeSelector = new Selector({ 
+  
+  const typeSelector = new Selector({
     defaultValue: this.notificationType,
     options: this.getTypeValues(),
     onChange: this.handleTypeChange,
