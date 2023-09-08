@@ -1,6 +1,7 @@
 import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE } from "autoql-fe-utils";
 import { QueryResultInput } from "../../QueryResultInput";
 import { Selector } from "../../Selector/Selector";
+import { uuidv4 } from "../../../../Utils";
 
 export function ConditionsStep({ queryResponse }) {
   const container = document.createElement('div');
@@ -122,11 +123,38 @@ export function ConditionsStep({ queryResponse }) {
   container.appendChild(wrapper);
 
   this.buildExpression = () => {
-    
+    const expression = []
+    const {
+      text
+    } = queryResponse.data;
+
+    expression.push({
+      condition: conditionSelect.value,
+      filters: [],
+      id: uuidv4(),
+      session_filter_locks: [], 
+      term_type: 'QUERY',
+      term_value: text,
+      user_selection: []
+    });
+
+    expression.push({
+      condition: 'TERMINATOR',
+      filters: [],
+      id: uuidv4(),
+      session_filter_locks: [], 
+      term_type: secondTermSelect.value,
+      term_value: termInputValue.getValue(),
+      user_selection: []
+    });
+
+    return expression;
   }
 
   container.getValues = () => {
-    return {}
+    return {
+      expression: this.buildExpression()
+    }
   }
 
   container.isValid = () => {
