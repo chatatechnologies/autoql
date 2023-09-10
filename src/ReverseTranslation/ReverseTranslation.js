@@ -3,7 +3,7 @@ import utc from 'dayjs/plugin/utc.js';
 import { constructRTArray, fetchVLAutocomplete } from 'autoql-fe-utils';
 import { htmlToElement } from '../Utils';
 import { strings } from '../Strings';
-import { INFO_ICON, FILTER_LOCKING } from '../Svg';
+import { INFO_ICON, FILTER_LOCKING_CLOSE } from '../Svg';
 
 import './ReverseTranslation.scss';
 
@@ -73,7 +73,7 @@ export function ReverseTranslation(queryResponse, onValueLabelClick, textOnly = 
                         const lockIcon = document.createElement('span');
                         lockIcon.style.display = 'inline-block';
                         lockIcon.setAttribute('data-tippy-content', strings.lockedValueLabel);
-                        lockIcon.innerHTML = FILTER_LOCKING;
+                        lockIcon.innerHTML = FILTER_LOCKING_CLOSE;
                         VLLink.appendChild(lockIcon);
                     }
 

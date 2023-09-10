@@ -59,7 +59,6 @@ export function FilterLocking(datamessenger){
     view.appendChild(footer)
 
     view.isOpen = false
-
     view.appendList = (data) => {
         conditionList.addList(data)
     }
@@ -85,7 +84,6 @@ export function FilterLocking(datamessenger){
         view.style.opacity = 1;
         view.isOpen = true
     }
-
     view.existsFilter = (filter) => {
         const data = conditionList.getData()
         const found = data.find((line) => {
@@ -117,7 +115,7 @@ export function FilterLocking(datamessenger){
             }, 1000)
         }, 300)
     }
-
+	
     view.submitVL = (vl, text) => {
         const foundFilter = view.existsFilter(vl)
 
@@ -146,7 +144,6 @@ export function FilterLocking(datamessenger){
     view.loadConditions = async () => {
         const conditions = await view.getConditions()
         const data = conditions?.data
-
         if (!data) {
             return
         }
