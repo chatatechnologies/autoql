@@ -7,11 +7,13 @@ import './DataAlertCreationModal.scss';
 import { StepContainer } from "./StepContainer";
 import { SummaryFooter } from "./SummaryFooter";
 import { TimingStep } from "./TimingStep/TimingStep";
+import { AntdMessage } from "../../../Antd";
 
 export function DataAlertCreationModal({ queryResponse, authentication }) {
   const container = document.createElement('div');
   const stepContentContainer = document.createElement('div');
   const summaryFooter = new SummaryFooter({ queryText: queryResponse.data.text })
+
   this.steps = [];
   this.currentStepIndex = 0;
 
@@ -38,6 +40,14 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     () => {},
     this.onDiscard
   );
+
+  this.createSpinner = () => {
+    const spinner = document.createElement('div');
+    spinner.classList.add('autoql-vanilla-spinner-loader');
+    spinner.classList.add('hidden');
+
+    return spinner;
+  }
     
   this.createSteps = () => {
     const {
@@ -111,6 +121,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
   }
 
   this.handleSave = async () => {
+    this.spinner.classList.remove('hidden');
     const values = this.steps.map(step  => step.view.getValues())
     .reduce((r, c) => Object.assign(r, c));
     
@@ -118,13 +129,14 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
       data_return_query: queryResponse.data.text,
       ...values
     }
-
+    
     const response = await createDataAlert({
-      dataAlert,
-      ...authentication
-    })
-
-    console.log(dataAlert);
+       dataAlert,
+       ...authentication
+     });
+     
+     modal.close();
+     new AntdMessage('Data Alert created!', 3000);
   }
 
   this.updateFooter = () => {
@@ -132,7 +144,9 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     summaryFooter.classList.remove('autoql-vanilla-hidden');
 
     if((this.currentStepIndex + 1) >= length) {
-      this.btnNextStep.textContent = 'Finish & Save';
+      this.btnNextStep.innerHTML = '';
+      this.btnNextStep.appendChild(this.spinner);
+      this.btnNextStep.appendChild(document.createTextNode('Finish & Save'));
       this.btnNextStep.onclick = this.handleSave;
     } else {
       this.btnNextStep.textContent = 'Next';
@@ -154,6 +168,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     );
     this.btnBack = this.createButton('Back', ['autoql-vanilla-default']);
     this.btnNextStep = this.createButton('Next', ['autoql-vanilla-primary']);
+    this.spinner = this.createSpinner();
     const buttonContainerLeft = document.createElement('div');
     const modalFooter = document.createElement('div');
     
