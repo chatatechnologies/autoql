@@ -1,4 +1,4 @@
-import { createDataAlert } from "autoql-fe-utils";
+import { QUERY_TERM_TYPE, createDataAlert } from "autoql-fe-utils";
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
 import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
@@ -8,6 +8,7 @@ import { StepContainer } from "./StepContainer";
 import { SummaryFooter } from "./SummaryFooter";
 import { TimingStep } from "./TimingStep/TimingStep";
 import { AntdMessage } from "../../../Antd";
+import { uuidv4 } from "../../../Utils";
 
 export function DataAlertCreationModal({ queryResponse, authentication }) {
   const container = document.createElement('div');
@@ -120,23 +121,45 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     this.updateFooter();
   }
 
+  this.getDefaultExpression = () => {
+    return [{
+      condition: 'EXISTS',
+      filters: [],
+      id: uuidv4(),
+      session_filter_locks: [],
+      term_type: QUERY_TERM_TYPE,
+      term_value: queryResponse.data.text,
+      user_selection: [],
+    }];
+  }
+
   this.handleSave = async () => {
-    this.spinner.classList.remove('hidden');
-    const values = this.steps.map(step  => step.view.getValues())
-    .reduce((r, c) => Object.assign(r, c));
-    
-    const dataAlert = {
-      data_return_query: queryResponse.data.text,
-      ...values
+    try {
+      this.spinner.classList.remove('hidden');
+      const values = this.steps.map(step  => step.view.getValues())
+      .reduce((r, c) => Object.assign(r, c));
+      
+      const dataAlert = {
+        data_return_query: queryResponse.data.text,
+        ...values
+      }
+  
+      if(!dataAlert?.expression) {
+        dataAlert.expression = this.getDefaultExpression();
+      }
+      
+      const response = await createDataAlert({
+        dataAlert,
+        ...authentication
+      });
+  
+      console.log(response);
+      
+      modal.close();
+      new AntdMessage('Data Alert created!', 3000); 
+    } catch (error) {
+      this.spinner.classList.add('hidden');
     }
-    
-    const response = await createDataAlert({
-       dataAlert,
-       ...authentication
-     });
-     
-     modal.close();
-     new AntdMessage('Data Alert created!', 3000);
   }
 
   this.updateFooter = () => {

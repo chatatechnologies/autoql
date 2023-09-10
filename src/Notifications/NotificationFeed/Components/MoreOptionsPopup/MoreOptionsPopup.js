@@ -110,7 +110,6 @@ export function MoreOptionsPopup({ notificationItem, dataAlert, authentication }
     deleteBtn.onclick = this.handleDeleteClick;
     
     menu.appendChild(settingsBtn);
-
     if(dataAlert.status === DATA_ALERT_STATUSES.INACTIVE) {
       const turnOnBtn = this.createOptions(
         'Turn on',
