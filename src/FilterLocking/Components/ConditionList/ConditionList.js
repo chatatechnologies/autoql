@@ -7,7 +7,7 @@ export function ConditionList(datamessenger,filterLocking){
     var conditionListWrapper = document.createElement('div')
     var conditionList = []
     emptyConditionListContainer.innerHTML = `
-        <p><i>No Filters are locked yet</i></p>
+        <p class="autoql-vanilla-filter-locking-empty-condition"><i class='autoql-vanilla-filter-locking-empty-condition'>No Filters are locked yet</i></p>
     `
     container.classList.add('autoql-vanilla-condition-list')
     emptyConditionListContainer.classList.add('autoql-vanilla-empty-condition-list')

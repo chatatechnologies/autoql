@@ -1,4 +1,4 @@
-import { areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
+import { MIN_HISTOGRAM_SAMPLE, areAllColumnsHidden, formatChartLabel, formatElement, getVisibleColumns } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
@@ -506,6 +506,10 @@ export const getSupportedDisplayTypes = response => {
                 supportedDisplayTypes.push('pie')
             }
 
+            if (rows.length > MIN_HISTOGRAM_SAMPLE) {
+                supportedDisplayTypes.push('histogram');
+            }
+
             const { amountOfNumberColumns } = getColumnTypeAmounts(columns)
             if (amountOfNumberColumns > 1) {
               supportedDisplayTypes.push('column_line')
@@ -704,7 +708,7 @@ export function closeAutocompleteObjects() {
         '.autoql-vanilla-data-explorer-autocomplete'
     )
     for (var i = 0; i < list.length; i++) {
-        list[i].classList.remove('show');
+        list[i].classList.remove('autoql-vanilla-autocomplete-show');
     }
 
 }
@@ -715,7 +719,9 @@ export function closeAllChartPopovers(){
     )
 
     for (var i = 0; i < list.length; i++) {
-        if(list[i].isOpen)list[i].close();
+        if(list[i]?.style?.visibility === 'visible') {
+            list[i].close();
+        }
     }
 
 }
@@ -731,11 +737,11 @@ export function closeAllSafetynetSelectors(){
 
 export function closeAllToolbars(){
     var list = document.querySelectorAll(
-        '.autoql-vanilla-chat-message-toolbar.show'
+        '.autoql-vanilla-chat-message-toolbar-show'
     )
 
     var submenus = document.querySelectorAll(
-        '.chata-popover-wrapper.show'
+        '.chata-popover-wrapper-show'
     )
 
     var popovers = document.querySelectorAll(
@@ -743,11 +749,11 @@ export function closeAllToolbars(){
     )
 
     for (let i = 0; i < list.length; i++) {
-        list[i].classList.remove('show');
+        list[i].classList.remove('autoql-vanilla-chat-message-toolbar-show');
     }
 
     for (let i = 0; i < submenus.length; i++) {
-        submenus[i].classList.remove('show');
+        submenus[i].classList.remove('chata-popover-wrapper-show');
     }
     for (let i = 0; i < popovers.length; i++) {
         if(popovers[i].isOpen)popovers[i].close();

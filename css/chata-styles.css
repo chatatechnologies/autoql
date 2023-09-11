@@ -684,10 +684,10 @@ tr td.chata-hidden{
     border: 1px solid var(--autoql-vanilla-border-color);
 }
 
-.autoql-vanilla-chat-message-toolbar.right {
+.autoql-vanilla-chat-message-toolbar.autoql-vanilla-chat-message-toolbar-right {
     right: -9px;
 }
-.autoql-vanilla-chat-message-toolbar.left {
+.autoql-vanilla-chat-message-toolbar.autoql-vanilla-chat-message-toolbar-left {
     left: -9px;
 }
 
@@ -695,7 +695,7 @@ tr td.chata-hidden{
     display: flex;
 }
 
-.autoql-vanilla-chat-message-bubble .autoql-vanilla-chat-message-toolbar.show{
+.autoql-vanilla-chat-message-toolbar.autoql-vanilla-chat-message-toolbar-show{
     display: flex;
 }
 
@@ -1146,6 +1146,28 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     margin-inline-end: 0px;
 }
 
+.autoql-vanilla-spinner-loader {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    margin-right: 6px;
+}
+#csv-downloading-spinner {
+	color: var(--autoql-vanilla-accent-color);
+}
+
+.autoql-vanilla-spinner-loader:after {
+    content: " ";
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: 0px;
+    border-radius: 50%;
+    border: 1px solid currentColor;
+    border-color: currentColor transparent currentColor transparent;
+    animation: spinner-loader 1.2s linear infinite;
+}
+
 .chat-bar-loading-spinner {
   position: absolute;
   right: 20px;
@@ -1412,7 +1434,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 }
 
 .autoql-vanilla-report-problem-text-area {
-	font-family: var(--react-autoql-font-family);
+	font-family: var(--autoql-vanilla-font-family);
     width: 100% !important;
     max-width: 100% !important;
     min-height: 80px;
@@ -1474,6 +1496,10 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-list-item .autoql-vanilla-m-checkbox__input{
     width: 18px !important;
+    height: 18px !important;
+}
+.autoql-vanilla-chata-series-popover-header-wrapper .autoql-vanilla-m-checkbox__input{
+	width: 18px !important;
     height: 18px !important;
 }
 

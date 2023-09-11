@@ -14,8 +14,9 @@ import {
 } from '../../Utils'
 import { strings } from '../../Strings'
 import Split from 'split.js'
-import './Tile.css'
 import { refreshTooltips } from '../../Tooltips'
+
+import './Tile.scss'
 
 export function Tile(dashboard, options){
     var item = document.createElement('div')
@@ -197,7 +198,7 @@ export function Tile(dashboard, options){
         var pos = dragPositions[i]
         var handler = document.createElement('div')
         handler.classList.add('autoql-vanilla-dashboard-tile-drag-handle')
-        handler.classList.add(pos)
+        handler.classList.add(`autoql-vanilla-dashboard-tile-drag-handle-${pos}`)
 
         content.appendChild(handler)
     }

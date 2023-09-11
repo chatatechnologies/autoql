@@ -68,13 +68,8 @@ export function ColumnChartNew(container, params = {}) {
 
     this.yScale = yScales.scale;
 
-    var xCol = columns[stringColumnIndex];
-    var yCol = columns[numberColumnIndex];
-
-    let yCol2;
     if (columnLineCombo) {
         this.yScale2 = yScales.scale2;
-        yCol2 = columns[numberColumnIndex2];
     }
 
     this.createBars = () => {
@@ -160,18 +155,6 @@ export function ColumnChartNew(container, params = {}) {
             });
     };
 
-    this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
-
-    new Axes(this.axesWrapper, {
-        ...params,
-        xScale: this.xScale,
-        yScale: this.yScale,
-        yScale2: this.yScale2,
-        xCol,
-        yCol,
-        yCol2,
-    });
-
     if (!firstDraw) {
         this.createBars();
 
@@ -186,6 +169,15 @@ export function ColumnChartNew(container, params = {}) {
             });
         }
     }
+
+    this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
+
+    new Axes(this.axesWrapper, {
+        ...params,
+        xScale: this.xScale,
+        yScale: this.yScale,
+        yScale2: this.yScale2,
+    });
 
     return this;
 }

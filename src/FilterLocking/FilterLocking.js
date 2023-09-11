@@ -98,6 +98,8 @@ export function FilterLocking(datamessenger){
     }
 
     view.hide = () => {
+		view.input.clear()
+		view.input.close()
         view.style.visibility = 'hidden';
         view.style.opacity = 0;
         view.isOpen = false

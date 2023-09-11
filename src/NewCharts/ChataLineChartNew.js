@@ -12,7 +12,19 @@ import { select } from 'd3-selection';
 import { CSS_PREFIX } from '../Constants';
 
 export const createLines = (container, params) => {
-    const { data, width, visibleSeries, onChartClick, activeKey, stacked, options, xScale, yScale, legend } = params;
+    const {
+        data,
+        width,
+        visibleSeries,
+        onChartClick,
+        activeKey,
+        stacked,
+        options,
+        xScale,
+        yScale,
+        legend,
+        columnIndexConfig,
+    } = params;
     const { dataFormatting } = options;
 
     if (!visibleSeries?.length) {
@@ -89,6 +101,13 @@ export const createLines = (container, params) => {
         }
 
         prevVertices = currentVertices;
+
+        let legendLabels = legend?.labels;
+
+        if (columnIndexConfig.numberColumnIndices2?.includes(yScale.columnIndex)) {
+            legendLabels = legend?.labels2;
+        }
+
         const path = {
             key: `line-${getKey(0, i)}`,
             pathD,
@@ -96,9 +115,9 @@ export const createLines = (container, params) => {
             fill: stacked ? color : 'transparent',
             tooltip: `
                 <div>
-                <strong>Field</strong>: ${legend.labels[i].label}
+                <strong>Field</strong>: ${legendLabels?.[i]?.label ?? ''}
                 </div>
-            `
+            `,
         };
 
         return [{ path, vertices }];
@@ -238,19 +257,12 @@ export function LineChartNew(container, params = {}) {
         stacked,
     }).scale;
 
-    var xCol = columns[stringColumnIndex];
-    var yCol = columns[numberColumnIndex];
-
-    const self = this;
-
     this.axesWrapper = container.append('g').attr('class', 'autoql-vanilla-axes-chart');
 
     new Axes(this.axesWrapper, {
         ...params,
         xScale: this.xScale,
         yScale: this.yScale,
-        xCol,
-        yCol,
         legendShape: 'line',
     });
 

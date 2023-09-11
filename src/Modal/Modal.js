@@ -25,6 +25,10 @@ export function Modal(options={}, onShow=()=>{}, onClose=undefined){
     var chataBody = document.createElement('div');
     var chataFooter = document.createElement('div');
 
+    if (options.className) {
+        modalContainer.classList.add(options.className)
+    }
+
     modalContainer.classList.add('chata-modal-container');
     chataModal.classList.add('chata-modal');
     chataHeader.classList.add('chata-modal-header');

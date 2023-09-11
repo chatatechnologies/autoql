@@ -5,7 +5,10 @@ import {
   ABACUS_ICON,
   TABLE_ICON,
   BOOK_ICON,
+  CLOSE_ICON
 } from "../Svg";
+import tippy from 'tippy.js';
+import { refreshTooltips } from '../Tooltips';
 import { htmlToElement, createIcon } from "../Utils";
 import { strings } from "../Strings";
 import './DataExplorer.scss';
@@ -16,10 +19,12 @@ export function DataExplorer({ subjects, widget }) {
   let obj = this;
   obj.subjects = subjects || [];
   const searchIcon = htmlToElement(SEARCH_ICON);
+  const clearIcon = htmlToElement(CLOSE_ICON);
   const container = document.createElement('div');
   const textBar = document.createElement('div');
   const input = document.createElement('input');
   const chatBarInputIcon  = document.createElement('div');
+  const chatBarClearIcon = document.createElement('div');
   const introMessage = document.createElement('div');
   const title = document.createElement('h2');
   const instructions = document.createElement('div');
@@ -40,6 +45,15 @@ export function DataExplorer({ subjects, widget }) {
   textBar.classList.add('autoql-vanilla-text-bar-animation');
   textBar.classList.add('autoql-vanilla-text-bar-with-icon');
   chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
+  chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon');
+  chatBarClearIcon.onclick = () => obj.clearSearch()
+  const chatBarClearIconTooltip = tippy(chatBarClearIcon);
+  chatBarClearIconTooltip.setContent(strings.clearSearch);
+  chatBarClearIconTooltip.setProps({
+	  theme: 'chata-theme',
+	  delay: [500],
+  });
+  refreshTooltips();
   container.classList.add('autoql-vanilla-querytips-container');
   input.classList.add('autoql-vanilla-chata-input');
   input.classList.add('autoql-vanilla-explore-queries-input');
@@ -64,7 +78,21 @@ export function DataExplorer({ subjects, widget }) {
     elem.appendChild(document.createTextNode(text.string));
     listWrapper.appendChild(elem);
   })
-
+  obj.clearSearch = ()=>{
+	var previewSection = document.querySelector('.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section');
+	var relatedQueriesSection = document.querySelector('.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section');
+	chatBarClearIcon.classList.remove('autoql-vanilla-chat-bar-clear-icon-visible');
+	if (previewSection) {
+		previewSection.remove()
+	}
+	if(relatedQueriesSection){
+		relatedQueriesSection.remove()
+	}
+	if (input){
+		input.value = "";
+	}
+	contentWrapper.appendChild(introMessage);
+  }
   obj.createSubjects = () => {
     obj.subjects.forEach((subject) => {
       const li = document.createElement('li');
@@ -73,7 +101,8 @@ export function DataExplorer({ subjects, widget }) {
       li.appendChild(document.createTextNode(subject.display_name));
       subjectsWrapper.appendChild(li);
       li.onclick = async () => {
-        autocomplete.classList.remove('show')
+		    chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible')
+        autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
         input.value = subject.display_name;
         contentWrapper.innerHTML = '';
         const previewSection = new DataPreview({
@@ -99,10 +128,12 @@ export function DataExplorer({ subjects, widget }) {
   }
 
   chatBarInputIcon.appendChild(searchIcon);
+  chatBarClearIcon.appendChild(clearIcon);
   autocomplete.appendChild(subjectsWrapper);
   textBar.appendChild(input);
   textBar.appendChild(chatBarInputIcon);
   textBar.appendChild(autocomplete);
+  textBar.appendChild(chatBarClearIcon);
   instructionList.appendChild(listWrapper);
   instructions.appendChild(p);
   instructions.appendChild(instructionList);
@@ -112,11 +143,16 @@ export function DataExplorer({ subjects, widget }) {
   container.appendChild(textBar);
   container.appendChild(contentWrapper);
   container.style.display = 'none';
-  
+  input.addEventListener('input',()=>{
+	chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible');
+	if(input.value === ''){
+		chatBarClearIcon.classList.remove('autoql-vanilla-chat-bar-clear-icon-visible');
+	}
+})
   input.addEventListener('keydown', async (event) => {
       if (event.key == 'Enter' && input.value) {
           contentWrapper.innerHTML = '';
-          autocomplete.classList.remove('show')
+          autocomplete.classList.remove('autoql-vanilla-autocomplete-show')
 
           const relatedQueriesSection = new RelatedQueries({
               icon: CHATA_BUBBLES_ICON,
@@ -137,8 +173,8 @@ export function DataExplorer({ subjects, widget }) {
     const textBarHeight = textBar.clientHeight;
     const headerHeight = widget.header.clientHeight;
     const margin = 60;
-    subjectsWrapper.style.maxHeight = (height - (textBarHeight + headerHeight + margin)) + 'px'; 
-    autocomplete.classList.add('show');
+    autocomplete.style.maxHeight = (height - (textBarHeight + headerHeight + margin)) + 'px'; 
+    autocomplete.classList.add('autoql-vanilla-autocomplete-show');
   });
   
   obj.hide = () => {

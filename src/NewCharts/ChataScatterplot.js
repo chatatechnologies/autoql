@@ -82,9 +82,6 @@ export function Scatterplot(container, params = {}) {
     this.xScale.secondScale = this.yScale;
     this.yScale.secondScale = this.xScale;
 
-    var xCol = columns[numberColumnIndex];
-    var yCol = columns[numberColumnIndex2];
-
     this.createPoints = () => {
         if (!numberColumnIndex || !numberColumnIndex2) {
             console.warn('Unable to create points - there are not enough number columns');
@@ -132,8 +129,6 @@ export function Scatterplot(container, params = {}) {
         ...params,
         xScale: this.xScale,
         yScale: this.yScale,
-        xCol,
-        yCol,
     });
 
     if (!firstDraw) {

@@ -184,7 +184,7 @@ export const DELETE_MESSAGE = `
 
 export const INFO_ICON = `
 <svg fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg" class="autoql-vanilla-interpretation-icon">
-    <path class="" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
+    <path class="autoql-vanilla-interpretation-icon" d="M11 17h2v-6h-2v6zm1-15C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zM11 9h2V7h-2v2z">
     </path>
 </svg>
 `;
@@ -545,8 +545,8 @@ export const SELECT_ARROW = `
 `
 
 export const FILTER_LOCKING = `
-    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"></path>
+    <svg class="filter-locking-menu" stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+        <path class="filter-locking-menu" d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6h1.9c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm0 12H6V10h12v10z"></path>
     </svg>
 `
 
@@ -651,7 +651,7 @@ export const MARK_ALL = `
     </path>
 </svg>
 `
-export const HISTOGRAM_ICON = 
+export const HISTOGRAM_ICON =
 `<svg fill="currentColor" x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16'>
     <rect x='0.482' y='9.788' className='chart-icon-svg-0' width='2.016' height='6.212' />
     <rect x='3.755' y='3.923' className='chart-icon-svg-0' width='2.016' height='12.077' />
@@ -659,8 +659,8 @@ export const HISTOGRAM_ICON =
     <rect x='10.3' y='5.406' className='chart-icon-svg-0' width='2.016' height='10.594' />
     <rect x='13.571' y='11.542' className='chart-icon-svg-0' width='2.016' height='4.458' />
 </svg>`
-  
-export const SCATTERPLOT_ICON = 
+
+export const SCATTERPLOT_ICON =
 `<svg fill="currentColor" x='0px' y='0px' width='16px' height='16px' viewBox='0 0 16 16'>
     <circle className='chart-icon-svg-0' cx='9.399' cy='10.008' r='1.2' />
     <circle className='chart-icon-svg-0' cx='9.219' cy='6.29' r='1.2' />
@@ -687,23 +687,40 @@ export const COLUMN_LINE_ICON =
   c0.2-0.2,0.5-0.3,0.8-0.1l4,1.9c0.3,0.2,0.5,0.6,0.3,0.9c-0.2,0.4-0.6,0.5-0.9,0.3L9.6,1.7L6,5.3C5.9,5.4,5.7,5.5,5.5,5.5z'
       />
 </svg>`
-  
-export const ENVELOPE = 
+
+export const ENVELOPE =
 `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path 
-    d="M20,4H4C2.897,4,2,4.897,2,6v12c0,1.103,0.897,2,2,2h16c1.103,0,2-0.897,2-2V6C22,4.897,21.103,4,20,4z 
+    <path
+    d="M20,4H4C2.897,4,2,4.897,2,6v12c0,1.103,0.897,2,2,2h16c1.103,0,2-0.897,2-2V6C22,4.897,21.103,4,20,4z
     M20,6v0.511 l-8,6.223L4,6.512V6H20z M4,18V9.044l7.386,5.745C11.566,14.93,11.783,15,12,15s0.434-0.07,0.614-0.211L20,9.044L20.002,18H4z">
     </path>
 </svg>
 `
 
-export const ENVELOPE_OPEN = 
+export const ENVELOPE_OPEN =
 `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
-    <path d="M21.555,8.168l-9-6c-0.336-0.224-0.773-0.224-1.109,0l-9,6C2.167,8.354,2,8.666,2,9v11c0,1.103,0.897,2,2,2h16 
-    c1.103,0,2-0.897,2-2V9C22,8.666,21.833,8.354,21.555,8.168z M12,4.202L19.197,9L12,13.798L4.803,9L12,4.202z M4,20v-9.131 
+    <path d="M21.555,8.168l-9-6c-0.336-0.224-0.773-0.224-1.109,0l-9,6C2.167,8.354,2,8.666,2,9v11c0,1.103,0.897,2,2,2h16
+    c1.103,0,2-0.897,2-2V9C22,8.666,21.833,8.354,21.555,8.168z M12,4.202L19.197,9L12,13.798L4.803,9L12,4.202z M4,20v-9.131
     l7.445,4.963C11.613,15.944,11.807,16,12,16s0.387-0.056,0.555-0.168L20,10.869L19.997,20H4z">
     </path>
 </svg>
 `
+
+export const DISPLAY_TYPE_ICONS = {
+    table: TABLE_ICON,
+    pivot_table: PIVOT_ICON,
+    column: COLUMN_CHART_ICON,
+    bar: BAR_CHART_ICON,
+    line: LINE_CHART_ICON,
+    pie: PIE_CHART_ICON,
+    heatmap: HEATMAP_ICON,
+    bubble: BUBBLE_CHART_ICON,
+    stacked_column: STACKED_COLUMN_CHART_ICON,
+    stacked_bar: STACKED_BAR_CHART_ICON,
+    stacked_line: STACKED_AREA_CHART_ICON,
+    column_line: COLUMN_LINE_ICON,
+    scatterplot: SCATTERPLOT_ICON,
+    histogram: HISTOGRAM_ICON,
+};
