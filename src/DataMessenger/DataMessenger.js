@@ -2779,7 +2779,7 @@ export function DataMessenger(options = {}) {
                 domain,
                 apiKey,
                 token,
-                userSelection: undefined,
+                userSelection: selections,
                 userSelectionFinal: undefined,
                 debug: false,
                 test: obj.options.autoQLConfig.test,
