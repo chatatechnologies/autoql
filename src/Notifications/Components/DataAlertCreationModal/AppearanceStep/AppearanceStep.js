@@ -226,6 +226,7 @@ export function AppearanceStep({ queryResponse }) {
   container.isValid = () => {
     return titleSection.getValue() !== '';
   }
+  
   container.classList.add('autoql-vanilla-data-alert-setting-section');
   container.classList.add('autoql-vanilla-data-alert-modal-step');
 

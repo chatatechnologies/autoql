@@ -158,7 +158,7 @@ export function ConditionsStep({ queryResponse }) {
   }
 
   container.isValid = () => {
-    //return termInputValue.getValue() !== '';
+    return termInputValue.getValue() !== '';
   }
 
   this.createConditionsSection();

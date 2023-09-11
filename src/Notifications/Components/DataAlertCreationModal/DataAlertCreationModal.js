@@ -3,10 +3,10 @@ import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
 import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
 import { ConditionsStep } from "./ConditionsStep";
+import { TimingStep } from "./TimingStep/TimingStep";
 import './DataAlertCreationModal.scss';
 import { StepContainer } from "./StepContainer";
 import { SummaryFooter } from "./SummaryFooter";
-import { TimingStep } from "./TimingStep/TimingStep";
 import { AntdMessage } from "../../../Antd";
 import { uuidv4 } from "../../../Utils";
 
@@ -110,6 +110,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     nextStep.view.classList.remove('autoql-vanilla-hidden');
     this.stepContainer.enableStep(this.currentStepIndex);
     this.updateFooter();
+    this.validateNextButton();
   }
 
   this.handlePreviousStep = () => {
@@ -148,13 +149,10 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         dataAlert.expression = this.getDefaultExpression();
       }
       
-      const response = await createDataAlert({
+      await createDataAlert({
         dataAlert,
         ...authentication
       });
-  
-      console.log(response);
-      
       modal.close();
       new AntdMessage('Data Alert created!', 3000); 
     } catch (error) {
@@ -205,10 +203,24 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     modalFooter.appendChild(buttonContainerLeft);
     
     this.btnBack.classList.add('autoql-vanilla-hidden');
+    this.btnNextStep.classList.add('autoql-vanilla-disabled');
     modalFooter.classList.add('autoql-vanilla-modal-footer');
 
     return modalFooter;
   }
+
+  this.validateNextButton = () => {
+    const currentStep = this.steps[this.currentStepIndex];
+    if(currentStep.view.isValid()) {
+      this.btnNextStep.classList.remove('autoql-vanilla-disabled');
+    } else {
+      this.btnNextStep.classList.add('autoql-vanilla-disabled');
+    }
+  }
+
+  container.addEventListener('keyup', () => {
+    this.validateNextButton();
+  });
 
   stepContentContainer.classList.add('autoql-vanilla-data-alert-modal-step-content-container');
 
@@ -219,6 +231,8 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
   modal.addFooterElement(summaryFooter);
   modal.addFooterElement(this.createFooter());
   modal.addView(container);
+
+  this.validateNextButton();
 
   return modal;
 }

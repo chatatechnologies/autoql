@@ -383,6 +383,10 @@ export function TimingStep() {
     this.createLiveView();
   }
 
+  container.isValid = () => {
+    return true;
+  }
+
   container.getValues = () => {
     const notificationType = this.getNotificationType(this.notificationType);
     const timezone = this.timezone;
