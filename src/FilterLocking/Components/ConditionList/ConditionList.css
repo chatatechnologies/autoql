@@ -1,21 +1,33 @@
-.autoql-vanilla-condition-list{
+.autoql-vanilla-condition-list {
 	max-height: 300px;
 	overflow: auto;
-    padding: 6px 10px 6px 6px !important;
-    margin: 0 auto;
-    min-height: 182px;
+	padding: 6px 10px 6px 6px !important;
+	margin: 0 auto;
+	min-height: 182px;
 }
 
-.autoql-vanilla-empty-condition-list{
-    text-align: center;
-    padding: 20px !important;
-    height: 140px !important;
-    font-family: var(--autoql-vanilla-font-family);
-    font-size: 13px;
+.autoql-vanilla-empty-condition-list {
+	text-align: center;
+	padding: 20px !important;
+	height: 140px !important;
+	font-family: var(--autoql-vanilla-font-family);
+	font-size: 13px;
 }
 
 .autoql-vanilla-empty-condition-list p {
-    margin-top: 20px!important;
-    vertical-align: middle;
-    color: var(--autoql-vanilla-text-color-primary);
+	margin-top: 20px !important;
+	vertical-align: middle;
+	color: var(--autoql-vanilla-text-color-primary);
+}
+
+.autoql-vanilla-filter-lock-icon-badge {
+	position: absolute;
+	display: inline-block;
+	border: 2px solid var(--autoql-vanilla-accent-color);
+	background: var(--autoql-vanilla-warning-color);
+	border-radius: 50%;
+	height: 14px;
+	width: 14px;
+	right: 52px;
+	top: 15px;
 }
