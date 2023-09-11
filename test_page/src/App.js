@@ -218,6 +218,7 @@ class App extends React.Component {
                 domain: getStoredProp('domain-url') || '',
                 apiKey: getStoredProp('api-key') || '',
             },
+            defaultOpen: false,
         });
     };
 
