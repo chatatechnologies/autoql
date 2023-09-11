@@ -23,8 +23,8 @@
 .autoql-vanilla-filter-lock-icon-badge {
 	position: absolute;
 	display: inline-block;
-	border: 2px solid var(--react-autoql-accent-color);
-	background: var(--react-autoql-warning-color);
+	border: 2px solid var(--autoql-vanilla-accent-color);
+	background: var(--autoql-vanilla-warning-color);
 	border-radius: 50%;
 	height: 14px;
 	width: 14px;
