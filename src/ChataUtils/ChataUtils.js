@@ -4,6 +4,7 @@ import {
     closeAllToolbars,
     closeAllSafetynetSelectors,
     closeAutocompleteObjects,
+    closeAllPopups,
     formatColumnName,
     allColHiddenMessage,
     getNotGroupableField,
@@ -1044,6 +1045,15 @@ ChataUtils.registerWindowClicks = () => {
         'report_problem',
     ];
 
+    const excludeElementsForSelectors = [
+        'autoql-vanilla-select-popup',
+        'autoql-vanilla-select',
+        'autoql-vanilla-select-arrow',
+        'autoql-vanilla-select-menu-item',
+        'autoql-vanilla-select-text',
+        'autoql-vanilla-menu-item-value-title',
+    ]
+
     const excludeElementsForSafetynet = ['autoql-vanilla-safetynet-selector', 'autoql-vanilla-chata-safetynet-select'];
 
     const excludeElementsForSubjectAutocomplete = ['autoql-vanilla-subject', 'autoql-vanilla-explore-queries-input'];
@@ -1052,7 +1062,8 @@ ChataUtils.registerWindowClicks = () => {
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
         var closeAutocomplete = true;
-
+        var closePopups = true;
+    
         for (let i = 0; i < excludeElementsForSafetynet.length; i++) {
             let c = excludeElementsForSafetynet[i];
             if (evt.target.classList.contains(c)) {
@@ -1076,6 +1087,14 @@ ChataUtils.registerWindowClicks = () => {
             }
         }
 
+        for (let i = 0; i < excludeElementsForSelectors.length; i++) {
+            let c = excludeElementsForSelectors[i];
+            if (evt.target.classList.contains(c)) {
+                closePopups = false;
+                break;
+            }
+        }
+
         if (closeToolbars) {
             closeAllToolbars();
         }
@@ -1086,6 +1105,10 @@ ChataUtils.registerWindowClicks = () => {
 
         if (closeAutocomplete) {
             closeAutocompleteObjects();
+        }
+
+        if(closePopups) {
+            closeAllPopups();
         }
     });
 };

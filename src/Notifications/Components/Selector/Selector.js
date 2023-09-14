@@ -67,11 +67,7 @@ export function Selector({
   }
 
   select.onclick = () => {
-    if(!this.isOpen){
-      select.openPopup();
-    }else{
-      select.closePopup();
-    }
+    select.openPopup();
   }
   
   selectArrow.appendChild(arrow);

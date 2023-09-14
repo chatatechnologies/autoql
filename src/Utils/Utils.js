@@ -735,6 +735,16 @@ export function closeAllSafetynetSelectors(){
     }
 }
 
+export function closeAllPopups(){
+    var list = document.querySelectorAll(
+        '.autoql-vanilla-select-popup'
+    )
+    for (var i = 0; i < list.length; i++) {
+        list[i].close();
+    }
+}
+
+
 export function closeAllToolbars(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-chat-message-toolbar-show'
