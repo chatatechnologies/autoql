@@ -22,6 +22,7 @@
         }
     },
     "scripts": {
+        "start": "npx npm-watch devscript",
         "dev": "npx npm-watch devscript",
         "devscript": "npm run build",
         "test": "echo \"no test specified\" ",
@@ -61,7 +62,7 @@
         "webpack-remove-empty-scripts": "^1.0.3"
     },
     "dependencies": {
-        "autoql-fe-utils": "1.0.14",
+        "autoql-fe-utils": "1.0.30",
         "axios": "^1.4.0",
         "d3": "^7.8.2",
         "d3-shape": "^3.2.0",

@@ -47,6 +47,7 @@ import {
     checkAndApplyTheme,
     getSupportedDisplayTypes,
     closeAllChartPopovers,
+    getLocalStream,
 } from '../Utils';
 
 import {
@@ -158,13 +159,14 @@ export function DataMessenger(options = {}) {
     };
 
     obj.autoCompleteTimer = undefined;
-    obj.speechToText = getSpeech();
+    obj.speechToText = getSpeech(obj.options.dataFormatting);
     obj.finalTranscript = '';
     obj.isRecordVoiceActive = false;
     obj.zIndexBubble = 1000000;
     obj.id = options?.id ?? `autoql-vanilla-data-messenger-${uuidv4()}`;
     obj.isVisible = !!obj.options.defaultOpen;
     obj.notificationTabId = uuidv4();
+    
 
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
@@ -1107,6 +1109,22 @@ export function DataMessenger(options = {}) {
         }
     };
 
+    obj.onMouseUpSpeechToText = function() {
+        window.removeEventListener('mouseup', this)
+
+        try {
+            if (obj.isRecordVoiceActive) {
+                obj.speechToText.stop();
+                obj.input.value = obj.finalTranscript;
+                obj.isRecordVoiceActive = false;
+            }
+    
+            obj.voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
+        } catch(error) {
+            console.error(error)
+        }
+    };
+
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
         var chataBarContainer = document.createElement('div');
@@ -1151,13 +1169,35 @@ export function DataMessenger(options = {}) {
             obj.autoCompleteHandler(evt);
         };
 
-        voiceRecordButton.onmouseup = () => {
-            obj.speechToText.stop();
-            obj.input.value = obj.finalTranscript;
-            obj.isRecordVoiceActive = false;
-        };
+        voiceRecordButton.onmousedown = async () => {
+            if (obj.voiceDisabled) {
+                return
+            }
 
-        voiceRecordButton.onmousedown = () => {
+            window.addEventListener('mouseup', obj.onMouseUpSpeechToText)
+
+            const permissionCheckStart = Date.now()
+            try {
+                await getLocalStream()
+            } catch(error) {
+                console.error(error)
+                if (error?.message === 'Permission denied') {
+                    obj.voiceDisabled = true
+                    voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
+                    voiceRecordButton.style.opacity = '0.5';
+                    voiceRecordButton.style.cursor = 'default';
+                    voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecordError);
+                    refreshTooltips();
+                }
+                return
+            }
+
+            if (Date.now() - permissionCheckStart > 500) {
+                // Assume dialog popped up, and do not start audio recording
+                // There is no other easy way that I know of to check if there was a permission dialog
+                return
+            }
+
             obj.speechToText.start();
             voiceRecordButton.style.backgroundColor = '#FF471A';
             obj.isRecordVoiceActive = true;
