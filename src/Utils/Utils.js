@@ -268,7 +268,11 @@ export function mergeOptions(objList){
     return output;
 }
 
-export function getSpeech(){
+export function getLocalStream() {
+    return navigator.mediaDevices.getUserMedia({ video: false, audio: true })
+  }
+
+export function getSpeech(dataFormatting){
     window.SpeechRecognition =
     window.webkitSpeechRecognition || window.SpeechRecognition;
     if(window.SpeechRecognition){
@@ -276,6 +280,7 @@ export function getSpeech(){
         recognition.interimResults = true;
         recognition.maxAlternatives = 10;
         recognition.continuous = true;
+        recognition.lang = dataFormatting?.languageCode ?? "en-US";
         return recognition;
     }else{
         return false
