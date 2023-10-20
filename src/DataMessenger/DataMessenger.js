@@ -1238,8 +1238,9 @@ export function DataMessenger(options = {}) {
                 }
                 if (obj.finalTranscript !== '') {
                     obj.input.value = obj.finalTranscript;
+                    obj.input.focus();
                     obj.speechToText.stop();
-                    ChataUtils.autocomplete(obj.input.value, obj.autoCompleteList, 'suggestion', obj.options);
+                    obj.speechToText.abort();
                 }
                 obj.finalTranscript = '';
             };

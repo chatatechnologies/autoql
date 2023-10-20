@@ -273,8 +273,8 @@ export function getLocalStream() {
   }
 
 export function getSpeech(dataFormatting){
-    window.SpeechRecognition =
-    window.webkitSpeechRecognition || window.SpeechRecognition;
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+
     if(window.SpeechRecognition){
         let recognition = new window.SpeechRecognition();
         recognition.interimResults = true;
@@ -962,10 +962,7 @@ export const getFirstDateCol = (cols) => {
 }
 
 export const supportsVoiceRecord = () => {
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
-    var isEdge = !isIE && !!window.StyleMedia;
-    var isChrome = !!window.chrome
-    return isEdge || isChrome
+    return !!window.SpeechRecognition || !!window.webkitSpeechRecognition
 }
 
 export const getHeightForChildrens = (parent) => {
