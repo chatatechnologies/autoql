@@ -1,6 +1,7 @@
 steps:
   # Clone the repository and check tags
-  - name: 'gcr.io/cloud-builders/npm:node-16.20.0'
+  - name: node:16.20.0
+    entrypoint: npm
     id: install dependencies
     entrypoint: /bin/bash
     args:
