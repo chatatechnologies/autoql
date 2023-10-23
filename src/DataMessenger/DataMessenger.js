@@ -20,7 +20,6 @@ import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { ChataUtils } from '../ChataUtils';
-import { Modal } from '../Modal';
 import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
@@ -68,10 +67,20 @@ import {
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
-    DISPLAY_TYPE_ICONS,
     SCATTERPLOT_ICON,
-    COLUMN_LINE_ICON,
     HISTOGRAM_ICON,
+    TABLE_ICON,
+    PIVOT_ICON,
+    COLUMN_CHART_ICON,
+    BAR_CHART_ICON,
+    LINE_CHART_ICON,
+    PIE_CHART_ICON,
+    HEATMAP_ICON,
+    BUBBLE_CHART_ICON,
+    STACKED_COLUMN_CHART_ICON,
+    STACKED_BAR_CHART_ICON,
+    STACKED_AREA_CHART_ICON,
+    COLUMN_LINE_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -85,6 +94,7 @@ import testdata from '../../testdata';
 import { ChataChartNew } from '../NewCharts';
 
 export function DataMessenger(options = {}) {
+    console.log('RENDERING DATA MESSENGER COMPONENT')
     checkAndApplyTheme();
 
     var obj = this;

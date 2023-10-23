@@ -23,7 +23,6 @@ import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCre
 import { CSS_PREFIX } from '../Constants';
 import '../../css/PopoverMenu.css';
 import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
-import { CSS_PREFIX } from '../Constants';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
