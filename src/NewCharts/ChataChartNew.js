@@ -36,6 +36,7 @@ import { BubbleChartNew } from './ChataBubbleChart';
 import { PieChartNew } from './ChataPieChart';
 import { Scatterplot } from './ChataScatterplot';
 import { Histogram } from './ChataHistogram';
+
 import '../Charts/ChataChart.scss';
 
 export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {

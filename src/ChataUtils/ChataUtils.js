@@ -11,11 +11,10 @@ import {
     copyTextToClipboard,
     uuidv4,
 } from '../Utils';
-import { apiCallPut, apiCallPost } from '../Api';
+import { apiCallPut } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataConfirmDialog } from '../Notifications/Components/ChataConfirmDialog/ChataConfirmDialog';
-import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { ChataRadio } from '../ChataComponents';
+import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
 import { AntdMessage } from '../Antd';
@@ -24,6 +23,7 @@ import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCre
 import { CSS_PREFIX } from '../Constants';
 import '../../css/PopoverMenu.css';
 import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
+import { CSS_PREFIX } from '../Constants';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -877,8 +877,8 @@ ChataUtils.ajaxCall = function (val, callback, options, source) {
             try {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 callback(jsonResponse, xhr.status);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -897,8 +897,8 @@ ChataUtils.putCall = function (url, data, callback, options) {
             try {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 callback(jsonResponse);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -918,8 +918,8 @@ ChataUtils.deleteCall = function (url, callback, options, extraHeaders = []) {
             try {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 callback(jsonResponse);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -949,8 +949,8 @@ ChataUtils.ajaxCallPost = function (url, callback, data, options) {
             try {
                 var jsonResponse = JSON.parse(xmlhttp.responseText);
                 callback(jsonResponse, xmlhttp.status);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -970,8 +970,8 @@ ChataUtils.ajaxCallAutoComplete = function (url, callback, options) {
                     jsonResponse = JSON.parse(options.xhr.responseText);
                 }
                 callback(jsonResponse);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -1052,7 +1052,7 @@ ChataUtils.registerWindowClicks = () => {
         'autoql-vanilla-select-menu-item',
         'autoql-vanilla-select-text',
         'autoql-vanilla-menu-item-value-title',
-    ]
+    ];
 
     const excludeElementsForSafetynet = ['autoql-vanilla-safetynet-selector', 'autoql-vanilla-chata-safetynet-select'];
 
@@ -1063,7 +1063,7 @@ ChataUtils.registerWindowClicks = () => {
         var closeSafetynetSelectors = true;
         var closeAutocomplete = true;
         var closePopups = true;
-    
+
         for (let i = 0; i < excludeElementsForSafetynet.length; i++) {
             let c = excludeElementsForSafetynet[i];
             if (evt.target.classList.contains(c)) {
@@ -1107,7 +1107,7 @@ ChataUtils.registerWindowClicks = () => {
             closeAutocompleteObjects();
         }
 
-        if(closePopups) {
+        if (closePopups) {
             closeAllPopups();
         }
     });

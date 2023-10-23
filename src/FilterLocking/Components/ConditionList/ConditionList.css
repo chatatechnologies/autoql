@@ -1,9 +1,9 @@
-.autoql-vanilla-condition-list {
+.autoql-vanilla-condition-list{
 	max-height: 300px;
 	overflow: auto;
-	padding: 6px 10px 6px 6px !important;
-	margin: 0 auto;
-	min-height: 182px;
+    padding: 6px 10px 6px 6px !important;
+    margin: 0 auto;
+    min-height: 182px;
 }
 
 .autoql-vanilla-empty-condition-list {

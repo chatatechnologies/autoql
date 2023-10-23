@@ -269,14 +269,19 @@ export function mergeOptions(objList){
     return output;
 }
 
-export function getSpeech(){
-    window.SpeechRecognition =
-    window.webkitSpeechRecognition || window.SpeechRecognition;
+export function getLocalStream() {
+    return navigator.mediaDevices.getUserMedia({ video: false, audio: true })
+  }
+
+export function getSpeech(dataFormatting){
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+
     if(window.SpeechRecognition){
         let recognition = new window.SpeechRecognition();
         recognition.interimResults = true;
         recognition.maxAlternatives = 10;
         recognition.continuous = true;
+        recognition.lang = dataFormatting?.languageCode ?? "en-US";
         return recognition;
     }else{
         return false
@@ -968,10 +973,7 @@ export const getFirstDateCol = (cols) => {
 }
 
 export const supportsVoiceRecord = () => {
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
-    var isEdge = !isIE && !!window.StyleMedia;
-    var isChrome = !!window.chrome
-    return isEdge || isChrome
+    return !!window.SpeechRecognition || !!window.webkitSpeechRecognition
 }
 
 export const getHeightForChildrens = (parent) => {
