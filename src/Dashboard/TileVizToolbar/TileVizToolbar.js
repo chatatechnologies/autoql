@@ -1,12 +1,12 @@
+import { getSupportedDisplayTypes } from 'autoql-fe-utils';
 import { DISPLAY_TYPE_ICONS } from '../../Svg';
-import { getSupportedDisplayTypes } from '../../Utils';
 import { refreshTooltips } from '../../Tooltips';
 import { strings } from '../../Strings';
 
 import './TileVizToolbar.scss';
 
 export function TileVizToolbar(json, view, tile) {
-    var displayTypes = getSupportedDisplayTypes(json);
+    var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
     var { dashboard } = tile;
     var dummyArray = [];
     dummyArray.forEach.call(view.querySelectorAll('.autoql-vanilla-viz-toolbar'), function (e) {
@@ -16,7 +16,7 @@ export function TileVizToolbar(json, view, tile) {
     if (displayTypes.length > 1) {
         var vizToolbar = document.createElement('div');
 
-        vizToolbar.buttons = []
+        vizToolbar.buttons = [];
 
         if (!view.isSecond) vizToolbar.classList.add('first');
         if (!view.isSecond && tile.options.isSplit) vizToolbar.classList.add('is-split');
@@ -41,7 +41,7 @@ export function TileVizToolbar(json, view, tile) {
             button.setAttribute('data-displaytype', displayTypes[i]);
             button.setAttribute('data-tippy-content', strings.displayTypes[displayType]);
 
-            vizToolbar.buttons.push(button)
+            vizToolbar.buttons.push(button);
 
             if (button.innerHTML != '') {
                 vizToolbar.appendChild(button);

@@ -7,4 +7,4 @@ export { NotificationFeed } from './Notifications';
 export { DataAlerts } from './Notifications';
 export { QueryInput } from './QueryInput';
 export { QueryOutput } from './QueryOutput';
-export { getSupportedDisplayTypes, configureTheme } from './Utils';
+export { getSupportedDisplayTypes, configureTheme } from 'autoql-fe-utils';

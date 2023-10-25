@@ -1,3 +1,4 @@
+import { getSupportedDisplayTypes } from 'autoql-fe-utils'
 import {
     ChataUtils
 } from '../../ChataUtils'
@@ -9,7 +10,6 @@ import{
 } from '../../Svg'
 import {
     htmlToElement,
-    getSupportedDisplayTypes,
     showBadge
 } from '../../Utils'
 import { strings } from '../../Strings'
@@ -34,7 +34,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
     var displayType = tileView.internalDisplayType
     toolbar.getToolbarActionType = (json, displayType) => {
         var toolbarType = 'simple';
-        var displayTypes = getSupportedDisplayTypes(json);
+        var displayTypes = getSupportedDisplayTypes({ response: { data: json }});
         if(displayTypes.length > 1){
             switch (displayType) {
                 case 'table':
