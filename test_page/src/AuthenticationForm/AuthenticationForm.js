@@ -31,10 +31,21 @@ export class AuthenticationForm extends Component {
         apiKey: getStoredProp('api-key') || '',
         email: '',
         password: '',
-
     }
 
     componentDidMount = () => {
+        const values = {
+            token: getStoredProp('jwtToken'),
+            domain: this.state.domain,
+            apiKey: this.state.apiKey
+        }
+
+        this.testLogin(values).then(() => {
+            this.setState({isAuthenticated: true})
+            this.props.onLogin(values,{
+                projectId: this.state.projectId
+            })
+        })
     }
 
     getJWT = async (loginToken) => {

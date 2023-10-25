@@ -20,8 +20,7 @@ import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { ChataUtils } from '../ChataUtils';
-import { Modal } from '../Modal';
-import { NotificationSettingsModal, NotificationIcon, NotificationFeed } from '../Notifications';
+import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
@@ -47,6 +46,7 @@ import {
     checkAndApplyTheme,
     getSupportedDisplayTypes,
     closeAllChartPopovers,
+    getLocalStream,
 } from '../Utils';
 
 import {
@@ -67,7 +67,20 @@ import {
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
-    DISPLAY_TYPE_ICONS,
+    SCATTERPLOT_ICON,
+    HISTOGRAM_ICON,
+    TABLE_ICON,
+    PIVOT_ICON,
+    COLUMN_CHART_ICON,
+    BAR_CHART_ICON,
+    LINE_CHART_ICON,
+    PIE_CHART_ICON,
+    HEATMAP_ICON,
+    BUBBLE_CHART_ICON,
+    STACKED_COLUMN_CHART_ICON,
+    STACKED_BAR_CHART_ICON,
+    STACKED_AREA_CHART_ICON,
+    COLUMN_LINE_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
@@ -81,6 +94,7 @@ import testdata from '../../testdata';
 import { ChataChartNew } from '../NewCharts';
 
 export function DataMessenger(options = {}) {
+    console.log('RENDERING DATA MESSENGER COMPONENT')
     checkAndApplyTheme();
 
     var obj = this;
@@ -100,7 +114,7 @@ export function DataMessenger(options = {}) {
         enableVoiceRecord: true,
         autocompleteStyles: {},
         enableDataExplorerTab: true,
-        enableNotificationsTab: false,
+        enableNotificationsTab: true,
         inputPlaceholder: strings.dmInputPlaceholder,
         enableDynamicCharting: true,
         landingPage: 'data-messenger',
@@ -137,7 +151,7 @@ export function DataMessenger(options = {}) {
             enableQuerySuggestions: true,
             enableColumnVisibilityManager: true,
             enableDrilldowns: true,
-            enableNotifications: false,
+            enableNotifications: true,
             enableCSVDownload: true,
             enableReportProblem: true,
             ...(options.autoQLConfig ?? {}),
@@ -145,19 +159,20 @@ export function DataMessenger(options = {}) {
     };
 
     obj.autoCompleteTimer = undefined;
-    obj.speechToText = getSpeech();
+    obj.speechToText = getSpeech(obj.options.dataFormatting);
     obj.finalTranscript = '';
     obj.isRecordVoiceActive = false;
     obj.zIndexBubble = 1000000;
     obj.id = options?.id ?? `autoql-vanilla-data-messenger-${uuidv4()}`;
     obj.isVisible = !!obj.options.defaultOpen;
     obj.notificationTabId = uuidv4();
+    
 
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
     }
-
-    obj.cancelCurrentRequest = () => {
+	
+	obj.cancelCurrentRequest = () => {
         obj.axiosSource?.cancel(REQUEST_CANCELLED_ERROR);
     };
     obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement);
@@ -485,14 +500,14 @@ export function DataMessenger(options = {}) {
             </div>
         `);
         const button = htmlToElement(`
-            <button class="autoql-vanilla-chata-btn primary"
+            <button class="autoql-vanilla-chata-btn autoql-vanilla-primary"
             style="padding: 5px 16px; margin: 10px 5px 2px;">
                 Create a New Notification
             </button>
         `);
 
         button.onclick = () => {
-            var modalView = new NotificationSettingsModal(obj.options);
+           /*  var modalView = new NotificationSettingsModal(obj.options);
             var configModal = new Modal(
                 {
                     withFooter: true,
@@ -503,7 +518,7 @@ export function DataMessenger(options = {}) {
                 },
             );
             var cancelButton = htmlToElement(
-                `<div class="autoql-vanilla-chata-btn default"
+                `<div class="autoql-vanilla-chata-btn autoql-vanilla-default"
                 style="padding: 5px 16px; margin: 2px 5px;">Cancel</div>`,
             );
             var spinner = htmlToElement(`
@@ -540,7 +555,7 @@ export function DataMessenger(options = {}) {
                     modalView.getValues(),
                     o,
                 );
-            };
+            }; */
         };
 
         container.style.display = 'none';
@@ -566,9 +581,9 @@ export function DataMessenger(options = {}) {
         });
 
         if (obj.isPortrait()) {
-            notificationList.style.height = obj.drawerContent.clientHeight - 60 + 'px';
+            notificationList.style.height = obj.drawerContent.clientHeight - 70 + 'px';
         } else {
-            notificationList.style.height = obj.options.height - 60 + 'px';
+            notificationList.style.height = obj.options.height - 70 + 'px';
         }
     };
 
@@ -768,8 +783,8 @@ export function DataMessenger(options = {}) {
                 default:
             }
             if (newWidth <= 400) {
-                newWidth = 400;
-            }
+                newWidth = 400
+            };
 
             if (obj.isPortrait()) {
                 obj.drawerContentWrapper.style.width = newWidth + 'px';
@@ -1095,6 +1110,22 @@ export function DataMessenger(options = {}) {
         }
     };
 
+    obj.onMouseUpSpeechToText = function() {
+        window.removeEventListener('mouseup', this)
+
+        try {
+            if (obj.isRecordVoiceActive) {
+                obj.speechToText.stop();
+                obj.input.value = obj.finalTranscript;
+                obj.isRecordVoiceActive = false;
+            }
+    
+            obj.voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
+        } catch(error) {
+            console.error(error)
+        }
+    };
+
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
         var chataBarContainer = document.createElement('div');
@@ -1139,13 +1170,35 @@ export function DataMessenger(options = {}) {
             obj.autoCompleteHandler(evt);
         };
 
-        voiceRecordButton.onmouseup = () => {
-            obj.speechToText.stop();
-            obj.input.value = obj.finalTranscript;
-            obj.isRecordVoiceActive = false;
-        };
+        voiceRecordButton.onmousedown = async () => {
+            if (obj.voiceDisabled) {
+                return
+            }
 
-        voiceRecordButton.onmousedown = () => {
+            window.addEventListener('mouseup', obj.onMouseUpSpeechToText)
+
+            const permissionCheckStart = Date.now()
+            try {
+                await getLocalStream()
+            } catch(error) {
+                console.error(error)
+                if (error?.message === 'Permission denied') {
+                    obj.voiceDisabled = true
+                    voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
+                    voiceRecordButton.style.opacity = '0.5';
+                    voiceRecordButton.style.cursor = 'default';
+                    voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecordError);
+                    refreshTooltips();
+                }
+                return
+            }
+
+            if (Date.now() - permissionCheckStart > 500) {
+                // Assume dialog popped up, and do not start audio recording
+                // There is no other easy way that I know of to check if there was a permission dialog
+                return
+            }
+
             obj.speechToText.start();
             voiceRecordButton.style.backgroundColor = '#FF471A';
             obj.isRecordVoiceActive = true;
@@ -1186,8 +1239,9 @@ export function DataMessenger(options = {}) {
                 }
                 if (obj.finalTranscript !== '') {
                     obj.input.value = obj.finalTranscript;
+                    obj.input.focus();
                     obj.speechToText.stop();
-                    ChataUtils.autocomplete(obj.input.value, obj.autoCompleteList, 'suggestion', obj.options);
+                    obj.speechToText.abort();
                 }
                 obj.finalTranscript = '';
             };
@@ -1735,12 +1789,10 @@ export function DataMessenger(options = {}) {
                         });
                     } else {
                         // --------- 2. Use subquery for filter drilldown --------
-                        const clickedFilter =
-                            filter ??
-                            constructFilter({
-                                column: json.data.data.columns[stringColumnIndex],
-                                value: row[stringColumnIndex],
-                            });
+                        const clickedFilter = filter ?? constructFilter({
+                            column: json.data.data.columns[stringColumnIndex],
+                            value: row[stringColumnIndex],
+                        });
 
                         const allFilters = getCombinedFilters(clickedFilter, json, undefined); // TODO: add table params
 
@@ -1953,6 +2005,23 @@ export function DataMessenger(options = {}) {
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes(json);
 
+        const displayTypeIcons = {
+            table: TABLE_ICON,
+            pivot_table: PIVOT_ICON,
+            column: COLUMN_CHART_ICON,
+            bar: BAR_CHART_ICON,
+            line: LINE_CHART_ICON,
+            pie: PIE_CHART_ICON,
+            heatmap: HEATMAP_ICON,
+            bubble: BUBBLE_CHART_ICON,
+            stacked_column: STACKED_COLUMN_CHART_ICON,
+            stacked_bar: STACKED_BAR_CHART_ICON,
+            stacked_line: STACKED_AREA_CHART_ICON,
+            column_line: COLUMN_LINE_ICON,
+            scatterplot: SCATTERPLOT_ICON,
+            histogram: HISTOGRAM_ICON,
+        }
+
         displayTypes.forEach((displayType) => {
             let button;
 
@@ -1961,21 +2030,21 @@ export function DataMessenger(options = {}) {
             if (displayType == 'table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    DISPLAY_TYPE_ICONS[displayType],
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     obj.displayTableHandler,
                 );
             } else if (displayType == 'pivot_table') {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    DISPLAY_TYPE_ICONS[displayType],
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     obj.displayPivotTableHandler,
                 );
-            } else if (Object.keys(DISPLAY_TYPE_ICONS).includes(displayType)) {
+            } else if (Object.keys(displayTypeIcons).includes(displayType)) {
                 button = obj.getDisplayTypeButton(
                     idRequest,
-                    DISPLAY_TYPE_ICONS[displayType],
+                    displayTypeIcons[displayType],
                     strings.displayTypes[displayType],
                     displayChartHandlerFn,
                 );
@@ -1998,18 +2067,18 @@ export function DataMessenger(options = {}) {
         if (value) {
             if (value !== 'Drilldown') {
                 localStorage.setItem('lastQuery', value);
-                var containerMessage = document.createElement('div');
-                var messageBubble = document.createElement('div');
-
-                containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-                containerMessage.style.zIndex = --obj.zIndexBubble;
-                containerMessage.classList.add('request');
-                messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-                messageBubble.classList.add('single');
-                messageBubble.classList.add('text');
-                messageBubble.textContent = value;
-                containerMessage.appendChild(messageBubble);
-                obj.drawerContent.appendChild(containerMessage);
+				var containerMessage = document.createElement('div');
+				var messageBubble = document.createElement('div');
+	
+				containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
+				containerMessage.style.zIndex = --obj.zIndexBubble;
+				containerMessage.classList.add('request');
+				messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+				messageBubble.classList.add('single');
+				messageBubble.classList.add('text');
+				messageBubble.textContent = value;
+				containerMessage.appendChild(messageBubble);
+				obj.drawerContent.appendChild(containerMessage);
             }
         }
 

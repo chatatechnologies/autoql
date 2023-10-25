@@ -1,0 +1,36 @@
+.autoql-vanilla-notifications-more-options {
+  list-style-type: none;
+  width: 100%;
+  padding: 10px 0;
+  margin: 0;
+  max-height: 270px;
+  line-height: 1.5;
+  .autoql-vanilla-option-menu-item {
+    color: var(--autoql-vanilla-text-color-primary);
+    padding: 10px 20px;
+    cursor: pointer;
+    &:hover {
+      background: var(--autoql-vanilla-hover-color);
+    }
+    .autoql-vanilla-select-option-span {
+      display: flex;
+      align-items: center;
+      .autoql-vanilla-select-option-value-container {
+        display: flex;
+        flex-direction: column;
+        .autoql-vanilla-menu-item-title {
+          display: flex;
+          align-items: center;
+          .autoql-vanilla-icon {
+            font-size: 1.1em;
+            margin-right: 8px;
+          }
+        }
+        .autoql-vanilla-select-option-value-subtitle {
+          font-size: .875em;
+          opacity: .8;
+        }
+      }
+    }
+  }
+}

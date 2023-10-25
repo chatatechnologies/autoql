@@ -2,6 +2,7 @@ import { MIN_HISTOGRAM_SAMPLE, areAllColumnsHidden, formatChartLabel, formatElem
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
+import dayjs from './dayjsPlugins';
 
 export function formatChartData(d, column, options, scale){
     // return formatData(val, col, options, true);
@@ -268,14 +269,19 @@ export function mergeOptions(objList){
     return output;
 }
 
-export function getSpeech(){
-    window.SpeechRecognition =
-    window.webkitSpeechRecognition || window.SpeechRecognition;
+export function getLocalStream() {
+    return navigator.mediaDevices.getUserMedia({ video: false, audio: true })
+  }
+
+export function getSpeech(dataFormatting){
+    window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
+
     if(window.SpeechRecognition){
         let recognition = new window.SpeechRecognition();
         recognition.interimResults = true;
         recognition.maxAlternatives = 10;
         recognition.continuous = true;
+        recognition.lang = dataFormatting?.languageCode ?? "en-US";
         return recognition;
     }else{
         return false
@@ -734,6 +740,16 @@ export function closeAllSafetynetSelectors(){
     }
 }
 
+export function closeAllPopups(){
+    var list = document.querySelectorAll(
+        '.autoql-vanilla-select-popup'
+    )
+    for (var i = 0; i < list.length; i++) {
+        list[i].close();
+    }
+}
+
+
 export function closeAllToolbars(){
     var list = document.querySelectorAll(
         '.autoql-vanilla-chat-message-toolbar-show'
@@ -957,10 +973,7 @@ export const getFirstDateCol = (cols) => {
 }
 
 export const supportsVoiceRecord = () => {
-    var isIE = /*@cc_on!@*/false || !!document.documentMode;
-    var isEdge = !isIE && !!window.StyleMedia;
-    var isChrome = !!window.chrome
-    return isEdge || isChrome
+    return !!window.SpeechRecognition || !!window.webkitSpeechRecognition
 }
 
 export const getHeightForChildrens = (parent) => {
@@ -978,4 +991,23 @@ export const hasErrorTag = (text) => {
     if(values.length > 1)return true
 
     return false
+}
+
+export const getFormattedTimestamp = (timestamp) => {
+    const dateDayJS = dayjs.unix(timestamp)
+    
+    const time = dateDayJS.format('h:mma')
+    const day = dateDayJS.format('MM-DD-YY')
+    
+    const today = dayjs().format('MM-DD-YY')
+    const yesterday = dayjs().subtract(1, 'd').format('MM-DD-YY')
+
+    if (day === today) {
+      return `Today at ${time}`
+    } else if (day === yesterday) {
+      return `Yesterday at ${time}`
+    } else if (dayjs().isSame(dateDayJS, 'year')) {
+      return `${dateDayJS.format('MMMM Do')} at ${time}`
+    }
+    return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`
 }

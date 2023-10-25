@@ -4,25 +4,25 @@ import {
     closeAllToolbars,
     closeAllSafetynetSelectors,
     closeAutocompleteObjects,
+    closeAllPopups,
     formatColumnName,
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
     uuidv4,
 } from '../Utils';
-import { apiCallPut, apiCallPost } from '../Api';
+import { apiCallPut } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataConfirmDialog, ChataRadio } from '../ChataComponents';
+import { ChataRadio } from '../ChataComponents';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
-import { NotificationSettingsModal } from '../Notifications';
 import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
-import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
-
-import '../../css/PopoverMenu.css';
+import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
 import { CSS_PREFIX } from '../Constants';
+import '../../css/PopoverMenu.css';
+import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -304,72 +304,11 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 };
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
-    var options = extraParams.caller.options;
-    var modalView = new NotificationSettingsModal(options);
-    var configModal = new Modal(
-        {
-            withFooter: true,
-            destroyOnClose: true,
-        },
-        () => {
-            modalView.step1.expand();
-        },
-        () => {
-            new ChataConfirmDialog(strings.confirmDialogTitle, strings.confirmDialogDescription, () => {
-                configModal.closeAnimation();
-                setTimeout(() => {
-                    configModal.hideContainer();
-                }, 250);
-            });
-        },
-    );
-    var cancelButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
-    );
-    var spinner = htmlToElement(`
-        <div class="autoql-vanilla-spinner-loader hidden"></div>
-        `);
-    var saveButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary disabled"
-        style="padding: 5px 16px; margin: 2px 5px;"></div>`,
-    );
+    const queryResponse = ChataUtils.responses[idRequest];
+    const { options } = extraParams.caller;
 
-    modalView.checkSteps = () => {
-        if (modalView.isValid()) {
-            saveButton.classList.remove('disabled');
-        } else {
-            saveButton.classList.add('disabled');
-        }
-    };
-
-    saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode(strings.save));
-    configModal.addFooterElement(cancelButton);
-    configModal.addFooterElement(saveButton);
-    configModal.show();
-    refreshTooltips();
-    configModal.chataModal.style.width = '95vw';
-    configModal.addView(modalView);
-    configModal.setTitle(strings.createDataAlert);
-    configModal.show();
-
-    var input = modalView.querySelectorAll('.autoql-vanilla-chata-input-settings')[1];
-
-    input.value = extraParams.query;
-
-    cancelButton.onclick = () => {
-        new ChataConfirmDialog(strings.confirmDialogTitle, strings.confirmDialogDescription, () => {
-            configModal.close();
-        });
-    };
-    saveButton.onclick = async () => {
-        spinner.classList.remove('hidden');
-        saveButton.setAttribute('disabled', 'true');
-        const URL = `${options.authentication.domain}/autoql/api/v1/rules?key=${options.authentication.apiKey}`;
-        await apiCallPost(URL, modalView.getValues, options);
-        configModal.close();
-    };
+    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication });
+    modal.show();
 };
 
 ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams = {}) => {
@@ -937,8 +876,8 @@ ChataUtils.ajaxCall = function (val, callback, options, source) {
             try {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 callback(jsonResponse, xhr.status);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -957,8 +896,8 @@ ChataUtils.putCall = function (url, data, callback, options) {
             try {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 callback(jsonResponse);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -978,8 +917,8 @@ ChataUtils.deleteCall = function (url, callback, options, extraHeaders = []) {
             try {
                 var jsonResponse = JSON.parse(xhr.responseText);
                 callback(jsonResponse);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -1009,8 +948,8 @@ ChataUtils.ajaxCallPost = function (url, callback, data, options) {
             try {
                 var jsonResponse = JSON.parse(xmlhttp.responseText);
                 callback(jsonResponse, xmlhttp.status);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -1030,8 +969,8 @@ ChataUtils.ajaxCallAutoComplete = function (url, callback, options) {
                     jsonResponse = JSON.parse(options.xhr.responseText);
                 }
                 callback(jsonResponse);
-            } catch(error) {
-                console.error(error)
+            } catch (error) {
+                console.error(error);
             }
         }
     };
@@ -1105,6 +1044,15 @@ ChataUtils.registerWindowClicks = () => {
         'report_problem',
     ];
 
+    const excludeElementsForSelectors = [
+        'autoql-vanilla-select-popup',
+        'autoql-vanilla-select',
+        'autoql-vanilla-select-arrow',
+        'autoql-vanilla-select-menu-item',
+        'autoql-vanilla-select-text',
+        'autoql-vanilla-menu-item-value-title',
+    ];
+
     const excludeElementsForSafetynet = ['autoql-vanilla-safetynet-selector', 'autoql-vanilla-chata-safetynet-select'];
 
     const excludeElementsForSubjectAutocomplete = ['autoql-vanilla-subject', 'autoql-vanilla-explore-queries-input'];
@@ -1113,6 +1061,7 @@ ChataUtils.registerWindowClicks = () => {
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
         var closeAutocomplete = true;
+        var closePopups = true;
 
         for (let i = 0; i < excludeElementsForSafetynet.length; i++) {
             let c = excludeElementsForSafetynet[i];
@@ -1137,6 +1086,14 @@ ChataUtils.registerWindowClicks = () => {
             }
         }
 
+        for (let i = 0; i < excludeElementsForSelectors.length; i++) {
+            let c = excludeElementsForSelectors[i];
+            if (evt.target.classList.contains(c)) {
+                closePopups = false;
+                break;
+            }
+        }
+
         if (closeToolbars) {
             closeAllToolbars();
         }
@@ -1147,6 +1104,10 @@ ChataUtils.registerWindowClicks = () => {
 
         if (closeAutocomplete) {
             closeAutocompleteObjects();
+        }
+
+        if (closePopups) {
+            closeAllPopups();
         }
     });
 };

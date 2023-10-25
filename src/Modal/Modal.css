@@ -22,11 +22,13 @@
   transition: none !important;
   font-family: sans-serif;
   font-size: 14px;
+  display: flex;
+  align-items: center;
 }
 .chata-modal {
   display: flex;
   flex-direction: column;
-  background: var(--autoql-vanilla-background-color-secondary);
+  background: white;
   border-radius: 4px;
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
   margin: 45px auto;
@@ -36,7 +38,7 @@
   margin-top: 25px;
   transform: scale(0);
   transition: all .2s ease-in-out;
-  max-height: calc(100vh - 90px);
+  max-height: calc(100vh - 120px);
   color: var(--autoql-vanilla-text-color-primary);
 }
 

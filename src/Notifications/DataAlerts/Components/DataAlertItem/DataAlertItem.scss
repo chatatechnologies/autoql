@@ -1,0 +1,140 @@
+.autoql-vanilla-notification-setting-item {
+  display: block;
+  min-height: 55px;
+  transition: height .3s cubic-bezier(.26,.26,0,1);
+  background-color: var(--autoql-vanilla-background-color-secondary);
+  box-shadow: var(--autoql-vanilla-box-shadow-1);
+  position: relative;
+  &:not(:last-child) {
+    border-bottom: 1px solid var(--autoql-vanilla-box-shadow-color);
+  }
+
+  &:first-child {
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+    margin-top: 38px;
+  }
+
+  &.autoql-vanilla-data-alert-disabled {
+    .autoql-vanilla-notification-setting-item-header {
+      .autoql-vanilla-data-alert-list-item-section-frequency,
+      .autoql-vanilla-data-alert-list-item-section-state,
+      .autoql-vanilla-data-alert-list-item-section-next-check {
+        opacity: .5;
+      }
+    }
+  }
+
+  .autoql-vanilla-notification-setting-item-header {
+    min-height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .autoql-vanilla-data-alert-list-item-section {
+      flex: 1 0 50px;
+      display: flex;
+      flex-direction: row;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: nowrap;
+      text-align: center;
+      overflow: hidden;
+      .autoql-vanilla-data-alert-header-item {
+        position: absolute;
+        line-height: 33px;
+        white-space: nowrap;
+        bottom: 100%;
+        font-size: .875em;
+        color: var(--autoql-vanilla-text-color-primary);
+        opacity: .7;
+      }
+      &:last-child {
+        flex: 0 0 auto;
+      }
+      .autoql-vanilla-data-alert-section-content {
+        padding: 8px 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 13px;
+        cursor: default;
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-scheduled,
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-live {
+          color: var(--autoql-vanilla-success-color);
+        }
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-error {
+          color: var(--autoql-vanilla-warning-color);
+        }
+
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-triggered {
+          color: var(--autoql-vanilla-info-color);
+        }
+        .autoql-vanilla-data-alert-state{
+          .autoql-vanilla-notification-state-action-btn {
+            display: inline-block;
+            transition: background-color .2s ease;
+            padding: 4px;
+            margin-left: 7px;
+            margin-right: 0;
+            box-sizing: initial;
+            font-size: 11px;
+            border-radius: 20px;
+            color: var(--autoql-vanilla-info-color);
+            border: 1px solid var(--autoql-vanilla-info-color);
+            cursor: pointer;
+            &.autoql-vanilla-spinning {
+              animation-name: state-spin;
+              animation-duration: 1000ms;
+              animation-iteration-count: infinite;
+              animation-timing-function: linear; 
+            }
+            @keyframes state-spin {
+              from {
+                  transform:rotate(0deg);
+              }
+              to {
+                  transform:rotate(360deg);
+                }
+              }
+          }
+        }
+        .autoql-vanilla-data-alert-state.autoql-vanilla-data-alert-live .autoql-vanilla-icon {
+          background-color: var(--autoql-vanilla-success-color);
+          border-radius: 20px;
+          color: #fff;
+          padding: 3px;
+          font-size: 1.1em;
+          box-sizing: initial;
+        }
+        .autoql-vanilla-icon {
+          margin-right: 5px;
+        }
+
+        .autoql-vanilla-action-buttons-section {
+          display: flex;
+          .autoql-vanilla-notification-action-btn {
+            display: flex;
+            font-size: 18px;
+            transition-property: color,border-color,background-color,opacity;
+            transition-duration: .3s;
+            transition-timing-function: ease;
+            padding: 0 10px;
+            color: var(--autoql-vanilla-text-color-primary);
+            cursor: pointer;
+            &:hover {
+              color: var(--autoql-vanilla-accent-color);
+            }
+          }
+        }
+      }
+      &.autoql-vanilla-notification-setting-display-name {
+        flex: 3 0 50px;
+        padding-left: 12px;
+        justify-content: flex-start;
+      }
+      &.autoql-vanilla-data-alert-list-item-section-next-check, &.autoql-vanilla-data-alert-list-item-section-frequency {
+        flex: 1.5 0 50px;
+      }
+    }
+  }
+}

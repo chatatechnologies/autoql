@@ -1,0 +1,132 @@
+.autoql-vanilla-notifiation-list {
+  height: 100%;
+  &:hover .autoql-vanilla-notification-list-container {
+    visibility: visible;
+  }
+  .autoql-vanilla-notification-list-container {
+    height: 100%;
+    overflow: scroll;
+    visibility: hidden;
+    background: var(--autoql-vanilla-background-color-primary);
+    font-family: var(--autoql-vanilla-font-family),sans-serif;
+    color: var(--autoql-vanilla-text-color-primary);
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--autoql-vanilla-scrollbar-color);
+      opacity: .5;
+      border-radius: 5px;
+    }
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+  
+    .autoql-vanilla-notification-content-loading {
+      margin-top: 0 !important;
+    }
+  
+    .autoql-vanilla-loading-wrapper {
+      visibility: visible;
+      text-align: center;
+      margin-top: 100px;
+      .autoql-vanilla-response-loading {
+        display: inline-block;
+        position: relative;
+        width: 64px;
+        height: 64px;
+        div {
+          position: absolute;
+          top: 27px;
+          width: 11px;
+          height: 11px;
+          border-radius: 50%;
+          background: #e2e2e2;
+          -webkit-animation-timing-function: cubic-bezier(0,1,1,0);
+          animation-timing-function: cubic-bezier(0,1,1,0);
+        }
+        div:first-child {
+          left: 6px;
+          -webkit-animation: response-loading1 .6s infinite;
+          animation: response-loading1 .6s infinite;
+        }
+  
+        div:nth-child(2) {
+          left: 6px;
+        }
+  
+        div:nth-child(3) {
+          left: 26px;
+        }
+  
+        div:nth-child(2), & div:nth-child(3) {
+          -webkit-animation: response-loading2 .6s infinite;
+          animation: response-loading2 .6s infinite;
+        }
+  
+        div:nth-child(4) {
+          left: 45px;
+          -webkit-animation: response-loading3 .6s infinite;
+          animation: response-loading3 .6s infinite;
+        }
+      }
+    }
+  
+    .autoql-vanilla-notification-feed-top-options-container {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 15px 22px 8px;
+      flex: 0 1;
+      visibility: visible;
+      .autoql-vanilla-confirm-popover-click-wrapper {
+        display: flex;
+        .autoql-vanilla-notification-mark-all {
+          flex: 0 0 auto;
+          display: flex;
+          align-items: center;
+          color: inherit;
+          transition: color .1s ease;
+          opacity: .8;
+          cursor: pointer;
+          font-size: 14px;
+          .autoql-vanilla-icon {
+            margin-right: 6px;
+          }
+        }
+      }
+    }
+  
+    .autoql-vanilla-notification-feed-list {
+      padding: 0 20px 10px;
+      overflow: hidden;
+      visibility: visible;
+    }
+  }
+}
+
+@keyframes response-loading1 {
+  0% {
+    transform: scale(0); 
+  }
+  100% {
+    transform: scale(1); 
+  } 
+}
+
+@keyframes response-loading3 {
+  0% {
+    transform: scale(1); 
+  }
+  100% {
+    transform: scale(0); 
+  } 
+}
+
+@keyframes response-loading2 {
+  0% {
+    transform: translate(0, 0); 
+  }
+  100% {
+    transform: translate(19px, 0); 
+  } 
+}

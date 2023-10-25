@@ -1,0 +1,58 @@
+.autoql-vanilla-notification-settings {
+  width: 100%;
+  background-color: initial;
+  color: var(--autoql-vanilla-text-color-primary);
+  padding-top: 20px;
+  padding-bottom: 100px;
+  height: 100%;
+  font-family: var(--autoql-vanilla-font-family);
+
+  &.flex {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .autoql-vanilla-data-alerts-list-container {
+    padding-bottom: 20px;
+  }
+
+  .autoql-vanilla-response-loading-container {
+    position: inherit;
+    display: flex;
+    justify-self: center;
+    align-items: center;
+  }
+
+  .autoql-vanilla-notification-settings-container {
+    margin: 10px 20px 20px;
+  }
+
+  .autoql-vanilla-data-alert-section-title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px 10px;
+    width: 100%;
+    color: var(--autoql-vanilla-text-color-primary);
+    font-family: var(--autoql-vanilla-font-family);
+    .autoql-vanilla-data-alert-section-title {
+      font-size: 19px;
+      font-weight: 500;
+    }
+
+    .autoql-vanilla-data-alert-section-subtitle {
+      padding-top: 3px;
+      padding-bottom: 5px;
+      font-size: 14px;
+      a {
+        font-weight: 600;
+        color: var(--autoql-vanilla-accent-color);
+        cursor: pointer;
+      }
+      a:hover {
+        text-decoration: none;
+        outline: 0;
+      }
+    }
+  }
+}

@@ -1,0 +1,223 @@
+.autoql-vanilla-notification-list-item {
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  background: var(--autoql-vanilla-background-color-secondary,#fff);
+  border-radius: 4px;
+  box-shadow: var(--autoql-vanilla-box-shadow-1);
+  margin-bottom: 8px;
+  color: rgba(0,0,0,.6);
+  color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
+  font-family: var(--autoql-vanilla-font-family),sans-serif;
+  transition: height .3s cubic-bezier(.26,.26,0,1);
+  -webkit-animation: slideIn .5s cubic-bezier(.26,.26,0,1);
+  animation: slideIn .5s cubic-bezier(.26,.26,0,1);
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  .autoql-vanilla-notification-list-item-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-left: 22px;
+    cursor: pointer;
+    .autoql-vanilla-notification-display-name-container {
+      flex: 1 1;
+      line-height: 23px;
+      padding: 13px 0;
+      transition: color .2s ease;
+      .autoql-vanilla-notification-display-name {
+        font-weight: 500;
+        font-size: 18px;
+        color: var(--autoql-vanilla-text-color-primary, rgba(0, 0, 0, .7));
+        .autoql-vanilla-icon {
+          vertical-align: middle;
+          padding-bottom: 3px;
+          margin-right: 5px;
+          font-size: .875em;
+        }
+      }
+      .autoql-vanilla-notification-description {
+        color: rgba(0,0,0,.6);
+        color: var(--autoql-vanilla-text-color-primary,rgba(0,0,0,.6));
+        opacity: .8;
+        font-size: 14px;
+      }
+      .autoql-vanilla-notification-timestamp-container {
+        font-size: 12px;
+        opacity: .5;
+        .autoql-vanilla-notification-timestamp {
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          .autoql-vanilla-icon {
+            margin-right: 3px;
+          }
+        }
+      }
+    }
+    .autoql-vanilla-notification-options-btn-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      padding: 13px 8px;
+      .autoql-vanilla-notification-options-btn {
+        display: flex;
+        opacity: .8;
+        width: 40px;
+        height: 40px;
+        font-size: 24px;
+        line-height: 20px;
+        border-radius: 20px;
+        background-color: initial;
+        transition: background-color .2s ease;
+        cursor: pointer;
+        &:hover {
+          opacity: 1;
+          background-color: #ececec;
+          background-color: var(--autoql-vanilla-background-color-primary,#ececec);
+        }
+      }
+    }
+  }
+
+  .autoql-vanilla-notification-alert-strip {
+    height: 100%;
+    opacity: 1;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 4px;
+    color: transparent;
+    background: transparent;
+    transition-property: opacity;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+  }
+
+  &.autoql-vanilla-notification-error.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-alert-strip {
+      background: var(--autoql-vanilla-warning-color,#FFB600);
+    }
+  }
+
+  &.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-alert-strip {
+      background: var(--autoql-vanilla-accent-color,#26a7df);
+      color: var(--autoql-vanilla-text-color-accent);
+    }
+  }
+
+  .autoql-vanilla-notification-item-expand-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    opacity: 0;
+    transition: opacity .2s ease;
+    color: var(--autoql-vanilla-text-color-primary);
+    pointer-events: none;
+    .autoql-vanilla-icon {
+      -webkit-transform: scalex(1.75);
+      transform: scalex(1.75);
+    }
+  }
+
+  &.autoql-vanilla-notification-error {
+    .autoql-vanilla-notification-list-item-header {
+      .autoql-vanilla-notification-display-name-container{
+        .autoql-vanilla-notification-display-name {
+        color: var(--autoql-vanilla-text-color-primary, rgba(0, 0, 0, .7));
+        }
+      }
+    }
+  }
+
+  &.autoql-vanilla-notification-error.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-list-item-header {
+      .autoql-vanilla-notification-display-name-container{
+        .autoql-vanilla-notification-display-name {
+        color: var(--autoql-vanilla-warning-color,#FFB600) !important;
+        }
+      }
+    }
+  }
+
+  &.autoql-vanilla-notification-unread {
+    .autoql-vanilla-notification-list-item-header {
+      .autoql-vanilla-notification-display-name-container{
+        .autoql-vanilla-notification-display-name {
+          color: var(--autoql-vanilla-accent-color);
+        }
+      }
+    }
+  }
+
+  .autoql-vanilla-notification-item-hover-overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: var(--autoql-vanilla-accent-color);
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  &.autoql-vanilla-notification-collapsed:hover {
+    .autoql-vanilla-notification-item-hover-overlay{
+      opacity: .05;
+    }
+    .autoql-vanilla-notification-item-expand-arrow {
+      opacity: .5;
+    }
+  }
+
+  .autoql-vanilla-notification-expanded-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: stretch;
+    flex-wrap: nowrap;
+    flex: 0 1 auto;
+    transition: min-height .3s ease,opacity .3s ease;
+    opacity: 1;
+    min-height: 0;
+    max-height: 0;
+    overflow: hidden;
+    &.autoql-vanilla-notification-content-collapsed {
+      visibility: hidden;
+      pointer-events: none;
+      opacity: 0;
+    }
+
+    .autoql-vanilla-notification-content-container {
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      width: 100%;
+    }
+
+    &.autoql-vanilla-notification-expanded {
+      position: relative;
+      min-height: 70px;
+      max-height: 500px;
+      font-size: 14px;
+    }
+  }  
+}
+
+@keyframes slideIn {
+  0% {
+    opacity: 0;
+    top: 500px; 
+  }
+  100% {
+    opacity: 1;
+    top: 0; 
+  } 
+}

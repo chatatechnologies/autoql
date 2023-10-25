@@ -60,6 +60,9 @@ function instantiateTabulator(component, tableOptions, table) {
         tabulator.setHeaderInputEventListeners?.();
         tabulator.toggleFilters?.();
 
+        tabulator.setHeaderInputEventListeners?.();
+        tabulator.toggleFilters?.();
+
         // Remove for now - causing buggy behavious
         // component.ps = replaceScrollbar(tabulator);
     });

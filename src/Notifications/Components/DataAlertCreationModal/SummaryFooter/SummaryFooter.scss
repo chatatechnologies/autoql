@@ -1,0 +1,21 @@
+.autoql-vanilla-data-alert-modal-query-summary-container {
+  &.autoql-vanilla-hidden {
+    display: none;
+  }
+  position: relative;
+  .autoql-vanilla-data-alert-modal-query-summary {
+    position: relative;
+    padding: 10px 20px;
+    text-align: center;
+    color: var(--autoql-vanilla-text-color-primary);
+  }
+  .autoql-vanilla-data-alert-modal-query-summary-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    opacity: .2;
+    background: var(--autoql-vanilla-accent-color);
+  }
+}
