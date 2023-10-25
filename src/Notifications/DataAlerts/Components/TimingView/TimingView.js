@@ -357,7 +357,6 @@ export function TimingView({ dataAlert }) {
   }
 
   this.handleResetEvaluationFrequencyChange = (option) => {
-    console.log(option);
     this.evaluationFrequency = option.value;
     this.intervalTimeSelectValue = option.obj;
   }

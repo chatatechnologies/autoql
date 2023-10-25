@@ -95,7 +95,6 @@ import '../../css/DataMessenger.scss';
 import testdata from '../../testdata';
 
 export function DataMessenger(options = {}) {
-    console.log('RENDERING DATA MESSENGER COMPONENT')
     checkAndApplyTheme();
 
     var obj = this;
@@ -2005,7 +2004,6 @@ export function DataMessenger(options = {}) {
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
         var displayTypes = getSupportedDisplayTypes({ response: { data: json }});
-        console.log({displayTypes, json})
 
         const displayTypeIcons = {
             table: TABLE_ICON,

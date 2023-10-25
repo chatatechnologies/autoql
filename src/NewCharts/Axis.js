@@ -2,7 +2,7 @@ import {
     getThemeValue,
     getAxis,
     getMaxTickLabelWidth,
-    getLabelsBBox,
+    // getLabelsBBox,
     adjustTitleToFit,
     MINIMUM_TITLE_LENGTH,
     AXIS_TITLE_PADDING_TOP,
@@ -12,8 +12,10 @@ import {
     AXIS_TITLE_BORDER_PADDING_LEFT,
     LABEL_FONT_SIZE,
     TITLE_FONT_SIZE,
+    mergeBoundingClientRects,
 } from 'autoql-fe-utils';
 
+import { select } from 'd3-selection'
 import { CSS_PREFIX } from '../Constants';
 import { ChataChartListPopover } from '../Charts/ChataChartListPopover';
 import { ChartRowSelector } from '../Charts/ChartRowSelector';
@@ -26,13 +28,12 @@ export function Axis(container, params = {}, axisOptions = {}) {
         deltaX,
         deltaY,
         columns,
-        hasRowSelector,
-        toggleChartScale,
         firstDraw,
         options = {},
         onDataFetching,
         onNewData,
         onDataFetchError,
+        columnIndexConfig
     } = params;
     const { orient, scale, innerHeight, innerWidth, rotateLabels, transform } = axisOptions;
 
@@ -93,12 +94,46 @@ export function Axis(container, params = {}, axisOptions = {}) {
             placement = 'bottom';
         }
 
-        this.axisSelectorPopover = new ChataChartListPopover(evt, scale, columns, placement, 'middle');
+        this.axisSelectorPopover = new ChataChartListPopover(evt, scale, columns, placement, 'middle', columnIndexConfig);
     };
 
     const handleLabelRotation = () => {
         const didLabelsRotate = transformLabels(orient, this.axisElement.node(), innerHeight, rotateLabels);
         this.axisElement.classed('autoql-vanilla-axis-labels-rotated', !!didLabelsRotate);
+    };
+
+    const getLabelsBBox = (axisElement) => {
+        let labelsBBox = {};
+        // svg coordinate system is different from clientRect coordinate system
+        // we need to get the deltas first, then we can apply them to the bounding rect
+        const axisBBox = axisElement?.getBBox?.();
+        const axisBoundingRect = axisElement?.getBoundingClientRect?.();
+
+        let xDiff = 0;
+        let yDiff = 0;
+        if (!!axisBBox && !!axisBoundingRect) {
+            xDiff = axisBoundingRect?.x - axisBBox?.x;
+            yDiff = axisBoundingRect?.y - axisBBox?.y;
+        }
+
+        const labelBboxes = [];
+        select(axisElement).selectAll('g.tick text').each(function () {
+            const textBoundingRect = select(this).node().getBoundingClientRect();
+
+            labelBboxes.push({
+                left: textBoundingRect.left - xDiff,
+                bottom: textBoundingRect.bottom - yDiff,
+                right: textBoundingRect.right - xDiff,
+                top: textBoundingRect.top - yDiff,
+            });
+        });
+
+        if (labelBboxes) {
+            const allLabelsBbox = mergeBoundingClientRects(labelBboxes);
+            labelsBBox = { ...allLabelsBbox };
+        }
+
+        return labelsBBox;
     };
 
     const createAxisTitle = () => {
