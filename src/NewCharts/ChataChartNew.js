@@ -184,7 +184,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 data: newRows,
                 aggColIndex: columnIndexConfig.stringColumnIndex,
                 columns,
-                numberIndices: getNumberColumnIndices(columns).allNumberColumnIndices,
+                numberIndices,
                 dataFormatting,
             });
         }
