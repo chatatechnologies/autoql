@@ -454,11 +454,13 @@ export function TimingView({ dataAlert }) {
 
   container.getValues = () => {
     const notificationType = this.getNotificationType(this.notificationType);
+    const resetPeriod = this.getResetPeriod(this.resetPeriod);
     const timezone = this.timezone;
     const evaluationFrequency = this.evaluationFrequency;
     const schedules = this.getSchedules();
     return {
       notification_type: notificationType,
+      reset_period: resetPeriod,
       evaluation_frequency: evaluationFrequency,
       time_zone: timezone,
       schedules,

@@ -15,7 +15,6 @@ import {
     getPivotColumnIndexConfig,
     getChartColorVars,
     CHARTS_WITHOUT_AXES,
-    getNumberColumnIndices,
     getAggConfig,
     formatQueryColumns,
     CHARTS_WITHOUT_AGGREGATED_DATA,

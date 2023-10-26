@@ -23,7 +23,7 @@ export function DataPreview({ icon, title, subject, widgetOptions }) {
   obj.getPreview = async() => {
     card.showLoading();
     const response = await fetchDataPreview({
-      subject: subject.name,
+      subject: subject.context,
       numRows: 5,
       source: 'data_explorer.data_preview',
       domain,

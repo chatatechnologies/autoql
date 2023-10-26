@@ -96,6 +96,8 @@ import testdata from '../../testdata';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
+    
+    const { authentication, dataFormatting, autoQLConfig, ...optionValues } = options;
 
     var obj = this;
     obj.options = {
@@ -121,13 +123,12 @@ export function DataMessenger(options = {}) {
         autoChartAggregations: false,
         pageSize: 500,
         xhr: new XMLHttpRequest(),
-        ...options, // Spread all provided options to overwrite defaults
+        ...optionValues, // Spread all provided options to overwrite defaults
         authentication: {
             token: undefined,
             apiKey: undefined,
             domain: undefined,
-            demo: false,
-            ...(options.authentication ?? {}),
+            ...(authentication ?? {}),
         },
         dataFormatting: {
             timestampFormat: TIMESTAMP_FORMATS.iso8601,
@@ -140,7 +141,7 @@ export function DataMessenger(options = {}) {
             monthYearFormat: 'MMM YYYY',
             dayMonthYearFormat: 'll',
             percentDecimals: 2,
-            ...(options.dataFormatting ?? {}),
+            ...(dataFormatting ?? {}),
         },
         autoQLConfig: {
             debug: false,
@@ -154,7 +155,7 @@ export function DataMessenger(options = {}) {
             enableNotifications: true,
             enableCSVDownload: true,
             enableReportProblem: true,
-            ...(options.autoQLConfig ?? {}),
+            ...(autoQLConfig ?? {}),
         },
     };
 
@@ -166,10 +167,14 @@ export function DataMessenger(options = {}) {
     obj.id = options?.id ?? `autoql-vanilla-data-messenger-${uuidv4()}`;
     obj.isVisible = !!obj.options.defaultOpen;
     obj.notificationTabId = uuidv4();
-    
 
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
+    }
+
+    if (obj.options.enableNotificationsTab && !obj.options.autoQLConfig.enableNotifications) {
+        obj.options.enableNotificationsTab = false
+        console.warn('Unable to show Notifications tab - enableNotificationsTab was set to true, but the enableNotifications option in autoQLConfig was set to false. Both options must be true in order to show the Notifications tab.');
     }
 	
 	obj.cancelCurrentRequest = () => {
@@ -184,14 +189,13 @@ export function DataMessenger(options = {}) {
             if (!token || token === '') {
                 return [];
             } else {
-                const response = await fetchSubjectList({
+                const subjects = await fetchSubjectList({
                     token,
                     apiKey,
                     domain,
                 });
-                if (response.status === 200) {
-                    return response.data.data.subjects;
-                }
+
+                return subjects
             }
         } catch (error) {
             console.error(error);
@@ -289,17 +293,24 @@ export function DataMessenger(options = {}) {
 
                 case 'enableNotificationsTab':
                     obj.options.enableNotificationsTab = value;
-                    value
-                        ? obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden')
-                        : obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
-
-                    if (!value && obj.landingPage === 'notifications') {
-                        obj.setActiveTab(obj.tabChataUtils);
+                    if (value) {
+                        if (!obj.options.autoQLConfig.enableNotifications) {
+                            if (obj.tabNotifications) obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+                            obj.options.enableNotificationsTab = false
+                            console.warn(
+                                'Unable to show Notifications tab - enableNotificationsTab was set to true, but the enableNotifications option in autoQLConfig was set to false. Both options must be true in order to show the Notifications tab.',
+                            );
+                        } else {
+                            if (obj.tabNotifications) obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden');
+                            obj.instanceNotificationIcon();
+                            obj.toggleNotificationOption();
+                        }
+                    } else {
+                        if (obj.tabNotifications) obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+                        if (obj.landingPage === 'notifications') {
+                            obj.setActiveTab(obj.tabChataUtils);
+                        }
                     }
-
-                    obj.instanceNotificationIcon();
-                    obj.toggleNotificationOption();
-
                     break;
                 case 'inputPlaceholder':
                     obj.options.inputPlaceholder = value;
@@ -565,7 +576,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.notificationsAnimation = function (display) {
-        if (!obj.options.autoQLConfig.enableNotifications || !obj.options.enableNotificationsTab) {
+        if (!obj.options.enableNotificationsTab) {
             return;
         }
 
@@ -629,11 +640,7 @@ export function DataMessenger(options = {}) {
             tooltip: strings.dataExplorer,
             isEnabled: enableDataExplorerTab,
         });
-        var tabNotifications = obj.createQueryTab({
-            name: 'notifications',
-            tooltip: strings.notifications,
-            isEnabled: enableNotificationsTab,
-        });
+
 
         tabChataUtils.onclick = function () {
             obj.setActiveTab(this);
@@ -652,21 +659,31 @@ export function DataMessenger(options = {}) {
             obj.notificationsAnimation('none');
         };
 
-        tabNotifications.setAttribute('id', obj.notificationTabId);
-        tabNotifications.onclick = function () {
-            obj.setActiveTab(this);
-            obj.scrollBox.scrollTop = 0;
-            obj.scrollBox.style.overflow = 'hidden';
-            obj.scrollBox.style.maxHeight = '100%';
-            obj.tabsAnimation('none', 'none');
-            obj.dataExplorer.hide();
-            obj.notificationsAnimation('block');
-            obj.headerTitle.innerHTML = strings.notifications;
-        };
-
         pageSwitcherContainer.appendChild(tabChataUtils);
         pageSwitcherContainer.appendChild(tabDataExplorer);
-        pageSwitcherContainer.appendChild(tabNotifications);
+
+        if (enableNotificationsTab) {
+            var tabNotifications = obj.createQueryTab({
+                name: 'notifications',
+                tooltip: strings.notifications,
+                isEnabled: enableNotificationsTab,
+            });
+    
+            tabNotifications.setAttribute('id', obj.notificationTabId);
+            tabNotifications.onclick = function () {
+                obj.setActiveTab(this);
+                obj.scrollBox.scrollTop = 0;
+                obj.scrollBox.style.overflow = 'hidden';
+                obj.scrollBox.style.maxHeight = '100%';
+                obj.tabsAnimation('none', 'none');
+                obj.dataExplorer?.hide();
+                obj.notificationsAnimation('block');
+                obj.headerTitle.innerHTML = strings.notifications;
+            };
+
+            pageSwitcherContainer.appendChild(tabNotifications);
+            obj.tabNotifications = tabNotifications;
+        }
 
         var pageSwitcherShadowContainer = document.createElement('div');
         pageSwitcherShadowContainer.classList.add('autoql-vanilla-page-switcher-shadow-container');
@@ -678,7 +695,6 @@ export function DataMessenger(options = {}) {
 
         obj.tabChataUtils = tabChataUtils;
         obj.tabDataExplorer = tabDataExplorer;
-        obj.tabNotifications = tabNotifications;
 
         obj.drawerBody.appendChild(tabContainer);
 

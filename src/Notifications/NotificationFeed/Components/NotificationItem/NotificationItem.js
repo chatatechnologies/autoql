@@ -148,7 +148,7 @@ export function NotificationItem({
   }
 
   this.hasError = () => {
-    return itemData.outcome === 'ERROR';
+    return itemData.outcome === 'ERROR' && this.queryResponse?.data?.hasQueryResult !== false;
   }
 
   this.isUnread = () => {
@@ -176,8 +176,12 @@ export function NotificationItem({
   }
 
   this.fetchNotification = async() => {
-    const response = await fetchNotificationData({ ...authentication, id: itemData.id });
-    return response
+    try {
+      const response = await fetchNotificationData({ ...authentication, id: itemData.id });
+      return response
+    } catch(error) {
+      console.error(error)
+    }
   }
 
   this.handleExpand = async() => {
@@ -260,17 +264,20 @@ export function NotificationItem({
     if(this.queryResponse !== undefined) return;
 
     const response = await this.fetchNotification()
+
     this.queryResponse = response;
 
     this.loading.remove();
-    
+
     if(this.hasError()) {
       this.contentContainer.appendChild(this.createMessageError());
       return;
     }
 
-    this.contentContainer.appendChild(this.createSummary());
-    this.contentContainer.appendChild(this.createNotificationResponse());
+    if (response && response.data?.hasQueryResult !== false) {
+      this.contentContainer.appendChild(this.createSummary());
+      this.contentContainer.appendChild(this.createNotificationResponse());
+    }
 
     refreshTooltips();
   }

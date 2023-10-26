@@ -14,12 +14,12 @@ import {
   getFirstDateCol,
   getGroupableCount,
   formatColumnName,
-  getChartColorVars,
 } from '../../Utils'
 import {
   ColumnChart
 } from './Charts'
 import { CSS_PREFIX } from '../../Constants'
+import { getChartColorVars } from 'autoql-fe-utils'
 
 export function Chart(widgetOptions, options) {
   const { 

@@ -28,12 +28,12 @@ import {
     closeAllChartPopovers,
     formatData,
     getChartLeftMargin,
-    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
+import { getChartColorVars } from 'autoql-fe-utils'
+import { CSS_PREFIX } from '../Constants'
 
 import './ChataChart.scss'
-import { CSS_PREFIX } from '../Constants'
 
 export function createStackedColumnChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,

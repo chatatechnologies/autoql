@@ -15,11 +15,11 @@ import {
     formatColumnName,
     formatData,
     getFirstDateCol,
-    getChartColorVars
 } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 import { CSS_PREFIX } from '../Constants'
+import { getChartColorVars } from 'autoql-fe-utils'
 
 export function createPieChart(
     component, json, options, onUpdate=()=>{}, fromChataUtils=true,
