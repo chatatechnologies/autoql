@@ -14,6 +14,7 @@ import {
     areAllColumnsHidden,
     REQUEST_CANCELLED_ERROR,
     getColumnIndexConfig,
+    getSupportedDisplayTypes,
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -44,7 +45,6 @@ import {
     showBadge,
     supportsVoiceRecord,
     checkAndApplyTheme,
-    getSupportedDisplayTypes,
     closeAllChartPopovers,
     getLocalStream,
 } from '../Utils';
@@ -87,14 +87,14 @@ import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
 import { fetchSubjectList } from 'autoql-fe-utils';
+import { ChataChartNew } from '../NewCharts';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
+
 import testdata from '../../testdata';
-import { ChataChartNew } from '../NewCharts';
 
 export function DataMessenger(options = {}) {
-    console.log('RENDERING DATA MESSENGER COMPONENT')
     checkAndApplyTheme();
 
     var obj = this;
@@ -1585,7 +1585,7 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        var displayTypes = getSupportedDisplayTypes(json);
+        var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
 
         if (['table', 'pivot_table'].includes(ignore) && displayTypes.length <= 5) {
             messageBubble.classList.remove('chart-full-width');
@@ -2003,7 +2003,7 @@ export function DataMessenger(options = {}) {
     obj.getDisplayTypesButtons = (idRequest, active) => {
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
-        var displayTypes = getSupportedDisplayTypes(json);
+        var displayTypes = getSupportedDisplayTypes({ response: { data: json }});
 
         const displayTypeIcons = {
             table: TABLE_ICON,

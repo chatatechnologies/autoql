@@ -292,7 +292,6 @@ export function TimingStep() {
   }
 
   this.handleResetEvaluationFrequencyChange = (option) => {
-    console.log(option);
     this.evaluationFrequency = option.value;
     this.intervalTimeSelectValue = option.obj;
   }

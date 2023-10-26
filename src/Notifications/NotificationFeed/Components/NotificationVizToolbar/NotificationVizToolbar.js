@@ -44,10 +44,7 @@ export function NotificationVizToolbar({ response, notificationItem }) {
   this.createLeftButtons = () => {
     const leftButtons = this.createToolbar();
     leftButtons.classList.add('autoql-vanilla-viz-toolbar');
-    const supportedDisplayTypes = getSupportedDisplayTypes({
-      response,
-      collumns: response?.data?.columns
-    });
+    const supportedDisplayTypes = getSupportedDisplayTypes({ response });
 
     supportedDisplayTypes.forEach((dType) => {
       let btn;

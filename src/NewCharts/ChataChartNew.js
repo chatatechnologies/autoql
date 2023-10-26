@@ -78,7 +78,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.getColumnIndexConfig = (currentConfig) => {
-        return getColumnIndexConfig({ response: { data: queryJson }, columns, currentTableConfig: currentConfig });
+        return getColumnIndexConfig({ response: { data: queryJson }, columns, currentTableConfig: currentConfig, allowNumericalOrdinalAxis: true });
     };
 
     const columnIndexConfigExists = !!component.columnIndexConfig;
@@ -184,7 +184,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 data: newRows,
                 aggColIndex: columnIndexConfig.stringColumnIndex,
                 columns,
-                numberIndices: getNumberColumnIndices(columns).allNumberColumnIndices,
+                numberIndices,
                 dataFormatting,
             });
         }

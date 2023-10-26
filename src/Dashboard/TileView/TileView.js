@@ -25,7 +25,7 @@ import {
     isDataLimited,
     runDrilldown,
     runQuery,
-    runQueryOnly,
+    getSupportedDisplayTypes,
 } from 'autoql-fe-utils';
 import {
     uuidv4,
@@ -35,7 +35,6 @@ import {
     cloneObject,
     getSafetynetValues,
     getSafetynetUserSelection,
-    getSupportedDisplayTypes,
     getRecommendationPath,
     htmlToElement,
     getGroupables,
@@ -662,7 +661,7 @@ export function TileView(tile, isSecond = false) {
 
         var container = responseWrapper;
         var displayType = view.internalDisplayType;
-        var supportedDisplayTypes = getSupportedDisplayTypes(json);
+        var supportedDisplayTypes = getSupportedDisplayTypes({ response: { data: json } });
         if (!supportedDisplayTypes.includes(displayType)) {
             view.internalDisplayType = 'table';
             displayType = 'table';
