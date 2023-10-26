@@ -1,4 +1,4 @@
-import './Popup1.scss';
+import './Popup.scss';
 
 export function Popup() {
     const popup = document.createElement('div');
