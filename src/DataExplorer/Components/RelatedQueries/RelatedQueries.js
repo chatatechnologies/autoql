@@ -1,8 +1,8 @@
 import { Card } from "../Card";
-import './RelatedQueries.scss';
-import { fetchDataExplorerSuggestions } from "autoql-fe-utils";
-import { CHATA_BUBBLES_ICON } from "../../../Svg";
 import { createIcon } from "../../../Utils";
+import { CHATA_BUBBLES_ICON } from "../../../Svg";
+import { fetchDataExplorerSuggestions } from "autoql-fe-utils";
+
 import './RelatedQueries.scss';
 
 export function RelatedQueries({ 
@@ -20,7 +20,7 @@ export function RelatedQueries({
   let pageNumber = 1;
   const getRelatedQueries = async({ pageNumber }) => {
     const relatedQueries = await fetchDataExplorerSuggestions({
-      context: subject.name,
+      context: subject.context,
       text: plainText,
       skipQueryValidation: true,
       pageSize: 25,
@@ -33,29 +33,37 @@ export function RelatedQueries({
       // selectedVL: undefined,
       // userVLSelection: undefined,
     });
-    const { items } = relatedQueries.data.data;
+    const { items } = relatedQueries?.data?.data;
 
-    items.forEach((suggestion) => {
-      const item = document.createElement('div');
-      const icon = createIcon(CHATA_BUBBLES_ICON);
-      const text = document.createElement('div');
-      item.classList.add('autoql-vanilla-query-tip-item');
-      item.classList.add('autoql-vanilla-animated-item');
-      text.classList.add('autoql-vanilla-query-suggestion-text');
-
-      item.onclick = () => {
-        widget.setActiveTab(widget.tabChataUtils);
-        widget.tabsAnimation('flex', 'block');
-        widget.dataExplorer.hide();
-        widget.notificationsAnimation('none');
-        widget.keyboardAnimation(suggestion);
-        widget.options.landingPage = 'data-messenger';
-      }
-      text.appendChild(icon);
-      text.appendChild(document.createTextNode(suggestion));
-      item.appendChild(text);
-      list.appendChild(item);
-    });
+    if (!items?.length) {
+      const emptyListMessage = document.createElement('div');
+      emptyListMessage.classList.add('autoql-vanilla-related-queries-empty-list-message');
+      const emptyListText = "Sorry, I couldn't find any queries matching your input. Try entering a different topic or keyword instead."
+      emptyListMessage.appendChild(document.createTextNode(emptyListText));
+      list.appendChild(emptyListMessage);
+    } else {
+      items.forEach((suggestion) => {
+        const item = document.createElement('div');
+        const icon = createIcon(CHATA_BUBBLES_ICON);
+        const text = document.createElement('div');
+        item.classList.add('autoql-vanilla-query-tip-item');
+        item.classList.add('autoql-vanilla-animated-item');
+        text.classList.add('autoql-vanilla-query-suggestion-text');
+  
+        item.onclick = () => {
+          widget.setActiveTab(widget.tabChataUtils);
+          widget.tabsAnimation('flex', 'block');
+          widget.dataExplorer.hide();
+          widget.notificationsAnimation('none');
+          widget.keyboardAnimation(suggestion);
+          widget.options.landingPage = 'data-messenger';
+        }
+        text.appendChild(icon);
+        text.appendChild(document.createTextNode(suggestion));
+        item.appendChild(text);
+        list.appendChild(item);
+      });
+    }
   }
 
   const onScroll = () => {

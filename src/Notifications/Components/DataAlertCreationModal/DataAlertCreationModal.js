@@ -1,4 +1,4 @@
-import { QUERY_TERM_TYPE, createDataAlert } from "autoql-fe-utils";
+import { QUERY_TERM_TYPE, createDataAlert, validateExpression } from "autoql-fe-utils";
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
 import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
@@ -137,14 +137,13 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
   this.handleSave = async () => {
     try {
       this.spinner.classList.remove('hidden');
-      const values = this.steps.map(step  => step.view.getValues())
-      .reduce((r, c) => Object.assign(r, c));
-      
+      const values = this.steps.map(step  => step.view.getValues()).reduce((r, c) => Object.assign(r, c));
+
       const dataAlert = {
         data_return_query: queryResponse.data.text,
         ...values
       }
-  
+
       if(!dataAlert?.expression) {
         dataAlert.expression = this.getDefaultExpression();
       }

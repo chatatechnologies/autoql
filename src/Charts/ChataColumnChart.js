@@ -32,13 +32,13 @@ import {
     closeAllChartPopovers,
     getFirstDateCol,
     getGroupableCount,
-    getChartColorVars,
     getStringWidth,
 } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import { strings } from '../Strings'
 import { ChartLoader } from './ChartLoader'
 import { CSS_PREFIX } from '../Constants'
+import { getChartColorVars } from 'autoql-fe-utils'
 
 export function createColumnChart(
     component, origJson, options, onUpdate=()=>{}, fromChataUtils=true,

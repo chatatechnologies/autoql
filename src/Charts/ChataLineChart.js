@@ -34,13 +34,12 @@ import {
     getFirstDateCol,
     getGroupableCount,
     getChartLeftMargin,
-    getChartColorVars
 } from '../Utils'
 import { tooltipChrefreshTooltipsarts } from '../Tooltips'
 import { strings } from '../Strings'
 import { ChartLoader } from './ChartLoader'
 import { ChartRowSelector } from './ChartRowSelector'
-import { aggregateData } from 'autoql-fe-utils'
+import { aggregateData, getChartColorVars } from 'autoql-fe-utils'
 import { CSS_PREFIX } from '../Constants'
 
 export function createLineChart(

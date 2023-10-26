@@ -1,3 +1,5 @@
+import tippy from 'tippy.js';
+
 import {
   SEARCH_ICON,
   DATA_EXPLORER_SEARCH_ICON,
@@ -7,13 +9,14 @@ import {
   BOOK_ICON,
   CLOSE_ICON
 } from "../Svg";
-import tippy from 'tippy.js';
+
+import { strings } from "../Strings";
 import { refreshTooltips } from '../Tooltips';
 import { htmlToElement, createIcon } from "../Utils";
-import { strings } from "../Strings";
-import './DataExplorer.scss';
 import { DataPreview } from "./Components/DataPreview";
 import { RelatedQueries } from "./Components/RelatedQueries";
+
+import './DataExplorer.scss';
 
 export function DataExplorer({ subjects, widget }) {
   let obj = this;
@@ -34,7 +37,7 @@ export function DataExplorer({ subjects, widget }) {
   const autocomplete = document.createElement('div');
   const subjectsWrapper = document.createElement('ul'); 
   const contentWrapper = document.createElement('div');
-  const headerHeight = widget.header.clientHeight;
+  
   const texts = [
     { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
     { icon: ABACUS_ICON, string: 'Explore data structure and column types' },
@@ -98,12 +101,12 @@ export function DataExplorer({ subjects, widget }) {
       const li = document.createElement('li');
       li.classList.add('autoql-vanilla-subject');
       li.appendChild(createIcon(BOOK_ICON));
-      li.appendChild(document.createTextNode(subject.display_name));
+      li.appendChild(document.createTextNode(subject.displayName));
       subjectsWrapper.appendChild(li);
       li.onclick = async () => {
 		    chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible')
         autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
-        input.value = subject.display_name;
+        input.value = subject.displayName;
         contentWrapper.innerHTML = '';
         const previewSection = new DataPreview({
           icon: TABLE_ICON,
@@ -115,7 +118,7 @@ export function DataExplorer({ subjects, widget }) {
         
         const relatedQueriesSection = new RelatedQueries({
           icon: CHATA_BUBBLES_ICON,
-          title: `Query suggestions for "${subject.display_name}"`,
+          title: `Query suggestions for "${subject.displayName}"`,
           containerHeight: container.clientHeight,
           previewSectionHeight: previewSection.container.clientHeight,
           textBarHeight: textBar.clientHeight,

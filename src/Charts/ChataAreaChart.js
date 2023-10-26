@@ -28,11 +28,11 @@ import {
     closeAllChartPopovers,
     formatData,
     getChartLeftMargin,
-    getChartColorVars
 } from '../Utils'
 import { ChataUtils } from '../ChataUtils'
 import { area } from 'd3-shape'
 import { CSS_PREFIX } from '../Constants'
+import { getChartColorVars } from 'autoql-fe-utils'
 
 export function createAreaChart(component, json, options, onUpdate=()=>{}, fromChataUtils=true, valueClass='data-stackedchartindex', renderTooltips=true) {
     var margin = {top: 15, right: 10, bottom: 50, left: 80},
