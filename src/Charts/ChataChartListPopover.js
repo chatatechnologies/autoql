@@ -29,7 +29,9 @@ export function ChataChartListPopover(e, scale, allColumns, placement, align, co
 
         fieldColumns?.forEach((column, i) => {
             var listItem = obj.createListItem(column, i);
-            selectorContent.appendChild(listItem);
+            if (listItem) {
+                selectorContent?.appendChild(listItem);
+            }
         });
 
         selectorContainer.appendChild(selectorContent);

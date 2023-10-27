@@ -18,6 +18,8 @@ import {
     getAggConfig,
     formatQueryColumns,
     CHARTS_WITHOUT_AGGREGATED_DATA,
+    DisplayTypes,
+    aggregateOtherCategory,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -77,7 +79,12 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.getColumnIndexConfig = (currentConfig) => {
-        return getColumnIndexConfig({ response: { data: queryJson }, columns, currentTableConfig: currentConfig, allowNumericalOrdinalAxis: true });
+        return getColumnIndexConfig({
+            response: { data: queryJson },
+            columns,
+            currentTableConfig: currentConfig,
+            allowNumericalOrdinalAxis: true,
+        });
     };
 
     const columnIndexConfigExists = !!component.columnIndexConfig;
@@ -119,7 +126,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 allowHTML: true,
                 dynamicTitle: true,
                 maxWidth: 300,
-                zIndex: 99999999
+                zIndex: 99999999,
             }),
         };
     }
@@ -130,12 +137,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         let newRows = rows ?? origRows ?? [];
         var data = newRows;
 
-        if (type === 'pie') {
-            return [...data].sort((aRow, bRow) => {
-                const a = aRow[columnIndexConfig.numberColumnIndex] || 0;
-                const b = bRow[columnIndexConfig.numberColumnIndex] || 0;
-                return parseFloat(b) - parseFloat(a);
-            });
+        if (!data?.length || !columns?.length) {
+            return;
         }
 
         if (isDataAggregated) {
@@ -186,6 +189,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 numberIndices,
                 dataFormatting,
             });
+        }
+
+        if (type === DisplayTypes.PIE) {
+            data = aggregateOtherCategory(data, columnIndexConfig);
         }
 
         return data;
@@ -270,13 +277,20 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     const onLegendClick = (label) => {
-        const newColumns = cloneObject(columns);
-        newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
-        this.updateColumns(newColumns);
+        if (type === DisplayTypes.PIE) {
+            const labels = this.legendLabels?.labels;
+            if (labels?.[label?.dataIndex]) {
+                labels[label.dataIndex].hidden = !labels[label.dataIndex].hidden;
+                this.drawChart();
+            }
+        } else {
+            const newColumns = cloneObject(columns);
+            newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
+            this.updateColumns(newColumns);
+        }
     };
 
-    const getLegendObject = () => {
-        const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+    const getLegendLabelsForChart = () => {
         const labels =
             getLegendLabels({
                 isDataAggregated,
@@ -286,8 +300,14 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 dataFormatting,
                 data: this.data,
                 type,
-            }) ?? {};
+            }) ?? [];
 
+        return labels;
+    };
+
+    const getLegendObject = () => {
+        const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+        const labels = type === DisplayTypes.PIE ? this.legendLabels : getLegendLabelsForChart();
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
             columnIndices: columnIndexConfig.numberColumnIndices,
@@ -316,7 +336,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 dynamicTitle: true,
                 maxWidth: 300,
                 inertia: true,
-                zIndex: 99999999
+                zIndex: 99999999,
             });
         }
     };
@@ -557,6 +577,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         console.error(error);
         this.chartLoader?.setChartLoading(false);
     };
+
+    this.legendLabels = getLegendLabelsForChart();
 
     // ----------- TODO move this outside of this component ----------------------
     select(component).select('*')?.remove();
