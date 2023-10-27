@@ -234,7 +234,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     component.isLastPage = component.lastPage === 1;
     component.useInfiniteScroll = !!useInfiniteScroll;
-    component.isFiltering = true;
+    component.isFiltering = false;
     component.tableParams = tableParams ?? { sort: undefined, filter: undefined };
 
     component.queryFn = json?.queryFn;
