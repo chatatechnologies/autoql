@@ -186,6 +186,7 @@ body.autoql-vanilla-drawer-open-body {
         display: flex;
         justify-content: center;
         align-items: center;
+        pointer-events: none;
     }
 
     .autoql-vanilla-drawer-content-wrapper {
