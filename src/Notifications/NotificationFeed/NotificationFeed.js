@@ -207,6 +207,8 @@ export function NotificationFeed(selector, options) {
     const emptyListTextLine2 = document.createElement('div');
     emptyListTextLine2.innerHTML = 'Stay tuned!';
 
+    container.emptyListMessage = emptyListMessage;
+
     emptyListMessage.appendChild(emptyListImg);
     emptyListMessage.appendChild(emptyListTextLine1);
     emptyListMessage.appendChild(emptyListTextLine2);
@@ -219,11 +221,11 @@ export function NotificationFeed(selector, options) {
       const items = notificationFeed?.items;
       this.items = items
   
-      if (!items?.length) {
+      if (!items?.length && container.offset === 0 && !container.emptyListMessage) {
         this.createEmptyListMessage()
         return
       }
-    
+
       const { authentication } = container.options;
       items.forEach((itemData, index) => {
         const dataAlert = this.dataAlerts.find((d) => d.id === itemData.data_alert_id);
