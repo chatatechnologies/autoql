@@ -1422,15 +1422,18 @@ export function DataMessenger(options = {}) {
                 );
                 break;
             case 'csvCopy':
-                var filterBtn = obj.getActionButton(
-                    FILTER_TABLE,
-                    strings.filterTable,
-                    idRequest,
-                    obj.filterTableHandler,
-                    [],
-                );
-                toolbar.appendChild(filterBtn);
-                filterBtn.setAttribute('data-name-option', 'filter-action');
+                if (displayType !== 'pivot_table') {
+                    var filterBtn = obj.getActionButton(
+                        FILTER_TABLE,
+                        strings.filterTable,
+                        idRequest,
+                        obj.filterTableHandler,
+                        [],
+                    );
+                    toolbar.appendChild(filterBtn);
+                    filterBtn.setAttribute('data-name-option', 'filter-action');
+                }
+
                 var columnVisibility = obj.options.autoQLConfig.enableColumnVisibilityManager;
                 if (columnVisibility && displayType !== 'pivot_table') {
                     let badge = obj.getBadge();
