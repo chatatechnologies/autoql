@@ -96,7 +96,7 @@ import testdata from '../../testdata';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
-    
+
     const { authentication, dataFormatting, autoQLConfig, ...optionValues } = options;
 
     var obj = this;
@@ -121,6 +121,7 @@ export function DataMessenger(options = {}) {
         enableDynamicCharting: true,
         landingPage: 'data-messenger',
         autoChartAggregations: false,
+        showBranding: true,
         pageSize: 500,
         xhr: new XMLHttpRequest(),
         ...optionValues, // Spread all provided options to overwrite defaults
@@ -1156,6 +1157,10 @@ export function DataMessenger(options = {}) {
                 ${strings.watermark}
             </div>
         `);
+
+        if (!obj.options.showBranding) {
+            watermark.style.visibility = 'hidden'
+        }
 
         chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
         chataBarContainer.classList.add('autoql-vanilla-chat-drawer-chat-bar');
