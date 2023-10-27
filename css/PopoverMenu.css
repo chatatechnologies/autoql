@@ -64,7 +64,7 @@
 }
 
 .chata-more-options-menu .chata-menu-list li{
-    color: var(--autoql-vanilla-text-color-secondary);
+    color: var(--autoql-vanilla-text-color-primary);
     width: 100%;
     line-height: 35px;
     padding: 0 20px;
