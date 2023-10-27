@@ -56,13 +56,13 @@
     font-size: 14px !important;
 }
 
-.autoql-vanilla-chata-confirm-btn.no {
+.autoql-vanilla-chata-confirm-btn.autoql-vanilla-chata-confirm-btn-no {
     color: inherit;
     border: 1px solid var(--autoql-vanilla-border-color);
     background: inherit
 }
 
-.autoql-vanilla-chata-confirm-btn.yes {
+.autoql-vanilla-chata-confirm-btn.autoql-vanilla-chata-confirm-btn-yes {
     background: var(--autoql-vanilla-accent-color) !important;
     border: 1px solid var(--autoql-vanilla-accent-color) !important;
     color: white;

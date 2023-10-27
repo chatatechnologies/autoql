@@ -843,7 +843,7 @@ export function DataMessenger(options = {}) {
 
     obj.registerWindowClicks = () => {
         const excludeElementsForClearMessages = [
-            'clear-all',
+            'autoql-vanilla-clear-all',
             'filter-locking-menu',
             'autoql-vanilla-condition-locking-input',
             'autoql-vanilla-condition-list',
@@ -961,7 +961,7 @@ export function DataMessenger(options = {}) {
         `);
 
         var clearAllButton = htmlToElement(`
-            <button class="autoql-vanilla-chata-button clear-all"
+            <button class="autoql-vanilla-chata-button autoql-vanilla-clear-all"
             data-tippy-content="${strings.clearMessages}">
                 ${CLEAR_ALL}
             </button>
@@ -987,10 +987,10 @@ export function DataMessenger(options = {}) {
                         ${POPOVER_ICON}
                         ${strings.clearMessagesTitle}
                     </div>
-                    <button class="autoql-vanilla-chata-confirm-btn no">
+                    <button class="autoql-vanilla-chata-confirm-btn autoql-vanilla-chata-confirm-btn-no">
                         ${strings.cancel}
                     </button>
-                    <button class="autoql-vanilla-chata-confirm-btn yes">
+                    <button class="autoql-vanilla-chata-confirm-btn autoql-vanilla-chata-confirm-btn-yes">
                         ${strings.clear}
                     </button>
                 </div>

@@ -23,7 +23,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     var series = getNumberColumnsByType(columns); // {}
     const applyButton = htmlToElement(`
         <button
-            class="autoql-vanilla-chata-btn primary"
+            class="autoql-vanilla-chata-btn autoql-vanilla-primary"
             style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
                 ${strings.apply}
         </button>

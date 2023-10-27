@@ -552,9 +552,6 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
             if (inputElement) {
                 inputElement.removeEventListener('keydown', table.inputKeydownListener);
                 inputElement.addEventListener('keydown', table.inputKeydownListener);
-                inputElement.addEventListener('change', (e) => {
-                    console.log('INPUT CHANGED!', e);
-                });
 
                 inputElement.column = col;
 
