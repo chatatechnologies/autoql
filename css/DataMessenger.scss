@@ -51,7 +51,7 @@ body.autoql-vanilla-drawer-open-body {
                 padding: 0 8px;
                 margin: 0;
 
-                &.clear-all svg {
+                &.autoql-vanilla-clear-all svg {
                     height: 21px;
                 }
 
@@ -105,7 +105,7 @@ body.autoql-vanilla-drawer-open-body {
                     word-wrap: break-word;
                     font-family: inherit;
                     font-size: 14px;
-                    letter-spacing: 0.04em;
+                    letter-spacing: 0.03em;
                     box-sizing: border-box;
                     box-shadow: var(--autoql-vanilla-box-shadow-1);
                     max-height: 400px;

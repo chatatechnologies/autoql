@@ -25,7 +25,7 @@ export function PieChartNew(container, params = {}) {
         activeKey,
     } = params;
 
-    this.innerChartWrapper = container.append('g').attr('class', 'autoql-vanilla-pie-chart-container');
+    this.innerChartWrapper = container.append('g').attr('class', 'autoql-vanilla-pie-chart-container')
 
     const { stringColumnIndex, numberColumnIndex } = columnIndexConfig;
     const { dataFormatting } = options;
@@ -46,12 +46,12 @@ export function PieChartNew(container, params = {}) {
     };
 
     this.onSliceClick = (element, e) => {
-        const sliceData = element['__data__']?.data
+        const sliceData = element['__data__']?.data;
 
         if (!sliceData) {
-            return
+            return;
         }
-        
+
         const newActiveKey = sliceData?.key;
 
         self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
@@ -77,10 +77,10 @@ export function PieChartNew(container, params = {}) {
             colIndex: numberColumnIndex,
             columns: columns,
             legendColumn,
-            columnIndexConfig
-        })
+            columnIndexConfig,
+        });
 
-        onChartClick(drilldownData)
+        onChartClick(drilldownData);
     };
 
     this.renderPieSlices = () => {
@@ -108,7 +108,7 @@ export function PieChartNew(container, params = {}) {
                     colIndex2: stringColumnIndex,
                 });
             })
-            .style('fill-opacity', 0.85)
+            .style('fill-opacity', 1)
             .attr('stroke-width', '0.5px')
             .attr('stroke', getThemeValue('background-color-secondary', CSS_PREFIX))
             .on('mouseover', function (d) {
@@ -146,16 +146,27 @@ export function PieChartNew(container, params = {}) {
         }
     };
 
-    this.onLegendCellClick = (label) => {
-        if (!label) {
-            console.warn('unable to find legend item that was clicked');
-            return;
-        }
+    this.onLegendCellClick = (legendObjStr) => {
+        try {
+            const cellDataJson = JSON.parse(legendObjStr);
+            const index = cellDataJson?.dataIndex;
+            const label = legendLabels?.[index];
+    
+            if (!label) {
+                console.warn('unable to find legend item that was clicked');
+                return;
+            }
+    
+            const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
+            const allowClick = label.hidden || visibleLegendLabels?.length > 1;
 
-        const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
-        const allowClick = label.hidden || visibleLegendLabels?.length > 1;
-        if (allowClick) {
-            legend.onLegendClick?.(label);
+            if (allowClick) {
+                legend.onLegendClick?.(label);
+            }
+
+        } catch (error) {
+            console.error(error);
+            return;
         }
     };
 
@@ -163,28 +174,28 @@ export function PieChartNew(container, params = {}) {
         // TODO: use existing legend component instead of this custom legend
         // The legend wrap length threshold should be half of the width
         // Because the pie will never be larger than half the width
+
         const legendWrapLength = outerWidth / 2 - 70; // 70 for the width of the circles and padding
         this.legend = this.innerChartWrapper
             .append('g')
-            .attr('class', 'legendOrdinal')
+            .attr('class', 'legendOrdinal autoql-vanilla-chart-legend')
             .style('fill', 'currentColor')
             .style('fill-opacity', 1)
             .style('font-family', 'inherit')
             .style('font-size', '10px')
             .style('stroke-width', '2px')
-			.style('stroke','none');
+            .style('stroke', 'none');
 
         var legendOrdinal = legendColor()
             .orient('vertical')
-            .shapePadding(5)
+            .shapePadding(8)
             .labels(legendLabels.map((labelObj) => labelObj.label))
             .labelWrap(legendWrapLength)
             .labelOffset(10)
             .scale(self.legendScale)
             .on('cellclick', function (e, d) {
-                const cellElement = e.target?.parentElement?.parentElement;
-                const cellDataJson = JSON.parse(select(cellElement).data());
-                self.onLegendCellClick(cellDataJson);
+                const legendObjStr = select(this)?.data?.();
+                self.onLegendCellClick(legendObjStr);
             });
 
         this.legend.call(legendOrdinal);
@@ -215,7 +226,7 @@ export function PieChartNew(container, params = {}) {
         this.setRadius();
 
         const { pieChartFn, legendScale } = getPieChartData({
-            data: data,
+            data,
             numberColumnIndex,
             legendLabels,
             chartColors,

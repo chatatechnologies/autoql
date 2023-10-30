@@ -843,7 +843,7 @@ export function DataMessenger(options = {}) {
 
     obj.registerWindowClicks = () => {
         const excludeElementsForClearMessages = [
-            'clear-all',
+            'autoql-vanilla-clear-all',
             'filter-locking-menu',
             'autoql-vanilla-condition-locking-input',
             'autoql-vanilla-condition-list',
@@ -961,7 +961,7 @@ export function DataMessenger(options = {}) {
         `);
 
         var clearAllButton = htmlToElement(`
-            <button class="autoql-vanilla-chata-button clear-all"
+            <button class="autoql-vanilla-chata-button autoql-vanilla-clear-all"
             data-tippy-content="${strings.clearMessages}">
                 ${CLEAR_ALL}
             </button>
@@ -987,10 +987,10 @@ export function DataMessenger(options = {}) {
                         ${POPOVER_ICON}
                         ${strings.clearMessagesTitle}
                     </div>
-                    <button class="autoql-vanilla-chata-confirm-btn no">
+                    <button class="autoql-vanilla-chata-confirm-btn autoql-vanilla-chata-confirm-btn-no">
                         ${strings.cancel}
                     </button>
-                    <button class="autoql-vanilla-chata-confirm-btn yes">
+                    <button class="autoql-vanilla-chata-confirm-btn autoql-vanilla-chata-confirm-btn-yes">
                         ${strings.clear}
                     </button>
                 </div>
@@ -1422,15 +1422,18 @@ export function DataMessenger(options = {}) {
                 );
                 break;
             case 'csvCopy':
-                var filterBtn = obj.getActionButton(
-                    FILTER_TABLE,
-                    strings.filterTable,
-                    idRequest,
-                    obj.filterTableHandler,
-                    [],
-                );
-                toolbar.appendChild(filterBtn);
-                filterBtn.setAttribute('data-name-option', 'filter-action');
+                if (displayType !== 'pivot_table') {
+                    var filterBtn = obj.getActionButton(
+                        FILTER_TABLE,
+                        strings.filterTable,
+                        idRequest,
+                        obj.filterTableHandler,
+                        [],
+                    );
+                    toolbar.appendChild(filterBtn);
+                    filterBtn.setAttribute('data-name-option', 'filter-action');
+                }
+
                 var columnVisibility = obj.options.autoQLConfig.enableColumnVisibilityManager;
                 if (columnVisibility && displayType !== 'pivot_table') {
                     let badge = obj.getBadge();

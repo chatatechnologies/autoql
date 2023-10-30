@@ -2,7 +2,6 @@ import {
     getThemeValue,
     getAxis,
     getMaxTickLabelWidth,
-    // getLabelsBBox,
     adjustTitleToFit,
     MINIMUM_TITLE_LENGTH,
     AXIS_TITLE_PADDING_TOP,
@@ -15,7 +14,7 @@ import {
     mergeBoundingClientRects,
 } from 'autoql-fe-utils';
 
-import { select } from 'd3-selection'
+import { select } from 'd3-selection';
 import { CSS_PREFIX } from '../Constants';
 import { ChataChartListPopover } from '../Charts/ChataChartListPopover';
 import { ChartRowSelector } from '../Charts/ChartRowSelector';
@@ -33,7 +32,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
         onDataFetching,
         onNewData,
         onDataFetchError,
-        columnIndexConfig
+        columnIndexConfig,
     } = params;
     const { orient, scale, innerHeight, innerWidth, rotateLabels, transform } = axisOptions;
 
@@ -65,22 +64,27 @@ export function Axis(container, params = {}, axisOptions = {}) {
     var axis = getAxis({ orient, scale, innerWidth, innerHeight, maxLabelWidth });
 
     const positionTitle = (titleElement) => {
-        adjustTitleToFit(titleElement, orient, {
-            labelsBBox: this.labelsBBox,
-            innerWidth,
-            innerHeight,
-            outerWidth,
-            deltaX,
-            deltaY,
-            chartPadding: CHART_PADDING,
-        }, CSS_PREFIX);
+        adjustTitleToFit(
+            titleElement,
+            orient,
+            {
+                labelsBBox: this.labelsBBox,
+                innerWidth,
+                innerHeight,
+                outerWidth,
+                deltaX,
+                deltaY,
+                chartPadding: CHART_PADDING,
+            },
+            CSS_PREFIX,
+        );
     };
 
     const onSelectorClick = (evt, legendEvent) => {
         if (this.axisSelectorPopover?.style?.visibility === 'visible') {
             this.axisSelectorPopover.destroy();
             this.axisSelectorPopover = undefined;
-            return
+            return;
         }
 
         let placement;
@@ -94,7 +98,14 @@ export function Axis(container, params = {}, axisOptions = {}) {
             placement = 'bottom';
         }
 
-        this.axisSelectorPopover = new ChataChartListPopover(evt, scale, columns, placement, 'middle', columnIndexConfig);
+        this.axisSelectorPopover = new ChataChartListPopover(
+            evt,
+            scale,
+            columns,
+            placement,
+            'middle',
+            columnIndexConfig,
+        );
     };
 
     const handleLabelRotation = () => {
@@ -117,16 +128,18 @@ export function Axis(container, params = {}, axisOptions = {}) {
         }
 
         const labelBboxes = [];
-        select(axisElement).selectAll('g.tick text').each(function () {
-            const textBoundingRect = select(this).node().getBoundingClientRect();
+        select(axisElement)
+            .selectAll('g.tick text')
+            .each(function () {
+                const textBoundingRect = select(this).node().getBoundingClientRect();
 
-            labelBboxes.push({
-                left: textBoundingRect.left - xDiff,
-                bottom: textBoundingRect.bottom - yDiff,
-                right: textBoundingRect.right - xDiff,
-                top: textBoundingRect.top - yDiff,
+                labelBboxes.push({
+                    left: textBoundingRect.left - xDiff,
+                    bottom: textBoundingRect.bottom - yDiff,
+                    right: textBoundingRect.right - xDiff,
+                    top: textBoundingRect.top - yDiff,
+                });
             });
-        });
 
         if (labelBboxes) {
             const allLabelsBbox = mergeBoundingClientRects(labelBboxes);
@@ -137,7 +150,7 @@ export function Axis(container, params = {}, axisOptions = {}) {
     };
 
     const createAxisTitle = () => {
-        this.axisTitleContainer = this.axisElement.append('g')
+        this.axisTitleContainer = this.axisElement.append('g');
 
         this.axisTitle = this.axisTitleContainer
             .append('text')

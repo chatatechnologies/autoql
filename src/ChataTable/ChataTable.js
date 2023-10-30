@@ -24,6 +24,51 @@ import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
 import './ChataTable.scss';
 
+const commonTableOptions = {
+    layout: 'fitDataFill',
+    clipboard: true,
+    height: '100%',
+    rowHeight: 25,
+    invalidOptionWarnings: false,
+    virtualDomBuffer: 300,
+    virtualDom: true,
+    reactiveData: false,
+    autoResize: false,
+    downloadConfig: {
+        columnGroups: false,
+        rowGroups: false,
+        columnCalcs: false,
+    },
+    selectableCheck: () => false,
+    downloadEncoder: function (fileContents, mimeType) {
+        //fileContents - the unencoded contents of the file
+        //mimeType - the suggested mime type for the output
+        return new Blob([fileContents], { type: mimeType }); //must return a blob to proceed with the download, return false to abort download
+    },
+};
+
+function toggleFilters(component, table) {
+    var domTable = table.element;
+    var filters = domTable.querySelectorAll('.tabulator-header-filter');
+    component.isFiltering = !component.isFiltering;
+
+    if (component.isFiltering) {
+        component.classList.add('is-filtering');
+    } else {
+        component.classList.remove('is-filtering');
+    }
+
+    for (var i = 0; i < filters.length; i++) {
+        var filter = filters[i];
+        var input = filter.children[0];
+        if (input.value) {
+            filter.parentElement.classList.add('is-filtered');
+        } else {
+            filter.parentElement.classList.remove('is-filtered');
+        }
+    }
+}
+
 function replaceScrollbar(table) {
     var tableholder = table.element?.querySelector('.tabulator-tableholder');
 
@@ -139,7 +184,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
             component.setScrollLoading(true);
 
             newResponse = await component.getNewPage(nextTableParamsFormatted);
-            component.onNewPage({newRows:newResponse?.rows,newResponse});
+            component.onNewPage({ newRows: newResponse?.rows, newResponse });
         } else {
             component.setPageLoading(true);
 
@@ -240,24 +285,23 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.queryFn = json?.queryFn;
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewPage = ({newRows = 0,chartsVisibleCount = 0, newResponse = null}) => {
-		
-		if(newResponse){
-			tableParams.queryJson.data.rows = [...tableParams.queryJson.data.rows, ...newResponse.rows]
-			tableParams.queryJson.data.row_limit = newResponse.row_limit;
-		}
-		var newCurrentTableRowCount = 0;
+    component.onNewPage = ({ newRows = 0, chartsVisibleCount = 0, newResponse = null }) => {
+        if (newResponse) {
+            tableParams.queryJson.data.rows = [...tableParams.queryJson.data.rows, ...newResponse.rows];
+            tableParams.queryJson.data.row_limit = newResponse.row_limit;
+        }
+        var newCurrentTableRowCount = 0;
         var tableRowCountElement = component.parentElement.querySelector('.autoql-vanilla-chata-table-row-count');
         var currentText = tableRowCountElement.textContent;
         var matches = currentText.match(/(\d+)/);
         if (matches && matches.length > 0) {
             var currentTableRowCount = parseInt(matches[0]);
-			if(newRows !== 0){
-				var newCurrentTableRowCount = currentTableRowCount + newRows.length;
-			}
-			if(chartsVisibleCount !== 0){
-				var newCurrentTableRowCount = chartsVisibleCount
-			}
+            if (newRows !== 0) {
+                var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+            }
+            if (chartsVisibleCount !== 0) {
+                var newCurrentTableRowCount = chartsVisibleCount;
+            }
             var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
             tableRowCountElement.textContent = newText;
         }
@@ -343,31 +387,13 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     };
 
     const tableOptions = {
-        layout: 'fitDataFill',
-        clipboard: true,
-        height: '100%',
+        ...commonTableOptions,
         headerFilterLiveFilterDelay: 300,
-        virtualDomBuffer: 350,
-        virtualDom: true,
-        reactiveData: false,
-        autoResize: false,
-        movableColumns: true,
         columns,
         data: tableData,
-        downloadConfig: {
-            columnGroups: false,
-            rowGroups: false,
-            columnCalcs: false,
-        },
-        selectableCheck: () => false,
         initialSort: component.tableParams?.sort,
         initialFilter: component.tableParams?.filter,
         progressiveLoadScrollMargin: 100, // Trigger next ajax load when scroll bar is 800px or less from the bottom of the table.
-        downloadEncoder: function (fileContents, mimeType) {
-            //fileContents - the unencoded contents of the file
-            //mimeType - the suggested mime type for the output
-            return new Blob([fileContents], { type: mimeType }); //must return a blob to proceed with the download, return false to abort download
-        },
     };
 
     if (component.useInfiniteScroll && component.queryFn) {
@@ -498,7 +524,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
                     onSelection: this.onDateRangeSelection,
                     validRange: col.dateRange,
                     type: col.precision,
-                    onSelectionApplied: (selection) => table.onDateRangeSelectionApplied(selection, col, inputElement)
+                    onSelectionApplied: (selection) => table.onDateRangeSelectionApplied(selection, col, inputElement),
                 });
 
                 inputElement.datePicker = datePickerPopover;
@@ -527,7 +553,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
                 inputElement.removeEventListener('keydown', table.inputKeydownListener);
                 inputElement.addEventListener('keydown', table.inputKeydownListener);
 
-                inputElement.column = col
+                inputElement.column = col;
 
                 const clearBtn = inputElement.parentNode.querySelector('.autoql-vanilla-clear-btn');
                 if (!clearBtn) {
@@ -574,27 +600,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         inputElement.parentNode.appendChild(clearBtn);
     };
 
-    table.toggleFilters = () => {
-        var domTable = table.element;
-        var filters = domTable.querySelectorAll('.tabulator-header-filter');
-        component.isFiltering = !component.isFiltering;
-
-        if (component.isFiltering) {
-            component.classList.add('is-filtering');
-        } else {
-            component.classList.remove('is-filtering');
-        }
-
-        for (var i = 0; i < filters.length; i++) {
-            var filter = filters[i];
-            var input = filter.children[0];
-            if (input.value) {
-                filter.parentElement.classList.add('is-filtered');
-            } else {
-                filter.parentElement.classList.remove('is-filtered');
-            }
-        }
-    };
+    table.toggleFilters = () => toggleFilters(component, table);
 
     return table;
 }
@@ -641,17 +647,8 @@ export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
     };
 
     const tableOptions = {
-        layout: 'fitDataFill',
-        rowHeight: 25,
-        height: '100%',
-        invalidOptionWarnings: false,
-        virtualDomBuffer: 300,
+        ...commonTableOptions,
         movableColumns: true,
-        downloadConfig: {
-            columnGroups: false,
-            rowGroups: false,
-            columnCalcs: false,
-        },
         columns: pivotColumns,
         data: pivotTableData,
     };
