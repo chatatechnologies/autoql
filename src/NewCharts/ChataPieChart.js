@@ -19,7 +19,6 @@ export function PieChartNew(container, params = {}) {
         columns,
         outerWidth,
         outerHeight,
-        chartColors,
         legendColumn,
         onChartClick,
         activeKey,
@@ -229,7 +228,6 @@ export function PieChartNew(container, params = {}) {
             data,
             numberColumnIndex,
             legendLabels,
-            chartColors,
         });
 
         this.pieData = pieChartFn;
