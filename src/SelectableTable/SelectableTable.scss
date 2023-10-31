@@ -1,0 +1,227 @@
+.autoql-vanilla-selectable-table {
+    height: 100%;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+
+    .autoql-vanilla-selectable-table-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        white-space: nowrap;
+        font-size: 13px;
+        color: var(--autoql-vanilla-text-color-secondary);
+        font-weight: 600;
+
+        // .autoql-vanilla-selectable-table-selected-columns-text {
+        //     padding-left: 5px;
+        // }
+    }
+
+    .autoql-vanilla-selectable-table-wrapper {
+        position: relative;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        height: 100%;
+        border-radius: 2px;
+        border: 1px solid var(--autoql-vanilla-border-color);
+        margin-top: 1px;
+        overflow: auto; // TODO: uncomment when custom scrollbars are added
+
+        // Use these styles to show scrollbars on hover
+        .ps__rail-x,
+        .ps__rail-y {
+            opacity: 0 !important;
+            transition: opacity 0.2s ease !important;
+        }
+
+        &:hover {
+            .ps__rail-x,
+            .ps__rail-y {
+                opacity: 0.5 !important;
+            }
+        }
+
+        table {
+            font-size: 13px;
+            min-width: 100%;
+            border-collapse: collapse;
+
+            td.autoql-vanilla-selectable-table-cell-disabled {
+                cursor: default;
+                opacity: 0.7;
+                background-color: var(--autoql-vanilla-background-color-disabled) !important;
+            }
+
+            &:hover {
+                // If hovering the table AND hovering a column, highlight header and cells in column
+                th.autoql-vanilla-selectable-table-hovered::before {
+                    background-color: RGBA(
+                        var(--autoql-vanilla-accent-color-R),
+                        var(--autoql-vanilla-accent-color-G),
+                        var(--autoql-vanilla-accent-color-B),
+                        0.3
+                    );
+                }
+
+                td.autoql-vanilla-selectable-table-hovered {
+                    &:not(.autoql-vanilla-selectable-table-cell-selected):not(
+                            .autoql-vanilla-selectable-table-cell-disabled
+                        ) {
+                        background-color: RGBA(
+                            var(--autoql-vanilla-accent-color-R),
+                            var(--autoql-vanilla-accent-color-G),
+                            var(--autoql-vanilla-accent-color-B),
+                            0.1
+                        );
+                    }
+                    &.autoql-vanilla-selectable-table-cell-selected:not(
+                            .autoql-vanilla-selectable-table-cell-disabled
+                        ) {
+                        background-color: RGBA(
+                            var(--autoql-vanilla-accent-color-R),
+                            var(--autoql-vanilla-accent-color-G),
+                            var(--autoql-vanilla-accent-color-B),
+                            0.2
+                        );
+                    }
+                }
+            }
+
+            th::before {
+                content: '\00a0';
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                left: 0px;
+                top: 0px;
+            }
+
+            thead {
+                th {
+                    top: 0;
+                    padding: 0 15px;
+                    height: 35px;
+                    position: sticky;
+                    z-index: 1;
+                    background-color: var(--autoql-vanilla-background-color-secondary);
+                    border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
+
+                    &.autoql-vanilla-selectable-table-column-disabled {
+                        &::before {
+                            background-color: var(--autoql-vanilla-border-color) !important;
+                        }
+                        &::after {
+                            content: '\00a0';
+                            position: absolute;
+                            height: 100%;
+                            width: 100%;
+                            left: 0px;
+                            top: 0px;
+                            opacity: 0.4;
+                            background-color: var(--autoql-vanilla-border-color);
+                        }
+                    }
+
+                    &:not(.autoql-vanilla-selectable-table-column-disabled) {
+                        cursor: pointer;
+                    }
+
+                    &.autoql-vanilla-selectable-table-hovered {
+                        .autoql-vanilla-checkbox__input {
+                            border-color: var(--autoql-vanilla-accent-color) !important;
+                        }
+                    }
+
+                    &.autoql-vanilla-selectable-table-column-selected {
+                        background-color: var(--autoql-vanilla-accent-color);
+                        color: var(--autoql-vanilla-text-color-accent);
+                    }
+
+                    &:not(.autoql-vanilla-selectable-table-column-selected)::before {
+                        background-color: var(--autoql-vanilla-background-color-disabled);
+                    }
+
+                    &:not(:last-child) {
+                        border-right: 1px solid var(--autoql-vanilla-table-border-color);
+                    }
+
+                    .autoql-vanilla-selectable-table-col-header {
+                        height: 100%;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        position: relative;
+
+                        // TODO: add checkbox styles
+                        // .autoql-vanilla-checkbox-container {
+                        //     margin-left: 10px;
+
+                        //     .autoql-vanilla-checkbox__input {
+                        //         width: 15px;
+                        //         height: 15px;
+                        //         border-color: var(--autoql-vanilla-text-color-placeholder);
+                        //     }
+                        // }
+                    }
+                }
+            }
+            tbody {
+                tr {
+                    height: 28px;
+                    font-size: 12px;
+                    background: var(--autoql-vanilla-background-color-secondary);
+
+                    &:not(:last-child) {
+                        border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
+                    }
+
+                    td {
+                        position: relative;
+                        padding: 0 18px;
+
+                        &:not(.autoql-vanilla-selectable-table-cell-disabled) {
+                            cursor: pointer;
+                        }
+
+                        &:not(:last-child) {
+                            border-right: 1px solid var(--autoql-vanilla-table-border-color);
+                        }
+
+                        &.autoql-vanilla-selectable-table-cell-selected {
+                            background-color: RGBA(
+                                var(--autoql-vanilla-accent-color-R),
+                                var(--autoql-vanilla-accent-color-G),
+                                var(--autoql-vanilla-accent-color-B),
+                                0.15
+                            );
+                        }
+                    }
+                }
+            }
+
+            .autoql-vanilla-selectable-table-end-of-preview-message {
+                color: var(--autoql-vanilla-text-color-secondary);
+                background-color: transparent;
+                left: calc(50% - 75px);
+                height: 30px;
+                position: sticky;
+                display: block;
+                font-style: italic;
+                font-size: inherit;
+
+                .autoql-vanilla-selectable-table-end-of-preview-sticky-wrapper {
+                    justify-content: center;
+                    pointer-events: none;
+                    align-items: center;
+                    position: absolute;
+                    display: flex;
+                    width: 150px;
+                    height: 100%;
+                    padding-bottom: 8px;
+                }
+            }
+        }
+    }
+}

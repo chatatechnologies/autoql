@@ -1,46 +1,44 @@
-import { Card } from "../Card";
-import './DataPreview.scss';
 import { fetchDataPreview } from 'autoql-fe-utils';
-import { DataPreviewTable } from "../DataPreviewTable";
+import SelectableTable from '../../../SelectableTable/SelectableTable';
+
+import './DataPreview.scss';
 
 export function DataPreview({ icon, title, subject, widgetOptions }) {
-  let obj = this;
-  const container = document.createElement('div');
-  const card = new Card({ icon, title, maxHeight: 155 });
-  const {
-    domain,
-    apiKey,
-    token,
-  } = widgetOptions.authentication;
+    let obj = this;
 
-  container.classList.add('autoql-vanilla-data-explorer-section');
-  container.classList.add('autoql-vanilla-data-preview-section');
+    const container = document.createElement('div');
+    container.classList.add('autoql-vanilla-data-explorer-section');
+    container.classList.add('autoql-vanilla-data-preview-section');
 
-  container.appendChild(card);
+    obj.container = container;
 
-  obj.container = container;
+    const { domain, apiKey, token } = widgetOptions.authentication;
 
-  obj.getPreview = async() => {
-    card.showLoading();
-    const response = await fetchDataPreview({
-      subject: subject.context,
-      numRows: 5,
-      source: 'data_explorer.data_preview',
-      domain,
-      apiKey,
-      token,
-    });
-    obj.displayResponse(response);
-  }
+    const dataPreviewContainer = document.createElement('div');
+    dataPreviewContainer.classList.add('autoql-vanilla-data-explorer-data-preview');
+    container.appendChild(dataPreviewContainer);
 
-  obj.displayResponse = (r) => {
-    card.clearView();
-    const { data } = r.data
-    const table = new DataPreviewTable({ previewResponse: data });
-    card.setContent(table);
-  }
+    obj.getPreview = async () => {
+        // card.showLoading();
+        const response = await fetchDataPreview({
+            subject: subject.context,
+            numRows: 5,
+            source: 'data_explorer.data_preview',
+            domain,
+            apiKey,
+            token,
+        });
+        obj.displayResponse(response);
+    };
 
-  obj.getPreview();
+    obj.displayResponse = (r) => {
+        // card.clearView();
+        const { data } = r.data;
+        const table = new SelectableTable({ queryResponse: data });
+        dataPreviewContainer.appendChild(table);
+    };
 
-  return obj;
+    obj.getPreview();
+
+    return obj;
 }
