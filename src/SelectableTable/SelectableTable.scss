@@ -3,6 +3,7 @@
     padding: 5px;
     display: flex;
     flex-direction: column;
+    overflow: hidden;
 
     .autoql-vanilla-selectable-table-header {
         display: flex;

@@ -174,11 +174,13 @@ export function DataMessenger(options = {}) {
     }
 
     if (obj.options.enableNotificationsTab && !obj.options.autoQLConfig.enableNotifications) {
-        obj.options.enableNotificationsTab = false
-        console.warn('Unable to show Notifications tab - enableNotificationsTab was set to true, but the enableNotifications option in autoQLConfig was set to false. Both options must be true in order to show the Notifications tab.');
+        obj.options.enableNotificationsTab = false;
+        console.warn(
+            'Unable to show Notifications tab - enableNotificationsTab was set to true, but the enableNotifications option in autoQLConfig was set to false. Both options must be true in order to show the Notifications tab.',
+        );
     }
-	
-	obj.cancelCurrentRequest = () => {
+
+    obj.cancelCurrentRequest = () => {
         obj.axiosSource?.cancel(REQUEST_CANCELLED_ERROR);
     };
     obj.isPortrait = () => ['left', 'right'].includes(obj.options.placement);
@@ -196,7 +198,7 @@ export function DataMessenger(options = {}) {
                     domain,
                 });
 
-                return subjects
+                return subjects;
             }
         } catch (error) {
             console.error(error);
@@ -296,18 +298,21 @@ export function DataMessenger(options = {}) {
                     obj.options.enableNotificationsTab = value;
                     if (value) {
                         if (!obj.options.autoQLConfig.enableNotifications) {
-                            if (obj.tabNotifications) obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
-                            obj.options.enableNotificationsTab = false
+                            if (obj.tabNotifications)
+                                obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+                            obj.options.enableNotificationsTab = false;
                             console.warn(
                                 'Unable to show Notifications tab - enableNotificationsTab was set to true, but the enableNotifications option in autoQLConfig was set to false. Both options must be true in order to show the Notifications tab.',
                             );
                         } else {
-                            if (obj.tabNotifications) obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden');
+                            if (obj.tabNotifications)
+                                obj.tabNotifications.classList.remove('autoql-vanilla-data-messenger-tab-hidden');
                             obj.instanceNotificationIcon();
                             obj.toggleNotificationOption();
                         }
                     } else {
-                        if (obj.tabNotifications) obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
+                        if (obj.tabNotifications)
+                            obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
                         if (obj.landingPage === 'notifications') {
                             obj.setActiveTab(obj.tabChataUtils);
                         }
@@ -519,7 +524,7 @@ export function DataMessenger(options = {}) {
         `);
 
         button.onclick = () => {
-           /*  var modalView = new NotificationSettingsModal(obj.options);
+            /*  var modalView = new NotificationSettingsModal(obj.options);
             var configModal = new Modal(
                 {
                     withFooter: true,
@@ -642,11 +647,10 @@ export function DataMessenger(options = {}) {
             isEnabled: enableDataExplorerTab,
         });
 
-
         tabChataUtils.onclick = function () {
             obj.setActiveTab(this);
             obj.scrollBox.style.overflow = 'auto';
-            obj.scrollBox.style.maxHeight = 'calc(100% - 150px)';
+            obj.scrollBox.style.maxHeight = 'calc(100% - 155px)';
             obj.tabsAnimation('flex', 'block');
             obj.dataExplorer.hide();
             obj.notificationsAnimation('none');
@@ -669,7 +673,7 @@ export function DataMessenger(options = {}) {
                 tooltip: strings.notifications,
                 isEnabled: enableNotificationsTab,
             });
-    
+
             tabNotifications.setAttribute('id', obj.notificationTabId);
             tabNotifications.onclick = function () {
                 obj.setActiveTab(this);
@@ -800,8 +804,8 @@ export function DataMessenger(options = {}) {
                 default:
             }
             if (newWidth <= 400) {
-                newWidth = 400
-            };
+                newWidth = 400;
+            }
 
             if (obj.isPortrait()) {
                 obj.drawerContentWrapper.style.width = newWidth + 'px';
@@ -1127,8 +1131,8 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.onMouseUpSpeechToText = function() {
-        window.removeEventListener('mouseup', this)
+    obj.onMouseUpSpeechToText = function () {
+        window.removeEventListener('mouseup', this);
 
         try {
             if (obj.isRecordVoiceActive) {
@@ -1136,10 +1140,10 @@ export function DataMessenger(options = {}) {
                 obj.input.value = obj.finalTranscript;
                 obj.isRecordVoiceActive = false;
             }
-    
+
             obj.voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
-        } catch(error) {
-            console.error(error)
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -1159,7 +1163,7 @@ export function DataMessenger(options = {}) {
         `);
 
         if (!obj.options.showBranding) {
-            watermark.style.visibility = 'hidden'
+            watermark.style.visibility = 'hidden';
         }
 
         chataBarContainer.classList.add('autoql-vanilla-chata-bar-container');
@@ -1193,31 +1197,31 @@ export function DataMessenger(options = {}) {
 
         voiceRecordButton.onmousedown = async () => {
             if (obj.voiceDisabled) {
-                return
+                return;
             }
 
-            window.addEventListener('mouseup', obj.onMouseUpSpeechToText)
+            window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
 
-            const permissionCheckStart = Date.now()
+            const permissionCheckStart = Date.now();
             try {
-                await getLocalStream()
-            } catch(error) {
-                console.error(error)
+                await getLocalStream();
+            } catch (error) {
+                console.error(error);
                 if (error?.message === 'Permission denied') {
-                    obj.voiceDisabled = true
+                    obj.voiceDisabled = true;
                     voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
                     voiceRecordButton.style.opacity = '0.5';
                     voiceRecordButton.style.cursor = 'default';
                     voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecordError);
                     refreshTooltips();
                 }
-                return
+                return;
             }
 
             if (Date.now() - permissionCheckStart > 500) {
                 // Assume dialog popped up, and do not start audio recording
                 // There is no other easy way that I know of to check if there was a permission dialog
-                return
+                return;
             }
 
             obj.speechToText.start();
@@ -1813,10 +1817,12 @@ export function DataMessenger(options = {}) {
                         });
                     } else {
                         // --------- 2. Use subquery for filter drilldown --------
-                        const clickedFilter = filter ?? constructFilter({
-                            column: json.data.data.columns[stringColumnIndex],
-                            value: row[stringColumnIndex],
-                        });
+                        const clickedFilter =
+                            filter ??
+                            constructFilter({
+                                column: json.data.data.columns[stringColumnIndex],
+                                value: row[stringColumnIndex],
+                            });
 
                         const allFilters = getCombinedFilters(clickedFilter, json, undefined); // TODO: add table params
 
@@ -2027,7 +2033,7 @@ export function DataMessenger(options = {}) {
     obj.getDisplayTypesButtons = (idRequest, active) => {
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
-        var displayTypes = getSupportedDisplayTypes({ response: { data: json }});
+        var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
 
         const displayTypeIcons = {
             table: TABLE_ICON,
@@ -2044,7 +2050,7 @@ export function DataMessenger(options = {}) {
             column_line: COLUMN_LINE_ICON,
             scatterplot: SCATTERPLOT_ICON,
             histogram: HISTOGRAM_ICON,
-        }
+        };
 
         displayTypes.forEach((displayType) => {
             let button;
@@ -2091,18 +2097,18 @@ export function DataMessenger(options = {}) {
         if (value) {
             if (value !== 'Drilldown') {
                 localStorage.setItem('lastQuery', value);
-				var containerMessage = document.createElement('div');
-				var messageBubble = document.createElement('div');
-	
-				containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-				containerMessage.style.zIndex = --obj.zIndexBubble;
-				containerMessage.classList.add('request');
-				messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-				messageBubble.classList.add('single');
-				messageBubble.classList.add('text');
-				messageBubble.textContent = value;
-				containerMessage.appendChild(messageBubble);
-				obj.drawerContent.appendChild(containerMessage);
+                var containerMessage = document.createElement('div');
+                var messageBubble = document.createElement('div');
+
+                containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
+                containerMessage.style.zIndex = --obj.zIndexBubble;
+                containerMessage.classList.add('request');
+                messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
+                messageBubble.classList.add('single');
+                messageBubble.classList.add('text');
+                messageBubble.textContent = value;
+                containerMessage.appendChild(messageBubble);
+                obj.drawerContent.appendChild(containerMessage);
             }
         }
 

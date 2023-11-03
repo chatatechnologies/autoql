@@ -1,10 +1,17 @@
-.autoql-vanilla-querytips-container {
+.autoql-vanilla-data-explorer-content-container {
     font-family: sans-serif;
     line-height: 1.5;
     font-size: 14px;
     max-height: 100%;
     height: 100%;
     overflow: hidden;
+    background-color: var(--autoql-vanilla-background-color-secondary);
+
+    .autoql-vanilla-text-bar {
+        padding: 10px;
+        margin: 10px;
+        margin-bottom: 0;
+    }
 
     .autoql-vanilla-data-explorer-intro-message {
         color: var(--autoql-vanilla-text-color-primary);
@@ -122,6 +129,70 @@
 
         &.autoql-vanilla-autocomplete-show {
             display: block;
+        }
+    }
+
+    .autoql-vanilla-data-explorer-result-container {
+        color: var(--autoql-vanilla-text-color-primary);
+        width: 100%;
+        overflow: hidden;
+        padding: 0px 24px 0px 24px;
+        min-height: 0;
+        height: calc(100% - 130px);
+
+        .autoql-vanilla-data-explorer-sections-container {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            overflow: hidden;
+            min-height: 0;
+
+            .autoql-vanilla-data-explorer-selected-subject-title {
+                display: flex;
+                flex-wrap: nowrap;
+                align-items: center;
+                flex: 0 0 auto;
+                font-weight: 600;
+                font-size: 16px;
+                margin: 2px;
+                margin-top: 4px;
+                margin-bottom: 10px;
+
+                .autoql-vanilla-icon {
+                    font-size: 17px;
+                    margin-right: 5px;
+                    vertical-align: middle;
+                    padding-bottom: 3px;
+                }
+            }
+
+            .autoql-vanilla-data-explorer-section {
+                max-height: 100%;
+                overflow: hidden;
+                display: flex;
+                flex-direction: column;
+
+                &:last-of-type {
+                    padding-bottom: 10px;
+                }
+            }
+
+            .autoql-vanilla-input-label {
+                display: inline;
+                padding-left: 8px;
+            }
+
+            .autoql-vanilla-data-explorer-section-placeholder {
+                min-height: 90px;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
         }
     }
 }

@@ -191,7 +191,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             });
         }
 
-        if (type === DisplayTypes.PIE) {
+        if (type == DisplayTypes.PIE) {
             data = aggregateOtherCategory(data, columnIndexConfig);
         }
 
@@ -277,7 +277,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     const onLegendClick = (label) => {
-        if (type === DisplayTypes.PIE) {
+        if (type == DisplayTypes.PIE) {
             const labels = this.legendLabels?.labels;
             if (labels?.[label?.dataIndex]) {
                 labels[label.dataIndex].hidden = !labels[label.dataIndex].hidden;
@@ -307,7 +307,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
     const getLegendObject = () => {
         const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
-        const labels = type === DisplayTypes.PIE ? this.legendLabels : getLegendLabelsForChart();
+        const labels = type == DisplayTypes.PIE ? this.legendLabels : getLegendLabelsForChart();
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
             columnIndices: columnIndexConfig.numberColumnIndices,

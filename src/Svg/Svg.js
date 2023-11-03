@@ -576,6 +576,10 @@ export const BOOK_ICON = `
 </svg>
 `;
 
+export const BOOKMARK_ICON = `
+<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M18,2H6C4.897,2,4,2.897,4,4v5.276V10v12l8-4.572L20,22V10V9.276V4C20,2.897,19.103,2,18,2z M18,18.553l-6-3.428l-6,3.428 V10V9.276V4h12v5.276V10V18.553z"></path></svg>
+`;
+
 export const CARET_DOWN_ICON = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z">
@@ -622,27 +626,25 @@ export const COLUMN_LINE_ICON = `<svg fill="currentColor" x='0px' y='0px' width=
         d='M5.5,5.5c-0.1,0-0.2,0-0.3-0.1l-4-1.7C0.9,3.6,0.7,3.2,0.9,2.9C1,2.5,1.4,2.3,1.8,2.5L5.4,4L9,0.3
   c0.2-0.2,0.5-0.3,0.8-0.1l4,1.9c0.3,0.2,0.5,0.6,0.3,0.9c-0.2,0.4-0.6,0.5-0.9,0.3L9.6,1.7L6,5.3C5.9,5.4,5.7,5.5,5.5,5.5z'
       />
-</svg>`
+</svg>`;
 
-export const ENVELOPE =
-`
+export const ENVELOPE = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path
     d="M20,4H4C2.897,4,2,4.897,2,6v12c0,1.103,0.897,2,2,2h16c1.103,0,2-0.897,2-2V6C22,4.897,21.103,4,20,4z
     M20,6v0.511 l-8,6.223L4,6.512V6H20z M4,18V9.044l7.386,5.745C11.566,14.93,11.783,15,12,15s0.434-0.07,0.614-0.211L20,9.044L20.002,18H4z">
     </path>
 </svg>
-`
+`;
 
-export const ENVELOPE_OPEN =
-`
+export const ENVELOPE_OPEN = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M21.555,8.168l-9-6c-0.336-0.224-0.773-0.224-1.109,0l-9,6C2.167,8.354,2,8.666,2,9v11c0,1.103,0.897,2,2,2h16
     c1.103,0,2-0.897,2-2V9C22,8.666,21.833,8.354,21.555,8.168z M12,4.202L19.197,9L12,13.798L4.803,9L12,4.202z M4,20v-9.131
     l7.445,4.963C11.613,15.944,11.807,16,12,16s0.387-0.056,0.555-0.168L20,10.869L19.997,20H4z">
     </path>
 </svg>
-`
+`;
 
 export const REFRESH_ICON = `
 <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -652,7 +654,7 @@ export const REFRESH_ICON = `
     </polyline>
     <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
 </svg>
-`
+`;
 
 export const SETTINGS = `
 <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -660,7 +662,7 @@ export const SETTINGS = `
     <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z">
     </path>
 </svg>
-`
+`;
 
 export const TRASH_ICON = `
 <svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -668,14 +670,14 @@ export const TRASH_ICON = `
     <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
     <line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>
 </svg>
-`
+`;
 
 export const MARK_ALL = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M21.555,8.168l-9-6c-0.336-0.224-0.773-0.224-1.109,0l-9,6C2.167,8.354,2,8.666,2,9v11c0,1.103,0.897,2,2,2h16 c1.103,0,2-0.897,2-2V9C22,8.666,21.833,8.354,21.555,8.168z M12,4.202L19.197,9L12,13.798L4.803,9L12,4.202z M4,20v-9.131 l7.445,4.963C11.613,15.944,11.807,16,12,16s0.387-0.056,0.555-0.168L20,10.869L19.997,20H4z">
     </path>
 </svg>
-`
+`;
 
 export const LIVE_ICON = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
@@ -685,32 +687,32 @@ export const LIVE_ICON = `
         </path>
     </g>
 </svg>
-`
+`;
 
 export const ARROW_UP = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 217.9L383 345c9.4 9.4 24.6 9.4 33.9 0 9.4-9.4 9.3-24.6 0-34L273 167c-9.1-9.1-23.7-9.3-33.1-.7L95 310.9c-4.7 4.7-7 10.9-7 17s2.3 12.3 7 17c9.4 9.4 24.6 9.4 33.9 0l127.1-127z"></path>
 </svg>
-`
+`;
 
 export const ARROW_DOWN = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M256 294.1L383 167c9.4-9.4 24.6-9.4 33.9 0s9.3 24.6 0 34L273 345c-9.1 9.1-23.7 9.3-33.1.7L95 201.1c-4.7-4.7-7-10.9-7-17s2.3-12.3 7-17c9.4-9.4 24.6-9.4 33.9 0l127.1 127z"></path>
 </svg>
-`
+`;
 
 export const ICON_LOCK = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"></path>
 </svg>
-`
+`;
 
 export const LIGHTNING_ICON = `
 <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 16 16" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
     <path fill-rule="evenodd" d="M11.251.068a.5.5 0 01.227.58L9.677 6.5H13a.5.5 0 01.364.843l-8 8.5a.5.5 0 01-.842-.49L6.323 9.5H3a.5.5 0 01-.364-.843l8-8.5a.5.5 0 01.615-.09zM4.157 8.5H7a.5.5 0 01.478.647L6.11 13.59l5.732-6.09H9a.5.5 0 01-.478-.647L9.89 2.41 4.157 8.5z" clip-rule="evenodd">
     </path>
 </svg>
-`
+`;
 
 export const DISPLAY_TYPE_ICONS = {
     table: TABLE_ICON,

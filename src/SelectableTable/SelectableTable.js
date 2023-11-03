@@ -14,56 +14,52 @@ export default function SelectableTable({
 }) {
     this.ID = uuidv4();
 
-    console.log({ queryResponse });
-
     const rows = queryResponse?.rows;
     const columns = queryResponse?.columns;
     const config = getDataFormatting(options.dataFormatting);
 
+    //   onColumnHeaderClick = (index) => {
+    //     if (this.props.disabledColumns.includes(index)) {
+    //       return
+    //     }
 
-//   onColumnHeaderClick = (index) => {
-//     if (this.props.disabledColumns.includes(index)) {
-//       return
-//     }
+    //     if (this.props.radio) {
+    //       this.props.onColumnSelection?.([index])
+    //     } else {
+    //       let selectedColumns = _cloneDeep(this.props.selectedColumns)
 
-//     if (this.props.radio) {
-//       this.props.onColumnSelection?.([index])
-//     } else {
-//       let selectedColumns = _cloneDeep(this.props.selectedColumns)
+    //       if (selectedColumns?.includes(index)) {
+    //         selectedColumns = selectedColumns.filter((i) => i !== index)
+    //       } else {
+    //         selectedColumns.push(index)
+    //       }
 
-//       if (selectedColumns?.includes(index)) {
-//         selectedColumns = selectedColumns.filter((i) => i !== index)
-//       } else {
-//         selectedColumns.push(index)
-//       }
+    //       this.props.onColumnSelection?.(selectedColumns)
+    //     }
+    //   }
 
-//       this.props.onColumnSelection?.(selectedColumns)
-//     }
-//   }
+    //   this.onMouseOverColumn = (e, columnIndex) => {
+    //     // Must use vanilla styling to achieve hover styles for a whole column
+    //     const allColumnHeaders = this.tableRef?.querySelectorAll('.selectable-table-column')
+    //     allColumnHeaders?.forEach((header) => {
+    //       header.classList.remove('react-autoql-selectable-table-hovered')
+    //     })
 
-//   this.onMouseOverColumn = (e, columnIndex) => {
-//     // Must use vanilla styling to achieve hover styles for a whole column
-//     const allColumnHeaders = this.tableRef?.querySelectorAll('.selectable-table-column')
-//     allColumnHeaders?.forEach((header) => {
-//       header.classList.remove('react-autoql-selectable-table-hovered')
-//     })
+    //     const allCells = this.tableRef?.querySelectorAll('.selectable-table-cell')
+    //     allCells?.forEach((cell) => {
+    //       cell.classList.remove('react-autoql-selectable-table-hovered')
+    //     })
 
-//     const allCells = this.tableRef?.querySelectorAll('.selectable-table-cell')
-//     allCells?.forEach((cell) => {
-//       cell.classList.remove('react-autoql-selectable-table-hovered')
-//     })
+    //     if (this.props.disabledColumns.includes(columnIndex)) {
+    //       return
+    //     }
 
-//     if (this.props.disabledColumns.includes(columnIndex)) {
-//       return
-//     }
+    //     const columnHeader = this.tableRef?.querySelector(`#col-header-${columnIndex}`)
+    //     columnHeader?.classList.add('react-autoql-selectable-table-hovered')
 
-//     const columnHeader = this.tableRef?.querySelector(`#col-header-${columnIndex}`)
-//     columnHeader?.classList.add('react-autoql-selectable-table-hovered')
-
-//     const cells = this.tableRef?.querySelectorAll(`.cell-${columnIndex}`)
-//     cells?.forEach((cell) => cell.classList.add('react-autoql-selectable-table-hovered'))
-//   }
-
+    //     const cells = this.tableRef?.querySelectorAll(`.cell-${columnIndex}`)
+    //     cells?.forEach((cell) => cell.classList.add('react-autoql-selectable-table-hovered'))
+    //   }
 
     this.formatColumnHeader = (th, column, i) => {
         const colHeader = document.createElement('div');
