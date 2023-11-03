@@ -714,6 +714,10 @@ export const LIGHTNING_ICON = `
 </svg>
 `;
 
+export const QUERY_SEND_BTN = `
+<svg stroke="currentColor" fill="none" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+`;
+
 export const DISPLAY_TYPE_ICONS = {
     table: TABLE_ICON,
     pivot_table: PIVOT_ICON,

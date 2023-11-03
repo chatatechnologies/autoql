@@ -5,7 +5,7 @@ import { DATA_EXPLORER_SEARCH_ICON, CHATA_BUBBLES_ICON, ABACUS_ICON, TABLE_ICON 
 import { refreshTooltips } from '../Tooltips';
 import { createIcon } from '../Utils';
 import { DataPreview } from './Components/DataPreview';
-import { RelatedQueries } from './Components/RelatedQueries';
+import { SampleQueries } from './Components/SampleQueries';
 import { SubjectName } from './Components/SubjectName/SubjectName';
 import { DataExplorerInput } from './Components/DataExplorerInput';
 
@@ -38,15 +38,15 @@ export function DataExplorer({ subjects, widget }) {
             var previewSection = document.querySelector(
                 '.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section',
             );
-            var relatedQueriesSection = document.querySelector(
+            var sampleQueriesSection = document.querySelector(
                 '.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section',
             );
 
             if (previewSection) {
                 previewSection.remove();
             }
-            if (relatedQueriesSection) {
-                relatedQueriesSection.remove();
+            if (sampleQueriesSection) {
+                sampleQueriesSection.remove();
             }
             contentWrapper.appendChild(introMessage);
         },
@@ -109,15 +109,43 @@ export function DataExplorer({ subjects, widget }) {
     };
 
     obj.createSampleQueriesSection = (subject) => {
-        const relatedQueriesSection = new RelatedQueries({
-            icon: CHATA_BUBBLES_ICON,
-            title: `Query suggestions for "${subject.displayName}"`,
-            containerHeight: container.clientHeight,
-            textBarHeight: textBar.clientHeight,
-            subject,
+        const context = subject?.type === DataExplorerTypes.VL_TYPE ? this.selectedTopic?.context : subject?.context;
+
+        let searchText = '';
+        if (subject?.type === DataExplorerTypes.TEXT_TYPE) {
+            searchText = subject?.displayName;
+        }
+
+        let columns;
+        if (subject?.valueLabel?.column_name) {
+            columns = {
+                [subject.valueLabel.column_name]: {
+                    value: subject.valueLabel.keyword,
+                },
+            };
+        }
+
+        if (this.selectedColumns?.length) {
+            this.selectedColumns?.forEach((columnIndex) => {
+                if (!columns) {
+                    columns = {};
+                }
+
+                const column = obj.dataPreview?.response?.data?.data?.columns[columnIndex];
+                if (!columns[column.name]) {
+                    columns[column.name] = { value: '' };
+                }
+            });
+        }
+
+        const sampleQueriesSection = new SampleQueries({
             widget,
+            searchText,
+            columns,
+            context,
         });
-        contentWrapper.appendChild(relatedQueriesSection);
+
+        contentWrapper.appendChild(sampleQueriesSection);
     };
 
     obj.onSubjectClick = (subject) => {

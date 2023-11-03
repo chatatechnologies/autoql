@@ -178,6 +178,25 @@
                 &:last-of-type {
                     padding-bottom: 10px;
                 }
+
+                .autoql-vanilla-data-explorer-title-text {
+                    display: flex;
+                    flex-wrap: nowrap;
+                    align-items: center;
+                    font-size: 16px;
+                    font-weight: 600;
+                    margin-bottom: 5px;
+                    margin-top: 15px;
+                    min-height: 30px;
+
+                    .autoql-vanilla-data-explorer-title-text-sample-queries {
+                        padding-bottom: 2px;
+                    }
+
+                    .autoql-vanilla-icon {
+                        margin-right: 0;
+                    }
+                }
             }
 
             .autoql-vanilla-input-label {
