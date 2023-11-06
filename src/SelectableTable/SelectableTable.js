@@ -1,5 +1,5 @@
 import { ColumnTypes, formatElement, getDataFormatting } from 'autoql-fe-utils';
-import { uuidv4 } from '../Utils';
+import { Checkbox } from '../Checkbox';
 
 import './SelectableTable.scss';
 
@@ -12,8 +12,6 @@ export default function SelectableTable({
     radio = false,
     showEndOfPreviewMessage = true,
 }) {
-    this.ID = uuidv4();
-
     let selected = selectedColumns;
 
     const rows = queryResponse?.rows;
@@ -21,14 +19,24 @@ export default function SelectableTable({
     const config = getDataFormatting(options.dataFormatting);
 
     this.addClassToColumn = (columnIndex, state) => {
+        const className = `autoql-vanilla-selectable-table-${state}`;
         const header = this.getColumnHeaderFromIndex(columnIndex);
         const cells = this.getCellsFromColumnIndex(columnIndex);
 
-        header?.classList.add(`autoql-vanilla-selectable-table-${state}`);
+        if (header) {
+            header.classList.add(className);
 
-        cells?.forEach((cell) => {
-            cell.classList.add(`autoql-vanilla-selectable-table-${state}`);
-        });
+            if (state === 'selected') {
+                const checkbox = header.querySelector('input.autoql-vanilla-checkbox-input');
+                if (checkbox) {
+                    checkbox.checked = true;
+                }
+            }
+        }
+
+        if (cells?.length) {
+            cells?.forEach((cell) => cell.classList.add(className));
+        }
     };
 
     this.removeClassFromColumn = (columnIndex, state) => {
@@ -37,9 +45,20 @@ export default function SelectableTable({
 
         header?.classList.remove(`autoql-vanilla-selectable-table-${state}`);
 
+        if (state === 'selected') {
+            const checkbox = header.querySelector('input.autoql-vanilla-checkbox-input');
+            if (checkbox) {
+                checkbox.checked = false;
+            }
+        }
+
         cells?.forEach((cell) => {
             cell.classList.remove(`autoql-vanilla-selectable-table-${state}`);
         });
+    };
+
+    this.removeClassFromAllColumns = (state) => {
+        columns.forEach((c, i) => this.removeClassFromColumn(i, state));
     };
 
     this.getCellsFromColumnIndex = (index) =>
@@ -68,16 +87,7 @@ export default function SelectableTable({
     };
 
     this.onMouseOverColumn = (e, columnIndex) => {
-        // const allColumnHeaders = this.selectableTable?.querySelectorAll('.autoql-vanilla-selectable-table-column');
-        // allColumnHeaders?.forEach((header) => {
-        //     header.classList.remove('autoql-vanilla-selectable-table-hovered');
-        // });
-        // const allCells = this.selectableTable?.querySelectorAll('.autoql-vanilla-selectable-table-cell');
-        // allCells?.forEach((cell) => {
-        //     cell.classList.remove('autoql-vanilla-selectable-table-hovered');
-        // });
-
-        columns.forEach((c, i) => this.removeClassFromColumn(i, 'hovered'));
+        this.removeClassFromAllColumns('hovered');
 
         if (disabledColumns.includes(columnIndex)) {
             return;
@@ -88,20 +98,24 @@ export default function SelectableTable({
 
     this.formatColumnHeader = (th, column, i) => {
         const colHeader = document.createElement('div');
+        const columnTitle = document.createElement('span');
+        const checkboxContainer = document.createElement('div');
+
         colHeader.classList.add('autoql-vanilla-selectable-table-col-header');
+        checkboxContainer.classList.add('autoql-vanilla-checkbox-container');
         // TODO: Add tippy content
         //     data-tooltip-id={tooltipID}
         //     data-tooltip-content={JSON.stringify(column)}
 
-        const columnTitle = document.createElement('span');
         columnTitle.innerHTML = column?.display_name;
+
+        const checkboxElement = new Checkbox(checkboxContainer, {
+            checked: selectedColumns?.includes(i),
+            disabled: disabledColumns?.includes(i),
+        });
+
         colHeader.appendChild(columnTitle);
-        // TODO: Add checkbox
-        //     <Checkbox
-        //       disabled={disabledColumns.includes(i)}
-        //       checked={selectedColumns?.includes(i)}
-        //       onChange={() => this.onColumnHeaderClick(i)}
-        //     />
+        colHeader.appendChild(checkboxContainer);
 
         th.appendChild(colHeader);
     };
@@ -127,6 +141,7 @@ export default function SelectableTable({
 
         const selectableTableWrapper = document.createElement('div');
         selectableTableWrapper.classList.add('autoql-vanilla-selectable-table-wrapper');
+        selectableTableWrapper.addEventListener('mouseout', () => this.removeClassFromAllColumns('hovered'));
         selectableTable.appendChild(selectableTableWrapper);
 
         // add scrollbars here around "table"

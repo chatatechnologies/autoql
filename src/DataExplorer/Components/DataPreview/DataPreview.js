@@ -98,7 +98,7 @@ export function DataPreview({ subject, widgetOptions }) {
             queryResponse: data,
             options: widgetOptions,
             selectedColumns: [],
-            onColumnSelection: (selected) => console.log('on column selection!', { selected }),
+            // TODO: onColumnSelection: (selected) => console.log('on column selection!', { selected }),
         });
 
         const previewTableLabel = document.createElement('div');

@@ -51,7 +51,7 @@
             td.autoql-vanilla-selectable-table-disabled {
                 cursor: default;
                 opacity: 0.7;
-                background-color: var(--autoql-vanilla-background-color-disabled) !important;
+                background-color: var(--autoql-vanilla-background-color-disabled);
             }
 
             &:hover {
@@ -125,8 +125,8 @@
                     }
 
                     &.autoql-vanilla-selectable-table-hovered {
-                        .autoql-vanilla-checkbox__input {
-                            border-color: var(--autoql-vanilla-accent-color) !important;
+                        .autoql-vanilla-selectable-table-col-header .autoql-vanilla-checkbox-checkmark {
+                            border-color: var(--autoql-vanilla-accent-color);
                         }
                     }
 
@@ -151,16 +151,21 @@
                         justify-content: center;
                         position: relative;
 
-                        // TODO: add checkbox styles
-                        // .autoql-vanilla-checkbox-container {
-                        //     margin-left: 10px;
+                        .autoql-vanilla-checkbox-container {
+                            display: flex;
+                            margin-left: 10px;
+                            pointer-events: none;
 
-                        //     .autoql-vanilla-checkbox__input {
-                        //         width: 15px;
-                        //         height: 15px;
-                        //         border-color: var(--autoql-vanilla-text-color-placeholder);
-                        //     }
-                        // }
+                            .autoql-vanilla-checkbox-checkmark {
+                                width: 15px;
+                                height: 15px;
+                            }
+                            .autoql-vanilla-checkbox-input {
+                                &:not(:checked) ~ .autoql-vanilla-checkbox-checkmark {
+                                    border-color: var(--autoql-vanilla-text-color-placeholder);
+                                }
+                            }
+                        }
                     }
                 }
             }
