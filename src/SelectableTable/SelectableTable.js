@@ -14,68 +14,92 @@ export default function SelectableTable({
 }) {
     this.ID = uuidv4();
 
+    let selected = selectedColumns;
+
     const rows = queryResponse?.rows;
     const columns = queryResponse?.columns;
     const config = getDataFormatting(options.dataFormatting);
 
-    //   onColumnHeaderClick = (index) => {
-    //     if (this.props.disabledColumns.includes(index)) {
-    //       return
-    //     }
+    this.addClassToColumn = (columnIndex, state) => {
+        const header = this.getColumnHeaderFromIndex(columnIndex);
+        const cells = this.getCellsFromColumnIndex(columnIndex);
 
-    //     if (this.props.radio) {
-    //       this.props.onColumnSelection?.([index])
-    //     } else {
-    //       let selectedColumns = _cloneDeep(this.props.selectedColumns)
+        header?.classList.add(`autoql-vanilla-selectable-table-${state}`);
 
-    //       if (selectedColumns?.includes(index)) {
-    //         selectedColumns = selectedColumns.filter((i) => i !== index)
-    //       } else {
-    //         selectedColumns.push(index)
-    //       }
+        cells?.forEach((cell) => {
+            cell.classList.add(`autoql-vanilla-selectable-table-${state}`);
+        });
+    };
 
-    //       this.props.onColumnSelection?.(selectedColumns)
-    //     }
-    //   }
+    this.removeClassFromColumn = (columnIndex, state) => {
+        const header = this.getColumnHeaderFromIndex(columnIndex);
+        const cells = this.getCellsFromColumnIndex(columnIndex);
 
-    //   this.onMouseOverColumn = (e, columnIndex) => {
-    //     // Must use vanilla styling to achieve hover styles for a whole column
-    //     const allColumnHeaders = this.tableRef?.querySelectorAll('.selectable-table-column')
-    //     allColumnHeaders?.forEach((header) => {
-    //       header.classList.remove('react-autoql-selectable-table-hovered')
-    //     })
+        header?.classList.remove(`autoql-vanilla-selectable-table-${state}`);
 
-    //     const allCells = this.tableRef?.querySelectorAll('.selectable-table-cell')
-    //     allCells?.forEach((cell) => {
-    //       cell.classList.remove('react-autoql-selectable-table-hovered')
-    //     })
+        cells?.forEach((cell) => {
+            cell.classList.remove(`autoql-vanilla-selectable-table-${state}`);
+        });
+    };
 
-    //     if (this.props.disabledColumns.includes(columnIndex)) {
-    //       return
-    //     }
+    this.getCellsFromColumnIndex = (index) =>
+        this.selectableTable?.querySelectorAll(`.autoql-vanilla-selectable-table-cell-${index}`);
 
-    //     const columnHeader = this.tableRef?.querySelector(`#col-header-${columnIndex}`)
-    //     columnHeader?.classList.add('react-autoql-selectable-table-hovered')
+    this.getColumnHeaderFromIndex = (index) => this.selectableTable?.querySelector(`#col-header-${index}`);
 
-    //     const cells = this.tableRef?.querySelectorAll(`.cell-${columnIndex}`)
-    //     cells?.forEach((cell) => cell.classList.add('react-autoql-selectable-table-hovered'))
-    //   }
+    this.onColumnHeaderClick = (index) => {
+        if (disabledColumns.includes(index)) {
+            return;
+        }
+
+        if (radio) {
+            onColumnSelection?.([index]);
+        } else {
+            if (selected?.includes(index)) {
+                this.removeClassFromColumn(index, 'selected');
+                selected = selected.filter((i) => i !== index);
+            } else {
+                this.addClassToColumn(index, 'selected');
+                selected.push(index);
+            }
+
+            onColumnSelection?.(selected);
+        }
+    };
+
+    this.onMouseOverColumn = (e, columnIndex) => {
+        // const allColumnHeaders = this.selectableTable?.querySelectorAll('.autoql-vanilla-selectable-table-column');
+        // allColumnHeaders?.forEach((header) => {
+        //     header.classList.remove('autoql-vanilla-selectable-table-hovered');
+        // });
+        // const allCells = this.selectableTable?.querySelectorAll('.autoql-vanilla-selectable-table-cell');
+        // allCells?.forEach((cell) => {
+        //     cell.classList.remove('autoql-vanilla-selectable-table-hovered');
+        // });
+
+        columns.forEach((c, i) => this.removeClassFromColumn(i, 'hovered'));
+
+        if (disabledColumns.includes(columnIndex)) {
+            return;
+        }
+
+        this.addClassToColumn(columnIndex, 'hovered');
+    };
 
     this.formatColumnHeader = (th, column, i) => {
         const colHeader = document.createElement('div');
         colHeader.classList.add('autoql-vanilla-selectable-table-col-header');
         // TODO: Add tippy content
-        //     data-tooltip-id={this.props.tooltipID}
+        //     data-tooltip-id={tooltipID}
         //     data-tooltip-content={JSON.stringify(column)}
 
         const columnTitle = document.createElement('span');
         columnTitle.innerHTML = column?.display_name;
         colHeader.appendChild(columnTitle);
-
         // TODO: Add checkbox
         //     <Checkbox
-        //       disabled={this.props.disabledColumns.includes(i)}
-        //       checked={this.props.selectedColumns?.includes(i)}
+        //       disabled={disabledColumns.includes(i)}
+        //       checked={selectedColumns?.includes(i)}
         //       onChange={() => this.onColumnHeaderClick(i)}
         //     />
 
@@ -122,17 +146,14 @@ export default function SelectableTable({
             const isDisabled = disabledColumns.includes(i);
             const isSelected = selectedColumns.includes(i);
 
+            th.id = `col-header-${i}`;
             th.classList.add('autoql-vanilla-selectable-table-column');
-            if (isSelected) th.classList.add('autoql-vanilla-selectable-table-column-selected');
-            if (isDisabled) th.classList.add('autoql-vanilla-selectable-table-column-disabled');
 
-            th.addEventListener('mousedown', () => {
-                // this.onColumnHeaderClick(i)
-            });
+            if (isSelected) th.classList.add('autoql-vanilla-selectable-table-selected');
+            if (isDisabled) th.classList.add('autoql-vanilla-selectable-table-disabled');
 
-            th.addEventListener('mouseover', (e) => {
-                // this.onMouseOverColumn(e, i)
-            });
+            th.addEventListener('mousedown', () => this.onColumnHeaderClick(i));
+            th.addEventListener('mouseover', (e) => this.onMouseOverColumn(e, i));
 
             this.formatColumnHeader(th, col, i);
             headerRow.appendChild(th);
@@ -149,16 +170,13 @@ export default function SelectableTable({
                 const isSelected = selectedColumns.includes(j);
 
                 td.classList.add('autoql-vanilla-selectable-table-cell');
-                if (isSelected) td.classList.add('autoql-vanilla-selectable-table-cell-selected');
-                if (isDisabled) td.classList.add('autoql-vanilla-selectable-table-cell-disabled');
+                td.classList.add(`autoql-vanilla-selectable-table-cell-${j}`);
 
-                td.addEventListener('mousedown', () => {
-                    // this.onColumnHeaderClick(j)
-                });
+                if (isSelected) td.classList.add('autoql-vanilla-selectable-table-selected');
+                if (isDisabled) td.classList.add('autoql-vanilla-selectable-table-disabled');
 
-                td.addEventListener('mouseover', (e) => {
-                    // this.onMouseOverColumn(e, j)
-                });
+                td.addEventListener('mousedown', () => this.onColumnHeaderClick(j));
+                td.addEventListener('mouseover', (e) => this.onMouseOverColumn(e, j));
 
                 this.formatCell({ td, cell, column, config });
                 tr.appendChild(td);

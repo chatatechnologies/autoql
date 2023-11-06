@@ -94,7 +94,12 @@ export function DataPreview({ subject, widgetOptions }) {
     obj.displayResponse = (r) => {
         obj.clearLoading();
         const { data } = r.data;
-        const table = new SelectableTable({ queryResponse: data });
+        const table = new SelectableTable({
+            queryResponse: data,
+            options: widgetOptions,
+            selectedColumns: [],
+            onColumnSelection: (selected) => console.log('on column selection!', { selected }),
+        });
 
         const previewTableLabel = document.createElement('div');
         previewTableLabel.classList.add('autoql-vanilla-input-label');

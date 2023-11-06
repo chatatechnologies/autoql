@@ -48,7 +48,7 @@
             min-width: 100%;
             border-collapse: collapse;
 
-            td.autoql-vanilla-selectable-table-cell-disabled {
+            td.autoql-vanilla-selectable-table-disabled {
                 cursor: default;
                 opacity: 0.7;
                 background-color: var(--autoql-vanilla-background-color-disabled) !important;
@@ -66,9 +66,7 @@
                 }
 
                 td.autoql-vanilla-selectable-table-hovered {
-                    &:not(.autoql-vanilla-selectable-table-cell-selected):not(
-                            .autoql-vanilla-selectable-table-cell-disabled
-                        ) {
+                    &:not(.autoql-vanilla-selectable-table-selected):not(.autoql-vanilla-selectable-table-disabled) {
                         background-color: RGBA(
                             var(--autoql-vanilla-accent-color-R),
                             var(--autoql-vanilla-accent-color-G),
@@ -76,9 +74,7 @@
                             0.1
                         );
                     }
-                    &.autoql-vanilla-selectable-table-cell-selected:not(
-                            .autoql-vanilla-selectable-table-cell-disabled
-                        ) {
+                    &.autoql-vanilla-selectable-table-selected:not(.autoql-vanilla-selectable-table-disabled) {
                         background-color: RGBA(
                             var(--autoql-vanilla-accent-color-R),
                             var(--autoql-vanilla-accent-color-G),
@@ -108,7 +104,7 @@
                     background-color: var(--autoql-vanilla-background-color-secondary);
                     border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
 
-                    &.autoql-vanilla-selectable-table-column-disabled {
+                    &.autoql-vanilla-selectable-table-disabled {
                         &::before {
                             background-color: var(--autoql-vanilla-border-color) !important;
                         }
@@ -124,7 +120,7 @@
                         }
                     }
 
-                    &:not(.autoql-vanilla-selectable-table-column-disabled) {
+                    &:not(.autoql-vanilla-selectable-table-disabled) {
                         cursor: pointer;
                     }
 
@@ -134,12 +130,12 @@
                         }
                     }
 
-                    &.autoql-vanilla-selectable-table-column-selected {
+                    &.autoql-vanilla-selectable-table-selected {
                         background-color: var(--autoql-vanilla-accent-color);
                         color: var(--autoql-vanilla-text-color-accent);
                     }
 
-                    &:not(.autoql-vanilla-selectable-table-column-selected)::before {
+                    &:not(.autoql-vanilla-selectable-table-selected)::before {
                         background-color: var(--autoql-vanilla-background-color-disabled);
                     }
 
@@ -182,7 +178,7 @@
                         position: relative;
                         padding: 0 18px;
 
-                        &:not(.autoql-vanilla-selectable-table-cell-disabled) {
+                        &:not(.autoql-vanilla-selectable-table-disabled) {
                             cursor: pointer;
                         }
 
@@ -190,7 +186,7 @@
                             border-right: 1px solid var(--autoql-vanilla-table-border-color);
                         }
 
-                        &.autoql-vanilla-selectable-table-cell-selected {
+                        &.autoql-vanilla-selectable-table-selected {
                             background-color: RGBA(
                                 var(--autoql-vanilla-accent-color-R),
                                 var(--autoql-vanilla-accent-color-G),
