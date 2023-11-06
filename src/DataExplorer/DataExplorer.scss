@@ -71,67 +71,6 @@
         }
     }
 
-    .autoql-vanilla-data-explorer-autocomplete {
-        position: absolute;
-        padding: 10px 0px;
-        top: 60px;
-        left: 10px;
-        right: 10px;
-        display: none;
-        box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
-        overflow: hidden;
-        border-radius: 24px;
-        z-index: 3;
-        border: 1px solid var(--autoql-vanilla-border-color);
-        background: var(--autoql-vanilla-background-color-secondary);
-        color: var(--autoql-vanilla-text-color-primary);
-        overflow-y: auto;
-
-        ul {
-            list-style: none;
-            list-style-type: none;
-            visibility: hidden;
-            padding: 0px;
-            margin: 0;
-
-            &:hover {
-                visibility: visible;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                background-color: var(--autoql-vanilla-scrollbar-color);
-                opacity: 0.5;
-                border-radius: 5px;
-            }
-            &::-webkit-scrollbar {
-                width: 6px;
-                height: 6px;
-            }
-
-            .autoql-vanilla-subject {
-                cursor: pointer;
-                padding: 2px 2px 2px 18px;
-                letter-spacing: 0.05em;
-                line-height: 22.5px;
-                visibility: visible;
-                padding-right: 8px;
-
-                &:hover {
-                    background-color: rgba(0, 0, 0, 0.1);
-                }
-
-                .autoql-vanilla-icon {
-                    margin-right: 5px;
-                    vertical-align: middle;
-                }
-            }
-        }
-
-        &.autoql-vanilla-autocomplete-show {
-            display: block;
-        }
-    }
-
     .autoql-vanilla-data-explorer-result-container {
         color: var(--autoql-vanilla-text-color-primary);
         width: 100%;

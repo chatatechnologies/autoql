@@ -31,23 +31,25 @@ export function DataExplorer({ subjects, widget }) {
 
     const textBarComponent = new DataExplorerInput({
         subjects,
-        height: container.clientHeight,
+        container,
         onSubjectClick: (subject) => obj.onSubjectClick(subject),
         widget,
         onClearSearch: () => {
-            var previewSection = document.querySelector(
-                '.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section',
-            );
-            var sampleQueriesSection = document.querySelector(
-                '.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section',
-            );
+            contentWrapper.innerHTML = '';
 
-            if (previewSection) {
-                previewSection.remove();
-            }
-            if (sampleQueriesSection) {
-                sampleQueriesSection.remove();
-            }
+            // var previewSection = document.querySelector(
+            //     '.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section',
+            // );
+            // var sampleQueriesSection = document.querySelector(
+            //     '.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section',
+            // );
+
+            // if (previewSection) {
+            //     previewSection.remove();
+            // }
+            // if (sampleQueriesSection) {
+            //     sampleQueriesSection.remove();
+            // }
             contentWrapper.appendChild(introMessage);
         },
     });

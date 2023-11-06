@@ -52,7 +52,7 @@ export function SampleQueries({ widget, searchText, columns, context, dataPrevie
 
         const messageText = document.createElement('p');
         messageText.innerHTML =
-            error?.message ??
+            error?.message ||
             'Uh oh.. an error occured while trying to retrieve your sample queries. Please try again.';
         errorMessageContainer.appendChild(messageText);
 
@@ -62,7 +62,7 @@ export function SampleQueries({ widget, searchText, columns, context, dataPrevie
             errorMessageContainer.appendChild(messageErrorID);
         }
 
-        container.appendChild(errorMessageContainer);
+        list.appendChild(errorMessageContainer);
     };
 
     const createSampleQuery = (suggestion) => {

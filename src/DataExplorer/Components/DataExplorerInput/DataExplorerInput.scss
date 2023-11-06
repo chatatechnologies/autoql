@@ -1,0 +1,88 @@
+.autoql-vanilla-data-explorer-autocomplete {
+    position: absolute;
+    padding-bottom: 10px;
+    top: 60px;
+    left: 10px;
+    right: 10px;
+    display: none;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    border-radius: 24px;
+    z-index: 3;
+    border: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color-secondary);
+    color: var(--autoql-vanilla-text-color-primary);
+    overflow-y: auto;
+    max-height: 400px;
+
+    .autoql-vanilla-autocomplete-section-title {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        width: 100%;
+        font-size: 12px;
+        line-height: 1.2em !important;
+        background: var(--autoql-vanilla-background-color-secondary) !important;
+        padding: 10px 15px 2px 18px !important;
+        color: var(--autoql-vanilla-text-color-placeholder);
+        cursor: default !important;
+
+        .autoql-vanilla-autocomplete-section-title-text {
+            font-weight: 600;
+        }
+
+        .autoql-vanilla-autocomplete-section-title-action {
+            text-decoration: underline;
+            font-weight: 400;
+            cursor: pointer;
+        }
+    }
+
+    .autoql-vanilla-data-explorer-search-no-results {
+        display: flex;
+        text-align: center;
+        font-style: italic;
+        color: var(--autoql-vanilla-text-color-placeholder);
+        padding: 6px 20px 5px 28px !important;
+        background: var(--autoql-vanilla-background-color-secondary) !important;
+        cursor: default !important;
+    }
+
+    ul {
+        list-style: none;
+        list-style-type: none;
+        padding: 0px;
+        margin: 0;
+
+        &::-webkit-scrollbar-thumb {
+            background-color: var(--autoql-vanilla-scrollbar-color);
+            opacity: 0.5;
+            border-radius: 5px;
+        }
+        &::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+
+        .autoql-vanilla-subject {
+            cursor: pointer;
+            padding: 2px 2px 2px 18px;
+            letter-spacing: 0.03em;
+            line-height: 22px;
+            padding-right: 8px;
+
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.1);
+            }
+
+            .autoql-vanilla-icon {
+                margin-right: 7px;
+                vertical-align: middle;
+            }
+        }
+    }
+
+    &.autoql-vanilla-autocomplete-show {
+        display: block;
+    }
+}
