@@ -37,9 +37,7 @@ export function TopicList({
         errorMessageContainer.classList.add('data-explorer-section-error-container');
 
         const messageText = document.createElement('p');
-        messageText.innerHTML =
-            error?.message ||
-            'Uh oh.. an error occured while trying to retrieve the topics for this value. Please try again.';
+        messageText.innerHTML = error?.message || strings.topicsGeneralError;
         errorMessageContainer.appendChild(messageText);
 
         if (error?.reference_id) {

@@ -161,6 +161,8 @@ export const strings = new LocalizedStrings({
             'Sorry, I couldn’t find any sample queries matching your input. Try entering a different topic or keyword instead.',
         sampleQueriesGeneralError:
             'Uh oh.. an error occured while trying to retrieve your sample queries. Please try again.',
+        topicsGeneralError:
+            'Uh oh.. an error occured while trying to retrieve the topics for this value. Please try again.',
         generatedSql: 'Generated SQL',
         copySqlMessage: 'Successfully copied generated query to clipboard!',
         copySqlToClipboard: 'Copy to Clipboard',
@@ -348,6 +350,8 @@ export const strings = new LocalizedStrings({
             'Lo siento, no pude encontrar ninguna consulta de muestra que coincida con su entrada. Intente ingresar un tema o palabra clave diferente en su lugar.',
         sampleQueriesGeneralError:
             'Lo siento, se produjo un error al intentar recuperar sus consultas de muestra. Inténtalo de nuevo.',
+        topicsGeneralError:
+            'Lo siento, se produjo un error al intentar recuperar los temas para este valor. Inténtalo de nuevo.',
         generatedSql: 'SQL Generado',
         copySqlMessage: 'La consulta generada se copió correctamente al portapapeles!',
         copySqlToClipboard: 'Copiar al portapapeles',
