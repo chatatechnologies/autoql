@@ -4,7 +4,7 @@ import SelectableTable from '../../../SelectableTable/SelectableTable';
 
 import './DataPreview.scss';
 
-export function DataPreview({ subject, widgetOptions }) {
+export function DataPreview({ subject, widgetOptions, showLabel = true }) {
     let obj = this;
 
     const DATA_PREVIEW_ROWS = 20;
@@ -101,11 +101,13 @@ export function DataPreview({ subject, widgetOptions }) {
             // TODO: onColumnSelection: (selected) => console.log('on column selection!', { selected }),
         });
 
-        const previewTableLabel = document.createElement('div');
-        previewTableLabel.classList.add('autoql-vanilla-input-label');
-        previewTableLabel.innerHTML = `Select all fields of interest from <em>"${subject?.displayName}"</em>:`;
+        if (showLabel) {
+            const previewTableLabel = document.createElement('div');
+            previewTableLabel.classList.add('autoql-vanilla-input-label');
+            previewTableLabel.innerHTML = `Select all fields of interest from <em>"${subject?.displayName}"</em>:`;
+            dataPreviewContainer.appendChild(previewTableLabel);
+        }
 
-        dataPreviewContainer.appendChild(previewTableLabel);
         dataPreviewContainer.appendChild(table);
     };
 

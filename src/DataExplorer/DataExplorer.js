@@ -10,6 +10,7 @@ import { SubjectName } from './Components/SubjectName/SubjectName';
 import { DataExplorerInput } from './Components/DataExplorerInput';
 
 import './DataExplorer.scss';
+import { TopicList } from './Components/TopicList/TopicList';
 
 export function DataExplorer({ subjects, widget }) {
     let obj = this;
@@ -110,6 +111,21 @@ export function DataExplorer({ subjects, widget }) {
         }
     };
 
+    obj.createTopicsListSection = (subject) => {
+        if (subject?.type === DataExplorerTypes.VL_TYPE) {
+            const topicListSection = new TopicList({
+                valueLabel: subject.valueLabel.canonical,
+                options: widget.options,
+                subjects,
+                subject,
+            });
+
+            obj.topicList = topicListSection;
+
+            contentWrapper.appendChild(topicListSection.container);
+        }
+    };
+
     obj.createSampleQueriesSection = (subject) => {
         const context = subject?.type === DataExplorerTypes.VL_TYPE ? this.selectedTopic?.context : subject?.context;
 
@@ -158,6 +174,7 @@ export function DataExplorer({ subjects, widget }) {
     obj.createDataExplorerContent = async (subject) => {
         obj.createTitle(subject);
         obj.createDataPreviewSection(subject);
+        obj.createTopicsListSection(subject);
         obj.createSampleQueriesSection(subject);
     };
 
