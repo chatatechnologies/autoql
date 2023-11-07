@@ -1,16 +1,16 @@
 import { DataExplorerTypes } from 'autoql-fe-utils';
 
-import { DATA_EXPLORER_SEARCH_ICON, CHATA_BUBBLES_ICON, ABACUS_ICON, TABLE_ICON } from '../Svg';
-
-import { refreshTooltips } from '../Tooltips';
+import { strings } from '../Strings';
 import { createIcon } from '../Utils';
+import { refreshTooltips } from '../Tooltips';
 import { DataPreview } from './Components/DataPreview';
 import { SampleQueries } from './Components/SampleQueries';
+import { TopicList } from './Components/TopicList/TopicList';
 import { SubjectName } from './Components/SubjectName/SubjectName';
 import { DataExplorerInput } from './Components/DataExplorerInput';
+import { DATA_EXPLORER_SEARCH_ICON, CHATA_BUBBLES_ICON, ABACUS_ICON, TABLE_ICON } from '../Svg';
 
 import './DataExplorer.scss';
-import { TopicList } from './Components/TopicList/TopicList';
 
 export function DataExplorer({ subjects, widget }) {
     let obj = this;
@@ -33,24 +33,10 @@ export function DataExplorer({ subjects, widget }) {
     const textBarComponent = new DataExplorerInput({
         subjects,
         container,
-        onSubjectClick: (subject) => obj.onSubjectClick(subject),
-        widget,
+        onSubmit: (subject) => obj.createDataExplorerContent(subject),
+        options: widget.options,
         onClearSearch: () => {
             contentWrapper.innerHTML = '';
-
-            // var previewSection = document.querySelector(
-            //     '.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section',
-            // );
-            // var sampleQueriesSection = document.querySelector(
-            //     '.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section',
-            // );
-
-            // if (previewSection) {
-            //     previewSection.remove();
-            // }
-            // if (sampleQueriesSection) {
-            //     sampleQueriesSection.remove();
-            // }
             contentWrapper.appendChild(introMessage);
         },
     });
@@ -65,19 +51,15 @@ export function DataExplorer({ subjects, widget }) {
     introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
     instructionList.classList.add('autoql-vanilla-intro-message-list-container');
 
-    title.appendChild(document.createTextNode('Welcome to '));
+    title.appendChild(document.createTextNode(strings.welcomeTo));
     title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
-    title.appendChild(document.createTextNode('Data Explorer'));
-    p.appendChild(
-        document.createTextNode(
-            `Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:`,
-        ),
-    );
+    title.appendChild(document.createTextNode(strings.dataExplorer));
+    p.appendChild(document.createTextNode(strings.dataExplorerIntro));
 
     const texts = [
-        { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
-        { icon: ABACUS_ICON, string: 'Explore data structure and column types' },
-        { icon: CHATA_BUBBLES_ICON, string: 'View a variety of query suggestions' },
+        { icon: TABLE_ICON, string: strings.dataExplorerMessage1 },
+        { icon: ABACUS_ICON, string: strings.dataExplorerMessage2 },
+        { icon: CHATA_BUBBLES_ICON, string: strings.dataExplorerMessage3 },
     ];
 
     texts.map((text) => {
@@ -89,7 +71,8 @@ export function DataExplorer({ subjects, widget }) {
         listWrapper.appendChild(elem);
     });
 
-    obj.createTitle = (subject) => {
+    obj.createTitle = () => {
+        const subject = obj.selectedSubject;
         if (subject?.displayName && subject?.type !== DataExplorerTypes.TEXT_TYPE) {
             const subjectName = new SubjectName({ subject });
             subjectName.classList.add('autoql-vanilla-data-explorer-selected-subject-title');
@@ -98,11 +81,14 @@ export function DataExplorer({ subjects, widget }) {
         }
     };
 
-    obj.createDataPreviewSection = (subject) => {
+    obj.createDataPreviewSection = () => {
+        const subject = obj.selectedSubject;
+
         if (subject?.type === DataExplorerTypes.SUBJECT_TYPE) {
             const previewSection = new DataPreview({
                 subject,
                 widgetOptions: widget.options,
+                onColumnSelection: obj.onColumnFilter,
             });
 
             obj.dataPreview = previewSection;
@@ -111,13 +97,18 @@ export function DataExplorer({ subjects, widget }) {
         }
     };
 
-    obj.createTopicsListSection = (subject) => {
+    obj.createTopicsListSection = () => {
+        const subject = obj.selectedSubject;
+
         if (subject?.type === DataExplorerTypes.VL_TYPE) {
             const topicListSection = new TopicList({
                 valueLabel: subject.valueLabel.canonical,
                 options: widget.options,
                 subjects,
                 subject,
+                onSubjectClick: obj.onSubjectFilter,
+                onColumnSelection: obj.onColumnFilter,
+                onDataPreview: (previewSection) => (obj.dataPreview = previewSection),
             });
 
             obj.topicList = topicListSection;
@@ -126,8 +117,16 @@ export function DataExplorer({ subjects, widget }) {
         }
     };
 
-    obj.createSampleQueriesSection = (subject) => {
-        const context = subject?.type === DataExplorerTypes.VL_TYPE ? this.selectedTopic?.context : subject?.context;
+    obj.clearSampleQueriesSection = () => {
+        obj.sampleQueriesSection?.remove?.();
+    };
+
+    obj.createSampleQueriesSection = () => {
+        obj.clearSampleQueriesSection();
+
+        const subject = obj.selectedSubject;
+
+        const context = subject?.type === DataExplorerTypes.VL_TYPE ? this.selectedSubject?.context : subject?.context;
 
         let searchText = '';
         if (subject?.type === DataExplorerTypes.TEXT_TYPE) {
@@ -150,7 +149,7 @@ export function DataExplorer({ subjects, widget }) {
                 }
 
                 const column = obj.dataPreview?.response?.data?.data?.columns[columnIndex];
-                if (!columns[column.name]) {
+                if (column?.name && !columns[column.name]) {
                     columns[column.name] = { value: '' };
                 }
             });
@@ -163,19 +162,36 @@ export function DataExplorer({ subjects, widget }) {
             context,
         });
 
+        obj.sampleQueriesSection = sampleQueriesSection;
+
         contentWrapper.appendChild(sampleQueriesSection);
     };
 
-    obj.onSubjectClick = (subject) => {
-        contentWrapper.innerHTML = '';
-        obj.createDataExplorerContent(subject);
+    obj.onSubjectFilter = (subject) => {
+        obj.selectedSubject = subject;
+        obj.createSampleQueriesSection();
+    };
+
+    obj.onColumnFilter = (columns) => {
+        obj.selectedColumns = columns;
+        obj.createSampleQueriesSection();
     };
 
     obj.createDataExplorerContent = async (subject) => {
-        obj.createTitle(subject);
-        obj.createDataPreviewSection(subject);
-        obj.createTopicsListSection(subject);
-        obj.createSampleQueriesSection(subject);
+        obj.selectedSubject = subject;
+
+        contentWrapper.innerHTML = '';
+
+        obj.createTitle();
+
+        // TODO: console.log('implement safetynet for plain text search')
+        // if (subject.type === DataExplorerTypes.TEXT_TYPE) {
+        //     await validateSearchTerm(searchTerm)
+        // }
+
+        obj.createDataPreviewSection();
+        obj.createTopicsListSection();
+        obj.createSampleQueriesSection();
     };
 
     instructionList.appendChild(listWrapper);

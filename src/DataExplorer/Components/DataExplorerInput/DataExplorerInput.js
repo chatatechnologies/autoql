@@ -1,5 +1,12 @@
 import tippy from 'tippy.js';
-import { REQUEST_CANCELLED_ERROR, fetchDataExplorerAutocomplete, parseJwt } from 'autoql-fe-utils';
+import {
+    DataExplorerTypes,
+    REQUEST_CANCELLED_ERROR,
+    fetchDataExplorerAutocomplete,
+    getRecentSearchesFromLocalStorage,
+    setRecentSearchesInLocalStorage,
+    addSubjectToRecentSearches,
+} from 'autoql-fe-utils';
 import { strings } from '../../../Strings';
 import { SubjectName } from '../SubjectName/SubjectName';
 import { htmlToElement } from '../../../Utils';
@@ -7,67 +14,7 @@ import { SEARCH_ICON, CLOSE_ICON } from '../../../Svg';
 
 import './DataExplorerInput.scss';
 
-const getRecentSelectionID = (options) => {
-    const jwt = options?.authentication?.token;
-
-    if (!jwt) {
-        return;
-    }
-
-    try {
-        const tokenInfo = parseJwt(jwt);
-        const id = `data-explorer-recent-${tokenInfo.user_id}-${tokenInfo.project_id}`;
-        return id;
-    } catch (error) {
-        console.error(error);
-        return;
-    }
-};
-
-const getRecentSearchesFromLocalStorage = (options) => {
-    try {
-        const id = getRecentSelectionID(options);
-
-        if (!id) {
-            return [];
-        }
-
-        const recentSearchesStr = localStorage.getItem(id);
-        const recentSearchesArray = JSON.parse(recentSearchesStr);
-
-        if (recentSearchesArray?.constructor !== Array || !recentSearchesArray?.length) {
-            return [];
-        }
-
-        const filteredRecentSearchesArray = recentSearchesArray.filter((subject, i, self) => {
-            return self.findIndex((subj) => subj.displayName == subject.displayName) === i;
-        });
-
-        if (filteredRecentSearchesArray?.length) {
-            return filteredRecentSearchesArray;
-        }
-    } catch (error) {
-        console.error(error);
-    }
-
-    return [];
-};
-
-const setRecentSearchesInLocalStorage = (recentSearches, options) => {
-    try {
-        const id = this.getRecentSelectionID(options);
-        if (!id) {
-            return;
-        }
-
-        const recentSearchesStr = JSON.stringify(recentSearches);
-        localStorage.setItem(id, recentSearchesStr);
-    } catch (error) {
-        console.error(error);
-    }
-};
-
-export function DataExplorerInput({ subjects, container, widget, onClearSearch, onSubjectClick }) {
+export function DataExplorerInput({ subjects, container, options, onClearSearch, onSubmit }) {
     let obj = this;
 
     if (subjects) {
@@ -75,7 +22,7 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
         obj.subjects = subjects.concat();
     }
 
-    const options = widget.options;
+    const auth = options?.authentication;
 
     const searchIcon = htmlToElement(SEARCH_ICON);
     const clearIcon = htmlToElement(CLOSE_ICON);
@@ -154,8 +101,13 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
     };
 
     obj.onClearHistory = () => {
-        setRecentSearchesInLocalStorage([], options);
+        setRecentSearchesInLocalStorage([], auth);
         obj.createSubjects();
+    };
+
+    obj.onSearch = (subject, skipQueryValidation) => {
+        addSubjectToRecentSearches(subject, auth);
+        onSubmit?.(subject, skipQueryValidation);
     };
 
     obj.createSubjectListItem = (subject) => {
@@ -169,7 +121,7 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
             autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
             input.value = subject.displayName;
 
-            onSubjectClick?.(subject);
+            obj.onSearch(subject);
         };
     };
 
@@ -180,18 +132,18 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
 
         // Create history list if it exists
         if (!input?.value) {
-            const recentSearches = getRecentSearchesFromLocalStorage(options);
+            const recentSearches = getRecentSearchesFromLocalStorage(auth);
             const hasRecentSearches = !!recentSearches?.length;
             if (hasRecentSearches) {
-                obj.createAutocompleteSectionTitle('Recent', 'Clear history', obj.onClearHistory);
+                obj.createAutocompleteSectionTitle(strings.recent, strings.clearHistory, obj.onClearHistory);
                 recentSearches.forEach((subject) => obj.createSubjectListItem(subject));
             }
         }
 
         // Create subject result list
-        let titleText = 'Topics';
+        let titleText = strings.topics;
         if (input?.value) {
-            titleText = `Related to "${input.value}"`;
+            titleText = `${strings.relatedTo} "${input.value}"`;
         }
 
         obj.createAutocompleteSectionTitle(titleText);
@@ -204,9 +156,9 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
             noResultsMessage.classList.add('autoql-vanilla-subject');
 
             if (!subjects) {
-                noResultsMessage.innerHTML = 'Loading Topics...';
+                noResultsMessage.innerHTML = `${strings.loadingTopics}...`;
             } else {
-                noResultsMessage.innerHTML = 'No results';
+                noResultsMessage.innerHTML = strings.noResults;
             }
 
             subjectsWrapper.appendChild(noResultsMessage);
@@ -231,7 +183,7 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
             try {
                 obj.setLoading();
                 const result = await fetchDataExplorerAutocomplete({
-                    ...(widget?.options?.authentication ?? {}),
+                    ...(auth ?? {}),
                     suggestion: e.target.value,
                 });
 
@@ -250,6 +202,22 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
     input.addEventListener('keydown', async (event) => {
         if (event.key == 'Enter' && input.value) {
             autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
+            const text = input.value;
+
+            let subject = obj.allSubjects.find(
+                (subj) => subj?.displayName?.toLowerCase().trim() === text?.toLowerCase().trim(),
+            );
+
+            let skipQueryValidation = true;
+            if (!subject) {
+                skipQueryValidation = false;
+                subject = {
+                    type: DataExplorerTypes.TEXT_TYPE,
+                    displayName: text,
+                };
+            }
+
+            obj.onSearch(subject, skipQueryValidation);
 
             // contentWrapper.innerHTML = '';
             // const relatedQueriesSection = new RelatedQueries({
@@ -271,6 +239,7 @@ export function DataExplorerInput({ subjects, container, widget, onClearSearch, 
         // const margin = 60;
         // const height = container?.height ?? 0
         // autocomplete.style.maxHeight = height - (textBarHeight + headerHeight + margin) + 'px';
+        obj.createSubjects();
         obj.applyMaxListHeight();
         autocomplete.classList.add('autoql-vanilla-autocomplete-show');
     });

@@ -99,6 +99,10 @@ export function DataMessenger(options = {}) {
 
     const { authentication, dataFormatting, autoQLConfig, ...optionValues } = options;
 
+    if (dataFormatting?.languageCode) {
+        strings.setLanguage(dataFormatting?.languageCode);
+    }
+
     var obj = this;
     obj.options = {
         defaultOpen: true,
@@ -652,7 +656,7 @@ export function DataMessenger(options = {}) {
             obj.scrollBox.style.overflow = 'auto';
             obj.scrollBox.style.maxHeight = 'calc(100% - 155px)';
             obj.tabsAnimation('flex', 'block');
-            obj.dataExplorer.hide();
+            obj.dataExplorer?.hide();
             obj.notificationsAnimation('none');
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         };
@@ -660,7 +664,7 @@ export function DataMessenger(options = {}) {
         tabDataExplorer.onclick = function () {
             obj.setActiveTab(this);
             obj.tabsAnimation('none', 'none');
-            obj.dataExplorer.show();
+            obj.dataExplorer?.show();
             obj.notificationsAnimation('none');
         };
 
@@ -900,7 +904,7 @@ export function DataMessenger(options = {}) {
 
             if (closePop) {
                 obj.closePopOver(obj.clearMessagePop);
-                obj.filterLocking.hide();
+                obj.filterLocking?.hide();
             }
 
             if (closeAutoComplete) {
@@ -1015,7 +1019,7 @@ export function DataMessenger(options = {}) {
             if (filterLocking.isOpen) {
                 filterLocking.hide();
             } else {
-                filterLocking.show();
+                filterLocking?.show();
             }
         };
 

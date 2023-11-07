@@ -1,11 +1,21 @@
 import { fetchSubjectListV2 } from 'autoql-fe-utils';
 
-import './TopicList.scss';
 import { createIcon } from '../../../Utils';
 import { CARET_LEFT_ICON } from '../../../Svg';
 import { DataPreview } from '../DataPreview';
+import { strings } from '../../../Strings';
 
-export function TopicList({ options, subjects, subject, valueLabel, columns, context, dataPreview }) {
+import './TopicList.scss';
+
+export function TopicList({
+    options,
+    subjects,
+    subject,
+    valueLabel,
+    onSubjectClick = () => {},
+    onColumnSelection = () => {},
+    onDataPreview = () => {},
+}) {
     let obj = this;
 
     const container = document.createElement('div');
@@ -34,14 +44,16 @@ export function TopicList({ options, subjects, subject, valueLabel, columns, con
 
         if (error?.reference_id) {
             const messageErrorID = document.createElement('p');
-            messageErrorID.innerHTML = `Error ID: ${error.reference_id}`;
+            messageErrorID.innerHTML = `${strings.errorID}: ${error.reference_id}`;
             errorMessageContainer.appendChild(messageErrorID);
         }
 
         container.appendChild(errorMessageContainer);
     };
 
-    const onSubjectClick = (clickedSubject) => {
+    obj.onSubjectClick = (clickedSubject) => {
+        onSubjectClick(clickedSubject);
+
         const dataPreviewSection = document.createElement('div');
         dataPreviewSection.classList.add('autoql-vanilla-topic-cascader-data-preview');
 
@@ -55,6 +67,7 @@ export function TopicList({ options, subjects, subject, valueLabel, columns, con
             dataPreviewSection.parentElement.removeChild(dataPreviewSection);
             obj.topicList.classList.add('autoql-vanilla-data-explorer-query-topic-list-visible');
             obj.topicList.classList.remove('autoql-vanilla-data-explorer-query-topic-list-hidden');
+            onSubjectClick();
         });
 
         const titleText = document.createElement('span');
@@ -67,7 +80,14 @@ export function TopicList({ options, subjects, subject, valueLabel, columns, con
         title.appendChild(backArrow);
         title.appendChild(titleText);
 
-        const dataPreview = new DataPreview({ subject: clickedSubject, widgetOptions: options, showLabel: false });
+        const dataPreview = new DataPreview({
+            subject: clickedSubject,
+            widgetOptions: options,
+            showLabel: false,
+            onColumnSelection,
+        });
+
+        onDataPreview(dataPreview);
 
         dataPreviewSection.appendChild(title);
         dataPreviewSection.appendChild(dataPreview.container);
@@ -98,7 +118,7 @@ export function TopicList({ options, subjects, subject, valueLabel, columns, con
         if (subjectList?.length) {
             const listLabel = document.createElement('div');
             listLabel.classList.add('autoql-vanilla-input-label');
-            listLabel.innerHTML = `Select a Topic related to <em>"${subject?.displayName}"</em>:`;
+            listLabel.innerHTML = `${strings.topicSelectionLabel} <em>"${subject?.displayName}"</em>:`;
 
             const topicList = document.createElement('div');
             topicList.classList.add('autoql-vanilla-data-explorer-query-topic-list');
@@ -116,7 +136,7 @@ export function TopicList({ options, subjects, subject, valueLabel, columns, con
                 subjectItemArrow.classList.add('autoql-vanilla-cascader-option-arrow');
                 subjectItemText.innerHTML = subject.displayName;
 
-                subjectItem.addEventListener('click', () => onSubjectClick(subject));
+                subjectItem.addEventListener('click', () => obj.onSubjectClick(subject));
 
                 subjectItem.appendChild(subjectItemText);
                 subjectItem.appendChild(subjectItemArrow);

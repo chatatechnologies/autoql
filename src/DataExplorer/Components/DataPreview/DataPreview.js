@@ -1,10 +1,11 @@
 import { fetchDataPreview } from 'autoql-fe-utils';
 import { TablePlaceholder } from '../../../TablePlaceholder/TablePlaceholder';
 import SelectableTable from '../../../SelectableTable/SelectableTable';
+import { strings } from '../../../Strings';
 
 import './DataPreview.scss';
 
-export function DataPreview({ subject, widgetOptions, showLabel = true }) {
+export function DataPreview({ subject, widgetOptions, showLabel = true, onColumnSelection }) {
     let obj = this;
 
     const DATA_PREVIEW_ROWS = 20;
@@ -56,7 +57,7 @@ export function DataPreview({ subject, widgetOptions, showLabel = true }) {
 
         if (error?.reference_id) {
             const messageErrorID = document.createElement('p');
-            messageErrorID.innerHTML = `Error ID: ${error.reference_id}`;
+            messageErrorID.innerHTML = `${strings.errorID}: ${error.reference_id}`;
             errorMessageContainer.appendChild(messageErrorID);
         }
 
@@ -98,13 +99,13 @@ export function DataPreview({ subject, widgetOptions, showLabel = true }) {
             queryResponse: data,
             options: widgetOptions,
             selectedColumns: [],
-            // TODO: onColumnSelection: (selected) => console.log('on column selection!', { selected }),
+            onColumnSelection,
         });
 
         if (showLabel) {
             const previewTableLabel = document.createElement('div');
             previewTableLabel.classList.add('autoql-vanilla-input-label');
-            previewTableLabel.innerHTML = `Select all fields of interest from <em>"${subject?.displayName}"</em>:`;
+            previewTableLabel.innerHTML = `${strings.fieldSelectionLabel} <em>"${subject?.displayName}"</em>:`;
             dataPreviewContainer.appendChild(previewTableLabel);
         }
 

@@ -3,8 +3,9 @@ import { QUERY_SEND_BTN } from '../../../Svg';
 import { fetchDataExplorerSampleQueries, SampleQueryReplacementTypes, getTitleCase } from 'autoql-fe-utils';
 
 import './SampleQueries.scss';
+import { strings } from '../../../Strings';
 
-export function SampleQueries({ widget, searchText, columns, context, dataPreview }) {
+export function SampleQueries({ widget, searchText, columns, context }) {
     let obj = this;
 
     const container = document.createElement('div');
@@ -51,14 +52,12 @@ export function SampleQueries({ widget, searchText, columns, context, dataPrevie
         errorMessageContainer.classList.add('data-explorer-section-error-container');
 
         const messageText = document.createElement('p');
-        messageText.innerHTML =
-            error?.message ||
-            'Uh oh.. an error occured while trying to retrieve your sample queries. Please try again.';
+        messageText.innerHTML = error?.message || strings.sampleQueriesGeneralError;
         errorMessageContainer.appendChild(messageText);
 
         if (error?.reference_id) {
             const messageErrorID = document.createElement('p');
-            messageErrorID.innerHTML = `Error ID: ${error.reference_id}`;
+            messageErrorID.innerHTML = `${strings.errorID}: ${error.reference_id}`;
             errorMessageContainer.appendChild(messageErrorID);
         }
 
@@ -142,7 +141,7 @@ export function SampleQueries({ widget, searchText, columns, context, dataPrevie
             widget.tabsAnimation('flex', 'block');
             widget.dataExplorer.hide();
             widget.notificationsAnimation('none');
-            widget.keyboardAnimation(suggestion);
+            widget.keyboardAnimation(suggestion.queryText);
             widget.options.landingPage = 'data-messenger';
         };
 
@@ -170,8 +169,7 @@ export function SampleQueries({ widget, searchText, columns, context, dataPrevie
             if (!items?.length) {
                 const emptyListMessage = document.createElement('div');
                 emptyListMessage.classList.add('autoql-vanilla-related-queries-empty-list-message');
-                const emptyListText =
-                    "Sorry, I couldn't find any queries matching your input. Try entering a different topic or keyword instead.";
+                const emptyListText = strings.sampleQueriesNotFound;
                 emptyListMessage.appendChild(document.createTextNode(emptyListText));
                 list.appendChild(emptyListMessage);
             } else {
@@ -199,7 +197,7 @@ export function SampleQueries({ widget, searchText, columns, context, dataPrevie
     sampleQueriesHeader.classList.add('autoql-vanilla-data-explorer-title-text');
     const sampleQueriesHeaderText = document.createElement('span');
     sampleQueriesHeaderText.classList.add('autoql-vanilla-data-explorer-title-text-sample-queries');
-    sampleQueriesHeaderText.innerHTML = 'Sample Queries';
+    sampleQueriesHeaderText.innerHTML = strings.sampleQueries;
     sampleQueriesHeader.appendChild(sampleQueriesHeaderText);
     // TODO: console.log('RENDER FIELD SELECTOR')
 
