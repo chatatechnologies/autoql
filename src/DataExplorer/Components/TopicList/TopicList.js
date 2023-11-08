@@ -12,9 +12,9 @@ export function TopicList({
     subjects,
     subject,
     valueLabel,
+    onDataPreview = () => {},
     onSubjectClick = () => {},
     onColumnSelection = () => {},
-    onDataPreview = () => {},
 }) {
     let obj = this;
 
@@ -83,9 +83,8 @@ export function TopicList({
             widgetOptions: options,
             showLabel: false,
             onColumnSelection,
+            onDataPreview,
         });
-
-        onDataPreview(dataPreview);
 
         dataPreviewSection.appendChild(title);
         dataPreviewSection.appendChild(dataPreview.container);

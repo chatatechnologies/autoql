@@ -1,16 +1,34 @@
-import { createIcon } from '../../../Utils';
-import { QUERY_SEND_BTN } from '../../../Svg';
 import { fetchDataExplorerSampleQueries, SampleQueryReplacementTypes, getTitleCase } from 'autoql-fe-utils';
 
-import './SampleQueries.scss';
-import { strings } from '../../../Strings';
+import _cloneDeep from 'lodash.clonedeep';
 
-export function SampleQueries({ widget, searchText, columns, context }) {
+import { strings } from '../../../Strings';
+import { createIcon } from '../../../Utils';
+import { QUERY_SEND_BTN } from '../../../Svg';
+import { SubjectName } from '../SubjectName/SubjectName';
+import { MultiSelect } from '../../../ChataComponents/MultiSelect';
+
+import './SampleQueries.scss';
+
+export function SampleQueries({
+    widget,
+    subject,
+    searchText,
+    selectedColumns = [],
+    context,
+    dataPreview,
+    onColumnClick = () => {},
+    onColumnSelection = () => {},
+}) {
     let obj = this;
 
     const container = document.createElement('div');
     const suggestionList = document.createElement('div');
     const list = document.createElement('div');
+
+    obj.container = container;
+    obj.dataPreview = dataPreview;
+    obj.selectedColumns = selectedColumns;
 
     const showLoading = () => {
         list.innerHTML = '';
@@ -45,6 +63,32 @@ export function SampleQueries({ widget, searchText, columns, context }) {
         if (obj.placeholderContainer) {
             obj.placeholderContainer.style.display = 'none';
         }
+    };
+
+    const getColumns = () => {
+        let columns;
+        if (subject?.valueLabel?.column_name) {
+            columns = {
+                [subject.valueLabel.column_name]: {
+                    value: subject.valueLabel.keyword,
+                },
+            };
+        }
+
+        if (obj.selectedColumns?.length) {
+            obj.selectedColumns?.forEach((columnIndex) => {
+                if (!columns) {
+                    columns = {};
+                }
+
+                const column = obj.dataPreview?.data?.data?.columns[columnIndex];
+                if (column?.name && !columns[column.name]) {
+                    columns[column.name] = { value: '' };
+                }
+            });
+        }
+
+        return columns;
     };
 
     const createErrorMessage = (error) => {
@@ -151,10 +195,111 @@ export function SampleQueries({ widget, searchText, columns, context }) {
         return item;
     };
 
-    const getSampleQueries = async () => {
-        showLoading();
+    obj.updateSelectedColumns = () => {
+        if (obj.fieldSelector) {
+            obj.selectedColumns;
+        }
+    };
 
+    obj.setDataPreview = (dataPreviewData) => {
+        obj.dataPreview = dataPreviewData;
+        obj.createFieldSelectorSection();
+    };
+
+    obj.updateSampleQueries = ({ dataPreview: dataPreviewData, selectedColumns }) => {
+        if (dataPreviewData) {
+            obj.dataPreview = dataPreviewData;
+        }
+
+        if (selectedColumns) {
+            obj.selectedColumns = selectedColumns;
+        }
+
+        obj.getSampleQueries();
+    };
+
+    obj.createFieldSelectorSection = () => {
         try {
+            obj.fieldSelectorSection?.remove();
+
+            const dataPreviewColumns = obj.dataPreview?.data?.data?.columns;
+
+            if (!dataPreviewColumns?.length) {
+                return;
+            }
+
+            const fieldSelectorSection = document.createElement('div');
+            const fieldSelectorWrapper = document.createElement('span');
+
+            fieldSelectorSection.classList.add('autoql-vanilla-data-explorer-sample-queries-header-actions');
+            fieldSelectorWrapper.classList.add('autoql-vanilla-data-preview-selected-columns-selector');
+
+            let fieldsDropdownTitle = 'Select fields of interest';
+            if (subject) {
+                fieldsDropdownTitle = document.createElement('span');
+                const fieldsDropdownTitleText = document.createElement('span');
+                fieldsDropdownTitleText.innerHTML = 'Select fields from ';
+                const subjectName = new SubjectName({ subject });
+
+                fieldsDropdownTitle.appendChild(fieldsDropdownTitleText);
+                fieldsDropdownTitle.appendChild(subjectName);
+            }
+
+            const fieldSelector = new MultiSelect({
+                title: 'FIELDS',
+                size: 'small',
+                align: 'start',
+                selected: obj.selectedColumns,
+                listTitle: fieldsDropdownTitle,
+                options: dataPreviewColumns.map((col) => {
+                    return {
+                        value: col.name,
+                        label: col.display_name,
+                    };
+                }),
+                onItemClick: (option, index) => {
+                    onColumnClick(option, index);
+                },
+                onChange: (selectedColumnNames) => {
+                    const selectedColumnIndexes = selectedColumnNames.map((name) =>
+                        dataPreviewColumns.findIndex((col) => name === col.name),
+                    );
+                    // onColumnSelection(selectedColumnIndexes);
+                    obj.selectedColumns = selectedColumnIndexes;
+                },
+            });
+
+            obj.fieldSelectorSection = fieldSelectorSection;
+            obj.fieldSelector = fieldSelector;
+
+            fieldSelectorWrapper.appendChild(fieldSelector);
+
+            const clearFiltersBtn = document.createElement('span');
+            clearFiltersBtn.classList.add('autoql-vanilla-data-preview-selected-columns-clear-btn');
+            clearFiltersBtn.innerHTML = 'CLEAR';
+            clearFiltersBtn.addEventListener('click', () => {
+                onColumnSelection([]);
+            });
+
+            if (!obj.selectedColumns?.length) {
+                clearFiltersBtn.classList.add('autoql-vanilla-data-preview-selected-columns-clear-btn-hidden');
+            }
+
+            fieldSelectorSection.appendChild(fieldSelectorWrapper);
+            fieldSelectorSection.appendChild(clearFiltersBtn);
+
+            this.sampleQueriesHeader.appendChild(fieldSelectorSection);
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    obj.getSampleQueries = async () => {
+        try {
+            showLoading();
+            obj.createFieldSelectorSection();
+
+            const columns = getColumns();
             const sampleQueries = await fetchDataExplorerSampleQueries({
                 ...(widget?.options?.authentication ?? {}),
                 text: searchText,
@@ -199,12 +344,13 @@ export function SampleQueries({ widget, searchText, columns, context }) {
     sampleQueriesHeaderText.classList.add('autoql-vanilla-data-explorer-title-text-sample-queries');
     sampleQueriesHeaderText.innerHTML = strings.sampleQueries;
     sampleQueriesHeader.appendChild(sampleQueriesHeaderText);
-    // TODO: console.log('RENDER FIELD SELECTOR')
+
+    this.sampleQueriesHeader = sampleQueriesHeader;
 
     container.appendChild(sampleQueriesHeader);
     container.appendChild(suggestionList);
 
-    getSampleQueries();
+    obj.getSampleQueries();
 
-    return container;
+    return obj;
 }

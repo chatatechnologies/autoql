@@ -90,9 +90,10 @@ export function DataExplorer({ subjects, widget }) {
                 subject,
                 widgetOptions: widget.options,
                 onColumnSelection: (columns) => obj.onColumnFilter(columns),
+                onDataPreview: (response) => obj.onDataPreview(response),
             });
 
-            obj.dataPreview = previewSection;
+            obj.dataPreviewComponent = previewSection;
 
             contentWrapper.appendChild(previewSection.container);
         }
@@ -109,7 +110,7 @@ export function DataExplorer({ subjects, widget }) {
                 subject,
                 onSubjectClick: (subject) => obj.onSubjectFilter(subject),
                 onColumnSelection: (columns) => obj.onColumnFilter(columns),
-                onDataPreview: (previewSection) => (obj.dataPreview = previewSection),
+                onDataPreview: (response) => obj.onDataPreview(response),
             });
 
             obj.topicList = topicListSection;
@@ -119,7 +120,7 @@ export function DataExplorer({ subjects, widget }) {
     };
 
     obj.clearSampleQueriesSection = () => {
-        obj.sampleQueriesSection?.remove?.();
+        obj.sampleQueriesSection?.container?.remove?.();
     };
 
     obj.createValidationMessage = (response) => {
@@ -174,38 +175,25 @@ export function DataExplorer({ subjects, widget }) {
             }
         }
 
-        let columns;
-        if (subject?.valueLabel?.column_name) {
-            columns = {
-                [subject.valueLabel.column_name]: {
-                    value: subject.valueLabel.keyword,
-                },
-            };
-        }
-
-        if (this.selectedColumns?.length) {
-            this.selectedColumns?.forEach((columnIndex) => {
-                if (!columns) {
-                    columns = {};
-                }
-
-                const column = obj.dataPreview?.response?.data?.data?.columns[columnIndex];
-                if (column?.name && !columns[column.name]) {
-                    columns[column.name] = { value: '' };
-                }
-            });
-        }
-
         const sampleQueriesSection = new SampleQueries({
             widget,
             searchText,
-            columns,
             context,
+            subject,
+            selectedColumns: obj.selectedColumns,
+            dataPreview: obj.dataPreview,
+            onColumnClick: (option, index) => {
+                obj.dataPreviewComponent?.table?.onColumnHeaderClick?.(index);
+            },
+            onColumnSelection: (columns) => {
+                obj.onColumnFilter(columns);
+                obj.dataPreviewComponent?.table?.clearSelections?.();
+            },
         });
 
         obj.sampleQueriesSection = sampleQueriesSection;
 
-        contentWrapper.appendChild(sampleQueriesSection);
+        contentWrapper.appendChild(sampleQueriesSection.container);
     };
 
     obj.onSubjectFilter = (subject) => {
@@ -215,11 +203,18 @@ export function DataExplorer({ subjects, widget }) {
 
     obj.onColumnFilter = (columns) => {
         obj.selectedColumns = columns;
-        obj.createSampleQueriesSection();
+        obj.sampleQueriesSection?.updateSampleQueries?.({ selectedColumns: obj.selectedColumns });
+    };
+
+    obj.onDataPreview = (dataPreview) => {
+        obj.dataPreview = dataPreview;
+        obj.sampleQueriesSection?.setDataPreview?.(dataPreview);
     };
 
     obj.createDataExplorerContent = async (subject, skipQueryValidation) => {
         obj.selectedSubject = subject;
+        obj.dataPreview = undefined;
+        obj.selectedColumns = undefined;
 
         contentWrapper.innerHTML = '';
 

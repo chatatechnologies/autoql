@@ -8,6 +8,10 @@
     user-select: none;
     cursor: pointer;
 
+    &.autoql-vanilla-checkbox-unclickable {
+        pointer-events: none;
+    }
+
     &:hover .autoql-vanilla-checkbox-input ~ .autoql-vanilla-checkbox-checkmark {
         border-color: var(--autoql-vanilla-accent-color);
     }

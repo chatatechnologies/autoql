@@ -1,6 +1,9 @@
 import './Checkbox.scss';
 
-export function Checkbox(parent, { checked = false, disabled = false, onChange = () => {}, label = '' }) {
+export function Checkbox(
+    parent,
+    { checked = false, disabled = false, onChange = () => {}, label = '', clickable = true },
+) {
     this.setChecked = (checked) => {
         this.checkbox.checked = checked;
     };
@@ -19,6 +22,10 @@ export function Checkbox(parent, { checked = false, disabled = false, onChange =
     checkmark.classList.add('autoql-vanilla-checkbox-checkmark');
     checkboxLabelText.classList.add('autoql-vanilla-checkbox-label');
     checkboxContainer.classList.add('autoql-vanilla-checkbox__container');
+
+    if (!clickable) {
+        checkboxContainer.classList.add('autoql-vanilla-checkbox-unclickable');
+    }
 
     checkbox.checked = checked;
     checkbox.disabled = disabled;

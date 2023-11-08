@@ -1,3 +1,25 @@
+.autoql-vanilla-data-preview-selected-columns-clear-btn {
+    color: var(--autoql-vanilla-text-color-placeholder);
+    height: 25px;
+    font-size: 11px;
+    padding: 0px 6px;
+    font-weight: 600;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &.autoql-vanilla-data-preview-selected-columns-clear-btn-hidden {
+        display: none;
+    }
+
+    &:hover {
+        color: var(--autoql-vanilla-accent-color);
+        background-color: var(--autoql-vanilla-hover-color);
+    }
+}
+
 .autoql-vanilla-query-suggestions-section {
     flex: 2;
     padding-left: 12px;
@@ -173,6 +195,46 @@
 
                 .autoql-vanilla-select-text {
                     line-height: 1em;
+                }
+            }
+        }
+    }
+}
+
+.autoql-vanilla-data-explorer-sample-queries-header-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    min-height: 30px;
+
+    .autoql-vanilla-data-preview-selected-columns-selector {
+        font-size: 11px;
+        margin-left: 7px;
+        color: var(--autoql-vanilla-text-color-secondary);
+        padding-left: 8px;
+        border-left: 1px solid var(--autoql-vanilla-backgroud-color-disabled);
+
+        .autoql-vanilla-select-and-label {
+            padding-right: 0px;
+
+            .autoql-vanilla-multi-select {
+                color: inherit;
+                border-color: transparent !important;
+                padding: 0px 5px;
+                height: 25px;
+
+                &:hover {
+                    color: var(--autoql-vanilla-accent-color);
+                    background-color: var(--autoql-vanilla-hover-color);
+                }
+
+                .autoql-vanilla-select-arrow {
+                    svg {
+                        stroke: currentColor;
+                        stroke-width: 2em;
+                    }
                 }
             }
         }

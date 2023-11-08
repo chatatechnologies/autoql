@@ -5,7 +5,13 @@ import { strings } from '../../../Strings';
 
 import './DataPreview.scss';
 
-export function DataPreview({ subject, widgetOptions, showLabel = true, onColumnSelection }) {
+export function DataPreview({
+    subject,
+    widgetOptions,
+    showLabel = true,
+    onColumnSelection = () => {},
+    onDataPreview = () => {},
+}) {
     let obj = this;
 
     const DATA_PREVIEW_ROWS = 20;
@@ -86,6 +92,7 @@ export function DataPreview({ subject, widgetOptions, showLabel = true, onColumn
 
             obj.response = response;
             obj.displayResponse(response);
+            onDataPreview(response);
         } catch (error) {
             obj.clearLoading();
             obj.createErrorMessage(error);
@@ -95,12 +102,17 @@ export function DataPreview({ subject, widgetOptions, showLabel = true, onColumn
     obj.displayResponse = (r) => {
         obj.clearLoading();
         const { data } = r.data;
-        const table = new SelectableTable({
+
+        const tableComponent = new SelectableTable({
             queryResponse: data,
             options: widgetOptions,
             selectedColumns: [],
             onColumnSelection,
         });
+
+        const table = tableComponent.selectableTable;
+
+        obj.table = tableComponent;
 
         if (showLabel) {
             const previewTableLabel = document.createElement('div');
