@@ -67,8 +67,9 @@ export default function SelectableTable({
     this.getColumnHeaderFromIndex = (index) => this.selectableTable?.querySelector(`#col-header-${index}`);
 
     this.clearSelections = () => {
+        selected = [];
         this.removeClassFromAllColumns('selected');
-        onColumnSelection?.([]);
+        onColumnSelection?.(selected);
     };
 
     this.onColumnHeaderClick = (index) => {

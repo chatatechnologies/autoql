@@ -245,18 +245,25 @@ export function SampleQueries({
                 fieldsDropdownTitle.appendChild(subjectName);
             }
 
+            const options = dataPreviewColumns.map((col) => {
+                return {
+                    value: col.name,
+                    label: col.display_name,
+                };
+            });
+
+            const selected =
+                obj.selectedColumns?.map((index) => {
+                    return dataPreviewColumns[index]?.name;
+                }) ?? [];
+
             const fieldSelector = new MultiSelect({
+                options,
                 title: 'FIELDS',
                 size: 'small',
                 align: 'start',
-                selected: obj.selectedColumns,
+                selected,
                 listTitle: fieldsDropdownTitle,
-                options: dataPreviewColumns.map((col) => {
-                    return {
-                        value: col.name,
-                        label: col.display_name,
-                    };
-                }),
                 onItemClick: (option, index) => {
                     onColumnClick(option, index);
                 },
