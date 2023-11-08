@@ -1,0 +1,27 @@
+.autoql-vanilla-chata-safety-net-query {
+    .autoql-vanilla-validation-message-selector {
+        display: inline-block;
+        position: relative;
+        margin: 0 3px;
+
+        .autoql-vanilla-query-validation-select {
+            padding: 0 !important;
+
+            .autoql-vanilla-select {
+                position: relative;
+                height: 2em !important;
+                background: none;
+                outline: none !important;
+                border: none;
+                letter-spacing: 0.05em;
+                font-family: inherit;
+                font-size: inherit;
+                margin: 0;
+                padding: 0 !important;
+                border-radius: 0;
+                border-bottom: 1px dashed;
+                color: var(--react-autoql-accent-color);
+            }
+        }
+    }
+}

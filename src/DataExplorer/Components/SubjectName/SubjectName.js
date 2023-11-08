@@ -19,15 +19,22 @@ export function SubjectName({ subject } = {}) {
         suffix = ` (${subject.formattedType})`;
     }
 
-    const subjectNameIcon = createIcon(iconType);
-    subjectNameIcon.classList.add('autoql-vanilla-data-explorer-topic-icon');
-
     const subjectNameText = `${subject.type === DataExplorerTypes.TEXT_TYPE ? '"' : ''}${subject.displayName}${suffix}${
         subject.type === DataExplorerTypes.TEXT_TYPE ? '"' : ''
     }`;
 
     const subjectName = document.createElement('span');
-    subjectName.append(subjectNameIcon);
+
+    if (iconType) {
+        try {
+            const subjectNameIcon = createIcon(iconType);
+            subjectNameIcon.classList.add('autoql-vanilla-data-explorer-topic-icon');
+            subjectName.append(subjectNameIcon);
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     subjectName.append(subjectNameText);
 
     return subjectName;

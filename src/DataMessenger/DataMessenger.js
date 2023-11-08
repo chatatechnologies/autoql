@@ -586,25 +586,29 @@ export function DataMessenger(options = {}) {
     };
 
     obj.notificationsAnimation = function (display) {
-        if (!obj.options.enableNotificationsTab) {
+        if (!obj.options.enableNotificationsTab || !obj.notificationsContainer) {
             return;
         }
 
-        obj.notificationsContainer.style.display = display;
-        obj.notificationsContainer.innerHTML = '';
-        var id = obj.notificationsContainerId;
-        var notificationList = new NotificationFeed(`[id="${id}"]`, {
-            authentication: {
-                ...obj.options.authentication,
-            },
-            showNotificationDetails: true,
-            showDescription: false,
-        });
+        try {
+            obj.notificationsContainer.style.display = display;
+            obj.notificationsContainer.innerHTML = '';
+            var id = obj.notificationsContainerId;
+            var notificationList = new NotificationFeed(`[id="${id}"]`, {
+                authentication: {
+                    ...obj.options.authentication,
+                },
+                showNotificationDetails: true,
+                showDescription: false,
+            });
 
-        if (obj.isPortrait()) {
-            notificationList.style.height = obj.drawerContent.clientHeight - 70 + 'px';
-        } else {
-            notificationList.style.height = obj.options.height - 70 + 'px';
+            if (obj.isPortrait()) {
+                notificationList.style.height = obj.drawerContent.clientHeight - 70 + 'px';
+            } else {
+                notificationList.style.height = obj.options.height - 70 + 'px';
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 

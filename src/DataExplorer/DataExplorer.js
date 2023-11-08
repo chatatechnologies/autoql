@@ -1,4 +1,4 @@
-import { DataExplorerTypes } from 'autoql-fe-utils';
+import { DataExplorerTypes, getAuthentication, runQueryValidation } from 'autoql-fe-utils';
 
 import { strings } from '../Strings';
 import { createIcon } from '../Utils';
@@ -8,7 +8,8 @@ import { SampleQueries } from './Components/SampleQueries';
 import { TopicList } from './Components/TopicList/TopicList';
 import { SubjectName } from './Components/SubjectName/SubjectName';
 import { DataExplorerInput } from './Components/DataExplorerInput';
-import { DATA_EXPLORER_SEARCH_ICON, CHATA_BUBBLES_ICON, ABACUS_ICON, TABLE_ICON } from '../Svg';
+import { QueryValidationMessage } from '../QueryValidationMessage';
+import { DATA_EXPLORER_SEARCH_ICON, CHATA_BUBBLES_ICON, ABACUS_ICON, TABLE_ICON, SEARCH_ICON } from '../Svg';
 
 import './DataExplorer.scss';
 
@@ -33,7 +34,7 @@ export function DataExplorer({ subjects, widget }) {
     const textBarComponent = new DataExplorerInput({
         subjects,
         container,
-        onSubmit: (subject) => obj.createDataExplorerContent(subject),
+        onSubmit: (subject, skipQueryValidation) => obj.createDataExplorerContent(subject, skipQueryValidation),
         options: widget.options,
         onClearSearch: () => {
             contentWrapper.innerHTML = '';
@@ -88,7 +89,7 @@ export function DataExplorer({ subjects, widget }) {
             const previewSection = new DataPreview({
                 subject,
                 widgetOptions: widget.options,
-                onColumnSelection: obj.onColumnFilter,
+                onColumnSelection: (columns) => obj.onColumnFilter(columns),
             });
 
             obj.dataPreview = previewSection;
@@ -106,8 +107,8 @@ export function DataExplorer({ subjects, widget }) {
                 options: widget.options,
                 subjects,
                 subject,
-                onSubjectClick: obj.onSubjectFilter,
-                onColumnSelection: obj.onColumnFilter,
+                onSubjectClick: (subject) => obj.onSubjectFilter(subject),
+                onColumnSelection: (columns) => obj.onColumnFilter(columns),
                 onDataPreview: (previewSection) => (obj.dataPreview = previewSection),
             });
 
@@ -121,7 +122,38 @@ export function DataExplorer({ subjects, widget }) {
         obj.sampleQueriesSection?.remove?.();
     };
 
-    obj.createSampleQueriesSection = () => {
+    obj.createValidationMessage = (response) => {
+        const validationMessage = new QueryValidationMessage({
+            response,
+            submitText: 'Search',
+            submitIcon: SEARCH_ICON,
+            onSubmit: ({ query, userSelection }) => {
+                textBarComponent.input.value = query;
+                textBarComponent.onSearch(
+                    { type: DataExplorerTypes.TEXT_TYPE, displayName: query, userSelection },
+                    true,
+                );
+            },
+        });
+
+        contentWrapper.appendChild(validationMessage);
+    };
+
+    obj.validateSearchTerm = async (text) => {
+        try {
+            const response = await runQueryValidation({
+                ...getAuthentication(widget.options.authentication),
+                text,
+            });
+
+            if (response?.data?.data?.replacements?.length) {
+                return response;
+            }
+        } catch (error) {}
+        return;
+    };
+
+    obj.createSampleQueriesSection = async (skipQueryValidation) => {
         obj.clearSampleQueriesSection();
 
         const subject = obj.selectedSubject;
@@ -129,8 +161,17 @@ export function DataExplorer({ subjects, widget }) {
         const context = subject?.type === DataExplorerTypes.VL_TYPE ? this.selectedSubject?.context : subject?.context;
 
         let searchText = '';
+
         if (subject?.type === DataExplorerTypes.TEXT_TYPE) {
             searchText = subject?.displayName;
+
+            if (!skipQueryValidation) {
+                const validationResponse = await obj.validateSearchTerm(searchText);
+                if (validationResponse) {
+                    obj.createValidationMessage(validationResponse);
+                    return;
+                }
+            }
         }
 
         let columns;
@@ -177,21 +218,15 @@ export function DataExplorer({ subjects, widget }) {
         obj.createSampleQueriesSection();
     };
 
-    obj.createDataExplorerContent = async (subject) => {
+    obj.createDataExplorerContent = async (subject, skipQueryValidation) => {
         obj.selectedSubject = subject;
 
         contentWrapper.innerHTML = '';
 
         obj.createTitle();
-
-        // TODO: console.log('implement safetynet for plain text search')
-        // if (subject.type === DataExplorerTypes.TEXT_TYPE) {
-        //     await validateSearchTerm(searchTerm)
-        // }
-
         obj.createDataPreviewSection();
         obj.createTopicsListSection();
-        obj.createSampleQueriesSection();
+        obj.createSampleQueriesSection(skipQueryValidation);
     };
 
     instructionList.appendChild(listWrapper);

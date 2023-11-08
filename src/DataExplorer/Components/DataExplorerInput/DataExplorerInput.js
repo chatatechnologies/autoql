@@ -1,4 +1,5 @@
 import tippy from 'tippy.js';
+
 import {
     DataExplorerTypes,
     REQUEST_CANCELLED_ERROR,
@@ -7,10 +8,11 @@ import {
     setRecentSearchesInLocalStorage,
     addSubjectToRecentSearches,
 } from 'autoql-fe-utils';
+
 import { strings } from '../../../Strings';
-import { SubjectName } from '../SubjectName/SubjectName';
 import { htmlToElement } from '../../../Utils';
 import { SEARCH_ICON, CLOSE_ICON } from '../../../Svg';
+import { SubjectName } from '../SubjectName/SubjectName';
 
 import './DataExplorerInput.scss';
 
@@ -55,6 +57,8 @@ export function DataExplorerInput({ subjects, container, options, onClearSearch,
     autocomplete.classList.add('autoql-vanilla-data-explorer-autocomplete');
 
     input.setAttribute('placeholder', strings.dataExplorerInput);
+
+    obj.input = input;
 
     obj.clearLoading = () => {};
     obj.setLoading = () => {};
@@ -131,13 +135,11 @@ export function DataExplorerInput({ subjects, container, options, onClearSearch,
         subjectsWrapper.innerHTML = '';
 
         // Create history list if it exists
-        if (!input?.value) {
-            const recentSearches = getRecentSearchesFromLocalStorage(auth);
-            const hasRecentSearches = !!recentSearches?.length;
-            if (hasRecentSearches) {
-                obj.createAutocompleteSectionTitle(strings.recent, strings.clearHistory, obj.onClearHistory);
-                recentSearches.forEach((subject) => obj.createSubjectListItem(subject));
-            }
+        const recentSearches = getRecentSearchesFromLocalStorage(auth);
+        const hasRecentSearches = !!recentSearches?.length;
+        if (hasRecentSearches) {
+            obj.createAutocompleteSectionTitle(strings.recent, strings.clearHistory, obj.onClearHistory);
+            recentSearches.forEach((subject) => obj.createSubjectListItem(subject));
         }
 
         // Create subject result list
@@ -218,27 +220,10 @@ export function DataExplorerInput({ subjects, container, options, onClearSearch,
             }
 
             obj.onSearch(subject, skipQueryValidation);
-
-            // contentWrapper.innerHTML = '';
-            // const relatedQueriesSection = new RelatedQueries({
-            //     icon: CHATA_BUBBLES_ICON,
-            //     title: `Query suggestions for "${input.value}"`,
-            //     containerHeight: container.clientHeight,
-            //     previewSectionHeight: 0,
-            //     textBarHeight: textBar.clientHeight,
-            //     plainText: input.value,
-            //     widget,
-            // });
-            // contentWrapper.appendChild(relatedQueriesSection);
         }
     });
 
     input.addEventListener('focus', () => {
-        // const textBarHeight = textBar.clientHeight;
-        // const headerHeight = widget.header.clientHeight;
-        // const margin = 60;
-        // const height = container?.height ?? 0
-        // autocomplete.style.maxHeight = height - (textBarHeight + headerHeight + margin) + 'px';
         obj.createSubjects();
         obj.applyMaxListHeight();
         autocomplete.classList.add('autoql-vanilla-autocomplete-show');

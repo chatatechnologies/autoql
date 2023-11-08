@@ -821,7 +821,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
     width: 100%;
 }
 
-.autoql-vanilla-chata-safety-net-container {
+.autoql-vanilla-query-validation-message-container {
     width: 100%;
     overflow-y: auto;
 }
@@ -832,6 +832,7 @@ text.autoql-vanilla-x-axis-label, text.autoql-vanilla-y-axis-label {
 
 .autoql-vanilla-chata-safety-net-query {
     text-align: center;
+    letter-spacing: 0.04em;
 }
 
 .autoql-vanilla-chata-safety-net-selector-container {
