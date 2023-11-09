@@ -109,6 +109,10 @@ body.autoql-vanilla-drawer-open-body {
                     box-sizing: border-box;
                     box-shadow: var(--autoql-vanilla-box-shadow-1);
                     max-height: 400px;
+
+                    &:first-child {
+                        margin-top: 10px;
+                    }
                 }
             }
         }
@@ -175,6 +179,10 @@ body.autoql-vanilla-drawer-open-body {
                     font-weight: bold;
                     position: relative;
                     z-index: 2;
+                }
+
+                &.autoql-vanilla-data-messenger-tab-active[data-tab='explore-queries'] {
+                    background: var(--autoql-vanilla-background-color-secondary);
                 }
             }
         }
@@ -267,7 +275,7 @@ body.autoql-vanilla-drawer-open-body {
         position: relative;
         align-items: center;
         padding: 10px;
-        margin: 0 10px;
+        margin: 6px;
 
         &.autoql-vanilla-text-bar-with-icon input {
             padding-left: 46px;

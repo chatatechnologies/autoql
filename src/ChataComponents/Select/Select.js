@@ -85,9 +85,9 @@ export function Select({
             const selectedOption = options.find((option) => option.value == selectedValue);
 
             if (!selectedOption) {
-                return
+                return;
             }
-            
+
             this.selectedValue = selectedOption.value;
 
             if (selectedOption?.label || selectedOption?.value) {
@@ -118,7 +118,7 @@ export function Select({
                 this.popover = undefined;
             } else {
                 this.popover = new PopoverChartSelector(e, position, align, 0);
-                this.popover.classList.add('autoql-vanilla-select-popover')
+                this.popover.classList.add('autoql-vanilla-select-popover');
                 if (popoverClassName) this.popover.classList.add(popoverClassName);
 
                 const selectorContent = this.createPopoverContent();
@@ -149,7 +149,7 @@ export function Select({
 
             li.onclick = (e) => {
                 e.stopPropagation();
-                this.select.setValue(option.value)
+                this.select.setValue(option.value);
                 this.popover?.close();
             };
 

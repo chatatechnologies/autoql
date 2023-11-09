@@ -14,3 +14,29 @@
         color: #000000 !important;
     }
 }
+
+.autoql-vanilla-placeholder-loader {
+    position: relative;
+    border-radius: 2px;
+
+    animation-name: autoql-vanilla-loading-placeholder-pulse;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+    background: var(--autoql-vanilla-text-color-primary);
+
+    opacity: 0;
+}
+
+@keyframes autoql-vanilla-loading-placeholder-pulse {
+    0% {
+        opacity: 0.05;
+    }
+    50% {
+        opacity: 0.1;
+    }
+    100% {
+        opacity: 0.05;
+    }
+}

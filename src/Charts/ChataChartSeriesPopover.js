@@ -9,12 +9,12 @@ import { AGG_TYPES, getAggConfig } from 'autoql-fe-utils';
 export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padding, columnIndexConfig) {
     const activeSeries = scale?.fields;
 
-    const columns = cols.filter(col => !columnIndexConfig || columnIndexConfig?.stringColumnIndex !== col.index)
+    const columns = cols.filter((col) => !columnIndexConfig || columnIndexConfig?.stringColumnIndex !== col.index);
 
     var obj = this;
     var seriesIndexes = [];
     var aggConfig = getAggConfig(cols) ?? {};
-    
+
     activeSeries.map((col) => {
         seriesIndexes.push(col.index);
     });
@@ -44,7 +44,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             }
         }
     };
-    // TODO(Alex) - react-autoql doesn't have below feature, but still keep it for future.
+    // TODO(Alex) - react widgets don't have below feature, but still keep it for future.
     //
     // var deselectCheckBox = () => {
     //     const type = obj.groupType;
@@ -152,7 +152,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         if (header !== '') {
             tick.style.top = '14px';
             checkboxInput.style.marginTop = '14px';
-            checkboxInput.classList.add('autoql-vanilla-m-checkbox__input-header')
+            checkboxInput.classList.add('autoql-vanilla-m-checkbox__input-header');
         }
         checkboxInput.style.marginLeft = '20px';
 
@@ -182,20 +182,22 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 }
             } else {
                 var inputs = content.querySelectorAll(`[data-col-type="${type}"]`);
-                var columnHeaderInput = Array.from(inputs).filter((input) => input.hasAttribute('data-is-col-header'))[0];
+                var columnHeaderInput = Array.from(inputs).filter((input) =>
+                    input.hasAttribute('data-is-col-header'),
+                )[0];
                 var columnInputs = Array.from(inputs).filter((input) => !input.hasAttribute('data-is-col-header'));
                 var unCheckedColumnInputs = columnInputs.filter((input) => !input.checked);
                 var unCheckedColumnInputsCount = unCheckedColumnInputs.length;
-				var disabledColumnInputs = Array.from(inputs).filter(input => input.disabled);
-				var disabledColumnInputsCount = disabledColumnInputs.length;
+                var disabledColumnInputs = Array.from(inputs).filter((input) => input.disabled);
+                var disabledColumnInputsCount = disabledColumnInputs.length;
                 if (unCheckedColumnInputsCount !== 0) {
                     columnHeaderInput.checked = false;
                 } else {
                     columnHeaderInput.checked = true;
                 }
-				if (disabledColumnInputsCount === unCheckedColumnInputsCount) {
-					columnHeaderInput.checked = true;
-				}
+                if (disabledColumnInputsCount === unCheckedColumnInputsCount) {
+                    columnHeaderInput.checked = true;
+                }
             }
             if (type !== obj.groupType) {
                 obj.groupType = type;
@@ -258,11 +260,11 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 listItem.appendChild(nameAndSelectContainer);
                 listItem.appendChild(checkbox);
                 selectableList.appendChild(listItem);
-            })
+            });
 
             var areAllColumnsChecked = checkboxInputs.every((input) => {
                 return !!input.getAttribute('disabled') || !!input.getAttribute('checked');
-            }); 
+            });
             var header = document.createElement('div');
             var headerCheckbox = createCheckbox({ type: series[key][0]?.type, header: key }, areAllColumnsChecked);
             var headerWrapper = document.createElement('div');
@@ -276,7 +278,9 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         }
 
         applyButton.onclick = (evt) => {
-            var inputs = content.querySelectorAll('.autoql-vanilla-m-checkbox__input:not(.autoql-vanilla-m-checkbox__input-header)');
+            var inputs = content.querySelectorAll(
+                '.autoql-vanilla-m-checkbox__input:not(.autoql-vanilla-m-checkbox__input-header)',
+            );
             var activeSeries = [];
 
             for (var i = 0; i < inputs.length; i++) {

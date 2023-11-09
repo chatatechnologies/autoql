@@ -106,7 +106,7 @@ export function NotificationVizToolbar({ response, notificationItem }) {
       }
       if(
         (this.displayType === dType) || 
-        (this.displayType === 'data' && dType === DisplayTypes.TABLE)
+        (this.displayType == 'data' && dType == DisplayTypes.TABLE)
       ) {
         btn.classList.add('autoql-vanilla-toolbar-btn-selected');
         this.selectedBtn = btn;

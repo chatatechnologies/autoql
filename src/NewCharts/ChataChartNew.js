@@ -85,7 +85,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         });
     };
 
-
     this.getColorScales = () => getColorScales({ ...this.columnIndexConfig, data: this.data, type, CSS_PREFIX });
 
     this.setColumns = (newColumns) => {
@@ -144,7 +143,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         } else if (!CHARTS_WITHOUT_AGGREGATED_DATA.includes(type) && numberIndices.length) {
             let maxElements;
             if (type === DisplayTypes.PIE) {
-                maxElements = 10
+                maxElements = 10;
             }
 
             return aggregateData({
@@ -153,8 +152,12 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 numberIndices,
                 dataFormatting,
                 columnIndexConfig: this.columnIndexConfig,
-                maxElements
+                maxElements,
             });
+        }
+
+        if (type == DisplayTypes.PIE) {
+            rowData = aggregateOtherCategory(data, columnIndexConfig);
         }
 
         return rowData;
@@ -192,7 +195,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         }
 
         if (type === DisplayTypes.PIE) {
-            this.legendLabels = undefined
+            this.legendLabels = undefined;
         }
 
         this.data = this.getData();
@@ -213,10 +216,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         }
 
         if (type === DisplayTypes.PIE) {
-            this.legendLabels = undefined
+            this.legendLabels = undefined;
         }
 
-        component.columnIndexConfig = this.columnIndexConfig
+        component.columnIndexConfig = this.columnIndexConfig;
 
         this.data = this.getData();
 
@@ -241,7 +244,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     const onLegendClick = (label) => {
-        if (type === DisplayTypes.PIE) {
+        if (type == DisplayTypes.PIE) {
             const labels = this.legendLabels?.labels;
             if (labels?.[label?.dataIndex]) {
                 labels[label.dataIndex].hidden = !labels[label.dataIndex].hidden;
@@ -256,7 +259,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
     const getLegendLabelsForChart = () => {
         if (type === DisplayTypes.PIE && this.legendLabels) {
-            return this.legendLabels
+            return this.legendLabels;
         }
 
         const labels =
@@ -269,15 +272,15 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 data: this.data,
                 type,
             }) ?? [];
-        
-            this.legendLabels = labels
+
+        this.legendLabels = labels;
 
         return labels;
     };
 
     this.getLegendObject = () => {
-        const location = getLegendLocation(this.columnIndexConfig.numberColumnIndices, type, options.legendLocation);
-        const labels = getLegendLabelsForChart();
+        const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+        const labels = type == DisplayTypes.PIE ? this.legendLabels : getLegendLabelsForChart();
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
             columnIndices: this.columnIndexConfig.numberColumnIndices,
@@ -313,7 +316,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
     this.isColumnIndexConfigValid = (newConfig) => {
         if (!this.columnIndexConfig) {
-            return false
+            return false;
         }
 
         return isColumnIndexConfigValid({
@@ -406,8 +409,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             const chartColors = getChartColorVars(CSS_PREFIX) ?? {};
 
             const aggregated = !CHARTS_WITHOUT_AGGREGATED_DATA.includes(type);
-            const legend = this.getLegendObject()
-            const colorScales = this.getColorScales()
+            const legend = this.getLegendObject();
+            const colorScales = this.getColorScales();
 
             const params = {
                 data: this.data,
@@ -569,7 +572,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
     // TODO: update send in index config directly instead of using the metadata component
     if (!metadataElement.metadata) {
-        const columnIndexConfig = this.getColumnIndexConfig()
+        const columnIndexConfig = this.getColumnIndexConfig();
         metadataElement.metadata = {
             groupBy: {
                 index: columnIndexConfig.stringColumnIndex,
@@ -589,7 +592,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     }
 
     this.columnIndexConfig = metadataElement.metadata.columnIndexConfig ?? this.getColumnIndexConfig();
-    
+
     var aggConfig = component.aggConfig;
 
     const indices1 = this.columnIndexConfig.numberColumnIndices ?? [];
@@ -597,7 +600,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     const numberIndices = [...indices1, ...indices2];
     const isDataAggregated = usePivotDataForChart({ data: queryJson });
     const hasRowSelector = options.pageSize < queryJson?.data?.count_rows;
-
 
     this.data = this.getData();
 
