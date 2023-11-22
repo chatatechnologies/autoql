@@ -4,6 +4,10 @@ import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
 import dayjs from './dayjsPlugins';
 
+export function isTouchDevice() {
+    return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
+}
+
 export function formatChartData(d, column, options, scale){
     // return formatData(val, col, options, true);
     const formattedLabel = formatChartLabel({
