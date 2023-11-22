@@ -48,6 +48,7 @@ import {
     getSupportedDisplayTypes,
     closeAllChartPopovers,
     getLocalStream,
+    isTouchDevice,
 } from '../Utils';
 
 import {
@@ -91,6 +92,8 @@ import { fetchSubjectList } from 'autoql-fe-utils';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
+import '../Toolbar/Toolbar.scss';
+
 import testdata from '../../testdata';
 import { ChataChartNew } from '../NewCharts';
 
@@ -1373,6 +1376,10 @@ export function DataMessenger(options = {}) {
             </div>
         `);
 
+        if (isTouchDevice()) {
+            toolbar.style.visibility = 'visible';
+        }
+
         var reportProblem = obj.getReportProblemMenu(toolbar, idRequest, type);
         reportProblem.classList.add('report-problem');
         var reportProblemButton = obj.getActionButton(
@@ -1614,10 +1621,12 @@ export function DataMessenger(options = {}) {
                 toolbarLeft.appendChild(button);
             })
 
-            if (displayTypeButtons.length > 1) {
-                toolbarLeft.style.visibility = 'visible'
+            if (isTouchDevice()) {
+                toolbarLeft.style.visibility = 'visible';
+            } else if (displayTypeButtons.length > 1) {
+                toolbarLeft.classList.remove('autoql-vanilla-chat-message-toolbar-hidden');
             } else {
-                toolbarLeft.style.visibility = 'hidden'
+                toolbarLeft.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
             }
         }
 
