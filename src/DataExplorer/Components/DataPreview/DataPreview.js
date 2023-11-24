@@ -5,7 +5,6 @@ import { DataPreviewTable } from '../DataPreviewTable';
 import './DataPreview.scss';
 
 export function DataPreview({ icon, title, subject, widgetOptions }) {
-    console.log({ subjectForDP: subject });
     let obj = this;
     const container = document.createElement('div');
     const card = new Card({ icon, title, maxHeight: 155 });
