@@ -62,7 +62,7 @@
         "webpack-remove-empty-scripts": "^1.0.3"
     },
     "dependencies": {
-        "autoql-fe-utils": "1.0.57",
+        "autoql-fe-utils": "^1.0.57",
         "axios": "^1.4.0",
         "d3": "^7.8.2",
         "d3-shape": "^3.2.0",

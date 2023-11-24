@@ -14,6 +14,7 @@ import {
     areAllColumnsHidden,
     REQUEST_CANCELLED_ERROR,
     getColumnIndexConfig,
+    getSupportedDisplayTypes,
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -45,7 +46,6 @@ import {
     showBadge,
     supportsVoiceRecord,
     checkAndApplyTheme,
-    getSupportedDisplayTypes,
     closeAllChartPopovers,
     getLocalStream,
     isTouchDevice,
@@ -1433,7 +1433,7 @@ export function DataMessenger(options = {}) {
                     editorBtn.appendChild(badge);
                     editorBtn.badge = badge;
                     if (showBadge(request)) {
-                        badge.style.visibility = 'visible';
+                        badge.style.visibility = 'inherit';
                     } else {
                         badge.style.visibility = 'hidden';
                     }
@@ -1592,7 +1592,8 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        var displayTypes = getSupportedDisplayTypes(json);
+        var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
+        console.log('supported display types:', displayTypes);
 
         if (['table', 'pivot_table'].includes(ignore) && displayTypes.length <= 5) {
             messageBubble.classList.remove('chart-full-width');
@@ -2014,7 +2015,7 @@ export function DataMessenger(options = {}) {
     obj.getDisplayTypesButtons = (idRequest, active) => {
         var json = ChataUtils.responses[idRequest];
         var buttons = [];
-        var displayTypes = getSupportedDisplayTypes(json);
+        var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
 
         const displayTypeIcons = {
             table: TABLE_ICON,
@@ -2252,7 +2253,7 @@ export function DataMessenger(options = {}) {
             component.columnIndexConfig = newColumnIndexConfig;
 
             if (showBadge(json)) {
-                badge.style.visibility = 'visible';
+                badge.style.visibility = 'inherit';
             } else {
                 badge.style.visibility = 'hidden';
             }

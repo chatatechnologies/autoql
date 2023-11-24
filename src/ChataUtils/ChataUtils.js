@@ -702,8 +702,6 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
         var table = document.querySelector(`[data-componentid='${id}']`);
         var tableColumns = table.tabulator.getColumns();
 
-        table.tabulator.blockRedraw();
-
         const data = tableColumns.map((col, i) => {
             json['data']['columns'][i]['is_visible'] = !!inputs[i].checked;
             return {

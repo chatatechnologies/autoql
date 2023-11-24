@@ -2,6 +2,7 @@ import { MIN_HISTOGRAM_SAMPLE, areAllColumnsHidden, formatChartLabel, formatElem
 import { ChataUtils } from '../ChataUtils'
 import { WARNING, COLUMN_EDITOR } from '../Svg'
 import { strings } from '../Strings'
+import dayjs from './dayjsPlugins';
 
 export function isTouchDevice() {
     return 'ontouchstart' in window || navigator.maxTouchPoints > 0 || navigator.msMaxTouchPoints > 0;
@@ -666,10 +667,6 @@ export function allColHiddenMessage(table) {
             csvHandlerOption.style.display = 'none';
             csvCopyOption.style.display = 'none';
             filterOption.style.display = 'none';
-
-            if (table.isInitialized) {
-                table.tabulator.blockRedraw();
-            }
         } else {
             message.style.display = 'none';
             table.style.display = 'inline-block';
@@ -742,6 +739,16 @@ export function closeAllSafetynetSelectors(){
         if(list[i].isOpen)list[i].hide();
     }
 }
+
+export function closeAllPopups(){
+    var list = document.querySelectorAll(
+        '.autoql-vanilla-select-popup'
+    )
+    for (var i = 0; i < list.length; i++) {
+        list[i].close();
+    }
+}
+
 
 export function closeAllToolbars(){
     var list = document.querySelectorAll(
@@ -984,4 +991,23 @@ export const hasErrorTag = (text) => {
     if(values.length > 1)return true
 
     return false
+}
+
+export const getFormattedTimestamp = (timestamp) => {
+    const dateDayJS = dayjs.unix(timestamp)
+    
+    const time = dateDayJS.format('h:mma')
+    const day = dateDayJS.format('MM-DD-YY')
+    
+    const today = dayjs().format('MM-DD-YY')
+    const yesterday = dayjs().subtract(1, 'd').format('MM-DD-YY')
+
+    if (day === today) {
+      return `Today at ${time}`
+    } else if (day === yesterday) {
+      return `Yesterday at ${time}`
+    } else if (dayjs().isSame(dateDayJS, 'year')) {
+      return `${dateDayJS.format('MMMM Do')} at ${time}`
+    }
+    return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`
 }
