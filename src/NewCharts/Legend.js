@@ -2,7 +2,6 @@ import {
     LABEL_FONT_SIZE,
     VERTICAL_LEGEND_SPACING,
     applyLegendTitleStyles,
-    getLegendScale,
     getMaxLegendSectionWidth,
     getlegendLabelSections,
     legendColor,
@@ -16,14 +15,15 @@ import {
     removeHiddenLegendLabels,
     getTotalLeftPadding,
     getTotalTopPadding,
-    applyStylesForHiddenSeries,
     LOAD_MORE_DROPDOWN_PADDING_BOTTOM,
     TITLE_FONT_SIZE,
     mergeBoundingClientRects,
     HORIZONTAL_LEGEND_SPACING,
 } from 'autoql-fe-utils';
 
+import { scaleOrdinal } from 'd3-scale';
 import { symbol, symbolSquare } from 'd3-shape';
+import { select } from 'd3-selection';
 
 export function Legend(container, params = {}) {
     const {
@@ -64,12 +64,47 @@ export function Legend(container, params = {}) {
         }
     };
 
+    const getLegendScale = (legendLabels) => {
+        const colorRange = legendLabels.map((obj) => {
+            return obj.color;
+        });
+
+        return scaleOrdinal()
+            .domain(
+                legendLabels.map((obj) => {
+                    return obj.label;
+                }),
+            )
+            .range(colorRange);
+    };
+
+    const applyStylesForHiddenSeries = ({ legendElement, legendLabels }) => {
+        try {
+            select(legendElement)
+                .selectAll('.cell')
+                .each(function (label) {
+                    const legendLabel = legendLabels.find((l) => l.label === label);
+                    if (legendLabel) {
+                        select(this)
+                            .select('.swatch')
+                            .attr('stroke', legendLabel.color)
+                            .attr('stroke-location', 'outside');
+                        if (legendLabel.hidden) {
+                            select(this).attr('class', 'cell hidden');
+                        } else {
+                            select(this).attr('class', 'cell visible');
+                        }
+                    }
+                });
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     const createLegend = (legendLabels, sectionIndex) => {
         if (!legendLabels?.length) {
             return;
         }
-
-        const self = this;
 
         const legendNumber = legendLabels[0]?.legendNumber;
         const isFirstSection = !!legendLabels[0]?.isFirst;
@@ -88,7 +123,7 @@ export function Legend(container, params = {}) {
             .title(title)
             .titleWidth(maxSectionWidth)
             .on('cellclick', function () {
-                onLegendCellClick(this['__data__'], allLabels);
+                onLegendCellClick(select(this)?.data()?.[0], allLabels);
             });
 
         if (isSecondLegend) {
