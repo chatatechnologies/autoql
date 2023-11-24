@@ -1593,7 +1593,6 @@ export function DataMessenger(options = {}) {
         }
 
         var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
-        console.log('supported display types:', displayTypes);
 
         if (['table', 'pivot_table'].includes(ignore) && displayTypes.length <= 5) {
             messageBubble.classList.remove('chart-full-width');
@@ -2188,6 +2187,9 @@ export function DataMessenger(options = {}) {
             `);
             for (var i = 0; i < supportedDisplayTypes.length; i++) {
                 toolbar.appendChild(supportedDisplayTypes[i]);
+            }
+            if (supportedDisplayTypes.length === 1) {
+                toolbar?.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
             }
         }
 

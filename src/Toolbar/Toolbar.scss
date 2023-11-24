@@ -1,4 +1,5 @@
-.autoql-vanilla-chat-message-bubble:hover .autoql-vanilla-chat-message-toolbar {
+.autoql-vanilla-chat-message-bubble:hover
+    .autoql-vanilla-chat-message-toolbar:not(.autoql-vanilla-chat-message-toolbar-hidden) {
     visibility: visible;
 }
 
