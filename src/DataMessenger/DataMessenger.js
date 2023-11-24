@@ -1113,7 +1113,13 @@ export function DataMessenger(options = {}) {
     };
 
     obj.onMouseUpSpeechToText = function () {
-        window.removeEventListener('mouseup', this);
+        if (isTouchDevice()) {
+            window.removeEventListener('touchend', this);
+            window.removeEventListener('touchcancel', this);
+            window.removeEventListener('touchmove', this);
+        } else {
+            window.removeEventListener('mouseup', this);
+        }
 
         try {
             if (obj.isRecordVoiceActive) {
@@ -1172,12 +1178,20 @@ export function DataMessenger(options = {}) {
             obj.autoCompleteHandler(evt);
         };
 
-        voiceRecordButton.onmousedown = async () => {
+        const startListening = async (event) => {
             if (obj.voiceDisabled) {
                 return;
             }
 
-            window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
+            if (isTouchDevice()) {
+                event.preventDefault();
+                event.stopPropagation();
+                window.addEventListener('touchend', obj.onMouseUpSpeechToText);
+                window.addEventListener('touchcancel', obj.onMouseUpSpeechToText);
+                window.addEventListener('touchmove', obj.onMouseUpSpeechToText);
+            } else {
+                window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
+            }
 
             const permissionCheckStart = Date.now();
             try {
@@ -1204,7 +1218,15 @@ export function DataMessenger(options = {}) {
             obj.speechToText.start();
             voiceRecordButton.style.backgroundColor = '#FF471A';
             obj.isRecordVoiceActive = true;
+
+            return false;
         };
+
+        if (isTouchDevice()) {
+            voiceRecordButton.ontouchstart = startListening;
+        } else {
+            voiceRecordButton.onmousedown = startListening;
+        }
 
         obj.chataBarContainer = chataBarContainer;
         obj.input = chataInput;
