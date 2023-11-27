@@ -328,10 +328,12 @@ body.autoql-vanilla-drawer-open-body {
             border: none;
             flex-shrink: 0;
             flex-grow: 0;
+            user-select: none;
 
             img {
                 height: 1em;
                 width: 1em;
+                pointer-events: none;
             }
         }
     }

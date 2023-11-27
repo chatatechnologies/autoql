@@ -15,6 +15,7 @@ import {
     REQUEST_CANCELLED_ERROR,
     getColumnIndexConfig,
     getSupportedDisplayTypes,
+    fetchSubjectList,
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -88,14 +89,13 @@ import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-import { fetchSubjectList } from 'autoql-fe-utils';
+import { ChataChartNew } from '../NewCharts';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
 import '../Toolbar/Toolbar.scss';
 
 import testdata from '../../testdata';
-import { ChataChartNew } from '../NewCharts';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
@@ -1125,6 +1125,7 @@ export function DataMessenger(options = {}) {
             if (obj.isRecordVoiceActive) {
                 obj.speechToText.stop();
                 obj.input.value = obj.finalTranscript;
+                obj.finalTranscript = '';
                 obj.isRecordVoiceActive = false;
             }
 
@@ -1179,6 +1180,9 @@ export function DataMessenger(options = {}) {
         };
 
         const startListening = async (event) => {
+            obj.finalTranscript = '';
+            obj.input.value = '';
+
             if (obj.voiceDisabled) {
                 return;
             }
@@ -1189,6 +1193,12 @@ export function DataMessenger(options = {}) {
                 window.addEventListener('touchend', obj.onMouseUpSpeechToText);
                 window.addEventListener('touchcancel', obj.onMouseUpSpeechToText);
                 window.addEventListener('touchmove', obj.onMouseUpSpeechToText);
+
+                try {
+                    window.navigator?.vibrate([30, 30]);
+                } catch (error) {
+                    console.error(error);
+                }
             } else {
                 window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
             }
@@ -1212,6 +1222,9 @@ export function DataMessenger(options = {}) {
             if (Date.now() - permissionCheckStart > 500) {
                 // Assume dialog popped up, and do not start audio recording
                 // There is no other easy way that I know of to check if there was a permission dialog
+                obj.isRecordVoiceActive = false;
+                obj.speechToText?.stop();
+                obj.speechToText?.abort();
                 return;
             }
 
@@ -1254,9 +1267,16 @@ export function DataMessenger(options = {}) {
 
     obj.speechToTextEvent = () => {
         if (obj.speechToText) {
+            obj.speechToText.onend = () => {
+                if (obj.isRecordVoiceActive) {
+                    // On Android, text stops automatically. We want to keep it going as long as the button is pressed
+                    obj.speechToText.start();
+                }
+            };
+
             obj.speechToText.onresult = (e) => {
                 for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-                    let transcript = e.results[i][0].transcript;
+                    let transcript = e.results?.[i]?.[0]?.transcript ?? '';
                     if (e.results[i].isFinal) {
                         obj.finalTranscript += transcript;
                     }
@@ -1267,7 +1287,6 @@ export function DataMessenger(options = {}) {
                     obj.speechToText.stop();
                     obj.speechToText.abort();
                 }
-                obj.finalTranscript = '';
             };
         }
     };
