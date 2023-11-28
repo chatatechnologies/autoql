@@ -177,61 +177,69 @@ export function createSafetynetBody(
     })
 }
 
-export function createSuggestionArray(jsonResponse){
-    var fullSuggestion = jsonResponse['full_suggestion']
-    || jsonResponse['data']['replacements'];
-    var query = jsonResponse['query'] || jsonResponse['data']['text'];
-    var words = [];
+export function createSuggestionArray(jsonResponse) {
     var suggestionArray = [];
-    let lastEndIndex = 0;
+    try {
+        var fullSuggestion = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
+        var query = jsonResponse['query'] || jsonResponse['data']['text'];
+        var words = [];
 
-    fullSuggestion.map((suggestion, index) => {
-        words.push(query.slice(lastEndIndex, suggestion.start))
-        words.push(query.slice(suggestion.start, suggestion.end))
+        let lastEndIndex = 0;
 
-        if (index === fullSuggestion.length - 1) {
-            var lastWord = query.slice(suggestion.end, query.length);
-            if(lastWord != ''){
-                words.push(lastWord);
-            }
+        if (!query || !fullSuggestion?.length) {
+            return;
         }
-        lastEndIndex = suggestion.end
-    })
 
-    for (var i = 0; i < words.length; i++) {
-        var w = words[i];
-        var hasSuggestion = false;
-        for (var x = 0; x < fullSuggestion.length; x++) {
-            var start = fullSuggestion[x]['start'];
-            var end = fullSuggestion[x]['end'];
-            var word = query.slice(start, end);
-            if(word == w){
-                let suggestions = fullSuggestion[x]['suggestion_list']
-                || fullSuggestion[x]['suggestions'];
-                suggestions.push({
-                    text: word,
-                    canonical: "ORIGINAL_TEXT",
-                    value_label: "ORIGINAL_TEXT"
-                })
+        fullSuggestion.map((suggestion, index) => {
+            words.push(query.slice(lastEndIndex, suggestion.start));
+            words.push(query.slice(suggestion.start, suggestion.end));
+
+            if (index === fullSuggestion.length - 1) {
+                var lastWord = query.slice(suggestion.end, query.length);
+                if (lastWord != '') {
+                    words.push(lastWord);
+                }
+            }
+            lastEndIndex = suggestion.end;
+        });
+
+        for (var i = 0; i < words.length; i++) {
+            var w = words[i];
+            var hasSuggestion = false;
+            for (var x = 0; x < fullSuggestion.length; x++) {
+                var start = fullSuggestion[x]['start'];
+                var end = fullSuggestion[x]['end'];
+                var word = query.slice(start, end);
+                if (word == w) {
+                    let suggestions = fullSuggestion[x]['suggestion_list'] || fullSuggestion[x]['suggestions'];
+                    suggestions.push({
+                        text: word,
+                        canonical: 'ORIGINAL_TEXT',
+                        value_label: 'ORIGINAL_TEXT',
+                    });
+                    suggestionArray.push({
+                        word: word,
+                        type: 'suggestion',
+                        suggestionList: suggestions,
+                        start: start,
+                        end: end,
+                    });
+                    hasSuggestion = true;
+                    break;
+                }
+            }
+            if (!hasSuggestion) {
                 suggestionArray.push({
-                    word: word,
-                    type: 'suggestion',
-                    suggestionList: suggestions,
-                    start: start,
-                    end: end
-                })
-                hasSuggestion = true;
-                break;
+                    word: w,
+                    type: 'word',
+                    suggestionList: [],
+                });
             }
         }
-        if(!hasSuggestion){
-            suggestionArray.push({
-                'word': w,
-                'type': 'word',
-                suggestionList: []
-            });
-        }
+    } catch (error) {
+        console.error(error);
     }
+
     return suggestionArray;
 }
 
