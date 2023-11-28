@@ -277,18 +277,17 @@ export function getLocalStream() {
     return navigator.mediaDevices.getUserMedia({ video: false, audio: true })
   }
 
-export function getSpeech(dataFormatting){
+export function getSpeech(dataFormatting) {
     window.SpeechRecognition = window.webkitSpeechRecognition || window.SpeechRecognition;
 
-    if(window.SpeechRecognition){
+    if (window.SpeechRecognition) {
         let recognition = new window.SpeechRecognition();
         recognition.interimResults = true;
-        recognition.maxAlternatives = 10;
-        recognition.continuous = true;
-        recognition.lang = dataFormatting?.languageCode ?? "en-US";
+        recognition.continuous = false;
+        recognition.lang = dataFormatting?.languageCode ?? 'en-US';
         return recognition;
-    }else{
-        return false
+    } else {
+        return false;
     }
 }
 

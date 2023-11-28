@@ -15,6 +15,7 @@ import {
     REQUEST_CANCELLED_ERROR,
     getColumnIndexConfig,
     getSupportedDisplayTypes,
+    fetchSubjectList,
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -88,14 +89,13 @@ import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-import { fetchSubjectList } from 'autoql-fe-utils';
+import { ChataChartNew } from '../NewCharts';
 
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
 import '../Toolbar/Toolbar.scss';
 
 import testdata from '../../testdata';
-import { ChataChartNew } from '../NewCharts';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
@@ -1112,28 +1112,6 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.onMouseUpSpeechToText = function () {
-        if (isTouchDevice()) {
-            window.removeEventListener('touchend', this);
-            window.removeEventListener('touchcancel', this);
-            window.removeEventListener('touchmove', this);
-        } else {
-            window.removeEventListener('mouseup', this);
-        }
-
-        try {
-            if (obj.isRecordVoiceActive) {
-                obj.speechToText.stop();
-                obj.input.value = obj.finalTranscript;
-                obj.isRecordVoiceActive = false;
-            }
-
-            obj.voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
         var chataBarContainer = document.createElement('div');
@@ -1159,7 +1137,6 @@ export function DataMessenger(options = {}) {
         chataInput.setAttribute('autocomplete', 'off');
         chataInput.setAttribute('placeholder', placeholder);
         voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button');
-        voiceRecordButton.classList.add('chata-voice');
         voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
@@ -1179,6 +1156,14 @@ export function DataMessenger(options = {}) {
         };
 
         const startListening = async (event) => {
+            if (obj.isRecordVoiceActive) {
+                obj.speechToText?.stop();
+                return;
+            }
+
+            obj.finalTranscript = '';
+            obj.input.value = '';
+
             if (obj.voiceDisabled) {
                 return;
             }
@@ -1186,11 +1171,12 @@ export function DataMessenger(options = {}) {
             if (isTouchDevice()) {
                 event.preventDefault();
                 event.stopPropagation();
-                window.addEventListener('touchend', obj.onMouseUpSpeechToText);
-                window.addEventListener('touchcancel', obj.onMouseUpSpeechToText);
-                window.addEventListener('touchmove', obj.onMouseUpSpeechToText);
-            } else {
-                window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
+
+                try {
+                    window.navigator?.vibrate([30, 30]);
+                } catch (error) {
+                    console.error(error);
+                }
             }
 
             const permissionCheckStart = Date.now();
@@ -1212,11 +1198,14 @@ export function DataMessenger(options = {}) {
             if (Date.now() - permissionCheckStart > 500) {
                 // Assume dialog popped up, and do not start audio recording
                 // There is no other easy way that I know of to check if there was a permission dialog
+                obj.isRecordVoiceActive = false;
+                obj.speechToText?.stop();
+                obj.speechToText?.abort();
                 return;
             }
 
             obj.speechToText.start();
-            voiceRecordButton.style.backgroundColor = '#FF471A';
+            voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button-listening');
             obj.isRecordVoiceActive = true;
 
             return false;
@@ -1254,9 +1243,14 @@ export function DataMessenger(options = {}) {
 
     obj.speechToTextEvent = () => {
         if (obj.speechToText) {
+            obj.speechToText.onend = () => {
+                obj.isRecordVoiceActive = false;
+                obj.voiceRecordButton.classList.remove('autoql-vanilla-chat-voice-record-button-listening');
+            };
+
             obj.speechToText.onresult = (e) => {
                 for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-                    let transcript = e.results[i][0].transcript;
+                    let transcript = e.results?.[i]?.[0]?.transcript ?? '';
                     if (e.results[i].isFinal) {
                         obj.finalTranscript += transcript;
                     }
@@ -1267,7 +1261,6 @@ export function DataMessenger(options = {}) {
                     obj.speechToText.stop();
                     obj.speechToText.abort();
                 }
-                obj.finalTranscript = '';
             };
         }
     };

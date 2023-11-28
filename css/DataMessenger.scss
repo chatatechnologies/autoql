@@ -312,6 +312,7 @@ body.autoql-vanilla-drawer-open-body {
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
             width: 40px;
             height: 40px;
             border-radius: 24px;
@@ -320,18 +321,25 @@ body.autoql-vanilla-drawer-open-body {
             font-size: 18px;
             line-height: 24px;
             outline: none !important;
-            position: relative;
-            cursor: pointer;
             overflow: hidden;
             background: var(--autoql-vanilla-accent-color);
             color: var(--autoql-vanilla-text-color-primary);
             border: none;
             flex-shrink: 0;
             flex-grow: 0;
+            user-select: none;
+            cursor: pointer;
 
             img {
                 height: 1em;
                 width: 1em;
+                pointer-events: none;
+            }
+
+            &.autoql-vanilla-chat-voice-record-button-listening {
+                background: linear-gradient(-45deg, #ff471a 8%, #ff471aa1 18%, #ff471a 33%);
+                background-size: 200% 200%;
+                animation: pulse-gradient 1s ease-in infinite;
             }
         }
     }
@@ -342,6 +350,13 @@ body.autoql-vanilla-drawer-open-body {
 
     .autoql-vanilla-explore-queries-input {
         margin: 10px 0;
+    }
+
+    @keyframes pulse-gradient {
+        to {
+            background-position-x: -200%;
+            background-position-y: -200%;
+        }
     }
 
     // ************************** DRAWER OPEN STYLES ************************* //
