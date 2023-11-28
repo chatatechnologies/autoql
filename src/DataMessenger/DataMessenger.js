@@ -1112,29 +1112,6 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.onMouseUpSpeechToText = function () {
-        if (isTouchDevice()) {
-            window.removeEventListener('touchend', this);
-            window.removeEventListener('touchcancel', this);
-            window.removeEventListener('touchmove', this);
-        } else {
-            window.removeEventListener('mouseup', this);
-        }
-
-        try {
-            if (obj.isRecordVoiceActive) {
-                obj.speechToText.stop();
-                obj.input.value = obj.finalTranscript;
-                obj.finalTranscript = '';
-                obj.isRecordVoiceActive = false;
-            }
-
-            obj.voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
         var chataBarContainer = document.createElement('div');
@@ -1160,7 +1137,6 @@ export function DataMessenger(options = {}) {
         chataInput.setAttribute('autocomplete', 'off');
         chataInput.setAttribute('placeholder', placeholder);
         voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button');
-        voiceRecordButton.classList.add('chata-voice');
         voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
@@ -1180,6 +1156,11 @@ export function DataMessenger(options = {}) {
         };
 
         const startListening = async (event) => {
+            if (obj.isRecordVoiceActive) {
+                obj.speechToText?.stop();
+                return;
+            }
+
             obj.finalTranscript = '';
             obj.input.value = '';
 
@@ -1190,17 +1171,12 @@ export function DataMessenger(options = {}) {
             if (isTouchDevice()) {
                 event.preventDefault();
                 event.stopPropagation();
-                window.addEventListener('touchend', obj.onMouseUpSpeechToText);
-                window.addEventListener('touchcancel', obj.onMouseUpSpeechToText);
-                window.addEventListener('touchmove', obj.onMouseUpSpeechToText);
 
                 try {
                     window.navigator?.vibrate([30, 30]);
                 } catch (error) {
                     console.error(error);
                 }
-            } else {
-                window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
             }
 
             const permissionCheckStart = Date.now();
@@ -1229,7 +1205,7 @@ export function DataMessenger(options = {}) {
             }
 
             obj.speechToText.start();
-            voiceRecordButton.style.backgroundColor = '#FF471A';
+            voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button-listening');
             obj.isRecordVoiceActive = true;
 
             return false;
@@ -1268,10 +1244,8 @@ export function DataMessenger(options = {}) {
     obj.speechToTextEvent = () => {
         if (obj.speechToText) {
             obj.speechToText.onend = () => {
-                if (obj.isRecordVoiceActive) {
-                    // On Android, text stops automatically. We want to keep it going as long as the button is pressed
-                    obj.speechToText.start();
-                }
+                obj.isRecordVoiceActive = false;
+                obj.voiceRecordButton.classList.remove('autoql-vanilla-chat-voice-record-button-listening');
             };
 
             obj.speechToText.onresult = (e) => {

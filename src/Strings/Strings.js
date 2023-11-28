@@ -51,7 +51,7 @@ export const strings = new LocalizedStrings({
 		clearSearch: 'Clear Search',
         notifications: 'Notifications',
         dmInputPlaceholder: 'Type your queries here',
-        voiceRecord: 'Hold for voice-to-text',
+        voiceRecord: 'Click for voice-to-text',
         voiceRecordError: "You have denied permission for the use of your microphone. Please update the microphone permissions in your browser's settings.",
         dataExplorerInput: 'Search terms or topics',
         dataExplorerMessage1: 'Discover what you can ask by entering a topic in the search bar above.',
