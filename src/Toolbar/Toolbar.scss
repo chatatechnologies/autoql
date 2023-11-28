@@ -33,7 +33,7 @@
 
     .autoql-vanilla-chata-toolbar-btn {
         height: 28px;
-        width: 28px;
+        padding: 2px;
         background: none;
         border: none;
         font-size: 16px;
@@ -46,6 +46,10 @@
         display: flex;
         align-items: center;
         justify-content: center;
+
+        svg {
+            color: inherit;
+        }
 
         &:focus {
             background: none !important;
@@ -72,4 +76,16 @@
     right: 2px;
     border-radius: 50%;
     box-sizing: content-box;
+}
+
+@media only screen and (max-width: 600px) {
+    .autoql-vanilla-chata-toolbar-btn {
+        padding: 2px !important;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .autoql-vanilla-chata-toolbar-btn {
+        padding: 5px !important;
+    }
 }
