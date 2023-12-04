@@ -94,12 +94,13 @@ import { ChataChartNew } from '../NewCharts';
 import '../../css/chata-styles.css';
 import '../../css/DataMessenger.scss';
 import '../Toolbar/Toolbar.scss';
-
 import testdata from '../../testdata';
+import MobileDetect from 'mobile-detect';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
-
+    var md = new MobileDetect(window.navigator.userAgent);
+    const isMobile = md.mobile() === null ? false : true;
     var obj = this;
     obj.options = {
         defaultOpen: true,
@@ -603,7 +604,9 @@ export function DataMessenger(options = {}) {
     obj.createQueryTab = function ({ name, content, tooltip, isEnabled }) {
         var tab = document.createElement('div');
         tab.classList.add('autoql-vanilla-data-messenger-tab');
-        tab.setAttribute('data-tippy-content', tooltip);
+        if (!isMobile) {
+            tab.setAttribute('data-tippy-content', tooltip);
+        }
         tab.setAttribute('data-tab', name);
 
         if (content) tab.appendChild(content);
@@ -927,7 +930,7 @@ export function DataMessenger(options = {}) {
         var closeButton = htmlToElement(`
             <button
                 class="autoql-vanilla-chata-button close-action"
-                data-tippy-content="${strings.closeDrawer}" currentitem="false">
+            currentitem="false">
                 ${CLOSE_ICON}
             </button>
         `);
@@ -939,15 +942,14 @@ export function DataMessenger(options = {}) {
         `);
 
         var filterButton = htmlToElement(`
-            <button class="autoql-vanilla-chata-button filter-locking-menu"
-            data-tippy-content="${strings.filterButton}">
+            <button class="autoql-vanilla-chata-button filter-locking-menu">
                 ${FILTER_LOCKING}
             </button>
         `);
 
         var clearAllButton = htmlToElement(`
             <button class="autoql-vanilla-chata-button clear-all"
-            data-tippy-content="${strings.clearMessages}">
+           >
                 ${CLEAR_ALL}
             </button>
         `);
@@ -982,16 +984,39 @@ export function DataMessenger(options = {}) {
             </div>
         `);
         chatHeaderContainer.classList.add('autoql-vanilla-chat-header-container');
-
+        if (!isMobile) {
+            const closeButtonTooltip = tippy(closeButton);
+            closeButtonTooltip.setContent(strings.closeDrawer);
+            closeButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        }
         closeButton.onclick = () => {
             obj.closeDrawer();
         };
-
+        if (!isMobile) {
+            const clearAllButtonTooltip = tippy(clearAllButton);
+            clearAllButtonTooltip.setContent(strings.clearMessages);
+            clearAllButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        }
         clearAllButton.onclick = () => {
             popover.style.visibility = 'visible';
             popover.style.opacity = 1;
         };
-
+        const filterButtonTooltip = tippy(filterButton);
+        if (!isMobile) {
+            filterButtonTooltip.setContent(strings.filterButton);
+            filterButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        } else {
+            filterButtonTooltip.disable();
+        }
         filterButton.onclick = () => {
             if (filterLocking.isOpen) {
                 filterLocking.hide();
@@ -1008,20 +1033,24 @@ export function DataMessenger(options = {}) {
                 }
             }
         });
-
         const screenButtonTooltip = tippy(screenButton);
-        screenButtonTooltip.setContent(strings.maximizeButton);
-        screenButtonTooltip.setProps({
-            theme: 'chata-theme',
-            delay: [500],
-        });
+        if (!isMobile) {
+            screenButtonTooltip.setContent(strings.maximizeButton);
+            screenButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        }
         screenButton.onclick = () => {
             if (screenButton.classList.contains('autoql-btn-maximize')) {
                 screenButton.classList.remove('autoql-btn-maximize');
                 screenButton.classList.add('autoql-btn-minimize');
                 screenButton.innerHTML = MINIMIZE_BUTTON;
-                screenButtonTooltip.setContent(strings.maximizeButtonExit);
-
+                if (!isMobile) {
+                    screenButtonTooltip.setContent(strings.maximizeButtonExit);
+                } else {
+                    screenButtonTooltip.disable();
+                }
                 obj.isPortrait()
                     ? (obj.drawerContentWrapper.style.width = '100%')
                     : (obj.drawerContentWrapper.style.height = '100%');
@@ -1029,7 +1058,11 @@ export function DataMessenger(options = {}) {
                 screenButton.classList.add('autoql-btn-maximize');
                 screenButton.classList.remove('autoql-btn-minimize');
                 screenButton.innerHTML = MAXIMIZE_BUTTON;
-                screenButtonTooltip.setContent(strings.maximizeButton);
+                if (!isMobile) {
+                    screenButtonTooltip.setContent(strings.maximizeButton);
+                } else {
+                    screenButtonTooltip.disable();
+                }
 
                 obj.isPortrait()
                     ? (obj.drawerContentWrapper.style.width = `${obj.options.width}px`)
@@ -1137,7 +1170,10 @@ export function DataMessenger(options = {}) {
         chataInput.setAttribute('autocomplete', 'off');
         chataInput.setAttribute('placeholder', placeholder);
         voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button');
-        voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
+        if (!isMobile) {
+            voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
+        }
+
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
         if (!supportsVoiceRecord() || !obj.options.enableVoiceRecord) {
