@@ -1171,12 +1171,6 @@ export function DataMessenger(options = {}) {
             if (isTouchDevice()) {
                 event.preventDefault();
                 event.stopPropagation();
-
-                try {
-                    window.navigator?.vibrate([30, 30]);
-                } catch (error) {
-                    console.error(error);
-                }
             }
 
             const permissionCheckStart = Date.now();
