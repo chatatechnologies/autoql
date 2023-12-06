@@ -182,8 +182,8 @@ export function DataMessenger(options = {}) {
     obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement);
 
     obj.getSubjects = async () => {
-        const { token, apiKey, domain } = obj.options.authentication;
         try {
+            const { token, apiKey, domain } = obj.options.authentication;
             if (!token || token === '') {
                 return [];
             } else {
@@ -1234,8 +1234,8 @@ export function DataMessenger(options = {}) {
                 return;
             }
 
-            obj.speechToText.start();
             voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button-listening');
+            obj.speechToText.start();
             obj.isRecordVoiceActive = true;
 
             return false;
@@ -2737,7 +2737,7 @@ export function DataMessenger(options = {}) {
             if (responseLoadingContainer) {
                 obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
-            if (response.data.message === 'Request cancelled') {
+            if (response?.data?.message === 'Request cancelled') {
                 return;
             }
             obj.sendResponse(strings.accessDenied);
