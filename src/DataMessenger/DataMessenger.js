@@ -1194,7 +1194,6 @@ export function DataMessenger(options = {}) {
         const startListening = async (event) => {
             if (obj.isRecordVoiceActive) {
                 obj.speechToText?.stop();
-                console.log('STOPPED SP2T 1');
                 return;
             }
 
@@ -1212,7 +1211,6 @@ export function DataMessenger(options = {}) {
 
             const permissionCheckStart = Date.now();
             try {
-                console.log('about to get local stream...');
                 await getLocalStream();
             } catch (error) {
                 console.error(error);
@@ -1230,15 +1228,12 @@ export function DataMessenger(options = {}) {
             if (Date.now() - permissionCheckStart > 500) {
                 // Assume dialog popped up, and do not start audio recording
                 // There is no other easy way that I know of to check if there was a permission dialog
-                console.log('STOPPED SP2T 2, permission was just checked instead');
-
                 obj.isRecordVoiceActive = false;
                 obj.speechToText?.stop();
                 obj.speechToText?.abort();
                 return;
             }
 
-            console.log('starting speech to text NOW!');
             voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button-listening');
             obj.speechToText.start();
             obj.isRecordVoiceActive = true;
@@ -1278,44 +1273,16 @@ export function DataMessenger(options = {}) {
 
     obj.speechToTextEvent = () => {
         if (obj.speechToText) {
-            obj.speechToText.onstart = (e) => {
-                console.log('onstart callback voice is activated, you may now speak', e);
-                console.log(obj.speechToText);
-            };
             obj.speechToText.onend = () => {
-                console.log('onend callback');
                 obj.isRecordVoiceActive = false;
                 obj.voiceRecordButton.classList.remove('autoql-vanilla-chat-voice-record-button-listening');
             };
 
-            obj.speechToText.onsoundstart = (e) => {
-                console.log('on sound start!', e);
-            };
-            obj.speechToText.onspeechstart = (e) => {
-                console.log('on speech start!', e);
-            };
-            obj.speechToText.onaudiostart = (e) => {
-                console.log('on audio start', e);
-            };
-            obj.speechToText.onaudioend = (e) => {
-                console.log('on audio end', e);
-            };
-            obj.speechToText.onerror = (e) => {
-                console.log('ON SPEECH TO TEXT ERROR!!!', e);
-            };
-            obj.speechToText.onnomatch = (e) => {
-                console.log('ON NO MATCH!', e);
-            };
             obj.speechToText.onresult = (e) => {
-                console.log('ON SPEECH TO TEXT RESULT!!', e, e.results);
                 for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
                     let transcript = e.results?.[i]?.[0]?.transcript ?? '';
-                    console.log({ transcript });
                     if (e.results[i].isFinal) {
                         obj.finalTranscript += transcript;
-                        console.log('FINAL TRANSCRIPT:', obj.finalTranscript);
-                    } else {
-                        console.log('cancelling because the transcript was not final');
                     }
                 }
                 if (obj.finalTranscript !== '') {
