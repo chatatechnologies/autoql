@@ -2770,7 +2770,7 @@ export function DataMessenger(options = {}) {
             if (responseLoadingContainer) {
                 obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
-            if (response.data.message === 'Request cancelled') {
+            if (response?.data?.message === 'Request cancelled') {
                 return;
             }
             obj.sendResponse(strings.accessDenied);
