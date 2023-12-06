@@ -4,8 +4,9 @@ import { ConditionList } from './Components/ConditionList';
 import { INFO_ICON, CLOSE_ICON } from '../Svg';
 import { strings } from '../Strings';
 import { refreshTooltips } from '../Tooltips';
-import './FilterLocking.scss';
 import MobileDetect from 'mobile-detect';
+
+import './FilterLocking.scss';
 
 export function FilterLocking(datamessenger) {
     var md = new MobileDetect(window.navigator.userAgent);
@@ -145,14 +146,18 @@ export function FilterLocking(datamessenger) {
     };
 
     view.loadConditions = async () => {
-        const conditions = await view.getConditions();
-        const data = conditions?.data;
+        try {
+            const conditions = await view.getConditions();
+            const data = conditions?.data;
 
-        if (!data) {
-            return;
+            if (!data) {
+                return;
+            }
+
+            view.refreshConditions(data);
+        } catch (error) {
+            console.error(error);
         }
-
-        view.refreshConditions(data);
     };
     view.displaySavingIndicator = () => {
         savingIndicator.style.visibility = 'visible';
