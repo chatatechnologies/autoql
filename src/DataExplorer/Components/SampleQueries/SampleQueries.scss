@@ -79,12 +79,6 @@
                 white-space: nowrap;
             }
 
-            // .autoql-vanilla-inline-number-editor-wrapper,
-            // .autocomplete-input-popover-btn {
-            //   position: relative;
-            //   margin-left: 3px;
-            // }
-
             &::before {
                 content: '';
                 position: absolute;
@@ -198,6 +192,26 @@
                 }
             }
         }
+    }
+}
+
+.autoql-vanilla-autcomplete-input-popover-btn,
+.autoql-vanilla-inline-number-input-editor-btn {
+    border: 1px solid transparent;
+    border-bottom-color: var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-text-color-primary);
+    padding: 2px;
+    font-weight: 600;
+    padding-bottom: 2px;
+    transition: color 0.2s ease;
+    position: relative;
+    margin-left: 3px;
+    cursor: pointer;
+
+    &:hover,
+    &.autoql-vanilla-autocomplete-input-popover-btn-active,
+    &.autoql-vanilla-inline-number-input-editor-btn-active {
+        color: var(--autoql-vanilla-accent-color);
     }
 }
 

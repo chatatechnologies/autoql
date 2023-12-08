@@ -76,7 +76,7 @@ export function ReverseTranslation(queryResponse, onValueLabelClick, textOnly = 
                             const lockIcon = document.createElement('span');
                             lockIcon.style.display = 'inline-block';
                             lockIcon.setAttribute('data-tippy-content', strings.lockedValueLabel);
-                            lockIcon.innerHTML = FILTER_LOCKING;
+                            lockIcon.innerHTML = FILTER_LOCKING_CLOSE;
                             VLLink.appendChild(lockIcon);
                         }
 
@@ -84,53 +84,13 @@ export function ReverseTranslation(queryResponse, onValueLabelClick, textOnly = 
                         return chunkSpan;
                     }
                 }
-            });
-        }
-    };
-
-    this.getInfoIcon = () => {
-        const iconContainer = document.createElement('span');
-        iconContainer.classList.add('autoql-vanilla-reverse-translation-icon');
-        iconContainer.setAttribute('data-tippy-content', strings.reverseTranslationTooltip)
-        iconContainer.innerHTML = INFO_ICON;
-        return iconContainer;
-    };
-
-    this.getLabel = () => {
-        const label = document.createElement('strong');
-        label.textContent = strings.reverseTranslationLabel;
-        return label;
-    };
-
-    this.handleValueLabelClick = (e, chunk) => {
-        e.stopPropagation();
-        onValueLabelClick(chunk);
-    };
-
-    this.getInterpretationChunk = (chunk) => {
-        const chunkSpan = document.createElement('span');
-
-        switch (chunk.c_type) {
-            case 'VALUE_LABEL': {
-                if (onValueLabelClick && !textOnly) {
-                    const VLLink = document.createElement('a');
-                    VLLink.classList.add('autoql-vanilla-condition-link');
-                    VLLink.onclick = (e) => this.handleValueLabelClick(e, chunk);
-
-                    const VLLinkText = document.createElement('span');
-                    VLLinkText.innerHTML = `&nbsp;${chunk.eng}`;
-                    VLLink.appendChild(VLLinkText);
-
-                    if (chunk.lockedFilter) {
-                        const lockIcon = document.createElement('span');
-                        lockIcon.style.display = 'inline-block';
-                        lockIcon.setAttribute('data-tippy-content', strings.lockedValueLabel);
-                        lockIcon.innerHTML = FILTER_LOCKING_CLOSE;
-                        VLLink.appendChild(lockIcon);
-                    }
-
-                    chunkSpan.appendChild(VLLink);
-                    return chunkSpan;
+                // case 'DELIM': {
+                //     chunkSpan.innerHTML += chunk.eng.trim();
+                //     break;
+                //   }
+                case 'DELIM': {
+                    chunkSpan.innerHTML += chunk.eng;
+                    break;
                 }
                 // case 'TEXT': {
                 //     chunkSpan.innerHTML += `&nbsp${chunk.eng}`;

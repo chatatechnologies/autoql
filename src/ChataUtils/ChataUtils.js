@@ -1,31 +1,29 @@
 import 'regenerator-runtime/runtime.js';
+import tippy from 'tippy.js';
 import MobileDetect from 'mobile-detect';
 import {
     htmlToElement,
     closeAllToolbars,
     closeAllSafetynetSelectors,
     closeAutocompleteObjects,
-    closeAllPopups,
     formatColumnName,
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
     uuidv4,
 } from '../Utils';
-import { apiCallPut, apiCallPost } from '../Api';
+import { apiCallPut } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataConfirmDialog, ChataRadio } from '../ChataComponents';
+import { ChataRadio } from '../ChataComponents';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
 import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
-import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
+import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
+import { CSS_PREFIX } from '../Constants';
 
 import '../../css/PopoverMenu.css';
-import { CSS_PREFIX } from '../Constants';
-import '../../css/PopoverMenu.css';
-import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),

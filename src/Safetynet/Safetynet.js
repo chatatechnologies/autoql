@@ -174,10 +174,6 @@ export function createSuggestionArray(jsonResponse) {
     var query = jsonResponse['query'] || jsonResponse['data']['text'];
     var words = [];
     var suggestionArray = [];
-    try {
-        var fullSuggestion = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
-        var query = jsonResponse['query'] || jsonResponse['data']['text'];
-        var words = [];
 
     fullSuggestion.map((suggestion, index) => {
         words.push(query.slice(lastEndIndex, suggestion.start));

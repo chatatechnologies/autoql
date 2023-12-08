@@ -1,22 +1,27 @@
-import { fetchDataExplorerSampleQueries, SampleQueryReplacementTypes, getTitleCase } from 'autoql-fe-utils';
-
-import _cloneDeep from 'lodash.clonedeep';
+import {
+    fetchDataExplorerSampleQueries,
+    SampleQueryReplacementTypes,
+    getTitleCase,
+    getQueryRequestParams,
+} from 'autoql-fe-utils';
 
 import { strings } from '../../../Strings';
 import { createIcon } from '../../../Utils';
+import { SampleQuery } from './SampleQuery';
 import { QUERY_SEND_BTN } from '../../../Svg';
 import { SubjectName } from '../SubjectName/SubjectName';
 import { MultiSelect } from '../../../ChataComponents/MultiSelect';
+import { VLAutocompleteInputPopover } from '../../../VLAutocomplete/VLAutocompletePopover';
 
 import './SampleQueries.scss';
 
 export function SampleQueries({
     widget,
     subject,
-    searchText,
-    selectedColumns = [],
     context,
+    searchText,
     dataPreview,
+    selectedColumns = [],
     onColumnClick = () => {},
     onColumnSelection = () => {},
 }) {
@@ -106,99 +111,6 @@ export function SampleQueries({
         }
 
         list.appendChild(errorMessageContainer);
-    };
-
-    const createSampleQuery = (suggestion) => {
-        const renderedChunks = document.createElement('div');
-
-        if (suggestion.chunked?.length) {
-            suggestion.chunked.forEach((chunk, i) => {
-                if (chunk?.value) {
-                    let text = chunk.value;
-                    if (i === 0 && chunk?.type == SampleQueryReplacementTypes.SAMPLE_QUERY_TEXT_TYPE) {
-                        text = getTitleCase(chunk.value);
-                    }
-
-                    let chunkContent = text;
-
-                    if (chunk.type == SampleQueryReplacementTypes.SAMPLE_QUERY_VL_TYPE) {
-                        chunkContent = text;
-                        // TODO: console.log('CREATE INLINE AUTOCOMPLETE VL POPOVER')
-                        // chunkContent = (
-                        //   <VLAutocompleteInputPopover
-                        //     authentication={this.props.authentication}
-                        //     placeholder='Search values'
-                        //     value={this.state.values[chunk.name]?.replacement ?? undefined}
-                        //     onChange={(newValue) => this.onValueChange(newValue, chunk.name)}
-                        //     tooltipID={this.props.tooltipID}
-                        //     context={this.props.context}
-                        //     shouldRender={this.props.shouldRender}
-                        //   />
-                        // )
-                    } else if (chunk.type == SampleQueryReplacementTypes.SAMPLE_QUERY_AMOUNT_TYPE) {
-                        chunkContent = text;
-                        // chunkContent = (
-                        //   <InlineInputEditor
-                        //     value={chunk.value}
-                        //     type='number'
-                        //     onChange={(newValue) => this.onAmountChange(newValue, chunk.name)}
-                        //     tooltipID={this.props.tooltipID}
-                        //   />
-                        // )
-                    } else if (chunk.type == SampleQueryReplacementTypes.SAMPLE_QUERY_TIME_TYPE) {
-                        chunkContent = text;
-                        // TODO: console.log('CREATE INLINE INPUT EDITOR')
-                        // chunkContent = (
-                        //   <InlineInputEditor
-                        //     value={chunk.value}
-                        //     type='text'
-                        //     onChange={(newValue) => this.onAmountChange(newValue, chunk.name)}
-                        //     datePicker={true}
-                        //     tooltipID={this.props.tooltipID}
-                        //   />
-                        // )
-                    }
-
-                    const chunkElement = document.createElement('div');
-                    chunkElement.classList.add('autoql-vanilla-data-explorer-sample-chunk');
-                    chunkElement.innerHTML = chunkContent;
-
-                    renderedChunks.appendChild(chunkElement);
-                }
-            });
-        }
-
-        const item = document.createElement('div');
-        item.classList.add('autoql-vanilla-data-explorer-sample-query');
-
-        const itemText = document.createElement('div');
-        itemText.classList.add('autoql-vanilla-query-suggestion-text');
-        itemText.appendChild(renderedChunks);
-
-        const sendButton = document.createElement('div');
-        const sendIcon = createIcon(QUERY_SEND_BTN);
-        sendButton.appendChild(sendIcon);
-        sendButton.classList.add('autoql-vanilla-query-suggestion-send-btn');
-        sendButton.setAttribute('data-tippy-content', 'Submit Query');
-        sendButton.onclick = () => {
-            widget.setActiveTab(widget.tabChataUtils);
-            widget.tabsAnimation('flex', 'block');
-            widget.dataExplorer.hide();
-            widget.notificationsAnimation('none');
-            widget.keyboardAnimation(suggestion.queryText);
-            widget.options.landingPage = 'data-messenger';
-        };
-
-        item.appendChild(itemText);
-        item.appendChild(sendButton);
-
-        return item;
-    };
-
-    obj.updateSelectedColumns = () => {
-        if (obj.fieldSelector) {
-            obj.selectedColumns;
-        }
     };
 
     obj.setDataPreview = (dataPreviewData) => {
@@ -326,7 +238,22 @@ export function SampleQueries({
                 list.appendChild(emptyListMessage);
             } else {
                 items.forEach((suggestion) => {
-                    const item = createSampleQuery(suggestion);
+                    const item = new SampleQuery({
+                        suggestion,
+                        options: widget.options,
+                        context,
+                        onSubmit: (queryParams) => {
+                            const queryText = queryParams?.query ?? suggestion.queryText;
+
+                            widget.setActiveTab(widget.tabChataUtils);
+                            widget.tabsAnimation('flex', 'block');
+                            widget.dataExplorer.hide();
+                            widget.notificationsAnimation('none');
+                            widget.keyboardAnimation(queryText);
+                            widget.options.landingPage = 'data-messenger';
+                        },
+                    });
+
                     list.appendChild(item);
                 });
             }
