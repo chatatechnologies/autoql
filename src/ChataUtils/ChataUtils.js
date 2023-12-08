@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime.js';
+import MobileDetect from 'mobile-detect';
 import {
     htmlToElement,
     closeAllToolbars,
@@ -11,15 +12,17 @@ import {
     copyTextToClipboard,
     uuidv4,
 } from '../Utils';
-import { apiCallPut } from '../Api';
+import { apiCallPut, apiCallPost } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataRadio } from '../ChataComponents';
+import { ChataConfirmDialog, ChataRadio } from '../ChataComponents';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
 import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
-import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
+import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
+
+import '../../css/PopoverMenu.css';
 import { CSS_PREFIX } from '../Constants';
 import '../../css/PopoverMenu.css';
 import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
@@ -43,6 +46,8 @@ export var ChataUtils = {
 //
 //     return Promise.resolve()
 // }
+var md = new MobileDetect(window.navigator.userAgent);
+const isMobile = md.mobile() === null ? false : true;
 
 ChataUtils.sendReportMessage = async (idRequest, options, toolbar, msg) => {
     var json = ChataUtils.responses[idRequest];
@@ -229,7 +234,9 @@ ChataUtils.copySqlHandler = (idRequest) => {
     copyButton.classList.add('copy-sql-btn');
     copyButton.classList.add('default');
     copyButton.classList.add('large');
-    copyButton.setAttribute('data-tippy-content', strings.copySqlToClipboard);
+    if (!isMobile) {
+        copyButton.setAttribute('data-tippy-content', strings.copySqlToClipboard);
+    }
     copyButton.appendChild(
         htmlToElement(`
         <span class="chata-icon">
@@ -421,11 +428,20 @@ ChataUtils.getActionButton = (svg, tooltip, idRequest, onClick, evtParams) => {
     var button = htmlToElement(`
         <button
             class="autoql-vanilla-chata-toolbar-btn"
-            data-tippy-content="${tooltip}"
             data-id="${idRequest}">
             ${svg}
         </button>
     `);
+    const buttonTooltip = tippy(button);
+    if (!isMobile) {
+        buttonTooltip.setContent(tooltip);
+        buttonTooltip.setProps({
+            theme: 'chata-theme',
+            delay: [500],
+        });
+    } else {
+        buttonTooltip.disable();
+    }
     button.onclick = (evt) => {
         onClick.apply(null, [evt, idRequest, ...evtParams]);
     };
@@ -707,8 +723,6 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
         var inputs = container.querySelectorAll('[data-line]');
         var table = document.querySelector(`[data-componentid='${id}']`);
         var tableColumns = table.tabulator.getColumns();
-
-        table.tabulator.blockRedraw();
 
         const data = tableColumns.map((col, i) => {
             json['data']['columns'][i]['is_visible'] = !!inputs[i].checked;
@@ -1104,10 +1118,6 @@ ChataUtils.registerWindowClicks = () => {
 
         if (closeAutocomplete) {
             closeAutocompleteObjects();
-        }
-
-        if (closePopups) {
-            closeAllPopups();
         }
     });
 };

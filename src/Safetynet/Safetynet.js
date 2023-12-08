@@ -174,7 +174,10 @@ export function createSuggestionArray(jsonResponse) {
     var query = jsonResponse['query'] || jsonResponse['data']['text'];
     var words = [];
     var suggestionArray = [];
-    let lastEndIndex = 0;
+    try {
+        var fullSuggestion = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
+        var query = jsonResponse['query'] || jsonResponse['data']['text'];
+        var words = [];
 
     fullSuggestion.map((suggestion, index) => {
         words.push(query.slice(lastEndIndex, suggestion.start));
@@ -222,6 +225,7 @@ export function createSuggestionArray(jsonResponse) {
             });
         }
     }
+
     return suggestionArray;
 }
 

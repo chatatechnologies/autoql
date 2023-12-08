@@ -15,6 +15,7 @@ import {
     REQUEST_CANCELLED_ERROR,
     getColumnIndexConfig,
     getSupportedDisplayTypes,
+    fetchSubjectList,
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -47,6 +48,7 @@ import {
     checkAndApplyTheme,
     closeAllChartPopovers,
     getLocalStream,
+    isTouchDevice,
 } from '../Utils';
 
 import {
@@ -86,13 +88,14 @@ import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-import { fetchSubjectList } from 'autoql-fe-utils';
 import { ChataChartNew } from '../NewCharts';
-
-import '../../css/chata-styles.css';
-import '../../css/DataMessenger.scss';
+import MobileDetect from 'mobile-detect';
 
 import testdata from '../../testdata';
+
+import '../Toolbar/Toolbar.scss';
+import '../../css/chata-styles.css';
+import '../../css/DataMessenger.scss';
 
 export function DataMessenger(options = {}) {
     checkAndApplyTheme();
@@ -103,6 +106,8 @@ export function DataMessenger(options = {}) {
         strings.setLanguage(dataFormatting?.languageCode);
     }
 
+    var md = new MobileDetect(window.navigator.userAgent);
+    const isMobile = md.mobile() === null ? false : true;
     var obj = this;
     obj.options = {
         defaultOpen: true,
@@ -191,8 +196,8 @@ export function DataMessenger(options = {}) {
     obj.isLandscape = () => ['top', 'bottom'].includes(obj.options.placement);
 
     obj.getSubjects = async () => {
-        const { token, apiKey, domain } = obj.options.authentication;
         try {
+            const { token, apiKey, domain } = obj.options.authentication;
             if (!token || token === '') {
                 return [];
             } else {
@@ -206,6 +211,7 @@ export function DataMessenger(options = {}) {
             }
         } catch (error) {
             console.error(error);
+            return [];
         }
     };
 
@@ -626,7 +632,9 @@ export function DataMessenger(options = {}) {
     obj.createQueryTab = function ({ name, content, tooltip, isEnabled }) {
         var tab = document.createElement('div');
         tab.classList.add('autoql-vanilla-data-messenger-tab');
-        tab.setAttribute('data-tippy-content', tooltip);
+        if (!isMobile) {
+            tab.setAttribute('data-tippy-content', tooltip);
+        }
         tab.setAttribute('data-tab', name);
 
         if (content) tab.appendChild(content);
@@ -954,7 +962,7 @@ export function DataMessenger(options = {}) {
         var closeButton = htmlToElement(`
             <button
                 class="autoql-vanilla-chata-button close-action"
-                data-tippy-content="${strings.closeDrawer}" currentitem="false">
+            currentitem="false">
                 ${CLOSE_ICON}
             </button>
         `);
@@ -1009,16 +1017,39 @@ export function DataMessenger(options = {}) {
             </div>
         `);
         chatHeaderContainer.classList.add('autoql-vanilla-chat-header-container');
-
+        if (!isMobile) {
+            const closeButtonTooltip = tippy(closeButton);
+            closeButtonTooltip.setContent(strings.closeDrawer);
+            closeButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        }
         closeButton.onclick = () => {
             obj.closeDrawer();
         };
-
+        if (!isMobile) {
+            const clearAllButtonTooltip = tippy(clearAllButton);
+            clearAllButtonTooltip.setContent(strings.clearMessages);
+            clearAllButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        }
         clearAllButton.onclick = () => {
             popover.style.visibility = 'visible';
             popover.style.opacity = 1;
         };
-
+        const filterButtonTooltip = tippy(filterButton);
+        if (!isMobile) {
+            filterButtonTooltip.setContent(strings.filterButton);
+            filterButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        } else {
+            filterButtonTooltip.disable();
+        }
         filterButton.onclick = () => {
             if (filterLocking.isOpen) {
                 filterLocking.hide();
@@ -1035,20 +1066,24 @@ export function DataMessenger(options = {}) {
                 }
             }
         });
-
         const screenButtonTooltip = tippy(screenButton);
-        screenButtonTooltip.setContent(strings.maximizeButton);
-        screenButtonTooltip.setProps({
-            theme: 'chata-theme',
-            delay: [500],
-        });
+        if (!isMobile) {
+            screenButtonTooltip.setContent(strings.maximizeButton);
+            screenButtonTooltip.setProps({
+                theme: 'chata-theme',
+                delay: [500],
+            });
+        }
         screenButton.onclick = () => {
             if (screenButton.classList.contains('autoql-btn-maximize')) {
                 screenButton.classList.remove('autoql-btn-maximize');
                 screenButton.classList.add('autoql-btn-minimize');
                 screenButton.innerHTML = MINIMIZE_BUTTON;
-                screenButtonTooltip.setContent(strings.maximizeButtonExit);
-
+                if (!isMobile) {
+                    screenButtonTooltip.setContent(strings.maximizeButtonExit);
+                } else {
+                    screenButtonTooltip.disable();
+                }
                 obj.isPortrait()
                     ? (obj.drawerContentWrapper.style.width = '100%')
                     : (obj.drawerContentWrapper.style.height = '100%');
@@ -1056,7 +1091,11 @@ export function DataMessenger(options = {}) {
                 screenButton.classList.add('autoql-btn-maximize');
                 screenButton.classList.remove('autoql-btn-minimize');
                 screenButton.innerHTML = MAXIMIZE_BUTTON;
-                screenButtonTooltip.setContent(strings.maximizeButton);
+                if (!isMobile) {
+                    screenButtonTooltip.setContent(strings.maximizeButton);
+                } else {
+                    screenButtonTooltip.disable();
+                }
 
                 obj.isPortrait()
                     ? (obj.drawerContentWrapper.style.width = `${obj.options.width}px`)
@@ -1139,22 +1178,6 @@ export function DataMessenger(options = {}) {
         }
     };
 
-    obj.onMouseUpSpeechToText = function () {
-        window.removeEventListener('mouseup', this);
-
-        try {
-            if (obj.isRecordVoiceActive) {
-                obj.speechToText.stop();
-                obj.input.value = obj.finalTranscript;
-                obj.isRecordVoiceActive = false;
-            }
-
-            obj.voiceRecordButton.style.backgroundColor = 'var(--autoql-vanilla-accent-color)';
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     obj.createBar = () => {
         const placeholder = obj.options.inputPlaceholder;
         var chataBarContainer = document.createElement('div');
@@ -1184,8 +1207,10 @@ export function DataMessenger(options = {}) {
         chataInput.setAttribute('autocomplete', 'off');
         chataInput.setAttribute('placeholder', placeholder);
         voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button');
-        voiceRecordButton.classList.add('chata-voice');
-        voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
+        if (!isMobile) {
+            voiceRecordButton.setAttribute('data-tippy-content', strings.voiceRecord);
+        }
+
         voiceRecordButton.innerHTML = VOICE_RECORD_IMAGE;
 
         if (!supportsVoiceRecord() || !obj.options.enableVoiceRecord) {
@@ -1203,12 +1228,23 @@ export function DataMessenger(options = {}) {
             obj.autoCompleteHandler(evt);
         };
 
-        voiceRecordButton.onmousedown = async () => {
+        const startListening = async (event) => {
+            if (obj.isRecordVoiceActive) {
+                obj.speechToText?.stop();
+                return;
+            }
+
+            obj.finalTranscript = '';
+            obj.input.value = '';
+
             if (obj.voiceDisabled) {
                 return;
             }
 
-            window.addEventListener('mouseup', obj.onMouseUpSpeechToText);
+            if (isTouchDevice()) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
 
             const permissionCheckStart = Date.now();
             try {
@@ -1229,13 +1265,24 @@ export function DataMessenger(options = {}) {
             if (Date.now() - permissionCheckStart > 500) {
                 // Assume dialog popped up, and do not start audio recording
                 // There is no other easy way that I know of to check if there was a permission dialog
+                obj.isRecordVoiceActive = false;
+                obj.speechToText?.stop();
+                obj.speechToText?.abort();
                 return;
             }
 
+            voiceRecordButton.classList.add('autoql-vanilla-chat-voice-record-button-listening');
             obj.speechToText.start();
-            voiceRecordButton.style.backgroundColor = '#FF471A';
             obj.isRecordVoiceActive = true;
+
+            return false;
         };
+
+        if (isTouchDevice()) {
+            voiceRecordButton.ontouchstart = startListening;
+        } else {
+            voiceRecordButton.onmousedown = startListening;
+        }
 
         obj.chataBarContainer = chataBarContainer;
         obj.input = chataInput;
@@ -1263,9 +1310,14 @@ export function DataMessenger(options = {}) {
 
     obj.speechToTextEvent = () => {
         if (obj.speechToText) {
+            obj.speechToText.onend = () => {
+                obj.isRecordVoiceActive = false;
+                obj.voiceRecordButton.classList.remove('autoql-vanilla-chat-voice-record-button-listening');
+            };
+
             obj.speechToText.onresult = (e) => {
                 for (let i = e.resultIndex, len = e.results.length; i < len; i++) {
-                    let transcript = e.results[i][0].transcript;
+                    let transcript = e.results?.[i]?.[0]?.transcript ?? '';
                     if (e.results[i].isFinal) {
                         obj.finalTranscript += transcript;
                     }
@@ -1276,7 +1328,6 @@ export function DataMessenger(options = {}) {
                     obj.speechToText.stop();
                     obj.speechToText.abort();
                 }
-                obj.finalTranscript = '';
             };
         }
     };
@@ -1406,6 +1457,10 @@ export function DataMessenger(options = {}) {
             </div>
         `);
 
+        if (isTouchDevice()) {
+            toolbar.style.visibility = 'visible';
+        }
+
         var reportProblem = obj.getReportProblemMenu(toolbar, idRequest, type);
         reportProblem.classList.add('report-problem');
         var reportProblemButton = obj.getActionButton(
@@ -1462,7 +1517,7 @@ export function DataMessenger(options = {}) {
                     editorBtn.appendChild(badge);
                     editorBtn.badge = badge;
                     if (showBadge(request)) {
-                        badge.style.visibility = 'visible';
+                        badge.style.visibility = 'inherit';
                     } else {
                         badge.style.visibility = 'hidden';
                     }
@@ -1651,10 +1706,12 @@ export function DataMessenger(options = {}) {
                 toolbarLeft.appendChild(button);
             });
 
-            if (displayTypeButtons.length > 1) {
+            if (isTouchDevice()) {
                 toolbarLeft.style.visibility = 'visible';
+            } else if (displayTypeButtons.length > 1) {
+                toolbarLeft.classList.remove('autoql-vanilla-chat-message-toolbar-hidden');
             } else {
-                toolbarLeft.style.visibility = 'hidden';
+                toolbarLeft.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
             }
         }
 
@@ -2215,6 +2272,9 @@ export function DataMessenger(options = {}) {
             for (var i = 0; i < supportedDisplayTypes.length; i++) {
                 toolbar.appendChild(supportedDisplayTypes[i]);
             }
+            if (supportedDisplayTypes.length === 1) {
+                toolbar?.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
+            }
         }
 
         if (toolbar) {
@@ -2279,7 +2339,7 @@ export function DataMessenger(options = {}) {
             component.columnIndexConfig = newColumnIndexConfig;
 
             if (showBadge(json)) {
-                badge.style.visibility = 'visible';
+                badge.style.visibility = 'inherit';
             } else {
                 badge.style.visibility = 'hidden';
             }
@@ -2716,7 +2776,7 @@ export function DataMessenger(options = {}) {
             if (responseLoadingContainer) {
                 obj.chataBarContainer.removeChild(responseLoadingContainer);
             }
-            if (response.data.message === 'Request cancelled') {
+            if (response?.data?.message === 'Request cancelled') {
                 return;
             }
             obj.sendResponse(strings.accessDenied);
