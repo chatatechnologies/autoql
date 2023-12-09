@@ -415,7 +415,7 @@ export const POPOVER_ICON = `
 `;
 
 export const VOICE_RECORD_IMAGE = `
-    <img class="chat-voice-record-icon chata-voice" src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false"/>
+    <img src="data:image/svg+xml;base64,${VOICE_RECORD_ICON}" alt="speech to text button" height="22px" width="22px" draggable="false"/>
 `;
 
 export const REMOVE_ELEMENT = `

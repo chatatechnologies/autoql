@@ -62,14 +62,16 @@
         "webpack-remove-empty-scripts": "^1.0.3"
     },
     "dependencies": {
-        "autoql-fe-utils": "^1.0.45",
+        "autoql-fe-utils": "1.0.62",
         "axios": "^1.4.0",
         "d3": "^7.8.2",
         "d3-shape": "^3.2.0",
         "dayjs": "^1.11.7",
         "gridstack": "^3.1.2",
+        "ismobilejs": "^1.1.1",
         "localized-strings": "^0.2.4",
         "lodash.isequal": "^4.5.0",
+        "mobile-detect": "^1.4.5",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.40",
         "muuri": "^0.9.5",

@@ -22,7 +22,14 @@ const clickedOutsideBounds = (e, popover) => {
     return false;
 };
 
-export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'start', padding = 5, className) {
+export function PopoverChartSelector(
+    evt,
+    placement = 'bottom',
+    alignment = 'start',
+    padding = 5,
+    className,
+    maxHeight,
+) {
     this.popoverID = uuidv4();
 
     var popover = document.createElement('div');
@@ -52,6 +59,7 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
 
     popover.setPosition = () => {
         var bbox = popover.target?.getBoundingClientRect?.();
+
         var position = {
             left: 0,
             top: 0,
@@ -63,6 +71,12 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
 
         bbox.centerX = bbox.left + bbox.width / 2;
         bbox.centerY = bbox.top + bbox.height / 2;
+
+        const boundaryRect = document.documentElement.getBoundingClientRect();
+
+        if (maxHeight && popover.placement === 'bottom' && bbox.bottom + maxHeight > boundaryRect.bottom) {
+            popover.placement = 'top';
+        }
 
         if (popover.placement === 'top' || popover.placement === 'bottom') {
             if (popover.alignment === 'middle') {
@@ -104,6 +118,10 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
             position.top = screenBottom - popover.clientHeight - padding;
         }
 
+        popover.classList.remove('autoql-vanilla-popover-selector--top');
+        popover.classList.remove('autoql-vanilla-popover-selector--bottom');
+        popover.classList.add(`autoql-vanilla-popover-selector--${popover.placement}`);
+
         popover.position = position;
         popover.style.left = `${position.left}px`;
         popover.style.top = `${position.top}px`;
@@ -134,7 +152,7 @@ export function PopoverChartSelector(evt, placement = 'bottom', alignment = 'sta
         } else {
             popover.show();
         }
-    }
+    };
 
     popover.close = () => {
         popover.style.visibility = 'hidden';

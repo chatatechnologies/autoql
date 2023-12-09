@@ -122,7 +122,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                 );
 
                 if(showBadge(request)){
-                    badge.style.visibility = 'visible'
+                    badge.style.visibility = 'inherit'
                 }else{
                     badge.style.visibility = 'hidden'
                 }
