@@ -279,8 +279,12 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.getLegendObject = () => {
-        const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
-        const labels = type == DisplayTypes.PIE ? this.legendLabels : getLegendLabelsForChart();
+        const location = getLegendLocation(this.columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+        let labels = type == DisplayTypes.PIE ? this.legendLabels : undefined;
+        if (!labels) {
+            labels = getLegendLabelsForChart();
+        }
+
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
             columnIndices: this.columnIndexConfig.numberColumnIndices,

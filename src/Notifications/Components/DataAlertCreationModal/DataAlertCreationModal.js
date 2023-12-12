@@ -1,14 +1,15 @@
-import { QUERY_TERM_TYPE, createDataAlert, validateExpression } from "autoql-fe-utils";
+import { QUERY_TERM_TYPE, createDataAlert } from "autoql-fe-utils";
 import { Modal } from "../../../Modal";
 import { ChataConfirmDialog } from "../ChataConfirmDialog/ChataConfirmDialog";
 import { AppearanceStep } from "./AppearanceStep/AppearanceStep";
 import { ConditionsStep } from "./ConditionsStep";
 import { TimingStep } from "./TimingStep/TimingStep";
-import './DataAlertCreationModal.scss';
 import { StepContainer } from "./StepContainer";
 import { SummaryFooter } from "./SummaryFooter";
 import { AntdMessage } from "../../../Antd";
 import { uuidv4 } from "../../../Utils";
+
+import './DataAlertCreationModal.scss';
 
 export function DataAlertCreationModal({ queryResponse, authentication }) {
   const container = document.createElement('div');
