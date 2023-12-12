@@ -1,10 +1,13 @@
-import { CARET_DOWN_ICON } from '../../Svg';
+import { CALENDAR, CARET_DOWN_ICON } from '../../Svg';
 import { createIcon } from '../../Utils';
+import { DateRangePicker } from '../DateRangePicker/DateRangePicker';
+import dayjs from '../../Utils/dayjsPlugins';
+
 import './Input.scss';
 
 export function Input(options) {
     if (!options) {
-        console.warn('No options provided to Slider component. Unable to render');
+        console.warn('No options provided to Input component. Unable to render');
         return;
     }
 
@@ -24,23 +27,85 @@ export function Input(options) {
         min,
         max,
         value,
+        datePicker = false,
+        onDateRangeChange = () => {},
+        initialDateRange,
+        validDateRange,
+        datePickerType,
     } = options;
 
     this.focused = false;
     const hasSelect = selectOptions?.length;
+
+    this.onDateRangeChange = (selection) => {
+        if (!selection || !this.input) {
+            return;
+        }
+
+        const { startDate, endDate } = selection;
+
+        if (!startDate && !endDate) {
+            return;
+        }
+
+        let inputText = '';
+        let start = startDate;
+        let end = endDate;
+        if (startDate && !endDate) {
+            end = start;
+        } else if (!startDate && endDate) {
+            start = end;
+        }
+
+        const formattedStart = dayjs(start).format('ll');
+        const formattedEnd = dayjs(end).format('ll');
+
+        if (formattedStart === formattedEnd) {
+            inputText = `on ${formattedStart}`;
+        } else {
+            inputText = `between ${formattedStart} and ${formattedEnd}`;
+        }
+
+        this.input.value = inputText;
+        onDateRangeChange(selection, inputText);
+
+        this.datePickerPopover?.close();
+        this.simulateOnChange();
+        this.onBlur();
+    };
+
+    this.createDatePickerPopover = (e) => {
+        const datePickerPopover = new DateRangePicker(e, {
+            title: null,
+            validRange: validDateRange,
+            type: datePickerType,
+            onSelectionApplied: (selection) => this.onDateRangeChange(selection),
+        });
+
+        this.datePickerPopover = datePickerPopover;
+
+        return datePickerPopover;
+    };
 
     this.onFocus = () => {
         this.focused = true;
         onFocus?.();
     };
 
-    this.onBlur = () => {
+    this.onBlur = (e) => {
+        if (datePicker && this.datePickerPopover?.isOpen()) {
+            e.stopImmediatePropagation();
+            e.preventDefault();
+            return;
+        }
+
         this.focused = false;
+
         onBlur?.();
     };
 
     this.simulateOnChange = () => {
-        this.input?.dispatchEvent(new Event('change', { bubbles: true }));
+        this.input?.dispatchEvent(new Event('input', { bubbles: true }));
     };
 
     this.incrementNumber = () => {
@@ -88,6 +153,27 @@ export function Input(options) {
     } else {
         const inputWrapper = document.createElement('div');
         inputWrapper.classList.add('autoql-vanilla-input-and-icon');
+
+        if (datePicker) {
+            inputWrapper.classList.add('with-date-picker');
+
+            const calenderBtn = document.createElement('div');
+            calenderBtn.classList.add('autoql-vanilla-inline-input-date-picker-btn');
+            calenderBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                this.createDatePickerPopover(e);
+            });
+            calenderBtn.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                e.preventDefault();
+            });
+
+            const calendarIcon = createIcon(CALENDAR);
+            calendarIcon.classList.add('autoql-vanilla-inline-input-date-picker-btn-icon');
+
+            calenderBtn.appendChild(calendarIcon);
+            inputWrapper.appendChild(calenderBtn);
+        }
 
         const input = document.createElement('input');
         input.classList.add('autoql-vanilla-input');

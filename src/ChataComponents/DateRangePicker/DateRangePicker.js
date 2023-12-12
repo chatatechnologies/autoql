@@ -10,7 +10,15 @@ import './DateRangePicker.scss';
 
 export function DateRangePicker(
     e,
-    { type, title, initialRange, onSelection = () => {}, onSelectionApplied = () => {}, validRange } = {},
+    {
+        type = 'day',
+        title,
+        initialRange,
+        onSelection = () => {},
+        onSelectionApplied = () => {},
+        validRange,
+        showApplyBtn = true,
+    } = {},
 ) {
     const popover = new PopoverChartSelector(e, 'bottom', 'start', 0);
 
@@ -26,14 +34,24 @@ export function DateRangePicker(
     this.show = this.popover.show;
     this.close = this.popover.close;
 
+    this.isOpen = () => {
+        return this.popover.isOpen;
+    };
+
     this.createContent = () => {
         var datePickerContainer = document.createElement('div');
         datePickerContainer.classList.add('autoql-vanilla-date-picker-container');
         datePickerContainer.id = `autoql-vanilla-date-picker-container-${ID}`;
+        datePickerContainer.onclick = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+        };
 
-        const datePickerTitle = document.createElement('h3');
-        datePickerTitle.innerHTML = title;
-        datePickerContainer.appendChild(datePickerTitle);
+        if (title) {
+            const datePickerTitle = document.createElement('h3');
+            datePickerTitle.innerHTML = title;
+            datePickerContainer.appendChild(datePickerTitle);
+        }
 
         popover.appendContent(datePickerContainer);
 
@@ -46,6 +64,9 @@ export function DateRangePicker(
             onRangeSelection: (selectedRange) => {
                 this.selectedRange = selectedRange;
                 onSelection(selectedRange);
+                if (!showApplyBtn) {
+                    onSelectionApplied(selectedRange);
+                }
             },
         };
 
@@ -59,15 +80,17 @@ export function DateRangePicker(
 
         this.datePicker = datePicker;
 
-        const applyBtn = document.createElement('button');
-        applyBtn.innerHTML = 'Apply';
-        applyBtn.classList.add('autoql-vanilla-btn');
-        applyBtn.onclick = () => {
-            onSelectionApplied(this.selectedRange);
-            this.close();
-        };
+        if (showApplyBtn) {
+            const applyBtn = document.createElement('button');
+            applyBtn.innerHTML = 'Apply';
+            applyBtn.classList.add('autoql-vanilla-btn');
+            applyBtn.onclick = () => {
+                onSelectionApplied(this.selectedRange);
+                this.close();
+            };
 
-        datePickerContainer.appendChild(applyBtn);
+            datePickerContainer.appendChild(applyBtn);
+        }
 
         this.show();
     };

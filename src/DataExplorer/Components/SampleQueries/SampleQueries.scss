@@ -213,6 +213,7 @@
     transition: color 0.2s ease;
     position: relative;
     margin-left: 3px;
+    white-space: nowrap;
     cursor: pointer;
 
     &:hover,

@@ -177,6 +177,7 @@ export function DataMessenger(options = {}) {
     obj.id = options?.id ?? `autoql-vanilla-data-messenger-${uuidv4()}`;
     obj.isVisible = !!obj.options.defaultOpen;
     obj.notificationTabId = uuidv4();
+    obj.activePage = obj.options.landingPage;
 
     if (!('introMessage' in options)) {
         obj.options.introMessage = strings.introMessage.chataFormat(obj.options.userDisplayName);
@@ -299,7 +300,7 @@ export function DataMessenger(options = {}) {
                         ? obj.tabDataExplorer.classList.remove('autoql-vanilla-data-messenger-tab-hidden')
                         : obj.tabDataExplorer.classList.add('autoql-vanilla-data-messenger-tab-hidden');
 
-                    if (!value && obj.landingPage === 'explore-queries') {
+                    if (!value && obj.activePage === 'data-explorer') {
                         obj.setActiveTab(obj.tabChataUtils);
                     }
                     break;
@@ -323,7 +324,7 @@ export function DataMessenger(options = {}) {
                     } else {
                         if (obj.tabNotifications)
                             obj.tabNotifications.classList.add('autoql-vanilla-data-messenger-tab-hidden');
-                        if (obj.landingPage === 'notifications') {
+                        if (obj.activePage === 'notifications') {
                             obj.setActiveTab(obj.tabChataUtils);
                         }
                     }
@@ -509,7 +510,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.updateBubbleTables = () => {
-        if (obj.options.landingPage === 'data-messenger') {
+        if (obj.activePage === 'data-messenger') {
             var nodes = obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container');
             for (var i = 0; i < nodes.length; i++) {
                 var component = nodes[i].querySelector('[data-componentid]');
@@ -626,7 +627,7 @@ export function DataMessenger(options = {}) {
         });
 
         tab.classList.add('autoql-vanilla-data-messenger-tab-active');
-        obj.landingPage = tab.getAttribute('data-tab');
+        obj.activePage = tab.getAttribute('data-tab');
     };
 
     obj.createQueryTab = function ({ name, content, tooltip, isEnabled }) {
@@ -639,7 +640,7 @@ export function DataMessenger(options = {}) {
 
         if (content) tab.appendChild(content);
         if (!isEnabled) tab.classList.add('autoql-vanilla-data-messenger-tab-hidden');
-        if (obj.options.landingPage === name) tab.classList.add('autoql-vanilla-data-messenger-tab-active');
+        if (obj.activePage === name) tab.classList.add('autoql-vanilla-data-messenger-tab-active');
 
         return tab;
     };
@@ -657,7 +658,7 @@ export function DataMessenger(options = {}) {
             isEnabled: true,
         });
         var tabDataExplorer = obj.createQueryTab({
-            name: 'explore-queries',
+            name: 'data-explorer',
             content: htmlToElement(DATA_EXPLORER_SEARCH_ICON),
             tooltip: strings.dataExplorer,
             isEnabled: enableDataExplorerTab,
@@ -1061,7 +1062,7 @@ export function DataMessenger(options = {}) {
         popover.addEventListener('click', (evt) => {
             if (evt.target.classList.contains('autoql-vanilla-chata-confirm-btn')) {
                 obj.closePopOver(popover);
-                if (evt.target.classList.contains('yes')) {
+                if (evt.target.classList.contains('autoql-vanilla-chata-confirm-btn-yes')) {
                     obj.clearMessages();
                 }
             }
@@ -1130,9 +1131,12 @@ export function DataMessenger(options = {}) {
     };
 
     obj.clearMessages = () => {
-        [].forEach.call(obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container'), (e) => {
-            e.parentNode.removeChild(e);
+        const messages = obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container');
+
+        messages?.forEach((message) => {
+            message.parentElement.removeChild(message);
         });
+
         obj.cancelCurrentRequest();
         obj.input.removeAttribute('disabled');
         obj.drawerContent.appendChild(obj.introMessage);
@@ -1643,9 +1647,9 @@ export function DataMessenger(options = {}) {
 
     obj.hideBubbles = () => {
         var nodes = obj.drawerContent.querySelectorAll('.autoql-vanilla-chat-single-message-container');
-        for (var i = 0; i < nodes.length; i++) {
-            nodes[i].style.display = 'none !important';
-        }
+        nodes.forEach((node) => {
+            node.style.display = 'none';
+        });
     };
 
     obj.copyFilterMetadata = (component) => {
@@ -2174,6 +2178,10 @@ export function DataMessenger(options = {}) {
                 messageBubble.textContent = value;
                 containerMessage.appendChild(messageBubble);
                 obj.drawerContent.appendChild(containerMessage);
+
+                if (obj.activePage !== 'data-messenger') {
+                    obj.hideBubbles();
+                }
             }
         }
 
@@ -2190,10 +2198,12 @@ export function DataMessenger(options = {}) {
 
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         obj.checkMaxMessages();
-        if (obj.options.landingPage !== 'data-messenger') {
+
+        if (obj.activePage !== 'data-messenger') {
             obj.hideBubbles();
             return null;
         }
+
         obj.chataBarContainer.appendChild(responseLoadingContainer);
         return responseLoadingContainer;
     };
@@ -2244,7 +2254,6 @@ export function DataMessenger(options = {}) {
         var { parsed_interpretation } = jsonResponse.data;
 
         containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-
         containerMessage.style.zIndex = ++obj.zIndexBubble;
         containerMessage.style.maxHeight = '85%';
 
@@ -2302,6 +2311,11 @@ export function DataMessenger(options = {}) {
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
+
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
         messageBubble.appendChild(actions);
 
@@ -2365,6 +2379,11 @@ export function DataMessenger(options = {}) {
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
+
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         if (withDeleteBtn) {
             let toolbarButtons = obj.getActionToolbar(uuid, 'safety-net', '');
             messageBubble.appendChild(toolbarButtons);
@@ -2464,6 +2483,10 @@ export function DataMessenger(options = {}) {
         obj.putClientResponse(strings.suggestionResponse);
         obj.drawerContent.appendChild(containerMessage);
 
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         messageBubble.appendChild(obj.getActionToolbar(uuid, 'suggestions', ''));
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         3;
@@ -2498,6 +2521,11 @@ export function DataMessenger(options = {}) {
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
+
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         if (withDeleteBtn) {
             var toolbarButtons = obj.getActionToolbar(uuid, 'safety-net', '');
             messageBubble.appendChild(toolbarButtons);
@@ -2581,6 +2609,11 @@ export function DataMessenger(options = {}) {
         }
         messageBubble.appendChild(div);
         obj.drawerContent.appendChild(containerMessage);
+
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         var toolbarButtons = obj.getActionToolbar(idRequest, 'simple', 'table');
 
         if (ref !== '1.1.430') {
@@ -2599,7 +2632,7 @@ export function DataMessenger(options = {}) {
         }
         if (ref === '1.1.430') {
             let loading = null;
-            if (obj.options.landingPage === 'data-messenger') {
+            if (obj.activePage === 'data-messenger') {
                 loading = obj.showLoading();
                 obj.drawerContent.appendChild(loading);
             }
@@ -2613,7 +2646,7 @@ export function DataMessenger(options = {}) {
             obj.putSimpleResponse(response.data, '', status);
 
             if (loading) obj.drawerContent.removeChild(loading);
-            if (obj.options.landingPage !== 'data-messenger') {
+            if (obj.activePage !== 'data-messenger') {
                 obj.hideBubbles();
             }
         }
@@ -2655,6 +2688,11 @@ export function DataMessenger(options = {}) {
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
+
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         messageBubble.appendChild(toolbar);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
@@ -2691,6 +2729,11 @@ export function DataMessenger(options = {}) {
         chatMessageBubbleContainer.appendChild(messageBubble);
         containerMessage.appendChild(chatMessageBubbleContainer);
         obj.drawerContent.appendChild(containerMessage);
+
+        if (obj.activePage !== 'data-messenger') {
+            obj.hideBubbles();
+        }
+
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };
 
@@ -2918,7 +2961,7 @@ export function DataMessenger(options = {}) {
         obj.checkMaxMessages();
         refreshTooltips();
 
-        if (obj.options.landingPage != 'data-messenger') {
+        if (obj.activePage != 'data-messenger') {
             obj.hideBubbles();
         }
     };

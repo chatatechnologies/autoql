@@ -1,4 +1,4 @@
-.react-autoql-inline-input-date-picker-btn {
+.autoql-vanilla-inline-input-date-picker-btn {
     position: absolute;
     display: flex;
     justify-content: center;
@@ -7,14 +7,14 @@
     top: 0;
     height: 100%;
     margin-right: 10px;
-    color: var(--react-autoql-accent-color);
+    color: var(--autoql-vanilla-accent-color);
 
-    .react-autoql-inline-input-date-picker-btn-icon {
+    .autoql-vanilla-inline-input-date-picker-btn-icon {
         cursor: pointer;
     }
 }
 
-.react-autoql-inline-input-date-picker-popover {
+.autoql-vanilla-inline-input-date-picker-popover {
     .rdrDay {
         line-height: 2.7em;
         height: 2.7em;
