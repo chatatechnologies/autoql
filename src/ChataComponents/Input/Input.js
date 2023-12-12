@@ -20,6 +20,7 @@ export function Input(options) {
         onFocus = () => {},
         onBlur = () => {},
         onChange = () => {},
+        onKeyDown = () => {},
         min,
         max,
         value,
@@ -91,9 +92,12 @@ export function Input(options) {
         const input = document.createElement('input');
         input.classList.add('autoql-vanilla-input');
         input.value = value;
-        input.onfocus = this.onFocus;
-        input.onblur = this.onBlur;
-        input.onchange = onChange;
+
+        input.addEventListener('focus', this.onFocus);
+        input.addEventListener('blur', this.onBlur);
+        input.addEventListener('input', onChange);
+        input.addEventListener('keydown', onKeyDown);
+
         if (min !== undefined) input.setAttribute('min', min);
         if (max !== undefined) input.setAttribute('max', max);
         if (type) input.setAttribute('type', type);
@@ -138,6 +142,8 @@ export function Input(options) {
 
         inputContainer.appendChild(spinWheelContainer);
     }
+
+    inputAndLabelContainer.input = this.input;
 
     return inputAndLabelContainer;
 }

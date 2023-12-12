@@ -79,6 +79,12 @@
                 white-space: nowrap;
             }
 
+            .autoql-vanilla-inline-number-editor-wrapper,
+            .autoql-vanilla-autcomplete-input-popover-btn {
+                position: relative;
+                margin-left: 3px;
+            }
+
             &::before {
                 content: '';
                 position: absolute;
@@ -86,6 +92,7 @@
                 height: 100%;
                 background-color: var(--autoql-vanilla-accent-color);
                 transition: opacity 0.2s;
+                pointer-events: none;
 
                 opacity: 0;
             }
@@ -212,6 +219,20 @@
     &.autoql-vanilla-autocomplete-input-popover-btn-active,
     &.autoql-vanilla-inline-number-input-editor-btn-active {
         color: var(--autoql-vanilla-accent-color);
+    }
+}
+
+.autoql-vanilla-inline-number-editor-wrapper {
+    .autoql-vanilla-input-and-label-container {
+        padding: 0;
+        .autoql-vanilla-input-container .autoql-vanilla-input {
+            border-radius: 0 !important;
+            height: 35px !important;
+        }
+    }
+
+    .autoql-vanilla-input-number-spin-button-container {
+        display: none !important;
     }
 }
 
