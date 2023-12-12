@@ -22,6 +22,7 @@ import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
 import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 import { CSS_PREFIX } from '../Constants';
+import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
 
 import '../../css/PopoverMenu.css';
 
