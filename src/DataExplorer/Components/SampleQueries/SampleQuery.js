@@ -81,17 +81,19 @@ export function SampleQuery({ suggestion, options, context, onSubmit = () => {} 
                         console.error(error);
                     }
                 } else if (chunk.type == SampleQueryReplacementTypes.SAMPLE_QUERY_TIME_TYPE) {
-                    chunkContent = text;
-                    // TODO: console.log('CREATE INLINE INPUT EDITOR')
-                    // chunkContent = (
-                    //   <InlineInputEditor
-                    //     value={chunk.value}
-                    //     type='text'
-                    //     onChange={(newValue) => this.onAmountChange(newValue, chunk.name)}
-                    //     datePicker={true}
-                    //     tooltipID={this.props.tooltipID}
-                    //   />
-                    // )
+                    try {
+                        const renderedChunk = new InlineInputEditor({
+                            options,
+                            initialValue: chunk.value,
+                            type: 'text',
+                            onChange: (value) => onValueChange({ value, chunk }),
+                            datePicker: true,
+                        });
+                        renderedChunks.push(renderedChunk);
+                        return;
+                    } catch (error) {
+                        console.error(error);
+                    }
                 }
 
                 const chunkElement = document.createElement('div');

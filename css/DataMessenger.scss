@@ -75,6 +75,10 @@ body.autoql-vanilla-drawer-open-body {
     }
 
     .autoql-vanilla-chat-single-message-container {
+        &.autoql-vanilla-chat-single-message-container-hidden {
+            display: none !important;
+        }
+
         &.response {
             display: flex;
             flex-direction: column;
@@ -181,7 +185,7 @@ body.autoql-vanilla-drawer-open-body {
                     z-index: 2;
                 }
 
-                &.autoql-vanilla-data-messenger-tab-active[data-tab='explore-queries'] {
+                &.autoql-vanilla-data-messenger-tab-active[data-tab='data-explorer'] {
                     background: var(--autoql-vanilla-background-color-secondary);
                 }
             }

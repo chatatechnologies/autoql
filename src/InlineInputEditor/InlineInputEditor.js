@@ -2,7 +2,16 @@ import { Input } from '../ChataComponents/Input/Input';
 
 import './InlineInputEditor.scss';
 
-export function InlineInputEditor({ options, type, initialValue, onChange = () => {} }) {
+export function InlineInputEditor({
+    options,
+    type,
+    column,
+    initialValue,
+    onChange = () => {},
+    datePicker = false,
+    onDateRangeChange = () => {},
+    initialDateRange,
+}) {
     const obj = this;
 
     obj.selectedVL = initialValue;
@@ -44,7 +53,9 @@ export function InlineInputEditor({ options, type, initialValue, onChange = () =
     const toggleInput = (isInput) => {
         inputWrapper.innerHTML = '';
 
-        if (isInput && !obj.isInput) {
+        const prevIsInput = obj.isInput;
+
+        if (isInput && !prevIsInput) {
             inputWrapper.style.visibility = 'hidden';
 
             inputWrapper.appendChild(input);
@@ -55,7 +66,7 @@ export function InlineInputEditor({ options, type, initialValue, onChange = () =
 
             obj.inputElement.focus();
             obj.inputElement.select();
-        } else if (!isInput && obj.isInput) {
+        } else if (!isInput && prevIsInput) {
             const inputValue = obj.inputElement?.value;
             inputBtn.innerHTML = inputValue;
             onChange(inputValue);
@@ -70,23 +81,23 @@ export function InlineInputEditor({ options, type, initialValue, onChange = () =
         type: type === 'number' ? type : 'text',
         value: initialValue,
         onBlur: () => toggleInput(false),
-        onChange: () => setInputWidth(),
+        onChange: (e) => {
+            setInputWidth();
+        },
+        onDateRangeChange: (selection, inputValue) => {
+            inputBtn.innerHTML = inputValue;
+            setInputWidth();
+        },
         onKeyDown: (e) => {
             if (e.key === 'Enter') {
                 obj.inputElement?.blur();
             }
         },
+        datePicker,
     });
 
     obj.input = input;
     obj.inputElement = input.input;
-
-    if (type === 'number') {
-        input.type = type;
-        input.classList.add('autoql-vanilla-input-number');
-    } else {
-        // Todo: Date type
-    }
 
     inputWrapper.appendChild(inputBtn);
 

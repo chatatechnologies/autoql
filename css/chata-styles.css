@@ -190,7 +190,7 @@
 }
 
 .autoql-vanilla-chat-single-message-container.autoql-vanilla-suggestions-container{
-    display: block !important;
+    display: block;
  }
 
 .autoql-vanilla-chata-animation-message{
@@ -219,7 +219,7 @@
 }
 
 .autoql-vanilla-chata-response-content-container.suggestions{
-    display: block !important;
+    display: block;
 }
 
 .autoql-vanilla-chat-single-message-container.request {
