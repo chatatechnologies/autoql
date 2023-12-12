@@ -27,16 +27,16 @@ import { select } from 'd3-selection';
 
 export function Legend(container, params = {}) {
     const {
-        labels,
-        labels2,
+        labels = [],
+        labels2 = [],
         height,
         outerHeight,
         outerWidth,
         orientation = 'vertical',
         hasSecondAxis,
-        title,
+        title = '',
         legendShape,
-        onLegendClick,
+        onLegendClick = () => {},
     } = params;
 
     this.legendElements = [];
@@ -74,6 +74,10 @@ export function Legend(container, params = {}) {
     };
 
     const getLegendScale = (legendLabels) => {
+        if (!legendLabels?.length) {
+            return;
+        }
+
         const colorRange = legendLabels.map((obj) => {
             return obj.color;
         });
@@ -119,6 +123,7 @@ export function Legend(container, params = {}) {
         const isFirstSection = !!legendLabels[0]?.isFirst;
         const isSecondLegend = legendNumber === 2;
         const allLabels = legendNumber === 2 ? labels2 : labels;
+        const legendLabelSection = legendLabels;
         const legendScale = getLegendScale(legendLabelSection);
         const maxSectionWidth = getMaxLegendSectionWidth({ orientation, outerWidth, legendPadding });
 
