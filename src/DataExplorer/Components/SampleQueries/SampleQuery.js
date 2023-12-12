@@ -2,27 +2,42 @@ import { SampleQueryReplacementTypes, getQueryRequestParams, getTitleCase } from
 import { VLAutocompleteInputPopover } from '../../../VLAutocomplete/VLAutocompletePopover';
 import { createIcon } from '../../../Utils';
 import { QUERY_SEND_BTN } from '../../../Svg';
+import { InlineInputEditor } from '../../../InlineInputEditor/InlineInputEditor';
 
 export function SampleQuery({ suggestion, options, context, onSubmit = () => {} }) {
     const renderedChunks = [];
     const values = suggestion.initialValues ?? {};
 
-    const onValueChange = (vl, chunk) => {
+    const onValueChange = ({ vl, value, chunk }) => {
+        let newValue;
+
         if (vl) {
+            if (!vl.format_txt) {
+                return;
+            }
+
+            newValue = vl?.format_txt;
             chunk.replacement = vl;
-            chunk.value = vl?.format_txt;
+        } else if (value !== undefined) {
+            newValue = value;
+            if (chunk.replacement) {
+                chunk.replacement.format_txt = value;
+                chunk.replacement.keyword = value;
+            }
         }
+
+        chunk.value = newValue;
 
         const chunkName = chunk.name;
 
-        if (!values?.[chunkName] || !vl?.format_txt) {
+        if (!values?.[chunkName]) {
             return;
         }
 
         values[chunkName] = {
             ...values[chunkName],
-            value: vl.format_txt,
-            replacement: vl,
+            value: newValue,
+            replacement: chunk.replacement,
         };
     };
 
@@ -45,7 +60,7 @@ export function SampleQuery({ suggestion, options, context, onSubmit = () => {} 
                             column: columnName,
                             initialValue: chunk.replacement,
                             placeholder: columnName ? `Search a "${columnName}"` : 'Search values',
-                            onChange: (vl) => onValueChange(vl, chunk),
+                            onChange: (vl) => onValueChange({ vl, chunk }),
                         });
                         renderedChunks.push(renderedChunk);
                         return;
@@ -53,15 +68,18 @@ export function SampleQuery({ suggestion, options, context, onSubmit = () => {} 
                         console.error(error);
                     }
                 } else if (chunk.type == SampleQueryReplacementTypes.SAMPLE_QUERY_AMOUNT_TYPE) {
-                    chunkContent = text;
-                    // chunkContent = (
-                    //   <InlineInputEditor
-                    //     value={chunk.value}
-                    //     type='number'
-                    //     onChange={(newValue) => this.onAmountChange(newValue, chunk.name)}
-                    //     tooltipID={this.props.tooltipID}
-                    //   />
-                    // )
+                    try {
+                        const renderedChunk = new InlineInputEditor({
+                            options,
+                            initialValue: chunk.value,
+                            type: 'number',
+                            onChange: (value) => onValueChange({ value, chunk }),
+                        });
+                        renderedChunks.push(renderedChunk);
+                        return;
+                    } catch (error) {
+                        console.error(error);
+                    }
                 } else if (chunk.type == SampleQueryReplacementTypes.SAMPLE_QUERY_TIME_TYPE) {
                     chunkContent = text;
                     // TODO: console.log('CREATE INLINE INPUT EDITOR')
