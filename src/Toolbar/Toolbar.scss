@@ -17,6 +17,9 @@
 
     &.autoql-vanilla-chat-message-toolbar-right {
         right: -9px;
+		&.mobile{
+			right: 9px;
+		}
     }
 
     &.autoql-vanilla-chat-message-toolbar-left {
