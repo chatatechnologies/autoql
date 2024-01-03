@@ -1420,6 +1420,12 @@ export function DataMessenger(options = {}) {
             <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right">
             </div>
         `);
+		if(isMobile){
+			var toolbar = htmlToElement(`
+            <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right mobile">
+            </div>
+        `);
+		}
 
         if (isTouchDevice()) {
             toolbar.style.visibility = 'visible';
