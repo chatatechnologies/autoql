@@ -43,6 +43,9 @@ export function FilterLockingList(datamessenger, conditionList, data, filterLock
         }
         toggleColumnContent.textContent = strings.persist;
         toggleColumnContent.classList.add('autoql-vanilla-persist-toggle-column');
+		if(isMobile){
+			toggleColumnContent.classList.add('mobile');
+		}
         toggleColumnContent.appendChild(infoIcon);
         toggleColumn.appendChild(toggleColumnContent);
         titleContainer.appendChild(toggleColumn);
