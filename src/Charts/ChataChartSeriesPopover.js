@@ -1,10 +1,11 @@
 import { PopoverChartSelector } from './PopoverChartSelector';
 import { getNumberColumnsByType } from './ChataChartHelpers';
-import { htmlToElement, formatColumnName, cloneObject } from '../Utils';
+import { htmlToElement, formatColumnName, cloneObject, createIcon } from '../Utils';
 import { strings } from '../Strings';
 import { TICK } from '../Svg';
 import { Select } from '../ChataComponents/Select';
-import { AGG_TYPES, getAggConfig } from 'autoql-fe-utils';
+import { AGG_TYPE_ICONS } from '../Svg';
+import { AGG_TYPES, AggTypes, getAggConfig, isColumnStringType } from 'autoql-fe-utils';
 
 export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padding, columnIndexConfig) {
     const activeSeries = scale?.fields;
@@ -74,26 +75,51 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     content.classList.add('autoql-vanilla-axis-selector-container');
 
     var createAggSelector = (column) => {
-        const options = Object.values(AGG_TYPES).map((agg) => {
-            const listLabel = document.createElement('span');
+        const options = Object.values(AGG_TYPES)
+            .filter((agg) => {
+                if (isColumnStringType(column)) {
+                    return agg === AggTypes.COUNT || agg === AggTypes.COUNT_DISTINCT;
+                }
 
-            const listLabelSymbol = document.createElement('span');
-            listLabelSymbol.classList.add('agg-select-list-symbol');
-            listLabelSymbol.innerHTML = agg.symbol;
+                return true;
+            })
+            .map((agg) => {
+                const listLabel = document.createElement('span');
 
-            const listLabelText = document.createElement('span');
-            listLabelText.innerHTML = agg.displayName;
+                let icon = agg.symbol;
+                if (agg.icon) {
+                    if (AGG_TYPE_ICONS[agg.icon]) {
+                        icon = createIcon(AGG_TYPE_ICONS[agg.icon]);
+                    }
+                }
 
-            listLabel.appendChild(listLabelSymbol);
-            listLabel.appendChild(listLabelText);
+                let listLabelSymbol = document.createElement('span');
+                listLabelSymbol.classList.add('agg-select-list-symbol');
 
-            return {
-                value: agg.type,
-                label: agg.symbol,
-                listLabel,
-                tooltip: agg.tooltip,
-            };
-        });
+                if (agg.type == AggTypes.SUM) {
+                    console.log('appending SUM icon to list label...', icon);
+                }
+
+                if (typeof icon == 'object') {
+                    listLabelSymbol.innerHTML = '';
+                    listLabelSymbol.appendChild(icon);
+                } else {
+                    listLabelSymbol.innerHTML = icon;
+                }
+
+                const listLabelText = document.createElement('span');
+                listLabelText.innerHTML = agg.displayName;
+
+                listLabel.appendChild(listLabelSymbol);
+                listLabel.appendChild(listLabelText);
+
+                return {
+                    value: agg.type,
+                    label: icon,
+                    listLabel,
+                    tooltip: agg.tooltip,
+                };
+            });
 
         const selector = new Select({
             options,
