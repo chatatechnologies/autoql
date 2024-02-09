@@ -96,10 +96,6 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 let listLabelSymbol = document.createElement('span');
                 listLabelSymbol.classList.add('agg-select-list-symbol');
 
-                if (agg.type == AggTypes.SUM) {
-                    console.log('appending SUM icon to list label...', icon);
-                }
-
                 if (typeof icon == 'object') {
                     listLabelSymbol.innerHTML = '';
                     listLabelSymbol.appendChild(icon);
