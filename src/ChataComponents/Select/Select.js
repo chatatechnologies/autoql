@@ -85,6 +85,8 @@ export function Select({
             const selectedOption = options.find((option) => option.value == selectedValue);
 
             if (!selectedOption) {
+                selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
+                selectTextContent.innerHTML = placeholder;
                 return;
             }
 
@@ -92,7 +94,16 @@ export function Select({
 
             if (selectedOption?.label || selectedOption?.value) {
                 selectTextContent.classList.add('autoql-vanilla-menu-item-value-title');
-                selectTextContent.innerHTML = `${selectedOption.label ?? selectedOption.value}`;
+
+                const label = selectedOption.label ?? selectedOption.value;
+
+                selectTextContent.innerHTML = '';
+                if (typeof label == 'object') {
+                    selectTextContent.innerHTML = '';
+                    selectTextContent.appendChild(label);
+                } else {
+                    selectTextContent.innerHTML = `${label}`;
+                }
             } else {
                 selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
                 selectTextContent.innerHTML = placeholder;
@@ -155,7 +166,7 @@ export function Select({
 
             const listLabel = option?.listLabel ?? option?.label ?? option?.value;
 
-            if (typeof listLabel === 'object') {
+            if (typeof listLabel == 'object') {
                 li.appendChild(listLabel);
             } else {
                 li.innerHTML = listLabel;
