@@ -7,6 +7,9 @@
     max-height: 95vh;
     width: 450px;
     background: var(--autoql-vanilla-background-color-secondary);
+	&.mobile{
+		min-width: 250px;
+	}
 }
 
 .autoql-vanilla-close-filter-locking {

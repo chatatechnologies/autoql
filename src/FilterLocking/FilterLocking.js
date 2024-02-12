@@ -26,6 +26,9 @@ export function FilterLocking(datamessenger) {
 
     view.input = input;
     view.classList.add('autoql-vanilla-filter-locking-view');
+	if(isMobile){
+		view.classList.add('mobile');
+	}
     view.classList.add('autoql-vanilla-popover-container');
     header.classList.add('autoql-vanilla-condition-lock-header');
     titleContainer.classList.add('autoql-vanilla-filter-locking-title-container');
