@@ -115,14 +115,12 @@ export function TimingStep() {
     const keys = Object.keys(RESET_PERIOD_OPTIONS);
     return keys.map((key) => {
       const value = RESET_PERIOD_OPTIONS[key];
-
       return {
         displayName: value.displayName,
         value: key,
       }
-    });
+    }).filter((option) => (option?.value === 'NONE' ? false: true));
   }
-
   this.getDaysOptions = () => {
     return WEEKDAY_NAMES_MON.map((dayName) => {
       return {
@@ -396,6 +394,7 @@ export function TimingStep() {
       evaluation_frequency: evaluationFrequency,
       time_zone: timezone,
       schedules,
+	  ...(notificationType === PERIODIC_TYPE ? { reset_period: this.resetPeriod } : {}),
     }
   }
 
