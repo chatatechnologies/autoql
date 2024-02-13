@@ -20,9 +20,12 @@ export function ConditionList(datamessenger,filterLocking){
     container.hideConditionEmptyMessage = () => {
 		var filterLockingButton = document.querySelector('.autoql-vanilla-chata-button.filter-locking-menu');
 		var existingFilterLockingSVG = filterLockingButton.querySelector("svg");
-		var filterLockingIconBadge = document.createElement('div');
-		filterLockingIconBadge.classList.add('autoql-vanilla-filter-lock-icon-badge'); 
-		filterLockingButton.appendChild(filterLockingIconBadge)
+		var filterLockingIconBadge = document.querySelector('.autoql-vanilla-filter-lock-icon-badge')
+		if(!filterLockingIconBadge){
+			filterLockingIconBadge = document.createElement('div');
+			filterLockingIconBadge.classList.add('autoql-vanilla-filter-lock-icon-badge'); 
+			filterLockingButton.appendChild(filterLockingIconBadge)
+		}
 		var parser = new DOMParser();
 		var newFilterLockingSVG = parser.parseFromString(FILTER_LOCKING_CLOSE, "image/svg+xml").documentElement;
 		filterLockingButton.replaceChild(newFilterLockingSVG, existingFilterLockingSVG);
