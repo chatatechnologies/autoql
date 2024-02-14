@@ -221,7 +221,11 @@ ChataUtils.copySqlHandler = (idRequest) => {
     var copyButton = document.createElement('button');
     var okBtn = htmlToElement(
         `<div class="autoql-vanilla-chata-btn primary "
-        style="padding: 5px 16px; margin: 2px 5px;">Ok</div>`,
+        style="padding: 5px 16px; 
+		margin: 2px 5px;"
+		onMouseOver = "this.style.opacity='0.8'"
+		onMouseOut = "this.style.opacity='1'" 
+		>Ok</div>`,
     );
     var modalContent = document.createElement('div');
     var text = document.createElement('textarea');
@@ -537,7 +541,14 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     container.classList.add('autoql-vanilla-report-problem-modal-body');
     var cancelButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
+        style="margin: 2px 5px;
+		padding: 10px 16px; 
+		background: inherit;
+		border: 1px solid var(--autoql-vanilla-accent-color);
+		color: var(--autoql-vanilla-accent-color);"
+		onMouseOver = "this.style.background='var(--autoql-vanilla-mask-color)'" 
+		onMouseOut = "this.style.background='inherit'" 
+		>${strings.cancel}</div>`,
     );
 
     var spinner = htmlToElement(`
@@ -546,7 +557,14 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
 
     var reportButton = htmlToElement(
         `<div class="autoql-vanilla-chata-btn primary"
-            style="padding: 5px 16px; margin: 2px 5px;">
+		style="margin: 2px 5px;
+		padding: 10px 16px;
+		background: var(--autoql-vanilla-accent-color);
+		border: 1px solid var(--autoql-vanilla-accent-color);
+		color: var(--autoql-vanilla-text-color-accent);"
+		onMouseOver = "this.style.opacity='0.8'"
+		onMouseOut = "this.style.opacity='1'" 
+		>
         </div>`,
     );
 
@@ -692,7 +710,13 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
     var cancelButton = htmlToElement(
         `<div
             class="autoql-vanilla-chata-btn default"
-            style="padding: 5px 16px; margin: 2px 5px;">
+            style="margin: 2px 5px;
+			padding: 10px 16px;
+			background: inherit;
+			border: 1px solid var(--autoql-vanilla-accent-color);
+			color: var(--autoql-vanilla-accent-color);"
+			onMouseOver = "this.style.background='var(--autoql-vanilla-mask-color)'"
+			onMouseOut = "this.style.background='inherit'" >
                 ${strings.cancel}
             </div>`,
     );
@@ -704,7 +728,13 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
     var saveButton = htmlToElement(
         `<div
             class="autoql-vanilla-chata-btn primary"
-            style="padding: 5px 16px; margin: 2px 5px;">
+            style="margin: 2px 5px;
+			padding: 10px 16px;
+			background: var(--autoql-vanilla-accent-color);
+			border: 1px solid var(--autoql-vanilla-accent-color);
+			color: var(--autoql-vanilla-text-color-accent);"
+			onMouseOver = "this.style.opacity='0.8'"
+			onMouseOut = "this.style.opacity='1'" >
         </div>`,
     );
 
