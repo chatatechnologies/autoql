@@ -396,6 +396,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         yearPickerBackBtn.appendChild(yearPickerBackBtnIcon);
 
         const monthYearPickers = document.createElement('div');
+		monthYearPickers.classList.add('autoql-vanilla-month-year-pickers')
         yearPicker.appendChild(monthYearPickers);
 
         const monthPickerSelect = this.createMonthSelect();
