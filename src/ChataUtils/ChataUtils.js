@@ -220,8 +220,8 @@ ChataUtils.copySqlHandler = (idRequest) => {
     var sql = json['data']['sql'][0];
     var copyButton = document.createElement('button');
     var okBtn = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary "
-        style="padding: 5px 16px; margin: 2px 5px;">Ok</div>`,
+        `<div class="autoql-vanilla-chata-btn primary">Ok
+		</div>`,
     );
     var modalContent = document.createElement('div');
     var text = document.createElement('textarea');
@@ -535,18 +535,14 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     textArea.classList.add('autoql-vanilla-report-problem-text-area');
     textArea.addEventListener('input', (evt) => enableButton(evt, selectedOption));
     container.classList.add('autoql-vanilla-report-problem-modal-body');
-    var cancelButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
-    );
+    var cancelButton = htmlToElement(`<div class="autoql-vanilla-chata-btn default">${strings.cancel}</div>`);
 
     var spinner = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
     `);
 
     var reportButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary"
-            style="padding: 5px 16px; margin: 2px 5px;">
+        `<div class="autoql-vanilla-chata-btn primary">
         </div>`,
     );
 
@@ -689,23 +685,15 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
         }
     };
 
-    var cancelButton = htmlToElement(
-        `<div
-            class="autoql-vanilla-chata-btn default"
-            style="padding: 5px 16px; margin: 2px 5px;">
-                ${strings.cancel}
-            </div>`,
-    );
+    var cancelButton = htmlToElement(`<div class="autoql-vanilla-chata-btn default">${strings.cancel}</div>`);
 
     var spinner = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
     `);
 
     var saveButton = htmlToElement(
-        `<div
-            class="autoql-vanilla-chata-btn primary"
-            style="padding: 5px 16px; margin: 2px 5px;">
-        </div>`,
+        `<div class="autoql-vanilla-chata-btn primary"> 
+		</div>`,
     );
 
     saveButton.appendChild(spinner);
