@@ -12,7 +12,9 @@ String.prototype.chataFormat = function () {
 export const strings = new LocalizedStrings({
     en: {
         report: 'report',
-        introMessage: 'Hi {0} Let’s dive into your data. What can I help you discover today?',
+        introMessage: 'Hi {0} Let’s dive into your data. \r\n \r\n',
+        dataExplorerIntroMessageOne: 'Get started by asking a query below, or use ',
+        dataExplorerIntroMessageTwo: ' to discover what data is available to you!',
         there: 'there!',
         dataIncorrect: 'The data is incorrect',
         dataIncomplete: 'The data is incomplete',
@@ -58,6 +60,7 @@ export const strings = new LocalizedStrings({
         voiceRecordError:
             "You have denied permission for the use of your microphone. Please update the microphone permissions in your browser's settings.",
         dataExplorerInput: 'Search terms or topics',
+        dataExplorer: 'Data Explorer',
         relatedTo: 'Related to',
         topics: 'Topics',
         recent: 'Recent',
@@ -206,7 +209,9 @@ export const strings = new LocalizedStrings({
     },
     es: {
         report: 'repórtalo',
-        introMessage: 'Hola {0} Analicemos sus datos. ¿Qué puedo ayudarte a descubrir hoy?',
+        introMessage: 'Hola {0} Analicemos sus datos. \r\n \r\n',
+        dataExplorerIntroMessageOne: 'Comience haciendo una consulta a continuación o use ',
+        dataExplorerIntroMessageTwo: ' para descubrir qué datos están disponibles para usted!',
         there: '',
         dataIncorrect: 'Los datos son incorrectos',
         dataIncomplete: 'Los datos están incompletos',
@@ -252,6 +257,7 @@ export const strings = new LocalizedStrings({
         voiceRecord: 'Mantenga presionado para convertir voz a texto',
         voiceRecordError: 'La grabación de voz no está disponible porque has negado el permiso para usar tu micrófono',
         dataExplorerInput: 'Buscar términos o temas',
+        dataExplorer: 'Exploradora de datos',
         relatedTo: 'Relacionado con',
         topics: 'Temas',
         recent: 'Búsquedas recientes',

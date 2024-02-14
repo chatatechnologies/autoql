@@ -88,7 +88,11 @@ body.autoql-vanilla-drawer-open-body {
             transition: background-color 0.2s ease;
             position: relative;
             width: calc(100% - 20px);
-
+            .autoql-vanilla-data-explorer-icon-with-text {
+                color: var(--react-autoql-accent-color);
+                cursor: pointer;
+                font-weight: 600;
+            }
             .autoql-vanilla-chat-message-bubble-container {
                 display: flex;
                 justify-content: flex-start;
@@ -98,7 +102,7 @@ body.autoql-vanilla-drawer-open-body {
                 flex: 1 1;
 
                 &.autoql-vanilla-chat-message-bubble-container-text {
-                    max-width: 85%;
+                    max-width: 100%;
                 }
 
                 .autoql-vanilla-chat-message-bubble {

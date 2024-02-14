@@ -49,6 +49,7 @@ import {
     closeAllChartPopovers,
     getLocalStream,
     isTouchDevice,
+    createIcon,
 } from '../Utils';
 
 import {
@@ -935,13 +936,29 @@ export function DataMessenger(options = {}) {
     obj.createDrawerContent = () => {
         var drawerContent = document.createElement('div');
         var firstMessage = document.createElement('div');
+        var dataExplorerIntroMessage = document.createElement('div');
+        var dataExplorerIconWithText = document.createElement('span');
+        dataExplorerIconWithText.classList.add('autoql-vanilla-data-explorer-icon-with-text');
         var chatMessageBubbleContainer = document.createElement('div');
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container');
         chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container-text');
         var chatMessageBubble = document.createElement('div');
+        chatMessageBubble.setAttribute('style', 'white-space-collapse: preserve;');
         var scrollBox = document.createElement('div');
         scrollBox.classList.add('autoql-vanilla-chata-scrollbox');
         chatMessageBubble.textContent = obj.options.introMessage;
+        chatMessageBubble.appendChild(dataExplorerIntroMessage);
+        dataExplorerIntroMessage.appendChild(document.createTextNode(strings.dataExplorerIntroMessageOne));
+        dataExplorerIconWithText.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
+        dataExplorerIconWithText.appendChild(document.createTextNode(strings.dataExplorer));
+        dataExplorerIconWithText.onclick = function () {
+            obj.setActiveTab(obj.tabDataExplorer);
+            obj.tabsAnimation('none', 'none');
+            obj.dataExplorer?.show();
+            obj.notificationsAnimation('none');
+        };
+        dataExplorerIntroMessage.appendChild(dataExplorerIconWithText);
+        dataExplorerIntroMessage.appendChild(document.createTextNode(strings.dataExplorerIntroMessageTwo));
         drawerContent.classList.add('autoql-vanilla-drawer-content');
         firstMessage.classList.add('autoql-vanilla-chat-single-message-container');
         firstMessage.classList.add('response');
@@ -1460,12 +1477,12 @@ export function DataMessenger(options = {}) {
             <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right">
             </div>
         `);
-		if(isMobile){
-			var toolbar = htmlToElement(`
+        if (isMobile) {
+            var toolbar = htmlToElement(`
             <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right mobile">
             </div>
         `);
-		}
+        }
 
         if (isTouchDevice()) {
             toolbar.style.visibility = 'visible';
