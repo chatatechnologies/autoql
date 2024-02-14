@@ -98,20 +98,20 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     };
 
     this.setSelectedStart = (timestamp) => {
-        this.selectedStart = timestamp
+        this.selectedStart = timestamp;
 
         if (timestamp) {
-            this.dateDisplayStartInput?.setAttribute('value', timestamp.format('ll'))
+            this.dateDisplayStartInput?.setAttribute('value', timestamp.format('ll'));
         }
-    }
+    };
 
     this.setSelectedEnd = (timestamp) => {
-        this.selectedEnd = timestamp
+        this.selectedEnd = timestamp;
 
         if (timestamp) {
-            this.dateDisplayEndInput?.setAttribute('value', timestamp.format('ll'))
+            this.dateDisplayEndInput?.setAttribute('value', timestamp.format('ll'));
         }
-    }
+    };
 
     this.onDayStartSelection = (timestamp) => {
         this.setSelectedStart(timestamp.startOf('day'));
@@ -131,7 +131,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
     this.onDayEndSelection = (timestamp) => {
         try {
             if (!this.selectedStart) {
-                this.setSelectedStart(timestamp)
+                this.setSelectedStart(timestamp);
             }
 
             this.setSelectedEnd(timestamp);
@@ -146,8 +146,8 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
             const selectedStartYearStart = rangeSelection[0].startOf('day');
             const selectedEndYearEnd = rangeSelection[1].endOf('day');
 
-            this.setSelectedStart(selectedStartYearStart)
-            this.setSelectedEnd(selectedEndYearEnd)
+            this.setSelectedStart(selectedStartYearStart);
+            this.setSelectedEnd(selectedEndYearEnd);
 
             onRangeSelection({
                 startDate: selectedStartYearStart.toDate(),
@@ -313,7 +313,6 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         dateDisplayDiv.appendChild(dateDisplayEnd);
         this.dateDisplayEnd = dateDisplayEnd;
 
-
         const dateDisplayEndInput = document.createElement('input');
         dateDisplayEndInput.setAttribute('readOnly', true);
         dateDisplayEndInput.setAttribute('placeholder', 'Continuous');
@@ -396,7 +395,7 @@ export function DayRangePicker(component, { initialRange, minDate, maxDate, onRa
         yearPickerBackBtn.appendChild(yearPickerBackBtnIcon);
 
         const monthYearPickers = document.createElement('div');
-		monthYearPickers.classList.add('autoql-vanilla-month-year-pickers')
+        monthYearPickers.classList.add('autoql-vanilla-month-year-pickers');
         yearPicker.appendChild(monthYearPickers);
 
         const monthPickerSelect = this.createMonthSelect();
