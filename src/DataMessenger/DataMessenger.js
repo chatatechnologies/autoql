@@ -2027,6 +2027,10 @@ export function DataMessenger(options = {}) {
         return ChataUtils.responses[id];
     };
 
+    obj.setRequest = (id, data) => {
+        ChataUtils.responses[id] = data;
+    };
+
     obj.setDefaultFilters = (component, table, type) => {
         if (!table?.toggleFilters) {
             return;
@@ -2052,8 +2056,8 @@ export function DataMessenger(options = {}) {
         var chartsVisibleCount = json.data?.rows.length;
         var parentContainer = obj.getParentFromComponent(component);
         var parentElement = component.parentElement;
-        var useInfiniteScroll = isDataLimited({ data: json });
-        var tableParams = { queryJson: json, sort: undefined, filter: undefined };
+        var useInfiniteScroll = true; // isDataLimited({ data: json });
+        var tableParams = component.tableParams ?? { queryJson: json, sort: undefined, filter: undefined };
 
         obj.refreshToolbarButtons(component, 'table');
 
@@ -2063,6 +2067,18 @@ export function DataMessenger(options = {}) {
             (data) => obj.onCellClick(data, idRequest),
             useInfiniteScroll,
             tableParams,
+            (response, params) => {
+                if (response?.data) {
+                    obj.setRequest(idRequest, response?.data);
+                }
+
+                if (params) {
+                    component.tableParams = {
+                        ...tableParams,
+                        ...params,
+                    };
+                }
+            },
         );
         table.element.onNewPage({ chartsVisibleCount: chartsVisibleCount });
         component.internalTable = table;

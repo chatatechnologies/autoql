@@ -102,6 +102,8 @@ function instantiateTabulator(component, tableOptions, table) {
         component.createPageLoader?.();
         component.createScrollLoader?.();
 
+        tabulator.setFilters?.();
+
         tabulator.setHeaderInputEventListeners?.();
         tabulator.toggleFilters?.();
 
@@ -245,7 +247,7 @@ const ajaxResponseFunc = (response, component) => {
     };
 };
 
-export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteScroll = true, tableParams) {
+export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteScroll = true, tableParams, onNewData) {
     const self = this;
 
     const TABLE_ID = uuidv4();
@@ -311,7 +313,9 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.onTableParamsChange = (params, nextTableParamsFormatted) => {};
 
     // TODO(Nikki) - update parent component with changes
-    component.onNewData = (response, component) => {};
+    component.onNewData = (response) => {
+        onNewData?.(response, component.tableParams);
+    };
 
     component.getNewPage = (tableParams) => {
         return runQueryNewPage({
@@ -537,6 +541,23 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     table.inputDateKeypressListener = (e) => {
         e.stopPropagation();
         e.preventDefault();
+    };
+
+    table.setFilters = () => {
+        const filterValues = component.tableParams?.filter;
+
+        if (filterValues) {
+            filterValues.forEach((filter, i) => {
+                try {
+                    table?.setHeaderFilterValue(filter.field, filter.value);
+                    if (!useInfiniteScroll) {
+                        table?.setFilter(filter.field, filter.type, filter.value);
+                    }
+                } catch (error) {
+                    console.error(error);
+                }
+            });
+        }
     };
 
     table.setHeaderInputEventListeners = () => {
