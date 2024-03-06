@@ -25,6 +25,7 @@ export function ColumnChartNew(container, params = {}) {
         stacked,
         aggregated,
         columnLineCombo = false,
+        originalColumns,
     } = params;
 
     const {
@@ -46,6 +47,7 @@ export function ColumnChartNew(container, params = {}) {
         stringColumnIndex,
         stringColumnIndices,
         enableAxisDropdown,
+        originalColumns,
         changeNumberColumnIndices,
         changeStringColumnIndices,
         aggregated,

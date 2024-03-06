@@ -222,6 +222,7 @@ export function LineChartNew(container, params = {}) {
         columnIndexConfig = {},
         stacked,
         aggregated,
+        originalColumns,
     } = params;
 
     const { stringColumnIndices, stringColumnIndex, numberColumnIndex } = columnIndexConfig;
@@ -236,6 +237,7 @@ export function LineChartNew(container, params = {}) {
         stringColumnIndex,
         stringColumnIndices,
         enableAxisDropdown,
+        originalColumns,
         changeNumberColumnIndices,
         changeStringColumnIndices,
         aggregated,
