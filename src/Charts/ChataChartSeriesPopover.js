@@ -86,21 +86,19 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             .map((agg) => {
                 const listLabel = document.createElement('span');
 
-                let icon = agg.symbol;
-                if (agg.icon) {
-                    if (AGG_TYPE_ICONS[agg.icon]) {
-                        icon = createIcon(AGG_TYPE_ICONS[agg.icon]);
-                    }
+                let listIcon = agg.symbol;
+                if (agg.icon && AGG_TYPE_ICONS[agg.icon]) {
+                    listIcon = createIcon(AGG_TYPE_ICONS[agg.icon]);
                 }
 
                 let listLabelSymbol = document.createElement('span');
                 listLabelSymbol.classList.add('agg-select-list-symbol');
 
-                if (typeof icon == 'object') {
+                if (typeof listIcon == 'object') {
                     listLabelSymbol.innerHTML = '';
-                    listLabelSymbol.appendChild(icon);
+                    listLabelSymbol.appendChild(listIcon);
                 } else {
-                    listLabelSymbol.innerHTML = icon;
+                    listLabelSymbol.innerHTML = listIcon;
                 }
 
                 const listLabelText = document.createElement('span');
@@ -108,6 +106,11 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
 
                 listLabel.appendChild(listLabelSymbol);
                 listLabel.appendChild(listLabelText);
+
+                let icon = agg.symbol;
+                if (agg.icon && AGG_TYPE_ICONS[agg.icon]) {
+                    icon = createIcon(AGG_TYPE_ICONS[agg.icon]);
+                }
 
                 return {
                     value: agg.type,
