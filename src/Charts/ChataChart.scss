@@ -184,6 +184,9 @@
 }
 
 .autoql-vanilla-axis-selector-container {
+    max-height: 150px;
+    overflow-y: auto;
+
     .autoql-vanilla-chata-list-item {
         .autoql-vanilla-select {
             font-weight: 600;
