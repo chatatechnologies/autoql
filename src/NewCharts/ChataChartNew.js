@@ -426,6 +426,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 columnIndexConfig: this.columnIndexConfig,
                 aggConfig,
                 aggregated,
+                originalColumns: columns,
                 visibleSeries: this.columnIndexConfig.numberColumnIndices.filter(
                     (index) => !columns?.[index]?.isSeriesHidden,
                 ),
