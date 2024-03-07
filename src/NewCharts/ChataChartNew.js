@@ -361,6 +361,9 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             return;
         }
 
+        // This is used for a safety fallback in case of infinite recursion
+        this.drawCount += 1;
+
         if (!this.isColumnIndexConfigValid()) {
             console.warn(
                 'Current column config is not valid for new axis selection. Resetting config to default in order to draw the chart.',
@@ -488,7 +491,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     this.chartComponent = new LineChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
                 case 'column_line':
-                    this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, columnLineCombo: true });
+                    this.chartComponent = new ColumnChartNew(chartContentWrapper, {
+                        ...params,
+                        columnLineCombo: true,
+                    });
                     break;
                 case 'scatterplot':
                     this.chartComponent = new Scatterplot(chartContentWrapper, params);
@@ -508,9 +514,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     return null; // 'Unknown Display Type'
             }
 
-            // This is used for a safety fallback in case of infinite recursion
-            this.drawCount += 1;
-
             if (CHARTS_WITHOUT_AXES.includes(type)) {
                 // Do not redraw
             } else {
@@ -520,11 +523,11 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     console.error(error);
                 }
 
-                if (firstDraw) {
-                    this.drawChart(false);
+                if (firstDraw || this.drawCount <= 2) {
+                    return this.drawChart(false);
                 } else if (this.didLabelsRotateOnSecondDraw()) {
                     // Labels rotated after seconds draw - redraw one last time
-                    this.drawChart(false);
+                    return this.drawChart(false);
                 }
             }
         } catch (error) {
