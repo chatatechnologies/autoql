@@ -24,7 +24,9 @@ export function Selector({ defaultValue, options, outlined = true, onChange = ()
     itemValue.classList.add('autoql-vanilla-menu-item-value-title');
     itemValue.classList.add(selectID);
     selectArrow.classList.add('autoql-vanilla-select-arrow');
+    selectArrow.classList.add(selectID);
     selectText.classList.add('autoql-vanilla-select-text');
+    selectText.classList.add(selectID);
     optionsContainer.classList.add('autoql-vanilla-select-menu');
     select.classList.add('autoql-vanilla-select');
     select.classList.add(selectID);
@@ -58,8 +60,17 @@ export function Selector({ defaultValue, options, outlined = true, onChange = ()
     });
 
     const onOutsideClick = (e) => {
-        if (e.target.classList.contains(popup.ID) || e.target.classList.contains(selectID)) {
-            return;
+        const classIgnoreList = [popup.ID, selectID];
+
+        for (let i = 0; i < classIgnoreList.length; i++) {
+            let c = classIgnoreList[i];
+            if (
+                e.target.classList.contains(c) ||
+                e.srcElement?.offsetParent?.classList?.contains(c) ||
+                e.srcElement?.parentElement?.classList?.contains(c)
+            ) {
+                return;
+            }
         }
 
         select.closePopup();
