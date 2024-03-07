@@ -1,4 +1,4 @@
-import { QUERY_TERM_TYPE, createDataAlert } from 'autoql-fe-utils';
+import { QUERY_TERM_TYPE, createDataAlert, isAggregation } from 'autoql-fe-utils';
 import { Modal } from '../../../Modal';
 import { ChataConfirmDialog } from '../ChataConfirmDialog/ChataConfirmDialog';
 import { AppearanceStep } from './AppearanceStep/AppearanceStep';
@@ -55,11 +55,12 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         const { columns, count_rows } = queryResponse.data;
 
         const isSingleResponse = columns?.length === 1 && count_rows === 1;
+        const renderFirstStep = isSingleResponse || isAggregation(queryResponse?.data?.columns);
 
         this.steps.push({
             view: new TimingStep({ queryResponse }),
-            withConnector: isSingleResponse,
-            isActive: !isSingleResponse,
+            withConnector: renderFirstStep,
+            isActive: !renderFirstStep,
             title: 'Configure Timing',
         });
 
@@ -70,7 +71,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
             title: 'Customize Appearance',
         });
 
-        if (isSingleResponse) {
+        if (renderFirstStep) {
             this.steps.unshift({
                 view: new ConditionsStep({ queryResponse }),
                 withConnector: false,
