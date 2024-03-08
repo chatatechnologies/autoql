@@ -55,7 +55,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         const { columns, count_rows } = queryResponse.data;
 
         const isSingleResponse = columns?.length === 1 && count_rows === 1;
-        const renderFirstStep = isSingleResponse || isAggregation(queryResponse?.data?.columns);
+        const renderFirstStep = isSingleResponse; // Todo: add join column selection feature for this: || isAggregation(queryResponse?.data?.columns);
 
         this.steps.push({
             view: new TimingStep({ queryResponse }),
