@@ -52,7 +52,6 @@ export function Legend(container, params = {}) {
 
     this.onLegendCellClick = (labelObj, legendLabels) => {
         try {
-            console.log({ labelObj, legendLabels });
             let cellDataJson;
             try {
                 cellDataJson = JSON.parse(labelObj);

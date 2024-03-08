@@ -1,10 +1,13 @@
 import { ChipsContainer } from '../../../Components/ChipsContainer/ChipsContainer';
 import { QueryResultInput } from '../../../Components/QueryResultInput';
 import { Selector } from '../../../Components/Selector/Selector';
+import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE, PERIODIC_TYPE, EXISTS_TYPE } from 'autoql-fe-utils';
+
 import './ConditionsView.scss';
-import { DATA_ALERT_OPERATORS, NUMBER_TERM_TYPE, QUERY_TERM_TYPE, PERIODIC_TYPE } from 'autoql-fe-utils';
 
 export function ConditionsView({ dataAlert }) {
+    const isExsistsType = dataAlert?.expression?.[0]?.condition === EXISTS_TYPE;
+
     //Trigger alert section
     const container = document.createElement('div');
     const title = document.createElement('div');
@@ -62,10 +65,12 @@ export function ConditionsView({ dataAlert }) {
     const inputDefaultValue = dataAlert.expression?.[1]?.term_value;
     const defaultValueCondition = dataAlert.expression?.[0]?.condition;
     const termInputValue = new QueryResultInput({ termInputType, inputDefaultValue });
+
     const conditionSelect = new Selector({
         defaultValue: defaultValueCondition,
         options: this.getOperatorSelectValues(),
     });
+
     const secondTermSelect = new Selector({
         defaultValue: defaultSecondTerm,
         options: this.getSecondTermValues(),
@@ -113,10 +118,16 @@ export function ConditionsView({ dataAlert }) {
     };
 
     title.textContent = 'Conditions';
-    inputLabel.textContent = 'Trigger Alert when this query';
+    queryInput.setAttribute('value', dataAlert?.expression?.[0]?.term_value);
     queryInput.setAttribute('type', 'text');
     queryInput.setAttribute('disabled', 'true');
     queryInput.setAttribute('readonly', 'true');
+
+    if (isExsistsType) {
+        inputLabel.textContent = 'Trigger Alert when new data is detected for this query';
+    } else {
+        inputLabel.textContent = 'Trigger Alert when this query';
+    }
 
     wrapper.classList.add('autoql-vanilla-data-alerts-container');
     container.classList.add('autoql-vanilla-data-alert-setting-section');
@@ -154,9 +165,10 @@ export function ConditionsView({ dataAlert }) {
         return termInputValue.getValue() !== '';
     };
 
-    if (dataAlert.notification_type !== PERIODIC_TYPE) {
+    if (!isExsistsType) {
         this.createConditionsSection();
     }
+
     this.createChips();
 
     return container;
