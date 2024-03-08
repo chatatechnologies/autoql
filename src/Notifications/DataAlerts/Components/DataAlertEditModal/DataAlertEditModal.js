@@ -1,13 +1,14 @@
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
 import { Modal } from '../../../../Modal';
-import './DataAlertEditModal.scss';
 import { ConditionsView } from '../ConditionsView/ConditionsView';
 import { TimingView } from '../TimingView';
 import { AppearanceView } from '../AppearanceView';
-import { updateDataAlert } from 'autoql-fe-utils';
+import { deleteDataAlert, updateDataAlert } from 'autoql-fe-utils';
 import { AntdMessage } from '../../../../Antd';
 
-export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication }) {
+import './DataAlertEditModal.scss';
+
+export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication, onDeleteClick = () => {} }) {
     const btnDelete = document.createElement('button');
     const btnCancel = document.createElement('button');
     const btnSave = document.createElement('button');
@@ -78,22 +79,9 @@ export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication })
         onDiscard,
     );
 
-    const deleteDataAlertItemHandler = () => {
-        ChataConfirmDialog({
-            title: 'Are you sure you want to delete this Data Alert?',
-            message: 'You will no longer be notified about these changes in your data.',
-            cancelString: 'Go Back',
-            discardString: 'Delete',
-            onDiscard: async () => {
-                const response = await deleteDataAlert(id, authentication);
-                if (response.status === 200) {
-                    new AntdMessage('Data Alert was successfully deleted.', 3000);
-                } else {
-                    new AntdMessage('Error', 3000);
-                }
-                modal.close();
-            },
-        });
+    const deleteDataAlertItemHandler = async () => {
+        await onDeleteClick();
+        modal.close();
     };
 
     btnCancel.onclick = onDiscard;
