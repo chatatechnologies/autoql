@@ -258,7 +258,7 @@ export function TimingStep() {
         const timeContainer = this.createFrequencyOption({
             defaultValue: this.DEFAULT_TIME_SELECT_VALUE.value,
             selectorOptions: this.getTimeOptions(),
-            onChange: this.handleResetEvaluationFrequencyChange,
+            onChange: this.handleTimeSelectValueChange,
         });
 
         const timeZoneContainer = this.createFrequencyOption({
@@ -291,6 +291,9 @@ export function TimingStep() {
 
     this.handleResetEvaluationFrequencyChange = (option) => {
         this.evaluationFrequency = option.value;
+    };
+
+    this.handleTimeSelectValueChange = (option) => {
         this.intervalTimeSelectValue = option.obj;
     };
 
