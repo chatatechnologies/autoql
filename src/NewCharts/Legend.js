@@ -52,11 +52,13 @@ export function Legend(container, params = {}) {
 
     this.onLegendCellClick = (labelObj, legendLabels) => {
         try {
-            const cellDataJson = JSON.parse(labelObj);
-            const index = cellDataJson?.columnIndex;
-            const label = legendLabels?.find((l) => l.columnIndex === index);
+            console.log({ labelObj, legendLabels });
+            let cellDataJson;
+            try {
+                cellDataJson = JSON.parse(labelObj);
+            } catch (error) {}
+            const label = legendLabels?.find((l) => l.label === labelObj);
 
-            // const label = legendLabels?.find((l) => l.label === labelText);
             if (!label) {
                 console.warn('unable to find legend item that was clicked');
                 return;
@@ -127,6 +129,8 @@ export function Legend(container, params = {}) {
         const legendScale = getLegendScale(legendLabelSection);
         const maxSectionWidth = getMaxLegendSectionWidth({ orientation, outerWidth, legendPadding });
 
+        const self = this;
+
         var legendOrdinal = legendColor()
             .orient('vertical')
             .path(symbol().type(symbolSquare).size(LEGEND_SHAPE_SIZE)())
@@ -138,7 +142,7 @@ export function Legend(container, params = {}) {
             .title(title)
             .titleWidth(maxSectionWidth)
             .on('cellclick', function () {
-                onLegendCellClick(select(this)?.data()?.[0], allLabels);
+                self.onLegendCellClick(select(this)?.data()?.[0], allLabels);
             });
 
         if (isSecondLegend) {
