@@ -16,6 +16,7 @@ import {
     getColumnIndexConfig,
     getSupportedDisplayTypes,
     fetchSubjectList,
+    isDrilldown,
 } from 'autoql-fe-utils';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
@@ -1371,6 +1372,17 @@ export function DataMessenger(options = {}) {
         return ChataUtils.getPopover();
     };
 
+    obj.isDrilldown = (idRequest) => {
+        const queryResponse = ChataUtils.responses[idRequest];
+        try {
+            const queryText = queryResponse?.data?.text || '';
+            const isDrilldown = queryText.split(':')[0] === 'Drilldown';
+            return isDrilldown;
+        } catch (error) {
+            return false;
+        }
+    };
+
     obj.getMoreOptionsMenu = (options, idRequest, type) => {
         var bubble = obj.drawerContent.querySelector(`[data-bubble-id="${idRequest}"]`);
         return ChataUtils.getMoreOptionsMenu(options, idRequest, type, {
@@ -1498,12 +1510,15 @@ export function DataMessenger(options = {}) {
             [obj.options, undefined, toolbar],
         );
 
+        const isDrilldownResponse = obj.isDrilldown(idRequest);
+
         switch (type) {
             case 'simple':
                 if (request['reference_id'] !== '1.9.502') {
                     toolbar.appendChild(reportProblemButton);
                     autoQLConfig.debug && moreOptionsArray.push('copy_sql');
-                    autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
+
+                    autoQLConfig.enableNotifications && !isDrilldownResponse && moreOptionsArray.push('notification');
                 }
                 toolbar.appendChild(
                     obj.getActionButton(
@@ -1564,7 +1579,7 @@ export function DataMessenger(options = {}) {
                 autoQLConfig.enableCSVDownload && moreOptionsArray.push('csv');
                 moreOptionsArray.push('copy');
                 autoQLConfig.debug && moreOptionsArray.push('copy_sql');
-                autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
+                autoQLConfig.enableNotifications && !isDrilldownResponse && moreOptionsArray.push('notification');
                 break;
             case 'chart-view':
                 if (request['reference_id'] !== '1.1.420') {
@@ -1581,7 +1596,7 @@ export function DataMessenger(options = {}) {
                 );
                 moreOptionsArray.push('png');
                 autoQLConfig.debug && moreOptionsArray.push('copy_sql');
-                autoQLConfig.enableNotifications && moreOptionsArray.push('notification');
+                autoQLConfig.enableNotifications && !isDrilldownResponse && moreOptionsArray.push('notification');
                 break;
             case 'safety-net':
                 toolbar.appendChild(
