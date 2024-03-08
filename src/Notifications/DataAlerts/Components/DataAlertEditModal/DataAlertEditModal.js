@@ -3,12 +3,18 @@ import { Modal } from '../../../../Modal';
 import { ConditionsView } from '../ConditionsView/ConditionsView';
 import { TimingView } from '../TimingView';
 import { AppearanceView } from '../AppearanceView';
-import { deleteDataAlert, updateDataAlert } from 'autoql-fe-utils';
+import { updateDataAlert } from 'autoql-fe-utils';
 import { AntdMessage } from '../../../../Antd';
 
 import './DataAlertEditModal.scss';
 
-export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication, onDeleteClick = () => {} }) {
+export function DataAlertEditModal({
+    dataAlertItem,
+    dataAlert,
+    authentication,
+    onDeleteClick = () => {},
+    fetchAlerts = () => {},
+}) {
     const btnDelete = document.createElement('button');
     const btnCancel = document.createElement('button');
     const btnSave = document.createElement('button');
@@ -96,14 +102,21 @@ export function DataAlertEditModal({ dataAlertItem, dataAlert, authentication, o
             ...appearanceView.getValues(),
             ...timingView.getValues(),
         };
-        const response = await updateDataAlert({ dataAlert: newValues, ...authentication });
-        modal.close();
-        if (response.status === 200) {
-            new AntdMessage('Data Alert updated!', 2500);
-            if (!dataAlertItem) {
-                dataAlertItem.setDataAlert(response.data.data);
+        try {
+            const response = await updateDataAlert({ dataAlert: newValues, ...authentication });
+            await fetchAlerts();
+
+            if (response.status === 200) {
+                new AntdMessage('Data Alert updated!', 2500);
+                if (dataAlertItem) {
+                    dataAlertItem.setDataAlert(response.data.data);
+                }
+                modal.close();
+            } else {
+                new AntdMessage('Error', 2500);
             }
-        } else {
+        } catch (error) {
+            console.error(error);
             new AntdMessage('Error', 2500);
         }
     };

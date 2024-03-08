@@ -37,7 +37,7 @@ const labelsMap = [
     { name: 'Actions', className: 'autoql-vanilla-data-alert-list-item-section-actions-header' },
 ];
 
-export function DataAlertItem({ dataAlert, authentication, showHeader = false }) {
+export function DataAlertItem({ dataAlert, authentication, showHeader = false, fetchAlerts = () => {} }) {
     const item = document.createElement('div');
     const row = document.createElement('div');
     item.classList.add('autoql-vanilla-notification-setting-item');
@@ -212,21 +212,24 @@ export function DataAlertItem({ dataAlert, authentication, showHeader = false })
         return response;
     };
 
-    const deleteDataAlertItemHandler = () => {
-        ChataConfirmDialog({
-            title: 'Are you sure you want to delete this Data Alert?',
-            message: 'You will no longer be notified about these changes in your data.',
-            cancelString: 'Go Back',
-            discardString: 'Delete',
-            onDiscard: async () => {
-                const response = await deleteDataAlert(id, authentication);
-                if (response.status === 200) {
-                    item.parentElement.removeChild(item);
-                    new AntdMessage('Data Alert was successfully deleted.', 3000);
-                } else {
-                    new AntdMessage('Error', 3000);
-                }
-            },
+    const deleteDataAlertItemHandler = async () => {
+        return new Promise((res, rej) => {
+            ChataConfirmDialog({
+                title: 'Are you sure you want to delete this Data Alert?',
+                message: 'You will no longer be notified about these changes in your data.',
+                cancelString: 'Go Back',
+                discardString: 'Delete',
+                onDiscard: async () => {
+                    const response = await deleteDataAlert(id, authentication);
+                    if (response.status === 200) {
+                        item.parentElement.removeChild(item);
+                        new AntdMessage('Data Alert was successfully deleted.', 3000);
+                    } else {
+                        new AntdMessage('Error', 3000);
+                    }
+                    return res();
+                },
+            });
         });
     };
 
@@ -236,6 +239,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader = false })
             dataAlert,
             authentication,
             onDeleteClick: deleteDataAlertItemHandler,
+            fetchAlerts,
         });
         modal.show();
     };
