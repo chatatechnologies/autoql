@@ -25,6 +25,7 @@ export function ColumnChartNew(container, params = {}) {
         stacked,
         aggregated,
         columnLineCombo = false,
+        originalColumns,
     } = params;
 
     const {
@@ -46,6 +47,7 @@ export function ColumnChartNew(container, params = {}) {
         stringColumnIndex,
         stringColumnIndices,
         enableAxisDropdown,
+        originalColumns,
         changeNumberColumnIndices,
         changeStringColumnIndices,
         aggregated,
@@ -61,7 +63,7 @@ export function ColumnChartNew(container, params = {}) {
         axis: 'y',
         isScaled,
         columnIndices1: visibleSeries,
-        columnIndices2: visibleSeries2,
+        columnIndices2: columnLineCombo ? visibleSeries2 : undefined,
         colorScales,
         stacked,
     });

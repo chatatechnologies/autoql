@@ -1,0 +1,53 @@
+.autoql-vanilla-data-alert-filters-container {
+  .autoql-vanilla-chip {
+    position: relative;
+    display: inline-flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    border: 1px solid transparent;
+    background-color: var(--autoql-vanilla-background-color-secondary);
+    color: var(--autoql-vanilla-text-color-primary);
+    transition-property: color,border-color,background-color,opacity;
+    transition-duration: .2s;
+    transition-timing-function: ease;
+    margin-right: 5px;
+    font-size: .875em;
+    border-radius: 50px;
+    padding: 5px 12px;
+    overflow: hidden;
+    .autoql-vanilla-chip-content {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-between;
+      align-items: center;
+      div .autoql-vanilla-lock-icon {
+        vertical-align: middle;
+        padding-bottom: 3px;
+      }
+      .autoql-vanilla-chip-delete-confirm-popover {
+        display: flex;
+        .autoql-vanilla-chip-delete-btn {
+          margin-left: 8px;
+          transition: opacity .2s ease;
+          opacity: .7;
+          z-index: 3;
+          cursor: pointer;
+          &:hover {
+            opacity: 1;
+            color: var(--autoql-vanilla-accent-color);
+          }
+        }
+      }
+    }
+    .autoql-vanilla-chip-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      opacity: .3;
+      background: var(--autoql-vanilla-accent-color);
+    }
+  }
+}

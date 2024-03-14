@@ -1,120 +1,73 @@
-import {
-    TABLE_ICON,
-    COLUMN_CHART_ICON,
-    BAR_CHART_ICON,
-    PIE_CHART_ICON,
-    LINE_CHART_ICON,
-    PIVOT_ICON,
-    HEATMAP_ICON,
-    BUBBLE_CHART_ICON,
-    STACKED_COLUMN_CHART_ICON,
-    STACKED_BAR_CHART_ICON,
-    STACKED_AREA_CHART_ICON
-} from '../../Svg'
-import {
-    getSupportedDisplayTypes
-} from '../../Utils'
-import {
-    refreshTooltips
-} from '../../Tooltips'
-import { strings } from '../../Strings'
-import './TileVizToolbar.css'
+import { getSupportedDisplayTypes } from 'autoql-fe-utils';
+import { DISPLAY_TYPE_ICONS } from '../../Svg';
+import { refreshTooltips } from '../../Tooltips';
+import { strings } from '../../Strings';
 
-export function TileVizToolbar(json, view, tile){
-    var displayTypes = getSupportedDisplayTypes(json)
-    var { dashboard } = tile
-    var ignoreDisplayType = view.internalDisplayType
-    var dummyArray = []
-    dummyArray.forEach.call(view.querySelectorAll(
-        '.autoql-vanilla-viz-toolbar'
-    ),
-    function(e){
-        e.parentNode.removeChild(e)
-    })
+import './TileVizToolbar.scss';
 
-    if(displayTypes.length > 1){
-        var vizToolbar = document.createElement('div')
+export function TileVizToolbar(json, view, tile) {
+    var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
+    var { dashboard } = tile;
+    var dummyArray = [];
+    dummyArray.forEach.call(view.querySelectorAll('.autoql-vanilla-viz-toolbar'), function (e) {
+        e.parentNode.removeChild(e);
+    });
 
-        if(!view.isSecond)vizToolbar.classList.add('first')
-        if(!view.isSecond && tile.options.isSplit)vizToolbar.classList.add(
-            'is-split'
-        )
+    if (displayTypes.length > 1) {
+        var vizToolbar = document.createElement('div');
 
-        vizToolbar.classList.add('autoql-vanilla-tile-toolbar')
-        vizToolbar.classList.add('autoql-vanilla-viz-toolbar')
+        vizToolbar.buttons = [];
+
+        if (!view.isSecond) vizToolbar.classList.add('first');
+        if (!view.isSecond && tile.options.isSplit) vizToolbar.classList.add('is-split');
+
+        vizToolbar.classList.add('autoql-vanilla-tile-toolbar');
+        vizToolbar.classList.add('autoql-vanilla-viz-toolbar');
+
         for (var i = 0; i < displayTypes.length; i++) {
-            if(displayTypes[i] == ignoreDisplayType)continue
-            var button = document.createElement('button')
-            button.classList.add('autoql-vanilla-chata-toolbar-btn')
-            button.setAttribute('data-displaytype', displayTypes[i])
-            if(displayTypes[i] == 'table'){
-                button.innerHTML = TABLE_ICON
-                button.setAttribute('data-tippy-content', strings.table)
+            const displayType = displayTypes[i];
+
+            if (!displayType || !DISPLAY_TYPE_ICONS[displayType]) continue;
+
+            var button = document.createElement('button');
+
+            button.classList.add('autoql-vanilla-chata-toolbar-btn');
+
+            if (displayType == view.internalDisplayType) {
+                button.classList.add('autoql-vanilla-viz-toolbar-btn-active');
             }
-            if(displayTypes[i] == 'column'){
-                button.innerHTML = COLUMN_CHART_ICON
-                button.setAttribute('data-tippy-content', strings.columnChart)
-            }
-            if(displayTypes[i] == 'bar'){
-                button.innerHTML = BAR_CHART_ICON
-                button.setAttribute('data-tippy-content', strings.barChart)
-            }
-            if(displayTypes[i] == 'pie'){
-                button.innerHTML = PIE_CHART_ICON
-                button.setAttribute('data-tippy-content', strings.pieChart)
-            }
-            if(displayTypes[i] == 'line'){
-                button.innerHTML = LINE_CHART_ICON
-                button.setAttribute('data-tippy-content', strings.lineChart)
-            }
-            if(displayTypes[i] == 'pivot_table'){
-                button.innerHTML = PIVOT_ICON
-                button.setAttribute('data-tippy-content', strings.pivotTable)
-            }
-            if(displayTypes[i] == 'heatmap'){
-                button.innerHTML = HEATMAP_ICON
-                button.setAttribute('data-tippy-content', strings.heatmap)
-            }
-            if(displayTypes[i] == 'bubble'){
-                button.innerHTML = BUBBLE_CHART_ICON
-                button.setAttribute('data-tippy-content', strings.bubbleChart)
-            }
-            if(displayTypes[i] == 'stacked_column'){
-                button.innerHTML = STACKED_COLUMN_CHART_ICON
-                button.setAttribute(
-                    'data-tippy-content',
-                    strings.stackedColumn
-                )
-            }
-            if(displayTypes[i] == 'stacked_bar'){
-                button.innerHTML = STACKED_BAR_CHART_ICON
-                button.setAttribute(
-                    'data-tippy-content',
-                    strings.stackedBar
-                )
-            }
-            if(displayTypes[i] == 'stacked_line'){
-                button.innerHTML = STACKED_AREA_CHART_ICON
-                button.setAttribute(
-                    'data-tippy-content',
-                    strings.stackedLine
-                )
-            }
-            if(button.innerHTML != ''){
-                vizToolbar.appendChild(button)
-                button.onclick = function(){
-                    dashboard.setUndoData('display-type-change', () => {
-                        var curValue = view.internalDisplayType
-                        view.internalDisplayType = ignoreDisplayType
-                        view.displayData()
-                        return curValue
-                    }, view)
-                    view.internalDisplayType = this.dataset.displaytype
-                    view.displayData()
-                }
+
+            button.innerHTML = DISPLAY_TYPE_ICONS[displayType];
+            button.setAttribute('data-displaytype', displayTypes[i]);
+            button.setAttribute('data-tippy-content', strings.displayTypes[displayType]);
+
+            vizToolbar.buttons.push(button);
+
+            if (button.innerHTML != '') {
+                vizToolbar.appendChild(button);
+                button.onclick = function () {
+                    dashboard.setUndoData(
+                        'display-type-change',
+                        () => {
+                            var curValue = view.internalDisplayType;
+                            vizToolbar.querySelectorAll('.autoql-vanilla-viz-toolbar-btn')?.forEach((btn) => {
+                                btn?.classList.remove('autoql-vanilla-viz-toolbar-btn-active');
+                            });
+
+                            button.classList.add('autoql-vanilla-viz-toolbar-btn-active');
+
+                            view.displayData();
+                            return curValue;
+                        },
+                        view,
+                    );
+                    view.internalDisplayType = this.dataset.displaytype;
+                    view.displayData();
+                };
             }
         }
-        view.appendChild(vizToolbar)
-        refreshTooltips()
+
+        view.appendChild(vizToolbar);
+        refreshTooltips();
     }
 }

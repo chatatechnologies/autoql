@@ -43,6 +43,7 @@
         stroke-width: 0;
         stroke-opacity: 0;
         transition: fill-opacity 0.2s ease;
+        outline: none !important;
         cursor: pointer;
 
         &:hover {
@@ -183,6 +184,9 @@
 }
 
 .autoql-vanilla-axis-selector-container {
+    max-height: 150px;
+    overflow-y: auto;
+
     .autoql-vanilla-chata-list-item {
         .autoql-vanilla-select {
             font-weight: 600;

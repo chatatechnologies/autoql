@@ -1,16 +1,22 @@
 import { ChataChartSeriesPopover } from './ChataChartSeriesPopover';
 import { PopoverChartSelector } from './PopoverChartSelector';
 
-export function ChataChartListPopover(e, scale, columns, placement, align) {
+export function ChataChartListPopover(e, scale, allColumns, placement, align, columnIndexConfig) {
     var obj = this;
     var elements = [];
 
     if (!scale) console.warn('No scale provided to ChataChartListPover');
 
-    if (scale.type === 'LINEAR' && scale.allowMultipleSeries) {
-        return new ChataChartSeriesPopover(e, placement, align, columns, scale)
+    let columns = allColumns
+
+    if (scale.type === 'LINEAR' && scale.allowMultipleSeries) { 
+        return new ChataChartSeriesPopover(e, placement, align, columns, scale, undefined, columnIndexConfig)
     }
 
+    if (columnIndexConfig) {
+        columns = allColumns.filter(col => !columnIndexConfig.numberColumnIndices?.includes(col.index))
+    }
+    
     obj.createContent = () => {
         var selectorContainer = document.createElement('div');
         var selectorContent = document.createElement('ul');
@@ -23,7 +29,9 @@ export function ChataChartListPopover(e, scale, columns, placement, align) {
 
         fieldColumns?.forEach((column, i) => {
             var listItem = obj.createListItem(column, i);
-            selectorContent.appendChild(listItem);
+            if (listItem) {
+                selectorContent?.appendChild(listItem);
+            }
         });
 
         selectorContainer.appendChild(selectorContent);

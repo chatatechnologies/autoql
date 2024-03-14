@@ -1,0 +1,36 @@
+.autoql-vanilla-data-alert-creation-modal-full-size {
+  width: 95vw;
+  height: 100%;
+  .chata-modal-footer {
+    padding: 0px;
+    .autoql-vanilla-modal-footer {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      flex-direction: column;
+      padding: 8px 10px;
+      .autoql-vanilla-chata-btn {
+        .autoql-vanilla-btn-text-wrapper {
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+  .autoql-vanilla-data-alert-modal-step-content-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    .autoql-vanilla-data-alert-modal-step {
+      font-weight: 400;
+      font-size: 15px;
+      padding: 15px 100px 20px;
+      &.autoql-vanilla-hidden {
+        position: absolute;
+        display: none;
+      }
+    }
+  }
+}

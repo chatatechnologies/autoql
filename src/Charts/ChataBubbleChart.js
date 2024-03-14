@@ -17,12 +17,12 @@ import {
     formatColumnName,
     formatData,
     formatLabels,
-    getChartColorVars,
     getNotGroupableField,
 } from '../Utils'
 import { refreshTooltips } from '../Tooltips'
 import { ChataUtils } from '../ChataUtils'
 import { CSS_PREFIX } from '../Constants'
+import { getChartColorVars } from 'autoql-fe-utils'
 
 export function createBubbleChart(
     component, json, options, fromChataUtils=true,

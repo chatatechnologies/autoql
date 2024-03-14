@@ -12,7 +12,6 @@ export function PieChartNew(container, params = {}) {
         columns,
         outerWidth,
         outerHeight,
-        chartColors,
         legendColumn,
         onChartClick,
         activeKey,
@@ -104,7 +103,7 @@ export function PieChartNew(container, params = {}) {
                     colIndex2: stringColumnIndex,
                 });
             })
-            .style('fill-opacity', 0.85)
+            .style('fill-opacity', 1)
             .attr('stroke-width', '0.5px')
             .attr('stroke', getThemeValue('background-color-secondary', CSS_PREFIX))
             .on('mouseover', function (d) {
@@ -191,6 +190,7 @@ export function PieChartNew(container, params = {}) {
         // TODO: use existing legend component instead of this custom legend
         // The legend wrap length threshold should be half of the width
         // Because the pie will never be larger than half the width
+
         const legendWrapLength = outerWidth / 2 - 70; // 70 for the width of the circles and padding
         this.legend = this.innerChartWrapper
             .append('g')
@@ -204,7 +204,7 @@ export function PieChartNew(container, params = {}) {
 
         var legendOrdinal = legendColor()
             .orient('vertical')
-            .shapePadding(5)
+            .shapePadding(8)
             .labels(legendLabels.map((labelObj) => labelObj.label))
             .labelWrap(legendWrapLength)
             .labelOffset(10)
@@ -241,10 +241,9 @@ export function PieChartNew(container, params = {}) {
         this.setRadius();
 
         const { pieChartFn, legendScale } = getPieChartData({
-            data: data,
+            data,
             numberColumnIndex,
             legendLabels,
-            chartColors,
         });
 
         this.pieData = pieChartFn;

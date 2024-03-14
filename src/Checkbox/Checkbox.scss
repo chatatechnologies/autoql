@@ -1,0 +1,82 @@
+.autoql-vanilla-checkbox__container {
+    display: block;
+    position: relative;
+    font-size: inherit;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor: pointer;
+
+    &.autoql-vanilla-checkbox-unclickable {
+        pointer-events: none;
+    }
+
+    &:hover .autoql-vanilla-checkbox-input ~ .autoql-vanilla-checkbox-checkmark {
+        border-color: var(--autoql-vanilla-accent-color);
+    }
+
+    .autoql-vanilla-checkbox-input {
+        cursor: pointer;
+        position: absolute;
+        opacity: 0;
+        height: 0;
+        width: 0;
+
+        &:checked {
+            & ~ .autoql-vanilla-checkbox-checkmark {
+                background-color: var(--autoql-vanilla-accent-color);
+                border-color: var(--autoql-vanilla-accent-color);
+
+                &::after {
+                    display: block;
+                }
+            }
+        }
+    }
+
+    .autoql-vanilla-checkbox-checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        height: 18px;
+        width: 18px;
+        margin-top: auto;
+        margin-bottom: auto;
+        border-radius: 2px;
+        border: 1px solid;
+        border-color: var(--autoql-vanilla-text-color-placeholder);
+        background-color: var(--autoql-vanilla-background-color-checkbox);
+        transition: background-color 0.2s ease;
+
+        &::after {
+            content: '';
+            position: absolute;
+            display: none;
+            left: 35%;
+            top: 10%;
+            width: 30%;
+            height: 60%;
+            border: solid #fff;
+            border-width: 0 1px 1px 0;
+
+            transform-origin: 50% 50%;
+            transform: scale(1) rotate(45deg);
+            animation: autoql-vanilla-checkbox-check 0.2s ease;
+        }
+    }
+
+    .autoql-vanilla-checkbox-label {
+        padding-left: 25px;
+    }
+}
+
+@keyframes autoql-vanilla-checkbox-check {
+    0% {
+        transform: scale(0) rotate(45deg);
+    }
+    100% {
+        transform: scale(1) rotate(45deg);
+    }
+}

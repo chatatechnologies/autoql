@@ -62,6 +62,7 @@ export class DashboardPage extends Component {
     instanceDashboard = () => {
         const { authentication } = this.props
         var dashboardData = this.props.dashboards[this.props.activeDashboard]
+
         this.dashboard = new Dashboard('#dashboard', {
             authentication: {
                 token: authentication.token,
@@ -71,8 +72,8 @@ export class DashboardPage extends Component {
             autoQLConfig: {
                 debug: true
             },
-            tiles: dashboardData.data,
-            name: dashboardData.name,
+            tiles: dashboardData?.data,
+            name: dashboardData?.name,
             executeOnStopEditing: false,
             executeOnMount: false,
         })

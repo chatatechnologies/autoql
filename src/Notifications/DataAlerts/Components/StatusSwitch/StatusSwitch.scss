@@ -1,0 +1,24 @@
+.autoql-vanilla-switcher-status {
+  width: 80px;
+  height: 23px;
+  .autoql-vanilla-slider:before {
+    right: 60px;
+  }
+  input:checked + .autoql-vanilla-slider:before {
+    left: 60px;
+  }
+
+  .autql-vanilla-switch-text {
+    position: absolute;
+    bottom: 3px;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--autoql-vanilla-text-color-accent);
+    &.left {
+      left: 15px;
+    }
+    &.right {
+      right: 12px;
+    }
+  }
+}

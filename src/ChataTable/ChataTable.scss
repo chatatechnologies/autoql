@@ -14,6 +14,7 @@
     .autoql-vanilla-chata-table {
         max-height: 100%;
         max-width: 100%;
+        width: 100%;
 
         &.tabulator {
             border: none;
@@ -151,7 +152,9 @@
                 /* user-select: none; This breaks copy/paste */
                 border-color: var(--autoql-vanilla-table-border-color);
                 background-color: inherit !important;
+                border-bottom: 1px solid var(--autoql-vanilla-table-border-color);
                 z-index: 1;
+                line-height: 1.2em;
 
                 &:last-child {
                     border-bottom: none;
@@ -161,6 +164,7 @@
                 .tabulator-cell {
                     padding: 1px 8px;
                     font-size: 11px;
+                    vertical-align: middle;
 
                     &:not(:first-child) {
                         border-color: var(--autoql-vanilla-table-border-color);

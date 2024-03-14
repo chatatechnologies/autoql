@@ -15,10 +15,10 @@ import {
     getPivotColumnIndexConfig,
     getChartColorVars,
     CHARTS_WITHOUT_AXES,
-    getNumberColumnIndices,
     getAggConfig,
     formatQueryColumns,
     CHARTS_WITHOUT_AGGREGATED_DATA,
+    DisplayTypes,
 } from 'autoql-fe-utils';
 
 import { uuidv4, cloneObject } from '../Utils';
@@ -37,9 +37,9 @@ import { PieChartNew } from './ChataPieChart';
 import { Scatterplot } from './ChataScatterplot';
 import { Histogram } from './ChataHistogram';
 
-export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
-    const dataFormatting = getDataFormatting(options.dataFormatting);
+import '../Charts/ChataChart.scss';
 
+export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     if (!component || !queryJson) {
         console.warn('Unable to create chart - one of the following parameters were not supplied:', {
             component: !!component,
@@ -48,9 +48,14 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         return;
     }
 
-    const chartID = uuidv4();
+    const CHART_ID = uuidv4();
+    const CHART_SVG_CLASS = 'autoql-vanilla-chart-svg';
+    const CHART_CONTAINER_CLASS = 'autoql-vanilla-chart-content-container';
+    const FONT_SIZE = 12;
 
-    var origRows = queryJson?.data?.rows;
+    const origRows = queryJson?.data?.rows;
+    const dataFormatting = getDataFormatting(options.dataFormatting);
+
     var columns = formatQueryColumns({
         columns: queryJson?.data?.columns,
         aggConfig: component.aggConfig,
@@ -62,10 +67,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         return null;
     }
 
-    const CHART_SVG_CLASS = 'autoql-vanilla-chart-svg';
-    const CHART_CONTAINER_CLASS = 'autoql-vanilla-chart-content-container';
-    const FONT_SIZE = 12;
-
     this.isColumnIndexConfigValid = () => {
         return isColumnIndexConfigValid({
             columnIndexConfig: component.columnIndexConfig,
@@ -76,69 +77,30 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.getColumnIndexConfig = (currentConfig) => {
-        return getColumnIndexConfig({ response: { data: queryJson }, columns, currentTableConfig: currentConfig });
+        return getColumnIndexConfig({
+            response: { data: queryJson },
+            columns,
+            currentTableConfig: currentConfig,
+            allowNumericalOrdinalAxis: true,
+        });
     };
 
-    const columnIndexConfigExists = !!component.columnIndexConfig;
+    this.getColorScales = () => getColorScales({ ...this.columnIndexConfig, data: this.data, type, CSS_PREFIX });
 
-    if (!columnIndexConfigExists || (columnIndexConfigExists && !this.isColumnIndexConfigValid())) {
-        component.columnIndexConfig = this.getColumnIndexConfig();
-    }
-
-    if (!component.aggConfig) {
-        component.aggConfig = getAggConfig(columns);
-    }
-
-    if (component.isChartScaled == undefined) {
-        component.isChartScaled = DEFAULT_CHART_CONFIG.isScaled;
-    }
-
-    var columnIndexConfig = component.columnIndexConfig;
-    var aggConfig = component.aggConfig;
-
-    const indices1 = columnIndexConfig.numberColumnIndices ?? [];
-    const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? columnIndexConfig.numberColumnIndices2 ?? [] : [];
-    const numberIndices = [...indices1, ...indices2];
-    const isDataAggregated = usePivotDataForChart({ data: queryJson });
-    const hasRowSelector = options.pageSize < queryJson?.data?.count_rows;
-
-    var metadataElement = component.parentElement.parentElement;
-    // TODO: update send in index config directly instead of using the metadata component
-    if (!metadataElement.metadata) {
-        metadataElement.metadata = {
-            groupBy: {
-                index: columnIndexConfig.stringColumnIndex,
-                currentLi: 0,
-            },
-            series: indices1,
-            columnIndexConfig,
-            tippyInstance: tippy('[data-tippy-chart]', {
-                theme: 'chata-theme',
-                delay: [300],
-                allowHTML: true,
-                dynamicTitle: true,
-                maxWidth: 300,
-                inertia: true,
-            }),
-        };
-    }
-
-    var colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
+    this.setColumns = (newColumns) => {
+        columns = newColumns;
+    };
 
     this.getData = (rows) => {
-        let newRows = rows ?? origRows ?? [];
-        var data = newRows;
+        const rowData = rows ?? origRows ?? [];
 
-        if (type === 'pie') {
-            return [...data].sort((aRow, bRow) => {
-                const a = aRow[columnIndexConfig.numberColumnIndex] || 0;
-                const b = bRow[columnIndexConfig.numberColumnIndex] || 0;
-                return parseFloat(b) - parseFloat(a);
-            });
+        if (!rowData?.length || !columns?.length) {
+            return;
         }
 
         if (isDataAggregated) {
-            const sortedRows = sortDataByDate(newRows, columns, 'asc');
+            const sortedRows = sortDataByDate(rowData, columns, 'asc');
+
             try {
                 // TODO: pass this data in from parent
                 const {
@@ -152,7 +114,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     isFirstGeneration: !!this.chartComponent,
                     rows: sortedRows,
                     columns,
-                    tableConfig: columnIndexConfig,
+                    tableConfig: this.columnIndexConfig,
                     dataFormatting,
                 });
 
@@ -165,29 +127,40 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 this.pivotRowHeaders = pivotRowHeaders;
                 this.pivotColumnHeaders = pivotColumnHeaders;
 
-                columnIndexConfig = getPivotColumnIndexConfig({
+                this.columnIndexConfig = getPivotColumnIndexConfig({
                     pivotTableColumns,
                     columnIndexConfig: pivotColumnIndexConfig,
                     isFirstGeneration: !!this.chartComponent,
                     response: queryJson,
                 });
 
-                data = pivotTableData;
-                columns = pivotTableColumns;
+                this.setColumns(pivotTableColumns);
+
+                return pivotTableData;
             } catch (error) {
                 console.error(error);
             }
         } else if (!CHARTS_WITHOUT_AGGREGATED_DATA.includes(type) && numberIndices.length) {
-            data = aggregateData({
-                data: newRows,
-                aggColIndex: columnIndexConfig.stringColumnIndex,
+            let maxElements;
+            if (type === DisplayTypes.PIE) {
+                maxElements = 10;
+            }
+
+            return aggregateData({
+                data: rowData,
                 columns,
-                numberIndices: getNumberColumnIndices(columns).allNumberColumnIndices,
+                numberIndices,
                 dataFormatting,
+                columnIndexConfig: this.columnIndexConfig,
+                maxElements,
             });
         }
 
-        return data;
+        if (type == DisplayTypes.PIE) {
+            rowData = aggregateOtherCategory(data, columnIndexConfig);
+        }
+
+        return rowData;
     };
 
     this.updateColumns = (newColumns) => {
@@ -196,7 +169,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.changeNumberColumnIndexConfig = (indices, indices2, newColumns) => {
-        const newConfig = cloneObject(columnIndexConfig);
+        const newConfig = cloneObject(this.columnIndexConfig);
 
         if (indices) {
             newConfig.numberColumnIndices = indices;
@@ -213,11 +186,16 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             return;
         }
 
-        columnIndexConfig = newConfig;
+        this.columnIndexConfig = newConfig;
+        component.columnIndexConfig = newConfig;
 
         if (newColumns) {
             columns = newColumns;
             component.aggConfig = getAggConfig(columns);
+        }
+
+        if (type === DisplayTypes.PIE) {
+            this.legendLabels = undefined;
         }
 
         this.data = this.getData();
@@ -226,37 +204,34 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     this.changeStringColumnIndices = (index) => {
-        if (columnIndexConfig.legendColumnIndex === index) {
-            columnIndexConfig.legendColumnIndex = undefined;
+        if (this.columnIndexConfig.legendColumnIndex === index) {
+            this.columnIndexConfig.legendColumnIndex = undefined;
         }
 
         if (typeof index === 'number') {
-            columnIndexConfig.stringColumnIndex = index;
+            this.columnIndexConfig.stringColumnIndex = index;
         } else if (Array.isArray(index) && index?.length) {
             const indices = index;
-            columnIndexConfig.stringColumnIndex = indices[0];
+            this.columnIndexConfig.stringColumnIndex = indices[0];
         }
+
+        if (type === DisplayTypes.PIE) {
+            this.legendLabels = undefined;
+        }
+
+        component.columnIndexConfig = this.columnIndexConfig;
 
         this.data = this.getData();
 
         this.drawChart();
     };
 
-    this.data = this.getData();
-
-    // Default starting size and position
-    this.deltaX = 0;
-    this.deltaY = 0;
-    this.innerHeight = Math.round(component.parentElement.clientHeight / 2);
-    this.innerWidth = Math.round(component.parentElement.clientWidth / 2);
-    this.drawCount = 0;
-
     this.toggleChartScale = () => {
         component.isChartScaled = !component.isChartScaled;
         this.drawChart();
     };
 
-    const areLabelsRotated = (component, axis) => {
+    this.areLabelsRotated = (component, axis) => {
         return !!component?.select(`.autoql-vanilla-axis-${axis}.autoql-vanilla-axis-labels-rotated`)?.node?.();
     };
 
@@ -269,27 +244,50 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
     };
 
     const onLegendClick = (label) => {
-        const newColumns = cloneObject(columns);
-        newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
-        this.updateColumns(newColumns);
+        if (type == DisplayTypes.PIE) {
+            const labels = this.legendLabels?.labels;
+            if (labels?.[label?.dataIndex]) {
+                labels[label.dataIndex].hidden = !labels[label.dataIndex].hidden;
+                this.drawChart();
+            }
+        } else {
+            const newColumns = cloneObject(columns);
+            newColumns[label.column.index].isSeriesHidden = !label.column.isSeriesHidden;
+            this.updateColumns(newColumns);
+        }
     };
 
-    const getLegendObject = () => {
-        const location = getLegendLocation(columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+    const getLegendLabelsForChart = () => {
+        if (type === DisplayTypes.PIE && this.legendLabels) {
+            return this.legendLabels;
+        }
+
         const labels =
             getLegendLabels({
                 isDataAggregated,
                 columns,
-                colorScales,
-                columnIndexConfig,
+                colorScales: this.getColorScales(),
+                columnIndexConfig: this.columnIndexConfig,
                 dataFormatting,
                 data: this.data,
                 type,
-            }) ?? {};
+            }) ?? [];
+
+        this.legendLabels = labels;
+
+        return labels;
+    };
+
+    this.getLegendObject = () => {
+        const location = getLegendLocation(this.columnIndexConfig.numberColumnIndices, type, options.legendLocation);
+        let labels = type == DisplayTypes.PIE ? this.legendLabels : undefined;
+        if (!labels) {
+            labels = getLegendLabelsForChart();
+        }
 
         const hasSecondAxis = DOUBLE_AXIS_CHART_TYPES.includes(type);
         const title = getLegendTitleFromColumns({
-            columnIndices: columnIndexConfig.numberColumnIndices,
+            columnIndices: this.columnIndexConfig.numberColumnIndices,
             isDataAggregated,
             columns,
             hasSecondAxis,
@@ -315,13 +313,18 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 dynamicTitle: true,
                 maxWidth: 300,
                 inertia: true,
+                zIndex: 99999999,
             });
         }
     };
 
     this.isColumnIndexConfigValid = (newConfig) => {
+        if (!this.columnIndexConfig) {
+            return false;
+        }
+
         return isColumnIndexConfigValid({
-            columnIndexConfig: newConfig ?? columnIndexConfig,
+            columnIndexConfig: newConfig ?? this.columnIndexConfig,
             response: { data: queryJson },
             columns,
             displayType: type,
@@ -332,8 +335,8 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         this.prevBottomLabelsRotated = this.bottomLabelsRotated;
         this.prevTopLabelsRotated = this.topLabelsRotated;
 
-        const bottomLabelsRotated = areLabelsRotated(chartContentWrapper, 'bottom');
-        const topLabelsRotated = areLabelsRotated(chartContentWrapper, 'top');
+        const bottomLabelsRotated = this.areLabelsRotated(chartContentWrapper, 'bottom');
+        const topLabelsRotated = this.areLabelsRotated(chartContentWrapper, 'top');
 
         this.bottomLabelsRotated = bottomLabelsRotated;
         this.topLabelsRotated = topLabelsRotated;
@@ -358,11 +361,14 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
             return;
         }
 
+        // This is used for a safety fallback in case of infinite recursion
+        this.drawCount += 1;
+
         if (!this.isColumnIndexConfigValid()) {
             console.warn(
                 'Current column config is not valid for new axis selection. Resetting config to default in order to draw the chart.',
             );
-            columnIndexConfig = this.getColumnIndexConfig(columnIndexConfig);
+            this.columnIndexConfig = this.getColumnIndexConfig(this.columnIndexConfig);
         }
 
         const hasDrawnOnce = !!this.chartComponent;
@@ -391,7 +397,7 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
 
             this.svg = this.svgWrapper
                 .append('svg')
-                .attr('id', chartID)
+                .attr('id', CHART_ID)
                 .attr('class', CHART_SVG_CLASS)
                 .attr('width', this.outerWidth)
                 .attr('height', this.outerHeight)
@@ -407,11 +413,11 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 .attr('transform', `translate(${this.deltaX}, ${this.deltaY})`)
                 .style('opacity', 0);
 
-            colorScales = getColorScales({ ...columnIndexConfig, CSS_PREFIX });
-
             const chartColors = getChartColorVars(CSS_PREFIX) ?? {};
 
             const aggregated = !CHARTS_WITHOUT_AGGREGATED_DATA.includes(type);
+            const legend = this.getLegendObject();
+            const colorScales = this.getColorScales();
 
             const params = {
                 data: this.data,
@@ -420,25 +426,26 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 options,
                 height: this.innerHeight ?? this.outerHeight,
                 width: this.innerWidth ?? this.outerWidth,
-                columnIndexConfig,
+                columnIndexConfig: this.columnIndexConfig,
                 aggConfig,
                 aggregated,
-                visibleSeries: columnIndexConfig.numberColumnIndices.filter(
+                originalColumns: columns,
+                visibleSeries: this.columnIndexConfig.numberColumnIndices.filter(
                     (index) => !columns?.[index]?.isSeriesHidden,
                 ),
-                visibleSeries2: columnIndexConfig.numberColumnIndices2?.filter(
+                visibleSeries2: this.columnIndexConfig.numberColumnIndices2?.filter(
                     (index) => !columns?.[index]?.isSeriesHidden,
                 ),
                 outerHeight: this.outerHeight,
                 outerWidth: this.outerWidth,
                 deltaX: this.deltaX,
                 deltaY: this.deltaY,
-                legendColumn: queryJson?.data?.columns[columnIndexConfig?.legendColumnIndex],
+                legendColumn: queryJson?.data?.columns[this.columnIndexConfig?.legendColumnIndex],
                 firstDraw,
                 hasRowSelector,
                 isScaled: component.isChartScaled,
                 colorScales,
-                legend: getLegendObject(),
+                legend,
                 enableAxisDropdown: options.enableDynamicCharting && !isDataAggregated,
                 tippyInstance: this.tippyInstance,
                 activeKey: component.activeKey,
@@ -452,7 +459,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                 onDataFetchError: this.onDataFetchError,
                 redraw: this.drawChart,
                 onChartClick,
-                ...colorScales,
                 ...chartColors,
             };
 
@@ -485,7 +491,10 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     this.chartComponent = new LineChartNew(chartContentWrapper, { ...params, stacked: true });
                     break;
                 case 'column_line':
-                    this.chartComponent = new ColumnChartNew(chartContentWrapper, { ...params, columnLineCombo: true });
+                    this.chartComponent = new ColumnChartNew(chartContentWrapper, {
+                        ...params,
+                        columnLineCombo: true,
+                    });
                     break;
                 case 'scatterplot':
                     this.chartComponent = new Scatterplot(chartContentWrapper, params);
@@ -505,9 +514,6 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     return null; // 'Unknown Display Type'
             }
 
-            // This is used for a safety fallback in case of infinite recursion
-            this.drawCount += 1;
-
             if (CHARTS_WITHOUT_AXES.includes(type)) {
                 // Do not redraw
             } else {
@@ -517,11 +523,11 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
                     console.error(error);
                 }
 
-                if (firstDraw) {
-                    this.drawChart(false);
+                if (firstDraw || this.drawCount <= 2) {
+                    return this.drawChart(false);
                 } else if (this.didLabelsRotateOnSecondDraw()) {
                     // Labels rotated after seconds draw - redraw one last time
-                    this.drawChart(false);
+                    return this.drawChart(false);
                 }
             }
         } catch (error) {
@@ -555,6 +561,62 @@ export function ChataChartNew(component, { type = 'bar', queryJson, options = {}
         console.error(error);
         this.chartLoader?.setChartLoading(false);
     };
+
+    const columnIndexConfigExists = !!component.columnIndexConfig;
+
+    if (!columnIndexConfigExists || (columnIndexConfigExists && !this.isColumnIndexConfigValid())) {
+        component.columnIndexConfig = this.getColumnIndexConfig();
+    }
+
+    if (!component.aggConfig) {
+        component.aggConfig = getAggConfig(columns);
+    }
+
+    if (component.isChartScaled == undefined) {
+        component.isChartScaled = DEFAULT_CHART_CONFIG.isScaled;
+    }
+
+    var metadataElement = component.parentElement.parentElement;
+
+    // TODO: update send in index config directly instead of using the metadata component
+    if (!metadataElement.metadata) {
+        const columnIndexConfig = this.getColumnIndexConfig();
+        metadataElement.metadata = {
+            groupBy: {
+                index: columnIndexConfig.stringColumnIndex,
+                currentLi: 0,
+            },
+            series: indices1,
+            columnIndexConfig,
+            tippyInstance: tippy('[data-tippy-chart]', {
+                theme: 'chata-theme',
+                delay: [0],
+                allowHTML: true,
+                dynamicTitle: true,
+                maxWidth: 300,
+                zIndex: 99999999,
+            }),
+        };
+    }
+
+    this.columnIndexConfig = metadataElement.metadata.columnIndexConfig ?? this.getColumnIndexConfig();
+
+    var aggConfig = component.aggConfig;
+
+    const indices1 = this.columnIndexConfig.numberColumnIndices ?? [];
+    const indices2 = DOUBLE_AXIS_CHART_TYPES.includes(type) ? this.columnIndexConfig.numberColumnIndices2 ?? [] : [];
+    const numberIndices = [...indices1, ...indices2];
+    const isDataAggregated = usePivotDataForChart({ data: queryJson });
+    const hasRowSelector = options.pageSize < queryJson?.data?.count_rows;
+
+    this.data = this.getData();
+
+    // Default starting size and position
+    this.deltaX = 0;
+    this.deltaY = 0;
+    this.innerHeight = Math.round(component.parentElement.clientHeight / 2);
+    this.innerWidth = Math.round(component.parentElement.clientWidth / 2);
+    this.drawCount = 0;
 
     // ----------- TODO move this outside of this component ----------------------
     select(component).select('*')?.remove();

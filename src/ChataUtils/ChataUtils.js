@@ -1,4 +1,5 @@
 import 'regenerator-runtime/runtime.js';
+import tippy from 'tippy.js';
 import MobileDetect from 'mobile-detect';
 import {
     htmlToElement,
@@ -9,20 +10,21 @@ import {
     allColHiddenMessage,
     getNotGroupableField,
     copyTextToClipboard,
+    uuidv4,
 } from '../Utils';
-import tippy from 'tippy.js';
-import { apiCallPut, apiCallPost } from '../Api';
+import { apiCallPut } from '../Api';
 import { format } from 'sql-formatter';
-import { ChataConfirmDialog, ChataRadio } from '../ChataComponents';
+import { ChataRadio } from '../ChataComponents';
 import { DOWNLOAD_CSV_ICON, CLIPBOARD_ICON, EXPORT_PNG_ICON, TICK, CHECK, COPY_SQL, NOTIFICATION_BUTTON } from '../Svg';
 import { refreshTooltips } from '../Tooltips';
 import { Modal } from '../Modal';
-import { NotificationSettingsModal } from '../Notifications';
 import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
-import { setColumnVisibility, svgToPng } from 'autoql-fe-utils';
-import '../../css/PopoverMenu.css';
+import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 import { CSS_PREFIX } from '../Constants';
+import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
+
+import '../../css/PopoverMenu.css';
 
 export var ChataUtils = {
     xhr: new XMLHttpRequest(),
@@ -134,9 +136,83 @@ ChataUtils.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
     toolbar.classList.toggle('autoql-vanilla-chat-message-toolbar-show');
 };
 
-ChataUtils.downloadCsvHandler = (idRequest) => {
+ChataUtils.onCSVDownloadStart = (caller) => {
+    caller.sendResponse(
+        `
+			<div id="autoql-vanilla-CSV-downloading-message">
+			${strings.fetchingCSV}
+			<div class="autoql-vanilla-spinner-loader" id='csv-downloading-spinner'></div>
+		  </div>
+				`,
+    );
+};
+
+ChataUtils.onCSVDownloadProgress = ({ id, progress }) => {
+    const csvDownloadingMessage = document.getElementById(`autoql-vanilla-CSV-downloading-message-${id}`);
+    csvDownloadingMessage.textContent = `${strings.downloadingCSV} ... ${progress}%`;
+};
+
+ChataUtils.onCSVDownloadFinish = ({ caller, error, exportLimit, limitReached, queryText }) => {
+    if (error) {
+        return caller.sendResponse(error, true);
+    }
+    caller.sendResponse(
+        `    <div>
+         ${strings.downloadedCSVSuccessully}${' '}
+          <b><i>${queryText}</i></b>.
+          ${
+              limitReached
+                  ? `<div>
+              <p>
+                <br />
+                ${strings.downloadedCSVWarning} ${exportLimit}
+                MB. ${strings.partialCSVDataWarning}
+              </p>
+            <div/>`
+                  : ''
+          }
+        <div/>`,
+        true,
+    );
+};
+ChataUtils.downloadCsvHandler = async (idRequest, extraParams) => {
+    try {
+        var uuid = uuidv4();
+        var options = extraParams.caller.options;
+        var caller = extraParams.caller;
+        ChataUtils.onCSVDownloadStart(caller);
+        var json = ChataUtils.responses[idRequest];
+        var queryId = json['data']['query_id'];
+        const queryText = json['data']['text'];
+        const csvDownloadingMessage = document.getElementById('autoql-vanilla-CSV-downloading-message');
+        csvDownloadingMessage.setAttribute('id', `autoql-vanilla-CSV-downloading-message-${uuid}`);
+        var response = await exportCSV({
+            queryId,
+            domain: options.authentication.domain,
+            apiKey: options.authentication.apiKey,
+            token: options.authentication.token,
+            csvProgressCallback: (percentCompleted) =>
+                ChataUtils.onCSVDownloadProgress({
+                    id: uuid,
+                    progress: percentCompleted,
+                }),
+        });
+        const url = window.URL.createObjectURL(new Blob([response.data]));
+        const link = document.createElement('a');
+        link.href = url;
+        link.setAttribute('download', 'export.csv');
+        document.body.appendChild(link);
+        link.click();
+        const exportLimit = parseInt(response?.headers?.export_limit);
+        const limitReached = response?.headers?.limit_reached?.toLowerCase() == 'true' ? true : false;
+        ChataUtils.onCSVDownloadFinish({ caller, queryText, exportLimit, limitReached });
+    } catch (error) {
+        ChataUtils.onCSVDownloadFinish({ caller, error });
+        console.error(error);
+        return;
+    }
+
     var component = document.querySelector(`[data-componentid='${idRequest}']`);
-    component.tabulator.download('csv', 'table.csv', { delimiter: '\t' });
 };
 
 ChataUtils.copySqlHandler = (idRequest) => {
@@ -144,8 +220,8 @@ ChataUtils.copySqlHandler = (idRequest) => {
     var sql = json['data']['sql'][0];
     var copyButton = document.createElement('button');
     var okBtn = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary "
-        style="padding: 5px 16px; margin: 2px 5px;">Ok</div>`,
+        `<div class="autoql-vanilla-chata-btn primary">Ok
+		</div>`,
     );
     var modalContent = document.createElement('div');
     var text = document.createElement('textarea');
@@ -234,72 +310,11 @@ ChataUtils.filterTableHandler = (evt, idRequest) => {
 };
 
 ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
-    var o = extraParams.caller.options;
-    var modalView = new NotificationSettingsModal(o);
-    var configModal = new Modal(
-        {
-            withFooter: true,
-            destroyOnClose: true,
-        },
-        () => {
-            modalView.step1.expand();
-        },
-        () => {
-            new ChataConfirmDialog(strings.confirmDialogTitle, strings.confirmDialogDescription, () => {
-                configModal.closeAnimation();
-                setTimeout(() => {
-                    configModal.hideContainer();
-                }, 250);
-            });
-        },
-    );
-    var cancelButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
-    );
-    var spinner = htmlToElement(`
-        <div class="autoql-vanilla-spinner-loader hidden"></div>
-        `);
-    var saveButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary disabled"
-        style="padding: 5px 16px; margin: 2px 5px;"></div>`,
-    );
+    const queryResponse = ChataUtils.responses[idRequest];
+    const { options } = extraParams.caller;
 
-    modalView.checkSteps = () => {
-        if (modalView.isValid()) {
-            saveButton.classList.remove('disabled');
-        } else {
-            saveButton.classList.add('disabled');
-        }
-    };
-
-    saveButton.appendChild(spinner);
-    saveButton.appendChild(document.createTextNode(strings.save));
-    configModal.addFooterElement(cancelButton);
-    configModal.addFooterElement(saveButton);
-    configModal.show();
-    refreshTooltips();
-    configModal.chataModal.style.width = '95vw';
-    configModal.addView(modalView);
-    configModal.setTitle(strings.createDataAlert);
-    configModal.show();
-
-    var input = modalView.querySelectorAll('.autoql-vanilla-chata-input-settings')[1];
-
-    input.value = extraParams.query;
-
-    cancelButton.onclick = () => {
-        new ChataConfirmDialog(strings.confirmDialogTitle, strings.confirmDialogDescription, () => {
-            configModal.close();
-        });
-    };
-    saveButton.onclick = async () => {
-        spinner.classList.remove('hidden');
-        saveButton.setAttribute('disabled', 'true');
-        const URL = `${o.authentication.domain}/autoql/api/v1/rules?key=${o.authentication.apiKey}`;
-        await apiCallPost(URL, modalView.getValues, o);
-        configModal.close();
-    };
+    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication });
+    modal.show();
 };
 
 ChataUtils.makeMoreOptionsMenu = (idRequest, chataPopover, options, extraParams = {}) => {
@@ -366,7 +381,7 @@ ChataUtils.getMoreOptionsMenu = (options, idRequest, type, extraParams = {}) => 
                     DOWNLOAD_CSV_ICON,
                     strings.downloadCSV,
                     ChataUtils.downloadCsvHandler,
-                    [idRequest],
+                    [idRequest, extraParams],
                 );
                 action.setAttribute('data-name-option', 'csv-handler');
                 menu.ul.appendChild(action);
@@ -520,18 +535,14 @@ ChataUtils.openModalReport = (idRequest, options, menu, toolbar) => {
     textArea.classList.add('autoql-vanilla-report-problem-text-area');
     textArea.addEventListener('input', (evt) => enableButton(evt, selectedOption));
     container.classList.add('autoql-vanilla-report-problem-modal-body');
-    var cancelButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn default"
-        style="padding: 5px 16px; margin: 2px 5px;">${strings.cancel}</div>`,
-    );
+    var cancelButton = htmlToElement(`<div class="autoql-vanilla-chata-btn default">${strings.cancel}</div>`);
 
     var spinner = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
     `);
 
     var reportButton = htmlToElement(
-        `<div class="autoql-vanilla-chata-btn primary"
-            style="padding: 5px 16px; margin: 2px 5px;">
+        `<div class="autoql-vanilla-chata-btn primary">
         </div>`,
     );
 
@@ -674,23 +685,15 @@ ChataUtils.showColumnEditor = (id, options, onHideCols = () => {}) => {
         }
     };
 
-    var cancelButton = htmlToElement(
-        `<div
-            class="autoql-vanilla-chata-btn default"
-            style="padding: 5px 16px; margin: 2px 5px;">
-                ${strings.cancel}
-            </div>`,
-    );
+    var cancelButton = htmlToElement(`<div class="autoql-vanilla-chata-btn default">${strings.cancel}</div>`);
 
     var spinner = htmlToElement(`
         <div class="autoql-vanilla-spinner-loader hidden"></div>
     `);
 
     var saveButton = htmlToElement(
-        `<div
-            class="autoql-vanilla-chata-btn primary"
-            style="padding: 5px 16px; margin: 2px 5px;">
-        </div>`,
+        `<div class="autoql-vanilla-chata-btn primary"> 
+		</div>`,
     );
 
     saveButton.appendChild(spinner);
@@ -871,8 +874,12 @@ ChataUtils.ajaxCall = function (val, callback, options, source) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse, xhr.status);
+            try {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse, xhr.status);
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
     xhr.open('POST', url);
@@ -887,8 +894,12 @@ ChataUtils.putCall = function (url, data, callback, options) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            try {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse);
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -904,8 +915,12 @@ ChataUtils.deleteCall = function (url, callback, options, extraHeaders = []) {
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function () {
         if (xhr.readyState === 4) {
-            var jsonResponse = JSON.parse(xhr.responseText);
-            callback(jsonResponse);
+            try {
+                var jsonResponse = JSON.parse(xhr.responseText);
+                callback(jsonResponse);
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
 
@@ -931,8 +946,12 @@ ChataUtils.ajaxCallPost = function (url, callback, data, options) {
     }
     xmlhttp.onreadystatechange = function () {
         if (xmlhttp.readyState === 4) {
-            var jsonResponse = JSON.parse(xmlhttp.responseText);
-            callback(jsonResponse, xmlhttp.status);
+            try {
+                var jsonResponse = JSON.parse(xmlhttp.responseText);
+                callback(jsonResponse, xmlhttp.status);
+            } catch (error) {
+                console.error(error);
+            }
         }
     };
     xmlhttp.send(JSON.stringify(data));
@@ -946,10 +965,14 @@ ChataUtils.ajaxCallAutoComplete = function (url, callback, options) {
                     matches: [],
                 },
             };
-            if (options.xhr.responseText) {
-                jsonResponse = JSON.parse(options.xhr.responseText);
+            try {
+                if (options.xhr.responseText) {
+                    jsonResponse = JSON.parse(options.xhr.responseText);
+                }
+                callback(jsonResponse);
+            } catch (error) {
+                console.error(error);
             }
-            callback(jsonResponse);
         }
     };
     options.xhr.open('GET', url);
@@ -1022,6 +1045,15 @@ ChataUtils.registerWindowClicks = () => {
         'report_problem',
     ];
 
+    const excludeElementsForSelectors = [
+        'autoql-vanilla-select-popup',
+        'autoql-vanilla-select',
+        'autoql-vanilla-select-arrow',
+        'autoql-vanilla-select-menu-item',
+        'autoql-vanilla-select-text',
+        'autoql-vanilla-menu-item-value-title',
+    ];
+
     const excludeElementsForSafetynet = ['autoql-vanilla-safetynet-selector', 'autoql-vanilla-chata-safetynet-select'];
 
     const excludeElementsForSubjectAutocomplete = ['autoql-vanilla-subject', 'autoql-vanilla-explore-queries-input'];
@@ -1030,6 +1062,7 @@ ChataUtils.registerWindowClicks = () => {
         var closeToolbars = true;
         var closeSafetynetSelectors = true;
         var closeAutocomplete = true;
+        var closePopups = true;
 
         for (let i = 0; i < excludeElementsForSafetynet.length; i++) {
             let c = excludeElementsForSafetynet[i];
@@ -1050,6 +1083,14 @@ ChataUtils.registerWindowClicks = () => {
             let c = excludeElementsForSubjectAutocomplete[i];
             if (evt.target.classList.contains(c)) {
                 closeAutocomplete = false;
+                break;
+            }
+        }
+
+        for (let i = 0; i < excludeElementsForSelectors.length; i++) {
+            let c = excludeElementsForSelectors[i];
+            if (evt.target.classList.contains(c)) {
+                closePopups = false;
                 break;
             }
         }

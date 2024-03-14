@@ -1,4 +1,4 @@
-import './index.scss'
+import './index.scss';
 
 export { DataMessenger } from './DataMessenger';
 export { Dashboard } from './Dashboard';
@@ -7,4 +7,5 @@ export { NotificationFeed } from './Notifications';
 export { DataAlerts } from './Notifications';
 export { QueryInput } from './QueryInput';
 export { QueryOutput } from './QueryOutput';
-export { getSupportedDisplayTypes, configureTheme } from './Utils';
+export { checkAndApplyTheme as configureTheme } from './Utils';
+export { getSupportedDisplayTypes } from 'autoql-fe-utils';

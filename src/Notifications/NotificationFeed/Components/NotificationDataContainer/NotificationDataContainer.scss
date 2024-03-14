@@ -1,0 +1,73 @@
+.autoql-vanilla-notification-data-container {
+  display: flex;
+  flex: 3 3;
+  overflow: hidden;
+  border-top: 1px solid var(--autoql-vanilla-background-color-primary);
+  .autoql-vanilla-notification-chart-container {
+    flex: 1 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px 20px 0;
+    overflow: hidden;
+    .autoql-vanilla-response-content-container {
+      max-height: 300px!important;
+      .autoql-vanilla-single-value-response-flex-container {
+        padding: 10px 10px 20px;
+        flex: 1 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        .autoql-vanilla-single-value-response {
+          font-size: 17px;
+        }
+      }
+      .autoql-vanilla-chata-table-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%!important;
+        max-width: 100%;
+        max-height: 100%;
+        overflow: hidden;
+        background-color: inherit;
+        position: relative;
+        box-sizing: border-box;
+        flex: 1 1;
+        height: calc(100% - 20px);
+        &.autoql-vanilla-hidden {
+          visibility: hidden!important;
+          position: absolute!important;
+          pointer-events: none!important;
+          opacity: 0!important;
+        }
+      }
+      .autoql-vanilla-output-footer {
+        display: flex;
+        align-items: flex-end;
+        max-height: 150px;
+        width: 100%;
+        margin-top: 0px;
+      }
+      .autoql-vanilla-chart-container {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        max-height: 100%;
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 100vh;
+        overflow: hidden;
+        color: var(--autoql-vanilla-text-color-primary);
+        background: var(--autoql-vanilla-background-color-secondary);
+        transition: opacity .2s ease;
+        &.autoql-vanilla-hidden {
+          position: absolute;
+          visibility: hidden;
+          flex: 0 0;
+          opacity: 0;
+          flex-basis: 0!important;
+          pointer-events: none;
+        }
+      }
+    }
+  }
+}

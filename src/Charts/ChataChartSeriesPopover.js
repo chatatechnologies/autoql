@@ -1,28 +1,30 @@
 import { PopoverChartSelector } from './PopoverChartSelector';
-import { getIndexesByType } from './ChataChartHelpers';
-import { htmlToElement, formatColumnName, cloneObject } from '../Utils';
+import { getNumberColumnsByType } from './ChataChartHelpers';
+import { htmlToElement, formatColumnName, cloneObject, createIcon } from '../Utils';
 import { strings } from '../Strings';
 import { TICK } from '../Svg';
 import { Select } from '../ChataComponents/Select';
-import { AGG_TYPES, getAggConfig } from 'autoql-fe-utils';
+import { AGG_TYPE_ICONS } from '../Svg';
+import { AGG_TYPES, AggTypes, getAggConfig, isColumnStringType } from 'autoql-fe-utils';
 
-export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padding) {
+export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padding, columnIndexConfig) {
     const activeSeries = scale?.fields;
 
+    const columns = cols.filter((col) => !columnIndexConfig || columnIndexConfig?.stringColumnIndex !== col.index);
+
     var obj = this;
-    var indexList = getIndexesByType(cols);
     var seriesIndexes = [];
     var aggConfig = getAggConfig(cols) ?? {};
-    const allColumns = cloneObject(cols);
+
     activeSeries.map((col) => {
         seriesIndexes.push(col.index);
     });
     var content = document.createElement('div');
     var popover = new PopoverChartSelector(evt, placement, align, padding);
-    var series = {};
+    var series = getNumberColumnsByType(columns); // {}
     const applyButton = htmlToElement(`
         <button
-            class="autoql-vanilla-chata-btn primary"
+            class="autoql-vanilla-chata-btn autoql-vanilla-primary"
             style="padding: 5px 16px; margin: 2px 5px; width: calc(100% - 10px);">
                 ${strings.apply}
         </button>
@@ -43,7 +45,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             }
         }
     };
-    // TODO(Alex) - react-autoql doesn't have below feature, but still keep it for future.
+    // TODO(Alex) - react widgets don't have below feature, but still keep it for future.
     //
     // var deselectCheckBox = () => {
     //     const type = obj.groupType;
@@ -73,35 +75,59 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
     content.classList.add('autoql-vanilla-axis-selector-container');
 
     var createAggSelector = (column) => {
-        const options = Object.values(AGG_TYPES).map((agg) => {
-            const listLabel = document.createElement('span');
+        const options = Object.values(AGG_TYPES)
+            .filter((agg) => {
+                if (isColumnStringType(column)) {
+                    return agg === AggTypes.COUNT || agg === AggTypes.COUNT_DISTINCT;
+                }
 
-            const listLabelSymbol = document.createElement('span');
-            listLabelSymbol.classList.add('agg-select-list-symbol');
-            listLabelSymbol.innerHTML = agg.symbol;
+                return true;
+            })
+            .map((agg) => {
+                const listLabel = document.createElement('span');
 
-            const listLabelText = document.createElement('span');
-            listLabelText.innerHTML = agg.displayName;
+                let listIcon = agg.symbol;
+                if (agg.icon && AGG_TYPE_ICONS[agg.icon]) {
+                    listIcon = createIcon(AGG_TYPE_ICONS[agg.icon]);
+                }
 
-            listLabel.appendChild(listLabelSymbol);
-            listLabel.appendChild(listLabelText);
+                let listLabelSymbol = document.createElement('span');
+                listLabelSymbol.classList.add('agg-select-list-symbol');
 
-            return {
-                value: agg.type,
-                label: agg.symbol,
-                listLabel,
-                tooltip: agg.tooltip,
-            };
-        });
+                if (typeof listIcon == 'object') {
+                    listLabelSymbol.innerHTML = '';
+                    listLabelSymbol.appendChild(listIcon);
+                } else {
+                    listLabelSymbol.innerHTML = listIcon;
+                }
+
+                const listLabelText = document.createElement('span');
+                listLabelText.innerHTML = agg.displayName;
+
+                listLabel.appendChild(listLabelSymbol);
+                listLabel.appendChild(listLabelText);
+
+                let icon = agg.symbol;
+                if (agg.icon && AGG_TYPE_ICONS[agg.icon]) {
+                    icon = createIcon(AGG_TYPE_ICONS[agg.icon]);
+                }
+
+                return {
+                    value: agg.type,
+                    label: icon,
+                    listLabel,
+                    tooltip: agg.tooltip,
+                };
+            });
 
         const selector = new Select({
             options,
-            initialValue: column?.col?.aggType,
+            initialValue: column?.aggType,
             showArrow: false,
             size: 'small',
             onChange: (option) => {
-                if (column?.col) {
-                    aggConfig[column?.col?.name] = option.value;
+                if (column?.name) {
+                    aggConfig[column.name] = option.value;
                 }
             },
         });
@@ -109,18 +135,17 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         return selector;
     };
 
-    var createCheckbox = ({ column = '', columnInfo = '', header = '' }, checked = false, disabled = false) => {
-        let colObj;
+    var createCheckbox = ({ column = '', type = '', header = '' }, checked = false, disabled = false) => {
         let colName;
 
         if (column !== '') {
-            colObj = column.col;
-            colName = colObj.display_name || colObj.name;
+            colName = column.display_name || column.name;
         }
 
         if (header !== '') {
             colName = header;
         }
+
         var tick = htmlToElement(`
             <div class="autoql-vanilla-chata-checkbox-tick">
                 <span class="chata-icon">${TICK}</span>
@@ -136,21 +161,23 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             checkboxInput.setAttribute('data-col-name', colName);
         }
         checkboxInput.setAttribute('data-col-index', column.index);
-        if (colObj) {
-            checkboxInput.setAttribute('data-col-type', colObj.type);
+        if (column) {
+            checkboxInput.setAttribute('data-col-type', column.type);
         }
-        if (columnInfo !== '') {
-            var colType = columnInfo[0].col.type;
+        if (type !== '') {
             checkboxInput.setAttribute('data-is-col-header', true);
-            checkboxInput.setAttribute('data-col-type', colType);
+            checkboxInput.setAttribute('data-col-type', type);
         }
+
         checkboxInput.col = column;
+
         tick.style.top = '3px';
         tick.style.left = '23px';
         checkboxInput.style.marginTop = '4.5px';
         if (header !== '') {
             tick.style.top = '14px';
             checkboxInput.style.marginTop = '14px';
+            checkboxInput.classList.add('autoql-vanilla-m-checkbox__input-header');
         }
         checkboxInput.style.marginLeft = '20px';
 
@@ -180,20 +207,22 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 }
             } else {
                 var inputs = content.querySelectorAll(`[data-col-type="${type}"]`);
-                var columnHeaderInput = Array.from(inputs).filter((input) => input.hasAttribute('data-is-col-header'))[0];
+                var columnHeaderInput = Array.from(inputs).filter((input) =>
+                    input.hasAttribute('data-is-col-header'),
+                )[0];
                 var columnInputs = Array.from(inputs).filter((input) => !input.hasAttribute('data-is-col-header'));
                 var unCheckedColumnInputs = columnInputs.filter((input) => !input.checked);
                 var unCheckedColumnInputsCount = unCheckedColumnInputs.length;
-				var disabledColumnInputs = Array.from(inputs).filter(input => input.disabled);
-				var disabledColumnInputsCount = disabledColumnInputs.length;
+                var disabledColumnInputs = Array.from(inputs).filter((input) => input.disabled);
+                var disabledColumnInputsCount = disabledColumnInputs.length;
                 if (unCheckedColumnInputsCount !== 0) {
                     columnHeaderInput.checked = false;
                 } else {
                     columnHeaderInput.checked = true;
                 }
-				if (disabledColumnInputsCount === unCheckedColumnInputsCount) {
-					columnHeaderInput.checked = true;
-				}
+                if (disabledColumnInputsCount === unCheckedColumnInputsCount) {
+                    columnHeaderInput.checked = true;
+                }
             }
             if (type !== obj.groupType) {
                 obj.groupType = type;
@@ -209,18 +238,6 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         return checkboxContainer;
     };
 
-    if (indexList['DOLLAR_AMT']) {
-        series['Currency'] = [...indexList['DOLLAR_AMT']];
-    }
-
-    if (indexList['QUANTITY']) {
-        series['Quantity'] = [...indexList['QUANTITY']];
-    }
-
-    if (indexList['PERCENT']) {
-        series['Percent'] = [...indexList['PERCENT']];
-    }
-
     obj.createContent = () => {
         var wrapper = document.createElement('div');
         var buttonWrapper = document.createElement('div');
@@ -230,34 +247,36 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
             var checkboxInputs = [];
             var selectableList = document.createElement('div');
             selectableList.classList.add('autoql-vanilla-chata-selectable-list');
-            var cols = series[key];
-            for (var i = 0; i < cols.length; i++) {
+            var columnsOfType = series[key];
+
+            columnsOfType.forEach((column) => {
                 var listItem = document.createElement('div');
                 listItem.classList.add('autoql-vanilla-chata-list-item');
 
                 var colName = document.createElement('div');
-                var colIndex = cols[i].index;
-                var isChecked = seriesIndexes.includes(colIndex);
+
+                const isChecked = seriesIndexes.includes(column.index);
+                const isDisabled = !!scale?.secondScale?.fields?.find((col) => col.index === column.index);
+
                 if (isChecked && !obj.groupType) {
-                    obj.groupType = cols[i].col.type;
+                    obj.groupType = column.type;
                 }
 
-                var isDisabled = !!scale?.secondScale?.fields?.find((col) => col.index === colIndex);
                 if (isDisabled) {
                     listItem.classList.add('autoql-vanilla-chata-list-item-disabled');
                 }
 
-                var checkbox = createCheckbox({ column: cols[i] }, isChecked, isDisabled);
+                var checkbox = createCheckbox({ column }, isChecked, isDisabled);
                 checkboxInputs.push(checkbox.querySelector('input'));
 
-                var n = cols[i].col.display_name || cols[i].col.name;
+                var n = column.display_name || column.name;
                 colName.innerHTML = formatColumnName(n);
 
                 const nameAndSelectContainer = document.createElement('div');
                 nameAndSelectContainer.classList.add('autoql-vanilla-chata-col-selector-name');
 
-                if (cols[i]?.col?.aggType) {
-                    const selector = createAggSelector(cols[i]);
+                if (column.aggType) {
+                    const selector = createAggSelector(column);
                     nameAndSelectContainer.appendChild(selector);
                 }
 
@@ -266,14 +285,13 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 listItem.appendChild(nameAndSelectContainer);
                 listItem.appendChild(checkbox);
                 selectableList.appendChild(listItem);
-            }
+            });
 
             var areAllColumnsChecked = checkboxInputs.every((input) => {
                 return !!input.getAttribute('disabled') || !!input.getAttribute('checked');
-            }); 
+            });
             var header = document.createElement('div');
-            var columnInfo = series[key];
-            var headerCheckbox = createCheckbox({ columnInfo, header: key }, areAllColumnsChecked);
+            var headerCheckbox = createCheckbox({ type: series[key][0]?.type, header: key }, areAllColumnsChecked);
             var headerWrapper = document.createElement('div');
             headerWrapper.classList.add('autoql-vanilla-chata-series-popover-header-wrapper');
             header.classList.add('number-selector-header');
@@ -285,7 +303,9 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
         }
 
         applyButton.onclick = (evt) => {
-            var inputs = content.querySelectorAll('.autoql-vanilla-m-checkbox__input');
+            var inputs = content.querySelectorAll(
+                '.autoql-vanilla-m-checkbox__input:not(.autoql-vanilla-m-checkbox__input-header)',
+            );
             var activeSeries = [];
 
             for (var i = 0; i < inputs.length; i++) {
@@ -295,7 +315,7 @@ export function ChataChartSeriesPopover(evt, placement, align, cols, scale, padd
                 }
             }
 
-            const newColumns = allColumns.map((col) => {
+            const newColumns = cols.map((col) => {
                 const aggType = aggConfig[col?.name];
                 if (aggType && col) {
                     col.aggType = aggType;

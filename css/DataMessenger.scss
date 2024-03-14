@@ -51,7 +51,7 @@ body.autoql-vanilla-drawer-open-body {
                 padding: 0 8px;
                 margin: 0;
 
-                &.clear-all svg {
+                &.autoql-vanilla-clear-all svg {
                     height: 21px;
                 }
 
@@ -75,6 +75,10 @@ body.autoql-vanilla-drawer-open-body {
     }
 
     .autoql-vanilla-chat-single-message-container {
+        &.autoql-vanilla-chat-single-message-container-hidden {
+            display: none !important;
+        }
+
         &.response {
             display: flex;
             flex-direction: column;
@@ -84,7 +88,11 @@ body.autoql-vanilla-drawer-open-body {
             transition: background-color 0.2s ease;
             position: relative;
             width: calc(100% - 20px);
-
+            .autoql-vanilla-data-explorer-icon-with-text {
+                color: var(--autoql-vanilla-accent-color);
+                cursor: pointer;
+                font-weight: 600;
+            }
             .autoql-vanilla-chat-message-bubble-container {
                 display: flex;
                 justify-content: flex-start;
@@ -94,7 +102,7 @@ body.autoql-vanilla-drawer-open-body {
                 flex: 1 1;
 
                 &.autoql-vanilla-chat-message-bubble-container-text {
-                    max-width: 85%;
+                    max-width: 100%;
                 }
 
                 .autoql-vanilla-chat-message-bubble {
@@ -105,10 +113,14 @@ body.autoql-vanilla-drawer-open-body {
                     word-wrap: break-word;
                     font-family: inherit;
                     font-size: 14px;
-                    letter-spacing: 0.04em;
+                    letter-spacing: 0.03em;
                     box-sizing: border-box;
                     box-shadow: var(--autoql-vanilla-box-shadow-1);
                     max-height: 400px;
+
+                    &:first-child {
+                        margin-top: 10px;
+                    }
                 }
             }
         }
@@ -176,6 +188,10 @@ body.autoql-vanilla-drawer-open-body {
                     position: relative;
                     z-index: 2;
                 }
+
+                &.autoql-vanilla-data-messenger-tab-active[data-tab='data-explorer'] {
+                    background: var(--autoql-vanilla-background-color-secondary);
+                }
             }
         }
     }
@@ -186,6 +202,7 @@ body.autoql-vanilla-drawer-open-body {
         display: flex;
         justify-content: center;
         align-items: center;
+        pointer-events: none;
     }
 
     .autoql-vanilla-drawer-content-wrapper {
@@ -266,7 +283,7 @@ body.autoql-vanilla-drawer-open-body {
         position: relative;
         align-items: center;
         padding: 10px;
-        margin: 0 10px;
+        margin: 6px;
 
         &.autoql-vanilla-text-bar-with-icon input {
             padding-left: 46px;
@@ -654,44 +671,46 @@ body.autoql-vanilla-drawer-open-body {
         }
     }
 }
-
+.autoql-vanilla-icon {
+    vertical-align: middle !important;
+}
 .autoql-vanilla-response-loading-container {
     display: flex;
     position: absolute;
     top: 0px;
     left: 20px;
+}
 
-    .autoql-vanilla-response-loading {
-        display: inline-block;
-        position: relative;
-        height: 12px;
-        width: 64px;
+.autoql-vanilla-response-loading {
+    display: inline-block;
+    position: relative;
+    height: 12px;
+    width: 64px;
 
-        div {
-            position: absolute;
-            top: 0;
-            width: 11px;
-            height: 11px;
-            border-radius: 50%;
-            background: #e2e2e2;
-            animation-timing-function: cubic-bezier(0, 1, 1, 0);
+    div {
+        position: absolute;
+        top: 0;
+        width: 11px;
+        height: 11px;
+        border-radius: 50%;
+        background: #e2e2e2;
+        animation-timing-function: cubic-bezier(0, 1, 1, 0);
 
-            &:nth-child(1) {
-                left: 6px;
-                animation: response-loading1 0.6s infinite;
-            }
-            &:nth-child(2) {
-                left: 6px;
-                animation: response-loading2 0.6s infinite;
-            }
-            &:nth-child(3) {
-                left: 26px;
-                animation: response-loading2 0.6s infinite;
-            }
-            &:nth-child(4) {
-                left: 45px;
-                animation: response-loading3 0.6s infinite;
-            }
+        &:nth-child(1) {
+            left: 6px;
+            animation: response-loading1 0.6s infinite;
+        }
+        &:nth-child(2) {
+            left: 6px;
+            animation: response-loading2 0.6s infinite;
+        }
+        &:nth-child(3) {
+            left: 26px;
+            animation: response-loading2 0.6s infinite;
+        }
+        &:nth-child(4) {
+            left: 45px;
+            animation: response-loading3 0.6s infinite;
         }
     }
 }

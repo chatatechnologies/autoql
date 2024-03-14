@@ -27,16 +27,16 @@ import { select } from 'd3-selection';
 
 export function Legend(container, params = {}) {
     const {
-        labels,
-        labels2,
+        labels = [],
+        labels2 = [],
         height,
         outerHeight,
         outerWidth,
         orientation = 'vertical',
         hasSecondAxis,
-        title,
+        title = '',
         legendShape,
-        onLegendClick,
+        onLegendClick = () => {},
     } = params;
 
     this.legendElements = [];
@@ -50,21 +50,35 @@ export function Legend(container, params = {}) {
     const translateX = getTotalLeftPadding(legendPadding);
     const translateY = getTotalTopPadding(legendPadding) + LEGEND_TOP_ADJUSTMENT;
 
-    const onLegendCellClick = (labelText, legendLabels) => {
-        const label = legendLabels?.find((l) => l.label === labelText);
-        if (!label) {
-            return;
-        }
+    this.onLegendCellClick = (labelObj, legendLabels) => {
+        try {
+            let cellDataJson;
+            try {
+                cellDataJson = JSON.parse(labelObj);
+            } catch (error) {}
+            const label = legendLabels?.find((l) => l.label === labelObj);
 
-        const isHidingLabel = !label.hidden;
-        const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
-        const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1;
-        if (allowClick) {
-            onLegendClick(label);
+            if (!label) {
+                console.warn('unable to find legend item that was clicked');
+                return;
+            }
+
+            const isHidingLabel = !label.hidden;
+            const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
+            const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1;
+            if (allowClick) {
+                onLegendClick(label);
+            }
+        } catch (error) {
+            console.error(error);
         }
     };
 
     const getLegendScale = (legendLabels) => {
+        if (!legendLabels?.length) {
+            return;
+        }
+
         const colorRange = legendLabels.map((obj) => {
             return obj.color;
         });
@@ -110,20 +124,24 @@ export function Legend(container, params = {}) {
         const isFirstSection = !!legendLabels[0]?.isFirst;
         const isSecondLegend = legendNumber === 2;
         const allLabels = legendNumber === 2 ? labels2 : labels;
-        const legendScale = getLegendScale(legendLabels);
+        const legendLabelSection = legendLabels;
+        const legendScale = getLegendScale(legendLabelSection);
         const maxSectionWidth = getMaxLegendSectionWidth({ orientation, outerWidth, legendPadding });
+
+        const self = this;
 
         var legendOrdinal = legendColor()
             .orient('vertical')
             .path(symbol().type(symbolSquare).size(LEGEND_SHAPE_SIZE)())
             .shapePadding(8)
+            .labels(legendLabelSection.map((labelObj) => labelObj.label))
             .labelWrap(maxSectionWidth - 20)
             .labelOffset(10)
             .scale(legendScale)
             .title(title)
             .titleWidth(maxSectionWidth)
             .on('cellclick', function () {
-                onLegendCellClick(select(this)?.data()?.[0], allLabels);
+                self.onLegendCellClick(select(this)?.data()?.[0], allLabels);
             });
 
         if (isSecondLegend) {
@@ -139,7 +157,7 @@ export function Legend(container, params = {}) {
             .call(legendOrdinal)
             .attr('class', 'legendOrdinal')
             .style('fill', 'currentColor')
-            .style('fill-opacity', '1')
+            .style('fill-opacity', 1)
             .style('font-family', 'inherit')
             .style('font-size', `${TITLE_FONT_SIZE}px`);
 
@@ -203,6 +221,7 @@ export function Legend(container, params = {}) {
             .attr('width', legendWidth + 2 * LEGEND_BORDER_PADDING)
             .attr('rx', 2)
             .style('stroke', 'var(--autoql-vanilla-border-color)')
+            .style('stroke-width', 1)
             .style('fill', 'transparent')
             .style('pointer-events', 'none')
             .style('stroke-opacity', 0.6)
@@ -218,11 +237,20 @@ export function Legend(container, params = {}) {
         const legendElementNode = legendElement.node();
         const legendBorderNode = legendBorder.node();
 
+        applyStylesForHiddenSeries({ legendElement: legendElementNode, legendLabels: legendLabelSection });
         removeHiddenLegendLabels({ legendElement: legendElementNode, legendBorder: legendBorderNode });
-        applyStylesForHiddenSeries({ legendElement: legendElementNode, legendLabels });
     };
 
-    this.legend = container.append('g').attr('class', 'autoql-vanilla-chart-legend');
+    this.legend = container
+        .append('g')
+        .attr('class', 'legendOrdinal autoql-vanilla-chart-legend')
+        .style('fill', 'currentColor')
+        .style('fill-opacity', 1)
+        .style('font-family', 'inherit')
+        .style('font-size', '10px')
+        .style('stroke-width', '2px')
+        .style('stroke', 'none');
+
     this.legendContainer = this.legend.append('g');
     this.legendElementContainer = this.legendContainer.append('g').attr('class', 'autoql-vanilla-legend-content');
 
@@ -236,8 +264,8 @@ export function Legend(container, params = {}) {
             legendPadding,
         });
 
-        this.legendLabelSections?.forEach((legendLabels, i) => {
-            createLegend(legendLabels, i);
+        this.legendLabelSections?.forEach((legendLabelSection, i) => {
+            createLegend(legendLabelSection, i);
         });
     };
 

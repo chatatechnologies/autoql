@@ -1,0 +1,146 @@
+.autoql-vanilla-data-explorer-section.autoql-vanilla-topic-dropdown-section {
+    flex: 0 0 auto;
+    max-height: 35%;
+
+    .autoql-vanilla-topic-cascader-data-preview {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+
+        .autoql-vanilla-topics-list-title {
+            padding: 5px 15px;
+            font-weight: 600;
+            flex: 0 0 auto;
+
+            .autoql-vanilla-topics-list-title-text {
+                padding-left: 10px;
+            }
+
+            cursor: pointer;
+            &:hover {
+                color: var(--autoql-vanilla-accent-color);
+            }
+        }
+
+        .autoql-vanilla-data-preview-section {
+            flex: 1;
+            padding: 0 !important;
+            width: 100%;
+            overflow: hidden;
+
+            .autoql-vanilla-data-explorer-data-preview {
+                min-width: 100%;
+
+                .autoql-vanilla-selectable-table {
+                    padding: 0;
+                    width: 100%;
+                    height: 100% !important;
+
+                    .autoql-vanilla-selectable-table-wrapper {
+                        border-left: none;
+                        border-right: none;
+                        border-bottom: none;
+                        border-radius: 0;
+                    }
+                }
+            }
+        }
+    }
+
+    .autoql-vanilla-query-topic-list {
+        position: relative;
+        white-space: nowrap;
+        overflow: hidden;
+        display: flex;
+        min-width: 300px;
+        max-height: 200px;
+        border: 1px solid var(--autoql-vanilla-border-color);
+        border-radius: 4px;
+        margin: 5px;
+        margin-top: 0;
+
+        .autoql-vanilla-data-explorer-query-topic-list {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 0;
+            flex-shrink: 0;
+            flex-basis: 0%;
+            transition: flex-basis 0.2s ease;
+            white-space: pre-wrap;
+            overflow-y: auto;
+            max-height: 100%;
+            margin: 0;
+
+            &.autoql-vanilla-data-explorer-query-topic-list-visible {
+                flex-grow: 0;
+                flex-shrink: 0;
+                flex-basis: 100%;
+            }
+
+            &.autoql-vanilla-data-explorer-query-topic-list-hidden {
+                flex-grow: 0;
+                flex-shrink: 0;
+                flex-basis: 0%;
+                border: none;
+
+                span {
+                    white-space: nowrap;
+                }
+
+                .autoql-vanilla-data-explorer-topic-list-item {
+                    opacity: 0;
+                    pointer-events: none;
+                }
+            }
+
+            .autoql-vanilla-data-explorer-topic-list-item {
+                position: relative;
+                padding: 6px 18px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                transition: color 0.1s ease, background-color 0.1s ease;
+                height: 34px;
+                z-index: 1;
+                cursor: pointer;
+
+                .autoql-vanilla-cascader-option-arrow {
+                    transform: rotate(180deg);
+                    opacity: 0;
+                }
+
+                &::before {
+                    content: '\00a0';
+                    position: absolute;
+                    height: 100%;
+                    width: 100%;
+                    left: 0px;
+                    top: 0px;
+                    opacity: 0;
+                    background: var(--autoql-vanilla-accent-color);
+                    transition: opacity 0.1s ease;
+                }
+
+                &:not(.autoql-vanilla-cascader-option-custom-content) {
+                    letter-spacing: 0.03em;
+
+                    &.autoql-vanilla-cascader-option-active {
+                        background-color: var(--autoql-vanilla-accent-color, #26a7df);
+                        color: var(--autoql-vanilla-text-color-accent);
+                        font-weight: 600;
+                    }
+                    &:hover {
+                        .autoql-vanilla-cascader-option-arrow {
+                            opacity: 1;
+                        }
+
+                        &::before {
+                            opacity: 0.2;
+                            z-index: 0;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

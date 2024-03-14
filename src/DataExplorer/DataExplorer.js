@@ -1,77 +1,67 @@
-import {
-    SEARCH_ICON,
-    DATA_EXPLORER_SEARCH_ICON,
-    CHATA_BUBBLES_ICON,
-    ABACUS_ICON,
-    TABLE_ICON,
-    BOOK_ICON,
-    CLOSE_ICON,
-} from '../Svg';
-import tippy from 'tippy.js';
-import { refreshTooltips } from '../Tooltips';
-import { htmlToElement, createIcon } from '../Utils';
+import { DataExplorerTypes, getAuthentication, runQueryValidation } from 'autoql-fe-utils';
+
 import { strings } from '../Strings';
+import { createIcon } from '../Utils';
+import { refreshTooltips } from '../Tooltips';
 import { DataPreview } from './Components/DataPreview';
-import { RelatedQueries } from './Components/RelatedQueries';
+import { SampleQueries } from './Components/SampleQueries';
+import { TopicList } from './Components/TopicList/TopicList';
+import { SubjectName } from './Components/SubjectName/SubjectName';
+import { DataExplorerInput } from './Components/DataExplorerInput';
+import { QueryValidationMessage } from '../QueryValidationMessage';
+import { DATA_EXPLORER_SEARCH_ICON, CHATA_BUBBLES_ICON, ABACUS_ICON, TABLE_ICON, SEARCH_ICON } from '../Svg';
 
 import './DataExplorer.scss';
 
 export function DataExplorer({ subjects, widget }) {
     let obj = this;
-    obj.subjects = subjects || [];
-    const searchIcon = htmlToElement(SEARCH_ICON);
-    const clearIcon = htmlToElement(CLOSE_ICON);
+
     const container = document.createElement('div');
-    const textBar = document.createElement('div');
-    const input = document.createElement('input');
-    const chatBarInputIcon = document.createElement('div');
-    const chatBarClearIcon = document.createElement('div');
     const introMessage = document.createElement('div');
     const title = document.createElement('h2');
     const instructions = document.createElement('div');
     const p = document.createElement('p');
     const instructionList = document.createElement('div');
     const listWrapper = document.createElement('div');
-    const autocomplete = document.createElement('div');
-    const subjectsWrapper = document.createElement('ul');
     const contentWrapper = document.createElement('div');
-    const headerHeight = widget.header.clientHeight;
-    const texts = [
-        { icon: TABLE_ICON, string: 'Preview available data in a snapshot' },
-        { icon: ABACUS_ICON, string: 'Explore data structure and column types' },
-        { icon: CHATA_BUBBLES_ICON, string: 'View a variety of query suggestions' },
-    ];
+    const resultContainer = document.createElement('div');
 
-    textBar.classList.add('autoql-vanilla-text-bar');
-    textBar.classList.add('autoql-vanilla-text-bar-animation');
-    textBar.classList.add('autoql-vanilla-text-bar-with-icon');
-    chatBarInputIcon.classList.add('autoql-vanilla-chat-bar-input-icon');
-    chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon');
-    chatBarClearIcon.onclick = () => obj.clearSearch();
-    const chatBarClearIconTooltip = tippy(chatBarClearIcon);
-    chatBarClearIconTooltip.setContent(strings.clearSearch);
-    chatBarClearIconTooltip.setProps({
-        theme: 'chata-theme',
-        delay: [500],
+    container.classList.add('autoql-vanilla-data-explorer-content-container');
+    resultContainer.classList.add('autoql-vanilla-data-explorer-result-container');
+    contentWrapper.classList.add('autoql-vanilla-data-explorer-sections-container');
+    resultContainer.appendChild(contentWrapper);
+
+    const textBarComponent = new DataExplorerInput({
+        subjects,
+        container,
+        onSubmit: (subject, skipQueryValidation) => obj.createDataExplorerContent(subject, skipQueryValidation),
+        options: widget.options,
+        onClearSearch: () => {
+            contentWrapper.innerHTML = '';
+            contentWrapper.appendChild(introMessage);
+        },
     });
+    const textBar = textBarComponent?.textBar;
+
+    obj.setSubjects = (subjects) => {
+        textBarComponent?.setSubjects(subjects);
+    };
+
     refreshTooltips();
-    container.classList.add('autoql-vanilla-querytips-container');
-    input.classList.add('autoql-vanilla-chata-input');
-    input.classList.add('autoql-vanilla-explore-queries-input');
-    input.classList.add('left-padding');
-    autocomplete.classList.add('autoql-vanilla-data-explorer-autocomplete');
+
     introMessage.classList.add('autoql-vanilla-data-explorer-intro-message');
     instructionList.classList.add('autoql-vanilla-intro-message-list-container');
-    input.setAttribute('placeholder', strings.dataExplorerInput);
 
-    title.appendChild(document.createTextNode('Welcome to '));
+    title.appendChild(document.createTextNode(strings.welcomeTo));
     title.appendChild(createIcon(DATA_EXPLORER_SEARCH_ICON));
-    title.appendChild(document.createTextNode('Data Explorer'));
-    p.appendChild(
-        document.createTextNode(`
-  Explore your data and discover what you can ask AutoQL. Simply enter a term or topic above and:
-  `),
-    );
+    title.appendChild(document.createTextNode(strings.dataExplorer));
+    p.appendChild(document.createTextNode(strings.dataExplorerIntro));
+
+    const texts = [
+        { icon: TABLE_ICON, string: strings.dataExplorerMessage1 },
+        { icon: ABACUS_ICON, string: strings.dataExplorerMessage2 },
+        { icon: CHATA_BUBBLES_ICON, string: strings.dataExplorerMessage3 },
+    ];
 
     texts.map((text) => {
         const icon = createIcon(text.icon);
@@ -81,66 +71,159 @@ export function DataExplorer({ subjects, widget }) {
         elem.appendChild(document.createTextNode(text.string));
         listWrapper.appendChild(elem);
     });
-    obj.clearSearch = () => {
-        var previewSection = document.querySelector(
-            '.autoql-vanilla-data-explorer-section.autoql-vanilla-data-preview-section',
-        );
-        var relatedQueriesSection = document.querySelector(
-            '.autoql-vanilla-data-explorer-section.autoql-vanilla-query-suggestions-section',
-        );
-        chatBarClearIcon.classList.remove('autoql-vanilla-chat-bar-clear-icon-visible');
-        if (previewSection) {
-            previewSection.remove();
-        }
-        if (relatedQueriesSection) {
-            relatedQueriesSection.remove();
-        }
-        if (input) {
-            input.value = '';
-        }
-        contentWrapper.appendChild(introMessage);
-    };
-    obj.createSubjects = () => {
-        obj.subjects?.forEach((subject) => {
-            const li = document.createElement('li');
-            li.classList.add('autoql-vanilla-subject');
-            li.appendChild(createIcon(BOOK_ICON));
-            li.appendChild(document.createTextNode(subject.displayName));
-            subjectsWrapper.appendChild(li);
-            li.onclick = async () => {
-                chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible');
-                autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
-                input.value = subject.displayName;
-                contentWrapper.innerHTML = '';
-                const previewSection = new DataPreview({
-                    icon: TABLE_ICON,
-                    title: `Data Preview "${subject.query}"`,
-                    subject,
-                    widgetOptions: widget.options,
-                });
-                contentWrapper.appendChild(previewSection.container);
 
-                const relatedQueriesSection = new RelatedQueries({
-                    icon: CHATA_BUBBLES_ICON,
-                    title: `Query suggestions for "${subject.displayName}"`,
-                    containerHeight: container.clientHeight,
-                    previewSectionHeight: previewSection.container.clientHeight,
-                    textBarHeight: textBar.clientHeight,
-                    subject,
-                    widget,
-                });
-                contentWrapper.appendChild(relatedQueriesSection);
-            };
+    obj.createTitle = () => {
+        const subject = obj.selectedSubject;
+        if (subject?.displayName && subject?.type !== DataExplorerTypes.TEXT_TYPE) {
+            const subjectName = new SubjectName({ subject });
+            subjectName.classList.add('autoql-vanilla-data-explorer-selected-subject-title');
+
+            contentWrapper.appendChild(subjectName);
+        }
+    };
+
+    obj.createDataPreviewSection = () => {
+        const subject = obj.selectedSubject;
+
+        if (subject?.type === DataExplorerTypes.SUBJECT_TYPE) {
+            const previewSection = new DataPreview({
+                subject,
+                widgetOptions: widget.options,
+                onColumnSelection: (columns) => obj.onColumnFilter(columns),
+                onDataPreview: (response) => obj.onDataPreview(response),
+            });
+
+            obj.dataPreviewComponent = previewSection;
+
+            contentWrapper.appendChild(previewSection.container);
+        }
+    };
+
+    obj.createTopicsListSection = () => {
+        const subject = obj.selectedSubject;
+
+        if (subject?.type === DataExplorerTypes.VL_TYPE) {
+            const topicListSection = new TopicList({
+                valueLabel: subject.valueLabel.canonical,
+                options: widget.options,
+                subjects,
+                subject,
+                onSubjectClick: (subject) => obj.onSubjectFilter(subject),
+                onColumnSelection: (columns) => obj.onColumnFilter(columns),
+                onDataPreview: (response) => obj.onDataPreview(response),
+            });
+
+            obj.topicList = topicListSection;
+
+            contentWrapper.appendChild(topicListSection.container);
+        }
+    };
+
+    obj.clearSampleQueriesSection = () => {
+        obj.sampleQueriesSection?.container?.remove?.();
+    };
+
+    obj.createValidationMessage = (response) => {
+        const validationMessage = new QueryValidationMessage({
+            response,
+            submitText: 'Search',
+            submitIcon: SEARCH_ICON,
+            onSubmit: ({ query, userSelection }) => {
+                textBarComponent.input.value = query;
+                textBarComponent.onSearch(
+                    { type: DataExplorerTypes.TEXT_TYPE, displayName: query, userSelection },
+                    true,
+                );
+            },
         });
+
+        contentWrapper.appendChild(validationMessage);
     };
 
-    chatBarInputIcon.appendChild(searchIcon);
-    chatBarClearIcon.appendChild(clearIcon);
-    autocomplete.appendChild(subjectsWrapper);
-    textBar.appendChild(input);
-    textBar.appendChild(chatBarInputIcon);
-    textBar.appendChild(autocomplete);
-    textBar.appendChild(chatBarClearIcon);
+    obj.validateSearchTerm = async (text) => {
+        try {
+            const response = await runQueryValidation({
+                ...getAuthentication(widget.options.authentication),
+                text,
+            });
+
+            if (response?.data?.data?.replacements?.length) {
+                return response;
+            }
+        } catch (error) {}
+        return;
+    };
+
+    obj.createSampleQueriesSection = async (skipQueryValidation) => {
+        obj.clearSampleQueriesSection();
+
+        const subject = obj.selectedSubject;
+
+        const context = subject?.type === DataExplorerTypes.VL_TYPE ? this.selectedSubject?.context : subject?.context;
+
+        let searchText = '';
+
+        if (subject?.type === DataExplorerTypes.TEXT_TYPE) {
+            searchText = subject?.displayName;
+
+            if (!skipQueryValidation) {
+                const validationResponse = await obj.validateSearchTerm(searchText);
+                if (validationResponse) {
+                    obj.createValidationMessage(validationResponse);
+                    return;
+                }
+            }
+        }
+
+        const sampleQueriesSection = new SampleQueries({
+            widget,
+            searchText,
+            context,
+            subject,
+            selectedColumns: obj.selectedColumns,
+            dataPreview: obj.dataPreview,
+            onColumnClick: (option, index) => {
+                obj.dataPreviewComponent?.table?.onColumnHeaderClick?.(index);
+            },
+            onColumnSelection: (columns) => {
+                obj.onColumnFilter(columns);
+                obj.dataPreviewComponent?.table?.clearSelections?.();
+            },
+        });
+
+        obj.sampleQueriesSection = sampleQueriesSection;
+
+        contentWrapper.appendChild(sampleQueriesSection.container);
+    };
+
+    obj.onSubjectFilter = (subject) => {
+        obj.selectedSubject = subject;
+        obj.createSampleQueriesSection();
+    };
+
+    obj.onColumnFilter = (columns) => {
+        obj.selectedColumns = columns;
+        obj.sampleQueriesSection?.updateSampleQueries?.({ selectedColumns: obj.selectedColumns });
+    };
+
+    obj.onDataPreview = (dataPreview) => {
+        obj.dataPreview = dataPreview;
+        obj.sampleQueriesSection?.setDataPreview?.(dataPreview);
+    };
+
+    obj.createDataExplorerContent = async (subject, skipQueryValidation) => {
+        obj.selectedSubject = subject;
+        obj.dataPreview = undefined;
+        obj.selectedColumns = undefined;
+
+        contentWrapper.innerHTML = '';
+
+        obj.createTitle();
+        obj.createDataPreviewSection();
+        obj.createTopicsListSection();
+        obj.createSampleQueriesSection(skipQueryValidation);
+    };
+
     instructionList.appendChild(listWrapper);
     instructions.appendChild(p);
     instructions.appendChild(instructionList);
@@ -148,41 +231,8 @@ export function DataExplorer({ subjects, widget }) {
     introMessage.appendChild(instructions);
     contentWrapper.appendChild(introMessage);
     container.appendChild(textBar);
-    container.appendChild(contentWrapper);
+    container.appendChild(resultContainer);
     container.style.display = 'none';
-    input.addEventListener('input', () => {
-        chatBarClearIcon.classList.add('autoql-vanilla-chat-bar-clear-icon-visible');
-        if (input.value === '') {
-            chatBarClearIcon.classList.remove('autoql-vanilla-chat-bar-clear-icon-visible');
-        }
-    });
-    input.addEventListener('keydown', async (event) => {
-        if (event.key == 'Enter' && input.value) {
-            contentWrapper.innerHTML = '';
-            autocomplete.classList.remove('autoql-vanilla-autocomplete-show');
-
-            const relatedQueriesSection = new RelatedQueries({
-                icon: CHATA_BUBBLES_ICON,
-                title: `Query suggestions for "${input.value}"`,
-                containerHeight: container.clientHeight,
-                previewSectionHeight: 0,
-                textBarHeight: textBar.clientHeight,
-                plainText: input.value,
-                widget,
-            });
-
-            contentWrapper.appendChild(relatedQueriesSection);
-        }
-    });
-
-    input.addEventListener('focus', () => {
-        const height = container.clientHeight;
-        const textBarHeight = textBar.clientHeight;
-        const headerHeight = widget.header.clientHeight;
-        const margin = 60;
-        autocomplete.style.maxHeight = height - (textBarHeight + headerHeight + margin) + 'px';
-        autocomplete.classList.add('autoql-vanilla-autocomplete-show');
-    });
 
     obj.hide = () => {
         container.style.display = 'none';
@@ -191,13 +241,6 @@ export function DataExplorer({ subjects, widget }) {
     obj.show = () => {
         container.style.display = 'block';
     };
-
-    obj.setSubjects = (subjects) => {
-        obj.subjects = subjects;
-        obj.createSubjects();
-    };
-
-    obj.createSubjects();
 
     obj.container = container;
 }

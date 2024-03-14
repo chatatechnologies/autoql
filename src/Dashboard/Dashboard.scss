@@ -1,0 +1,41 @@
+.autoql-vanilla-tile-chart-container-data-componentid-holder {
+    height: 100%;
+    width: 100%;
+}
+
+.autoql-vanilla-chata-dashboard *,
+.autoql-vanilla-chata-dashboard *:before,
+.autoql-vanilla-chata-dashboard *:after {
+    box-sizing: border-box !important;
+    -webkit-box-sizing: border-box !important;
+    padding: 0px;
+    margin: 0px;
+    font-family: sans-serif;
+}
+
+.autoql-vanilla-dashboard-container {
+    background: var(--autoql-vanilla-background-color-primary);
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+.autoql-vanilla-dashboard-container.editing {
+    padding-bottom: 200px;
+}
+
+.empty-dashboard-message-container {
+    font-family: var(--autoql-vanilla-font-family);
+    color: var(--autoql-vanilla-text-color-primary);
+    letter-spacing: 0.02em;
+    text-align: center;
+    padding: 100px;
+    height: 100%;
+    width: 100%;
+}
+
+.empty-dashboard-new-tile-btn {
+    color: var(--autoql-vanilla-accent-color);
+    font-weight: 700;
+    cursor: pointer;
+}

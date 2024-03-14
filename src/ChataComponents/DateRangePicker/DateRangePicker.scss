@@ -54,7 +54,9 @@
     font-size: 12px;
     display: inline-flex;
     flex-direction: column;
-
+    .autoql-vanilla-month-year-pickers {
+        display: flex;
+    }
     .autoql-vanilla-day-disabled {
         background-color: var(--autoql-vanilla-hover-color);
         pointer-events: none;

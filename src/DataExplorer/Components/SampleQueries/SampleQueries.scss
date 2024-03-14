@@ -1,0 +1,278 @@
+.autoql-vanilla-data-preview-selected-columns-clear-btn {
+    color: var(--autoql-vanilla-text-color-placeholder);
+    height: 25px;
+    font-size: 11px;
+    padding: 0px 6px;
+    font-weight: 600;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+
+    &.autoql-vanilla-data-preview-selected-columns-clear-btn-hidden {
+        display: none;
+    }
+
+    &:hover {
+        color: var(--autoql-vanilla-accent-color);
+        background-color: var(--autoql-vanilla-hover-color);
+    }
+}
+
+.autoql-vanilla-query-suggestions-section {
+    flex: 2;
+    padding-left: 12px;
+    overflow-y: scroll;
+    white-space: nowrap;
+    width: 100%;
+    height: 100%;
+    scroll-behavior: smooth;
+    scrollbar-width: thin;
+    border-radius: 6px;
+
+    .autoql-vanilla-data-explorer-section-placeholder-loading-container {
+        min-height: 90px;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: flex-start;
+        align-items: flex-start;
+        flex-direction: column;
+
+        .autoql-vanilla-data-explorer-section-placeholder-loading-item {
+            padding: 12px 0;
+            width: 100%;
+        }
+    }
+
+    .autoql-vanilla-data-explorer-query-suggestion-list {
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        flex: 0 1 100vh;
+        min-height: 0;
+        height: 100%;
+        overflow: auto;
+
+        .autoql-vanilla-related-queries-empty-list-message {
+            display: flex;
+            align-items: center;
+            padding: 50px 40px;
+            opacity: 0.7;
+            font-style: italic;
+            text-wrap: wrap;
+            text-align: center;
+        }
+
+        .autoql-vanilla-data-explorer-sample-query {
+            display: flex;
+            position: relative;
+            flex-direction: row;
+            align-items: center;
+            font-size: 14px;
+            letter-spacing: 0.02em;
+            min-height: 50px;
+            border-top: 1px solid #8b8b8b1f;
+
+            .autoql-vanilla-data-explorer-sample-chunk {
+                white-space: nowrap;
+            }
+
+            .autoql-vanilla-inline-number-editor-wrapper,
+            .autoql-vanilla-autcomplete-input-popover-btn {
+                position: relative;
+                margin-left: 3px;
+            }
+
+            &::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                background-color: var(--autoql-vanilla-accent-color);
+                transition: opacity 0.2s;
+                pointer-events: none;
+
+                opacity: 0;
+            }
+
+            &:hover {
+                &::before {
+                    content: '';
+                    opacity: 0.05;
+                }
+
+                .autoql-vanilla-query-suggestion-send-btn {
+                    opacity: 0.7;
+                }
+            }
+
+            .autoql-vanilla-query-suggestion-text {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                white-space: pre-wrap;
+                padding: 8px;
+            }
+
+            .autoql-vanilla-query-suggestion-send-btn {
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                position: relative;
+                display: flex;
+                font-size: 19px;
+                margin: 7px 20px;
+                width: 30px;
+                height: 30px;
+                z-index: 1;
+                flex: 0 0 auto;
+                border-radius: 50%;
+                box-shadow: var(--autoql-vanilla-box-shadow-1);
+                color: var(--autoql-vanilla-text-color-accent);
+                background-color: var(--autoql-vanilla-accent-color);
+                transition: background-color 0.2s ease, color 0.2s ease, font-size 0.2s ease, opacity 0.2s ease;
+                cursor: pointer;
+
+                opacity: 0;
+
+                .autoql-vanilla-icon {
+                    padding-bottom: 0;
+                    padding-right: 2px;
+                }
+
+                &::before,
+                &::after {
+                    content: '';
+                    pointer-events: none;
+                    position: absolute;
+                    box-sizing: content-box;
+                    width: 100%;
+                    height: 100%;
+                    border-radius: 50%;
+                    background-color: transparent;
+                    transition: transform 0.2s, opacity 0.2s;
+                    opacity: 0;
+                }
+
+                &::before {
+                    top: -7px;
+                    left: -7px;
+                    padding: 5px;
+                    border: 2px solid var(--autoql-vanilla-accent-color);
+                    box-shadow: var(--autoql-vanilla-box-shadow-1);
+                    transform: scale(0.6);
+                }
+
+                &::after {
+                    top: -3px;
+                    left: -3px;
+                    padding: 0;
+                    border: 3px solid var(--autoql-vanilla-accent-color);
+                    box-shadow: var(--autoql-vanilla-box-shadow-1);
+                    background-color: transparent;
+                    transform: scale(0.8);
+                }
+
+                &:hover {
+                    font-size: 23px;
+                    opacity: 1;
+
+                    &::before,
+                    &::after {
+                        transform: scale(1);
+                        opacity: 1;
+                    }
+                }
+            }
+
+            .autoql-vanilla-select-and-label {
+                border-bottom: 1px solid var(--autoql-vanilla-accent-color);
+                height: 1.5em;
+                margin: 0 5px;
+                margin-top: 4px;
+                padding: 2px;
+
+                .autoql-vanilla-select-text {
+                    line-height: 1em;
+                }
+            }
+        }
+    }
+}
+
+.autoql-vanilla-autcomplete-input-popover-btn,
+.autoql-vanilla-inline-number-input-editor-btn {
+    border: 1px solid transparent;
+    border-bottom-color: var(--autoql-vanilla-accent-color);
+    color: var(--autoql-vanilla-text-color-primary);
+    padding: 2px;
+    font-weight: 600;
+    padding-bottom: 2px;
+    transition: color 0.2s ease;
+    position: relative;
+    margin-left: 3px;
+    white-space: nowrap;
+    cursor: pointer;
+
+    &:hover,
+    &.autoql-vanilla-autocomplete-input-popover-btn-active,
+    &.autoql-vanilla-inline-number-input-editor-btn-active {
+        color: var(--autoql-vanilla-accent-color);
+    }
+}
+
+.autoql-vanilla-inline-number-editor-wrapper {
+    .autoql-vanilla-input-and-label-container {
+        padding: 0;
+        .autoql-vanilla-input-container .autoql-vanilla-input {
+            border-radius: 0 !important;
+            height: 35px !important;
+        }
+    }
+
+    .autoql-vanilla-input-number-spin-button-container {
+        display: none !important;
+    }
+}
+
+.autoql-vanilla-data-explorer-sample-queries-header-actions {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 600;
+    min-height: 30px;
+
+    .autoql-vanilla-data-preview-selected-columns-selector {
+        font-size: 11px;
+        margin-left: 7px;
+        color: var(--autoql-vanilla-text-color-secondary);
+        padding-left: 8px;
+        border-left: 1px solid var(--autoql-vanilla-backgroud-color-disabled);
+
+        .autoql-vanilla-select-and-label {
+            padding-right: 0px;
+
+            .autoql-vanilla-multi-select {
+                color: inherit;
+                border-color: transparent !important;
+                padding: 0px 5px;
+                height: 25px;
+
+                &:hover {
+                    color: var(--autoql-vanilla-accent-color);
+                    background-color: var(--autoql-vanilla-hover-color);
+                }
+
+                .autoql-vanilla-select-arrow {
+                    svg {
+                        stroke: currentColor;
+                        stroke-width: 2em;
+                    }
+                }
+            }
+        }
+    }
+}

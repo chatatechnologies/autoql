@@ -1,10 +1,10 @@
+import { getSupportedDisplayTypes } from 'autoql-fe-utils'
 import { ChataUtils } from '../ChataUtils';
 import { CHATA_BUBBLES_ICON, VOICE_RECORD_IMAGE } from '../Svg';
 import {
     getSpeech,
     htmlToElement,
     putLoadingContainer,
-    getSupportedDisplayTypes,
     uuidv4,
     mergeOptions,
     createTableContainer,
@@ -437,7 +437,7 @@ export function QueryInput(selector, options) {
         }
 
         let displayType;
-        var sup = getSupportedDisplayTypes(jsonResponse);
+        var sup = getSupportedDisplayTypes({ response: { data: jsonResponse }});
         if (sup.includes(responseRenderer.options.displayType)) {
             displayType = responseRenderer.options.displayType;
         } else {

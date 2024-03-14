@@ -1,0 +1,57 @@
+.autoql-vanilla-notification-toolbar-container {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  .autoql-vanilla-autoql-toolbar {
+    padding: 5px 8px 8px;
+    box-shadow: none;
+    border: none;
+    &.autoql-vanilla-viz-toolbar {
+      display: flex;
+      flex-direction: row;
+      background: inherit;
+      padding: 5px;
+      border-radius: 6px;
+      line-height: 28px;
+      padding: 5px 5px 5px 0px;
+      width: 100%;
+    }
+    &.autoql-vanilla-options-toolbar {
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      background: inherit;
+      padding: 5px 0px 5px 5px;
+      border-radius: 6px;
+      line-height: 28px;
+      background: var(--autoql-vanilla-background-color-secondary);
+      box-shadow: 0 2px 3px -2px var(--autoql-vanilla-box-shadow-color);
+      margin-right: -10px;
+    }
+    .autoql-vanilla-toolbar-btn {
+      height: 28px;
+      width: 28px;
+      display: flex;
+      position: relative;
+      justify-content: center;
+      align-items: center;
+      padding: 0;
+      margin: 0;
+      background: none!important;
+      border: none!important;
+      outline: none!important;
+      font-size: 16px;
+      color: var(--autoql-vanilla-text-color-primary);
+      cursor: pointer;
+      &:hover {
+        opacity: .7;
+      }
+      &.autoql-vanilla-toolbar-btn-selected {
+        color: var(--autoql-vanilla-accent-color);
+      }
+    }
+  }
+}

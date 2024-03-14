@@ -10,7 +10,7 @@ import {
 import {
     ChataUtils
 } from '../ChataUtils'
-import { mergeBoundingClientRects } from 'autoql-fe-utils'
+import { COLUMN_TYPES, isColumnNumberType, mergeBoundingClientRects } from 'autoql-fe-utils'
 
 export const makeGroups = (json, options, seriesCols=[], labelIndex=-1) => {
     var groupables = getGroupableFields(json);
@@ -342,6 +342,22 @@ export const groupBy = (items, key) => items.reduce(
     }),
     {},
 );
+
+export const getNumberColumnsByType = (columns) => {
+    var output = {};
+    columns.forEach((col) => {
+         const typeFormatted = COLUMN_TYPES[col.type]?.description
+        if (isColumnNumberType(col) && typeFormatted) {
+            if (!output[typeFormatted]) {
+                output[typeFormatted] = [col];
+            } else {
+                output[typeFormatted].push(col);
+            }
+        }
+    });
+
+    return output; 
+}
 
 export const getIndexesByType = (cols) => {
     var output = {};
