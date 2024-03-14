@@ -237,8 +237,8 @@ export function Legend(container, params = {}) {
         const legendElementNode = legendElement.node();
         const legendBorderNode = legendBorder.node();
 
-        removeHiddenLegendLabels({ legendElement: legendElementNode, legendBorder: legendBorderNode });
         applyStylesForHiddenSeries({ legendElement: legendElementNode, legendLabels: legendLabelSection });
+        removeHiddenLegendLabels({ legendElement: legendElementNode, legendBorder: legendBorderNode });
     };
 
     this.legend = container
