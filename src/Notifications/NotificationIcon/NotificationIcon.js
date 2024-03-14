@@ -1,19 +1,16 @@
 import { NOTIFICATION_BUTTON } from '../../Svg';
-import {
-	apiCallNotificationCount,
-	apiCallPut
-} from '../../Api';
+import { apiCallNotificationCount, apiCallPut } from '../../Api';
 import { checkAndApplyTheme } from '../../Utils';
 
 import './ChataNotificationButton.scss';
 
-export function NotificationIcon(selector, options={}){
-    checkAndApplyTheme()
+export function NotificationIcon(selector, options = {}) {
+    checkAndApplyTheme();
 
-	const NOTIFICATION_POLLING_INTERVAL = 180000
-	var obj = this;
-	this.options = {
-		authentication: {
+    const NOTIFICATION_POLLING_INTERVAL = 180000;
+    var obj = this;
+    this.options = {
+        authentication: {
             token: undefined,
             apiKey: undefined,
             customerId: undefined,
@@ -96,6 +93,7 @@ export function NotificationIcon(selector, options={}){
         switch (option) {
             case 'authentication':
                 obj.setObjectProp('authentication', value);
+                this.poolInterval();
                 break;
             default:
         }
@@ -129,7 +127,7 @@ export function NotificationIcon(selector, options={}){
         if (!isNaN(data?.unacknowledged)) {
             obj.unacknowledged = data.unacknowledged;
         } else {
-            return
+            return;
         }
 
         this.setBadgeValue(obj.unacknowledged);
