@@ -134,7 +134,7 @@ export function SafetynetSelector(suggestionList, position, parent, onChange) {
 }
 
 export function createSafetynetBody(responseContentContainer, suggestionArray, onChange) {
-    suggestionArray.map((suggestion) => {
+    suggestionArray?.map((suggestion) => {
         if (suggestion['type'] == 'word') {
             var span = document.createElement('span');
             span.textContent = ' ' + suggestion['word'] + ' ';
@@ -171,13 +171,18 @@ export function createSafetynetBody(responseContentContainer, suggestionArray, o
 
 export function createSuggestionArray(jsonResponse) {
     var fullSuggestion = jsonResponse['full_suggestion'] || jsonResponse['data']['replacements'];
-    var query = jsonResponse['query'] || jsonResponse['data']['text'];
+
+    var query = jsonResponse['query'] || jsonResponse['data']['text'] || jsonResponse['data']['query'];
     var words = [];
     var suggestionArray = [];
+    var lastEndIndex = 0;
 
     fullSuggestion.map((suggestion, index) => {
-        words.push(query.slice(lastEndIndex, suggestion.start));
-        words.push(query.slice(suggestion.start, suggestion.end));
+        const text = query?.slice(lastEndIndex, suggestion.start) ?? '';
+        const vl = query?.slice(suggestion.start, suggestion.end) ?? '';
+
+        words.push(text);
+        words.push(vl);
 
         if (index === fullSuggestion.length - 1) {
             var lastWord = query.slice(suggestion.end, query.length);
