@@ -348,8 +348,8 @@ export function DataMessenger(options = {}) {
                     obj.options[option] = value;
             }
             const subjects = await obj.getSubjects();
-            obj.dataExplorer.setSubjects(subjects);
-            obj.filterLocking.loadConditions();
+            obj.dataExplorer?.setSubjects(subjects);
+            obj.filterLocking?.loadConditions();
         } catch (error) {
             console.error(error);
         }
