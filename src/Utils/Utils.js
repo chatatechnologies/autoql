@@ -385,8 +385,13 @@ export function htmlToElement(html) {
 
 export function createIcon(icon) {
     const span = document.createElement('span');
-    span.appendChild(htmlToElement(icon));
     span.classList.add('autoql-vanilla-icon');
+
+    try {
+        span.appendChild(htmlToElement(icon));
+    } catch (error) {
+        console.error(error);
+    }
 
     return span;
 }

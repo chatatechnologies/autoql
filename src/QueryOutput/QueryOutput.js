@@ -1,288 +1,336 @@
 import {
-    getClickedData,
-    getNumberOfGroupables,
-    getGroupables,
-    uuidv4,
-    cloneObject,
+    isTableType,
+    isChartType,
+    formatElement,
+    getAutoQLConfig,
+    getDataFormatting,
+    areAllColumnsHidden,
+    getDefaultDisplayType,
+    transformQueryResponse,
     getSupportedDisplayTypes,
-    createTableContainer,
-    formatData,
-    mergeOptions,
-    checkAndApplyTheme,
-} from '../Utils';
-import {
-    createAreaChart,
-    createBarChart,
-    createBubbleChart,
-    createColumnChart,
-    createHeatmap,
-    createLineChart,
-    createPieChart,
-    createStackedBarChart,
-    createStackedColumnChart,
-} from '../Charts';
-import { ChataTable, ChataPivotTable } from '../ChataTable';
+} from 'autoql-fe-utils';
+
+import { uuidv4, checkAndApplyTheme, createIcon } from '../Utils';
+
+import { strings } from '../Strings';
+import { WARNING_TRIANGLE } from '../Svg';
 import { ChataUtils } from '../ChataUtils';
+import { ChataChartNew } from '../NewCharts';
+import { ChataTable, ChataPivotTable } from '../ChataTable';
+
+import './QueryOutput.scss';
+
+const isQueryResponseTransformed = (response) => {
+    return response?.isDrilldown !== undefined;
+};
 
 export function QueryOutput(selector, options = {}) {
-    checkAndApplyTheme();
+    try {
+        checkAndApplyTheme();
 
-    const PARENT = document.querySelector(selector);
-    var responseRenderer = document.createElement('div');
-    const uuid = uuidv4();
-    responseRenderer.options = {
-        supportsSuggestions: true,
-        onSuggestionClick: function () {},
-        onDataClick: () => {},
-        tableBorderColor: undefined,
-        tableHoverColor: undefined,
-        displayType: undefined,
-        renderTooltips: true,
-        dataFormatting: {
-            currencyCode: 'USD',
-            languageCode: 'en-US',
-            currencyDecimals: 2,
-            quantityDecimals: 1,
-            comparisonDisplay: 'PERCENT',
-            monthYearFormat: 'MMM YYYY',
-            dayMonthYearFormat: 'MMM D, YYYY',
-        },
-        enableDynamicCharting: true,
-        queryResponse: null,
-        autoChartAggregations: true,
-    };
+        const PARENT = document.querySelector(selector);
+        PARENT.innerHTML = '';
 
-    for (var [key, value] of Object.entries(options)) {
-        responseRenderer.options[key] = value;
-    }
-    responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
-    responseRenderer.classList.add('autoql-vanilla-renderer-container');
-    responseRenderer.setAttribute('data-componentid', uuidv4());
-    var applyTableStyles = function () {
-        var css = '';
-        var style = document.createElement('style');
-        if (responseRenderer.options.tableBorderColor !== undefined) {
-            css += `.renderer-table tr{ border-color: ${responseRenderer.options.tableBorderColor}; }`;
-        }
-        if (responseRenderer.options.tableHoverColor !== undefined) {
-            css += `.renderer-table tr:hover{ background-color: ${responseRenderer.options.tableHoverColor}; }`;
-        }
-        style.appendChild(document.createTextNode(css));
-        document.getElementsByTagName('head')[0].appendChild(style);
-    };
-    applyTableStyles();
+        const ALLOW_NUMERIC_STRING_COLUMNS = true;
+        const uuid = uuidv4();
 
-    responseRenderer.setObjectProp = (key, _obj) => {
-        for (var [keyValue, value] of Object.entries(_obj)) {
-            responseRenderer.options[key][keyValue] = value;
-        }
-    };
+        var responseRenderer = document.createElement('div');
 
-    responseRenderer.setOption = (option, value) => {
-        switch (option) {
-            case 'dataFormatting':
-                responseRenderer.setObjectProp('dataFormatting', value);
-                break;
-            default:
-                responseRenderer.options[option] = value;
-        }
-    };
+        responseRenderer.options = {
+            supportsSuggestions: true,
+            onSuggestionClick: function () {},
+            onDataClick: () => {},
+            tableBorderColor: undefined,
+            tableHoverColor: undefined,
+            displayType: undefined,
+            renderTooltips: true,
+            dataFormatting: {
+                currencyCode: 'USD',
+                languageCode: 'en-US',
+                currencyDecimals: 2,
+                quantityDecimals: 1,
+                comparisonDisplay: 'PERCENT',
+                monthYearFormat: 'MMM YYYY',
+                dayMonthYearFormat: 'MMM D, YYYY',
+            },
+            enableDynamicCharting: true,
+            queryResponse: null,
+            autoChartAggregations: true,
+        };
 
-    responseRenderer.clearMetadata = () => {
-        responseRenderer.metadata = null;
-    };
+        for (var [key, value] of Object.entries(options)) {
+            responseRenderer.options[key] = value;
 
-    responseRenderer.refreshView = () => {
-        var jsonResponse = responseRenderer.options.queryResponse;
-        const { autoChartAggregations } = responseRenderer.options;
-        if (!jsonResponse) return;
-        var chataBarContainer = responseRenderer.chataBarContainer;
-        var groupables = getGroupables(jsonResponse);
-        responseRenderer.clearMetadata();
-        ChataUtils.responses[uuid] = jsonResponse;
-        if (!jsonResponse) return;
-        let displayType;
-        var sup = getSupportedDisplayTypes(jsonResponse);
-        var chartWrapper = document.createElement('div');
-        if (sup.includes(responseRenderer.options.displayType)) {
-            displayType = responseRenderer.options.displayType;
-            if (groupables.length === 1 && autoChartAggregations) {
-                displayType = 'column';
-            }
-
-            if (groupables.length === 2 && autoChartAggregations) {
-                displayType = 'stacked_column';
-            }
-        } else {
-            displayType = 'table';
-        }
-
-        switch (displayType) {
-            case 'table':
-                var div = createTableContainer();
-                responseRenderer.appendChild(div);
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-                scrollbox.appendChild(div);
-                responseRenderer.appendChild(scrollbox);
-                if (jsonResponse['data']['columns'].length == 1) {
-                    var data = formatData(
-                        jsonResponse['data'],
-                        jsonResponse['data']['columns'][0],
-                        responseRenderer.options,
-                    );
-                    responseRenderer.innerHTML = `<div>${data}</div>`;
-                } else {
-                    var table = new ChataTable(uuid, opts, chataBarContainer.onRowClick);
-                    div.tabulator = table;
+            if (key === 'queryResponse') {
+                try {
+                    if (!isQueryResponseTransformed(value)) {
+                        const transformedResponse = transformQueryResponse({ data: value }).data;
+                        responseRenderer.options[key] = transformedResponse;
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-                break;
-            case 'pivot_table':
-                var opts = mergeOptions([chataBarContainer.options, responseRenderer.options]);
-                var d = createTableContainer();
-                responseRenderer.appendChild(d);
-                var s = document.createElement('div');
-                s.classList.add('autoql-vanilla-chata-table-scrollbox');
-                scrollbox.appendChild(d);
-                responseRenderer.appendChild(scrollbox);
-                var t = new ChataPivotTable(uuid, opts, chataBarContainer.onCellClick);
-                div.tabulator = t;
-                break;
-            case 'line':
-                responseRenderer.appendChild(chartWrapper);
-                createLineChart(
-                    chartWrapper,
-                    jsonResponse,
+            }
+        }
+
+        responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
+        responseRenderer.classList.add('autoql-vanilla-renderer-container');
+        responseRenderer.setAttribute('data-componentid', uuidv4());
+
+        responseRenderer.setObjectProp = (key, _obj) => {
+            for (var [keyValue, value] of Object.entries(_obj)) {
+                responseRenderer.options[key][keyValue] = value;
+            }
+        };
+
+        responseRenderer.setOption = (option, value) => {
+            switch (option) {
+                case 'dataFormatting':
+                    responseRenderer.setObjectProp('dataFormatting', value);
+                    break;
+                default:
+                    responseRenderer.options[option] = value;
+            }
+        };
+
+        responseRenderer.clearMetadata = () => {
+            responseRenderer.metadata = null;
+        };
+
+        responseRenderer.onChartClick = (data, jsonResponse) => {
+            const drilldownData = {
+                ...data,
+                queryID: jsonResponse?.data?.query_id,
+                jsonResponse,
+            };
+
+            responseRenderer.options?.onDataClick?.(drilldownData);
+        };
+
+        responseRenderer.onCellClick = async (data) => {
+            const json = ChataUtils.responses[uuid];
+
+            const drilldownData = {
+                ...data,
+                queryID: json?.data?.query_id,
+            };
+
+            responseRenderer.options?.onDataClick?.(drilldownData);
+        };
+
+        responseRenderer.renderAllColumnsHiddenMessage = () => {
+            const messageWrapper = document.createElement('div');
+            messageWrapper.classList.add('autoql-vanilla-no-columns-error-message');
+
+            try {
+                const messageIcon = createIcon(WARNING_TRIANGLE);
+                messageIcon.classList.add('autoql-vanilla-warning-icon');
+
+                const message = document.createElement('span');
+                message.innerHTML = strings.allColsHidden;
+
+                messageWrapper.appendChild(messageIcon);
+                messageWrapper.appendChild(message);
+            } catch (error) {
+                console.error(error);
+            }
+
+            responseRenderer.appendChild(messageWrapper);
+        };
+
+        responseRenderer.renderTable = (jsonResponse, displayType = 'table') => {
+            var totalRows = jsonResponse.data.count_rows;
+            var initialRows = jsonResponse.data.rows.length;
+
+            const tableContainer = document.createElement('div');
+            tableContainer.classList.add('autoql-vanilla-chata-table-container');
+            if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
+                tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
+            }
+
+            const tableRowCount = document.createElement('div');
+            tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
+            tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
+
+            const scrollbox = document.createElement('div');
+            scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+
+            const tableWrapper = document.createElement('div');
+            tableWrapper.setAttribute('data-componentid', uuid);
+            tableWrapper.classList.add('autoql-vanilla-chata-table');
+
+            // const tableScrollbox = document.createElement('div');
+            // tableScrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+
+            // const tableWrapper = document.createElement('div');
+            // tableWrapper.classList.add('autoql-vanilla-table-wrapper-queryoutput');
+
+            // tableScrollbox.appendChild(tableWrapper);
+            // responseRenderer.appendChild(tableScrollbox);
+
+            tableContainer.appendChild(tableWrapper);
+            scrollbox.appendChild(tableContainer);
+
+            if (displayType === 'table') {
+                tableContainer.appendChild(tableRowCount);
+            }
+
+            responseRenderer.appendChild(scrollbox);
+
+            var visibleRowCount = initialRows;
+            var useInfiniteScroll = true;
+            var tableParams = responseRenderer.tableParams ?? {
+                queryJson: jsonResponse,
+                sort: undefined,
+                filter: undefined,
+            };
+
+            if (displayType === 'table') {
+                var table = new ChataTable(
+                    uuid,
                     responseRenderer.options,
-                    () => {},
-                    false,
-                    'data-chartrenderer',
+                    (data) => responseRenderer.onCellClick(data),
+                    useInfiniteScroll,
+                    tableParams,
+                    (response, params) => {
+                        if (response?.data) {
+                            ChataUtils.responses[uuid] = response.data;
+                        }
+
+                        if (params) {
+                            responseRenderer.tableParams = {
+                                ...tableParams,
+                                ...params,
+                            };
+                        }
+
+                        table.element.onNewPage({ chartsVisibleCount: visibleRowCount });
+                    },
                 );
-                break;
-            case 'bar':
-                responseRenderer.appendChild(chartWrapper);
-                createBarChart(
-                    chartWrapper,
-                    jsonResponse,
-                    responseRenderer.options,
-                    () => {},
-                    false,
-                    'data-chartrenderer',
+
+                responseRenderer.internalTable = table;
+                responseRenderer.tabulator = table;
+                // table.responseRenderer = responseRenderer;
+            } else if (displayType === 'pivot_table') {
+                var table = new ChataPivotTable(uuid, responseRenderer.options, (data) =>
+                    responseRenderer.onCellClick(data),
                 );
-                break;
-            case 'column':
-                responseRenderer.appendChild(chartWrapper);
-                createColumnChart(
-                    chartWrapper,
-                    jsonResponse,
-                    responseRenderer.options,
-                    () => {},
-                    false,
-                    'data-chartrenderer',
+            }
+        };
+
+        responseRenderer.renderChart = (jsonResponse, displayType) => {
+            const chartWrapper = document.createElement('div');
+            chartWrapper.classList.add('autoql-vanilla-chart-wrapper-queryoutput');
+            responseRenderer.chartWrapper = chartWrapper;
+            responseRenderer.appendChild(chartWrapper);
+
+            new ChataChartNew(chartWrapper, {
+                type: displayType,
+                queryJson: jsonResponse,
+                options: responseRenderer.options,
+                onChartClick: (data) => responseRenderer.onChartClick(data, jsonResponse),
+            });
+        };
+
+        responseRenderer.getDisplayType = () => {
+            const jsonResponse = responseRenderer.options.queryResponse;
+
+            const supportedDisplayTypes = getSupportedDisplayTypes({
+                response: { data: jsonResponse },
+                allowNumericStringColumns: ALLOW_NUMERIC_STRING_COLUMNS,
+            });
+
+            let displayType = responseRenderer.options.displayType;
+
+            if (!supportedDisplayTypes.includes(displayType)) {
+                const defaultDisplayType = getDefaultDisplayType({ data: jsonResponse });
+                console.warn(
+                    `Display type provided is invalid: ${displayType}. Using default display type ${defaultDisplayType} instead`,
                 );
-                break;
-            case 'heatmap':
-                responseRenderer.appendChild(chartWrapper);
-                createHeatmap(chartWrapper, jsonResponse, responseRenderer.options, false, 'data-chartrenderer');
-                break;
-            case 'bubble':
-                responseRenderer.appendChild(chartWrapper);
-                createBubbleChart(chartWrapper, jsonResponse, responseRenderer.options, false, 'data-chartrenderer');
-                break;
-            case 'help':
-                responseRenderer.innerHTML = ChataUtils.createHelpContent(jsonResponse['data']['rows'][0]);
-                break;
-            case 'stacked_bar':
-                responseRenderer.appendChild(chartWrapper);
-                createStackedBarChart(
-                    chartWrapper,
-                    jsonResponse,
-                    responseRenderer.options,
-                    () => {},
-                    false,
-                    'data-stackedchartindex',
-                );
-                break;
-            case 'stacked_column':
-                responseRenderer.appendChild(chartWrapper);
-                createStackedColumnChart(
-                    chartWrapper,
-                    jsonResponse,
-                    responseRenderer.options,
-                    () => {},
-                    false,
-                    'data-stackedchartindex',
-                );
-                break;
-            case 'stacked_line':
-                responseRenderer.appendChild(chartWrapper);
-                createAreaChart(
-                    chartWrapper,
-                    jsonResponse,
-                    responseRenderer.options,
-                    () => {},
-                    false,
-                    'data-stackedchartindex',
-                );
-                break;
-            case 'pie':
-                responseRenderer.appendChild(chartWrapper);
-                createPieChart(chartWrapper, jsonResponse, responseRenderer.options, false, 'data-chartrenderer', true);
-                break;
-            default:
+
+                displayType = defaultDisplayType;
+            }
+
+            return displayType;
+        };
+
+        responseRenderer.renderSingleValueResponse = async (jsonResponse) => {
+            const responseContainer = document.createElement('div');
+            responseContainer.classList.add('autoql-vanilla-single-value-response-flex-container');
+
+            const responseWrapper = document.createElement('div');
+            responseWrapper.classList.add('autoql-vanilla-single-value-response-container');
+
+            const clickableResponse = document.createElement('a');
+            clickableResponse.classList.add('autoql-vanilla-single-value-response');
+
+            if (getAutoQLConfig(responseRenderer.options?.autoQLConfig).enableDrilldowns) {
+                clickableResponse.classList.add('with-drilldown');
+                clickableResponse.addEventListener('click', () => {
+                    responseRenderer.options?.onDataClick?.({
+                        groupBys: [],
+                        queryID: jsonResponse.data.query_id,
+                        supportedByAPI: true,
+                    });
+                });
+            }
+
+            const dataValue = formatElement({
+                element: jsonResponse.data.rows[0]?.[0] ?? 0,
+                column: jsonResponse.data.columns?.[0],
+                config: getDataFormatting(responseRenderer.options?.dataFormatting),
+            });
+
+            const responseText = document.createElement('span');
+            if (responseRenderer.options?.showSingleValueResponseTitle) {
+                responseText.innerHTML = `<span><strong>${responseRenderer.data?.columns?.[0]?.display_name}:</strong> ${dataValue}</span>`;
+            } else {
+                responseText.innerHTML = `<span>${dataValue}</span>`;
+            }
+
+            clickableResponse.appendChild(responseText);
+            responseWrapper.appendChild(clickableResponse);
+            responseContainer.appendChild(responseWrapper);
+            responseRenderer.appendChild(responseContainer);
+        };
+
+        responseRenderer.refreshView = () => {
+            var jsonResponse = responseRenderer.options.queryResponse;
+            if (!jsonResponse) return;
+
+            responseRenderer.innerHTML = '';
+            responseRenderer.clearMetadata();
+
+            ChataUtils.responses[uuid] = jsonResponse;
+
+            const displayType = responseRenderer.getDisplayType();
+
+            if (displayType === 'single-value') {
+                return responseRenderer.renderSingleValueResponse(jsonResponse);
+            } else if (areAllColumnsHidden(jsonResponse?.data?.columns)) {
+                return responseRenderer.renderAllColumnsHiddenMessage();
+            } else if (isTableType(displayType)) {
+                return responseRenderer.renderTable(jsonResponse, displayType);
+            } else if (isChartType(displayType)) {
+                return responseRenderer.renderChart(jsonResponse, displayType);
+            } else {
                 responseRenderer.innerHTML = `
                     <div>
                         Error: There was no data supplied for this table
                     </div>
                 `;
-        }
-    };
-
-    responseRenderer.addEventListener('click', function (e) {
-        if (e.target.hasAttribute('data-chartrenderer')) {
-            if (responseRenderer.chataBarContainer.options.autoQLConfig.enableDrilldowns) {
-                var json = ChataUtils.responses[uuid];
-                var queryId = json['data']['query_id'];
-                var indexData = e.target.dataset.chartrenderer;
-                var colValue = e.target.dataset.colvalue1;
-                var indexValue = e.target.dataset.filterindex;
-                var clickedData = getClickedData(json, ...json['data']['rows'][indexData]);
-
-                var groupableCount = getNumberOfGroupables(json['data']['columns']);
-                if (groupableCount == 1 || groupableCount == 2) {
-                    responseRenderer.chataBarContainer.sendDrilldownMessage(json, indexData);
-                } else {
-                    responseRenderer.chataBarContainer.sendDrilldownClientSide(json, indexValue, colValue);
-                }
             }
-            responseRenderer.options.onDataClick(clickedData, queryId);
+        };
+
+        try {
+            PARENT.appendChild(responseRenderer);
+            responseRenderer.refreshView();
+        } catch (error) {
+            console.error(error);
         }
 
-        if (e.target.hasAttribute('data-stackedchartindex')) {
-            let json = cloneObject(ChataUtils.responses[uuid]);
-            let queryId = json['data']['query_id'];
-
-            var val1 = e.target.dataset.unformatvalue1;
-            var val2 = e.target.dataset.unformatvalue2;
-            var val3 = e.target.dataset.unformatvalue3;
-
-            let clickedData = getClickedData(json, val1, val2, val3);
-            json['data']['rows'][0][0] = val1;
-            json['data']['rows'][0][1] = val2;
-            json['data']['rows'][0][2] = val3;
-
-            responseRenderer.chataBarContainer.sendDrilldownMessage(json, indexData);
-            responseRenderer.options.onDataClick(clickedData, queryId);
-        }
-
-        if (e.target.classList.contains('autoql-vanilla-chata-suggestion-btn-renderer')) {
-            var parent = e.target.parentElement.parentElement.parentElement;
-            parent.chataBarContainer.sendMessageToResponseRenderer(e.target.textContent);
-        }
-    });
-
-    PARENT.appendChild(responseRenderer);
-    responseRenderer.refreshView();
-
-    return responseRenderer;
+        return responseRenderer;
+    } catch (error) {
+        console.error(error);
+    }
 }

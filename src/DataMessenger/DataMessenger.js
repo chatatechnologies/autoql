@@ -2348,6 +2348,7 @@ export function DataMessenger(options = {}) {
         if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
             tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
         }
+
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
         tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
         tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;

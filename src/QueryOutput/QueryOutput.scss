@@ -1,0 +1,60 @@
+.autoql-vanilla-chata-response-content-container {
+    .autoql-vanilla-chart-wrapper-queryoutput {
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .autoql-vanilla-single-value-response-flex-container {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .autoql-vanilla-single-value-response-container {
+            width: 100%;
+            text-align: center;
+
+            .autoql-vanilla-single-value-response {
+                color: inherit;
+                cursor: unset;
+                font-size: 20px;
+                font-weight: 400;
+
+                &:hover {
+                    color: inherit;
+                }
+            }
+            .autoql-vanilla-single-value-response.with-drilldown:hover {
+                color: inherit;
+                text-decoration: underline;
+                font-weight: 600;
+                cursor: pointer;
+            }
+        }
+    }
+
+    .autoql-vanilla-no-columns-error-message {
+        margin: auto;
+        text-align: center;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        font-size: 13px;
+
+        .autoql-vanilla-warning-icon {
+            font-size: 22px;
+            display: block;
+            margin-bottom: 10px;
+            color: var(--react-autoql-warning-color);
+
+            line {
+                stroke-width: unset !important;
+                opacity: 1;
+            }
+        }
+    }
+}

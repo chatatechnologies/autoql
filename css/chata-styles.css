@@ -731,14 +731,14 @@ tr td.chata-hidden {
     align-self: center;
 }
 
-.autoql-vanilla-renderer-container line {
+.autoql-vanilla-chart-wrapper line {
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
 }
 
-.autoql-vanilla-renderer-container text {
+.autoql-vanilla-chart-wrapper text {
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
     fill: #5d5d5d;

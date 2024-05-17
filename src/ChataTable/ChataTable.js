@@ -190,11 +190,7 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
         } else {
             component.setPageLoading(true);
 
-            const responseWrapper = await component.queryFn({
-                tableFilters: nextTableParamsFormatted?.filters,
-                orders: nextTableParamsFormatted?.sorters,
-                cancelToken: component.axiosSource?.token,
-            });
+            const responseWrapper = await component.sortOrFilterData(nextTableParamsFormatted);
 
             component.queryID = responseWrapper?.data?.data?.query_id;
             newResponse = { ...(responseWrapper?.data?.data ?? {}), page: 1 };
@@ -318,12 +314,23 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     };
 
     component.getNewPage = (tableParams) => {
+        const queryId = ChataUtils.responses[idRequest]?.data?.query_id;
+
         return runQueryNewPage({
             ...(options.authentication ?? {}),
             tableFilters: tableParams?.filters,
             orders: tableParams?.sorters,
             page: tableParams?.page,
-            queryId: json.data.query_id,
+            queryId,
+            cancelToken: component.axiosSource?.token,
+        });
+    };
+
+    component.sortOrFilterData = (tableParams) => {
+        return component.queryFn({
+            ...(options.authentication ?? {}),
+            tableFilters: tableParams?.filters,
+            orders: tableParams?.sorters,
             cancelToken: component.axiosSource?.token,
         });
     };
