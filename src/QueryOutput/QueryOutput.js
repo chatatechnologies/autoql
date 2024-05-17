@@ -73,6 +73,10 @@ export function QueryOutput(selector, options = {}) {
             }
         }
 
+        if (responseRenderer.options.queryResponse) {
+            responseRenderer.options.pageSize = options.queryResponse?.data?.fe_req?.page_size;
+        }
+
         responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
         responseRenderer.classList.add('autoql-vanilla-renderer-container');
         responseRenderer.setAttribute('data-componentid', uuidv4());
