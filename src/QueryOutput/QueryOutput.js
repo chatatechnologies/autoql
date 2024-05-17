@@ -83,6 +83,12 @@ export function QueryOutput(selector, options = {}) {
             }
         };
 
+        responseRenderer.dispatchResizeEvent = () => {
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        };
+
+        window.addEventListener('resize', responseRenderer.dispatchResizeEvent);
+
         responseRenderer.setOption = (option, value) => {
             switch (option) {
                 case 'dataFormatting':
@@ -159,15 +165,6 @@ export function QueryOutput(selector, options = {}) {
             tableWrapper.setAttribute('data-componentid', uuid);
             tableWrapper.classList.add('autoql-vanilla-chata-table');
 
-            // const tableScrollbox = document.createElement('div');
-            // tableScrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-
-            // const tableWrapper = document.createElement('div');
-            // tableWrapper.classList.add('autoql-vanilla-table-wrapper-queryoutput');
-
-            // tableScrollbox.appendChild(tableWrapper);
-            // responseRenderer.appendChild(tableScrollbox);
-
             tableContainer.appendChild(tableWrapper);
             scrollbox.appendChild(tableContainer);
 
@@ -207,15 +204,13 @@ export function QueryOutput(selector, options = {}) {
                         table.element.onNewPage({ chartsVisibleCount: visibleRowCount });
                     },
                 );
-
-                responseRenderer.internalTable = table;
-                responseRenderer.tabulator = table;
-                // table.responseRenderer = responseRenderer;
             } else if (displayType === 'pivot_table') {
                 var table = new ChataPivotTable(uuid, responseRenderer.options, (data) =>
                     responseRenderer.onCellClick(data),
                 );
             }
+
+            select(window).on('chata-resize.' + uuid, null);
         };
 
         responseRenderer.renderChart = (jsonResponse, displayType) => {
@@ -306,13 +301,13 @@ export function QueryOutput(selector, options = {}) {
             const displayType = responseRenderer.getDisplayType();
 
             if (displayType === 'single-value') {
-                return responseRenderer.renderSingleValueResponse(jsonResponse);
+                responseRenderer.renderSingleValueResponse(jsonResponse);
             } else if (areAllColumnsHidden(jsonResponse?.data?.columns)) {
-                return responseRenderer.renderAllColumnsHiddenMessage();
+                responseRenderer.renderAllColumnsHiddenMessage();
             } else if (isTableType(displayType)) {
-                return responseRenderer.renderTable(jsonResponse, displayType);
+                responseRenderer.renderTable(jsonResponse, displayType);
             } else if (isChartType(displayType)) {
-                return responseRenderer.renderChart(jsonResponse, displayType);
+                responseRenderer.renderChart(jsonResponse, displayType);
             } else {
                 responseRenderer.innerHTML = `
                     <div>
@@ -320,6 +315,8 @@ export function QueryOutput(selector, options = {}) {
                     </div>
                 `;
             }
+
+            responseRenderer.dispatchResizeEvent();
         };
 
         try {

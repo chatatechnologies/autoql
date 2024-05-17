@@ -27,7 +27,7 @@ import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
-import { getGroupableFields } from '../Charts/ChataChartHelpers';
+import { getGroupableFields } from '../NewCharts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet';
 import {
@@ -2380,6 +2380,7 @@ export function DataMessenger(options = {}) {
             var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
             containerMessage.appendChild(interpretationView);
         }
+
         setTimeout(function () {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);

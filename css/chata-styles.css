@@ -620,7 +620,7 @@ tr td.chata-hidden {
     font-family: var(--autoql-vanilla-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
-    color: #5d5d5d;
+    color: var(--autoql-vanilla-text-color-primary);
     padding: 8px;
     height: 37px;
     vertical-align: middle;
@@ -731,7 +731,7 @@ tr td.chata-hidden {
     align-self: center;
 }
 
-.autoql-vanilla-chart-wrapper line {
+.autoql-vanilla-chart-wrapper .tick line {
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
@@ -741,7 +741,7 @@ tr td.chata-hidden {
 .autoql-vanilla-chart-wrapper text {
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
-    fill: #5d5d5d;
+    fill: var(--autoql-vanilla-text-color-primary);
 }
 
 text.autoql-vanilla-x-axis-label,

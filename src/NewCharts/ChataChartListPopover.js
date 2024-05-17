@@ -7,16 +7,16 @@ export function ChataChartListPopover(e, scale, allColumns, placement, align, co
 
     if (!scale) console.warn('No scale provided to ChataChartListPover');
 
-    let columns = allColumns
+    let columns = allColumns;
 
-    if (scale.type === 'LINEAR' && scale.allowMultipleSeries) { 
-        return new ChataChartSeriesPopover(e, placement, align, columns, scale, undefined, columnIndexConfig)
+    if (scale.type === 'LINEAR' && scale.allowMultipleSeries) {
+        return new ChataChartSeriesPopover(e, placement, align, columns, scale, undefined, columnIndexConfig);
     }
 
     if (columnIndexConfig) {
-        columns = allColumns.filter(col => !columnIndexConfig.numberColumnIndices?.includes(col.index))
+        columns = allColumns.filter((col) => !columnIndexConfig.numberColumnIndices?.includes(col.index));
     }
-    
+
     obj.createContent = () => {
         var selectorContainer = document.createElement('div');
         var selectorContent = document.createElement('ul');
@@ -63,7 +63,7 @@ export function ChataChartListPopover(e, scale, allColumns, placement, align, co
     };
 
     var popover = new PopoverChartSelector(e, placement, align);
-    
+
     obj.createContent();
 
     popover.setSelectedItem = (columnIndex) => {

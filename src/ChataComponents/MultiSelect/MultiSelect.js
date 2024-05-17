@@ -1,4 +1,4 @@
-import { PopoverChartSelector } from '../../Charts/PopoverChartSelector';
+import { PopoverChartSelector } from '../../NewCharts/PopoverChartSelector';
 import { Checkbox } from '../../Checkbox';
 import { CARET_DOWN_ICON } from '../../Svg';
 import { createIcon, uuidv4 } from '../../Utils';
