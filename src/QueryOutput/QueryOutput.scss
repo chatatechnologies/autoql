@@ -1,4 +1,9 @@
-.autoql-vanilla-chata-response-content-container {
+.autoql-vanilla-renderer-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: center;
+
     .autoql-vanilla-chart-wrapper-queryoutput {
         height: 100%;
         width: 100%;

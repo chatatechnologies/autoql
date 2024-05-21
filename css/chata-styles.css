@@ -724,13 +724,6 @@ tr td.chata-hidden {
 }
 
 /* RESPONSE RENDERER */
-.autoql-vanilla-renderer-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: center;
-}
-
 .autoql-vanilla-chart-wrapper .tick line {
     stroke-width: 1px;
     stroke: currentColor;

@@ -10,6 +10,8 @@ import {
     getSupportedDisplayTypes,
 } from 'autoql-fe-utils';
 
+import { select } from 'd3-selection';
+
 import { uuidv4, checkAndApplyTheme, createIcon } from '../Utils';
 
 import { strings } from '../Strings';
@@ -81,6 +83,18 @@ export function QueryOutput(selector, options = {}) {
         responseRenderer.classList.add('autoql-vanilla-renderer-container');
         responseRenderer.setAttribute('data-componentid', uuidv4());
 
+        if (responseRenderer.options.height > 0) {
+            responseRenderer.style.height = `${responseRenderer.options.height}px`;
+        } else {
+            responseRenderer.style.height = '400px';
+        }
+
+        if (responseRenderer.options.maxHeight > 0) {
+            responseRenderer.style.maxHeight = `${responseRenderer.options.maxHeight}px`;
+        } else {
+            responseRenderer.style.maxHeight = '500px';
+        }
+
         responseRenderer.setObjectProp = (key, _obj) => {
             for (var [keyValue, value] of Object.entries(_obj)) {
                 responseRenderer.options[key][keyValue] = value;
@@ -101,6 +115,8 @@ export function QueryOutput(selector, options = {}) {
                 default:
                     responseRenderer.options[option] = value;
             }
+
+            responseRenderer.refreshView();
         };
 
         responseRenderer.clearMetadata = () => {
@@ -153,10 +169,13 @@ export function QueryOutput(selector, options = {}) {
             var initialRows = jsonResponse.data.rows.length;
 
             const tableContainer = document.createElement('div');
+
             tableContainer.classList.add('autoql-vanilla-chata-table-container');
             if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
                 tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
             }
+
+            // tableContainer.style.maxHeight = '200px';
 
             const tableRowCount = document.createElement('div');
             tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
