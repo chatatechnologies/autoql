@@ -39,6 +39,8 @@ export function QueryOutput(selector, options = {}) {
 
         var responseRenderer = document.createElement('div');
 
+        PARENT.appendChild(responseRenderer);
+
         responseRenderer.options = {
             supportsSuggestions: true,
             onSuggestionClick: function () {},
@@ -113,6 +115,17 @@ export function QueryOutput(selector, options = {}) {
             switch (option) {
                 case 'dataFormatting':
                     responseRenderer.setObjectProp('dataFormatting', value);
+                    break;
+                case 'queryResponse':
+                    responseRenderer.options[option] = value;
+                    try {
+                        if (!isQueryResponseTransformed(value)) {
+                            const transformedResponse = transformQueryResponse({ data: value }).data;
+                            responseRenderer.options[key] = transformedResponse;
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    }
                     break;
                 default:
                     responseRenderer.options[option] = value;
@@ -414,7 +427,6 @@ export function QueryOutput(selector, options = {}) {
         };
 
         try {
-            PARENT.appendChild(responseRenderer);
             responseRenderer.refreshView();
         } catch (error) {
             console.error(error);
