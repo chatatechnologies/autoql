@@ -453,8 +453,8 @@ input.autoql-vanilla-chata-input {
     cursor: pointer;
     letter-spacing: 0.05em;
     transition: border-color 0.2s ease, background-color 0.2s ease, opacity 0.2s ease, color 0.2s ease;
-    border-color: #e2e2e26e;
-    border: 1px solid rgba(0, 0, 0, 0.15);
+    border-color: var(--autoql-vanilla-border-color);
+    border: 1px solid var(--autoql-vanilla-border-color);
     color: var(--autoql-vanilla-text-color-primary);
 }
 
@@ -620,7 +620,7 @@ tr td.chata-hidden {
     font-family: var(--autoql-vanilla-font-family);
     font-size: 14px;
     letter-spacing: 0.04em;
-    color: #5d5d5d;
+    color: var(--autoql-vanilla-text-color-primary);
     padding: 8px;
     height: 37px;
     vertical-align: middle;
@@ -724,24 +724,17 @@ tr td.chata-hidden {
 }
 
 /* RESPONSE RENDERER */
-.autoql-vanilla-renderer-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    align-self: center;
-}
-
-.autoql-vanilla-renderer-container line {
+.autoql-vanilla-chart-wrapper .tick line {
     stroke-width: 1px;
     stroke: currentColor;
     opacity: 0.15;
     shape-rendering: crispedges;
 }
 
-.autoql-vanilla-renderer-container text {
+.autoql-vanilla-chart-wrapper text {
     font-family: var(--autoql-vanilla-font-family);
     letter-spacing: 0.04em;
-    fill: #5d5d5d;
+    fill: var(--autoql-vanilla-text-color-primary);
 }
 
 text.autoql-vanilla-x-axis-label,

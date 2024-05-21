@@ -132,7 +132,7 @@ export function Axes(container, params = {}) {
     this.legend = this.createLegend();
 
     this.destroy = () => {
-        axes.selectAll("*").remove();
+        axes.selectAll('*').remove();
     };
 
     return this;

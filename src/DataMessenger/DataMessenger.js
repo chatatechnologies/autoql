@@ -27,7 +27,7 @@ import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
-import { getGroupableFields } from '../Charts/ChataChartHelpers';
+import { getGroupableFields } from '../NewCharts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet';
 import {
@@ -348,8 +348,8 @@ export function DataMessenger(options = {}) {
                     obj.options[option] = value;
             }
             const subjects = await obj.getSubjects();
-            obj.dataExplorer.setSubjects(subjects);
-            obj.filterLocking.loadConditions();
+            obj.dataExplorer?.setSubjects(subjects);
+            obj.filterLocking?.loadConditions();
         } catch (error) {
             console.error(error);
         }
@@ -2348,6 +2348,7 @@ export function DataMessenger(options = {}) {
         if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
             tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
         }
+
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
         tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
         tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
@@ -2379,6 +2380,7 @@ export function DataMessenger(options = {}) {
             var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
             containerMessage.appendChild(interpretationView);
         }
+
         setTimeout(function () {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);

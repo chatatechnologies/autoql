@@ -24,7 +24,7 @@ import {
 import { uuidv4, cloneObject } from '../Utils';
 import { select } from 'd3-selection';
 import { BarChartNew } from './ChataBarChartNew';
-import { ChartLoader } from '../Charts/ChartLoader';
+import { ChartLoader } from './ChartLoader';
 import { CSS_PREFIX } from '../Constants';
 import { ColumnChartNew } from './ChataColumnChartNew';
 import { LineChartNew } from './ChataLineChartNew';
@@ -37,7 +37,7 @@ import { PieChartNew } from './ChataPieChart';
 import { Scatterplot } from './ChataScatterplot';
 import { Histogram } from './ChataHistogram';
 
-import '../Charts/ChataChart.scss';
+import './ChataChart.scss';
 
 export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     if (!component || !queryJson) {

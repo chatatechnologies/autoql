@@ -41,7 +41,7 @@ export const strings = new LocalizedStrings({
         queryText: 'Query',
         titleText: 'Title',
         allColsHidden:
-            'All columns in this table are currently hidden. You can adjust your column visibility preferences using the Column Visibility Manager (<span class="chata-icon eye-icon">{0}</span>) in the Options Toolbar.',
+            'All columns in this table are currently hidden. You can adjust your column visibility preferences using the Column Visibility Manager in the Options Toolbar.',
         safetynet:
             'I need your help matching a term you used to the exact corresponding term in your database. Verify by selecting the correct term from the menu below:',
         addedNewTile1: 'Add a  ',

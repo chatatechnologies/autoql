@@ -48,8 +48,8 @@ export function PieChartNew(container, params = {}) {
 
         self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
             select(this)
-                .transition()
-                .duration(500)
+                // .transition()
+                // .duration(500)
                 .attr('transform', function (d) {
                     if (d.data.key === newActiveKey) {
                         const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;
@@ -119,8 +119,8 @@ export function PieChartNew(container, params = {}) {
         // render active pie slice if there is one
         self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
             select(this)
-                .transition()
-                .duration(500)
+                // .transition()
+                // .duration(500)
                 .attr('transform', function (d) {
                     if (d.data.key === this.activeKey) {
                         const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;

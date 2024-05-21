@@ -1,9 +1,9 @@
 .chata-modal {
-    .chata-modal-body{
+    .chata-modal-body {
         .autoql-vanilla-confirm-title {
             margin-top: 20px;
             margin-bottom: 20px;
-            color: rgba(0,0,0,.85);
+            color: var(--autoql-vanilla-text-color-primary);
             font-weight: 700;
         }
         p {

@@ -1,4 +1,4 @@
-import { PopoverChartSelector } from '../../Charts/PopoverChartSelector';
+import { PopoverChartSelector } from '../../NewCharts/PopoverChartSelector';
 import { uuidv4 } from '../../Utils';
 import { MonthRangePicker } from './MonthRangePicker';
 import { YearRangePicker } from './YearRangePicker';

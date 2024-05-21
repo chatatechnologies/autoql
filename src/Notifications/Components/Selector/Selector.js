@@ -1,6 +1,5 @@
-import { PopoverChartSelector } from '../../../Charts/PopoverChartSelector';
 import { Popup } from '../../../Popup';
-import { SELECT_ARROW } from '../../../Svg';
+import { CARET_DOWN_ICON } from '../../../Svg';
 import { createIcon, uuidv4 } from '../../../Utils';
 import './Selector.scss';
 
@@ -11,7 +10,7 @@ export function Selector({ defaultValue, options, outlined = true, onChange = ()
     const selectText = document.createElement('span');
     const itemValue = document.createElement('span');
     const selectArrow = document.createElement('div');
-    const arrow = createIcon(SELECT_ARROW);
+    const arrow = createIcon(CARET_DOWN_ICON);
     arrow.classList.add(selectID);
 
     const optionsContainer = document.createElement('ul');

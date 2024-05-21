@@ -16,8 +16,8 @@ import {
 
 import { select } from 'd3-selection';
 import { CSS_PREFIX } from '../Constants';
-import { ChataChartListPopover } from '../Charts/ChataChartListPopover';
-import { ChartRowSelector } from '../Charts/ChartRowSelector';
+import { ChataChartListPopover } from './ChataChartListPopover';
+import { ChartRowSelector } from './ChartRowSelector';
 
 export function Axis(container, params = {}, axisOptions = {}) {
     const {
