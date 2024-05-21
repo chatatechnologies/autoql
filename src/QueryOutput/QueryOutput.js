@@ -164,6 +164,12 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.appendChild(messageWrapper);
         };
 
+        responseRenderer.toggleTableFiltering = () => {
+            if (responseRenderer?.table) {
+                responseRenderer?.table.toggleFilters();
+            }
+        };
+
         responseRenderer.renderTable = (jsonResponse, displayType = 'table') => {
             var totalRows = jsonResponse.data.count_rows;
             var initialRows = jsonResponse.data.rows.length;
@@ -174,8 +180,6 @@ export function QueryOutput(selector, options = {}) {
             if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
                 tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
             }
-
-            // tableContainer.style.maxHeight = '200px';
 
             const tableRowCount = document.createElement('div');
             tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
@@ -233,6 +237,7 @@ export function QueryOutput(selector, options = {}) {
                 );
             }
 
+            responseRenderer.table = table;
             select(window).on('chata-resize.' + uuid, null);
         };
 
