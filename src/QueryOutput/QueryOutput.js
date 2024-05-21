@@ -15,10 +15,11 @@ import { select } from 'd3-selection';
 import { uuidv4, checkAndApplyTheme, createIcon } from '../Utils';
 
 import { strings } from '../Strings';
-import { WARNING_TRIANGLE } from '../Svg';
 import { ChataUtils } from '../ChataUtils';
 import { ChataChartNew } from '../NewCharts';
+import { SEARCH_ICON, WARNING_TRIANGLE } from '../Svg';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
+import { QueryValidationMessage } from '../QueryValidationMessage';
 
 import './QueryOutput.scss';
 
@@ -41,6 +42,7 @@ export function QueryOutput(selector, options = {}) {
         responseRenderer.options = {
             supportsSuggestions: true,
             onSuggestionClick: function () {},
+            onQueryValidationSubmit: undefined,
             onDataClick: () => {},
             tableBorderColor: undefined,
             tableHoverColor: undefined,
@@ -277,6 +279,60 @@ export function QueryOutput(selector, options = {}) {
             return displayType;
         };
 
+        responseRenderer.renderFeedbackMessage = () => {
+            responseRenderer.innerHTML = strings.feedback;
+        };
+
+        responseRenderer.renderSuggestionResponse = (jsonResponse) => {
+            const suggestions = jsonResponse?.data?.items;
+
+            if (!suggestions) {
+                return;
+            }
+
+            const suggestionsContainer = document.createElement('div');
+            const suggestionMessage = document.createElement('p');
+            suggestionMessage.innerHTML = strings.suggestionResponse;
+
+            suggestionsContainer.appendChild(suggestionMessage);
+            responseRenderer.appendChild(suggestionsContainer);
+
+            suggestions.forEach((suggestion, i) => {
+                const suggestionContainer = document.createElement('div');
+                const suggestionButton = document.createElement('button');
+
+                suggestionButton.classList.add('autoql-vanilla-chata-suggestion-btn');
+                suggestionButton.textContent = suggestion;
+                suggestionContainer.appendChild(suggestionButton);
+                suggestionButton.onclick = async (e) => {
+                    responseRenderer.options?.onSuggestionClick?.(suggestion);
+
+                    if (suggestion === 'None of these') {
+                        responseRenderer.renderFeedbackMessage();
+                    }
+                };
+
+                suggestionsContainer.appendChild(suggestionContainer);
+            });
+        };
+
+        responseRenderer.renderValidationResponse = (jsonResponse) => {
+            const validationMessage = new QueryValidationMessage({
+                response: { data: jsonResponse },
+                submitText: 'Run Query',
+                submitIcon: SEARCH_ICON,
+                onSubmit: ({ query, userSelection }) => {
+                    try {
+                        responseRenderer.options?.onQueryValidationSubmit?.({ query, userSelection });
+                    } catch (error) {
+                        console.error(error);
+                    }
+                },
+            });
+
+            responseRenderer.appendChild(validationMessage);
+        };
+
         responseRenderer.renderSingleValueResponse = async (jsonResponse) => {
             const responseContainer = document.createElement('div');
             responseContainer.classList.add('autoql-vanilla-single-value-response-flex-container');
@@ -325,6 +381,16 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.clearMetadata();
 
             ChataUtils.responses[uuid] = jsonResponse;
+
+            const isSuggestionList = !!jsonResponse?.data?.items;
+            if (isSuggestionList) {
+                return responseRenderer.renderSuggestionResponse(jsonResponse);
+            }
+
+            const isValidationResponse = !!jsonResponse?.data?.replacements;
+            if (isValidationResponse) {
+                return responseRenderer.renderValidationResponse(jsonResponse);
+            }
 
             const displayType = responseRenderer.getDisplayType();
 
