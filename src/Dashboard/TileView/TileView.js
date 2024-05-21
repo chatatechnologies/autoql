@@ -12,7 +12,7 @@ import { TileVizToolbar } from '../TileVizToolbar';
 import { ActionToolbar } from '../ActionToolbar';
 import { InputToolbar } from '../InputToolbar';
 import { strings } from '../../Strings';
-import { ChataChartNew } from '../../NewCharts';
+import { ChataChartNew } from '../../Charts';
 import {
     CHART_TYPES,
     DEFAULT_DATA_PAGE_SIZE,
@@ -311,11 +311,11 @@ export function TileView(tile, isSecond = false) {
         }
     };
 
-
     view.getQueryFn = (response) => {
         let newResponse;
 
-        return async ({ formattedTableParams: undefined, ...args }) => { // todo - formattedTablParams
+        return async ({ formattedTableParams: undefined, ...args }) => {
+            // todo - formattedTablParams
             try {
                 const queryRequestData = response?.data?.data?.fe_req;
                 const allFilters = getCombinedFilters(undefined, response, undefined);
@@ -333,19 +333,18 @@ export function TileView(tile, isSecond = false) {
                     tableFilters: allFilters,
                 };
 
-                  let newResponse = await runQuery({
-                        ...queryParams,
-                        query: queryRequestData?.text,
-                        debug: queryRequestData?.translation === 'include',
-                        userSelection: queryRequestData?.disambiguation,
-                        ...args,
-                    });
-    
-                    if (newResponse?.data) {
-                        newResponse.data.originalQueryID = response.data.data.query_id;
-                        newResponse.data.queryFn = view.getQueryFn(response)
-                    }
+                let newResponse = await runQuery({
+                    ...queryParams,
+                    query: queryRequestData?.text,
+                    debug: queryRequestData?.translation === 'include',
+                    userSelection: queryRequestData?.disambiguation,
+                    ...args,
+                });
 
+                if (newResponse?.data) {
+                    newResponse.data.originalQueryID = response.data.data.query_id;
+                    newResponse.data.queryFn = view.getQueryFn(response);
+                }
             } catch (error) {
                 console.error(error);
                 newResponse = error;
@@ -368,15 +367,20 @@ export function TileView(tile, isSecond = false) {
 
             let response;
             try {
-                response = await runQuery({ ...getAuthentication(dashboard.options.authentication), ...getAutoQLConfig(dashboard.options.autoQLConfig), query, source: 'dashboards.user' })
+                response = await runQuery({
+                    ...getAuthentication(dashboard.options.authentication),
+                    ...getAutoQLConfig(dashboard.options.autoQLConfig),
+                    query,
+                    source: 'dashboards.user',
+                });
                 if (response?.data) {
-                    response.data.queryFn = view.getQueryFn(response)
+                    response.data.queryFn = view.getQueryFn(response);
                 }
             } catch (error) {
                 response = error;
             }
 
-            const json = response?.data
+            const json = response?.data;
 
             ChataUtils.responses[UUID] = json;
 
@@ -608,7 +612,7 @@ export function TileView(tile, isSecond = false) {
     };
 
     view.displaySingleValueDrillDown = (json) => {
-        const data = { groupBys: [], supportedByAPI: true }
+        const data = { groupBys: [], supportedByAPI: true };
 
         var tableView = new DrilldownView({
             tile,

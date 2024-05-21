@@ -16,7 +16,7 @@ import { uuidv4, checkAndApplyTheme, createIcon } from '../Utils';
 
 import { strings } from '../Strings';
 import { ChataUtils } from '../ChataUtils';
-import { ChataChartNew } from '../NewCharts';
+import { ChataChartNew } from '../Charts';
 import { SEARCH_ICON, WARNING_TRIANGLE } from '../Svg';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { QueryValidationMessage } from '../QueryValidationMessage';
