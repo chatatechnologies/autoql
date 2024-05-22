@@ -12,7 +12,7 @@ import { TileVizToolbar } from '../TileVizToolbar';
 import { ActionToolbar } from '../ActionToolbar';
 import { InputToolbar } from '../InputToolbar';
 import { strings } from '../../Strings';
-import { ChataChartNew } from '../../Charts';
+import { ChataChart } from '../../Charts';
 import {
     CHART_TYPES,
     DEFAULT_DATA_PAGE_SIZE,
@@ -729,7 +729,7 @@ export function TileView(tile, isSecond = false) {
             chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
             chartWrapper2.appendChild(chartWrapper);
             container.appendChild(chartWrapper2);
-            new ChataChartNew(chartWrapper, {
+            new ChataChart(chartWrapper, {
                 type: displayType,
                 options: dashboard.options,
                 queryJson: json,

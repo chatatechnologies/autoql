@@ -1,11 +1,12 @@
-import { dataFormattingDefault, formatElement, isChartType, isDataLimited } from 'autoql-fe-utils';
-import './NotificationDataContainer.scss';
+import { isSingleValueResponse } from 'autoql-fe-utils';
+
 import { ChataUtils } from '../../../../ChataUtils';
 import { uuidv4 } from '../../../../Utils';
-import { ChataTable } from '../../../../ChataTable';
 import { NotificationVizToolbar } from '../NotificationVizToolbar';
 import { DataLimitWarningIcon } from '../../../../DataLimitWarningIcon';
-import { ChataChartNew } from '../../../../Charts';
+import { QueryOutput } from '../../../../QueryOutput';
+
+import './NotificationDataContainer.scss';
 
 export function NotificationDataContainer({ queryResponse, widgetOptions }) {
     const container = document.createElement('div');
@@ -18,33 +19,6 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
     wrapper.classList.add('autoql-vanilla-notification-chart-container');
     container.classList.add('autoql-vanilla-notification-data-container');
 
-    this.createDataResponse = () => {
-        const responseContainer = document.createElement('div');
-        const singleValue = document.createElement('div');
-        const queryContainer = document.createElement('span');
-        const queryWrapper = document.createElement('strong');
-        const { text, columns, rows } = queryResponse?.data?.data;
-
-        queryWrapper.textContent = text;
-
-        queryContainer.appendChild(queryWrapper);
-        queryContainer.appendChild(document.createTextNode(': '));
-        singleValue.appendChild(queryContainer);
-        singleValue.appendChild(
-            document.createTextNode(
-                formatElement({
-                    element: rows[0][0],
-                    column: columns[0],
-                }),
-            ),
-        );
-        responseContainer.appendChild(singleValue);
-
-        singleValue.classList.add('autoql-vanilla-single-value-response');
-        responseContainer.classList.add('autoql-vanilla-single-value-response-flex-container');
-        return responseContainer;
-    };
-
     this.createVizToolbar = () => {
         return new NotificationVizToolbar({
             response: queryResponse,
@@ -53,93 +27,21 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
     };
 
     this.handleFilterClick = () => {
-        this.tabulator.toggleFilters();
-    };
-
-    this.createTable = () => {
-        var useInfiniteScroll = isDataLimited({ data: queryResponse?.data });
-        const table = new ChataTable(
-            this.idRequest,
-            { options: dataFormattingDefault },
-            () => {},
-            () => {},
-            useInfiniteScroll,
-            undefined,
-        );
-
-        this.tabulator = table;
-    };
-
-    this.createChartContainer = () => {
-        var chartContainer = document.createElement('div');
-        chartContainer.classList.add('autoql-vanilla-chart-container');
-
-        return chartContainer;
-    };
-
-    this.createTableResponseContainer = () => {
-        var tableContainer = document.createElement('div');
-        var tableWrapper = document.createElement('div');
-
-        tableWrapper.setAttribute('data-componentid', this.idRequest);
-        tableWrapper.classList.add('autoql-vanilla-chata-table');
-        tableContainer.classList.add('autoql-vanilla-chata-table-container');
-
-        tableContainer.appendChild(tableWrapper);
-
-        return tableContainer;
-    };
-
-    this.isSingleResponse = () => {
-        const { columns } = queryResponse?.data?.data;
-
-        return columns.length === 1;
+        this.queryOutput?.toggleTableFiltering();
     };
 
     this.showDataLimitWarning = () => {
         return queryResponse?.data?.data?.rows?.length >= 500;
     };
 
-    this.initializeContainers = () => {
-        if (!this.isSingleResponse()) {
-            this.tableContainer = this.createTableResponseContainer();
-            this.chartContainer = this.createChartContainer();
-
-            this.chartContainer.classList.add('autoql-vanilla-hidden');
-
-            responseContentContainer.appendChild(this.tableContainer);
-            responseContentContainer.appendChild(this.chartContainer);
-            if (this.showDataLimitWarning()) {
-                responseContentContainer.appendChild(this.createFooter());
-            }
-        }
-    };
-
     this.showResponse = (displayType) => {
-        switch (displayType) {
-            case 'data':
-            case 'table':
-                if (this.isSingleResponse()) {
-                    responseContentContainer.appendChild(this.createDataResponse());
-                } else {
-                    this.chartContainer.classList.add('autoql-vanilla-hidden');
-                    this.tableContainer.classList.remove('autoql-vanilla-hidden');
-                    this.createTable();
-                }
-                break;
-        }
+        const queryOuptut = new QueryOutput(responseContentContainer, {
+            displayType,
+            queryResponse: queryResponse?.data,
+            showSingleValueResponseTitle: true,
+        });
 
-        if (isChartType(displayType)) {
-            this.tableContainer.classList.add('autoql-vanilla-hidden');
-            this.chartContainer.classList.remove('autoql-vanilla-hidden');
-
-            new ChataChartNew(this.chartContainer, {
-                type: displayType,
-                queryJson: queryResponse?.data,
-                onChartClick: () => {},
-                options: widgetOptions,
-            });
-        }
+        this.queryOutput = queryOuptut;
     };
 
     this.createFooter = () => {
@@ -156,13 +58,11 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
     wrapper.appendChild(responseContentContainer);
     container.appendChild(wrapper);
 
-    this.initializeContainers();
-
     setTimeout(() => {
         this.showResponse(displayType);
     }, 100);
 
-    if (!this.isSingleResponse()) {
+    if (!isSingleValueResponse(queryResponse)) {
         wrapper.appendChild(this.createVizToolbar());
     }
 

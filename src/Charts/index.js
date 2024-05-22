@@ -1,1 +1,1 @@
-export { ChataChartNew } from './ChataChartNew'
+export { ChataChart } from './ChataChart';

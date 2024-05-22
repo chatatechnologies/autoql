@@ -90,7 +90,7 @@ import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-import { ChataChartNew } from '../Charts';
+import { ChataChart } from '../Charts';
 import MobileDetect from 'mobile-detect';
 
 import testdata from '../../testdata';
@@ -2124,7 +2124,7 @@ export function DataMessenger(options = {}) {
 
         obj.refreshToolbarButtons(component, displayType);
 
-        new ChataChartNew(component, {
+        new ChataChart(component, {
             type: displayType,
             queryJson: json,
             options: obj.options,

@@ -16,7 +16,7 @@ import { uuidv4, checkAndApplyTheme, createIcon } from '../Utils';
 
 import { strings } from '../Strings';
 import { ChataUtils } from '../ChataUtils';
-import { ChataChartNew } from '../Charts';
+import { ChataChart } from '../Charts';
 import { SEARCH_ICON, WARNING_TRIANGLE } from '../Svg';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { QueryValidationMessage } from '../QueryValidationMessage';
@@ -31,7 +31,7 @@ export function QueryOutput(selector, options = {}) {
     try {
         checkAndApplyTheme();
 
-        const PARENT = document.querySelector(selector);
+        const PARENT = select(selector).node();
         PARENT.innerHTML = '';
 
         const ALLOW_NUMERIC_STRING_COLUMNS = true;
@@ -85,7 +85,9 @@ export function QueryOutput(selector, options = {}) {
 
         responseRenderer.classList.add('autoql-vanilla-chata-response-content-container');
         responseRenderer.classList.add('autoql-vanilla-renderer-container');
-        responseRenderer.setAttribute('data-componentid', uuidv4());
+
+        const responseRendererID = uuidv4();
+        responseRenderer.setAttribute('data-componentid', responseRendererID);
 
         if (responseRenderer.options.height > 0) {
             responseRenderer.style.height = `${responseRenderer.options.height}px`;
@@ -179,6 +181,10 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.appendChild(messageWrapper);
         };
 
+        responseRenderer.exportToPNG = () => {
+            ChataUtils.exportPNGHandler(responseRendererID);
+        };
+
         responseRenderer.toggleTableFiltering = () => {
             if (responseRenderer?.table) {
                 responseRenderer?.table.toggleFilters();
@@ -262,7 +268,7 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.chartWrapper = chartWrapper;
             responseRenderer.appendChild(chartWrapper);
 
-            new ChataChartNew(chartWrapper, {
+            new ChataChart(chartWrapper, {
                 type: displayType,
                 queryJson: jsonResponse,
                 options: responseRenderer.options,
@@ -375,7 +381,7 @@ export function QueryOutput(selector, options = {}) {
 
             const responseText = document.createElement('span');
             if (responseRenderer.options?.showSingleValueResponseTitle) {
-                responseText.innerHTML = `<span><strong>${responseRenderer.data?.columns?.[0]?.display_name}:</strong> ${dataValue}</span>`;
+                responseText.innerHTML = `<span><strong>${jsonResponse.data?.columns?.[0]?.display_name}:</strong> ${dataValue}</span>`;
             } else {
                 responseText.innerHTML = `<span>${dataValue}</span>`;
             }

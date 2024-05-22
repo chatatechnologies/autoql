@@ -4,15 +4,17 @@ import {
     fetchNotificationData,
     markNotificationAsUnread,
 } from 'autoql-fe-utils';
+
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from '../../../../Svg';
 import { createIcon, getFormattedTimestamp } from '../../../../Utils';
-import './NotificationItem.scss';
 import { NotificationMessageError } from '../NotificationMessageError';
 import { NotificationSummary } from '../NotificationSummary';
 import { NotificationDataContainer } from '../NotificationDataContainer';
 import { refreshTooltips } from '../../../../Tooltips';
 import { MoreOptionsPopup } from '../MoreOptionsPopup';
 import { DataAlertEditModal } from '../../../DataAlerts/Components/DataAlertEditModal/DataAlertEditModal';
+
+import './NotificationItem.scss';
 
 const dataAlertErrorName = 'Data Alert Error';
 const DELAY = 0.08;

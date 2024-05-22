@@ -4,7 +4,7 @@ import { ChataTable, ChataPivotTable } from '../../ChataTable';
 import { ErrorMessage } from '../../ErrorMessage';
 import { DrilldownToolbar } from '../DrilldownToolbar';
 import { CHART_TYPES } from 'autoql-fe-utils';
-import { ChataChartNew } from '../../Charts';
+import { ChataChart } from '../../Charts';
 
 import './DrilldownView.scss';
 
@@ -164,7 +164,7 @@ export function DrilldownView({
             container.appendChild(chartWrapper2);
             chartWrapper.activeKey = activeKey;
 
-            new ChataChartNew(chartWrapper, {
+            new ChataChart(chartWrapper, {
                 type: displayType,
                 options: dashboard.options,
                 queryJson: json,

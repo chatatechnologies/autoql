@@ -285,6 +285,12 @@ ChataUtils.copyHandler = (idRequest) => {
 ChataUtils.exportPNGHandler = async (idRequest) => {
     try {
         var component = document.querySelector(`[data-componentid='${idRequest}']`);
+
+        if (!component) {
+            console.error('Could not find component containing the chart.');
+            return;
+        }
+
         var svg = component.querySelector('svg.autoql-vanilla-chart-svg');
 
         if (!svg) {
