@@ -32,7 +32,9 @@ export function QueryOutput(selector, options = {}) {
         checkAndApplyTheme();
 
         const PARENT = select(selector).node();
-        PARENT.innerHTML = '';
+        if (PARENT) {
+            PARENT.innerHTML = '';
+        }
 
         const ALLOW_NUMERIC_STRING_COLUMNS = true;
         const uuid = uuidv4();
@@ -393,6 +395,10 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.refreshView = () => {
+            if (!responseRenderer) {
+                return;
+            }
+
             var jsonResponse = responseRenderer.options.queryResponse;
             if (!jsonResponse) return;
 
