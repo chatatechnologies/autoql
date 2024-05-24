@@ -13,7 +13,6 @@ import {
     RESET_PERIOD_OPTIONS,
 } from 'autoql-fe-utils';
 import './TimingStep.scss';
-import { Select } from '../../../../ChataComponents/Select';
 
 export function TimingStep() {
     const container = document.createElement('div');

@@ -1,8 +1,7 @@
 .autoql-vanilla-select-popover {
     .autoql-vanilla-select-list-item {
         color: var(--autoql-vanilla-text-color-primary);
-        font-size: 12px;
-        padding: 5px 15px;
+        padding: 8px 15px;
         cursor: pointer;
 
         &:hover,
@@ -21,10 +20,10 @@
     display: inline-flex;
     flex-direction: column;
     padding: 2px 5px;
-    width: 100%;
 
     &.autoql-vanilla-select-full-width {
         display: flex;
+        width: 100%;
     }
 
     .autoql-vanilla-select {
@@ -52,9 +51,9 @@
             }
         }
 
-        &:not(.outlined) {
-            font-weight: 600;
-            padding: 0;
+        &.underlined {
+            border-bottom: 1px solid var(--react-autoql-accent-color);
+            padding: 2px;
             margin: 0;
         }
 

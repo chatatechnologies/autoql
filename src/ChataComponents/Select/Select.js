@@ -5,7 +5,7 @@ import { createIcon, uuidv4 } from '../../Utils';
 import './Select.scss';
 
 export function Select({
-    options,
+    options = [],
     disabled = false,
     fullWidth = false,
     label,
@@ -20,6 +20,11 @@ export function Select({
     onChange = () => {},
 }) {
     this.ID = uuidv4();
+
+    this.select = document.createElement('div');
+    this.select.classList.add('autoql-vanilla-select-and-label');
+
+    this.selectedValue = initialValue;
 
     this.showPopover = () => {
         this.popover.show();
@@ -39,10 +44,7 @@ export function Select({
     };
 
     this.createSelect = () => {
-        this.select = document.createElement('div');
-        this.select.classList.add('autoql-vanilla-select-and-label');
-
-        this.selectedValue = initialValue;
+        this.select.innerHTML = '';
 
         if (fullWidth) {
             this.select.classList.add('autoql-vanilla-select-full-width');
@@ -64,6 +66,8 @@ export function Select({
 
         if (outlined) {
             selectElement.classList.add('outlined');
+        } else {
+            selectElement.classList.add('underlined');
         }
 
         if (size === 'small') {
@@ -88,6 +92,8 @@ export function Select({
                 selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
                 selectTextContent.innerHTML = placeholder;
                 return;
+            } else {
+                selectTextContent.classList.remove('autoql-vanilla-select-text-placeholder');
             }
 
             this.selectedValue = selectedOption.value;
@@ -112,33 +118,30 @@ export function Select({
             onChange(selectedOption);
         };
 
-        this.select.setValue();
-
         if (showArrow) {
             const selectArrow = document.createElement('div');
             selectArrow.classList.add('autoql-vanilla-select-arrow');
 
             const selectArrowIcon = createIcon(CARET_DOWN_ICON);
-            selectArrow.appendChild(selectArrowIcon);
 
+            // Only allow clicks on the container - to place the popover in the correct position
+            selectArrow.style.pointerEvents = 'none';
+            selectArrowIcon.style.pointerEvents = 'none';
+
+            selectArrow.appendChild(selectArrowIcon);
             selectElement.appendChild(selectArrow);
         }
 
         selectElement.addEventListener('click', (e) => {
-            if (this.popover) {
-                this.popover = undefined;
-            } else {
-                this.popover = new PopoverChartSelector(e, position, align, 0);
-                this.popover.classList.add('autoql-vanilla-select-popover');
-                if (popoverClassName) this.popover.classList.add(popoverClassName);
-
-                const selectorContent = this.createPopoverContent();
-
-                this.popover.appendContent(selectorContent);
-
-                this.showPopover();
-            }
+            this.popover = new PopoverChartSelector(e, position, align, 0);
+            this.popover.classList.add('autoql-vanilla-select-popover');
+            if (popoverClassName) this.popover.classList.add(popoverClassName);
+            const selectorContent = this.createPopoverContent();
+            this.popover.appendContent(selectorContent);
+            this.showPopover();
         });
+
+        this.select.setValue(this.selectedValue);
     };
 
     this.createPopoverContent = () => {

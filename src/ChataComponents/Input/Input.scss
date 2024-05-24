@@ -20,6 +20,15 @@
             margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
         }
 
+        &.with-select {
+            .autoql-vanilla-select-and-label {
+                padding: 0;
+            }
+
+            .autoql-vanilla-input-selector {
+            }
+        }
+
         .autoql-vanilla-input[type='number'] {
             border-radius: 4px 0px 0px 4px;
             margin-right: 0;
@@ -27,6 +36,10 @@
 
         &.autoql-vanilla-input-number {
             flex: 1;
+
+            input.autoql-vanilla-input-with-spin-wheel {
+                border-radius: 0;
+            }
 
             .autoql-vanilla-input,
             .autoql-vanilla-input-number-spin-button-container {

@@ -1,24 +1,26 @@
-import { CALENDAR, CARET_DOWN_ICON } from '../../Svg';
-import { createIcon } from '../../Utils';
-import { DateRangePicker } from '../DateRangePicker/DateRangePicker';
 import dayjs from '../../Utils/dayjsPlugins';
+
+import { Select } from '../Select';
+import { createIcon } from '../../Utils';
+import { CALENDAR, CARET_DOWN_ICON } from '../../Svg';
+import { DateRangePicker } from '../DateRangePicker/DateRangePicker';
 
 import './Input.scss';
 
-export function Input(options) {
-    if (!options) {
-        console.warn('No options provided to Input component. Unable to render');
-        return;
-    }
-
+export function Input(options = {}) {
     const {
         icon,
         type = 'text',
         step = '1',
         size = 'large',
         label = '',
+        placeholder = '',
+        readOnly = false,
+        disabled = false,
         fullWidth = false,
-        selectOptions,
+        selectOptions = [],
+        selectInitialValue,
+        selectOnChange = () => {},
         area,
         onFocus = () => {},
         onBlur = () => {},
@@ -29,7 +31,7 @@ export function Input(options) {
         value,
         datePicker = false,
         onDateRangeChange = () => {},
-        initialDateRange,
+        showSpinWheel = true,
         validDateRange,
         datePickerType,
     } = options;
@@ -120,6 +122,7 @@ export function Input(options) {
 
     const inputAndLabelContainer = document.createElement('div');
     inputAndLabelContainer.classList.add('autoql-vanilla-input-and-label-container');
+
     if (fullWidth) inputAndLabelContainer.classList.add('autoql-vanilla-input-full-width');
 
     inputAndLabelContainer.setValue = (value) => {
@@ -130,6 +133,7 @@ export function Input(options) {
 
     if (label) {
         const inputLabel = document.createElement('div');
+        inputLabel.classList.add('autoql-vanilla-input-label');
         inputLabel.innerHTML = label;
         inputAndLabelContainer.appendChild(inputLabel);
     }
@@ -139,7 +143,30 @@ export function Input(options) {
     if (size === 'small') inputContainer.classList.add('autoql-vanilla-input-small');
     else inputContainer.classList.add('autoql-vanilla-input-large');
     if (this.focused) inputContainer.classList.add('focus');
-    if (hasSelect) inputContainer.classList.add('with-select');
+
+    if (hasSelect) {
+        inputContainer.classList.add('with-select');
+
+        const select = new Select({
+            options: selectOptions,
+            initialValue: selectInitialValue,
+            onChange: (option) => {
+                if (option.inputType) {
+                    inputAndLabelContainer.setInputType?.(option.inputType);
+                }
+                if (option.inputPlaceholder) {
+                    inputAndLabelContainer.setPlaceholder?.(option.inputPlaceholder);
+                }
+
+                selectOnChange(option);
+            },
+        });
+
+        select.classList.add('autoql-vanilla-input-selector');
+
+        inputContainer.appendChild(select);
+    }
+
     if (type === 'number') inputContainer.classList.add('autoql-vanilla-input-number');
     inputAndLabelContainer.appendChild(inputContainer);
 
@@ -190,6 +217,7 @@ export function Input(options) {
         if (label) input.setAttribute('label', label);
         if (icon) input.classList.add('with-icon');
         if (hasSelect) input.classList.add('with-select');
+        if (showSpinWheel) input.classList.add('autoql-vanilla-input-with-spin-wheel');
         if (step) input.setAttribute('step', step);
 
         inputWrapper.appendChild(input);
@@ -207,9 +235,46 @@ export function Input(options) {
         this.input = input;
     }
 
-    if (type === 'number') {
+    if (placeholder) {
+        this.input.setAttribute('placeholder', placeholder);
+    }
+
+    if (readOnly) {
+        this.input.setAttribute('readonly', 'true');
+    }
+
+    if (disabled) {
+        this.input.setAttribute('disabled', 'true');
+    }
+
+    inputAndLabelContainer.getValue = () => {
+        return this.input?.value;
+    };
+
+    inputAndLabelContainer.setPlaceholder = (placeholder) => {
+        this.input.setAttribute('placeholder', placeholder);
+    };
+
+    inputAndLabelContainer.setInputType = (type) => {
+        this.input.setAttribute('type', type);
+
+        if (type === 'number') {
+            this.input.setAttribute('spellcheck', 'number');
+            // this.input.setAttribute('placeholder', 'Type a number');
+
+            if (this.spinWheelContainer) this.spinWheelContainer.style.display = 'flex';
+        } else {
+            this.input.setAttribute('spellcheck', 'false');
+            // this.input.setAttribute('placeholder', 'Type a query');
+            if (this.spinWheelContainer) this.spinWheelContainer.style.display = 'none';
+        }
+        this.input.value = '';
+    };
+
+    if (type === 'number' && showSpinWheel) {
         const spinWheelContainer = document.createElement('div');
         spinWheelContainer.classList.add('autoql-vanilla-input-number-spin-button-container');
+        this.spinWheelContainer = spinWheelContainer;
 
         const incrementBtn = document.createElement('button');
         incrementBtn.classList.add('autoql-vanilla-input-number-spin-button');
