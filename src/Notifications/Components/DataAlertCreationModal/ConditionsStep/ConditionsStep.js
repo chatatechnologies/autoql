@@ -78,6 +78,7 @@ export function ConditionsStep({
     this.dataAlertType = dataAlertType;
     this.firstQuerySelectedColumns = getFirstQuerySelectedColumns(queryResponse, initialData);
     this.secondQuerySelectedColumns = [];
+    this.secondTermType = NUMBER_TERM_TYPE;
 
     const container = document.createElement('div');
     container.classList.add('autoql-vanilla-conditions-step-container');
@@ -89,6 +90,12 @@ export function ConditionsStep({
         if (type === SCHEDULED_TYPE || type === CONTINUOUS_TYPE) {
             this.dataAlertType = type;
             this.renderView();
+        }
+    };
+
+    this.clearValidationMessage = () => {
+        if (this.validationMessageContainer) {
+            this.validationMessageContainer.innerHTML = '';
         }
     };
 
@@ -199,6 +206,7 @@ export function ConditionsStep({
         this.secondQueryResponse = undefined;
 
         if (!query) {
+            this.clearValidationMessage();
             return;
         }
 
@@ -217,7 +225,7 @@ export function ConditionsStep({
                 this.onValidationResponse(response);
             })
             .catch((error) => {
-                if (error?.response?.data?.message !== REQUEST_CANCELLED_ERROR) {
+                if (error?.data?.message !== REQUEST_CANCELLED_ERROR) {
                     this.isValidating = false;
                     this.showValidationMessage('error');
                 }
@@ -225,7 +233,9 @@ export function ConditionsStep({
     };
 
     this.clearSecondQueryColumnSelectionTable = () => {
-        this.secondColumnSelectionTableContainer.innerHTML = '';
+        if (this.secondColumnSelectionTableContainer) {
+            this.secondColumnSelectionTableContainer.innerHTML = '';
+        }
     };
 
     this.validateSecondQuery = (query) => {
@@ -440,11 +450,6 @@ export function ConditionsStep({
         return columnValueMessageAndSelector;
     };
 
-    this.handleInputType = (option) => {
-        const type = option.value === NUMBER_TERM_TYPE ? 'number' : 'text';
-        this.termInputValue.setInputType(type);
-    };
-
     this.getOperatorSelectValues = () => {
         const keys = Object.keys(DATA_ALERT_OPERATORS);
         return keys.map((key) => {
@@ -464,13 +469,20 @@ export function ConditionsStep({
         type: 'number',
         hasSelect: true,
         showSpinWheel: false,
-        selectInitialValue: NUMBER_TERM_TYPE,
+        selectInitialValue: this.secondTermType,
         placeholder: 'Type a number',
         onChange: (e) => {
-            this.validateSecondQuery(e.target.value);
+            if (this.secondTermType === QUERY_TERM_TYPE) {
+                this.validateSecondQuery(e.target.value);
+            }
+
             onChange(e);
         },
         selectOnChange: (option) => {
+            this.secondTermType = option.value;
+            this.cancelSecondValidation();
+            this.clearValidationMessage();
+            this.clearSecondQueryColumnSelectionTable();
             onChange(option);
         },
         selectOptions: [

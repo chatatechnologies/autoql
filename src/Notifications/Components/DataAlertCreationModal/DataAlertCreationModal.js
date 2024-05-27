@@ -66,7 +66,9 @@ export function DataAlertCreationModal({ queryResponse, authentication, options 
             view: new TypeStep({
                 onChange: (type) => {
                     const conditionStep = this.steps.find((step) => step.type === DATA_ALERT_CONDITIONS_STEP);
+                    const timingStep = this.steps.find((step) => step.type === DATA_ALERT_TIMING_STEP);
                     conditionStep?.view?.setDataAlertType(type);
+                    timingStep?.view?.handleTypeChange(type);
                 },
             }),
         });

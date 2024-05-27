@@ -14,17 +14,18 @@ import {
 } from 'autoql-fe-utils';
 import './TimingStep.scss';
 
-export function TimingStep() {
+export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
     const container = document.createElement('div');
     const wrapper = document.createElement('div');
     const settingGroup = document.createElement('div');
     const frequencyMessageContainer = document.createElement('div');
     const frequencyMessage = document.createElement('span');
-    const typeSelectorWrapper = document.createElement('span');
 
     const dataAlertSettingGroup = document.createElement('div');
     const dataAlertSettingFrequency = document.createElement('div');
     const frequencyContainer = document.createElement('div');
+
+    this.dataAlertType = dataAlertType;
 
     this.DEFAULT_EVALUATION_FREQUENCY = 5;
     this.DEFAULT_WEEKDAY_SELECT_VALUE = 'Friday';
@@ -41,7 +42,6 @@ export function TimingStep() {
         value24hr: '17:00',
     };
 
-    this.notificationType = SCHEDULED_TYPE;
     this.timezone = dayjs.tz.guess();
     this.evaluationFrequency = this.DEFAULT_EVALUATION_FREQUENCY;
     this.intervalTimeSelectValue = this.DEFAULT_TIME_SELECT_VALUE;
@@ -61,7 +61,7 @@ export function TimingStep() {
     };
 
     this.getSchedules = () => {
-        if (this.notificationType !== SCHEDULED_TYPE) {
+        if (this.dataAlertType !== SCHEDULED_TYPE) {
             return [];
         }
 
@@ -204,22 +204,6 @@ export function TimingStep() {
         return option;
     };
 
-    this.getTypeValues = () => {
-        const values = [];
-
-        values.push({
-            value: SCHEDULED_TYPE,
-            displayName: 'at the following times:',
-        });
-
-        values.push({
-            value: CONTINUOUS_TYPE,
-            displayName: 'right away',
-        });
-
-        return values;
-    };
-
     this.handleDayChange = (option) => {
         this.createScheduledView({ notificationPeriod: option.value });
         this.resetPeriod = option.value;
@@ -306,7 +290,7 @@ export function TimingStep() {
         frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
         frequencyContainer.appendChild(frequencySelectorContainer);
 
-        if (this.notificationType !== PERIODIC_TYPE) {
+        if (this.dataAlertType !== PERIODIC_TYPE) {
             const resetContainer = this.createFrequencyOption({
                 label: 'Check conditions every',
                 defaultValue: this.resetPeriod,
@@ -333,10 +317,10 @@ export function TimingStep() {
         return resetPeriodSelectValue;
     };
 
-    this.handleTypeChange = (option) => {
+    container.handleTypeChange = (type) => {
         frequencyContainer.innerHTML = '';
-        this.notificationType = option.value;
-        switch (option.value) {
+        this.dataAlertType = type;
+        switch (type) {
             case SCHEDULED_TYPE:
                 this.createScheduledView({ notificationPeriod: this.resetPeriod });
                 break;
@@ -347,13 +331,6 @@ export function TimingStep() {
         }
     };
 
-    const typeSelector = new Selector({
-        defaultValue: this.notificationType,
-        options: this.getTypeValues(),
-        onChange: this.handleTypeChange,
-        outlined: false,
-    });
-
     container.classList.add('autoql-vanilla-data-alert-modal-step');
     wrapper.classList.add('autoql-vanilla-data-alerts-container');
     settingGroup.classList.add('autoql-vanilla-data-alert-setting-group');
@@ -362,13 +339,18 @@ export function TimingStep() {
     dataAlertSettingFrequency.classList.add('autoql-vanilla-frequency-settings');
     frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
     frequencyMessageContainer.classList.add('autoql-vanilla-frequency-type-container');
-    typeSelectorWrapper.classList.add('autoql-vanilla-data-alert-schedule-step-type-selector');
 
     frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
 
-    typeSelectorWrapper.appendChild(typeSelector);
+    if (this.dataAlertType === SCHEDULED_TYPE) {
+        frequencyMessage.innerHTML =
+            '<span>A notification will be sent with the query result <strong>at the following times:</strong></span>';
+    } else {
+        frequencyMessage.innerHTML =
+            '<span>A notification will be sent <strong>right away</strong> when the Data Alert conditions are met.</span>';
+    }
+
     frequencyMessageContainer.appendChild(frequencyMessage);
-    frequencyMessageContainer.appendChild(typeSelectorWrapper);
     dataAlertSettingFrequency.appendChild(frequencyContainer);
     dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
     settingGroup.appendChild(dataAlertSettingGroup);
@@ -376,7 +358,7 @@ export function TimingStep() {
     wrapper.appendChild(settingGroup);
     container.appendChild(wrapper);
 
-    if (this.notificationType === 'SCHEDULED') {
+    if (this.dataAlertType === 'SCHEDULED') {
         this.createScheduledView({ notificationPeriod: this.resetPeriod });
     } else {
         this.createLiveView();
@@ -387,10 +369,11 @@ export function TimingStep() {
     };
 
     container.getValues = () => {
-        const notificationType = this.getNotificationType(this.notificationType);
+        const notificationType = this.getNotificationType(this.dataAlertType);
         const timezone = this.timezone;
         const evaluationFrequency = this.evaluationFrequency;
         const schedules = this.getSchedules();
+
         return {
             notification_type: notificationType,
             evaluation_frequency: evaluationFrequency,
