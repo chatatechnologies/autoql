@@ -71,18 +71,19 @@ export function ConditionsStep({
     onChange = () => {},
     options = {},
 }) {
+    const container = document.createElement('div');
+    container.classList.add('autoql-vanilla-conditions-step-container');
+    container.classList.add('autoql-vanilla-data-alert-setting-section');
+
     const SUPPORTED_CONDITION_TYPES = getSupportedConditionTypes(undefined, queryResponse);
     const PREVIEW_ROWS = 20;
 
-    this.conditionType = SUPPORTED_CONDITION_TYPES[0];
     this.dataAlertType = dataAlertType;
     this.firstQuerySelectedColumns = getFirstQuerySelectedColumns(queryResponse, initialData);
     this.secondQuerySelectedColumns = [];
     this.secondTermType = NUMBER_TERM_TYPE;
 
-    const container = document.createElement('div');
-    container.classList.add('autoql-vanilla-conditions-step-container');
-    container.classList.add('autoql-vanilla-data-alert-setting-section');
+    container.conditionType = SUPPORTED_CONDITION_TYPES[0];
 
     const ruleContainer = document.createElement('div');
 
@@ -476,14 +477,14 @@ export function ConditionsStep({
                 this.validateSecondQuery(e.target.value);
             }
 
-            onChange(e);
+            onChange({ secondTermValue: e.target.value });
         },
         selectOnChange: (option) => {
             this.secondTermType = option.value;
             this.cancelSecondValidation();
             this.clearValidationMessage();
             this.clearSecondQueryColumnSelectionTable();
-            onChange(option);
+            onChange({ secondTermType: option.value });
         },
         selectOptions: [
             {
@@ -502,14 +503,14 @@ export function ConditionsStep({
     });
 
     this.createConditionTypeMessage = () => {
-        if (this.conditionTypeSelectMessageContainer) {
-            this.conditionTypeSelectMessageContainer.innerHTML = '';
+        if (container.conditionTypeSelectMessageContainer) {
+            container.conditionTypeSelectMessageContainer.innerHTML = '';
         }
 
         const conditionTypeSelectMessageContainer = document.createElement('div');
         conditionTypeSelectMessageContainer.classList.add('autoql-vanilla-condition-type-container');
 
-        this.conditionTypeSelectMessageContainer = conditionTypeSelectMessageContainer;
+        container.conditionTypeSelectMessageContainer = conditionTypeSelectMessageContainer;
 
         const conditionTypeSelectMessage = document.createElement('span');
 
@@ -522,7 +523,7 @@ export function ConditionsStep({
         const conditionTypeSelector = new Select({
             outlined: false,
             showArrow: false,
-            initialValue: this.conditionType,
+            initialValue: container.conditionType,
             options: Object.keys(DATA_ALERT_CONDITION_TYPES).map((type) => {
                 const disabled = !SUPPORTED_CONDITION_TYPES.includes(type);
 
@@ -537,7 +538,7 @@ export function ConditionsStep({
                 };
             }),
             onChange: (option) => {
-                this.conditionType = option.value;
+                container.conditionType = option.value;
 
                 if (option.value === EXISTS_TYPE) {
                     if (this.existsTypeContent) this.existsTypeContent.style.display = 'block';
@@ -547,7 +548,7 @@ export function ConditionsStep({
                     if (this.existsTypeContent) this.existsTypeContent.style.display = 'none';
                 }
 
-                onChange();
+                onChange({ conditionType: option.value });
             },
         });
 
@@ -601,7 +602,7 @@ export function ConditionsStep({
         const compareTypeContent = document.createElement('div');
         this.compareTypeContent = compareTypeContent;
 
-        if (this.conditionType !== COMPARE_TYPE) {
+        if (container.conditionType !== COMPARE_TYPE) {
             compareTypeContent.style.display = 'none';
         }
 
@@ -627,7 +628,7 @@ export function ConditionsStep({
         const existsTypeContent = document.createElement('div');
         this.existsTypeContent = existsTypeContent;
 
-        if (this.conditionType !== EXISTS_TYPE) {
+        if (container.conditionType !== EXISTS_TYPE) {
             existsTypeContent.style.display = 'none';
         }
 
@@ -699,9 +700,9 @@ export function ConditionsStep({
     };
 
     container.isValid = () => {
-        if (this.conditionType === EXISTS_TYPE) {
+        if (container.conditionType === EXISTS_TYPE) {
             return true;
-        } else if (this.conditionType === COMPARE_TYPE) {
+        } else if (container.conditionType === COMPARE_TYPE) {
             return this.termInputValue.getValue() !== '';
         }
     };

@@ -81,7 +81,14 @@ export function DataAlertCreationModal({ queryResponse, authentication, options 
             view: new ConditionsStep({
                 options,
                 queryResponse,
-                onChange: () => this.validateNextButton(),
+                onChange: ({ conditionType } = {}) => {
+                    if (conditionType) {
+                        const timingStep = this.steps.find((step) => step.type === DATA_ALERT_TIMING_STEP);
+                        timingStep?.view?.handleConditionTypeChange(conditionType);
+                    }
+
+                    this.validateNextButton();
+                },
             }),
         });
 

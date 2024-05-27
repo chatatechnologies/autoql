@@ -11,10 +11,11 @@ import {
     EVALUATION_FREQUENCY_OPTIONS,
     MONTH_DAY_SELECT_OPTIONS,
     RESET_PERIOD_OPTIONS,
+    EXISTS_TYPE,
 } from 'autoql-fe-utils';
 import './TimingStep.scss';
 
-export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
+export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EXISTS_TYPE } = {}) {
     const container = document.createElement('div');
     const wrapper = document.createElement('div');
     const settingGroup = document.createElement('div');
@@ -26,6 +27,7 @@ export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
     const frequencyContainer = document.createElement('div');
 
     this.dataAlertType = dataAlertType;
+    this.conditionType = conditionType;
 
     this.DEFAULT_EVALUATION_FREQUENCY = 5;
     this.DEFAULT_WEEKDAY_SELECT_VALUE = 'Friday';
@@ -113,15 +115,19 @@ export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
 
     this.getResetOptions = () => {
         const keys = Object.keys(RESET_PERIOD_OPTIONS);
-        return keys
-            .map((key) => {
-                const value = RESET_PERIOD_OPTIONS[key];
-                return {
-                    displayName: value.displayName,
-                    value: key,
-                };
-            })
-            .filter((option) => (option?.value === 'NONE' ? false : true));
+        let options = keys.map((key) => {
+            const value = RESET_PERIOD_OPTIONS[key];
+            return {
+                displayName: value.displayName,
+                value: key,
+            };
+        });
+
+        if (this.conditionType !== EXISTS_TYPE) {
+            options = options.filter((option) => (option?.value === 'NONE' ? false : true));
+        }
+
+        return options;
     };
     this.getDaysOptions = () => {
         return WEEKDAY_NAMES_MON.map((dayName) => {
@@ -219,6 +225,8 @@ export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
 
     this.createScheduledView = ({ notificationPeriod }) => {
         frequencyContainer.innerHTML = '';
+        frequencyMessage.innerHTML =
+            '<span>A notification will be sent with the query result <strong>at the following times:</strong></span>';
 
         const intervalContainer = this.createFrequencyOption({
             label: 'Send a Notification',
@@ -290,15 +298,33 @@ export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
         frequencySelectorContainer.classList.add('autoql-vanilla-time-selector');
         frequencyContainer.appendChild(frequencySelectorContainer);
 
+        frequencyMessage.innerHTML =
+            '<span>A notification will be sent <strong>right away</strong> when the Data Alert conditions are met.</span>';
+
+        const selectorOptions = this.getResetOptions();
+
+        if (!selectorOptions.find((op) => op.value === this.resetPeriod)) {
+            this.resetPeriod = selectorOptions[0].value;
+        }
+
         if (this.dataAlertType !== PERIODIC_TYPE) {
             const resetContainer = this.createFrequencyOption({
-                label: 'Check conditions every',
+                label: 'Send a notification',
                 defaultValue: this.resetPeriod,
-                selectorOptions: this.getResetOptions(),
+                selectorOptions,
                 onChange: this.handleResetPeriodChange,
             });
             frequencyContainer.appendChild(resetContainer);
         }
+
+        const timeZoneContainer = this.createFrequencyOption({
+            label: 'Time Zone',
+            defaultValue: this.timezone,
+            selectorOptions: this.getTimeZoneOptions(),
+            onChange: this.handleTimezoneChange,
+        });
+
+        frequencyContainer.appendChild(timeZoneContainer);
     };
 
     this.getNotificationType = (value) => {
@@ -315,6 +341,11 @@ export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
         }
 
         return resetPeriodSelectValue;
+    };
+
+    container.handleConditionTypeChange = (conditionType) => {
+        this.conditionType = conditionType;
+        container.handleTypeChange(this.dataAlertType);
     };
 
     container.handleTypeChange = (type) => {
@@ -340,15 +371,15 @@ export function TimingStep({ dataAlertType = SCHEDULED_TYPE } = {}) {
     frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
     frequencyMessageContainer.classList.add('autoql-vanilla-frequency-type-container');
 
-    frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
+    // frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
 
-    if (this.dataAlertType === SCHEDULED_TYPE) {
-        frequencyMessage.innerHTML =
-            '<span>A notification will be sent with the query result <strong>at the following times:</strong></span>';
-    } else {
-        frequencyMessage.innerHTML =
-            '<span>A notification will be sent <strong>right away</strong> when the Data Alert conditions are met.</span>';
-    }
+    // if (this.dataAlertType === SCHEDULED_TYPE) {
+    //     frequencyMessage.innerHTML =
+    //         '<span>A notification will be sent with the query result <strong>at the following times:</strong></span>';
+    // } else {
+    //     frequencyMessage.innerHTML =
+    //         '<span>A notification will be sent <strong>right away</strong> when the Data Alert conditions are met.</span>';
+    // }
 
     frequencyMessageContainer.appendChild(frequencyMessage);
     dataAlertSettingFrequency.appendChild(frequencyContainer);
