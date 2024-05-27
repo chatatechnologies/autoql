@@ -28,7 +28,7 @@ export function Input(options = {}) {
         onKeyDown = () => {},
         min,
         max,
-        value,
+        value = '',
         datePicker = false,
         onDateRangeChange = () => {},
         showSpinWheel = true,
@@ -174,13 +174,25 @@ export function Input(options = {}) {
     if (type === 'number') inputContainer.classList.add('autoql-vanilla-input-number');
     inputAndLabelContainer.appendChild(inputContainer);
 
+    const input = area ? document.createElement('textarea') : document.createElement('input');
+    input.classList.add('autoql-vanilla-input');
+    input.value = value;
+
+    if (label) input.setAttribute('label', label);
+    if (placeholder) input.setAttribute('placeholder', placeholder);
+    if (readOnly) input.setAttribute('readonly', 'true');
+    if (disabled) input.setAttribute('disabled', 'true');
+
+    input.addEventListener('focus', this.onFocus);
+    input.addEventListener('blur', this.onBlur);
+    input.addEventListener('input', onChange);
+    input.addEventListener('keydown', onKeyDown);
+
+    this.input = input;
+
     if (area) {
-        const input = document.createElement('textarea');
-        input.classList.add('autoql-vanilla-input');
         input.classList.add('area');
         inputContainer.appendChild(input);
-
-        this.input = input;
     } else {
         const inputWrapper = document.createElement('div');
         inputWrapper.classList.add('autoql-vanilla-input-and-icon');
@@ -206,19 +218,9 @@ export function Input(options = {}) {
             inputWrapper.appendChild(calenderBtn);
         }
 
-        const input = document.createElement('input');
-        input.classList.add('autoql-vanilla-input');
-        input.value = value;
-
-        input.addEventListener('focus', this.onFocus);
-        input.addEventListener('blur', this.onBlur);
-        input.addEventListener('input', onChange);
-        input.addEventListener('keydown', onKeyDown);
-
+        if (type) input.setAttribute('type', type);
         if (min !== undefined) input.setAttribute('min', min);
         if (max !== undefined) input.setAttribute('max', max);
-        if (type) input.setAttribute('type', type);
-        if (label) input.setAttribute('label', label);
         if (icon) input.classList.add('with-icon');
         if (hasSelect) input.classList.add('with-select');
         if (showSpinWheel) input.classList.add('autoql-vanilla-input-with-spin-wheel');
@@ -235,20 +237,6 @@ export function Input(options = {}) {
                 inputWrapper.appendChild(iconElement);
             }
         }
-
-        this.input = input;
-    }
-
-    if (placeholder) {
-        this.input.setAttribute('placeholder', placeholder);
-    }
-
-    if (readOnly) {
-        this.input.setAttribute('readonly', 'true');
-    }
-
-    if (disabled) {
-        this.input.setAttribute('disabled', 'true');
     }
 
     inputAndLabelContainer.getValue = () => {

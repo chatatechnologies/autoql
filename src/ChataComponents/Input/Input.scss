@@ -160,6 +160,7 @@
             transition-timing-function: ease;
             padding: 10px;
             line-height: 1em;
+            color: var(--autoql-vanilla-text-color-primary);
 
             &:disabled {
                 background: var(--autoql-vanilla-hover-color);

@@ -101,7 +101,7 @@ export function DataAlertCreationModal({ queryResponse, authentication, options 
         });
 
         this.steps.push({
-            view: new AppearanceStep({ queryResponse }),
+            view: new AppearanceStep({ onChange: this.validateNextButton }),
             withConnector: true,
             isActive: false,
             title: 'Customize Appearance',
