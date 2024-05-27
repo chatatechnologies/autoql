@@ -3,6 +3,29 @@
         margin-bottom: 10px;
     }
 
+    .autoql-vanilla-notification-rule-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .autoql-vanilla-rule-input {
+        .autoql-vanilla-input-and-label-container {
+            flex: 1;
+            padding: 0;
+            margin-left: 10px;
+        }
+    }
+
+    .autoql-vanilla-rule-second-input-container {
+        display: flex;
+    }
+
+    .autoql-vanilla-term-validation-message-container {
+        text-align: right;
+        font-size: 12px;
+    }
+
     .autoql-vanilla-data-alert-rule-query-readonly-container {
         .autoql-vanilla-input-and-label-container {
             padding: 0;
@@ -10,6 +33,19 @@
             .autoql-vanilla-input {
                 height: 40px;
             }
+        }
+    }
+
+    .autoql-vanilla-column-selection-table-container {
+        max-height: 165px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+
+        .autoql-vanilla-selectable-table {
+            padding: 0;
+            margin: 8px 0;
         }
     }
 }

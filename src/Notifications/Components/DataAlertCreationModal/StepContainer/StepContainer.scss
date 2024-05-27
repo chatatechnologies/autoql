@@ -42,6 +42,8 @@
         }
 
         &.autoql-vanilla-disabled {
+            pointer-events: none;
+
             .autoql-vanilla-step-connector {
                 cursor: default !important;
                 color: var(--autoql-vanilla-text-color-placeholder);

@@ -24,11 +24,11 @@ export function Select({
     this.select = document.createElement('div');
     this.select.classList.add('autoql-vanilla-select-and-label');
 
-    this.selectedValue = initialValue;
+    this.select.selectedValue = initialValue;
 
     this.showPopover = () => {
         this.popover.show();
-        this.scrollToValue(this.selectedValue);
+        this.scrollToValue(this.select.selectedValue);
     };
 
     this.scrollToValue = (value) => {
@@ -84,8 +84,8 @@ export function Select({
         this.selectTextContent = selectTextContent;
         selectText.appendChild(selectTextContent);
 
-        this.select.setValue = (value) => {
-            const selectedValue = value ?? this.selectedValue;
+        this.select.setValue = (value, noCallback) => {
+            const selectedValue = value ?? this.select.selectedValue;
             const selectedOption = options.find((option) => option.value == selectedValue);
 
             if (!selectedOption) {
@@ -96,7 +96,7 @@ export function Select({
                 selectTextContent.classList.remove('autoql-vanilla-select-text-placeholder');
             }
 
-            this.selectedValue = selectedOption.value;
+            this.select.selectedValue = selectedOption.value;
 
             if (selectedOption?.label || selectedOption?.value) {
                 selectTextContent.classList.add('autoql-vanilla-menu-item-value-title');
@@ -115,7 +115,9 @@ export function Select({
                 selectTextContent.innerHTML = placeholder;
             }
 
-            onChange(selectedOption);
+            if (!noCallback) {
+                onChange(selectedOption);
+            }
         };
 
         if (showArrow) {
@@ -141,7 +143,7 @@ export function Select({
             this.showPopover();
         });
 
-        this.select.setValue(this.selectedValue);
+        this.select.setValue(this.select.selectedValue);
     };
 
     this.createPopoverContent = () => {
@@ -157,7 +159,7 @@ export function Select({
             li.classList.add('autoql-vanilla-select-list-item');
             li.id = `select-option-${this.ID}-${i}`;
 
-            if (option.value == this.selectedValue) {
+            if (option.value == this.select.selectedValue) {
                 li.classList.add('active');
             }
 

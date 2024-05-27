@@ -5,7 +5,7 @@ import { MultiLineButton } from '../../../../ChataComponents/MultiLineButton';
 
 import './TypeStep.scss';
 
-export function TypeStep({ queryResponse, dataAlertType = CONTINUOUS_TYPE } = {}) {
+export function TypeStep({ dataAlertType = CONTINUOUS_TYPE, onChange = () => {} } = {}) {
     const container = document.createElement('div');
     container.classList.add('autoql-vanilla-data-alert-modal-step');
 
@@ -21,6 +21,8 @@ export function TypeStep({ queryResponse, dataAlertType = CONTINUOUS_TYPE } = {}
             this.scheduledBtn.setActive(true);
             this.liveBtn.setActive(false);
         }
+
+        onChange(container.dataAlertType);
     };
 
     this.createTypeSection = () => {

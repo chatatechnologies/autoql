@@ -53,6 +53,7 @@
 
         &.underlined {
             border-bottom: 1px solid var(--react-autoql-accent-color);
+            font-weight: 600;
             padding: 2px;
             margin: 0;
         }

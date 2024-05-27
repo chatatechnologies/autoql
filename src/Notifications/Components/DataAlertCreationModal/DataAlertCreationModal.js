@@ -17,7 +17,7 @@ const DATA_ALERT_CONDITIONS_STEP = 'DATA_ALERT_CONDITIONS_STEP';
 const DATA_ALERT_TIMING_STEP = 'DATA_ALERT_TIMING_STEP';
 const DATA_ALERT_APPEARANCE_STEP = 'DATA_ALERT_APPEARANCE_STEP';
 
-export function DataAlertCreationModal({ queryResponse, authentication }) {
+export function DataAlertCreationModal({ queryResponse, authentication, options }) {
     const container = document.createElement('div');
     const stepContentContainer = document.createElement('div');
     const summaryFooter = new SummaryFooter({ queryText: queryResponse.data.text });
@@ -59,11 +59,16 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
 
     this.createSteps = () => {
         this.steps.push({
-            view: new TypeStep({ queryResponse }),
             withConnector: false,
             isActive: true,
             title: 'Choose Alert Type',
             type: DATA_ALERT_TYPE_STEP,
+            view: new TypeStep({
+                onChange: (type) => {
+                    const conditionStep = this.steps.find((step) => step.type === DATA_ALERT_CONDITIONS_STEP);
+                    conditionStep?.view?.setDataAlertType(type);
+                },
+            }),
         });
 
         this.steps.push({
@@ -72,6 +77,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
             title: 'Set Up Conditions',
             type: DATA_ALERT_CONDITIONS_STEP,
             view: new ConditionsStep({
+                options,
                 queryResponse,
                 onChange: () => this.validateNextButton(),
             }),
@@ -94,7 +100,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         });
 
         this.addViewSteps();
-        this.stepContainer = new StepContainer({ steps: this.steps });
+        this.stepContainer = new StepContainer({ steps: this.steps, onStepClick: this.goToStep });
         return this.stepContainer;
     };
 
@@ -116,12 +122,27 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         return button;
     };
 
+    this.goToStep = (stepIndex) => {
+        this.steps?.forEach((step) => {
+            step?.view?.classList.add('autoql-vanilla-hidden');
+        });
+
+        const currentStep = this.steps[stepIndex];
+        currentStep.view.classList.remove('autoql-vanilla-hidden');
+
+        this.currentStepIndex = stepIndex;
+
+        this.updateFooter();
+        this.validateNextButton();
+    };
+
     this.handleNextStep = () => {
         const currentStep = this.steps[this.currentStepIndex++];
         const nextStep = this.steps[this.currentStepIndex];
         currentStep.view.classList.add('autoql-vanilla-hidden');
         nextStep.view.classList.remove('autoql-vanilla-hidden');
         this.stepContainer.enableStep(this.currentStepIndex);
+
         this.updateFooter();
         this.validateNextButton();
     };
@@ -176,7 +197,6 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
 
     this.updateFooter = () => {
         const { length } = this.steps;
-        summaryFooter.classList.remove('autoql-vanilla-hidden');
 
         if (this.currentStepIndex + 1 >= length) {
             this.btnNextStep.innerHTML = '';
@@ -190,7 +210,6 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
 
         if (this.currentStepIndex === 0) {
             this.btnBack.classList.add('autoql-vanilla-hidden');
-            summaryFooter.classList.add('autoql-vanilla-hidden');
         } else {
             this.btnBack.classList.remove('autoql-vanilla-hidden');
         }
@@ -232,10 +251,6 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
             this.btnNextStep.classList.add('autoql-vanilla-disabled');
         }
     };
-
-    // container.addEventListener('keyup', () => {
-    //     this.validateNextButton();
-    // });
 
     stepContentContainer.classList.add('autoql-vanilla-data-alert-modal-step-content-container');
 

@@ -147,10 +147,14 @@ export function Input(options = {}) {
     if (hasSelect) {
         inputContainer.classList.add('with-select');
 
+        inputAndLabelContainer.selectValue = selectInitialValue;
+
         const select = new Select({
             options: selectOptions,
             initialValue: selectInitialValue,
             onChange: (option) => {
+                inputAndLabelContainer.selectValue = option.value;
+
                 if (option.inputType) {
                     inputAndLabelContainer.setInputType?.(option.inputType);
                 }

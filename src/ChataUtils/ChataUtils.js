@@ -319,7 +319,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     const queryResponse = ChataUtils.responses[idRequest];
     const { options } = extraParams.caller;
 
-    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication });
+    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication, options });
     modal.show();
 };
 
