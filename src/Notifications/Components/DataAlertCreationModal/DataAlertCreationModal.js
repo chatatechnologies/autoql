@@ -1,4 +1,4 @@
-import { QUERY_TERM_TYPE, createDataAlert, isAggregation } from 'autoql-fe-utils';
+import { QUERY_TERM_TYPE, createDataAlert } from 'autoql-fe-utils';
 import { Modal } from '../../../Modal';
 import { ChataConfirmDialog } from '../ChataConfirmDialog/ChataConfirmDialog';
 import { AppearanceStep } from './AppearanceStep/AppearanceStep';
@@ -197,10 +197,12 @@ export function DataAlertCreationModal({ queryResponse, authentication, options 
                 dataAlert,
                 ...authentication,
             });
+
             modal.close();
             new AntdMessage('Data Alert created!', 3000);
         } catch (error) {
             this.spinner.classList.add('hidden');
+            console.error(error);
         }
     };
 

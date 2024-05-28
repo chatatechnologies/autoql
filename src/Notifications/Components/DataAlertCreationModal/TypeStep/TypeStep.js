@@ -11,6 +11,10 @@ export function TypeStep({ dataAlertType = CONTINUOUS_TYPE, onChange = () => {} 
 
     container.dataAlertType = dataAlertType;
 
+    container.getValues = () => {
+        return {};
+    };
+
     const onButtonClick = (type) => {
         if (type === CONTINUOUS_TYPE) {
             container.dataAlertType = CONTINUOUS_TYPE;

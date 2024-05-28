@@ -54,45 +54,6 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
         return container;
     };
 
-    const createInputContainer = ({ inputType, placeholder, icon, label, onChange, defaultValue }) => {
-        const container = createInputLabel({ label });
-        const inputContainer = document.createElement('div');
-        const inputWrapper = document.createElement('div');
-        const input = document.createElement(inputType);
-        inputWrapper.appendChild(input);
-
-        inputContainer.appendChild(inputWrapper);
-        if (icon) {
-            inputWrapper.appendChild(icon);
-            inputWrapper.classList.add('autoql-vanilla-with-icon');
-            input.classList.add('autoql-vanilla-with-icon');
-        }
-
-        container.appendChild(inputContainer);
-
-        inputContainer.classList.add('autoql-vanilla-input-container');
-        inputWrapper.classList.add('autoql-vanilla-input-and-icon');
-        input.classList.add('autoql-vanilla-input');
-        input.setAttribute('type', 'text');
-        input.setAttribute('placeholder', placeholder);
-
-        input.onkeyup = (evt) => {
-            let val = evt.target.value;
-            if (inputType === 'input' && val === '') {
-                val = '[Title]';
-            }
-            onChange(val);
-        };
-
-        input.value = defaultValue;
-
-        container.getValue = () => {
-            return input.value;
-        };
-
-        return container;
-    };
-
     const createPreviewItem = () => {
         const item = document.createElement('div');
         const header = document.createElement('div');
@@ -186,7 +147,6 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
     };
 
     const handleDescriptionChange = (e) => {
-        console.log('DESCRIPTION CHANGE!', e, e.target.value);
         const message = e.target.value;
 
         previewSection.setDescription(message);
@@ -230,7 +190,7 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
     container.getValues = () => {
         return {
             title: titleSection.input?.value,
-            message: messageSection.intpue?.value,
+            message: messageSection.input?.value,
         };
     };
 

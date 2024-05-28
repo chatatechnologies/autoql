@@ -102,7 +102,7 @@ export function TimingView({ dataAlert }) {
 
     this.getSchedules = () => {
         if (this.notificationType !== SCHEDULED_TYPE) {
-            return [];
+            return undefined;
         }
 
         if (this.resetPeriod === 'DAY') {
@@ -454,13 +454,19 @@ export function TimingView({ dataAlert }) {
         const timezone = this.timezone;
         const evaluationFrequency = this.evaluationFrequency;
         const schedules = this.getSchedules();
-        return {
+
+        const values = {
             notification_type: notificationType,
             reset_period: resetPeriod,
             evaluation_frequency: evaluationFrequency,
             time_zone: timezone,
-            schedules,
         };
+
+        if (schedules?.length) {
+            values.schedules = schedules;
+        }
+
+        return values;
     };
 
     return container;

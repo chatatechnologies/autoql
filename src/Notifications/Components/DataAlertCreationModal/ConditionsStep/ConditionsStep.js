@@ -78,8 +78,14 @@ export function ConditionsStep({
     const SUPPORTED_CONDITION_TYPES = getSupportedConditionTypes(undefined, queryResponse);
     const PREVIEW_ROWS = 20;
 
+    const isFirstQuerySingleValue = isSingleValueResponse(queryResponse);
+    const firstQueryGroupables = getGroupableColumns(queryResponse?.data?.columns)?.map(
+        (i) => queryResponse?.data?.columns?.find((col) => col.index === i)?.name,
+    );
+
     this.dataAlertType = dataAlertType;
     this.firstQuerySelectedColumns = getFirstQuerySelectedColumns(queryResponse, initialData);
+    this.firstQueryJoinColumns = firstQueryGroupables ?? [];
     this.secondQuerySelectedColumns = [];
     this.secondTermType = NUMBER_TERM_TYPE;
 
@@ -142,23 +148,23 @@ export function ConditionsStep({
             return { isValid: false };
         }
 
-        const firstColumns = queryResponse?.data?.columns;
+        // const firstColumns = queryResponse?.data?.columns;
         const secondColumns = response?.data?.data?.columns;
 
-        const isFirstQuerySingleValue = isSingleValueResponse(queryResponse);
+        // const isFirstQuerySingleValue = isSingleValueResponse(queryResponse);
         const isSecondQuerySingleValue = isSingleValueResponse(response);
         const isSecondQueryListQuery = isListQuery(secondColumns) && !isSecondQuerySingleValue;
 
-        const firstQueryGroupables = getGroupableColumns(firstColumns)?.map(
-            (i) => firstColumns.find((col) => col.index === i)?.name,
-        );
+        // const firstQueryGroupables = getGroupableColumns(firstColumns)?.map(
+        //     (i) => firstColumns.find((col) => col.index === i)?.name,
+        // );
 
         const secondQueryGroupables = getGroupableColumns(secondColumns)?.map(
             (i) => secondColumns.find((col) => col.index === i)?.name,
         );
 
-        this.firstQueryJoinColumns = firstQueryGroupables;
-        this.secondQueryJoinColumns = secondQueryGroupables;
+        // this.firstQueryJoinColumns = firstQueryGroupables ?? [];
+        this.secondQueryJoinColumns = secondQueryGroupables ?? [];
 
         const areGroupablesSameAsFirstQuery = isEqual(firstQueryGroupables, secondQueryGroupables);
 
@@ -654,41 +660,49 @@ export function ConditionsStep({
 
     this.buildExpression = () => {
         const expression = [];
-        const { text } = queryResponse.data;
 
-        const firstQueryCompareColumnIndex = this.firstQuerySelectedColumns?.[0];
-        const firstQueryCompareColumnName = queryResponse?.data?.columns?.find(
-            (col) => col.index === firstQueryCompareColumnIndex,
-        )?.name;
+        const condition = container.conditionType === COMPARE_TYPE ? this.conditionSelect?.selectedValue : EXISTS_TYPE;
 
-        const secondQueryCompareColumnIndex = this.secondQuerySelectedColumns?.[0];
-        const secondQueryCompareColumnName = this.secondQueryResponse?.data?.data?.columns?.find(
-            (col) => col.index === secondQueryCompareColumnIndex,
-        )?.name;
-
-        expression.push({
+        const firstTerm = {
             id: uuidv4(),
-            condition: this.conditionSelect?.selectedValue ?? EXISTS_TYPE,
+            condition,
             term_type: 'QUERY',
-            term_value: text,
-            join_columns: this.firstQueryJoinColumns,
-            compare_column: firstQueryCompareColumnName,
+            term_value: queryResponse?.data?.text,
+            join_columns: this.firstQueryJoinColumns ?? [],
             filters: [], // TODO: APPLY TABLE FILTERS FROM DM
             session_filter_locks: [], // TODO: APPLY FILTER LOCKS FROM DM
             user_selection: [], // TODO: APPLY USER SELECTION FROM VALIDATION RESPONSE
-        });
+        };
 
-        expression.push({
-            id: uuidv4(),
-            condition: 'TERMINATOR',
-            term_type: this.termInputValue?.selectValue,
-            term_value: this.termInputValue.getValue(),
-            join_columns: this.secondQueryJoinColumns,
-            compare_column: secondQueryCompareColumnName,
-            filters: [],
-            session_filter_locks: [],
-            user_selection: [],
-        });
+        if (container.conditionType !== EXISTS_TYPE) {
+            const firstQueryCompareColumnIndex = this.firstQuerySelectedColumns?.[0];
+            const firstQueryCompareColumnName = queryResponse?.data?.columns?.find(
+                (col) => col.index === firstQueryCompareColumnIndex,
+            )?.name;
+
+            firstTerm.compare_column = firstQueryCompareColumnName;
+        }
+
+        expression.push(firstTerm);
+
+        if (container.conditionType !== EXISTS_TYPE) {
+            const secondQueryCompareColumnIndex = this.secondQuerySelectedColumns?.[0];
+            const secondQueryCompareColumnName = this.secondQueryResponse?.data?.data?.columns?.find(
+                (col) => col.index === secondQueryCompareColumnIndex,
+            )?.name;
+
+            expression.push({
+                id: uuidv4(),
+                condition: 'TERMINATOR',
+                term_type: this.termInputValue?.selectValue,
+                term_value: this.termInputValue.getValue(),
+                join_columns: this.secondQueryJoinColumns,
+                compare_column: secondQueryCompareColumnName,
+                filters: [],
+                session_filter_locks: [],
+                user_selection: [],
+            });
+        }
 
         return expression;
     };

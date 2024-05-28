@@ -328,11 +328,13 @@ export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EX
     };
 
     this.getNotificationType = (value) => {
-        if (value === CONTINUOUS_TYPE && value !== 'NONE') {
-            return PERIODIC_TYPE;
+        const resetPeriod = this.getResetPeriod();
+
+        if (this.dataAlertType === CONTINUOUS_TYPE || !resetPeriod || resetPeriod === 'NONE') {
+            return CONTINUOUS_TYPE;
         }
 
-        return value;
+        return PERIODIC_TYPE;
     };
 
     this.getResetPeriod = (resetPeriodSelectValue) => {
@@ -371,16 +373,6 @@ export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EX
     frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
     frequencyMessageContainer.classList.add('autoql-vanilla-frequency-type-container');
 
-    // frequencyMessage.textContent = "If the Data Alert conditions are met, you'll be notified ";
-
-    // if (this.dataAlertType === SCHEDULED_TYPE) {
-    //     frequencyMessage.innerHTML =
-    //         '<span>A notification will be sent with the query result <strong>at the following times:</strong></span>';
-    // } else {
-    //     frequencyMessage.innerHTML =
-    //         '<span>A notification will be sent <strong>right away</strong> when the Data Alert conditions are met.</span>';
-    // }
-
     frequencyMessageContainer.appendChild(frequencyMessage);
     dataAlertSettingFrequency.appendChild(frequencyContainer);
     dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
@@ -404,14 +396,20 @@ export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EX
         const timezone = this.timezone;
         const evaluationFrequency = this.evaluationFrequency;
         const schedules = this.getSchedules();
+        const reset_period = notificationType === PERIODIC_TYPE ? this.getResetPeriod(this.resetPeriod) : null;
 
-        return {
+        const values = {
             notification_type: notificationType,
             evaluation_frequency: evaluationFrequency,
             time_zone: timezone,
-            schedules,
-            ...(notificationType === PERIODIC_TYPE ? { reset_period: this.resetPeriod } : {}),
+            reset_period,
         };
+
+        if (schedules?.length) {
+            values.schedules = schedules;
+        }
+
+        return values;
     };
 
     return container;
