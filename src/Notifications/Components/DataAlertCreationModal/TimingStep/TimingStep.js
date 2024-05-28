@@ -330,7 +330,9 @@ export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EX
     this.getNotificationType = (value) => {
         const resetPeriod = this.getResetPeriod();
 
-        if (this.dataAlertType === CONTINUOUS_TYPE || !resetPeriod || resetPeriod === 'NONE') {
+        if (this.dataAlertType === SCHEDULED_TYPE) {
+            return SCHEDULED_TYPE;
+        } else if (!resetPeriod || resetPeriod === 'NONE') {
             return CONTINUOUS_TYPE;
         }
 
