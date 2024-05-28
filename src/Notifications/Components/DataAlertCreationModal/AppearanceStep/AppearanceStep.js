@@ -6,7 +6,7 @@ import { Input } from '../../../../ChataComponents/Input';
 
 import './AppearanceStep.scss';
 
-export function AppearanceStep({ onChange = () => {} } = {}) {
+export function AppearanceStep({ onChange = () => {}, dataAlert } = {}) {
     const container = document.createElement('div');
     const composeStepMessage = document.createElement('div');
     const wrapper = document.createElement('div');
@@ -15,7 +15,9 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
     const boldText = document.createElement('strong');
     const formSection = document.createElement('div');
 
-    const defaultTitle = '[Title]';
+    const defaultTitle = dataAlert?.title ?? '[Title]';
+
+    console.log({ dataAlert });
 
     const getFormattedTimestamp = () => {
         const timestamp = new Date().toISOString();
@@ -137,7 +139,7 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
 
     const previewSection = createPreview({
         label: 'Preview',
-        defaultMessage: '',
+        defaultMessage: dataAlert?.message ?? '',
     });
 
     const handleTitleChange = (e) => {
@@ -157,6 +159,7 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
         placeholder: 'eg. "Budget alert!"',
         icon: NOTEBOOK,
         label: 'Title',
+        value: dataAlert?.title ?? '',
         onChange: handleTitleChange,
     });
 
@@ -164,6 +167,7 @@ export function AppearanceStep({ onChange = () => {} } = {}) {
         area: true,
         placeholder: 'eg. "You have spent 80% of your budget for the month."',
         label: 'Message (optional)',
+        value: dataAlert?.message ?? '',
         onChange: handleDescriptionChange,
     });
 

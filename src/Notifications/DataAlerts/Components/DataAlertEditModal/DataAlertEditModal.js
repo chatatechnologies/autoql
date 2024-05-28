@@ -2,11 +2,11 @@ import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/Chata
 import { Modal } from '../../../../Modal';
 import { ConditionsView } from '../ConditionsView/ConditionsView';
 import { TimingView } from '../TimingView';
-import { AppearanceView } from '../AppearanceView';
 import { updateDataAlert } from 'autoql-fe-utils';
 import { AntdMessage } from '../../../../Antd';
 
 import './DataAlertEditModal.scss';
+import { AppearanceStep } from '../../../Components/DataAlertCreationModal/AppearanceStep/AppearanceStep';
 
 export function DataAlertEditModal({
     dataAlertItem,
@@ -27,7 +27,7 @@ export function DataAlertEditModal({
 
     const conditionsView = new ConditionsView({ dataAlert });
     const timingView = new TimingView({ dataAlert });
-    const appearanceView = new AppearanceView({ dataAlert });
+    const appearanceSection = new AppearanceStep({ dataAlert });
 
     container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
     spinner.classList.add('autoql-vanilla-spinner-loader');
@@ -99,7 +99,7 @@ export function DataAlertEditModal({
         const newValues = {
             id: dataAlert.id,
             ...conditionsView.getValues(),
-            ...appearanceView.getValues(),
+            ...appearanceSection.getValues(),
             ...timingView.getValues(),
         };
         try {
@@ -107,13 +107,11 @@ export function DataAlertEditModal({
             await fetchAlerts();
 
             if (response.status === 200) {
-                new AntdMessage('Data Alert updated!', 2500);
-                if (dataAlertItem) {
-                    dataAlertItem.setDataAlert(response.data.data);
-                }
+                dataAlertItem?.setDataAlert?.(response?.data?.data);
                 modal.close();
+                new AntdMessage('Data Alert updated!', 2500);
             } else {
-                new AntdMessage('Error', 2500);
+                throw new Error('There was a problem saving your Data Alert. Please try again.');
             }
         } catch (error) {
             console.error(error);
@@ -122,7 +120,7 @@ export function DataAlertEditModal({
     };
 
     container.addEventListener('keyup', () => {
-        if (!conditionsView.isValid() || !appearanceView.isValid()) {
+        if (!conditionsView.isValid() || !appearanceSection.isValid()) {
             btnSave.disabled = true;
             btnSave.classList.add('autoql-vanilla-disabled');
         } else {
@@ -133,7 +131,7 @@ export function DataAlertEditModal({
 
     container.appendChild(conditionsView);
     container.appendChild(timingView);
-    container.appendChild(appearanceView);
+    container.appendChild(appearanceSection);
     modal.addView(container);
     modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
     modal.setTitle('Edit Data Alert Settings');
