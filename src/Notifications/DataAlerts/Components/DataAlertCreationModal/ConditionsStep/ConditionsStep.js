@@ -72,6 +72,7 @@ export function ConditionsStep({
     options = {},
 }) {
     const initialData = dataAlert?.expression;
+    const queryText = dataAlert?.expression?.[0]?.term_value ?? queryResponse?.data?.text;
 
     const container = document.createElement('div');
     container.classList.add('autoql-vanilla-conditions-step-container');
@@ -268,8 +269,6 @@ export function ConditionsStep({
     this.createQueryInput = () => {
         const queryInputContainer = document.createElement('div');
         queryInputContainer.classList.add('autoql-vanilla-data-alert-rule-query-readonly-container');
-
-        const queryText = dataAlert?.expression?.[0]?.term_value ?? queryResponse?.data?.text;
 
         const queryInput = new Input({
             label: 'Query',
@@ -671,7 +670,7 @@ export function ConditionsStep({
             id: uuidv4(),
             condition,
             term_type: 'QUERY',
-            term_value: queryResponse?.data?.text,
+            term_value: queryText,
             join_columns: this.firstQueryJoinColumns ?? [],
             filters: [], // TODO: APPLY TABLE FILTERS FROM DM
             session_filter_locks: [], // TODO: APPLY FILTER LOCKS FROM DM
