@@ -1,0 +1,25 @@
+.autoql-vanilla-frequency-type-container {
+    padding: 3px 5px;
+    margin-bottom: 20px;
+
+    .autoql-vanilla-data-alert-schedule-step-type-selector {
+        border-bottom: 1px solid var(--autoql-vanilla-accent-color);
+        height: 1.5em;
+        margin: 0 5px;
+        padding: 0;
+    }
+}
+
+.autoql-vanilla-data-alert-frequency-options-container {
+    display: flex;
+    flex-wrap: wrap;
+
+    .autoql-vanilla-time-selector {
+        flex: 1;
+        max-width: 300px;
+
+        .autoql-vanilla-select-and-label {
+            width: 100%;
+        }
+    }
+}

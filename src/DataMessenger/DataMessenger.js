@@ -96,7 +96,7 @@ import MobileDetect from 'mobile-detect';
 import testdata from '../../testdata';
 
 import '../Toolbar/Toolbar.scss';
-import '../../css/chata-styles.css';
+import '../../css/chata-styles.scss';
 import '../../css/DataMessenger.scss';
 
 export function DataMessenger(options = {}) {

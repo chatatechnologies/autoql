@@ -1,12 +1,26 @@
-import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
-import { Modal } from '../../../../Modal';
-import { ConditionsView } from '../ConditionsView/ConditionsView';
-import { TimingView } from '../TimingView';
 import { updateDataAlert } from 'autoql-fe-utils';
+
+import { Modal } from '../../../../Modal';
 import { AntdMessage } from '../../../../Antd';
+import { ConditionsStep } from '../DataAlertCreationModal/ConditionsStep';
+import { TimingStep } from '../DataAlertCreationModal/TimingStep/TimingStep';
+import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
+import { AppearanceStep } from '../DataAlertCreationModal/AppearanceStep/AppearanceStep';
 
 import './DataAlertEditModal.scss';
-import { AppearanceStep } from '../../../Components/DataAlertCreationModal/AppearanceStep/AppearanceStep';
+
+const createSectionTitle = (title) => {
+    const sectionTitle = document.createElement('div');
+    sectionTitle.classList.add('autoql-vanilla-data-alert-setting-section-title');
+    sectionTitle.innerHTML = title;
+    return sectionTitle;
+};
+
+const SectionDivider = () => {
+    const divider = document.createElement('div');
+    divider.classList.add('autoql-vanilla-divider-horizontal');
+    return divider;
+};
 
 export function DataAlertEditModal({
     dataAlertItem,
@@ -25,9 +39,9 @@ export function DataAlertEditModal({
     const container = document.createElement('div');
     const btnSaveString = document.createElement('span');
 
-    const conditionsView = new ConditionsView({ dataAlert });
-    const timingView = new TimingView({ dataAlert });
-    const appearanceSection = new AppearanceStep({ dataAlert });
+    const conditionsSection = new ConditionsStep({ dataAlert });
+    const timingSection = new TimingStep({ dataAlert, showSummaryMessage: false });
+    const appearanceSection = new AppearanceStep({ dataAlert, showSummaryMessage: false });
 
     container.classList.add('autoql-vanilla-data-alert-settings-modal-content');
     spinner.classList.add('autoql-vanilla-spinner-loader');
@@ -98,9 +112,9 @@ export function DataAlertEditModal({
         btnSave.setAttribute('disabled', 'true');
         const newValues = {
             id: dataAlert.id,
-            ...conditionsView.getValues(),
+            ...conditionsSection.getValues(),
             ...appearanceSection.getValues(),
-            ...timingView.getValues(),
+            ...timingSection.getValues(),
         };
         try {
             const response = await updateDataAlert({ dataAlert: newValues, ...authentication });
@@ -120,7 +134,7 @@ export function DataAlertEditModal({
     };
 
     container.addEventListener('keyup', () => {
-        if (!conditionsView.isValid() || !appearanceSection.isValid()) {
+        if (!conditionsSection.isValid() || !appearanceSection.isValid()) {
             btnSave.disabled = true;
             btnSave.classList.add('autoql-vanilla-disabled');
         } else {
@@ -129,9 +143,19 @@ export function DataAlertEditModal({
         }
     });
 
-    container.appendChild(conditionsView);
-    container.appendChild(timingView);
+    const conditionsSectionTitle = createSectionTitle('Conditions');
+    const timingSectionTitle = createSectionTitle('Timing');
+    const appearanceSectionTitle = createSectionTitle('Appearance');
+
+    container.appendChild(conditionsSectionTitle);
+    container.appendChild(conditionsSection);
+    container.appendChild(new SectionDivider());
+    container.appendChild(timingSectionTitle);
+    container.appendChild(timingSection);
+    container.appendChild(new SectionDivider());
+    container.appendChild(appearanceSectionTitle);
     container.appendChild(appearanceSection);
+
     modal.addView(container);
     modal.chataModal.classList.add('autoql-vanilla-modal-full-size');
     modal.setTitle('Edit Data Alert Settings');

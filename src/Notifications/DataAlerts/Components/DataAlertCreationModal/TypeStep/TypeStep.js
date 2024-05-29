@@ -1,7 +1,7 @@
 import { CONTINUOUS_TYPE, SCHEDULED_TYPE } from 'autoql-fe-utils';
 
-import { CALENDAR, LIVE_ICON } from '../../../../Svg';
-import { MultiLineButton } from '../../../../ChataComponents/MultiLineButton';
+import { CALENDAR, LIVE_ICON } from '../../../../../Svg';
+import { MultiLineButton } from '../../../../../ChataComponents/MultiLineButton';
 
 import './TypeStep.scss';
 

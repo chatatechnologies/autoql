@@ -79,7 +79,7 @@
 .chata-modal-footer {
     position: relative;
     flex: 0 0 52px;
-    border-top: 1px solid rgba(0,0,0,.05);
+    border-top: 1px solid var(--autoql-vanilla-border-color);
     text-align: right;
     padding: 8px 10px;
 }

@@ -23,11 +23,11 @@ import {
 import axios from 'axios';
 import isEqual from 'lodash.isequal';
 
-import { Input } from '../../../../ChataComponents/Input';
-import { Select } from '../../../../ChataComponents/Select';
-import { SelectableTable } from '../../../../SelectableTable';
-import { createIcon, uuidv4 } from '../../../../Utils';
-import { CHECK, WARNING_TRIANGLE } from '../../../../Svg';
+import { Input } from '../../../../../ChataComponents/Input';
+import { Select } from '../../../../../ChataComponents/Select';
+import { SelectableTable } from '../../../../../SelectableTable';
+import { createIcon, uuidv4 } from '../../../../../Utils';
+import { CHECK, WARNING_TRIANGLE } from '../../../../../Svg';
 
 import './ConditionsStep.scss';
 
@@ -66,11 +66,13 @@ const getFirstQuerySelectedColumns = (queryResponse, initialData) => {
 
 export function ConditionsStep({
     queryResponse,
-    initialData,
+    dataAlert,
     dataAlertType = CONTINUOUS_TYPE,
     onChange = () => {},
     options = {},
 }) {
+    const initialData = dataAlert?.expression;
+
     const container = document.createElement('div');
     container.classList.add('autoql-vanilla-conditions-step-container');
     container.classList.add('autoql-vanilla-data-alert-setting-section');
@@ -267,9 +269,11 @@ export function ConditionsStep({
         const queryInputContainer = document.createElement('div');
         queryInputContainer.classList.add('autoql-vanilla-data-alert-rule-query-readonly-container');
 
+        const queryText = dataAlert?.expression?.[0]?.term_value ?? queryResponse?.data?.text;
+
         const queryInput = new Input({
             label: 'Query',
-            value: queryResponse.data.text,
+            value: queryText,
             readOnly: true,
             disabled: true,
             fullWidth: true,

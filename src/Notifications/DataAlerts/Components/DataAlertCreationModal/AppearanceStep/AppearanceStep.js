@@ -1,12 +1,13 @@
-import { NOTEBOOK, CALENDAR, VERTICAL_DOTS } from '../../../../Svg';
-import { createIcon } from '../../../../Utils';
-import dayjs from '../../../../Utils/dayjsPlugins';
 import { isNumber } from 'autoql-fe-utils';
-import { Input } from '../../../../ChataComponents/Input';
+
+import { createIcon } from '../../../../../Utils';
+import dayjs from '../../../../../Utils/dayjsPlugins';
+import { Input } from '../../../../../ChataComponents/Input';
+import { NOTEBOOK, CALENDAR, VERTICAL_DOTS } from '../../../../../Svg';
 
 import './AppearanceStep.scss';
 
-export function AppearanceStep({ onChange = () => {}, dataAlert } = {}) {
+export function AppearanceStep({ onChange = () => {}, dataAlert, showSummaryMessage = true } = {}) {
     const container = document.createElement('div');
     const composeStepMessage = document.createElement('div');
     const wrapper = document.createElement('div');
@@ -180,9 +181,12 @@ export function AppearanceStep({ onChange = () => {}, dataAlert } = {}) {
     wrapper.classList.add('autoql-vanilla-data-alerts-container');
     composeMessageSection.classList.add('autoql-vanilla-compose-message-section');
     formSection.classList.add('autoql-vanilla-form-section');
-
     composeMessageSectionWrapper.appendChild(boldText);
-    composeStepMessage.appendChild(composeMessageSectionWrapper);
+
+    if (showSummaryMessage) {
+        composeStepMessage.appendChild(composeMessageSectionWrapper);
+    }
+
     formSection.appendChild(titleSection);
     formSection.appendChild(messageSection);
     composeMessageSection.appendChild(formSection);

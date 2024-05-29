@@ -1292,19 +1292,18 @@ text.autoql-vanilla-y-axis-label {
     font-size: 14px !important;
 }
 
-.autoql-vanilla-chata-btn.autoql-vanilla-danger:hover {
-    opacity: 0.8;
-}
-
 .autoql-vanilla-chata-btn.autoql-vanilla-hidden {
     display: none;
 }
 
 .autoql-vanilla-chata-btn.autoql-vanilla-danger {
-    color: var(--autoql-vanilla-text-color-accent);
-    background: var(--autoql-vanilla-danger-color-default);
-    background: var(--autoql-vanilla-danger-color, var(--autoql-vanilla-danger-color-default));
+    color: var(--autoql-vanilla-danger-color);
+    background: transparent;
     border: 1px solid var(--autoql-vanilla-danger-color, var(--autoql-vanilla-danger-color-default));
+
+    &:hover {
+        background: var(--autoql-vanilla-mask-color);
+    }
 }
 
 .autoql-vanilla-chata-btn.autoql-vanilla-primary {

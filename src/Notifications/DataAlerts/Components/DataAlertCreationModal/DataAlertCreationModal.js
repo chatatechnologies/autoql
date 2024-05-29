@@ -1,13 +1,13 @@
 import { QUERY_TERM_TYPE, createDataAlert } from 'autoql-fe-utils';
-import { Modal } from '../../../Modal';
-import { ChataConfirmDialog } from '../ChataConfirmDialog/ChataConfirmDialog';
+import { Modal } from '../../../../Modal';
+import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
 import { AppearanceStep } from './AppearanceStep/AppearanceStep';
 import { ConditionsStep } from './ConditionsStep';
 import { TimingStep } from './TimingStep/TimingStep';
 import { StepContainer } from './StepContainer';
 import { SummaryFooter } from './SummaryFooter';
-import { AntdMessage } from '../../../Antd';
-import { uuidv4 } from '../../../Utils';
+import { AntdMessage } from '../../../../Antd';
+import { uuidv4 } from '../../../../Utils';
 import { TypeStep } from './TypeStep';
 
 import './DataAlertCreationModal.scss';

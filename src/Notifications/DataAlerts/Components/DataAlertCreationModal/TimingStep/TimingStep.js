@@ -1,6 +1,6 @@
-import { getTimeOptionArray } from '../../../DataAlerts/Components/TimingView/helpers';
-import dayjs from '../../../../Utils/dayjsPlugins';
-import { Selector } from '../../../Components/Selector/Selector';
+import { getTimeOptionArray } from './helpers';
+import dayjs from '../../../../../Utils/dayjsPlugins';
+import { Selector } from '../../../../Components/Selector/Selector';
 import momentTZ from 'moment-timezone';
 import {
     SCHEDULED_TYPE,
@@ -12,10 +12,16 @@ import {
     MONTH_DAY_SELECT_OPTIONS,
     RESET_PERIOD_OPTIONS,
     EXISTS_TYPE,
+    COMPARE_TYPE,
 } from 'autoql-fe-utils';
 import './TimingStep.scss';
 
-export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EXISTS_TYPE } = {}) {
+export function TimingStep({
+    dataAlertType = CONTINUOUS_TYPE,
+    conditionType = EXISTS_TYPE,
+    showSummaryMessage = true,
+    dataAlert,
+} = {}) {
     const container = document.createElement('div');
     const wrapper = document.createElement('div');
     const settingGroup = document.createElement('div');
@@ -28,6 +34,15 @@ export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EX
 
     this.dataAlertType = dataAlertType;
     this.conditionType = conditionType;
+
+    if (dataAlert) {
+        const dataAlertTypeFromAlert = dataAlert?.notification_type;
+        const conditionTypeFromAlert =
+            dataAlert?.expression?.[0]?.condition === EXISTS_TYPE ? EXISTS_TYPE : COMPARE_TYPE;
+
+        this.dataAlertType = dataAlertTypeFromAlert;
+        this.conditionType = conditionTypeFromAlert;
+    }
 
     this.DEFAULT_EVALUATION_FREQUENCY = 5;
     this.DEFAULT_WEEKDAY_SELECT_VALUE = 'Friday';
@@ -379,7 +394,11 @@ export function TimingStep({ dataAlertType = CONTINUOUS_TYPE, conditionType = EX
     dataAlertSettingFrequency.appendChild(frequencyContainer);
     dataAlertSettingGroup.appendChild(dataAlertSettingFrequency);
     settingGroup.appendChild(dataAlertSettingGroup);
-    wrapper.appendChild(frequencyMessageContainer);
+
+    if (showSummaryMessage) {
+        wrapper.appendChild(frequencyMessageContainer);
+    }
+
     wrapper.appendChild(settingGroup);
     container.appendChild(wrapper);
 
