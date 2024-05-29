@@ -167,6 +167,10 @@ export function Select({
             li.classList.add('autoql-vanilla-select-list-item');
             li.id = `select-option-${this.ID}-${i}`;
 
+            if (option.disabled) {
+                li.classList.add('autoql-vanilla-disabled');
+            }
+
             if (option.value == this.select.selectedValue) {
                 li.classList.add('active');
             }

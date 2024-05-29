@@ -64,14 +64,6 @@ const getFirstQuerySelectedColumns = (queryResponse, initialData) => {
     return selectedColumns;
 };
 
-const getDataAlertType = (dataAlert) => {
-    if (dataAlert?.notification_type === SCHEDULED_TYPE) {
-        return SCHEDULED_TYPE;
-    }
-
-    return CONTINUOUS_TYPE;
-};
-
 export function ConditionsStep({
     queryResponse,
     dataAlert,
@@ -554,7 +546,10 @@ export function ConditionsStep({
             showArrow: false,
             initialValue: container.conditionType,
             options: Object.keys(DATA_ALERT_CONDITION_TYPES).map((type) => {
-                const disabled = !SUPPORTED_CONDITION_TYPES.includes(type);
+                let disabled = !SUPPORTED_CONDITION_TYPES.includes(type);
+                if (!queryResponse) {
+                    disabled = type !== container.conditionType;
+                }
 
                 return {
                     value: type,

@@ -4,6 +4,12 @@
         padding: 8px 15px;
         cursor: pointer;
 
+        &.autoql-vanilla-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: default;
+        }
+
         &:hover,
         &.active {
             background: var(--autoql-vanilla-hover-color);
