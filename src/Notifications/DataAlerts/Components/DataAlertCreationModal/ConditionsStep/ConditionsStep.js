@@ -64,6 +64,14 @@ const getFirstQuerySelectedColumns = (queryResponse, initialData) => {
     return selectedColumns;
 };
 
+const getDataAlertType = (dataAlert) => {
+    if (dataAlert?.notification_type === SCHEDULED_TYPE) {
+        return SCHEDULED_TYPE;
+    }
+
+    return CONTINUOUS_TYPE;
+};
+
 export function ConditionsStep({
     queryResponse,
     dataAlert,
@@ -87,12 +95,17 @@ export function ConditionsStep({
     );
 
     this.dataAlertType = dataAlertType;
+    container.conditionType = SUPPORTED_CONDITION_TYPES[0];
+
+    if (dataAlert) {
+        this.dataAlertType = dataAlert?.notification_type === SCHEDULED_TYPE ? SCHEDULED_TYPE : CONTINUOUS_TYPE;
+        container.conditionType = dataAlert?.expression?.[0]?.condition === EXISTS_TYPE ? EXISTS_TYPE : COMPARE_TYPE;
+    }
+
     this.firstQuerySelectedColumns = getFirstQuerySelectedColumns(queryResponse, initialData);
     this.firstQueryJoinColumns = firstQueryGroupables ?? [];
     this.secondQuerySelectedColumns = [];
-    this.secondTermType = NUMBER_TERM_TYPE;
-
-    container.conditionType = SUPPORTED_CONDITION_TYPES[0];
+    this.secondTermType = dataAlert?.expression?.[1]?.term_type ?? NUMBER_TERM_TYPE;
 
     const ruleContainer = document.createElement('div');
 
@@ -426,6 +439,13 @@ export function ConditionsStep({
         columnValueMessageAndSelector.classList.add('autoql-vanilla-condition-type-container');
 
         const columnValueMessage = document.createElement('span');
+
+        if (!queryResponse) {
+            columnValueMessage.innerHTML = 'The result of your query';
+            columnValueMessageAndSelector.appendChild(columnValueMessage);
+            return columnValueMessageAndSelector;
+        }
+
         columnValueMessage.innerHTML = 'Any value from';
         columnValueMessageAndSelector.appendChild(columnValueMessage);
 
@@ -475,12 +495,12 @@ export function ConditionsStep({
     };
 
     this.termInputValue = new Input({
-        value: '',
-        type: 'number',
+        value: dataAlert?.expression?.[1]?.term_value ?? '',
+        type: this.secondTermType === NUMBER_TERM_TYPE ? 'number' : 'text',
         hasSelect: true,
         showSpinWheel: false,
         selectInitialValue: this.secondTermType,
-        placeholder: 'Type a number',
+        placeholder: this.secondTermType === NUMBER_TERM_TYPE ? 'Type a number' : 'Type a query',
         onChange: (e) => {
             if (this.secondTermType === QUERY_TERM_TYPE) {
                 this.validateSecondQuery(e.target.value);
@@ -575,7 +595,7 @@ export function ConditionsStep({
         const secondRuleInput = document.createElement('div');
         const secondLabelContainer = document.createElement('div');
         const conditionSelect = new Select({
-            initialValue: 'GREATER_THAN',
+            initialValue: dataAlert?.expression?.[0]?.condition ?? 'GREATER_THAN',
             options: this.getOperatorSelectValues(),
         });
 
@@ -624,7 +644,7 @@ export function ConditionsStep({
 
         compareTypeContent.appendChild(queryInput);
         if (columnSelectionTable) compareTypeContent.appendChild(columnSelectionTable);
-        compareTypeContent.appendChild(columnValueMessage);
+        if (columnValueMessage) compareTypeContent.appendChild(columnValueMessage);
 
         compareTypeContent.appendChild(conditionBuilder);
 
