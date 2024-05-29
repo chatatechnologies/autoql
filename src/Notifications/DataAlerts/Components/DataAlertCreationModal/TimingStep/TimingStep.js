@@ -1,7 +1,3 @@
-import { getTimeOptionArray } from './helpers';
-import dayjs from '../../../../../Utils/dayjsPlugins';
-import { Selector } from '../../../../Components/Selector/Selector';
-import momentTZ from 'moment-timezone';
 import {
     SCHEDULED_TYPE,
     CONTINUOUS_TYPE,
@@ -14,6 +10,14 @@ import {
     EXISTS_TYPE,
     COMPARE_TYPE,
 } from 'autoql-fe-utils';
+import momentTZ from 'moment-timezone';
+
+import dayjs from '../../../../../Utils/dayjsPlugins';
+import { getTimeOptionArray } from './helpers';
+import { CALENDAR, LIVE_ICON } from '../../../../../Svg';
+import { Select } from '../../../../../ChataComponents/Select';
+import { Selector } from '../../../../Components/Selector/Selector';
+
 import './TimingStep.scss';
 
 export function TimingStep({
@@ -36,7 +40,8 @@ export function TimingStep({
     this.conditionType = conditionType;
 
     if (dataAlert) {
-        const dataAlertTypeFromAlert = dataAlert?.notification_type;
+        const dataAlertTypeFromAlert =
+            dataAlert?.notification_type === SCHEDULED_TYPE ? SCHEDULED_TYPE : CONTINUOUS_TYPE;
         const conditionTypeFromAlert =
             dataAlert?.expression?.[0]?.condition === EXISTS_TYPE ? EXISTS_TYPE : COMPARE_TYPE;
 
@@ -238,6 +243,36 @@ export function TimingStep({
         this.monthDaySelectValue = option.value;
     };
 
+    this.createDataAlertTypeSelector = () => {
+        const dataAlertTypeSelectContainer = document.createElement('div');
+        dataAlertTypeSelectContainer.classList.add('autoql-vanilla-data-alert-type-selector-container');
+
+        const dataAlertTypeSelect = new Select({
+            label: 'Alert Type',
+            initialValue: this.dataAlertType,
+            onChange: (option) => {
+                container.handleTypeChange(option.value);
+            },
+            options: [
+                {
+                    value: CONTINUOUS_TYPE,
+                    label: 'Live',
+                    subtitle: 'Get notifications as soon as the conditions are met.',
+                    icon: LIVE_ICON,
+                },
+                {
+                    value: SCHEDULED_TYPE,
+                    label: 'Scheduled',
+                    subtitle: 'Get notifications at specific times.',
+                    icon: CALENDAR,
+                },
+            ],
+        });
+
+        dataAlertTypeSelectContainer.appendChild(dataAlertTypeSelect);
+        dataAlertSettingFrequency.appendChild(dataAlertTypeSelectContainer);
+    };
+
     this.createScheduledView = ({ notificationPeriod }) => {
         frequencyContainer.innerHTML = '';
         frequencyMessage.innerHTML =
@@ -304,6 +339,8 @@ export function TimingStep({
     };
 
     this.createLiveView = () => {
+        frequencyContainer.innerHTML = '';
+
         const frequencySelectorContainer = this.createFrequencyOption({
             label: 'Check conditions every',
             defaultValue: this.evaluationFrequency,
@@ -389,6 +426,10 @@ export function TimingStep({
     dataAlertSettingFrequency.classList.add('autoql-vanilla-frequency-settings');
     frequencyContainer.classList.add('autoql-vanilla-data-alert-frequency-options-container');
     frequencyMessageContainer.classList.add('autoql-vanilla-frequency-type-container');
+
+    if (dataAlert) {
+        this.createDataAlertTypeSelector();
+    }
 
     frequencyMessageContainer.appendChild(frequencyMessage);
     dataAlertSettingFrequency.appendChild(frequencyContainer);

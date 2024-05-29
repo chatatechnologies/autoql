@@ -57,6 +57,7 @@ export function Select({
         if (label) {
             const inputLabel = document.createElement('div');
             inputLabel.classList.add('autoql-vanilla-input-label');
+            inputLabel.innerHTML = label;
             this.select.appendChild(inputLabel);
         }
 
@@ -104,11 +105,18 @@ export function Select({
                 const label = selectedOption.label ?? selectedOption.value;
 
                 selectTextContent.innerHTML = '';
+
+                if (selectedOption.icon) {
+                    const icon = createIcon(selectedOption.icon);
+                    selectTextContent.appendChild(icon);
+                }
+
                 if (typeof label == 'object') {
-                    selectTextContent.innerHTML = '';
                     selectTextContent.appendChild(label);
                 } else {
-                    selectTextContent.innerHTML = `${label}`;
+                    const selectTextContentInnerSpan = document.createElement('span');
+                    selectTextContentInnerSpan.innerHTML = `${label}`;
+                    selectTextContent.appendChild(selectTextContentInnerSpan);
                 }
             } else {
                 selectTextContent.classList.add('autoql-vanilla-select-text-placeholder');
@@ -171,10 +179,21 @@ export function Select({
 
             const listLabel = option?.listLabel ?? option?.label ?? option?.value;
 
-            if (typeof listLabel == 'object') {
-                li.appendChild(listLabel);
-            } else {
-                li.innerHTML = listLabel;
+            if (option.icon) {
+                const icon = createIcon(option.icon);
+                li.appendChild(icon);
+            }
+
+            const listLabelSpan = document.createElement('span');
+            listLabelSpan.innerHTML = listLabel;
+
+            li.appendChild(listLabelSpan);
+
+            if (option.subtitle) {
+                const subtitle = document.createElement('div');
+                subtitle.classList.add('select-option-menu-item-value-subtitle');
+                subtitle.innerHTML = option.subtitle;
+                li.appendChild(subtitle);
             }
 
             selectorContent.appendChild(li);

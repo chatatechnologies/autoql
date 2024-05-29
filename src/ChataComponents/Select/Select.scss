@@ -16,6 +16,19 @@
     }
 }
 
+.autoql-vanilla-menu-item-value-title,
+.autoql-vanilla-select-list-item {
+    .autoql-vanilla-icon {
+        margin-bottom: 2px;
+        margin-right: 8px;
+    }
+}
+
+.select-option-menu-item-value-subtitle {
+    font-size: 0.875em;
+    opacity: 0.8;
+}
+
 .autoql-vanilla-select-and-label {
     display: inline-flex;
     flex-direction: column;

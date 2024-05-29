@@ -10,12 +10,31 @@
     }
 }
 
+.autoql-vanilla-frequency-settings {
+    display: flex;
+
+    .autoql-vanilla-schedule-builder-at-connector {
+        padding-bottom: 10px;
+    }
+}
+
+.autoql-vanilla-data-alert-type-selector-container {
+    flex: 1;
+    min-width: 200px;
+
+    .autoql-vanilla-select-and-label {
+        width: 100%;
+    }
+}
+
 .autoql-vanilla-data-alert-frequency-options-container {
     display: flex;
     flex-wrap: wrap;
+    align-items: flex-end;
 
     .autoql-vanilla-time-selector {
         flex: 1;
+        min-width: 150px;
         max-width: 300px;
 
         .autoql-vanilla-select-and-label {

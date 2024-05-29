@@ -229,8 +229,6 @@ export function NotificationFeed(selector, options) {
                 items.forEach((itemData, index) => {
                     const dataAlert = this.dataAlerts.find((d) => d.id === itemData.data_alert_id);
 
-                    console.log({ dataAlert });
-
                     const item = new NotificationItem({
                         itemData,
                         index,

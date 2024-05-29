@@ -18,8 +18,6 @@ export function AppearanceStep({ onChange = () => {}, dataAlert, showSummaryMess
 
     const defaultTitle = dataAlert?.title ?? '[Title]';
 
-    console.log({ dataAlert });
-
     const getFormattedTimestamp = () => {
         const timestamp = new Date().toISOString();
 
