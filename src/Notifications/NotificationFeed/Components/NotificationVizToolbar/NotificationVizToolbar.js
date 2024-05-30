@@ -10,9 +10,6 @@ import './NotificationVizToolbar.scss';
 export function NotificationVizToolbar({ response, notificationItem }) {
     const container = document.createElement('div');
 
-    // var rightButtons = document.createElement('div');
-    // var leftButtons = document.createElement('div');
-
     const moreOptionsPopup = new MoreOptionsVizToolbar({ notificationItem });
     this.displayType = response?.data?.data.display_type;
     this.selectedBtn = undefined;

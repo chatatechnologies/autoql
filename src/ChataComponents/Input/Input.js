@@ -252,12 +252,10 @@ export function Input(options = {}) {
 
         if (type === 'number') {
             this.input.setAttribute('spellcheck', 'number');
-            // this.input.setAttribute('placeholder', 'Type a number');
 
             if (this.spinWheelContainer) this.spinWheelContainer.style.display = 'flex';
         } else {
             this.input.setAttribute('spellcheck', 'false');
-            // this.input.setAttribute('placeholder', 'Type a query');
             if (this.spinWheelContainer) this.spinWheelContainer.style.display = 'none';
         }
         this.input.value = '';

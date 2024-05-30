@@ -29,17 +29,6 @@ export function MoreOptionsVizToolbar({ notificationItem }) {
         try {
             popup.close();
             notificationItem.queryOutput.exportToPNG();
-
-            // const svg = notificationItem.queryOutput.saveAsPng()
-            // if (!svg) {
-            //     console.warn('Unable to download SVG - no svg was found');
-            // }
-
-            // const base64Data = await svgToPng(svg, 2);
-            // const a = document.createElement('a');
-            // a.download = 'Chart.png';
-            // a.href = base64Data;
-            // a.click();
         } catch (error) {
             console.error(error);
             return;
