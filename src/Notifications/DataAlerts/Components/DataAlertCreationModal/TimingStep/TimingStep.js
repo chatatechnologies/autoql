@@ -9,14 +9,16 @@ import {
     RESET_PERIOD_OPTIONS,
     EXISTS_TYPE,
     COMPARE_TYPE,
+    getTimeObjFromTimeStamp,
+    getWeekdayFromTimeStamp,
 } from 'autoql-fe-utils';
-import momentTZ from 'moment-timezone';
 
+import momentTZ from 'moment-timezone';
 import dayjs from '../../../../../Utils/dayjsPlugins';
+
 import { getTimeOptionArray } from './helpers';
 import { CALENDAR, LIVE_ICON } from '../../../../../Svg';
 import { Select } from '../../../../../ChataComponents/Select';
-import { Selector } from '../../../../Components/Selector/Selector';
 
 import './TimingStep.scss';
 
@@ -72,14 +74,78 @@ export function TimingStep({
 
     this.resetPeriod = this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
 
+    this.setInitialValuesFromDataAlert = () => {
+        try {
+            const evalFrequency = dataAlert?.evaluation_frequency;
+
+            this.timezone = dataAlert?.time_zone;
+            this.resetPeriod = dataAlert?.reset_period;
+            this.evaluationFrequencySelectValue = dataAlert?.evaluation_frequency;
+
+            // If evaluation frequency is not in predefined list, then it is a custom value:
+            if (!EVALUATION_FREQUENCY_OPTIONS[evalFrequency]) {
+                this.evaluationFrequencySelectValue = 'custom';
+                this.evaluationFrequencyMins = evalFrequency;
+                this.isCustomEvaluationFrequencyInputVisible = true;
+            }
+
+            if (
+                !this.resetPeriod &&
+                this.dataAlertType !== SCHEDULED_TYPE &&
+                this.SUPPORTED_CONDITION_TYPES.includes(COMPARE_TYPE)
+            ) {
+                // We don't want to support null reset_periods for compare type data alerts
+                // To avoid continuous triggering of the alert. Use default value in this case
+                this.resetPeriod = this.timeRange ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
+            }
+
+            if (this.resetPeriod === null) {
+                this.resetPeriod = 'NONE';
+            }
+
+            if (this.dataAlertType === SCHEDULED_TYPE) {
+                const schedules = dataAlert?.schedules;
+                const schedulePeriod = schedules?.[0]?.notification_period ?? this.DEFAULT_RESET_PERIOD_SELECT_VALUE;
+
+                this.timezone = schedules?.[0]?.time_zone;
+                this.resetPeriod = schedulePeriod;
+                this.intervalTimeSelectValue =
+                    getTimeObjFromTimeStamp(schedules?.[0]?.start_date, schedules?.[0]?.time_zone) ??
+                    this.DEFAULT_TIME_SELECT_VALUE;
+
+                if (schedulePeriod === 'MONTH_LAST_DAY') {
+                    this.resetPeriod = 'MONTH';
+                    this.monthDaySelectValue = 'LAST';
+                } else if (schedulePeriod === 'MONTH') {
+                    this.monthDaySelectValue = 'FIRST'; // For now. Later we want to add month day numbers
+                } else if (schedulePeriod === 'WEEK' && dataAlert.schedules.length === 7) {
+                    this.resetPeriod = 'DAY';
+                } else if (schedulePeriod === 'WEEK') {
+                    this.weekDaySelectValue = getWeekdayFromTimeStamp(
+                        schedules?.[0]?.start_date,
+                        schedules?.[0]?.time_zone,
+                    );
+                }
+            }
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    if (dataAlert) {
+        this.setInitialValuesFromDataAlert();
+    }
+
     this.getLocalStartDate = ({ daysToAdd } = {}) => {
-        return SCHEDULE_INTERVAL_OPTIONS[this.resetPeriod]?.getLocalStartDate({
+        const params = {
             timeObj: this.intervalTimeSelectValue,
             timezone: this.timezone,
             monthDay: this.monthDaySelectValue,
             weekDay: this.weekDaySelectValue,
             daysToAdd,
-        });
+        };
+
+        return SCHEDULE_INTERVAL_OPTIONS[this.resetPeriod]?.getLocalStartDate(params);
     };
 
     this.getSchedules = () => {
@@ -115,7 +181,7 @@ export function TimingStep({
             const value = SCHEDULE_INTERVAL_OPTIONS[key];
 
             return {
-                displayName: value.displayName,
+                label: value.displayName,
                 value: key,
             };
         });
@@ -126,7 +192,7 @@ export function TimingStep({
         return keys.map((key) => {
             const value = EVALUATION_FREQUENCY_OPTIONS[key];
             return {
-                displayName: value.label,
+                label: value.label,
                 value: value.value,
                 obj: value,
             };
@@ -138,7 +204,7 @@ export function TimingStep({
         let options = keys.map((key) => {
             const value = RESET_PERIOD_OPTIONS[key];
             return {
-                displayName: value.displayName,
+                label: value.displayName,
                 value: key,
             };
         });
@@ -153,7 +219,7 @@ export function TimingStep({
         return WEEKDAY_NAMES_MON.map((dayName) => {
             return {
                 value: dayName,
-                displayName: `
+                label: `
         <span>
           on <strong>${dayName}</strong>
         </span>`,
@@ -167,7 +233,7 @@ export function TimingStep({
             const value = MONTH_DAY_SELECT_OPTIONS[key];
 
             return {
-                displayName: value,
+                label: value,
                 value: key,
             };
         });
@@ -177,7 +243,7 @@ export function TimingStep({
         return getTimeOptionArray().map((o) => {
             return {
                 value: o.value,
-                displayName: `<span>${o.value}</span>`,
+                label: `<span>${o.value}</span>`,
                 obj: o,
             };
         });
@@ -187,7 +253,7 @@ export function TimingStep({
         return momentTZ.tz.names().map((tz) => {
             return {
                 value: tz,
-                displayName: `<span>${tz}</span>`,
+                label: `<span>${tz}</span>`,
             };
         });
     };
@@ -204,39 +270,35 @@ export function TimingStep({
         return connector;
     };
 
-    this.createFrequencyOption = ({ label, defaultValue, selectorOptions, onChange }) => {
+    this.createFrequencyOption = ({ label, initialValue, selectorOptions, onChange = () => {} }) => {
         const option = document.createElement('div');
-        const wrapperLabel = document.createElement('div');
-        const selector = new Selector({
-            defaultValue,
+        const selector = new Select({
+            label,
+            initialValue,
             options: selectorOptions,
             onChange,
         });
 
-        wrapperLabel.classList.add('autoql-vanilla-select-and-label');
         option.classList.add('autoql-vanilla-data-alert-frequency-option');
 
-        if (label) {
-            const labelItem = document.createElement('div');
-            labelItem.classList.add('autoql-vanilla-input-label');
-            labelItem.textContent = label;
-            wrapperLabel.appendChild(labelItem);
-        }
-
-        selector.classList.add('autoql-vanilla-full-width');
-        wrapperLabel.appendChild(selector);
-        option.appendChild(wrapperLabel);
+        option.appendChild(selector);
 
         return option;
     };
 
     this.handleDayChange = (option) => {
-        this.createScheduledView({ notificationPeriod: option.value });
-        this.resetPeriod = option.value;
+        if (this.resetPeriod !== option.value) {
+            this.resetPeriod = option.value;
+            this.createScheduledView();
+        }
     };
 
     this.handleTimezoneChange = (option) => {
         this.timezone = option.value;
+    };
+
+    this.handleWeekDaySelectValueChange = (option) => {
+        this.weekDaySelectValue = option.value;
     };
 
     this.handleMonthDaySelectValueChange = (option) => {
@@ -273,51 +335,52 @@ export function TimingStep({
         dataAlertSettingFrequency.appendChild(dataAlertTypeSelectContainer);
     };
 
-    this.createScheduledView = ({ notificationPeriod }) => {
+    this.createScheduledView = () => {
         frequencyContainer.innerHTML = '';
         frequencyMessage.innerHTML =
             '<span>A notification will be sent with the query result <strong>at the following times:</strong></span>';
 
         const intervalContainer = this.createFrequencyOption({
             label: 'Send a Notification',
-            defaultValue: notificationPeriod,
+            initialValue: this.resetPeriod,
             selectorOptions: this.getScheduleIntervalOptions(),
             onChange: this.handleDayChange,
         });
 
         const daysContainer = this.createFrequencyOption({
-            defaultValue: this.weekDaySelectValue,
+            initialValue: this.weekDaySelectValue,
             selectorOptions: this.getDaysOptions(),
+            onChange: this.handleWeekDaySelectValueChange,
         });
 
         const monthContainer = this.createFrequencyOption({
-            defaultValue: this.DEFAULT_MONTH_DAY_SELECT_VALUE,
+            initialValue: this.monthDaySelectValue,
             selectorOptions: this.getMonthDaySelectOptions(),
             onChange: this.handleMonthDaySelectValueChange,
         });
 
         const timeContainer = this.createFrequencyOption({
-            defaultValue: this.DEFAULT_TIME_SELECT_VALUE.value,
+            initialValue: this.intervalTimeSelectValue?.value,
             selectorOptions: this.getTimeOptions(),
             onChange: this.handleTimeSelectValueChange,
         });
 
         const timeZoneContainer = this.createFrequencyOption({
             label: 'Time Zone',
-            defaultValue: this.timezone,
+            initialValue: this.timezone,
             selectorOptions: this.getTimeZoneOptions(),
             onChange: this.handleTimezoneChange,
         });
 
         frequencyContainer.appendChild(intervalContainer);
-        if (notificationPeriod === 'DAY') {
+        if (this.resetPeriod === 'DAY') {
             frequencyContainer.appendChild(this.createConnector());
             frequencyContainer.appendChild(timeContainer);
-        } else if (notificationPeriod === 'WEEK') {
+        } else if (this.resetPeriod === 'WEEK') {
             frequencyContainer.appendChild(daysContainer);
             frequencyContainer.appendChild(this.createConnector());
             frequencyContainer.appendChild(timeContainer);
-        } else if (notificationPeriod === 'MONTH') {
+        } else if (this.resetPeriod === 'MONTH') {
             frequencyContainer.appendChild(monthContainer);
             frequencyContainer.appendChild(this.createConnector());
             frequencyContainer.appendChild(timeContainer);
@@ -343,7 +406,7 @@ export function TimingStep({
 
         const frequencySelectorContainer = this.createFrequencyOption({
             label: 'Check conditions every',
-            defaultValue: this.evaluationFrequency,
+            initialValue: this.evaluationFrequency,
             selectorOptions: this.getFrequencyOptions(),
             onChange: this.handleResetEvaluationFrequencyChange,
         });
@@ -362,7 +425,7 @@ export function TimingStep({
         if (this.dataAlertType !== PERIODIC_TYPE) {
             const resetContainer = this.createFrequencyOption({
                 label: 'Send a notification',
-                defaultValue: this.resetPeriod,
+                initialValue: this.resetPeriod,
                 selectorOptions,
                 onChange: this.handleResetPeriodChange,
             });
@@ -371,7 +434,7 @@ export function TimingStep({
 
         const timeZoneContainer = this.createFrequencyOption({
             label: 'Time Zone',
-            defaultValue: this.timezone,
+            initialValue: this.timezone,
             selectorOptions: this.getTimeZoneOptions(),
             onChange: this.handleTimezoneChange,
         });
@@ -409,7 +472,7 @@ export function TimingStep({
         this.dataAlertType = type;
         switch (type) {
             case SCHEDULED_TYPE:
-                this.createScheduledView({ notificationPeriod: this.resetPeriod });
+                this.createScheduledView();
                 break;
             case CONTINUOUS_TYPE:
             case PERIODIC_TYPE:
@@ -444,7 +507,7 @@ export function TimingStep({
     container.appendChild(wrapper);
 
     if (this.dataAlertType === 'SCHEDULED') {
-        this.createScheduledView({ notificationPeriod: this.resetPeriod });
+        this.createScheduledView();
     } else {
         this.createLiveView();
     }
