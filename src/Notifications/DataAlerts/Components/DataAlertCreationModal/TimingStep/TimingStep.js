@@ -92,7 +92,7 @@ export function TimingStep({
             if (
                 !this.resetPeriod &&
                 this.dataAlertType !== SCHEDULED_TYPE &&
-                this.SUPPORTED_CONDITION_TYPES.includes(COMPARE_TYPE)
+                this.SUPPORTED_CONDITION_TYPES?.includes(COMPARE_TYPE)
             ) {
                 // We don't want to support null reset_periods for compare type data alerts
                 // To avoid continuous triggering of the alert. Use default value in this case
