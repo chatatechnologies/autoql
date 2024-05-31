@@ -156,22 +156,14 @@ export function ConditionsStep({
             return { isValid: false };
         }
 
-        // const firstColumns = queryResponse?.data?.columns;
         const secondColumns = response?.data?.data?.columns;
-
-        // const isFirstQuerySingleValue = isSingleValueResponse(queryResponse);
         const isSecondQuerySingleValue = isSingleValueResponse(response);
         const isSecondQueryListQuery = isListQuery(secondColumns) && !isSecondQuerySingleValue;
-
-        // const firstQueryGroupables = getGroupableColumns(firstColumns)?.map(
-        //     (i) => firstColumns.find((col) => col.index === i)?.name,
-        // );
 
         const secondQueryGroupables = getGroupableColumns(secondColumns)?.map(
             (i) => secondColumns.find((col) => col.index === i)?.name,
         );
 
-        // this.firstQueryJoinColumns = firstQueryGroupables ?? [];
         this.secondQueryJoinColumns = secondQueryGroupables ?? [];
 
         const areGroupablesSameAsFirstQuery = isEqual(firstQueryGroupables, secondQueryGroupables);

@@ -1,7 +1,6 @@
-import { isNumber } from 'autoql-fe-utils';
+import { getFormattedTimestamp } from 'autoql-fe-utils';
 
 import { createIcon } from '../../../../../Utils';
-import dayjs from '../../../../../Utils/dayjsPlugins';
 import { Input } from '../../../../../ChataComponents/Input';
 import { NOTEBOOK, CALENDAR, VERTICAL_DOTS } from '../../../../../Svg';
 
@@ -17,32 +16,6 @@ export function AppearanceStep({ onChange = () => {}, dataAlert, showSummaryMess
     const formSection = document.createElement('div');
 
     const defaultTitle = dataAlert?.title ?? '[Title]';
-
-    const getFormattedTimestamp = () => {
-        const timestamp = new Date().toISOString();
-
-        let dateDayJS;
-        if (isNumber(timestamp)) {
-            dateDayJS = dayjs.unix(timestamp);
-        } else {
-            dateDayJS = dayjs(timestamp);
-        }
-
-        const time = dateDayJS.format('h:mma');
-        const day = dateDayJS.format('MM-DD-YY');
-
-        const today = dayjs().format('MM-DD-YY');
-        const yesterday = dayjs().subtract(1, 'd').format('MM-DD-YY');
-
-        if (day === today) {
-            return `Today at ${time}`;
-        } else if (day === yesterday) {
-            return `Yesterday at ${time}`;
-        } else if (dayjs().isSame(dateDayJS, 'year')) {
-            return `${dateDayJS.format('MMMM Do')} at ${time}`;
-        }
-        return `${dateDayJS.format('MMMM Do, YYYY')} at ${time}`;
-    };
 
     const createInputLabel = ({ label }) => {
         const container = document.createElement('div');
