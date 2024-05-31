@@ -3,10 +3,11 @@ import {
     dismissNotification,
     fetchNotificationData,
     markNotificationAsUnread,
+    getFormattedTimestamp,
 } from 'autoql-fe-utils';
 
 import { CALENDAR, CARET_DOWN_ICON, VERTICAL_DOTS, WARNING_TRIANGLE } from '../../../../Svg';
-import { createIcon, getFormattedTimestamp } from '../../../../Utils';
+import { createIcon } from '../../../../Utils';
 import { NotificationMessageError } from '../NotificationMessageError';
 import { NotificationSummary } from '../NotificationSummary';
 import { NotificationDataContainer } from '../NotificationDataContainer';
@@ -221,8 +222,10 @@ export function NotificationItem({ itemData, authentication, index, onClick, wid
             description.textContent = `Your Data Alert "${title}" encountered a problem. Click for more information.`;
         }
 
+        const formattedTimeStamp = getFormattedTimestamp?.(itemData.created_at);
+
         timestamp.appendChild(createIcon(CALENDAR));
-        timestamp.appendChild(document.createTextNode(getFormattedTimestamp(itemData.created_at)));
+        timestamp.appendChild(document.createTextNode(formattedTimeStamp));
 
         timestampContainer.appendChild(timestamp);
         displayNameContainer.appendChild(displayName);
