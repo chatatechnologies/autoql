@@ -1,0 +1,1 @@
+export { ChataChart } from './ChataChart';

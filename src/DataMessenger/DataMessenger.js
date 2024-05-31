@@ -27,7 +27,7 @@ import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
 import { select } from 'd3-selection';
-import { getGroupableFields } from '../NewCharts/ChataChartHelpers';
+import { getGroupableFields } from '../Charts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet';
 import {
@@ -90,13 +90,13 @@ import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-import { ChataChartNew } from '../NewCharts';
+import { ChataChart } from '../Charts';
 import MobileDetect from 'mobile-detect';
 
 import testdata from '../../testdata';
 
 import '../Toolbar/Toolbar.scss';
-import '../../css/chata-styles.css';
+import '../../css/chata-styles.scss';
 import '../../css/DataMessenger.scss';
 
 export function DataMessenger(options = {}) {
@@ -2124,7 +2124,7 @@ export function DataMessenger(options = {}) {
 
         obj.refreshToolbarButtons(component, displayType);
 
-        new ChataChartNew(component, {
+        new ChataChart(component, {
             type: displayType,
             queryJson: json,
             options: obj.options,

@@ -22,7 +22,7 @@ import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
 import { setColumnVisibility, svgToPng, exportCSV } from 'autoql-fe-utils';
 import { CSS_PREFIX } from '../Constants';
-import { DataAlertCreationModal } from '../Notifications/Components/DataAlertCreationModal';
+import { DataAlertCreationModal } from '../Notifications/DataAlerts/Components/DataAlertCreationModal';
 
 import '../../css/PopoverMenu.css';
 
@@ -285,6 +285,12 @@ ChataUtils.copyHandler = (idRequest) => {
 ChataUtils.exportPNGHandler = async (idRequest) => {
     try {
         var component = document.querySelector(`[data-componentid='${idRequest}']`);
+
+        if (!component) {
+            console.error('Could not find component containing the chart.');
+            return;
+        }
+
         var svg = component.querySelector('svg.autoql-vanilla-chart-svg');
 
         if (!svg) {
@@ -313,7 +319,7 @@ ChataUtils.createNotificationHandler = (idRequest, extraParams) => {
     const queryResponse = ChataUtils.responses[idRequest];
     const { options } = extraParams.caller;
 
-    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication });
+    const modal = new DataAlertCreationModal({ queryResponse, authentication: options.authentication, options });
     modal.show();
 };
 

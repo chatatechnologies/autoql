@@ -1,4 +1,4 @@
-import { PopoverChartSelector } from '../NewCharts/PopoverChartSelector';
+import { PopoverChartSelector } from '../Charts/PopoverChartSelector';
 import { VLAutocompleteInput } from './VLAutocompleteInput';
 import './VLAutocompleteInput.scss';
 

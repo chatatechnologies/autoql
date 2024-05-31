@@ -1,9 +1,14 @@
 .autoql-vanilla-select-popover {
     .autoql-vanilla-select-list-item {
         color: var(--autoql-vanilla-text-color-primary);
-        font-size: 12px;
-        padding: 5px 15px;
+        padding: 8px 15px;
         cursor: pointer;
+
+        &.autoql-vanilla-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+            cursor: default;
+        }
 
         &:hover,
         &.active {
@@ -17,14 +22,27 @@
     }
 }
 
+.autoql-vanilla-menu-item-value-title,
+.autoql-vanilla-select-list-item {
+    .autoql-vanilla-icon {
+        margin-bottom: 2px;
+        margin-right: 8px;
+    }
+}
+
+.select-option-menu-item-value-subtitle {
+    font-size: 0.875em;
+    opacity: 0.8;
+}
+
 .autoql-vanilla-select-and-label {
     display: inline-flex;
     flex-direction: column;
     padding: 2px 5px;
-    width: 100%;
 
     &.autoql-vanilla-select-full-width {
         display: flex;
+        width: 100%;
     }
 
     .autoql-vanilla-select {
@@ -52,9 +70,10 @@
             }
         }
 
-        &:not(.outlined) {
+        &.underlined {
+            border-bottom: 1px solid var(--autoql-vanilla-accent-color);
             font-weight: 600;
-            padding: 0;
+            padding: 2px;
             margin: 0;
         }
 

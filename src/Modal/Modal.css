@@ -31,14 +31,12 @@
   background: var(--autoql-vanilla-background-color-secondary);
   border-radius: 4px;
   box-shadow: 0 0 14px 1px rgba(0, 0, 0, 0.15);
-  margin: 45px auto;
+  margin: 25px auto;
   width: 80vw;
   max-width: 90vw;
-  max-height: 95vh;
-  margin-top: 25px;
   transform: scale(0);
   transition: all .2s ease-in-out;
-  max-height: calc(100vh - 120px);
+  max-height: calc(100vh - 80px);
   color: var(--autoql-vanilla-text-color-primary);
 }
 
@@ -50,7 +48,7 @@
   position: relative;
   text-align: center;
   flex: 0 0 52px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid var(--autoql-vanilla-border-color);
   padding: 14px 60px;
   font-size: 16px;
   -webkit-box-sizing: border-box;
@@ -81,7 +79,7 @@
 .chata-modal-footer {
     position: relative;
     flex: 0 0 52px;
-    border-top: 1px solid rgba(0,0,0,.05);
+    border-top: 1px solid var(--autoql-vanilla-border-color);
     text-align: right;
     padding: 8px 10px;
 }

@@ -1,17 +1,23 @@
-import { QUERY_TERM_TYPE, createDataAlert, isAggregation } from 'autoql-fe-utils';
-import { Modal } from '../../../Modal';
-import { ChataConfirmDialog } from '../ChataConfirmDialog/ChataConfirmDialog';
+import { QUERY_TERM_TYPE, createDataAlert } from 'autoql-fe-utils';
+import { Modal } from '../../../../Modal';
+import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
 import { AppearanceStep } from './AppearanceStep/AppearanceStep';
 import { ConditionsStep } from './ConditionsStep';
 import { TimingStep } from './TimingStep/TimingStep';
 import { StepContainer } from './StepContainer';
 import { SummaryFooter } from './SummaryFooter';
-import { AntdMessage } from '../../../Antd';
-import { uuidv4 } from '../../../Utils';
+import { AntdMessage } from '../../../../Antd';
+import { uuidv4 } from '../../../../Utils';
+import { TypeStep } from './TypeStep';
 
 import './DataAlertCreationModal.scss';
 
-export function DataAlertCreationModal({ queryResponse, authentication }) {
+const DATA_ALERT_TYPE_STEP = 'DATA_ALERT_TYPE_STEP';
+const DATA_ALERT_CONDITIONS_STEP = 'DATA_ALERT_CONDITIONS_STEP';
+const DATA_ALERT_TIMING_STEP = 'DATA_ALERT_TIMING_STEP';
+const DATA_ALERT_APPEARANCE_STEP = 'DATA_ALERT_APPEARANCE_STEP';
+
+export function DataAlertCreationModal({ queryResponse, authentication, options }) {
     const container = document.createElement('div');
     const stepContentContainer = document.createElement('div');
     const summaryFooter = new SummaryFooter({ queryText: queryResponse.data.text });
@@ -52,35 +58,58 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     };
 
     this.createSteps = () => {
-        const { columns, count_rows } = queryResponse.data;
+        this.steps.push({
+            withConnector: false,
+            isActive: true,
+            title: 'Choose Alert Type',
+            type: DATA_ALERT_TYPE_STEP,
+            view: new TypeStep({
+                onChange: (type) => {
+                    const conditionStep = this.steps.find((step) => step.type === DATA_ALERT_CONDITIONS_STEP);
+                    const timingStep = this.steps.find((step) => step.type === DATA_ALERT_TIMING_STEP);
+                    conditionStep?.view?.setDataAlertType(type);
+                    timingStep?.view?.handleTypeChange(type);
+                },
+            }),
+        });
 
-        const isSingleResponse = columns?.length === 1 && count_rows === 1;
-        const renderFirstStep = isSingleResponse; // Todo: add join column selection feature for this: || isAggregation(queryResponse?.data?.columns);
+        this.steps.push({
+            withConnector: true,
+            isActive: false,
+            title: 'Set Up Conditions',
+            type: DATA_ALERT_CONDITIONS_STEP,
+            view: new ConditionsStep({
+                options,
+                queryResponse,
+                onChange: ({ conditionType } = {}) => {
+                    if (conditionType) {
+                        const timingStep = this.steps.find((step) => step.type === DATA_ALERT_TIMING_STEP);
+                        timingStep?.view?.handleConditionTypeChange(conditionType);
+                    }
+
+                    this.validateNextButton();
+                },
+            }),
+        });
 
         this.steps.push({
             view: new TimingStep({ queryResponse }),
-            withConnector: renderFirstStep,
-            isActive: !renderFirstStep,
+            withConnector: true,
+            isActive: false,
             title: 'Configure Timing',
+            type: DATA_ALERT_TIMING_STEP,
         });
 
         this.steps.push({
-            view: new AppearanceStep({ queryResponse }),
+            view: new AppearanceStep({ onChange: this.validateNextButton }),
             withConnector: true,
             isActive: false,
             title: 'Customize Appearance',
+            type: DATA_ALERT_APPEARANCE_STEP,
         });
 
-        if (renderFirstStep) {
-            this.steps.unshift({
-                view: new ConditionsStep({ queryResponse }),
-                withConnector: false,
-                isActive: true,
-                title: 'Set Up Conditions',
-            });
-        }
         this.addViewSteps();
-        this.stepContainer = new StepContainer({ steps: this.steps });
+        this.stepContainer = new StepContainer({ steps: this.steps, onStepClick: this.goToStep });
         return this.stepContainer;
     };
 
@@ -102,12 +131,27 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         return button;
     };
 
+    this.goToStep = (stepIndex) => {
+        this.steps?.forEach((step) => {
+            step?.view?.classList.add('autoql-vanilla-hidden');
+        });
+
+        const currentStep = this.steps[stepIndex];
+        currentStep.view.classList.remove('autoql-vanilla-hidden');
+
+        this.currentStepIndex = stepIndex;
+
+        this.updateFooter();
+        this.validateNextButton();
+    };
+
     this.handleNextStep = () => {
         const currentStep = this.steps[this.currentStepIndex++];
         const nextStep = this.steps[this.currentStepIndex];
         currentStep.view.classList.add('autoql-vanilla-hidden');
         nextStep.view.classList.remove('autoql-vanilla-hidden');
         this.stepContainer.enableStep(this.currentStepIndex);
+
         this.updateFooter();
         this.validateNextButton();
     };
@@ -119,6 +163,7 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
         currentStep.view.classList.add('autoql-vanilla-hidden');
         previousStep.view.classList.remove('autoql-vanilla-hidden');
         this.updateFooter();
+        this.validateNextButton();
     };
 
     this.getDefaultExpression = () => {
@@ -152,16 +197,17 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
                 dataAlert,
                 ...authentication,
             });
+
             modal.close();
             new AntdMessage('Data Alert created!', 3000);
         } catch (error) {
             this.spinner.classList.add('hidden');
+            console.error(error);
         }
     };
 
     this.updateFooter = () => {
         const { length } = this.steps;
-        summaryFooter.classList.remove('autoql-vanilla-hidden');
 
         if (this.currentStepIndex + 1 >= length) {
             this.btnNextStep.innerHTML = '';
@@ -175,7 +221,6 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
 
         if (this.currentStepIndex === 0) {
             this.btnBack.classList.add('autoql-vanilla-hidden');
-            summaryFooter.classList.add('autoql-vanilla-hidden');
         } else {
             this.btnBack.classList.remove('autoql-vanilla-hidden');
         }
@@ -206,17 +251,17 @@ export function DataAlertCreationModal({ queryResponse, authentication }) {
     };
 
     this.validateNextButton = () => {
+        if (!this.btnNextStep) {
+            return;
+        }
+
         const currentStep = this.steps[this.currentStepIndex];
-        if (currentStep.view.isValid()) {
+        if (currentStep?.view?.isValid()) {
             this.btnNextStep.classList.remove('autoql-vanilla-disabled');
         } else {
             this.btnNextStep.classList.add('autoql-vanilla-disabled');
         }
     };
-
-    container.addEventListener('keyup', () => {
-        this.validateNextButton();
-    });
 
     stepContentContainer.classList.add('autoql-vanilla-data-alert-modal-step-content-container');
 

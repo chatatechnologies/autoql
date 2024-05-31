@@ -15,7 +15,6 @@ import {
     updateDataAlertStatus,
     deleteDataAlert,
     formatResetDate,
-    getScheduleFrequencyObject,
     formatNextScheduleDate,
     resetDateIsFuture,
     initializeAlert,
@@ -23,6 +22,10 @@ import {
     DATA_ALERT_ENABLED_STATUSES,
     CUSTOM_TYPE,
     DATA_ALERT_STATUSES,
+    RESET_PERIOD_OPTIONS,
+    SCHEDULE_FREQUENCY_OPTIONS,
+    CONTINUOUS_TYPE,
+    PERIODIC_TYPE,
 } from 'autoql-fe-utils';
 import { ChataConfirmDialog } from '../../../Components/ChataConfirmDialog/ChataConfirmDialog';
 import { AntdMessage } from '../../../../Antd';
@@ -90,7 +93,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader = false, f
 
         if (typeof element === 'string') {
             value.innerHTML = element;
-        } else {
+        } else if (element) {
             value.appendChild(element);
         }
 
@@ -253,6 +256,33 @@ export function DataAlertItem({ dataAlert, authentication, showHeader = false, f
         return btn;
     };
 
+    const getCycleFromResetPeriod = (resetPeriod) => {
+        if (!resetPeriod) {
+            return 'Continuous';
+        }
+
+        return RESET_PERIOD_OPTIONS[resetPeriod]?.displayText ?? '-';
+    };
+
+    const getCycle = (dataAlert) => {
+        const frequencyType = dataAlert?.notification_type;
+
+        let cycle = '-';
+
+        if (frequencyType === SCHEDULED_TYPE) {
+            const schedules = dataAlert?.schedules;
+            if (schedules?.length === 7) {
+                cycle = SCHEDULE_FREQUENCY_OPTIONS['DAY']?.displayText;
+            } else {
+                cycle = SCHEDULE_FREQUENCY_OPTIONS[schedules?.[0]?.notification_period]?.displayText ?? '-';
+            }
+        } else if (frequencyType === CONTINUOUS_TYPE || frequencyType === PERIODIC_TYPE) {
+            cycle = getCycleFromResetPeriod(dataAlert.reset_period);
+        }
+
+        return cycle;
+    };
+
     const createActions = () => {
         const actionWrapper = document.createElement('div');
         const settingsButton = createActionButton(SETTINGS, 'autoql-vanilla-notification-action-btn-settings');
@@ -268,11 +298,7 @@ export function DataAlertItem({ dataAlert, authentication, showHeader = false, f
     };
 
     item.elementTitle = createCol('autoql-vanilla-notification-setting-display-name', title, 0);
-    item.elementFrequency = createCol(
-        'autoql-vanilla-data-alert-list-item-section-frequency',
-        getScheduleFrequencyObject(dataAlert).displayText,
-        1,
-    );
+    item.elementFrequency = createCol('autoql-vanilla-data-alert-list-item-section-frequency', getCycle(dataAlert), 1);
     item.elementState = createCol('autoql-vanilla-data-alert-list-item-section-state', getState(), 2);
     item.elementCycleStart = createCol(
         'autoql-vanilla-data-alert-list-item-section-next-check',

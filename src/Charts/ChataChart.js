@@ -39,7 +39,7 @@ import { Histogram } from './ChataHistogram';
 
 import './ChataChart.scss';
 
-export function ChataChartNew(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
+export function ChataChart(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
     if (!component || !queryJson) {
         console.warn('Unable to create chart - one of the following parameters were not supplied:', {
             component: !!component,
