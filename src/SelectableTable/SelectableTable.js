@@ -11,10 +11,15 @@ export default function SelectableTable({
     onColumnSelection = () => {},
     radio = false,
     showEndOfPreviewMessage = true,
+    rowLimit,
 }) {
     let selected = selectedColumns;
 
-    const rows = queryResponse?.rows;
+    let rows = queryResponse?.rows;
+    if (rowLimit && rows?.length > rowLimit) {
+        rows = queryResponse?.rows?.slice(0, rowLimit);
+    }
+
     const columns = queryResponse?.columns;
     const config = getDataFormatting(options.dataFormatting);
 
@@ -72,13 +77,18 @@ export default function SelectableTable({
         onColumnSelection?.(selected);
     };
 
-    this.onColumnHeaderClick = (index) => {
+    this.onColumnHeaderClick = (index, noCallback) => {
         if (disabledColumns.includes(index)) {
             return;
         }
 
         if (radio) {
-            onColumnSelection?.([index]);
+            this.removeClassFromAllColumns('selected');
+            this.addClassToColumn(index, 'selected');
+
+            if (!noCallback) {
+                onColumnSelection?.([index]);
+            }
         } else {
             if (selected?.includes(index)) {
                 this.removeClassFromColumn(index, 'selected');
@@ -87,8 +97,9 @@ export default function SelectableTable({
                 this.addClassToColumn(index, 'selected');
                 selected.push(index);
             }
-
-            onColumnSelection?.(selected);
+            if (!noCallback) {
+                onColumnSelection?.(selected);
+            }
         }
     };
 

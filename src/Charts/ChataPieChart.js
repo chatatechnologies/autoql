@@ -1,314 +1,265 @@
-import { select } from 'd3-selection'
-import {
-    enumerateCols,
-    getIndexesByType,
-    getMetadataElement,
-    getPieGroups,
-} from './ChataChartHelpers'
-import {
-    getColorScale,
-    getLegend,
-    getArc,
-    getPie
-} from './d3-compatibility'
-import {
-    formatColumnName,
-    formatData,
-    getFirstDateCol,
-} from '../Utils'
-import { refreshTooltips } from '../Tooltips'
-import { ChataUtils } from '../ChataUtils'
-import { CSS_PREFIX } from '../Constants'
-import { getChartColorVars } from 'autoql-fe-utils'
+import { getDrilldownData, getPieChartData, getThemeValue, getTooltipContent, legendColor } from 'autoql-fe-utils';
+import { select } from 'd3-selection';
+import { arc } from 'd3-shape';
+import { CSS_PREFIX } from '../Constants';
 
-export function createPieChart(
-    component, json, options, onUpdate=()=>{}, fromChataUtils=true,
-    valueClass='data-chartindex', renderTooltips=true){
+export function PieChartNew(container, params = {}) {
+    const {
+        columnIndexConfig = {},
+        options = {},
+        data,
+        legend,
+        columns,
+        outerWidth,
+        outerHeight,
+        legendColumn,
+        onChartClick,
+        activeKey,
+    } = params;
 
-    var margin = 20;
-    var width = component.parentElement.clientWidth;
-    var pieWidth;
-    var height;
-    var cols = json['data']['columns'];
-    var colsEnum = enumerateCols(json);
-    var indexList = getIndexesByType(colsEnum);
-    var xIndexes = [];
-    var yIndexes = [];
-    var { chartColors } = getChartColorVars(CSS_PREFIX);
+    this.innerChartWrapper = container.append('g').attr('class', 'autoql-vanilla-pie-chart-container');
 
-    if(indexList['STRING']){
-        xIndexes.push(...indexList['STRING'])
-    }
+    const { stringColumnIndex, numberColumnIndex } = columnIndexConfig;
+    const { dataFormatting } = options;
 
-    if(indexList['DATE']){
-        xIndexes.push(...indexList['DATE'])
-    }
+    const self = this;
 
-    if(indexList['DATE_STRING']){
-        xIndexes.push(...indexList['DATE_STRING'])
-    }
+    this.activeKey = activeKey;
 
-    if(indexList['DOLLAR_AMT']){
-        yIndexes = indexList['DOLLAR_AMT'];
-    }else if(indexList['QUANTITY']){
-        yIndexes = indexList['QUANTITY'];
-    }else if(indexList['PERCENT']){
-        yIndexes = indexList['PERCENT'];
-    }
+    const legendLabels = legend?.labels;
 
-    var metadataComponent = getMetadataElement(component, fromChataUtils);
-    if(!metadataComponent.metadata){
-        var dateCol = getFirstDateCol(colsEnum)
-        let i = dateCol !== -1 ? dateCol : yIndexes[0].index
-        metadataComponent.metadata = {
-            groupBy: {
-                index: i,
-                currentLi: 0,
-            },
-            series: [yIndexes[0]]
+    this.setRadius = () => {
+        const PADDING = 20;
+
+        const pieWidth = Math.min(outerWidth / 2 - PADDING, outerHeight - PADDING);
+
+        this.outerRadius = pieWidth / 2;
+        this.innerRadius = this.outerRadius - 50 > 15 ? this.outerRadius - 50 : 0;
+    };
+
+    this.onSliceClick = (element, e) => {
+        const sliceData = element['__data__']?.data;
+
+        if (!sliceData) {
+            return;
         }
-    }
 
-    var index1 = metadataComponent.metadata.groupBy.index;
-    var index2 = metadataComponent.metadata.series[0].index;
-    var data = ChataUtils.groupBy(
-        json['data']['rows'], row => row[index1], index2
-    );
+        const newActiveKey = sliceData?.key;
 
-    var groups = {}
-    var legendGroups = {}
-    for(let [key, value] of Object.entries(data)){
-        groups[key] = {
-            isVisible: true
-        }
-        legendGroups[
-            formatData(key, cols[index1], options) + ": " +
-            formatData(value, cols[index2], options)
-        ] = {
-            value: key
-        }
-    }
+        self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
+            select(this)
+                // .transition()
+                // .duration(500)
+                .attr('transform', function (d) {
+                    if (d.data.key === newActiveKey) {
+                        const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;
+                        const x = Math.cos(a) * 10;
+                        const y = Math.sin(a) * 10;
+                        return `translate(${x},${y})`;
+                    }
 
-    var colStr1 = cols[index1]['display_name'] || cols[index1]['name'];
-    var colStr2 = cols[index2]['display_name'] || cols[index2]['name'];
-    var col1 = formatColumnName(colStr1);
-    var col2 = formatColumnName(colStr2);
-    if(fromChataUtils){
-        if(options.placement == 'left' || options.placement == 'right'){
-            height = component.parentElement.parentElement.clientHeight - (margin + 3);
-            if(height < 250){
-                height = 300;
-            }
-        }else{
-            height = 250;
-        }
-    }else{
-        height = component.parentElement.offsetHeight - (margin);
-    }
-    if (width < height) {
-        pieWidth = width / 2 - margin;
-    } else if (height * 2 < width) {
-        pieWidth = height - margin;
-    } else {
-        pieWidth = width / 2 - margin;
-    }
+                    return `translate(0,0)`;
+                });
+        });
 
-    var outerRadius = pieWidth / 2
-    var innerRadius = outerRadius - 40 > 15 ? outerRadius - 40 : 0
+        this.activeKey = newActiveKey;
 
-    component.innerHTML = '';
-    component.innerHTML = '';
-    if(component.headerElement){
-        component.parentElement.parentElement.removeChild(
-            component.headerElement
-        );
-        component.headerElement = null;
-    }
-    component.parentElement.classList.remove('chata-table-container');
-    component.parentElement.classList.add('autoql-vanilla-chata-chart-container');
-    component.parentElement.parentElement.classList.add(
-        'chata-hidden-scrollbox'
-    );
+        const drilldownData = getDrilldownData({
+            row: Object.values(sliceData.value),
+            colIndex: numberColumnIndex,
+            columns: columns,
+            legendColumn,
+            columnIndexConfig,
+        });
 
-    var svg = select(component)
-    .append('svg')
-    .attr('width', width)
-    .attr('height', height)
+        onChartClick(drilldownData);
+    };
 
-    var arc = getArc(
-        innerRadius,
-        outerRadius
-    )
+    this.renderPieSlices = () => {
+        // Remove if already exists
+        this.slicesContainer?.remove();
 
-    var pie = getPie(
-        (d) => { return d.value }
-    )
+        this.slicesContainer = this.innerChartWrapper
+            .append('g')
+            .attr('class', 'autoql-vanilla-pie-chart-slices')
+            .attr('transform', `translate(${outerWidth / 2 + this.outerRadius},${outerHeight / 2})`);
 
-    let slicesContainer;
-    var pieChartContainer = svg.append('g')
-    
-    const entries = (map, visibleGroups) => {
-        var entries = [];
-        visibleGroups.map((group) => {
-            entries.push(
-                {key: group.key, value: map[group.key], index: group.index}
-            )
-        })
-        return entries;
-    }
-
-    const createSlices = () => {
-        if (slicesContainer)slicesContainer.remove()
-        slicesContainer = pieChartContainer.append('g').attr("transform", `translate(${width / 2 + outerRadius}, ${height / 2})`);
-        
-        var visibleGroups = getPieGroups(groups);
-        var dataReady = pie(entries(data, visibleGroups))
-
-        var colorLabels = []
-        for(let [key] of Object.entries(data)){
-            colorLabels.push(key);
-        }
-        var color = getColorScale(colorLabels, chartColors)
-
-        slicesContainer.selectAll('path')
-        .data(dataReady)
-        .enter()
-        .append('path')
-        .each(function(d){
-            select(this).attr(valueClass, d.data.index)
-            .attr('data-filterindex', index1)
-            .attr('data-col1', col1)
-            .attr('data-col2', col2)
-            .attr('data-colvalue1', formatData(d.data.key, cols[index1], options))
-            .attr('data-colvalue2', formatData(
-                d.value, cols[index2],
-                options
-            ))
-            select(this)._groups[0][0].style.fill = color(d.data.key)
-        })
-        .attr('d', arc)
-        .style('fill-opacity', 1)
-        .on('mouseover', function() {
-            select(this).style('fill-opacity', 0.7)
-        })
-        .on('mouseout', function() {
-            select(this).style('fill-opacity', 1)
-        })
-        .on('click', function() {
-            svg
-            .selectAll('path.slice')
-            .each(function(data) {
-                data._expanded = false
+        this.slicesContainer
+            .selectAll('.autoql-vanilla-pie-chart-slices')
+            .data(self.pieData)
+            .enter()
+            .append('path')
+            .attr('class', 'autoql-vanilla-pie-chart-slice')
+            .attr('d', arc().innerRadius(self.innerRadius).outerRadius(self.outerRadius))
+            .attr('fill', (d) => d.data?.value?.legendLabel?.color)
+            .attr('data-tippy-chart', true)
+            .attr('data-tippy-content', function (d) {
+                return getTooltipContent({
+                    legendColumn,
+                    dataFormatting,
+                    row: d.data.value,
+                    columns: columns,
+                    colIndex: numberColumnIndex,
+                    colIndex2: stringColumnIndex,
+                });
             })
-            .transition()
-            .duration(500)
-            .attr('transform', function(){
-                return 'translate(0,0)';
+            .style('fill-opacity', 1)
+            .attr('stroke-width', '0.5px')
+            .attr('stroke', getThemeValue('background-color-secondary', CSS_PREFIX))
+            .on('mouseover', function (d) {
+                select(this).style('fill-opacity', 0.7);
+            })
+            .on('mouseout', function (d) {
+                select(this).style('fill-opacity', 1);
+            })
+            .on('click', function (e) {
+                self.onSliceClick(this, e);
             });
 
+        // render active pie slice if there is one
+        self.innerChartWrapper.selectAll('path.autoql-vanilla-pie-chart-slice').each(function (slice) {
             select(this)
-            .transition()
-            .duration(500)
-            .attr('transform', function(d) {
-                if (!d._expanded) {
-                    d._expanded = true
-                    const a =
-                    d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2
-                    const x = Math.cos(a) * 10
-                    const y = Math.sin(a) * 10
-                    return 'translate(' + x + ',' + y + ')'
-                } else {
-                    d._expanded = false
-                    return 'translate(0,0)'
+                // .transition()
+                // .duration(500)
+                .attr('transform', function (d) {
+                    if (d.data.key === this.activeKey) {
+                        const a = d.startAngle + (d.endAngle - d.startAngle) / 2 - Math.PI / 2;
+                        const x = Math.cos(a) * 10;
+                        const y = Math.sin(a) * 10;
+                        // move it away from the circle center
+                        return 'translate(' + x + ',' + y + ')';
+                    }
+                });
+        });
+    };
+
+    this.applyStylesForHiddenSeries = () => {
+        try {
+            this.legend.selectAll('.cell').each(function (label) {
+                let legendLabel;
+                try {
+                    legendLabel = JSON.parse(label);
+
+                    if (legendLabel) {
+                        if (legendLabel.hidden) {
+                            select(this).attr('class', 'cell hidden');
+                        } else {
+                            select(this).attr('class', 'cell visible');
+                        }
+                    }
+                } catch (error) {
+                    console.error(error);
                 }
-            })
-        })
-        .attr('class', 'tooltip-2d pie-slice slice')
+            });
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
-        var chartCenter = width / 2
-        var bbox = pieChartContainer?.node()?.getBBox?.()
-        if (bbox) {
-            var bboxCenterX = bbox.x + bbox.width / 2
-            pieChartContainer.attr('transform', `translate(${chartCenter - bboxCenterX}, 0)`)
+    this.onLegendCellClick = (legendObjStr) => {
+        let legendObj;
+
+        try {
+            legendObj = JSON.parse(legendObjStr);
+        } catch (error) {
+            console.error(error);
+            return;
         }
 
-        refreshTooltips();
-        onUpdate(component)
-    }
+        const index = legendObj?.dataIndex;
+        const label = legendLabels?.[index];
 
-
-    // define legend
-    var svgLegend = pieChartContainer.append('g')
-        .style('fill', 'currentColor')
-        .style('fill-opacity', '1')
-        .style('font-family', 'inherit')
-        .style('font-size', '10px')
-
-    var labels = []
-
-    for(let [key, value] of Object.entries(data)){
-        labels.push(
-            formatData(
-                    key, cols[index1],
-                    options) + ": " +
-            formatData(
-                    value, cols[index2],
-                    options
-            )
-        );
-    }
-
-    const legendWrapLength = width / 2 - 50
-    var legendScale = getColorScale(labels, chartColors)
-    var legendOrdinal = getLegend(legendScale, legendWrapLength, 'vertical');
-
-    svgLegend.call(legendOrdinal)
-
-    let legendBBox
-    const legendElement = svgLegend.node()
-    if (legendElement) {
-        legendBBox = legendElement.getBBox()
-    }
-
-    const legendHeight = legendBBox.height
-    const legendWidth = legendBBox.width
-    const legendXPosition = width / 2 - legendWidth - 10
-    const legendYPosition =
-      legendHeight < height - 20 ? (height - legendHeight) / 2 : 15
-
-    svgLegend.attr(
-        'transform', `translate(${legendXPosition}, ${legendYPosition})`
-    )
-
-    legendOrdinal.on('cellclick', function(d) {
-        var words = []
-        var nodes = d.currentTarget.getElementsByTagName('tspan')
-        for (var i = 0; i < nodes.length; i++) {
-            words.push(nodes[i].textContent)
+        if (!label) {
+            console.warn('unable to find legend item that was clicked');
+            return;
         }
-        var unformatGroup = legendGroups[words.join(' ')]?.value;
-        groups[unformatGroup].isVisible = !groups[unformatGroup].isVisible;
-        createSlices();
-        const legendCell = select(this);
-        legendCell.classed(
-            'disable-group', !legendCell.classed('disable-group')
-        );
-    });
 
-
-    select(window).on(
-        "chata-resize." + component.dataset.componentid, () => {
-            createPieChart(
-                component,
-                json,
-                options,
-                onUpdate,
-                fromChataUtils,
-                valueClass,
-                renderTooltips
-            )
+        const isHidingLabel = !label.hidden;
+        const visibleLegendLabels = legendLabels?.filter((l) => !l.hidden);
+        const allowClick = !isHidingLabel || visibleLegendLabels?.length > 1;
+        if (allowClick) {
+            label.hidden = !label.hidden;
+            this.renderPie();
         }
-    );
+    };
 
-    createSlices()
+    this.renderLegend = () => {
+        // Remove if already exists
+        this.legend?.remove();
+
+        // TODO: use existing legend component instead of this custom legend
+        // The legend wrap length threshold should be half of the width
+        // Because the pie will never be larger than half the width
+
+        const legendWrapLength = outerWidth / 2 - 70; // 70 for the width of the circles and padding
+        this.legend = this.innerChartWrapper
+            .append('g')
+            .attr('class', 'autoql-vanilla-chart-legend')
+            .style('fill', 'currentColor')
+            .style('fill-opacity', 1)
+            .style('font-family', 'inherit')
+            .style('font-size', '10px')
+            .style('stroke-width', '2px')
+            .style('stroke', 'none');
+
+        var legendOrdinal = legendColor()
+            .orient('vertical')
+            .shapePadding(8)
+            .labels(legendLabels.map((labelObj) => labelObj.label))
+            .labelWrap(legendWrapLength)
+            .labelOffset(10)
+            .scale(self.legendScale)
+            .on('cellclick', function () {
+                self.onLegendCellClick(select(this)?.data());
+            });
+
+        this.legend.call(legendOrdinal);
+
+        const legendBBox = this.legend?.node()?.getBBox() ?? {};
+        const legendHeight = legendBBox?.height ?? 0;
+        const legendWidth = legendBBox?.width ?? 0;
+        const legendXPosition = outerWidth / 2 - legendWidth - 20;
+        const legendYPosition = legendHeight < outerHeight - 20 ? (outerHeight - legendHeight) / 2 : 15;
+
+        this.legend.attr('transform', `translate(${legendXPosition}, ${legendYPosition})`);
+        this.applyStylesForHiddenSeries();
+    };
+
+    this.centerVisualization = () => {
+        const chartBBox = this.innerChartWrapper?.node()?.getBBox();
+
+        if (chartBBox) {
+            const currentXPosition = chartBBox.x;
+            const finalXPosition = (outerWidth - chartBBox.width) / 2;
+            const deltaX = finalXPosition - currentXPosition;
+
+            this.innerChartWrapper.attr('transform', `translate(${deltaX},0)`);
+        }
+    };
+
+    this.renderPie = () => {
+        this.setRadius();
+
+        const { pieChartFn, legendScale } = getPieChartData({
+            data,
+            numberColumnIndex,
+            legendLabels,
+        });
+
+        this.pieData = pieChartFn;
+        this.legendScale = legendScale;
+
+        this.renderPieSlices();
+        this.renderLegend();
+        this.centerVisualization();
+    };
+
+    try {
+        this.renderPie();
+    } catch (error) {
+        this.innerChartWrapper?.select('*')?.remove();
+        console.error(error);
+    }
+
+    return this;
 }

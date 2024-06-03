@@ -1,5 +1,7 @@
 .autoql-vanilla-chata-table-container {
     height: 100%;
+    max-height: 100%;
+    overflow: hidden;
     background-color: inherit;
     visibility: visible;
     display: flex;
@@ -262,6 +264,7 @@
         max-width: 100%;
         overflow: hidden;
         visibility: visible;
+        position: relative;
     }
     .autoql-vanilla-chata-table-row-count {
         flex: 0 1;

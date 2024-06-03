@@ -228,6 +228,7 @@ export function NotificationFeed(selector, options) {
                 const { authentication } = container.options;
                 items.forEach((itemData, index) => {
                     const dataAlert = this.dataAlerts.find((d) => d.id === itemData.data_alert_id);
+
                     const item = new NotificationItem({
                         itemData,
                         index,

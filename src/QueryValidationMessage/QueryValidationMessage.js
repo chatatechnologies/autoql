@@ -36,7 +36,7 @@ export function QueryValidationMessage({ response, onSubmit = () => {}, submitTe
             const runQueryButton = document.createElement('button');
 
             const icon = submitIcon ?? RUN_QUERY;
-            const runQueryIcon = createIcon(submitIcon);
+            const runQueryIcon = createIcon(icon);
             const runQueryText = document.createElement('span');
 
             runQueryButton.classList.add('autoql-vanilla-chata-safety-net-execute-btn');

@@ -4,7 +4,7 @@ import { ChataTable, ChataPivotTable } from '../../ChataTable';
 import { ErrorMessage } from '../../ErrorMessage';
 import { DrilldownToolbar } from '../DrilldownToolbar';
 import { CHART_TYPES } from 'autoql-fe-utils';
-import { ChataChartNew } from '../../NewCharts';
+import { ChataChart } from '../../Charts';
 
 import './DrilldownView.scss';
 
@@ -15,7 +15,7 @@ export function DrilldownView({
     isStatic = true,
     drilldownFn,
     activeKey,
-    onClick = () => {}
+    onClick = () => {},
 }) {
     var view = document.createElement('div');
     var wrapperView = document.createElement('div');
@@ -162,13 +162,13 @@ export function DrilldownView({
             chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
             chartWrapper2.appendChild(chartWrapper);
             container.appendChild(chartWrapper2);
-            chartWrapper.activeKey = activeKey
+            chartWrapper.activeKey = activeKey;
 
-            new ChataChartNew(chartWrapper, {
+            new ChataChart(chartWrapper, {
                 type: displayType,
                 options: dashboard.options,
                 queryJson: json,
-                onChartClick: onClick
+                onChartClick: onClick,
             });
         }
 

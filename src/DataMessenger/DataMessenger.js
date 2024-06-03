@@ -90,13 +90,13 @@ import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-import { ChataChartNew } from '../NewCharts';
+import { ChataChart } from '../Charts';
 import MobileDetect from 'mobile-detect';
 
 import testdata from '../../testdata';
 
 import '../Toolbar/Toolbar.scss';
-import '../../css/chata-styles.css';
+import '../../css/chata-styles.scss';
 import '../../css/DataMessenger.scss';
 
 export function DataMessenger(options = {}) {
@@ -2124,7 +2124,7 @@ export function DataMessenger(options = {}) {
 
         obj.refreshToolbarButtons(component, displayType);
 
-        new ChataChartNew(component, {
+        new ChataChart(component, {
             type: displayType,
             queryJson: json,
             options: obj.options,
@@ -2348,6 +2348,7 @@ export function DataMessenger(options = {}) {
         if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
             tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
         }
+
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
         tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
         tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
@@ -2379,6 +2380,7 @@ export function DataMessenger(options = {}) {
             var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
             containerMessage.appendChild(interpretationView);
         }
+
         setTimeout(function () {
             obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         }, 350);
