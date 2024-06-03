@@ -490,7 +490,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.dispatchResizeEvent = () => {
-        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
     };
 
     obj.tabsAnimation = function (displayNodes, displayBar) {
@@ -836,7 +836,7 @@ export function DataMessenger(options = {}) {
 
             clearTimeout(timer);
             timer = setTimeout(() => {
-                window.dispatchEvent(new CustomEvent('chata-resize', {}));
+                // window.dispatchEvent(new CustomEvent('chata-resize', {}));
                 obj.rootElem.classList.remove('autoql-vanilla-drawer-resizing');
             }, 100);
         }
@@ -1121,7 +1121,7 @@ export function DataMessenger(options = {}) {
                     : (o.drawerContentWrapper.style.height = `${obj.options.height}px`);
             }
 
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            // window.dispatchEvent(new CustomEvent('chata-resize', {}));
         };
 
         headerLeft.appendChild(closeButton);
@@ -3105,7 +3105,7 @@ export function DataMessenger(options = {}) {
     refreshTooltips();
 
     obj.dispatchResizeEvent = () => {
-        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
     };
 
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);

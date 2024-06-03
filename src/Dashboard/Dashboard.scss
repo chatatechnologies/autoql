@@ -14,10 +14,15 @@
 }
 
 .autoql-vanilla-dashboard-container {
-    background: var(--autoql-vanilla-background-color-primary);
-    height: 100%;
+    background: rgba(0, 0, 0, 0);
     width: 100%;
     overflow: hidden;
+    padding-top: 3px;
+    margin-bottom: 100px;
+
+    .grid-stack {
+        margin: 10px;
+    }
 }
 
 .autoql-vanilla-dashboard-container.editing {

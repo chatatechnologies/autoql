@@ -2,7 +2,7 @@
     position: absolute;
     left: 0;
     top: 0;
-    background: var(--autoql-vanilla-background-color-primary);
+    background: var(--autoql-vanilla-background-color-secondary);
     z-index: 9999;
     border: 1px solid hsla(0,0%,67.1%,.32);
     border-radius: 4px;

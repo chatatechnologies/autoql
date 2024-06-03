@@ -1,9 +1,11 @@
 import {
+    exportCSV,
     isTableType,
     isChartType,
     formatElement,
     getAutoQLConfig,
     getDataFormatting,
+    getAuthentication,
     areAllColumnsHidden,
     getDefaultDisplayType,
     transformQueryResponse,
@@ -13,7 +15,7 @@ import {
 import { select } from 'd3-selection';
 
 import { uuidv4, checkAndApplyTheme, createIcon } from '../Utils';
-
+import { AntdMessage } from '../Antd';
 import { strings } from '../Strings';
 import { ChataUtils } from '../ChataUtils';
 import { ChataChart } from '../Charts';
@@ -40,6 +42,10 @@ export function QueryOutput(selector, options = {}) {
         const uuid = uuidv4();
 
         var responseRenderer = document.createElement('div');
+
+        if (!PARENT) {
+            return;
+        }
 
         PARENT.appendChild(responseRenderer);
 
@@ -110,7 +116,7 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.dispatchResizeEvent = () => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            // window.dispatchEvent(new CustomEvent('chata-resize', {}));
         };
 
         window.addEventListener('resize', responseRenderer.dispatchResizeEvent);
@@ -142,10 +148,10 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.metadata = null;
         };
 
-        responseRenderer.onChartClick = (data, jsonResponse) => {
+        responseRenderer.onChartClick = (data = {}, jsonResponse) => {
             const drilldownData = {
                 ...data,
-                queryID: jsonResponse?.data?.query_id,
+                queryID: responseRenderer.options.queryResponse?.data?.query_id,
                 jsonResponse,
             };
 
@@ -153,11 +159,9 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.onCellClick = async (data) => {
-            const json = ChataUtils.responses[uuid];
-
             const drilldownData = {
                 ...data,
-                queryID: json?.data?.query_id,
+                queryID: responseRenderer.options.queryResponse?.data?.query_id,
             };
 
             responseRenderer.options?.onDataClick?.(drilldownData);
@@ -185,6 +189,51 @@ export function QueryOutput(selector, options = {}) {
 
         responseRenderer.exportToPNG = () => {
             ChataUtils.exportPNGHandler(responseRendererID);
+        };
+
+        responseRenderer.copyTableToClipboard = () => {
+            // var json = responseRenderer.options.queryResponse;
+            // copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
+            responseRenderer?.table?.copyToClipboard('active', true);
+            new AntdMessage(strings.copyTextToClipboard, 3000);
+        };
+
+        responseRenderer.downloadCSV = async (showSuccessMessage) => {
+            try {
+                const response = await exportCSV({
+                    ...getAuthentication(options.authentication),
+                    queryId: responseRenderer.options.queryResponse?.data?.query_id,
+                    csvProgressCallback: (progress) => {},
+                });
+
+                const url = window.URL.createObjectURL(new Blob([response.data]));
+                const link = document.createElement('a');
+                link.href = url;
+                link.setAttribute('download', 'export.csv');
+                document.body.appendChild(link);
+                link.click();
+
+                const exportLimit = parseInt(response?.headers?.export_limit);
+                const limitReached = response?.headers?.limit_reached?.toLowerCase() == 'true' ? true : false;
+
+                if (showSuccessMessage) {
+                    if (limitReached) {
+                        new AntdMessage(
+                            `${strings.downloadedCSVWarning} ${exportLimit}
+                            MB. ${strings.partialCSVDataWarning}`,
+                            3000,
+                        );
+                    } else {
+                        new AntdMessage(strings.downloadedCSVSuccessully, 3000);
+                    }
+                }
+            } catch (error) {
+                console.error(error);
+            }
+        };
+
+        responseRenderer.reportProblem = () => {
+            ChataUtils.openModalReport(uuid, responseRenderer.options);
         };
 
         responseRenderer.toggleTableFiltering = () => {
@@ -418,6 +467,7 @@ export function QueryOutput(selector, options = {}) {
             }
 
             const displayType = responseRenderer.getDisplayType();
+            responseRenderer.displayType = displayType;
 
             if (displayType === 'single-value') {
                 responseRenderer.renderSingleValueResponse(jsonResponse);

@@ -5,6 +5,7 @@ import { ErrorMessage } from '../../ErrorMessage';
 import { DrilldownToolbar } from '../DrilldownToolbar';
 import { CHART_TYPES } from 'autoql-fe-utils';
 import { ChataChart } from '../../Charts';
+import { QueryOutput } from '../../QueryOutput/QueryOutput';
 
 import './DrilldownView.scss';
 
@@ -15,6 +16,7 @@ export function DrilldownView({
     isStatic = true,
     drilldownFn,
     activeKey,
+    options = {},
     onClick = () => {},
 }) {
     var view = document.createElement('div');
@@ -50,31 +52,35 @@ export function DrilldownView({
         elem.classList.add('active');
     };
 
-    view.executeDrilldown = async (data) => {
+    view.executeDrilldown = async (data = {}) => {
         if (!drilldownFn) {
-            setTimeout(() => {
-                ChataUtils.responses[UUID] = json;
-                view.displayData(json);
-            }, 400);
+            ChataUtils.responses[UUID] = json;
+            view.displayData(json);
 
             return;
         }
 
         var loading = view.showLoadingDots();
 
-        var response = await drilldownFn?.(data);
+        var response;
 
-        loading?.parentElement.removeChild(loading);
+        try {
+            response = await drilldownFn?.(data);
+        } catch (error) {
+            console.error(error);
+        }
+
+        loading?.parentElement?.removeChild(loading);
 
         ChataUtils.responses[UUID] = response?.data;
 
         if (response?.data?.data?.rows?.length > 0) {
             view.displayData(response.data);
         } else {
-            var error = new ErrorMessage(response.data.message, () => {
+            var error = new ErrorMessage(response?.data?.message, () => {
                 ChataUtils.openModalReport(UUID, dashboard.options, null, null);
             });
-            view.wrapper.appendChild(error);
+            if (error) view.wrapper.appendChild(error);
         }
     };
 
@@ -117,6 +123,7 @@ export function DrilldownView({
     };
 
     view.displayToolbar = () => {
+        // console.log('TODO: make new "hide chart" button');
         // if (isStatic) {
         //     var drilldownButton = new DrilldownToolbar(view);
         //     view.appendChild(drilldownButton);
@@ -126,53 +133,68 @@ export function DrilldownView({
     view.displayData = (json) => {
         var container = view.wrapper;
         view.wrapper.innerHTML = '';
-        let chartWrapper;
-        let chartWrapper2;
+        // let chartWrapper;
+        // let chartWrapper2;
 
-        if (displayType === 'table') {
-            var tableContainer = createTableContainer();
-            tableContainer.setAttribute('data-componentid', UUID);
-            container.appendChild(tableContainer);
-            container.classList.add('autoql-vanilla-chata-table-container');
-            var scrollbox = document.createElement('div');
-            scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-            scrollbox.classList.add('no-full-width');
-            scrollbox.appendChild(tableContainer);
-            container.appendChild(scrollbox);
-            var table = new ChataTable(UUID, dashboard.options, view.onRowClick);
-            tableContainer.tabulator = table;
-            table.parentContainer = view;
-        } else if (displayType === 'pivot_table') {
-            var div = createTableContainer();
-            div.setAttribute('data-componentid', UUID);
-            container.appendChild(div);
-            container.classList.add('autoql-vanilla-chata-table-container');
-            var _scrollbox = document.createElement('div');
-            _scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-            _scrollbox.classList.add('no-full-width');
-            _scrollbox.appendChild(div);
-            container.appendChild(scrollbox);
-            var _table = new ChataPivotTable(UUID, dashboard.options, view.onCellClick);
+        // if (!json) {
+        //     view.showLoadingDots();
+        //     return;
+        // }
 
-            div.tabulator = _table;
-        } else if (CHART_TYPES.includes(displayType)) {
-            chartWrapper = document.createElement('div');
-            chartWrapper.classList.add('autoql-vanilla-tile-chart-container-data-componentid-holder');
-            chartWrapper2 = document.createElement('div');
-            chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
-            chartWrapper2.appendChild(chartWrapper);
-            container.appendChild(chartWrapper2);
-            chartWrapper.activeKey = activeKey;
-
-            new ChataChart(chartWrapper, {
-                type: displayType,
-                options: dashboard.options,
-                queryJson: json,
-                onChartClick: onClick,
-            });
-        }
+        view.dataResponseContent = new QueryOutput(container, {
+            ...options,
+            displayType,
+            queryResponse: json,
+            onDataClick: onClick,
+        });
 
         view.displayToolbar();
+
+        return;
+        // if (displayType === 'table') {
+        //     var tableContainer = createTableContainer();
+        //     tableContainer.setAttribute('data-componentid', UUID);
+        //     container.appendChild(tableContainer);
+        //     container.classList.add('autoql-vanilla-chata-table-container');
+        //     var scrollbox = document.createElement('div');
+        //     scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+        //     scrollbox.classList.add('no-full-width');
+        //     scrollbox.appendChild(tableContainer);
+        //     container.appendChild(scrollbox);
+        //     var table = new ChataTable(UUID, dashboard.options, view.onRowClick);
+        //     tableContainer.tabulator = table;
+        //     table.parentContainer = view;
+        // } else if (displayType === 'pivot_table') {
+        //     var div = createTableContainer();
+        //     div.setAttribute('data-componentid', UUID);
+        //     container.appendChild(div);
+        //     container.classList.add('autoql-vanilla-chata-table-container');
+        //     var _scrollbox = document.createElement('div');
+        //     _scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
+        //     _scrollbox.classList.add('no-full-width');
+        //     _scrollbox.appendChild(div);
+        //     container.appendChild(scrollbox);
+        //     var _table = new ChataPivotTable(UUID, dashboard.options, view.onCellClick);
+
+        //     div.tabulator = _table;
+        // } else if (CHART_TYPES.includes(displayType)) {
+        //     chartWrapper = document.createElement('div');
+        //     chartWrapper.classList.add('autoql-vanilla-tile-chart-container-data-componentid-holder');
+        //     chartWrapper2 = document.createElement('div');
+        //     chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
+        //     chartWrapper2.appendChild(chartWrapper);
+        //     container.appendChild(chartWrapper2);
+        //     chartWrapper.activeKey = activeKey;
+
+        //     new ChataChart(chartWrapper, {
+        //         type: displayType,
+        //         options: dashboard.options,
+        //         queryJson: json,
+        //         onChartClick: onClick,
+        //     });
+        // }
+
+        // view.displayToolbar();
     };
 
     if (!isStatic) {

@@ -1,20 +1,4 @@
-import { ChataUtils } from '../../ChataUtils';
-import { apiCall, apiCallGet, apiCallPut } from '../../Api';
-import { ChataTable, ChataPivotTable } from '../../ChataTable';
-import { ChataPopover } from '../../ChataComponents';
-import { ErrorMessage } from '../../ErrorMessage';
-import { DrilldownModal } from '../DrilldownModal';
-import { DrilldownView } from '../DrilldownView';
-import { select } from 'd3-selection';
-import { refreshTooltips } from '../../Tooltips';
-import { createSuggestionArray, createSafetynetContent } from '../../Safetynet';
-import { TileVizToolbar } from '../TileVizToolbar';
-import { ActionToolbar } from '../ActionToolbar';
-import { InputToolbar } from '../InputToolbar';
-import { strings } from '../../Strings';
-import { ChataChart } from '../../Charts';
 import {
-    CHART_TYPES,
     DEFAULT_DATA_PAGE_SIZE,
     constructFilter,
     getAuthentication,
@@ -26,12 +10,25 @@ import {
     runDrilldown,
     runQuery,
     getSupportedDisplayTypes,
+    isChartType,
 } from 'autoql-fe-utils';
+
+import { ChataUtils } from '../../ChataUtils';
+import { apiCall, apiCallGet, apiCallPut } from '../../Api';
+import { ErrorMessage } from '../../ErrorMessage';
+import { DrilldownModal } from '../DrilldownModal';
+import { DrilldownView } from '../DrilldownView';
+import { select } from 'd3-selection';
+import { refreshTooltips } from '../../Tooltips';
+import { createSuggestionArray, createSafetynetContent } from '../../Safetynet';
+import { TileVizToolbar } from '../TileVizToolbar';
+import { ActionToolbar } from '../ActionToolbar';
+import { InputToolbar } from '../InputToolbar';
+import { QueryOutput } from '../../QueryOutput/QueryOutput';
+import { strings } from '../../Strings';
+
 import {
     uuidv4,
-    createTableContainer,
-    formatData,
-    closeAllToolbars,
     cloneObject,
     getSafetynetValues,
     getSafetynetUserSelection,
@@ -93,48 +90,20 @@ export function TileView(tile, isSecond = false) {
 
     responseWrapper.innerHTML = placeHolderText;
 
-    view.reportProblemHandler = (evt, idRequest, reportProblem, toolbar) => {
-        closeAllToolbars();
-        var popover = new ChataPopover(toolbar, toolbar.reportProblemButton);
-        popover.appendChild(reportProblem);
-        popover.show();
-    };
-
-    view.makeMoreOptions = () => {};
-
-    view.moreOptionsHandler = (evt, idRequest, moreOptions, toolbar) => {
-        closeAllToolbars();
-        var popover = new ChataPopover(toolbar, toolbar.moreOptionsBtn);
-        var opts = ChataUtils.makeMoreOptionsMenu(idRequest, popover, moreOptions, {
-            caller: dashboard,
-            query: view.getQuery(),
-        });
-        popover.appendChild(opts);
-        popover.show();
-    };
-
     view.openColumnEditorHandler = (evt, id, options, badge) => {
-        ChataUtils.showColumnEditor(id, options, () => {
-            var json = ChataUtils.responses[id];
-            if (showBadge(json)) {
-                badge.style.visibility = 'visible';
-            } else {
-                badge.style.visibility = 'hidden';
-            }
-        });
-    };
-
-    view.onCellClick = (data, json) => {
-        var tableView = new DrilldownView({
-            tile,
-            displayType: 'table',
-            isStatic: false,
-            drilldownFn: view.getDrilldownFn(data, json),
-        });
-
-        const title = view.getQuery();
-
-        view.displayDrilldownModal(title, [tableView]);
+        ChataUtils.showColumnEditor(
+            id,
+            options,
+            () => {
+                var json = ChataUtils.responses[id];
+                if (showBadge(json)) {
+                    badge.style.visibility = 'visible';
+                } else {
+                    badge.style.visibility = 'hidden';
+                }
+            },
+            view.queryOutput,
+        );
     };
 
     view.show = () => {
@@ -281,9 +250,9 @@ export function TileView(tile, isSecond = false) {
         }
     };
 
-    view.clearFilterMetadata = () => {
-        responseWrapper.filterMetadata = [];
-    };
+    // view.clearFilterMetadata = () => {
+    //     responseWrapper.filterMetadata = [];
+    // };
 
     view.setDefaultFilters = (table) => {
         const { filterMetadata } = responseWrapper;
@@ -311,49 +280,6 @@ export function TileView(tile, isSecond = false) {
         }
     };
 
-    view.getQueryFn = (response) => {
-        let newResponse;
-
-        return async ({ formattedTableParams: undefined, ...args }) => {
-            // todo - formattedTablParams
-            try {
-                const queryRequestData = response?.data?.data?.fe_req;
-                const allFilters = getCombinedFilters(undefined, response, undefined);
-
-                const queryParams = {
-                    ...getAuthentication(dashboard.options.authentication),
-                    ...getAutoQLConfig(dashboard.options.autoQLConfig),
-                    source: 'dashboard.user',
-                    scope: dashboard.options.scope,
-                    debug: queryRequestData?.translation === 'include',
-                    filters: queryRequestData?.session_filter_locks,
-                    pageSize: queryRequestData?.page_size,
-                    groupBys: queryRequestData?.columns,
-                    orders: formattedTableParams?.sorters,
-                    tableFilters: allFilters,
-                };
-
-                let newResponse = await runQuery({
-                    ...queryParams,
-                    query: queryRequestData?.text,
-                    debug: queryRequestData?.translation === 'include',
-                    userSelection: queryRequestData?.disambiguation,
-                    ...args,
-                });
-
-                if (newResponse?.data) {
-                    newResponse.data.originalQueryID = response.data.data.query_id;
-                    newResponse.data.queryFn = view.getQueryFn(response);
-                }
-            } catch (error) {
-                console.error(error);
-                newResponse = error;
-            }
-
-            return newResponse;
-        };
-    };
-
     view.run = async () => {
         const query = view.getQuery();
 
@@ -361,21 +287,21 @@ export function TileView(tile, isSecond = false) {
         view.isSafetynet = false;
 
         if (query) {
-            view.clearMetadata();
-            view.clearFilterMetadata();
-            var loading = view.showLoading();
+            // view.clearMetadata();
+            // view.clearFilterMetadata();
+            view.showLoading();
 
             let response;
             try {
                 response = await runQuery({
                     ...getAuthentication(dashboard.options.authentication),
                     ...getAutoQLConfig(dashboard.options.autoQLConfig),
+                    enableQueryValidation: dashboard.options.isEditing,
                     query,
                     source: 'dashboards.user',
+                    scope: dashboard.options.scope,
+                    pageSize: dashboard.options.pageSize ?? DEFAULT_DATA_PAGE_SIZE,
                 });
-                if (response?.data) {
-                    response.data.queryFn = view.getQueryFn(response);
-                }
             } catch (error) {
                 response = error;
             }
@@ -458,18 +384,18 @@ export function TileView(tile, isSecond = false) {
         return apiCall(val, tile.dashboard.options, 'dashboards.user');
     };
 
-    view.clearMetadata = () => {
-        responseWrapper.metadata = null;
-    };
+    // view.clearMetadata = () => {
+    //     responseWrapper.metadata = null;
+    // };
 
     view.copyFilterMetadata = () => {
         responseWrapper.filterMetadata = responseWrapper.tabulator.getHeaderFilters();
     };
 
-    view.copyMetadataToDrilldown = (drilldownView) => {
-        drilldownView.metadata = responseWrapper.metadata;
-        drilldownView.metadata3D = responseWrapper.metadata3D;
-    };
+    // view.copyMetadataToDrilldown = (drilldownView) => {
+    //     drilldownView.metadata = responseWrapper.metadata;
+    //     drilldownView.metadata3D = responseWrapper.metadata3D;
+    // };
 
     view.componentClickHandler = (handler, component, selector) => {
         var elements = component.querySelectorAll(selector);
@@ -544,7 +470,12 @@ export function TileView(tile, isSecond = false) {
 
                         let response;
                         try {
-                            response = await json.data?.queryFn?.({ tableFilters: allFilters, pageSize });
+                            response = await json.data?.queryFn?.({
+                                ...getAuthentication(dashboard.options.authentication),
+                                ...getAutoQLConfig(dashboard.options.autoQLConfig),
+                                tableFilters: allFilters,
+                                pageSize,
+                            });
                         } catch (error) {
                             console.error(error);
                             return;
@@ -576,54 +507,50 @@ export function TileView(tile, isSecond = false) {
         };
     };
 
-    view.chartElementClick = (data, idRequest) => {
+    view.onDrilldownClick = (data) => {
         const enableDrilldowns = getAutoQLConfig(dashboard.options.autoQLConfig).enableDrilldowns;
         if (!enableDrilldowns) return;
 
-        const json = cloneObject(ChataUtils.responses[idRequest]);
+        const json = view.queryOutput?.options?.queryResponse;
 
         view.activeKey = data.activeKey;
 
-        var tableView = new DrilldownView({
+        const views = [];
+
+        var drilldownView = new DrilldownView({
+            isStatic: false,
+            options: dashboard.options,
             tile,
             displayType: 'table',
-            isStatic: false,
             drilldownFn: view.getDrilldownFn(data, json),
         });
 
-        var chartView = new DrilldownView({
-            tile,
-            displayType: view.internalDisplayType,
-            activeKey: view.activeKey,
-            onClick: (data) => tableView.executeDrilldown(data),
-            json,
-        });
+        views.push(drilldownView);
+
+        var originalView;
+        if (isChartType(view.internalDisplayType)) {
+            originalView = new DrilldownView({
+                options: dashboard.options,
+                tile,
+                displayType: view.internalDisplayType,
+                activeKey: view.activeKey,
+                onClick: (drilldownData) => drilldownView.executeDrilldown(drilldownData),
+                json,
+            });
+
+            views.unshift(originalView);
+        }
 
         const title = view.getQuery();
 
-        view.drilldownModal = view.displayDrilldownModal(title, [chartView, tableView]);
-
-        view.copyMetadataToDrilldown(chartView);
+        view.drilldownModal = view.displayDrilldownModal(title, views, data);
 
         // Wait for modal animation to complete
         setTimeout(() => {
-            chartView.displayData(json);
-        }, 500);
-    };
-
-    view.displaySingleValueDrillDown = (json) => {
-        const data = { groupBys: [], supportedByAPI: true };
-
-        var tableView = new DrilldownView({
-            tile,
-            displayType: 'table',
-            isStatic: false,
-            drilldownFn: view.getDrilldownFn(data, json),
-        });
-
-        const title = view.getQuery();
-
-        view.displayDrilldownModal(title, [tableView]);
+            originalView?.displayData(json);
+            drilldownView.displayData();
+            drilldownView.executeDrilldown(data);
+        }, 400);
     };
 
     view.getMessageError = () => {
@@ -663,7 +590,6 @@ export function TileView(tile, isSecond = false) {
             return;
         }
 
-        var container = responseWrapper;
         var displayType = view.internalDisplayType;
         var supportedDisplayTypes = getSupportedDisplayTypes({ response: { data: json } });
         if (!supportedDisplayTypes.includes(displayType)) {
@@ -673,82 +599,35 @@ export function TileView(tile, isSecond = false) {
         if (responseWrapper.tabulator) {
             view.copyFilterMetadata();
         }
-        var chartWrapper;
-        var chartWrapper2;
 
         responseWrapper.innerHTML = '';
 
-        if (displayType === 'table') {
-            if (json['data']['columns'].length == 1) {
-                var data = formatData(json['data']['rows'][0][0], json['data']['columns'][0], dashboard.options);
-                var singleValue = htmlToElement(`
-                    <div>
-                        <a class="autoql-vanilla-single-value-response">
-                            ${data}
-                        <a/>
-                    </div>
-                `);
-                container.appendChild(singleValue);
-                singleValue.onclick = () => {
-                    view.displaySingleValueDrillDown(json);
-                };
-            } else {
-                var div = createTableContainer();
-                div.setAttribute('data-componentid', UUID);
-                container.appendChild(div);
-                container.classList.add('autoql-vanilla-chata-table-container');
-                var scrollbox = document.createElement('div');
-                scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-                scrollbox.classList.add('no-full-width');
-                scrollbox.appendChild(div);
-                container.appendChild(scrollbox);
-                var table = new ChataTable(UUID, dashboard.options, (data) => view.onCellClick(data, json));
+        const queryOutput = new QueryOutput(responseWrapper, {
+            authentication: getAuthentication(dashboard.options.authentication),
+            autoQLConfig: getAutoQLConfig(dashboard.options.autoQLConfig),
+            queryResponse: json,
+            displayType,
+            pageSize: 50,
+            onDataClick: view.onDrilldownClick,
+        });
 
-                div.tabulator = table;
-                responseWrapper.tabulator = table;
-                table.parentContainer = view;
-                view.setDefaultFilters(table);
-            }
-        } else if (displayType === 'pivot_table') {
-            var tableContainer = createTableContainer();
-            tableContainer.setAttribute('data-componentid', UUID);
-            container.appendChild(tableContainer);
-            container.classList.add('autoql-vanilla-chata-table-container');
-            var _scrollbox = document.createElement('div');
-            _scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-            _scrollbox.classList.add('no-full-width');
-            _scrollbox.appendChild(tableContainer);
-            container.appendChild(_scrollbox);
-            var _table = new ChataPivotTable(UUID, dashboard.options, (data) => view.onCellClick(data, json));
-            tableContainer.tabulator = _table;
-        } else if (CHART_TYPES.includes(displayType)) {
-            chartWrapper = document.createElement('div');
-            chartWrapper.setAttribute('data-componentid', UUID);
-            chartWrapper.classList.add('autoql-vanilla-tile-chart-container-data-componentid-holder');
-            chartWrapper2 = document.createElement('div');
-            chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
-            chartWrapper2.appendChild(chartWrapper);
-            container.appendChild(chartWrapper2);
-            new ChataChart(chartWrapper, {
-                type: displayType,
-                options: dashboard.options,
-                queryJson: json,
-                onChartClick: (data) => view.chartElementClick(data, UUID),
-            });
+        view.queryOutput = queryOutput;
 
-            // view.registerDrilldownChartEvent(chartWrapper)
+        if (queryOutput) {
+            responseWrapper.appendChild(queryOutput);
         } else {
-            container.innerHTML = "Oops! We didn't understand that query.";
+            responseWrapper.innerHTML = "Oops! We didn't understand that query.";
         }
 
         view.createVizToolbar();
         refreshTooltips();
+
+        return;
     };
 
     view.createVizToolbar = () => {
         var json = ChataUtils.responses[UUID];
         new TileVizToolbar(json, view, tile);
-
         var actionToolbar = new ActionToolbar(UUID, view, tile);
         if (!view.isSecond) actionToolbar.classList.add('first');
         view.appendChild(actionToolbar);
