@@ -548,9 +548,11 @@ export function TileView(tile, isSecond = false) {
         // Wait for modal animation to complete
         setTimeout(() => {
             originalView?.displayData(json);
-            drilldownView.displayData();
-            drilldownView.executeDrilldown(data);
-        }, 400);
+            setTimeout(() => {
+                drilldownView.displayData();
+                drilldownView.executeDrilldown(data);
+            }, 100);
+        }, 350);
     };
 
     view.getMessageError = () => {

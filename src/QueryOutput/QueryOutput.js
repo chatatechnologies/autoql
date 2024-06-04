@@ -116,10 +116,8 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.dispatchResizeEvent = () => {
-            // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
         };
-
-        window.addEventListener('resize', responseRenderer.dispatchResizeEvent);
 
         responseRenderer.setOption = (option, value) => {
             switch (option) {

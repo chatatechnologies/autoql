@@ -490,7 +490,7 @@ export function DataMessenger(options = {}) {
     };
 
     obj.dispatchResizeEvent = () => {
-        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        window.dispatchEvent(new CustomEvent('chata-resize', {}));
     };
 
     obj.tabsAnimation = function (displayNodes, displayBar) {
@@ -3104,19 +3104,13 @@ export function DataMessenger(options = {}) {
 
     refreshTooltips();
 
-    obj.dispatchResizeEvent = () => {
-        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
-    };
-
     document.addEventListener('DOMContentLoaded', obj.onLoadHandler);
-    window.addEventListener('resize', obj.dispatchResizeEvent);
 
     obj.destroy = () => {
         obj.drawerButton?.addEventListener('click', obj.openDrawer);
         obj.input?.removeEventListener('keydown', obj.onArrowUpHandler);
         obj.input?.addEventListener('keydown', obj.onEnterHandler);
         document.removeEventListener('DOMContentLoaded', obj.onLoadHandler);
-        window.removeEventListener('resize', obj.dispatchResizeEvent);
     };
 
     return obj;

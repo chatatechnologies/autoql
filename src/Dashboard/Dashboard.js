@@ -200,14 +200,14 @@ export function Dashboard(selector, options = {}) {
     obj.undoResize = (el, newWidth, newHeight) => {
         obj.grid.update(el, null, null, newWidth, newHeight);
         setTimeout(() => {
-            // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
         }, 200);
     };
 
     obj.undoDrag = (el, x, y) => {
         obj.grid.update(el, x, y, null, null);
         setTimeout(() => {
-            // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            window.dispatchEvent(new CustomEvent('chata-resize', {}));
         }, 200);
     };
 
@@ -251,7 +251,7 @@ export function Dashboard(selector, options = {}) {
 
     obj.grid.on('resizestop', () => {
         obj.hidePlaceHolders();
-        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        window.dispatchEvent(new CustomEvent('chata-resize', {}));
     });
 
     obj.showPlaceHolders = function () {

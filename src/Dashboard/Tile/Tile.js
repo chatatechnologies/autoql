@@ -356,7 +356,7 @@ export function Tile(dashboard, options) {
                 gutterSize: 7,
                 cursor: 'row-resize',
                 onDragEnd: () => {
-                    // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+                    window.dispatchEvent(new CustomEvent('chata-resize', {}));
                 },
             });
             item.views.map((view) => view.show());
