@@ -578,6 +578,10 @@ export function TileView(tile, isSecond = false) {
         select(window).on('chata-resize.' + UUID, null);
     };
 
+    view.redraw = () => {
+        view.queryOutput?.dispatchResizeEvent?.();
+    };
+
     view.displayData = () => {
         var json = ChataUtils.responses[UUID];
 

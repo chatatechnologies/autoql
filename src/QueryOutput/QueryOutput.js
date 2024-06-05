@@ -116,7 +116,7 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.dispatchResizeEvent = () => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            window.dispatchEvent(new CustomEvent(`chata-resize-${uuid}`, {}));
         };
 
         responseRenderer.setOption = (option, value) => {
@@ -308,7 +308,6 @@ export function QueryOutput(selector, options = {}) {
             }
 
             responseRenderer.table = table;
-            select(window).on('chata-resize.' + uuid, null);
         };
 
         responseRenderer.renderChart = (jsonResponse, displayType) => {
@@ -317,12 +316,14 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.chartWrapper = chartWrapper;
             responseRenderer.appendChild(chartWrapper);
 
-            new ChataChart(chartWrapper, {
+            const chart = new ChataChart(chartWrapper, {
+                uuid,
                 type: displayType,
                 queryJson: jsonResponse,
                 options: responseRenderer.options,
                 onChartClick: (data) => responseRenderer.onChartClick(data, jsonResponse),
             });
+            responseRenderer.chart = chart;
         };
 
         responseRenderer.getDisplayType = () => {

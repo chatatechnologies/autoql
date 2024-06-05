@@ -153,8 +153,17 @@ export function Dashboard(selector, options = {}) {
         });
     }
 
-    obj.updateCharts = () => {
-        // console.log('TODO: FN TO UPDATE CHART MARGINS');
+    obj.updateCharts = (tile) => {
+        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        if (tile) {
+            // Update single tile
+            tile.redraw?.();
+        } else {
+            // Update all tiles
+            obj.tiles?.forEach((tile) => {
+                tile.redraw?.();
+            });
+        }
     };
 
     obj.getTiles = () => {
@@ -202,14 +211,14 @@ export function Dashboard(selector, options = {}) {
     obj.undoResize = (el, newWidth, newHeight) => {
         obj.grid.update(el, null, null, newWidth, newHeight);
         setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            obj.updateCharts();
         }, 200);
     };
 
     obj.undoDrag = (el, x, y) => {
         obj.grid.update(el, x, y, null, null);
         setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            obj.updateCharts();
         }, 200);
     };
 
@@ -253,7 +262,7 @@ export function Dashboard(selector, options = {}) {
 
     obj.grid.on('resizestop', () => {
         obj.hidePlaceHolders();
-        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        obj.updateCharts();
     });
 
     obj.showPlaceHolders = function () {

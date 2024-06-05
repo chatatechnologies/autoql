@@ -360,7 +360,7 @@ export function Tile(dashboard, options) {
                 gutterSize: 7,
                 cursor: 'row-resize',
                 onDragEnd: () => {
-                    window.dispatchEvent(new CustomEvent('chata-resize', {}));
+                    item.redraw();
                 },
             });
             item.views.map((view) => view.show());
@@ -368,6 +368,10 @@ export function Tile(dashboard, options) {
             item.switchSplitButton(SPLIT_VIEW_ACTIVE, strings.singleView);
             item.refreshViews();
         }
+    };
+
+    item.redraw = () => {
+        item.views?.forEach((view) => view.redraw?.());
     };
 
     item.runTile = () => {
