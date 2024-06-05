@@ -24,7 +24,11 @@ export function Tile(dashboard, options) {
     item.splitInstance = undefined;
 
     var content = document.createElement('div');
-    const dragPositions = ['left', 'bottom', 'top', 'right'];
+
+    // Gridstack only allows one element per tile for dragging
+    // (They probably just use querySelector instead of querySelectorAll)
+    // We will just use the top to drag until they change this
+    const dragPositions = ['top'];
 
     for (var [key, value] of Object.entries(options)) {
         item.options[key] = value;

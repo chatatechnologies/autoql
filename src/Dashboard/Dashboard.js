@@ -7,8 +7,7 @@ import { strings } from '../Strings';
 import { refreshTooltips, refreshDelegate } from '../Tooltips';
 
 import './Dashboard.scss';
-import 'gridstack/dist/gridstack.css';
-import 'gridstack/dist/h5/gridstack-dd-native';
+import 'gridstack/dist/gridstack.min.css';
 
 export function Dashboard(selector, options = {}) {
     checkAndApplyTheme();
@@ -125,7 +124,9 @@ export function Dashboard(selector, options = {}) {
 
     var grid = GridStack.init(
         {
-            handle: '.autoql-vanilla-dashboard-tile-drag-handle',
+            draggable: {
+                handle: '.autoql-vanilla-dashboard-tile-drag-handle',
+            },
             placeholderClass: 'autoql-vanilla-tile-placeholder',
             cellHeight: '80px',
         },
@@ -137,11 +138,12 @@ export function Dashboard(selector, options = {}) {
 
     for (var i = 0; i < obj.options.tiles.length; i++) {
         var tile = obj.options.tiles[i];
-        var e = new Tile(obj, {
+        var tileElement = new Tile(obj, {
             ...tile,
         });
-        obj.tiles.push(e);
-        grid.addWidget(e, {
+
+        obj.tiles.push(tileElement);
+        grid.addWidget(tileElement, {
             w: tile.w,
             h: tile.h,
             x: tile.x,
