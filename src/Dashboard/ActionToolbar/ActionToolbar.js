@@ -215,7 +215,7 @@ export function ActionToolbar(idRequest, tileView, tile) {
                         EXPORT_PNG_ICON,
                         strings.downloadPNG,
                         () => {
-                            tileView?.queryOutput?.downloadPNG?.();
+                            tileView?.queryOutput?.exportToPNG?.();
                         },
                         [idRequest],
                     );
