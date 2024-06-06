@@ -33,6 +33,8 @@ export function QueryOutput(selector, options = {}) {
     try {
         checkAndApplyTheme();
 
+        var responseRenderer = document.createElement('div');
+
         const PARENT = select(selector).node();
         if (PARENT) {
             PARENT.innerHTML = '';
@@ -40,8 +42,7 @@ export function QueryOutput(selector, options = {}) {
 
         const ALLOW_NUMERIC_STRING_COLUMNS = true;
         const uuid = uuidv4();
-
-        var responseRenderer = document.createElement('div');
+        responseRenderer.uuid = uuid;
 
         if (!PARENT) {
             return;
@@ -185,13 +186,15 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.appendChild(messageWrapper);
         };
 
+        responseRenderer.getQuery = () => {
+            return responseRenderer.options?.queryResponse?.data?.text;
+        };
+
         responseRenderer.exportToPNG = () => {
             ChataUtils.exportPNGHandler(responseRendererID);
         };
 
         responseRenderer.copyTableToClipboard = () => {
-            // var json = responseRenderer.options.queryResponse;
-            // copyTextToClipboard(ChataUtils.createCsvData(json, '\t'));
             responseRenderer?.table?.copyToClipboard('active', true);
             new AntdMessage(strings.copyTextToClipboard, 3000);
         };

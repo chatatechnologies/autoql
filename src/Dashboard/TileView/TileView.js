@@ -22,7 +22,6 @@ import { select } from 'd3-selection';
 import { refreshTooltips } from '../../Tooltips';
 import { createSuggestionArray, createSafetynetContent } from '../../Safetynet';
 import { TileVizToolbar } from '../TileVizToolbar';
-import { ActionToolbar } from '../ActionToolbar';
 import { InputToolbar } from '../InputToolbar';
 import { QueryOutput } from '../../QueryOutput/QueryOutput';
 import { strings } from '../../Strings';
@@ -39,6 +38,7 @@ import {
 } from '../../Utils';
 
 import './TileView.scss';
+import { OptionsToolbar } from '../../OptionsToolbar';
 
 export function TileView(tile, isSecond = false) {
     var view = document.createElement('div');
@@ -592,7 +592,7 @@ export function TileView(tile, isSecond = false) {
         if (!json['data'].rows || json['data'].rows.length == 0) {
             responseWrapper.innerHTML = '';
             responseWrapper.appendChild(view.getMessageError());
-            view.createVizToolbar();
+            view.createToolbars();
             return;
         }
 
@@ -625,18 +625,18 @@ export function TileView(tile, isSecond = false) {
             responseWrapper.innerHTML = "Oops! We didn't understand that query.";
         }
 
-        view.createVizToolbar();
+        view.createToolbars();
         refreshTooltips();
 
         return;
     };
 
-    view.createVizToolbar = () => {
+    view.createToolbars = () => {
         var json = ChataUtils.responses[UUID];
         new TileVizToolbar(json, view, tile);
-        var actionToolbar = new ActionToolbar(UUID, view, tile);
-        if (!view.isSecond) actionToolbar.classList.add('first');
-        view.appendChild(actionToolbar);
+        var optionsToolbar = new OptionsToolbar(UUID, view.queryOutput, tile.dashboard.options);
+        if (!view.isSecond) optionsToolbar.classList.add('first');
+        view.appendChild(optionsToolbar);
     };
 
     view.classList.add('autoql-vanilla-tile-view');

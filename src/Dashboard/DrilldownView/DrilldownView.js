@@ -1,10 +1,7 @@
-import { uuidv4, createTableContainer, getNumberOfGroupables } from '../../Utils';
+import { uuidv4 } from '../../Utils';
 import { ChataUtils } from '../../ChataUtils';
-import { ChataTable, ChataPivotTable } from '../../ChataTable';
 import { ErrorMessage } from '../../ErrorMessage';
-import { DrilldownToolbar } from '../DrilldownToolbar';
-import { CHART_TYPES } from 'autoql-fe-utils';
-import { ChataChart } from '../../Charts';
+import { OptionsToolbar } from '../../OptionsToolbar';
 import { QueryOutput } from '../../QueryOutput/QueryOutput';
 
 import './DrilldownView.scss';
@@ -123,78 +120,28 @@ export function DrilldownView({
     };
 
     view.displayToolbar = () => {
-        // console.log('TODO: make new "hide chart" button');
-        // if (isStatic) {
-        //     var drilldownButton = new DrilldownToolbar(view);
-        //     view.appendChild(drilldownButton);
-        // }
+        if (!isStatic) {
+            const optionsToolbar = new OptionsToolbar(view.queryOutput?.uuid, view.queryOutput, options);
+            view.optionsToolbar = optionsToolbar;
+            view.appendChild(optionsToolbar);
+        }
     };
 
     view.displayData = (json) => {
         var container = view.wrapper;
         view.wrapper.innerHTML = '';
-        // let chartWrapper;
-        // let chartWrapper2;
 
-        // if (!json) {
-        //     view.showLoadingDots();
-        //     return;
-        // }
-
-        view.dataResponseContent = new QueryOutput(container, {
+        view.queryOutput = new QueryOutput(container, {
             ...options,
             displayType,
             queryResponse: json,
+            optionsToolbar: view.optionsToolbar,
             onDataClick: onClick,
         });
 
         view.displayToolbar();
 
         return;
-        // if (displayType === 'table') {
-        //     var tableContainer = createTableContainer();
-        //     tableContainer.setAttribute('data-componentid', UUID);
-        //     container.appendChild(tableContainer);
-        //     container.classList.add('autoql-vanilla-chata-table-container');
-        //     var scrollbox = document.createElement('div');
-        //     scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-        //     scrollbox.classList.add('no-full-width');
-        //     scrollbox.appendChild(tableContainer);
-        //     container.appendChild(scrollbox);
-        //     var table = new ChataTable(UUID, dashboard.options, view.onRowClick);
-        //     tableContainer.tabulator = table;
-        //     table.parentContainer = view;
-        // } else if (displayType === 'pivot_table') {
-        //     var div = createTableContainer();
-        //     div.setAttribute('data-componentid', UUID);
-        //     container.appendChild(div);
-        //     container.classList.add('autoql-vanilla-chata-table-container');
-        //     var _scrollbox = document.createElement('div');
-        //     _scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-        //     _scrollbox.classList.add('no-full-width');
-        //     _scrollbox.appendChild(div);
-        //     container.appendChild(scrollbox);
-        //     var _table = new ChataPivotTable(UUID, dashboard.options, view.onCellClick);
-
-        //     div.tabulator = _table;
-        // } else if (CHART_TYPES.includes(displayType)) {
-        //     chartWrapper = document.createElement('div');
-        //     chartWrapper.classList.add('autoql-vanilla-tile-chart-container-data-componentid-holder');
-        //     chartWrapper2 = document.createElement('div');
-        //     chartWrapper2.classList.add('autoql-vanilla-tile-chart-container');
-        //     chartWrapper2.appendChild(chartWrapper);
-        //     container.appendChild(chartWrapper2);
-        //     chartWrapper.activeKey = activeKey;
-
-        //     new ChataChart(chartWrapper, {
-        //         type: displayType,
-        //         options: dashboard.options,
-        //         queryJson: json,
-        //         onChartClick: onClick,
-        //     });
-        // }
-
-        // view.displayToolbar();
     };
 
     if (!isStatic) {

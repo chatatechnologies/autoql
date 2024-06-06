@@ -127,7 +127,22 @@ export function ActionToolbar(idRequest, tileView, tile) {
                     COLUMN_EDITOR,
                     strings.showHideCols,
                     idRequest,
-                    tileView.openColumnEditorHandler,
+                    // tileView.openColumnEditorHandler,
+                    (evt, id, options, badge) => {
+                        ChataUtils.showColumnEditor(
+                            id,
+                            options,
+                            () => {
+                                var json = ChataUtils.responses[id];
+                                if (showBadge(json)) {
+                                    badge.style.visibility = 'visible';
+                                } else {
+                                    badge.style.visibility = 'hidden';
+                                }
+                            },
+                            view.queryOutput,
+                        );
+                    },
                     [tile.dashboard.options, badge],
                 );
 
