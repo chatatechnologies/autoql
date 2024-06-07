@@ -16,7 +16,12 @@
     height: 100%;
     overflow: hidden;
     position: relative;
-    padding: 25px;
+    padding: 8px 15px 20px 15px;
+
+    .autoql-vanilla-chart-wrapper {
+        height: 100%;
+        width: 100%;
+    }
 }
 
 .autoql-vanilla-tile-response-wrapper {
@@ -27,6 +32,36 @@
     height: 100%;
     overflow: hidden;
     position: relative;
+
+    .autoql-vanilla-chata-response-content-container {
+        height: 100% !important;
+    }
+
+    &.autoql-vanilla-tile-response-wrapper-second {
+        .autoql-vanilla-tile-toolbar {
+            left: 54;
+        }
+    }
+}
+
+.autoql-vanilla-dashboard-toolbar-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    pointer-events: none;
+
+    padding: 5px;
+    width: 100%;
+    bottom: 0;
+
+    .autoql-vanilla-dashboard-toolbar-container-left,
+    .autoql-vanilla-dashboard-toolbar-container-right {
+        flex: 0 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
 
 .autoql-vanilla-tile-chart-container {
