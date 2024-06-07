@@ -648,8 +648,7 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
 
         var vizToolbarSplitButton = htmlToElement(`
             <button
-            class="autoql-vanilla-chata-toolbar-btn"
-            data-tippy-content="${strings.splitView}">
+                class="autoql-vanilla-chata-toolbar-btn"
             </button>
         `);
 
@@ -673,7 +672,7 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
 
             if (isSplit) {
                 vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
-                vizToolbarSplitButton.setAttribute('data-tippy-content', strings.singleView);
+                this.setAttribute('data-tippy-content', strings.singleView);
             } else {
                 vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
                 this.setAttribute('data-tippy-content', strings.splitView);
