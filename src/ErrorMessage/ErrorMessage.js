@@ -26,7 +26,6 @@ export function ErrorMessage(text = '', onClick = () => {}) {
         div.appendChild(document.createTextNode(values[1]));
     } else {
         div.innerHTML = text;
-        // return htmlToElement(text);
     }
 
     return div;

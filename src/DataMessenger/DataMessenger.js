@@ -836,7 +836,6 @@ export function DataMessenger(options = {}) {
 
             clearTimeout(timer);
             timer = setTimeout(() => {
-                // window.dispatchEvent(new CustomEvent('chata-resize', {}));
                 obj.rootElem.classList.remove('autoql-vanilla-drawer-resizing');
             }, 100);
         }
@@ -1120,8 +1119,6 @@ export function DataMessenger(options = {}) {
                     ? (obj.drawerContentWrapper.style.width = `${obj.options.width}px`)
                     : (o.drawerContentWrapper.style.height = `${obj.options.height}px`);
             }
-
-            // window.dispatchEvent(new CustomEvent('chata-resize', {}));
         };
 
         headerLeft.appendChild(closeButton);

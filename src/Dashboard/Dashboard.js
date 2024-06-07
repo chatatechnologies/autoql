@@ -154,7 +154,6 @@ export function Dashboard(selector, options = {}) {
     }
 
     obj.updateCharts = (tile) => {
-        // window.dispatchEvent(new CustomEvent('chata-resize', {}));
         if (tile) {
             // Update single tile
             tile.redraw?.();
