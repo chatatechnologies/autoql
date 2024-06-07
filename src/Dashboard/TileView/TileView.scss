@@ -64,6 +64,19 @@
     }
 }
 
+.autoql-vanilla-chata-dashboard-item .autoql-vanilla-tile-toolbar {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-tile-toolbar,
+.autoql-vanilla-drilldown-modal .autoql-vanilla-tile-toolbar {
+    visibility: visible;
+    pointer-events: all;
+    opacity: 1;
+}
+
 .autoql-vanilla-tile-chart-container {
     width: calc(100% - 25px);
     height: calc(100% - 25px);
