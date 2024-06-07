@@ -1,9 +1,9 @@
-.autoql-vanilla-tile-toolbar.first {
-    bottom: 7px;
+.autoql-vanilla-tile-toolbar.second {
+    left: 54px;
 }
 
 .autoql-vanilla-tile-toolbar.first.is-split {
-    left: 7px;
+    left: 5px;
 }
 
 .autoql-vanilla-tile-toolbar {
@@ -16,9 +16,8 @@
     line-height: 28px;
     z-index: 10;
     border: 1px solid hsla(0, 0%, 82.7%, 0.32);
-    position: absolute;
-    bottom: 2px;
-    left: 54px;
+    bottom: 5px;
+    left: 5px;
     -webkit-transition: opacity 0.3s ease, color 0.3s ease;
     transition: opacity 0.3s ease, color 0.3s ease;
     visibility: hidden;
@@ -55,12 +54,12 @@
     margin-bottom: -0.1em;
 }
 
-.autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-tile-toolbar {
+.autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-tile-toolbar,
+.autoql-vanilla-drilldown-modal .autoql-vanilla-tile-toolbar {
     visibility: visible;
     opacity: 1;
 }
 
 .autoql-vanilla-split-view-btn {
-    bottom: 7px;
-    left: 7px;
+    margin-right: 5px;
 }

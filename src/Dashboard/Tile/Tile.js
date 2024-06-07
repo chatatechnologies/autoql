@@ -49,28 +49,7 @@ export function Tile(dashboard, options) {
     var tileTitleContainer = document.createElement('div');
     var tileTitle = document.createElement('span');
 
-    var vizToolbarSplit = htmlToElement(`
-        <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
-        </div>
-    `);
-
-    var vizToolbarSplitButton = htmlToElement(`
-        <button
-        class="autoql-vanilla-chata-toolbar-btn"
-        data-tippy-content="${strings.splitView}">
-        </button>
-    `);
-
-    var vizToolbarSplitContent = htmlToElement(`
-        <span class="autoql-vanilla-chata-icon" style="color: inherit;">
-            ${SPLIT_VIEW}
-        </span>
-    `);
-
-    vizToolbarSplit.appendChild(vizToolbarSplitButton);
-    vizToolbarSplitButton.appendChild(vizToolbarSplitContent);
-
-    vizToolbarSplit.onclick = () => {
+    item.onSplitBtnClick = () => {
         item.toggleSplit();
         dashboard.setUndoData(
             'split-view',
@@ -155,7 +134,6 @@ export function Tile(dashboard, options) {
     content.appendChild(responseWrapper);
     content.appendChild(deleteButton);
     content.appendChild(placeHolderDrag);
-    content.appendChild(vizToolbarSplit);
     item.appendChild(content);
 
     tileInputContainer.style.display = 'none';
@@ -322,19 +300,12 @@ export function Tile(dashboard, options) {
         item.views.map((view) => view.stopEditing());
     };
 
-    item.switchSplitButton = (svg, tooltip) => {
-        vizToolbarSplitContent.innerHTML = svg;
-        vizToolbarSplitButton.setAttribute('data-tippy-content', tooltip);
-        refreshTooltips();
-    };
-
     item.refreshViews = () => {
         item.views.map((view) => view.displayData());
     };
 
     item.focusItem = function () {
         item.scrollIntoView();
-        // item.inputQuery.focus();
     };
 
     item.toggleSplit = () => {
@@ -342,7 +313,6 @@ export function Tile(dashboard, options) {
             item.options.isSplit = false;
             if (item.splitInstance) item.splitInstance.destroy();
             item.views[1].hide();
-            item.switchSplitButton(SPLIT_VIEW, strings.splitView);
             item.refreshViews();
         } else {
             var sizes = [50, 50];
@@ -365,7 +335,6 @@ export function Tile(dashboard, options) {
             });
             item.views.map((view) => view.show());
             item.options.isSplit = true;
-            item.switchSplitButton(SPLIT_VIEW_ACTIVE, strings.singleView);
             item.refreshViews();
         }
     };
@@ -393,7 +362,7 @@ export function Tile(dashboard, options) {
         );
     };
 
-    item.views = [new TileView(item), new TileView(item, true)];
+    item.views = [new TileView(item, undefined, item.onSplitBtnClick), new TileView(item, true, item.onSplitBtnClick)];
 
     item.views.map((view) => responseWrapper.appendChild(view));
 

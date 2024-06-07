@@ -36,6 +36,31 @@
     .autoql-vanilla-chata-response-content-container {
         height: 100% !important;
     }
+
+    &.autoql-vanilla-tile-response-wrapper-second {
+        .autoql-vanilla-tile-toolbar {
+            left: 54;
+        }
+    }
+}
+
+.autoql-vanilla-dashboard-toolbar-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+
+    padding: 5px;
+    width: 100%;
+    bottom: 0;
+
+    .autoql-vanilla-dashboard-toolbar-container-left,
+    .autoql-vanilla-dashboard-toolbar-container-right {
+        flex: 0 0 auto;
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
 
 .autoql-vanilla-tile-chart-container {

@@ -21,10 +21,11 @@ import { DrilldownView } from '../DrilldownView';
 import { select } from 'd3-selection';
 import { refreshTooltips } from '../../Tooltips';
 import { createSuggestionArray, createSafetynetContent } from '../../Safetynet';
-import { TileVizToolbar } from '../TileVizToolbar';
 import { InputToolbar } from '../InputToolbar';
 import { QueryOutput } from '../../QueryOutput/QueryOutput';
 import { strings } from '../../Strings';
+import { OptionsToolbar } from '../../OptionsToolbar';
+import { VizToolbar } from '../../VizToolbar';
 
 import {
     uuidv4,
@@ -38,12 +39,15 @@ import {
 } from '../../Utils';
 
 import './TileView.scss';
-import { OptionsToolbar } from '../../OptionsToolbar';
+import { SPLIT_VIEW, SPLIT_VIEW_ACTIVE } from '../../Svg';
 
-export function TileView(tile, isSecond = false) {
+export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
     var view = document.createElement('div');
     var responseWrapper = document.createElement('div');
+
     responseWrapper.classList.add('autoql-vanilla-tile-response-wrapper');
+    responseWrapper.classList.add(`autoql-vanilla-tile-response-wrapper-${isSecond ? 'second' : 'first'}`);
+
     view.appendChild(responseWrapper);
     const { dashboard } = tile;
     view.isSecond = isSecond;
@@ -585,7 +589,10 @@ export function TileView(tile, isSecond = false) {
     view.displayData = () => {
         var json = ChataUtils.responses[UUID];
 
-        if (json === undefined) return;
+        if (json === undefined) {
+            view.createToolbars();
+            return;
+        }
 
         view.clearAutoResizeEvents();
 
@@ -631,12 +638,86 @@ export function TileView(tile, isSecond = false) {
         return;
     };
 
+    view.createSplitViewBtn = () => {
+        var vizToolbarSplit = htmlToElement(`
+            <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
+            </div>
+        `);
+
+        var vizToolbarSplitButton = htmlToElement(`
+            <button
+            class="autoql-vanilla-chata-toolbar-btn"
+            data-tippy-content="${strings.splitView}">
+            </button>
+        `);
+
+        var vizToolbarSplitContent = htmlToElement(`
+            <span class="autoql-vanilla-chata-icon" style="color: inherit;">
+                ${tile.options.isSplit ? SPLIT_VIEW_ACTIVE : SPLIT_VIEW}
+            </span>
+        `);
+
+        vizToolbarSplit.appendChild(vizToolbarSplitButton);
+        vizToolbarSplitButton.appendChild(vizToolbarSplitContent);
+        vizToolbarSplit.setAttribute('data-issplit', tile.options.isSplit);
+        vizToolbarSplit.onclick = function () {
+            try {
+                onSplitBtnClick();
+            } catch (error) {
+                console.error(error);
+            }
+
+            const isSplit = this.dataset.isSplit;
+
+            if (isSplit) {
+                vizToolbarSplitContent.innerHTML = SPLIT_VIEW;
+                vizToolbarSplitButton.setAttribute('data-tippy-content', strings.singleView);
+            } else {
+                vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
+                vizToolbarSplitButton.setAttribute('data-tippy-content', strings.splitView);
+            }
+
+            vizToolbarSplit.setAttribute('data-issplit', !isSplit);
+            refreshTooltips();
+        };
+
+        return vizToolbarSplit;
+    };
+
     view.createToolbars = () => {
+        if (view.toolbarContainer) {
+            view.toolbarContainer.innerHTML = '';
+        }
+
+        const toolbarContainer = document.createElement('div');
+        const leftToolbarContainer = document.createElement('div');
+        const rightToolbarContainer = document.createElement('div');
+
+        toolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container');
+        leftToolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container-left');
+        rightToolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container-right');
+
         var json = ChataUtils.responses[UUID];
-        new TileVizToolbar(json, view, tile);
-        var optionsToolbar = new OptionsToolbar(UUID, view.queryOutput, tile.dashboard.options);
-        if (!view.isSecond) optionsToolbar.classList.add('first');
-        view.appendChild(optionsToolbar);
+
+        const shouldCreateSplitViewBtn = view.isSecond || (!view.isSecond && !tile.options.isSplit);
+
+        const splitViewBtn = shouldCreateSplitViewBtn ? view.createSplitViewBtn() : null;
+        const vizToolbar = new VizToolbar(json, view.queryOutput, tile.dashboard.options);
+        const optionsToolbar = new OptionsToolbar(UUID, view.queryOutput, tile.dashboard.options);
+
+        if (view.isSecond) vizToolbar.classList.add('second');
+        if (view.isSecond) optionsToolbar.classList.add('second');
+
+        if (splitViewBtn) leftToolbarContainer.appendChild(splitViewBtn);
+        if (vizToolbar) leftToolbarContainer.appendChild(vizToolbar);
+        if (optionsToolbar) rightToolbarContainer.appendChild(optionsToolbar);
+
+        toolbarContainer.appendChild(leftToolbarContainer);
+        toolbarContainer.appendChild(rightToolbarContainer);
+
+        view.toolbarContainer = toolbarContainer;
+
+        view.appendChild(toolbarContainer);
     };
 
     view.classList.add('autoql-vanilla-tile-view');

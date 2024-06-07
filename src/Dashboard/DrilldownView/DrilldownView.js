@@ -5,6 +5,7 @@ import { OptionsToolbar } from '../../OptionsToolbar';
 import { QueryOutput } from '../../QueryOutput/QueryOutput';
 
 import './DrilldownView.scss';
+import { VizToolbar } from '../../VizToolbar';
 
 export function DrilldownView({
     tile,
@@ -119,11 +120,37 @@ export function DrilldownView({
         gutter.style.display = 'block';
     };
 
-    view.displayToolbar = () => {
+    view.displayToolbars = () => {
         if (!isStatic) {
+            if (view.toolbarContainer) {
+                view.toolbarContainer.innerHTML = '';
+            }
+
+            const toolbarContainer = document.createElement('div');
+            const leftToolbarContainer = document.createElement('div');
+            const rightToolbarContainer = document.createElement('div');
+
+            toolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container');
+            leftToolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container-left');
+            rightToolbarContainer.classList.add('autoql-vanilla-dashboard-toolbar-container-right');
+
+            const vizToolbar = new VizToolbar(ChataUtils.responses[view.queryOutput?.uuid], view.queryOutput, options);
             const optionsToolbar = new OptionsToolbar(view.queryOutput?.uuid, view.queryOutput, options);
+
+            view.vizToolbar = vizToolbar;
             view.optionsToolbar = optionsToolbar;
-            view.appendChild(optionsToolbar);
+
+            console.log({ vizToolbar });
+
+            if (vizToolbar) leftToolbarContainer.appendChild(vizToolbar);
+            if (optionsToolbar) rightToolbarContainer.appendChild(optionsToolbar);
+
+            toolbarContainer.appendChild(leftToolbarContainer);
+            toolbarContainer.appendChild(rightToolbarContainer);
+
+            view.toolbarContainer = toolbarContainer;
+
+            view.appendChild(toolbarContainer);
         }
     };
 
@@ -139,7 +166,7 @@ export function DrilldownView({
             onDataClick: onClick,
         });
 
-        view.displayToolbar();
+        view.displayToolbars();
 
         return;
     };

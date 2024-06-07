@@ -71,20 +71,17 @@ const getActionButton = (svg, tooltip, idRequest, onClick, evtParams = []) => {
 };
 
 export function OptionsToolbar(idRequest, queryOutput, options) {
-    var request = ChataUtils.responses[queryOutput.uuid] ?? {};
+    const toolbar = document.createElement('div');
 
-    const toolbar = htmlToElement(`
-        <div
-        class="
-            autoql-vanilla-tile-toolbar
-            actions-toolbar
-            autoql-vanilla-viz-toolbar">
-        </div>
-    `);
+    var request = ChataUtils.responses[queryOutput?.uuid];
 
     if (!request) {
         return toolbar;
     }
+
+    toolbar.classList.add('autoql-vanilla-tile-toolbar');
+    toolbar.classList.add('actions-toolbar');
+    toolbar.classList.add('autoql-vanilla-viz-toolbar');
 
     const Badge = () => htmlToElement(`<div class="autoql-vanilla-badge"></div>`);
 
