@@ -50,6 +50,10 @@ export function DrilldownView({
         elem.classList.add('active');
     };
 
+    view.redraw = () => {
+        view.queryOutput?.dispatchResizeEvent?.();
+    };
+
     view.executeDrilldown = async (data = {}) => {
         if (!drilldownFn) {
             ChataUtils.responses[UUID] = json;

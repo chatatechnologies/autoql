@@ -19,6 +19,7 @@ export function DrilldownModal(title, views = []) {
                     cursor: 'row-resize',
                     onDragEnd: () => {
                         window.dispatchEvent(new CustomEvent('chata-resize', {}));
+                        views.forEach((view) => view.redraw?.());
                     },
                 });
             }
