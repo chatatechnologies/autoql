@@ -12,7 +12,7 @@
 .autoql-vanilla-dashboard-tile-drag-handle {
     transition: opacity 0.3s ease;
     position: absolute;
-    background-color: var(--autoql-vanilla-border-color, #f7f7f7);
+    background-color: var(--autoql-vanilla-accent-color, #f7f7f7);
     opacity: 0;
 }
 
@@ -112,7 +112,7 @@
 }
 
 .autoql-vanilla-chata-dashboard-item.editing:hover .autoql-vanilla-dashboard-tile-drag-handle {
-    opacity: 1;
+    opacity: 0.4;
     cursor: move;
 }
 

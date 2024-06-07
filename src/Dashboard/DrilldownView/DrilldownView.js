@@ -140,8 +140,6 @@ export function DrilldownView({
             view.vizToolbar = vizToolbar;
             view.optionsToolbar = optionsToolbar;
 
-            console.log({ vizToolbar });
-
             if (vizToolbar) leftToolbarContainer.appendChild(vizToolbar);
             if (optionsToolbar) rightToolbarContainer.appendChild(optionsToolbar);
 
