@@ -120,6 +120,7 @@ export function Tile(dashboard, options) {
     placeHolderDrag.style.display = 'none';
     tilePlayBuytton.innerHTML = TILE_RUN_QUERY;
     deleteButton.innerHTML = DASHBOARD_DELETE_ICON;
+    tileTitleContainer.setAttribute('data-tippy-content', options.title || item.options.query || strings.untitledTile);
 
     item.classList.add('grid-stack-item');
     content.classList.add('grid-stack-item-content');

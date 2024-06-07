@@ -203,6 +203,15 @@
 
 .autoql-vanilla-dashboard-tile-title-container {
     cursor: default;
+    display: block;
+    width: 100%;
+    text-align: left;
+    height: 47px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 0;
+    flex-grow: 0;
 }
 
 .autoql-vanilla-dashboard-tile-title-container .autoql-vanilla-dashboard-tile-title {
