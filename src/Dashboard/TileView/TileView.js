@@ -640,7 +640,9 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
 
     view.createSplitViewBtn = () => {
         var vizToolbarSplit = htmlToElement(`
-            <div class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn">
+            <div 
+                class="autoql-vanilla-tile-toolbar autoql-vanilla-split-view-btn"
+                data-tippy-content="${tile.options.isSplit ? strings.singleView : strings.splitView}">
             </div>
         `);
 
@@ -674,10 +676,10 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
                 vizToolbarSplitButton.setAttribute('data-tippy-content', strings.singleView);
             } else {
                 vizToolbarSplitContent.innerHTML = SPLIT_VIEW_ACTIVE;
-                vizToolbarSplitButton.setAttribute('data-tippy-content', strings.splitView);
+                this.setAttribute('data-tippy-content', strings.splitView);
             }
 
-            vizToolbarSplit.setAttribute('data-issplit', !isSplit);
+            this.setAttribute('data-issplit', !isSplit);
             refreshTooltips();
         };
 
