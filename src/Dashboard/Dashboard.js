@@ -1,3 +1,4 @@
+import { select } from 'd3-selection';
 import { GridStack } from 'gridstack';
 import { Tile } from './Tile';
 import { htmlToElement } from '../Utils';
@@ -6,8 +7,7 @@ import { strings } from '../Strings';
 import { refreshTooltips, refreshDelegate } from '../Tooltips';
 
 import './Dashboard.scss';
-import 'gridstack/dist/gridstack.css';
-import 'gridstack/dist/h5/gridstack-dd-native';
+import 'gridstack/dist/gridstack.min.css';
 
 export function Dashboard(selector, options = {}) {
     checkAndApplyTheme();
@@ -26,6 +26,27 @@ export function Dashboard(selector, options = {}) {
     obj.messageContainer = messageContainer;
     obj.messageContainer.style.display = 'none';
 
+    // Add resize event to update charts
+    obj.resizeend = () => {
+        if (new Date() - obj.lastResize < obj.resizeDebounceTime) {
+            setTimeout(obj.resizeend, obj.resizeDebounceTime);
+        } else {
+            obj.isResizing = false;
+            obj.updateCharts?.();
+        }
+    };
+
+    obj.lastResize;
+    obj.isResizing = false;
+    obj.resizeDebounceTime = 200;
+    select(window).on('resize', () => {
+        obj.lastResize = new Date();
+        if (obj.isResizing === false) {
+            obj.isResizing = true;
+            setTimeout(obj.resizeend, obj.resizeDebounceTime);
+        }
+    });
+
     obj.undoData = {
         eventType: undefined,
         changedItem: undefined,
@@ -41,7 +62,7 @@ export function Dashboard(selector, options = {}) {
             username: undefined,
             domain: undefined,
             demo: false,
-            ...(options.authentication ?? {})
+            ...(options.authentication ?? {}),
         },
         dataFormatting: {
             currencyCode: 'USD',
@@ -74,7 +95,7 @@ export function Dashboard(selector, options = {}) {
         dashboardId: -1,
         autoChartAggregations: true,
         name: undefined,
-        ...options
+        ...options,
     };
 
     if ('dataFormatting' in options) {
@@ -99,11 +120,13 @@ export function Dashboard(selector, options = {}) {
         }
     }
 
-    if (!obj.options.tiles) obj.options.tiles = []
+    if (!obj.options.tiles) obj.options.tiles = [];
 
     var grid = GridStack.init(
         {
-            handle: '.autoql-vanilla-dashboard-tile-drag-handle',
+            draggable: {
+                handle: '.autoql-vanilla-dashboard-tile-drag-handle',
+            },
             placeholderClass: 'autoql-vanilla-tile-placeholder',
             cellHeight: '80px',
         },
@@ -115,11 +138,12 @@ export function Dashboard(selector, options = {}) {
 
     for (var i = 0; i < obj.options.tiles.length; i++) {
         var tile = obj.options.tiles[i];
-        var e = new Tile(obj, {
+        var tileElement = new Tile(obj, {
             ...tile,
         });
-        obj.tiles.push(e);
-        grid.addWidget(e, {
+
+        obj.tiles.push(tileElement);
+        grid.addWidget(tileElement, {
             w: tile.w,
             h: tile.h,
             x: tile.x,
@@ -129,9 +153,21 @@ export function Dashboard(selector, options = {}) {
         });
     }
 
+    obj.updateCharts = (tile) => {
+        if (tile) {
+            // Update single tile
+            tile.redraw?.();
+        } else {
+            // Update all tiles
+            obj.tiles?.forEach((tile) => {
+                tile.redraw?.();
+            });
+        }
+    };
+
     obj.getTiles = () => {
-        return obj.options.tiles
-    }
+        return obj.options.tiles;
+    };
 
     obj.setObjectProp = (key, _obj) => {
         for (var [keyValue, value] of Object.entries(_obj)) {
@@ -174,14 +210,14 @@ export function Dashboard(selector, options = {}) {
     obj.undoResize = (el, newWidth, newHeight) => {
         obj.grid.update(el, null, null, newWidth, newHeight);
         setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            obj.updateCharts();
         }, 200);
     };
 
     obj.undoDrag = (el, x, y) => {
         obj.grid.update(el, x, y, null, null);
         setTimeout(() => {
-            window.dispatchEvent(new CustomEvent('chata-resize', {}));
+            obj.updateCharts();
         }, 200);
     };
 
@@ -225,7 +261,7 @@ export function Dashboard(selector, options = {}) {
 
     obj.grid.on('resizestop', () => {
         obj.hidePlaceHolders();
-        window.dispatchEvent(new CustomEvent('chata-resize', {}));
+        obj.updateCharts();
     });
 
     obj.showPlaceHolders = function () {
@@ -498,7 +534,8 @@ export function Dashboard(selector, options = {}) {
     refreshTooltips();
 
     obj.destroy = () => {
-        parent.innerHTML = ''
+        parent.innerHTML = '';
+        select(window).on('resize', null);
     };
 
     return obj;

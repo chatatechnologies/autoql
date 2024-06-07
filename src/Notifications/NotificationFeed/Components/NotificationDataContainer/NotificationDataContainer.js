@@ -36,6 +36,7 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
 
     this.showResponse = (displayType) => {
         const queryOuptut = new QueryOutput(responseContentContainer, {
+            authentication: widgetOptions.authentication,
             displayType,
             height: 300,
             queryResponse: queryResponse?.data,

@@ -39,7 +39,10 @@ import { Histogram } from './ChataHistogram';
 
 import './ChataChart.scss';
 
-export function ChataChart(component, { type = 'bar', queryJson, options = {}, onChartClick = () => {} } = {}) {
+export function ChataChart(
+    component,
+    { type = 'bar', queryJson, options = {}, onChartClick = () => {}, uuid = uuidv4() } = {},
+) {
     if (!component || !queryJson) {
         console.warn('Unable to create chart - one of the following parameters were not supplied:', {
             component: !!component,
@@ -639,7 +642,7 @@ export function ChataChart(component, { type = 'bar', queryJson, options = {}, o
 
     this.drawChart();
 
-    select(window).on('chata-resize.' + component.dataset.componentid, this.drawChart);
+    select(window).on(`chata-resize-${uuid}`, this.drawChart);
 
     return this.svg?.node();
 }

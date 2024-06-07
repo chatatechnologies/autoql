@@ -1400,6 +1400,8 @@ text.autoql-vanilla-y-axis-label {
     margin-top: 15px !important;
     padding: 5px 10px !important;
     outline: none !important;
+    background: transparent;
+
     &:focus,
     &:hover {
         border-color: var(--autoql-vanilla-accent-color);

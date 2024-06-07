@@ -1,10 +1,11 @@
-import { isChartType, svgToPng } from 'autoql-fe-utils';
+import { isChartType } from 'autoql-fe-utils';
 import { Popup } from '../../../../Popup';
 import { createIcon } from '../../../../Utils';
 import { CLIPBOARD_ICON, EXPORT_PNG_ICON } from '../../../../Svg';
 import { strings } from '../../../../Strings';
-import './MoreOptionsVizToolbar.scss';
 import { ChataUtils } from '../../../../ChataUtils';
+
+import './MoreOptionsVizToolbar.scss';
 
 export function MoreOptionsVizToolbar({ notificationItem }) {
     const popup = new Popup();
