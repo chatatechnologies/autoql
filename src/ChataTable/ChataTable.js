@@ -262,7 +262,9 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
 
-    component.columnIndexConfig = tableConfig;
+    if (component) {
+        component.columnIndexConfig = tableConfig;
+    }
 
     // TODO - move this to its parent element instead
     var groupableCount = getNumberOfGroupables(json?.data?.columns);

@@ -62,8 +62,6 @@ export function DataAlerts(selector, options) {
         text1.innerHTML = `View and manage your Custom Alerts here. 
             To create a new Custom Alert, simply click on the "Create Data Alert" option from a query result in `;
 
-        console.log(options.onDMLinkClick, options.onDashboardLinkClick);
-
         const link1 = document.createElement('a');
         link1.addEventListener('click', options.onDMLinkClick);
         link1.innerHTML = 'Data Messenger';

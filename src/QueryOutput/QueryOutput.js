@@ -10,6 +10,7 @@ import {
     getDefaultDisplayType,
     transformQueryResponse,
     getSupportedDisplayTypes,
+    GENERAL_QUERY_ERROR,
 } from 'autoql-fe-utils';
 
 import { select } from 'd3-selection';
@@ -24,6 +25,7 @@ import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { QueryValidationMessage } from '../QueryValidationMessage';
 
 import './QueryOutput.scss';
+import { ErrorMessage } from '../ErrorMessage';
 
 const isQueryResponseTransformed = (response) => {
     return response?.isDrilldown !== undefined;
@@ -79,8 +81,12 @@ export function QueryOutput(selector, options = {}) {
             if (key === 'queryResponse') {
                 try {
                     if (!isQueryResponseTransformed(value)) {
-                        const transformedResponse = transformQueryResponse({ data: value }).data;
-                        responseRenderer.options[key] = transformedResponse;
+                        try {
+                            const transformedResponse = transformQueryResponse({ data: value }).data;
+                            responseRenderer.options[key] = transformedResponse;
+                        } catch (error) {
+                            console.error(error);
+                        }
                     }
                 } catch (error) {
                     console.error(error);
@@ -303,6 +309,7 @@ export function QueryOutput(selector, options = {}) {
 
                         table.element.onNewPage({ chartsVisibleCount: visibleRowCount });
                     },
+                    options?.onDataLoaded,
                 );
             } else if (displayType === 'pivot_table') {
                 var table = new ChataPivotTable(uuid, responseRenderer.options, (data) =>
@@ -445,6 +452,22 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.appendChild(responseContainer);
         };
 
+        responseRenderer.renderErrorResponse = (json) => {
+            const errorResponseContainer = document.createElement('div');
+            const errorMessage = new ErrorMessage(json?.message ?? GENERAL_QUERY_ERROR, responseRenderer.reportProblem);
+
+            errorResponseContainer.appendChild(errorMessage);
+
+            if (json?.reference_id) {
+                const referenceID = document.createElement('div');
+                referenceID.innerHTML = `Error ID: ${json.reference_id}`;
+                errorResponseContainer.appendChild(document.createElement('br'));
+                errorResponseContainer.appendChild(referenceID);
+            }
+
+            responseRenderer.appendChild(errorResponseContainer);
+        };
+
         responseRenderer.refreshView = () => {
             if (!responseRenderer) {
                 return;
@@ -466,6 +489,11 @@ export function QueryOutput(selector, options = {}) {
             const isValidationResponse = !!jsonResponse?.data?.replacements;
             if (isValidationResponse) {
                 return responseRenderer.renderValidationResponse(jsonResponse);
+            }
+
+            const isError = !jsonResponse?.data?.rows;
+            if (isError) {
+                return responseRenderer.renderErrorResponse(jsonResponse);
             }
 
             const displayType = responseRenderer.getDisplayType();
