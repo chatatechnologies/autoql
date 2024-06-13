@@ -1,28 +1,30 @@
 import axios from 'axios';
+import _isEqual from 'lodash.isequal';
+import dayjs from '../Utils/dayjsPlugins';
+import { TabulatorFull as Tabulator } from 'tabulator-tables';
+
 import {
     runQueryNewPage,
-    formatTableParams,
-    currentEventLoopEnd,
-    REQUEST_CANCELLED_ERROR,
-    generatePivotData,
-    getColumnIndexConfig,
-    formatQueryColumns,
     onTableCellClick,
+    formatTableParams,
+    generatePivotData,
+    formatQueryColumns,
     getFilterPrecision,
+    currentEventLoopEnd,
+    getColumnIndexConfig,
     DAYJS_PRECISION_FORMATS,
+    REQUEST_CANCELLED_ERROR,
 } from 'autoql-fe-utils';
-import dayjs from '../Utils/dayjsPlugins';
-import _isEqual from 'lodash.isequal';
-import { TabulatorFull as Tabulator } from 'tabulator-tables';
+
+import { strings } from '../Strings';
 import { Scrollbars } from '../Scrollbars';
 import { ChataUtils } from '../ChataUtils';
 import { DateRangePicker } from '../ChataComponents/DateRangePicker/DateRangePicker';
-import { strings } from '../Strings';
 import { getNumberOfGroupables, allColHiddenMessage, cloneObject, uuidv4 } from '../Utils';
 
-import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
 import './ChataTable.scss';
+import 'tabulator-tables/dist/css/tabulator.min.css';
 
 const commonTableOptions = {
     layout: 'fitDataFill',

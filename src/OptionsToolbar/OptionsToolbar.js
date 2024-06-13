@@ -250,7 +250,7 @@ export function OptionsToolbar(idRequest, queryOutput, options) {
 
             var popover = new ChataPopover({
                 baseParent: toolbar,
-                placement: obj.popoverPlacement ?? 'top',
+                placement: options.popoverPlacement ?? 'top',
                 alignment: 'end',
             });
             popover.classList.add('autoql-vanilla-dashboard-action-toolbar-popover');
