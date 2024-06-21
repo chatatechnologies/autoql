@@ -136,7 +136,7 @@ export function DataMessenger(options = {}) {
         landingPage: 'data-messenger',
         autoChartAggregations: false,
         showBranding: true,
-        pageSize: 500,
+        pageSize: DEFAULT_DATA_PAGE_SIZE,
         xhr: new XMLHttpRequest(),
         ...optionValues, // Spread all provided options to overwrite defaults
         authentication: {

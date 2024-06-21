@@ -61,6 +61,7 @@ export function QueryOutput(selector, options = {}) {
             tableHoverColor: undefined,
             displayType: undefined,
             renderTooltips: true,
+            useInfiniteScroll: true,
             dataFormatting: {
                 currencyCode: 'USD',
                 languageCode: 'en-US',
@@ -250,19 +251,12 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.renderTable = (jsonResponse, displayType = 'table') => {
-            var totalRows = jsonResponse.data.count_rows;
-            var initialRows = jsonResponse.data.rows.length;
-
             const tableContainer = document.createElement('div');
 
             tableContainer.classList.add('autoql-vanilla-chata-table-container');
             if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
                 tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
             }
-
-            const tableRowCount = document.createElement('div');
-            tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
-            tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
 
             const scrollbox = document.createElement('div');
             scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
@@ -274,14 +268,11 @@ export function QueryOutput(selector, options = {}) {
             tableContainer.appendChild(tableWrapper);
             scrollbox.appendChild(tableContainer);
 
-            if (displayType === 'table') {
-                tableContainer.appendChild(tableRowCount);
-            }
-
             responseRenderer.appendChild(scrollbox);
 
-            var visibleRowCount = initialRows;
-            var useInfiniteScroll = true;
+            // var visibleRowCount = initialRows;
+            var useInfiniteScroll = responseRenderer.options.useInfiniteScroll;
+
             var tableParams = responseRenderer.tableParams ?? {
                 queryJson: jsonResponse,
                 sort: undefined,
@@ -307,7 +298,7 @@ export function QueryOutput(selector, options = {}) {
                             };
                         }
 
-                        table.element.onNewPage({ chartsVisibleCount: visibleRowCount });
+                        // table.element?.onNewPage?.({ chartsVisibleCount: visibleRowCount });
                     },
                     options?.onDataLoaded,
                 );
