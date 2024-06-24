@@ -165,10 +165,14 @@ const getTotalPages = (response, component) => {
 
 const ajaxRequestFunc = async (params, idRequest, component, columns, table) => {
     const initialData = {
-        rows: component.getRows(1),
+        rows: component?.getRows(1) ?? [],
         page: 1,
         isInitialData: true,
     };
+
+    if (!component) {
+        return initialData;
+    }
 
     const json = ChataUtils.responses[idRequest];
 
@@ -300,6 +304,10 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     const TABLE_ID = uuidv4();
 
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
+
+    if (!component) {
+        return;
+    }
 
     const json = ChataUtils.responses[idRequest];
     if (!json?.data?.rows?.length || !json?.data?.columns?.length) {

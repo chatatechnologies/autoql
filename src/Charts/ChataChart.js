@@ -19,9 +19,11 @@ import {
     formatQueryColumns,
     CHARTS_WITHOUT_AGGREGATED_DATA,
     DisplayTypes,
+    MAX_DATA_PAGE_SIZE,
+    MAX_CHART_ELEMENTS,
 } from 'autoql-fe-utils';
 
-import { uuidv4, cloneObject } from '../Utils';
+import { uuidv4, cloneObject, createIcon } from '../Utils';
 import { select } from 'd3-selection';
 import { BarChartNew } from './ChataBarChartNew';
 import { ChartLoader } from './ChartLoader';
@@ -38,6 +40,7 @@ import { Scatterplot } from './ChataScatterplot';
 import { Histogram } from './ChataHistogram';
 
 import './ChataChart.scss';
+import { WARNING } from '../Svg';
 
 export function ChataChart(
     component,
@@ -358,6 +361,32 @@ export function ChataChart(
         return labelsRotatedOnSecondDraw;
     };
 
+    this.renderDataLimitWarning = () => {
+        const languageCode = getDataFormatting(options.dataFormatting).languageCode;
+        const rowLimitFormatted = new Intl.NumberFormat(languageCode, {}).format(
+            options.rowLimit ?? MAX_DATA_PAGE_SIZE,
+        );
+        const chartElementLimitFormatted = new Intl.NumberFormat(languageCode, {}).format(
+            options.maxChartElements ?? MAX_CHART_ELEMENTS,
+        );
+
+        const dataLimitWarningContainer = document.createElement('div');
+        dataLimitWarningContainer.classList.add('autoql-vanilla-data-limit-warning');
+        dataLimitWarningContainer.setAttribute(
+            'data-tippy-content',
+            `To optimize performance, the visualization is limited to the initial <em>${rowLimitFormatted}</em> rows of data or <em>${chartElementLimitFormatted}</em> chart elements - whichever occurs first.`,
+        );
+
+        const icon = new createIcon(WARNING);
+        dataLimitWarningContainer.appendChild(icon);
+
+        const warningMessage = document.createElement('span');
+        warningMessage.innerHTML = '<strong>Warning:</strong> Data limit reached!';
+        dataLimitWarningContainer.appendChild(warningMessage);
+
+        this.chartHeaderElement?.node()?.appendChild(dataLimitWarningContainer);
+    };
+
     this.drawChart = (firstDraw = true) => {
         if (this.drawCount > 10) {
             console.warn('recursive drawChart was called over 10 times. Something is wrong.');
@@ -639,6 +668,11 @@ export function ChataChart(
     this.chartLoader = new ChartLoader(this.chartWrapper.node());
 
     this.chartHeaderElement = this.chartWrapper.append('div').attr('class', 'autoql-vanilla-chart-header');
+
+    const isDataLimited = queryJson?.data?.rows?.length < queryJson?.data?.count_rows;
+    if (isDataLimited) {
+        this.renderDataLimitWarning();
+    }
 
     this.drawChart();
 
