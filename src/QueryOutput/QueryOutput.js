@@ -23,9 +23,9 @@ import { ChataChart } from '../Charts';
 import { SEARCH_ICON, WARNING_TRIANGLE } from '../Svg';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { QueryValidationMessage } from '../QueryValidationMessage';
+import { ErrorMessage } from '../ErrorMessage';
 
 import './QueryOutput.scss';
-import { ErrorMessage } from '../ErrorMessage';
 
 const isQueryResponseTransformed = (response) => {
     return response?.isDrilldown !== undefined;
@@ -270,7 +270,6 @@ export function QueryOutput(selector, options = {}) {
 
             responseRenderer.appendChild(scrollbox);
 
-            // var visibleRowCount = initialRows;
             var useInfiniteScroll = responseRenderer.options.useInfiniteScroll;
 
             var tableParams = responseRenderer.tableParams ?? {
@@ -297,8 +296,6 @@ export function QueryOutput(selector, options = {}) {
                                 ...params,
                             };
                         }
-
-                        // table.element?.onNewPage?.({ chartsVisibleCount: visibleRowCount });
                     },
                     options?.onDataLoaded,
                 );

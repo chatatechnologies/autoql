@@ -11,7 +11,6 @@ import {
     getCombinedFilters,
     runQueryOnly,
     isDrilldown as isDrilldownResponse,
-    // areAllColumnsHidden,
     REQUEST_CANCELLED_ERROR,
     getColumnIndexConfig,
     getSupportedDisplayTypes,
@@ -22,13 +21,10 @@ import MobileDetect from 'mobile-detect';
 import axios from 'axios';
 import { ErrorMessage } from '../ErrorMessage';
 import { TIMESTAMP_FORMATS } from '../Constants';
-// import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { ChataUtils } from '../ChataUtils';
 import { NotificationIcon, NotificationFeed } from '../Notifications';
 import { ReverseTranslation } from '../ReverseTranslation';
 import { apiCallGet, apiCallPut } from '../Api';
-// import { select } from 'd3-selection';
-// import { getGroupableFields } from '../Charts/ChataChartHelpers';
 import { FilterLocking } from '../FilterLocking';
 import { createSafetynetContent, createSuggestionArray } from '../Safetynet';
 import { VizToolbar } from '../VizToolbar';
@@ -37,15 +33,11 @@ import {
     htmlToElement,
     closeAllSafetynetSelectors,
     uuidv4,
-    // allColHiddenMessage,
     closeAllToolbars,
-    // cloneObject,
-    // getNumberOfGroupables,
     formatData,
     getRecommendationPath,
     getSafetynetValues,
     getSafetynetUserSelection,
-    // getGroupables,
     showBadge,
     supportsVoiceRecord,
     checkAndApplyTheme,
@@ -63,40 +55,18 @@ import {
     WATERMARK,
     VOICE_RECORD_IMAGE,
     DATA_MESSENGER,
-    // REPORT_PROBLEM,
-    // FILTER_TABLE,
-    // COLUMN_EDITOR,
-    // DELETE_MESSAGE,
-    // VERTICAL_DOTS,
     HELP_ICON,
     FILTER_LOCKING_OPEN,
     MAXIMIZE_BUTTON,
     MINIMIZE_BUTTON,
     DATA_EXPLORER_SEARCH_ICON,
-    // SCATTERPLOT_ICON,
-    // HISTOGRAM_ICON,
-    // TABLE_ICON,
-    // PIVOT_ICON,
-    // COLUMN_CHART_ICON,
-    // BAR_CHART_ICON,
-    // LINE_CHART_ICON,
-    // PIE_CHART_ICON,
-    // HEATMAP_ICON,
-    // BUBBLE_CHART_ICON,
-    // STACKED_COLUMN_CHART_ICON,
-    // STACKED_BAR_CHART_ICON,
-    // STACKED_AREA_CHART_ICON,
-    // COLUMN_LINE_ICON,
 } from '../Svg';
 import { strings } from '../Strings';
 import tippy, { hideAll } from 'tippy.js';
 import { refreshTooltips } from '../Tooltips';
 import { DataExplorer } from '../DataExplorer';
-// import { ChataChart } from '../Charts';
 import { QueryOutput } from '../QueryOutput';
 import { OptionsToolbar } from '../OptionsToolbar';
-
-// import testdata from '../../testdata';
 
 import '../Toolbar/Toolbar.scss';
 import '../../css/chata-styles.scss';
@@ -1481,199 +1451,6 @@ export function DataMessenger(options = {}) {
         return htmlToElement(`<div class="autoql-vanilla-badge"></div>`);
     };
 
-    // obj.getActionToolbar = (idRequest, type, displayType) => {
-    //     const autoQLConfig = obj.options.autoQLConfig ?? {};
-    //     var request = ChataUtils.responses[idRequest];
-    //     let moreOptionsArray = [];
-    //     var toolbar = htmlToElement(`
-    //         <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right">
-    //         </div>
-    //     `);
-    //     if (isMobile) {
-    //         var toolbar = htmlToElement(`
-    //         <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-right mobile">
-    //         </div>
-    //     `);
-    //     }
-
-    //     if (isTouchDevice()) {
-    //         toolbar.style.visibility = 'visible';
-    //     }
-
-    //     var reportProblem = obj.getReportProblemMenu(toolbar, idRequest, type);
-    //     reportProblem.classList.add('report-problem');
-    //     var reportProblemButton = obj.getActionButton(
-    //         REPORT_PROBLEM,
-    //         strings.reportProblemTitle,
-    //         idRequest,
-    //         obj.openModalReport,
-    //         [obj.options, undefined, toolbar],
-    //     );
-
-    //     const isDrilldownResponse = obj.isDrilldown(idRequest);
-
-    //     switch (type) {
-    //         case 'simple':
-    //             if (request['reference_id'] !== '1.9.502') {
-    //                 toolbar.appendChild(reportProblemButton);
-    //                 autoQLConfig.debug && moreOptionsArray.push('copy_sql');
-
-    //                 autoQLConfig.enableNotifications && !isDrilldownResponse && moreOptionsArray.push('notification');
-    //             }
-    //             toolbar.appendChild(
-    //                 obj.getActionButton(
-    //                     DELETE_MESSAGE,
-    //                     strings.deleteDataResponse,
-    //                     idRequest,
-    //                     obj.deleteMessageHandler,
-    //                     [reportProblem, toolbar],
-    //                 ),
-    //             );
-    //             break;
-    //         case 'csvCopy':
-    //             if (displayType !== 'pivot_table') {
-    //                 var filterBtn = obj.getActionButton(
-    //                     FILTER_TABLE,
-    //                     strings.filterTable,
-    //                     idRequest,
-    //                     obj.filterTableHandler,
-    //                     [],
-    //                 );
-    //                 toolbar.appendChild(filterBtn);
-    //                 filterBtn.setAttribute('data-name-option', 'filter-action');
-    //             }
-
-    //             var columnVisibility = obj.options.autoQLConfig.enableColumnVisibilityManager;
-    //             if (columnVisibility && displayType !== 'pivot_table') {
-    //                 let badge = obj.getBadge();
-    //                 let editorBtn = obj.getActionButton(
-    //                     COLUMN_EDITOR,
-    //                     strings.showHideCols,
-    //                     idRequest,
-    //                     obj.openColumnEditorHandler,
-    //                     [badge],
-    //                 );
-    //                 editorBtn.setAttribute('data-name-option', 'column-editor');
-    //                 toolbar.appendChild(editorBtn);
-
-    //                 editorBtn.appendChild(badge);
-    //                 editorBtn.badge = badge;
-    //                 if (showBadge(request)) {
-    //                     badge.style.visibility = 'inherit';
-    //                 } else {
-    //                     badge.style.visibility = 'hidden';
-    //                 }
-    //             }
-    //             if (request['reference_id'] !== '1.1.420') {
-    //                 toolbar.appendChild(reportProblemButton);
-    //             }
-    //             toolbar.appendChild(
-    //                 obj.getActionButton(
-    //                     DELETE_MESSAGE,
-    //                     strings.deleteDataResponse,
-    //                     idRequest,
-    //                     obj.deleteMessageHandler,
-    //                     [reportProblem, toolbar],
-    //                 ),
-    //             );
-    //             autoQLConfig.enableCSVDownload && moreOptionsArray.push('csv');
-    //             moreOptionsArray.push('copy');
-    //             autoQLConfig.debug && moreOptionsArray.push('copy_sql');
-    //             autoQLConfig.enableNotifications && !isDrilldownResponse && moreOptionsArray.push('notification');
-    //             break;
-    //         case 'chart-view':
-    //             if (request['reference_id'] !== '1.1.420') {
-    //                 toolbar.appendChild(reportProblemButton);
-    //             }
-    //             toolbar.appendChild(
-    //                 obj.getActionButton(
-    //                     DELETE_MESSAGE,
-    //                     strings.deleteDataResponse,
-    //                     idRequest,
-    //                     obj.deleteMessageHandler,
-    //                     [reportProblem, toolbar],
-    //                 ),
-    //             );
-    //             moreOptionsArray.push('png');
-    //             autoQLConfig.debug && moreOptionsArray.push('copy_sql');
-    //             autoQLConfig.enableNotifications && !isDrilldownResponse && moreOptionsArray.push('notification');
-    //             break;
-    //         case 'safety-net':
-    //             toolbar.appendChild(
-    //                 obj.getActionButton(
-    //                     DELETE_MESSAGE,
-    //                     strings.deleteDataResponse,
-    //                     idRequest,
-    //                     obj.deleteMessageHandler,
-    //                     [reportProblem, toolbar],
-    //                 ),
-    //             );
-    //             break;
-    //         case 'suggestions':
-    //             toolbar.appendChild(reportProblemButton);
-
-    //             toolbar.appendChild(
-    //                 obj.getActionButton(
-    //                     DELETE_MESSAGE,
-    //                     strings.deleteDataResponse,
-    //                     idRequest,
-    //                     obj.deleteMessageHandler,
-    //                     [reportProblem, toolbar],
-    //                 ),
-    //             );
-    //             break;
-    //         default:
-    //     }
-
-    //     var moreOptions = obj.getMoreOptionsMenu(moreOptionsArray, idRequest, type);
-
-    //     if (type === 'chart-view') {
-    //         moreOptions.classList.add('chart');
-    //     }
-
-    //     var moreOptionsBtn = obj.getActionButton(
-    //         VERTICAL_DOTS,
-    //         strings.moreOptions,
-    //         idRequest,
-    //         obj.moreOptionsHandler,
-    //         [moreOptions, toolbar],
-    //     );
-    //     moreOptionsBtn.classList.add('autoql-vanilla-more-options');
-    //     if (request) {
-    //         if (
-    //             request['reference_id'] !== '1.1.420' &&
-    //             type !== 'safety-net' &&
-    //             type !== 'suggestions' &&
-    //             request['reference_id'] !== '1.9.502' &&
-    //             request['reference_id'] !== '1.1.550' &&
-    //             request['reference_id'] !== '1.1.432' &&
-    //             request['reference_id'] !== '1.1.461'
-    //         ) {
-    //             if (moreOptionsArray?.length) {
-    //                 toolbar.appendChild(moreOptionsBtn);
-    //                 toolbar.appendChild(moreOptions);
-    //             }
-
-    //             toolbar.appendChild(reportProblem);
-    //         }
-
-    //         if (type === 'suggestions') {
-    //             toolbar.appendChild(reportProblem);
-    //         }
-
-    //         if (
-    //             request['reference_id'] === '1.1.550' ||
-    //             request['reference_id'] === '1.1.420' ||
-    //             request['reference_id'] === '1.1.432'
-    //         ) {
-    //             toolbar.appendChild(reportProblem);
-    //             reportProblem.classList.remove('chata-popover-single-message');
-    //         }
-    //     }
-
-    //     return toolbar;
-    // };
-
     obj.getParentFromComponent = (component) => {
         var messageBubble = component.parentElement.parentElement.parentElement;
         if (messageBubble.classList.contains('autoql-vanilla-chata-response-content-container')) {
@@ -1690,78 +1467,8 @@ export function DataMessenger(options = {}) {
         });
     };
 
-    // obj.copyFilterMetadata = (component) => {
-    //     component.filterMetadata = component.internalTable.getHeaderFilters();
-    // };
-
-    // obj.copyPivotFilterMetadata = (component) => {
-    //     component.pivotFilterMetadata = component.pivotTabulator.getHeaderFilters();
-    // };
-
     obj.refreshToolbarButtons = (component) => {
         component.optionsToolbar?.refreshToolbar?.();
-        // if (!oldComponent) {
-        //     return;
-        // }
-
-        // if (oldComponent?.internalTable) {
-        //     obj.copyFilterMetadata(oldComponent);
-        // }
-        // if (oldComponent?.pivotTabulator) {
-        //     obj.copyPivotFilterMetadata(oldComponent);
-        // }
-
-        // var messageBubble = obj.getParentFromComponent(oldComponent);
-        // var uuid = messageBubble.parentNode.dataset.bubbleContainerId;
-        // var json = ChataUtils.responses[uuid];
-
-        // if (!json) {
-        //     return;
-        // }
-
-        // var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
-
-        // if (['table', 'pivot_table'].includes(ignore) && displayTypes.length <= 5) {
-        //     messageBubble.classList.remove('chart-full-width');
-        // } else {
-        //     messageBubble.classList.add('chart-full-width');
-        // }
-
-        // var scrollBox = messageBubble.querySelector('.autoql-vanilla-chata-table-scrollbox');
-        // var toolbarLeft = messageBubble.getElementsByClassName('autoql-vanilla-chat-message-toolbar-left')[0];
-        // var toolbarRight = messageBubble.getElementsByClassName('autoql-vanilla-chat-message-toolbar-right')[0];
-
-        // if (oldComponent.noColumnsElement && !areAllColumnsHidden(json?.data?.columns)) {
-        //     oldComponent.parentElement.removeChild(oldComponent.noColumnsElement);
-        //     oldComponent.noColumnsElement = null;
-        //     oldComponent.style.display = 'block';
-        // }
-
-        // scrollBox.scrollLeft = 0;
-
-        // var actionType = ['table', 'pivot_table', 'date_pivot'].includes(ignore) ? 'csvCopy' : 'chart-view';
-
-        // if (toolbarLeft) {
-        //     toolbarLeft.innerHTML = '';
-        //     let displayTypeButtons = obj.getDisplayTypesButtons(oldComponent.dataset.componentid, ignore);
-
-        //     displayTypeButtons.forEach((button) => {
-        //         toolbarLeft.appendChild(button);
-        //     });
-
-        //     if (isTouchDevice()) {
-        //         toolbarLeft.style.visibility = 'visible';
-        //     } else if (displayTypeButtons.length > 1) {
-        //         toolbarLeft.classList.remove('autoql-vanilla-chat-message-toolbar-hidden');
-        //     } else {
-        //         toolbarLeft.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
-        //     }
-        // }
-
-        // var newToolbarRight = obj.getActionToolbar(oldComponent.dataset.componentid, actionType, ignore);
-        // messageBubble.replaceChild(newToolbarRight, toolbarRight);
-        // obj.setScrollBubble(messageBubble);
-        // refreshTooltips();
     };
 
     obj.setScrollBubble = (messageBubble) => {
@@ -1769,122 +1476,6 @@ export function DataMessenger(options = {}) {
             messageBubble.parentElement.scrollIntoView();
         }, 200);
     };
-
-    // obj.sendDrilldownMessage = async (json, indexData, options) => {
-    //     if (!options.autoQLConfig.enableDrilldowns) return;
-    //     var queryId = json['data']['query_id'];
-    //     var params = {};
-    //     var groupables = getGroupableFields(json);
-    //     if (indexData != -1) {
-    //         for (var i = 0; i < groupables.length; i++) {
-    //             var index = groupables[i].indexCol;
-    //             var value = json['data']['rows'][parseInt(indexData)][index];
-    //             var colData = json['data']['columns'][index]['name'];
-    //             if (!value) value = '';
-    //             params[colData] = value.toString() || '';
-    //         }
-    //     }
-
-    //     var cols = [];
-    //     for (let [key, value] of Object.entries(params)) {
-    //         cols.push({
-    //             name: key,
-    //             value: value,
-    //         });
-    //     }
-
-    //     const data = {
-    //         ...options.authentication,
-    //         queryID: queryId,
-    //         debug: options.autoQLConfig.debug,
-    //         groupBys: cols,
-    //         source: obj.options.source,
-    //     };
-
-    //     var responseLoadingContainer = document.createElement('div');
-    //     var responseLoading = document.createElement('div');
-
-    //     responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
-    //     responseLoading.classList.add('autoql-vanilla-response-loading');
-    //     for (let i = 0; i <= 3; i++) {
-    //         responseLoading.appendChild(document.createElement('div'));
-    //     }
-
-    //     responseLoadingContainer.appendChild(responseLoading);
-    //     obj.chataBarContainer.appendChild(responseLoadingContainer);
-
-    //     var response = await runDrilldown(data);
-    //     var responseJson = response?.data;
-
-    //     if (!responseJson) {
-    //         console.error('Error processing drilldown');
-    //         return;
-    //     }
-
-    //     responseJson.queryFn = obj.getQueryFn(response);
-
-    //     var status = response.status;
-    //     obj.chataBarContainer.removeChild(responseLoadingContainer);
-    //     if (!responseJson['data']['rows']) {
-    //         obj.putClientResponse(strings.errorMessage);
-    //     } else if (responseJson['data']['rows'].length > 0) {
-    //         obj.putTableResponse(responseJson, true);
-    //     } else {
-    //         obj.putSimpleResponse(responseJson, '', status, true);
-    //     }
-    //     refreshTooltips();
-    // };
-
-    // obj.createLoadingDots = () => {
-    //     var responseLoadingContainer = document.createElement('div');
-    //     var responseLoading = document.createElement('div');
-
-    //     responseLoadingContainer.classList.add('autoql-vanilla-response-loading-container');
-    //     responseLoading.classList.add('autoql-vanilla-response-loading');
-    //     for (var i = 0; i <= 3; i++) {
-    //         responseLoading.appendChild(document.createElement('div'));
-    //     }
-
-    //     responseLoadingContainer.appendChild(responseLoading);
-
-    //     return responseLoadingContainer;
-    // };
-
-    // obj.sendDrilldownClientSide = (json, indexValue, filterBy, options) => {
-    //     if (!options.autoQLConfig.enableDrilldowns) return;
-    //     var newJson = cloneObject(json);
-    //     var newData = [];
-    //     var oldData = newJson['data']['rows'];
-    //     var col = newJson['data']['columns'][indexValue];
-
-    //     for (var i = 0; i < oldData.length; i++) {
-    //         var compareValue = oldData[i][indexValue];
-    //         if (!compareValue) compareValue = 'null';
-    //         compareValue = formatData(compareValue, col, options);
-    //         if (compareValue === 'Invalid date' && filterBy == 'undefined') {
-    //             newData.push(oldData[i]);
-    //         }
-
-    //         if (compareValue === filterBy) newData.push(oldData[i]);
-    //     }
-    //     var loading = obj.createLoadingDots();
-    //     obj.drawerContent.appendChild(loading);
-    //     if (newData.length > 0) {
-    //         newJson.data.rows = newData;
-
-    //         setTimeout(() => {
-    //             obj.putTableResponse(newJson, true);
-    //             obj.drawerContent.removeChild(loading);
-    //             refreshTooltips();
-    //         }, 400);
-    //     } else {
-    //         setTimeout(() => {
-    //             obj.putClientResponse(strings.noDataFound, json, true);
-    //             obj.drawerContent.removeChild(loading);
-    //             refreshTooltips();
-    //         }, 400);
-    //     }
-    // };
 
     obj.processDrilldown = async ({
         json,
@@ -1940,7 +1531,6 @@ export function DataMessenger(options = {}) {
                         } catch (error) {
                             console.error(error);
                             return;
-                            // response = error;
                         }
 
                         return response;
@@ -1981,60 +1571,6 @@ export function DataMessenger(options = {}) {
         obj.createResponseMessage({ response, responseLoadingContainer, isDrilldown: true });
     };
 
-    // obj.chartElementClick = (evt, idRequest) => {
-    //     var json = cloneObject(ChataUtils.responses[idRequest]);
-    //     var target = evt.target;
-    //     var indexData = target.dataset.chartindex;
-    //     var colValue = target.dataset.colvalue1;
-    //     var indexValue = target.dataset.filterindex;
-    //     var groupableCount = getNumberOfGroupables(json['data']['columns']);
-    //     if (groupableCount == 1 || groupableCount == 2) {
-    //         if (!target.dataset.isStackedDrill) {
-    //             obj.sendDrilldownMessage(json, indexData, obj.options);
-    //         } else {
-    //             let newJson = cloneObject(ChataUtils.responses[idRequest]);
-    //             newJson['data']['rows'][0][0] = evt.target.dataset.unformatvalue1;
-    //             newJson['data']['rows'][0][1] = evt.target.dataset.unformatvalue2;
-    //             newJson['data']['rows'][0][2] = evt.target.dataset.unformatvalue3;
-    //             obj.sendDrilldownMessage(newJson, 0, obj.options);
-    //         }
-    //     } else {
-    //         obj.sendDrilldownClientSide(json, indexValue, colValue, obj.options);
-    //     }
-    // };
-
-    // obj.stackedChartElementClick = (evt, idRequest) => {
-    //     var json = cloneObject(ChataUtils.responses[idRequest]);
-    //     json['data']['rows'][0][0] = evt.target.dataset.unformatvalue1;
-    //     json['data']['rows'][0][1] = evt.target.dataset.unformatvalue2;
-    //     json['data']['rows'][0][2] = evt.target.dataset.unformatvalue3;
-    //     obj.sendDrilldownMessage(json, 0, obj.options);
-    // };
-
-    // obj.updateSelectedBar = (evt, component) => {
-    //     var oldSelect = component.querySelector('.active');
-    //     if (oldSelect) oldSelect.classList.remove('active');
-    //     if (evt.target.tagName !== 'TD') evt.target.classList.add('active');
-    // };
-
-    // obj.componentClickHandler = (handler, component, selector) => {
-    //     var elements = component.querySelectorAll(selector);
-    //     for (var i = 0; i < elements.length; i++) {
-    //         elements[i].onclick = (evt) => {
-    //             handler.apply(null, [evt, component.dataset.componentid]);
-    //             obj.updateSelectedBar(evt, component);
-    //         };
-    //     }
-    // };
-
-    // obj.registerDrilldownChartEvent = (component) => {
-    //     obj.componentClickHandler(obj.chartElementClick, component, '[data-chartindex]');
-    // };
-
-    // obj.registerDrilldownStackedChartEvent = (component) => {
-    //     obj.componentClickHandler(obj.stackedChartElementClick, component, '[data-stackedchartindex]');
-    // };
-
     obj.getComponent = (request) => {
         return obj.drawerContent.querySelector(`[data-componentid='${request}']`);
     };
@@ -2046,179 +1582,6 @@ export function DataMessenger(options = {}) {
     obj.setRequest = (id, data) => {
         ChataUtils.responses[id] = data;
     };
-
-    // obj.setDefaultFilters = (component, table, type) => {
-    //     if (!table?.toggleFilters) {
-    //         return;
-    //     }
-
-    //     var filters = [];
-    //     if (type === 'table') filters = component.filterMetadata;
-    //     else if (type === 'pivot') filters = component.pivotFilterMetadata;
-
-    //     if (!filters) return;
-
-    //     table.toggleFilters();
-    //     for (var i = 0; i < filters.length; i++) {
-    //         var filter = filters[i];
-    //         table.setHeaderFilterValue(filter.field, filter.value);
-    //     }
-    //     table.toggleFilters();
-    // };
-
-    // obj.displayTableHandler = (idRequest) => {
-    //     var component = obj.getComponent(idRequest);
-    //     var json = obj.getRequest(idRequest);
-    //     var chartsVisibleCount = json.data?.rows.length;
-    //     var parentContainer = obj.getParentFromComponent(component);
-    //     var parentElement = component.parentElement;
-    //     var useInfiniteScroll = true; // isDataLimited({ data: json });
-    //     var tableParams = component.tableParams ?? { queryJson: json, sort: undefined, filter: undefined };
-
-    //     obj.refreshToolbarButtons(component, 'table');
-
-    //     var table = new ChataTable(
-    //         idRequest,
-    //         obj.options,
-    //         (data) => obj.onCellClick(data, idRequest),
-    //         useInfiniteScroll,
-    //         tableParams,
-    //         (response, params) => {
-    //             if (response?.data) {
-    //                 obj.setRequest(idRequest, response?.data);
-    //             }
-
-    //             if (params) {
-    //                 component.tableParams = {
-    //                     ...tableParams,
-    //                     ...params,
-    //                 };
-    //             }
-    //         },
-    //     );
-    //     table.element.onNewPage({ chartsVisibleCount: chartsVisibleCount });
-    //     component.internalTable = table;
-    //     component.tabulator = table;
-    //     obj.setDefaultFilters(component, table, 'table');
-    //     table.parentContainer = parentContainer;
-    //     table.parentElement = parentElement;
-    //     if (table.parentElement.classList.contains('autoql-vanilla-chata-chart-container')) {
-    //         table.parentElement.classList.remove('autoql-vanilla-chata-chart-container');
-    //     }
-    //     allColHiddenMessage(component);
-    //     select(window).on('chata-resize.' + idRequest, null);
-    // };
-
-    // obj.displayPivotTableHandler = (idRequest) => {
-    //     var component = obj.getComponent(idRequest);
-    //     obj.refreshToolbarButtons(component, 'pivot_table');
-    //     var table = new ChataPivotTable(idRequest, obj.options, (data) => obj.onCellClick(data, idRequest));
-    //     obj.setDefaultFilters(component, table, 'pivot');
-    //     select(window).on('chata-resize.' + idRequest, null);
-    //     component.tabulator = table;
-    //     component.pivotTabulator = table;
-    // };
-
-    // obj.displayChartHandler = (idRequest, displayType) => {
-    //     var json = obj.getRequest(idRequest);
-    //     var component = obj.getComponent(idRequest);
-
-    //     obj.refreshToolbarButtons(component, displayType);
-
-    //     new ChataChart(component, {
-    //         type: displayType,
-    //         queryJson: json,
-    //         options: obj.options,
-    //         onChartClick: (data) => obj.onDrilldownClick(data, idRequest),
-    //     });
-
-    //     if (['stacked_column', 'stacked_bar', 'stacked_line'].includes(displayType)) {
-    //         obj.registerDrilldownStackedChartEvent(component);
-    //     } else {
-    //         obj.registerDrilldownChartEvent(component);
-    //     }
-    // };
-
-    // obj.getDisplayTypeButton = (idRequest, svg, tooltip, onClick) => {
-    //     var button = htmlToElement(`
-    //         <button
-    //             class="autoql-vanilla-chata-toolbar-btn"
-    //             data-tippy-content="${tooltip}"
-    //             data-id="${idRequest}">
-    //             ${svg}
-    //         </button>
-    //     `);
-
-    //     button.onclick = () => onClick(idRequest);
-
-    //     return button;
-    // };
-
-    // obj.getDisplayTypesButtons = (idRequest, active) => {
-    //     var json = ChataUtils.responses[idRequest];
-    //     var buttons = [];
-    //     var displayTypes = getSupportedDisplayTypes({ response: { data: json } });
-
-    //     const displayTypeIcons = {
-    //         table: TABLE_ICON,
-    //         pivot_table: PIVOT_ICON,
-    //         column: COLUMN_CHART_ICON,
-    //         bar: BAR_CHART_ICON,
-    //         line: LINE_CHART_ICON,
-    //         pie: PIE_CHART_ICON,
-    //         heatmap: HEATMAP_ICON,
-    //         bubble: BUBBLE_CHART_ICON,
-    //         stacked_column: STACKED_COLUMN_CHART_ICON,
-    //         stacked_bar: STACKED_BAR_CHART_ICON,
-    //         stacked_line: STACKED_AREA_CHART_ICON,
-    //         column_line: COLUMN_LINE_ICON,
-    //         scatterplot: SCATTERPLOT_ICON,
-    //         histogram: HISTOGRAM_ICON,
-    //     };
-
-    //     displayTypes.forEach((displayType) => {
-    //         let button;
-
-    //         const displayChartHandlerFn = (idRequest) => obj.displayChartHandler(idRequest, displayType);
-    //         const component = obj.getComponent(id);
-
-    //         if (displayType == 'table') {
-    //             button = obj.getDisplayTypeButton(
-    //                 idRequest,
-    //                 displayTypeIcons[displayType],
-    //                 strings.displayTypes[displayType],
-    //                 // obj.displayTableHandler,
-    //                 () => {
-    //                 },
-    //             );
-    //         } else if (displayType == 'pivot_table') {
-    //             button = obj.getDisplayTypeButton(
-    //                 idRequest,
-    //                 displayTypeIcons[displayType],
-    //                 strings.displayTypes[displayType],
-    //                 obj.displayPivotTableHandler,
-    //             );
-    //         } else if (Object.keys(displayTypeIcons).includes(displayType)) {
-    //             button = obj.getDisplayTypeButton(
-    //                 idRequest,
-    //                 displayTypeIcons[displayType],
-    //                 strings.displayTypes[displayType],
-    //                 displayChartHandlerFn,
-    //             );
-    //         } else {
-    //             console.warn('Unable to create button for display type: ', displayType);
-    //             return;
-    //         }
-
-    //         if (displayType == active) {
-    //             button.classList.add('autoql-vanilla-viz-toolbar-btn-active');
-    //         }
-
-    //         buttons.push(button);
-    //     });
-
-    //     return buttons;
-    // };
 
     obj.putMessage = (value) => {
         if (value) {
@@ -2266,30 +1629,6 @@ export function DataMessenger(options = {}) {
         return responseLoadingContainer;
     };
 
-    // obj.onCellClick = async (data, idRequest) => {
-    //     const json = ChataUtils.responses[idRequest];
-
-    //     obj.input.disabled = true;
-    //     obj.input.value = '';
-
-    //     var responseLoadingContainer = obj.putMessage('Drilldown');
-
-    //     const queryID = json?.data?.query_id;
-
-    //     const response = await obj.processDrilldown({
-    //         ...data,
-    //         queryID,
-    //         source: json?.data?.fe_req?.source,
-    //         json: { data: json },
-    //     });
-
-    //     if (response?.data) {
-    //         response.data.originalQueryID = queryID;
-    //     }
-
-    //     obj.createResponseMessage({ response, responseLoadingContainer, isDrilldown: true });
-    // };
-
     obj.onRTVLClick = (rtChunk) => {
         obj.filterLocking?.show();
         if (rtChunk.lockedFilter) {
@@ -2298,99 +1637,6 @@ export function DataMessenger(options = {}) {
             obj.filterLocking?.submitText(rtChunk.eng);
         }
     };
-
-    // obj.putTableResponse = (jsonResponse, isDrilldown = false) => {
-    //     var containerMessage = document.createElement('div');
-    //     var messageBubble = document.createElement('div');
-    //     var responseContentContainer = document.createElement('div');
-    //     var tableContainer = document.createElement('div');
-    //     var tableRowCount = document.createElement('div');
-    //     var scrollbox = document.createElement('div');
-    //     var tableWrapper = document.createElement('div');
-    //     var lastBubble = obj.getLastMessageBubble();
-    //     var idRequest = uuidv4();
-    //     var { parsed_interpretation } = jsonResponse.data;
-
-    //     containerMessage.classList.add('autoql-vanilla-chat-single-message-container');
-    //     containerMessage.style.zIndex = ++obj.zIndexBubble;
-    //     containerMessage.style.maxHeight = '85%';
-
-    //     containerMessage.setAttribute('data-bubble-id', idRequest);
-    //     if (!isDrilldown) {
-    //         containerMessage.relatedMessage = lastBubble;
-    //     }
-
-    //     containerMessage.classList.add('response');
-    //     containerMessage.classList.add('autoql-vanilla-chat-message-response');
-    //     messageBubble.classList.add('autoql-vanilla-chat-message-bubble');
-    //     containerMessage.relatedQuery = obj.lastQuery;
-
-    //     ChataUtils.responses[idRequest] = jsonResponse;
-    //     var totalRows = jsonResponse.data.count_rows;
-    //     var initialRows = jsonResponse.data.rows.length;
-    //     var supportedDisplayTypes = obj.getDisplayTypesButtons(idRequest, 'table');
-
-    //     var toolbar = undefined;
-    //     if (supportedDisplayTypes.length > 0) {
-    //         toolbar = htmlToElement(`
-    //             <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-left">
-    //             </div>
-    //         `);
-    //         for (var i = 0; i < supportedDisplayTypes.length; i++) {
-    //             toolbar.appendChild(supportedDisplayTypes[i]);
-    //         }
-    //         if (supportedDisplayTypes.length === 1) {
-    //             toolbar?.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
-    //         }
-    //     }
-
-    //     if (toolbar) {
-    //         messageBubble.appendChild(toolbar);
-    //     }
-
-    //     tableContainer.classList.add('autoql-vanilla-chata-table-container');
-    //     if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
-    //         tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
-    //     }
-
-    //     scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-    //     tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
-    //     tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
-    //     responseContentContainer.classList.add('autoql-vanilla-chata-response-content-container');
-    //     tableWrapper.setAttribute('data-componentid', idRequest);
-    //     tableWrapper.classList.add('autoql-vanilla-chata-table');
-    //     tableContainer.appendChild(tableWrapper);
-    //     scrollbox.appendChild(tableContainer);
-    //     tableContainer.appendChild(tableRowCount);
-    //     responseContentContainer.appendChild(scrollbox);
-    //     messageBubble.appendChild(responseContentContainer);
-    //     var chatMessageBubbleContainer = document.createElement('div');
-    //     chatMessageBubbleContainer.classList.add('autoql-vanilla-chat-message-bubble-container');
-    //     chatMessageBubbleContainer.setAttribute('data-bubble-container-id', idRequest);
-    //     chatMessageBubbleContainer.appendChild(messageBubble);
-    //     containerMessage.appendChild(chatMessageBubbleContainer);
-    //     obj.drawerContent.appendChild(containerMessage);
-
-    //     if (obj.activePage !== 'data-messenger') {
-    //         obj.hideBubbles();
-    //     }
-
-    //     var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
-    //     messageBubble.appendChild(actions);
-
-    //     // obj.displayTableHandler(idRequest);
-
-    //     if (parsed_interpretation) {
-    //         var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
-    //         containerMessage.appendChild(interpretationView);
-    //     }
-
-    //     setTimeout(function () {
-    //         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
-    //     }, 350);
-
-    //     return idRequest;
-    // };
 
     obj.sendReport = function (idRequest, options, menu, toolbar) {
         return ChataUtils.sendReport(idRequest, options, menu, toolbar);
@@ -2444,10 +1690,6 @@ export function DataMessenger(options = {}) {
             obj.hideBubbles();
         }
 
-        // if (withDeleteBtn) {
-        //     let toolbarButtons = obj.getActionToolbar(uuid, 'safety-net', '');
-        //     messageBubble.appendChild(toolbarButtons);
-        // }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
     };
 
@@ -2547,7 +1789,6 @@ export function DataMessenger(options = {}) {
             obj.hideBubbles();
         }
 
-        // messageBubble.appendChild(obj.getActionToolbar(uuid, 'suggestions', ''));
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         3;
         refreshTooltips();
@@ -2586,10 +1827,6 @@ export function DataMessenger(options = {}) {
             obj.hideBubbles();
         }
 
-        // if (withDeleteBtn) {
-        //     var toolbarButtons = obj.getActionToolbar(uuid, 'safety-net', '');
-        //     messageBubble.appendChild(toolbarButtons);
-        // }
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         refreshTooltips();
     };
@@ -2674,17 +1911,6 @@ export function DataMessenger(options = {}) {
             obj.hideBubbles();
         }
 
-        // var toolbarButtons = obj.getActionToolbar(idRequest, 'simple', 'table');
-
-        // if (ref !== '1.1.430') {
-        //     messageBubble.appendChild(toolbarButtons);
-        // }
-
-        // if (ref === '1.1.430') {
-        //     toolbarButtons = obj.getActionToolbar(idRequest, 'safety-net', '');
-        //     messageBubble.appendChild(toolbarButtons);
-        // }
-
         if (ref != '1.1.430') {
             chatMessageBubbleContainer.appendChild(messageBubble);
             containerMessage.appendChild(chatMessageBubbleContainer);
@@ -2753,7 +1979,6 @@ export function DataMessenger(options = {}) {
             obj.hideBubbles();
         }
 
-        // var toolbar = obj.getActionToolbar(uuid, 'safety-net', '');
         messageBubble.appendChild(toolbar);
         obj.scrollBox.scrollTop = obj.scrollBox.scrollHeight;
         refreshTooltips();
@@ -2832,26 +2057,6 @@ export function DataMessenger(options = {}) {
     };
 
     obj.getQueryFn = (response) => {
-        // ------- test data -------
-        // var jsonResponseCopy = cloneObject(response)
-        // var pageSize = obj.options.pageSize ?? response.data.data.row_limit
-
-        // var rows = []
-        // for(let i = 0; i < pageSize; i++) {
-        //     rows.push(response.data.data.rows[0])
-        // }
-
-        // jsonResponseCopy.data.data.rows = rows
-        // jsonResponseCopy.data.data.row_limit = pageSize
-        // jsonResponseCopy.data.data.fe_req.page_size = pageSize
-
-        // return () => (new Promise((res, rej) => {
-        //     setTimeout(() => {
-        //         res(jsonResponseCopy)
-        //     }, 2000)
-        // }))
-        // -------------------------
-
         let newResponse;
 
         return async ({ formattedTableParams, ...args }) => {
@@ -2920,88 +2125,22 @@ export function DataMessenger(options = {}) {
             return;
         }
 
-        // const { status } = response;
-
         var jsonResponse = response.data;
 
         if (jsonResponse) {
             jsonResponse.queryFn = obj.getQueryFn(response);
         }
 
-        // if (status != 200) {
-        //     let msg = response.data.message;
-        //     let ref = response.data['reference_id'];
-        //     if (ref === '1.1.482') {
-        //         obj.putSimpleResponse(response.data, textValue, status);
-        //     } else {
-        //         if (status === 401) {
-        //             obj.sendResponse(strings.accessDenied, true);
-        //         } else {
-        //             obj.sendResponse(
-        //                 `
-        //                     <div>${msg}</div>
-        //                     <br/>
-        //                     <div>${strings.errorID}: ${ref}</div>
-        //                     `,
-        //                 true,
-        //             );
-        //         }
-        //     }
-        //     if (responseLoadingContainer) {
-        //         obj.chataBarContainer.removeChild(responseLoadingContainer);
-        //     }
-        //     refreshTooltips();
-        //     return;
-        // }
-
-        // if (response?.data?.data?.replacements) {
-        //     const suggestions = response.data.data.replacements;
-
-        //     if (textValue != 'None Of these' && suggestions?.length > 0 && typeof selections === 'undefined') {
-        //         obj.input.removeAttribute('disabled');
-        //         if (responseLoadingContainer) {
-        //             obj.chataBarContainer.removeChild(responseLoadingContainer);
-        //         }
-        //         obj.putSafetynetMessage(response.data);
-        //         return;
-        //     }
-        // }
-
         if (responseLoadingContainer) {
             obj.chataBarContainer.removeChild(responseLoadingContainer);
         }
 
-        // if (jsonResponse?.data?.items) {
-        //     obj.putSuggestionResponse(jsonResponse);
-        //     return;
-        // }
-
-        // var groupables = [];
-        // if (jsonResponse.data.columns) {
-        //     groupables = getGroupables(jsonResponse);
-        // }
-
-        // var displayType = jsonResponse['data']['display_type'];
-        // if (groupables.length === 1 && obj.options.autoChartAggregations && jsonResponse.data.rows.length > 1) {
-        //     displayType = 'column';
-        // }
-
         const displayType = getDefaultDisplayType({ data: jsonResponse });
-
-        // if (groupables.length === 2 && obj.options.autoChartAggregations && jsonResponse.data.rows.length > 1) {
-        //     displayType = 'stacked_column';
-        // }
-
-        // if (jsonResponse.data.rows && jsonResponse.data.rows.length === 0) {
-        //     obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
-        //     return;
-        // }
 
         var containerMessage = document.createElement('div');
         var messageBubble = document.createElement('div');
         var responseContentContainer = document.createElement('div');
         var tableContainer = document.createElement('div');
-        // var tableRowCount = document.createElement('div');
         var scrollbox = document.createElement('div');
         var tableWrapper = document.createElement('div');
         var lastBubble = obj.getLastMessageBubble();
@@ -3023,10 +2162,7 @@ export function DataMessenger(options = {}) {
         containerMessage.relatedQuery = obj.lastQuery;
 
         ChataUtils.responses[idRequest] = jsonResponse;
-        // var totalRows = jsonResponse.data.count_rows;
-        // var initialRows = jsonResponse.data.rows?.length ?? 0;
 
-        // var supportedDisplayTypes = obj.getDisplayTypesButtons(idRequest, 'table');
         const supportedDisplayTypes = getSupportedDisplayTypes({
             response: { data: jsonResponse },
             allowNumericStringColumns: true,
@@ -3038,14 +2174,11 @@ export function DataMessenger(options = {}) {
         }
 
         scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
-        // tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
-        // tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
         responseContentContainer.classList.add('autoql-vanilla-chata-response-content-container');
         tableWrapper.setAttribute('data-componentid', idRequest);
         tableWrapper.classList.add('autoql-vanilla-chata-table');
         tableContainer.appendChild(tableWrapper);
         scrollbox.appendChild(tableContainer);
-        // tableContainer.appendChild(tableRowCount);
         responseContentContainer.appendChild(scrollbox);
         messageBubble.appendChild(responseContentContainer);
         var chatMessageBubbleContainer = document.createElement('div');
@@ -3058,8 +2191,6 @@ export function DataMessenger(options = {}) {
         if (obj.activePage !== 'data-messenger') {
             obj.hideBubbles();
         }
-
-        // obj.displayTableHandler(idRequest);
 
         if (parsed_interpretation) {
             var interpretationView = new ReverseTranslation(jsonResponse, obj.onRTVLClick);
@@ -3087,65 +2218,6 @@ export function DataMessenger(options = {}) {
 
         component.queryOutput = queryOutput;
 
-        // switch (displayType) {
-        //     case 'table':
-        //         if (jsonResponse['data']['columns'].length == 1) {
-        //             obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
-        //         } else {
-        //             obj.putTableResponse(jsonResponse, isDrilldown);
-        //         }
-        //         break;
-        //     case 'data':
-        //         var cols = jsonResponse['data']['columns'];
-        //         var rows = jsonResponse['data']['rows'];
-        //         if (cols.length == 1 && rows.length == 1) {
-        //             if (cols[0]['name'] == 'query_suggestion') {
-        //                 obj.putSuggestionResponse(jsonResponse);
-        //             } else if (cols[0]['name'] == 'Help Link') {
-        //                 obj.putHelpMessage(jsonResponse);
-        //             } else {
-        //                 obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
-        //             }
-        //         } else {
-        //             if (rows.length > 0) {
-        //                 obj.putTableResponse(jsonResponse, isDrilldown);
-        //             } else {
-        //                 obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
-        //             }
-        //         }
-        //         break;
-        //     case 'compare_table':
-        //         obj.putTableResponse(jsonResponse, isDrilldown);
-        //         break;
-        //     case 'date_pivot':
-        //         obj.putTableResponse(jsonResponse, isDrilldown);
-        //         break;
-        //     case 'pivot_table':
-        //         obj.putTableResponse(jsonResponse, isDrilldown);
-        //         break;
-        //     case 'word_cloud':
-        //         obj.putTableResponse(jsonResponse, isDrilldown);
-        //         break;
-        //     case 'column':
-        //     case 'bar':
-        //     case 'line':
-        //     case 'stacked_column':
-        //     case 'stacked_bar':
-        //     case 'stacked_line':
-        //     case 'bubble':
-        //     case 'heatmap':
-        //     case 'pie':
-        //         var component = obj.getComponent(_idRequest);
-        //         obj.refreshToolbarButtons(component, displayType);
-        //         obj.displayChartHandler(_idRequest, displayType);
-        //         break;
-        //     case 'help':
-        //         obj.putHelpMessage(jsonResponse);
-        //         break;
-        //     default:
-        //         obj.putSimpleResponse(jsonResponse, textValue, status, isDrilldown);
-        // }
-
         const toolbarContainer = document.createElement('div');
         const toolbarLeftContainer = document.createElement('div');
         const toolbarRightContainer = document.createElement('div');
@@ -3160,19 +2232,6 @@ export function DataMessenger(options = {}) {
 
         var vizToolbar = undefined;
         if (supportedDisplayTypes.length > 0) {
-            // toolbar = htmlToElement(`
-            //     <div class="autoql-vanilla-chat-message-toolbar autoql-vanilla-chat-message-toolbar-left">
-            //     </div>
-            // `);
-            // for (var i = 0; i < supportedDisplayTypes.length; i++) {
-            //     toolbar.appendChild(supportedDisplayTypes[i]);
-            // }
-            // if (supportedDisplayTypes.length === 1) {
-            //     toolbar?.classList.add('autoql-vanilla-chat-message-toolbar-hidden');
-            // }
-
-            // toolbarContainer.classList.add('autoql-vanilla-chat-message-toolbar-left');
-
             vizToolbar = new VizToolbar(jsonResponse, component.queryOutput, obj.options, (displayType) => {
                 if (component.optionsToolbar) {
                     component.optionsToolbar.refreshToolbar();
@@ -3185,8 +2244,6 @@ export function DataMessenger(options = {}) {
             }
         }
 
-        // var actions = obj.getActionToolbar(idRequest, 'csvCopy', 'table');
-        // messageBubble.appendChild(actions);
         const optionsToolbar = new OptionsToolbar(idRequest, component.queryOutput, {
             ...obj.options,
             popoverPlacement: 'bottom',

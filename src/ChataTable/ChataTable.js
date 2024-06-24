@@ -227,25 +227,12 @@ const ajaxRequestFunc = async (params, idRequest, component, columns, table) => 
 
             component.queryFn = responseWrapper?.data?.queryFn;
             component.queryID = responseWrapper?.data?.data?.query_id;
-            // newResponse = { ...(responseWrapper?.data?.data ?? {}), page: 1 };
 
             component.scrollLeft = component.tabulator?.rowManager?.element?.scrollLeft;
-
-            /* wait for current event loop to end so table is updated before callbacks are invoked */
-            // await currentEventLoopEnd();
 
             component.onTableParamsChange(params, nextTableParamsFormatted);
             component.isOriginalData = false;
             component.onNewData?.(responseWrapper);
-
-            // const currentScrollValue = this.ref?.tabulator?.rowManager?.element?.scrollLeft
-            // if (currentScrollValue > 0) {
-            //   this.scrollLeft = currentScrollValue
-            // }
-
-            /* wait for current event loop to end so table is updated
-            before callbacks are invoked */
-            // await currentEventLoopEnd()
 
             const totalPages = getTotalPages(responseWrapper, component);
 
@@ -272,10 +259,6 @@ const ajaxRequestFunc = async (params, idRequest, component, columns, table) => 
 
 const ajaxResponseFunc = (response, component) => {
     if (response) {
-        if (!response.isPreviousData) {
-            // component.tablulator?.restoreRedraw();
-        }
-
         const isLastPage = (response?.rows?.length ?? 0) < component.pageSize;
 
         component.currentPage = response.page;
@@ -330,7 +313,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         return queryResponse?.data?.rows?.slice(start, end) ?? [];
     };
 
-    const tableData = component.getRows(1); // getTableData(json.data.rows);
+    const tableData = component.getRows(1);
 
     if (component) {
         component.columnIndexConfig = tableConfig;
@@ -344,7 +327,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     component.classList.add('table-condensed');
     component.isOriginalData = true;
-    component.pageSize = 50; // json.data.fe_req.page_size;
+    component.pageSize = 50;
     component.lastPage = tableData?.length < component.pageSize ? 1 : 2;
 
     component.isLastPage = component.lastPage === 1;
@@ -532,25 +515,6 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         component.parentElement.appendChild(pageLoader);
     };
 
-    // component.displayTableRowCount = () => {
-    //     if (component.tableRowCount) {
-    //         component.tableRowCount.innerHTML = '';
-    //     }
-
-    //     const totalRows = json.data.count_rows;
-    //     const currentRows = component.getCurrentRowCount();
-
-    //     const currentRowsFormatted = new Intl.NumberFormat(languageCode, {}).format(currentRows);
-    //     const totalRowsFormatted = new Intl.NumberFormat(languageCode, {}).format(totalRows);
-
-    //     const tableRowCount = document.createElement('div');
-    //     component.tableRowCount = tableRowCount;
-    //     tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
-    //     tableRowCount.textContent = `${strings.scrolledText} ${currentRowsFormatted} / ${totalRowsFormatted} ${strings.rowsText}`;
-
-    //     component.parentElement.appendChild(tableRowCount);
-    // };
-
     const tableOptions = {
         ...commonTableOptions,
         headerFilterLiveFilterDelay: 300,
@@ -561,7 +525,6 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         progressiveLoadScrollMargin: 100, // Trigger next ajax load when scroll bar is 800px or less from the bottom of the table.
     };
 
-    // if (component.useInfiniteScroll && component.queryFn) {
     if (json?.data?.rows?.length) {
         tableOptions.sortMode = 'remote'; // v4: ajaxSorting = true
         tableOptions.filterMode = 'remote'; // v4: ajaxFiltering = true
@@ -592,16 +555,10 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         onClick(drilldownData);
     };
     component.onDataSorting = () => {};
-    component.onDataSorted = (params) => {
-        // component.updateScrollSummaryFooter();
-    };
+    component.onDataSorted = () => {};
     component.onDataFiltering = () => {};
-    component.onDataFiltered = (params) => {
-        // component.updateScrollSummaryFooter();
-    };
-    component.onDataLoaded = (params) => {
-        // component.updateScrollSummaryFooter();
-    };
+    component.onDataFiltered = () => {};
+    component.onDataLoaded = () => {};
 
     var table = instantiateTabulator(component, tableOptions, this);
 
@@ -791,9 +748,6 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     };
 
     table.toggleFilters = () => toggleFilters(component, table);
-
-    // component.displayTableRowCount();
-    // component.updateScrollSummaryFooter();
 
     return table;
 }
