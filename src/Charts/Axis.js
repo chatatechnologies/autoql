@@ -241,32 +241,6 @@ export function Axis(container, params = {}, axisOptions = {}) {
         }
     };
 
-    const createRowSelector = () => {
-        try {
-            if (orient !== 'bottom') {
-                return;
-            }
-
-            if (this.rowSelectorElement) this.rowSelectorElement.remove();
-            this.rowSelectorElement = new ChartRowSelector(
-                this.axisElement,
-                json,
-                onDataFetching,
-                onNewData,
-                onDataFetchError,
-                options,
-            );
-
-            const axisTitleBBox = this.axisTitleContainer?.node()?.getBBox();
-            const translateX = innerWidth / 2;
-            const translateY = axisTitleBBox?.y + axisTitleBBox?.height + AXIS_TITLE_BORDER_PADDING_TOP * 2;
-
-            this.rowSelectorElement.attr('transform', `translate(${translateX}, ${translateY})`);
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
     const addTooltipsToLabels = () => {
         if (firstDraw) {
             // DO NOT BOTHER WITH TOOLTIPS ON FIRST DRAW
@@ -324,7 +298,6 @@ export function Axis(container, params = {}, axisOptions = {}) {
     this.labelsBBox = getLabelsBBox(this.axisElement.node());
 
     createAxisTitle();
-    createRowSelector();
 
     addTooltipsToLabels();
     styleTicks();

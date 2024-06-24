@@ -1,28 +1,33 @@
 import axios from 'axios';
-import {
-    runQueryNewPage,
-    formatTableParams,
-    currentEventLoopEnd,
-    REQUEST_CANCELLED_ERROR,
-    generatePivotData,
-    getColumnIndexConfig,
-    formatQueryColumns,
-    onTableCellClick,
-    getFilterPrecision,
-    DAYJS_PRECISION_FORMATS,
-} from 'autoql-fe-utils';
-import dayjs from '../Utils/dayjsPlugins';
 import _isEqual from 'lodash.isequal';
+import dayjs from '../Utils/dayjsPlugins';
+import _cloneDeep from 'lodash.clonedeep';
 import { TabulatorFull as Tabulator } from 'tabulator-tables';
+
+import {
+    onTableCellClick,
+    formatTableParams,
+    generatePivotData,
+    formatQueryColumns,
+    getFilterPrecision,
+    currentEventLoopEnd,
+    getColumnIndexConfig,
+    DAYJS_PRECISION_FORMATS,
+    REQUEST_CANCELLED_ERROR,
+    getDataFormatting,
+    filterDataByColumn,
+    sortDataByColumn,
+} from 'autoql-fe-utils';
+
+import { strings } from '../Strings';
 import { Scrollbars } from '../Scrollbars';
 import { ChataUtils } from '../ChataUtils';
 import { DateRangePicker } from '../ChataComponents/DateRangePicker/DateRangePicker';
-import { strings } from '../Strings';
 import { getNumberOfGroupables, allColHiddenMessage, cloneObject, uuidv4 } from '../Utils';
 
-import 'tabulator-tables/dist/css/tabulator.min.css';
 import './ChataTable.css';
 import './ChataTable.scss';
+import 'tabulator-tables/dist/css/tabulator.min.css';
 
 const commonTableOptions = {
     layout: 'fitDataFill',
@@ -87,6 +92,7 @@ function instantiateTabulator(component, tableOptions, table) {
     component.onDataSorted && tabulator.on('dataSorted', component.onDataSorted);
     component.onDataFiltering && tabulator.on('dataFiltering', component.onDataFiltering);
     component.onDataFiltered && tabulator.on('dataFiltered', component.onDataFiltered);
+    component.onDataLoaded && tabulator.on('dataLoaded', component.onDataLoaded);
 
     tabulator.on('tableBuilt', async () => {
         table.isInitialized = true;
@@ -109,6 +115,8 @@ function instantiateTabulator(component, tableOptions, table) {
 
         tabulator.setHeaderInputEventListeners?.();
         tabulator.toggleFilters?.();
+
+        component.updateScrollSummaryFooter();
 
         // Remove for now - causing buggy behavious
         // component.ps = replaceScrollbar(tabulator);
@@ -140,42 +148,66 @@ const ajaxRequesting = (params) => {
     // Use this fn to abort a request
 };
 
-const ajaxRequestFunc = async (params, response, component, columns, table) => {
-    const previousResponseData = response?.data ?? {};
-    const previousData = { ...previousResponseData, page: 1, isPreviousData: true };
+const getTotalPages = (response, component) => {
+    const rows = response?.data?.data?.rows;
+    if (!rows?.length) {
+        return 1;
+    }
+
+    const totalPages = Math.ceil(rows.length / component.pageSize);
+
+    if (totalPages >= 1 && totalPages !== Infinity) {
+        return totalPages;
+    }
+
+    return 1;
+};
+
+const ajaxRequestFunc = async (params, idRequest, component, columns, table) => {
+    const initialData = {
+        rows: component?.getRows(1) ?? [],
+        page: 1,
+        isInitialData: true,
+    };
+
+    if (!component) {
+        return initialData;
+    }
+
+    const json = ChataUtils.responses[idRequest];
 
     try {
         if (component.style.display === 'none' || component.hidden || !table.isInitialized) {
-            return previousData;
+            return initialData;
         }
 
         const requestedNewPageWhileLoadingFilter = params?.page > 1 && component.isPageLoading;
         if (!table.hasSetInitialData) {
             table.hasSetInitialData = true;
-            return previousData;
+            return initialData;
         }
 
         if (requestedNewPageWhileLoadingFilter) {
-            return previousData;
+            return initialData;
         }
 
         const tableParamsFormatted = formatTableParams(component.tableParams, columns);
         const nextTableParamsFormatted = formatTableParams(params, columns);
 
         if (_isEqual(tableParamsFormatted, nextTableParamsFormatted)) {
-            return previousData;
+            return initialData;
         }
 
         component.tableParams = cloneObject(params);
 
-        if (!response?.data?.fe_req) {
+        if (!json?.data?.fe_req) {
             console.warn(
                 'Original request data was not provided to ChataTable, unable to filter or sort table',
-                response,
-                response?.data,
-                response?.data?.fe_req,
+                json,
+                json?.data,
+                json?.data?.fe_req,
             );
-            return previousData;
+            return initialData;
         }
 
         component.cancelCurrentRequest();
@@ -186,45 +218,47 @@ const ajaxRequestFunc = async (params, response, component, columns, table) => {
             component.setScrollLoading(true);
 
             newResponse = await component.getNewPage(nextTableParamsFormatted);
-            component.onNewPage({ newRows: newResponse?.rows, newResponse });
         } else {
             component.setPageLoading(true);
 
             const responseWrapper = await component.sortOrFilterData(nextTableParamsFormatted);
 
+            ChataUtils.responses[idRequest] = responseWrapper?.data;
+
+            component.queryFn = responseWrapper?.data?.queryFn;
             component.queryID = responseWrapper?.data?.data?.query_id;
-            newResponse = { ...(responseWrapper?.data?.data ?? {}), page: 1 };
 
             component.scrollLeft = component.tabulator?.rowManager?.element?.scrollLeft;
 
-            /* wait for current event loop to end so table is updated before callbacks are invoked */
-            await currentEventLoopEnd();
-
             component.onTableParamsChange(params, nextTableParamsFormatted);
             component.isOriginalData = false;
-            component.onNewData(responseWrapper);
+            component.onNewData?.(responseWrapper);
+
+            const totalPages = getTotalPages(responseWrapper, component);
+
+            newResponse = {
+                rows: responseWrapper?.data?.data?.rows?.slice(0, component.pageSize) ?? [],
+                page: 1,
+                last_page: totalPages,
+            };
         }
 
         component.clearLoadingIndicators();
         return newResponse;
     } catch (error) {
         if (error?.data?.message === REQUEST_CANCELLED_ERROR) {
-            return previousData;
+            return initialData;
         }
 
         console.error(error);
         component.clearLoadingIndicators();
         // Send empty promise so data doesn't change
-        return previousData;
+        return initialData;
     }
 };
 
 const ajaxResponseFunc = (response, component) => {
     if (response) {
-        if (!response.isPreviousData) {
-            // component.tablulator?.restoreRedraw();
-        }
-
         const isLastPage = (response?.rows?.length ?? 0) < component.pageSize;
 
         component.currentPage = response.page;
@@ -233,6 +267,10 @@ const ajaxResponseFunc = (response, component) => {
         const modResponse = {};
         modResponse.data = getTableData(response.rows);
         modResponse.last_page = component.lastPage;
+
+        setTimeout(() => {
+            component?.updateScrollSummaryFooter?.();
+        }, 0);
 
         return modResponse;
     }
@@ -248,21 +286,38 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     const TABLE_ID = uuidv4();
 
+    const component = document.querySelector(`[data-componentid='${idRequest}']`);
+
+    if (!component) {
+        return;
+    }
+
     const json = ChataUtils.responses[idRequest];
     if (!json?.data?.rows?.length || !json?.data?.columns?.length) {
         return;
     }
 
-    const tableData = getTableData(json.data.rows);
     const columns = formatQueryColumns({ columns: json.data.columns, queryResponse: { data: json } });
     const tableConfig = getColumnIndexConfig({ response: { data: json } });
 
     this.isInitialized = false;
     this.hasSetInitialData = false;
 
-    const component = document.querySelector(`[data-componentid='${idRequest}']`);
+    component.getRows = (pageNumber) => {
+        const page = pageNumber ?? component.tableParams?.page ?? 1;
+        const start = (page - 1) * component.pageSize;
+        const end = start + component.pageSize;
 
-    component.columnIndexConfig = tableConfig;
+        const queryResponse = ChataUtils.responses[idRequest];
+
+        return queryResponse?.data?.rows?.slice(start, end) ?? [];
+    };
+
+    const tableData = component.getRows(1);
+
+    if (component) {
+        component.columnIndexConfig = tableConfig;
+    }
 
     // TODO - move this to its parent element instead
     var groupableCount = getNumberOfGroupables(json?.data?.columns);
@@ -272,7 +327,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     component.classList.add('table-condensed');
     component.isOriginalData = true;
-    component.pageSize = json.data.fe_req.page_size;
+    component.pageSize = 50;
     component.lastPage = tableData?.length < component.pageSize ? 1 : 2;
 
     component.isLastPage = component.lastPage === 1;
@@ -282,26 +337,48 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
     component.queryFn = json?.queryFn;
 
-    // TODO(Nikki) - update parent component with changes
-    component.onNewPage = ({ newRows = 0, chartsVisibleCount = 0, newResponse = null }) => {
-        if (newResponse) {
-            tableParams.queryJson.data.rows = [...tableParams.queryJson.data.rows, ...newResponse.rows];
-            tableParams.queryJson.data.row_limit = newResponse.row_limit;
+    component.getCurrentRowCount = () => {
+        const queryResponse = ChataUtils.responses[idRequest];
+
+        let rowCount = table?.getDataCount('active');
+
+        if (rowCount === undefined) {
+            rowCount = component.tableParams.page * component.pageSize;
         }
-        var newCurrentTableRowCount = 0;
-        var tableRowCountElement = component.parentElement.querySelector('.autoql-vanilla-chata-table-row-count');
-        var currentText = tableRowCountElement.textContent;
-        var matches = currentText.match(/(\d+)/);
-        if (matches && matches.length > 0) {
-            var currentTableRowCount = parseInt(matches[0]);
-            if (newRows !== 0) {
-                var newCurrentTableRowCount = currentTableRowCount + newRows.length;
+
+        if (rowCount > queryResponse?.data?.rows?.length) {
+            rowCount = queryResponse?.data?.rows?.length;
+        }
+
+        return rowCount;
+    };
+
+    // TODO(Nikki) - update parent component with changes
+    component.updateScrollSummaryFooter = () => {
+        try {
+            if (!component.tableRowCount) {
+                const tableRowCount = document.createElement('div');
+                tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
+                component.parentElement.appendChild(tableRowCount);
+                component.tableRowCount = tableRowCount;
             }
-            if (chartsVisibleCount !== 0) {
-                var newCurrentTableRowCount = chartsVisibleCount;
+
+            const queryResponse = ChataUtils.responses[idRequest];
+
+            const totalRows = queryResponse?.data?.count_rows ?? 0;
+            const currentRows = component.getCurrentRowCount();
+
+            if (!!totalRows && !currentRows) {
+                return;
             }
-            var newText = currentText.replace(currentTableRowCount, newCurrentTableRowCount);
-            tableRowCountElement.textContent = newText;
+
+            const languageCode = getDataFormatting(options.dataFormatting).languageCode;
+            const currentRowsFormatted = new Intl.NumberFormat(languageCode, {}).format(currentRows);
+            const totalRowsFormatted = new Intl.NumberFormat(languageCode, {}).format(totalRows);
+
+            component.tableRowCount.textContent = `${strings.scrolledText} ${currentRowsFormatted} / ${totalRowsFormatted} ${strings.rowsText}`;
+        } catch (error) {
+            console.error(error);
         }
     };
 
@@ -314,25 +391,66 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     };
 
     component.getNewPage = (tableParams) => {
-        const queryId = ChataUtils.responses[idRequest]?.data?.query_id;
+        try {
+            const rows = component.getRows(tableParams.page);
+            const response = {
+                page: tableParams.page,
+                rows,
+            };
 
-        return runQueryNewPage({
-            ...(options.authentication ?? {}),
-            tableFilters: tableParams?.filters,
-            orders: tableParams?.sorters,
-            page: tableParams?.page,
-            queryId,
-            cancelToken: component.axiosSource?.token,
-        });
+            return Promise.resolve(response);
+        } catch (error) {
+            console.error(error);
+            return Promise.reject(error);
+        }
+    };
+
+    component.clientSortAndFilterData = (params) => {
+        // Use FE for sorting and filtering
+        let response = _cloneDeep(ChataUtils.responses[idRequest]);
+        let data = _cloneDeep(json.data.rows);
+
+        // Filters
+        if (params.filters?.length) {
+            params.filters.forEach((filter) => {
+                const filterColumnName = filter.name;
+                const filterColumnIndex = response.data.columns.find((col) => col.name === filterColumnName)?.index;
+
+                data = filterDataByColumn(
+                    data,
+                    response.data.columns,
+                    filterColumnIndex,
+                    filter.value,
+                    filter.operator,
+                );
+            });
+        }
+
+        // Sorters
+        if (params.sorters?.length) {
+            const sortColumnName = params.sorters[0].name;
+            const sortColumnIndex = response.data.columns.find((col) => col.name === sortColumnName)?.index;
+            const sortDirection = params.sorters[0].sort === 'DESC' ? 'desc' : 'asc';
+
+            data = sortDataByColumn(data, response.data.columns, sortColumnIndex, sortDirection);
+        }
+
+        response.data.rows = data;
+
+        return { data: response };
     };
 
     component.sortOrFilterData = (tableParams) => {
-        return component.queryFn({
-            ...(options.authentication ?? {}),
-            tableFilters: tableParams?.filters,
-            orders: tableParams?.sorters,
-            cancelToken: component.axiosSource?.token,
-        });
+        if (options.useInfiniteScroll) {
+            return component.queryFn({
+                ...(options.authentication ?? {}),
+                tableFilters: tableParams?.filters,
+                orders: tableParams?.sorters,
+                cancelToken: component.axiosSource?.token,
+            });
+        } else {
+            return Promise.resolve(component.clientSortAndFilterData(tableParams));
+        }
     };
 
     component.cancelCurrentRequest = () => {
@@ -407,7 +525,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         progressiveLoadScrollMargin: 100, // Trigger next ajax load when scroll bar is 800px or less from the bottom of the table.
     };
 
-    if (component.useInfiniteScroll && component.queryFn) {
+    if (json?.data?.rows?.length) {
         tableOptions.sortMode = 'remote'; // v4: ajaxSorting = true
         tableOptions.filterMode = 'remote'; // v4: ajaxFiltering = true
         tableOptions.paginationMode = 'remote';
@@ -419,7 +537,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
         tableOptions.initialFilter = undefined;
         tableOptions.ajaxRequesting = (url, params) => ajaxRequesting(params);
         tableOptions.ajaxRequestFunc = function (url, config, params) {
-            return ajaxRequestFunc(params, json, component, columns, self);
+            return ajaxRequestFunc(params, idRequest, component, columns, self);
         };
         tableOptions.ajaxResponse = (url, params, response) => ajaxResponseFunc(response, component);
     }
@@ -440,6 +558,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
     component.onDataSorted = () => {};
     component.onDataFiltering = () => {};
     component.onDataFiltered = () => {};
+    component.onDataLoaded = () => {};
 
     var table = instantiateTabulator(component, tableOptions, this);
 
@@ -635,7 +754,7 @@ export function ChataTable(idRequest, options, onClick = () => {}, useInfiniteSc
 
 export function ChataPivotTable(idRequest, options = {}, onClick = () => {}) {
     const component = document.querySelector(`[data-componentid='${idRequest}']`);
-    const json = ChataUtils.responses[idRequest];
+    const json = _cloneDeep(ChataUtils.responses[idRequest]);
 
     if (!json?.data?.rows) {
         return;

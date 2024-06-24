@@ -232,6 +232,8 @@ export function SampleQueries({
 
             clearLoading();
 
+            list.innerHTML = '';
+
             const items = sampleQueries?.data?.data?.suggestions;
 
             if (!items?.length) {

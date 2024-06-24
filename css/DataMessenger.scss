@@ -13,6 +13,13 @@ body.autoql-vanilla-drawer-open-body {
         pointer-events: none;
     }
 
+    .autoql-vanilla-chat-single-message-container .autoql-vanilla-chata-response-content-container {
+        height: 100% !important;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
     .autoql-vanilla-chat-header-container {
         display: flex;
         justify-content: space-between;
@@ -96,7 +103,6 @@ body.autoql-vanilla-drawer-open-body {
             .autoql-vanilla-chat-message-bubble-container {
                 display: flex;
                 justify-content: flex-start;
-                width: 100%;
                 max-width: 100%;
                 min-height: 0;
                 flex: 1 1;
@@ -106,6 +112,9 @@ body.autoql-vanilla-drawer-open-body {
                 }
 
                 .autoql-vanilla-chat-message-bubble {
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
                     position: relative;
                     padding: 13px;
                     border-radius: 6px;
@@ -255,6 +264,34 @@ body.autoql-vanilla-drawer-open-body {
                 display: flex;
             }
         }
+    }
+
+    .autoql-vanilla-chat-message-toolbar-container {
+        top: -30px;
+        left: -10px;
+        width: calc(100% + 20px);
+        opacity: 0;
+        visibility: hidden;
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .autoql-vanilla-chat-single-message-container:hover {
+        .autoql-vanilla-viz-toolbar,
+        .autoql-vanilla-tile-toolbar.actions-toolbar {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .autoql-vanilla-chat-message-toolbar-container {
+            opacity: 1;
+            visibility: visible;
+        }
+    }
+
+    .autoql-vanilla-chart-wrapper-queryoutput {
+        flex: 1 1 100vh;
     }
 
     .autoql-vanilla-chata-drawer-resize-handle {

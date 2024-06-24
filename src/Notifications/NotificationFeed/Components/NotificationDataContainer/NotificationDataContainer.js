@@ -41,6 +41,7 @@ export function NotificationDataContainer({ queryResponse, widgetOptions }) {
             height: 300,
             queryResponse: queryResponse?.data,
             showSingleValueResponseTitle: true,
+            useInfiniteScroll: false,
         });
 
         this.queryOutput = queryOuptut;
