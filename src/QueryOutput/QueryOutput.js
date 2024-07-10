@@ -10,6 +10,7 @@ import {
     getDefaultDisplayType,
     transformQueryResponse,
     getSupportedDisplayTypes,
+    GENERAL_QUERY_ERROR,
 } from 'autoql-fe-utils';
 
 import { select } from 'd3-selection';
@@ -22,6 +23,7 @@ import { ChataChart } from '../Charts';
 import { SEARCH_ICON, WARNING_TRIANGLE } from '../Svg';
 import { ChataTable, ChataPivotTable } from '../ChataTable';
 import { QueryValidationMessage } from '../QueryValidationMessage';
+import { ErrorMessage } from '../ErrorMessage';
 
 import './QueryOutput.scss';
 
@@ -59,6 +61,7 @@ export function QueryOutput(selector, options = {}) {
             tableHoverColor: undefined,
             displayType: undefined,
             renderTooltips: true,
+            useInfiniteScroll: true,
             dataFormatting: {
                 currencyCode: 'USD',
                 languageCode: 'en-US',
@@ -79,8 +82,12 @@ export function QueryOutput(selector, options = {}) {
             if (key === 'queryResponse') {
                 try {
                     if (!isQueryResponseTransformed(value)) {
-                        const transformedResponse = transformQueryResponse({ data: value }).data;
-                        responseRenderer.options[key] = transformedResponse;
+                        try {
+                            const transformedResponse = transformQueryResponse({ data: value }).data;
+                            responseRenderer.options[key] = transformedResponse;
+                        } catch (error) {
+                            console.error(error);
+                        }
                     }
                 } catch (error) {
                     console.error(error);
@@ -244,19 +251,12 @@ export function QueryOutput(selector, options = {}) {
         };
 
         responseRenderer.renderTable = (jsonResponse, displayType = 'table') => {
-            var totalRows = jsonResponse.data.count_rows;
-            var initialRows = jsonResponse.data.rows.length;
-
             const tableContainer = document.createElement('div');
 
             tableContainer.classList.add('autoql-vanilla-chata-table-container');
             if (tableContainer.classList.contains('autoql-vanilla-chata-chart-container')) {
                 tableContainer.classList.remove('autoql-vanilla-chata-chart-container');
             }
-
-            const tableRowCount = document.createElement('div');
-            tableRowCount.classList.add('autoql-vanilla-chata-table-row-count');
-            tableRowCount.textContent = `${strings.scrolledText} ${initialRows} / ${totalRows} ${strings.rowsText}`;
 
             const scrollbox = document.createElement('div');
             scrollbox.classList.add('autoql-vanilla-chata-table-scrollbox');
@@ -268,14 +268,10 @@ export function QueryOutput(selector, options = {}) {
             tableContainer.appendChild(tableWrapper);
             scrollbox.appendChild(tableContainer);
 
-            if (displayType === 'table') {
-                tableContainer.appendChild(tableRowCount);
-            }
-
             responseRenderer.appendChild(scrollbox);
 
-            var visibleRowCount = initialRows;
-            var useInfiniteScroll = true;
+            var useInfiniteScroll = responseRenderer.options.useInfiniteScroll;
+
             var tableParams = responseRenderer.tableParams ?? {
                 queryJson: jsonResponse,
                 sort: undefined,
@@ -300,9 +296,8 @@ export function QueryOutput(selector, options = {}) {
                                 ...params,
                             };
                         }
-
-                        table.element.onNewPage({ chartsVisibleCount: visibleRowCount });
                     },
+                    options?.onDataLoaded,
                 );
             } else if (displayType === 'pivot_table') {
                 var table = new ChataPivotTable(uuid, responseRenderer.options, (data) =>
@@ -445,6 +440,22 @@ export function QueryOutput(selector, options = {}) {
             responseRenderer.appendChild(responseContainer);
         };
 
+        responseRenderer.renderErrorResponse = (json) => {
+            const errorResponseContainer = document.createElement('div');
+            const errorMessage = new ErrorMessage(json?.message ?? GENERAL_QUERY_ERROR, responseRenderer.reportProblem);
+
+            errorResponseContainer.appendChild(errorMessage);
+
+            if (json?.reference_id) {
+                const referenceID = document.createElement('div');
+                referenceID.innerHTML = `Error ID: ${json.reference_id}`;
+                errorResponseContainer.appendChild(document.createElement('br'));
+                errorResponseContainer.appendChild(referenceID);
+            }
+
+            responseRenderer.appendChild(errorResponseContainer);
+        };
+
         responseRenderer.refreshView = () => {
             if (!responseRenderer) {
                 return;
@@ -466,6 +477,11 @@ export function QueryOutput(selector, options = {}) {
             const isValidationResponse = !!jsonResponse?.data?.replacements;
             if (isValidationResponse) {
                 return responseRenderer.renderValidationResponse(jsonResponse);
+            }
+
+            const isError = !jsonResponse?.data?.rows;
+            if (isError) {
+                return responseRenderer.renderErrorResponse(jsonResponse);
             }
 
             const displayType = responseRenderer.getDisplayType();

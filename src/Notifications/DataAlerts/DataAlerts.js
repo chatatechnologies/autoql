@@ -34,6 +34,8 @@ export function DataAlerts(selector, options) {
             enableColumnVisibilityManager: true,
             ...(options.autoQLConfig ?? {}),
         },
+        onDMLinkClick: () => {},
+        onDashboardLinkClick: () => {},
         onErrorCallback: () => {},
         ...options,
     };
@@ -55,10 +57,26 @@ export function DataAlerts(selector, options) {
         sectionTitle.classList.add('autoql-vanilla-data-alert-section-title');
         sectionSubtitle.classList.add('autoql-vanilla-data-alert-section-subtitle');
         sectionTitle.textContent = 'Custom Data Alerts';
-        subtitleWrapper.innerHTML = `
-        View and manage your Custom Alerts here. 
-        To create a new Custom Alert, simply click on the "Create Data Alert" option from a query result in 
-        <a>DataMessenger</a> or a <a>Dashboard</a>.`;
+
+        const text1 = document.createElement('span');
+        text1.innerHTML = `View and manage your Custom Alerts here. 
+            To create a new Custom Alert, simply click on the "Create Data Alert" option from a query result in `;
+
+        const link1 = document.createElement('a');
+        link1.addEventListener('click', options.onDMLinkClick);
+        link1.innerHTML = 'Data Messenger';
+
+        const text2 = document.createElement('span');
+        text2.innerHTML = ` or a `;
+
+        const link2 = document.createElement('a');
+        link2.addEventListener('click', options.onDashboardLinkClick);
+        link2.innerHTML = 'Dashboard';
+
+        subtitleWrapper.appendChild(text1);
+        subtitleWrapper.appendChild(link1);
+        subtitleWrapper.appendChild(text2);
+        subtitleWrapper.appendChild(link2);
 
         sectionSubtitle.appendChild(subtitleWrapper);
         titleWrapper.appendChild(sectionTitle);

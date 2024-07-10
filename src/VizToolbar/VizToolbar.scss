@@ -9,19 +9,20 @@
 .autoql-vanilla-tile-toolbar {
     display: flex;
     z-index: 1000;
-    background: var(--autoql-vanilla-background-color-secondary);
-
     padding: 5px;
     border-radius: 6px;
     line-height: 28px;
     z-index: 10;
-    border: 1px solid hsla(0, 0%, 82.7%, 0.32);
     bottom: 5px;
     left: 5px;
+
     -webkit-transition: opacity 0.3s ease, color 0.3s ease;
     transition: opacity 0.3s ease, color 0.3s ease;
     visibility: hidden;
     opacity: 0;
+
+    border: 1px solid var(--autoql-vanilla-border-color);
+    background: var(--autoql-vanilla-background-color-secondary);
 
     .autoql-vanilla-chata-toolbar-btn {
         height: 28px;

@@ -34,7 +34,6 @@ import {
     getSafetynetUserSelection,
     getRecommendationPath,
     htmlToElement,
-    getGroupables,
     showBadge,
 } from '../../Utils';
 
@@ -155,7 +154,11 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
     };
 
     view.showSuggestionButtons = (response) => {
-        var items = response.data.items;
+        var items = response?.data?.items;
+        if (!items?.length) {
+            return;
+        }
+
         var relatedJson = ChataUtils.responses[UUID];
         relatedJson.suggestions = response;
         var queryId = relatedJson['data']['query_id'];
@@ -254,36 +257,6 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
         }
     };
 
-    // view.clearFilterMetadata = () => {
-    //     responseWrapper.filterMetadata = [];
-    // };
-
-    view.setDefaultFilters = (table) => {
-        const { filterMetadata } = responseWrapper;
-
-        if (!filterMetadata) return;
-
-        table.toggleFilters();
-        for (var i = 0; i < filterMetadata.length; i++) {
-            var filter = filterMetadata[i];
-            table.setHeaderFilterValue(filter.field, filter.value);
-        }
-        table.toggleFilters();
-    };
-
-    view.checkAutoChartAggregations = (json) => {
-        var groupables = getGroupables(json);
-        const { autoChartAggregations } = dashboard.options;
-
-        if (groupables.length === 1 && autoChartAggregations) {
-            view.internalDisplayType = 'column';
-        }
-
-        if (groupables.length === 2 && autoChartAggregations) {
-            view.internalDisplayType = 'stacked_column';
-        }
-    };
-
     view.run = async () => {
         const query = view.getQuery();
 
@@ -291,8 +264,6 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
         view.isSafetynet = false;
 
         if (query) {
-            // view.clearMetadata();
-            // view.clearFilterMetadata();
             view.showLoading();
 
             let response;
@@ -326,9 +297,6 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
                 if (response.data.reference_id === '1.1.430' || response.data.reference_id === '1.1.431') {
                     view.displaySuggestions();
                 } else {
-                    if (!view.isExecuted) {
-                        view.checkAutoChartAggregations(json);
-                    }
                     view.displayData();
                 }
             } else {
@@ -388,18 +356,9 @@ export function TileView(tile, isSecond = false, onSplitBtnClick = () => {}) {
         return apiCall(val, tile.dashboard.options, 'dashboards.user');
     };
 
-    // view.clearMetadata = () => {
-    //     responseWrapper.metadata = null;
-    // };
-
     view.copyFilterMetadata = () => {
         responseWrapper.filterMetadata = responseWrapper.tabulator.getHeaderFilters();
     };
-
-    // view.copyMetadataToDrilldown = (drilldownView) => {
-    //     drilldownView.metadata = responseWrapper.metadata;
-    //     drilldownView.metadata3D = responseWrapper.metadata3D;
-    // };
 
     view.componentClickHandler = (handler, component, selector) => {
         var elements = component.querySelectorAll(selector);
